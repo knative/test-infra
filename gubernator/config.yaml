@@ -1,0 +1,33 @@
+---
+default_external_services:
+  gcs_pull_prefix: knative-prow/pr-logs/pull
+  prow_url: prow.knative.dev
+default_org: knative
+default_repo: serving
+external_services:
+  knative:
+    gcs_bucket: knative-prow/
+    gcs_pull_prefix: knative-prow/pr-logs/pull
+    prow_url: prow.knative.dev
+jobs:
+  knative-prow/pr-logs/directory/:
+  - pull-knative-serving-build-tests
+  - pull-knative-serving-integration-tests
+  - pull-knative-serving-unit-tests
+  - pull-knative-eventing-build-tests
+  - pull-knative-eventing-integration-tests
+  - pull-knative-eventing-unit-tests
+  - pull-knative-docs-build-tests
+  - pull-knative-docs-unit-tests
+  - pull-knative-docs-integration-tests
+  - pull-knative-build-templates-unit-tests
+  - pull-knative-build-templates-build-tests
+  - pull-knative-build-templates-integration-tests
+  - pull-knative-build-build-tests
+  - pull-knative-build-unit-tests
+  - pull-knative-build-integration-tests
+  - ci-knative-build-release
+  - ci-knative-serving-continuous
+  - ci-knative-serving-release
+  - ci-knative-serving-playground
+recursive_artifacts: false
