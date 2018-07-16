@@ -16,6 +16,8 @@ CLUSTER ?= prow
 PROJECT ?= knative-tests
 ZONE    ?= us-central1-f
 
+PROW_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+
 get-cluster-credentials:
 	gcloud container clusters get-credentials "$(CLUSTER)" --project="$(PROJECT)" --zone="$(ZONE)"
 
@@ -26,5 +28,5 @@ update-plugins: get-cluster-credentials
 	kubectl create configmap plugins --from-file=plugins=plugins.yaml --dry-run -o yaml | kubectl replace configmap plugins -f -
 
 test:
-	bazel run @k8s//prow/cmd/config -- --plugin-config=$(PWD)/plugins.yaml
-	bazel run @k8s//prow/cmd/config -- --config-path=$(PWD)/config.yaml
+	bazel run @k8s//prow/cmd/config -- --plugin-config=$(PROW_DIR)/plugins.yaml
+	bazel run @k8s//prow/cmd/config -- --config-path=$(PROW_DIR)/config.yaml
