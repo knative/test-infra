@@ -42,7 +42,7 @@ http_archive(
     urls = ["https://github.com/bazelbuild/rules_docker/archive/198367210c55fba5dded22274adde1a289801dc4.tar.gz"],
 )
 
-#
+# External repositories
 
 git_repository(
     name = "k8s",
