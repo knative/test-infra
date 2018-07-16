@@ -24,3 +24,7 @@ update-config: get-cluster-credentials
 
 update-plugins: get-cluster-credentials
 	kubectl create configmap plugins --from-file=plugins=plugins.yaml --dry-run -o yaml | kubectl replace configmap plugins -f -
+
+test:
+	bazel run @k8s//prow/cmd/config -- --plugin-config=$(PWD)/plugins.yaml
+	bazel run @k8s//prow/cmd/config -- --config-path=$(PWD)/config.yaml
