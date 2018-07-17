@@ -17,5 +17,5 @@ TESTGRID_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 update-config:
 	bazel run @k8s//testgrid/cmd/configurator -- \
 		--yaml=$(TESTGRID_DIR)/config.yaml \
-		--output=gs://knative-testgrid/config
+		--output=gs://knative-testgrid/config \
 		--oneshot
