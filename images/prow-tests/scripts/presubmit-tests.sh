@@ -30,15 +30,20 @@
 # to run a specific set of tests. The flag --emit-metrics is used
 # to emit metrics when running the tests.
 
-# Extensions or file patterns that don't require presubmit tests
+# Load github.com/knative/test-infra/images/prow-tests/scripts/library.sh
+[ -f /workspace/library.sh ] \
+  && source /workspace/library.sh \
+  || eval "$(docker run --entrypoint sh gcr.io/knative-tests/test-infra/prow-tests -c 'cat library.sh')"
+[ -v KNATIVE_TEST_INFRA ] || exit 1
+
+# Extensions or file patterns that don't require presubmit tests.
 readonly NO_PRESUBMIT_FILES=(\.md \.png ^OWNERS)
+
+# Options set by command-line flags.
 RUN_BUILD_TESTS=0
 RUN_UNIT_TESTS=0
 RUN_INTEGRATION_TESTS=0
 EMIT_METRICS=0
-
-[ -f /workspace/library.sh ] && source /workspace/library.sh || eval "$(docker run --entrypoint sh gcr.io/knative-tests/test-infra/prow-tests -c 'cat library.sh')"
-[ -v KNATIVE_TEST_INFRA ] || exit 1
 
 # Exit presubmit tests if only documentation files were changed.
 function exit_if_presubmit_not_required() {
