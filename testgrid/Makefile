@@ -14,6 +14,10 @@
 
 TESTGRID_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
+ifndef GOOGLE_APPLICATION_CREDENTIALS
+  $(error GOOGLE_APPLICATION_CREDENTIALS not set)
+endif
+
 update-config:
 	bazel run @k8s//testgrid/cmd/configurator -- \
 		--yaml=$(TESTGRID_DIR)/config.yaml \
