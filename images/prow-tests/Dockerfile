@@ -25,3 +25,4 @@ RUN go get github.com/google/go-containerregistry/cmd/ko
 
 # Add our scripts
 ADD scripts/library.sh .
+ADD scripts/presubmit-tests.sh .
