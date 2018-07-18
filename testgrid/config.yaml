@@ -140,8 +140,8 @@ dashboards:
 dashboard_groups:
 - name: knative
   dashboard_names:
-  - serving
-  - build
-  - eventing
-  - build-templates
-  - docs
+  - knative-serving
+  - knative-build
+  - knative-eventing
+  - knative-build-templates
+  - knative-docs
