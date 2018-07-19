@@ -27,3 +27,4 @@ RUN go get github.com/golang/dep/cmd/dep
 # Add our scripts
 ADD scripts/library.sh .
 ADD scripts/presubmit-tests.sh .
+ADD scripts/release.sh .
