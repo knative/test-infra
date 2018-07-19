@@ -22,6 +22,7 @@ RUN gcloud components install docker-credential-gcr
 RUN docker-credential-gcr configure-docker
 RUN apt-get install -y uuid-runtime  # for uuidgen
 RUN go get github.com/google/go-containerregistry/cmd/ko
+RUN go get github.com/golang/dep/cmd/dep
 
 # Add our scripts
 ADD scripts/library.sh .
