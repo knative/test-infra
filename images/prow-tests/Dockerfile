@@ -28,3 +28,4 @@ RUN go get github.com/golang/dep/cmd/dep
 ADD scripts/library.sh .
 ADD scripts/presubmit-tests.sh .
 ADD scripts/release.sh .
+ADD scripts/e2e-tests.sh .
