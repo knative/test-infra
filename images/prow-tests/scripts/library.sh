@@ -63,27 +63,6 @@ function delete_gcr_images() {
   done
 }
 
-# Tag images in the yaml file with a tag. If not tag is passed, does nothing.
-# Parameters: $1 - yaml file to parse for images.
-#             $2 - registry where the images are stored.
-#             $3 - tag to apply (optional).
-function tag_images_in_yaml() {
-  [[ -z $3 ]] && return 0
-  echo "Tagging images with $3"
-  for image in $(grep -o "$2/[a-z\./-]\+@sha256:[0-9a-f]\+" $1); do
-    gcloud -q container images add-tag ${image} ${image%%@*}:$3
-  done
-}
-
-# Copy the given yaml file to a GCS bucket. Image is tagged :latest, and optionally :$2.
-# Parameters: $1 - yaml file to copy.
-#             $2 - destination bucket name.
-#             $3 - tag to apply (optional).
-function publish_yaml() {
-  gsutil cp $1 gs://$2/latest/
-  [[ -n $3 ]] && gsutil cp $1 gs://$2/previous/$3/
-}
-
 # Waits until the given object doesn't exist.
 # Parameters: $1 - the kind of the object.
 #             $2 - object's name.

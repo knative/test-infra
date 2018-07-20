@@ -44,7 +44,7 @@
 [ -v KNATIVE_TEST_INFRA ] || exit 1
 
 # Test cluster parameters
-readonly E2E_BASE_NAME=$(basename ${REPO_ROOT_DIR})
+readonly E2E_BASE_NAME=k$(basename ${REPO_ROOT_DIR})
 readonly E2E_CLUSTER_NAME=${E2E_BASE_NAME}-e2e-cls${BUILD_NUMBER}
 readonly E2E_NETWORK_NAME=${E2E_BASE_NAME}-e2e-net${BUILD_NUMBER}
 readonly E2E_CLUSTER_ZONE=us-central1-a
@@ -71,10 +71,9 @@ function teardown_test_resources() {
   fi
 }
 
-# Exit test if the previous command failed, dumping current state info.
+# Exit test, dumping current state info.
 # Parameters: $1 - error message (optional).
 function fail_test() {
-  [[ $? -eq 0 ]] && return 0
   [[ -n $1 ]] && echo "ERROR: $1"
   dump_k8s_info
   exit 1
@@ -141,6 +140,7 @@ function create_test_cluster() {
     --gcp-node-image ${SERVING_GKE_IMAGE} \
     --test-cmd "${script}" \
     --test-cmd-args "${test_cmd_args}"
+  echo "Test subprocess exited with code $?"
   # Delete target pools and health checks that might have leaked.
   # See https://github.com/knative/serving/issues/959 for details.
   # TODO(adrcunha): Remove once the leak issue is resolved.
@@ -189,7 +189,7 @@ function setup_test_cluster() {
   readonly USING_EXISTING_CLUSTER
 
   if [[ -z ${DOCKER_REPO_OVERRIDE} ]]; then
-    export DOCKER_REPO_OVERRIDE=gcr.io/$(gcloud config get-value project)/${E2E_BASE_NAME}e2e-img
+    export DOCKER_REPO_OVERRIDE=gcr.io/$(gcloud config get-value project)/${E2E_BASE_NAME}-e2e-img
   fi
 
   echo "- Cluster is ${K8S_CLUSTER_OVERRIDE}"
@@ -199,7 +199,7 @@ function setup_test_cluster() {
   trap teardown_test_resources EXIT
 
   if (( USING_EXISTING_CLUSTER )); then
-    echo "Deleting any previous Knative Serving instance"
+    echo "Deleting any previous SUT instance"
     teardown
   fi
 

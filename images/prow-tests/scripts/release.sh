@@ -77,26 +77,17 @@ function parse_flags() {
   cd ${REPO_ROOT_DIR}
   for parameter in $@; do
     case $parameter in
-      --skip-tests)
-        SKIP_TESTS=1
-        shift
-        ;;
-      --tag-release)
-        TAG_RELEASE=1
-        shift
-        ;;
-      --notag-release)
-        TAG_RELEASE=0
-        shift
-        ;;
+      --skip-tests) SKIP_TESTS=1 ;;
+      --tag-release) TAG_RELEASE=1 ;;
+      --notag-release) TAG_RELEASE=0 ;;
       --publish)
         PUBLISH_RELEASE=1
         # Remove -L from ko flags
         KO_FLAGS="${KO_FLAGS/-L}"
-        shift
         ;;
       --nopublish)
         PUBLISH_RELEASE=0
+        # Add -L to ko flags
         KO_FLAGS="-L ${KO_FLAGS}"
         shift
         ;;
@@ -105,6 +96,7 @@ function parse_flags() {
         exit 1
         ;;
     esac
+    shift
   done
 
   TAG=""
