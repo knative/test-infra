@@ -75,7 +75,7 @@ function teardown_test_resources() {
 # Parameters: $1 - error message (optional).
 function fail_test() {
   [[ -n $1 ]] && echo "ERROR: $1"
-  dump_k8s_info
+  dump_cluster_state
   exit 1
 }
 
@@ -129,16 +129,13 @@ function create_test_cluster() {
   echo -n "1"> ${TEST_RESULT_FILE}
   local test_cmd_args="--run-tests"
   (( EMIT_METRICS )) && test_cmd_args+=" --emit-metrics"
-  # Normalize script path; we can't use readlink because it's not available everywhere
-  local script=$0
-  [[ ${script} =~ ^[\./].* ]] || script="./$0"
-  script="$(cd ${script%/*} && echo $PWD/${script##*/})"
+  echo "Test script is ${E2E_SCRIPT}"
   kubetest "${CLUSTER_CREATION_ARGS[@]}" \
     --up \
     --down \
     --extract "gke-${SERVING_GKE_VERSION}" \
     --gcp-node-image ${SERVING_GKE_IMAGE} \
-    --test-cmd "${script}" \
+    --test-cmd "${E2E_SCRIPT}" \
     --test-cmd-args "${test_cmd_args}"
   echo "Test subprocess exited with code $?"
   # Delete target pools and health checks that might have leaked.
@@ -228,9 +225,16 @@ function success() {
 RUN_TESTS=0
 EMIT_METRICS=0
 USING_EXISTING_CLUSTER=1
+E2E_SCRIPT=""
 
 # Parse flags and initialize the test cluster.
 function initialize() {
+  # Normalize calling script path; we can't use readlink because it's not available everywhere
+  E2E_SCRIPT=$0
+  [[ ${E2E_SCRIPT} =~ ^[\./].* ]] || E2E_SCRIPT="./$0"
+  E2E_SCRIPT="$(cd ${E2E_SCRIPT%/*} && echo $PWD/${E2E_SCRIPT##*/})"
+  readonly E2E_SCRIPT
+
   cd ${REPO_ROOT_DIR}
   for parameter in $@; do
     case $parameter in
