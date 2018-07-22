@@ -250,7 +250,12 @@ function update_licenses() {
   local go_src="/go/src/${BASH_REMATCH[2]}"
   local dst=$1
   shift
-  docker run -v $PWD:${go_src} --entrypoint sh \
-      gcr.io/knative-tests/test-infra/prow-tests -c \
-      "cd ${go_src} ; dep-collector $@ > ${go_src}/${dst}"
+  local local_dep_collector="$(which dep-collector)"
+  if [[ -n ${local_dep_collector} ]]; then
+    dep-collector $@ > ./${dst}
+  else
+    docker run -v $PWD:${go_src} --entrypoint sh \
+        gcr.io/knative-tests/test-infra/prow-tests -c \
+        "cd ${go_src} ; dep-collector $@ > ${go_src}/${dst}"
+  fi
 }
