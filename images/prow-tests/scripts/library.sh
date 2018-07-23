@@ -25,7 +25,8 @@ readonly SERVING_GKE_IMAGE=cos
 # Public images and yaml files.
 readonly KNATIVE_ISTIO_YAML=https://storage.googleapis.com/knative-releases/latest/istio.yaml
 readonly KNATIVE_SERVING_RELEASE=https://storage.googleapis.com/knative-releases/latest/release.yaml
-readonly KNATIVE_BUILD_RELEASE=https://storage.googleapis.com/build-crd/latest/release.yaml
+readonly KNATIVE_BUILD_RELEASE=https://storage.googleapis.com/knative-releases/latest/release-build.yaml
+readonly KNATIVE_EVENTING_RELEASE=https://storage.googleapis.com/knative-releases/latest/release-eventing.yaml
 
 # Flag that this script was loaded.
 readonly KNATIVE_TEST_INFRA=1
