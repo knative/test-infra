@@ -70,7 +70,7 @@ SKIP_TESTS=0
 TAG_RELEASE=0
 PUBLISH_RELEASE=0
 TAG=""
-KO_FLAGS="-L"
+KO_FLAGS="-P -L"
 
 # Parses flags and sets environment variables accordingly.
 function parse_flags() {
