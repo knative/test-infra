@@ -21,10 +21,10 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN gcloud components install docker-credential-gcr
 RUN docker-credential-gcr configure-docker
 RUN apt-get install -y uuid-runtime  # for uuidgen
-RUN go get github.com/google/go-containerregistry/cmd/ko
-RUN go get github.com/golang/dep/cmd/dep
-RUN go get github.com/mattmoor/dep-collector
-RUN go get github.com/google/licenseclassifier
+RUN go get -u github.com/google/go-containerregistry/cmd/ko
+RUN go get -u github.com/golang/dep/cmd/dep
+RUN go get -u github.com/mattmoor/dep-collector
+RUN go get -u github.com/google/licenseclassifier
 
 # Add our scripts
 ADD scripts/library.sh .
