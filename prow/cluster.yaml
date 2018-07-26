@@ -274,7 +274,12 @@ metadata:
   name: deck-ing
   annotations:
     kubernetes.io/ingress.class: "gce"
+    kubernetes.io/ingress.global-static-ip-name: prow-ingress
 spec:
+  tls:
+  - secretName: tls-secret
+    hosts:
+    - prow.knative.dev
   rules:
   - host: prow.knative.dev
     http:
