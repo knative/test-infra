@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-CLUSTER ?= prow
-PROJECT ?= knative-tests
-ZONE    ?= us-central1-f
+CLUSTER       ?= prow
+PROJECT       ?= knative-tests
+ZONE          ?= us-central1-f
+JOB_NAMESPACE ?= test-pods
 
 PROW_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
@@ -26,6 +27,12 @@ update-config: get-cluster-credentials
 
 update-plugins: get-cluster-credentials
 	kubectl create configmap plugins --from-file=plugins.yaml=plugins.yaml --dry-run -o yaml | kubectl replace configmap plugins -f -
+
+update-boskos: get-cluster-credentials
+	kubectl apply -f boskos/config.yaml
+
+update-boskos-config: get-cluster-credentials
+	kubectl create configmap resources --from-file=config=boskos/resources.yaml --dry-run -o yaml | kubectl --namespace="$(JOB_NAMESPACE)" replace configmap resources -f -
 
 update-cluster: get-cluster-credentials
 	kubectl apply -f cluster.yaml
