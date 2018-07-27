@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Initial configuration of prow cluster
+# Initial configuration of Boskos
 
 apiVersion: v1
 kind: ConfigMap
