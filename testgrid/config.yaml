@@ -59,7 +59,7 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-serving-release
 - name: ci-knative-serving-playground
   gcs_prefix: knative-prow/logs/ci-knative-serving-playground
-- name: pull-knative-test-coverage
+- name: pull-knative-serving-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-serving-go-coverage
   short_text_metric: coverage
 - name: ci-knative-serving-latency
@@ -82,9 +82,14 @@ test_groups:
 - name: ci-knative-build-templates-continuous
   gcs_prefix: knative-prow/logs/ci-knative-build-templates-continuous
 - name: ci-knative-docs-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-docs-continuous
 - name: pull-knative-docs-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-docs-go-coverage
+  short_text_metric: coverage
+- name: ci-knative-pkg-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-pkg-continuous
+- name: pull-knative-pkg-test-coverage
+  gcs_prefix: knative-prow/logs/ci-knative-pkg-go-coverage
   short_text_metric: coverage
 
 # Dashboards
@@ -134,6 +139,13 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-docs-test-coverage
     base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
+- name: knative-pkg
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-pkg-continuous
+  - name: coverage
+    test_group_name: pull-knative-pkg-test-coverage
+    base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
 
 # Dashboard groups
 
@@ -145,3 +157,4 @@ dashboard_groups:
   - knative-eventing
   - knative-build-templates
   - knative-docs
+  - knative-pkg
