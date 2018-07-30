@@ -4,15 +4,21 @@
 
 1. Create the GKE cluster, the role bindings and the GitHub secrets. You might need to update [Makefile](./Makefile). For details, see https://github.com/kubernetes/test-infra/blob/master/prow/getting_started.md.
 
+1. Ensure the GCP projects listed in [resources.yaml](./boskos/resources.yaml) are created.
+
 1. Apply [config_start.yaml](./config_start.yaml) to the cluster.
 
-1. Run `make update-cluster`, `make update-config` and `make update-plugins`.
+1. Apply Boskos [config_start.yaml](./boskos/config_start.yaml) to the cluster.
+
+1. Run `make update-cluster`, `make update-boskos`, `make update-config`, `make update-plugins` and `make update-boskos-config`.
 
 1. If SSL needs to be reconfigured, promote your ingress IP to static in Cloud Console, and [create the TLS secret](https://kubernetes.io/docs/concepts/services-networking/ingress/#tls).
 
 ## Expanding Boskos pool
 
-TBD
+1. Create new GCP projects and add them to [resources.yaml](./boskos/resources.yaml).
+
+1. Run `make update-boskos-config`.
 
 ## Setting up Prow for a new repo
 
