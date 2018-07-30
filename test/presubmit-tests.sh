@@ -29,7 +29,7 @@
 
 function build_tests() {
   header "Running build tests"
-  make -C prow test
+  make -C ci/prow test
 }
 
 function unit_tests() {
