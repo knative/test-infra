@@ -20,9 +20,9 @@ test:
 		--validate-config-file
 
 update-config:
-	ifndef GOOGLE_APPLICATION_CREDENTIALS
-	  $(error GOOGLE_APPLICATION_CREDENTIALS not set)
-	endif
+ifndef GOOGLE_APPLICATION_CREDENTIALS
+	$(error GOOGLE_APPLICATION_CREDENTIALS not set)
+endif
 	bazel run @k8s//testgrid/cmd/configurator -- \
 		--yaml=$(TESTGRID_DIR)/config.yaml \
 		--output=gs://knative-testgrid/config \
