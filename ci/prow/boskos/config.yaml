@@ -49,6 +49,7 @@ spec:
         app: boskos
       namespace: test-pods
     spec:
+      serviceAccountName: "boskos"
       terminationGracePeriodSeconds: 30
       containers:
       - name: boskos
@@ -109,6 +110,7 @@ spec:
       labels:
         app: boskos-janitor
     spec:
+      serviceAccountName: "boskos"
       terminationGracePeriodSeconds: 300
       containers:
       - name: boskos-janitor
@@ -141,9 +143,10 @@ spec:
       labels:
         app: boskos-reaper
     spec:
+      serviceAccountName: "boskos"
       terminationGracePeriodSeconds: 30
       containers:
       - name: boskos-reaper
         image: gcr.io/k8s-testimages/reaper:v20180402-43203f868
         args:
-        - --resource-type=gke-project
+        - --resource-type=knative-project
