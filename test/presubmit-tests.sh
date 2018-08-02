@@ -37,7 +37,7 @@ function unit_tests() {
 }
 
 function integration_tests() {
-  header "TODO(#8): Running integration tests"
+  ./test/e2e-tests.sh
 }
 
 main $@
