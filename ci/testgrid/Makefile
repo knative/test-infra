@@ -14,11 +14,15 @@
 
 TESTGRID_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
-ifndef GOOGLE_APPLICATION_CREDENTIALS
-  $(error GOOGLE_APPLICATION_CREDENTIALS not set)
-endif
+test:
+	bazel run @k8s//testgrid/cmd/configurator -- \
+		--yaml=$(TESTGRID_DIR)/config.yaml \
+		--validate-config-file
 
 update-config:
+	ifndef GOOGLE_APPLICATION_CREDENTIALS
+	  $(error GOOGLE_APPLICATION_CREDENTIALS not set)
+	endif
 	bazel run @k8s//testgrid/cmd/configurator -- \
 		--yaml=$(TESTGRID_DIR)/config.yaml \
 		--output=gs://knative-testgrid/config \
