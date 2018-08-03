@@ -95,9 +95,12 @@ function wait_until_pods_running() {
     local pods="$(kubectl get pods -n $1 2>/dev/null | grep -v NAME)"
     local not_running=$(echo "${pods}" | grep -v Running | grep -v Completed | wc -l)
     if [[ -n "${pods}" && ${not_running} == 0 ]]; then
-      echo -e "\nAll pods are up:"
-      kubectl get pods -n $1
-      return 0
+      local not_ready=$(echo "${pods}" | grep "0/" | wc -l)
+      if [[ ${not_ready} == 0 ]]; then
+        echo -e "\nAll pods are up:"
+        kubectl get pods -n $1
+        return 0
+      fi
     fi
     echo -n "."
     sleep 2
