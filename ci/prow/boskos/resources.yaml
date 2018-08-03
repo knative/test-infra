@@ -25,4 +25,4 @@ resources:
   - knative-boskos-09
   - knative-boskos-10
   state: dirty
-  type: knative-project
+  type: gke-project
