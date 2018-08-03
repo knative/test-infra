@@ -43,10 +43,24 @@
   || eval "$(docker run --entrypoint sh gcr.io/knative-tests/test-infra/prow-tests -c 'cat library.sh')"
 [ -v KNATIVE_TEST_INFRA ] || exit 1
 
+# Build a resource name based on $E2E_BASE_NAME, a suffix and $BUILD_NUMBER.
+# Restricts the name length to 40 chars (the limit for resource names in GCP).
+# Name will have the form $E2E_BASE_NAME-<PREFIX>$BUILD_NUMBER.
+# Parameters: $1 - name suffix
+function build_resource_name() {
+  local prefix=${E2E_BASE_NAME}-$1
+  local suffix=${BUILD_NUMBER}
+  # Restrict suffix length to 20 chars
+  if [[ -n "${suffix}" ]]; then
+    suffix=${suffix:${#suffix}<20?0:-20}
+  fi
+  echo "${prefix:0:20}${suffix}"
+}
+
 # Test cluster parameters
 readonly E2E_BASE_NAME=k$(basename ${REPO_ROOT_DIR})
-readonly E2E_CLUSTER_NAME=${E2E_BASE_NAME}-e2e-cls${BUILD_NUMBER}
-readonly E2E_NETWORK_NAME=${E2E_BASE_NAME}-e2e-net${BUILD_NUMBER}
+readonly E2E_CLUSTER_NAME=$(build_resource_name e2e-cls)
+readonly E2E_NETWORK_NAME=$(build_resource_name e2e-net)
 readonly E2E_CLUSTER_ZONE=us-central1-a
 readonly E2E_CLUSTER_NODES=3
 readonly E2E_CLUSTER_MACHINE=n1-standard-4
