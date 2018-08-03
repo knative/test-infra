@@ -65,6 +65,9 @@ test_groups:
 - name: ci-knative-serving-latency
   gcs_prefix: knative-prow/logs/ci-knative-serving-latency
   short_text_metric: latency
+- name: ci-knative-serving-api-coverage
+  gcs_prefix: knative-prow/logs/ci-knative-serving-api-coverage
+  short_text_metric: api_coverage
 - name: ci-knative-build-continuous
   gcs_prefix: knative-prow/logs/ci-knative-build-continuous
 - name: ci-knative-build-release
@@ -91,9 +94,6 @@ test_groups:
 - name: pull-knative-pkg-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-pkg-go-coverage
   short_text_metric: coverage
-- name: ci-knative-serving-api-coverage
-  gcs_prefix: knative-prow/logs/ci-knative-serving-api-coverage
-  short_text_metric: api_coverage
 
 # Dashboards
 
@@ -114,7 +114,7 @@ dashboards:
     description: '95% latency in ms'
     base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
   - name: api-coverage
-    test_group_name: 'ci-knative-serving-api-coverage'
+    test_group_name: ci-knative-serving-api-coverage
     description: 'Conformance tests API coverage.'
     base_options: 'exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name='
 - name: knative-build
