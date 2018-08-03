@@ -16,7 +16,8 @@
 
 # This is a helper script for Knative E2E test scripts. To use it:
 # 1. Source this script.
-# 2. Write the teardown() function, which will tear down your test resources.
+# 2. [optional] Write the teardown() function, which will tear down your test
+#    resources.
 # 3. [optional] Write the dump_extra_cluster_state() function. It will be called
 #    when a test fails, and can dump extra information about the current state of
 #    the cluster (tipically using kubectl).
@@ -56,7 +57,7 @@ readonly TEST_RESULT_FILE=/tmp/${E2E_BASE_NAME}-e2e-result
 function teardown_test_resources() {
   header "Tearing down test environment"
   # Free resources in GCP project.
-  if (( ! USING_EXISTING_CLUSTER )); then
+  if (( ! USING_EXISTING_CLUSTER )) && [[ "$(type -t teardown)" == "function" ]]; then
     teardown
   fi
 
@@ -195,7 +196,7 @@ function setup_test_cluster() {
 
   trap teardown_test_resources EXIT
 
-  if (( USING_EXISTING_CLUSTER )); then
+  if (( USING_EXISTING_CLUSTER )) && [[ "$(type -t teardown)" == "function" ]]; then
     echo "Deleting any previous SUT instance"
     teardown
   fi
