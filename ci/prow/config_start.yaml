@@ -315,6 +315,7 @@ rules:
     resources:
       - prowjobs
     verbs:
+      - create
       - get
       - list
   - apiGroups:
