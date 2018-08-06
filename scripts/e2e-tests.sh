@@ -37,11 +37,7 @@
 #    K8S_USER_OVERRIDE and DOCKER_REPO_OVERRIDE set will immediately start the
 #    tests against the cluster.
 
-# Load github.com/knative/test-infra/images/prow-tests/scripts/library.sh
-[ -f /workspace/library.sh ] \
-  && source /workspace/library.sh \
-  || eval "$(docker run --entrypoint sh gcr.io/knative-tests/test-infra/prow-tests -c 'cat library.sh')"
-[ -v KNATIVE_TEST_INFRA ] || exit 1
+source $(dirname $0)/library.sh
 
 # Build a resource name based on $E2E_BASE_NAME, a suffix and $BUILD_NUMBER.
 # Restricts the name length to 40 chars (the limit for resource names in GCP).
