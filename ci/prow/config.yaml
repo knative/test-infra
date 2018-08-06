@@ -110,10 +110,10 @@ presets:
   - name: bazel-scratch
     mountPath: /bazel-scratch/.cache
 - labels:
-    preset-bazel-remote-cache-enabled: "true"
+    preset-bazel-remote-cache-enabled: "false"
   env:
   - name: BAZEL_REMOTE_CACHE_ENABLED
-    value: "true"
+    value: "false"
 
 presubmits:
   knative/serving:
