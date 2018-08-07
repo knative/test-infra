@@ -32,7 +32,7 @@
 #    All environment variables above, except KO_FLAGS, are marked read-only once
 #    parse_flags() is called.
 
-source $(dirname $0)/library.sh
+source $(dirname ${BASH_SOURCE})/library.sh
 
 # Simple banner for logging purposes.
 function banner() {

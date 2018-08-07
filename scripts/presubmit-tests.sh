@@ -30,7 +30,7 @@
 # to run a specific set of tests. The flag --emit-metrics is used
 # to emit metrics when running the tests.
 
-source $(dirname $0)/library.sh
+source $(dirname ${BASH_SOURCE})/library.sh
 
 # Extensions or file patterns that don't require presubmit tests.
 readonly NO_PRESUBMIT_FILES=(\.md \.png ^OWNERS)
