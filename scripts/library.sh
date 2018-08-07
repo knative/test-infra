@@ -28,9 +28,6 @@ readonly KNATIVE_SERVING_RELEASE=https://storage.googleapis.com/knative-releases
 readonly KNATIVE_BUILD_RELEASE=https://storage.googleapis.com/knative-releases/build/latest/release.yaml
 readonly KNATIVE_EVENTING_RELEASE=https://storage.googleapis.com/knative-releases/eventing/latest/release.yaml
 
-# Flag that this script was loaded.
-readonly KNATIVE_TEST_INFRA=1
-
 # Useful environment variables
 [[ -n "${PROW_JOB_ID}" ]] && IS_PROW=1 || IS_PROW=0
 readonly IS_PROW

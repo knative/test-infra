@@ -25,9 +25,3 @@ RUN go get -u github.com/google/go-containerregistry/cmd/ko
 RUN go get -u github.com/golang/dep/cmd/dep
 RUN go get -u github.com/mattmoor/dep-collector
 RUN go get -u github.com/google/licenseclassifier
-
-# Add our scripts
-ADD scripts/library.sh .
-ADD scripts/presubmit-tests.sh .
-ADD scripts/release.sh .
-ADD scripts/e2e-tests.sh .

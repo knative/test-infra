@@ -47,6 +47,6 @@ http_archive(
 git_repository(
     name = "k8s",
     remote = "http://github.com/kubernetes/test-infra.git",
-    commit = "0605c7e3441815a6484474805173a035e654cdab",  # HEAD as of 7/13/2018
+    commit = "dd12621d6178838097847abf5842ad8d08fc9308",  # HEAD as of 8/1/2018
 )
 

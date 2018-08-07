@@ -32,11 +32,7 @@
 #    All environment variables above, except KO_FLAGS, are marked read-only once
 #    parse_flags() is called.
 
-# Load github.com/knative/test-infra/images/prow-tests/scripts/library.sh
-[ -f /workspace/library.sh ] \
-  && source /workspace/library.sh \
-  || eval "$(docker run --entrypoint sh gcr.io/knative-tests/test-infra/prow-tests -c 'cat library.sh')"
-[ -v KNATIVE_TEST_INFRA ] || exit 1
+source $(dirname ${BASH_SOURCE})/library.sh
 
 # Simple banner for logging purposes.
 function banner() {

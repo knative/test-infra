@@ -16,7 +16,13 @@
 
 ## Expanding Boskos pool
 
-1. Create new GCP projects and add them to [resources.yaml](./boskos/resources.yaml).
+1. Create a new GCP project and add it to [resources.yaml](./boskos/resources.yaml).
+
+1. Make `knative-tests@appspot.gserviceaccount.com` an editor of the project.
+
+1. Enable the Compute Engine API for the project (e.g., by visiting https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=XXXXXXXX).
+
+1. Enable the Kubernetes Engine API for the project (e.g., by visiting https://console.cloud.google.com/apis/api/container.googleapis.com/overview?project=XXXXXXXX).
 
 1. Run `make update-boskos-config`.
 

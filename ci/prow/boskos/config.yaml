@@ -49,6 +49,7 @@ spec:
         app: boskos
       namespace: test-pods
     spec:
+      serviceAccountName: "boskos"
       terminationGracePeriodSeconds: 30
       containers:
       - name: boskos
@@ -109,13 +110,14 @@ spec:
       labels:
         app: boskos-janitor
     spec:
+      serviceAccountName: "boskos"
       terminationGracePeriodSeconds: 300
       containers:
       - name: boskos-janitor
         image: gcr.io/k8s-testimages/janitor:v20180619-83c62c891
         args:
         - --service-account=/etc/service-account/service-account.json
-        - --resource-type=knative-project
+        - --resource-type=gke-project
         - --pool-size=10
         volumeMounts:
         - mountPath: /etc/service-account
@@ -141,6 +143,7 @@ spec:
       labels:
         app: boskos-reaper
     spec:
+      serviceAccountName: "boskos"
       terminationGracePeriodSeconds: 30
       containers:
       - name: boskos-reaper
