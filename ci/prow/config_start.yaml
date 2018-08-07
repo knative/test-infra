@@ -315,6 +315,7 @@ rules:
     resources:
       - prowjobs
     verbs:
+      - create
       - get
       - list
   - apiGroups:
@@ -336,39 +337,3 @@ subjects:
 - kind: ServiceAccount
   name: "tide"
   namespace: default
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: "tot"
----
-kind: Role
-apiVersion: rbac.authorization.k8s.io/v1beta1
-metadata:
-  name: "tot"
-rules:
-  - apiGroups:
-      - "prow.k8s.io"
-    resources:
-      - prowjobs
-    verbs:
-      - create
-      - get
-  - apiGroups:
-      - ""
-    resources:
-      - configmaps
-    verbs:
-      - update
----
-kind: RoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
-metadata:
-  name: "tot"
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: "tot"
-subjects:
-- kind: ServiceAccount
-  name: "tot"

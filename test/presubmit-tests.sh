@@ -30,6 +30,7 @@
 function build_tests() {
   header "Running build tests"
   make -C ci/prow test
+  make -C ci/testgrid test
 }
 
 function unit_tests() {

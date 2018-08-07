@@ -110,10 +110,10 @@ presets:
   - name: bazel-scratch
     mountPath: /bazel-scratch/.cache
 - labels:
-    preset-bazel-remote-cache-enabled: "true"
+    preset-bazel-remote-cache-enabled: "false"
   env:
   - name: BAZEL_REMOTE_CACHE_ENABLED
-    value: "true"
+    value: "false"
 
 presubmits:
   knative/serving:
@@ -296,8 +296,6 @@ presubmits:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage-dev:latest-dev
         imagePullPolicy: Always
-        securityContext:
-          runAsNonRoot: true
         command:
         - "/coverage"
         args:
@@ -1362,6 +1360,28 @@ periodics:
       imagePullPolicy: Always
       command:
       - "/metrics"
+      args:
+      - "--artifacts-dir=$(ARTIFACTS)"
+      - "--service-account=/etc/service-account/service-account.json"
+- cron: "5 8 * * *" # Run at 01:05PST every day (08:05 UTC)
+  name: ci-knative-serving-api-coverage
+  agent: kubernetes
+  labels:
+    preset-service-account: "true"
+  decorate: true
+  ssh_key_secrets:
+  - ssh-knative
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+    clone_uri: "git@github.com:knative/serving.git"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/apicoverage:latest
+      imagePullPolicy: Always
+      command:
+      - "/apicoverage"
       args:
       - "--artifacts-dir=$(ARTIFACTS)"
       - "--service-account=/etc/service-account/service-account.json"
