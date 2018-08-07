@@ -37,7 +37,7 @@
 #    K8S_USER_OVERRIDE and DOCKER_REPO_OVERRIDE set will immediately start the
 #    tests against the cluster.
 
-source $(dirname $0)/library.sh
+source $(dirname ${BASH_SOURCE})/library.sh
 
 # Build a resource name based on $E2E_BASE_NAME, a suffix and $BUILD_NUMBER.
 # Restricts the name length to 40 chars (the limit for resource names in GCP).
