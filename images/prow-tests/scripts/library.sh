@@ -92,11 +92,17 @@ function wait_until_object_does_not_exist() {
 function wait_until_pods_running() {
   echo -n "Waiting until all pods in namespace $1 are up"
   for i in {1..150}; do  # timeout after 5 minutes
-    local pods="$(kubectl get pods -n $1 2>/dev/null | grep -v NAME)"
+    local pods="$(kubectl get pods --no-headers -n $1 2>/dev/null)"
+    # All pods must be running
     local not_running=$(echo "${pods}" | grep -v Running | grep -v Completed | wc -l)
     if [[ -n "${pods}" && ${not_running} == 0 ]]; then
-      local not_ready=$(echo "${pods}" | grep "0/" | wc -l)
-      if [[ ${not_ready} == 0 ]]; then
+      local all_ready=1
+      while read pod ; do
+        local status=(`echo -n ${pod} | cut -f2 -d' ' | tr '/' ' '`)
+        # All containers must be ready
+        [[ ${status[0]} != ${status[1]} ]] && all_ready=0 && break
+      done <<< $(echo "${pods}")
+      if (( all_ready )); then
         echo -e "\nAll pods are up:"
         kubectl get pods -n $1
         return 0
@@ -263,3 +269,6 @@ function update_licenses() {
         "cd ${go_src} ; dep-collector $@ > ${go_src}/${dst}"
   fi
 }
+
+
+wait_until_pods_running test-pods
