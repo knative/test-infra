@@ -269,6 +269,3 @@ function update_licenses() {
         "cd ${go_src} ; dep-collector $@ > ${go_src}/${dst}"
   fi
 }
-
-
-wait_until_pods_running test-pods
