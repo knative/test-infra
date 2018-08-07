@@ -5,7 +5,7 @@ and displaying test results.
 
 ## High level architecture
 
-Knative uses [Prow](https://github.com/kubernetes/test-infra/tree/master/prow) to schedule testing and update issues.
+Knative uses [Prow](https://github.com/kubernetes/test-infra/tree/master/prow) to schedule testing and update issues and PRs.
 
 ### E2E Testing
 
