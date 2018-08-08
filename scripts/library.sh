@@ -97,7 +97,11 @@ function wait_until_pods_running() {
       while read pod ; do
         local status=(`echo -n ${pod} | cut -f2 -d' ' | tr '/' ' '`)
         # All containers must be ready
-        [[ ${status[0]} != ${status[1]} ]] && all_ready=0 && break
+        [[ -z ${status[0]} ]] && all_ready=0 && break
+        [[ -z ${status[1]} ]] && all_ready=0 && break
+        [[ ${status[0]} -lt 1 ]] && all_ready=0 && break
+        [[ ${status[1]} -lt 1 ]] && all_ready=0 && break
+        [[ ${status[0]} -ne ${status[1]} ]] && all_ready=0 && break
       done <<< $(echo "${pods}")
       if (( all_ready )); then
         echo -e "\nAll pods are up:"
