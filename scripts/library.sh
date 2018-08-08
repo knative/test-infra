@@ -19,7 +19,7 @@
 # called from command line.
 
 # Default GKE version to be used with Knative Serving
-readonly SERVING_GKE_VERSION=latest
+readonly SERVING_GKE_VERSION=default
 readonly SERVING_GKE_IMAGE=cos
 
 # Public images and yaml files.
