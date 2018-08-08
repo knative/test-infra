@@ -20,8 +20,14 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN gcloud components install docker-credential-gcr
 RUN docker-credential-gcr configure-docker
+
+RUN apt-get update
 RUN apt-get install -y uuid-runtime  # for uuidgen
+RUN apt-get install -y npm  # for markdownk-link-checker
+
 RUN go get -u github.com/google/go-containerregistry/cmd/ko
 RUN go get -u github.com/golang/dep/cmd/dep
 RUN go get -u github.com/mattmoor/dep-collector
 RUN go get -u github.com/google/licenseclassifier
+
+RUN npm install -g markdown-link-check
