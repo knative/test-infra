@@ -33,6 +33,9 @@ readonly KNATIVE_EVENTING_RELEASE=https://storage.googleapis.com/knative-release
 readonly IS_PROW
 readonly REPO_ROOT_DIR="$(git rev-parse --show-toplevel)"
 
+# Display a box banner.
+# Parameters: $1 - character to use for the box.
+#             $2 - banner message.
 function make_banner() {
     local msg="$1$1$1$1 $2 $1$1$1$1"
     local border="${msg//[-0-9A-Za-z _.,]/$1}"
