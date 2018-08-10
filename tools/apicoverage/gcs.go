@@ -95,7 +95,7 @@ func parseLog(dir string, isLocal bool, coverage *OverallAPICoverage) *[]string 
 
 		// I0727 16:23:30.055] info	TestRouteCreation	test/configuration.go:34	resource {<resource_name>: <val>}"}
 		if len(fields) == 7 && fields[2] == "info" && fields[5] == "resource" {
-			covLogs = append(covLogs, fields[6])
+			covLogs = append(covLogs, strings.Join(fields[6:], " "))
 		}
 	}
 	return &covLogs
