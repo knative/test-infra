@@ -254,19 +254,11 @@ function start_latest_knative_build() {
 #             $2...$n - directories and files to inspect.
 function update_licenses() {
   cd ${REPO_ROOT_DIR} || return 1
-  if [[ ! $PWD =~ (.*)/go/src/(.*) ]]; then
-    echo "ERROR: expected to be under /go/src, but actually in '$PWD'"
-    return 1
-  fi
-  local go_src="/go/src/${BASH_REMATCH[2]}"
   local dst=$1
   shift
   local local_dep_collector="$(which dep-collector)"
-  if [[ -n ${local_dep_collector} ]]; then
-    dep-collector $@ > ./${dst}
-  else
-    docker run -v $PWD:${go_src} --entrypoint sh \
-        gcr.io/knative-tests/test-infra/prow-tests -c \
-        "cd ${go_src} ; dep-collector $@ > ${go_src}/${dst}"
+  if [[ -z ${local_dep_collector} ]]; then
+    go get -u github.com/mattmoor/dep-collector
   fi
+  dep-collector $@ > ./${dst}
 }
