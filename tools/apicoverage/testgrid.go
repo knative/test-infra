@@ -73,67 +73,29 @@ func createTestSuite(cases []TestCase) TestSuite {
 	return TestSuite{TestCases: cases}
 }
 
-func createServiceCases(coverage *OverallAPICoverage) []TestCase {
+func createCases(tcName string, covered map[string]int, notCovered map[string]int) []TestCase {
 	var tc []TestCase
 
-	var percentCovered = float32(100 * len(coverage.ServiceAPICovered) / (len(coverage.ServiceAPICovered) + len(coverage.ServiceAPINotCovered)))
+	var percentCovered = float32(100 * len(covered) / (len(covered) + len(notCovered)))
 	tp := []TestProperty{createTestProperty(percentCovered)}
-	tc = append(tc, createTestCase(overallService, tp, false))
+	tc = append(tc, createTestCase(tcName, tp, false))
 
-	for key, value := range coverage.ServiceAPICovered {
+	for key, value := range covered {
 		tp := []TestProperty{createTestProperty(float32(value))}
-		tc = append(tc, createTestCase(overallService+"/"+key, tp, false))
+		tc = append(tc, createTestCase(tcName+"/"+key, tp, false))
 	}
 
-	for key, value := range coverage.ServiceAPINotCovered {
+	for key, value := range notCovered {
 		tp := []TestProperty{createTestProperty(float32(value))}
-		tc = append(tc, createTestCase(overallService+"/"+key, tp, true))
-	}
-	return tc
-}
-
-func createConfigCases(coverage *OverallAPICoverage) []TestCase {
-	var tc []TestCase
-
-	var percentCovered = float32(100 * len(coverage.ConfigurationAPICovered) / (len(coverage.ConfigurationAPICovered) + len(coverage.ConfigurationAPINotCovered)))
-	tp := []TestProperty{createTestProperty(percentCovered)}
-	tc = append(tc, createTestCase(overallConfig, tp, false))
-
-	for key, value := range coverage.ConfigurationAPICovered {
-		tp := []TestProperty{createTestProperty(float32(value))}
-		tc = append(tc, createTestCase(overallConfig+"/"+key, tp, false))
-	}
-
-	for key, value := range coverage.ConfigurationAPINotCovered {
-		tp := []TestProperty{createTestProperty(float32(value))}
-		tc = append(tc, createTestCase(overallConfig+"/"+key, tp, true))
-	}
-	return tc
-}
-
-func createRouteCases(coverage *OverallAPICoverage) []TestCase {
-	var tc []TestCase
-
-	var percentCovered = float32(100 * len(coverage.RouteAPICovered) / (len(coverage.RouteAPICovered) + len(coverage.RouteAPINotCovered)))
-	tp := []TestProperty{createTestProperty(percentCovered)}
-	tc = append(tc, createTestCase(overallRoute, tp, false))
-
-	for key, value := range coverage.RouteAPICovered {
-		tp := []TestProperty{createTestProperty(float32(value))}
-		tc = append(tc, createTestCase(overallRoute+"/"+key, tp, false))
-	}
-
-	for key, value := range coverage.RouteAPINotCovered {
-		tp := []TestProperty{createTestProperty(float32(value))}
-		tc = append(tc, createTestCase(overallRoute+"/"+key, tp, true))
+		tc = append(tc, createTestCase(tcName+"/"+key, tp, true))
 	}
 	return tc
 }
 
 func createTestgridXML(coverage *OverallAPICoverage, artifactsDir string) {
-	tc := createRouteCases(coverage)
-	tc = append(tc, createConfigCases(coverage)...)
-	tc = append(tc, createServiceCases(coverage)...)
+	tc := createCases(overallRoute, coverage.RouteAPICovered, coverage.RouteAPINotCovered)
+	tc = append(tc, createCases(overallConfig, coverage.ConfigurationAPICovered, coverage.ConfigurationAPINotCovered)...)
+	tc = append(tc, createCases(overallService, coverage.ServiceAPICovered, coverage.ServiceAPINotCovered)...)
 	ts := createTestSuite(tc)
 
 	if op, err := xml.MarshalIndent(ts, "", "  "); err != nil {
