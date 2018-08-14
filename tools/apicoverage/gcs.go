@@ -48,11 +48,10 @@ func createStorageObject(filename string) *storage.ObjectHandle {
 	return client.Bucket(bucketName).Object(filename)
 }
 
-func readGcsFile(filename string, sa string) ([]byte, error) {
+func readGcsFile(ctx context.Context, filename string, sa string) ([]byte, error) {
 	// Create a new GCS client
 	if err := createStorageClient(ctx, sa); err != nil {
 		log.Fatalf("Failed to create GCS client: %v", err)
-		return []byte(fmt.Sprintf("Cannot create GCS client")), err
 	}
 	o := createStorageObject(filename)
 	if _, err := o.Attrs(ctx); err != nil {
@@ -70,7 +69,7 @@ func readGcsFile(filename string, sa string) ([]byte, error) {
 	return contents, nil
 }
 
-func parseLog(dir string, isLocal bool, coverage *OverallAPICoverage) *[]string {
+func parseLog(ctx context.Context, dir string, isLocal bool, coverage *OverallAPICoverage) []string {
 	var covLogs []string
 
 	buildDir := logDir + dir
@@ -98,5 +97,5 @@ func parseLog(dir string, isLocal bool, coverage *OverallAPICoverage) *[]string 
 			covLogs = append(covLogs, strings.Join(fields[6:], " "))
 		}
 	}
-	return &covLogs
+	return covLogs
 }

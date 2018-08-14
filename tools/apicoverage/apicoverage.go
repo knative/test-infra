@@ -33,10 +33,6 @@ import (
 	"github.com/knative/serving/pkg/apis/serving/v1alpha1"
 )
 
-var (
-	ctx = context.Background()
-)
-
 // ResourceObjects defines the resource objects in knative-serving
 type ResourceObjects struct {
 	Route         *v1alpha1.Route
@@ -54,10 +50,17 @@ type OverallAPICoverage struct {
 	ServiceAPINotCovered       map[string]int
 }
 
+type apiObjectName string
+
+const (
+	apiObjectRoute         apiObjectName = "route"
+	apiObjectConfiguration               = "configuration"
+	apiObjectService                     = "service"
+)
+
 // check if the object value is nil or empty.
 // Uses https://golang.org/pkg/reflect/#Kind to get the variable type
 func isNil(v reflect.Value) bool {
-	//fmt.Printf("kind: %v", v.Kind())
 	switch v.Kind() {
 	case reflect.Array, reflect.Map, reflect.Slice, reflect.String:
 		return v.Len() == 0
@@ -75,11 +78,13 @@ func isStruct(v reflect.Value) bool {
 
 // Parse the struct and returns a map of <field name, value>
 func parseStruct(v reflect.Value) map[string]reflect.Value {
-	var f map[string]reflect.Value
-	f = make(map[string]reflect.Value)
+	f := make(map[string]reflect.Value)
 
 	for i := 0; i < v.NumField(); i++ {
-		f[v.Type().Field(i).Name] = v.Field(i)
+		// Include only public vars. https://golang.org/pkg/reflect/#StructField.
+		if len(v.Type().Field(i).PkgPath) == 0 {
+			f[v.Type().Field(i).Name] = v.Field(i)
+		}
 	}
 
 	return f
@@ -130,12 +135,12 @@ func getCoverage(value reflect.Value, name string, coverage *OverallAPICoverage)
 	}
 }
 
-func calculateCoverage(covLogs *[]string, coverage *OverallAPICoverage) {
-	if covLogs == nil {
+func calculateCoverage(covLogs []string, coverage *OverallAPICoverage) {
+	if len(covLogs) == 0 {
 		return
 	}
 
-	for _, f := range *covLogs {
+	for _, f := range covLogs {
 		var obj ResourceObjects
 		if err := json.Unmarshal([]byte(f), &obj); err != nil {
 			log.Fatalf("Cannot read resource object: %v", err)
@@ -170,7 +175,8 @@ func main() {
 	flag.Parse()
 
 	// Read the latest-build.txt file to get the latest build number
-	contents, err := readGcsFile(logDir+sourceDir+"/latest-build.txt", *serviceAccount)
+	ctx := context.Background()
+	contents, err := readGcsFile(ctx, logDir+sourceDir+"/latest-build.txt", *serviceAccount)
 	if err != nil {
 		log.Fatalf("Cannot get latest build number. %s: %v", contents, err)
 	}
@@ -181,7 +187,7 @@ func main() {
 
 	// Calculate coverage
 	coverage := initCoverage()
-	calculateCoverage(parseLog(fmt.Sprintf("%s/%d", sourceDir, latestBuild), false, coverage), coverage)
+	calculateCoverage(parseLog(ctx, fmt.Sprintf("%s/%d", sourceDir, latestBuild), false, coverage), coverage)
 
 	// Write the testgrid xml to artifacts
 	createTestgridXML(coverage, *artifactsDir)

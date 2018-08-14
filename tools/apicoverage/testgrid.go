@@ -98,17 +98,18 @@ func createTestgridXML(coverage *OverallAPICoverage, artifactsDir string) {
 	tc = append(tc, createCases(overallService, coverage.ServiceAPICovered, coverage.ServiceAPINotCovered)...)
 	ts := createTestSuite(tc)
 
-	if op, err := xml.MarshalIndent(ts, "", "  "); err != nil {
+	op, err := xml.MarshalIndent(ts, "", "  ")
+	if err != nil {
 		log.Fatalf("Error creating xml: %v", err)
-	} else {
-		outputFile := artifactsDir + "/junit_bazel.xml"
-		f, err := os.Create(outputFile)
-		if err != nil {
-			log.Fatalf("Cannot create '%s': %v", outputFile, err)
-		}
-		defer f.Close()
-		if _, err := f.WriteString(string(op) + "\n"); err != nil {
-			log.Fatalf("Cannot write to '%s': %v", f.Name(), err)
-		}
+	}
+
+	outputFile := artifactsDir + "/junit_bazel.xml"
+	f, err := os.Create(outputFile)
+	if err != nil {
+		log.Fatalf("Cannot create '%s': %v", outputFile, err)
+	}
+	defer f.Close()
+	if _, err := f.WriteString(string(op) + "\n"); err != nil {
+		log.Fatalf("Cannot write to '%s': %v", f.Name(), err)
 	}
 }
