@@ -19,7 +19,7 @@
 # called from command line.
 
 # Default GKE version to be used with Knative Serving
-readonly SERVING_GKE_VERSION=default
+readonly SERVING_GKE_VERSION=latest
 readonly SERVING_GKE_IMAGE=cos
 
 # Public images and yaml files.
@@ -164,8 +164,8 @@ function acquire_cluster_admin_role() {
   # might not have the necessary permission.
   local password=$(gcloud --format="value(masterAuth.password)" \
       container clusters describe $2 --zone=$3)
-  kubectl --username=admin --password=$password \
-      create clusterrolebinding cluster-admin-binding \
+  kubectl config set-credentials cluster-admin --username=admin --password=${password}
+  kubectl create clusterrolebinding cluster-admin-binding \
       --clusterrole=cluster-admin \
       --user=$1
 }
