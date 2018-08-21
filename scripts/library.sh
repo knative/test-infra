@@ -103,7 +103,7 @@ function wait_until_pods_running() {
     local pods="$(kubectl get pods --no-headers -n $1 2>/dev/null)"
     # All pods must be running
     local not_running=$(echo "${pods}" | grep -v Running | grep -v Completed | wc -l)
-    if [[ -n "${pods}" && ${not_running} == 0 ]]; then
+    if [[ -n "${pods}" && ${not_running} -eq 0 ]]; then
       local all_ready=1
       while read pod ; do
         local status=(`echo -n ${pod} | cut -f2 -d' ' | tr '/' ' '`)
@@ -113,17 +113,16 @@ function wait_until_pods_running() {
         [[ ${status[0]} -lt 1 ]] && all_ready=0 && break
         [[ ${status[1]} -lt 1 ]] && all_ready=0 && break
         [[ ${status[0]} -ne ${status[1]} ]] && all_ready=0 && break
-      done <<< $(echo "${pods}")
+      done <<< $(echo "${pods}" | grep -v Completed)
       if (( all_ready )); then
-        echo -e "\nAll pods are up:"
-        kubectl get pods -n $1
+        echo -e "\nAll pods are up:\n${pods}"
         return 0
       fi
     fi
     echo -n "."
     sleep 2
   done
-  echo -e "\n\nERROR: timeout waiting for pods to come up"
+  echo -e "\n\nERROR: timeout waiting for pods to come up\n${pods}"
   kubectl get pods -n $1
   return 1
 }
