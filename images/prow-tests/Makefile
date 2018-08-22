@@ -30,4 +30,3 @@ push_latest: build
 	docker push $(IMG):latest
 
 push: push_versioned push_latest
-
