@@ -36,3 +36,6 @@ RUN go get -u github.com/google/licenseclassifier
 
 # Extra tools through npm
 RUN npm install -g markdown-link-check
+
+# Extra custom tools
+ADD githubhelper .
