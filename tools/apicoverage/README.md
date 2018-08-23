@@ -8,7 +8,7 @@ It uses the service account passed in or by default will use the GOOGLE_APPLICAT
 ## Creating Output
 This tool creates an output xml in the prow artifacts directory. The prow artifacts directory is passed in or by default will use `./artifacts` directory.
 
-This output xml will be read by testgrid and displayed on the (dashboard)[https://testgrid.knative.dev/knative-serving#api-coverage].
+This output xml will be read by testgrid and displayed on the [dashboard](https://testgrid.knative.dev/knative-serving#api-coverage).
 
 ## Prow Job
 There is a daily prow job that triggers this tool that is run at 01:05 AM PST. This tool will then generate the output xml which is then displayed in the testgrid dashboard.
