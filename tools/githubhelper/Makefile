@@ -12,21 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-IMG = gcr.io/knative-tests/test-infra/prow-tests
-TAG := $(shell date +v%Y%m%d)-$(shell git describe --tags --always --dirty)
-
-all: build
-
-build:
-	make -C ../../tools/githubhelper
-	mv ../../tools/githubhelper/githubhelper .
-	docker build -t $(IMG):$(TAG) .
-	docker tag $(IMG):$(TAG) $(IMG):latest
-
-push_versioned: build
-	docker push $(IMG):$(TAG)
-
-push_latest: build
-	docker push $(IMG):latest
-
-push: push_versioned push_latest
+all:
+	go get -u github.com/google/go-github/github
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build .
