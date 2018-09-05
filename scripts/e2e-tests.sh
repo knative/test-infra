@@ -103,7 +103,7 @@ function download_k8s() {
     local gke_versions=(`echo -n ${versions//;/ /}`)
     # Get first (latest) version, excluding the "-gke.#" suffix
     version="${gke_versions[0]%-*}"
-    echo "Latest GKE is ${version}, from [${versions//;/, /}]"
+    echo "Latest GKE is ${version}, from [${versions//;/, }]"
   elif [[ "${version}" == "default" ]]; then
     echo "ERROR: `default` GKE version is not supported yet"
     return 1
