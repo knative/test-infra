@@ -114,6 +114,18 @@ presets:
   env:
   - name: BAZEL_REMOTE_CACHE_ENABLED
     value: "false"
+# docker-in-docker presets
+- labels:
+    preset-dind-enabled: "true"
+  env:
+  - name: DOCKER_IN_DOCKER_ENABLED
+    value: "true"
+  volumes:
+  - name: docker-graph
+    emptyDir: {}
+  volumeMounts:
+  - name: docker-graph
+    mountPath: /docker-graph
 
 presubmits:
   knative/serving:
@@ -1454,6 +1466,7 @@ periodics:
     preset-service-account: "true"
     preset-bazel-scratch-dir: "true"
     preset-bazel-remote-cache-enabled: "true"
+    preset-dind-enabled: "true"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:latest
