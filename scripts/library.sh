@@ -58,16 +58,6 @@ function warning() {
   make_banner "!" "$1"
 }
 
-# Install wrk. Used for performance benchmarking
-# libssl-dev needs to be installed before running this.
-function install_wrk() {
-  echo ">> Installing wrk:"
-  git clone https://github.com/wg/wrk.git wrk
-  make -C wrk/
-  # move the executable to bin
-  cp wrk/wrk /usr/local/bin
-}
-
 # Remove ALL images in the given GCR repository.
 # Parameters: $1 - GCR repository.
 function delete_gcr_images() {
