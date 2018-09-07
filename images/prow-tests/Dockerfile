@@ -27,6 +27,7 @@ RUN docker-credential-gcr configure-docker
 # Extra tools through apt-get
 RUN apt-get install -y uuid-runtime  # for uuidgen
 RUN apt-get install -y npm  # for markdownk-link-check
+RUN apt-get install -y build-essential libssl-dev git # for wrk(perf benchmarking tool) 
 
 # Extra tools through go get
 RUN go get -u github.com/google/go-containerregistry/cmd/ko
