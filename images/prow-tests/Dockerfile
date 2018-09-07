@@ -28,7 +28,7 @@ RUN docker-credential-gcr configure-docker
 RUN apt-get install -y uuid-runtime  # for uuidgen
 RUN apt-get install -y npm  # for markdown-link-check
 RUN apt-get install -y rubygems  # for mdl
-RUN apt-get install -y build-essential libssl-dev git # for wrk(perf benchmarking tool) 
+RUN apt-get install -y build-essential libssl-dev # for wrk(perf benchmarking tool) 
 
 
 # Extra tools through go get
