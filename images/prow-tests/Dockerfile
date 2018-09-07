@@ -26,7 +26,8 @@ RUN docker-credential-gcr configure-docker
 
 # Extra tools through apt-get
 RUN apt-get install -y uuid-runtime  # for uuidgen
-RUN apt-get install -y npm  # for markdownk-link-check
+RUN apt-get install -y npm  # for markdown-link-check
+RUN apt-get install -y rubygems  # for mdl
 
 # Extra tools through go get
 RUN go get -u github.com/google/go-containerregistry/cmd/ko
@@ -36,6 +37,10 @@ RUN go get -u github.com/google/licenseclassifier
 
 # Extra tools through npm
 RUN npm install -g markdown-link-check
+
+# Extra tools through gem
+RUN gem install mixlib-config -v 2.2.4  # required because ruby is 2.1
+RUN gem install mdl
 
 # Extra custom tools
 ADD githubhelper .
