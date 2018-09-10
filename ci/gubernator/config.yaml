@@ -43,6 +43,12 @@ jobs:
   - pull-knative-pkg-build-tests
   - pull-knative-pkg-unit-tests
   - pull-knative-pkg-integration-tests
+  - pull-knative-test-infra-build-tests
+  - pull-knative-test-infra-unit-tests
+  - pull-knative-test-infra-integration-tests
+  - pull-knative-caching-build-tests
+  - pull-knative-caching-unit-tests
+  - pull-knative-caching-integration-tests
   - ci-knative-serving-continuous
   - ci-knative-serving-release
   - ci-knative-serving-playground
@@ -53,4 +59,5 @@ jobs:
   - ci-knative-build-templates-continuous
   - ci-knative-docs-continuous
   - ci-knative-pkg-continuous
+  - ci-knative-caching-continuous
 recursive_artifacts: false
