@@ -108,7 +108,11 @@ function download_k8s() {
     echo "ERROR: `default` GKE version is not supported yet"
     return 1
   fi
+
   # Download k8s to staging dir
+  if [[ -z "${GOPATH}" ]]; then
+    local GOPATH=$(go env GOPATH)
+  fi
   version=v${version}
   local staging_dir=${GOPATH}/src/k8s.io/kubernetes/_output/gcs-stage
   rm -fr ${staging_dir}
