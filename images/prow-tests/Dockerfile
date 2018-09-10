@@ -28,6 +28,7 @@ RUN docker-credential-gcr configure-docker
 RUN apt-get install -y uuid-runtime  # for uuidgen
 RUN apt-get install -y npm  # for markdown-link-check
 RUN apt-get install -y rubygems  # for mdl
+RUN apt-get install -y build-essential libssl-dev # for wrk
 
 # Extra tools through go get
 RUN go get -u github.com/google/go-containerregistry/cmd/ko
@@ -41,6 +42,11 @@ RUN npm install -g markdown-link-check
 # Extra tools through gem
 RUN gem install mixlib-config -v 2.2.4  # required because ruby is 2.1
 RUN gem install mdl
+
+# Install wrk
+RUN git clone https://github.com/wg/wrk.git wrk
+RUN make -C wrk/
+RUN cp wrk/wrk /usr/local/bin
 
 # Extra custom tools
 ADD githubhelper .
