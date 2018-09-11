@@ -108,7 +108,6 @@ function download_k8s() {
     echo "ERROR: `default` GKE version is not supported yet"
     return 1
   fi
-
   # Download k8s to staging dir
   if [[ -z "${GOPATH}" ]]; then
     local GOPATH=$(go env GOPATH)
@@ -159,7 +158,7 @@ function create_test_cluster() {
   header "Creating test cluster"
   # Smallest cluster required to run the end-to-end-tests
   local CLUSTER_CREATION_ARGS=(
-    --gke-create-args="--enable-autoscaling --min-nodes=1 --max-nodes=${E2E_CLUSTER_NODES} --scopes=cloud-platform"
+    --gke-create-args="--enable-autoscaling --min-nodes=1 --max-nodes=${E2E_CLUSTER_NODES} --scopes=cloud-platform --enable-basic-auth --no-issue-client-certificate"
     --gke-shape={\"default\":{\"Nodes\":${E2E_CLUSTER_NODES}\,\"MachineType\":\"${E2E_CLUSTER_MACHINE}\"}}
     --provider=gke
     --deployment=gke

@@ -164,8 +164,21 @@ function acquire_cluster_admin_role() {
   # might not have the necessary permission.
   local password=$(gcloud --format="value(masterAuth.password)" \
       container clusters describe $2 --zone=$3)
-  kubectl config set-credentials cluster-admin \
-      --username=admin --password=${password}
+  if [[ -n "${password}" ]]; then
+    # Cluster created with basic authentication
+    kubectl config set-credentials cluster-admin \
+        --username=admin --password=${password}
+  else
+    local cert=$(mktemp)
+    local key=$(mktemp)
+    echo "Certificate in ${cert}, key in ${key}"
+    gcloud --format="value(masterAuth.clientCertificate)" \
+      container clusters describe $2 --zone=$3 | base64 -d > ${cert}
+    gcloud --format="value(masterAuth.clientKey)" \
+      container clusters describe $2 --zone=$3 | base64 -d > ${key}
+    kubectl config set-credentials cluster-admin \
+      --client-certificate=${cert} --client-key=${key}
+  fi
   kubectl config set-context $(kubectl config current-context) \
       --user=cluster-admin
   kubectl create clusterrolebinding cluster-admin-binding \
