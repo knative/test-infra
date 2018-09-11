@@ -312,6 +312,7 @@ function run_lint_tool() {
     ${checker} ${params} ${file} || failed=1
   done
   return ${failed}
+}
 
 # Check links in the given markdown files.
 # Parameters: $1...$n - files to inspect
