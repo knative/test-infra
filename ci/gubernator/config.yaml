@@ -37,6 +37,8 @@ jobs:
   - pull-knative-build-templates-unit-tests
   - pull-knative-build-templates-build-tests
   - pull-knative-build-templates-integration-tests
+  - pull-knative-build-pipeline-build-tests
+  - pull-knative-build-pipeline-unit-tests
   - pull-knative-build-build-tests
   - pull-knative-build-unit-tests
   - pull-knative-build-integration-tests
