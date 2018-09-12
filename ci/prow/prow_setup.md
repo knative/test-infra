@@ -28,7 +28,7 @@
 
 ## Setting up Prow for a new repo
 
-1. Make sure that *Serving Robots* is an Admin of the repo.
+1. Make sure that *Knative Robots* is an Admin of the repo.
 
 1. Update the Prow config file (copy and update an existing config for another repo) and run `make update-config`.
 
