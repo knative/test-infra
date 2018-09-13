@@ -25,8 +25,14 @@ source $(dirname $0)/../scripts/presubmit-tests.sh
 
 function build_tests() {
   header "Running build tests"
-  make -C ci/prow test
-  make -C ci/testgrid test
+  local failed=0
+  make -C ci/prow test || failed=1
+  make -C ci/testgrid test || failed=1
+  for script in scripts/*.sh; do
+    echo "Checking integrity of ${script}"
+    bash -c "source ${script}" || failed=1
+  done
+  return ${failed}
 }
 
 function unit_tests() {
