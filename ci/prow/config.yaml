@@ -56,6 +56,7 @@ tide:
     - knative/docs
     - knative/test-infra
     - knative/pkg
+    - knative/caching
     labels:
     - lgtm
     - approved
@@ -1319,6 +1320,169 @@ presubmits:
           defaultMode: 256
           secretName: ssh-knative
 
+  knative/caching:
+  - name: pull-knative-caching-build-tests
+    agent: kubernetes
+    context: pull-knative-caching-build-tests
+    always_run: true
+    rerun_command: "/test pull-knative-caching-build-tests"
+    trigger: "(?m)^/test (all|pull-knative-caching-build-tests),?(\\s+|$)"
+    labels:
+      preset-service-account: "true"
+      preset-bazel-scratch-dir: "true"
+      preset-bazel-remote-cache-enabled: "true"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+        imagePullPolicy: Always
+        args:
+        - "--ssh=/etc/ssh-knative/ssh-knative"
+        - "--scenario=kubernetes_execute_bazel"
+        - "--clean"
+        - "--job=$(JOB_NAME)"
+        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
+        - "--root=/go/src"
+        - "--service-account=/etc/service-account/service-account.json"
+        - "--upload=gs://knative-prow/pr-logs"
+        - "--" # end bootstrap args, scenario args below
+        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+        - "./test/presubmit-tests.sh"
+        - "--build-tests"
+        # Bazel needs privileged mode in order to sandbox builds.
+        securityContext:
+          privileged: true
+        resources:
+          requests:
+            memory: "1Gi"
+        volumeMounts:
+        - mountPath: /etc/ssh-knative
+          name: ssh-knative
+      volumes:
+      - name: ssh-knative
+        secret:
+          defaultMode: 256
+          secretName: ssh-knative
+
+  - name: pull-knative-caching-unit-tests
+    agent: kubernetes
+    context: pull-knative-caching-unit-tests
+    always_run: true
+    rerun_command: "/test pull-knative-caching-unit-tests"
+    trigger: "(?m)^/test (all|pull-knative-caching-unit-tests),?(\\s+|$)"
+    labels:
+      preset-service-account: "true"
+      preset-bazel-scratch-dir: "true"
+      preset-bazel-remote-cache-enabled: "true"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+        imagePullPolicy: Always
+        args:
+        - "--ssh=/etc/ssh-knative/ssh-knative"
+        - "--scenario=kubernetes_execute_bazel"
+        - "--clean"
+        - "--job=$(JOB_NAME)"
+        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
+        - "--root=/go/src"
+        - "--service-account=/etc/service-account/service-account.json"
+        - "--upload=gs://knative-prow/pr-logs"
+        - "--" # end bootstrap args, scenario args below
+        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+        - "./test/presubmit-tests.sh"
+        - "--unit-tests"
+        # Bazel needs privileged mode in order to sandbox builds.
+        securityContext:
+          privileged: true
+        resources:
+          requests:
+            memory: "1Gi"
+        volumeMounts:
+        - mountPath: /etc/ssh-knative
+          name: ssh-knative
+      volumes:
+      - name: ssh-knative
+        secret:
+          defaultMode: 256
+          secretName: ssh-knative
+
+  - name: pull-knative-caching-integration-tests
+    agent: kubernetes
+    context: pull-knative-caching-integration-tests
+    always_run: true
+    rerun_command: "/test pull-knative-caching-integration-tests"
+    trigger: "(?m)^/test (all|pull-knative-caching-integration-tests),?(\\s+|$)"
+    labels:
+      preset-service-account: "true"
+      preset-bazel-scratch-dir: "true"
+      preset-bazel-remote-cache-enabled: "true"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+        imagePullPolicy: Always
+        args:
+        - "--ssh=/etc/ssh-knative/ssh-knative"
+        - "--scenario=kubernetes_execute_bazel"
+        - "--clean"
+        - "--job=$(JOB_NAME)"
+        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
+        - "--root=/go/src"
+        - "--service-account=/etc/service-account/service-account.json"
+        - "--upload=gs://knative-prow/pr-logs"
+        - "--" # end bootstrap args, scenario args below
+        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+        - "./test/presubmit-tests.sh"
+        - "--integration-tests"
+        # Bazel needs privileged mode in order to sandbox builds.
+        securityContext:
+          privileged: true
+        resources:
+          requests:
+            memory: "1Gi"
+        volumeMounts:
+        - mountPath: /etc/ssh-knative
+          name: ssh-knative
+      volumes:
+      - name: ssh-knative
+        secret:
+          defaultMode: 256
+          secretName: ssh-knative
+
+  - name: pull-knative-caching-go-coverage
+    labels:
+      preset-service-account: "true"
+    agent: kubernetes
+    context: pull-knative-caching-go-coverage
+    always_run: true
+    rerun_command: "/test pull-knative-caching-go-coverage"
+    trigger: "(?m)^/test (all|pull-knative-caching-go-coverage),?(\\s+|$)"
+    optional: true
+    decorate: true
+    clone_uri: "git@github.com:knative/caching.git"
+    ssh_key_secrets:
+    - ssh-knative
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
+        imagePullPolicy: Always
+        command:
+        - "/coverage"
+        args:
+        - "--postsubmit-gcs-bucket=knative-prow"
+        - "--postsubmit-job-name=post-knative-caching-go-coverage"
+        - "--artifacts=$(ARTIFACTS)"
+        - "--profile-name=coverage_profile.txt"
+        - "--cov-target=./pkg/"
+        - "--cov-threshold-percentage=50"
+        - "--github-token=/etc/github-token/token"
+        volumeMounts:
+        - name: github-token
+          mountPath: /etc/github-token
+          readOnly: true
+      volumes:
+      - name: github-token
+        secret:
+          secretName: covbot-token
+
 periodics:
 - cron: "1 * * * *" # Run every hour and one minute
   name: ci-knative-serving-continuous
@@ -1875,6 +2039,68 @@ periodics:
       - "--cov-target=./apis/ ./configmap/"
       - "--cov-threshold-percentage=80"
 
+- cron: "30 * * * *" # Run every hour and 30 minutes
+  name: ci-knative-caching-continuous
+  agent: kubernetes
+  labels:
+    preset-service-account: "true"
+    preset-bazel-scratch-dir: "true"
+    preset-bazel-remote-cache-enabled: "true"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      imagePullPolicy: Always
+      args:
+      - "--ssh=/etc/ssh-knative/ssh-knative"
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=github.com/knative/caching"
+      - "--root=/go/src"
+      - "--service-account=/etc/service-account/service-account.json"
+      - "--upload=gs://knative-prow/logs"
+      - "--timeout=50" # Avoid overrun
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./test/presubmit-tests.sh"
+      - "--all-tests"
+      # Bazel needs privileged mode in order to sandbox builds.
+      securityContext:
+        privileged: true
+      resources:
+        requests:
+          memory: "1Gi"
+      volumeMounts:
+      - mountPath: /etc/ssh-knative
+        name: ssh-knative
+    volumes:
+     - name: ssh-knative
+       secret:
+         defaultMode: 256
+         secretName: ssh-knative
+- cron: "0 1 * * *" # Run at 01:00 every day
+  name: ci-knative-caching-go-coverage
+  agent: kubernetes
+  decorate: true
+  ssh_key_secrets:
+  - ssh-knative
+  extra_refs:
+  - org: knative
+    repo: caching
+    base_ref: master
+    clone_uri: "git@github.com:knative/caching.git"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/coverage:latest
+      imagePullPolicy: Always
+      command:
+      - "/coverage"
+      args:
+      - "--artifacts=$(ARTIFACTS)"
+      - "--profile-name=coverage_profile.txt"
+      - "--cov-target=./pkg/"
+      - "--cov-threshold-percentage=80"
+
 postsubmits:
   knative/serving:
   - name: post-knative-serving-go-coverage
@@ -1998,5 +2224,26 @@ postsubmits:
         - "--artifacts=$(ARTIFACTS)"
         - "--profile-name=coverage_profile.txt"
         - "--cov-target=./apis/ ./configmap/"
+        - "--cov-threshold-percentage=0"
+
+  knative/caching:
+  - name: post-knative-caching-go-coverage
+    branches:
+    - master
+    agent: kubernetes
+    decorate: true
+    clone_uri: "git@github.com:knative/caching.git"
+    ssh_key_secrets:
+    - ssh-knative
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
+        imagePullPolicy: Always
+        command:
+        - "/coverage"
+        args:
+        - "--artifacts=$(ARTIFACTS)"
+        - "--profile-name=coverage_profile.txt"
+        - "--cov-target=./pkg/"
         - "--cov-threshold-percentage=0"
 
