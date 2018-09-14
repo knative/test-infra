@@ -198,18 +198,21 @@ function report_go_test() {
     return
   fi
   local report=$(mktemp)
-  local summary=$(mktemp)
   local failed=0
+  local test_count=0
   # Run tests in verbose mode to capture details.
   # go doesn't like repeating -v, so remove if passed.
   local args=("${@/-v}")
+  echo "Running tests with 'go test ${args[@]}'"
   go test -race -v ${args[@]} > ${report} || failed=$?
+  echo "Finished run, return code is ${failed}"
   # Tests didn't run.
   [[ ! -s ${report} ]] && return 1
   # Create WORKSPACE file, required to use bazel
   touch WORKSPACE
   local targets=""
   # Parse the report and generate fake tests for each passing/failing test.
+  echo "Start parsing results, summary:"
   while read line ; do
     local fields=(`echo -n ${line}`)
     local field0="${fields[0]}"
@@ -217,11 +220,13 @@ function report_go_test() {
     local name=${fields[2]}
     # Ignore subtests (those containing slashes)
     if [[ -n "${name##*/*}" ]]; then
-      if [[ ${field1} == PASS: || ${field1} == FAIL: ]]; then
+      if [[ "${field1}" == "PASS:" || "${field1}" == "FAIL:" ]]; then
+        echo "- ${name} :${field1}"
+        test_count=$(( test_count + 1 ))
         # Populate BUILD.bazel
         local src="${name}.sh"
         echo "exit 0" > ${src}
-        if [[ ${field1} == "FAIL:" ]]; then
+        if [[ "${field1}" == "FAIL:" ]]; then
           read error
           echo "cat <<ERROR-EOF" > ${src}
           echo "${error}" >> ${src}
@@ -230,24 +235,27 @@ function report_go_test() {
         fi
         chmod +x ${src}
         echo "sh_test(name=\"${name}\", srcs=[\"${src}\"])" >> BUILD.bazel
-      elif [[ ${field0} == FAIL || ${field0} == ok ]]; then
-        # Update the summary with the result for the package
-        echo "${line}" >> ${summary}
+      elif [[ "${field0}" == "FAIL" || "${field0}" == "ok" ]] && [[ -n "${field1}" ]]; then
+        echo "- ${field0} ${field1}"
         # Create the package structure, move tests and BUILD file
         local package=${field1/github.com\//}
-        mkdir -p ${package}
-        targets="${targets} //${package}/..."
-        mv *.sh BUILD.bazel ${package}
+        local bazel_files="$(ls -1 *.sh BUILD.bazel 2> /dev/null)"
+        if [[ $? -eq 0 ]]; then
+          mkdir -p ${package}
+          targets="${targets} //${package}/..."
+          mv ${bazel_files} ${package}
+        else
+          echo "*** INTERNAL ERROR: missing tests for ${package}, got [${bazel_files/$'\n'/, }]"
+        fi
       fi
     fi
   done < ${report}
+  echo "Done parsing ${test_count} tests"
   # If any test failed, show the detailed report.
-  # Otherwise, just show the summary.
+  # Otherwise, we already shown the summary.
   # Exception: when emitting metrics, dump the full report.
   if (( failed )) || [[ "$@" == *" -emitmetrics"* ]]; then
     cat ${report}
-  else
-    cat ${summary}
   fi
   # Always generate the junit summary.
   bazel test ${targets} > /dev/null 2>&1
