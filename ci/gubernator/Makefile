@@ -12,20 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-GUBERNATOR_SRC := test-infra/gubernator
-APP_YAML := $(GUBERNATOR_SRC)/app.yaml
+SRC := test-infra/gubernator
 
 deploy:
 	# Fetch latest source, patch for our instance
 	rm -fr test-infra
 	git clone http://github.com/kubernetes/test-infra.git
-	cp config.yaml $(GUBERNATOR_SRC)
-	sed -i -e '/^runtime: .*/a service: gubernator' $(APP_YAML)
-	sed -i -e "/^handlers:/a\- url: /timeline\n  script: redir_github.app\n" $(APP_YAML)
-	sed -i -e 's/user:kubernetes/user:knative/' $(GUBERNATOR_SRC)/view_pr.py
-	sed -i -e 's/Kubernetes/Knative/' $(GUBERNATOR_SRC)/templates/index.html
-	cp redir_github.py $(GUBERNATOR_SRC)
+	cp config.yaml $(SRC)
+	cp redir_github.py $(SRC)
+	sed -i -e '/^runtime: .*/a service: gubernator' $(SRC)/app.yaml
+	sed -i -e "/^handlers:/a\- url: /timeline\n  script: redir_github.app\n" $(SRC)/app.yaml
+	sed -i -e 's/user:kubernetes/user:knative/' $(SRC)/view_pr.py
+	sed -i -e 's/Kubernetes/Knative/' $(SRC)/templates/index.html
+	sed -i -e 's/k8s-testgrid.appspot.com/testgrid.knative.dev/' $(SRC)/filters.py
+	sed -i -e 's/k8s-testgrid/knative-testgrid/' $(SRC)/testgrid.py
 	# Deploy
-	PROJECT=knative-tests make -C $(GUBERNATOR_SRC) deploy
+	make -C ../prow get-cluster-credentials
+	PROJECT=knative-tests make -C $(SRC) deploy
 	# Cleanup
 	rm -fr test-infra
