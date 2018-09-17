@@ -146,6 +146,9 @@ function wait_until_service_has_external_ip() {
   return 1
 }
 
+# Waits for the endpoint to be routable
+# Parameters: $1 - External ingress IP address `kubectl get svc knative-ingressgateway -n istio-system -o jsonpath="{.status.loadBalancer.ingress[*].ip`
+#             $2 - Hostname `kubectl get route <route_name> -o jsonpath="{.status.domain}"`
 function wait_until_routable() {
     for i in {1..150}; do  # timeout after 5 minutes
         local val=$(curl -H "Host: $2" "http://$1" >/dev/null 2>&1)
