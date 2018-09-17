@@ -146,6 +146,21 @@ function wait_until_service_has_external_ip() {
   return 1
 }
 
+function wait_until_routable() {
+    for i in {1..150}; do  # timeout after 5 minutes
+        local val=$(curl -H "Host: $2" "http://$1" >/dev/null 2>&1)
+        if [[ -z "$val" ]]; then
+            echo -n "."
+            sleep 2
+        else
+            echo "App is now routable"
+            return 0
+        fi                
+    done
+    echo "Timed out waiting for app to be routable"
+    return 1
+}
+
 # Returns the name of the pod of the given app.
 # Parameters: $1 - app name.
 #             $2 - namespace (optional).
