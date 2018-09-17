@@ -61,6 +61,7 @@ function publish_yaml() {
 }
 
 SKIP_TESTS=0
+SKIP_PREPARE_CLUSTER=0
 TAG_RELEASE=0
 PUBLISH_RELEASE=0
 TAG=""
@@ -72,6 +73,7 @@ function parse_flags() {
   for parameter in $@; do
     case $parameter in
       --skip-tests) SKIP_TESTS=1 ;;
+      --skip-prepare-cluster) SKIP_PREPARE_CLUSTER=1 ;;
       --tag-release) TAG_RELEASE=1 ;;
       --notag-release) TAG_RELEASE=0 ;;
       --publish)
@@ -102,6 +104,7 @@ function parse_flags() {
   fi
 
   readonly SKIP_TESTS
+  readonly SKIP_PREPARE_CLUSTER
   readonly TAG_RELEASE
   readonly PUBLISH_RELEASE
   readonly TAG
