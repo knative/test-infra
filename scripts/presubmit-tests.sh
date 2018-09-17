@@ -38,6 +38,7 @@ readonly NO_PRESUBMIT_FILES=(\.md \.png ^OWNERS)
 # Options set by command-line flags.
 RUN_BUILD_TESTS=0
 RUN_UNIT_TESTS=0
+SKIP_PREPARE_CLUSTER=0
 RUN_INTEGRATION_TESTS=0
 EMIT_METRICS=0
 
@@ -84,6 +85,10 @@ function main() {
         RUN_UNIT_TESTS=1
         shift
         ;;
+      --skip-prepare-cluster)
+        SKIP_PREPARE_CLUSTER=1
+        shift
+        ;;
       --integration-tests)
         RUN_INTEGRATION_TESTS=1
         shift
@@ -101,6 +106,7 @@ function main() {
 
   readonly RUN_BUILD_TESTS
   readonly RUN_UNIT_TESTS
+  readonly SKIP_PREPARE_CLUSTER
   readonly RUN_INTEGRATION_TESTS
   readonly EMIT_METRICS
 

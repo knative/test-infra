@@ -281,6 +281,7 @@ function success() {
 
 RUN_TESTS=0
 EMIT_METRICS=0
+PREPARE_CLUSTER=1
 USING_EXISTING_CLUSTER=1
 E2E_SCRIPT=""
 
@@ -296,6 +297,7 @@ function initialize() {
   for parameter in $@; do
     case $parameter in
       --run-tests) RUN_TESTS=1 ;;
+      --skip-prepare-cluster) PREPARE_CLUSTER=0 ;;
       --emit-metrics) EMIT_METRICS=1 ;;
       *)
         echo "error: unknown option ${parameter}"
@@ -305,12 +307,17 @@ function initialize() {
     esac
     shift
   done
+  readonly PREPARE_CLUSTER
   readonly RUN_TESTS
   readonly EMIT_METRICS
 
-  if (( ! RUN_TESTS )); then
-    create_test_cluster
+  if (( ! PREPARE_CLUSTER )); then
+    echo "warning: skip preparing a kubernetes cluster from GCP, make sure you have a accessible cluster"
   else
-    setup_test_cluster
+    if (( ! RUN_TESTS )); then
+        create_test_cluster
+    else
+        setup_test_cluster
+    fi
   fi
 }
