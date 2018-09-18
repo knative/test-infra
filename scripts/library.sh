@@ -151,7 +151,7 @@ function wait_until_service_has_external_ip() {
 #             $2 - Hostname
 function wait_until_routable() {
     for i in {1..150}; do  # timeout after 5 minutes
-        local val=$(curl -H "Host: $2" "http://$1" >/dev/null 2>&1)
+        local val=$(curl -H "Host: $2" "http://$1" 2>/dev/null)
         if [[ -z "$val" ]]; then
             echo -n "."
             sleep 2
