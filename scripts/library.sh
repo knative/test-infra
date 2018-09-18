@@ -315,6 +315,51 @@ function check_licenses() {
   run_dep_collector -check $@
 }
 
+# Run gofmt to check format of .go files
+function check_format() {
+  if [[ -z "${GOROOT}" ]]; then
+    local GOROOT=$(go env GOROOT)
+  fi
+  gofmt="${GOROOT}/bin/gofmt"
+
+  diff=$(  find . -not \( \
+      \( \
+        -wholename './output' \
+        -o -wholename './_output' \
+        -o -wholename './_gopath' \
+        -o -wholename './release' \
+        -o -wholename './target' \
+        -o -wholename '*/third_party/*' \
+        -o -wholename '*/vendor/*' \
+      \) -prune \
+    \) -name '*.go' \
+   | xargs ${gofmt} -d -s 2>&1) || true
+  if [[ -n "${diff}" ]]; then
+    echo "${diff}" >&2
+    echo >&2
+    echo "Run ./hack/update-gofmt.sh" >&2
+    exit 1
+  fi
+  echo `date`,"No errors found."
+}
+
+# Run misspell to check the spelling
+function check_spelling() {
+  local misspell="$(which misspell)"
+  if [[ -z ${misspell} ]]; then
+    go get -u github.com/client9/misspell/cmd/misspell
+  fi
+
+  skipping_file="hack/.spelling_failures"
+  failing_packages=$(echo `cat ${skipping_file}` | sed "s| | -e |g")
+  spelling_error=$(git ls-files | grep -v -e ${failing_packages} | xargs misspell -i "Creater,creater,ect") || true
+  if [[ -n "${spelling_error}" ]]; then
+    echo "${spelling_error}" >&2
+    exit 1
+  fi
+  echo `date`,"No errors found."
+}
+
 # Run the given linter on the given files, checking it exists first.
 # Parameters: $1 - tool
 #             $2 - tool purpose (for error message if tool not installed)
