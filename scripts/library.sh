@@ -146,22 +146,22 @@ function wait_until_service_has_external_ip() {
   return 1
 }
 
-# Waits for the endpoint to be routable
-# Parameters: $1 - External ingress IP address
-#             $2 - Hostname
+# Waits for the endpoint to be routable.
+# Parameters: $1 - External ingress IP address.
+#             $2 - cluster hostname.
 function wait_until_routable() {
-    for i in {1..150}; do  # timeout after 5 minutes
-        local val=$(curl -H "Host: $2" "http://$1" 2>/dev/null)
-        if [[ -z "$val" ]]; then
-            echo -n "."
-            sleep 2
-        else
-            echo "\nApp is now routable"
-            return 0
-        fi                
-    done
-    echo "\nERROR: Timed out waiting for app to be routable"
-    return 1
+  echo -n "Waiting until cluster $2 at $1 has a routable endpoint"
+  for i in {1..150}; do  # timeout after 5 minutes
+    local val=$(curl -H "Host: $2" "http://$1" 2>/dev/null)
+    if [[ -n "$val" ]]; then
+      echo "\nEndpoint is now routable"
+      return 0
+    fi
+    echo -n "."
+    sleep 2
+  done
+  echo -e "\n\nERROR: Timed out waiting for endpoint to be routable"
+  return 1
 }
 
 # Returns the name of the pod of the given app.
