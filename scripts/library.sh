@@ -374,3 +374,20 @@ function lint_markdown() {
   # https://github.com/markdownlint/markdownlint
   run_lint_tool mdl "linting markdown files" "-r ~MD013" $@
 }
+
+# Check for subdirs which do not contain any test module but contain code.
+# This is to prevent an issue where these directories are skipped in coverage
+# reports resulting in inaccurately high coverage results. Fix by adding a
+# stub_tests.go with no tests to these directories.
+function check_subdirs_without_tests() {
+  ret=0
+  for dir in $(find pkg -type d); do
+    if ls -l $dir/*.go 1> /dev/null 2>&1; then
+      if ! ls -l $dir/*_test.go 1> /dev/null 2>&1; then
+        echo "Warning: no tests in directory: $dir"
+        ret=1
+      fi
+    fi
+  done
+  return ${ret}
+}
