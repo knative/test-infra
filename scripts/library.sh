@@ -218,19 +218,20 @@ function acquire_cluster_admin_role() {
 # Runs a go test and generate a junit summary through bazel.
 # Parameters: $1... - parameters to go test
 function report_go_test() {
-  # Just run regular go tests if not on Prow.
-  if (( ! IS_PROW )); then
-    go test $@
-    return
-  fi
-  local report=$(mktemp)
-  local failed=0
-  local test_count=0
   # Run tests in verbose mode to capture details.
   # go doesn't like repeating -v, so remove if passed.
   local args=("${@/-v}")
-  echo "Running tests with 'go test ${args[@]}'"
-  go test -race -v ${args[@]} > ${report} || failed=$?
+  local go_test="go test race -v ${args[@]}"
+  # Just run regular go tests if not on Prow.
+  if (( ! IS_PROW )); then
+    ${go_test}
+    return
+  fi
+  echo "Running tests with '${go_test}'"
+  local report=$(mktemp)
+  local failed=0
+  local test_count=0
+  ${go_test} > ${report} || failed=$?
   echo "Finished run, return code is ${failed}"
   # Tests didn't run.
   [[ ! -s ${report} ]] && return 1
