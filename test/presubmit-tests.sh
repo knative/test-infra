@@ -37,7 +37,7 @@ function build_tests() {
 
 function unit_tests() {
   header "Running unit tests"
-  report_go_test ./...
+  report_go_test ./test/...
 }
 
 function integration_tests() {
