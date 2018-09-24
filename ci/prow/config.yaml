@@ -313,8 +313,8 @@ presubmits:
         args:
         - "--postsubmit-gcs-bucket=knative-prow"
         - "--postsubmit-job-name=post-knative-serving-go-coverage"
-        - "--artifacts=$(ARTIFACTS)"
         - "--profile-name=coverage_profile.txt"
+        - "--artifacts=$(ARTIFACTS)"
         - "--cov-target=./pkg/"
         - "--cov-threshold-percentage=81"
         - "--github-token=/etc/github-token/token"
@@ -1786,7 +1786,7 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--profile-name=coverage_profile.txt"
-      - "--cov-target=./apis/ ./configmap/"
+      - "--cov-target=."
       - "--cov-threshold-percentage=80"
 
 postsubmits:
@@ -1911,6 +1911,6 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--profile-name=coverage_profile.txt"
-        - "--cov-target=./apis/ ./configmap/"
+        - "--cov-target=."
         - "--cov-threshold-percentage=0"
 
