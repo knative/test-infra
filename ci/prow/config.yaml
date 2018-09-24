@@ -1181,7 +1181,7 @@ presubmits:
         - "--postsubmit-job-name=post-knative-pkg-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--profile-name=coverage_profile.txt"
-        - "--cov-target=./apis/ ./configmap/"
+        - "--cov-target=./"
         - "--cov-threshold-percentage=50"
         - "--github-token=/etc/github-token/token"
         volumeMounts:
@@ -2036,7 +2036,7 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--profile-name=coverage_profile.txt"
-      - "--cov-target=./apis/ ./configmap/"
+      - "--cov-target=./"
       - "--cov-threshold-percentage=80"
 
 - cron: "30 * * * *" # Run every hour and 30 minutes
