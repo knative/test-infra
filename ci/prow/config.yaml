@@ -81,24 +81,6 @@ presets:
   - name: service
     mountPath: /etc/service-account
     readOnly: true
-- labels:
-    preset-k8s-ssh: "true"
-  env:
-  - name: USER
-    value: prow
-  - name: JENKINS_GCE_SSH_PRIVATE_KEY_FILE
-    value: /etc/ssh-key-secret/ssh-private
-  - name: JENKINS_GCE_SSH_PUBLIC_KEY_FILE
-    value: /etc/ssh-key-secret/ssh-public
-  volumes:
-  - name: ssh
-    secret:
-      defaultMode: 0400
-      secretName: ssh-key-secret
-  volumeMounts:
-  - name: ssh
-    mountPath: /etc/ssh-key-secret
-    readOnly: true
 # storage / caching presets
 - labels:
     preset-bazel-scratch-dir: "true"
@@ -146,7 +128,6 @@ presubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
         imagePullPolicy: Always
         args:
-        - "--ssh=/etc/ssh-knative/ssh-knative"
         - "--scenario=kubernetes_execute_bazel"
         - "--clean"
         - "--job=$(JOB_NAME)"
@@ -164,14 +145,6 @@ presubmits:
         resources:
           requests:
             memory: "1Gi"
-        volumeMounts:
-        - mountPath: /etc/ssh-knative
-          name: ssh-knative
-      volumes:
-      - name: ssh-knative
-        secret:
-          defaultMode: 256
-          secretName: ssh-knative
 
   - name: pull-knative-serving-unit-tests
     agent: kubernetes
@@ -188,7 +161,6 @@ presubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
         imagePullPolicy: Always
         args:
-        - "--ssh=/etc/ssh-knative/ssh-knative"
         - "--scenario=kubernetes_execute_bazel"
         - "--clean"
         - "--job=$(JOB_NAME)"
@@ -206,14 +178,6 @@ presubmits:
         resources:
           requests:
             memory: "1Gi"
-        volumeMounts:
-        - mountPath: /etc/ssh-knative
-          name: ssh-knative
-      volumes:
-      - name: ssh-knative
-        secret:
-          defaultMode: 256
-          secretName: ssh-knative
 
   - name: pull-knative-serving-integration-tests
     agent: kubernetes
@@ -230,7 +194,6 @@ presubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
         imagePullPolicy: Always
         args:
-        - "--ssh=/etc/ssh-knative/ssh-knative"
         - "--scenario=kubernetes_execute_bazel"
         - "--clean"
         - "--job=$(JOB_NAME)"
@@ -248,14 +211,6 @@ presubmits:
         resources:
           requests:
             memory: "1Gi"
-        volumeMounts:
-        - mountPath: /etc/ssh-knative
-          name: ssh-knative
-      volumes:
-      - name: ssh-knative
-        secret:
-          defaultMode: 256
-          secretName: ssh-knative
 
   - name: pull-knative-serving-go-coverage
     labels:
@@ -268,8 +223,6 @@ presubmits:
     optional: true
     decorate: true
     clone_uri: "git@github.com:knative/serving.git"
-    ssh_key_secrets:
-    - ssh-knative
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -304,8 +257,6 @@ presubmits:
     optional: true
     decorate: true
     clone_uri: "git@github.com:knative/serving.git"
-    ssh_key_secrets:
-    - ssh-knative
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage-dev:latest-dev
@@ -345,7 +296,6 @@ presubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
         imagePullPolicy: Always
         args:
-        - "--ssh=/etc/ssh-knative/ssh-knative"
         - "--scenario=kubernetes_execute_bazel"
         - "--clean"
         - "--job=$(JOB_NAME)"
@@ -363,14 +313,6 @@ presubmits:
         resources:
           requests:
             memory: "1Gi"
-        volumeMounts:
-        - mountPath: /etc/ssh-knative
-          name: ssh-knative
-      volumes:
-      - name: ssh-knative
-        secret:
-          defaultMode: 256
-          secretName: ssh-knative
 
   - name: pull-knative-build-unit-tests
     agent: kubernetes
@@ -387,7 +329,6 @@ presubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
         imagePullPolicy: Always
         args:
-        - "--ssh=/etc/ssh-knative/ssh-knative"
         - "--scenario=kubernetes_execute_bazel"
         - "--clean"
         - "--job=$(JOB_NAME)"
@@ -405,14 +346,6 @@ presubmits:
         resources:
           requests:
             memory: "1Gi"
-        volumeMounts:
-        - mountPath: /etc/ssh-knative
-          name: ssh-knative
-      volumes:
-      - name: ssh-knative
-        secret:
-          defaultMode: 256
-          secretName: ssh-knative
 
   - name: pull-knative-build-integration-tests
     agent: kubernetes
@@ -429,7 +362,6 @@ presubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
         imagePullPolicy: Always
         args:
-        - "--ssh=/etc/ssh-knative/ssh-knative"
         - "--scenario=kubernetes_execute_bazel"
         - "--clean"
         - "--job=$(JOB_NAME)"
@@ -447,14 +379,6 @@ presubmits:
         resources:
           requests:
             memory: "1Gi"
-        volumeMounts:
-        - mountPath: /etc/ssh-knative
-          name: ssh-knative
-      volumes:
-      - name: ssh-knative
-        secret:
-          defaultMode: 256
-          secretName: ssh-knative
 
   - name: pull-knative-build-go-coverage
     labels:
@@ -467,8 +391,6 @@ presubmits:
     optional: true
     decorate: true
     clone_uri: "git@github.com:knative/build.git"
-    ssh_key_secrets:
-    - ssh-knative
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -508,7 +430,6 @@ presubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
         imagePullPolicy: Always
         args:
-        - "--ssh=/etc/ssh-knative/ssh-knative"
         - "--scenario=kubernetes_execute_bazel"
         - "--clean"
         - "--job=$(JOB_NAME)"
@@ -526,14 +447,6 @@ presubmits:
         resources:
           requests:
             memory: "1Gi"
-        volumeMounts:
-        - mountPath: /etc/ssh-knative
-          name: ssh-knative
-      volumes:
-      - name: ssh-knative
-        secret:
-          defaultMode: 256
-          secretName: ssh-knative
 
   - name: pull-knative-build-pipeline-unit-tests
     agent: kubernetes
@@ -550,7 +463,6 @@ presubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
         imagePullPolicy: Always
         args:
-        - "--ssh=/etc/ssh-knative/ssh-knative"
         - "--scenario=kubernetes_execute_bazel"
         - "--clean"
         - "--job=$(JOB_NAME)"
@@ -568,14 +480,6 @@ presubmits:
         resources:
           requests:
             memory: "1Gi"
-        volumeMounts:
-        - mountPath: /etc/ssh-knative
-          name: ssh-knative
-      volumes:
-      - name: ssh-knative
-        secret:
-          defaultMode: 256
-          secretName: ssh-knative
 
   knative/eventing:
   - name: pull-knative-eventing-build-tests
@@ -593,7 +497,6 @@ presubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
         imagePullPolicy: Always
         args:
-        - "--ssh=/etc/ssh-knative/ssh-knative"
         - "--scenario=kubernetes_execute_bazel"
         - "--clean"
         - "--job=$(JOB_NAME)"
@@ -611,14 +514,6 @@ presubmits:
         resources:
           requests:
             memory: "1Gi"
-        volumeMounts:
-        - mountPath: /etc/ssh-knative
-          name: ssh-knative
-      volumes:
-      - name: ssh-knative
-        secret:
-          defaultMode: 256
-          secretName: ssh-knative
 
   - name: pull-knative-eventing-unit-tests
     agent: kubernetes
@@ -635,7 +530,6 @@ presubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
         imagePullPolicy: Always
         args:
-        - "--ssh=/etc/ssh-knative/ssh-knative"
         - "--scenario=kubernetes_execute_bazel"
         - "--clean"
         - "--job=$(JOB_NAME)"
@@ -653,14 +547,6 @@ presubmits:
         resources:
           requests:
             memory: "1Gi"
-        volumeMounts:
-        - mountPath: /etc/ssh-knative
-          name: ssh-knative
-      volumes:
-      - name: ssh-knative
-        secret:
-          defaultMode: 256
-          secretName: ssh-knative
 
   - name: pull-knative-eventing-integration-tests
     agent: kubernetes
@@ -677,7 +563,6 @@ presubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
         imagePullPolicy: Always
         args:
-        - "--ssh=/etc/ssh-knative/ssh-knative"
         - "--scenario=kubernetes_execute_bazel"
         - "--clean"
         - "--job=$(JOB_NAME)"
@@ -695,14 +580,6 @@ presubmits:
         resources:
           requests:
             memory: "1Gi"
-        volumeMounts:
-        - mountPath: /etc/ssh-knative
-          name: ssh-knative
-      volumes:
-      - name: ssh-knative
-        secret:
-          defaultMode: 256
-          secretName: ssh-knative
 
   - name: pull-knative-eventing-go-coverage
     labels:
@@ -715,8 +592,6 @@ presubmits:
     optional: true
     decorate: true
     clone_uri: "git@github.com:knative/eventing.git"
-    ssh_key_secrets:
-    - ssh-knative
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -756,7 +631,6 @@ presubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
         imagePullPolicy: Always
         args:
-        - "--ssh=/etc/ssh-knative/ssh-knative"
         - "--scenario=kubernetes_execute_bazel"
         - "--clean"
         - "--job=$(JOB_NAME)"
@@ -774,14 +648,6 @@ presubmits:
         resources:
           requests:
             memory: "1Gi"
-        volumeMounts:
-        - mountPath: /etc/ssh-knative
-          name: ssh-knative
-      volumes:
-      - name: ssh-knative
-        secret:
-          defaultMode: 256
-          secretName: ssh-knative
 
   - name: pull-knative-docs-unit-tests
     agent: kubernetes
@@ -798,7 +664,6 @@ presubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
         imagePullPolicy: Always
         args:
-        - "--ssh=/etc/ssh-knative/ssh-knative"
         - "--scenario=kubernetes_execute_bazel"
         - "--clean"
         - "--job=$(JOB_NAME)"
@@ -816,14 +681,6 @@ presubmits:
         resources:
           requests:
             memory: "1Gi"
-        volumeMounts:
-        - mountPath: /etc/ssh-knative
-          name: ssh-knative
-      volumes:
-      - name: ssh-knative
-        secret:
-          defaultMode: 256
-          secretName: ssh-knative
 
   - name: pull-knative-docs-integration-tests
     agent: kubernetes
@@ -840,7 +697,6 @@ presubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
         imagePullPolicy: Always
         args:
-        - "--ssh=/etc/ssh-knative/ssh-knative"
         - "--scenario=kubernetes_execute_bazel"
         - "--clean"
         - "--job=$(JOB_NAME)"
@@ -858,14 +714,6 @@ presubmits:
         resources:
           requests:
             memory: "1Gi"
-        volumeMounts:
-        - mountPath: /etc/ssh-knative
-          name: ssh-knative
-      volumes:
-      - name: ssh-knative
-        secret:
-          defaultMode: 256
-          secretName: ssh-knative
 
   - name: pull-knative-docs-go-coverage
     labels:
@@ -878,8 +726,6 @@ presubmits:
     optional: true
     decorate: true
     clone_uri: "git@github.com:knative/docs.git"
-    ssh_key_secrets:
-    - ssh-knative
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -919,7 +765,6 @@ presubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
         imagePullPolicy: Always
         args:
-        - "--ssh=/etc/ssh-knative/ssh-knative"
         - "--scenario=kubernetes_execute_bazel"
         - "--clean"
         - "--job=$(JOB_NAME)"
@@ -937,14 +782,6 @@ presubmits:
         resources:
           requests:
             memory: "1Gi"
-        volumeMounts:
-        - mountPath: /etc/ssh-knative
-          name: ssh-knative
-      volumes:
-      - name: ssh-knative
-        secret:
-          defaultMode: 256
-          secretName: ssh-knative
 
   - name: pull-knative-build-templates-unit-tests
     agent: kubernetes
@@ -961,7 +798,6 @@ presubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
         imagePullPolicy: Always
         args:
-        - "--ssh=/etc/ssh-knative/ssh-knative"
         - "--scenario=kubernetes_execute_bazel"
         - "--clean"
         - "--job=$(JOB_NAME)"
@@ -979,14 +815,6 @@ presubmits:
         resources:
           requests:
             memory: "1Gi"
-        volumeMounts:
-        - mountPath: /etc/ssh-knative
-          name: ssh-knative
-      volumes:
-      - name: ssh-knative
-        secret:
-          defaultMode: 256
-          secretName: ssh-knative
 
   - name: pull-knative-build-templates-integration-tests
     agent: kubernetes
@@ -1003,7 +831,6 @@ presubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
         imagePullPolicy: Always
         args:
-        - "--ssh=/etc/ssh-knative/ssh-knative"
         - "--scenario=kubernetes_execute_bazel"
         - "--clean"
         - "--job=$(JOB_NAME)"
@@ -1021,14 +848,6 @@ presubmits:
         resources:
           requests:
             memory: "1Gi"
-        volumeMounts:
-        - mountPath: /etc/ssh-knative
-          name: ssh-knative
-      volumes:
-      - name: ssh-knative
-        secret:
-          defaultMode: 256
-          secretName: ssh-knative
 
   knative/pkg:
   - name: pull-knative-pkg-build-tests
@@ -1046,7 +865,6 @@ presubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
         imagePullPolicy: Always
         args:
-        - "--ssh=/etc/ssh-knative/ssh-knative"
         - "--scenario=kubernetes_execute_bazel"
         - "--clean"
         - "--job=$(JOB_NAME)"
@@ -1064,14 +882,6 @@ presubmits:
         resources:
           requests:
             memory: "1Gi"
-        volumeMounts:
-        - mountPath: /etc/ssh-knative
-          name: ssh-knative
-      volumes:
-      - name: ssh-knative
-        secret:
-          defaultMode: 256
-          secretName: ssh-knative
 
   - name: pull-knative-pkg-unit-tests
     agent: kubernetes
@@ -1088,7 +898,6 @@ presubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
         imagePullPolicy: Always
         args:
-        - "--ssh=/etc/ssh-knative/ssh-knative"
         - "--scenario=kubernetes_execute_bazel"
         - "--clean"
         - "--job=$(JOB_NAME)"
@@ -1106,14 +915,6 @@ presubmits:
         resources:
           requests:
             memory: "1Gi"
-        volumeMounts:
-        - mountPath: /etc/ssh-knative
-          name: ssh-knative
-      volumes:
-      - name: ssh-knative
-        secret:
-          defaultMode: 256
-          secretName: ssh-knative
 
   - name: pull-knative-pkg-integration-tests
     agent: kubernetes
@@ -1130,7 +931,6 @@ presubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
         imagePullPolicy: Always
         args:
-        - "--ssh=/etc/ssh-knative/ssh-knative"
         - "--scenario=kubernetes_execute_bazel"
         - "--clean"
         - "--job=$(JOB_NAME)"
@@ -1148,14 +948,6 @@ presubmits:
         resources:
           requests:
             memory: "1Gi"
-        volumeMounts:
-        - mountPath: /etc/ssh-knative
-          name: ssh-knative
-      volumes:
-      - name: ssh-knative
-        secret:
-          defaultMode: 256
-          secretName: ssh-knative
 
   - name: pull-knative-pkg-go-coverage
     labels:
@@ -1168,8 +960,6 @@ presubmits:
     optional: true
     decorate: true
     clone_uri: "git@github.com:knative/pkg.git"
-    ssh_key_secrets:
-    - ssh-knative
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -1209,7 +999,6 @@ presubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
         imagePullPolicy: Always
         args:
-        - "--ssh=/etc/ssh-knative/ssh-knative"
         - "--scenario=kubernetes_execute_bazel"
         - "--clean"
         - "--job=$(JOB_NAME)"
@@ -1227,14 +1016,6 @@ presubmits:
         resources:
           requests:
             memory: "1Gi"
-        volumeMounts:
-        - mountPath: /etc/ssh-knative
-          name: ssh-knative
-      volumes:
-      - name: ssh-knative
-        secret:
-          defaultMode: 256
-          secretName: ssh-knative
 
   - name: pull-knative-test-infra-unit-tests
     agent: kubernetes
@@ -1251,7 +1032,6 @@ presubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
         imagePullPolicy: Always
         args:
-        - "--ssh=/etc/ssh-knative/ssh-knative"
         - "--scenario=kubernetes_execute_bazel"
         - "--clean"
         - "--job=$(JOB_NAME)"
@@ -1269,14 +1049,6 @@ presubmits:
         resources:
           requests:
             memory: "1Gi"
-        volumeMounts:
-        - mountPath: /etc/ssh-knative
-          name: ssh-knative
-      volumes:
-      - name: ssh-knative
-        secret:
-          defaultMode: 256
-          secretName: ssh-knative
 
   - name: pull-knative-test-infra-integration-tests
     agent: kubernetes
@@ -1293,7 +1065,6 @@ presubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
         imagePullPolicy: Always
         args:
-        - "--ssh=/etc/ssh-knative/ssh-knative"
         - "--scenario=kubernetes_execute_bazel"
         - "--clean"
         - "--job=$(JOB_NAME)"
@@ -1311,14 +1082,6 @@ presubmits:
         resources:
           requests:
             memory: "1Gi"
-        volumeMounts:
-        - mountPath: /etc/ssh-knative
-          name: ssh-knative
-      volumes:
-      - name: ssh-knative
-        secret:
-          defaultMode: 256
-          secretName: ssh-knative
 
   knative/caching:
   - name: pull-knative-caching-build-tests
@@ -1336,7 +1099,6 @@ presubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
         imagePullPolicy: Always
         args:
-        - "--ssh=/etc/ssh-knative/ssh-knative"
         - "--scenario=kubernetes_execute_bazel"
         - "--clean"
         - "--job=$(JOB_NAME)"
@@ -1354,14 +1116,6 @@ presubmits:
         resources:
           requests:
             memory: "1Gi"
-        volumeMounts:
-        - mountPath: /etc/ssh-knative
-          name: ssh-knative
-      volumes:
-      - name: ssh-knative
-        secret:
-          defaultMode: 256
-          secretName: ssh-knative
 
   - name: pull-knative-caching-unit-tests
     agent: kubernetes
@@ -1378,7 +1132,6 @@ presubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
         imagePullPolicy: Always
         args:
-        - "--ssh=/etc/ssh-knative/ssh-knative"
         - "--scenario=kubernetes_execute_bazel"
         - "--clean"
         - "--job=$(JOB_NAME)"
@@ -1396,14 +1149,6 @@ presubmits:
         resources:
           requests:
             memory: "1Gi"
-        volumeMounts:
-        - mountPath: /etc/ssh-knative
-          name: ssh-knative
-      volumes:
-      - name: ssh-knative
-        secret:
-          defaultMode: 256
-          secretName: ssh-knative
 
   - name: pull-knative-caching-integration-tests
     agent: kubernetes
@@ -1420,7 +1165,6 @@ presubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
         imagePullPolicy: Always
         args:
-        - "--ssh=/etc/ssh-knative/ssh-knative"
         - "--scenario=kubernetes_execute_bazel"
         - "--clean"
         - "--job=$(JOB_NAME)"
@@ -1438,14 +1182,6 @@ presubmits:
         resources:
           requests:
             memory: "1Gi"
-        volumeMounts:
-        - mountPath: /etc/ssh-knative
-          name: ssh-knative
-      volumes:
-      - name: ssh-knative
-        secret:
-          defaultMode: 256
-          secretName: ssh-knative
 
   - name: pull-knative-caching-go-coverage
     labels:
@@ -1458,8 +1194,6 @@ presubmits:
     optional: true
     decorate: true
     clone_uri: "git@github.com:knative/caching.git"
-    ssh_key_secrets:
-    - ssh-knative
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -1496,7 +1230,6 @@ periodics:
     - image: gcr.io/knative-tests/test-infra/prow-tests:latest
       imagePullPolicy: Always
       args:
-      - "--ssh=/etc/ssh-knative/ssh-knative"
       - "--scenario=kubernetes_execute_bazel"
       - "--clean"
       - "--job=$(JOB_NAME)"
@@ -1516,14 +1249,6 @@ periodics:
       resources:
         requests:
           memory: "1Gi"
-      volumeMounts:
-      - mountPath: /etc/ssh-knative
-        name: ssh-knative
-    volumes:
-     - name: ssh-knative
-       secret:
-         defaultMode: 256
-         secretName: ssh-knative
 - cron: "1 8 * * *" # Run at 01:01PST every day (08:01 UTC)
   name: ci-knative-serving-release
   agent: kubernetes
@@ -1536,7 +1261,6 @@ periodics:
     - image: gcr.io/knative-tests/test-infra/prow-tests:latest
       imagePullPolicy: Always
       args:
-      - "--ssh=/etc/ssh-knative/ssh-knative"
       - "--scenario=kubernetes_execute_bazel"
       - "--clean"
       - "--job=$(JOB_NAME)"
@@ -1556,14 +1280,6 @@ periodics:
       resources:
         requests:
           memory: "1Gi"
-      volumeMounts:
-      - mountPath: /etc/ssh-knative
-        name: ssh-knative
-    volumes:
-     - name: ssh-knative
-       secret:
-         defaultMode: 256
-         secretName: ssh-knative
 - cron: "1 9 * * 6" # Run at 02:01PST every Saturday (09:01 UTC)
   name: ci-knative-serving-playground
   agent: kubernetes
@@ -1576,7 +1292,6 @@ periodics:
     - image: gcr.io/knative-tests/test-infra/prow-tests:latest
       imagePullPolicy: Always
       args:
-      - "--ssh=/etc/ssh-knative/ssh-knative"
       - "--scenario=kubernetes_execute_bazel"
       - "--clean"
       - "--job=$(JOB_NAME)"
@@ -1595,22 +1310,12 @@ periodics:
       resources:
         requests:
           memory: "1Gi"
-      volumeMounts:
-      - mountPath: /etc/ssh-knative
-        name: ssh-knative
-    volumes:
-     - name: ssh-knative
-       secret:
-         defaultMode: 256
-         secretName: ssh-knative
 - cron: "5 8 * * *" # Run at 01:05PST every day (08:05 UTC)
   name: ci-knative-serving-latency
   agent: kubernetes
   labels:
     preset-service-account: "true"
   decorate: true
-  ssh_key_secrets:
-  - ssh-knative
   extra_refs:
   - org: knative
     repo: serving
@@ -1631,8 +1336,6 @@ periodics:
   labels:
     preset-service-account: "true"
   decorate: true
-  ssh_key_secrets:
-  - ssh-knative
   extra_refs:
   - org: knative
     repo: serving
@@ -1651,8 +1354,6 @@ periodics:
   name: ci-knative-serving-go-coverage
   agent: kubernetes
   decorate: true
-  ssh_key_secrets:
-  - ssh-knative
   extra_refs:
   - org: knative
     repo: serving
@@ -1681,7 +1382,6 @@ periodics:
     - image: gcr.io/knative-tests/test-infra/prow-tests:latest
       imagePullPolicy: Always
       args:
-      - "--ssh=/etc/ssh-knative/ssh-knative"
       - "--scenario=kubernetes_execute_bazel"
       - "--clean"
       - "--job=$(JOB_NAME)"
@@ -1699,14 +1399,6 @@ periodics:
       resources:
         requests:
           memory: "1Gi"
-      volumeMounts:
-      - mountPath: /etc/ssh-knative
-        name: ssh-knative
-    volumes:
-     - name: ssh-knative
-       secret:
-         defaultMode: 256
-         secretName: ssh-knative
 
 - cron: "15 * * * *" # Run every hour and 15 minutes
   name: ci-knative-build-continuous
@@ -1720,7 +1412,6 @@ periodics:
     - image: gcr.io/knative-tests/test-infra/prow-tests:latest
       imagePullPolicy: Always
       args:
-      - "--ssh=/etc/ssh-knative/ssh-knative"
       - "--scenario=kubernetes_execute_bazel"
       - "--clean"
       - "--job=$(JOB_NAME)"
@@ -1739,14 +1430,6 @@ periodics:
       resources:
         requests:
           memory: "1Gi"
-      volumeMounts:
-      - mountPath: /etc/ssh-knative
-        name: ssh-knative
-    volumes:
-     - name: ssh-knative
-       secret:
-         defaultMode: 256
-         secretName: ssh-knative
 - cron: "31 8 * * *" # Run at 01:31PST every day (08:31 UTC)
   name: ci-knative-build-release
   agent: kubernetes
@@ -1760,7 +1443,6 @@ periodics:
     - image: gcr.io/knative-tests/test-infra/prow-tests:latest
       imagePullPolicy: Always
       args:
-      - "--ssh=/etc/ssh-knative/ssh-knative"
       - "--scenario=kubernetes_execute_bazel"
       - "--clean"
       - "--job=$(JOB_NAME)"
@@ -1780,20 +1462,10 @@ periodics:
       resources:
         requests:
           memory: "1Gi"
-      volumeMounts:
-      - mountPath: /etc/ssh-knative
-        name: ssh-knative
-    volumes:
-     - name: ssh-knative
-       secret:
-         defaultMode: 256
-         secretName: ssh-knative
 - cron: "0 1 * * *" # Run at 01:00 every day
   name: ci-knative-build-go-coverage
   agent: kubernetes
   decorate: true
-  ssh_key_secrets:
-  - ssh-knative
   extra_refs:
   - org: knative
     repo: build
@@ -1823,7 +1495,6 @@ periodics:
     - image: gcr.io/knative-tests/test-infra/prow-tests:latest
       imagePullPolicy: Always
       args:
-      - "--ssh=/etc/ssh-knative/ssh-knative"
       - "--scenario=kubernetes_execute_bazel"
       - "--clean"
       - "--job=$(JOB_NAME)"
@@ -1842,20 +1513,10 @@ periodics:
       resources:
         requests:
           memory: "1Gi"
-      volumeMounts:
-      - mountPath: /etc/ssh-knative
-        name: ssh-knative
-    volumes:
-     - name: ssh-knative
-       secret:
-         defaultMode: 256
-         secretName: ssh-knative
 - cron: "0 1 * * *" # Run at 01:00 every day
   name: ci-knative-docs-go-coverage
   agent: kubernetes
   decorate: true
-  ssh_key_secrets:
-  - ssh-knative
   extra_refs:
   - org: knative
     repo: docs
@@ -1885,7 +1546,6 @@ periodics:
     - image: gcr.io/knative-tests/test-infra/prow-tests:latest
       imagePullPolicy: Always
       args:
-      - "--ssh=/etc/ssh-knative/ssh-knative"
       - "--scenario=kubernetes_execute_bazel"
       - "--clean"
       - "--job=$(JOB_NAME)"
@@ -1904,14 +1564,6 @@ periodics:
       resources:
         requests:
           memory: "1Gi"
-      volumeMounts:
-      - mountPath: /etc/ssh-knative
-        name: ssh-knative
-    volumes:
-     - name: ssh-knative
-       secret:
-         defaultMode: 256
-         secretName: ssh-knative
 - cron: "16 9 * * *" # Run at 02:16PST every day (09:16 UTC)
   name: ci-knative-eventing-release
   agent: kubernetes
@@ -1924,7 +1576,6 @@ periodics:
     - image: gcr.io/knative-tests/test-infra/prow-tests:latest
       imagePullPolicy: Always
       args:
-      - "--ssh=/etc/ssh-knative/ssh-knative"
       - "--scenario=kubernetes_execute_bazel"
       - "--clean"
       - "--job=$(JOB_NAME)"
@@ -1944,20 +1595,10 @@ periodics:
       resources:
         requests:
           memory: "1Gi"
-      volumeMounts:
-      - mountPath: /etc/ssh-knative
-        name: ssh-knative
-    volumes:
-     - name: ssh-knative
-       secret:
-         defaultMode: 256
-         secretName: ssh-knative
 - cron: "0 1 * * *" # Run at 01:00 every day
   name: ci-knative-eventing-go-coverage
   agent: kubernetes
   decorate: true
-  ssh_key_secrets:
-  - ssh-knative
   extra_refs:
   - org: knative
     repo: eventing
@@ -1987,7 +1628,6 @@ periodics:
     - image: gcr.io/knative-tests/test-infra/prow-tests:latest
       imagePullPolicy: Always
       args:
-      - "--ssh=/etc/ssh-knative/ssh-knative"
       - "--scenario=kubernetes_execute_bazel"
       - "--clean"
       - "--job=$(JOB_NAME)"
@@ -2006,14 +1646,6 @@ periodics:
       resources:
         requests:
           memory: "1Gi"
-      volumeMounts:
-      - mountPath: /etc/ssh-knative
-        name: ssh-knative
-    volumes:
-     - name: ssh-knative
-       secret:
-         defaultMode: 256
-         secretName: ssh-knative
 
 - cron: "45 * * * *" # Run every hour and 45 minutes
   name: ci-knative-pkg-continuous
@@ -2027,7 +1659,6 @@ periodics:
     - image: gcr.io/knative-tests/test-infra/prow-tests:latest
       imagePullPolicy: Always
       args:
-      - "--ssh=/etc/ssh-knative/ssh-knative"
       - "--scenario=kubernetes_execute_bazel"
       - "--clean"
       - "--job=$(JOB_NAME)"
@@ -2046,20 +1677,10 @@ periodics:
       resources:
         requests:
           memory: "1Gi"
-      volumeMounts:
-      - mountPath: /etc/ssh-knative
-        name: ssh-knative
-    volumes:
-     - name: ssh-knative
-       secret:
-         defaultMode: 256
-         secretName: ssh-knative
 - cron: "0 1 * * *" # Run at 01:00 every day
   name: ci-knative-pkg-go-coverage
   agent: kubernetes
   decorate: true
-  ssh_key_secrets:
-  - ssh-knative
   extra_refs:
   - org: knative
     repo: pkg
@@ -2089,7 +1710,6 @@ periodics:
     - image: gcr.io/knative-tests/test-infra/prow-tests:latest
       imagePullPolicy: Always
       args:
-      - "--ssh=/etc/ssh-knative/ssh-knative"
       - "--scenario=kubernetes_execute_bazel"
       - "--clean"
       - "--job=$(JOB_NAME)"
@@ -2108,20 +1728,10 @@ periodics:
       resources:
         requests:
           memory: "1Gi"
-      volumeMounts:
-      - mountPath: /etc/ssh-knative
-        name: ssh-knative
-    volumes:
-     - name: ssh-knative
-       secret:
-         defaultMode: 256
-         secretName: ssh-knative
 - cron: "0 1 * * *" # Run at 01:00 every day
   name: ci-knative-caching-go-coverage
   agent: kubernetes
   decorate: true
-  ssh_key_secrets:
-  - ssh-knative
   extra_refs:
   - org: knative
     repo: caching
@@ -2147,8 +1757,6 @@ postsubmits:
     agent: kubernetes
     decorate: true
     clone_uri: "git@github.com:knative/serving.git"
-    ssh_key_secrets:
-    - ssh-knative
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -2166,8 +1774,6 @@ postsubmits:
     agent: kubernetes
     decorate: true
     clone_uri: "git@github.com:knative/serving.git"
-    ssh_key_secrets:
-    - ssh-knative
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage-dev:latest-dev
@@ -2187,8 +1793,6 @@ postsubmits:
     agent: kubernetes
     decorate: true
     clone_uri: "git@github.com:knative/build.git"
-    ssh_key_secrets:
-    - ssh-knative
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -2208,8 +1812,6 @@ postsubmits:
     agent: kubernetes
     decorate: true
     clone_uri: "git@github.com:knative/docs.git"
-    ssh_key_secrets:
-    - ssh-knative
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -2229,8 +1831,6 @@ postsubmits:
     agent: kubernetes
     decorate: true
     clone_uri: "git@github.com:knative/eventing.git"
-    ssh_key_secrets:
-    - ssh-knative
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -2250,8 +1850,6 @@ postsubmits:
     agent: kubernetes
     decorate: true
     clone_uri: "git@github.com:knative/pkg.git"
-    ssh_key_secrets:
-    - ssh-knative
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -2271,8 +1869,6 @@ postsubmits:
     agent: kubernetes
     decorate: true
     clone_uri: "git@github.com:knative/caching.git"
-    ssh_key_secrets:
-    - ssh-knative
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
