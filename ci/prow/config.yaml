@@ -1669,6 +1669,44 @@ periodics:
       - "--profile-name=coverage_profile.txt"
       - "--cov-target=./pkg/"
       - "--cov-threshold-percentage=80"
+- cron: "0 1 * * *" # Run at 01:00 every day
+  name: ci-knative-serving-performance
+  agent: kubernetes
+  labels:
+    preset-service-account: "true"
+    preset-bazel-scratch-dir: "true"
+    preset-bazel-remote-cache-enabled: "true"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      imagePullPolicy: Always
+      args:
+      - "--ssh=/etc/ssh-knative/ssh-knative"
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=github.com/knative/serving"
+      - "--root=/go/src"
+      - "--service-account=/etc/service-account/service-account.json"
+      - "--upload=gs://knative-prow/logs"
+      - "--timeout=50" # Avoid overrun
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./test/performance-tests.sh"
+      # Bazel needs privileged mode in order to sandbox builds.
+      securityContext:
+        privileged: true
+      resources:
+        requests:
+          memory: "1Gi"
+      volumeMounts:
+      - mountPath: /etc/ssh-knative
+        name: ssh-knative
+    volumes:
+     - name: ssh-knative
+       secret:
+         defaultMode: 256
+         secretName: ssh-knative
 
 - cron: "15 * * * *" # Run every hour and 15 minutes
   name: ci-knative-build-continuous
