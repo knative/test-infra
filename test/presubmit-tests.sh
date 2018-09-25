@@ -36,7 +36,8 @@ function build_tests() {
 }
 
 function unit_tests() {
-  header "TODO(#7): Running unit tests"
+  header "Running unit tests"
+  report_go_test ./test/...
 }
 
 function integration_tests() {
