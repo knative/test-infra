@@ -1382,7 +1382,6 @@ periodics:
     - image: gcr.io/knative-tests/test-infra/prow-tests:latest
       imagePullPolicy: Always
       args:
-      - "--ssh=/etc/ssh-knative/ssh-knative"
       - "--scenario=kubernetes_execute_bazel"
       - "--clean"
       - "--job=$(JOB_NAME)"
@@ -1400,14 +1399,6 @@ periodics:
       resources:
         requests:
           memory: "1Gi"
-      volumeMounts:
-      - mountPath: /etc/ssh-knative
-        name: ssh-knative
-    volumes:
-     - name: ssh-knative
-       secret:
-         defaultMode: 256
-         secretName: ssh-knative
 
 - cron: "15 * * * *" # Run every hour and 15 minutes
   name: ci-knative-build-continuous
