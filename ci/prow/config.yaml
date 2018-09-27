@@ -222,7 +222,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-serving-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "git@github.com:knative/serving.git"
+    clone_uri: "https://github.com/knative/serving.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -256,7 +256,7 @@ presubmits:
     trigger: "(?m)^/test (pull-knative-serving-go-coverage-dev),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "git@github.com:knative/serving.git"
+    clone_uri: "https://github.com/knative/serving.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage-dev:latest-dev
@@ -390,7 +390,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-build-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "git@github.com:knative/build.git"
+    clone_uri: "https://github.com/knative/build.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -591,7 +591,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-eventing-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "git@github.com:knative/eventing.git"
+    clone_uri: "https://github.com/knative/eventing.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -725,7 +725,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-docs-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "git@github.com:knative/docs.git"
+    clone_uri: "https://github.com/knative/docs.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -959,7 +959,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-pkg-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "git@github.com:knative/pkg.git"
+    clone_uri: "https://github.com/knative/pkg.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -1193,7 +1193,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-caching-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "git@github.com:knative/caching.git"
+    clone_uri: "https://github.com/knative/caching.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -1320,7 +1320,7 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
-    clone_uri: "git@github.com:knative/serving.git"
+    clone_uri: "https://github.com/knative/serving.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/metrics:latest
@@ -1340,7 +1340,7 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
-    clone_uri: "git@github.com:knative/serving.git"
+    clone_uri: "https://github.com/knative/serving.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/apicoverage:latest
@@ -1358,7 +1358,7 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
-    clone_uri: "git@github.com:knative/serving.git"
+    clone_uri: "https://github.com/knative/serving.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -1470,7 +1470,7 @@ periodics:
   - org: knative
     repo: build
     base_ref: master
-    clone_uri: "git@github.com:knative/build.git"
+    clone_uri: "https://github.com/knative/build.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -1521,7 +1521,7 @@ periodics:
   - org: knative
     repo: docs
     base_ref: master
-    clone_uri: "git@github.com:knative/docs.git"
+    clone_uri: "https://github.com/knative/docs.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -1603,7 +1603,7 @@ periodics:
   - org: knative
     repo: eventing
     base_ref: master
-    clone_uri: "git@github.com:knative/eventing.git"
+    clone_uri: "https://github.com/knative/eventing.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -1685,7 +1685,7 @@ periodics:
   - org: knative
     repo: pkg
     base_ref: master
-    clone_uri: "git@github.com:knative/pkg.git"
+    clone_uri: "https://github.com/knative/pkg.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -1736,7 +1736,7 @@ periodics:
   - org: knative
     repo: caching
     base_ref: master
-    clone_uri: "git@github.com:knative/caching.git"
+    clone_uri: "https://github.com/knative/caching.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -1756,7 +1756,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "git@github.com:knative/serving.git"
+    clone_uri: "https://github.com/knative/serving.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -1773,7 +1773,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "git@github.com:knative/serving.git"
+    clone_uri: "https://github.com/knative/serving.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage-dev:latest-dev
@@ -1792,7 +1792,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "git@github.com:knative/build.git"
+    clone_uri: "https://github.com/knative/build.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -1811,7 +1811,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "git@github.com:knative/docs.git"
+    clone_uri: "https://github.com/knative/docs.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -1830,7 +1830,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "git@github.com:knative/eventing.git"
+    clone_uri: "https://github.com/knative/eventing.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -1849,7 +1849,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "git@github.com:knative/pkg.git"
+    clone_uri: "https://github.com/knative/pkg.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -1868,7 +1868,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "git@github.com:knative/caching.git"
+    clone_uri: "https://github.com/knative/caching.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
