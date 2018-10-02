@@ -482,6 +482,39 @@ presubmits:
           requests:
             memory: "1Gi"
 
+  - name: pull-knative-build-pipeline-integration-tests
+    agent: kubernetes
+    context: pull-knative-build-pipeline-integration-tests
+    always_run: true
+    rerun_command: "/test pull-knative-build-pipeline-integration-tests"
+    trigger: "(?m)^/test (all|pull-knative-build-pipeline-integration-tests),?(\\s+|$)"
+    labels:
+      preset-service-account: "true"
+      preset-bazel-scratch-dir: "true"
+      preset-bazel-remote-cache-enabled: "true"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+        imagePullPolicy: Always
+        args:
+        - "--scenario=kubernetes_execute_bazel"
+        - "--clean"
+        - "--job=$(JOB_NAME)"
+        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
+        - "--root=/go/src"
+        - "--service-account=/etc/service-account/service-account.json"
+        - "--upload=gs://knative-prow/pr-logs"
+        - "--" # end bootstrap args, scenario args below
+        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+        - "./test/presubmit-tests.sh"
+        - "--integration-tests"
+        # Bazel needs privileged mode in order to sandbox builds.
+        securityContext:
+          privileged: true
+        resources:
+          requests:
+            memory: "1Gi"
+
   knative/eventing:
   - name: pull-knative-eventing-build-tests
     agent: kubernetes
