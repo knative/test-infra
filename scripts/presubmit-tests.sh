@@ -65,6 +65,17 @@ function exit_if_presubmit_not_required() {
 function main() {
   exit_if_presubmit_not_required
 
+  # Show the version of the tools we're using
+  if (( IS_PROW )); then
+    header "Current test setup"
+    echo ">> gcloud SDK version"
+    gcloud version
+    echo ">> kubectl version"
+    kubectl version
+    echo ">> go version"
+    go version
+  fi
+
   local all_parameters=$@
   [[ -z $1 ]] && all_parameters="--all-tests"
 
