@@ -67,6 +67,8 @@ function main() {
 
   # Show the version of the tools we're using
   if (( IS_PROW )); then
+    # Disable gcloud update notifications
+    gcloud config set component_manager/disable_update_check true
     header "Current test setup"
     echo ">> gcloud SDK version"
     gcloud version
