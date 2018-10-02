@@ -65,6 +65,7 @@ tide:
     - do-not-merge/work-in-progress
   merge_method:
     knative: squash
+    knative/build-pipeline: rebase
   target_url: https://prow.knative.dev/tide.html
 
 presets:
