@@ -12,13 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM gcr.io/k8s-testimages/kubekins-e2e:v20180604-68e777553-experimental
+FROM gcr.io/k8s-testimages/kubekins-e2e:v20181001-df2f5324a-master
 LABEL maintainer "Adriano Cunha <adrcunha@google.com>"
 
 # Install extras on top of base image
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update
+RUN gcloud components update
 
 # Docker
 RUN gcloud components install docker-credential-gcr
