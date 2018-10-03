@@ -47,11 +47,11 @@ source $(dirname ${BASH_SOURCE})/library.sh
 function build_resource_name() {
   local prefix=${E2E_BASE_NAME}-$1
   local suffix=${BUILD_NUMBER}
-  # Restrict suffix length to 20 chars
+  # Restrict suffix length to 30 chars
   if [[ -n "${suffix}" ]]; then
-    suffix=${suffix:${#suffix}<20?0:-20}
+    suffix=${suffix:${#suffix}<30?0:-30}
   fi
-  echo "${prefix:0:20}${suffix}"
+  echo "${prefix:0:30}${suffix}"
 }
 
 # Test cluster parameters
