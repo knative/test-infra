@@ -46,7 +46,7 @@ This script will test that the latest Knative Serving nightly release works.
 source vendor/github.com/knative/test-infra/scripts/e2e-tests.sh
 
 function teardown() {
-  echo "TODO: tear down Knative Serving"
+  echo "TODO: tear down test resources"
 }
 
 initialize $@
@@ -54,6 +54,9 @@ initialize $@
 start_latest_knative_serving
 
 wait_until_pods_running knative-serving || fail_test "Knative Serving is not up"
+
+# TODO: use go_test_e2e to run the tests.
+kubectl get pods || fail_test
 
 success
 ```
