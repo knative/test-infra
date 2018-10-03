@@ -37,7 +37,11 @@ function build_tests() {
 
 function unit_tests() {
   header "Running unit tests"
-  report_go_test ./test/...
+  local failed=0
+  for test in library release; do
+    ./test/${test}-tests.sh || failed=1
+  done
+  return ${failed}
 }
 
 function integration_tests() {
