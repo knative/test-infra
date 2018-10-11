@@ -24,5 +24,15 @@ resources:
   - knative-boskos-08
   - knative-boskos-09
   - knative-boskos-10
+  - knative-boskos-11
+  - knative-boskos-12
+  - knative-boskos-13
+  - knative-boskos-14
+  - knative-boskos-15
+  - knative-boskos-16
+  - knative-boskos-17
+  - knative-boskos-18
+  - knative-boskos-19
+  - knative-boskos-20
   state: dirty
   type: gke-project
