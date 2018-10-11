@@ -27,7 +27,9 @@ function build_resource_name() {
   if [[ -n "${suffix}" ]]; then
     suffix=${suffix:${#suffix}<20?0:-20}
   fi
-  echo "${prefix:0:20}${suffix}"
+  local name="${prefix:0:20}${suffix}"
+  # Ensure name doesn't end with "-"
+  echo "${name%-}"
 }
 
 # Test cluster parameters
