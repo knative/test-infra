@@ -515,6 +515,40 @@ presubmits:
           requests:
             memory: "1Gi"
 
+  - name: pull-knative-build-pipeline-go-coverage
+    labels:
+      preset-service-account: "true"
+    agent: kubernetes
+    context: pull-knative-build-pipeline-go-coverage
+    always_run: true
+    rerun_command: "/test pull-knative-build-pipeline-go-coverage"
+    trigger: "(?m)^/test (all|pull-knative-build-pipeline-go-coverage),?(\\s+|$)"
+    optional: true
+    decorate: true
+    clone_uri: "https://github.com/knative/build-pipeline.git"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
+        imagePullPolicy: Always
+        command:
+        - "/coverage"
+        args:
+        - "--postsubmit-gcs-bucket=knative-prow"
+        - "--postsubmit-job-name=post-knative-build-pipeline-go-coverage"
+        - "--artifacts=$(ARTIFACTS)"
+        - "--profile-name=coverage_profile.txt"
+        - "--cov-target=."
+        - "--cov-threshold-percentage=50"
+        - "--github-token=/etc/github-token/token"
+        volumeMounts:
+        - name: github-token
+          mountPath: /etc/github-token
+          readOnly: true
+      volumes:
+      - name: github-token
+        secret:
+          secretName: covbot-token
+
   knative/eventing:
   - name: pull-knative-eventing-build-tests
     agent: kubernetes
