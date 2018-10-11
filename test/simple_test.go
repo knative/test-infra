@@ -17,9 +17,32 @@ limitations under the License.
 package smoke
 
 import (
+	"fmt"
+	"os"
+	"syscall"
 	"testing"
 )
 
-func TestTestingInfrastructureWorks(t *testing.T) {
+// signal sends a UNIX signal to the test process.
+func signal(s os.Signal) {
+	p, _ := os.FindProcess(os.Getpid())
+        _ = p.Signal(s)
+}
+
+func TestSucceeds(t *testing.T) {
 	// Always succeed.
+}
+
+func TestFails(t *testing.T) {
+	t.Fail()
+}
+
+func TestFailsWithFatal(t *testing.T) {
+	// Simulate a zap.Fatal() call.
+	fmt.Println("fatal\tTestFailsWithFatal\tsimple_test.go:999\tFailed with logger.Fatal()")
+	signal(os.Interrupt)
+}
+
+func TestFailsWithSigQuit(t *testing.T) {
+	signal(syscall.SIGQUIT)
 }
