@@ -319,7 +319,11 @@ function report_go_test() {
   # Otherwise, we already shown the summary.
   # Exception: when emitting metrics, dump the full report.
   if (( failed )) || [[ "$@" == *" -emitmetrics"* ]]; then
-    echo "At least one test failed, full log:"
+    if (( failed )); then
+      echo "At least one test failed, full log:"
+    else
+      echo "Dumping full log as metrics were requested:"
+    fi
     cat ${report}
   fi
   # Always generate the junit summary.
