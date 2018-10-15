@@ -358,14 +358,17 @@ function start_latest_knative_build() {
   wait_until_pods_running knative-build || return 1
 }
 
-# Run dep-collector, installing it first if necessary.
-# Parameters: $1..$n - parameters passed to dep-collector.
-function run_dep_collector() {
-  local local_dep_collector="$(which dep-collector)"
-  if [[ -z ${local_dep_collector} ]]; then
-    go get -u github.com/mattmoor/dep-collector
+# Run a go tool, installing it first if necessary.
+# Parameters: $1 - tool to run.
+#             $2 - tool package for go get.
+#             $3..$n - parameters passed to the tool.
+function run_go_tool() {
+  local tool=$1
+  if [[ -z "$(which ${tool})" ]]; then
+    go get -u $2
   fi
-  dep-collector $@
+  shift 2
+  ${tool} $@
 }
 
 # Run dep-collector to update licenses.
@@ -375,7 +378,7 @@ function update_licenses() {
   cd ${REPO_ROOT_DIR} || return 1
   local dst=$1
   shift
-  run_dep_collector $@ > ./${dst}
+  run_go_tool dep-collector github.com/mattmoor/dep-collector $@ > ./${dst}
 }
 
 # Run dep-collector to check for forbidden liceses.
@@ -384,7 +387,7 @@ function check_licenses() {
   # Fetch the google/licenseclassifier for its license db
   go get -u github.com/google/licenseclassifier
   # Check that we don't have any forbidden licenses in our images.
-  run_dep_collector -check $@
+  run_go_tool dep-collector github.com/mattmoor/dep-collector -check $@
 }
 
 # Run the given linter on the given files, checking it exists first.

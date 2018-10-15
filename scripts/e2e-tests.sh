@@ -14,6 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# This is a helper script for Knative E2E test scripts.
+# See README.md for instructions on how to use it.
+
 source $(dirname ${BASH_SOURCE})/library.sh
 
 # Build a resource name based on $E2E_BASE_NAME, a suffix and $BUILD_NUMBER.
