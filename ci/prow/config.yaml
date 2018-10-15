@@ -1396,7 +1396,7 @@ periodics:
       command:
       - "/metrics"
       args:
-      - "--source-directory=$(JOB_NAME)"
+      - "--source-directory=ci-knative-serving-latency"
       - "--artifacts-dir=$(ARTIFACTS)"
       - "--service-account=/etc/service-account/service-account.json"
 - cron: "5 8 * * *" # Run at 01:05PST every day (08:05 UTC)
@@ -1550,7 +1550,7 @@ periodics:
       command:
       - "/metrics"
       args:
-      - "--source-directory=$(JOB_NAME)"
+      - "--source-directory=ci-knative-build-latency"
       - "--artifacts-dir=$(ARTIFACTS)"
       - "--service-account=/etc/service-account/service-account.json"
 - cron: "0 1 * * *" # Run at 01:00 every day
