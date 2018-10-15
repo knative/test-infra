@@ -1492,6 +1492,7 @@ periodics:
       - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/presubmit-tests.sh"
       - "--all-tests"
+      - "--emit-metrics"
       # Bazel needs privileged mode in order to sandbox builds.
       securityContext:
         privileged: true
@@ -1530,6 +1531,26 @@ periodics:
       resources:
         requests:
           memory: "1Gi"
+- cron: "5 8 * * *" # Run at 01:05PST every day (08:05 UTC)
+  name: ci-knative-build-latency
+  agent: kubernetes
+  labels:
+    preset-service-account: "true"
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: build
+    base_ref: master
+    clone_uri: "https://github.com/knative/build.git"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/metrics:latest
+      imagePullPolicy: Always
+      command:
+      - "/metrics"
+      args:
+      - "--artifacts-dir=$(ARTIFACTS)"
+      - "--service-account=/etc/service-account/service-account.json"
 - cron: "0 1 * * *" # Run at 01:00 every day
   name: ci-knative-build-go-coverage
   agent: kubernetes
