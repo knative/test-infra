@@ -235,6 +235,7 @@ function report_go_test() {
   echo "Finished run, return code is ${failed}"
   # Tests didn't run.
   [[ ! -s ${report} ]] && return 1
+  # Create WORKSPACE file, required to use bazel, if necessary.
   touch WORKSPACE
   local targets=""
   local last_run=""
