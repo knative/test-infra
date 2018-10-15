@@ -75,6 +75,9 @@ test_groups:
 - name: pull-knative-build-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-build-go-coverage
   short_text_metric: coverage
+- name: ci-knative-build-latency
+  gcs_prefix: knative-prow/logs/ci-knative-build-latency
+  short_text_metric: latency
 - name: ci-knative-eventing-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-continuous
 - name: ci-knative-eventing-release
@@ -130,6 +133,10 @@ dashboards:
     test_group_name: ci-knative-build-release
   - name: coverage
     test_group_name: pull-knative-build-test-coverage
+    base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
+  - name: latency
+    test_group_name: ci-knative-build-latency
+    description: '95% latency in ms'
     base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
 - name: knative-eventing
   dashboard_tab:
