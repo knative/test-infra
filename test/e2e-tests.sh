@@ -34,6 +34,9 @@ if (( USING_EXISTING_CLUSTER )); then
   fail_test
 fi
 
-# Test the e2e-tests.sh script by bringing up the test cluster
-start_latest_knative_serving || fail_test
+start_latest_knative_serving || fail_test "Knative Serving is not up"
+
+# This is actually a unit test, but it does exercise the necessary helper functions.
+go_test_e2e -run TestE2ESucceeds ./test || fail_test
+
 success
