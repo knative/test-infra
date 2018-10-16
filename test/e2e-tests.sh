@@ -37,6 +37,6 @@ fi
 start_latest_knative_serving || fail_test "Knative Serving is not up"
 
 # This is actually a unit test, but it does exercise the necessary helper functions.
-go_test_e2e -run TestE2ESucceeds || fail_test
+go_test_e2e -run TestE2ESucceeds ./test || fail_test
 
 success
