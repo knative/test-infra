@@ -30,7 +30,7 @@ RUN apt-get install -y uuid-runtime  # for uuidgen
 RUN apt-get install -y npm  # for markdown-link-check
 RUN apt-get install -y rubygems  # for mdl
 RUN apt-get install -y build-essential libssl-dev # for wrk
-RUN apt-get install -y netbase # sets up /etc/services needed for network calls
+RUN apt-get install -y netbase # sets up /etc/services needed for wrk
 
 # Extra tools through go get
 RUN go get -u github.com/google/go-containerregistry/cmd/ko
