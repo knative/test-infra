@@ -14,9 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// gcs.go defines functions on gcs
+// gcs.go defines functions to use GCS
 
-package main
+package gcs
 
 import (
 	"bufio"
@@ -24,6 +24,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"strconv"
 	"strings"
 
 	"cloud.google.com/go/storage"
@@ -31,9 +32,8 @@ import (
 )
 
 const (
-	logDir     = "logs/"
-	sourceDir  = "ci-knative-serving-continuous"
 	bucketName = "knative-prow"
+	latest     = "latest-build.txt"
 )
 
 var client *storage.Client
@@ -48,7 +48,22 @@ func createStorageObject(filename string) *storage.ObjectHandle {
 	return client.Bucket(bucketName).Object(filename)
 }
 
-func readGcsFile(ctx context.Context, filename string, sa string) ([]byte, error) {
+// GetLatestBuildNumber gets the latest build number for the specified log directory
+func GetLatestBuildNumber(ctx context.Context, logDir string, sa string) (int, error) {
+	contents, err := ReadGcsFile(ctx, logDir+latest, sa)
+	if err != nil {
+		return 0, err
+	}
+	latestBuild, err := strconv.Atoi(string(contents))
+	if err != nil {
+		return 0, err
+	}
+
+	return latestBuild, nil
+}
+
+//ReadGcsFile reads the specified file using the provided service account
+func ReadGcsFile(ctx context.Context, filename string, sa string) ([]byte, error) {
 	// Create a new GCS client
 	if err := createStorageClient(ctx, sa); err != nil {
 		log.Fatalf("Failed to create GCS client: %v", err)
@@ -69,33 +84,30 @@ func readGcsFile(ctx context.Context, filename string, sa string) ([]byte, error
 	return contents, nil
 }
 
-func parseLog(ctx context.Context, dir string, isLocal bool, coverage *OverallAPICoverage) []string {
-	var covLogs []string
+// ParseLog parses the log and returns the lines where the checkLog func does not return an empty slice.
+// checkLog function should take in the log statement and return the fields from that statement that should be in the log output
+func ParseLog(ctx context.Context, filename string, checkLog func(s []string) []string) []string {
+	var logs []string
 
-	buildDir := logDir + dir
-	log.Printf("Parsing '%s'", buildDir)
-	logFile := buildDir + "/build-log.txt"
-	log.Printf("Parsing '%s'", logFile)
-	o := createStorageObject(logFile)
+	log.Printf("Parsing '%s'", filename)
+	o := createStorageObject(filename)
 	if _, err := o.Attrs(ctx); err != nil {
-		log.Printf("Cannot get attributes of '%s', assuming not ready yet: %v", logFile, err)
+		log.Printf("Cannot get attributes of '%s', assuming not ready yet: %v", filename, err)
 		return nil
 	}
 	f, err := o.NewReader(ctx)
 	if err != nil {
-		log.Fatalf("Error opening '%s': %v", logFile, err)
+		log.Fatalf("Error opening '%s': %v", filename, err)
 	}
 	defer f.Close()
 
 	scanner := bufio.NewScanner(f)
 
 	for scanner.Scan() {
-		fields := strings.Fields(scanner.Text())
-
-		// I0727 16:23:30.055] info	TestRouteCreation	test/configuration.go:34	resource {<resource_name>: <val>}"}
-		if len(fields) == 7 && fields[2] == "info" && fields[5] == "resource" {
-			covLogs = append(covLogs, strings.Join(fields[6:], " "))
+		s := checkLog(strings.Fields(scanner.Text()))
+		if len(s) > 0 {
+			logs = append(s)
 		}
 	}
-	return covLogs
+	return logs
 }

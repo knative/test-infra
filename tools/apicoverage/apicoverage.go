@@ -27,10 +27,15 @@ import (
 	"log"
 	"os"
 	"reflect"
-	"strconv"
 	"strings"
 
 	"github.com/knative/serving/pkg/apis/serving/v1alpha1"
+	"github.com/knative/test-infra/tools/gcs"
+)
+
+const (
+	logDir    = "logs/ci-knative-serving-continuous/"
+	buildFile = "build-log.txt"
 )
 
 // ResourceObjects defines the resource objects in knative-serving
@@ -176,18 +181,26 @@ func main() {
 
 	// Read the latest-build.txt file to get the latest build number
 	ctx := context.Background()
-	contents, err := readGcsFile(ctx, logDir+sourceDir+"/latest-build.txt", *serviceAccount)
+	num, err := gcs.GetLatestBuildNumber(ctx, logDir, *serviceAccount)
 	if err != nil {
-		log.Fatalf("Cannot get latest build number. %s: %v", contents, err)
-	}
-	latestBuild, err := strconv.Atoi(string(contents))
-	if err != nil {
-		log.Fatalf("Cannot convert %s to string to get latest build %v", string(contents), err)
+		log.Fatalf("Cannot get latest build number: %v", err)
 	}
 
 	// Calculate coverage
 	coverage := initCoverage()
-	calculateCoverage(parseLog(ctx, fmt.Sprintf("%s/%d", sourceDir, latestBuild), false, coverage), coverage)
+	calculateCoverage(
+		gcs.ParseLog(
+			ctx,
+			fmt.Sprintf("%s/%d/%s", logDir, num, buildFile),
+			func(fields []string) []string {
+				var covLogs []string
+				// I0727 16:23:30.055] info	TestRouteCreation	test/configuration.go:34	resource {<resource_name>: <val>}"}
+				if len(fields) == 7 && fields[2] == "info" && fields[5] == "resource" {
+					covLogs = append(covLogs, strings.Join(fields[6:], " "))
+				}
+				return covLogs
+			}),
+		coverage)
 
 	// Write the testgrid xml to artifacts
 	createTestgridXML(coverage, *artifactsDir)

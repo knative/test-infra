@@ -19,9 +19,9 @@ limitations under the License.
 package main
 
 import (
-	"encoding/xml"
 	"log"
-	"os"
+
+	"github.com/knative/test-infra/tools/testgrid"
 )
 
 const (
@@ -31,63 +31,21 @@ const (
 	overallService = "OverallService"
 )
 
-// TestProperty defines a property of the test
-type TestProperty struct {
-	Name  string  `xml:"name,attr"`
-	Value float32 `xml:"value,attr"`
-}
-
-// TestProperties is an array of test properties
-type TestProperties struct {
-	Property []TestProperty `xml:"property"`
-}
-
-// TestCase defines a test case that was executed
-type TestCase struct {
-	ClassName  string         `xml:"class_name,attr"`
-	Name       string         `xml:"name,attr"`
-	Time       int            `xml:"time,attr"`
-	Properties TestProperties `xml:"properties"`
-	Fail       bool           `xml:"failure,omitempty"`
-}
-
-// TestSuite defines the set of relevant test cases
-type TestSuite struct {
-	XMLName   xml.Name   `xml:"testsuite"`
-	TestCases []TestCase `xml:"testcase"`
-}
-
-func createTestProperty(value float32) TestProperty {
-	return TestProperty{Name: apiCoverage, Value: value}
-}
-
-func createTestCase(name string, properties []TestProperty, fail bool) TestCase {
-	tc := TestCase{ClassName: apiCoverage, Name: name, Properties: TestProperties{Property: properties}, Time: 0}
-	if fail {
-		tc.Fail = true
-	}
-	return tc
-}
-
-func createTestSuite(cases []TestCase) TestSuite {
-	return TestSuite{TestCases: cases}
-}
-
-func createCases(tcName string, covered map[string]int, notCovered map[string]int) []TestCase {
-	var tc []TestCase
+func createCases(tcName string, covered map[string]int, notCovered map[string]int) []testgrid.TestCase {
+	var tc []testgrid.TestCase
 
 	var percentCovered = float32(100 * len(covered) / (len(covered) + len(notCovered)))
-	tp := []TestProperty{createTestProperty(percentCovered)}
-	tc = append(tc, createTestCase(tcName, tp, false))
+	tp := []testgrid.TestProperty{testgrid.TestProperty{Name: apiCoverage, Value: percentCovered}}
+	tc = append(tc, testgrid.TestCase{Name: tcName, Properties: testgrid.TestProperties{Property: tp}, Fail: false})
 
 	for key, value := range covered {
-		tp := []TestProperty{createTestProperty(float32(value))}
-		tc = append(tc, createTestCase(tcName+"/"+key, tp, false))
+		tp := []testgrid.TestProperty{testgrid.TestProperty{Name: apiCoverage, Value: float32(value)}}
+		tc = append(tc, testgrid.TestCase{Name: tcName + "/" + key, Properties: testgrid.TestProperties{Property: tp}, Fail: false})
 	}
 
 	for key, value := range notCovered {
-		tp := []TestProperty{createTestProperty(float32(value))}
-		tc = append(tc, createTestCase(tcName+"/"+key, tp, true))
+		tp := []testgrid.TestProperty{testgrid.TestProperty{Name: apiCoverage, Value: float32(value)}}
+		tc = append(tc, testgrid.TestCase{Name: tcName + "/" + key, Properties: testgrid.TestProperties{Property: tp}, Fail: true})
 	}
 	return tc
 }
@@ -96,20 +54,9 @@ func createTestgridXML(coverage *OverallAPICoverage, artifactsDir string) {
 	tc := createCases(overallRoute, coverage.RouteAPICovered, coverage.RouteAPINotCovered)
 	tc = append(tc, createCases(overallConfig, coverage.ConfigurationAPICovered, coverage.ConfigurationAPINotCovered)...)
 	tc = append(tc, createCases(overallService, coverage.ServiceAPICovered, coverage.ServiceAPINotCovered)...)
-	ts := createTestSuite(tc)
+	ts := testgrid.TestSuite{TestCases: tc}
 
-	op, err := xml.MarshalIndent(ts, "", "  ")
-	if err != nil {
-		log.Fatalf("Error creating xml: %v", err)
-	}
-
-	outputFile := artifactsDir + "/junit_bazel.xml"
-	f, err := os.Create(outputFile)
-	if err != nil {
-		log.Fatalf("Cannot create '%s': %v", outputFile, err)
-	}
-	defer f.Close()
-	if _, err := f.WriteString(string(op) + "\n"); err != nil {
-		log.Fatalf("Cannot write to '%s': %v", f.Name(), err)
+	if err := testgrid.CreateXMLOutput(ts, artifactsDir); err != nil {
+		log.Fatalf("Cannot create the xml output file: %v", err)
 	}
 }
