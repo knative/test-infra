@@ -192,13 +192,13 @@ func main() {
 		gcs.ParseLog(
 			ctx,
 			fmt.Sprintf("%s/%d/%s", logDir, num, buildFile),
-			func(fields []string) []string {
+			func(fields []string) *string {
 				var covLogs []string
 				// I0727 16:23:30.055] info	TestRouteCreation	test/configuration.go:34	resource {<resource_name>: <val>}"}
 				if len(fields) == 7 && fields[2] == "info" && fields[5] == "resource" {
-					covLogs = append(covLogs, strings.Join(fields[6:], " "))
+					return strings.Join(fields[6:], " ")
 				}
-				return covLogs
+				return nil
 			}),
 		coverage)
 

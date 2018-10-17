@@ -85,8 +85,9 @@ func ReadGcsFile(ctx context.Context, filename string, sa string) ([]byte, error
 }
 
 // ParseLog parses the log and returns the lines where the checkLog func does not return an empty slice.
-// checkLog function should take in the log statement and return the fields from that statement that should be in the log output
-func ParseLog(ctx context.Context, filename string, checkLog func(s []string) []string) []string {
+// checkLog function should take in the log statement and return a part from that statement that should be in the log output.ParseLog
+// If we want the whole line, we can return string.Join(s[:], " ") else return the relevant pieces separated by a space.
+func ParseLog(ctx context.Context, filename string, checkLog func(s []string) *string) []string {
 	var logs []string
 
 	log.Printf("Parsing '%s'", filename)
@@ -104,9 +105,8 @@ func ParseLog(ctx context.Context, filename string, checkLog func(s []string) []
 	scanner := bufio.NewScanner(f)
 
 	for scanner.Scan() {
-		s := checkLog(strings.Fields(scanner.Text()))
-		if len(s) > 0 {
-			logs = append(s)
+		if s := checkLog(strings.Fields(scanner.Text())); s != nil {
+			logs = append(logs, *s)
 		}
 	}
 	return logs
