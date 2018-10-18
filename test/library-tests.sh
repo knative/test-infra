@@ -29,6 +29,13 @@ function test_report() {
   grep "Done parsing 1 tests" ${REPORT} > /dev/null
 }
 
+# Cleanup bazel stuff to avoid confusing Prow
+function cleanup_bazel() {
+  bazel clean
+}
+
+trap cleanup_bazel EXIT
+
 header "Testing report_go_test"
 
 subheader "Test pass"

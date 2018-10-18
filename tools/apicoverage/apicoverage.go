@@ -27,10 +27,20 @@ import (
 	"log"
 	"os"
 	"reflect"
-	"strconv"
 	"strings"
 
 	"github.com/knative/serving/pkg/apis/serving/v1alpha1"
+	"github.com/knative/test-infra/tools/gcs"
+	"github.com/knative/test-infra/tools/testgrid"
+)
+
+const (
+	logDir         = "logs/ci-knative-serving-continuous/"
+	buildFile      = "build-log.txt"
+	apiCoverage    = "api_coverage"
+	overallRoute   = "OverallRoute"
+	overallConfig  = "OverallConfiguration"
+	overallService = "OverallService"
 )
 
 // ResourceObjects defines the resource objects in knative-serving
@@ -168,6 +178,45 @@ func initCoverage() *OverallAPICoverage {
 	return &coverage
 }
 
+func getRelevantLogs(fields []string) *string {
+	// I0727 16:23:30.055] 2018-10-12T18:18:06.835-0700 info	TestRouteCreation	test/configuration.go:34	resource {<resource_name>: <val>}"}
+	if len(fields) == 8 && fields[3] == "info" && fields[6] == "resource" {
+		s := strings.Join(fields[7:], " ")
+		return &s
+	}
+	return nil
+}
+
+func createCases(tcName string, covered map[string]int, notCovered map[string]int) []testgrid.TestCase {
+	var tc []testgrid.TestCase
+
+	var percentCovered = float32(100 * len(covered) / (len(covered) + len(notCovered)))
+	tp := []testgrid.TestProperty{testgrid.TestProperty{Name: apiCoverage, Value: percentCovered}}
+	tc = append(tc, testgrid.TestCase{Name: tcName, Properties: testgrid.TestProperties{Property: tp}, Fail: false})
+
+	for key, value := range covered {
+		tp := []testgrid.TestProperty{testgrid.TestProperty{Name: apiCoverage, Value: float32(value)}}
+		tc = append(tc, testgrid.TestCase{Name: tcName + "/" + key, Properties: testgrid.TestProperties{Property: tp}, Fail: false})
+	}
+
+	for key, value := range notCovered {
+		tp := []testgrid.TestProperty{testgrid.TestProperty{Name: apiCoverage, Value: float32(value)}}
+		tc = append(tc, testgrid.TestCase{Name: tcName + "/" + key, Properties: testgrid.TestProperties{Property: tp}, Fail: true})
+	}
+	return tc
+}
+
+func createTestgridXML(coverage *OverallAPICoverage, artifactsDir string) {
+	tc := createCases(overallRoute, coverage.RouteAPICovered, coverage.RouteAPINotCovered)
+	tc = append(tc, createCases(overallConfig, coverage.ConfigurationAPICovered, coverage.ConfigurationAPINotCovered)...)
+	tc = append(tc, createCases(overallService, coverage.ServiceAPICovered, coverage.ServiceAPINotCovered)...)
+	ts := testgrid.TestSuite{TestCases: tc}
+
+	if err := testgrid.CreateXMLOutput(ts, artifactsDir); err != nil {
+		log.Fatalf("Cannot create the xml output file: %v", err)
+	}
+}
+
 func main() {
 
 	artifactsDir := flag.String("artifacts-dir", "./artifacts", "Directory to store the generated XML file")
@@ -176,18 +225,16 @@ func main() {
 
 	// Read the latest-build.txt file to get the latest build number
 	ctx := context.Background()
-	contents, err := readGcsFile(ctx, logDir+sourceDir+"/latest-build.txt", *serviceAccount)
+	num, err := gcs.GetLatestBuildNumber(ctx, logDir, *serviceAccount)
 	if err != nil {
-		log.Fatalf("Cannot get latest build number. %s: %v", contents, err)
-	}
-	latestBuild, err := strconv.Atoi(string(contents))
-	if err != nil {
-		log.Fatalf("Cannot convert %s to string to get latest build %v", string(contents), err)
+		log.Fatalf("Cannot get latest build number: %v", err)
 	}
 
 	// Calculate coverage
 	coverage := initCoverage()
-	calculateCoverage(parseLog(ctx, fmt.Sprintf("%s/%d", sourceDir, latestBuild), false, coverage), coverage)
+	calculateCoverage(
+		gcs.ParseLog(ctx, fmt.Sprintf("%s/%d/%s", logDir, num, buildFile), getRelevantLogs),
+		coverage)
 
 	// Write the testgrid xml to artifacts
 	createTestgridXML(coverage, *artifactsDir)
