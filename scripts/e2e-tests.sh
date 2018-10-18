@@ -289,7 +289,15 @@ function initialize() {
   readonly E2E_SCRIPT
 
   cd ${REPO_ROOT_DIR}
-  for parameter in $@; do
+  while [[ $# -ne 0 ]]; do
+    local parameter=$1
+    if [[ "$(type -t parse_flags)" == "function" ]]; then
+      parse_flags $@
+      local skip=$?
+      [[ ${skip} -eq 0 ]] && break
+      shift ${skip}
+      continue
+    fi
     case $parameter in
       --run-tests) RUN_TESTS=1 ;;
       --emit-metrics) EMIT_METRICS=1 ;;

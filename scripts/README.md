@@ -16,6 +16,12 @@ resources.
 called when a test fails, and can dump extra information about the current state
 of the cluster (tipically using `kubectl`).
 
+1. [optional] Write the `parse_flags()` function. It will be called whenever an
+unrecognized flag is passed to the script, allowing you to define your own flags.
+The function must return 0 if the flag is unrecognized, or the number of items
+to skip in the command line if the flag was parsed successfully. For example,
+return 1 for a simple flag, and 2 for a flag with a parameter.
+
 1. Call the `initialize()` function passing `$@` (without quotes).
 
 1. Write logic for the end-to-end tests. Run all go tests using `go_test_e2e()`
@@ -41,7 +47,9 @@ tests against the cluster.
 
 ### Sample end-to-end test script
 
-This script will test that the latest Knative Serving nightly release works.
+This script will test that the latest Knative Serving nightly release works. It
+defines a special flag (`--dont-wait-for-knative`) that causes the script not to
+wait for Knative Serving to be up before running the tests.
 
 ```bash
 source vendor/github.com/knative/test-infra/scripts/e2e-tests.sh
@@ -50,11 +58,23 @@ function teardown() {
   echo "TODO: tear down test resources"
 }
 
+function parse_flags() {
+  if [[ "$1" == "--dont-wait-for-knative" ]]; then
+    WAIT_FOR_KNATIVE=0
+    return 1
+  fi
+  return 0
+}
+
+WAIT_FOR_KNATIVE=1
+
 initialize $@
 
 start_latest_knative_serving
 
-wait_until_pods_running knative-serving || fail_test "Knative Serving is not up"
+if (( WAIT_FOR_KNATIVE )); then
+  wait_until_pods_running knative-serving || fail_test "Knative Serving is not up"
+fi
 
 # TODO: use go_test_e2e to run the tests.
 kubectl get pods || fail_test
