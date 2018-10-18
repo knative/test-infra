@@ -48,7 +48,7 @@ tests against the cluster.
 ### Sample end-to-end test script
 
 This script will test that the latest Knative Serving nightly release works. It
-defines a special flag (`--dont-wait-for-knative`) that causes the script not to
+defines a special flag (`--no-knative-wait`) that causes the script not to
 wait for Knative Serving to be up before running the tests.
 
 ```bash
@@ -59,7 +59,7 @@ function teardown() {
 }
 
 function parse_flags() {
-  if [[ "$1" == "--dont-wait-for-knative" ]]; then
+  if [[ "$1" == "--no-knative-wait" ]]; then
     WAIT_FOR_KNATIVE=0
     return 1
   fi
