@@ -66,6 +66,11 @@ function warning() {
   make_banner "!" "$1"
 }
 
+# Checks whether the given function exists.
+function function_exists() {
+  [[ "$(type -t $1)" == "function" ]]
+}
+
 # Remove ALL images in the given GCR repository.
 # Parameters: $1 - GCR repository.
 function delete_gcr_images() {

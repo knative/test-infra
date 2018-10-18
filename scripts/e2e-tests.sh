@@ -49,7 +49,7 @@ readonly TEST_RESULT_FILE=/tmp/${E2E_BASE_NAME}-e2e-result
 function teardown_test_resources() {
   header "Tearing down test environment"
   # Free resources in GCP project.
-  if (( ! USING_EXISTING_CLUSTER )) && [[ "$(type -t teardown)" == "function" ]]; then
+  if (( ! USING_EXISTING_CLUSTER )) && function_exists teardown; then
     teardown
   fi
 
@@ -132,7 +132,7 @@ function dump_cluster_state() {
   kubectl get services --all-namespaces
   echo ">>> Events:"
   kubectl get events --all-namespaces
-  [[ "$(type -t dump_extra_cluster_state)" == "function" ]] && dump_extra_cluster_state
+  function_exists dump_extra_cluster_state && dump_extra_cluster_state
   echo "***************************************"
   echo "***           TEST FAILED           ***"
   echo "***     End of information dump     ***"
@@ -248,7 +248,7 @@ function setup_test_cluster() {
 
   trap teardown_test_resources EXIT
 
-  if (( USING_EXISTING_CLUSTER )) && [[ "$(type -t teardown)" == "function" ]]; then
+  if (( USING_EXISTING_CLUSTER )) && function_exists teardown; then
     echo "Deleting any previous SUT instance"
     teardown
   fi
