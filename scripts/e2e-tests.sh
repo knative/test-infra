@@ -291,13 +291,17 @@ function initialize() {
   cd ${REPO_ROOT_DIR}
   while [[ $# -ne 0 ]]; do
     local parameter=$1
+    # Try parsing flag as a custom one.
     if [[ "$(type -t parse_flags)" == "function" ]]; then
       parse_flags $@
       local skip=$?
-      [[ ${skip} -eq 0 ]] && break
-      shift ${skip}
-      continue
+      if [[ ${skip} -ne 0 ]]; then
+        # Skip parsed flag (and possibly argument) and continue
+        shift ${skip}
+        continue
+      fi
     fi
+    # Try parsing flag as a standard one.
     case $parameter in
       --run-tests) RUN_TESTS=1 ;;
       --emit-metrics) EMIT_METRICS=1 ;;

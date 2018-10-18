@@ -45,6 +45,7 @@ function unit_tests() {
 }
 
 function integration_tests() {
+  ./test/e2e-tests.sh --smoke-test-custom-flag-passed
   ./test/e2e-tests.sh
 }
 
