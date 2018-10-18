@@ -1419,6 +1419,26 @@ periodics:
       args:
       - "--artifacts-dir=$(ARTIFACTS)"
       - "--service-account=/etc/service-account/service-account.json"
+- cron: "5 9 * * *" # Run at 02:05 PST every day (09:05 UTC)
+  name: ci-knative-serving-performance-tool
+  agent: kubernetes
+  labels:
+    preset-service-account: "true"
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+    clone_uri: "https://github.com/knative/serving.git"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/observed-concurrency:latest
+      imagePullPolicy: Always
+      command:
+      - "/apicoverage"
+      args:
+      - "--artifacts-dir=$(ARTIFACTS)"
+      - "--service-account=/etc/service-account/service-account.json"
 - cron: "0 1 * * *" # Run at 01:00 every day
   name: ci-knative-serving-go-coverage
   agent: kubernetes
