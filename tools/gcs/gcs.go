@@ -85,8 +85,7 @@ func ReadGcsFile(ctx context.Context, filename string, sa string) ([]byte, error
 }
 
 // ParseLog parses the log and returns the lines where the checkLog func does not return an empty slice.
-// checkLog function should take in the log statement and return a part from that statement that should be in the log output.ParseLog
-// If we want the whole line, we can return string.Join(s[:], " ") else return the relevant pieces separated by a space.
+// checkLog function should take in the log statement and return a part from that statement that should be in the log output.
 func ParseLog(ctx context.Context, filename string, checkLog func(s []string) *string) []string {
 	var logs []string
 
