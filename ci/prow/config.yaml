@@ -53,6 +53,7 @@ tide:
     - knative/build-templates
     - knative/serving
     - knative/eventing
+    - knative/eventing-sources
     - knative/docs
     - knative/test-infra
     - knative/pkg
