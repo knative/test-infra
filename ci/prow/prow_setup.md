@@ -38,19 +38,27 @@
 
 1. Set **tide** as a required status check for the master branch.
 
-### Setting up test jobs for a new repo 
+### Setting up jobs for a new repo 
 
-1. Have the test infrastructure in place (usually this means having `//test/presubmit-tests.sh` working).
+1. Have the test infrastructure in place (usually this means having at least `//test/presubmit-tests.sh` working, and optionally `//hack/release.sh` working for automated nightly releases).
 
 1. Merge a pull request (e.g., https://github.com/knative/test-infra/pull/203) that:
 
-    1. Updates the Prow config file (usually this means setting up the *pull-knative-**repo**-**(build|unit|integration)**-tests* jobs, copy and update an existing config for another repo).
+   1. Updates the Prow config file (usually, copy and update existing jobs from another repository).
+   
+      1. For the presubmit tests, setup the *pull-knative-**repo**-**(build|unit|integration)**-tests* jobs.
+
+      1. For go test coverage, setup the ***(pull|post|ci)**-knative-**repo**-go-coverage* jobs.
+
+      1. For the continuous integration tests, setup the *ci-knative-**repo**-continuous* job.
+
+      1. For automated nightly releases, setup the *ci-knative-**repo**-release* job.
 
     1. Updates the Gubernator config with the new log dirs.
 
-    1. Updates the Testgrid configs with the new log dirs.
+    1. Updates the Testgrid config with the new buckets, tabs and dashboard.
 
-1. Ask ask one of the owners of *knative/test-infra* to:
+1. Ask one of the owners of *knative/test-infra* to:
 
     1. Run `make update-config` in `ci/prow`.
 
