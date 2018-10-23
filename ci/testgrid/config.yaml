@@ -78,6 +78,11 @@ test_groups:
 - name: ci-knative-build-latency
   gcs_prefix: knative-prow/logs/ci-knative-build-latency
   short_text_metric: latency
+- name: ci-knative-build-templates-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-build-templates-continuous
+- name: pull-knative-build-pipeline-test-coverage
+  gcs_prefix: knative-prow/logs/ci-knative-build-pipeline-go-coverage
+  short_text_metric: coverage
 - name: ci-knative-eventing-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-continuous
 - name: ci-knative-eventing-release
@@ -92,8 +97,6 @@ test_groups:
 - name: pull-knative-eventing-sources-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-go-coverage
   short_text_metric: coverage
-- name: ci-knative-build-templates-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-build-templates-continuous
 - name: ci-knative-docs-continuous
   gcs_prefix: knative-prow/logs/ci-knative-docs-continuous
 - name: pull-knative-docs-test-coverage
@@ -145,6 +148,15 @@ dashboards:
     test_group_name: ci-knative-build-latency
     description: '95% latency in ms'
     base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
+- name: knative-build-templates
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-build-templates-continuous
+- name: knative-build-pipeline
+  dashboard_tab:
+  - name: coverage
+    test_group_name: pull-knative-build-pipeline-test-coverage
+    base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
 - name: knative-eventing
   dashboard_tab:
   - name: continuous
@@ -163,10 +175,6 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-eventing-sources-test-coverage
     base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
-- name: knative-build-templates
-  dashboard_tab:
-  - name: continuous
-    test_group_name: ci-knative-build-templates-continuous
 - name: knative-docs
   dashboard_tab:
   - name: continuous
@@ -196,9 +204,10 @@ dashboard_groups:
   dashboard_names:
   - knative-serving
   - knative-build
+  - knative-build-templates
+  - knative-build-pipeline
   - knative-eventing
   - knative-eventing-sources
-  - knative-build-templates
   - knative-docs
   - knative-pkg
   - knative-caching
