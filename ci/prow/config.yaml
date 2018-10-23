@@ -53,6 +53,7 @@ tide:
     - knative/build-templates
     - knative/serving
     - knative/eventing
+    - knative/eventing-sources
     - knative/docs
     - knative/test-infra
     - knative/pkg
@@ -669,6 +670,140 @@ presubmits:
         args:
         - "--postsubmit-gcs-bucket=knative-prow"
         - "--postsubmit-job-name=post-knative-eventing-go-coverage"
+        - "--artifacts=$(ARTIFACTS)"
+        - "--profile-name=coverage_profile.txt"
+        - "--cov-target=./pkg/"
+        - "--cov-threshold-percentage=50"
+        - "--github-token=/etc/github-token/token"
+        volumeMounts:
+        - name: github-token
+          mountPath: /etc/github-token
+          readOnly: true
+      volumes:
+      - name: github-token
+        secret:
+          secretName: covbot-token
+
+  knative/eventing-sources:
+  - name: pull-knative-eventing-sources-build-tests
+    agent: kubernetes
+    context: pull-knative-eventing-sources-build-tests
+    always_run: true
+    rerun_command: "/test pull-knative-eventing-sources-build-tests"
+    trigger: "(?m)^/test (all|pull-knative-eventing-sources-build-tests),?(\\s+|$)"
+    labels:
+      preset-service-account: "true"
+      preset-bazel-scratch-dir: "true"
+      preset-bazel-remote-cache-enabled: "true"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+        imagePullPolicy: Always
+        args:
+        - "--scenario=kubernetes_execute_bazel"
+        - "--clean"
+        - "--job=$(JOB_NAME)"
+        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
+        - "--root=/go/src"
+        - "--service-account=/etc/service-account/service-account.json"
+        - "--upload=gs://knative-prow/pr-logs"
+        - "--" # end bootstrap args, scenario args below
+        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+        - "./test/presubmit-tests.sh"
+        - "--build-tests"
+        # Bazel needs privileged mode in order to sandbox builds.
+        securityContext:
+          privileged: true
+        resources:
+          requests:
+            memory: "1Gi"
+
+  - name: pull-knative-eventing-sources-unit-tests
+    agent: kubernetes
+    context: pull-knative-eventing-sources-unit-tests
+    always_run: true
+    rerun_command: "/test pull-knative-eventing-sources-unit-tests"
+    trigger: "(?m)^/test (all|pull-knative-eventing-sources-unit-tests),?(\\s+|$)"
+    labels:
+      preset-service-account: "true"
+      preset-bazel-scratch-dir: "true"
+      preset-bazel-remote-cache-enabled: "true"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+        imagePullPolicy: Always
+        args:
+        - "--scenario=kubernetes_execute_bazel"
+        - "--clean"
+        - "--job=$(JOB_NAME)"
+        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
+        - "--root=/go/src"
+        - "--service-account=/etc/service-account/service-account.json"
+        - "--upload=gs://knative-prow/pr-logs"
+        - "--" # end bootstrap args, scenario args below
+        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+        - "./test/presubmit-tests.sh"
+        - "--unit-tests"
+        # Bazel needs privileged mode in order to sandbox builds.
+        securityContext:
+          privileged: true
+        resources:
+          requests:
+            memory: "1Gi"
+
+  - name: pull-knative-eventing-sources-integration-tests
+    agent: kubernetes
+    context: pull-knative-eventing-sources-integration-tests
+    always_run: true
+    rerun_command: "/test pull-knative-eventing-sources-integration-tests"
+    trigger: "(?m)^/test (all|pull-knative-eventing-sources-integration-tests),?(\\s+|$)"
+    labels:
+      preset-service-account: "true"
+      preset-bazel-scratch-dir: "true"
+      preset-bazel-remote-cache-enabled: "true"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+        imagePullPolicy: Always
+        args:
+        - "--scenario=kubernetes_execute_bazel"
+        - "--clean"
+        - "--job=$(JOB_NAME)"
+        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
+        - "--root=/go/src"
+        - "--service-account=/etc/service-account/service-account.json"
+        - "--upload=gs://knative-prow/pr-logs"
+        - "--" # end bootstrap args, scenario args below
+        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+        - "./test/presubmit-tests.sh"
+        - "--integration-tests"
+        # Bazel needs privileged mode in order to sandbox builds.
+        securityContext:
+          privileged: true
+        resources:
+          requests:
+            memory: "1Gi"
+
+  - name: pull-knative-eventing-sources-go-coverage
+    labels:
+      preset-service-account: "true"
+    agent: kubernetes
+    context: pull-knative-eventing-sources-go-coverage
+    always_run: true
+    rerun_command: "/test pull-knative-eventing-sources-go-coverage"
+    trigger: "(?m)^/test (all|pull-knative-eventing-sources-go-coverage),?(\\s+|$)"
+    optional: true
+    decorate: true
+    clone_uri: "https://github.com/knative/eventing-sources.git"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
+        imagePullPolicy: Always
+        command:
+        - "/coverage"
+        args:
+        - "--postsubmit-gcs-bucket=knative-prow"
+        - "--postsubmit-job-name=post-knative-eventing-sources-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--profile-name=coverage_profile.txt"
         - "--cov-target=./pkg/"
@@ -1707,6 +1842,88 @@ periodics:
       - "--cov-target=./pkg/"
       - "--cov-threshold-percentage=80"
 
+- cron: "30 * * * *" # Run every hour and 30 minutes
+  name: ci-knative-eventing-sources-continuous
+  agent: kubernetes
+  labels:
+    preset-service-account: "true"
+    preset-bazel-scratch-dir: "true"
+    preset-bazel-remote-cache-enabled: "true"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      imagePullPolicy: Always
+      args:
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=github.com/knative/eventing-sources"
+      - "--root=/go/src"
+      - "--service-account=/etc/service-account/service-account.json"
+      - "--upload=gs://knative-prow/logs"
+      - "--timeout=50" # Avoid overrun
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./test/presubmit-tests.sh"
+      - "--all-tests"
+      # Bazel needs privileged mode in order to sandbox builds.
+      securityContext:
+        privileged: true
+      resources:
+        requests:
+          memory: "1Gi"
+- cron: "16 9 * * *" # Run at 02:16PST every day (09:16 UTC)
+  name: ci-knative-eventing-sources-release
+  agent: kubernetes
+  labels:
+    preset-service-account: "true"
+    preset-bazel-scratch-dir: "true"
+    preset-bazel-remote-cache-enabled: "true"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      imagePullPolicy: Always
+      args:
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=github.com/knative/eventing-sources"
+      - "--root=/go/src"
+      - "--service-account=/etc/service-account/service-account.json"
+      - "--upload=gs://knative-prow/logs"
+      - "--timeout=90" # 1.5h
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./hack/release.sh"
+      - "--publish"
+      - "--tag-release"
+      # Bazel needs privileged mode in order to sandbox builds.
+      securityContext:
+        privileged: true
+      resources:
+        requests:
+          memory: "1Gi"
+- cron: "0 1 * * *" # Run at 01:00 every day
+  name: ci-knative-eventing-sources-go-coverage
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: eventing-sources
+    base_ref: master
+    clone_uri: "https://github.com/knative/eventing-sources.git"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/coverage:latest
+      imagePullPolicy: Always
+      command:
+      - "/coverage"
+      args:
+      - "--artifacts=$(ARTIFACTS)"
+      - "--profile-name=coverage_profile.txt"
+      - "--cov-target=./pkg/"
+      - "--cov-threshold-percentage=80"
+
 - cron: "40 * * * *" # Run every hour and 40 minutes
   name: ci-knative-build-templates-continuous
   agent: kubernetes
@@ -1922,6 +2139,25 @@ postsubmits:
     agent: kubernetes
     decorate: true
     clone_uri: "https://github.com/knative/eventing.git"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
+        imagePullPolicy: Always
+        command:
+        - "/coverage"
+        args:
+        - "--artifacts=$(ARTIFACTS)"
+        - "--profile-name=coverage_profile.txt"
+        - "--cov-target=./pkg/"
+        - "--cov-threshold-percentage=0"
+
+  knative/eventing-sources:
+  - name: post-knative-eventing-sources-go-coverage
+    branches:
+    - master
+    agent: kubernetes
+    decorate: true
+    clone_uri: "https://github.com/knative/eventing-sources.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest

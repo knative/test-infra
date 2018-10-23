@@ -35,7 +35,6 @@ RUN apt-get install -y netbase # sets up /etc/services needed for wrk
 # Extra tools through go get
 RUN go get -u github.com/google/go-containerregistry/cmd/ko
 RUN go get -u github.com/golang/dep/cmd/dep
-RUN go get -u github.com/mattmoor/dep-collector
 RUN go get -u github.com/google/licenseclassifier
 
 # Extra tools through npm
@@ -52,3 +51,4 @@ RUN cp wrk/wrk /usr/local/bin
 
 # Extra custom tools
 ADD githubhelper .
+ADD dep-collector .

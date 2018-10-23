@@ -85,6 +85,13 @@ test_groups:
 - name: pull-knative-eventing-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-eventing-go-coverage
   short_text_metric: coverage
+- name: ci-knative-eventing-sources-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-continuous
+- name: ci-knative-eventing-sources-release
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-release
+- name: pull-knative-eventing-sources-test-coverage
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-go-coverage
+  short_text_metric: coverage
 - name: ci-knative-build-templates-continuous
   gcs_prefix: knative-prow/logs/ci-knative-build-templates-continuous
 - name: ci-knative-docs-continuous
@@ -147,6 +154,15 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-eventing-test-coverage
     base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
+- name: knative-eventing-sources
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-eventing-sources-continuous
+  - name: release
+    test_group_name: ci-knative-eventing-sources-release
+  - name: coverage
+    test_group_name: pull-knative-eventing-sources-test-coverage
+    base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
 - name: knative-build-templates
   dashboard_tab:
   - name: continuous
@@ -181,6 +197,7 @@ dashboard_groups:
   - knative-serving
   - knative-build
   - knative-eventing
+  - knative-eventing-sources
   - knative-build-templates
   - knative-docs
   - knative-pkg
