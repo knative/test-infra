@@ -292,7 +292,7 @@ function initialize() {
   while [[ $# -ne 0 ]]; do
     local parameter=$1
     # Try parsing flag as a custom one.
-    if [[ "$(type -t parse_flags)" == "function" ]]; then
+    if function_exists parse_flags; then
       parse_flags $@
       local skip=$?
       if [[ ${skip} -ne 0 ]]; then
