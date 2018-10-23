@@ -44,10 +44,6 @@ function unit_tests() {
   return ${failed}
 }
 
-# We use the default integration test runner, and
-# run extra tests in the pre-integration tests function.
-function pre_integration_tests() {
-  ./test/e2e-tests.sh --smoke-test-custom-flag-passed
-}
+# We use the default integration test runner.
 
 main $@
