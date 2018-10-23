@@ -16,7 +16,7 @@ approve:
 - repos:
   - knative
   implicit_self_approve: true
-  review_acts_as_approve: false
+  review_acts_as_approve: true
 
 plugins:
   knative:
