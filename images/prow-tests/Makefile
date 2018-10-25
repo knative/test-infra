@@ -19,9 +19,7 @@ all: build
 
 build:
 	make -C ../../tools/githubhelper
-	mv ../../tools/githubhelper/githubhelper .
-	go build ../../tools/dep-collector
-	docker build -t $(IMG):$(TAG) .
+	docker build -t $(IMG):$(TAG) -f Dockerfile ../..
 	docker tag $(IMG):$(TAG) $(IMG):latest
 
 push_versioned: build

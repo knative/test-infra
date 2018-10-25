@@ -49,6 +49,8 @@ RUN git clone https://github.com/wg/wrk.git wrk
 RUN make -C wrk/
 RUN cp wrk/wrk /usr/local/bin
 
+ADD . /go/src/github.com/knative/test-infra
+
 # Extra custom tools
-ADD githubhelper .
-ADD dep-collector .
+RUN cp /go/src/github.com/knative/test-infra/tools/githubhelper/githubhelper .
+RUN go install github.com/knative/test-infra/tools/dep-collector
