@@ -29,6 +29,7 @@ import (
 )
 
 var LicenseNames = []string{
+	"LICENCE",
 	"LICENSE",
 	"LICENSE.code",
 	"LICENSE.md",
