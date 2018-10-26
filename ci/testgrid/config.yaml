@@ -135,6 +135,9 @@ dashboards:
     test_group_name: ci-knative-serving-api-coverage
     description: 'Conformance tests API coverage.'
     base_options: 'exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name='
+  - name: conformance-tests
+    test_group_name: ci-knative-serving-continuous
+    base_options: 'include-filter-by-regex=//knative/serving/test/conformance:&sort-by-name='
 - name: knative-build
   dashboard_tab:
   - name: continuous
