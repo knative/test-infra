@@ -41,7 +41,7 @@ readonly E2E_CLUSTER_NAME=$(build_resource_name e2e-cls)
 readonly E2E_NETWORK_NAME=$(build_resource_name e2e-net)
 readonly E2E_CLUSTER_REGION=us-central1
 readonly E2E_CLUSTER_ZONE=${E2E_CLUSTER_REGION}-a
-readonly E2E_CLUSTER_NODES=3
+readonly E2E_CLUSTER_NODES=4
 readonly E2E_CLUSTER_MACHINE=n1-standard-4
 readonly TEST_RESULT_FILE=/tmp/${E2E_BASE_NAME}-e2e-result
 
