@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Test that pre/post integration tests don't run if unset.
+
 source $(dirname $0)/presubmit-integration-tests-common.sh
 
 function check_results() {
