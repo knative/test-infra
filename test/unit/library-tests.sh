@@ -17,7 +17,7 @@
 # Fake we're in a Prow job, if running locally.
 [[ -z "${PROW_JOB_ID:-}" ]] && PROW_JOB_ID=123
 
-source $(dirname $0)/../scripts/library.sh
+source $(dirname $0)/../../scripts/library.sh
 
 set -e
 

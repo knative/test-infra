@@ -38,15 +38,12 @@ function build_tests() {
 function unit_tests() {
   header "Running unit tests"
   local failed=0
-  for test in library release; do
-    ./test/${test}-tests.sh || failed=1
+  for test in ./test/unit/*-tests.sh; do
+    ${test} || failed=1
   done
   return ${failed}
 }
 
-function integration_tests() {
-  ./test/e2e-tests.sh --smoke-test-custom-flag-passed
-  ./test/e2e-tests.sh
-}
+# We use the default integration test runner.
 
 main $@

@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-source $(dirname $0)/../scripts/release.sh
+source $(dirname $0)/../../scripts/release.sh
 
 set -e
 
