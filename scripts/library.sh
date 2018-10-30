@@ -365,7 +365,7 @@ function run_go_tool() {
     go install $1
   fi
   shift 2
-  ${tool} $@
+  ${tool} "$@"
 }
 
 # Run dep-collector to update licenses.
