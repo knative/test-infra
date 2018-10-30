@@ -1710,6 +1710,27 @@ periodics:
       - "--cov-target=."
       - "--cov-threshold-percentage=80"
 
+- cron: "0 1 * * *" # Run at 01:00 every day
+  name: ci-knative-build-pipeline-go-coverage
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: build
+    base_ref: master
+    clone_uri: "https://github.com/knative/build-pipeline.git"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/coverage:latest
+      imagePullPolicy: Always
+      command:
+      - "/coverage"
+      args:
+      - "--artifacts=$(ARTIFACTS)"
+      - "--profile-name=coverage_profile.txt"
+      - "--cov-target=."
+      - "--cov-threshold-percentage=80"
+
 - cron: "50 * * * *" # Run every hour and 50 minutes
   name: ci-knative-docs-continuous
   agent: kubernetes
@@ -2114,6 +2135,25 @@ postsubmits:
         - "--cov-target=."
         - "--cov-threshold-percentage=0"
 
+  knative/build-pipeline:
+  - name: post-knative-build-pipeline-go-coverage
+    branches:
+    - master
+    agent: kubernetes
+    decorate: true
+    clone_uri: "https://github.com/knative/build-pipeline.git"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
+        imagePullPolicy: Always
+        command:
+        - "/coverage"
+        args:
+        - "--artifacts=$(ARTIFACTS)"
+        - "--profile-name=coverage_profile.txt"
+        - "--cov-target=."
+        - "--cov-threshold-percentage=0"
+
   knative/docs:
   - name: post-knative-docs-go-coverage
     branches:
@@ -2208,4 +2248,3 @@ postsubmits:
         - "--profile-name=coverage_profile.txt"
         - "--cov-target=."
         - "--cov-threshold-percentage=0"
-
