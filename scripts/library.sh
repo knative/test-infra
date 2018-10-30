@@ -356,13 +356,13 @@ function start_latest_knative_build() {
 }
 
 # Run a go tool, installing it first if necessary.
-# Parameters: $1 - tool to run.
-#             $2 - tool package for go get.
+# Parameters: $1 - tool package for go get.
+#             $2 - tool to run.
 #             $3..$n - parameters passed to the tool.
 function run_go_tool() {
-  local tool=$1
+  local tool=$2
   if [[ -z "$(which ${tool})" ]]; then
-    go install $2
+    go install $1
   fi
   shift 2
   ${tool} $@
@@ -375,7 +375,7 @@ function update_licenses() {
   cd ${REPO_ROOT_DIR} || return 1
   local dst=$1
   shift
-  run_go_tool dep-collector ./vendor/github.com/knative/test-infra/tools/dep-collector $@ > ./${dst}
+  run_go_tool ./vendor/github.com/knative/test-infra/tools/dep-collector dep-collector $@ > ./${dst}
 }
 
 # Run dep-collector to check for forbidden liceses.
@@ -384,7 +384,7 @@ function check_licenses() {
   # Fetch the google/licenseclassifier for its license db
   go get -u github.com/google/licenseclassifier
   # Check that we don't have any forbidden licenses in our images.
-  run_go_tool dep-collector ./vendor/github.com/knative/test-infra/tools/dep-collector -check $@
+  run_go_tool ./vendor/github.com/knative/test-infra/tools/dep-collector dep-collector -check $@
 }
 
 # Run the given linter on the given files, checking it exists first.

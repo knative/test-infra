@@ -184,8 +184,8 @@ function create_test_cluster() {
   # Don't fail test for kubetest, as it might incorrectly report test failure
   # if teardown fails (for details, see success() below)
   set +o errexit
-  run_go_tool kubetest k8s.io/test-infra/kubetest \
-    "${CLUSTER_CREATION_ARGS[@]}" \
+  run_go_tool k8s.io/test-infra/kubetest \
+    kubetest "${CLUSTER_CREATION_ARGS[@]}" \
     --up \
     --down \
     --extract local \
