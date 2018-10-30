@@ -23,6 +23,7 @@ readonly SERVING_GKE_VERSION=latest
 readonly SERVING_GKE_IMAGE=cos
 
 # Public images and yaml files.
+readonly KNATIVE_ISTIO_CRD_YAML=https://storage.googleapis.com/knative-releases/serving/latest/istio-crds.yaml
 readonly KNATIVE_ISTIO_YAML=https://storage.googleapis.com/knative-releases/serving/latest/istio.yaml
 readonly KNATIVE_SERVING_RELEASE=https://storage.googleapis.com/knative-releases/serving/latest/release.yaml
 readonly KNATIVE_BUILD_RELEASE=https://storage.googleapis.com/knative-releases/build/latest/release.yaml
@@ -335,6 +336,7 @@ function report_go_test() {
 function start_latest_knative_serving() {
   header "Starting Knative Serving"
   subheader "Installing Istio"
+  kubectl apply -f ${KNATIVE_ISTIO_CRD_YAML} || return 1
   kubectl apply -f ${KNATIVE_ISTIO_YAML} || return 1
   wait_until_pods_running istio-system || return 1
   kubectl label namespace default istio-injection=enabled || return 1
