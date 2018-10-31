@@ -157,9 +157,14 @@ function initialize() {
 function branch_release() {
   (( BRANCH_RELEASE )) || return 0
   local title="$1 release ${TAG}"
-  local yamls="$2"
-  local attach="--attach=${yamls// / --attach=}"
+  local attachments=()
   local description="$(mktemp)"
+  local attachments_dir="$(mktemp -d)"
+  # Copy each YAML to a separate dir
+  for yaml in $2; do
+    cp ${yaml} ${attachments_dir}/
+    attachments+=("--attach=${yaml}#$(basename ${yaml})")
+  done
   echo -e "${title}\n" > ${description}
   if [[ -n "${RELEASE_NOTES}" ]]; then
     cat ${RELEASE_NOTES} >> ${description}
@@ -168,7 +173,7 @@ function branch_release() {
   git push $(git remote get-url upstream) tag ${TAG}
   run_go_tool hub github.com/github/hub release create \
       --prerelease \
-      ${attach} \
+      ${attachments[@]} \
       --file=${description} \
       --commitish=${RELEASE_BRANCH} \
       ${TAG}
