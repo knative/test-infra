@@ -28,7 +28,7 @@ function test_function() {
   local output="$(mktemp)"
   local output_code="$(mktemp)"
   shift 2
-  echo -n "$(trap '{ echo $? > ${output_code}; }' EXIT ; $@)" > ${output}
+  echo -n "$(trap '{ echo $? > ${output_code}; }' EXIT ; "$@")" &> ${output}
   local retcode=$(cat ${output_code})
   if [[ ${retcode} -ne ${expected_retcode} ]]; then
     cat ${output}
@@ -54,7 +54,26 @@ function test_function() {
   echo "'$@' returns code ${expected_retcode} and displays '${expected_string}'"
 }
 
-header "Testing initialization"
+function branch_release_no_tag() {
+  set -e
+  BRANCH_RELEASE=1
+  branch_release "$@" 2>&1
+}
+
+function branch_release_tag() {
+  set -e
+  BRANCH_RELEASE=1
+  TAG=sometag
+  function git() {
+	echo $@
+  }
+  function hub() {
+	echo $@
+  }
+  branch_release "$@" 2>&1
+}
+
+echo "Testing initialization"
 
 test_function 1 "error: missing version" initialize --version
 test_function 1 "error: version format" initialize --version a
@@ -70,4 +89,11 @@ test_function 1 "error: missing release notes" initialize --release-notes
 test_function 1 "error: file a doesn't" initialize --release-notes a
 test_function 0 "" initialize --release-notes $(mktemp)
 
-header "All tests passed"
+echo "Testing release branching"
+
+test_function 0 "" branch_release
+test_function 129 "usage: git tag" branch_release_no_tag
+test_function 1 "No such file" branch_release_no_tag "K Foo" "a.yaml b.yaml"
+test_function 0 "release create" branch_release_tag "K Foo" "$(mktemp) $(mktemp)"
+
+echo "All tests passed"
