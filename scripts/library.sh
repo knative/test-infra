@@ -178,13 +178,22 @@ function wait_until_routable() {
   return 1
 }
 
-# Returns the name of the pod of the given app.
+# Returns the name of the first pod of the given app.
 # Parameters: $1 - app name.
 #             $2 - namespace (optional).
 function get_app_pod() {
   local namespace=""
   [[ -n $2 ]] && namespace="-n $2"
   kubectl get pods ${namespace} --selector=app=$1 --output=jsonpath="{.items[0].metadata.name}"
+}
+
+# Returns the name of all pods of the given app.
+# Parameters: $1 - app name.
+#             $2 - namespace (optional).
+function get_app_pods() {
+  local namespace=""
+  [[ -n $2 ]] && namespace="-n $2"
+  kubectl get pods ${namespace} --selector=app=$1 --output=jsonpath="{.items[*].metadata.name}"
 }
 
 # Sets the given user as cluster admin.
