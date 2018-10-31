@@ -367,13 +367,15 @@ function start_latest_knative_build() {
 }
 
 # Run a go tool, installing it first if necessary.
-# Parameters: $1 - tool package for go get.
+# Parameters: $1 - tool package/dir for go get/install.
 #             $2 - tool to run.
 #             $3..$n - parameters passed to the tool.
 function run_go_tool() {
   local tool=$2
   if [[ -z "$(which ${tool})" ]]; then
-    go install $1
+    local action=get
+    [[ $1 =~ ^[\./].* ]] && action=install
+    go ${action} $1
   fi
   shift 2
   ${tool} "$@"
