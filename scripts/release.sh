@@ -166,7 +166,7 @@ function branch_release() {
   fi
   git tag -a ${TAG} -m "${title}"
   git push $(git remote get-url upstream) tag ${TAG}
-  run_go_tool hub github.com/github/hub release create \
+  run_go_tool github.com/github/hub hub release create \
       --prerelease \
       ${attach} \
       --file=${description} \
