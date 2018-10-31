@@ -147,7 +147,7 @@ function initialize() {
   parse_flags $@
   # Checkout specific branch, if necessary
   if (( BRANCH_RELEASE )); then
-    git checkout --track upstream/${RELEASE_BRANCH} || abort "cannot checkout branch ${RELEASE_BRANCH}"
+    git checkout upstream/${RELEASE_BRANCH} || abort "cannot checkout branch ${RELEASE_BRANCH}"
   fi
 }
 
