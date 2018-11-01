@@ -83,8 +83,9 @@ function parse_flags() {
         ;;
       --nopublish)
         PUBLISH_RELEASE=0
-        # Add -L to ko flags
+        # Add -L to ko flags, update KO_DOCKER_REPO
         KO_FLAGS="-L ${KO_FLAGS}"
+        KO_DOCKER_REPO="ko.local"
         ;;
       --version)
         shift
