@@ -68,7 +68,7 @@ function parse_flags() {
   RELEASE_VERSION=""
   RELEASE_NOTES=""
   RELEASE_BRANCH=""
-  KO_FLAGS="-P -L"
+  KO_FLAGS="-P"
   cd ${REPO_ROOT_DIR}
   while [[ $# -ne 0 ]]; do
     local parameter=$1
@@ -76,17 +76,8 @@ function parse_flags() {
       --skip-tests) SKIP_TESTS=1 ;;
       --tag-release) TAG_RELEASE=1 ;;
       --notag-release) TAG_RELEASE=0 ;;
-      --publish)
-        PUBLISH_RELEASE=1
-        # Remove -L from ko flags
-        KO_FLAGS="${KO_FLAGS/-L}"
-        ;;
-      --nopublish)
-        PUBLISH_RELEASE=0
-        # Add -L to ko flags, update KO_DOCKER_REPO
-        KO_FLAGS="-L ${KO_FLAGS}"
-        KO_DOCKER_REPO="ko.local"
-        ;;
+      --publish) PUBLISH_RELEASE=1 ;;
+      --nopublish) PUBLISH_RELEASE=0 ;;
       --version)
         shift
         [[ $# -ge 1 ]] || abort "missing version after --version"
@@ -109,6 +100,12 @@ function parse_flags() {
     esac
     shift
   done
+
+  # Update KO_DOCKER_REPO and KO_FLAGS if we're not publishing.
+  if (( ! PUBLISH_RELEASE )); then
+    KO_DOCKER_REPO="ko.local"
+    KO_FLAGS="-L ${KO_FLAGS}"
+  fi
 
   if (( TAG_RELEASE )); then
     # Currently we're not considering the tags in refs/tags namespace.
