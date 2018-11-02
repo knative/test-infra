@@ -249,7 +249,7 @@ function setup_test_cluster() {
 
   trap teardown_test_resources EXIT
 
-  if (( USING_EXISTING_CLUSTER )) && function_exists teardown; then
+  if (( ! USING_EXISTING_CLUSTER )) && function_exists teardown; then
     echo "Deleting any previous SUT instance"
     teardown
   fi
