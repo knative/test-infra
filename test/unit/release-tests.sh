@@ -54,13 +54,7 @@ function test_function() {
   echo "'$@' returns code ${expected_retcode} and displays '${expected_string}'"
 }
 
-function branch_release_no_tag() {
-  set -e
-  BRANCH_RELEASE=1
-  branch_release "$@" 2>&1
-}
-
-function branch_release_tag() {
+function mock_branch_release() {
   set -e
   BRANCH_RELEASE=1
   TAG=sometag
@@ -73,7 +67,15 @@ function branch_release_tag() {
   branch_release "$@" 2>&1
 }
 
-echo "Testing initialization"
+function call_function() {
+  set -e
+  local init=$1
+  shift
+  eval ${init}
+  "$@" 2>&1
+}
+
+echo ">> Testing initialization"
 
 test_function 1 "error: missing version" initialize --version
 test_function 1 "error: version format" initialize --version a
@@ -89,11 +91,18 @@ test_function 1 "error: missing release notes" initialize --release-notes
 test_function 1 "error: file a doesn't" initialize --release-notes a
 test_function 0 "" initialize --release-notes $(mktemp)
 
-echo "Testing release branching"
+echo ">> Testing release branching"
 
 test_function 0 "" branch_release
-test_function 129 "usage: git tag" branch_release_no_tag
-test_function 1 "No such file" branch_release_no_tag "K Foo" "a.yaml b.yaml"
-test_function 0 "release create" branch_release_tag "K Foo" "$(mktemp) $(mktemp)"
+test_function 129 "usage: git tag" call_function BRANCH_RELEASE=1 branch_release
+test_function 1 "No such file" call_function BRANCH_RELEASE=1 branch_release "K Foo" "a.yaml b.yaml"
+test_function 0 "release create" mock_branch_release "K Foo" "$(mktemp) $(mktemp)"
 
-echo "All tests passed"
+echo ">> Testing validation tests"
+
+test_function 0 "Running release validation" run_validation_tests true
+test_function 0 "" call_function SKIP_TESTS=1 run_validation_tests true
+test_function 0 "i_passed" run_validation_tests "echo i_passed"
+test_function 1 "validation tests failed" run_validation_tests false
+
+echo ">> All tests passed"
