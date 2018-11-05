@@ -22,5 +22,5 @@ import (
 
 func main() {
 	fmt.Println("This is a dummy go file so `go dep` can be used with knative/test-infra/scripts")
-	fmt.Println("This file can be removed once the repo contains real, useful go code in the root dir")
+	fmt.Println("This file can be safely removed if one day this directory contains real, useful go code")
 }
