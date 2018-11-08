@@ -50,8 +50,9 @@ func createStorageObject(filename string) *storage.ObjectHandle {
 
 // GetLatestBuildNumber gets the latest build number for the specified log directory
 func GetLatestBuildNumber(ctx context.Context, logDir string, sa string) (int, error) {
-	log.Printf("%s %s", logDir, latest)
-	contents, err := ReadGcsFile(ctx, logDir+latest, sa)
+	logFilePath := logDir + latest
+	log.Printf("Using %s to get latest build number", logFilePath)
+	contents, err := ReadGcsFile(ctx, logFilePath, sa)
 	if err != nil {
 		return 0, err
 	}

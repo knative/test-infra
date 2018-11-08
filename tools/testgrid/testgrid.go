@@ -20,6 +20,7 @@ package testgrid
 
 import (
 	"encoding/xml"
+	"log"
 	"os"
 )
 
@@ -54,6 +55,7 @@ type TestSuite struct {
 func GetArtifactsDir() string {
 	dir := os.Getenv("ARTIFACTS")
 	if dir == "" {
+		log.Printf("Env variable ARTIFACTS not set. Using './artifacts' instead.")
 		return "./artifacts"
 	}
 	return dir
