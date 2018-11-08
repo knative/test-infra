@@ -33,7 +33,7 @@ import (
 
 const (
 	bucketName = "knative-prow"
-	latest     = "latest-build.txt"
+	latest     = "/latest-build.txt"
 )
 
 var client *storage.Client
@@ -50,6 +50,7 @@ func createStorageObject(filename string) *storage.ObjectHandle {
 
 // GetLatestBuildNumber gets the latest build number for the specified log directory
 func GetLatestBuildNumber(ctx context.Context, logDir string, sa string) (int, error) {
+	log.Printf("%s %s", logDir, latest)
 	contents, err := ReadGcsFile(ctx, logDir+latest, sa)
 	if err != nil {
 		return 0, err
