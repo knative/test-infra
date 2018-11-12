@@ -68,6 +68,9 @@ test_groups:
 - name: ci-knative-serving-api-coverage
   gcs_prefix: knative-prow/logs/ci-knative-serving-api-coverage
   short_text_metric: api_coverage
+- name: ci-knative-serving-performance
+  gcs_prefix: knative-prow/logs/ci-knative-serving-performance
+  short_text_metric: perf_latency
 - name: ci-knative-build-continuous
   gcs_prefix: knative-prow/logs/ci-knative-build-continuous
 - name: ci-knative-build-release
@@ -138,6 +141,9 @@ dashboards:
   - name: conformance-tests
     test_group_name: ci-knative-serving-continuous
     base_options: 'include-filter-by-regex=//knative/serving/test/conformance:&sort-by-name='
+  - name: performance
+    test_group_name: ci-knative-serving-performance
+    base_options: 'exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name='
 - name: knative-build
   dashboard_tab:
   - name: continuous
