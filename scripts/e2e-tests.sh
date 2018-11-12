@@ -128,7 +128,7 @@ function download_k8s() {
 # This is intended to be called when a test fails to provide debugging information.
 function dump_cluster_state() {
   echo "***************************************"
-  echo "***           TEST FAILED           ***"
+  echo "***         E2E TEST FAILED         ***"
   echo "***    Start of information dump    ***"
   echo "***************************************"
   echo ">>> All resources:"
@@ -139,7 +139,7 @@ function dump_cluster_state() {
   kubectl get events --all-namespaces
   function_exists dump_extra_cluster_state && dump_extra_cluster_state
   echo "***************************************"
-  echo "***           TEST FAILED           ***"
+  echo "***         E2E TEST FAILED         ***"
   echo "***     End of information dump     ***"
   echo "***************************************"
 }
@@ -276,7 +276,7 @@ function success() {
   # TODO(adrcunha): Get rid of this workaround.
   echo -n "0"> ${TEST_RESULT_FILE}
   echo "**************************************"
-  echo "***        ALL TESTS PASSED        ***"
+  echo "***        E2E TESTS PASSED        ***"
   echo "**************************************"
   exit 0
 }
