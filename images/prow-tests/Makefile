@@ -13,7 +13,7 @@
 # limitations under the License.
 
 IMG = gcr.io/knative-tests/test-infra/prow-tests
-TAG := $(shell date +v%Y%m%d)-$(shell git describe --tags --always --dirty)
+TAG := $(shell date +v%Y%m%d)-$(shell git describe --always --dirty --exclude '*')
 
 all: build
 
