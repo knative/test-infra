@@ -20,7 +20,7 @@
 source $(dirname ${BASH_SOURCE})/library.sh
 
 # Extensions or file patterns that don't require presubmit tests.
-readonly NO_PRESUBMIT_FILES=(\.md \.png ^OWNERS)
+readonly NO_PRESUBMIT_FILES=(\.md \.png ^OWNERS ^OWNERS_ALIASES)
 
 # Options set by command-line flags.
 RUN_BUILD_TESTS=0
