@@ -22,10 +22,10 @@ function check_results() {
   (( ! PRE_INTEGRATION_TESTS )) || failed "Pre integration tests did run"
   (( CUSTOM_INTEGRATION_TESTS )) || failed "Custom integration tests did not run"
   (( ! POST_INTEGRATION_TESTS )) || failed "Post integration tests did run"
-  echo "Test passed"
+  echo ">> All tests passed"
 }
 
-echo "Testing custom test integration function"
+echo ">> Testing custom test integration function"
 
 unset -f pre_integration_tests
 unset -f post_integration_tests

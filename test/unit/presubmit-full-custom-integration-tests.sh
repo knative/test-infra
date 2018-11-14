@@ -20,9 +20,9 @@ function check_results() {
   (( PRE_INTEGRATION_TESTS )) || failed "Pre integration tests did not run"
   (( CUSTOM_INTEGRATION_TESTS )) || failed "Custom integration tests did not run"
   (( POST_INTEGRATION_TESTS )) || failed "Post integration tests did not run"
-  echo "Test passed"
+  echo ">> All tests passed"
 }
 
-echo "Testing all custom test integration functions"
+echo ">> Testing all custom test integration functions"
 
 main $@
