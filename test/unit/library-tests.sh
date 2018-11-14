@@ -36,15 +36,15 @@ function cleanup_bazel() {
 
 trap cleanup_bazel EXIT
 
-echo "Testing report_go_test"
+echo ">> Testing report_go_test"
 
-echo "Test pass"
+echo ">> Test that test passes"
 test_report TestSucceeds "^- TestSucceeds :PASS:"
 
-echo "Test fails with fatal"
+echo ">> Testing that test fails with fatal"
 test_report TestFailsWithFatal "^- TestFailsWithFatal :FAIL:"
 
-echo "Test fails with SIGQUIT"
+echo ">> Testing that test fails with SIGQUIT"
 test_report TestFailsWithSigQuit "^- TestFailsWithSigQuit :FAIL:"
 
-echo "All tests passed"
+echo ">> All tests passed"

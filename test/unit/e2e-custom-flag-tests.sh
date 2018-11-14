@@ -27,7 +27,7 @@ source $(dirname $0)/../../scripts/e2e-tests.sh
 
 function parse_flags() {
   if [[ "$1" == "--smoke-test-custom-flag" ]]; then
-    echo "OK: --smoke-test-custom-flag passed"
+    echo ">> All tests passed"
     exit 0
   fi
   fail_test "Unexpected flag $1 passed"
@@ -35,4 +35,5 @@ function parse_flags() {
 
 # Script entry point.
 
+echo ">> Testing e2e custom flag"
 initialize --smoke-test-custom-flag
