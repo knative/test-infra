@@ -263,6 +263,8 @@ function setup_test_cluster() {
   echo "- User is ${K8S_USER_OVERRIDE}"
   echo "- Docker is ${DOCKER_REPO_OVERRIDE}"
 
+  export KO_DOCKER_REPO="${DOCKER_REPO_OVERRIDE}"
+
   trap teardown_test_resources EXIT
 
   if (( USING_EXISTING_CLUSTER )) && function_exists teardown; then
