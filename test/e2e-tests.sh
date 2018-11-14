@@ -25,22 +25,9 @@
 
 source $(dirname $0)/../scripts/e2e-tests.sh
 
-function parse_flags() {
-  if [[ "$1" == "--smoke-test-custom-flag" ]]; then
-    echo "--smoke-test-custom-flag passed"
-    exit 0
-  fi
-  return 0
-}
-
 # Script entry point.
 
 initialize $@
-
-if (( USING_EXISTING_CLUSTER )); then
-  echo "ERROR: this test isn't intended to run against an existing cluster"
-  fail_test
-fi
 
 start_latest_knative_serving || fail_test "Knative Serving is not up"
 
