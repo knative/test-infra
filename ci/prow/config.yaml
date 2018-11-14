@@ -239,7 +239,8 @@ presubmits:
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
-        - "--upgrade-tests"
+        - "--run-test"
+        - "./test/upgrade-tests.sh"
         # Bazel needs privileged mode in order to sandbox builds.
         securityContext:
           privileged: true
