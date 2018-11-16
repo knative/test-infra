@@ -50,9 +50,14 @@ default_dashboard_tab:
   code_search_url_template:      # The URL template to visit when searching for changelists
     url: https://github.com/knative/serving/compare/<start-custom-0>...<end-custom-0>
 
+#################################################################
 # Test groups
+#################################################################
 
 test_groups:
+
+## Master branch (head)
+
 - name: ci-knative-serving-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-continuous
 - name: ci-knative-serving-release
@@ -116,9 +121,19 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-caching-go-coverage
   short_text_metric: coverage
 
+## release-0.2 branch
+
+- name: ci-knative-serving-0.2-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-serving-0.2-continuous
+
+#################################################################
 # Dashboards
+#################################################################
 
 dashboards:
+
+## Master branch (head)
+
 - name: knative-serving
   dashboard_tab:
   - name: continuous
@@ -206,7 +221,16 @@ dashboards:
     test_group_name: pull-knative-caching-test-coverage
     base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
 
+## release-0.2 branch
+
+- name: knative-serving-0.2
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-serving-0.2-continuous
+
+#################################################################
 # Dashboard groups
+#################################################################
 
 dashboard_groups:
 - name: knative
@@ -220,3 +244,6 @@ dashboard_groups:
   - knative-docs
   - knative-pkg
   - knative-caching
+- name: knative-0.2
+  dashboard_names:
+  - knative-serving-0.2
