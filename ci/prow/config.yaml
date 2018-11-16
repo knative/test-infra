@@ -225,6 +225,9 @@ presubmits:
       preset-service-account: "true"
       preset-bazel-scratch-dir: "true"
       preset-bazel-remote-cache-enabled: "true"
+    skip_branches:  # Skip these branches, as test isn't available.
+    - release-0.1
+    - release-0.2
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:latest
