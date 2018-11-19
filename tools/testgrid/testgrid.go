@@ -74,7 +74,8 @@ func CreateXMLOutput(ts TestSuite, artifactsDir string) error {
 		return err
 	}
 
-	outputFile := artifactsDir + "/junit_bazel.xml"
+	outputFile := artifactsDir + "/junit_knative.xml"
+	log.Printf("Storing output in %s", outputFile)
 	f, err := os.Create(outputFile)
 	if err != nil {
 		return err
