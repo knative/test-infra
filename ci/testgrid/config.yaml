@@ -88,6 +88,8 @@ test_groups:
   short_text_metric: latency
 - name: ci-knative-build-templates-continuous
   gcs_prefix: knative-prow/logs/ci-knative-build-templates-continuous
+- name: ci-knative-build-pipeline-release
+  gcs_prefix: knative-prow/logs/ci-knative-build-pipeline-release
 - name: pull-knative-build-pipeline-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-build-pipeline-go-coverage
   short_text_metric: coverage
@@ -178,6 +180,8 @@ dashboards:
     test_group_name: ci-knative-build-templates-continuous
 - name: knative-build-pipeline
   dashboard_tab:
+  - name: release
+    test_group_name: ci-knative-build-pipeline-release
   - name: coverage
     test_group_name: pull-knative-build-pipeline-test-coverage
     base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
