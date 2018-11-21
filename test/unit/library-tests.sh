@@ -23,7 +23,7 @@ set -e
 
 function test_report() {
   local REPORT="$(mktemp)"
-  report_go_test -run $1 ./test > ${REPORT} || true
+  report_go_test -tag=library -run $1 ./test > ${REPORT} || true
   cat ${REPORT}
   grep "$2" ${REPORT} > /dev/null
   grep "Done parsing 1 tests" ${REPORT} > /dev/null
