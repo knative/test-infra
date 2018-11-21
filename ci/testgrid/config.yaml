@@ -50,7 +50,7 @@ default_dashboard_tab:
   code_search_url_template:      # The URL template to visit when searching for changelists
     url: https://github.com/knative/serving/compare/<start-custom-0>...<end-custom-0>
   alert_options:
-    alert_mail_to_addresses: 'knative-testinfradev@googlegroups.com'
+    alert_mail_to_addresses: ' knative-productivity-dev@googlegroups.com'
 
 # Test groups
 
