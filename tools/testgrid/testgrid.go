@@ -27,7 +27,7 @@ import (
 const (
 	// Filename to store output that acts as input to testgrid.
 	// Should be of the form junit_*.xml
-	Filename = "/junit_knative.xml"
+	Filename = "junit_knative.xml"
 )
 
 // TestProperty defines a property of the test
@@ -80,7 +80,7 @@ func CreateXMLOutput(ts TestSuite, artifactsDir string) error {
 		return err
 	}
 
-	outputFile := artifactsDir + Filename
+	outputFile := artifactsDir + "/" + Filename
 	log.Printf("Storing output in %s", outputFile)
 	f, err := os.OpenFile(outputFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {

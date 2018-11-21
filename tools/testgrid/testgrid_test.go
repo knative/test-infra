@@ -17,11 +17,22 @@ limitations under the License.
 package testgrid_test
 
 import (
+	"io/ioutil"
 	"os"
 	"testing"
 
 	"github.com/knative/test-infra/tools/testgrid"
 )
+
+func checkFileText(t *testing.T, expected string) {
+	d, err := ioutil.ReadFile(testgrid.Filename)
+	if err != nil {
+		t.Errorf("Failed to open test file: %v", err)
+	}
+	if string(d) != expected {
+		t.Fatalf("Actual text: %s, Expected text: %s", string(d), expected)
+	}
+}
 
 func TestGetArtifacts(t *testing.T) {
 	if v := testgrid.GetArtifactsDir(); v != "./artifacts" {
@@ -34,11 +45,13 @@ func TestXMLOutput(t *testing.T) {
 	if err := testgrid.CreateXMLOutput(testgrid.TestSuite{}, "."); err != nil {
 		t.Fatalf("Error when creating xml output file: %v", err)
 	}
+	checkFileText(t, "<testsuite></testsuite>\n")
 
 	// Make sure we can append to the file
 	if err := testgrid.CreateXMLOutput(testgrid.TestSuite{}, "."); err != nil {
 		t.Fatalf("Error when creating xml output file: %v", err)
 	}
+	checkFileText(t, "<testsuite></testsuite>\n<testsuite></testsuite>\n")
 
 	// Delete the test file created
 	if err := os.Remove("./" + testgrid.Filename); err != nil {
