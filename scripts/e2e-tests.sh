@@ -363,6 +363,12 @@ function initialize() {
 
   (( IS_PROW )) && [[ -z "${GCP_PROJECT}" ]] && IS_BOSKOS=1
 
+  # Safety checks
+
+  if [[ "${DOCKER_REPO_OVERRIDE}" =~ ^gcr.io/knative-releases/?$ ]]; then
+    abort "\$DOCKER_REPO_OVERRIDE is set to ${DOCKER_REPO_OVERRIDE}, which is forbidden"
+  fi
+
   readonly RUN_TESTS
   readonly EMIT_METRICS
   readonly E2E_CLUSTER_VERSION
