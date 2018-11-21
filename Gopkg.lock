@@ -2,7 +2,26 @@
 
 
 [[projects]]
+  digest = "1:ffebc83d60ea84f7c18f4f1437a8f01ce49b7d93302db8af14ab1702d83d3fd8"
+  name = "cloud.google.com/go"
+  packages = [
+    "storage",
+  ]
+  pruneopts = "NUT"
+  revision = "74b12019e2aa53ec27882158f59192d7cd6d1998"
+  version = "v0.33.1"
+
+[[projects]]
+  digest = "1:f4f203acd8b11b8747bdcd91696a01dbc95ccb9e2ca2db6abf81c3a4f5e950ce"
+  name = "github.com/google/go-github"
+  packages = ["github"]
+  pruneopts = "NUT"
+  revision = "f55b50f38167644bb7e4be03d9a2bde71d435239"
+  version = "v18.2.0"
+
+[[projects]]
   branch = "master"
+  digest = "1:fa44e3e20bd07c0f2ae762d01e7acb9f4b988411c5e8c00ec77d587b0c0465dc"
   name = "github.com/google/licenseclassifier"
   packages = [
     ".",
@@ -10,19 +29,47 @@
     "stringclassifier",
     "stringclassifier/internal/pq",
     "stringclassifier/searchset",
-    "stringclassifier/searchset/tokenizer"
+    "stringclassifier/searchset/tokenizer",
   ]
+  pruneopts = "UT"
   revision = "3c8ad1f0b0644b6646210ee9cf2f34ff907e2e18"
 
 [[projects]]
+  digest = "1:ffcf923a4041d861db53b7b8abd834325da3fbac6cc21ba041a472d770fef63b"
+  name = "github.com/knative/serving"
+  packages = [
+    "pkg/apis/serving/v1alpha1",
+  ]
+  pruneopts = "NUT"
+  revision = "f69d5efe522edecc5ff5bc3e23f1a7ff206a7726"
+  version = "v0.2.2"
+
+[[projects]]
+  digest = "1:d917313f309bda80d27274d53985bc65651f81a5b66b820749ac7f8ef061fd04"
   name = "github.com/sergi/go-diff"
   packages = ["diffmatchpatch"]
   revision = "1744e2970ca51c86172c8190fadad617561ed6e7"
   version = "v1.0.0"
 
+[[projects]]
+  branch = "master"
+  digest = "1:04c1f65b6a942ad67673950e530d6e7a43de578429d5ed9f08dca96f7ee55356"
+  name = "google.golang.org/api"
+  packages = [
+    "option",
+  ]
+  pruneopts = "NUT"
+  revision = "faade3cbb06a30202f2da53a8a5e3c4afe60b0c2"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "aea50f9014005bedc3dc202c5fbf9d2d8c7a6f7beac2337fd863b23f411c4125"
+  input-imports = [
+    "cloud.google.com/go/storage",
+    "github.com/google/go-github/github",
+    "github.com/google/licenseclassifier",
+    "github.com/knative/serving/pkg/apis/serving/v1alpha1",
+    "google.golang.org/api/option",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1
