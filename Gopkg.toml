@@ -14,8 +14,4 @@ required = [
 
 [[prune.project]]
   name = "github.com/google/licenseclassifier"
-<<<<<<< HEAD
   non-go = false
-=======
-  non-go = false
->>>>>>> master
