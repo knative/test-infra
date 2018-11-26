@@ -35,9 +35,24 @@ func checkFileText(t *testing.T, expected string) {
 }
 
 func TestGetArtifacts(t *testing.T) {
-	if v := testgrid.GetArtifactsDir(); v != "./artifacts" {
-		t.Fatalf("Default value is %s and not artifacts", v)
+	dir := os.Getenv("ARTIFACTS")
+
+	// Test we can read from the env var
+	os.Setenv("ARTIFACTS", "test")
+	v := testgrid.GetArtifactsDir()
+	if v != "test" {
+		t.Fatalf("Actual artifacts dir: '%s' and Expected: 'test'", v)
 	}
+
+	// Test we can use the default
+	os.Setenv("ARTIFACTS", "")
+	v = testgrid.GetArtifactsDir()
+	if v != "./artifacts" {
+		t.Fatalf("Actual artifacts dir: '%s' and Expected: './artifacts'", v)
+	}
+
+	// Set it to originial value
+	os.Setenv("ARTIFACTS", dir)
 }
 
 func TestXMLOutput(t *testing.T) {
