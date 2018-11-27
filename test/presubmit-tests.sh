@@ -42,6 +42,7 @@ function unit_tests() {
     subheader "Running tests in ${test}"
     ${test} || failed=1
   done
+  go test -count=1 ./... || failed=1
   return ${failed}
 }
 

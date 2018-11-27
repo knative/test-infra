@@ -1,3 +1,5 @@
+// +build library
+
 /*
 Copyright 2018 The Knative Authors
 
@@ -26,7 +28,7 @@ import (
 // signal sends a UNIX signal to the test process.
 func signal(s os.Signal) {
 	p, _ := os.FindProcess(os.Getpid())
-        _ = p.Signal(s)
+	_ = p.Signal(s)
 }
 
 func TestSucceeds(t *testing.T) {
