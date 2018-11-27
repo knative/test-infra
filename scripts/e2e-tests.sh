@@ -358,7 +358,7 @@ function initialize() {
 
   # Safety checks
 
-  if [[ "${DOCKER_REPO_OVERRIDE}" =~ ^gcr.io/knative-releases/?$ ]]; then
+  if [[ "${DOCKER_REPO_OVERRIDE}" =~ ^gcr.io/knative-(releases|nightly)/?$ ]]; then
     abort "\$DOCKER_REPO_OVERRIDE is set to ${DOCKER_REPO_OVERRIDE}, which is forbidden"
   fi
 
