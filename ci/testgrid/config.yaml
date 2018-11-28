@@ -23,7 +23,7 @@ default_test_group:
   num_columns_recent: 10         # The number of columns to consider "recent" for a variety of purposes
   use_kubernetes_client: true    # ** This field is deprecated and should always be true **
   is_external: true              # ** This field is deprecated and should always be true **
-  alert_stale_results_hours: 0   # Don't alert for staleness by default
+  alert_stale_results_hours: 24  # Alert if tests haven't run for a day
   num_failures_to_alert: 3       # Consider a test failed if it has 3 or more consecutive failures
   num_passes_to_disable_alert: 1 # Consider a failing test passing if it has 1 or more consecutive passes
 
@@ -49,6 +49,8 @@ default_dashboard_tab:
   num_columns_recent: 10
   code_search_url_template:      # The URL template to visit when searching for changelists
     url: https://github.com/knative/serving/compare/<start-custom-0>...<end-custom-0>
+  alert_options:
+    alert_mail_to_addresses: ' knative-productivity-dev@googlegroups.com'
 
 #################################################################
 # Test groups
@@ -64,6 +66,7 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-serving-release
 - name: ci-knative-serving-playground
   gcs_prefix: knative-prow/logs/ci-knative-serving-playground
+  alert_stale_results_hours: 168  # Alert if playground haven't been updated for a week
 - name: pull-knative-serving-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-serving-go-coverage
   short_text_metric: coverage
