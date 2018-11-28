@@ -182,13 +182,17 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:c9b80529d8bd72a4c142629b765bd241cb43eb68f205a6a8e683efb2c5dae7f2"
+  digest = "1:6710530e067dc1798577c37f08daf3f2d4b9941c3374db4f19d817f6f6b6e556"
   name = "github.com/knative/pkg"
   packages = [
     "apis",
     "apis/duck",
     "apis/duck/v1alpha1",
+    "changeset",
     "kmeta",
+    "logging",
+    "logging/logkey",
+    "test/logging",
   ]
   pruneopts = "NUT"
   revision = "acfd173abd8d2063ddceedb3487599f97ac93db8"
@@ -232,6 +236,25 @@
   version = "1.0.1"
 
 [[projects]]
+  digest = "1:d9e5e9ed96c4ec77b57c3f151d366f7013cc27f0ea72d121086f78c252c4da40"
+  name = "github.com/prometheus/client_golang"
+  packages = [
+    "api",
+    "api/prometheus/v1",
+  ]
+  pruneopts = "NUT"
+  revision = "abad2d1bd44235a26707c172eab6bca5bf2dbad3"
+  version = "v0.9.1"
+
+[[projects]]
+  branch = "master"
+  digest = "1:e15b82241f69fbb9fa3fda4de33b8851935a379f688b185b09c3aa7a0a466a30"
+  name = "github.com/prometheus/common"
+  packages = ["model"]
+  pruneopts = "NUT"
+  revision = "4724e9255275ce38f7179b2478abeae4e28c904f"
+
+[[projects]]
   digest = "1:d917313f309bda80d27274d53985bc65651f81a5b66b820749ac7f8ef061fd04"
   name = "github.com/sergi/go-diff"
   packages = ["diffmatchpatch"]
@@ -261,6 +284,37 @@
   pruneopts = "NUT"
   revision = "b7bf3cdb64150a8c8c53b769fdeb2ba581bd4d4b"
   version = "v0.18.0"
+
+[[projects]]
+  digest = "1:22f696cee54865fb8e9ff91df7b633f6b8f22037a8015253c6b6a71ca82219c7"
+  name = "go.uber.org/atomic"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "1ea20fb1cbb1cc08cbd0d913a96dead89aa18289"
+  version = "v1.3.2"
+
+[[projects]]
+  digest = "1:58ca93bdf81bac106ded02226b5395a0595d5346cdc4caa8d9c1f3a5f8f9976e"
+  name = "go.uber.org/multierr"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "3c4937480c32f4c13a875a1829af76c98ca3d40a"
+  version = "v1.1.0"
+
+[[projects]]
+  digest = "1:244145848a183fe658a95c682d379142595c79733d854a7d4076fa72fb1b9eb8"
+  name = "go.uber.org/zap"
+  packages = [
+    ".",
+    "buffer",
+    "internal/bufferpool",
+    "internal/color",
+    "internal/exit",
+    "zapcore",
+  ]
+  pruneopts = "NUT"
+  revision = "ff33455a0e382e8a81d14dd7c922020b6b5e7982"
+  version = "v1.9.1"
 
 [[projects]]
   branch = "master"
@@ -540,7 +594,11 @@
     "github.com/golang/glog",
     "github.com/google/go-github/github",
     "github.com/google/licenseclassifier",
+    "github.com/knative/pkg/test/logging",
     "github.com/knative/serving/pkg/apis/serving/v1alpha1",
+    "github.com/prometheus/client_golang/api",
+    "github.com/prometheus/client_golang/api/prometheus/v1",
+    "github.com/prometheus/common/model",
     "google.golang.org/api/option",
   ]
   solver-name = "gps-cdcl"
