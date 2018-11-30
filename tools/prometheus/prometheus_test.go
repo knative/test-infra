@@ -18,7 +18,6 @@ package prometheus_test
 
 import (
 	"context"
-	"fmt"
 	"testing"
 	"time"
 
@@ -68,12 +67,10 @@ func (tpa *TestPromAPI) LabelValues(ctx context.Context, label string) (model.La
 
 // Query performas a query on the prom api
 func (tpa *TestPromAPI) Query(c context.Context, query string, ts time.Time) (model.Value, error) {
-	fmt.Println("yay1")
 	s := model.Sample{Value: expected}
 	var v []*model.Sample
 	v = append(v, &s)
 
-	fmt.Println("yay")
 	return model.Vector(v), nil
 }
 
@@ -107,8 +104,10 @@ func TestRunQuery(t *testing.T) {
 	logging.InitializeLogger(true)
 	logger := logging.GetContextLogger("TestRunQuery")
 
-	r := prometheus.RunQuery(context.Background(), logger, getTestAPI(), query)
-
+	r, err := prometheus.RunQuery(context.Background(), logger, getTestAPI(), query)
+	if err != nil {
+		t.Fatalf("Error running query: %v", err)
+	}
 	if r != expected {
 		t.Fatalf("Expected: %f Actual: %f", expected, r)
 	}

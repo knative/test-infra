@@ -18,6 +18,7 @@ package prometheus
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -46,7 +47,7 @@ func (p *PromProxy) Setup(ctx context.Context, logger *logging.BaseLogger) error
 	return p.portForward(ctx, logger, appLabel, prometheusPort, prometheusPort)
 }
 
-// Kill the port forwarding process if running
+// Teardown will kill the port forwarding process if running
 func (p *PromProxy) Teardown(logger *logging.BaseLogger) error {
 	logger.Info("Cleaning up prom proxy")
 	if p.portFwdProcess != nil {
@@ -125,22 +126,26 @@ func AllowPrometheusSync(logger *logging.BaseLogger) {
 }
 
 // RunQuery runs a prometheus query and returns the metric value
-func RunQuery(ctx context.Context, logger *logging.BaseLogger, promAPI v1.API, query string) float64 {
+func RunQuery(ctx context.Context, logger *logging.BaseLogger, promAPI v1.API, query string) (float64, error) {
 	logger.Infof("Prometheus query: %s", query)
 
 	value, err := promAPI.Query(ctx, query, time.Now())
 	if err != nil {
-		logger.Errorf("Could not get metrics from prometheus: %v", err)
+		return 0, nil
 	}
 
 	return VectorValue(value)
 }
 
 // VectorValue gets the vector value from the value type
-func VectorValue(val model.Value) float64 {
+func VectorValue(val model.Value) (float64, error) {
 	if val.Type() != model.ValVector {
-		return 0
+		return 0, fmt.Errorf("Value type is %s. Expected: Valvector", val.String())
 	}
 	value := val.(model.Vector)
-	return float64(value[0].Value)
+	if len(value) == 0 {
+		return 0, errors.New("Query returned no results")
+	}
+
+	return float64(value[0].Value), nil
 }
