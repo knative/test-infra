@@ -100,8 +100,8 @@ function wait_until_object_does_not_exist() {
   fi
   echo -n "Waiting until ${DESCRIPTION} does not exist"
   for i in {1..150}; do  # timeout after 5 minutes
-    if kubectl ${KUBECTL_ARGS} > /dev/null 2>&1; then
-      echo "\n${DESCRIPTION} does not exist"
+    if ! kubectl ${KUBECTL_ARGS} > /dev/null 2>&1; then
+      echo -e "\n${DESCRIPTION} does not exist"
       return 0
     fi
     echo -n "."
