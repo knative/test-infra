@@ -18,7 +18,9 @@
 
 1. Create a new GCP project and add it to [resources.yaml](./boskos/resources.yaml).
 
-1. Make `knative-tests@appspot.gserviceaccount.com` an editor of the project.
+1. Make `knative-tests@appspot.gserviceaccount.com` and `knative-productivity-admins@googlegroups.com` editors of the project.
+
+1. Ensure that there is at least one other owner of the project. A good choice is one of the members of the `knative-productivity-admins@googlegroups.com` group.
 
 1. Enable the Compute Engine API for the project (e.g., by visiting https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=XXXXXXXX).
 
