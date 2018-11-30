@@ -45,6 +45,12 @@ func TestFailsWithFatal(t *testing.T) {
 	signal(os.Interrupt)
 }
 
+func TestFailsWithPanic(t *testing.T) {
+	// Simulate a "panic" stack trace.
+	fmt.Println("panic: test timed out after 5m0s")
+	signal(os.Interrupt)
+}
+
 func TestFailsWithSigQuit(t *testing.T) {
 	signal(syscall.SIGQUIT)
 }
