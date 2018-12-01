@@ -57,7 +57,7 @@ func (issues *FakeGithubIssues) CreateComment(ctx context.Context, owner string,
 }
 
 func (issues *FakeGithubIssues) DeleteComment(ctx context.Context, owner string, repo string,
-	commentID int) (*github.Response, error) {
+	commentID int64) (*github.Response, error) {
 	log.Printf("FakeGithubIssues.DeleteComment(Ctx, owner=%s, repo=%s, commentID=%d) called\n",
 		owner, repo, commentID)
 	return nil, nil
