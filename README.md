@@ -14,7 +14,7 @@ a [PR dashboard](https://gubernator.knative.dev/pr) for contributions in the Kna
 
 ### TestGrid
 
-Knative provides a [health dashboard](https://testgrid.knative.dev/) to show test, code and release health for each repo. It covers key areas such as continous integration, code coverage, nightly release, conformance, performance and etc.
+Knative provides a [health dashboard](https://testgrid.knative.dev/) to show test, code and release health for each repo. It covers key areas such as continuous integration, code coverage, nightly release, conformance, performance and etc.
 
 ### E2E Testing
 
