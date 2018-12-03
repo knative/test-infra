@@ -16,11 +16,11 @@ func CreateLineCovFile(arts *artifacts.LocalArtifacts) error {
 	cmdTxt := fmt.Sprintf("go tool cover -html=%s -o %s", pathKeyProfile, pathLineCov)
 	log.Printf("Running command '%s'\n", cmdTxt)
 	cmd := exec.Command("go", "tool", "cover", "-html="+pathKeyProfile, "-o", pathLineCov)
+	stdoutStderr, err := cmd.CombinedOutput()
 	log.Printf("Finished running '%s'\n", cmdTxt)
-	err := cmd.Run()
 	log.Printf("cmd.Args=%v", cmd.Args)
 	if err != nil {
-		log.Printf("Error executing cmd: %v", err)
+		log.Printf("Error executing cmd: %v; combinedOutput=%s", err, stdoutStderr)
 	}
 	return err
 }

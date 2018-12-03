@@ -6,7 +6,7 @@ go_library(
         "common.go",
         "onlySrcChange.go",
     ],
-    importpath = "github.com/knative/test-infra/coverage/testTarget/subPkg2",
+    importpath = "github.com/knative/test-infra/tools/coverage/testTarget/subPkg2",
     visibility = ["//visibility:public"],
 )
 

@@ -5,7 +5,7 @@ import (
 	"path"
 )
 
-const projectPathLessGoPath = "src/github.com/knative/test-infra/coverage"
+const projectPathLessGoPath = "src/github.com/knative/test-infra/tools/coverage"
 
 func ProjDir() string {
 	gopath := os.Getenv("GOPATH")

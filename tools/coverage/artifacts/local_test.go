@@ -19,7 +19,7 @@ func TestProfiling(t *testing.T) {
 
 	t.Logf("Verifying profile file...\n")
 	expectedFirstLine := "mode: count"
-	expectedLine := "github.com/knative/test-infra/coverage/testTarget/subPkg1/common.go:4.19,6.2 0 2"
+	expectedLine := "github.com/knative/test-infra/tools/coverage/testTarget/subPkg1/common.go:4.19,6.2 0 2"
 
 	scanner := bufio.NewScanner(arts.ProfileReader())
 	scanner.Scan()

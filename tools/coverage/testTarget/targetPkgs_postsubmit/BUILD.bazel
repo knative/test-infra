@@ -10,7 +10,7 @@ go_library(
         "onlySrcChange.go",
         "onlyTestChange.go",
     ],
-    importpath = "github.com/knative/test-infra/coverage/testTarget/targetPkgs_postsubmit",
+    importpath = "github.com/knative/test-infra/tools/coverage/testTarget/targetPkgs_postsubmit",
     visibility = ["//visibility:public"],
 )
 

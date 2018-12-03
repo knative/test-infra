@@ -11,7 +11,7 @@ go_library(
         "onlySrcChange.go",
         "onlyTestChange.go",
     ],
-    importpath = "github.com/knative/test-infra/coverage/testTarget/presubmit",
+    importpath = "github.com/knative/test-infra/tools/coverage/testTarget/presubmit",
     visibility = ["//visibility:public"],
 )
 
