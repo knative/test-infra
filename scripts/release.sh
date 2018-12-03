@@ -39,13 +39,13 @@ function tag_images_in_yaml() {
   done
 }
 
-# Copy the given yaml file to the $RELEASE_GCS bucket's "latest" directory.
-# If $TAG is not empty, also copy it to $RELEASE_GCS bucket's "previous" directory.
+# Copy the given yaml file to the $RELEASE_GCS_BUCKET bucket's "latest" directory.
+# If $TAG is not empty, also copy it to $RELEASE_GCS_BUCKET bucket's "previous" directory.
 # Parameters: $1 - yaml file to copy.
 function publish_yaml() {
-  gsutil cp $1 gs://${RELESASE_GCS}/latest/
+  gsutil cp $1 gs://${RELEASE_GCS_BUCKET}/latest/
   if [[ -n ${TAG} ]]; then
-    gsutil cp $1 gs://${RELEASE_GCS}/previous/${TAG}/
+    gsutil cp $1 gs://${RELEASE_GCS_BUCKET}/previous/${TAG}/
   fi
 }
 
@@ -58,7 +58,7 @@ TAG=""
 RELEASE_VERSION=""
 RELEASE_NOTES=""
 RELEASE_BRANCH=""
-RELEASE_GCS=""
+RELEASE_GCS_BUCKET=""
 KO_FLAGS=""
 KO_DOCKER_REPO=""
 
@@ -75,7 +75,7 @@ function parse_flags() {
   RELEASE_BRANCH=""
   KO_FLAGS="-P"
   KO_DOCKER_REPO="gcr.io/knative-nightly"
-  RELEASE_GCS="knative-nightly/$(basename ${REPO_ROOT_DIR})"
+  RELEASE_GCS_BUCKET="knative-nightly/$(basename ${REPO_ROOT_DIR})"
   local has_gcr_flag=0
   local has_gcs_flag=0
 
@@ -97,8 +97,8 @@ function parse_flags() {
       --release-gcs)
         shift
         [[ $# -ge 1 ]] || abort "missing GCS bucket after --release-gcs"
-        RELEASE_GCS=$1
-        has_gcs_flag=2
+        RELEASE_GCS_BUCKET=$1
+        has_gcs_flag=1
         ;;
       --version)
         shift
@@ -129,7 +129,7 @@ function parse_flags() {
     (( has_gcs_flag )) && echo "Not publishing the release, GCS flag is ignored"
     KO_DOCKER_REPO="ko.local"
     KO_FLAGS="-L ${KO_FLAGS}"
-    RELEASE_GCS=""
+    RELEASE_GCS_BUCKET=""
   fi
 
   if (( TAG_RELEASE )); then
@@ -154,7 +154,7 @@ function parse_flags() {
   readonly RELEASE_VERSION
   readonly RELEASE_NOTES
   readonly RELEASE_BRANCH
-  readonly RELEASE_GCS
+  readonly RELEASE_GCS_BUCKET
   readonly KO_DOCKER_REPO
 }
 

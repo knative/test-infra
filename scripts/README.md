@@ -163,7 +163,7 @@ also overrides the value of the `TAG` variable as `v<version>`.
 it's empty and `master` HEAD will be considered the release branch.
     * `RELEASE_NOTES`: contains the filename with the release notes if `--release-notes`
 was passed. The release notes is a simple markdown file.
-    * `RELEASE_GCS`: contains the GCS bucket name to store the manifests if
+    * `RELEASE_GCS_BUCKET`: contains the GCS bucket name to store the manifests if
 `--release-gcs` was passed, otherwise the default value `knative-nightly/<repo>` will be
 used. It is empty if `--publish` was not passed.
     * `KO_DOCKER_REPO`: contains the GCR to store the images if `--release-gcr` was
