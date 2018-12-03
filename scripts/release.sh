@@ -174,6 +174,10 @@ function run_validation_tests() {
 # Initialize everything (flags, workspace, etc) for a release.
 function initialize() {
   parse_flags $@
+  echo "- Destination GCR: ${KO_DOCKER_REPO}"
+  if (( PUBLISH_RELEASE )); then
+    echo "- Destination GCS: ${RELEASE_GCS_BUCKET}"
+  fi
   # Checkout specific branch, if necessary
   if (( BRANCH_RELEASE )); then
     git checkout upstream/${RELEASE_BRANCH} || abort "cannot checkout branch ${RELEASE_BRANCH}"

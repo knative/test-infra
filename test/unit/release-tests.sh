@@ -88,36 +88,36 @@ echo ">> Testing initialization"
 test_function 1 "error: missing version" initialize --version
 test_function 1 "error: version format" initialize --version a
 test_function 1 "error: version format" initialize --version 0.0
-test_function 0 "" initialize --version 1.0.0
+test_function 0 "" parse_flags --version 1.0.0
 
 test_function 1 "error: missing branch" initialize --branch
 test_function 1 "error: branch name must be" initialize --branch a
 test_function 1 "error: branch name must be" initialize --branch 0.0
-test_function 0 "" initialize --branch release-0.0
+test_function 0 "" parse_flags --branch release-0.0
 
 test_function 1 "error: missing release notes" initialize --release-notes
 test_function 1 "error: file a doesn't" initialize --release-notes a
-test_function 0 "" initialize --release-notes $(mktemp)
+test_function 0 "" parse_flags --release-notes $(mktemp)
 
 test_function 1 "error: missing GCS" initialize --release-gcs
-test_function 0 "" initialize --release-gcs a --publish
+test_function 0 "" parse_flags --release-gcs a --publish
 
 test_function 1 "error: missing GCR" initialize --release-gcr
-test_function 0 "" initialize --release-gcr a --publish
+test_function 0 "" parse_flags --release-gcr a --publish
 
 echo ">> Testing GCR/GCS values"
 
-test_function 0 "GCR flag is ignored" call_function_post "echo :\$KO_DOCKER_REPO:" initialize --release-gcr foo
-test_function 0 "GCS flag is ignored" call_function_post "echo :\$RELEASE_GCS:" initialize --release-gcs foo
+test_function 0 "GCR flag is ignored" initialize --release-gcr foo
+test_function 0 "GCS flag is ignored" initialize --release-gcs foo
 
-test_function 0 ":ko.local:" call_function_post "echo :\$KO_DOCKER_REPO:" initialize
+test_function 0 "Destination GCR: ko.local" initialize
 test_function 0 "::" call_function_post "echo :\$RELEASE_GCS:" initialize
 
-test_function 0 ":gcr.io/knative-nightly:" call_function_post "echo :\$KO_DOCKER_REPO:" initialize --publish
-test_function 0 ":knative-nightly/test-infra:" call_function_post "echo :\$RELEASE_GCS:" initialize --publish
+test_function 0 "Destination GCR: gcr.io/knative-nightly" initialize --publish
+test_function 0 "Destination GCS: knative-nightly/test-infra" initialize --publish
 
-test_function 0 ":foo:" call_function_post "echo :\$KO_DOCKER_REPO:" initialize --release-gcr foo --publish
-test_function 0 ":foo:" call_function_post "echo :\$RELEASE_GCS:" initialize --release-gcs foo --publish
+test_function 0 "Destination GCR: foo" initialize --release-gcr foo --publish
+test_function 0 "Destination GCS: foo" initialize --release-gcs foo --publish
 
 echo ">> Testing release branching"
 
