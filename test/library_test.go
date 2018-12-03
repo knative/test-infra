@@ -23,12 +23,15 @@ import (
 	"os"
 	"syscall"
 	"testing"
+	"time"
 )
 
 // signal sends a UNIX signal to the test process.
 func signal(s os.Signal) {
 	p, _ := os.FindProcess(os.Getpid())
 	_ = p.Signal(s)
+        // Sleep so test won't finish and signal will be received.
+	time.Sleep(999)
 }
 
 func TestSucceeds(t *testing.T) {
