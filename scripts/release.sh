@@ -25,14 +25,13 @@ function banner() {
     make_banner "@" "$1"
 }
 
-# Tag images in the yaml file.
+# Tag images in the yaml file if $TAG is not empty.
 # $KO_DOCKER_REPO is the registry containing the images to tag with $TAG.
 # Parameters: $1 - yaml file to parse for images.
 function tag_images_in_yaml() {
   [[ -z ${TAG} ]] && return 0
-  local src_dir="${GOPATH}/src/"
-  local BASE_PATH="${REPO_ROOT_DIR/$src_dir}"
-  local DOCKER_BASE="${KO_DOCKER_REPO}/${BASE_PATH}"
+  local SRC_DIR="${GOPATH}/src/"
+  local DOCKER_BASE="${KO_DOCKER_REPO}/${REPO_ROOT_DIR/$SRC_DIR}"
   echo "Tagging images under '${DOCKER_BASE}' with ${TAG}"
   for image in $(grep -o "${DOCKER_BASE}/[a-z\./-]\+@sha256:[0-9a-f]\+" $1); do
     gcloud -q container images add-tag ${image} ${image%%@*}:${TAG}
@@ -43,9 +42,14 @@ function tag_images_in_yaml() {
 # If $TAG is not empty, also copy it to $RELEASE_GCS_BUCKET bucket's "previous" directory.
 # Parameters: $1 - yaml file to copy.
 function publish_yaml() {
-  gsutil cp $1 gs://${RELEASE_GCS_BUCKET}/latest/
+  function verbose_gsutil_cp {
+    local DEST=gs://${RELEASE_GCS_BUCKET}/$2/
+    echo "Publishing $1 to ${DEST}"
+    gsutil cp $1 ${DEST}
+  }
+  verbose_gsutil_cp $1 latest
   if [[ -n ${TAG} ]]; then
-    gsutil cp $1 gs://${RELEASE_GCS_BUCKET}/previous/${TAG}/
+    verbose_gsutil_cp $1 previous/${TAG}
   fi
 }
 
@@ -60,7 +64,7 @@ RELEASE_NOTES=""
 RELEASE_BRANCH=""
 RELEASE_GCS_BUCKET=""
 KO_FLAGS=""
-KO_DOCKER_REPO=""
+export KO_DOCKER_REPO=""
 
 function abort() {
   echo "error: $@"
@@ -174,10 +178,26 @@ function run_validation_tests() {
 # Initialize everything (flags, workspace, etc) for a release.
 function initialize() {
   parse_flags $@
+
+  # Log what will be done and where.
+  banner "Release configuration"
   echo "- Destination GCR: ${KO_DOCKER_REPO}"
-  if (( PUBLISH_RELEASE )); then
-    echo "- Destination GCS: ${RELEASE_GCS_BUCKET}"
+  (( SKIP_TESTS )) && echo "- Tests will NOT be run" || echo "- Tests will be run"
+  if (( TAG_RELEASE )); then
+    echo "- Artifacts will tagged '${TAG}'"
+  else
+    echo "- Artifacts WILL NOT be tagged"
   fi
+  if (( PUBLISH_RELEASE )); then
+    echo "- Release WILL BE published to '${RELEASE_GCS_BUCKET}'"
+  else
+    echo "- Release will not be published"
+  fi
+  if (( BRANCH_RELEASE )); then
+    echo "- Release WILL BE branched from '${RELEASE_BRANCH}'"
+  fi
+  [[ -n "${RELEASE_NOTES}" ]] && echo "- Release notes are generated from '${RELEASE_NOTES}'"
+
   # Checkout specific branch, if necessary
   if (( BRANCH_RELEASE )); then
     git checkout upstream/${RELEASE_BRANCH} || abort "cannot checkout branch ${RELEASE_BRANCH}"
