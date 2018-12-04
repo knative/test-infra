@@ -25,7 +25,7 @@ function banner() {
     make_banner "@" "$1"
 }
 
-# Tag images in the yaml file.
+# Tag images in the yaml file if $TAG is not empty.
 # $KO_DOCKER_REPO is the registry containing the images to tag with $TAG.
 # Parameters: $1 - yaml file to parse for images.
 function tag_images_in_yaml() {
