@@ -114,10 +114,10 @@ test_function 0 "Destination GCR: ko.local" initialize
 test_function 0 "::" call_function_post "echo :\$RELEASE_GCS:" initialize
 
 test_function 0 "Destination GCR: gcr.io/knative-nightly" initialize --publish
-test_function 0 "Destination GCS: knative-nightly/test-infra" initialize --publish
+test_function 0 "published to 'knative-nightly/test-infra'" initialize --publish
 
 test_function 0 "Destination GCR: foo" initialize --release-gcr foo --publish
-test_function 0 "Destination GCS: foo" initialize --release-gcs foo --publish
+test_function 0 "published to 'foo'" initialize --release-gcs foo --publish
 
 echo ">> Testing release branching"
 
