@@ -555,38 +555,6 @@ presubmits:
           requests:
             memory: "1Gi"
 
-- cron: "31 8 * * *" # Run at 01:31PST every day (08:31 UTC)
-  name: ci-knative-build-pipeline-nightly-release
-  agent: kubernetes
-  labels:
-    preset-service-account: "true"
-    preset-bazel-scratch-dir: "true"
-    preset-bazel-remote-cache-enabled: "true"
-    preset-dind-enabled: "true"
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
-      imagePullPolicy: Always
-      args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/build-pipeline"
-      - "--root=/go/src"
-      - "--service-account=/etc/service-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=90" # 1.5h
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
-      - "./hack/release.sh"
-      - "--publish"
-      - "--tag-release"
-      # Bazel needs privileged mode in order to sandbox builds.
-      securityContext:
-        privileged: true
-      resources:
-        requests:
-          memory: "1Gi"
   - name: pull-knative-build-pipeline-go-coverage
     labels:
       preset-service-account: "true"
@@ -1813,7 +1781,7 @@ periodics:
       - "--cov-threshold-percentage=80"
 
 - cron: "31 8 * * *" # Run at 01:31PST every day (08:31 UTC)
-  name: ci-knative-build-pipeline-release
+  name: ci-knative-build-pipeline-nightly-release
   agent: kubernetes
   labels:
     preset-service-account: "true"
