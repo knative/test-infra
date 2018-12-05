@@ -54,7 +54,7 @@
 
       1. For the continuous integration tests, setup the *ci-knative-**repo**-continuous* job.
 
-      1. For automated nightly releases, setup the *ci-knative-**repo**-release* job.
+      1. For automated nightly releases, setup the *ci-knative-**repo**-nightly-release* job.
 
     1. Updates the Gubernator config with the new log dirs.
 

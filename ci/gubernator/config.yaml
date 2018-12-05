@@ -56,15 +56,17 @@ jobs:
   - pull-knative-caching-integration-tests
   knative-prow/logs/:
   - ci-knative-serving-continuous
-  - ci-knative-serving-release
+  - ci-knative-serving-0.2-continuous
+  - ci-knative-serving-nightly-release
   - ci-knative-serving-playground
   - ci-knative-build-continuous
-  - ci-knative-build-release
+  - ci-knative-build-nightly-release
   - ci-knative-eventing-continuous
-  - ci-knative-eventing-release
+  - ci-knative-eventing-nightly-release
   - ci-knative-eventing-sources-continuous
-  - ci-knative-eventing-sources-release
+  - ci-knative-eventing-sources-nightly-release
   - ci-knative-build-templates-continuous
+  - ci-knative-build-pipeline-nightly-release
   - ci-knative-docs-continuous
   - ci-knative-pkg-continuous
   - ci-knative-caching-continuous
