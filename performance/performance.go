@@ -26,6 +26,12 @@ import (
 	"fortio.org/fortio/periodic"
 )
 
+const (
+	p50 = 50.0
+	p90 = 90.0
+	p99 = 99.0
+)
+
 // PerfOptions provides knobs to run the perf test
 type PerfOptions struct {
 	Duration       time.Duration
@@ -58,7 +64,7 @@ func (p *PerfOptions) CreateRunnerOptions(resolvableDomain bool) *fhttp.HTTPRunn
 		RunnerOptions: periodic.RunnerOptions{
 			Duration:    p.Duration,
 			NumThreads:  p.NumThreads,
-			Percentiles: []float64{50.0, 90.0, 99.0},
+			Percentiles: []float64{p50, p90, p99},
 			QPS:         p.QPS,
 		},
 		HTTPOptions:        *o,
