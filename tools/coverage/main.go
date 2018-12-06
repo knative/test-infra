@@ -116,9 +116,10 @@ func main() {
 				"fail presubmit workflow intentionally", *covThresholdFlag)
 		}
 	case "periodic":
-		log.Printf("job type is %v, producing testsuite xml...\n", jobType)
-		testgrid.ProfileToTestsuiteXML(localArtifacts, *covThresholdFlag)
+		log.Printf("job type is %v\n", jobType)
 	}
+	log.Printf("producing testsuite xml...\n")
+	testgrid.ProfileToTestsuiteXML(localArtifacts, *covThresholdFlag)
 
 	fmt.Println("end of code coverage main")
 }
