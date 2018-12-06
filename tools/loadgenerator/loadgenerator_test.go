@@ -14,13 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package performance_test
+package loadgenerator_test
 
 import (
 	"testing"
 	"time"
 
-	"github.com/knative/test-infra/performance"
+	"github.com/knative/test-infra/tools/loadgenerator"
 )
 
 const (
@@ -30,8 +30,8 @@ const (
 	testQPS  = 100.0
 )
 
-func getPerfOptions() *performance.PerfOptions {
-	return &performance.PerfOptions{
+func getOptions() *loadgenerator.GeneratorOptions {
+	return &loadgenerator.GeneratorOptions{
 		Duration:       testTime,
 		NumThreads:     testNum,
 		NumConnections: testNum,
@@ -42,8 +42,8 @@ func getPerfOptions() *performance.PerfOptions {
 	}
 }
 
-func TestRunLoadTest(t *testing.T) {
-	o := getPerfOptions()
+func TestCreateRunnerOptions(t *testing.T) {
+	o := getOptions()
 	opts := o.CreateRunnerOptions(false)
 
 	if opts.RunnerOptions.Duration != testTime {

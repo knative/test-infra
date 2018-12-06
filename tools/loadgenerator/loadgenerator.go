@@ -14,9 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// performance.go provides a wrapper on fortio load generator to run perf tests.
+// loadgenerator.go provides a wrapper on fortio load generator.
 
-package performance
+package loadgenerator
 
 import (
 	"fmt"
@@ -32,8 +32,8 @@ const (
 	p99 = 99.0
 )
 
-// PerfOptions provides knobs to run the perf test
-type PerfOptions struct {
+// GeneratorOptions provides knobs to run the perf test
+type GeneratorOptions struct {
 	Duration       time.Duration
 	NumThreads     int
 	NumConnections int
@@ -43,29 +43,29 @@ type PerfOptions struct {
 	QPS            float64
 }
 
-// PerfResults contains the results of running the per test
-type PerfResults struct {
+// GeneratorResults contains the results of running the per test
+type GeneratorResults struct {
 	Result *fhttp.HTTPRunnerResults
 }
 
 // CreateRunnerOptions sets up the fortio client with the knobs needed to run the load test
-func (p *PerfOptions) CreateRunnerOptions(resolvableDomain bool) *fhttp.HTTPRunnerOptions {
-	o := fhttp.NewHTTPOptions(p.URL)
+func (g *GeneratorOptions) CreateRunnerOptions(resolvableDomain bool) *fhttp.HTTPRunnerOptions {
+	o := fhttp.NewHTTPOptions(g.URL)
 
-	o.NumConnections = p.NumConnections
-	o.HTTPReqTimeOut = p.RequestTimeout
+	o.NumConnections = g.NumConnections
+	o.HTTPReqTimeOut = g.RequestTimeout
 
 	// If the url does not contains a resolvable domain, we need to add the domain as a header
 	if !resolvableDomain {
-		o.AddAndValidateExtraHeader(fmt.Sprintf("Host: %s", p.Domain))
+		o.AddAndValidateExtraHeader(fmt.Sprintf("Host: %s", g.Domain))
 	}
 
 	return &fhttp.HTTPRunnerOptions{
 		RunnerOptions: periodic.RunnerOptions{
-			Duration:    p.Duration,
-			NumThreads:  p.NumThreads,
+			Duration:    g.Duration,
+			NumThreads:  g.NumThreads,
 			Percentiles: []float64{p50, p90, p99},
-			QPS:         p.QPS,
+			QPS:         g.QPS,
 		},
 		HTTPOptions:        *o,
 		AllowInitialErrors: true,
@@ -73,7 +73,7 @@ func (p *PerfOptions) CreateRunnerOptions(resolvableDomain bool) *fhttp.HTTPRunn
 }
 
 // RunLoadTest runs the load test with fortio and returns the response
-func (p *PerfOptions) RunLoadTest(resolvableDomain bool) (*PerfResults, error) {
-	r, err := fhttp.RunHTTPTest(p.CreateRunnerOptions(resolvableDomain))
-	return &PerfResults{Result: r}, err
+func (g *GeneratorOptions) RunLoadTest(resolvableDomain bool) (*GeneratorResults, error) {
+	r, err := fhttp.RunHTTPTest(g.CreateRunnerOptions(resolvableDomain))
+	return &GeneratorResults{Result: r}, err
 }
