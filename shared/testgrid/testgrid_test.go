@@ -21,7 +21,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/knative/test-infra/tools/testgrid"
+	"github.com/knative/test-infra/shared/testgrid"
 )
 
 func checkFileText(t *testing.T, expected string) {

@@ -22,7 +22,7 @@ import (
 	"time"
 
 	"github.com/knative/pkg/test/logging"
-	"github.com/knative/test-infra/tools/prometheus"
+	"github.com/knative/test-infra/shared/prometheus"
 	"github.com/prometheus/client_golang/api/prometheus/v1"
 	"github.com/prometheus/common/model"
 )
