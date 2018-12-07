@@ -1818,7 +1818,7 @@ periodics:
   decorate: true
   extra_refs:
   - org: knative
-    repo: build
+    repo: build-pipeline
     base_ref: master
     clone_uri: "https://github.com/knative/build-pipeline.git"
   spec:
