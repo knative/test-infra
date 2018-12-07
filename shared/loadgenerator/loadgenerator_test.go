@@ -20,7 +20,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/knative/test-infra/tools/loadgenerator"
+	"github.com/knative/test-infra/shared/loadgenerator"
 )
 
 const (

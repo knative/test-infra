@@ -30,8 +30,8 @@ import (
 	"strings"
 
 	"github.com/knative/serving/pkg/apis/serving/v1alpha1"
-	"github.com/knative/test-infra/tools/gcs"
-	"github.com/knative/test-infra/tools/testgrid"
+	"github.com/knative/test-infra/shared/gcs"
+	"github.com/knative/test-infra/shared/testgrid"
 )
 
 const (
