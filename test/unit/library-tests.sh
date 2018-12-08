@@ -23,10 +23,16 @@ set -e
 
 function test_report() {
   local REPORT="$(mktemp)"
+  function grepit() {
+    if ! grep "$1" ${REPORT} > /dev/null; then
+      echo "**** '$1' not found"
+      exit 1
+    fi
+  }
   report_go_test -tags=library -run $1 ./test > ${REPORT} || true
   cat ${REPORT}
-  grep "$2" ${REPORT} > /dev/null
-  grep "Done parsing 1 tests" ${REPORT} > /dev/null
+  grepit "$2"
+  grepit "Parsed 1 tests"
 }
 
 # Cleanup bazel stuff to avoid confusing Prow
@@ -36,18 +42,18 @@ function cleanup_bazel() {
 
 trap cleanup_bazel EXIT
 
-subheader "Tests for report_go_test()"
+echo "*** Tests for report_go_test() ***"
 
 echo ">> Test that test passes"
-test_report TestSucceeds "^- TestSucceeds :PASS:"
+test_report TestSucceeds "^  > pass TestSucceeds"
 
 echo ">> Testing that test fails with fatal"
-test_report TestFailsWithFatal "^- TestFailsWithFatal :FAIL:"
+test_report TestFailsWithFatal "^  X FAIL TestFailsWithFatal"
 
 echo ">> Testing that test fails with panic"
-test_report TestFailsWithPanic "^- TestFailsWithPanic :FAIL:"
+test_report TestFailsWithPanic "^  X FAIL TestFailsWithPanic"
 
 echo ">> Testing that test fails with SIGQUIT"
-test_report TestFailsWithSigQuit "^- TestFailsWithSigQuit :FAIL:"
+test_report TestFailsWithSigQuit "^  X FAIL TestFailsWithSigQuit"
 
 echo ">> All tests passed"
