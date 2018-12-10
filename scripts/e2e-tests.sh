@@ -159,9 +159,7 @@ function create_test_cluster() {
     --gcp-network="${E2E_NETWORK_NAME}"
     --gke-environment=prod
   )
-  if (( IS_BOSKOS )); then
-    CLUSTER_CREATION_ARGS+=(--gcp-service-account=/etc/service-account/service-account.json)
-  else
+  if (( ! IS_BOSKOS )); then
     CLUSTER_CREATION_ARGS+=(--gcp-project=${GCP_PROJECT})
   fi
   # SSH keys are not used, but kubetest checks for their existence.
