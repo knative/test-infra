@@ -81,9 +81,15 @@ presets:
   - name: account
     secret:
       secretName: test-account
+  - name: service-account
+    secret:
+      secretName: service-account
   volumeMounts:
   - name: account
     mountPath: /etc/test-account
+    readOnly: true
+  - name: service-account
+    mountPath: /etc/service-account
     readOnly: true
 # nightly release service account
 - labels:
@@ -95,9 +101,15 @@ presets:
   - name: account
     secret:
       secretName: nightly-account
+  - name: service-account
+    secret:
+      secretName: service-account
   volumeMounts:
   - name: account
     mountPath: /etc/nightly-account
+    readOnly: true
+  - name: service-account
+    mountPath: /etc/service-account
     readOnly: true
 # storage / caching presets
 - labels:
