@@ -59,11 +59,6 @@ RELEASE_NOTES=""
 RELEASE_BRANCH=""
 KO_FLAGS=""
 
-function abort() {
-  echo "error: $@"
-  exit 1
-}
-
 # Parses flags and sets environment variables accordingly.
 function parse_flags() {
   TAG=""

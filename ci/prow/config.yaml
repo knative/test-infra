@@ -2148,7 +2148,26 @@ periodics:
       - "--profile-name=coverage_profile.txt"
       - "--cov-target=."
       - "--cov-threshold-percentage=80"
-
+- cron: "0 19 * * 1" # Run at 11:00PST/12:00PST every Monday (19:00 UTC)
+  name: ci-knative-cleanup
+  branches:
+  - master
+  agent: kubernetes
+  labels:
+    preset-service-account: "true"
+  decorate: true
+  clone_uri: "https://github.com/knative/test-infra.git"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      imagePullPolicy: Always
+      command:
+      - "./tools/cleanup.sh"
+      args:
+      - "delete-old-gcr-images"
+      - "--project-resource-yaml ci/prow/boskos/resources.yaml"
+      - "--days-to-keep 90"
+  
 postsubmits:
   knative/serving:
   - name: post-knative-serving-go-coverage
