@@ -51,6 +51,7 @@ tide:
     - knative/build
     - knative/build-pipeline
     - knative/build-templates
+    - knative/observability
     - knative/serving
     - knative/eventing
     - knative/eventing-sources
