@@ -62,8 +62,8 @@ test_groups:
 
 - name: ci-knative-serving-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-continuous
-- name: ci-knative-serving-release
-  gcs_prefix: knative-prow/logs/ci-knative-serving-release
+- name: ci-knative-serving-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-serving-nightly-release
 - name: ci-knative-serving-playground
   gcs_prefix: knative-prow/logs/ci-knative-serving-playground
   alert_stale_results_hours: 168  # Alert if playground haven't been updated for a week
@@ -81,8 +81,8 @@ test_groups:
   short_text_metric: perf_latency
 - name: ci-knative-build-continuous
   gcs_prefix: knative-prow/logs/ci-knative-build-continuous
-- name: ci-knative-build-release
-  gcs_prefix: knative-prow/logs/ci-knative-build-release
+- name: ci-knative-build-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-build-nightly-release
 - name: pull-knative-build-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-build-go-coverage
   short_text_metric: coverage
@@ -91,22 +91,22 @@ test_groups:
   short_text_metric: latency
 - name: ci-knative-build-templates-continuous
   gcs_prefix: knative-prow/logs/ci-knative-build-templates-continuous
-- name: ci-knative-build-pipeline-release
-  gcs_prefix: knative-prow/logs/ci-knative-build-pipeline-release
+- name: ci-knative-build-pipeline-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-build-pipeline-nightly-release
 - name: pull-knative-build-pipeline-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-build-pipeline-go-coverage
   short_text_metric: coverage
 - name: ci-knative-eventing-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-continuous
-- name: ci-knative-eventing-release
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-release
+- name: ci-knative-eventing-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-nightly-release
 - name: pull-knative-eventing-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-eventing-go-coverage
   short_text_metric: coverage
 - name: ci-knative-eventing-sources-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-continuous
-- name: ci-knative-eventing-sources-release
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-release
+- name: ci-knative-eventing-sources-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-nightly-release
 - name: pull-knative-eventing-sources-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-go-coverage
   short_text_metric: coverage
@@ -144,7 +144,7 @@ dashboards:
   - name: continuous
     test_group_name: ci-knative-serving-continuous
   - name: release
-    test_group_name: ci-knative-serving-release
+    test_group_name: ci-knative-serving-nightly-release
   - name: playground
     test_group_name: ci-knative-serving-playground
   - name: coverage
@@ -169,7 +169,7 @@ dashboards:
   - name: continuous
     test_group_name: ci-knative-build-continuous
   - name: release
-    test_group_name: ci-knative-build-release
+    test_group_name: ci-knative-build-nightly-release
   - name: coverage
     test_group_name: pull-knative-build-test-coverage
     base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
@@ -184,7 +184,7 @@ dashboards:
 - name: knative-build-pipeline
   dashboard_tab:
   - name: release
-    test_group_name: ci-knative-build-pipeline-release
+    test_group_name: ci-knative-build-pipeline-nightly-release
   - name: coverage
     test_group_name: pull-knative-build-pipeline-test-coverage
     base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
@@ -193,7 +193,7 @@ dashboards:
   - name: continuous
     test_group_name: ci-knative-eventing-continuous
   - name: release
-    test_group_name: ci-knative-eventing-release
+    test_group_name: ci-knative-eventing-nightly-release
   - name: coverage
     test_group_name: pull-knative-eventing-test-coverage
     base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
@@ -202,7 +202,7 @@ dashboards:
   - name: continuous
     test_group_name: ci-knative-eventing-sources-continuous
   - name: release
-    test_group_name: ci-knative-eventing-sources-release
+    test_group_name: ci-knative-eventing-sources-nightly-release
   - name: coverage
     test_group_name: pull-knative-eventing-sources-test-coverage
     base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='

@@ -1524,7 +1524,7 @@ periodics:
         requests:
           memory: "1Gi"
 - cron: "1 8 * * *" # Run at 01:01PST every day (08:01 UTC)
-  name: ci-knative-serving-release
+  name: ci-knative-serving-nightly-release
   agent: kubernetes
   labels:
     preset-service-account: "true"
@@ -1707,7 +1707,7 @@ periodics:
         requests:
           memory: "1Gi"
 - cron: "31 8 * * *" # Run at 01:31PST every day (08:31 UTC)
-  name: ci-knative-build-release
+  name: ci-knative-build-nightly-release
   agent: kubernetes
   labels:
     preset-service-account: "true"
@@ -1781,7 +1781,7 @@ periodics:
       - "--cov-threshold-percentage=80"
 
 - cron: "31 8 * * *" # Run at 01:31PST every day (08:31 UTC)
-  name: ci-knative-build-pipeline-release
+  name: ci-knative-build-pipeline-nightly-release
   agent: kubernetes
   labels:
     preset-service-account: "true"
@@ -1915,7 +1915,7 @@ periodics:
         requests:
           memory: "1Gi"
 - cron: "16 9 * * *" # Run at 02:16PST every day (09:16 UTC)
-  name: ci-knative-eventing-release
+  name: ci-knative-eventing-nightly-release
   agent: kubernetes
   labels:
     preset-service-account: "true"
@@ -1997,7 +1997,7 @@ periodics:
         requests:
           memory: "1Gi"
 - cron: "16 9 * * *" # Run at 02:16PST every day (09:16 UTC)
-  name: ci-knative-eventing-sources-release
+  name: ci-knative-eventing-sources-nightly-release
   agent: kubernetes
   labels:
     preset-service-account: "true"
