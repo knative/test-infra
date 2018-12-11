@@ -14,9 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This is a script helping clean up stale resources
+# This is a script to clean up stale resources
 
-source $(dirname ${BASH_SOURCE})/../../scripts/library.sh
+source $(dirname $0)/../../scripts/library.sh
 
 # Global variables
 DAYS_TO_KEEP_IMAGES=365 # Keep images up to 1 year by default
@@ -53,7 +53,6 @@ function parse_args() {
         DAYS_TO_KEEP_IMAGES=$1
         ;;
       --dry-run)
-        shift
         DRY_RUN=1
         ;;
       *) abort "unknown option ${parameter}" ;;
@@ -70,11 +69,11 @@ function parse_args() {
 
   is_int $DAYS_TO_KEEP_IMAGES || abort "days to keep has to be integer"
 
-  (( $DRY_RUN )) && echo "-- Running in dry-run mode, no image deletion --"
+  (( DRY_RUN )) && echo "-- Running in dry-run mode, no image deletion --"
   echo "Removing images with following rules:"
   case ${FUNCTION_TO_RUN} in
     delete-old-gcr-images)
-      echo "- from project defined in $PROJECT_RESOURCE_YAML, matching $RE_PROJECT_NAME"
+      echo "- from projects defined in $PROJECT_RESOURCE_YAML, matching $RE_PROJECT_NAME"
       ;;
     delete-old-gcr-images-from-project)
       echo "- from project $PROJECT_TO_CLEANUP"

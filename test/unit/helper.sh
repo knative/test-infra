@@ -15,10 +15,14 @@
 # limitations under the License.
 
 
+# Useful exit code
+readonly SUCCESS=0
+readonly FAILURE=1
+
 # Call a function and verify its return value and output.
 # Parameters: $1 - expected return code.
 #             $2 - expected output ("" if no output is expected)
-#             $3 ..$n - function to call and its parameters.
+#             $3..$n - function to call and its parameters.
 function test_function() {
   local expected_retcode=$1
   local expected_string=$2
@@ -51,7 +55,8 @@ function test_function() {
   echo "'$@' returns code ${expected_retcode} and displays '${expected_string}'"
 }
 
-# Mock gcloud function for testing purpose
+# Run the function with gcloud mocked (does nothing and outputs nothing).
+# Parameters: $1..$n - parameters passed to the function.
 function mock_gcloud_function() {
   set -e
   function gcloud() {

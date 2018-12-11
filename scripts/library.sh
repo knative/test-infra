@@ -42,6 +42,8 @@ fi
 readonly IS_PROW
 readonly REPO_ROOT_DIR="$(git rev-parse --show-toplevel)"
 
+# Print error message and exit 1
+# Parameters: $1..$n - error mesage to be displayed
 function abort() {
   echo "error: $@"
   exit 1
@@ -423,22 +425,22 @@ function check_links_in_markdown() {
 }
 
 # Check format of the given markdown files.
-# Parameters: $1...$n - files to inspect
+# Parameters: $1..$n - files to inspect
 function lint_markdown() {
   # https://github.com/markdownlint/markdownlint
   run_lint_tool mdl "linting markdown files" "-r ~MD013" $@
 }
 
-# Return 0 if first argument is an integer, otherwise 1
+# Return 0 if the given parameter is an integer, otherwise 1
 # Parameters: $1 - an integer
 function is_int() {
-  [[ -n $1 && $1 =~ ^[0-9]+$ ]] && return 0
-  return 1
+  [[ -n $1 && $1 =~ ^[0-9]+$ ]]
 }
 
-# Safety checks, make sure not release/nightly gcr
+# Return 0 if the given parameter is the knative release/nightly gcr, 1
+# otherwise
 # Parameters: $1 - gcr name, e.g. gcr.io/knative-nightly
 function is_protected_gcr() {
-  [[ -n $1 && "$1" =~ "^gcr.io/knative-(releases|nightly)/?$" ]] && return 0
-  return 1
+  [[ -n $1 && "$1" =~ "^gcr.io/knative-(releases|nightly)/?$" ]]
 }
+
