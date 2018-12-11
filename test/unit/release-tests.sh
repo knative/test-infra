@@ -83,6 +83,13 @@ function call_function_post() {
   eval ${post}
 }
 
+echo ">> Testing helper functions"
+
+test_function 0 "0.2" master_version "v0.2.1"
+test_function 0 "0.2" master_version "0.2.1"
+test_function 0 "1" release_build_number "v0.2.1"
+test_function 0 "1" release_build_number "0.2.1"
+
 echo ">> Testing initialization"
 
 test_function 1 "error: missing version" initialize --version
