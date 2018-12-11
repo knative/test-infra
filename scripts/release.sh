@@ -66,11 +66,6 @@ RELEASE_GCS_BUCKET=""
 KO_FLAGS=""
 export KO_DOCKER_REPO=""
 
-function abort() {
-  echo "error: $@"
-  exit 1
-}
-
 # Parses flags and sets environment variables accordingly.
 function parse_flags() {
   TAG=""

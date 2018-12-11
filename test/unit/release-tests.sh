@@ -14,45 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+source $(dirname $0)/helper.sh
 source $(dirname $0)/../../scripts/release.sh
 
 set -e
-
-# Call a function and verify its return value and output.
-# Parameters: $1 - expected return code.
-#             $2 - expected output ("" if no output is expected)
-#             $3 ..$n - function to call and its parameters.
-function test_function() {
-  local expected_retcode=$1
-  local expected_string=$2
-  local output="$(mktemp)"
-  local output_code="$(mktemp)"
-  shift 2
-  echo -n "$(trap '{ echo $? > ${output_code}; }' EXIT ; "$@")" &> ${output}
-  local retcode=$(cat ${output_code})
-  if [[ ${retcode} -ne ${expected_retcode} ]]; then
-    cat ${output}
-    echo "Return code ${retcode} doesn't match expected return code ${expected_retcode}"
-    return 1
-  fi
-  if [[ -n "${expected_string}" ]]; then
-    local found=1
-    grep "${expected_string}" ${output} > /dev/null || found=0
-    if (( ! found )); then
-      cat ${output}
-      echo "String '${expected_string}' not found"
-      return 1
-    fi
-  else
-    if [[ -s ${output} ]]; then
-      ls ${output}
-      cat ${output}
-      echo "Unexpected output"
-      return 1
-    fi
-  fi
-  echo "'$@' returns code ${expected_retcode} and displays '${expected_string}'"
-}
 
 function mock_branch_release() {
   set -e
