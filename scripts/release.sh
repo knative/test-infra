@@ -66,11 +66,8 @@ RELEASE_GCS_BUCKET=""
 KO_FLAGS=""
 export KO_DOCKER_REPO=""
 
-function abort() {
-  echo "error: $@"
-  exit 1
-}
-
+# Convenience function to run the hub tool.
+# Parameters: $1..$n - arguments to hub.
 function hub_tool() {
   run_go_tool github.com/github/hub hub $@
 }
