@@ -2162,7 +2162,7 @@ periodics:
     - image: gcr.io/knative-tests/test-infra/prow-tests:latest
       imagePullPolicy: Always
       command:
-      - "./tools/cleanup.sh"
+      - "./tools/cleanup/cleanup.sh"
       args:
       - "delete-old-gcr-images"
       - "--project-resource-yaml ci/prow/boskos/resources.yaml"
