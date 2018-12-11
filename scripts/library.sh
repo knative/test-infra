@@ -43,7 +43,7 @@ readonly IS_PROW
 readonly REPO_ROOT_DIR="$(git rev-parse --show-toplevel)"
 
 # Print error message and exit 1
-# Parameters: $1..$n - error mesage to be displayed
+# Parameters: $1..$n - error message to be displayed
 function abort() {
   echo "error: $@"
   exit 1
