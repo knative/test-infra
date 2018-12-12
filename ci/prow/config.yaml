@@ -2211,6 +2211,8 @@ periodics:
 - cron: "0 19 * * 1" # Run at 11:00PST/12:00PST every Monday (19:00 UTC)
   name: ci-knative-cleanup
   agent: kubernetes
+  labels:
+    preset-test-account: "true"
   decorate: true
   extra_refs:
   - org: knative
