@@ -35,6 +35,11 @@ function tag_images_in_yaml() {
   echo "Tagging images under '${DOCKER_BASE}' with ${TAG}"
   for image in $(grep -o "${DOCKER_BASE}/[a-z\./-]\+@sha256:[0-9a-f]\+" $1); do
     gcloud -q container images add-tag ${image} ${image%%@*}:${TAG}
+
+    # Georeplicate to {us,eu,asia}.gcr.io
+    gcloud -q container images add-tag ${image} us.${image%%@*}:${TAG}
+    gcloud -q container images add-tag ${image} eu.${image%%@*}:${TAG}
+    gcloud -q container images add-tag ${image} asia.${image%%@*}:${TAG}
   done
 }
 
