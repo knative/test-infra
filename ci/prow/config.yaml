@@ -131,6 +131,20 @@ presets:
   - name: service-account
     mountPath: /etc/service-account
     readOnly: true
+# backups service account
+- labels:
+    preset-backup-account: "true"
+  env:
+  - name: GOOGLE_APPLICATION_CREDENTIALS
+    value: /etc/backup-account/service-account.json
+  volumes:
+  - name: account
+    secret:
+      secretName: backup-account
+  volumeMounts:
+  - name: account
+    mountPath: /etc/backup-account
+    readOnly: true
 # docker-in-docker presets
 - labels:
     preset-dind-enabled: "true"
@@ -1739,6 +1753,20 @@ periodics:
       - "./hack/release.sh"
       - "--publish"
       - "--tag-release"
+- cron: "15 9 * * *" # Run at 02:15PST every day (09:15 UTC)
+  name: ci-knative-backup-artifacts
+  agent: kubernetes
+  labels:
+    preset-backup-account: "true"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/backups:latest
+      imagePullPolicy: Always
+      command:
+      - "/backup.sh"
+      resources:
+        requests:
+          memory: "1Gi"
 - cron: "0 1 * * *" # Run at 01:00 every day
   name: ci-knative-eventing-sources-go-coverage
   agent: kubernetes
