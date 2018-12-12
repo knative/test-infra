@@ -160,7 +160,7 @@ function parse_flags() {
     TAG_RELEASE=1
     PUBLISH_RELEASE=1
     # List latest release
-    local releases
+    local releases # don't combine with the line below, or $? will be 0
     releases="$(hub_tool release)"
     [[ $? -eq 0 ]] || abort "cannot list releases"
     # If --release-branch passed, restrict to that release
