@@ -76,7 +76,7 @@ presets:
     preset-test-account: "true"
   env:
   - name: GOOGLE_APPLICATION_CREDENTIALS
-    value: /etc/test-account/key.json
+    value: /etc/test-account/service-account.json
   volumes:
   - name: account
     secret:
@@ -96,7 +96,7 @@ presets:
     preset-nightly-account: "true"
   env:
   - name: GOOGLE_APPLICATION_CREDENTIALS
-    value: /etc/nightly-account/key.json
+    value: /etc/nightly-account/service-account.json
   volumes:
   - name: account
     secret:
@@ -163,7 +163,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -196,7 +196,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -229,7 +229,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -266,7 +266,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -369,7 +369,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -402,7 +402,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -436,7 +436,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -504,7 +504,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -537,7 +537,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -570,7 +570,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -638,7 +638,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -671,7 +671,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -704,7 +704,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -772,7 +772,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -805,7 +805,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -838,7 +838,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -906,7 +906,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -939,7 +939,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -972,7 +972,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -1040,7 +1040,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -1073,7 +1073,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -1106,7 +1106,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -1140,7 +1140,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -1173,7 +1173,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -1206,7 +1206,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -1274,7 +1274,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -1307,7 +1307,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -1340,7 +1340,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -1374,7 +1374,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -1407,7 +1407,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -1440,7 +1440,7 @@ presubmits:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=/etc/test-account/key.json"
+        - "--service-account=/etc/test-account/service-account.json"
         - "--upload=gs://knative-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
@@ -1505,7 +1505,7 @@ periodics:
       - "--job=$(JOB_NAME)"
       - "--repo=github.com/knative/serving"
       - "--root=/go/src"
-      - "--service-account=/etc/test-account/key.json"
+      - "--service-account=/etc/test-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
       - "--timeout=100" # Avoid overrun
       - "--" # end bootstrap args, scenario args below
@@ -1537,7 +1537,7 @@ periodics:
       - "--job=$(JOB_NAME)"
       - "--repo=github.com/knative/serving=release-0.2"
       - "--root=/go/src"
-      - "--service-account=/etc/test-account/key.json"
+      - "--service-account=/etc/test-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
       - "--timeout=50" # Avoid overrun
       - "--" # end bootstrap args, scenario args below
@@ -1568,7 +1568,7 @@ periodics:
       - "--job=$(JOB_NAME)"
       - "--repo=github.com/knative/serving"
       - "--root=/go/src"
-      - "--service-account=/etc/nightly-account/key.json"
+      - "--service-account=/etc/nightly-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
       - "--timeout=90" # 1.5h
       - "--" # end bootstrap args, scenario args below
@@ -1599,7 +1599,7 @@ periodics:
       - "--job=$(JOB_NAME)"
       - "--repo=github.com/knative/serving"
       - "--root=/go/src"
-      - "--service-account=/etc/test-account/key.json"
+      - "--service-account=/etc/test-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
       - "--timeout=90" # 1.5h
       - "--" # end bootstrap args, scenario args below
@@ -1632,7 +1632,7 @@ periodics:
       args:
       - "--source-directory=ci-knative-serving-continuous"
       - "--artifacts-dir=$(ARTIFACTS)"
-      - "--service-account=/etc/test-account/key.json"
+      - "--service-account=/etc/test-account/service-account.json"
 - cron: "5 8 * * *" # Run at 01:05PST every day (08:05 UTC)
   name: ci-knative-serving-api-coverage
   agent: kubernetes
@@ -1652,7 +1652,7 @@ periodics:
       - "/apicoverage"
       args:
       - "--artifacts-dir=$(ARTIFACTS)"
-      - "--service-account=/etc/test-account/key.json"
+      - "--service-account=/etc/test-account/service-account.json"
 - cron: "0 1 * * *" # Run at 01:00 every day
   name: ci-knative-serving-go-coverage
   agent: kubernetes
@@ -1690,7 +1690,7 @@ periodics:
       - "--job=$(JOB_NAME)"
       - "--repo=github.com/knative/serving"
       - "--root=/go/src"
-      - "--service-account=/etc/test-account/key.json"
+      - "--service-account=/etc/test-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
       - "--timeout=50" # Avoid overrun
       - "--" # end bootstrap args, scenario args below
@@ -1720,7 +1720,7 @@ periodics:
       - "--job=$(JOB_NAME)"
       - "--repo=github.com/knative/build"
       - "--root=/go/src"
-      - "--service-account=/etc/test-account/key.json"
+      - "--service-account=/etc/test-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
       - "--timeout=50" # Avoid overrun
       - "--" # end bootstrap args, scenario args below
@@ -1752,7 +1752,7 @@ periodics:
       - "--job=$(JOB_NAME)"
       - "--repo=github.com/knative/build"
       - "--root=/go/src"
-      - "--service-account=/etc/nightly-account/key.json"
+      - "--service-account=/etc/nightly-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
       - "--timeout=90" # 1.5h
       - "--" # end bootstrap args, scenario args below
@@ -1786,7 +1786,7 @@ periodics:
       args:
       - "--source-directory=ci-knative-build-continuous"
       - "--artifacts-dir=$(ARTIFACTS)"
-      - "--service-account=/etc/test-account/key.json"
+      - "--service-account=/etc/test-account/service-account.json"
 - cron: "0 1 * * *" # Run at 01:00 every day
   name: ci-knative-build-go-coverage
   agent: kubernetes
@@ -1826,7 +1826,7 @@ periodics:
       - "--job=$(JOB_NAME)"
       - "--repo=github.com/knative/build-pipeline"
       - "--root=/go/src"
-      - "--service-account=/etc/nightly-account/key.json"
+      - "--service-account=/etc/nightly-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
       - "--timeout=90" # 1.5h
       - "--" # end bootstrap args, scenario args below
@@ -1878,7 +1878,7 @@ periodics:
       - "--job=$(JOB_NAME)"
       - "--repo=github.com/knative/docs"
       - "--root=/go/src"
-      - "--service-account=/etc/test-account/key.json"
+      - "--service-account=/etc/test-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
       - "--timeout=50" # Avoid overrun
       - "--" # end bootstrap args, scenario args below
@@ -1929,7 +1929,7 @@ periodics:
       - "--job=$(JOB_NAME)"
       - "--repo=github.com/knative/eventing"
       - "--root=/go/src"
-      - "--service-account=/etc/test-account/key.json"
+      - "--service-account=/etc/test-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
       - "--timeout=50" # Avoid overrun
       - "--" # end bootstrap args, scenario args below
@@ -1959,7 +1959,7 @@ periodics:
       - "--job=$(JOB_NAME)"
       - "--repo=github.com/knative/eventing"
       - "--root=/go/src"
-      - "--service-account=/etc/nightly-account/key.json"
+      - "--service-account=/etc/nightly-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
       - "--timeout=90" # 1.5h
       - "--" # end bootstrap args, scenario args below
@@ -2011,7 +2011,7 @@ periodics:
       - "--job=$(JOB_NAME)"
       - "--repo=github.com/knative/eventing-sources"
       - "--root=/go/src"
-      - "--service-account=/etc/test-account/key.json"
+      - "--service-account=/etc/test-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
       - "--timeout=50" # Avoid overrun
       - "--" # end bootstrap args, scenario args below
@@ -2041,7 +2041,7 @@ periodics:
       - "--job=$(JOB_NAME)"
       - "--repo=github.com/knative/eventing-sources"
       - "--root=/go/src"
-      - "--service-account=/etc/nightly-account/key.json"
+      - "--service-account=/etc/nightly-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
       - "--timeout=90" # 1.5h
       - "--" # end bootstrap args, scenario args below
@@ -2093,7 +2093,7 @@ periodics:
       - "--job=$(JOB_NAME)"
       - "--repo=github.com/knative/build-templates"
       - "--root=/go/src"
-      - "--service-account=/etc/test-account/key.json"
+      - "--service-account=/etc/test-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
       - "--timeout=50" # Avoid overrun
       - "--" # end bootstrap args, scenario args below
@@ -2124,7 +2124,7 @@ periodics:
       - "--job=$(JOB_NAME)"
       - "--repo=github.com/knative/pkg"
       - "--root=/go/src"
-      - "--service-account=/etc/test-account/key.json"
+      - "--service-account=/etc/test-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
       - "--timeout=50" # Avoid overrun
       - "--" # end bootstrap args, scenario args below
@@ -2175,7 +2175,7 @@ periodics:
       - "--job=$(JOB_NAME)"
       - "--repo=github.com/knative/caching"
       - "--root=/go/src"
-      - "--service-account=/etc/test-account/key.json"
+      - "--service-account=/etc/test-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
       - "--timeout=50" # Avoid overrun
       - "--" # end bootstrap args, scenario args below
@@ -2210,13 +2210,13 @@ periodics:
       - "--cov-threshold-percentage=80"
 - cron: "0 19 * * 1" # Run at 11:00PST/12:00PST every Monday (19:00 UTC)
   name: ci-knative-cleanup
-  branches:
-  - master
   agent: kubernetes
-  labels:
-    preset-service-account: "true"
   decorate: true
-  clone_uri: "https://github.com/knative/test-infra.git"
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: master
+    clone_uri: "https://github.com/knative/test-infra.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:latest
@@ -2227,6 +2227,7 @@ periodics:
       - "delete-old-gcr-images"
       - "--project-resource-yaml ci/prow/boskos/resources.yaml"
       - "--days-to-keep 90"
+      - "--service-account /etc/test-account/service-account.json"
   
 postsubmits:
   knative/serving:
