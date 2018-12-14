@@ -19,9 +19,10 @@
 1. Create a new GCP project and add it to [resources.yaml](./boskos/resources.yaml).
 
 1. Make the following accounts editors of the project:
-   * `knative-tests@appspot.gserviceaccount.com`
    * `knative-productivity-admins@googlegroups.com`
-   * `knative-nightly@knative-tests.iam.gserviceaccount.com`
+   * `prow-job@knative-tests.iam.gserviceaccount.com`
+   * `prow-job@knative-nightly.iam.gserviceaccount.com`
+   * `prow-job@knative-releases.iam.gserviceaccount.com`
 
 1. Ensure that there is at least one other owner of the project. A good choice is one of the members of the `knative-productivity-admins@googlegroups.com` group.
 

@@ -111,6 +111,26 @@ presets:
   - name: service-account
     mountPath: /etc/service-account
     readOnly: true
+# versioned release service account
+- labels:
+    preset-release-account: "true"
+  env:
+  - name: GOOGLE_APPLICATION_CREDENTIALS
+    value: /etc/release-account/service-account.json
+  volumes:
+  - name: account
+    secret:
+      secretName: release-account
+  - name: service-account
+    secret:
+      secretName: service-account
+  volumeMounts:
+  - name: account
+    mountPath: /etc/release-account
+    readOnly: true
+  - name: service-account
+    mountPath: /etc/service-account
+    readOnly: true
 # storage / caching presets
 - labels:
     preset-bazel-scratch-dir: "true"
@@ -1582,6 +1602,47 @@ periodics:
       resources:
         requests:
           memory: "1Gi"
+- cron: "1 9 * * 2" # Run at 02:01PST every Tuesday (09:01 UTC)
+  name: ci-knative-serving-dot-release
+  agent: kubernetes
+  labels:
+    preset-release-account: "true"
+    preset-bazel-scratch-dir: "true"
+    preset-bazel-remote-cache-enabled: "true"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      imagePullPolicy: Always
+      args:
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=github.com/knative/serving"
+      - "--root=/go/src"
+      - "--service-account=/etc/release-account/service-account.json"
+      - "--upload=gs://knative-prow/logs"
+      - "--timeout=90" # 1.5h
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./hack/release.sh"
+      - "--dot-release"
+      - "--release-gcs=knative-releases/serving"
+      - "--release-gcr=gcr.io/knative-releases"
+      - "--github-token=/etc/hub-token/token"
+      # Bazel needs privileged mode in order to sandbox builds.
+      securityContext:
+        privileged: true
+      resources:
+        requests:
+          memory: "1Gi"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: token
 - cron: "1 9 * * 6" # Run at 02:01PST every Saturday (09:01 UTC)
   name: ci-knative-serving-playground
   agent: kubernetes
