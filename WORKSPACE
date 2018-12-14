@@ -15,31 +15,32 @@
 # Required rules for building kubernetes/test-infra
 # These all come from http://github.com/kubernetes/test-infra/blob/master/WORKSPACE
 
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+
 http_archive(
     name = "io_bazel_rules_go",
-    sha256 = "1868ff68d6079e31b2f09b828b58d62e57ca8e9636edff699247c9108518570b",
-    url = "https://github.com/bazelbuild/rules_go/releases/download/0.11.1/rules_go-0.11.1.tar.gz",
+    sha256 = "7be7dc01f1e0afdba6c8eb2b43d2fa01c743be1b9273ab1eaf6c233df078d705",
+    urls = ["https://github.com/bazelbuild/rules_go/releases/download/0.16.5/rules_go-0.16.5.tar.gz"],
 )
 
 load("@io_bazel_rules_go//go:def.bzl", "go_rules_dependencies", "go_register_toolchains")
 
 go_rules_dependencies()
 
-go_register_toolchains(
-    go_version = "1.10.2",
-)
+go_register_toolchains(go_version = "1.11.4")
 
 git_repository(
     name = "io_bazel_rules_k8s",
-    commit = "3756369d4920033c32c12d16207e8ee14fee1b18",
+    commit = "9d2f6e8e21f1b5e58e721fc29b806957d9931930",
     remote = "https://github.com/bazelbuild/rules_k8s.git",
 )
 
 http_archive(
     name = "io_bazel_rules_docker",
-    sha256 = "cef4e7adfc1df999891e086bf42bed9092cfdf374adb902f18de2c1d6e1e0197",
-    strip_prefix = "rules_docker-198367210c55fba5dded22274adde1a289801dc4",
-    urls = ["https://github.com/bazelbuild/rules_docker/archive/198367210c55fba5dded22274adde1a289801dc4.tar.gz"],
+    sha256 = "5235045774d2f40f37331636378f21fe11f69906c0386a790c5987a09211c3c4",
+    strip_prefix = "rules_docker-8010a50ef03d1e13f1bebabfc625478da075fa60",
+    urls = ["https://github.com/bazelbuild/rules_docker/archive/8010a50ef03d1e13f1bebabfc625478da075fa60.tar.gz"],
 )
 
 # External repositories
@@ -47,6 +48,6 @@ http_archive(
 git_repository(
     name = "k8s",
     remote = "http://github.com/kubernetes/test-infra.git",
-    commit = "dd12621d6178838097847abf5842ad8d08fc9308",  # HEAD as of 8/1/2018
+    commit = "c4a1fe42ebf91a06a81b189223d19f7e4332634b",  # HEAD as of 12/15/2018
 )
 
