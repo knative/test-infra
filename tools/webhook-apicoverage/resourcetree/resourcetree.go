@@ -17,18 +17,19 @@ limitations under the License.
 package resourcetree
 
 import (
+	"container/list"
 	"reflect"
 )
 
-//ResourceTree encapsulates a tree corresponding to a resource type.
+// ResourceTree encapsulates a tree corresponding to a resource type.
 type ResourceTree struct {
 	ResourceName string
-	Root INode
+	Root NodeInterface
 	forest *ResourceForest
 }
 
-func (r *ResourceTree) createNode(field string, parent INode, t reflect.Type) INode {
-	var n INode
+func (r *ResourceTree) createNode(field string, parent NodeInterface, t reflect.Type) NodeInterface {
+	var n NodeInterface
 	switch t.Kind() {
 	case reflect.Struct:
 		n = new(StructKindNode)
@@ -45,23 +46,20 @@ func (r *ResourceTree) createNode(field string, parent INode, t reflect.Type) IN
 	}
 
 	n.initialize(field, parent, t, r)
+
+	if len(t.PkgPath()) != 0 {
+		typeName := t.PkgPath() + "." + t.Name()
+		if _, ok := r.forest.ConnectedNodes[typeName]; !ok {
+			r.forest.ConnectedNodes[typeName] = list.New()
+		}
+		r.forest.ConnectedNodes[typeName].PushBack(n)
+	}
+
 	return n
 }
 
-func (r *ResourceTree) initializeNodeData(field string, parent INode, t reflect.Type) nodeData {
-	nd := nodeData{
-		field:     field,
-		tree:      r,
-		nodePath:  parent.getData().nodePath + "." + field,
-		parent:    parent,
-		children:  make(map[string]INode),
-	}
-
-	// For types that are part of the standard package, we treat them as leaf nodes and don't expand further.
-	//https://golang.org/pkg/reflect/#StructField.
-	if len(t.PkgPath()) == 0 {
-		nd.leafNode = true
-	}
-
-	return nd
+// BuildResourceTree builds a resource tree by calling into analyzeType method starting from root.
+func (r *ResourceTree) BuildResourceTree(t reflect.Type) {
+	r.Root = r.createNode(r.ResourceName, nil, t)
+	r.Root.buildChildNodes(t)
 }
