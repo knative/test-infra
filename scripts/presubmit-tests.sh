@@ -66,7 +66,7 @@ function main() {
     echo ">> git version"
     git version
     echo ">> bazel version"
-    bazel version
+    bazel version 2> /dev/null
   fi
 
   [[ -z $1 ]] && set -- "--all-tests"
