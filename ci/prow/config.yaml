@@ -2230,6 +2230,7 @@ periodics:
       - "--project-resource-yaml ci/prow/boskos/resources.yaml"
       - "--days-to-keep 90"
       - "--service-account /etc/test-account/service-account.json"
+      - "--artifacts=$(ARTIFACTS)"
   
 postsubmits:
   knative/serving:

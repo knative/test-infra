@@ -39,9 +39,10 @@ test_function ${FAILURE} "error: missing gcr" cleanup_script "delete-old-images-
 test_function ${FAILURE} "error: missing resource" cleanup_script "delete-old-gcr-images"
 
 test_function ${FAILURE} "error: expecting value following" cleanup_script "delete-old-gcr-images" --project-resource-yaml --dry-run
-test_function ${FAILURE} "error: expecting value following" cleanup_script  "delete-old-gcr-images" --re-project-name --dry-run
+test_function ${FAILURE} "error: expecting value following" cleanup_script "delete-old-gcr-images" --re-project-name --dry-run
 test_function ${FAILURE} "error: expecting value following" cleanup_script "delete-old-gcr-images" --gcr-to-cleanup --dry-run
 test_function ${FAILURE} "error: expecting value following" cleanup_script "delete-old-gcr-images" --days-to-keep --dry-run
+test_function ${FAILURE} "error: expecting value following" cleanup_script "delete-old-gcr-images" --artifacts --dry-run
 
 test_function ${FAILURE} "error: days to keep" cleanup_script "delete-old-images-from-gcr" --days-to-keep "a" --dry-run
 test_function ${FAILURE} "error: days to keep" cleanup_script "delete-old-gcr-images" --days-to-keep "a" --dry-run
