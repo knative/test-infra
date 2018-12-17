@@ -23,6 +23,7 @@ DAYS_TO_KEEP_IMAGES=365 # Keep images up to 1 year by default
 RE_PROJECT_NAME="knative-boskos-[a-zA-Z0-9]+"
 PROJECT_RESOURCE_YAML=""
 GCR_TO_CLEANUP=""
+ARTIFACTS_DIR=""
 DRY_RUN=0
 
 
@@ -39,6 +40,7 @@ function parse_args() {
           --re-project-name) RE_PROJECT_NAME=$1 ;;
           --gcr-to-cleanup) GCR_TO_CLEANUP=$1 ;;
           --days-to-keep) DAYS_TO_KEEP_IMAGES=$1 ;;
+          --artifacts) ARTIFACTS_DIR=$1 ;;
           --service-account)
             gcloud auth activate-service-account --key-file=$1 || exit 1
             ;;
@@ -54,6 +56,7 @@ function parse_args() {
   readonly PROJECT_RESOURCE_YAML
   readonly RE_PROJECT_NAME
   readonly GCR_TO_CLEANUP
+  readonly ARTIFACTS_DIR
   readonly DRY_RUN
 }
 
@@ -84,3 +87,9 @@ case ${FUNCTION_TO_RUN} in
     ;;
   *) abort "unknown option '${FUNCTION_TO_RUN}'" ;;
 esac
+
+# Gubernator considers job failure if "junit_*.xml" not found under artifact,
+#   create a placeholder file to make this job succeed
+if [[ ! -z ${ARTIFACTS_DIR} ]]; then
+  echo "<testsuite time='0'/>" > "${ARTIFACTS_DIR}/junit_knative.xml"
+fi
