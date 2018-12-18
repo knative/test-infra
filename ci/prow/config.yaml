@@ -175,7 +175,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -208,7 +208,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -241,7 +241,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -278,7 +278,7 @@ presubmits:
     - release-0.2
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -381,7 +381,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -414,7 +414,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -448,7 +448,7 @@ presubmits:
       preset-dind-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -516,7 +516,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -549,7 +549,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -582,7 +582,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -650,7 +650,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -683,7 +683,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -716,7 +716,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -784,7 +784,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -817,7 +817,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -850,7 +850,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -918,7 +918,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -951,7 +951,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -984,7 +984,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -1052,7 +1052,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -1085,7 +1085,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -1118,7 +1118,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -1152,7 +1152,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -1185,7 +1185,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -1218,7 +1218,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -1286,7 +1286,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -1319,7 +1319,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -1352,7 +1352,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -1386,7 +1386,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -1419,7 +1419,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -1452,7 +1452,7 @@ presubmits:
       preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -1517,7 +1517,7 @@ periodics:
     preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -1549,7 +1549,7 @@ periodics:
     preset-dind-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -1580,7 +1580,7 @@ periodics:
     preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -1611,7 +1611,7 @@ periodics:
     preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -1652,7 +1652,7 @@ periodics:
     preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -1743,7 +1743,7 @@ periodics:
     preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -1773,7 +1773,7 @@ periodics:
     preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -1805,7 +1805,7 @@ periodics:
     preset-dind-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -1879,7 +1879,7 @@ periodics:
     preset-dind-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -1931,7 +1931,7 @@ periodics:
     preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -1982,7 +1982,7 @@ periodics:
     preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -2012,7 +2012,7 @@ periodics:
     preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -2064,7 +2064,7 @@ periodics:
     preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -2094,7 +2094,7 @@ periodics:
     preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -2146,7 +2146,7 @@ periodics:
     preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -2177,7 +2177,7 @@ periodics:
     preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -2228,7 +2228,7 @@ periodics:
     preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -2282,7 +2282,7 @@ periodics:
     clone_uri: "https://github.com/knative/test-infra.git"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
       - "./tools/cleanup/cleanup.sh"
