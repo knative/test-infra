@@ -20,12 +20,13 @@ import (
 	"reflect"
 )
 
-//node.go contains types and interfaces pertaining to nodes inside resource tree.
+// node.go contains types and interfaces pertaining to nodes inside resource tree.
 
-//INode interface defines methods that can be performed on each node in the resource tree.
-type INode interface {
+// NodeInterface defines methods that can be performed on each node in the resource tree.
+type NodeInterface interface {
 	getData() nodeData
-	initialize(field string, parent INode, t reflect.Type, rt *ResourceTree)
+	initialize(field string, parent NodeInterface, t reflect.Type, rt *ResourceTree)
+	buildChildNodes(t reflect.Type)
 }
 
 //nodeData is the data stored in each node of the resource tree.
@@ -34,22 +35,22 @@ type nodeData struct {
 	tree *ResourceTree // Reference back to the resource tree. Required for cross-tree traversal(connected nodes traversal)
 	fieldType reflect.Type // Required as type information is not available during tree traversal.
 	nodePath string // Path in the resource tree reaching this node.
-	parent INode // Link back to parent.
-	children map[string]INode // Child nodes are keyed using field names(nodeData.field).
+	parent NodeInterface // Link back to parent.
+	children map[string]NodeInterface // Child nodes are keyed using field names(nodeData.field).
 	leafNode bool // Storing this as an additional field because type-analysis determines the value, which gets used later in value-evaluation
 	covered bool
 }
 
-func (nd *nodeData) initialize(field string, parent INode, t reflect.Type, rt *ResourceTree) {
+func (nd *nodeData) initialize(field string, parent NodeInterface, t reflect.Type, rt *ResourceTree) {
 	nd.field = field
 	nd.tree = rt
 	nd.parent = parent
-	nd.nodePath = parent.getData().nodePath + "." + field
-	nd.children = make(map[string]INode)
+	nd.fieldType = t
+	nd.children = make(map[string]NodeInterface)
 
-	// For types that are part of the standard package, we treat them as leaf nodes and don't expand further.
-	//https://golang.org/pkg/reflect/#StructField.
-	if len(t.PkgPath()) == 0 {
-		nd.leafNode = true
+	if parent != nil {
+		nd.nodePath = parent.getData().nodePath + "." + field
+	} else {
+		nd.nodePath = field
 	}
 }

@@ -22,7 +22,7 @@ import (
 	"strconv"
 )
 
-//BasicTypeKindNode represents resource tree node of basic types like int, float, etc.
+// BasicTypeKindNode represents resource tree node of basic types like int, float, etc.
 type BasicTypeKindNode struct {
 	nodeData
 	values map[string]bool // Values seen for this node. Useful for enum types.
@@ -33,33 +33,39 @@ func (b *BasicTypeKindNode) getData() nodeData {
 	return b.nodeData
 }
 
-func (b *BasicTypeKindNode) initialize(field string, parent INode, t reflect.Type, rt *ResourceTree) {
+func (b *BasicTypeKindNode) initialize(field string, parent NodeInterface, t reflect.Type, rt *ResourceTree) {
 	b.nodeData.initialize(field, parent, t, rt)
 	b.values = make(map[string]bool)
 	b.nodeData.leafNode = true
 }
 
-func (b *BasicTypeKindNode) isNil(v reflect.Value) (bool, string) {
+func (b *BasicTypeKindNode) buildChildNodes(t reflect.Type) {
+	if t.Name() != t.Kind().String() {
+		b.possibleEnum = true
+	}
+}
+
+func (b *BasicTypeKindNode) string(v reflect.Value) string {
 	switch v.Kind() {
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 		if v.Int() != 0 {
-			return false, strconv.Itoa(int(v.Int()))
+			return strconv.Itoa(int(v.Int()))
 		}
 	case reflect.Uint, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 		if v.Uint() != 0 {
-			return false, strconv.FormatUint(v.Uint(), 10)
+			return strconv.FormatUint(v.Uint(), 10)
 		}
 	case reflect.Float32, reflect.Float64:
 		if v.Float() != 0 {
-			return false, fmt.Sprintf("%f", v.Float())
+			return fmt.Sprintf("%f", v.Float())
 		}
 	case reflect.String:
 		if v.Len() != 0 {
-			return false, v.String()
+			return v.String()
 		}
 	case reflect.Bool:
-		return false, strconv.FormatBool(v.Bool())
+		return strconv.FormatBool(v.Bool())
 	}
 
-	return true, ""
+	return ""
 }

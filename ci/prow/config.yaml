@@ -131,23 +131,6 @@ presets:
   - name: service-account
     mountPath: /etc/service-account
     readOnly: true
-# storage / caching presets
-- labels:
-    preset-bazel-scratch-dir: "true"
-  env:
-  - name: TEST_TMPDIR
-    value: /bazel-scratch/.cache/bazel
-  volumes:
-  - name: bazel-scratch
-    emptyDir: {}
-  volumeMounts:
-  - name: bazel-scratch
-    mountPath: /bazel-scratch/.cache
-- labels:
-    preset-bazel-remote-cache-enabled: "false"
-  env:
-  - name: BAZEL_REMOTE_CACHE_ENABLED
-    value: "false"
 # docker-in-docker presets
 - labels:
     preset-dind-enabled: "true"
@@ -171,11 +154,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-serving-build-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -189,12 +170,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--build-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-serving-unit-tests
     agent: kubernetes
@@ -204,11 +179,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-serving-unit-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -222,12 +195,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-serving-integration-tests
     agent: kubernetes
@@ -237,11 +204,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-serving-integration-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -256,12 +221,6 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-tests.sh"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-serving-upgrade-tests
     agent: kubernetes
@@ -271,14 +230,12 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-serving-upgrade-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     skip_branches:  # Skip these branches, as test isn't available.
     - release-0.1
     - release-0.2
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -293,12 +250,6 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-upgrade-tests.sh"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-serving-go-coverage
     labels:
@@ -377,11 +328,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-build-build-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -395,12 +344,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--build-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-build-unit-tests
     agent: kubernetes
@@ -410,11 +353,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-build-unit-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -428,12 +369,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-build-integration-tests
     agent: kubernetes
@@ -443,12 +378,10 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-build-integration-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
       preset-dind-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -462,12 +395,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-build-go-coverage
     labels:
@@ -512,11 +439,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-build-pipeline-build-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -530,12 +455,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--build-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-build-pipeline-unit-tests
     agent: kubernetes
@@ -545,11 +464,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-build-pipeline-unit-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -563,12 +480,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-build-pipeline-integration-tests
     agent: kubernetes
@@ -578,11 +489,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-build-pipeline-integration-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -596,12 +505,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-build-pipeline-go-coverage
     labels:
@@ -646,11 +549,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-eventing-build-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -664,12 +565,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--build-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-eventing-unit-tests
     agent: kubernetes
@@ -679,11 +574,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-eventing-unit-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -697,12 +590,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-eventing-integration-tests
     agent: kubernetes
@@ -712,11 +599,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-eventing-integration-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -730,12 +615,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-eventing-go-coverage
     labels:
@@ -780,11 +659,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-eventing-sources-build-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -798,12 +675,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--build-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-eventing-sources-unit-tests
     agent: kubernetes
@@ -813,11 +684,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-eventing-sources-unit-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -831,12 +700,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-eventing-sources-integration-tests
     agent: kubernetes
@@ -846,11 +709,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-eventing-sources-integration-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -864,12 +725,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-eventing-sources-go-coverage
     labels:
@@ -914,11 +769,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-docs-build-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -932,12 +785,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--build-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-docs-unit-tests
     agent: kubernetes
@@ -947,11 +794,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-docs-unit-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -965,12 +810,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-docs-integration-tests
     agent: kubernetes
@@ -980,11 +819,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-docs-integration-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -998,12 +835,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-docs-go-coverage
     labels:
@@ -1048,11 +879,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-build-templates-build-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -1066,12 +895,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--build-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-build-templates-unit-tests
     agent: kubernetes
@@ -1081,11 +904,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-build-templates-unit-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -1099,12 +920,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-build-templates-integration-tests
     agent: kubernetes
@@ -1114,11 +929,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-build-templates-integration-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -1132,12 +945,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   knative/pkg:
   - name: pull-knative-pkg-build-tests
@@ -1148,11 +955,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-pkg-build-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -1166,12 +971,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--build-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-pkg-unit-tests
     agent: kubernetes
@@ -1181,11 +980,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-pkg-unit-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -1199,12 +996,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-pkg-integration-tests
     agent: kubernetes
@@ -1214,11 +1005,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-pkg-integration-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -1232,12 +1021,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-pkg-go-coverage
     labels:
@@ -1282,11 +1065,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-test-infra-build-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -1300,12 +1081,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--build-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-test-infra-unit-tests
     agent: kubernetes
@@ -1315,11 +1090,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-test-infra-unit-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -1333,12 +1106,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-test-infra-integration-tests
     agent: kubernetes
@@ -1348,11 +1115,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-test-infra-integration-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -1366,12 +1131,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   knative/caching:
   - name: pull-knative-caching-build-tests
@@ -1382,11 +1141,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-caching-build-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -1400,12 +1157,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--build-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-caching-unit-tests
     agent: kubernetes
@@ -1415,11 +1166,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-caching-unit-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -1433,12 +1182,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-caching-integration-tests
     agent: kubernetes
@@ -1448,11 +1191,9 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-caching-integration-tests),?(\\s+|$)"
     labels:
       preset-test-account: "true"
-      preset-bazel-scratch-dir: "true"
-      preset-bazel-remote-cache-enabled: "true"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         args:
         - "--scenario=kubernetes_execute_bazel"
@@ -1466,12 +1207,6 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
-        # Bazel needs privileged mode in order to sandbox builds.
-        securityContext:
-          privileged: true
-        resources:
-          requests:
-            memory: "1Gi"
 
   - name: pull-knative-caching-go-coverage
     labels:
@@ -1513,11 +1248,9 @@ periodics:
   agent: kubernetes
   labels:
     preset-test-account: "true"
-    preset-bazel-scratch-dir: "true"
-    preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -1533,23 +1266,15 @@ periodics:
       - "./test/presubmit-tests.sh"
       - "--all-tests"
       - "--emit-metrics"
-      # Bazel needs privileged mode in order to sandbox builds.
-      securityContext:
-        privileged: true
-      resources:
-        requests:
-          memory: "1Gi"
 - cron: "15 8 * * *" # Run at 01:15PST every day (08:15 UTC)
   name: ci-knative-serving-0.2-continuous
   agent: kubernetes
   labels:
     preset-test-account: "true"
-    preset-bazel-scratch-dir: "true"
-    preset-bazel-remote-cache-enabled: "true"
     preset-dind-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -1565,22 +1290,14 @@ periodics:
       - "./hack/release.sh"
       - "--nopublish"
       - "--notag-release"
-      # Bazel needs privileged mode in order to sandbox builds.
-      securityContext:
-        privileged: true
-      resources:
-        requests:
-          memory: "1Gi"
 - cron: "1 8 * * *" # Run at 01:01PST every day (08:01 UTC)
   name: ci-knative-serving-nightly-release
   agent: kubernetes
   labels:
     preset-nightly-account: "true"
-    preset-bazel-scratch-dir: "true"
-    preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -1596,22 +1313,14 @@ periodics:
       - "./hack/release.sh"
       - "--publish"
       - "--tag-release"
-      # Bazel needs privileged mode in order to sandbox builds.
-      securityContext:
-        privileged: true
-      resources:
-        requests:
-          memory: "1Gi"
 - cron: "1 9 * * 2" # Run at 02:01PST every Tuesday (09:01 UTC)
   name: ci-knative-serving-dot-release
   agent: kubernetes
   labels:
     preset-release-account: "true"
-    preset-bazel-scratch-dir: "true"
-    preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -1629,12 +1338,6 @@ periodics:
       - "--release-gcs knative-releases/serving"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
-      # Bazel needs privileged mode in order to sandbox builds.
-      securityContext:
-        privileged: true
-      resources:
-        requests:
-          memory: "1Gi"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -1648,11 +1351,9 @@ periodics:
   agent: kubernetes
   labels:
     preset-test-account: "true"
-    preset-bazel-scratch-dir: "true"
-    preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -1667,12 +1368,6 @@ periodics:
       - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/deploy.sh"
       - "knative-playground"
-      # Bazel needs privileged mode in order to sandbox builds.
-      securityContext:
-        privileged: true
-      resources:
-        requests:
-          memory: "1Gi"
 - cron: "5 8 * * *" # Run at 01:05PST every day (08:05 UTC)
   name: ci-knative-serving-latency
   agent: kubernetes
@@ -1739,11 +1434,9 @@ periodics:
   agent: kubernetes
   labels:
     preset-test-account: "true"
-    preset-bazel-scratch-dir: "true"
-    preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -1757,23 +1450,15 @@ periodics:
       - "--" # end bootstrap args, scenario args below
       - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/performance-tests.sh"
-      # Bazel needs privileged mode in order to sandbox builds.
-      securityContext:
-        privileged: true
-      resources:
-        requests:
-          memory: "1Gi"
 
 - cron: "15 * * * *" # Run every hour and 15 minutes
   name: ci-knative-build-continuous
   agent: kubernetes
   labels:
     preset-test-account: "true"
-    preset-bazel-scratch-dir: "true"
-    preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -1789,23 +1474,15 @@ periodics:
       - "./test/presubmit-tests.sh"
       - "--all-tests"
       - "--emit-metrics"
-      # Bazel needs privileged mode in order to sandbox builds.
-      securityContext:
-        privileged: true
-      resources:
-        requests:
-          memory: "1Gi"
 - cron: "31 8 * * *" # Run at 01:31PST every day (08:31 UTC)
   name: ci-knative-build-nightly-release
   agent: kubernetes
   labels:
     preset-nightly-account: "true"
-    preset-bazel-scratch-dir: "true"
-    preset-bazel-remote-cache-enabled: "true"
     preset-dind-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -1821,12 +1498,6 @@ periodics:
       - "./hack/release.sh"
       - "--publish"
       - "--tag-release"
-      # Bazel needs privileged mode in order to sandbox builds.
-      securityContext:
-        privileged: true
-      resources:
-        requests:
-          memory: "1Gi"
 - cron: "5 8 * * *" # Run at 01:05PST every day (08:05 UTC)
   name: ci-knative-build-latency
   agent: kubernetes
@@ -1874,12 +1545,10 @@ periodics:
   agent: kubernetes
   labels:
     preset-nightly-account: "true"
-    preset-bazel-scratch-dir: "true"
-    preset-bazel-remote-cache-enabled: "true"
     preset-dind-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -1895,12 +1564,6 @@ periodics:
       - "./hack/release.sh"
       - "--publish"
       - "--tag-release"
-      # Bazel needs privileged mode in order to sandbox builds.
-      securityContext:
-        privileged: true
-      resources:
-        requests:
-          memory: "1Gi"
 - cron: "0 1 * * *" # Run at 01:00 every day
   name: ci-knative-build-pipeline-go-coverage
   agent: kubernetes
@@ -1927,11 +1590,9 @@ periodics:
   agent: kubernetes
   labels:
     preset-test-account: "true"
-    preset-bazel-scratch-dir: "true"
-    preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -1946,12 +1607,6 @@ periodics:
       - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/presubmit-tests.sh"
       - "--all-tests"
-      # Bazel needs privileged mode in order to sandbox builds.
-      securityContext:
-        privileged: true
-      resources:
-        requests:
-          memory: "1Gi"
 - cron: "0 1 * * *" # Run at 01:00 every day
   name: ci-knative-docs-go-coverage
   agent: kubernetes
@@ -1978,11 +1633,9 @@ periodics:
   agent: kubernetes
   labels:
     preset-test-account: "true"
-    preset-bazel-scratch-dir: "true"
-    preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -1997,22 +1650,14 @@ periodics:
       - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/presubmit-tests.sh"
       - "--all-tests"
-      # Bazel needs privileged mode in order to sandbox builds.
-      securityContext:
-        privileged: true
-      resources:
-        requests:
-          memory: "1Gi"
 - cron: "16 9 * * *" # Run at 02:16PST every day (09:16 UTC)
   name: ci-knative-eventing-nightly-release
   agent: kubernetes
   labels:
     preset-nightly-account: "true"
-    preset-bazel-scratch-dir: "true"
-    preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -2028,12 +1673,6 @@ periodics:
       - "./hack/release.sh"
       - "--publish"
       - "--tag-release"
-      # Bazel needs privileged mode in order to sandbox builds.
-      securityContext:
-        privileged: true
-      resources:
-        requests:
-          memory: "1Gi"
 - cron: "0 1 * * *" # Run at 01:00 every day
   name: ci-knative-eventing-go-coverage
   agent: kubernetes
@@ -2060,11 +1699,9 @@ periodics:
   agent: kubernetes
   labels:
     preset-test-account: "true"
-    preset-bazel-scratch-dir: "true"
-    preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -2079,22 +1716,14 @@ periodics:
       - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/presubmit-tests.sh"
       - "--all-tests"
-      # Bazel needs privileged mode in order to sandbox builds.
-      securityContext:
-        privileged: true
-      resources:
-        requests:
-          memory: "1Gi"
 - cron: "16 9 * * *" # Run at 02:16PST every day (09:16 UTC)
   name: ci-knative-eventing-sources-nightly-release
   agent: kubernetes
   labels:
     preset-nightly-account: "true"
-    preset-bazel-scratch-dir: "true"
-    preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -2110,12 +1739,6 @@ periodics:
       - "./hack/release.sh"
       - "--publish"
       - "--tag-release"
-      # Bazel needs privileged mode in order to sandbox builds.
-      securityContext:
-        privileged: true
-      resources:
-        requests:
-          memory: "1Gi"
 - cron: "0 1 * * *" # Run at 01:00 every day
   name: ci-knative-eventing-sources-go-coverage
   agent: kubernetes
@@ -2142,11 +1765,9 @@ periodics:
   agent: kubernetes
   labels:
     preset-test-account: "true"
-    preset-bazel-scratch-dir: "true"
-    preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -2161,23 +1782,15 @@ periodics:
       - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/presubmit-tests.sh"
       - "--all-tests"
-      # Bazel needs privileged mode in order to sandbox builds.
-      securityContext:
-        privileged: true
-      resources:
-        requests:
-          memory: "1Gi"
 
 - cron: "45 * * * *" # Run every hour and 45 minutes
   name: ci-knative-pkg-continuous
   agent: kubernetes
   labels:
     preset-test-account: "true"
-    preset-bazel-scratch-dir: "true"
-    preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -2192,12 +1805,6 @@ periodics:
       - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/presubmit-tests.sh"
       - "--all-tests"
-      # Bazel needs privileged mode in order to sandbox builds.
-      securityContext:
-        privileged: true
-      resources:
-        requests:
-          memory: "1Gi"
 - cron: "0 1 * * *" # Run at 01:00 every day
   name: ci-knative-pkg-go-coverage
   agent: kubernetes
@@ -2224,11 +1831,9 @@ periodics:
   agent: kubernetes
   labels:
     preset-test-account: "true"
-    preset-bazel-scratch-dir: "true"
-    preset-bazel-remote-cache-enabled: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       args:
       - "--scenario=kubernetes_execute_bazel"
@@ -2243,12 +1848,6 @@ periodics:
       - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/presubmit-tests.sh"
       - "--all-tests"
-      # Bazel needs privileged mode in order to sandbox builds.
-      securityContext:
-        privileged: true
-      resources:
-        requests:
-          memory: "1Gi"
 - cron: "0 1 * * *" # Run at 01:00 every day
   name: ci-knative-caching-go-coverage
   agent: kubernetes
@@ -2282,7 +1881,7 @@ periodics:
     clone_uri: "https://github.com/knative/test-infra.git"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
       - "./tools/cleanup/cleanup.sh"
@@ -2291,7 +1890,7 @@ periodics:
       - "--project-resource-yaml ci/prow/boskos/resources.yaml"
       - "--days-to-keep 90"
       - "--service-account /etc/test-account/service-account.json"
-      - "--artifacts=$(ARTIFACTS)"
+      - "--artifacts $(ARTIFACTS)"
   
 postsubmits:
   knative/serving:
