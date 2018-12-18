@@ -20,7 +20,9 @@ import (
 	"reflect"
 )
 
-//PtrKindNode represents nodes in the resource tree of type reflect.Kind.Ptr, reflect.Kind.UnsafePointer, etc.
+const ptrNodeNameSuffice = "-ptr"
+
+// PtrKindNode represents nodes in the resource tree of type reflect.Kind.Ptr, reflect.Kind.UnsafePointer, etc.
 type PtrKindNode struct {
 	nodeData
 	objKind reflect.Kind // Type of the object being pointed to. Eg: *int will store reflect.Kind.Int. This is required for type-expansion and value-evaluation decisions.
@@ -30,7 +32,14 @@ func (p *PtrKindNode) getData() nodeData {
 	return p.nodeData
 }
 
-func (p *PtrKindNode) initialize(field string, parent INode, t reflect.Type, rt *ResourceTree) {
+func (p *PtrKindNode) initialize(field string, parent NodeInterface, t reflect.Type, rt *ResourceTree) {
 	p.nodeData.initialize(field, parent, t, rt)
 	p.objKind = t.Elem().Kind()
+}
+
+func (p *PtrKindNode) buildChildNodes(t reflect.Type) {
+	childName := p.field + ptrNodeNameSuffice
+	childNode := p.tree.createNode(childName, p, t.Elem())
+	p.children[childName] = childNode
+	childNode.buildChildNodes(t.Elem())
 }

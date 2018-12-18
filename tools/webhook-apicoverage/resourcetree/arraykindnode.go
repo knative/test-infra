@@ -20,7 +20,9 @@ import (
 	"reflect"
 )
 
-//ArrayKindNode represents resource tree node of types reflect.Kind.Array and reflect.Kind.Slice
+const arrayNodeNameSuffix = "-arr"
+
+// ArrayKindNode represents resource tree node of types reflect.Kind.Array and reflect.Kind.Slice
 type ArrayKindNode struct {
 	nodeData
 	arrKind reflect.Kind // Array type e.g. []int will store reflect.Kind.Int. This is required for type-expansion and value-evaluation decisions.
@@ -30,7 +32,14 @@ func (a *ArrayKindNode ) getData() nodeData {
 	return a.nodeData
 }
 
-func (a *ArrayKindNode ) initialize(field string, parent INode, t reflect.Type, rt *ResourceTree) {
+func (a *ArrayKindNode ) initialize(field string, parent NodeInterface, t reflect.Type, rt *ResourceTree) {
 	a.nodeData.initialize(field, parent, t, rt)
 	a.arrKind = t.Elem().Kind()
+}
+
+func (a *ArrayKindNode) buildChildNodes(t reflect.Type) {
+	childName := a.field + arrayNodeNameSuffix
+	childNode := a.tree.createNode(childName, a, t.Elem())
+	a.children[childName] = childNode
+	childNode.buildChildNodes(t.Elem())
 }

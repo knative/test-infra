@@ -20,7 +20,7 @@ import (
 	"reflect"
 )
 
-//OtherKindNode represents nodes in the resource tree of types like maps, interfaces, etc
+// OtherKindNode represents nodes in the resource tree of types like maps, interfaces, etc
 type OtherKindNode struct {
 	nodeData
 }
@@ -29,7 +29,9 @@ func (o *OtherKindNode) getData() nodeData {
 	return o.nodeData
 }
 
-func (o *OtherKindNode) initialize(field string, parent INode, t reflect.Type, rt *ResourceTree) {
+func (o *OtherKindNode) initialize(field string, parent NodeInterface, t reflect.Type, rt *ResourceTree) {
 	o.nodeData.initialize(field, parent, t, rt)
 	o.nodeData.leafNode = true
 }
+
+func (o *OtherKindNode) buildChildNodes(t reflect.Type) {}
