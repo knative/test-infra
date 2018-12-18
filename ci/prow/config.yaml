@@ -1764,9 +1764,6 @@ periodics:
       imagePullPolicy: Always
       command:
       - "/backup.sh"
-      resources:
-        requests:
-          memory: "1Gi"
 - cron: "0 1 * * *" # Run at 01:00 every day
   name: ci-knative-eventing-sources-go-coverage
   agent: kubernetes
