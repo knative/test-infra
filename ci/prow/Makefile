@@ -38,5 +38,4 @@ update-cluster: get-cluster-credentials
 	kubectl apply -f cluster.yaml
 
 test:
-	bazel run @k8s//prow/cmd/config -- --plugin-config=$(PROW_DIR)/plugins.yaml
-	bazel run @k8s//prow/cmd/config -- --config-path=$(PROW_DIR)/config.yaml
+	bazel run @k8s//prow/cmd/checkconfig -- --plugin-config=$(PROW_DIR)/plugins.yaml --config-path=$(PROW_DIR)/config.yaml
