@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-source $(dirname $0)/helper.sh
+source $(dirname $0)/test-helper.sh
 source $(dirname $0)/../../tools/cleanup/cleanup-functions.sh
 
 readonly _FAKE_NIGHTLY_PROJECT_NAME="gcr.io/knative-nightly"

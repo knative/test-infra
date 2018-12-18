@@ -1335,9 +1335,9 @@ periodics:
       - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--dot-release"
-      - "--release-gcs=knative-releases/serving"
-      - "--release-gcr=gcr.io/knative-releases"
-      - "--github-token=/etc/hub-token/token"
+      - "--release-gcs knative-releases/serving"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -1345,7 +1345,7 @@ periodics:
     volumes:
     - name: hub-token
       secret:
-        secretName: token
+        secretName: hub-token
 - cron: "1 9 * * 6" # Run at 02:01PST every Saturday (09:01 UTC)
   name: ci-knative-serving-playground
   agent: kubernetes
