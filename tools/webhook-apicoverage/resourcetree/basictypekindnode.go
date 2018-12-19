@@ -45,6 +45,15 @@ func (b *BasicTypeKindNode) buildChildNodes(t reflect.Type) {
 	}
 }
 
+func (b *BasicTypeKindNode) updateCoverage(v reflect.Value) {
+	if value := b.string(v); len(value) > 0 {
+		if b.possibleEnum || b.fieldType.Kind() == reflect.Bool {
+			b.addValue(value)
+		}
+		b.covered = true
+	}
+}
+
 func (b *BasicTypeKindNode) string(v reflect.Value) string {
 	switch v.Kind() {
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
@@ -68,4 +77,10 @@ func (b *BasicTypeKindNode) string(v reflect.Value) string {
 	}
 
 	return ""
+}
+
+func (b *BasicTypeKindNode) addValue(value string) {
+	if _, ok := b.values[value]; !ok {
+		b.values[value] = true
+	}
 }

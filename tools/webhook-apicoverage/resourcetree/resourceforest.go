@@ -23,6 +23,6 @@ import (
 // ResourceForest represents the top-level forest that contains individual resource trees for top-level resource types and all connected nodes across resource trees.
 type ResourceForest struct {
 	Version string
-	TopLevelTrees map[string]NodeInterface // Key is ResourceTree.ResourceName
+	TopLevelTrees map[string]ResourceTree // Key is ResourceTree.ResourceName
 	ConnectedNodes map[string]*list.List // Head of the linked list keyed by nodeData.fieldType.pkg + nodeData.fieldType.Name()
 }

@@ -68,3 +68,14 @@ func (s *StructKindNode) isTimeNode(t reflect.Type) bool {
 		return false
 	}
 }
+
+func (s *StructKindNode) updateCoverage(v reflect.Value) {
+	if v.IsValid() {
+		s.covered = true
+		if !s.leafNode {
+			for i := 0; i < v.NumField(); i++ {
+				s.children[v.Type().Field(i).Name].updateCoverage(v.Field(i))
+			}
+		}
+	}
+}

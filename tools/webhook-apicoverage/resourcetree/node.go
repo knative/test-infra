@@ -27,6 +27,7 @@ type NodeInterface interface {
 	getData() nodeData
 	initialize(field string, parent NodeInterface, t reflect.Type, rt *ResourceTree)
 	buildChildNodes(t reflect.Type)
+	updateCoverage(v reflect.Value)
 }
 
 //nodeData is the data stored in each node of the resource tree.

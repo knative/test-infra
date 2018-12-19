@@ -35,3 +35,9 @@ func (o *OtherKindNode) initialize(field string, parent NodeInterface, t reflect
 }
 
 func (o *OtherKindNode) buildChildNodes(t reflect.Type) {}
+
+func (o *OtherKindNode) updateCoverage(v reflect.Value) {
+	if !v.IsNil() {
+		o.covered = true
+	}
+}
