@@ -20,6 +20,7 @@
 
 1. Make the following accounts editors of the project:
    * `knative-productivity-admins@googlegroups.com`
+   * `knative-tests@appspot.gserviceaccount.com`
    * `prow-job@knative-tests.iam.gserviceaccount.com`
    * `prow-job@knative-nightly.iam.gserviceaccount.com`
    * `prow-job@knative-releases.iam.gserviceaccount.com`
