@@ -1753,17 +1753,6 @@ periodics:
       - "./hack/release.sh"
       - "--publish"
       - "--tag-release"
-- cron: "15 9 * * *" # Run at 02:15PST every day (09:15 UTC)
-  name: ci-knative-backup-artifacts
-  agent: kubernetes
-  labels:
-    preset-backup-account: "true"
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/backups:latest
-      imagePullPolicy: Always
-      command:
-      - "/backup.sh"
 - cron: "0 1 * * *" # Run at 01:00 every day
   name: ci-knative-eventing-sources-go-coverage
   agent: kubernetes
@@ -1916,6 +1905,18 @@ periodics:
       - "--days-to-keep 90"
       - "--service-account /etc/test-account/service-account.json"
       - "--artifacts $(ARTIFACTS)"
+
+- cron: "15 9 * * *" # Run at 02:15PST every day (09:15 UTC)
+  name: ci-knative-backup-artifacts
+  agent: kubernetes
+  labels:
+    preset-backup-account: "true"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/backups:latest
+      imagePullPolicy: Always
+      command:
+      - "/backup.sh"
   
 postsubmits:
   knative/serving:
