@@ -62,6 +62,11 @@ func GetArtifactsDir() string {
 	dir := os.Getenv("ARTIFACTS")
 	if dir == "" {
 		log.Printf("Env variable ARTIFACTS not set. Using './artifacts' instead.")
+		err := os.Mkdir("artifacts", 0777)
+		if err != nil {
+			log.Printf("Cannot create 'artifacts' directory. Using current directory instead.")
+			return "."
+		}
 		return "./artifacts"
 	}
 	return dir
