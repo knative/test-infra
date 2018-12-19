@@ -20,6 +20,7 @@ package testgrid
 
 import (
 	"encoding/xml"
+	"fmt"
 	"log"
 	"os"
 )
@@ -28,6 +29,7 @@ const (
 	// Filename to store output that acts as input to testgrid.
 	// Should be of the form junit_*.xml
 	Filename = "junit_knative.xml"
+	artifactsDir = "./artifacts"
 )
 
 // TestProperty defines a property of the test
@@ -56,21 +58,39 @@ type TestSuite struct {
 	TestCases []TestCase `xml:"testcase"`
 }
 
+// createDir creates the artifacts dir if does not exist. 
+func createDir(name string) error {
+	_, err := os.Stat(name)
+	if os.IsNotExist(err) {
+		if err = os.Mkdir(name, 0777); err != nil {
+			return fmt.Errorf("Failed to create artifacts dir: %v", err)
+		}
+	}
+	return nil
+}
+
 // GetArtifactsDir gets the aritfacts directory where we should put the artifacts.
 // By default, it will look at the env var ARTIFACTS.
-func GetArtifactsDir() string {
+func GetArtifactsDir() (string, error) {
 	dir := os.Getenv("ARTIFACTS")
 	if dir == "" {
-		log.Printf("Env variable ARTIFACTS not set. Using './artifacts' instead.")
-		return "./artifacts"
+		log.Printf("Env variable ARTIFACTS not set. Using %s instead.", artifactsDir)
+		if err := createDir(artifactsDir); err != nil {
+			return "", err
+		}
+		return artifactsDir, nil
 	}
-	return dir
+	return dir, nil
 }
 
 // CreateTestgridXML junit xml file in the default artifacts directory
 func CreateTestgridXML(tc []TestCase) error {
 	ts := TestSuite{TestCases: tc}
-	return CreateXMLOutput(ts, GetArtifactsDir())
+	dir, err := GetArtifactsDir()
+	if err != nil {
+		return err
+	}
+	return CreateXMLOutput(ts, dir)
 }
 
 // CreateXMLOutput creates the junit xml file in the provided artifacts directory

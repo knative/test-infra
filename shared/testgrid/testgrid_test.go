@@ -39,14 +39,17 @@ func TestGetArtifacts(t *testing.T) {
 
 	// Test we can read from the env var
 	os.Setenv("ARTIFACTS", "test")
-	v := testgrid.GetArtifactsDir()
+	v, _ := testgrid.GetArtifactsDir()
 	if v != "test" {
 		t.Fatalf("Actual artifacts dir: '%s' and Expected: 'test'", v)
 	}
 
 	// Test we can use the default
 	os.Setenv("ARTIFACTS", "")
-	v = testgrid.GetArtifactsDir()
+	v, err := testgrid.GetArtifactsDir()
+	if err != nil {
+		t.Fatalf("Error when running locally: %v", err)
+	}
 	if v != "./artifacts" {
 		t.Fatalf("Actual artifacts dir: '%s' and Expected: './artifacts'", v)
 	}
