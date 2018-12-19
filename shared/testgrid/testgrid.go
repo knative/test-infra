@@ -58,7 +58,7 @@ type TestSuite struct {
 	TestCases []TestCase `xml:"testcase"`
 }
 
-// createArtifactsDir creates the artifacts dir if does not exist. 
+// createDir creates the artifacts dir if does not exist. 
 func createDir(name string) error {
 	_, err := os.Stat(name)
 	if os.IsNotExist(err) {
@@ -74,6 +74,7 @@ func createDir(name string) error {
 func GetArtifactsDir() (string, error) {
 	dir := os.Getenv("ARTIFACTS")
 	if dir == "" {
+		log.Printf("Env variable ARTIFACTS not set. Using %s instead.", artifactsDir)
 		if err := createDir(artifactsDir); err != nil {
 			return "", err
 		}
