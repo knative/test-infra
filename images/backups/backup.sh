@@ -17,6 +17,9 @@
 # This is a script to backup knative released images and yaml to the
 # knative-backups project.
 
+echo "Activating service account"
+gcloud auth activate-service-account --key-file=/etc/backup-account/service-account.json
+
 echo "Copying images"
 gcrane cp -r gcr.io/knative-releases gcr.io/knative-backups
 
