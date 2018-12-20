@@ -18,7 +18,7 @@
 # knative-backups project.
 
 echo "Activating service account"
-gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
+gcloud auth activate-service-account --key-file=$1
 
 echo "Copying images"
 gcrane cp -r gcr.io/knative-releases gcr.io/knative-backups
