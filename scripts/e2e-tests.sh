@@ -153,6 +153,8 @@ function create_test_cluster() {
 
   header "Creating test cluster"
 
+  echo "Cluster will have a minimum of ${E2E_MIN_CLUSTER_NODES} and a maximum of ${E2E_MIN_CLUSTER_NODES} nodes."
+
   # Smallest cluster required to run the end-to-end-tests
   local CLUSTER_CREATION_ARGS=(
     --gke-create-args="--enable-autoscaling --min-nodes=${E2E_MIN_CLUSTER_NODES} --max-nodes=${E2E_MAX_CLUSTER_NODES} --scopes=cloud-platform --enable-basic-auth --no-issue-client-certificate"
