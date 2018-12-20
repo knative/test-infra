@@ -21,6 +21,4 @@ LABEL maintainer "Jon Johnson <jonjohnson@google.com>"
 COPY --from=gcrane /ko-app /bin/gcrane
 
 # Copy the entrypoint shell script.
-COPY . .
-
-ENTRYPOINT ["/backup.sh"]
+ADD . .

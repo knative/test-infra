@@ -1917,7 +1917,9 @@ periodics:
       imagePullPolicy: Always
       command:
       - "/backup.sh"
-  
+      args:
+      - "/etc/backup-account/service-account.json"
+
 postsubmits:
   knative/serving:
   - name: post-knative-serving-go-coverage
