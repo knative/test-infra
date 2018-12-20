@@ -8,3 +8,4 @@ This directory contains the config for our [Prow](https://github.com/kubernetes/
 * `config.yaml` Configuration of the Prow jobs.
 * `config_start.yaml` Initial, empty configuration for Prow.
 * `plugins.yaml` Configuration of the Prow plugins.
+* `run_job.sh` Convenience script to start a Prow job from command-line.
