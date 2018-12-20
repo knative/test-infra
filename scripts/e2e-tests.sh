@@ -153,7 +153,7 @@ function create_test_cluster() {
 
   header "Creating test cluster"
 
-  echo "Cluster will have a minimum of ${E2E_MIN_CLUSTER_NODES} and a maximum of ${E2E_MIN_CLUSTER_NODES} nodes."
+  echo "Cluster will have a minimum of ${E2E_MIN_CLUSTER_NODES} and a maximum of ${E2E_MAX_CLUSTER_NODES} nodes."
 
   # Smallest cluster required to run the end-to-end-tests
   local CLUSTER_CREATION_ARGS=(
