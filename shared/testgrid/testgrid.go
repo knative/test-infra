@@ -26,9 +26,8 @@ import (
 )
 
 const (
-	// Filename to store output that acts as input to testgrid.
-	// Should be of the form junit_*.xml
-	Filename = "junit_knative.xml"
+	filePrefix = "junit_"
+	extension = ".xml"
 	artifactsDir = "./artifacts"
 )
 
@@ -83,24 +82,24 @@ func GetArtifactsDir() (string, error) {
 	return dir, nil
 }
 
-// CreateTestgridXML junit xml file in the default artifacts directory
-func CreateTestgridXML(tc []TestCase) error {
+// CreateTestgridXML creates junit_<TestName>.xml in the artifacts directory
+func CreateTestgridXML(tc []TestCase, testName string) error {
 	ts := TestSuite{TestCases: tc}
 	dir, err := GetArtifactsDir()
 	if err != nil {
 		return err
 	}
-	return CreateXMLOutput(ts, dir)
+	return CreateXMLOutput(ts, dir, testName)
 }
 
 // CreateXMLOutput creates the junit xml file in the provided artifacts directory
-func CreateXMLOutput(ts TestSuite, artifactsDir string) error {
+func CreateXMLOutput(ts TestSuite, artifactsDir, testName string) error {
 	op, err := xml.MarshalIndent(ts, "", "  ")
 	if err != nil {
 		return err
 	}
 
-	outputFile := artifactsDir + "/" + Filename
+	outputFile := artifactsDir + "/" + filePrefix + testName + extension
 	log.Printf("Storing output in %s", outputFile)
 	f, err := os.OpenFile(outputFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {

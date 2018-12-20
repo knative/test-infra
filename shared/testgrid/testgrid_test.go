@@ -24,8 +24,13 @@ import (
 	"github.com/knative/test-infra/shared/testgrid"
 )
 
+const (
+	filename = "junit_test.xml"
+	name     = "test"
+)
+
 func checkFileText(t *testing.T, expected string) {
-	d, err := ioutil.ReadFile(testgrid.Filename)
+	d, err := ioutil.ReadFile(filename)
 	if err != nil {
 		t.Errorf("Failed to open test file: %v", err)
 	}
@@ -60,19 +65,19 @@ func TestGetArtifacts(t *testing.T) {
 
 func TestXMLOutput(t *testing.T) {
 	// Create a test file
-	if err := testgrid.CreateXMLOutput(testgrid.TestSuite{}, "."); err != nil {
+	if err := testgrid.CreateXMLOutput(testgrid.TestSuite{}, ".", name); err != nil {
 		t.Fatalf("Error when creating xml output file: %v", err)
 	}
 	checkFileText(t, "<testsuite></testsuite>\n")
 
 	// Make sure we can append to the file
-	if err := testgrid.CreateXMLOutput(testgrid.TestSuite{}, "."); err != nil {
+	if err := testgrid.CreateXMLOutput(testgrid.TestSuite{}, ".", name); err != nil {
 		t.Fatalf("Error when creating xml output file: %v", err)
 	}
 	checkFileText(t, "<testsuite></testsuite>\n<testsuite></testsuite>\n")
 
 	// Delete the test file created
-	if err := os.Remove("./" + testgrid.Filename); err != nil {
+	if err := os.Remove("./" + filename); err != nil {
 		t.Logf("Cannot delete test file")
 	}
 }
