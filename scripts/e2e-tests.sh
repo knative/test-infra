@@ -151,7 +151,7 @@ function create_test_cluster() {
   set -o errexit
   set -o pipefail
 
-  header "Creating test cluster with --min-nodes=${E2E_MIN_CLUSTER_NODES} --max-nodes=${E2E_MAX_CLUSTER_NODES}"
+  header "Creating test cluster"
 
   # Smallest cluster required to run the end-to-end-tests
   local CLUSTER_CREATION_ARGS=(
