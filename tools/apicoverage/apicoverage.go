@@ -212,7 +212,7 @@ func createTestgridXML(coverage *OverallAPICoverage, artifactsDir string) {
 	tc = append(tc, createCases(overallService, coverage.ServiceAPICovered, coverage.ServiceAPINotCovered)...)
 	ts := testgrid.TestSuite{TestCases: tc}
 
-	if err := testgrid.CreateXMLOutput(ts, artifactsDir); err != nil {
+	if err := testgrid.CreateXMLOutput(ts, artifactsDir, "apicoverage"); err != nil {
 		log.Fatalf("Cannot create the xml output file: %v", err)
 	}
 }
