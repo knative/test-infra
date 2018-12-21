@@ -135,7 +135,6 @@ function wait_until_pods_running() {
     sleep 2
   done
   echo -e "\n\nERROR: timeout waiting for pods to come up\n${pods}"
-  kubectl get pods -n $1
   return 1
 }
 
