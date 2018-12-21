@@ -40,9 +40,13 @@ readonly E2E_BASE_NAME="k${REPO_NAME}"
 readonly E2E_CLUSTER_NAME=$(build_resource_name e2e-cls)
 readonly E2E_NETWORK_NAME=$(build_resource_name e2e-net)
 readonly E2E_CLUSTER_REGION=us-central1
-readonly E2E_CLUSTER_NODES=3
 readonly E2E_CLUSTER_MACHINE=n1-standard-4
 readonly TEST_RESULT_FILE=/tmp/${E2E_BASE_NAME}-e2e-result
+# Each knative repository may have a different cluster size requirement here,
+# so we allow calling code to set these parameters.  If they are not set we
+# use some sane defaults.
+readonly E2E_MIN_CLUSTER_NODES=${E2E_MIN_CLUSTER_NODES:-1}
+readonly E2E_MAX_CLUSTER_NODES=${E2E_MAX_CLUSTER_NODES:-3}
 
 # Flag whether test is using a boskos GCP project
 IS_BOSKOS=0
@@ -148,10 +152,13 @@ function create_test_cluster() {
   set -o pipefail
 
   header "Creating test cluster"
+
+  echo "Cluster will have a minimum of ${E2E_MIN_CLUSTER_NODES} and a maximum of ${E2E_MAX_CLUSTER_NODES} nodes."
+
   # Smallest cluster required to run the end-to-end-tests
   local CLUSTER_CREATION_ARGS=(
-    --gke-create-args="--enable-autoscaling --min-nodes=1 --max-nodes=${E2E_CLUSTER_NODES} --scopes=cloud-platform --enable-basic-auth --no-issue-client-certificate"
-    --gke-shape={\"default\":{\"Nodes\":${E2E_CLUSTER_NODES}\,\"MachineType\":\"${E2E_CLUSTER_MACHINE}\"}}
+    --gke-create-args="--enable-autoscaling --min-nodes=${E2E_MIN_CLUSTER_NODES} --max-nodes=${E2E_MAX_CLUSTER_NODES} --scopes=cloud-platform --enable-basic-auth --no-issue-client-certificate"
+    --gke-shape={\"default\":{\"Nodes\":${E2E_MIN_CLUSTER_NODES}\,\"MachineType\":\"${E2E_CLUSTER_MACHINE}\"}}
     --provider=gke
     --deployment=gke
     --cluster="${E2E_CLUSTER_NAME}"
@@ -352,7 +359,7 @@ function initialize() {
   # Safety checks
   is_protected_gcr ${DOCKER_REPO_OVERRIDE} && \
     abort "\$DOCKER_REPO_OVERRIDE set to ${DOCKER_REPO_OVERRIDE}, which is forbidden"
-  
+
   readonly RUN_TESTS
   readonly EMIT_METRICS
   readonly E2E_CLUSTER_VERSION
