@@ -190,6 +190,10 @@ func getRelevantLogs(fields []string) *string {
 func createCases(tcName string, covered map[string]int, notCovered map[string]int) []testgrid.TestCase {
 	var tc []testgrid.TestCase
 
+	if (len(covered) == 0 && len(notCovered) == 0) {
+		return tc
+	}
+
 	var percentCovered = float32(100 * len(covered) / (len(covered) + len(notCovered)))
 	tp := []testgrid.TestProperty{testgrid.TestProperty{Name: apiCoverage, Value: percentCovered}}
 	tc = append(tc, testgrid.TestCase{Name: tcName, Properties: testgrid.TestProperties{Property: tp}, Fail: false})
