@@ -34,6 +34,7 @@ RUN apt-get install -y rubygems  # for mdl
 RUN go get -u github.com/google/go-containerregistry/cmd/ko
 RUN go get -u github.com/golang/dep/cmd/dep
 RUN go get -u github.com/google/licenseclassifier
+RUN go get -u github.com/jstemmer/go-junit-report
 
 # Extra tools through npm
 RUN npm install -g markdown-link-check
