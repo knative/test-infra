@@ -409,6 +409,9 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
+        # docker needs privileged mode
+        securityContext:
+          privileged: true
 
   - name: pull-knative-build-go-coverage
     labels:
@@ -1304,6 +1307,9 @@ periodics:
       - "./hack/release.sh"
       - "--nopublish"
       - "--notag-release"
+      # docker needs privileged mode
+      securityContext:
+        privileged: true
 - cron: "1 8 * * *" # Run at 01:01PST every day (08:01 UTC)
   name: ci-knative-serving-nightly-release
   agent: kubernetes
@@ -1512,6 +1518,9 @@ periodics:
       - "./hack/release.sh"
       - "--publish"
       - "--tag-release"
+      # docker needs privileged mode
+      securityContext:
+        privileged: true
 - cron: "5 8 * * *" # Run at 01:05PST every day (08:05 UTC)
   name: ci-knative-build-latency
   agent: kubernetes
@@ -1578,6 +1587,9 @@ periodics:
       - "./hack/release.sh"
       - "--publish"
       - "--tag-release"
+      # docker needs privileged mode
+      securityContext:
+        privileged: true
 - cron: "0 1 * * *" # Run at 01:00 every day
   name: ci-knative-build-pipeline-go-coverage
   agent: kubernetes
