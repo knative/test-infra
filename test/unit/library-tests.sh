@@ -29,10 +29,11 @@ function test_report() {
       exit 1
     fi
   }
+  ARTIFACTS=/tmp
   report_go_test -tags=library -run $1 ./test > ${REPORT} || true
   cat ${REPORT}
   grepit "$2"
-  grepit "Parsed 1 tests"
+  grepit "XML report written"
 }
 
 # Cleanup bazel stuff to avoid confusing Prow
@@ -45,15 +46,16 @@ trap cleanup_bazel EXIT
 echo "*** Tests for report_go_test() ***"
 
 echo ">> Test that test passes"
-test_report TestSucceeds "^  > pass TestSucceeds"
+test_report TestSucceeds "^--- PASS: TestSucceeds"
 
 echo ">> Testing that test fails with fatal"
-test_report TestFailsWithFatal "^  X FAIL TestFailsWithFatal"
+test_report TestFailsWithFatal "^fatal\s\+TestFailsWithFatal"
 
 echo ">> Testing that test fails with panic"
-test_report TestFailsWithPanic "^  X FAIL TestFailsWithPanic"
+test_report TestFailsWithPanic "^panic: test timed out"
 
 echo ">> Testing that test fails with SIGQUIT"
-test_report TestFailsWithSigQuit "^  X FAIL TestFailsWithSigQuit"
+test_report TestFailsWithSigQuit "^SIGQUIT: quit"
 
 echo ">> All tests passed"
+
