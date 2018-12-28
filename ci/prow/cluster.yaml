@@ -214,7 +214,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
       - name: deck
-        image: gcr.io/k8s-prow/deck:v20180709-7109caeb1
+        image: gcr.io/k8s-prow/deck:v20181228-006c641
         args:
         - --hook-url=http://hook:8888/plugin-help
         - --tide-url=http://tide/
