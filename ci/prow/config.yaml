@@ -1914,7 +1914,7 @@ periodics:
       args:
       - "delete-old-gcr-images"
       - "--project-resource-yaml ci/prow/boskos/resources.yaml"
-      - "--days-to-keep 90"
+      - "--days-to-keep 30"
       - "--service-account /etc/test-account/service-account.json"
       - "--artifacts $(ARTIFACTS)"
 
