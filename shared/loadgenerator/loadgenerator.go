@@ -102,8 +102,7 @@ func (gr *GeneratorResults) SaveJSON(testName string) error {
 	if err != nil {
 		return err
 	}
-	_, err = f.Write(json)
-	if err != nil {
+	if _, err = f.Write(json); err != nil {
 		return err
 	}
 
