@@ -17,10 +17,12 @@ limitations under the License.
 package loadgenerator_test
 
 import (
+	"os"
 	"testing"
 	"time"
 
 	"github.com/knative/test-infra/shared/loadgenerator"
+	"github.com/knative/test-infra/shared/testgrid"
 )
 
 const (
@@ -68,5 +70,23 @@ func TestCreateRunnerOptions(t *testing.T) {
 
 	if opts.HTTPOptions.URL != testUrl {
 		t.Fatalf("Url is %s. Expected %s", opts.HTTPOptions.URL, testUrl)
+	}
+}
+
+func TestSaveJSON(t *testing.T) {
+	res := &loadgenerator.GeneratorResults{}
+	err := res.SaveJSON("TestSaveJSON")
+	if err != nil {
+		t.Fatalf("Cannot save JSON: %v", err)
+	}
+
+	// Delete the test json file created
+	dir, err := testgrid.GetArtifactsDir()
+	if err == nil {
+		err = os.Remove(dir + "/" + "TestSaveJSON.json")
+	}
+
+	if err != nil {
+		t.Logf("Cannot delete test file: %v", err)
 	}
 }
