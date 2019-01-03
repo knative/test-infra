@@ -271,6 +271,8 @@ function setup_test_cluster() {
   set +o pipefail
 }
 
+# Set the return code that the test script will return.
+# Parameters: $1 - return code (0-255)
 function set_test_return_code() {
   # kubetest teardown might fail and thus incorrectly report failure of the
   # script, even if the tests pass.
