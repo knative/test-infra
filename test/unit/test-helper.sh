@@ -64,3 +64,10 @@ function mock_gcloud_function() {
   }
   "$@" 2>&1
 }
+
+# Convenience method to display a test failure and exit the script.
+# Parameters: $1 - message to display.
+function failed() {
+  echo "$1"
+  exit 1
+}

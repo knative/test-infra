@@ -14,31 +14,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-source $(dirname $0)/test-helper.sh
-source $(dirname $0)/../../scripts/presubmit-tests.sh
-
-function pre_integration_tests() {
-  PRE_INTEGRATION_TESTS=1
-}
-
-function integration_tests() {
-  CUSTOM_INTEGRATION_TESTS=1
-}
-
-function post_integration_tests() {
-  POST_INTEGRATION_TESTS=1
-}
+source $(dirname $0)/presubmit-integration-tests-common.sh
 
 function build_tests() {
+  RAN_BUILD_TESTS=1
   return 0
 }
 
 function unit_tests() {
+  RAN_UNIT_TESTS=1
   return 0
 }
 
-PRE_INTEGRATION_TESTS=0
-CUSTOM_INTEGRATION_TESTS=0
-POST_INTEGRATION_TESTS=0
+function integration_tests() {
+  RAN_INTEGRATION_TESTS=1
+  return 0
+}
+
+RAN_BUILD_TESTS=0
+RAN_UNIT_TESTS=0
+RAN_INTEGRATION_TESTS=0
 
 trap check_results EXIT
+
+function check_results() {
+  (( RAN_BUILD_TESTS )) || failed "Build tests did not run"
+  (( RAN_UNIT_TESTS )) || failed "Unit tests did not run"
+  (( RAN_INTEGRATION_TESTS )) || failed "Integration tests did not run"
+  echo ">> All tests passed"
+}
+
+echo ">> Testing custom test runners"
+
+main $@
