@@ -19,9 +19,9 @@
 source $(dirname $0)/presubmit-integration-tests-common.sh
 
 function check_results() {
-  (( ! PRE_INTEGRATION_TESTS )) || failed "Pre integration tests did run"
-  (( CUSTOM_INTEGRATION_TESTS )) || failed "Custom integration tests did not run"
-  (( ! POST_INTEGRATION_TESTS )) || failed "Post integration tests did run"
+  (( ! PRE_INTEGRATION_TESTS )) || test_failed "Pre integration tests did run"
+  (( CUSTOM_INTEGRATION_TESTS )) || test_failed "Custom integration tests did not run"
+  (( ! POST_INTEGRATION_TESTS )) || test_failed "Post integration tests did run"
   echo ">> All tests passed"
 }
 

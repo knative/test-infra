@@ -38,9 +38,9 @@ RAN_INTEGRATION_TESTS=0
 trap check_results EXIT
 
 function check_results() {
-  (( RAN_BUILD_TESTS )) || failed "Build tests did not run"
-  (( RAN_UNIT_TESTS )) || failed "Unit tests did not run"
-  (( RAN_INTEGRATION_TESTS )) || failed "Integration tests did not run"
+  (( RAN_BUILD_TESTS )) || test_failed "Build tests did not run"
+  (( RAN_UNIT_TESTS )) || test_failed "Unit tests did not run"
+  (( RAN_INTEGRATION_TESTS )) || test_failed "Integration tests did not run"
   echo ">> All tests passed"
 }
 

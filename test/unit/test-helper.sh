@@ -67,7 +67,7 @@ function mock_gcloud_function() {
 
 # Convenience method to display a test failure and exit the script.
 # Parameters: $1 - message to display.
-function failed() {
+function test_failed() {
   echo "$1"
   exit 1
 }
