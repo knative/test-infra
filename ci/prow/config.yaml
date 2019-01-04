@@ -436,7 +436,7 @@ presubmits:
         - "--artifacts=$(ARTIFACTS)"
         - "--profile-name=coverage_profile.txt"
         - "--cov-target=."
-        - "--cov-threshold-percentage=50"
+        - "--cov-threshold-percentage=80"
         - "--github-token=/etc/github-token/token"
         volumeMounts:
         - name: github-token
