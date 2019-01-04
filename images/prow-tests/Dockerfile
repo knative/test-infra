@@ -12,8 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM gcr.io/k8s-testimages/kubekins-e2e:v20181001-df2f5324a-master
+FROM gcr.io/k8s-testimages/kubekins-e2e:v20190103-edc7696cc-master
 LABEL maintainer "Adriano Cunha <adrcunha@google.com>"
+
+# Add Node.js repo so nodejs/npm can be installed
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 
 # Install extras on top of base image
 
@@ -27,7 +30,7 @@ RUN docker-credential-gcr configure-docker
 
 # Extra tools through apt-get
 RUN apt-get install -y uuid-runtime  # for uuidgen
-RUN apt-get install -y npm  # for markdown-link-check
+RUN apt-get install -y nodejs  # for npm and markdown-link-check
 RUN apt-get install -y rubygems  # for mdl
 
 # Extra tools through go get
