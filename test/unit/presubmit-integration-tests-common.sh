@@ -14,12 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+source $(dirname $0)/test-helper.sh
 source $(dirname $0)/../../scripts/presubmit-tests.sh
-
-function failed() {
-  echo $1
-  exit 1
-}
 
 function pre_integration_tests() {
   PRE_INTEGRATION_TESTS=1

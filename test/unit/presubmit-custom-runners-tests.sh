@@ -14,20 +14,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Test that pre/post integration tests don't run if unset.
-
 source $(dirname $0)/presubmit-integration-tests-common.sh
 
+function build_tests() {
+  RAN_BUILD_TESTS=1
+  return 0
+}
+
+function unit_tests() {
+  RAN_UNIT_TESTS=1
+  return 0
+}
+
+function integration_tests() {
+  RAN_INTEGRATION_TESTS=1
+  return 0
+}
+
+RAN_BUILD_TESTS=0
+RAN_UNIT_TESTS=0
+RAN_INTEGRATION_TESTS=0
+
+trap check_results EXIT
+
 function check_results() {
-  (( ! PRE_INTEGRATION_TESTS )) || test_failed "Pre integration tests did run"
-  (( CUSTOM_INTEGRATION_TESTS )) || test_failed "Custom integration tests did not run"
-  (( ! POST_INTEGRATION_TESTS )) || test_failed "Post integration tests did run"
+  (( RAN_BUILD_TESTS )) || test_failed "Build tests did not run"
+  (( RAN_UNIT_TESTS )) || test_failed "Unit tests did not run"
+  (( RAN_INTEGRATION_TESTS )) || test_failed "Integration tests did not run"
   echo ">> All tests passed"
 }
 
-echo ">> Testing custom test integration function"
-
-unset -f pre_integration_tests
-unset -f post_integration_tests
+echo ">> Testing custom test runners"
 
 main $@

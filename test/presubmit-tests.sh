@@ -24,10 +24,10 @@
 source $(dirname $0)/../scripts/presubmit-tests.sh
 
 function build_tests() {
-  header "Running build tests"
   local failed=0
-  make -C ci/prow test || failed=1
-  make -C ci/testgrid test || failed=1
+  for dir in ci/prow ci/testgrid; do
+    make -C ${dir} test || failed=1
+  done
   for script in scripts/*.sh; do
     subheader "Checking integrity of ${script}"
     bash -c "source ${script}" || failed=1
@@ -36,7 +36,6 @@ function build_tests() {
 }
 
 function unit_tests() {
-  header "Running unit tests"
   local failed=0
   for test in ./test/unit/*-tests.sh; do
     subheader "Running tests in ${test}"
