@@ -32,22 +32,6 @@ function mock_branch_release() {
   branch_release "$@" 2>&1
 }
 
-function call_function_pre() {
-  set -e
-  local init="$1"
-  shift
-  eval ${init}
-  "$@" 2>&1
-}
-
-function call_function_post() {
-  set -e
-  local post="$1"
-  shift
-  "$@" 2>&1
-  eval ${post}
-}
-
 echo ">> Testing helper functions"
 
 test_function ${SUCCESS} "0.2" master_version "v0.2.1"

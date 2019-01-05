@@ -55,6 +55,30 @@ function test_function() {
   echo "'$@' returns code ${expected_retcode} and displays '${expected_string}'"
 }
 
+# Test helper that calls two functions in sequence.
+# Parameters: $1 - function to call first.
+#             $2 - function to call second.
+#             $3..$n - parameters passed to the second function.
+function call_function_pre() {
+  set -e
+  local init="$1"
+  shift
+  eval ${init}
+  "$@" 2>&1
+}
+
+# Test helper that calls two functions in sequence.
+# Parameters: $1 - function to call second.
+#             $2 - function to call first.
+#             $3..$n - parameters passed to the first function.
+function call_function_post() {
+  set -e
+  local post="$1"
+  shift
+  "$@" 2>&1
+  eval ${post}
+}
+
 # Run the function with gcloud mocked (does nothing and outputs nothing).
 # Parameters: $1..$n - parameters passed to the function.
 function mock_gcloud_function() {
