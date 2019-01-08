@@ -250,7 +250,10 @@ function report_go_test() {
   # Install go-junit-report if necessary.
   run_go_tool github.com/jstemmer/go-junit-report go-junit-report --help > /dev/null 2>&1
   local xml=$(mktemp ${ARTIFACTS}/junit_XXXXXXXX.xml)
-  cat ${report} | go-junit-report > ${xml}
+  cat ${report} \
+      | go-junit-report \
+      | sed -e 's#"github.com/knative/${REPO_NAME}/#"#g' \
+      > ${xml}
   echo "XML report written to ${xml}"
   return ${failed}
 }
