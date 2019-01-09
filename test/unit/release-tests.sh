@@ -32,59 +32,64 @@ function mock_branch_release() {
   branch_release "$@" 2>&1
 }
 
+function build_release() {
+  return 0
+}
+
 echo ">> Testing helper functions"
 
 test_function ${SUCCESS} "0.2" master_version "v0.2.1"
 test_function ${SUCCESS} "0.2" master_version "0.2.1"
 test_function ${SUCCESS} "1" release_build_number "v0.2.1"
 test_function ${SUCCESS} "1" release_build_number "0.2.1"
+test_function ${SUCCESS} "Foo Bar" capitalize "foo bar"
 
-echo ">> Testing initialization"
+echo ">> Testing flag parsing"
 
-test_function ${FAILURE} "error: missing parameter" initialize --version
-test_function ${FAILURE} "error: version format" initialize --version a
-test_function ${FAILURE} "error: version format" initialize --version 0.0
+test_function ${FAILURE} "error: missing parameter" parse_flags --version
+test_function ${FAILURE} "error: version format" parse_flags --version a
+test_function ${FAILURE} "error: version format" parse_flags --version 0.0
 test_function ${SUCCESS} "" parse_flags --version 1.0.0
 
-test_function ${FAILURE} "error: missing parameter" initialize --branch
-test_function ${FAILURE} "error: branch name must be" initialize --branch a
-test_function ${FAILURE} "error: branch name must be" initialize --branch 0.0
+test_function ${FAILURE} "error: missing parameter" parse_flags --branch
+test_function ${FAILURE} "error: branch name must be" parse_flags --branch a
+test_function ${FAILURE} "error: branch name must be" parse_flags --branch 0.0
 test_function ${SUCCESS} "" parse_flags --branch release-0.0
 
-test_function ${FAILURE} "error: missing parameter" initialize --release-notes
-test_function ${FAILURE} "error: file a doesn't" initialize --release-notes a
+test_function ${FAILURE} "error: missing parameter" parse_flags --release-notes
+test_function ${FAILURE} "error: file a doesn't" parse_flags --release-notes a
 test_function ${SUCCESS} "" parse_flags --release-notes $(mktemp)
 
-test_function ${FAILURE} "error: missing parameter" initialize --release-gcs
+test_function ${FAILURE} "error: missing parameter" parse_flags --release-gcs
 test_function ${SUCCESS} "" parse_flags --release-gcs a --publish
 
-test_function ${FAILURE} "error: missing parameter" initialize --release-gcr
+test_function ${FAILURE} "error: missing parameter" parse_flags --release-gcr
 test_function ${SUCCESS} "" parse_flags --release-gcr a --publish
 
 token_file=$(mktemp)
 echo -e "abc " > ${token_file}
-test_function ${SUCCESS} ":abc:" call_function_post "echo :\$GITHUB_TOKEN:" initialize --github-token ${token_file}
+test_function ${SUCCESS} ":abc:" call_function_post "echo :\$GITHUB_TOKEN:" parse_flags --github-token ${token_file}
 
 echo ">> Testing GCR/GCS values"
 
-test_function ${SUCCESS} "GCR flag is ignored" initialize --release-gcr foo
-test_function ${SUCCESS} "GCS flag is ignored" initialize --release-gcs foo
+test_function ${SUCCESS} "GCR flag is ignored" parse_flags --release-gcr foo
+test_function ${SUCCESS} "GCS flag is ignored" parse_flags --release-gcs foo
 
-test_function ${SUCCESS} "Destination GCR: ko.local" initialize
-test_function ${SUCCESS} "::" call_function_post "echo :\$RELEASE_GCS:" initialize
+test_function ${SUCCESS} ":ko.local:" call_function_post "echo :\$KO_DOCKER_REPO:" parse_flags
+test_function ${SUCCESS} "::" call_function_post "echo :\$RELEASE_GCS_BUCKET:" parse_flags
 
-test_function ${SUCCESS} "Destination GCR: gcr.io/knative-nightly" initialize --publish
-test_function ${SUCCESS} "published to 'knative-nightly/test-infra'" initialize --publish
+test_function ${SUCCESS} ":gcr.io/knative-nightly:" call_function_post "echo :\$KO_DOCKER_REPO:" parse_flags --publish
+test_function ${SUCCESS} ":knative-nightly/test-infra:" call_function_post "echo :\$RELEASE_GCS_BUCKET:" parse_flags --publish
 
-test_function ${SUCCESS} "Destination GCR: foo" initialize --release-gcr foo --publish
-test_function ${SUCCESS} "published to 'foo'" initialize --release-gcs foo --publish
+test_function ${SUCCESS} ":foo:" call_function_post "echo :\$KO_DOCKER_REPO:" parse_flags --release-gcr foo --publish
+test_function ${SUCCESS} ":foo:" call_function_post "echo :\$RELEASE_GCS_BUCKET:" parse_flags --release-gcs foo --publish
 
 echo ">> Testing release branching"
 
 test_function ${SUCCESS} "" branch_release
 test_function 129 "usage: git tag" call_function_pre BRANCH_RELEASE=1 branch_release
-test_function ${FAILURE} "No such file" call_function_pre BRANCH_RELEASE=1 branch_release "K Foo" "a.yaml b.yaml"
-test_function ${SUCCESS} "release create" mock_branch_release "K Foo" "$(mktemp) $(mktemp)"
+test_function ${FAILURE} "No such file" call_function_pre BRANCH_RELEASE=1 branch_release a.yaml b.yaml
+test_function ${SUCCESS} "release create" mock_branch_release $(mktemp) $(mktemp)
 
 echo ">> Testing validation tests"
 
