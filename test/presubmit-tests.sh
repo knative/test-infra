@@ -23,7 +23,9 @@
 
 source $(dirname $0)/../scripts/presubmit-tests.sh
 
-function build_tests() {
+# Run our custom build tests after the standard build tests.
+
+function post_build_tests() {
   local failed=0
   for dir in ci/prow ci/testgrid; do
     make -C ${dir} test || failed=1
@@ -35,13 +37,14 @@ function build_tests() {
   return ${failed}
 }
 
-function unit_tests() {
+# Run our custom unit tests after the standard unit tests.
+
+function post_unit_tests() {
   local failed=0
   for test in ./test/unit/*-tests.sh; do
     subheader "Running tests in ${test}"
     ${test} || failed=1
   done
-  report_go_test -count=1 ./... || failed=1
   return ${failed}
 }
 
