@@ -20,7 +20,9 @@ import (
 	"reflect"
 )
 
-const arrayNodeNameSuffix = "-arr"
+const (
+	arrayNodeNameSuffix = "-arr"
+)
 
 // ArrayKindNode represents resource tree node of types reflect.Kind.Array and reflect.Kind.Slice
 type ArrayKindNode struct {
@@ -42,4 +44,13 @@ func (a *ArrayKindNode) buildChildNodes(t reflect.Type) {
 	childNode := a.tree.createNode(childName, a, t.Elem())
 	a.children[childName] = childNode
 	childNode.buildChildNodes(t.Elem())
+}
+
+func (a *ArrayKindNode) updateCoverage(v reflect.Value) {
+	if !v.IsNil() {
+		a.covered = true
+		for i := 0; i < v.Len(); i++ {
+			a.children[a.field + arrayNodeNameSuffix].updateCoverage(v.Index(i))
+		}
+	}
 }

@@ -19,6 +19,7 @@ package resourcetree
 //test_util contains types defined and used by types and their corresponding verification methods.
 
 import (
+	"container/list"
 	"errors"
 	"fmt"
 	"reflect"
@@ -56,6 +57,72 @@ type combinedNodeType struct {
 	b baseType
 	a arrayType
 	p ptrType
+}
+
+func getBaseTypeValue() baseType {
+	return baseType{
+		field1: "test",
+	}
+}
+
+func getPtrTypeValueAllCovered() ptrType {
+	f := new(float32)
+	*f = 3.142
+	b := getBaseTypeValue()
+	return ptrType {
+		basePtr: f,
+		structPtr: &b,
+	}
+}
+
+func getPtrTypeValueSomeCovered() ptrType {
+	b := getBaseTypeValue()
+	return ptrType {
+		structPtr: &b,
+	}
+}
+
+func getArrValueAllCovered() arrayType {
+	b1 := getBaseTypeValue()
+	b2 := baseType{
+		field2: 32,
+	}
+
+	return arrayType{
+		structArr: []baseType{b1, b2},
+		baseArr: []bool{true, false},
+	}
+}
+
+func getArrValueSomeCovered() arrayType {
+	return arrayType{
+		structArr: []baseType{getBaseTypeValue()},
+	}
+}
+
+func getOtherTypeValue() otherType {
+	m := make(map[string]baseType)
+	m["test"] = getBaseTypeValue()
+	return otherType {
+		structMap: m,
+	}
+}
+
+func getTestTree(treeName string, t reflect.Type) *ResourceTree {
+	forest := ResourceForest{
+		Version: "TestVersion",
+		ConnectedNodes: make(map[string]*list.List),
+		TopLevelTrees: make(map[string]ResourceTree),
+	}
+
+	tree := ResourceTree{
+		ResourceName: treeName,
+		Forest: &forest,
+	}
+
+	tree.BuildResourceTree(t)
+	forest.TopLevelTrees[treeName] = tree
+	return &tree
 }
 
 func verifyBaseTypeNode(logPrefix string, data nodeData) error {
@@ -181,6 +248,151 @@ func verifyResourceForest(forest *ResourceForest) error {
 		return errors.New("Cannot find arrayType{} connectedNode")
 	} else if value.Len() != 1 {
 		return fmt.Errorf("Invalid length of arrayType{} Node. Expected : 1 Found : %d", value.Len())
+	}
+
+	return nil
+}
+
+func verifyBaseTypeValue(logPrefix string, node NodeInterface) error {
+	if !node.getData().covered {
+		return errors.New(logPrefix + " Node marked as not-covered. Expected to be covered")
+	}
+
+	if !node.getData().children["field1"].getData().covered {
+		return errors.New(logPrefix + " field1 marked as not-covered. Expected to be covered")
+	}
+
+	if node.getData().children["field2"].getData().covered {
+		return errors.New(logPrefix + " field2 marked as covered. Expected to be not-covered")
+	}
+
+	return nil
+}
+
+func verifyPtrValueAllCovered(node NodeInterface) error {
+	if !node.getData().covered {
+		return errors.New("Node marked as not-covered. Expected to be covered")
+	}
+
+	child := node.getData().children["basePtr"]
+	if !child.getData().covered {
+		return errors.New("field:base_ptr marked as not-covered. Expected to be covered")
+	}
+
+	if !child.getData().children["basePtr" + ptrNodeNameSuffix].getData().covered {
+		return errors.New("field:basePtr" + ptrNodeNameSuffix + "marked as not-covered. Expected to be covered" )
+	}
+
+	child = node.getData().children["structPtr"]
+	if !child.getData().covered {
+		return errors.New("field:structPtr marked as not-covered. Expected to be covered")
+	}
+
+	if err := verifyBaseTypeValue("field:structPtr" + ptrNodeNameSuffix, child.getData().children["structPtr" + ptrNodeNameSuffix]); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func verifyPtrValueSomeCovered(node NodeInterface) error {
+	if !node.getData().covered {
+		return errors.New("Node marked as not-covered. Expected to be covered")
+	}
+
+	child := node.getData().children["basePtr"]
+	if child.getData().covered {
+		return errors.New("field:basePtr marked as covered. Expected to be not-covered")
+	}
+
+	if child.getData().children["basePtr" + ptrNodeNameSuffix].getData().covered {
+		return errors.New("field:basePtr" + ptrNodeNameSuffix + "marked as covered. Expected to be not-covered" )
+	}
+
+	child = node.getData().children["structPtr"]
+	if !child.getData().covered {
+		return errors.New("field:structPtr marked as not-covered. Expected to be covered")
+	}
+
+	if err := verifyBaseTypeValue("field:structPtr" + ptrNodeNameSuffix, child.getData().children["structPtr" + ptrNodeNameSuffix]); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func verifyArryValueAllCovered(node NodeInterface) error {
+	if !node.getData().covered {
+		return errors.New("Node marked as not-covered. Expected to be covered")
+	}
+
+	child := node.getData().children["baseArr"]
+	if !child.getData().covered {
+		return errors.New("field:baseArr marked as not-covered. Expected to be covered")
+	}
+
+	if !child.getData().children["baseArr" + arrayNodeNameSuffix].getData().covered {
+		return errors.New("field:baseArr" + arrayNodeNameSuffix + " marked as not-covered. Expected to be covered" )
+	}
+
+	child = node.getData().children["structArr"]
+	if !child.getData().covered {
+		return errors.New("field:structArr marked as not-covered. Expected to be covered")
+	}
+
+	child = child.getData().children["structArr" + arrayNodeNameSuffix]
+	if !child.getData().covered {
+		return errors.New("structArr" + arrayNodeNameSuffix + " marked as not-covered. Expected to be covered")
+	}
+
+	if !child.getData().children["field1"].getData().covered {
+		return errors.New("structArr" + arrayNodeNameSuffix + ".field1 marked as not-covered. Expected to be covered")
+	}
+
+	if !child.getData().children["field2"].getData().covered {
+		return errors.New("structArr" + arrayNodeNameSuffix +".field1 marked as not-covered. Expected to be covered")
+	}
+
+	return nil
+}
+
+func verifyArrValueSomeCovered(node NodeInterface) error {
+	if !node.getData().covered {
+		return errors.New("Node marked as not-covered. Expected to be covered")
+	}
+
+	child := node.getData().children["baseArr"]
+	if child.getData().covered {
+		return errors.New("field:baseArr marked as covered. Expected to be not-covered")
+	}
+
+	if child.getData().children["baseArr" + arrayNodeNameSuffix].getData().covered {
+		return errors.New("field:baseArr" + arrayNodeNameSuffix + " marked as covered. Expected to be not-covered" )
+	}
+
+	child = node.getData().children["structArr"]
+	if !child.getData().covered {
+		return errors.New("field:structArr marked as not-covered. Expected to be covered")
+	}
+
+	if err := verifyBaseTypeValue("field:structArr" + arrayNodeNameSuffix, child.getData().children["structArr" + arrayNodeNameSuffix]); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func verifyOtherTypeValue(node NodeInterface) error {
+	if !node.getData().covered {
+		return errors.New("Node marked as not-covered. Expected to be covered")
+	}
+
+	if !node.getData().children["structMap"].getData().covered {
+		return errors.New("field:structMap marked as not-covered. Expected to be covered")
+	}
+
+	if node.getData().children["baseMap"].getData().covered {
+		return errors.New("field:baseMap marked as covered. Expected to be not-covered")
 	}
 
 	return nil

@@ -20,7 +20,9 @@ import (
 	"reflect"
 )
 
-const ptrNodeNameSuffice = "-ptr"
+const (
+	ptrNodeNameSuffix = "-ptr"
+)
 
 // PtrKindNode represents nodes in the resource tree of type reflect.Kind.Ptr, reflect.Kind.UnsafePointer, etc.
 type PtrKindNode struct {
@@ -38,8 +40,15 @@ func (p *PtrKindNode) initialize(field string, parent NodeInterface, t reflect.T
 }
 
 func (p *PtrKindNode) buildChildNodes(t reflect.Type) {
-	childName := p.field + ptrNodeNameSuffice
+	childName := p.field + ptrNodeNameSuffix
 	childNode := p.tree.createNode(childName, p, t.Elem())
 	p.children[childName] = childNode
 	childNode.buildChildNodes(t.Elem())
+}
+
+func (p *PtrKindNode) updateCoverage(v reflect.Value) {
+	if !v.IsNil() {
+		p.covered = true
+		p.children[p.field + ptrNodeNameSuffix].updateCoverage(v.Elem())
+	}
 }

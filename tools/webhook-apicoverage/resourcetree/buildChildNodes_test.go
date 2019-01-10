@@ -17,27 +17,9 @@ limitations under the License.
 package resourcetree
 
 import (
-	"container/list"
 	"reflect"
 	"testing"
 )
-
-func getTestTree(treeName string, t reflect.Type) *ResourceTree {
-	forest := ResourceForest{
-		Version: "TestVersion",
-		ConnectedNodes: make(map[string]*list.List),
-		TopLevelTrees: make(map[string]NodeInterface),
-	}
-
-	tree := ResourceTree{
-		ResourceName: treeName,
-		forest: &forest,
-	}
-
-	tree.BuildResourceTree(t)
-	forest.TopLevelTrees[treeName] = tree.Root
-	return &tree
-}
 
 func TestSimpleStructType(t *testing.T) {
 	tree := getTestTree(basicTypeName, reflect.TypeOf(baseType{}))
@@ -69,7 +51,7 @@ func TestOtherType(t *testing.T) {
 
 func TestCombinedType(t *testing.T) {
 	tree := getTestTree(combinedTypeName, reflect.TypeOf(combinedNodeType{}))
-	if err := verifyResourceForest(tree.forest); err != nil {
+	if err := verifyResourceForest(tree.Forest); err != nil {
 		t.Fatal(err)
 	}
 }

@@ -25,7 +25,7 @@ import (
 type ResourceTree struct {
 	ResourceName string
 	Root NodeInterface
-	forest *ResourceForest
+	Forest *ResourceForest
 }
 
 func (r *ResourceTree) createNode(field string, parent NodeInterface, t reflect.Type) NodeInterface {
@@ -49,10 +49,10 @@ func (r *ResourceTree) createNode(field string, parent NodeInterface, t reflect.
 
 	if len(t.PkgPath()) != 0 {
 		typeName := t.PkgPath() + "." + t.Name()
-		if _, ok := r.forest.ConnectedNodes[typeName]; !ok {
-			r.forest.ConnectedNodes[typeName] = list.New()
+		if _, ok := r.Forest.ConnectedNodes[typeName]; !ok {
+			r.Forest.ConnectedNodes[typeName] = list.New()
 		}
-		r.forest.ConnectedNodes[typeName].PushBack(n)
+		r.Forest.ConnectedNodes[typeName].PushBack(n)
 	}
 
 	return n
@@ -62,4 +62,9 @@ func (r *ResourceTree) createNode(field string, parent NodeInterface, t reflect.
 func (r *ResourceTree) BuildResourceTree(t reflect.Type) {
 	r.Root = r.createNode(r.ResourceName, nil, t)
 	r.Root.buildChildNodes(t)
+}
+
+// UpdateCoverage updates coverage data in the resource tree based on the provided reflect.Value
+func (r *ResourceTree) UpdateCoverage(v reflect.Value) {
+	r.Root.updateCoverage(v)
 }

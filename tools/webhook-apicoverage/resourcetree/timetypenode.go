@@ -35,3 +35,11 @@ func (ti *TimeTypeNode) initialize(field string, parent NodeInterface, t reflect
 }
 
 func (ti *TimeTypeNode) buildChildNodes(t reflect.Type) {}
+
+func (ti *TimeTypeNode) updateCoverage(v reflect.Value) {
+	if v.Type().Kind() == reflect.Struct && v.IsValid() {
+		ti.covered = true
+	} else if v.Type().Kind() == reflect.Ptr && !v.IsNil() {
+		ti.covered = true
+	}
+}
