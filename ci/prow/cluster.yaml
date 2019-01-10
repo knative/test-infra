@@ -327,7 +327,7 @@ spec:
       serviceAccountName: "tide"
       containers:
       - name: tide
-        image: gcr.io/k8s-prow/tide:v20180808-68cee5a41
+        image: gcr.io/k8s-prow/tide:v20190109-716fe27
         args:
         - --dry-run=false
         ports:
