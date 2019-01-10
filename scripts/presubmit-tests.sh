@@ -110,7 +110,8 @@ function run_build_tests() {
 # * check licenses in `/cmd` (if it exists)
 function default_build_test_runner() {
   local failed=0
-  local mdfiles="$(echo "${CHANGED_FILES}" | grep \.md$)"
+  # Ignore markdown files in /vendor
+  local mdfiles="$(echo "${CHANGED_FILES}" | grep \.md$ | grep -v ^vendor/)"
   if [[ -n "${mdfiles}" ]]; then
     subheader "Linting the markdown files"
     lint_markdown ${mdfiles} || failed=1
