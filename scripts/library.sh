@@ -369,3 +369,23 @@ function is_protected_gcr() {
   [[ -n $1 && "$1" =~ "^gcr.io/knative-(releases|nightly)/?$" ]]
 }
 
+# Remove symlinks in a path that are broken or lead outside the repo.
+# Parameters: $1 - path name, e.g. vendor
+function remove_broken_symlinks() {
+  for link in $(find ./$1 -type l); do
+    local target="$(ls -l ${link})"
+    target="${target##* -> }"
+    # Remove broken symlinks
+    if [[ ! -e ${link} ]]; then
+      unlink ${link}
+      continue
+    fi
+    # Get canonical path to target, remove if outside the repo
+    [[ ${target} == /* ]] || target="./${target}"
+    target="$(cd `dirname ${link}` && cd ${target%/*} && echo $PWD/${target##*/})"
+    if [[ ${target} != *github.com/knative/* ]]; then
+      unlink ${link}
+      continue
+    fi
+  done
+}
