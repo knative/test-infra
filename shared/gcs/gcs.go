@@ -1,5 +1,5 @@
 /*
-Copyright 2018 The Knative Authors
+Copyright 2019 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,123 +19,41 @@ limitations under the License.
 package gcs
 
 import (
-	"bufio"
 	"context"
-	"fmt"
 	"io/ioutil"
 	"log"
-	"strconv"
-	"strings"
 	"path"
 	"os"
 	"io"
+	"strings"
 
 	"cloud.google.com/go/storage"
 	"google.golang.org/api/option"
 	"google.golang.org/api/iterator"
 )
 
-const (
-	latest     = "/latest-build.txt"
-)
-
 var client *storage.Client
 
 // Authenticate explicitly sets up authentication for the rest of run
-func Authenticate(ctx context.Context, sa string) error {
+func Authenticate(ctx context.Context, serviceAccount string) error {
 	var err error
-	client, err = storage.NewClient(ctx, option.WithCredentialsFile(sa))
+	client, err = storage.NewClient(ctx, option.WithCredentialsFile(serviceAccount))
 	return err
-}
-
-// GetLatestBuildNumber gets the latest build number for the specified log directory
-func GetLatestBuildNumber(ctx context.Context, bucketName, logDir string) (int, error) {
-	logFilePath := logDir + latest
-	log.Printf("Using %s to get latest build number", logFilePath)
-	contents, err := ReadGcsFile(ctx, bucketName, logFilePath)
-	if err != nil {
-		return 0, err
-	}
-	latestBuild, err := strconv.Atoi(strings.TrimSuffix(string(contents), "\n"))
-	if err != nil {
-		return 0, err
-	}
-
-	return latestBuild, nil
-}
-
-//ReadGcsFile reads the specified file using the provided service account
-func ReadGcsFile(ctx context.Context, bucketName, filePath string) ([]byte, error) {
-	// Create a new GCS client
-	o := createStorageObject(bucketName, filePath)
-	if _, err := o.Attrs(ctx); err != nil {
-		return []byte(fmt.Sprintf("Cannot get attributes of '%s'", filePath)), err
-	}
-	f, err := o.NewReader(ctx)
-	if err != nil {
-		return []byte(fmt.Sprintf("Cannot open '%s'", filePath)), err
-	}
-	defer f.Close()
-	contents, err := ioutil.ReadAll(f)
-	if err != nil {
-		return []byte(fmt.Sprintf("Cannot read '%s'", filePath)), err
-	}
-	return contents, nil
-}
-
-// ParseLog parses the log and returns the lines where the checkLog func does not return an empty slice.
-// checkLog function should take in the log statement and return a part from that statement that should be in the log output.
-func ParseLog(ctx context.Context, bucketName, filePath string, checkLog func(s []string) *string) []string {
-	var logs []string
-
-	log.Printf("Parsing '%s'", filePath)
-	o := createStorageObject(bucketName, filePath)
-	if _, err := o.Attrs(ctx); err != nil {
-		log.Printf("Cannot get attributes of '%s', assuming not ready yet: %v", filePath, err)
-		return nil
-	}
-	f, err := o.NewReader(ctx)
-	if err != nil {
-		log.Fatalf("Error opening '%s': %v", filePath, err)
-	}
-	defer f.Close()
-
-	scanner := bufio.NewScanner(f)
-
-	for scanner.Scan() {
-		if s := checkLog(strings.Fields(scanner.Text())); s != nil {
-			logs = append(logs, *s)
-		}
-	}
-	return logs
 }
 
 // Exist checks if path exist under gcs bucket
 func Exist(ctx context.Context, bucketName, filePath string) bool {
 	handle := createStorageObject(bucketName, filePath)
-	if _, err := handle.Attrs(ctx); nil != err {
-		return false
-	}
-	return true
+	_, err := handle.Attrs(ctx)
+	return nil == err
 }
 
-// list child under prefix, use delim to eliminate some files.
-// see https://godoc.org/cloud.google.com/go/storage#Query
-func List(ctx context.Context, bucketName, prefix, delim string) []string {
-	var dirs []string
-	objsAttrs := getObjectsAttrs(ctx, bucketName, prefix, delim)
-	for _, attrs := range objsAttrs {
-		dirs = append(dirs, path.Join(attrs.Prefix, attrs.Name))
-	}
-	return dirs
-}
-
-// list direct child paths(including files and directories)
-// Note: to avoid including unnecessary directories, prefix must end with "/".
-//  e.g. if there are 2 top directories "foo" and "foobar",
-//		then given prefix "foo" with list both from "foo" and "foobar"
-func ListDirectChildren(ctx context.Context, bucketName, prefix string) []string {
-	return List(ctx, bucketName, prefix, "/")
+// ListDirectChildren lists direct children paths (including files and directories).
+func ListDirectChildren(ctx context.Context, bucketName, storagePath string) []string {
+	// If there are 2 directories named "foo" and "foobar",
+	// then given storagePath "foo" will get files both under "foo" and "foobar".
+	// Add trailling slash to storagePath, so that only gets children under given directory.
+	return list(ctx, bucketName, strings.TrimRight(storagePath, " /") + "/", "/")
 }
 
 // Copy file from within gcs
@@ -154,20 +72,18 @@ func Download(ctx context.Context, bucketName, srcPath, dstPath string) error {
 		return err
 	}
 
-	dst, _ := os.OpenFile(dstPath, os.O_RDWR|os.O_CREATE, 0755)
-	// dst, _ := os.OpenFile(dstFilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-
+	dst, err := os.OpenFile(dstPath, os.O_RDWR|os.O_CREATE, 0755)
+	if err != nil {
+		return err
+	}
 	src, err := handle.NewReader(ctx)
 	if err != nil {
-		log.Println(2)
 		return err
 	}
 	defer src.Close()
 	if _, err = io.Copy(dst, src); nil != err {
-		log.Println(3)
 		return err
 	}
-
 	return nil
 }
 
@@ -179,33 +95,53 @@ func Upload(ctx context.Context, bucketName, dstPath, srcPath string) error {
 	}
 	dst := createStorageObject(bucketName, dstPath).NewWriter(ctx)
 	defer dst.Close()
-
 	if _, err = io.Copy(dst, src); nil != err {
 		return err
 	}
-
 	return nil
 }
 
-/* Private functions */
+// Read reads the specified file
+func Read(ctx context.Context, bucketName, filePath string) ([]byte, error) {
+	var contents []byte
+	f, err := NewReader(ctx, bucketName, filePath)
+	defer f.Close()
+	if err != nil {
+		return contents, err
+	}
+	contents, err = ioutil.ReadAll(f)
+	if err != nil {
+		return contents, err
+	}
+	return contents, nil
+}
+
+// NewReader creates a new Reader of a gcs file.
+// Important: caller must call Close on the returned Reader when done reading
+func NewReader(ctx context.Context, bucketName, filePath string) (*storage.Reader, error) {
+	o := createStorageObject(bucketName, filePath)
+	if _, err := o.Attrs(ctx); err != nil {
+		return nil, err
+	}
+	return o.NewReader(ctx)
+}
 
 // create storage object handle, this step doesn't access internet
 func createStorageObject(bucketName, filePath string) *storage.ObjectHandle {
 	return client.Bucket(bucketName).Object(filePath)
 }
 
-// Query items under given gcs prefix, use delim to eliminate some files.
+// Query items under given gcs storagePath, use delim to eliminate some files.
 // see https://godoc.org/cloud.google.com/go/storage#Query
-func getObjectsAttrs(ctx context.Context, bucketName, prefix, delim string) []*storage.ObjectAttrs {
+func getObjectsAttrs(ctx context.Context, bucketName, storagePath, delim string) []*storage.ObjectAttrs {
 	var allAttrs []*storage.ObjectAttrs
 	bucketHandle := client.Bucket(bucketName)
 	it := bucketHandle.Objects(ctx, &storage.Query{
-		Prefix 		:	prefix,
-		Delimiter	:	delim,
+		Prefix:	storagePath,
+		Delimiter: delim,
 	})
 
 	for {
-		// fmt.Printf("iterating")
 		attrs, err := it.Next()
 		if err == iterator.Done {
 			break
@@ -213,9 +149,22 @@ func getObjectsAttrs(ctx context.Context, bucketName, prefix, delim string) []*s
 		if err != nil {
 			log.Fatalf("Error iterating: %v", err)
 		}
-
 		allAttrs = append(allAttrs, attrs)
 	}
-	
 	return allAttrs
+}
+
+// list child under storagePath, use exclusionFilter for skipping some files.
+// This function gets all child files recursively under given storagePath,
+// then filter out filenames containing giving exclusionFilter.
+// If exclusionFilter is empty string, returns all files but not directories,
+// if exclusionFilter is "/", returns all direct children, including both files and directories.
+// see https://godoc.org/cloud.google.com/go/storage#Query
+func list(ctx context.Context, bucketName, storagePath, exclusionFilter string) []string {
+	var filePaths []string
+	objsAttrs := getObjectsAttrs(ctx, bucketName, storagePath, exclusionFilter)
+	for _, attrs := range objsAttrs {
+		filePaths = append(filePaths, path.Join(attrs.Prefix, attrs.Name))
+	}
+	return filePaths
 }

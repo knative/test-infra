@@ -1,5 +1,5 @@
 /*
-Copyright 2018 The Knative Authors
+Copyright 2019 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import (
 	"time"
 
 	"github.com/knative/test-infra/shared/loadgenerator"
-	"github.com/knative/test-infra/shared/testgrid"
+	"github.com/knative/test-infra/shared/prow"
 )
 
 const (
@@ -81,12 +81,8 @@ func TestSaveJSON(t *testing.T) {
 	}
 
 	// Delete the test json file created
-	dir, err := testgrid.GetArtifactsDir()
-	if err == nil {
-		err = os.Remove(dir + "/" + "TestSaveJSON.json")
-	}
-
-	if err != nil {
+	dir := prow.GetLocalArtifactsDir()
+	if err = os.Remove(dir + "/" + "TestSaveJSON.json"); err != nil {
 		t.Logf("Cannot delete test file: %v", err)
 	}
 }
