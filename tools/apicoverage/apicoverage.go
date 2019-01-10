@@ -35,6 +35,7 @@ import (
 )
 
 const (
+	bucketName	   = "knative-prow"
 	logDir         = "logs/ci-knative-serving-continuous"
 	buildFile      = "build-log.txt"
 	apiCoverage    = "api_coverage"
@@ -229,7 +230,10 @@ func main() {
 
 	// Read the latest-build.txt file to get the latest build number
 	ctx := context.Background()
-	num, err := gcs.GetLatestBuildNumber(ctx, logDir, *serviceAccount)
+	// Explicit authenticate with gcs Client
+	gcs.Authenticate(ctx, *serviceAccount)
+
+	num, err := gcs.GetLatestBuildNumber(ctx, bucketName, logDir)
 	if err != nil {
 		log.Fatalf("Cannot get latest build number: %v", err)
 	}
@@ -237,7 +241,7 @@ func main() {
 	// Calculate coverage
 	coverage := initCoverage()
 	calculateCoverage(
-		gcs.ParseLog(ctx, fmt.Sprintf("%s/%d/%s", logDir, num, buildFile), getRelevantLogs),
+		gcs.ParseLog(ctx, bucketName, fmt.Sprintf("%s/%d/%s", logDir, num, buildFile), getRelevantLogs),
 		coverage)
 
 	// Write the testgrid xml to artifacts

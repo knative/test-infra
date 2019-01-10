@@ -61,7 +61,7 @@ type TestSuite struct {
 func createDir(name string) error {
 	_, err := os.Stat(name)
 	if os.IsNotExist(err) {
-		if err = os.Mkdir(name, 0777); err != nil {
+		if err = os.MkdirAll(name, 0777); err != nil {
 			return fmt.Errorf("Failed to create artifacts dir: %v", err)
 		}
 	}
@@ -94,6 +94,11 @@ func CreateTestgridXML(tc []TestCase, testName string) error {
 
 // CreateXMLOutput creates the junit xml file in the provided artifacts directory
 func CreateXMLOutput(ts TestSuite, artifactsDir, testName string) error {
+	// ensure artifactsDir exist, in case not invoked from this script
+	if err := createDir(artifactsDir); nil != err {
+		return err
+	}
+
 	op, err := xml.MarshalIndent(ts, "", "  ")
 	if err != nil {
 		return err
