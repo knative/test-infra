@@ -205,7 +205,7 @@ function default_integration_test_runner() {
   local options=""
   local failed=0
   (( EMIT_METRICS )) && options="--emit-metrics"
-  for e2e_test in ./test/e2e-*tests.sh; do
+  for e2e_test in $(find test/ -name e2e-*tests.sh); do
     echo "Running integration test ${e2e_test}"
     if ! ${e2e_test} ${options}; then
       failed=1
