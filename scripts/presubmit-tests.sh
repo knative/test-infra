@@ -134,10 +134,8 @@ function default_build_test_runner() {
     ./hack/verify-codegen.sh || failed=1
   fi
   # Check that we don't have any forbidden licenses in our images.
-  if [[ -d ./cmd ]]; then
-    subheader "Checking for forbidden licenses"
-    check_licenses ./cmd/* || failed=1
-  fi
+  subheader "Checking for forbidden licenses"
+  dep-collector -check $(go list ./...) || failed=1
   return ${failed}
 }
 
