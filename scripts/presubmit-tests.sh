@@ -135,7 +135,7 @@ function default_build_test_runner() {
   fi
   # Check that we don't have any forbidden licenses in our images.
   subheader "Checking for forbidden licenses"
-  dep-collector -check $(go list ./...) || failed=1
+  check_licenses $(go list ./...) || failed=1
   return ${failed}
 }
 
