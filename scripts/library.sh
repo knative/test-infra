@@ -199,11 +199,14 @@ function get_app_pods() {
 # Parameters: $1 - user
 #             $2 - cluster name
 #             $3 - cluster region
+#             $4 - cluster zone, optional
 function acquire_cluster_admin_role() {
+  local geoflag="--region=$3"
+  [[ -n $4 ]] && geoflag="--zone=$3-$4"
   # Get the password of the admin and use it, as the service account (or the user)
   # might not have the necessary permission.
   local password=$(gcloud --format="value(masterAuth.password)" \
-      container clusters describe $2 --region=$3)
+      container clusters describe $2 ${geoflag})
   if [[ -n "${password}" ]]; then
     # Cluster created with basic authentication
     kubectl config set-credentials cluster-admin \
@@ -213,9 +216,9 @@ function acquire_cluster_admin_role() {
     local key=$(mktemp)
     echo "Certificate in ${cert}, key in ${key}"
     gcloud --format="value(masterAuth.clientCertificate)" \
-      container clusters describe $2 --region=$3 | base64 -d > ${cert}
+      container clusters describe $2 ${geoflag} | base64 -d > ${cert}
     gcloud --format="value(masterAuth.clientKey)" \
-      container clusters describe $2 --region=$3 | base64 -d > ${key}
+      container clusters describe $2 ${geoflag} | base64 -d > ${key}
     kubectl config set-credentials cluster-admin \
       --client-certificate=${cert} --client-key=${key}
   fi
@@ -226,7 +229,7 @@ function acquire_cluster_admin_role() {
       --user=$1
   # Reset back to the default account
   gcloud container clusters get-credentials \
-      $2 --region=$3 --project $(gcloud config get-value project)
+      $2 ${geoflag} --project $(gcloud config get-value project)
 }
 
 # Runs a go test and generate a junit summary.

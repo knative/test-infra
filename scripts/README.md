@@ -84,6 +84,18 @@ main $@
 
 This is a helper script for Knative E2E test scripts. To use it:
 
+1. [optional] Customize the test cluster. Set the following environment variables
+   if the default values don't fit your needs:
+
+   - `E2E_CLUSTER_REGION`: Cluster region, defaults to `us-central1`.
+   - `E2E_CLUSTER_ZONE`: Cluster zone (e.g., `a`), defaults to none (i.e. use a regional
+     cluster).
+   - `E2E_CLUSTER_MACHINE`: Cluster node machine type, defaultrs to `n1-standard-4}`.
+   - `E2E_MIN_CLUSTER_NODES`: Minimum number of nodes in the cluster when autoscaling,
+     defaults to 1.
+   - `E2E_MAX_CLUSTER_NODES`: Maximum number of nodes in the cluster when autoscaling,
+     defaults to 3.
+
 1. Source the script.
 
 1. [optional] Write the `teardown()` function, which will tear down your test
@@ -130,9 +142,14 @@ This is a helper script for Knative E2E test scripts. To use it:
 
 This script will test that the latest Knative Serving nightly release works. It
 defines a special flag (`--no-knative-wait`) that causes the script not to
-wait for Knative Serving to be up before running the tests.
+wait for Knative Serving to be up before running the tests. It also requires that
+the test cluster is created in a specific region, `us-west2`.
 
 ```bash
+
+# This test requires a cluster in LA
+E2E_CLUSTER_REGION=us-west2
+
 source vendor/github.com/knative/test-infra/scripts/e2e-tests.sh
 
 function teardown() {
