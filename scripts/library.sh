@@ -269,6 +269,7 @@ function start_latest_knative_serving() {
   wait_until_pods_running istio-system || return 1
   kubectl label namespace default istio-injection=enabled || return 1
   subheader "Installing Knative Build"
+  echo "Installing Build from ${KNATIVE_BUILD_RELEASE}"
   kubectl apply -f ${KNATIVE_BUILD_RELEASE} || return 1
   subheader "Installing Knative Serving"
   echo "Installing Serving from ${KNATIVE_SERVING_RELEASE}"
@@ -281,9 +282,11 @@ function start_latest_knative_serving() {
 function start_latest_knative_build() {
   header "Starting Knative Build"
   subheader "Installing Istio"
+  echo "Installing Istio from ${KNATIVE_ISTIO_YAML}"
   kubectl apply -f ${KNATIVE_ISTIO_YAML} || return 1
   wait_until_pods_running istio-system || return 1
   subheader "Installing Knative Build"
+  echo "Installing Build from ${KNATIVE_BUILD_RELEASE}"
   kubectl apply -f ${KNATIVE_BUILD_RELEASE} || return 1
   wait_until_pods_running knative-build || return 1
 }
