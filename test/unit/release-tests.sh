@@ -61,6 +61,10 @@ test_function ${SUCCESS} "" parse_flags --release-gcs a --publish
 test_function ${FAILURE} "error: missing parameter" initialize --release-gcr
 test_function ${SUCCESS} "" parse_flags --release-gcr a --publish
 
+token_file=$(mktemp)
+echo -e "abc " > ${token_file}
+test_function ${SUCCESS} ":abc:" call_function_post "echo :\$GITHUB_TOKEN:" initialize --github-token ${token_file}
+
 echo ">> Testing GCR/GCS values"
 
 test_function ${SUCCESS} "GCR flag is ignored" initialize --release-gcr foo
