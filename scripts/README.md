@@ -90,7 +90,7 @@ This is a helper script for Knative E2E test scripts. To use it:
    - `E2E_CLUSTER_REGION`: Cluster region, defaults to `us-central1`.
    - `E2E_CLUSTER_ZONE`: Cluster zone (e.g., `a`), defaults to none (i.e. use a regional
      cluster).
-   - `E2E_CLUSTER_MACHINE`: Cluster node machine type, defaultrs to `n1-standard-4}`.
+   - `E2E_CLUSTER_MACHINE`: Cluster node machine type, defaults to `n1-standard-4}`.
    - `E2E_MIN_CLUSTER_NODES`: Minimum number of nodes in the cluster when autoscaling,
      defaults to 1.
    - `E2E_MAX_CLUSTER_NODES`: Maximum number of nodes in the cluster when autoscaling,
