@@ -11,10 +11,16 @@ This is a helper script to run the presubmit tests. To use it:
 
 1. [optional] Define the function `build_tests()`. If you don't define this
    function, the default action for running the build tests is to:
+
    - check markdown files
    - run `go build` on the entire repo
    - run `/hack/verify-codegen.sh` (if it exists)
    - check licenses in `/cmd` (if it exists)
+
+   The markdown link checker tools doesn't check `localhost` links by default.
+   Its configuration file, `markdown-link-check-config.json`, lives in the
+   `test-infra/scripts` directory. To override it, create a file with the same
+   name, containing the custom config in the `/test` directory.
 
 1. [optional] Customize the default build test runner, if you're using it. Set
    the following environment variables if the default values don't fit your needs:

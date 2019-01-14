@@ -352,7 +352,9 @@ function run_lint_tool() {
 # Parameters: $1...$n - files to inspect
 function check_links_in_markdown() {
   # https://github.com/tcort/markdown-link-check
-  run_lint_tool markdown-link-check "checking links in markdown files" -q $@
+  local config="${REPO_ROOT_DIR}/test/markdown-link-check-config.json"
+  [[ ! -e ${config} ]] && config="${_TEST_INFRA_SCRIPTS_DIR}/markdown-link-check-config.json"
+  run_lint_tool markdown-link-check "checking links in markdown files" "-c ${config} -q" $@
 }
 
 # Check format of the given markdown files.
@@ -362,16 +364,30 @@ function lint_markdown() {
   run_lint_tool mdl "linting markdown files" "-r ~MD013" $@
 }
 
-# Return 0 if the given parameter is an integer, otherwise 1
-# Parameters: $1 - an integer
+# Return whether the given parameter is an integer.
+# Parameters: $1 - integer to check
 function is_int() {
   [[ -n $1 && $1 =~ ^[0-9]+$ ]]
 }
 
-# Return 0 if the given parameter is the knative release/nightly gcr, 1
-# otherwise
-# Parameters: $1 - gcr name, e.g. gcr.io/knative-nightly
+# Return whether the given parameter is the knative release/nightly GCF.
+# Parameters: $1 - full GCR name, e.g. gcr.io/knative-foo-bar
 function is_protected_gcr() {
   [[ -n $1 && "$1" =~ "^gcr.io/knative-(releases|nightly)/?$" ]]
 }
 
+# Returns the canonical path of a filesystem object.
+# Parameters: $1 - path to return in canonical form
+#             $2 - base dir for relative links; optional, defaults to current
+function get_canonical_path() {
+  # We don't use readlink because it's not available on every platform.
+  local path=$1
+  local pwd=${2:-.}
+  [[ ${path} == /* ]] || path="${pwd}/${path}"
+  echo "$(cd ${path%/*} && echo $PWD/${path##*/})"
+}
+
+# Initializations that depend on previous functions.
+# These MUST come last.
+
+readonly _TEST_INFRA_SCRIPTS_DIR="$(dirname $(get_canonical_path ${BASH_SOURCE[0]}))"
