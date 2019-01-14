@@ -23,6 +23,9 @@
 # Calling this script without arguments will create a new cluster in
 # project $PROJECT_ID, run the tests and delete the cluster.
 
+# Use us-central1-f to reduce the pressure on us-central1-a
+E2E_CLUSTER_ZONE=f
+
 source $(dirname $0)/../scripts/e2e-tests.sh
 
 # Script entry point.
