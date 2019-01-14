@@ -316,12 +316,7 @@ E2E_CLUSTER_VERSION=""
 
 # Parse flags and initialize the test cluster.
 function initialize() {
-  # Normalize calling script path; we can't use readlink because it's not available everywhere
-  E2E_SCRIPT=$0
-  [[ ${E2E_SCRIPT} =~ ^[\./].* ]] || E2E_SCRIPT="./$0"
-  E2E_SCRIPT="$(cd ${E2E_SCRIPT%/*} && echo $PWD/${E2E_SCRIPT##*/})"
-  readonly E2E_SCRIPT
-
+  E2E_SCRIPT="$(get_canonical_path $0)"
   E2E_CLUSTER_VERSION="${SERVING_GKE_VERSION}"
 
   cd ${REPO_ROOT_DIR}
