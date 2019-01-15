@@ -4,7 +4,7 @@ Webhook based API-Coverage tool uses [ValidatingAdmissionWebhook](https://kubern
 which is a web-server that the K8 API-Server calls into for every API-Object
 update to verify if the object is valid before storing it into its datastore.
 Each validation request has the json representation of the object being
-created/modified, that the tool uses to capture coverage data. ```webhook```
+created/modified, that the tool uses to capture coverage data. `webhook`
 package inside this folder provides a mechanism for individual repos to
 setup ValidatingAdmissionWebhook.
 
