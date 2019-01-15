@@ -221,7 +221,8 @@ This is a helper script for Knative release scripts. To use it:
      variable `TAG` will contain the release tag in the form `vYYYYMMDD-<commit_short_hash>`.
    - `PUBLISH_RELEASE`: true if `--publish` was passed. In this case, the environment
      variable `KO_FLAGS` will be updated with the `-L` option.
-   - `BRANCH_RELEASE`: true if both `--version` and `--publish-release` were passed.
+   - `PUBLISH_TO_GITHUB`: true if `--version`, `--branch` and `--publish-release`
+     were passed.
 
    All boolean environment variables default to false for safety.
 
