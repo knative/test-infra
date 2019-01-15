@@ -10,7 +10,7 @@ setup ValidatingAdmissionWebhook.
 
  [APICoverageWebhook](webhook.go) type inside the package encapsulates
 necessary configuration details and helper methods required to setup
-the webhook. Each repo is expected to call into ```SetupWebhook()```
+the webhook. Each repo is expected to call into `SetupWebhook()`
 providing following three parameters:
 
 1. `http.Handler`: This is the http handler (that implements `ServeHTTP(
