@@ -8,7 +8,7 @@ created/modified, that the tool uses to capture coverage data. ```webhook```
 package inside this folder provides a mechanism for individual repos to
 setup ValidatingAdmissionWebhook.
 
- [APICoverageWebhook](webhook.go) type inside the package encapsulates
+[APICoverageWebhook](webhook.go) type inside the package encapsulates
 necessary configuration details and helper methods required to setup
 the webhook. Each repo is expected to call into `SetupWebhook()`
 providing following three parameters:
