@@ -17,7 +17,7 @@ providing following three parameters:
   w http.ResponseWriter, r *http.Request)```) that the web server
   created by APICoverageWebhook uses.
 1. `rules`: This is an array of `RuleWithOperations` objects
- from ```k8s.io/api/admissionregistration/v1beta1``` package
+ from the `k8s.io/api/admissionregistration/v1beta1` package
  that the webhook uses for validation on each API Object update.
  e.g: knative-serving while calling this method would
  provide rules that will handle API Objects like `Service`,
