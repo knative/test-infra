@@ -25,6 +25,6 @@ providing following three parameters:
 
 1. stop channel: Channel to terminate webhook's web server.
 
-```SetupWebhook()``` method in its implementation creates a TLS based web server
+`SetupWebhook()` method in its implementation creates a TLS based web server
 and registers the webhook by creating a ValidatingWebhookConfiguration
 object inside the K8 cluster.
