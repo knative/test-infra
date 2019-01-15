@@ -14,7 +14,7 @@ the webhook. Each repo is expected to call into ```SetupWebhook()```
 providing following three parameters:
 
 1. http.Handler: This is the http handler(that implements: ```ServeHTTP(
-  w http.ResponseWriter, r *http.Request)```) that the web server
+   w http.ResponseWriter, r *http.Request)`) that the web server
   created by APICoverageWebhook uses.
 1. `rules`: This is an array of `RuleWithOperations` objects
  from the `k8s.io/api/admissionregistration/v1beta1` package
