@@ -21,7 +21,7 @@ providing following three parameters:
  that the webhook uses for validation on each API Object update.
  e.g: knative-serving while calling this method would
  provide rules that will handle API Objects like ```Service,
- Configuration, Route and Revision```.
+ `Configuration`, `Route` and `Revision`.
 
 1. `stop` channel: Channel to terminate webhook's web server.
 
