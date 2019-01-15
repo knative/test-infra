@@ -23,7 +23,7 @@ providing following three parameters:
  provide rules that will handle API Objects like ```Service,
  Configuration, Route and Revision```.
 
-1. stop channel: Channel to terminate webhook's web server.
+1. `stop` channel: Channel to terminate webhook's web server.
 
 `SetupWebhook()` method in its implementation creates a TLS based web server
 and registers the webhook by creating a ValidatingWebhookConfiguration
