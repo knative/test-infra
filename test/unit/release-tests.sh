@@ -21,7 +21,7 @@ set -e
 
 function mock_branch_release() {
   set -e
-  BRANCH_RELEASE=1
+  PUBLISH_TO_GITHUB=1
   TAG=sometag
   function git() {
 	echo $@
@@ -79,11 +79,11 @@ test_function ${SUCCESS} "published to 'knative-nightly/test-infra'" initialize 
 test_function ${SUCCESS} "Destination GCR: foo" initialize --release-gcr foo --publish
 test_function ${SUCCESS} "published to 'foo'" initialize --release-gcs foo --publish
 
-echo ">> Testing release branching"
+echo ">> Testing publishing to GitHub"
 
 test_function ${SUCCESS} "" branch_release
-test_function 129 "usage: git tag" call_function_pre BRANCH_RELEASE=1 branch_release
-test_function ${FAILURE} "No such file" call_function_pre BRANCH_RELEASE=1 branch_release "K Foo" "a.yaml b.yaml"
+test_function 129 "usage: git tag" call_function_pre PUBLISH_TO_GITHUB=1 branch_release
+test_function ${FAILURE} "No such file" call_function_pre PUBLISH_TO_GITHUB=1 branch_release "K Foo" "a.yaml b.yaml"
 test_function ${SUCCESS} "release create" mock_branch_release "K Foo" "$(mktemp) $(mktemp)"
 
 echo ">> Testing validation tests"

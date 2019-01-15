@@ -65,7 +65,7 @@ function publish_yaml() {
 SKIP_TESTS=0
 TAG_RELEASE=0
 PUBLISH_RELEASE=0
-BRANCH_RELEASE=0
+PUBLISH_TO_GITHUB=0
 TAG=""
 RELEASE_VERSION=""
 RELEASE_NOTES=""
@@ -251,12 +251,12 @@ function parse_flags() {
     TAG="v${RELEASE_VERSION}"
   fi
 
-  [[ -n "${RELEASE_VERSION}" ]] && (( PUBLISH_RELEASE )) && BRANCH_RELEASE=1
+  [[ -n "${RELEASE_VERSION}" && -n "${RELEASE_BRANCH}" ]] && (( PUBLISH_RELEASE )) && PUBLISH_TO_GITHUB=1
 
   readonly SKIP_TESTS
   readonly TAG_RELEASE
   readonly PUBLISH_RELEASE
-  readonly BRANCH_RELEASE
+  readonly PUBLISH_TO_GITHUB
   readonly TAG
   readonly RELEASE_VERSION
   readonly RELEASE_NOTES
@@ -295,13 +295,14 @@ function initialize() {
   else
     echo "- Release will not be published"
   fi
-  if (( BRANCH_RELEASE )); then
-    echo "- Release WILL BE branched from '${RELEASE_BRANCH}'"
+  if (( PUBLISH_TO_GITHUB )); then
+    echo "- Release WILL BE published to GitHub"
   fi
+  [[ -n "${RELEASE_BRANCH}" ]] && echo "- Release will be built from branch '${RELEASE_BRANCH}'"
   [[ -n "${RELEASE_NOTES}" ]] && echo "- Release notes are generated from '${RELEASE_NOTES}'"
 
   # Checkout specific branch, if necessary
-  if (( BRANCH_RELEASE )); then
+  if [[ -n "${RELEASE_BRANCH}" ]]; then
     setup_upstream
     setup_branch
     git checkout upstream/${RELEASE_BRANCH} || abort "cannot checkout branch ${RELEASE_BRANCH}"
@@ -312,11 +313,13 @@ function initialize() {
 # Parameters: $1 - Module name (e.g., "Knative Serving").
 #             $2 - YAML files to add to the release, space separated.
 function branch_release() {
-  (( BRANCH_RELEASE )) || return 0
+  # TODO(adrcunha): rename this function to publish_to_github()
+  (( PUBLISH_TO_GITHUB )) || return 0
   local title="$1 release ${TAG}"
   local attachments=()
   local description="$(mktemp)"
   local attachments_dir="$(mktemp -d)"
+  local commitish=""
   # Copy each YAML to a separate dir
   for yaml in $2; do
     cp ${yaml} ${attachments_dir}/
@@ -331,10 +334,11 @@ function branch_release() {
   [[ -n "${GITHUB_TOKEN}}" ]] && repo_url="${repo_url/:\/\//:\/\/${GITHUB_TOKEN}@}"
   hub_tool push ${repo_url} tag ${TAG}
 
+  [[ -n "${RELEASE_BRANCH}" ]] && commitish="--commitish=${RELEASE_BRANCH}"
   hub_tool release create \
       --prerelease \
       ${attachments[@]} \
       --file=${description} \
-      --commitish=${RELEASE_BRANCH} \
+      ${commitish} \
       ${TAG}
 }
