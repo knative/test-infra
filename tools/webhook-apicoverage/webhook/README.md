@@ -16,7 +16,7 @@ providing following three parameters:
 1. http.Handler: This is the http handler(that implements: ```ServeHTTP(
   w http.ResponseWriter, r *http.Request)```) that the web server
   created by APICoverageWebhook uses.
-1. rules: This is an array of RuleWithOperations objects
+1. `rules`: This is an array of `RuleWithOperations` objects
  from ```k8s.io/api/admissionregistration/v1beta1``` package
  that the webhook uses for validation on each API Object update.
  e.g: knative-serving while calling this method would
