@@ -19,9 +19,9 @@ source $(dirname $0)/../../scripts/release.sh
 
 set -e
 
-function mock_branch_release() {
+function mock_publish_to_github() {
   set -e
-  BRANCH_RELEASE=1
+  PUBLISH_TO_GITHUB=1
   TAG=sometag
   function git() {
 	echo $@
@@ -29,7 +29,7 @@ function mock_branch_release() {
   function hub() {
 	echo $@
   }
-  branch_release "$@" 2>&1
+  publish_to_github "$@" 2>&1
 }
 
 function build_release() {
@@ -84,12 +84,12 @@ test_function ${SUCCESS} ":knative-nightly/test-infra:" call_function_post "echo
 test_function ${SUCCESS} ":foo:" call_function_post "echo :\$KO_DOCKER_REPO:" parse_flags --release-gcr foo --publish
 test_function ${SUCCESS} ":foo:" call_function_post "echo :\$RELEASE_GCS_BUCKET:" parse_flags --release-gcs foo --publish
 
-echo ">> Testing release branching"
+echo ">> Testing publishing to GitHub"
 
-test_function ${SUCCESS} "" branch_release
-test_function 129 "usage: git tag" call_function_pre BRANCH_RELEASE=1 branch_release
-test_function ${FAILURE} "No such file" call_function_pre BRANCH_RELEASE=1 branch_release a.yaml b.yaml
-test_function ${SUCCESS} "release create" mock_branch_release $(mktemp) $(mktemp)
+test_function ${SUCCESS} "" publish_to_github
+test_function 129 "usage: git tag" call_function_pre PUBLISH_TO_GITHUB=1 publish_to_github
+test_function ${FAILURE} "No such file" call_function_pre PUBLISH_TO_GITHUB=1 publish_to_github a.yaml b.yaml
+test_function ${SUCCESS} "release create" mock_publish_to_github $(mktemp) $(mktemp)
 
 echo ">> Testing validation tests"
 

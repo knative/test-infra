@@ -1900,6 +1900,8 @@ periodics:
   labels:
     preset-test-account: "true"
   decorate: true
+  decoration_config:
+    timeout: 28800000000000 # 8 hours
   extra_refs:
   - org: knative
     repo: test-infra
