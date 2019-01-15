@@ -15,7 +15,7 @@ This is a helper script to run the presubmit tests. To use it:
    - check markdown files
    - run `go build` on the entire repo
    - run `/hack/verify-codegen.sh` (if it exists)
-   - check licenses in `/cmd` (if it exists)
+   - check licenses in all go packages
 
    The markdown link checker tools doesn't check `localhost` links by default.
    Its configuration file, `markdown-link-check-config.json`, lives in the
