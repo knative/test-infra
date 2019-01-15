@@ -129,7 +129,7 @@ function markdown_build_tests() {
 # * check markdown files
 # * `go build` on the entire repo
 # * run `/hack/verify-codegen.sh` (if it exists)
-# * check licenses in `/cmd` (if it exists)
+# * check licenses in all go packages
 function default_build_test_runner() {
   local failed=0
   # Perform markdown build checks first
