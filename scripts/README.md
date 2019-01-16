@@ -17,7 +17,7 @@ This is a helper script to run the presubmit tests. To use it:
    - run `/hack/verify-codegen.sh` (if it exists)
    - check licenses in all go packages
 
-   The markdown link checker tools doesn't check `localhost` links by default.
+   The markdown link checker tool doesn't check `localhost` links by default.
    Its configuration file, `markdown-link-check-config.json`, lives in the
    `test-infra/scripts` directory. To override it, create a file with the same
    name, containing the custom config in the `/test` directory.
@@ -199,16 +199,14 @@ This is a helper script for Knative release scripts. To use it:
 
 1. Source the script.
 
-1. Call the `initialize()` function passing `$@` (without quotes).
+1. [optional] By default, the release script will run `./test/presubmit-tests.sh`
+   as the release validation tests. If you need to run something else, set the
+   environment variable `VALIDATION_TESTS` to the executable to run.
 
-1. Call the `run_validation_tests()` function passing the script or executable that
-   runs the release validation tests. It will call the script to run the tests unless
-   `--skip_tests` was passed.
-
-1. Write logic for the release process. Call `publish_yaml()` to publish the manifest(s),
-   `tag_releases_in_yaml()` to tag the generated images, `branch_release()` to branch
-   named releases. Use the following boolean (0 is false, 1 is true) and string environment
-   variables for the logic:
+1. Write logic for building the release in a function named `build_release()`.
+   Set the environment variable `YAMLS_TO_PUBLISH` to the list of yaml files created,
+   space separated. Use the following boolean (0 is false, 1 is true) and string
+   environment variables for the logic:
 
    - `RELEASE_VERSION`: contains the release version if `--version` was passed. This
      also overrides the value of the `TAG` variable as `v<version>`.
@@ -222,8 +220,7 @@ This is a helper script for Knative release scripts. To use it:
    - `KO_DOCKER_REPO`: contains the GCR to store the images if `--release-gcr` was
      passed, otherwise the default value `gcr.io/knative-nightly` will be used. It
      is set to `ko.local` if `--publish` was not passed.
-   - `SKIP_TESTS`: true if `--skip-tests` was passed. This is handled automatically
-     by the `run_validation_tests()` function.
+   - `SKIP_TESTS`: true if `--skip-tests` was passed. This is handled automatically.
    - `TAG_RELEASE`: true if `--tag-release` was passed. In this case, the environment
      variable `TAG` will contain the release tag in the form `vYYYYMMDD-<commit_short_hash>`.
    - `PUBLISH_RELEASE`: true if `--publish` was passed. In this case, the environment
@@ -234,25 +231,20 @@ This is a helper script for Knative release scripts. To use it:
    All boolean environment variables default to false for safety.
 
    All environment variables above, except `KO_FLAGS`, are marked read-only once
-   `initialize()` is called.
+   `main()` is called (see below).
+
+1. Call the `main()` function passing `$@` (without quotes).
 
 ### Sample release script
 
 ```bash
 source vendor/github.com/knative/test-infra/scripts/release.sh
 
-initialize $@
+function build_release() {
+  # config/ contains the manifests
+  ko resolve ${KO_FLAGS} -f config/ > release.yaml
+  YAMLS_TO_PUBLISH="release.yaml"
+}
 
-run_validation_tests ./test/presubmit-tests.sh
-
-# config/ contains the manifests
-ko resolve ${KO_FLAGS} -f config/ > release.yaml
-
-tag_images_in_yaml release.yaml
-
-if (( PUBLISH_RELEASE )); then
-  publish_yaml release.yaml
-fi
-
-branch_release "Knative Foo" release.yaml
+main $@
 ```
