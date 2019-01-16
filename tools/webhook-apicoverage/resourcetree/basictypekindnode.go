@@ -20,6 +20,8 @@ import (
 	"fmt"
 	"reflect"
 	"strconv"
+
+	"github.com/knative/test-infra/tools/webhook-apicoverage/coveragecalculator"
 )
 
 // BasicTypeKindNode represents resource tree node of basic types like int, float, etc.
@@ -40,7 +42,8 @@ func (b *BasicTypeKindNode) initialize(field string, parent NodeInterface, t ref
 }
 
 func (b *BasicTypeKindNode) buildChildNodes(t reflect.Type) {
-	if t.Name() != t.Kind().String() {
+	// Treating bools as possible enums to support tighter coverage information.
+	if t.Name() != t.Kind().String() || b.fieldType.Kind() == reflect.Bool {
 		b.possibleEnum = true
 	}
 }
@@ -53,6 +56,9 @@ func (b *BasicTypeKindNode) updateCoverage(v reflect.Value) {
 		b.covered = true
 	}
 }
+
+// no-op as the coverage is calculated as field coverage in parent node.
+func (b *BasicTypeKindNode) buildCoverageData(typeCoverage []coveragecalculator.TypeCoverage, nodeRules NodeRules, fieldRules FieldRules) {}
 
 func (b *BasicTypeKindNode) string(v reflect.Value) string {
 	switch v.Kind() {
@@ -83,4 +89,16 @@ func (b *BasicTypeKindNode) addValue(value string) {
 	if _, ok := b.values[value]; !ok {
 		b.values[value] = true
 	}
+}
+
+func (b *BasicTypeKindNode) getValues() ([]string) {
+	if b.possibleEnum {
+		values := []string{}
+		for key := range b.values {
+			values = append(values, key)
+		}
+		return values
+	}
+
+	return nil
 }

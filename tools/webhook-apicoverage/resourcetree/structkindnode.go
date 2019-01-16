@@ -17,6 +17,7 @@ limitations under the License.
 package resourcetree
 
 import (
+	"github.com/knative/test-infra/tools/webhook-apicoverage/coveragecalculator"
 	"reflect"
 )
 
@@ -78,4 +79,23 @@ func (s *StructKindNode) updateCoverage(v reflect.Value) {
 			}
 		}
 	}
+}
+
+func (s *StructKindNode) buildCoverageData(typeCoverage []coveragecalculator.TypeCoverage, nodeRules NodeRules, fieldRules FieldRules) {
+	if len(s.children) == 0 {
+		return
+	}
+
+	coverage := s.tree.Forest.getConnectedNodeCoverage(s.fieldType, fieldRules)
+	typeCoverage = append(typeCoverage, coverage)
+
+	for _, value := range s.children {
+		if value.getData().covered && nodeRules.Apply(value){
+			value.buildCoverageData(typeCoverage, nodeRules, fieldRules)
+		}
+	}
+}
+
+func (s *StructKindNode) getValues() ([]string) {
+	return nil
 }

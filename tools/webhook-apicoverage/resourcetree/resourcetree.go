@@ -19,6 +19,8 @@ package resourcetree
 import (
 	"container/list"
 	"reflect"
+
+	"github.com/knative/test-infra/tools/webhook-apicoverage/coveragecalculator"
 )
 
 // ResourceTree encapsulates a tree corresponding to a resource type.
@@ -67,4 +69,11 @@ func (r *ResourceTree) BuildResourceTree(t reflect.Type) {
 // UpdateCoverage updates coverage data in the resource tree based on the provided reflect.Value
 func (r *ResourceTree) UpdateCoverage(v reflect.Value) {
 	r.Root.updateCoverage(v)
+}
+
+// GetCoverageData calculates the coverage information for a resource tree by applying provided Node and Field rules.
+func (r *ResourceTree) BuildCoverageData(nodeRules NodeRules, fieldRules FieldRules) ([]coveragecalculator.TypeCoverage) {
+	typeCoverage := []coveragecalculator.TypeCoverage{}
+	r.Root.buildCoverageData(typeCoverage, nodeRules, fieldRules)
+	return typeCoverage
 }

@@ -24,15 +24,7 @@ v1alpha1.Route.Spec.Traffic and v1alpha1.Route.Status.Traffic, both these
 Traffic fields are of type v1alpha1.TrafficTarget, but are present in different
 paths inside the resource tree. ConnectedNodes connects these two nodes, and
 an outlining of this type would present the coverage across the two branches
-and gives a unified view of what fields are covered. ConnectedNodes represent
-connections between nodes that are of same type(reflect.Type) and belong to
-same package but span across different trees or branches of same tree. An
-example of ConnectedNodes would be v1alpha1.Route.Spec.Traffic and
-v1alpha1.Route.Status.Traffic, both these Traffic fields are of type
-v1alpha1.TrafficTarget, but are present in different paths inside the resource
-tree. ConnectedNodes connects these two nodes, and an outlining of this type
-would present the coverage across the two branches and gives a unified view of
-what fields are covered.
+and gives a unified view of what fields are covered.
 
 ## Type Analysis
 
@@ -48,3 +40,21 @@ A Resource tree is updated using reflect.Value Each node type is expected
 to implement NodeInterface method *updateCoverage(v reflect.Value)*.
 Inisde this method each node updates its nodeData.covered field based on
 whether the reflect.Value parameter being passed is set or not.
+
+## Rules
+
+To define traversal pattern on a [resourcetree](../resourcetree/resourcetree.go)
+`coveragecalculator` package supports defining rules that are applied during
+apicoverage walk-through. Currently the tool supports two types of Rule objects:
+
+  1. `NodeRules`: Enforces node level semantics. e.g.: Avoid traversing any type
+    that belong to a particular package. To enforce this rule, the repo would
+    define an object that implements the [NodeRule](rule.go) interface's
+    `Apply(nodeInterface  resourcetree.NodeInterface) bool` method and pass that
+    onto the `resourcetree` traversal routine.
+
+  1. `FieldRules`: Enforces field level semantics. e.g. Avoid calculating
+    coverage for any field that starts with prefix `deprecated`. To enforce this
+    rule, the repo would define an object that implements [FieldRule](rule.go)
+    interface's `Apply(fieldName string) bool` method and pass that onto the
+    `resourcetree` traversal routine.

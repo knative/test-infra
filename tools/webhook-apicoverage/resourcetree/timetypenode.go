@@ -16,7 +16,11 @@ limitations under the License.
 
 package resourcetree
 
-import "reflect"
+import (
+	"reflect"
+
+	"github.com/knative/test-infra/tools/webhook-apicoverage/coveragecalculator"
+)
 
 // TimeTypeNode is a node type that encapsulates fields that are internally time based. E.g metav1.ObjectMeta.CreationTimestamp or metav1.ObjectMeta.DeletionTimestamp.
 // These are internally of type metav1.Time which use standard time type, but their values are specified as timestamp strings with parsing logic to create time objects. For
@@ -42,4 +46,11 @@ func (ti *TimeTypeNode) updateCoverage(v reflect.Value) {
 	} else if v.Type().Kind() == reflect.Ptr && !v.IsNil() {
 		ti.covered = true
 	}
+}
+
+// no-op as the coverage is calculated as field coverage in parent node.
+func (ti *TimeTypeNode) buildCoverageData(typeCoverage []coveragecalculator.TypeCoverage, nodeRules NodeRules, fieldRules FieldRules) {}
+
+func (ti *TimeTypeNode) getValues() ([]string) {
+	return nil
 }
