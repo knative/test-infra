@@ -143,6 +143,21 @@ function dump_cluster_state() {
   echo "***************************************"
 }
 
+# On a Prow job, save some metadata about the test for Testgrid.
+function save_metadata() {
+  (( ! IS_PROW )) && return
+  cat << EOF > ${ARTIFACTS}/metadata.json
+{
+  "Region": "${E2E_CLUSTER_REGION}",
+  "Zone": "${E2E_CLUSTER_ZONE}",
+  "Machine": "${E2E_CLUSTER_MACHINE}",
+  "Version": "${E2E_CLUSTER_VERSION}",
+  "MinNodes": "${E2E_MIN_CLUSTER_NODES}",
+  "MaxNodes": "${E2E_MAX_CLUSTER_NODES}"
+}
+EOF
+}
+
 # Create a test cluster with kubetest and call the current script again.
 function create_test_cluster() {
   # Fail fast during setup.
@@ -228,6 +243,10 @@ function create_test_cluster() {
   fi
   local result="$(cat ${TEST_RESULT_FILE})"
   echo "Test result code is $result"
+
+  # Save some metadata about cluster creation for using in prow and testgrid
+  save_metadata
+
   exit ${result}
 }
 
