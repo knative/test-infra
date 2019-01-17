@@ -82,7 +82,7 @@ function go_test_e2e() {
 # Download the k8s binaries required by kubetest.
 # Parameters: $1 - GCP project that will host the test cluster.
 function download_k8s() {
-  local version=${E2E_CLUSTER_VERSION}
+  local version=${E2E_DEFAULT_CLUSTER_VERSION}
   # Fetch valid versions
   local versions="$(gcloud container get-server-config \
       --project=$1 \
@@ -109,6 +109,7 @@ function download_k8s() {
   pushd ${staging_dir}
   export KUBERNETES_PROVIDER=gke
   export KUBERNETES_RELEASE=${version}
+  export E2E_CLUSTER_VERSION=${version}
   curl -fsSL https://get.k8s.io | bash
   local result=$?
   if [[ ${result} -eq 0 ]]; then
@@ -244,9 +245,6 @@ function create_test_cluster() {
   local result="$(cat ${TEST_RESULT_FILE})"
   echo "Test result code is $result"
 
-  # Save some metadata about cluster creation for using in prow and testgrid
-  save_metadata
-
   exit ${result}
 }
 
@@ -293,6 +291,9 @@ function setup_test_cluster() {
   readonly K8S_USER_OVERRIDE
   readonly DOCKER_REPO_OVERRIDE
 
+  # Save some metadata about cluster creation for using in prow and testgrid
+  save_metadata
+
   # Handle failures ourselves, so we can dump useful info.
   set +o errexit
   set +o pipefail
@@ -331,12 +332,13 @@ EMIT_METRICS=0
 USING_EXISTING_CLUSTER=1
 GCP_PROJECT=""
 E2E_SCRIPT=""
+E2E_DEFAULT_CLUSTER_VERSION=""
 E2E_CLUSTER_VERSION=""
 
 # Parse flags and initialize the test cluster.
 function initialize() {
   E2E_SCRIPT="$(get_canonical_path $0)"
-  E2E_CLUSTER_VERSION="${SERVING_GKE_VERSION}"
+  E2E_DEFAULT_CLUSTER_VERSION="${SERVING_GKE_VERSION}"
 
   cd ${REPO_ROOT_DIR}
   while [[ $# -ne 0 ]]; do
@@ -364,7 +366,7 @@ function initialize() {
         shift
         [[ $# -ge 1 ]] || abort "missing version after --cluster-version"
         [[ $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || abort "kubernetes version must be 'X.Y.Z'"
-        E2E_CLUSTER_VERSION=$1
+        E2E_DEFAULT_CLUSTER_VERSION=$1
         ;;
       *)
         echo "usage: $0 [--run-tests][--emit-metrics][--cluster-version X.Y.Z][--gcp-project name]"
@@ -391,7 +393,7 @@ function initialize() {
 
   readonly RUN_TESTS
   readonly EMIT_METRICS
-  readonly E2E_CLUSTER_VERSION
+  readonly E2E_DEFAULT_CLUSTER_VERSION
   readonly GCP_PROJECT
   readonly IS_BOSKOS
 
