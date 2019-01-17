@@ -100,7 +100,7 @@ function download_k8s() {
     echo "Using command-line supplied version ${E2E_CLUSTER_VERSION}"
   fi
   # Download k8s to staging dir
-  version=v${E2E_CLUSTER_VERSION}
+  E2E_CLUSTER_VERSION=v${E2E_CLUSTER_VERSION}
   local staging_dir=${GOPATH}/src/k8s.io/kubernetes/_output/gcs-stage
   rm -fr ${staging_dir}
   staging_dir=${staging_dir}/${E2E_CLUSTER_VERSION}
