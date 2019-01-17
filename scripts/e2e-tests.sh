@@ -82,7 +82,6 @@ function go_test_e2e() {
 # Download the k8s binaries required by kubetest.
 # Parameters: $1 - GCP project that will host the test cluster.
 function download_k8s() {
-  local version=${E2E_DEFAULT_CLUSTER_VERSION}
   # Fetch valid versions
   local versions="$(gcloud container get-server-config \
       --project=$1 \
@@ -90,26 +89,26 @@ function download_k8s() {
       --region=${E2E_CLUSTER_REGION})"
   local gke_versions=(`echo -n ${versions//;/ /}`)
   echo "Valid GKE versions are [${versions//;/, }]"
-  if [[ "${version}" == "latest" ]]; then
+  if [[ "${E2E_CLUSTER_VERSION}" == "latest" ]]; then
     # Get first (latest) version, excluding the "-gke.#" suffix
-    version="${gke_versions[0]%-*}"
-    echo "Using latest version, ${version}"
-  elif [[ "${version}" == "default" ]]; then
+    E2E_CLUSTER_VERSION="${gke_versions[0]%-*}"
+    echo "Using latest version, ${E2E_CLUSTER_VERSION}"
+  elif [[ "${E2E_CLUSTER_VERSION}" == "default" ]]; then
     echo "ERROR: `default` GKE version is not supported yet"
     return 1
   else
-    echo "Using command-line supplied version ${version}"
+    echo "Using command-line supplied version ${E2E_CLUSTER_VERSION}"
   fi
   # Download k8s to staging dir
-  version=v${version}
+  version=v${E2E_CLUSTER_VERSION}
   local staging_dir=${GOPATH}/src/k8s.io/kubernetes/_output/gcs-stage
   rm -fr ${staging_dir}
-  staging_dir=${staging_dir}/${version}
+  staging_dir=${staging_dir}/${E2E_CLUSTER_VERSION}
   mkdir -p ${staging_dir}
   pushd ${staging_dir}
   export KUBERNETES_PROVIDER=gke
-  export KUBERNETES_RELEASE=${version}
-  export E2E_CLUSTER_VERSION=${version}
+  export KUBERNETES_RELEASE=${E2E_CLUSTER_VERSION}
+  readonly E2E_CLUSTER_VERSION
   curl -fsSL https://get.k8s.io | bash
   local result=$?
   if [[ ${result} -eq 0 ]]; then
@@ -332,13 +331,12 @@ EMIT_METRICS=0
 USING_EXISTING_CLUSTER=1
 GCP_PROJECT=""
 E2E_SCRIPT=""
-E2E_DEFAULT_CLUSTER_VERSION=""
 E2E_CLUSTER_VERSION=""
 
 # Parse flags and initialize the test cluster.
 function initialize() {
   E2E_SCRIPT="$(get_canonical_path $0)"
-  E2E_DEFAULT_CLUSTER_VERSION="${SERVING_GKE_VERSION}"
+  E2E_CLUSTER_VERSION="${SERVING_GKE_VERSION}"
 
   cd ${REPO_ROOT_DIR}
   while [[ $# -ne 0 ]]; do
@@ -366,7 +364,7 @@ function initialize() {
         shift
         [[ $# -ge 1 ]] || abort "missing version after --cluster-version"
         [[ $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || abort "kubernetes version must be 'X.Y.Z'"
-        E2E_DEFAULT_CLUSTER_VERSION=$1
+        E2E_CLUSTER_VERSION=$1
         ;;
       *)
         echo "usage: $0 [--run-tests][--emit-metrics][--cluster-version X.Y.Z][--gcp-project name]"
@@ -393,7 +391,6 @@ function initialize() {
 
   readonly RUN_TESTS
   readonly EMIT_METRICS
-  readonly E2E_DEFAULT_CLUSTER_VERSION
   readonly GCP_PROJECT
   readonly IS_BOSKOS
 
