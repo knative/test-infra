@@ -82,7 +82,6 @@ function go_test_e2e() {
 # Download the k8s binaries required by kubetest.
 # Parameters: $1 - GCP project that will host the test cluster.
 function download_k8s() {
-  local version=${E2E_CLUSTER_VERSION}
   # Fetch valid versions
   local versions="$(gcloud container get-server-config \
       --project=$1 \
@@ -90,25 +89,26 @@ function download_k8s() {
       --region=${E2E_CLUSTER_REGION})"
   local gke_versions=(`echo -n ${versions//;/ /}`)
   echo "Valid GKE versions are [${versions//;/, }]"
-  if [[ "${version}" == "latest" ]]; then
+  if [[ "${E2E_CLUSTER_VERSION}" == "latest" ]]; then
     # Get first (latest) version, excluding the "-gke.#" suffix
-    version="${gke_versions[0]%-*}"
-    echo "Using latest version, ${version}"
-  elif [[ "${version}" == "default" ]]; then
+    E2E_CLUSTER_VERSION="${gke_versions[0]%-*}"
+    echo "Using latest version, ${E2E_CLUSTER_VERSION}"
+  elif [[ "${E2E_CLUSTER_VERSION}" == "default" ]]; then
     echo "ERROR: `default` GKE version is not supported yet"
     return 1
   else
-    echo "Using command-line supplied version ${version}"
+    echo "Using command-line supplied version ${E2E_CLUSTER_VERSION}"
   fi
   # Download k8s to staging dir
-  version=v${version}
+  E2E_CLUSTER_VERSION=v${E2E_CLUSTER_VERSION}
   local staging_dir=${GOPATH}/src/k8s.io/kubernetes/_output/gcs-stage
   rm -fr ${staging_dir}
-  staging_dir=${staging_dir}/${version}
+  staging_dir=${staging_dir}/${E2E_CLUSTER_VERSION}
   mkdir -p ${staging_dir}
   pushd ${staging_dir}
   export KUBERNETES_PROVIDER=gke
-  export KUBERNETES_RELEASE=${version}
+  export KUBERNETES_RELEASE=${E2E_CLUSTER_VERSION}
+  readonly E2E_CLUSTER_VERSION
   curl -fsSL https://get.k8s.io | bash
   local result=$?
   if [[ ${result} -eq 0 ]]; then
@@ -141,6 +141,21 @@ function dump_cluster_state() {
   echo "***         E2E TEST FAILED         ***"
   echo "***     End of information dump     ***"
   echo "***************************************"
+}
+
+# On a Prow job, save some metadata about the test for Testgrid.
+function save_metadata() {
+  (( ! IS_PROW )) && return
+  cat << EOF > ${ARTIFACTS}/metadata.json
+{
+  "Region": "${E2E_CLUSTER_REGION}",
+  "Zone": "${E2E_CLUSTER_ZONE}",
+  "Machine": "${E2E_CLUSTER_MACHINE}",
+  "Version": "${E2E_CLUSTER_VERSION}",
+  "MinNodes": "${E2E_MIN_CLUSTER_NODES}",
+  "MaxNodes": "${E2E_MAX_CLUSTER_NODES}"
+}
+EOF
 }
 
 # Create a test cluster with kubetest and call the current script again.
@@ -228,6 +243,7 @@ function create_test_cluster() {
   fi
   local result="$(cat ${TEST_RESULT_FILE})"
   echo "Test result code is $result"
+
   exit ${result}
 }
 
@@ -273,6 +289,9 @@ function setup_test_cluster() {
   readonly K8S_CLUSTER_OVERRIDE
   readonly K8S_USER_OVERRIDE
   readonly DOCKER_REPO_OVERRIDE
+
+  # Save some metadata about cluster creation for using in prow and testgrid
+  save_metadata
 
   # Handle failures ourselves, so we can dump useful info.
   set +o errexit
@@ -372,7 +391,6 @@ function initialize() {
 
   readonly RUN_TESTS
   readonly EMIT_METRICS
-  readonly E2E_CLUSTER_VERSION
   readonly GCP_PROJECT
   readonly IS_BOSKOS
 
