@@ -125,16 +125,16 @@ func getTestTree(treeName string, t reflect.Type) *ResourceTree {
 	return &tree
 }
 
-func verifyBaseTypeNode(logPrefix string, data nodeData) error {
-	if len(data.children) != 2 {
-		return fmt.Errorf("%s Expected 2 children got only : %d", logPrefix, len(data.children))
+func verifyBaseTypeNode(logPrefix string, data NodeData) error {
+	if len(data.Children) != 2 {
+		return fmt.Errorf("%s Expected 2 Children got only : %d", logPrefix, len(data.Children))
 	}
 
-	if value, ok := data.children["field1"]; ok {
-		n := value.getData()
-		if !n.leafNode || n.fieldType.Kind() != reflect.String || n.fieldType.PkgPath() != "" || len(n.children) != 0 {
-			return fmt.Errorf("%s Unexpected field: field1. Expected leafNode:true, Kind: %s, pkgPath: '' Children: 0 Found leafNode: %t Kind: %s pkgPath: %s Children:%d",
-				logPrefix, reflect.String, n.leafNode, n.fieldType.Kind(), n.fieldType.PkgPath(), len(n.children))
+	if value, ok := data.Children["field1"]; ok {
+		n := value.GetData()
+		if !n.LeafNode || n.FieldType.Kind() != reflect.String || n.FieldType.PkgPath() != "" || len(n.Children) != 0 {
+			return fmt.Errorf("%s Unexpected field: field1. Expected LeafNode:true, Kind: %s, pkgPath: '' Children: 0 Found LeafNode: %t Kind: %s pkgPath: %s Children:%d",
+				logPrefix, reflect.String, n.LeafNode, n.FieldType.Kind(), n.FieldType.PkgPath(), len(n.Children))
 		}
 	} else {
 		return fmt.Errorf("%s field1 child Not found", logPrefix)
@@ -143,89 +143,89 @@ func verifyBaseTypeNode(logPrefix string, data nodeData) error {
 	return nil
 }
 
-func verifyPtrNode(data nodeData) error {
-	if len(data.children) != 2 {
-		return fmt.Errorf("Expected 2 children got: %d", len(data.children))
+func verifyPtrNode(data NodeData) error {
+	if len(data.Children) != 2 {
+		return fmt.Errorf("Expected 2 Children got: %d", len(data.Children))
 	}
 
-	child := data.children["structPtr"]
-	if len(child.getData().children) != 1 {
-		return fmt.Errorf("Unexpected size for field:structPtr. Expected : 1, Found : %d", len(child.getData().children))
+	child := data.Children["structPtr"]
+	if len(child.GetData().Children) != 1 {
+		return fmt.Errorf("Unexpected size for field:structPtr. Expected : 1, Found : %d", len(child.GetData().Children))
 	}
 
-	child = child.getData().children["structPtr-ptr"]
-	if err := verifyBaseTypeNode("child structPtr-ptr: ", child.getData()); err != nil {
+	child = child.GetData().Children["structPtr-ptr"]
+	if err := verifyBaseTypeNode("child structPtr-ptr: ", child.GetData()); err != nil {
 		return err
 	}
 
-	child = data.children["basePtr"]
-	if len(child.getData().children) != 1 {
-		return fmt.Errorf("Unexpected size for field:basePtr. Expected : 1 Found : %d", len(child.getData().children))
+	child = data.Children["basePtr"]
+	if len(child.GetData().Children) != 1 {
+		return fmt.Errorf("Unexpected size for field:basePtr. Expected : 1 Found : %d", len(child.GetData().Children))
 	}
 
-	child = child.getData().children["basePtr-ptr"]
-	d := child.getData()
-	if d.fieldType.Kind() != reflect.Float32 || !d.leafNode || d.fieldType.PkgPath() != "" || len(d.children) != 0 {
-		return fmt.Errorf("Unexpected field:basePtr-ptr: Expected: Kind: %s, leafNode: true, pkgPath: '' Children: 0 Found Kind: %s, leafNode: %t, pkgPath: %s children:%d",
-			reflect.Float32, d.fieldType.Kind(), d.leafNode, d.fieldType.PkgPath(), len(d.children))
+	child = child.GetData().Children["basePtr-ptr"]
+	d := child.GetData()
+	if d.FieldType.Kind() != reflect.Float32 || !d.LeafNode || d.FieldType.PkgPath() != "" || len(d.Children) != 0 {
+		return fmt.Errorf("Unexpected field:basePtr-ptr: Expected: Kind: %s, LeafNode: true, pkgPath: '' Children: 0 Found Kind: %s, LeafNode: %t, pkgPath: %s Children:%d",
+			reflect.Float32, d.FieldType.Kind(), d.LeafNode, d.FieldType.PkgPath(), len(d.Children))
 	}
 
 	return nil
 }
 
-func verifyArrayNode(data nodeData) error {
-	if len(data.children) != 2 {
-		return fmt.Errorf("Expected 2 children got: %d", len(data.children))
+func verifyArrayNode(data NodeData) error {
+	if len(data.Children) != 2 {
+		return fmt.Errorf("Expected 2 Children got: %d", len(data.Children))
 	}
 
-	child := data.children["structArr"]
-	d := child.getData()
-	if d.fieldType.Kind() != reflect.Slice {
-		return fmt.Errorf("Unexpected kind for field:structArr: Expected : %s Found: %s", reflect.Slice, d.fieldType.Kind())
-	} else if len(d.children) != 1 {
-		return fmt.Errorf("Unexpected number of children for field:structArr: Expected : 1 Found : %d", len(d.children))
+	child := data.Children["structArr"]
+	d := child.GetData()
+	if d.FieldType.Kind() != reflect.Slice {
+		return fmt.Errorf("Unexpected kind for field:structArr: Expected : %s Found: %s", reflect.Slice, d.FieldType.Kind())
+	} else if len(d.Children) != 1 {
+		return fmt.Errorf("Unexpected number of Children for field:structArr: Expected : 1 Found : %d", len(d.Children))
 	}
 
-	child = child.getData().children["structArr-arr"]
-	if err := verifyBaseTypeNode("child structArr-arr:", child.getData()); err != nil {
+	child = child.GetData().Children["structArr-arr"]
+	if err := verifyBaseTypeNode("child structArr-arr:", child.GetData()); err != nil {
 		return err
 	}
 
-	child = data.children["baseArr"]
-	d = child.getData()
-	if d.fieldType.Kind() != reflect.Slice {
-		return fmt.Errorf("Unexpected kind for field:baseArr: Expected : %s Found : %s", reflect.Slice, d.fieldType.Kind())
-	} else if len(d.children) != 1 {
-		return fmt.Errorf("Unexpected number of children for field:baseArr: Expected : 1 Found : %d", len(d.children))
+	child = data.Children["baseArr"]
+	d = child.GetData()
+	if d.FieldType.Kind() != reflect.Slice {
+		return fmt.Errorf("Unexpected kind for field:baseArr: Expected : %s Found : %s", reflect.Slice, d.FieldType.Kind())
+	} else if len(d.Children) != 1 {
+		return fmt.Errorf("Unexpected number of Children for field:baseArr: Expected : 1 Found : %d", len(d.Children))
 	}
 
-	child = child.getData().children["baseArr-arr"]
-	d = child.getData()
-	if d.fieldType.Kind() != reflect.Bool || !d.leafNode || d.fieldType.PkgPath() != "" || len(d.children) != 0 {
-		return fmt.Errorf("Unexpected field:baseArr-arr Expected kind: %s, leafNode: true, pkgPath: '', children:0 Found: kind: %s, leafNode: %t, pkgPath: %s, children:%d",
-			reflect.Bool, d.fieldType.Kind(), d.leafNode, d.fieldType.PkgPath(), len(d.children))
+	child = child.GetData().Children["baseArr-arr"]
+	d = child.GetData()
+	if d.FieldType.Kind() != reflect.Bool || !d.LeafNode || d.FieldType.PkgPath() != "" || len(d.Children) != 0 {
+		return fmt.Errorf("Unexpected field:baseArr-arr Expected kind: %s, LeafNode: true, pkgPath: '', Children:0 Found: kind: %s, LeafNode: %t, pkgPath: %s, Children:%d",
+			reflect.Bool, d.FieldType.Kind(), d.LeafNode, d.FieldType.PkgPath(), len(d.Children))
 	}
 
 	return nil
 }
 
-func verifyOtherTypeNode(data nodeData) error {
-	if len(data.children) != 2 {
-		return fmt.Errorf("OtherTypeVerification: Expected 2 children got: %d", len(data.children))
+func verifyOtherTypeNode(data NodeData) error {
+	if len(data.Children) != 2 {
+		return fmt.Errorf("OtherTypeVerification: Expected 2 Children got: %d", len(data.Children))
 	}
 
-	child := data.children["structMap"]
-	d := child.getData()
-	if d.fieldType.Kind() != reflect.Map || !d.leafNode || len(d.children) != 0 {
-		return fmt.Errorf("Unexpected field:structMap - Expected Kind: %s, leafNode: true, children:0 Found Kind: %s, leafNode: %t, children: %d",
-			reflect.Map, d.fieldType.Kind(), d.leafNode, len(d.children))
+	child := data.Children["structMap"]
+	d := child.GetData()
+	if d.FieldType.Kind() != reflect.Map || !d.LeafNode || len(d.Children) != 0 {
+		return fmt.Errorf("Unexpected field:structMap - Expected Kind: %s, LeafNode: true, Children:0 Found Kind: %s, LeafNode: %t, Children: %d",
+			reflect.Map, d.FieldType.Kind(), d.LeafNode, len(d.Children))
 	}
 
-	child = data.children["baseMap"]
-	d = child.getData()
-	if d.fieldType.Kind() != reflect.Map || !d.leafNode || len(d.children) != 0 {
-		return fmt.Errorf("Unexpected field:structMap - Expected Kind: %s, leafNode: true, children: 0 Found kind: %s, leafNode: %t, children: %d",
-			reflect.Map, d.fieldType.Kind(), d.leafNode, len(d.children))
+	child = data.Children["baseMap"]
+	d = child.GetData()
+	if d.FieldType.Kind() != reflect.Map || !d.LeafNode || len(d.Children) != 0 {
+		return fmt.Errorf("Unexpected field:structMap - Expected Kind: %s, LeafNode: true, Children: 0 Found kind: %s, LeafNode: %t, Children: %d",
+			reflect.Map, d.FieldType.Kind(), d.LeafNode, len(d.Children))
 	}
 
 	return nil
@@ -254,41 +254,41 @@ func verifyResourceForest(forest *ResourceForest) error {
 }
 
 func verifyBaseTypeValue(logPrefix string, node NodeInterface) error {
-	if !node.getData().covered {
-		return errors.New(logPrefix + " Node marked as not-covered. Expected to be covered")
+	if !node.GetData().Covered {
+		return errors.New(logPrefix + " Node marked as not-Covered. Expected to be Covered")
 	}
 
-	if !node.getData().children["field1"].getData().covered {
-		return errors.New(logPrefix + " field1 marked as not-covered. Expected to be covered")
+	if !node.GetData().Children["field1"].GetData().Covered {
+		return errors.New(logPrefix + " field1 marked as not-Covered. Expected to be Covered")
 	}
 
-	if node.getData().children["field2"].getData().covered {
-		return errors.New(logPrefix + " field2 marked as covered. Expected to be not-covered")
+	if node.GetData().Children["field2"].GetData().Covered {
+		return errors.New(logPrefix + " field2 marked as Covered. Expected to be not-Covered")
 	}
 
 	return nil
 }
 
 func verifyPtrValueAllCovered(node NodeInterface) error {
-	if !node.getData().covered {
-		return errors.New("Node marked as not-covered. Expected to be covered")
+	if !node.GetData().Covered {
+		return errors.New("Node marked as not-Covered. Expected to be Covered")
 	}
 
-	child := node.getData().children["basePtr"]
-	if !child.getData().covered {
-		return errors.New("field:base_ptr marked as not-covered. Expected to be covered")
+	child := node.GetData().Children["basePtr"]
+	if !child.GetData().Covered {
+		return errors.New("field:base_ptr marked as not-Covered. Expected to be Covered")
 	}
 
-	if !child.getData().children["basePtr" + ptrNodeNameSuffix].getData().covered {
-		return errors.New("field:basePtr" + ptrNodeNameSuffix + "marked as not-covered. Expected to be covered" )
+	if !child.GetData().Children["basePtr" + ptrNodeNameSuffix].GetData().Covered {
+		return errors.New("field:basePtr" + ptrNodeNameSuffix + "marked as not-Covered. Expected to be Covered" )
 	}
 
-	child = node.getData().children["structPtr"]
-	if !child.getData().covered {
-		return errors.New("field:structPtr marked as not-covered. Expected to be covered")
+	child = node.GetData().Children["structPtr"]
+	if !child.GetData().Covered {
+		return errors.New("field:structPtr marked as not-Covered. Expected to be Covered")
 	}
 
-	if err := verifyBaseTypeValue("field:structPtr" + ptrNodeNameSuffix, child.getData().children["structPtr" + ptrNodeNameSuffix]); err != nil {
+	if err := verifyBaseTypeValue("field:structPtr" + ptrNodeNameSuffix, child.GetData().Children["structPtr" + ptrNodeNameSuffix]); err != nil {
 		return err
 	}
 
@@ -296,25 +296,25 @@ func verifyPtrValueAllCovered(node NodeInterface) error {
 }
 
 func verifyPtrValueSomeCovered(node NodeInterface) error {
-	if !node.getData().covered {
-		return errors.New("Node marked as not-covered. Expected to be covered")
+	if !node.GetData().Covered {
+		return errors.New("Node marked as not-Covered. Expected to be Covered")
 	}
 
-	child := node.getData().children["basePtr"]
-	if child.getData().covered {
-		return errors.New("field:basePtr marked as covered. Expected to be not-covered")
+	child := node.GetData().Children["basePtr"]
+	if child.GetData().Covered {
+		return errors.New("field:basePtr marked as Covered. Expected to be not-Covered")
 	}
 
-	if child.getData().children["basePtr" + ptrNodeNameSuffix].getData().covered {
-		return errors.New("field:basePtr" + ptrNodeNameSuffix + "marked as covered. Expected to be not-covered" )
+	if child.GetData().Children["basePtr" + ptrNodeNameSuffix].GetData().Covered {
+		return errors.New("field:basePtr" + ptrNodeNameSuffix + "marked as Covered. Expected to be not-Covered" )
 	}
 
-	child = node.getData().children["structPtr"]
-	if !child.getData().covered {
-		return errors.New("field:structPtr marked as not-covered. Expected to be covered")
+	child = node.GetData().Children["structPtr"]
+	if !child.GetData().Covered {
+		return errors.New("field:structPtr marked as not-Covered. Expected to be Covered")
 	}
 
-	if err := verifyBaseTypeValue("field:structPtr" + ptrNodeNameSuffix, child.getData().children["structPtr" + ptrNodeNameSuffix]); err != nil {
+	if err := verifyBaseTypeValue("field:structPtr" + ptrNodeNameSuffix, child.GetData().Children["structPtr" + ptrNodeNameSuffix]); err != nil {
 		return err
 	}
 
@@ -322,60 +322,60 @@ func verifyPtrValueSomeCovered(node NodeInterface) error {
 }
 
 func verifyArryValueAllCovered(node NodeInterface) error {
-	if !node.getData().covered {
-		return errors.New("Node marked as not-covered. Expected to be covered")
+	if !node.GetData().Covered {
+		return errors.New("Node marked as not-Covered. Expected to be Covered")
 	}
 
-	child := node.getData().children["baseArr"]
-	if !child.getData().covered {
-		return errors.New("field:baseArr marked as not-covered. Expected to be covered")
+	child := node.GetData().Children["baseArr"]
+	if !child.GetData().Covered {
+		return errors.New("field:baseArr marked as not-Covered. Expected to be Covered")
 	}
 
-	if !child.getData().children["baseArr" + arrayNodeNameSuffix].getData().covered {
-		return errors.New("field:baseArr" + arrayNodeNameSuffix + " marked as not-covered. Expected to be covered" )
+	if !child.GetData().Children["baseArr" + arrayNodeNameSuffix].GetData().Covered {
+		return errors.New("field:baseArr" + arrayNodeNameSuffix + " marked as not-Covered. Expected to be Covered" )
 	}
 
-	child = node.getData().children["structArr"]
-	if !child.getData().covered {
-		return errors.New("field:structArr marked as not-covered. Expected to be covered")
+	child = node.GetData().Children["structArr"]
+	if !child.GetData().Covered {
+		return errors.New("field:structArr marked as not-Covered. Expected to be Covered")
 	}
 
-	child = child.getData().children["structArr" + arrayNodeNameSuffix]
-	if !child.getData().covered {
-		return errors.New("structArr" + arrayNodeNameSuffix + " marked as not-covered. Expected to be covered")
+	child = child.GetData().Children["structArr" + arrayNodeNameSuffix]
+	if !child.GetData().Covered {
+		return errors.New("structArr" + arrayNodeNameSuffix + " marked as not-Covered. Expected to be Covered")
 	}
 
-	if !child.getData().children["field1"].getData().covered {
-		return errors.New("structArr" + arrayNodeNameSuffix + ".field1 marked as not-covered. Expected to be covered")
+	if !child.GetData().Children["field1"].GetData().Covered {
+		return errors.New("structArr" + arrayNodeNameSuffix + ".field1 marked as not-Covered. Expected to be Covered")
 	}
 
-	if !child.getData().children["field2"].getData().covered {
-		return errors.New("structArr" + arrayNodeNameSuffix +".field1 marked as not-covered. Expected to be covered")
+	if !child.GetData().Children["field2"].GetData().Covered {
+		return errors.New("structArr" + arrayNodeNameSuffix +".field1 marked as not-Covered. Expected to be Covered")
 	}
 
 	return nil
 }
 
 func verifyArrValueSomeCovered(node NodeInterface) error {
-	if !node.getData().covered {
-		return errors.New("Node marked as not-covered. Expected to be covered")
+	if !node.GetData().Covered {
+		return errors.New("Node marked as not-Covered. Expected to be Covered")
 	}
 
-	child := node.getData().children["baseArr"]
-	if child.getData().covered {
-		return errors.New("field:baseArr marked as covered. Expected to be not-covered")
+	child := node.GetData().Children["baseArr"]
+	if child.GetData().Covered {
+		return errors.New("field:baseArr marked as Covered. Expected to be not-Covered")
 	}
 
-	if child.getData().children["baseArr" + arrayNodeNameSuffix].getData().covered {
-		return errors.New("field:baseArr" + arrayNodeNameSuffix + " marked as covered. Expected to be not-covered" )
+	if child.GetData().Children["baseArr" + arrayNodeNameSuffix].GetData().Covered {
+		return errors.New("field:baseArr" + arrayNodeNameSuffix + " marked as Covered. Expected to be not-Covered" )
 	}
 
-	child = node.getData().children["structArr"]
-	if !child.getData().covered {
-		return errors.New("field:structArr marked as not-covered. Expected to be covered")
+	child = node.GetData().Children["structArr"]
+	if !child.GetData().Covered {
+		return errors.New("field:structArr marked as not-Covered. Expected to be Covered")
 	}
 
-	if err := verifyBaseTypeValue("field:structArr" + arrayNodeNameSuffix, child.getData().children["structArr" + arrayNodeNameSuffix]); err != nil {
+	if err := verifyBaseTypeValue("field:structArr" + arrayNodeNameSuffix, child.GetData().Children["structArr" + arrayNodeNameSuffix]); err != nil {
 		return err
 	}
 
@@ -383,16 +383,16 @@ func verifyArrValueSomeCovered(node NodeInterface) error {
 }
 
 func verifyOtherTypeValue(node NodeInterface) error {
-	if !node.getData().covered {
-		return errors.New("Node marked as not-covered. Expected to be covered")
+	if !node.GetData().Covered {
+		return errors.New("Node marked as not-Covered. Expected to be Covered")
 	}
 
-	if !node.getData().children["structMap"].getData().covered {
-		return errors.New("field:structMap marked as not-covered. Expected to be covered")
+	if !node.GetData().Children["structMap"].GetData().Covered {
+		return errors.New("field:structMap marked as not-Covered. Expected to be Covered")
 	}
 
-	if node.getData().children["baseMap"].getData().covered {
-		return errors.New("field:baseMap marked as covered. Expected to be not-covered")
+	if node.GetData().Children["baseMap"].GetData().Covered {
+		return errors.New("field:baseMap marked as Covered. Expected to be not-Covered")
 	}
 
 	return nil

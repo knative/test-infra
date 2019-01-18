@@ -28,36 +28,37 @@ const (
 
 // PtrKindNode represents nodes in the resource tree of type reflect.Kind.Ptr, reflect.Kind.UnsafePointer, etc.
 type PtrKindNode struct {
-	nodeData
+	NodeData
 	objKind reflect.Kind // Type of the object being pointed to. Eg: *int will store reflect.Kind.Int. This is required for type-expansion and value-evaluation decisions.
 }
 
-func (p *PtrKindNode) getData() nodeData {
-	return p.nodeData
+// GetData returns node data
+func (p *PtrKindNode) GetData() NodeData {
+	return p.NodeData
 }
 
 func (p *PtrKindNode) initialize(field string, parent NodeInterface, t reflect.Type, rt *ResourceTree) {
-	p.nodeData.initialize(field, parent, t, rt)
+	p.NodeData.initialize(field, parent, t, rt)
 	p.objKind = t.Elem().Kind()
 }
 
 func (p *PtrKindNode) buildChildNodes(t reflect.Type) {
-	childName := p.field + ptrNodeNameSuffix
-	childNode := p.tree.createNode(childName, p, t.Elem())
-	p.children[childName] = childNode
+	childName := p.Field + ptrNodeNameSuffix
+	childNode := p.Tree.createNode(childName, p, t.Elem())
+	p.Children[childName] = childNode
 	childNode.buildChildNodes(t.Elem())
 }
 
 func (p *PtrKindNode) updateCoverage(v reflect.Value) {
 	if !v.IsNil() {
-		p.covered = true
-		p.children[p.field + ptrNodeNameSuffix].updateCoverage(v.Elem())
+		p.Covered = true
+		p.Children[p.Field + ptrNodeNameSuffix].updateCoverage(v.Elem())
 	}
 }
 
 func (p *PtrKindNode) buildCoverageData(typeCoverage []coveragecalculator.TypeCoverage, nodeRules NodeRules, fieldRules FieldRules) {
 	if p.objKind == reflect.Struct {
-		p.children[p.field + ptrNodeNameSuffix].buildCoverageData(typeCoverage, nodeRules, fieldRules)
+		p.Children[p.Field + ptrNodeNameSuffix].buildCoverageData(typeCoverage, nodeRules, fieldRules)
 	}
 }
 

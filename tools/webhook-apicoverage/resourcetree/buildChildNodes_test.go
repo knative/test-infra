@@ -23,28 +23,28 @@ import (
 
 func TestSimpleStructType(t *testing.T) {
 	tree := getTestTree(basicTypeName, reflect.TypeOf(baseType{}))
-	if err := verifyBaseTypeNode("", tree.Root.getData()); err  != nil {
+	if err := verifyBaseTypeNode("", tree.Root.GetData()); err  != nil {
 		t.Fatal(err)
 	}
 }
 
 func TestPtrType(t *testing.T) {
 	tree := getTestTree(ptrTypeName, reflect.TypeOf(ptrType{}))
-	if err := verifyPtrNode(tree.Root.getData()); err != nil {
+	if err := verifyPtrNode(tree.Root.GetData()); err != nil {
 		t.Fatal(err)
 	}
 }
 
 func TestArrayType(t *testing.T) {
 	tree := getTestTree(arrayTypeName, reflect.TypeOf(arrayType{}))
-	if err := verifyArrayNode(tree.Root.getData()); err != nil {
+	if err := verifyArrayNode(tree.Root.GetData()); err != nil {
 		t.Fatal(err)
 	}
 }
 
 func TestOtherType(t *testing.T) {
 	tree := getTestTree(otherTypeName, reflect.TypeOf(otherType{}))
-	if err := verifyOtherTypeNode(tree.Root.getData()); err != nil {
+	if err := verifyOtherTypeNode(tree.Root.GetData()); err != nil {
 		t.Fatal(err)
 	}
 }

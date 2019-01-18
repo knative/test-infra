@@ -28,22 +28,23 @@ const (
 
 // StructKindNode represents nodes in the resource tree of type reflect.Kind.Struct
 type StructKindNode struct {
-	nodeData
+	NodeData
 }
 
-func (s *StructKindNode) getData() nodeData {
-	return s.nodeData
+// GetData returns node data
+func (s *StructKindNode) GetData() NodeData {
+	return s.NodeData
 }
 
 func (s *StructKindNode) initialize(field string, parent NodeInterface, t reflect.Type, rt *ResourceTree) {
-	s.nodeData.initialize(field, parent, t, rt)
+	s.NodeData.initialize(field, parent, t, rt)
 }
 
 func (s *StructKindNode) buildChildNodes(t reflect.Type) {
 	// For types that are part of the standard package, we treat them as leaf nodes and don't expand further.
 	// https://golang.org/pkg/reflect/#StructField.
-	if len(s.fieldType.PkgPath()) == 0 {
-		s.leafNode = true
+	if len(s.FieldType.PkgPath()) == 0 {
+		s.LeafNode = true
 		return
 	}
 
@@ -51,11 +52,11 @@ func (s *StructKindNode) buildChildNodes(t reflect.Type) {
 		var childNode NodeInterface
 		if s.isTimeNode(t.Field(i).Type) {
 			childNode = new(TimeTypeNode)
-			childNode.initialize(t.Field(i).Name, s, t.Field(i).Type, s.tree)
+			childNode.initialize(t.Field(i).Name, s, t.Field(i).Type, s.Tree)
 		} else {
-			childNode = s.tree.createNode(t.Field(i).Name, s, t.Field(i).Type)
+			childNode = s.Tree.createNode(t.Field(i).Name, s, t.Field(i).Type)
 		}
-		s.children[t.Field(i).Name] = childNode
+		s.Children[t.Field(i).Name] = childNode
 		childNode.buildChildNodes(t.Field(i).Type)
 	}
 }
@@ -72,25 +73,25 @@ func (s *StructKindNode) isTimeNode(t reflect.Type) bool {
 
 func (s *StructKindNode) updateCoverage(v reflect.Value) {
 	if v.IsValid() {
-		s.covered = true
-		if !s.leafNode {
+		s.Covered = true
+		if !s.LeafNode {
 			for i := 0; i < v.NumField(); i++ {
-				s.children[v.Type().Field(i).Name].updateCoverage(v.Field(i))
+				s.Children[v.Type().Field(i).Name].updateCoverage(v.Field(i))
 			}
 		}
 	}
 }
 
 func (s *StructKindNode) buildCoverageData(typeCoverage []coveragecalculator.TypeCoverage, nodeRules NodeRules, fieldRules FieldRules) {
-	if len(s.children) == 0 {
+	if len(s.Children) == 0 {
 		return
 	}
 
-	coverage := s.tree.Forest.getConnectedNodeCoverage(s.fieldType, fieldRules)
+	coverage := s.Tree.Forest.getConnectedNodeCoverage(s.FieldType, fieldRules)
 	typeCoverage = append(typeCoverage, coverage)
 
-	for _, value := range s.children {
-		if value.getData().covered && nodeRules.Apply(value){
+	for _, value := range s.Children {
+		if value.GetData().Covered && nodeRules.Apply(value){
 			value.buildCoverageData(typeCoverage, nodeRules, fieldRules)
 		}
 	}

@@ -26,34 +26,35 @@ import (
 
 // BasicTypeKindNode represents resource tree node of basic types like int, float, etc.
 type BasicTypeKindNode struct {
-	nodeData
+	NodeData
 	values map[string]bool // Values seen for this node. Useful for enum types.
 	possibleEnum bool // Flag to indicate if this is a possible enum.
 }
 
-func (b *BasicTypeKindNode) getData() nodeData {
-	return b.nodeData
+// GetData returns node data
+func (b *BasicTypeKindNode) GetData() NodeData {
+	return b.NodeData
 }
 
 func (b *BasicTypeKindNode) initialize(field string, parent NodeInterface, t reflect.Type, rt *ResourceTree) {
-	b.nodeData.initialize(field, parent, t, rt)
+	b.NodeData.initialize(field, parent, t, rt)
 	b.values = make(map[string]bool)
-	b.nodeData.leafNode = true
+	b.NodeData.LeafNode = true
 }
 
 func (b *BasicTypeKindNode) buildChildNodes(t reflect.Type) {
 	// Treating bools as possible enums to support tighter coverage information.
-	if t.Name() != t.Kind().String() || b.fieldType.Kind() == reflect.Bool {
+	if t.Name() != t.Kind().String() || b.FieldType.Kind() == reflect.Bool {
 		b.possibleEnum = true
 	}
 }
 
 func (b *BasicTypeKindNode) updateCoverage(v reflect.Value) {
 	if value := b.string(v); len(value) > 0 {
-		if b.possibleEnum || b.fieldType.Kind() == reflect.Bool {
+		if b.possibleEnum || b.FieldType.Kind() == reflect.Bool {
 			b.addValue(value)
 		}
-		b.covered = true
+		b.Covered = true
 	}
 }
 
