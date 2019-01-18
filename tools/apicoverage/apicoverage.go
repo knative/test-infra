@@ -1,5 +1,5 @@
 /*
-Copyright 2018 The Knative Authors
+Copyright 2019 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ limitations under the License.
 package main
 
 import (
-	"context"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -30,13 +29,14 @@ import (
 	"strings"
 
 	"github.com/knative/serving/pkg/apis/serving/v1alpha1"
-	"github.com/knative/test-infra/shared/gcs"
+	"github.com/knative/test-infra/shared/prow"
 	"github.com/knative/test-infra/shared/testgrid"
+	"github.com/knative/test-infra/shared/junit"
 )
 
 const (
-	logDir         = "logs/ci-knative-serving-continuous"
-	buildFile      = "build-log.txt"
+	targetJob      = "ci-knative-serving-continuous"
+	targetRepo     = "serving"
 	apiCoverage    = "api_coverage"
 	overallRoute   = "OverallRoute"
 	overallConfig  = "OverallConfiguration"
@@ -187,59 +187,65 @@ func getRelevantLogs(fields []string) *string {
 	return nil
 }
 
-func createCases(tcName string, covered map[string]int, notCovered map[string]int) []testgrid.TestCase {
-	var tc []testgrid.TestCase
-
+func addTestCases(tcName string, covered map[string]int, notCovered map[string]int, testSuite *junit.TestSuite) {
 	if (len(covered) == 0 && len(notCovered) == 0) {
-		return tc
+		return
 	}
 
 	var percentCovered = float32(100 * len(covered) / (len(covered) + len(notCovered)))
-	tp := []testgrid.TestProperty{testgrid.TestProperty{Name: apiCoverage, Value: percentCovered}}
-	tc = append(tc, testgrid.TestCase{Name: tcName, Properties: testgrid.TestProperties{Property: tp}, Fail: false})
+	testCase := junit.TestCase{Name: tcName}
+	testCase.AddProperty(apiCoverage, fmt.Sprintf("%f", percentCovered))
+	testSuite.TestCases = append(testSuite.TestCases, testCase)
 
 	for key, value := range covered {
-		tp := []testgrid.TestProperty{testgrid.TestProperty{Name: apiCoverage, Value: float32(value)}}
-		tc = append(tc, testgrid.TestCase{Name: tcName + "/" + key, Properties: testgrid.TestProperties{Property: tp}, Fail: false})
+		coveredTestCase := junit.TestCase{Name: tcName + "/" + key}
+		coveredTestCase.AddProperty(apiCoverage, fmt.Sprintf("%d", value))
+		testSuite.TestCases = append(testSuite.TestCases, coveredTestCase)
 	}
 
 	for key, value := range notCovered {
-		tp := []testgrid.TestProperty{testgrid.TestProperty{Name: apiCoverage, Value: float32(value)}}
-		tc = append(tc, testgrid.TestCase{Name: tcName + "/" + key, Properties: testgrid.TestProperties{Property: tp}, Fail: true})
+		notCoveredTestCase := junit.TestCase{Name: tcName + "/" + key}
+		notCoveredTestCase.AddProperty(apiCoverage, fmt.Sprintf("%d", value))
+		failureMessage := "failure"
+		notCoveredTestCase.Failure = &failureMessage
+		testSuite.TestCases = append(testSuite.TestCases, notCoveredTestCase)
 	}
-	return tc
 }
 
-func createTestgridXML(coverage *OverallAPICoverage, artifactsDir string) {
-	tc := createCases(overallRoute, coverage.RouteAPICovered, coverage.RouteAPINotCovered)
-	tc = append(tc, createCases(overallConfig, coverage.ConfigurationAPICovered, coverage.ConfigurationAPINotCovered)...)
-	tc = append(tc, createCases(overallService, coverage.ServiceAPICovered, coverage.ServiceAPINotCovered)...)
-	ts := testgrid.TestSuite{TestCases: tc}
+func createTestgridXML(coverage *OverallAPICoverage) {
+	testSuite := junit.TestSuite{Name: ""}
+	addTestCases(overallRoute, coverage.RouteAPICovered, coverage.RouteAPINotCovered, &testSuite)
+	addTestCases(overallConfig, coverage.ConfigurationAPICovered, coverage.ConfigurationAPINotCovered, &testSuite)
+	addTestCases(overallService, coverage.ServiceAPICovered, coverage.ServiceAPINotCovered, &testSuite)
 
-	if err := testgrid.CreateXMLOutput(ts, artifactsDir, "apicoverage"); err != nil {
+	testSuites := junit.TestSuites{}
+	testSuites.AddTestSuite(&testSuite)
+	if err := testgrid.CreateXMLOutput(&testSuites, "apicoverage"); err != nil {
 		log.Fatalf("Cannot create the xml output file: %v", err)
 	}
 }
 
 func main() {
-
-	artifactsDir := flag.String("artifacts-dir", "./artifacts", "Directory to store the generated XML file")
 	serviceAccount := flag.String("service-account", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"), "JSON key file for service account to use")
 	flag.Parse()
 
-	// Read the latest-build.txt file to get the latest build number
-	ctx := context.Background()
-	num, err := gcs.GetLatestBuildNumber(ctx, logDir, *serviceAccount)
+	// Explicit authenticate with gcs Client
+	prow.Initialize(*serviceAccount)
+
+	jobToMonitor := prow.NewJob(targetJob, prow.PostsubmitJob, targetRepo, 0)
+	num, err := jobToMonitor.GetLatestBuildNumber()
 	if err != nil {
 		log.Fatalf("Cannot get latest build number: %v", err)
 	}
 
 	// Calculate coverage
 	coverage := initCoverage()
-	calculateCoverage(
-		gcs.ParseLog(ctx, fmt.Sprintf("%s/%d/%s", logDir, num, buildFile), getRelevantLogs),
-		coverage)
+	logs, err := jobToMonitor.NewBuild(num).ParseLog(getRelevantLogs)
+	if nil != err {
+		log.Fatalf("Failed parsing logs: %v", err)
+	}
+	calculateCoverage(logs, coverage)
 
 	// Write the testgrid xml to artifacts
-	createTestgridXML(coverage, *artifactsDir)
+	createTestgridXML(coverage)
 }
