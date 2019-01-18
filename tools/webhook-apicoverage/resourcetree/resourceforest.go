@@ -18,6 +18,10 @@ package resourcetree
 
 import (
 	"container/list"
+	"reflect"
+	"strings"
+
+	"github.com/knative/test-infra/tools/webhook-apicoverage/coveragecalculator"
 )
 
 // ResourceForest represents the top-level forest that contains individual resource trees for top-level resource types and all connected nodes across resource trees.
@@ -25,4 +29,30 @@ type ResourceForest struct {
 	Version string
 	TopLevelTrees map[string]ResourceTree // Key is ResourceTree.ResourceName
 	ConnectedNodes map[string]*list.List // Head of the linked list keyed by nodeData.fieldType.pkg + nodeData.fieldType.Name()
+}
+
+// getConnectedNodeCoverage calculates the outlined coverage for a Type using ConnectedNodes linkedlist. We traverse through each element in the linkedlist and merge
+// coverage data into a single coveragecalculator.TypeCoverage object.
+func (r *ResourceForest) getConnectedNodeCoverage(fieldType reflect.Type, fieldRules FieldRules) (coveragecalculator.TypeCoverage){
+	coverage := coveragecalculator.TypeCoverage{
+		Type: fieldType.Name(),
+		Package: strings.Replace(fieldType.PkgPath(), "/", ".", -1),
+	}
+
+	if value, ok := r.ConnectedNodes[fieldType.PkgPath() + "." + fieldType.Name()]; ok {
+		for elem := value.Front(); elem != nil; elem = elem.Next() {
+			node := elem.Value.(NodeInterface)
+			for field, v := range node.getData().children {
+				if fieldRules.Apply(field) {
+					if _, ok := coverage.Fields[field]; !ok {
+						coverage.Fields[field] = new(coveragecalculator.FieldCoverage)
+					}
+					// merge values across the list.
+					coverage.Fields[field].Merge(v.getData().covered, v.getValues())
+				}
+			}
+		}
+	}
+
+	return coverage
 }

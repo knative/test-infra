@@ -18,6 +18,8 @@ package resourcetree
 
 import (
 	"reflect"
+
+	"github.com/knative/test-infra/tools/webhook-apicoverage/coveragecalculator"
 )
 
 // OtherKindNode represents nodes in the resource tree of types like maps, interfaces, etc
@@ -40,4 +42,11 @@ func (o *OtherKindNode) updateCoverage(v reflect.Value) {
 	if !v.IsNil() {
 		o.covered = true
 	}
+}
+
+// no-op as the coverage is calculated as field coverage in parent node.
+func (o * OtherKindNode) buildCoverageData(typeCoverage []coveragecalculator.TypeCoverage, nodeRules NodeRules, fieldRules FieldRules) {}
+
+func (o *OtherKindNode) getValues() ([]string) {
+	return nil
 }

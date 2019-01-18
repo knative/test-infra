@@ -18,6 +18,8 @@ package resourcetree
 
 import (
 	"reflect"
+
+	"github.com/knative/test-infra/tools/webhook-apicoverage/coveragecalculator"
 )
 
 // node.go contains types and interfaces pertaining to nodes inside resource tree.
@@ -28,6 +30,8 @@ type NodeInterface interface {
 	initialize(field string, parent NodeInterface, t reflect.Type, rt *ResourceTree)
 	buildChildNodes(t reflect.Type)
 	updateCoverage(v reflect.Value)
+	buildCoverageData(typeCoverage []coveragecalculator.TypeCoverage, nodeRules NodeRules, fieldRules FieldRules)
+	getValues() ([]string)
 }
 
 //nodeData is the data stored in each node of the resource tree.
