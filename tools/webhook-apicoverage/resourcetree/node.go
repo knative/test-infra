@@ -26,7 +26,7 @@ import (
 
 // NodeInterface defines methods that can be performed on each node in the resource tree.
 type NodeInterface interface {
-	getData() nodeData
+	GetData() NodeData
 	initialize(field string, parent NodeInterface, t reflect.Type, rt *ResourceTree)
 	buildChildNodes(t reflect.Type)
 	updateCoverage(v reflect.Value)
@@ -34,28 +34,28 @@ type NodeInterface interface {
 	getValues() ([]string)
 }
 
-//nodeData is the data stored in each node of the resource tree.
-type nodeData struct {
-	field string // Represents the Name of the field e.g. field name inside the struct.
-	tree *ResourceTree // Reference back to the resource tree. Required for cross-tree traversal(connected nodes traversal)
-	fieldType reflect.Type // Required as type information is not available during tree traversal.
-	nodePath string // Path in the resource tree reaching this node.
-	parent NodeInterface // Link back to parent.
-	children map[string]NodeInterface // Child nodes are keyed using field names(nodeData.field).
-	leafNode bool // Storing this as an additional field because type-analysis determines the value, which gets used later in value-evaluation
-	covered bool
+// NodeData is the data stored in each node of the resource tree.
+type NodeData struct {
+	Field string // Represents the Name of the field e.g. field name inside the struct.
+	Tree *ResourceTree // Reference back to the resource tree. Required for cross-tree traversal(connected nodes traversal)
+	FieldType reflect.Type // Required as type information is not available during tree traversal.
+	NodePath string // Path in the resource tree reaching this node.
+	Parent NodeInterface // Link back to parent.
+	Children map[string]NodeInterface // Child nodes are keyed using field names(nodeData.field).
+	LeafNode bool // Storing this as an additional field because type-analysis determines the value, which gets used later in value-evaluation
+	Covered bool
 }
 
-func (nd *nodeData) initialize(field string, parent NodeInterface, t reflect.Type, rt *ResourceTree) {
-	nd.field = field
-	nd.tree = rt
-	nd.parent = parent
-	nd.fieldType = t
-	nd.children = make(map[string]NodeInterface)
+func (nd *NodeData) initialize(field string, parent NodeInterface, t reflect.Type, rt *ResourceTree) {
+	nd.Field = field
+	nd.Tree = rt
+	nd.Parent = parent
+	nd.FieldType = t
+	nd.Children = make(map[string]NodeInterface)
 
 	if parent != nil {
-		nd.nodePath = parent.getData().nodePath + "." + field
+		nd.NodePath = parent.GetData().NodePath + "." + field
 	} else {
-		nd.nodePath = field
+		nd.NodePath = field
 	}
 }

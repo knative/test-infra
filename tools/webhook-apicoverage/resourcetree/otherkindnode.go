@@ -24,23 +24,24 @@ import (
 
 // OtherKindNode represents nodes in the resource tree of types like maps, interfaces, etc
 type OtherKindNode struct {
-	nodeData
+	NodeData
 }
 
-func (o *OtherKindNode) getData() nodeData {
-	return o.nodeData
+// GetData returns node data
+func (o *OtherKindNode) GetData() NodeData {
+	return o.NodeData
 }
 
 func (o *OtherKindNode) initialize(field string, parent NodeInterface, t reflect.Type, rt *ResourceTree) {
-	o.nodeData.initialize(field, parent, t, rt)
-	o.nodeData.leafNode = true
+	o.NodeData.initialize(field, parent, t, rt)
+	o.NodeData.LeafNode = true
 }
 
 func (o *OtherKindNode) buildChildNodes(t reflect.Type) {}
 
 func (o *OtherKindNode) updateCoverage(v reflect.Value) {
 	if !v.IsNil() {
-		o.covered = true
+		o.Covered = true
 	}
 }
 

@@ -42,13 +42,13 @@ func (r *ResourceForest) getConnectedNodeCoverage(fieldType reflect.Type, fieldR
 	if value, ok := r.ConnectedNodes[fieldType.PkgPath() + "." + fieldType.Name()]; ok {
 		for elem := value.Front(); elem != nil; elem = elem.Next() {
 			node := elem.Value.(NodeInterface)
-			for field, v := range node.getData().children {
+			for field, v := range node.GetData().Children {
 				if fieldRules.Apply(field) {
 					if _, ok := coverage.Fields[field]; !ok {
 						coverage.Fields[field] = new(coveragecalculator.FieldCoverage)
 					}
 					// merge values across the list.
-					coverage.Fields[field].Merge(v.getData().covered, v.getValues())
+					coverage.Fields[field].Merge(v.GetData().Covered, v.getValues())
 				}
 			}
 		}

@@ -28,38 +28,39 @@ const (
 
 // ArrayKindNode represents resource tree node of types reflect.Kind.Array and reflect.Kind.Slice
 type ArrayKindNode struct {
-	nodeData
+	NodeData
 	arrKind reflect.Kind // Array type e.g. []int will store reflect.Kind.Int. This is required for type-expansion and value-evaluation decisions.
 }
 
-func (a *ArrayKindNode ) getData() nodeData {
-	return a.nodeData
+// GetData returns node data
+func (a *ArrayKindNode ) GetData() NodeData {
+	return a.NodeData
 }
 
 func (a *ArrayKindNode ) initialize(field string, parent NodeInterface, t reflect.Type, rt *ResourceTree) {
-	a.nodeData.initialize(field, parent, t, rt)
+	a.NodeData.initialize(field, parent, t, rt)
 	a.arrKind = t.Elem().Kind()
 }
 
 func (a *ArrayKindNode) buildChildNodes(t reflect.Type) {
-	childName := a.field + arrayNodeNameSuffix
-	childNode := a.tree.createNode(childName, a, t.Elem())
-	a.children[childName] = childNode
+	childName := a.Field + arrayNodeNameSuffix
+	childNode := a.Tree.createNode(childName, a, t.Elem())
+	a.Children[childName] = childNode
 	childNode.buildChildNodes(t.Elem())
 }
 
 func (a *ArrayKindNode) updateCoverage(v reflect.Value) {
 	if !v.IsNil() {
-		a.covered = true
+		a.Covered = true
 		for i := 0; i < v.Len(); i++ {
-			a.children[a.field + arrayNodeNameSuffix].updateCoverage(v.Index(i))
+			a.Children[a.Field + arrayNodeNameSuffix].updateCoverage(v.Index(i))
 		}
 	}
 }
 
 func (a *ArrayKindNode) buildCoverageData(typeCoverage []coveragecalculator.TypeCoverage, nodeRules NodeRules, fieldRules FieldRules) {
 	if a.arrKind == reflect.Struct {
-		a.children[a.field + arrayNodeNameSuffix].buildCoverageData(typeCoverage, nodeRules, fieldRules)
+		a.Children[a.Field + arrayNodeNameSuffix].buildCoverageData(typeCoverage, nodeRules, fieldRules)
 	}
 }
 
