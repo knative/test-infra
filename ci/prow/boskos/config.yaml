@@ -114,7 +114,7 @@ spec:
       terminationGracePeriodSeconds: 300
       containers:
       - name: boskos-janitor
-        image: gcr.io/k8s-testimages/janitor:v20180619-83c62c891
+        image: gcr.io/k8s-testimages/janitor:v20180725-c421ed4f9
         args:
         - --service-account=/etc/test-account/service-account.json
         - --resource-type=gke-project
@@ -126,7 +126,7 @@ spec:
       volumes:
       - name: service
         secret:
-          secretName: service-account
+          secretName: test-account
 ---
 # Reaper
 apiVersion: extensions/v1beta1
