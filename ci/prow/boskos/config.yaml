@@ -116,11 +116,11 @@ spec:
       - name: boskos-janitor
         image: gcr.io/k8s-testimages/janitor:v20180619-83c62c891
         args:
-        - --service-account=/etc/service-account/service-account.json
+        - --service-account=/etc/test-account/service-account.json
         - --resource-type=gke-project
         - --pool-size=10
         volumeMounts:
-        - mountPath: /etc/service-account
+        - mountPath: /etc/test-account
           name: service
           readOnly: true
       volumes:
