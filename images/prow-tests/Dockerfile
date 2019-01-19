@@ -46,8 +46,13 @@ RUN npm install -g markdown-link-check
 RUN gem install mixlib-config -v 2.2.4  # required because ruby is 2.1
 RUN gem install mdl
 
+# Temporarily add test-infra to the image to build custom tools
 ADD . /go/src/github.com/knative/test-infra
 
-# Extra custom tools
+# Build custom tools in the container
+RUN make -C /go/src/github.com/knative/test-infra/tools/githubhelper
 RUN cp /go/src/github.com/knative/test-infra/tools/githubhelper/githubhelper .
 RUN go install github.com/knative/test-infra/tools/dep-collector
+
+# Remove test-infra from the container
+RUN rm -fr /go/src/github.com/knative/test-infra
