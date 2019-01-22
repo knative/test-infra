@@ -314,6 +314,7 @@ presubmits:
       - name: github-token
         secret:
           secretName: covbot-token
+
   - name: pull-knative-serving-perf-tests
     agent: kubernetes
     context: pull-knative-serving-perf-tests
@@ -325,6 +326,7 @@ presubmits:
     skip_branches:  # Skip these branches, as test isn't available.
     - release-0.1
     - release-0.2
+    - release-0.3
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
