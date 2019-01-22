@@ -317,7 +317,7 @@ presubmits:
   - name: pull-knative-serving-perf-tests
     agent: kubernetes
     context: pull-knative-serving-perf-tests
-    always_run: true
+    always_run: false
     rerun_command: "/test pull-knative-serving-perf-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-perf-tests),?(\\s+|$)"
     labels:
