@@ -110,15 +110,10 @@ function run_build_tests() {
 # Perform markdown build tests if necessary, unless disabled.
 function markdown_build_tests() {
   (( DISABLE_MD_LINTING && DISABLE_MD_LINK_CHECK )) && return 0
-  # Get changed markdown files (ignore /vendor)
-  local mdfiles="$(echo "${CHANGED_FILES}" | grep \.md$ | grep -v ^vendor/)"
-  # Filter out deleted files
-  for file in $mdfiles; do
-    local existing_files=""
-    if [[ -f "$file" ]]; then
-      existing_files="$existing_files $file"
-    fi
-    mdfiles=existing_files
+  # Get changed markdown files (ignore /vendor and deleted files)
+  local mdfiles=""
+  for file in $(echo "${CHANGED_FILES}" | grep \.md$ | grep -v ^vendor/); do
+    [[ -f "{file}" ]] && mdfiles="${mdfiles} ${file}"
   done
   [[ -z "${mdfiles}" ]] && return 0
   local failed=0
