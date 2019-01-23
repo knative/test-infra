@@ -141,21 +141,26 @@ function wait_until_pods_running() {
   return 1
 }
 
-# Waits until the given service has an external IP address.
+# Waits until the given service has an external address (IP/hostname).
 # Parameters: $1 - namespace.
 #             $2 - service name.
 function wait_until_service_has_external_ip() {
-  echo -n "Waiting until service $2 in namespace $1 has an external IP"
+  echo -n "Waiting until service $2 in namespace $1 has an external address (IP/hostname)"
   for i in {1..150}; do  # timeout after 15 minutes
     local ip=$(kubectl get svc -n $1 $2 -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
     if [[ -n "${ip}" ]]; then
       echo -e "\nService $2.$1 has IP $ip"
       return 0
     fi
+    local hostname=$(kubectl get svc -n $1 $2 -o jsonpath="{.status.loadBalancer.ingress[0].hostname}")
+    if [[ -n "${hostname}" ]]; then
+      echo -e "\nService $2.$1 has hostname $hostname"
+      return 0
+    fi
     echo -n "."
     sleep 6
   done
-  echo -e "\n\nERROR: timeout waiting for service $svc.$ns to have an external IP"
+  echo -e "\n\nERROR: timeout waiting for service $svc.$ns to have an external address"
   kubectl get pods -n $1
   return 1
 }
