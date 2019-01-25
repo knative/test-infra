@@ -366,7 +366,9 @@ function check_links_in_markdown() {
 # Parameters: $1..$n - files to inspect
 function lint_markdown() {
   # https://github.com/markdownlint/markdownlint
-  run_lint_tool mdl "linting markdown files" "-r ~MD013" $@
+  local config="${REPO_ROOT_DIR}/test/markdown-lint-config.rc"
+  [[ ! -e ${config} ]] && config="${_TEST_INFRA_SCRIPTS_DIR}/markdown-lint-config.rc"
+  run_lint_tool mdl "linting markdown files" "-c ${config}" $@
 }
 
 # Return whether the given parameter is an integer.
