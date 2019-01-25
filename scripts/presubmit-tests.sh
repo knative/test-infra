@@ -253,7 +253,7 @@ function main() {
     echo ">> gcloud SDK version"
     gcloud version
     echo ">> kubectl version"
-    kubectl version
+    kubectl version --client
     echo ">> go version"
     go version
     echo ">> git version"
