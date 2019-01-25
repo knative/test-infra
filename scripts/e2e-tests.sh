@@ -184,6 +184,7 @@ function create_test_cluster() {
   if (( ! IS_BOSKOS )); then
     CLUSTER_CREATION_ARGS+=(--gcp-project=${GCP_PROJECT})
   fi
+  CLUSTER_CREATION_ARGS+=(${EXTRA_CLUSTER_CREATION_FLAGS[@]})
   # SSH keys are not used, but kubetest checks for their existence.
   # Touch them so if they don't exist, empty files are create to satisfy the check.
   mkdir -p $HOME/.ssh
@@ -242,7 +243,7 @@ function create_test_cluster() {
     gcloud compute http-health-checks delete -q --project=${gcloud_project} ${http_health_checks}
   fi
   local result="$(cat ${TEST_RESULT_FILE})"
-  echo "Test result code is $result"
+  echo "Test result code is ${result}"
 
   exit ${result}
 }
@@ -332,6 +333,7 @@ USING_EXISTING_CLUSTER=1
 GCP_PROJECT=""
 E2E_SCRIPT=""
 E2E_CLUSTER_VERSION=""
+EXTRA_CLUSTER_CREATION_FLAGS=()
 
 # Parse flags and initialize the test cluster.
 function initialize() {
@@ -352,24 +354,21 @@ function initialize() {
       fi
     fi
     # Try parsing flag as a standard one.
-    case $parameter in
+    case ${parameter} in
       --run-tests) RUN_TESTS=1 ;;
       --emit-metrics) EMIT_METRICS=1 ;;
-      --gcp-project)
-        shift
-        [[ $# -ge 1 ]] || abort "missing project name after --gcp-project"
-        GCP_PROJECT=$1
-        ;;
-      --cluster-version)
-        shift
-        [[ $# -ge 1 ]] || abort "missing version after --cluster-version"
-        [[ $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || abort "kubernetes version must be 'X.Y.Z'"
-        E2E_CLUSTER_VERSION=$1
-        ;;
       *)
-        echo "usage: $0 [--run-tests][--emit-metrics][--cluster-version X.Y.Z][--gcp-project name]"
-        abort "unknown option ${parameter}"
-        ;;
+        [[ $# -ge 2 ]] || abort "missing parameter after $1"
+        shift
+        case ${parameter} in
+          --gcp-project) GCP_PROJECT=$1 ;;
+          --cluster-version)
+            [[ $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || abort "kubernetes version must be 'X.Y.Z'"
+            E2E_CLUSTER_VERSION=$1
+            ;;
+          --cluster-creation-flag) EXTRA_CLUSTER_CREATION_FLAGS+=($1) ;;
+          *) abort "unknown option ${parameter}" ;;
+        esac
     esac
     shift
   done
@@ -393,6 +392,7 @@ function initialize() {
   readonly EMIT_METRICS
   readonly GCP_PROJECT
   readonly IS_BOSKOS
+  readonly EXTRA_CLUSTER_CREATION_FLAGS
 
   if (( ! RUN_TESTS )); then
     create_test_cluster
