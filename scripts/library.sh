@@ -366,7 +366,7 @@ function check_links_in_markdown() {
 # Parameters: $1..$n - files to inspect
 function lint_markdown() {
   # https://github.com/markdownlint/markdownlint
-  run_lint_tool mdl "linting markdown files" "-r ~MD013" $@
+  run_lint_tool mdl "linting markdown files" "-r ~MD013,~MD024" $@
 }
 
 # Return whether the given parameter is an integer.
