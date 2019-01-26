@@ -136,6 +136,41 @@ function setup_branch() {
   git fetch ${KNATIVE_UPSTREAM} ${RELEASE_BRANCH}:upstream/${RELEASE_BRANCH}
 }
 
+# Setup version, branch and release notes for a auto release.
+function prepare_auto_release() {
+  echo "Auto release requested"
+  TAG_RELEASE=1
+  PUBLISH_RELEASE=1
+
+  local tags="$(git tag | cut -d 'v' -f2 | cut -d '.' -f1-2 | sort | uniq )"
+  local branches="$( { (git branch -r | grep origin/release-) ; (git branch  | grep release-); } | cut -d '-' -f2 | sort | uniq)"
+  local last_version=""
+
+  for i in $branches; do
+    RELEASE_VERSION=$i
+    for j in $tags; do
+      last_version="v${j}.0"
+      if [[ "$i" == "$j" ]]; then
+        RELEASE_VERSION=""
+      fi
+    done
+  done
+
+  if [ "$RELEASE_VERSION" == "" ];then
+    echo "Everything is released. Nothing to do!"
+    exit  0
+  fi
+
+  RELEASE_BRANCH="release-${RELEASE_VERSION}"
+  echo "Will create release ${RELEASE_VERSION} from branch ${RELEASE_BRANCH}"
+  # If --release-notes not used, copy from the latest release
+  if [[ -z "${RELEASE_NOTES}" ]]; then
+    RELEASE_NOTES="$(mktemp)"
+    hub_tool release show -f "%b" ${last_version} > ${RELEASE_NOTES}
+    echo "Release notes from ${last_version} copied to ${RELEASE_NOTES}"
+  fi
+}
+
 # Setup version, branch and release notes for a "dot" release.
 function prepare_dot_release() {
   echo "Dot release requested"
@@ -197,6 +232,7 @@ function parse_flags() {
   local has_gcr_flag=0
   local has_gcs_flag=0
   local is_dot_release=0
+  local is_auto_release=0
 
   cd ${REPO_ROOT_DIR}
   while [[ $# -ne 0 ]]; do
@@ -208,6 +244,7 @@ function parse_flags() {
       --publish) PUBLISH_RELEASE=1 ;;
       --nopublish) PUBLISH_RELEASE=0 ;;
       --dot-release) is_dot_release=1 ;;
+      --auto-release) is_auto_release=1 ;;
       *)
         [[ $# -ge 2 ]] || abort "missing parameter after $1"
         shift
@@ -243,6 +280,29 @@ function parse_flags() {
     esac
     shift
   done
+
+  # Do auto release unless release is forced
+  if (( is_auto_release )); then
+
+    if (( is_dot_release )); then
+      echo "error: cannot have both --dot-release and --auto-release set simultaneously"
+      exit 1
+    fi
+
+    if [ "$RELEASE_VERSION" != "" ]; then
+      echo "error: cannot have both RELEASE_VERSION and --auto-release set simultaneously"
+      exit 1
+    fi
+
+    if [ "$RELEASE_BRANCH" != "" ]; then
+      echo "error: cannot have both RELEASE_BRANCH and --auto-release set simultaneously"
+      exit 1
+    fi
+
+    setup_upstream
+    prepare_auto_release
+
+  fi
 
   # Setup dot releases
   if (( is_dot_release )); then
