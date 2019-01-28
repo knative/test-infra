@@ -172,7 +172,7 @@ function create_test_cluster() {
   local geoflag="--gcp-region=${E2E_CLUSTER_REGION}"
   [[ -n "${E2E_CLUSTER_ZONE}" ]] && geoflag="--gcp-zone=${E2E_CLUSTER_REGION}-${E2E_CLUSTER_ZONE}"
   local CLUSTER_CREATION_ARGS=(
-    --gke-create-args="--enable-autoscaling --min-nodes=${E2E_MIN_CLUSTER_NODES} --max-nodes=${E2E_MAX_CLUSTER_NODES} --scopes=cloud-platform --enable-basic-auth --no-issue-client-certificate"
+    --gke-create-command="beta container clusters create --quiet --enable-autoscaling --min-nodes=${E2E_MIN_CLUSTER_NODES} --max-nodes=${E2E_MAX_CLUSTER_NODES} --scopes=cloud-platform --enable-basic-auth --no-issue-client-certificate --disk-size=10GB ${EXTRA_CLUSTER_CREATION_FLAGS[@]}"
     --gke-shape={\"default\":{\"Nodes\":${E2E_MIN_CLUSTER_NODES}\,\"MachineType\":\"${E2E_CLUSTER_MACHINE}\"}}
     --provider=gke
     --deployment=gke
@@ -184,7 +184,6 @@ function create_test_cluster() {
   if (( ! IS_BOSKOS )); then
     CLUSTER_CREATION_ARGS+=(--gcp-project=${GCP_PROJECT})
   fi
-  CLUSTER_CREATION_ARGS+=(${EXTRA_CLUSTER_CREATION_FLAGS[@]})
   # SSH keys are not used, but kubetest checks for their existence.
   # Touch them so if they don't exist, empty files are create to satisfy the check.
   mkdir -p $HOME/.ssh
@@ -200,6 +199,7 @@ function create_test_cluster() {
   local test_cmd_args="--run-tests"
   (( EMIT_METRICS )) && test_cmd_args+=" --emit-metrics"
   [[ -n "${GCP_PROJECT}" ]] && test_cmd_args+=" --gcp-project ${GCP_PROJECT}"
+  [[ -n "${E2E_SCRIPT_CUSTOM_FLAGS[@]}" ]] && test_cmd_args+=" ${E2E_SCRIPT_CUSTOM_FLAGS[@]}"
   # Get the current GCP project for downloading kubernetes
   local gcloud_project="${GCP_PROJECT}"
   [[ -z "${gcloud_project}" ]] && gcloud_project="$(gcloud config get-value project)"
@@ -334,6 +334,7 @@ GCP_PROJECT=""
 E2E_SCRIPT=""
 E2E_CLUSTER_VERSION=""
 EXTRA_CLUSTER_CREATION_FLAGS=()
+E2E_SCRIPT_CUSTOM_FLAGS=()
 
 # Parse flags and initialize the test cluster.
 function initialize() {
@@ -349,7 +350,11 @@ function initialize() {
       local skip=$?
       if [[ ${skip} -ne 0 ]]; then
         # Skip parsed flag (and possibly argument) and continue
-        shift ${skip}
+        # Also save it to it's passed through to the test script
+        for ((i=1;i<=skip;i++)); do
+          E2E_SCRIPT_CUSTOM_FLAGS+=("$1")
+          shift
+        done
         continue
       fi
     fi
