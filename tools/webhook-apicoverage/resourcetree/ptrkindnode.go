@@ -1,5 +1,5 @@
 /*
-Copyright 2018 The Knative Authors
+Copyright 2019 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -56,9 +56,10 @@ func (p *PtrKindNode) updateCoverage(v reflect.Value) {
 	}
 }
 
-func (p *PtrKindNode) buildCoverageData(typeCoverage []coveragecalculator.TypeCoverage, nodeRules NodeRules, fieldRules FieldRules) {
+func (p *PtrKindNode) buildCoverageData(typeCoverage *[]coveragecalculator.TypeCoverage, nodeRules NodeRules,
+	fieldRules FieldRules, ignoredFields coveragecalculator.IgnoredFields) {
 	if p.objKind == reflect.Struct {
-		p.Children[p.Field + ptrNodeNameSuffix].buildCoverageData(typeCoverage, nodeRules, fieldRules)
+		p.Children[p.Field + ptrNodeNameSuffix].buildCoverageData(typeCoverage, nodeRules, fieldRules, ignoredFields)
 	}
 }
 

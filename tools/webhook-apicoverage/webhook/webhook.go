@@ -78,7 +78,7 @@ type APICoverageWebhook struct {
 }
 
 func (acw *APICoverageWebhook) generateServerConfig() (*tls.Config , error) {
-	serverKey, serverCert, caCert, err := webhook.CreateCerts(context.Background(), acw.WebhookName, acw.Namespace)
+	serverKey, serverCert, caCert, err := webhook.CreateCerts(context.Background(), acw.ServiceName, acw.Namespace)
 	if err != nil {
 		return nil, fmt.Errorf("Error creating webhook certificates: %v", err)
 	}
