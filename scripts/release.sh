@@ -285,7 +285,7 @@ function parse_flags() {
   # Do auto release unless release is forced
   if (( is_auto_release )); then
 
-    ( is_dot_release )) && abort "cannot have both --dot-release and --auto-release set simultaneously"
+    (( is_dot_release ) && abort "cannot have both --dot-release and --auto-release set simultaneously"
     [[ -n "${RELEASE_VERSION}" ]] &&  abort "cannot have both --version and --auto-release set simultaneously"
     [[ -n "${RELEASE_BRANCH}" ]] &&  abort "cannot have both --branch and --auto-release set simultaneously"
 
