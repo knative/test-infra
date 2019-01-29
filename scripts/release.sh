@@ -144,20 +144,22 @@ function prepare_auto_release() {
 
   local tags="$(git tag | cut -d 'v' -f2 | cut -d '.' -f1-2 | sort | uniq )"
   local branches="$( { (git branch -r | grep origin/release-) ; (git branch  | grep release-); } | cut -d '-' -f2 | sort | uniq)"
-  local last_version=""
+  RELEASE_VERSION=""
+
+  [[ -n "${tags}" ]] || abort "cannot obtain release tags for the "
+  [[ -n "${branches}" ]] || abort "cannot obtain release branches for the repository"
 
   for i in $branches; do
     RELEASE_VERSION=$i
     for j in $tags; do
-      last_version="v${j}.0"
       if [[ "$i" == "$j" ]]; then
         RELEASE_VERSION=""
       fi
     done
   done
 
-  if [ "$RELEASE_VERSION" == "" ];then
-    echo "Everything is released. Nothing to do!"
+  if [ -z "$RELEASE_VERSION" ]; then
+    echo "*** Everything is released. Nothing to do!"
     exit  0
   fi
 
@@ -166,8 +168,7 @@ function prepare_auto_release() {
   # If --release-notes not used, copy from the latest release
   if [[ -z "${RELEASE_NOTES}" ]]; then
     RELEASE_NOTES="$(mktemp)"
-    hub_tool release show -f "%b" ${last_version} > ${RELEASE_NOTES}
-    echo "Release notes from ${last_version} copied to ${RELEASE_NOTES}"
+    echo "Placeholder for release notes ..." > ${RELEASE_NOTES}
   fi
 }
 
@@ -285,19 +286,11 @@ function parse_flags() {
   if (( is_auto_release )); then
 
     if (( is_dot_release )); then
-      echo "error: cannot have both --dot-release and --auto-release set simultaneously"
-      exit 1
+      abort "error: cannot have both --dot-release and --auto-release set simultaneously"
     fi
 
-    if [ "$RELEASE_VERSION" != "" ]; then
-      echo "error: cannot have both RELEASE_VERSION and --auto-release set simultaneously"
-      exit 1
-    fi
-
-    if [ "$RELEASE_BRANCH" != "" ]; then
-      echo "error: cannot have both RELEASE_BRANCH and --auto-release set simultaneously"
-      exit 1
-    fi
+    [[ -z "${RELEASE_VERSION}" ]] &&  abort "error: cannot have both --version and --auto-release set simultaneously"
+    [[ -z "${RELEASE_VERSION}" ]] &&  abort "error: cannot have both --branch and --auto-release set simultaneously"
 
     setup_upstream
     prepare_auto_release
