@@ -25,7 +25,10 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"strings"
+	"io/ioutil"
 
+	"golang.org/x/oauth2"
 	"github.com/google/go-github/github"
 )
 
@@ -39,8 +42,26 @@ var (
 	ctx                   = context.Background()
 	onePageList           = &github.ListOptions{Page: 1}
 	verbose               = false
-	anonymousGitHubClient *github.Client
+	client                *github.Client
 )
+
+// authenticate creates client with given token if it's provided and exists,
+// otherwise it falls back to use an anonymous client
+func authenticate(githubTokenPath *string) {
+	client = github.NewClient(nil)
+	if nil == githubTokenPath || "" == *githubTokenPath {
+		return
+	}
+
+	if b, err := ioutil.ReadFile(*githubTokenPath); err == nil {
+		infof("Authenticate using provided github token '%s'", *githubTokenPath)
+		ts := oauth2.StaticTokenSource(
+			&oauth2.Token{AccessToken: strings.TrimSpace(string(b))},
+		)
+		client = github.NewClient(oauth2.NewClient(ctx, ts))
+	}
+}
+
 
 // atoi is a convenience function to convert a string to integer, failing in case of error.
 func atoi(str, valueName string) int {
@@ -61,7 +82,7 @@ func infof(template string, args ...interface{}) {
 // listChangedFiles simply lists the files changed by the current PR.
 func listChangedFiles() {
 	infof("Listing changed files for PR %d in repository %s/%s", pullNumber, repoOwner, repoName)
-	files, _, err := anonymousGitHubClient.PullRequests.ListFiles(ctx, repoOwner, repoName, pullNumber, onePageList)
+	files, _, err := client.PullRequests.ListFiles(ctx, repoOwner, repoName, pullNumber, onePageList)
 	if err != nil {
 		log.Fatalf("Error listing files: %v", err)
 	}
@@ -71,15 +92,15 @@ func listChangedFiles() {
 }
 
 func main() {
+	githubTokenPath := flag.String("github-token", os.Getenv("GITHUB_BOT_TOKEN"), "Github token file path for authenticating with Github")
 	listChangedFilesFlag := flag.Bool("list-changed-files", false, "List the files changed by the current pull request")
 	verboseFlag := flag.Bool("verbose", false, "Whether to dump extra info on output or not; intended for debugging")
 	flag.Parse()
 
 	verbose = *verboseFlag
-	anonymousGitHubClient = github.NewClient(nil)
+	authenticate(githubTokenPath)
 
 	if *listChangedFilesFlag {
 		listChangedFiles()
 	}
 }
-
