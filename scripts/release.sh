@@ -289,8 +289,8 @@ function parse_flags() {
       abort "error: cannot have both --dot-release and --auto-release set simultaneously"
     fi
 
-    [[ -z "${RELEASE_VERSION}" ]] &&  abort "error: cannot have both --version and --auto-release set simultaneously"
-    [[ -z "${RELEASE_VERSION}" ]] &&  abort "error: cannot have both --branch and --auto-release set simultaneously"
+    [[ -n "${RELEASE_VERSION}" ]] &&  abort "error: cannot have both --version and --auto-release set simultaneously"
+    [[ -n "${RELEASE_BRANCH}" ]] &&  abort "error: cannot have both --branch and --auto-release set simultaneously"
 
     setup_upstream
     prepare_auto_release

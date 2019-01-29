@@ -67,8 +67,8 @@ test_function ${FAILURE} "error: missing parameter" parse_flags --release-gcr
 test_function ${SUCCESS} "" parse_flags --release-gcr a --publish
 
 test_function ${FAILURE} "error: cannot have both --dot-release and --auto-release set simultaneously" parse_flags --dot-release --auto-release
-test_function ${FAILURE} "error: cannot have both RELEASE_VERSION and --auto-release set simultaneously" parse_flags --auto-release --version 1.0.0
-test_function ${FAILURE} "error: cannot have both RELEASE_BRANCH and --auto-release set simultaneously" parse_flags --auto-release --branch release-0.0
+test_function ${FAILURE} "error: cannot have both --version and --auto-release set simultaneously" parse_flags --auto-release --version 1.0.0
+test_function ${FAILURE} "error: cannot have both --branch and --auto-release set simultaneously" parse_flags --auto-release --branch release-0.0
 
 token_file=$(mktemp)
 echo -e "abc " > ${token_file}
