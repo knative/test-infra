@@ -176,7 +176,7 @@ function create_test_cluster() {
   local geoflag="--gcp-region=${E2E_CLUSTER_REGION}"
   [[ -n "${E2E_CLUSTER_ZONE}" ]] && geoflag="--gcp-zone=${E2E_CLUSTER_REGION}-${E2E_CLUSTER_ZONE}"
   local CLUSTER_CREATION_ARGS=(
-    --gke-create-args="--enable-autoscaling --min-nodes=${E2E_MIN_CLUSTER_NODES} --max-nodes=${E2E_MAX_CLUSTER_NODES} --scopes=cloud-platform --enable-basic-auth --no-issue-client-certificate"
+    --gke-create-command="beta container clusters create --quiet --enable-autoscaling --min-nodes=${E2E_MIN_CLUSTER_NODES} --max-nodes=${E2E_MAX_CLUSTER_NODES} --scopes=cloud-platform --enable-basic-auth --no-issue-client-certificate --disk-size=10GB ${EXTRA_CLUSTER_CREATION_FLAGS[@]}"
     --gke-shape={\"default\":{\"Nodes\":${E2E_MIN_CLUSTER_NODES}\,\"MachineType\":\"${E2E_CLUSTER_MACHINE}\"}}
     --provider=gke
     --deployment=gke
@@ -200,6 +200,10 @@ function create_test_cluster() {
   export K8S_CLUSTER_OVERRIDE=
   # Assume test failed (see details in set_test_return_code()).
   set_test_return_code 1
+  local test_cmd_args="--run-tests"
+  (( EMIT_METRICS )) && test_cmd_args+=" --emit-metrics"
+  [[ -n "${GCP_PROJECT}" ]] && test_cmd_args+=" --gcp-project ${GCP_PROJECT}"
+  [[ -n "${E2E_SCRIPT_CUSTOM_FLAGS[@]}" ]] && test_cmd_args+=" ${E2E_SCRIPT_CUSTOM_FLAGS[@]}"
   # Get the current GCP project for downloading kubernetes
   local gcloud_project="${GCP_PROJECT}"
   [[ -z "${gcloud_project}" ]] && gcloud_project="$(gcloud config get-value project)"
@@ -249,7 +253,7 @@ function create_test_cluster() {
     gcloud compute http-health-checks delete -q --project=${gcloud_project} ${http_health_checks}
   fi
   local result="$(cat ${TEST_RESULT_FILE})"
-  echo "Test result code is $result"
+  echo "Test result code is ${result}"
 
   exit ${result}
 }
@@ -336,6 +340,8 @@ USING_EXISTING_CLUSTER=1
 GCP_PROJECT=""
 E2E_SCRIPT=""
 E2E_CLUSTER_VERSION=""
+EXTRA_CLUSTER_CREATION_FLAGS=()
+E2E_SCRIPT_CUSTOM_FLAGS=()
 
 # Parse flags and initialize the test cluster.
 function initialize() {
@@ -351,29 +357,30 @@ function initialize() {
       local skip=$?
       if [[ ${skip} -ne 0 ]]; then
         # Skip parsed flag (and possibly argument) and continue
-        shift ${skip}
+        # Also save it to it's passed through to the test script
+        for ((i=1;i<=skip;i++)); do
+          E2E_SCRIPT_CUSTOM_FLAGS+=("$1")
+          shift
+        done
         continue
       fi
     fi
     # Try parsing flag as a standard one.
-    case $parameter in
+    case ${parameter} in
       --run-tests) RUN_TESTS=1 ;;
       --emit-metrics) EMIT_METRICS=1 ;;
-      --gcp-project)
-        shift
-        [[ $# -ge 1 ]] || abort "missing project name after --gcp-project"
-        GCP_PROJECT=$1
-        ;;
-      --cluster-version)
-        shift
-        [[ $# -ge 1 ]] || abort "missing version after --cluster-version"
-        [[ $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || abort "kubernetes version must be 'X.Y.Z'"
-        E2E_CLUSTER_VERSION=$1
-        ;;
       *)
-        echo "usage: $0 [--run-tests][--emit-metrics][--cluster-version X.Y.Z][--gcp-project name]"
-        abort "unknown option ${parameter}"
-        ;;
+        [[ $# -ge 2 ]] || abort "missing parameter after $1"
+        shift
+        case ${parameter} in
+          --gcp-project) GCP_PROJECT=$1 ;;
+          --cluster-version)
+            [[ $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || abort "kubernetes version must be 'X.Y.Z'"
+            E2E_CLUSTER_VERSION=$1
+            ;;
+          --cluster-creation-flag) EXTRA_CLUSTER_CREATION_FLAGS+=($1) ;;
+          *) abort "unknown option ${parameter}" ;;
+        esac
     esac
     shift
   done
@@ -397,6 +404,7 @@ function initialize() {
   readonly EMIT_METRICS
   readonly GCP_PROJECT
   readonly IS_BOSKOS
+  readonly EXTRA_CLUSTER_CREATION_FLAGS
 
   if (( ! RUN_TESTS )); then
     create_test_cluster

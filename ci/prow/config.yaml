@@ -315,6 +315,34 @@ presubmits:
         secret:
           secretName: covbot-token
 
+  - name: pull-knative-serving-perf-tests
+    agent: kubernetes
+    context: pull-knative-serving-perf-tests
+    always_run: false
+    rerun_command: "/test pull-knative-serving-perf-tests"
+    trigger: "(?m)^/test (all|pull-knative-serving-perf-tests),?(\\s+|$)"
+    labels:
+      preset-test-account: "true"
+    skip_branches:  # Skip these branches, as test isn't available.
+    - release-0.1
+    - release-0.2
+    - release-0.3
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        args:
+        - "--scenario=kubernetes_execute_bazel"
+        - "--clean"
+        - "--job=$(JOB_NAME)"
+        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
+        - "--root=/go/src"
+        - "--service-account=/etc/test-account/service-account.json"
+        - "--upload=gs://knative-prow/pr-logs"
+        - "--" # end bootstrap args, scenario args below
+        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+        - "./test/performance-tests.sh"
+
   knative/build:
   - name: pull-knative-build-build-tests
     agent: kubernetes
