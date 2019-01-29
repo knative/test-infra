@@ -142,11 +142,11 @@ function prepare_auto_release() {
   TAG_RELEASE=1
   PUBLISH_RELEASE=1
 
-  local tags="$(git tag | cut -d 'v' -f2 | cut -d '.' -f1-2 | sort | uniq )"
+  local tags="$(git tag | cut -d 'v' -f2 | cut -d '.' -f1-2 | sort | uniq)"
   local branches="$( { (git branch -r | grep origin/release-) ; (git branch  | grep release-); } | cut -d '-' -f2 | sort | uniq)"
   RELEASE_VERSION=""
 
-  [[ -n "${tags}" ]] || abort "cannot obtain release tags for the "
+  [[ -n "${tags}" ]] || abort "cannot obtain release tags for the repository"
   [[ -n "${branches}" ]] || abort "cannot obtain release branches for the repository"
 
   for i in $branches; do
@@ -159,16 +159,16 @@ function prepare_auto_release() {
   done
 
   if [ -z "$RELEASE_VERSION" ]; then
-    echo "*** Everything is released. Nothing to do!"
+    echo "*** No new release will be generated, as no new branches exist"
     exit  0
   fi
 
   RELEASE_BRANCH="release-${RELEASE_VERSION}"
   echo "Will create release ${RELEASE_VERSION} from branch ${RELEASE_BRANCH}"
-  # If --release-notes not used, copy from the latest release
+  # If --release-notes not used, add a placeholder
   if [[ -z "${RELEASE_NOTES}" ]]; then
     RELEASE_NOTES="$(mktemp)"
-    echo "Placeholder for release notes ..." > ${RELEASE_NOTES}
+    echo "[add release notes here]" > ${RELEASE_NOTES}
   fi
 }
 
@@ -285,12 +285,9 @@ function parse_flags() {
   # Do auto release unless release is forced
   if (( is_auto_release )); then
 
-    if (( is_dot_release )); then
-      abort "error: cannot have both --dot-release and --auto-release set simultaneously"
-    fi
-
-    [[ -n "${RELEASE_VERSION}" ]] &&  abort "error: cannot have both --version and --auto-release set simultaneously"
-    [[ -n "${RELEASE_BRANCH}" ]] &&  abort "error: cannot have both --branch and --auto-release set simultaneously"
+    ( is_dot_release )) && abort "cannot have both --dot-release and --auto-release set simultaneously"
+    [[ -n "${RELEASE_VERSION}" ]] &&  abort "cannot have both --version and --auto-release set simultaneously"
+    [[ -n "${RELEASE_BRANCH}" ]] &&  abort "cannot have both --branch and --auto-release set simultaneously"
 
     setup_upstream
     prepare_auto_release
