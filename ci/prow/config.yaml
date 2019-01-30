@@ -77,6 +77,8 @@ presets:
   env:
   - name: GOOGLE_APPLICATION_CREDENTIALS
     value: /etc/test-account/service-account.json
+  - name: GITHUB_BOT_TOKEN
+    value: /etc/test-account/github_bot_token
   - name: E2E_CLUSTER_REGION
     value: us-west1
   volumes:
