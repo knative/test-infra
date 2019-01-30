@@ -1,5 +1,5 @@
 /*
-Copyright 2018 The Knative Authors
+Copyright 2019 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -46,7 +46,8 @@ func (o *OtherKindNode) updateCoverage(v reflect.Value) {
 }
 
 // no-op as the coverage is calculated as field coverage in parent node.
-func (o * OtherKindNode) buildCoverageData(typeCoverage []coveragecalculator.TypeCoverage, nodeRules NodeRules, fieldRules FieldRules) {}
+func (o * OtherKindNode) buildCoverageData(typeCoverage *[]coveragecalculator.TypeCoverage, nodeRules NodeRules,
+	fieldRules FieldRules, ignoredFields coveragecalculator.IgnoredFields) {}
 
 func (o *OtherKindNode) getValues() ([]string) {
 	return nil

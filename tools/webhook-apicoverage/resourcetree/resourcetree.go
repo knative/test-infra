@@ -1,5 +1,5 @@
 /*
-Copyright 2018 The Knative Authors
+Copyright 2019 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -72,8 +72,9 @@ func (r *ResourceTree) UpdateCoverage(v reflect.Value) {
 }
 
 // BuildCoverageData calculates the coverage information for a resource tree by applying provided Node and Field rules.
-func (r *ResourceTree) BuildCoverageData(nodeRules NodeRules, fieldRules FieldRules) ([]coveragecalculator.TypeCoverage) {
+func (r *ResourceTree) BuildCoverageData(nodeRules NodeRules, fieldRules FieldRules,
+	ignoredFields coveragecalculator.IgnoredFields) ([]coveragecalculator.TypeCoverage) {
 	typeCoverage := []coveragecalculator.TypeCoverage{}
-	r.Root.buildCoverageData(typeCoverage, nodeRules, fieldRules)
+	r.Root.buildCoverageData(&typeCoverage, nodeRules, fieldRules, ignoredFields)
 	return typeCoverage
 }

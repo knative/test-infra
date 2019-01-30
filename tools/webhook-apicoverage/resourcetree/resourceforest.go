@@ -1,5 +1,5 @@
 /*
-Copyright 2018 The Knative Authors
+Copyright 2019 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -33,10 +33,12 @@ type ResourceForest struct {
 
 // getConnectedNodeCoverage calculates the outlined coverage for a Type using ConnectedNodes linkedlist. We traverse through each element in the linkedlist and merge
 // coverage data into a single coveragecalculator.TypeCoverage object.
-func (r *ResourceForest) getConnectedNodeCoverage(fieldType reflect.Type, fieldRules FieldRules) (coveragecalculator.TypeCoverage){
-	coverage := coveragecalculator.TypeCoverage{
+func (r *ResourceForest) getConnectedNodeCoverage(fieldType reflect.Type, fieldRules FieldRules, ignoredFields coveragecalculator.IgnoredFields) (coveragecalculator.TypeCoverage) {
+	packageName := strings.Replace(fieldType.PkgPath(), "/", ".", -1)
+	coverage := coveragecalculator.TypeCoverage {
 		Type: fieldType.Name(),
-		Package: strings.Replace(fieldType.PkgPath(), "/", ".", -1),
+		Package: packageName,
+		Fields : make(map[string]*coveragecalculator.FieldCoverage),
 	}
 
 	if value, ok := r.ConnectedNodes[fieldType.PkgPath() + "." + fieldType.Name()]; ok {
@@ -45,7 +47,10 @@ func (r *ResourceForest) getConnectedNodeCoverage(fieldType reflect.Type, fieldR
 			for field, v := range node.GetData().Children {
 				if fieldRules.Apply(field) {
 					if _, ok := coverage.Fields[field]; !ok {
-						coverage.Fields[field] = new(coveragecalculator.FieldCoverage)
+						coverage.Fields[field] = &coveragecalculator.FieldCoverage {
+							Field: field,
+							Ignored: ignoredFields.FieldIgnored(packageName, fieldType.Name(), field),
+						}
 					}
 					// merge values across the list.
 					coverage.Fields[field].Merge(v.GetData().Covered, v.getValues())
@@ -53,6 +58,5 @@ func (r *ResourceForest) getConnectedNodeCoverage(fieldType reflect.Type, fieldR
 			}
 		}
 	}
-
 	return coverage
 }

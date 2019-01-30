@@ -82,17 +82,19 @@ func (s *StructKindNode) updateCoverage(v reflect.Value) {
 	}
 }
 
-func (s *StructKindNode) buildCoverageData(typeCoverage []coveragecalculator.TypeCoverage, nodeRules NodeRules, fieldRules FieldRules) {
+func (s *StructKindNode) buildCoverageData(typeCoverage *[]coveragecalculator.TypeCoverage, nodeRules NodeRules,
+	fieldRules FieldRules, ignoredFields coveragecalculator.IgnoredFields) {
 	if len(s.Children) == 0 {
 		return
 	}
 
-	coverage := s.Tree.Forest.getConnectedNodeCoverage(s.FieldType, fieldRules)
-	typeCoverage = append(typeCoverage, coverage)
+	coverage := s.Tree.Forest.getConnectedNodeCoverage(s.FieldType, fieldRules, ignoredFields)
+	*typeCoverage = append(*typeCoverage, coverage)
 
-	for _, value := range s.Children {
-		if value.GetData().Covered && nodeRules.Apply(value){
-			value.buildCoverageData(typeCoverage, nodeRules, fieldRules)
+	for field := range coverage.Fields {
+		node := s.Children[field]
+		if !coverage.Fields[field].Ignored && node.GetData().Covered && nodeRules.Apply(node) {
+			node.buildCoverageData(typeCoverage, nodeRules, fieldRules, ignoredFields)
 		}
 	}
 }

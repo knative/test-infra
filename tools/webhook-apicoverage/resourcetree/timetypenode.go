@@ -50,7 +50,8 @@ func (ti *TimeTypeNode) updateCoverage(v reflect.Value) {
 }
 
 // no-op as the coverage is calculated as field coverage in parent node.
-func (ti *TimeTypeNode) buildCoverageData(typeCoverage []coveragecalculator.TypeCoverage, nodeRules NodeRules, fieldRules FieldRules) {}
+func (ti *TimeTypeNode) buildCoverageData(typeCoverage *[]coveragecalculator.TypeCoverage, nodeRules NodeRules,
+	fieldRules FieldRules, ignoredFields coveragecalculator.IgnoredFields) {}
 
 func (ti *TimeTypeNode) getValues() ([]string) {
 	return nil
