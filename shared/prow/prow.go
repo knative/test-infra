@@ -236,12 +236,12 @@ func (j *Job) GetLatestBuilds(count int) []Build {
 
 // IsStarted check if build has started by looking at "started.json" file
 func (b *Build) IsStarted() bool {
-	return gcs.Exist(ctx, BucketName, path.Join(b.StoragePath, StartedJSON))
+	return gcs.Exists(ctx, BucketName, path.Join(b.StoragePath, StartedJSON))
 }
 
 // IsFinished check if build has finished by looking at "finished.json" file
 func (b *Build) IsFinished() bool {
-	return gcs.Exist(ctx, BucketName, path.Join(b.StoragePath, FinishedJSON))
+	return gcs.Exists(ctx, BucketName, path.Join(b.StoragePath, FinishedJSON))
 }
 
 // GetStartedTime gets started timestamp of a build,
