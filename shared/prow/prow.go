@@ -280,10 +280,10 @@ func (b *Build) ParseLog(checkLog func(s []string) *string) ([]string, error) {
 	var logs []string
 
 	f, err := gcs.NewReader(ctx, b.Bucket, b.GetBuildLogPath())
-	defer f.Close()
 	if err != nil {
 		return logs, err
 	}
+	defer f.Close()
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		if s := checkLog(strings.Fields(scanner.Text())); s != nil {

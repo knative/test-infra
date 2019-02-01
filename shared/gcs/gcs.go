@@ -94,10 +94,10 @@ func Upload(ctx context.Context, bucketName, dstPath, srcPath string) error {
 		return err
 	}
 	dst := createStorageObject(bucketName, dstPath).NewWriter(ctx)
-	defer dst.Close()
 	if _, err = io.Copy(dst, src); nil != err {
 		return err
 	}
+	dst.Close()
 	return nil
 }
 
@@ -105,10 +105,10 @@ func Upload(ctx context.Context, bucketName, dstPath, srcPath string) error {
 func Read(ctx context.Context, bucketName, filePath string) ([]byte, error) {
 	var contents []byte
 	f, err := NewReader(ctx, bucketName, filePath)
-	defer f.Close()
 	if err != nil {
 		return contents, err
 	}
+	defer f.Close()
 	contents, err = ioutil.ReadAll(f)
 	if err != nil {
 		return contents, err
