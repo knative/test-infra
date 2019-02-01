@@ -41,18 +41,17 @@ func Authenticate(ctx context.Context, serviceAccount string) error {
 	return err
 }
 
-// Exist checks if path exist under gcs bucket,
+// Exists checks if path exist under gcs bucket,
 // this path can either be a directory or a file.
-func Exist(ctx context.Context, bucketName, storagePath string) bool {
-	// Check if this is a directory,
-	// gcs directory paths are virtual paths, they automatically got deleted if there is no child file
-	it := getObjectsIter(ctx, bucketName, strings.TrimRight(storagePath, " /") + "/", "")
-	if _, err := it.Next(); nil == err {
-		return true
-	}
+func Exists(ctx context.Context, bucketName, storagePath string) bool {
 	// Check if this is a file
 	handle := createStorageObject(bucketName, storagePath)
-	_, err := handle.Attrs(ctx)
+	if _, err := handle.Attrs(ctx); nil == err {
+		return true
+	}
+	// Check if this is a directory,
+	// gcs directory paths are virtual paths, they automatically got deleted if there is no child file
+	_, err := getObjectsIter(ctx, bucketName, strings.TrimRight(storagePath, " /") + "/", "").Next()
 	return nil == err
 }
 
