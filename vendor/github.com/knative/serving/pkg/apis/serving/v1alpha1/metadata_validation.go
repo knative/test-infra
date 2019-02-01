@@ -19,26 +19,22 @@ package v1alpha1
 import (
 	"fmt"
 	"strconv"
-	"strings"
 
 	"github.com/knative/pkg/apis"
 	"github.com/knative/serving/pkg/apis/autoscaling"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/util/validation"
 )
 
+// ValidateObjectMetadata validates that `metadata` stanza of the
+// resources is correct.
 func ValidateObjectMetadata(meta metav1.Object) *apis.FieldError {
 	name := meta.GetName()
 
-	if strings.Contains(name, ".") {
+	msgs := validation.IsDNS1035Label(name)
+	if len(msgs) > 0 {
 		return &apis.FieldError{
-			Message: "Invalid resource name: special character . must not be present",
-			Paths:   []string{"name"},
-		}
-	}
-
-	if len(name) > 63 {
-		return &apis.FieldError{
-			Message: "Invalid resource name: length must be no more than 63 characters",
+			Message: fmt.Sprintf("not a DNS 1035 label: %v", msgs),
 			Paths:   []string{"name"},
 		}
 	}
@@ -56,7 +52,7 @@ func getIntGT0(m map[string]string, k string) (int64, *apis.FieldError) {
 		i, err := strconv.ParseInt(v, 10, 32)
 		if err != nil || i < 1 {
 			return 0, &apis.FieldError{
-				Message: fmt.Sprintf("Invalid %s annotation value: must be integer greater than 0", k),
+				Message: fmt.Sprintf("Invalid %s annotation value: must be an integer greater than 0", k),
 				Paths:   []string{k},
 			}
 		}
