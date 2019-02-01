@@ -41,11 +41,23 @@ func Authenticate(ctx context.Context, serviceAccount string) error {
 	return err
 }
 
-// Exist checks if path exist under gcs bucket
-func Exist(ctx context.Context, bucketName, filePath string) bool {
-	handle := createStorageObject(bucketName, filePath)
+// Exist checks if path exist under gcs bucket,
+// this path can either be a directory or a file.
+func Exist(ctx context.Context, bucketName, storagePath string) bool {
+	// Check if this is a directory,
+	// gcs directory paths are virtual paths, they automatically got deleted if there is no child file
+	if len(ListChildrenFiles(ctx, bucketName, storagePath)) > 0 {
+		return true
+	}
+	// Check if this is a file
+	handle := createStorageObject(bucketName, storagePath)
 	_, err := handle.Attrs(ctx)
 	return nil == err
+}
+
+// ListChildrenFiles recursively lists all children files.
+func ListChildrenFiles(ctx context.Context, bucketName, storagePath string) []string {
+	return list(ctx, bucketName, strings.TrimRight(storagePath, " /") + "/", "")
 }
 
 // ListDirectChildren lists direct children paths (including files and directories).
