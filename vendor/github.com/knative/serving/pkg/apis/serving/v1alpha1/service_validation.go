@@ -18,7 +18,10 @@ package v1alpha1
 
 import (
 	"fmt"
+	"strconv"
+
 	"github.com/knative/pkg/apis"
+	"k8s.io/apimachinery/pkg/util/validation"
 )
 
 // Validate validates the fields belonging to Service
@@ -51,9 +54,9 @@ func (ss *ServiceSpec) Validate() *apis.FieldError {
 		set = append(set, "manual")
 		errs = errs.Also(ss.Manual.Validate().ViaField("manual"))
 	}
-	if ss.Pinned != nil {
+	if ss.DeprecatedPinned != nil {
 		set = append(set, "pinned")
-		errs = errs.Also(ss.Pinned.Validate().ViaField("pinned"))
+		errs = errs.Also(ss.DeprecatedPinned.Validate().ViaField("pinned"))
 	}
 
 	if len(set) > 1 {
@@ -86,28 +89,28 @@ func (m *ManualType) Validate() *apis.FieldError {
 // Validate validates the fields belonging to ReleaseType
 func (rt *ReleaseType) Validate() *apis.FieldError {
 	var errs *apis.FieldError
-	minRevisions := 1
-	maxRevisions := 2
 
 	numRevisions := len(rt.Revisions)
-	if numRevisions < minRevisions {
+
+	if numRevisions == 0 {
 		errs = errs.Also(apis.ErrMissingField("revisions"))
 	}
-
-	if numRevisions > maxRevisions {
-		outOfRange := &apis.FieldError{
-			Message: fmt.Sprintf("expected number of elements in range [%v, %v], got %v", minRevisions, maxRevisions, numRevisions),
-			Paths:   []string{"revisions"},
+	if numRevisions > 2 {
+		errs = errs.Also(apis.ErrOutOfBoundsValue(strconv.Itoa(numRevisions), "1", "2", "revisions"))
+	}
+	for i, r := range rt.Revisions {
+		if msgs := validation.IsDNS1035Label(r); len(msgs) > 0 {
+			errs = errs.Also(apis.ErrInvalidValue(
+				fmt.Sprintf("not a DNS 1035 label: %v", msgs), apis.CurrentField).ViaFieldIndex("revisions", i))
 		}
-		errs = errs.Also(outOfRange)
 	}
 
 	if numRevisions < 2 && rt.RolloutPercent != 0 {
-		errs = errs.Also(apis.ErrInvalidValue(fmt.Sprintf("%v", rt.RolloutPercent), "rolloutPercent"))
+		errs = errs.Also(apis.ErrInvalidValue(strconv.Itoa(rt.RolloutPercent), "rolloutPercent"))
 	}
 
 	if rt.RolloutPercent < 0 || rt.RolloutPercent > 99 {
-		errs = errs.Also(apis.ErrInvalidValue(fmt.Sprintf("%v", rt.RolloutPercent), "rolloutPercent"))
+		errs = errs.Also(apis.ErrOutOfBoundsValue(strconv.Itoa(rt.RolloutPercent), "0", "99", "rolloutPercent"))
 	}
 
 	return errs.Also(rt.Configuration.Validate().ViaField("configuration"))

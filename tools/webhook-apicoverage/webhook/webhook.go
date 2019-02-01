@@ -22,12 +22,13 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/knative/pkg/webhook"
 	"github.com/knative/serving/pkg/system"
-	admissionregistrationv1beta1 "k8s.io/api/admissionregistration/v1beta1"
 	"go.uber.org/zap"
+	admissionregistrationv1beta1 "k8s.io/api/admissionregistration/v1beta1"
 	extensionsv1beta1 "k8s.io/api/extensions/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -36,6 +37,7 @@ import (
 var (
 	// GroupVersionKind for deployment to be used to set the webhook's owner reference.
 	deploymentKind = extensionsv1beta1.SchemeGroupVersion.WithKind("Deployment")
+	servingNamespace = os.Getenv(system.NamespaceEnvKey)
 )
 
 // APICoverageWebhook encapsulates necessary configuration details for the api-coverage webhook.
@@ -113,14 +115,14 @@ func (acw *APICoverageWebhook) registerWebhook(rules []admissionregistrationv1be
 	webhook := &admissionregistrationv1beta1.ValidatingWebhookConfiguration{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: acw.WebhookName,
-			Namespace: system.Namespace,
+			Namespace: servingNamespace,
 		},
 		Webhooks: []admissionregistrationv1beta1.Webhook{{
 			Name:  acw.WebhookName,
 			Rules: rules,
 			ClientConfig: admissionregistrationv1beta1.WebhookClientConfig{
 				Service: &admissionregistrationv1beta1.ServiceReference{
-					Namespace: system.Namespace,
+					Namespace: servingNamespace,
 					Name: acw.ServiceName,
 				},
 				CABundle: acw.CaCert,
@@ -130,7 +132,7 @@ func (acw *APICoverageWebhook) registerWebhook(rules []admissionregistrationv1be
 		},
 	}
 
-	deployment, err := acw.KubeClient.ExtensionsV1beta1().Deployments(system.Namespace).Get(acw.DeploymentName, metav1.GetOptions{})
+	deployment, err := acw.KubeClient.ExtensionsV1beta1().Deployments(servingNamespace).Get(acw.DeploymentName, metav1.GetOptions{})
 	if err != nil {
 		return fmt.Errorf("Error retrieving Deployment Extension object: %v", err)
 	}
