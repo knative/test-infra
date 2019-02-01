@@ -200,10 +200,6 @@ function create_test_cluster() {
   export K8S_CLUSTER_OVERRIDE=
   # Assume test failed (see details in set_test_return_code()).
   set_test_return_code 1
-  local test_cmd_args="--run-tests"
-  (( EMIT_METRICS )) && test_cmd_args+=" --emit-metrics"
-  [[ -n "${GCP_PROJECT}" ]] && test_cmd_args+=" --gcp-project ${GCP_PROJECT}"
-  [[ -n "${E2E_SCRIPT_CUSTOM_FLAGS[@]}" ]] && test_cmd_args+=" ${E2E_SCRIPT_CUSTOM_FLAGS[@]}"
   # Get the current GCP project for downloading kubernetes
   local gcloud_project="${GCP_PROJECT}"
   [[ -z "${gcloud_project}" ]] && gcloud_project="$(gcloud config get-value project)"
@@ -218,6 +214,7 @@ function create_test_cluster() {
   local test_cmd_args="--run-tests --cluster-version ${E2E_CLUSTER_VERSION}"
   (( EMIT_METRICS )) && test_cmd_args+=" --emit-metrics"
   [[ -n "${GCP_PROJECT}" ]] && test_cmd_args+=" --gcp-project ${GCP_PROJECT}"
+  [[ -n "${E2E_SCRIPT_CUSTOM_FLAGS[@]}" ]] && test_cmd_args+=" ${E2E_SCRIPT_CUSTOM_FLAGS[@]}"
   # Don't fail test for kubetest, as it might incorrectly report test failure
   # if teardown fails (for details, see success() below)
   set +o errexit
