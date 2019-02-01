@@ -46,7 +46,8 @@ func Authenticate(ctx context.Context, serviceAccount string) error {
 func Exist(ctx context.Context, bucketName, storagePath string) bool {
 	// Check if this is a directory,
 	// gcs directory paths are virtual paths, they automatically got deleted if there is no child file
-	if len(ListChildrenFiles(ctx, bucketName, storagePath)) > 0 {
+	it := getObjectsIter(ctx, bucketName, strings.TrimRight(storagePath, " /") + "/", "")
+	if _, err := it.Next(); nil == err {
 		return true
 	}
 	// Check if this is a file
@@ -143,15 +144,10 @@ func createStorageObject(bucketName, filePath string) *storage.ObjectHandle {
 	return client.Bucket(bucketName).Object(filePath)
 }
 
-// Query items under given gcs storagePath, use delim to eliminate some files.
-// see https://godoc.org/cloud.google.com/go/storage#Query
-func getObjectsAttrs(ctx context.Context, bucketName, storagePath, delim string) []*storage.ObjectAttrs {
+// Query items under given gcs storagePath, use exclusionFilter to eliminate some files.
+func getObjectsAttrs(ctx context.Context, bucketName, storagePath, exclusionFilter string) []*storage.ObjectAttrs {
 	var allAttrs []*storage.ObjectAttrs
-	bucketHandle := client.Bucket(bucketName)
-	it := bucketHandle.Objects(ctx, &storage.Query{
-		Prefix:	storagePath,
-		Delimiter: delim,
-	})
+	it := getObjectsIter(ctx, bucketName, storagePath, exclusionFilter)
 
 	for {
 		attrs, err := it.Next()
@@ -179,4 +175,12 @@ func list(ctx context.Context, bucketName, storagePath, exclusionFilter string) 
 		filePaths = append(filePaths, path.Join(attrs.Prefix, attrs.Name))
 	}
 	return filePaths
+}
+
+// get objects iterator under given storagePath and bucketName, use exclusionFilter to eliminate some files.
+func getObjectsIter(ctx context.Context, bucketName, storagePath, exclusionFilter string) *storage.ObjectIterator {
+	return client.Bucket(bucketName).Objects(ctx, &storage.Query{
+		Prefix:	storagePath,
+		Delimiter: exclusionFilter,
+	})
 }
