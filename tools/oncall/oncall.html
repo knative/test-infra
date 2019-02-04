@@ -31,15 +31,6 @@ function build_table(req) {
 		var person = oncall[key];
 		html += '<h2>' + key + ': ';
         //construct HTML content
-
-		if (person == "chaodai") {
-			person = "chaodaiG";
-		} else if (person == "syzf") { 
-			person = "steuhs";
-		} else if (person == "eklawitter") {
-			person = "ericKlawitter"; 
-		}
-
 		if (person) {
 			html += '<a href="https://github.com/' + person + '">';
 			html += person + '<img src="https://github.com/' + person + '.png?size=125"></a>';
@@ -51,7 +42,6 @@ function build_table(req) {
 
 	// trivial XSS, but storage.googleapis.com is even more trivial XSS!
 	document.getElementById('oncall').innerHTML = html;
-
 	document.getElementById('updated').innerText = req.getResponseHeader('date');
 }
 
