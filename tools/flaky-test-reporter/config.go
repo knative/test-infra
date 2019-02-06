@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// config.go contains data structure shared by all components of this package
+// config.go contains configurations for flaky tests reporting
 
 package main
 
@@ -28,6 +28,7 @@ const (
 	threshold           = 0.05 // Don't do anything if found more than 5% tests flaky
 )
 
-var jobConfigs = []jobConfig{
+// jobConfigs defines which job to be monitored for giving repo
+var jobConfigs = []JobConfig{
 	{"ci-knative-serving-continuous", "serving", prow.PostsubmitJob},
 }

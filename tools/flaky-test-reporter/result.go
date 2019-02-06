@@ -14,72 +14,144 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// result.go contains structs and functions for common results
+// result.go contains structs and functions for shared data
 
 package main
 
 import (
-	"strings"
-	"strconv"
 	"log"
 	"fmt"
+	"encoding/json"
 	"io/ioutil"
+	"path"
+	"path/filepath"
 
+	"github.com/knative/test-infra/shared/prow"
 	"github.com/knative/test-infra/shared/junit"
 )
 
-const (
-	buildsCount         = 10 // Builds to be analyzed
-	requiredCount       = 8 // Minimal number of results to be counted as valid results for each testcase
-	threshold           = 0.05 // Don't do anything if found more than 5% tests flaky
-)
-
-// repoData struct contains all configurations and test results for a repo
-type repoData struct {
-	config *jobConfig
-	testStats []*testStat
-	buildIDs  []int // all build IDs scanned in this run
-	lastBuildStartTime *int64 // useful for 
+// RepoData struct contains all configurations and test results for a repo
+type RepoData struct {
+	Config             *JobConfig
+	TestStats          map[string]*TestStat // key is test full name
+	BuildIDs           []int // all build IDs scanned in this run
+	LastBuildStartTime *int64 // timestamp, determines how fresh the data is
 }
 
-// jobConfig is initial configuration for a given repo, defines which job to scan
-type jobConfig struct {
-	name  string
-	repo  string
-	t     string // Use shorthand as "type" is a reserved name
+// JobConfig is initial configuration for a given repo, defines which job to scan
+type JobConfig struct {
+	Name  string
+	Repo  string
+	Type  string
 }
 
-// testStat represents test results of a single testcase across all builds,
-// passed, skipped and failed contains buildIDs with corresponding results
-type testStat struct {
-	testName string
-	passed   []int
-	skipped  []int
-	failed   []int
+// TestStat represents test results of a single testcase across all builds,
+// Passed, Skipped and Failed contains buildIDs with corresponding results
+type TestStat struct {
+	TestName string
+	Passed   []int
+	Skipped  []int
+	Failed   []int
 }
 
-func (ts *testStat) isValid() bool {
-	return len(ts.passed) + len(ts.failed) >= requiredCount
+func (ts *TestStat) isFlaky() bool {
+	return ts.isValid() && len(ts.Failed) > 0
 }
 
-func (ts *testStat) isFlaky() bool {
-	return ts.isValid() && len(ts.failed) > 0
+func (ts *TestStat) isPassed() bool {
+	return ts.isValid() && len(ts.Failed) == 0
 }
 
-func (ts *testStat) isPassed() bool {
-	return ts.isValid() && len(ts.failed) == 0
+func (ts *TestStat) isValid() bool {
+	return len(ts.Passed) + len(ts.Failed) >= requiredCount
 }
 
-func readFromJunitFile(filePath string) *junit.TestSuites {
-	contents, err := ioutil.ReadFile(filePath)
-	if nil != err {
-		log.Fatalf("%v", err)
-		return nil
+func getFlakyRate(testStats map[string]TestStat) (float32, error) {
+	flakyCount := 0
+	totalCount := 0
+	for _, ts := range testStats {
+		totalCount++
+		if ts.isFlaky() {
+			flakyCount++
+		}
 	}
-	suites, err := junit.UnMarshal(contents)
-	if nil != err {
-		log.Fatalf("%v", err)
-		return nil
+	if 0 == totalCount {
+		return 0.0, nil
 	}
-	return suites
+	return float32(flakyCount)/float32(totalCount), nil
+}
+
+// createArtifactForRepo marshals RepoData into json format and stores it in a json file,
+// under local artifacts directory
+func createArtifactForRepo(rd *RepoData) error {
+	outFilePath := path.Join(prow.GetLocalArtifactsDir(), rd.Config.Repo + ".json")
+	contents, err := json.Marshal(*rd)
+	if nil != err {
+		return err
+	}
+	return ioutil.WriteFile(outFilePath, contents, 0644)
+}
+
+// addSuiteToRepoData adds all testCase from suite into RepoData
+func addSuiteToRepoData(suite *junit.TestSuite, buildID int, rd *RepoData) {
+	if nil == rd.TestStats {
+		rd.TestStats = make(map[string]*TestStat)
+	}
+	for _, testCase := range suite.TestCases {
+		testFullName := fmt.Sprintf("%s.%s", suite.Name, testCase.Name)
+		if _, ok := rd.TestStats[testFullName]; !ok {
+			rd.TestStats[testFullName] = &TestStat{TestName: testFullName}
+		}
+		switch testCase.GetTestStatus() {
+			case junit.Passed:
+				rd.TestStats[testFullName].Passed = append(rd.TestStats[testFullName].Passed, buildID)
+			case junit.Skipped:
+				rd.TestStats[testFullName].Skipped = append(rd.TestStats[testFullName].Skipped, buildID)
+			case junit.Failed:
+				rd.TestStats[testFullName].Failed = append(rd.TestStats[testFullName].Failed, buildID)
+		}
+	}
+}
+
+// getCombinedResultsForBuild gets all junit results from a build,
+// and converts each one into a junit TestSuites struct
+func getCombinedResultsForBuild(build *prow.Build) []*junit.TestSuites {
+	var allSuites []*junit.TestSuites
+	for _, artifact := range build.GetArtifacts() {
+		relPath, _ := filepath.Rel(build.StoragePath, artifact)
+		contents, err := build.ReadFile(relPath)
+		if nil != err {
+			continue
+		}
+		if suites, err := junit.UnMarshal(contents); nil == err {
+			allSuites = append(allSuites, suites)
+		}
+	}
+	return allSuites
+}
+
+// collectTestResultsForRepo collects test results, build IDs from all builds,
+// as well as LastBuildStartTime, and stores them in RepoData
+func collectTestResultsForRepo(jc *JobConfig) (*RepoData, error) {
+	rd := &RepoData{Config: jc}
+	job := prow.NewJob(jc.Name, jc.Type, jc.Repo, 0)
+	if !job.Exists() {
+		return rd, fmt.Errorf("job not exist '%s'", jc.Name)
+	}
+	builds := job.GetLatestBuilds(buildsCount)
+	
+	log.Printf("latest builds: ")
+	for iBuild, build := range builds {
+		log.Printf("\t%d", build.BuildID)
+		rd.BuildIDs = append(rd.BuildIDs, build.BuildID)
+		if 0 == iBuild { // This is the latest build as builds are sorted by start time in descending order
+			rd.LastBuildStartTime = build.StartTime
+		}
+		for _, suites := range getCombinedResultsForBuild(&build) {
+			for _, suite := range suites.Suites {
+				addSuiteToRepoData(&suite, build.BuildID, rd)
+			}
+		}
+	}
+	return rd, nil
 }
