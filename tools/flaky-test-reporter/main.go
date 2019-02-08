@@ -30,6 +30,7 @@ import (
 
 func main() {
 	serviceAccount := flag.String("service-account", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"), "JSON key file for service account to use")
+	githubToken    := flag.String("github-token", "", "Token file for Github authentication")
 	dryrun         := flag.Bool("dry-run", false, "dry run switch")
 	flag.Parse()
 
@@ -37,6 +38,7 @@ func main() {
 		log.Printf("running in [dry run mode]")
 	}
 	
+	var repoDataAll []*RepoData
 	prow.Initialize(*serviceAccount) // Explicit authenticate with gcs Client
 
 	// Clean up local artifacts directory, this will be used later for artifacts uploads
@@ -50,7 +52,6 @@ func main() {
 		log.Fatalf("Failed preparing local artifacts directory: %v", err)
 	}
 
-	var repoDataAll []*RepoData
 	for _, jc := range jobConfigs {
 		log.Printf("collecting results for repo '%s'\n", jc.Repo)
 		rd, err := collectTestResultsForRepo(&jc)
@@ -62,6 +63,6 @@ func main() {
 		}
 		repoDataAll = append(repoDataAll, rd)
 	}
-
-	// TODO(chaodaiG): pass repoDataAll to functions for Github issues tracking and Slack notification
+	
+	processGithubIssues(repoDataAll, githubToken, dryrun)
 }

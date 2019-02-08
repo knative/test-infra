@@ -38,7 +38,7 @@ const (
 	// IssueOpenState is the state of open github issue
 	IssueOpenState IssueStateEnum = "open"
 	// IssueCloseState is the state of closed github issue
-	IssueCloseState IssueStateEnum = "close"
+	IssueCloseState IssueStateEnum = "closed"
 	// IssueAllState is the state for all, useful when querying issues
 	IssueAllState  IssueStateEnum = "all"
 )
@@ -80,6 +80,31 @@ func GetCurrentUser() (*github.User, error) {
 	return res, err
 }
 
+// ListRepos lists repos under org
+func ListRepos(org string) ([]string, error) {
+	var res []string
+	options := &github.ListOptions{}
+	genericList, err := depaginate(
+		"listing repos",
+		maxRetryCount,
+		options,
+		func() ([]interface{}, *github.Response, error) {
+			page, resp, err := client.Repositories.List(ctx, org, nil)
+			var interfaceList []interface{}
+			if nil == err {
+				for _, repo := range page {
+					interfaceList = append(interfaceList, repo)
+				}
+			}
+			return interfaceList, resp, err
+		},
+	)
+	for _, repo := range genericList {
+		res = append(res, repo.(*github.Repository).GetName())
+	}
+	return res, err
+}
+
 // ListIssuesByRepo lists issues within given repo, filters by labels if provided
 func ListIssuesByRepo(org, repo string, labels []string) ([]*github.Issue, error) {
 	issueListOptions := github.IssueListByRepoOptions{
@@ -92,7 +117,7 @@ func ListIssuesByRepo(org, repo string, labels []string) ([]*github.Issue, error
 	var res []*github.Issue
 	options := &github.ListOptions{}
 	genericList, err := depaginate(
-		fmt.Sprintf("listing genericList with label '%v'", labels),
+		fmt.Sprintf("listing issues with label '%v'", labels),
 		maxRetryCount,
 		options,
 		func() ([]interface{}, *github.Response, error) {
