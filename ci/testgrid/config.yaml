@@ -143,8 +143,10 @@ dashboards:
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-serving-continuous
+    base_options: 'sort-by-name='
   - name: release
     test_group_name: ci-knative-serving-nightly-release
+    base_options: 'sort-by-name='
   - name: playground
     test_group_name: ci-knative-serving-playground
   - name: coverage
@@ -168,8 +170,10 @@ dashboards:
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-build-continuous
+    base_options: 'sort-by-name='
   - name: release
     test_group_name: ci-knative-build-nightly-release
+    base_options: 'sort-by-name='
   - name: coverage
     test_group_name: pull-knative-build-test-coverage
     base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
@@ -181,10 +185,12 @@ dashboards:
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-build-templates-continuous
+    base_options: 'sort-by-name='
 - name: knative-build-pipeline
   dashboard_tab:
   - name: release
     test_group_name: ci-knative-build-pipeline-nightly-release
+    base_options: 'sort-by-name='
   - name: coverage
     test_group_name: pull-knative-build-pipeline-test-coverage
     base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
@@ -192,8 +198,10 @@ dashboards:
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-eventing-continuous
+    base_options: 'sort-by-name='
   - name: release
     test_group_name: ci-knative-eventing-nightly-release
+    base_options: 'sort-by-name='
   - name: coverage
     test_group_name: pull-knative-eventing-test-coverage
     base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
@@ -201,8 +209,10 @@ dashboards:
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-eventing-sources-continuous
+    base_options: 'sort-by-name='
   - name: release
     test_group_name: ci-knative-eventing-sources-nightly-release
+    base_options: 'sort-by-name='
   - name: coverage
     test_group_name: pull-knative-eventing-sources-test-coverage
     base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
@@ -210,6 +220,7 @@ dashboards:
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-docs-continuous
+    base_options: 'sort-by-name='
   - name: coverage
     test_group_name: pull-knative-docs-test-coverage
     base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
@@ -217,6 +228,7 @@ dashboards:
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-pkg-continuous
+    base_options: 'sort-by-name='
   - name: coverage
     test_group_name: pull-knative-pkg-test-coverage
     base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
@@ -224,6 +236,7 @@ dashboards:
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-caching-continuous
+    base_options: 'sort-by-name='
   - name: coverage
     test_group_name: pull-knative-caching-test-coverage
     base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
@@ -234,6 +247,7 @@ dashboards:
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-serving-0.2-continuous
+    base_options: 'sort-by-name='
 
 #################################################################
 # Dashboard groups
