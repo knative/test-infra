@@ -15,9 +15,6 @@
 FROM gcr.io/k8s-testimages/kubekins-e2e:v20190103-edc7696cc-master
 LABEL maintainer "Adriano Cunha <adrcunha@google.com>"
 
-# Add Node.js repo so nodejs/npm can be installed
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
-
 # Install extras on top of base image
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -30,7 +27,6 @@ RUN docker-credential-gcr configure-docker
 
 # Extra tools through apt-get
 RUN apt-get install -y uuid-runtime  # for uuidgen
-RUN apt-get install -y nodejs  # for npm and markdown-link-check
 RUN apt-get install -y rubygems  # for mdl
 
 # Extra tools through go get
@@ -38,9 +34,7 @@ RUN go get -u github.com/google/go-containerregistry/cmd/ko
 RUN go get -u github.com/golang/dep/cmd/dep
 RUN go get -u github.com/google/licenseclassifier
 RUN go get -u github.com/jstemmer/go-junit-report
-
-# Extra tools through npm
-RUN npm install -g markdown-link-check
+RUN go get -u github.com/raviqqe/liche
 
 # Extra tools through gem
 RUN gem install mixlib-config -v 2.2.4  # required because ruby is 2.1
