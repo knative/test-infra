@@ -21,6 +21,9 @@
 # Use the flags --build-tests, --unit-tests and --integration-tests
 # to run a specific set of tests.
 
+# See https://github.com/knative/test-infra/issues/451
+export DISABLE_MD_LINK_CHECK=1
+
 source $(dirname $0)/../scripts/presubmit-tests.sh
 
 # Run our custom build tests after the standard build tests.
