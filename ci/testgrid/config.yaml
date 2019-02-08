@@ -163,7 +163,7 @@ dashboards:
     base_options: 'include-filter-by-regex=test/conformance\.&sort-by-name='
   - name: performance
     test_group_name: ci-knative-serving-performance
-    base_options: 'exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name='
+    base_options: 'exclude-filter-by-regex=Overall$&group-by-target=&expand-groups=&sort-by-name='
 - name: knative-build
   dashboard_tab:
   - name: continuous
