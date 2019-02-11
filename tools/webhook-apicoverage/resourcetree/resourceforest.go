@@ -31,6 +31,16 @@ type ResourceForest struct {
 	ConnectedNodes map[string]*list.List // Head of the linked list keyed by nodeData.fieldType.pkg + nodeData.fieldType.Name()
 }
 
+// AddResourceTree adds a resource tree to the resource forest.
+func (r *ResourceForest) AddResourceTree(resourceName string, resourceType reflect.Type) {
+	tree := ResourceTree{
+		ResourceName: resourceName,
+		Forest: r,
+	}
+	tree.BuildResourceTree(resourceType)
+	r.TopLevelTrees[resourceName] = tree
+}
+
 // getConnectedNodeCoverage calculates the outlined coverage for a Type using ConnectedNodes linkedlist. We traverse through each element in the linkedlist and merge
 // coverage data into a single coveragecalculator.TypeCoverage object.
 func (r *ResourceForest) getConnectedNodeCoverage(fieldType reflect.Type, fieldRules FieldRules, ignoredFields coveragecalculator.IgnoredFields) (coveragecalculator.TypeCoverage) {

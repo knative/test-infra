@@ -21,23 +21,27 @@ import (
 	"crypto/tls"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
-	"os"
+	"strings"
 	"time"
 
+	"github.com/knative/pkg/configmap"
+	"github.com/knative/pkg/logging"
 	"github.com/knative/pkg/webhook"
-	"github.com/knative/serving/pkg/system"
+	"github.com/markbates/inflect"
 	"go.uber.org/zap"
 	admissionregistrationv1beta1 "k8s.io/api/admissionregistration/v1beta1"
 	extensionsv1beta1 "k8s.io/api/extensions/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/rest"
 )
 
 var (
 	// GroupVersionKind for deployment to be used to set the webhook's owner reference.
 	deploymentKind = extensionsv1beta1.SchemeGroupVersion.WithKind("Deployment")
-	servingNamespace = os.Getenv(system.NamespaceEnvKey)
 )
 
 // APICoverageWebhook encapsulates necessary configuration details for the api-coverage webhook.
@@ -111,18 +115,18 @@ func (acw *APICoverageWebhook) getWebhookServer(handler http.Handler) (*http.Ser
 	},  nil
 }
 
-func (acw *APICoverageWebhook) registerWebhook(rules []admissionregistrationv1beta1.RuleWithOperations) error {
+func (acw *APICoverageWebhook) registerWebhook(rules []admissionregistrationv1beta1.RuleWithOperations, namespace string) error {
 	webhook := &admissionregistrationv1beta1.ValidatingWebhookConfiguration{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: acw.WebhookName,
-			Namespace: servingNamespace,
+			Namespace: namespace,
 		},
 		Webhooks: []admissionregistrationv1beta1.Webhook{{
 			Name:  acw.WebhookName,
 			Rules: rules,
 			ClientConfig: admissionregistrationv1beta1.WebhookClientConfig{
 				Service: &admissionregistrationv1beta1.ServiceReference{
-					Namespace: servingNamespace,
+					Namespace: namespace,
 					Name: acw.ServiceName,
 				},
 				CABundle: acw.CaCert,
@@ -132,7 +136,7 @@ func (acw *APICoverageWebhook) registerWebhook(rules []admissionregistrationv1be
 		},
 	}
 
-	deployment, err := acw.KubeClient.ExtensionsV1beta1().Deployments(servingNamespace).Get(acw.DeploymentName, metav1.GetOptions{})
+	deployment, err := acw.KubeClient.ExtensionsV1beta1().Deployments(namespace).Get(acw.DeploymentName, metav1.GetOptions{})
 	if err != nil {
 		return fmt.Errorf("Error retrieving Deployment Extension object: %v", err)
 	}
@@ -147,16 +151,37 @@ func (acw *APICoverageWebhook) registerWebhook(rules []admissionregistrationv1be
 	return nil
 }
 
-// SetupWebhook sets up the webhook with the provided http.handler, webhook-rules and stop channel.
-func (acw *APICoverageWebhook) SetupWebhook(handler http.Handler, rules []admissionregistrationv1beta1.RuleWithOperations, stop <-chan struct{}) error {
+func (acw *APICoverageWebhook) getValidationRules(resources map[schema.GroupVersionKind]webhook.GenericCRD) ([]admissionregistrationv1beta1.RuleWithOperations) {
+	var rules []admissionregistrationv1beta1.RuleWithOperations
+	for gvk := range resources {
+		plural := strings.ToLower(inflect.Pluralize(gvk.Kind))
+
+		rules = append(rules, admissionregistrationv1beta1.RuleWithOperations{
+			Operations: []admissionregistrationv1beta1.OperationType{
+				admissionregistrationv1beta1.Create,
+				admissionregistrationv1beta1.Update,
+			},
+			Rule: admissionregistrationv1beta1.Rule{
+				APIGroups:   []string{gvk.Group},
+				APIVersions: []string{gvk.Version},
+				Resources:   []string{plural},
+			},
+		})
+	}
+	return rules
+}
+
+// SetupWebhook sets up the webhook with the provided http.handler, resourcegroup Map, namespace and stop channel.
+func (acw *APICoverageWebhook) SetupWebhook(handler http.Handler, resources map[schema.GroupVersionKind]webhook.GenericCRD, namespace string, stop <-chan struct{}) error {
 	server, err := acw.getWebhookServer(handler)
+	rules := acw.getValidationRules(resources)
 	if err != nil {
 		return fmt.Errorf("Webhook server object creation failed: %v", err)
 	}
 
 	select {
 	case <-time.After(acw.RegistrationDelay):
-		err = acw.registerWebhook(rules)
+		err = acw.registerWebhook(rules, namespace)
 		if err != nil {
 			return fmt.Errorf("Webhook registration failed: %v", err)
 		}
@@ -180,5 +205,42 @@ func (acw *APICoverageWebhook) SetupWebhook(handler http.Handler, rules []admiss
 		return server.Close()
 	case <-serverBootstrapErrCh:
 		return errors.New("webhook server bootstrap failed")
+	}
+}
+
+// BuildWebhookConfiguration builds the APICoverageWebhook object using the provided names.
+func BuildWebhookConfiguration(componentCommonName string, webhookName string, namespace string) *APICoverageWebhook {
+	cm, err := configmap.Load("/etc/config-logging")
+	if err != nil {
+		log.Fatalf("Error loading logging configuration: %v", err)
+	}
+
+	config, err := logging.NewConfigFromMap(cm)
+	if err != nil {
+		log.Fatalf("Error parsing logging configuration: %v", err)
+	}
+	logger, _ := logging.NewLoggerFromConfig(config, "webhook")
+
+	clusterConfig, err := rest.InClusterConfig()
+	if err != nil {
+		log.Fatalf("Failed to get in cluster config: %v", err)
+	}
+
+	kubeClient, err := kubernetes.NewForConfig(clusterConfig)
+	if err != nil {
+		log.Fatalf("Failed to get client set: %v", err)
+	}
+
+	return &APICoverageWebhook{
+		Logger: logger,
+		KubeClient: kubeClient,
+		FailurePolicy: admissionregistrationv1beta1.Fail,
+		ClientAuth: tls.NoClientCert,
+		RegistrationDelay: time.Second * 2,
+		Port: 443,
+		Namespace: namespace,
+		DeploymentName: componentCommonName,
+		ServiceName: componentCommonName,
+		WebhookName: webhookName,
 	}
 }

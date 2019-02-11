@@ -22,9 +22,23 @@ providing following three parameters:
  e.g: knative-serving while calling this method would
  provide rules that will handle API Objects like `Service`,
  `Configuration`, `Route` and `Revision`.
-
+1. `namespace`: Namespace name where the webhook would be installed.
 1. `stop` channel: Channel to terminate webhook's web server.
 
 `SetupWebhook()` method in its implementation creates a TLS based web server
 and registers the webhook by creating a ValidatingWebhookConfiguration
 object inside the K8 cluster.
+
+[APICoverageRecorder](apicoverage_recorder.go) type inside the package
+encapsulates the apicoverage recording capabilities. Repo using this type
+is expected to set:
+
+1. `ResourceForest`: Specifying the version and initializing the [ResourceTrees](../resourcetree/resourcetree.go)
+1. `ResourceMap`: Identifying the resources whose APICoverage needs to be
+ calculated.
+1. `NodeRules`: [NodeRules](../resourcetree/rule.go) that are applicable for
+ the repo.
+1. `FieldRules`: [FieldRules](../resourcetree/rule.go) that are applicable for
+ the repo.
+1. `DisplayRules`: [DisplayRules](../view/jsontype_display.go) to be used by
+ `GetResourceCoverage` method.
