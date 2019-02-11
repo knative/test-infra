@@ -39,7 +39,7 @@ func checkFileText(resultFile, expected string, t *testing.T) {
 		t.Fatalf("Failed to open test file: %v", err)
 	}
 	if s != expected {
-		t.Fatalf("Actual text: %s, Expected text: %s", s, expected)
+		t.Fatalf("Got:\n%s, Want:\n %s", s, expected)
 	}
 }
 
@@ -48,17 +48,17 @@ func TestXMLOutput(t *testing.T) {
 	defer os.Remove(resultFile)
 
 	// Create a test suites
-	testSuites := junit.TestSuites{}
+	tc := []junit.TestCase{}
+	want := `<testsuites>
+  <testsuite name="test" time="0" failures="0" tests="0">
+    <properties></properties>
+  </testsuite>
+</testsuites>
+`
 
 	// Create a test file
-	if err := testgrid.CreateXMLOutput(&testSuites, name); err != nil {
+	if err := testgrid.CreateXMLOutput(tc, name); err != nil {
 		t.Fatalf("Error when creating xml output file: %v", err)
 	}
-	checkFileText(resultFile, "<testsuites></testsuites>\n", t)
-
-	// Make sure we can append to the file
-	if err := testgrid.CreateXMLOutput(&testSuites, name); err != nil {
-		t.Fatalf("Error when creating xml output file: %v", err)
-	}
-	checkFileText(resultFile, "<testsuites></testsuites>\n<testsuites></testsuites>\n", t)
+	checkFileText(resultFile, want, t)
 }

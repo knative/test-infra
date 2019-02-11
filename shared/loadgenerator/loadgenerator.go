@@ -46,6 +46,7 @@ type GeneratorOptions struct {
 	Domain         string
 	RequestTimeout time.Duration
 	QPS            float64
+	AllowInitialErrors bool
 }
 
 // GeneratorResults contains the results of running the per test
@@ -73,7 +74,7 @@ func (g *GeneratorOptions) CreateRunnerOptions(resolvableDomain bool) *fhttp.HTT
 			QPS:         g.QPS,
 		},
 		HTTPOptions:        *o,
-		AllowInitialErrors: true,
+		AllowInitialErrors: g.AllowInitialErrors,
 	}
 }
 
