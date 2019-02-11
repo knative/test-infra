@@ -1814,6 +1814,28 @@ periodics:
       - "./hack/release.sh"
       - "--publish"
       - "--tag-release"
+- cron: "5 */2 * * *" # Run every two hours and five minutes
+  name: ci-knative-eventing-auto-release
+  agent: kubernetes
+  labels:
+    preset-release-account: "true"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      args:
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=github.com/knative/eventing"
+      - "--root=/go/src"
+      - "--service-account=/etc/release-account/service-account.json"
+      - "--upload=gs://knative-prow/logs"
+      - "--timeout=90" # 1.5h
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./hack/release.sh"
+      - "--auto-release"
 - cron: "0 1 * * *" # Run at 01:00 every day
   name: ci-knative-eventing-sources-go-coverage
   agent: kubernetes
