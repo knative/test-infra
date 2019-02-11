@@ -52,7 +52,7 @@ function test_function() {
       return 1
     fi
   fi
-  echo "'$@' returns code ${expected_retcode} and displays '${expected_string}'"
+  echo "'$@' returns code ${expected_retcode} and output matches with expected"
 }
 
 # Test helper that calls two functions in sequence.
