@@ -27,6 +27,7 @@ source $(dirname $0)/../scripts/presubmit-tests.sh
 
 function post_build_tests() {
   local failed=0
+  subheader "Checking config files"
   for dir in ci/prow ci/testgrid; do
     make -C ${dir} test || failed=1
   done
