@@ -187,20 +187,21 @@ func getRelevantLogs(fields []string) *string {
 	return nil
 }
 
-func addTestCases(tcName string, covered map[string]int, notCovered map[string]int, testSuite *junit.TestSuite) {
+func addTestCases(tcName string, covered map[string]int, notCovered map[string]int) []junit.TestCase {
+	tc := []junit.TestCase{}
 	if (len(covered) == 0 && len(notCovered) == 0) {
-		return
+		return tc
 	}
 
 	var percentCovered = float32(100 * len(covered) / (len(covered) + len(notCovered)))
 	testCase := junit.TestCase{Name: tcName}
 	testCase.AddProperty(apiCoverage, fmt.Sprintf("%f", percentCovered))
-	testSuite.TestCases = append(testSuite.TestCases, testCase)
+	tc = append(tc, testCase)
 
 	for key, value := range covered {
 		coveredTestCase := junit.TestCase{Name: tcName + "/" + key}
 		coveredTestCase.AddProperty(apiCoverage, fmt.Sprintf("%d", value))
-		testSuite.TestCases = append(testSuite.TestCases, coveredTestCase)
+		tc = append(tc, coveredTestCase)
 	}
 
 	for key, value := range notCovered {
@@ -208,19 +209,18 @@ func addTestCases(tcName string, covered map[string]int, notCovered map[string]i
 		notCoveredTestCase.AddProperty(apiCoverage, fmt.Sprintf("%d", value))
 		failureMessage := "failure"
 		notCoveredTestCase.Failure = &failureMessage
-		testSuite.TestCases = append(testSuite.TestCases, notCoveredTestCase)
+		tc = append(tc, notCoveredTestCase)
 	}
+
+	return tc
 }
 
 func createTestgridXML(coverage *OverallAPICoverage) {
-	testSuite := junit.TestSuite{Name: ""}
-	addTestCases(overallRoute, coverage.RouteAPICovered, coverage.RouteAPINotCovered, &testSuite)
-	addTestCases(overallConfig, coverage.ConfigurationAPICovered, coverage.ConfigurationAPINotCovered, &testSuite)
-	addTestCases(overallService, coverage.ServiceAPICovered, coverage.ServiceAPINotCovered, &testSuite)
+	tc := addTestCases(overallRoute, coverage.RouteAPICovered, coverage.RouteAPINotCovered)
+	tc = append(tc, addTestCases(overallConfig, coverage.ConfigurationAPICovered, coverage.ConfigurationAPINotCovered)...)
+	tc = append(tc, addTestCases(overallService, coverage.ServiceAPICovered, coverage.ServiceAPINotCovered)...)
 
-	testSuites := junit.TestSuites{}
-	testSuites.AddTestSuite(&testSuite)
-	if err := testgrid.CreateXMLOutput(&testSuites, "apicoverage"); err != nil {
+	if err := testgrid.CreateXMLOutput(tc, "apicoverage"); err != nil {
 		log.Fatalf("Cannot create the xml output file: %v", err)
 	}
 }
