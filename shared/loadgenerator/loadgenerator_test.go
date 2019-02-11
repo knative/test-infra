@@ -39,7 +39,6 @@ func getOptions() *loadgenerator.GeneratorOptions {
 		NumConnections: testNum,
 		URL:            testUrl,
 		Domain:         testUrl,
-		RequestTimeout: testTime,
 		QPS:            testQPS,
 	}
 }
