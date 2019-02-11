@@ -1570,6 +1570,31 @@ periodics:
       # docker needs privileged mode
       securityContext:
         privileged: true
+- cron: "7 */2 * * *" # Run every two hours and seven minutes
+  name: ci-knative-build-auto-release
+  agent: kubernetes
+  labels:
+    preset-release-account: "true"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      args:
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=github.com/knative/build"
+      - "--root=/go/src"
+      - "--service-account=/etc/nightly-account/service-account.json"
+      - "--upload=gs://knative-prow/logs"
+      - "--timeout=90" # 1.5h
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./hack/release.sh"
+      - "--auto-release"
+      # docker needs privileged mode
+      securityContext:
+        privileged: true
 - cron: "5 8 * * *" # Run at 01:05PST every day (08:05 UTC)
   name: ci-knative-build-latency
   agent: kubernetes
