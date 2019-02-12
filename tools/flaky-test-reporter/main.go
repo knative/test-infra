@@ -55,13 +55,13 @@ func main() {
 		log.Printf("collecting results for repo '%s'\n", jc.Repo)
 		rd, err := collectTestResultsForRepo(&jc)
 		if nil != err {
-			log.Printf("Error collecting results for repo: %v", err)
-			continue
+			log.Fatalf("Error collecting results for repo '%s': %v", jc.Repo, err)
 		}
 		if err = createArtifactForRepo(rd); nil != err {
-			log.Printf("%s", err.Error())
-			continue
+			log.Fatalf("Error creating artifacts for repo '%s': %v", jc.Repo, err)
 		}
 		repoDataAll = append(repoDataAll, rd)
 	}
+
+	// TODO(chaodaiG): pass repoDataAll to functions for Github issues tracking and Slack notification
 }

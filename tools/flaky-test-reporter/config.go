@@ -23,12 +23,15 @@ import (
 )
 
 const (
-	buildsCount         = 10 // Builds to be analyzed
-	requiredCount       = 8 // Minimal number of results to be counted as valid results for each testcase
-	threshold           = 0.05 // Don't do anything if found more than 5% tests flaky
+	// Builds to be analyzed, this is an arbitrary number
+	buildsCount         = 10
+	// Minimal number of results to be counted as valid results for each testcase, this is an arbitrary number
+	requiredCount       = 8
+	// Don't do anything if found more than 5% tests flaky, this is an arbitrary number
+	threshold           = 0.05
 )
 
 // jobConfigs defines which job to be monitored for giving repo
 var jobConfigs = []JobConfig{
-	{"ci-knative-serving-continuous", "serving", prow.PostsubmitJob},
+	{"ci-knative-serving-continuous", "serving", prow.PostsubmitJob}, // CI flow for serving repo
 }

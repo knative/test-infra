@@ -19,6 +19,7 @@ limitations under the License.
 package main
 
 import (
+	"strings"
 	"log"
 	"fmt"
 	"encoding/json"
@@ -55,28 +56,27 @@ type TestStat struct {
 }
 
 func (ts *TestStat) isFlaky() bool {
-	return ts.isValid() && len(ts.Failed) > 0
+	return ts.hasEnoughRuns() && len(ts.Failed) > 0 && len(ts.Passed) != 0
 }
 
 func (ts *TestStat) isPassed() bool {
-	return ts.isValid() && len(ts.Failed) == 0
+	return ts.hasEnoughRuns() && len(ts.Failed) == 0
 }
 
-func (ts *TestStat) isValid() bool {
+func (ts *TestStat) hasEnoughRuns() bool {
 	return len(ts.Passed) + len(ts.Failed) >= requiredCount
 }
 
 func getFlakyRate(testStats map[string]TestStat) (float32, error) {
+	totalCount := len(testStats)
+	if 0 == totalCount {
+		return 0.0, nil
+	}
 	flakyCount := 0
-	totalCount := 0
 	for _, ts := range testStats {
-		totalCount++
 		if ts.isFlaky() {
 			flakyCount++
 		}
-	}
-	if 0 == totalCount {
-		return 0.0, nil
 	}
 	return float32(flakyCount)/float32(totalCount), nil
 }
@@ -115,19 +115,25 @@ func addSuiteToRepoData(suite *junit.TestSuite, buildID int, rd *RepoData) {
 
 // getCombinedResultsForBuild gets all junit results from a build,
 // and converts each one into a junit TestSuites struct
-func getCombinedResultsForBuild(build *prow.Build) []*junit.TestSuites {
+func getCombinedResultsForBuild(build *prow.Build) ([]*junit.TestSuites, error) {
 	var allSuites []*junit.TestSuites
 	for _, artifact := range build.GetArtifacts() {
+		_, fileName := filepath.Split(artifact)
+		if ! strings.HasPrefix(fileName, "junit_") || ! strings.HasSuffix(fileName, ".xml") {
+			continue
+		}
 		relPath, _ := filepath.Rel(build.StoragePath, artifact)
 		contents, err := build.ReadFile(relPath)
 		if nil != err {
-			continue
+			return nil, err
 		}
-		if suites, err := junit.UnMarshal(contents); nil == err {
+		if suites, err := junit.UnMarshal(contents); nil != err {
+			return nil, err
+		} else {
 			allSuites = append(allSuites, suites)
 		}
 	}
-	return allSuites
+	return allSuites, nil
 }
 
 // collectTestResultsForRepo collects test results, build IDs from all builds,
@@ -135,19 +141,23 @@ func getCombinedResultsForBuild(build *prow.Build) []*junit.TestSuites {
 func collectTestResultsForRepo(jc *JobConfig) (*RepoData, error) {
 	rd := &RepoData{Config: jc}
 	job := prow.NewJob(jc.Name, jc.Type, jc.Repo, 0)
-	if !job.Exists() {
-		return rd, fmt.Errorf("job not exist '%s'", jc.Name)
+	if !job.PathExists() {
+		return rd, fmt.Errorf("job path not exist '%s'", jc.Name)
 	}
 	builds := job.GetLatestBuilds(buildsCount)
 	
 	log.Printf("latest builds: ")
-	for iBuild, build := range builds {
+	for i, build := range builds {
 		log.Printf("\t%d", build.BuildID)
 		rd.BuildIDs = append(rd.BuildIDs, build.BuildID)
-		if 0 == iBuild { // This is the latest build as builds are sorted by start time in descending order
+		if 0 == i { // This is the latest build as builds are sorted by start time in descending order
 			rd.LastBuildStartTime = build.StartTime
 		}
-		for _, suites := range getCombinedResultsForBuild(&build) {
+		combinedResults, err := getCombinedResultsForBuild(&build)
+		if nil != err {
+			return nil, err
+		}
+		for _, suites := range combinedResults {
 			for _, suite := range suites.Suites {
 				addSuiteToRepoData(&suite, build.BuildID, rd)
 			}

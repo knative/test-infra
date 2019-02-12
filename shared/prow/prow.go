@@ -151,8 +151,8 @@ func NewJob(jobName, jobType, repoName string, pullID int) *Job {
 	return &job
 }
 
-// Exists checks if the storage path of a job exists in gcs or not
-func (j *Job) Exists() bool {
+// PathExists checks if the storage path of a job exists in gcs or not
+func (j *Job) PathExists() bool {
 	return gcs.Exists(ctx, BucketName, j.StoragePath)
 }
 
