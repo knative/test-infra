@@ -1382,6 +1382,39 @@ periodics:
     - name: hub-token
       secret:
         secretName: hub-token
+- cron: "3 */2 * * *" # Run every two hours and three minutes
+  name: ci-knative-serving-auto-release
+  agent: kubernetes
+  labels:
+    preset-release-account: "true"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      args:
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=github.com/knative/serving"
+      - "--root=/go/src"
+      - "--service-account=/etc/release-account/service-account.json"
+      - "--upload=gs://knative-prow/logs"
+      - "--timeout=90" # 1.5h
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./hack/release.sh"
+      - "--auto-release"
+      - "--release-gcs knative-releases/serving"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
 - cron: "1 9 * * 6" # Run at 02:01PST every Saturday (09:01 UTC)
   name: ci-knative-serving-playground
   agent: kubernetes
@@ -1537,6 +1570,43 @@ periodics:
       # docker needs privileged mode
       securityContext:
         privileged: true
+- cron: "7 */2 * * *" # Run every two hours and seven minutes
+  name: ci-knative-build-auto-release
+  agent: kubernetes
+  labels:
+    preset-release-account: "true"
+    preset-dind-enabled: "true"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      args:
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=github.com/knative/build"
+      - "--root=/go/src"
+      - "--service-account=/etc/release-account/service-account.json"
+      - "--upload=gs://knative-prow/logs"
+      - "--timeout=90" # 1.5h
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./hack/release.sh"
+      - "--auto-release"
+      - "--release-gcs knative-releases/build"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      # docker needs privileged mode
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
 - cron: "5 8 * * *" # Run at 01:05PST every day (08:05 UTC)
   name: ci-knative-build-latency
   agent: kubernetes
@@ -1781,6 +1851,39 @@ periodics:
       - "./hack/release.sh"
       - "--publish"
       - "--tag-release"
+- cron: "5 */2 * * *" # Run every two hours and five minutes
+  name: ci-knative-eventing-auto-release
+  agent: kubernetes
+  labels:
+    preset-release-account: "true"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      args:
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=github.com/knative/eventing"
+      - "--root=/go/src"
+      - "--service-account=/etc/release-account/service-account.json"
+      - "--upload=gs://knative-prow/logs"
+      - "--timeout=90" # 1.5h
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./hack/release.sh"
+      - "--auto-release"
+      - "--release-gcs knative-releases/eventing"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
 - cron: "0 1 * * *" # Run at 01:00 every day
   name: ci-knative-eventing-sources-go-coverage
   agent: kubernetes
