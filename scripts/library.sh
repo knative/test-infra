@@ -281,7 +281,6 @@ function start_latest_knative_serving() {
   echo "Installing Serving from ${KNATIVE_SERVING_RELEASE}"
   kubectl apply -f ${KNATIVE_SERVING_RELEASE} || return 1
   wait_until_pods_running knative-serving || return 1
-  wait_until_pods_running knative-build || return 1
 }
 
 # Install the latest stable Knative/build in the current cluster.
