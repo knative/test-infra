@@ -238,7 +238,6 @@ function default_integration_test_runner() {
 RUN_BUILD_TESTS=0
 RUN_UNIT_TESTS=0
 RUN_INTEGRATION_TESTS=0
-RUN_PRESUBMIT_TESTS=0
 EMIT_METRICS=0
 
 # Process flags and run tests accordingly.
@@ -280,7 +279,6 @@ function main() {
       --build-tests) RUN_BUILD_TESTS=1 ;;
       --unit-tests) RUN_UNIT_TESTS=1 ;;
       --integration-tests) RUN_INTEGRATION_TESTS=1 ;;
-      --run-presubmit-tests) RUN_PRESUBMIT_TESTS=1 ;;
       --emit-metrics) EMIT_METRICS=1 ;;
       --all-tests)
         RUN_BUILD_TESTS=1
@@ -300,7 +298,6 @@ function main() {
   readonly RUN_BUILD_TESTS
   readonly RUN_UNIT_TESTS
   readonly RUN_INTEGRATION_TESTS
-  readonly RUN_PRESUBMIT_TESTS
   readonly EMIT_METRICS
   readonly TEST_TO_RUN
 
@@ -314,7 +311,8 @@ function main() {
     if (( RUN_BUILD_TESTS || RUN_UNIT_TESTS || RUN_INTEGRATION_TESTS )); then
       abort "--run-test must be used alone"
     fi
-    (( RUN_PRESUBMIT_TESTS )) && (( IS_DOCUMENTATION_PR )) && exit ${failed}
+    # If this is a presubmit run, but a documentation-only PR, don't run the test
+    (( IS_PRESUBMIT && IS_DOCUMENTATION_PR )) && exit 0
     ${TEST_TO_RUN} || failed=1
   fi
 
