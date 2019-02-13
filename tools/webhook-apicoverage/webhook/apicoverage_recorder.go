@@ -69,16 +69,16 @@ func (a *APICoverageRecorder) RecordResourceCoverage(w http.ResponseWriter, r *h
 		err error
 	)
 
+	review := &v1beta1.AdmissionReview{}
 	if body, err = ioutil.ReadAll(r.Body); err != nil {
 		a.Logger.Errorf("Failed reading request body: %v", err)
-		a.writeAdmissionResponse(a.getAdmissionResponse(false, "Admission Denied"), w)
+		a.appendAndWriteAdmissionResponse(review, false, "Admission Denied", w)
 		return
 	}
 
-	review := &v1beta1.AdmissionReview{}
 	if _, _, err := decoder.Decode(body, nil, review); err != nil {
 		a.Logger.Errorf("Unable to decode request: %v", err)
-		a.writeAdmissionResponse(a.getAdmissionResponse(false, "Admission Denied"), w)
+		a.appendAndWriteAdmissionResponse(review, false, "Admission Denied", w)
 		return
 	}
 
@@ -87,27 +87,31 @@ func (a *APICoverageRecorder) RecordResourceCoverage(w http.ResponseWriter, r *h
 		Version: review.Request.Kind.Version,
 		Kind:    review.Request.Kind.Kind,
 	}
+	// We only care about resources the repo has setup.
+	if _, ok := a.ResourceMap[gvk]; !ok {
+		a.appendAndWriteAdmissionResponse(review, true, "Welcome Aboard", w)
+		return
+	}
+
 	if err := json.Unmarshal(review.Request.Object.Raw, a.ResourceMap[gvk]); err != nil {
 		a.Logger.Errorf("Failed unmarshalling review.Request.Object.Raw for type: %s Error: %v", a.ResourceMap[gvk], err)
-		a.writeAdmissionResponse(a.getAdmissionResponse(false, "Admission Denied"), w)
+		a.appendAndWriteAdmissionResponse(review, false, "Admission Denied", w)
 		return
 	}
 	resourceTree := a.ResourceForest.TopLevelTrees[gvk.Kind]
 	resourceTree.UpdateCoverage(reflect.ValueOf(a.ResourceMap[gvk]).Elem())
-	a.writeAdmissionResponse(a.getAdmissionResponse(true, "Welcome Aboard"), w)
+	a.appendAndWriteAdmissionResponse(review, true, "Welcome Aboard", w)
 }
 
-func (a *APICoverageRecorder) getAdmissionResponse(allowed bool, message string) (*v1beta1.AdmissionResponse) {
-	return &v1beta1.AdmissionResponse{
+func (a *APICoverageRecorder) appendAndWriteAdmissionResponse(review *v1beta1.AdmissionReview, allowed bool, message string, w http.ResponseWriter) {
+	review.Response = &v1beta1.AdmissionResponse{
 		Allowed: allowed,
 		Result: &v1.Status{
 			Message: message,
 		},
 	}
-}
 
-func (a *APICoverageRecorder) writeAdmissionResponse(admissionResp *v1beta1.AdmissionResponse, w http.ResponseWriter) {
-	responseInBytes, err := json.Marshal(admissionResp)
+	responseInBytes, err := json.Marshal(review)
 	if err != nil {
 		a.Logger.Errorf("Failing mashalling review response: %v", err)
 	}
