@@ -261,7 +261,7 @@ func waitForRateReset(r *github.Rate) {
 	if r.Remaining <= tokenReserve {
 		sleepDuration := time.Until(r.Reset.Time) + (time.Second * 10)
 		if sleepDuration > 0 {
-			log.Printf("--Rate Limiting-- Tokens reached minimum reserve %d. Sleeping until reset in %v.\n", tokenReserve, sleepDuration)
+			log.Printf("--Rate Limiting-- GitHub tokens reached minimum reserve %d. Sleeping %ds until reset.\n", tokenReserve, sleepDuration)
 			time.Sleep(sleepDuration)
 		}
 	}
