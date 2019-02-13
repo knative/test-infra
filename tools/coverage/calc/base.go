@@ -147,7 +147,7 @@ func (c *Coverage) IsCoverageLow(covThresholdInt int) bool {
 	if err == nil {
 		return ratio < covThreshold
 	}
-	return true
+	return false
 }
 
 func SortCoverages(cs []Coverage) {
