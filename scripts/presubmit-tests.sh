@@ -311,6 +311,8 @@ function main() {
     if (( RUN_BUILD_TESTS || RUN_UNIT_TESTS || RUN_INTEGRATION_TESTS )); then
       abort "--run-test must be used alone"
     fi
+    # If this is a presubmit run, but a documentation-only PR, don't run the test
+    (( IS_PRESUBMIT && IS_DOCUMENTATION_PR )) && exit 0
     ${TEST_TO_RUN} || failed=1
   fi
 
