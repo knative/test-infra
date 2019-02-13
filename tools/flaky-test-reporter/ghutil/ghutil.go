@@ -39,7 +39,7 @@ const (
 	IssueOpenState IssueStateEnum = "open"
 	// IssueCloseState is the state of closed github issue
 	IssueCloseState IssueStateEnum = "close"
-	// IssueAllState can be used as filter for querying genericList including closed genericList
+	// IssueAllState is the state for all, useful when querying issues
 	IssueAllState  IssueStateEnum = "all"
 )
 
@@ -68,7 +68,7 @@ func Authenticate(tokenFilePath *string) error {
 func GetCurrentUser() (*github.User, error) {
 	var res *github.User
 	_, err := retry(
-		fmt.Sprintf("getting current user"),
+		"getting current user",
 		maxRetryCount,
 		func() (*github.Response, error) {
 			var resp *github.Response
@@ -80,8 +80,7 @@ func GetCurrentUser() (*github.User, error) {
 	return res, err
 }
 
-// ListIssuesByRepo lists genericList within given repo,
-// filters by labels if labels provided
+// ListIssuesByRepo lists issues within given repo, filters by labels if provided
 func ListIssuesByRepo(org, repo string, labels []string) ([]*github.Issue, error) {
 	issueListOptions := github.IssueListByRepoOptions{
 		State:  string(IssueAllState),
@@ -135,25 +134,25 @@ func CreateIssue(org, repo, title, body string) (*github.Issue, error) {
 }
 
 // CloseIssue closes issue
-func CloseIssue(org, repo string, number int) error {
-	return updateIssueState(org, repo, IssueCloseState, number)
+func CloseIssue(org, repo string, issueNumber int) error {
+	return updateIssueState(org, repo, IssueCloseState, issueNumber)
 }
 
 // ReopenIssue reopen issue
-func ReopenIssue(org, repo string, number int) error {
-	return updateIssueState(org, repo, IssueOpenState, number)
+func ReopenIssue(org, repo string, issueNumber int) error {
+	return updateIssueState(org, repo, IssueOpenState, issueNumber)
 }
 
 // ListComments gets all comments from issue
-func ListComments(org, repo string, number int) ([]*github.IssueComment, error) {
+func ListComments(org, repo string, issueNumber int) ([]*github.IssueComment, error) {
 	var res []*github.IssueComment
 	options := &github.ListOptions{}
 	genericList, err := depaginate(
-		fmt.Sprintf("commenting issue '%s %s %d'", org, repo, number),
+		fmt.Sprintf("listing comment for issue '%s %s %d'", org, repo, issueNumber),
 		maxRetryCount,
 		options,
 		func() ([]interface{}, *github.Response, error) {
-			page, resp, err := client.Issues.ListComments(ctx, org, repo, number, nil)
+			page, resp, err := client.Issues.ListComments(ctx, org, repo, issueNumber, nil)
 			var interfaceList []interface{}
 			if nil == err {
 				for _, issue := range page {
@@ -186,35 +185,31 @@ func GetComment(org, repo string, commentID int64) (*github.IssueComment, error)
 }
 
 // CreateComment adds comment to issue
-func CreateComment(org, repo string, number int, commentStr string) error {
+func CreateComment(org, repo string, issueNumber int, commentBody string) error {
 	comment := &github.IssueComment{
-		Body: &commentStr,
+		Body: &commentBody,
 	}
 	_, err := retry(
-		fmt.Sprintf("commenting issue '%s %s %d'", org, repo, number),
+		fmt.Sprintf("commenting issue '%s %s %d'", org, repo, issueNumber),
 		maxRetryCount,
 		func() (*github.Response, error) {
-			var resp *github.Response
-			var err error
-			_, resp, err = client.Issues.CreateComment(ctx, org, repo, number, comment)
+			_, resp, err := client.Issues.CreateComment(ctx, org, repo, issueNumber, comment)
 			return resp, err
 		},
 	)
 	return err
 }
 
-// EditComment edits comment with given comment ID
-func EditComment(org, repo string, commentID int64, commentStr string) error {
+// EditComment edits comment by replacing with provided comment
+func EditComment(org, repo string, commentID int64, commentBody string) error {
 	comment := &github.IssueComment{
-		Body: &commentStr,
+		Body: &commentBody,
 	}
 	_, err := retry(
 		fmt.Sprintf("editing comment '%s %s %d'", org, repo, commentID),
 		maxRetryCount,
 		func() (*github.Response, error) {
-			var resp *github.Response
-			var err error
-			_, resp, err = client.Issues.EditComment(ctx, org, repo, commentID, comment)
+			_, resp, err := client.Issues.EditComment(ctx, org, repo, commentID, comment)
 			return resp, err
 		},
 	)
@@ -222,47 +217,40 @@ func EditComment(org, repo string, commentID int64, commentStr string) error {
 }
 
 // AddLabelsToIssue adds label on issue
-func AddLabelsToIssue(org, repo string, number int, labelStrs []string) error {
+func AddLabelsToIssue(org, repo string, issueNumber int, labels []string) error {
 	_, err := retry(
-		fmt.Sprintf("add labels '%v' to '%s %s %d'", labelStrs, org, repo, number),
+		fmt.Sprintf("add labels '%v' to '%s %s %d'", labels, org, repo, issueNumber),
 		maxRetryCount,
 		func() (*github.Response, error) {
-			var resp *github.Response
-			var err error
-			_, resp, err = client.Issues.AddLabelsToIssue(ctx, org, repo, number, labelStrs)
+			_, resp, err := client.Issues.AddLabelsToIssue(ctx, org, repo, issueNumber, labels)
 			return resp, err
 		},
 	)
 	return err
 }
 
-// RemoveLabelForIssue in case test failed, remove label auto:lessflaky if exists
-func RemoveLabelForIssue(org, repo string, number int, labelStr string) error {
+// RemoveLabelForIssue removes given label for issue
+func RemoveLabelForIssue(org, repo string, issueNumber int, label string) error {
 	_, err := retry(
-		fmt.Sprintf("remove label '%s' from '%s %s %d'", labelStr, org, repo, number),
+		fmt.Sprintf("remove label '%s' from '%s %s %d'", label, org, repo, issueNumber),
 		maxRetryCount,
 		func() (*github.Response, error) {
-			var resp *github.Response
-			var err error
-			resp, err = client.Issues.RemoveLabelForIssue(ctx, org, repo, number, labelStr)
-			return resp, err
+			return client.Issues.RemoveLabelForIssue(ctx, org, repo, issueNumber, label)
 		},
 	)
 	return err
 }
 
-func updateIssueState(org, repo string, state IssueStateEnum, number int) error {
+func updateIssueState(org, repo string, state IssueStateEnum, issueNumber int) error {
 	stateString := string(state)
 	issueRequest := &github.IssueRequest{
 		State: &stateString,
 	}
 	_, err := retry(
-		fmt.Sprintf("applying '%s' action on issue '%s %s %d'", stateString, org, repo, number),
+		fmt.Sprintf("applying '%s' action on issue '%s %s %d'", stateString, org, repo, issueNumber),
 		maxRetryCount,
 		func() (*github.Response, error) {
-			var resp *github.Response
-			var err error
-			_, resp, err = client.Issues.Edit(ctx, org, repo, number, issueRequest)
+			_, resp, err := client.Issues.Edit(ctx, org, repo, issueNumber, issueRequest)
 			return resp, err
 		},
 	)
