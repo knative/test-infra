@@ -22,6 +22,9 @@ PROW_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 get-cluster-credentials:
 	gcloud container clusters get-credentials "$(CLUSTER)" --project="$(PROJECT)" --zone="$(ZONE)"
 
+config:
+	go run make_config.go config_knative.yaml > config.yaml
+
 update-config: get-cluster-credentials
 	kubectl create configmap config --from-file=config.yaml=config.yaml --dry-run -o yaml | kubectl replace configmap config -f -
 
