@@ -5,6 +5,7 @@ import (
 	"github.com/knative/test-infra/tools/coverage/str"
 	"log"
 	"os"
+	"path"
 	"strings"
 )
 
@@ -130,4 +131,17 @@ func (g *CoverageList) Report(itemized bool) {
 	}
 	g.Summarize()
 	fmt.Printf("summarized ratio: %v\n", g.String())
+}
+
+// Get a list a sub-directories that contains source code. The list will be shown on Testgrid
+func (g *CoverageList) GetDirs() []string {
+	dirSet := map[string]bool{}
+	for _, cov := range g.group {
+		dirSet[path.Dir(cov.name)] = true
+	}
+	var result []string
+	for key := range dirSet {
+		result = append(result, key)
+	}
+	return result
 }
