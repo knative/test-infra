@@ -133,7 +133,7 @@ func (g *CoverageList) Report(itemized bool) {
 	fmt.Printf("summarized ratio: %v\n", g.String())
 }
 
-// Get a list a sub-directories that contains source code. The list will be shown on Testgrid
+// GetDirs gets a list a sub-directories that contains source code. The list will be shown on Testgrid
 func (g *CoverageList) GetDirs() []string {
 	dirSet := map[string]bool{}
 	for _, cov := range g.group {
