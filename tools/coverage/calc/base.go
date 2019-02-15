@@ -147,6 +147,7 @@ func (c *Coverage) IsCoverageLow(covThresholdInt int) bool {
 	if err == nil {
 		return ratio < covThreshold
 	}
+	// go file with no statement should not be marked as low coverage file
 	return false
 }
 
