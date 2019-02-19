@@ -834,9 +834,6 @@ func generateGoCoveragePostsubmits() {
 		data.Base.Image = coverageDockerImage
 		data.PostsubmitJobName = fmt.Sprintf("post-%s-go-coverage", data.Base.RepoNameForJob)
 		configureServiceAccountForJob(&data.Base)
-		if jobNameFilter != "" && jobNameFilter != data.PostsubmitJobName && jobNameFilter != "post-knative-serving-go-coverage-dev" {
-			continue
-		}
 		executeJobTemplate("postsubmit go coverage", goCoveragePostsubmitJob, "postsubmits", repo, data.PostsubmitJobName, true, data)
 		// TODO(adrcunha): remove once the coverage-dev job isn't necessary anymore.
 		// Generate config for post-knative-serving-go-coverage-dev right after post-knative-serving-go-coverage
