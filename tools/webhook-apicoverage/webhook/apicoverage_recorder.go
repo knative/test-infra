@@ -23,6 +23,7 @@ import (
 	"net/http"
 	"os"
 	"reflect"
+	"strings"
 
 	"github.com/knative/pkg/webhook"
 	"github.com/knative/test-infra/tools/webhook-apicoverage/coveragecalculator"
@@ -89,6 +90,7 @@ func (a *APICoverageRecorder) RecordResourceCoverage(w http.ResponseWriter, r *h
 	}
 	// We only care about resources the repo has setup.
 	if _, ok := a.ResourceMap[gvk]; !ok {
+		a.Logger.Info("By-passing resource coverage update for resource : %s", gvk.Kind)
 		a.appendAndWriteAdmissionResponse(review, true, "Welcome Aboard", w)
 		return
 	}
@@ -100,6 +102,7 @@ func (a *APICoverageRecorder) RecordResourceCoverage(w http.ResponseWriter, r *h
 	}
 	resourceTree := a.ResourceForest.TopLevelTrees[gvk.Kind]
 	resourceTree.UpdateCoverage(reflect.ValueOf(a.ResourceMap[gvk]).Elem())
+	a.Logger.Info("Successfully recorded coverage for resource ", gvk.Kind)
 	a.appendAndWriteAdmissionResponse(review, true, "Welcome Aboard", w)
 }
 
@@ -137,7 +140,22 @@ func (a *APICoverageRecorder) GetResourceCoverage(w http.ResponseWriter, r *http
 
 	tree := a.ResourceForest.TopLevelTrees[resource]
 	typeCoverage := tree.BuildCoverageData(a.NodeRules, a.FieldRules, ignoredFields)
+	coverageValues := coveragecalculator.CalculateTypeCoverage(typeCoverage)
 
-	jsonLikeDisplay := view.GetJSONTypeDisplay(typeCoverage, a.DisplayRules)
-	fmt.Fprint(w, jsonLikeDisplay)
+	var buffer strings.Builder
+	buffer.WriteString(view.GetJSONTypeDisplay(typeCoverage, a.DisplayRules))
+
+	buffer.WriteString("\n Coverage Values:\n")
+	buffer.WriteString(fmt.Sprintf("Total Fields : %d\n", coverageValues.TotalFields))
+	buffer.WriteString(fmt.Sprintf("Covered Feilds : %d\n", coverageValues.CoveredFields))
+	buffer.WriteString(fmt.Sprintf("IgnoredFields : %d\n", coverageValues.IgnoredFields))
+
+	percentCoverage := 0.0
+	if coverageValues.CoveredFields > 0 {
+		percentCoverage = (float64(coverageValues.CoveredFields) / float64(coverageValues.TotalFields - coverageValues.IgnoredFields)) * 100
+	}
+	buffer.WriteString(fmt.Sprintf("Coverage Percentage : %f\n", percentCoverage))
+
+
+	fmt.Fprint(w, buffer.String())
 }
