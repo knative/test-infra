@@ -136,12 +136,12 @@ func (g *CoverageList) Report(itemized bool) {
 // GetDirs gets a list a sub-directories that contains source code. The list will be shown on Testgrid
 func (g *CoverageList) GetDirs() []string {
 	dirSet := map[string]bool{}
-	for _, cov := range g.group {
-		dirSet[path.Dir(cov.name)] = true
-	}
 	var result []string
-	for key := range dirSet {
-		result = append(result, key)
+	for _, cov := range g.group {
+		if dirName := path.Dir(cov.name); !dirSet[dirName] {
+			result = append(result, dirName)
+			dirSet[dirName] = true
+		}
 	}
 	return result
 }
