@@ -51,28 +51,28 @@ type repositoryData struct {
 type baseProwJobTemplateData struct {
 	RepoName            string
 	RepoNameForJob      string
+	GcsBucket           string
 	GcsLogDir           string
 	GcsPresubmitLogDir  string
-	GcsBucket           string
 	RepoURI             string
 	RepoBranch          string
 	SecurityContext     []string
-	AccountPresets      []string
 	SkipBranches        []string
 	Command             string
 	Args                []string
+	Env                 []string
+	Volumes             []string
+	VolumeMounts        []string
 	Timeout             int
-	Year                int
+	AlwaysRun           bool
 	LogsDir             string
 	PresubmitLogsDir    string
 	TestAccount         string
-	NightlyAccount      string
-	ReleaseAccount      string
+	ServiceAccount      string
 	ReleaseGcs          string
 	GoCoverageThreshold int
-	ServiceAccount      string
-	AlwaysRun           bool
 	Image               string
+	Year                int
 }
 
 // presubmitJobTemplateData contains data about a presubmit Prow job.
@@ -99,16 +99,12 @@ type postsubmitJobTemplateData struct {
 }
 
 // sectionGenerator is a function that generates Prow job configs given a slice of a yaml file with configs.
-type sectionGenerator func(string, yaml.MapSlice)
+type sectionGenerator func(string, string, yaml.MapSlice)
 
 var (
 	// Array constants used throughout the jobs.
-	allPresubmitTests    = []string{"--all-tests", "--emit-metrics"}
-	releaseNightly       = []string{"--publish", "--tag-release"}
-	presetTestAccount    = []string{"preset-test-account: \"true\""}
-	presetNightlyAccount = []string{"preset-nightly-account: \"true\""}
-	presetReleaseAccount = []string{"preset-release-account: \"true\""}
-	presetDindEnabled    = []string{"preset-dind-enabled: \"true\""}
+	allPresubmitTests = []string{"--all-tests", "--emit-metrics"}
+	releaseNightly    = []string{"--publish", "--tag-release"}
 
 	// Values used in the jobs that can be changed through command-line flags.
 	gcsBucket            string
@@ -122,10 +118,17 @@ var (
 	presubmitScript      string
 	releaseScript        string
 	performanceScript    string
-	repositoryOverride   string
+
+	// Overrides and behavior changes through command-line flags.
+	repositoryOverride string
+	jobNameFilter      string
+	preCommand         string
 
 	// List of Knative repositories.
 	repositories []repositoryData
+
+	// Map which sections of the config.yaml were written to stdout.
+	sectionMap map[string]bool
 )
 
 // Templates for config generation.
@@ -213,88 +216,6 @@ tide:
     knative: squash
     knative/build-pipeline: rebase
   target_url: https://prow.knative.dev/tide
-
-presets:
-# test run service account
-- labels:
-    preset-test-account: "true"
-  env:
-  - name: GOOGLE_APPLICATION_CREDENTIALS
-    value: [[.TestAccount]]
-  - name: E2E_CLUSTER_REGION
-    value: us-west1
-  volumes:
-  - name: account
-    secret:
-      secretName: test-account
-  volumeMounts:
-  - name: account
-    mountPath: /etc/test-account
-    readOnly: true
-# nightly release service account
-- labels:
-    preset-nightly-account: "true"
-  env:
-  - name: GOOGLE_APPLICATION_CREDENTIALS
-    value: [[.NightlyAccount]]
-  - name: E2E_CLUSTER_REGION
-    value: us-west1
-  volumes:
-  - name: account
-    secret:
-      secretName: nightly-account
-  volumeMounts:
-  - name: account
-    mountPath: /etc/nightly-account
-    readOnly: true
-# versioned release service account
-- labels:
-    preset-release-account: "true"
-  env:
-  - name: GOOGLE_APPLICATION_CREDENTIALS
-    value: [[.ReleaseAccount]]
-  - name: E2E_CLUSTER_REGION
-    value: us-west1
-  volumes:
-  - name: account
-    secret:
-      secretName: release-account
-  - name: hub-token
-    secret:
-      secretName: hub-token
-  volumeMounts:
-  - name: account
-    mountPath: /etc/release-account
-    readOnly: true
-  - name: hub-token
-    mountPath: /etc/hub-token
-    readOnly: true
-# backups service account
-- labels:
-    preset-backup-account: "true"
-  env:
-  - name: GOOGLE_APPLICATION_CREDENTIALS
-    value: /etc/backup-account/service-account.json
-  volumes:
-  - name: account
-    secret:
-      secretName: backup-account
-  volumeMounts:
-  - name: account
-    mountPath: /etc/backup-account
-    readOnly: true
-# docker-in-docker presets
-- labels:
-    preset-dind-enabled: "true"
-  env:
-  - name: DOCKER_IN_DOCKER_ENABLED
-    value: "true"
-  volumes:
-  - name: docker-graph
-    emptyDir: {}
-  volumeMounts:
-  - name: docker-graph
-    mountPath: /docker-graph
 `
 
 	// presubmitJob is the template for presubmit jobs.
@@ -305,9 +226,6 @@ presets:
     always_run: [[.Base.AlwaysRun]]
     rerun_command: "/test [[.PresubmitPullJobName]]"
     trigger: "(?m)^/test (all|[[.PresubmitPullJobName]]),?(\\s+|$)"
-    labels:
-      preset-test-account: "true"
-      [[indent_keys 6 .Base.AccountPresets]]
     [[indent_array_section 4 "skip_branches" .Base.SkipBranches]]
     spec:
       containers:
@@ -319,19 +237,20 @@ presets:
         - "--job=$(JOB_NAME)"
         - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
         - "--root=/go/src"
-        - "--service-account=[[.Base.TestAccount]]"
+        - "--service-account=[[.Base.ServiceAccount]]"
         - "--upload=[[.Base.GcsPresubmitLogDir]]"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         [[indent_array 8 .PresubmitCommand]]
         [[indent_section 10 "securityContext" .Base.SecurityContext]]
+        [[indent_section 8 "volumeMounts" .Base.VolumeMounts]]
+        [[indent_section 8 "env" .Base.Env]]
+      [[indent_section 6 "volumes" .Base.Volumes]]
 `
 
 	// presubmitGoCoverageJob is the template for go coverage presubmit jobs.
 	presubmitGoCoverageJob = `
   - name: [[.PresubmitPullJobName]]
-    labels:
-      preset-test-account: "true"
     agent: kubernetes
     context: [[.PresubmitPullJobName]]
     always_run: [[.Base.AlwaysRun]]
@@ -353,15 +272,10 @@ presets:
         - "--profile-name=coverage_profile.txt"
         - "--cov-target=."
         - "--cov-threshold-percentage=[[.Base.GoCoverageThreshold]]"
-        - "--github-token=/etc/github-token/token"
-        volumeMounts:
-        - name: github-token
-          mountPath: /etc/github-token
-          readOnly: true
-      volumes:
-      - name: github-token
-        secret:
-          secretName: covbot-token
+        - "--github-token=/etc/covbot-token/token"
+        [[indent_section 8 "volumeMounts" .Base.VolumeMounts]]
+        [[indent_section 8 "env" .Base.Env]]
+      [[indent_section 6 "volumes" .Base.Volumes]]
 `
 
 	// presubmitJob is the template for presubmit jobs.
@@ -369,7 +283,6 @@ presets:
 - cron: "[[.CronString]]"
   name: [[.PeriodicJobName]]
   agent: kubernetes
-  [[indent_section 4 "labels" .Base.AccountPresets]]
   spec:
     containers:
     - image: [[.Base.Image]]
@@ -387,6 +300,9 @@ presets:
       - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       [[indent_array 6 .PeriodicCommand]]
       [[indent_section 8 "securityContext" .Base.SecurityContext]]
+      [[indent_section 6 "volumeMounts" .Base.VolumeMounts]]
+      [[indent_section 6 "env" .Base.Env]]
+    [[indent_section 4 "volumes" .Base.Volumes]]
 `
 
 	// latencyJob is the template for latency metrics aggregation jobs.
@@ -394,7 +310,6 @@ presets:
 - cron: "[[.CronString]]"
   name: [[.PeriodicJobName]]
   agent: kubernetes
-  [[indent_section 4 "labels" .Base.AccountPresets]]
   decorate: true
   extra_refs:
   - org: knative
@@ -411,6 +326,9 @@ presets:
       - "--source-directory=ci-[[.Base.RepoNameForJob]]-continuous"
       - "--artifacts-dir=$(ARTIFACTS)"
       - "--service-account=[[.Base.ServiceAccount]]"
+      [[indent_section 6 "volumeMounts" .Base.VolumeMounts]]
+      [[indent_section 6 "env" .Base.Env]]
+    [[indent_section 4 "volumes" .Base.Volumes]]
 `
 
 	// apiCoverageJob is the template for API coverage metrics aggregation jobs.
@@ -418,7 +336,6 @@ presets:
 - cron: "[[.CronString]]"
   name: [[.PeriodicJobName]]
   agent: kubernetes
-  [[indent_section 4 "labels" .Base.AccountPresets]]
   decorate: true
   extra_refs:
   - org: knative
@@ -434,6 +351,9 @@ presets:
       args:
       - "--artifacts-dir=$(ARTIFACTS)"
       - "--service-account=[[.Base.ServiceAccount]]"
+      [[indent_section 6 "volumeMounts" .Base.VolumeMounts]]
+      [[indent_section 6 "env" .Base.Env]]
+    [[indent_section 4 "volumes" .Base.Volumes]]
 `
 
 	// goCoveragePeriodicJob is the template for go coverage periodic jobs.
@@ -458,6 +378,9 @@ presets:
       - "--profile-name=coverage_profile.txt"
       - "--cov-target=."
       - "--cov-threshold-percentage=[[.Base.GoCoverageThreshold]]"
+      [[indent_section 6 "volumeMounts" .Base.VolumeMounts]]
+      [[indent_section 6 "env" .Base.Env]]
+    [[indent_section 4 "volumes" .Base.Volumes]]
 `
 
 	// cleanupPeriodicJob is the template for the cleanup job.
@@ -465,7 +388,6 @@ presets:
 - cron: "[[.CronString]]"
   name: [[.PeriodicJobName]]
   agent: kubernetes
-  [[indent_section 4 "labels" .Base.AccountPresets]]
   decorate: true
   decoration_config:
     timeout: 28800000000000 # 8 hours
@@ -486,6 +408,9 @@ presets:
       - "--days-to-keep 30"
       - "--service-account [[.Base.ServiceAccount]]"
       - "--artifacts $(ARTIFACTS)"
+      [[indent_section 6 "volumeMounts" .Base.VolumeMounts]]
+      [[indent_section 6 "env" .Base.Env]]
+    [[indent_section 4 "volumes" .Base.Volumes]]
 `
 
 	// cleanupPeriodicJob is the template for the cleanup job.
@@ -493,8 +418,6 @@ presets:
 - cron: "[[.CronString]]"
   name: [[.PeriodicJobName]]
   agent: kubernetes
-  labels:
-    preset-backup-account: "true"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/backups:latest
@@ -502,7 +425,10 @@ presets:
       command:
       - "/backup.sh"
       args:
-      - "/etc/backup-account/service-account.json"
+      - "[[.Base.ServiceAccount]]"
+      [[indent_section 6 "volumeMounts" .Base.VolumeMounts]]
+      [[indent_section 6 "env" .Base.Env]]
+    [[indent_section 4 "volumes" .Base.Volumes]]
 `
 
 	// goCoveragePostsubmitJob is the template for the go postsubmit coverage job.
@@ -597,9 +523,6 @@ func getMapSlice(m interface{}) yaml.MapSlice {
 // newbaseProwJobTemplateData returns a baseProwJobTemplateData type with its initial, default values.
 func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	var data baseProwJobTemplateData
-	data.TestAccount = testAccount
-	data.NightlyAccount = nightlyAccount
-	data.ReleaseAccount = releaseAccount
 	data.Timeout = 50
 	data.RepoName = strings.Replace(repo, "knative/", "", 1)
 	data.RepoNameForJob = strings.Replace(repo, "/", "-", -1)
@@ -613,8 +536,61 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.ReleaseGcs = strings.Replace(repo, "knative/", "knative-releases/", 1)
 	data.AlwaysRun = true
 	data.Image = prowTestsDockerImage
+	data.ServiceAccount = testAccount
+	data.Command = ""
+	data.Args = make([]string, 0)
+	data.Volumes = make([]string, 0)
+	data.VolumeMounts = make([]string, 0)
+	data.Env = make([]string, 0)
 	return data
 }
+
+// General helpers.
+
+// createCommand returns an array with the command to run and its arguments.
+func createCommand(data baseProwJobTemplateData) []string {
+	c := []string{data.Command}
+	// Prefix the pre-command if present.
+	if preCommand != "" {
+		c = append([]string{preCommand}, c...)
+	}
+	return append(c, data.Args...)
+}
+
+// addEnvToJob adds the given key/pair environment variable to the job.
+func addEnvToJob(data *baseProwJobTemplateData, key, value string) {
+	(*data).Env = append((*data).Env, []string{"- name: " + key, "  value: " + value}...)
+}
+
+// addVolumeToJob adds the given mount path as volume for the job.
+func addVolumeToJob(data *baseProwJobTemplateData, mountPath, name string, isSecret bool) {
+	(*data).VolumeMounts = append((*data).VolumeMounts, []string{"- name: " + name, "  mountPath: " + mountPath}...)
+	if isSecret {
+		(*data).VolumeMounts = append((*data).VolumeMounts, "  readOnly: true")
+	}
+	s := []string{"- name: " + name}
+	if isSecret {
+		s = append(s, []string{"  secret:", "    secretName: " + name}...)
+	} else {
+		s = append(s, "  emptyDir: {}")
+	}
+	(*data).Volumes = append((*data).Volumes, s...)
+}
+
+// configureServiceAccountForJob adds the necessary volumes for the service account for the job.
+func configureServiceAccountForJob(data *baseProwJobTemplateData) {
+	if data.ServiceAccount == "" {
+		return
+	}
+	p := strings.Split(data.ServiceAccount, "/")
+	if len(p) != 4 || p[0] != "" || p[1] != "etc" || p[3] != "service-account.json" {
+		log.Fatalf("Service account path %q is expected to be \"/etc/<name>/service-account.json\"", data.ServiceAccount)
+	}
+	name := p[2]
+	addVolumeToJob(data, "/etc/"+name, name, true)
+}
+
+// Config parsers.
 
 // parseBasicJobConfig populates the given baseProwJobTemplateData with any basic option present in the given config.
 func parseBasicJobConfig(data *baseProwJobTemplateData, config yaml.MapSlice) {
@@ -628,11 +604,10 @@ func parseBasicJobConfig(data *baseProwJobTemplateData, config yaml.MapSlice) {
 			(*data).Timeout = getInt(item.Value)
 		case "command":
 			(*data).Command = getString(item.Value)
-		case "labels":
-			(*data).AccountPresets = append((*data).AccountPresets, getStringArray(item.Value)...)
 		case "needs-dind":
 			if getBool(item.Value) {
-				(*data).AccountPresets = append((*data).AccountPresets, presetDindEnabled...)
+				addVolumeToJob(data, "/docker-graph", "docker-graph", false)
+				addEnvToJob(data, "DOCKER_IN_DOCKER_ENABLED", "\"true\"")
 				(*data).SecurityContext = []string{"privileged: true"}
 			}
 		case "always_run":
@@ -646,14 +621,14 @@ func parseBasicJobConfig(data *baseProwJobTemplateData, config yaml.MapSlice) {
 }
 
 // generatePresubmit generates all presubmit job configs for the given repo and configuration.
-func generatePresubmit(repo string, presubmitConfig yaml.MapSlice) {
+func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSlice) {
 	var data presubmitJobTemplateData
-	data.Base = newbaseProwJobTemplateData(repo)
+	data.Base = newbaseProwJobTemplateData(repoName)
 	data.Base.Command = presubmitScript
 	data.Base.GoCoverageThreshold = 80
 	parseBasicJobConfig(&data.Base, presubmitConfig)
 	jobTemplate := presubmitJob
-	repoData := repositoryData{Name: repo, EnableGoCoverage: false, GoCoverageThreshold: data.Base.GoCoverageThreshold}
+	repoData := repositoryData{Name: repoName, EnableGoCoverage: false, GoCoverageThreshold: data.Base.GoCoverageThreshold}
 	for _, item := range presubmitConfig {
 		switch item.Key {
 		case "build-tests", "unit-tests", "integration-tests":
@@ -673,7 +648,9 @@ func generatePresubmit(repo string, presubmitConfig yaml.MapSlice) {
 			jobTemplate = presubmitGoCoverageJob
 			data.PresubmitJobName = data.Base.RepoNameForJob + "-go-coverage"
 			data.Base.Image = coverageDockerImage
+			data.Base.ServiceAccount = ""
 			repoData.EnableGoCoverage = true
+			addVolumeToJob(&data.Base, "/etc/covbot-token", "covbot-token", true)
 		case "custom-test":
 			data.PresubmitJobName = data.Base.RepoNameForJob + "-" + getString(item.Value)
 		case "go-coverage-threshold":
@@ -686,10 +663,15 @@ func generatePresubmit(repo string, presubmitConfig yaml.MapSlice) {
 		}
 	}
 	repositories = append(repositories, repoData)
-	data.PresubmitCommand = append([]string{data.Base.Command}, data.Base.Args...)
+	data.PresubmitCommand = createCommand(data.Base)
 	data.PresubmitPullJobName = "pull-" + data.PresubmitJobName
 	data.PresubmitPostJobName = "post-" + data.PresubmitJobName
-	executeTemplate("presubmit", jobTemplate, data)
+        if data.Base.ServiceAccount != "" {
+		addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
+		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-west1")
+	}
+	configureServiceAccountForJob(&data.Base)
+	executeJobTemplate("presubmit", jobTemplate, title, repoName, data.PresubmitPullJobName, true, data)
 	// TODO(adrcunha): remove once the coverage-dev job isn't necessary anymore.
 	// Generate config for pull-knative-serving-go-coverage-dev right after pull-knative-serving-go-coverage
 	if data.PresubmitPullJobName == "pull-knative-serving-go-coverage" {
@@ -697,21 +679,17 @@ func generatePresubmit(repo string, presubmitConfig yaml.MapSlice) {
 		data.Base.AlwaysRun = false
 		data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest-dev", -1)
 		template := strings.Replace(presubmitGoCoverageJob, "(all|", "(", 1)
-		executeTemplate("presubmit", template, data)
+		executeJobTemplate("presubmit", template, title, repoName, data.PresubmitPullJobName, true, data)
 	}
 }
 
 // generatePeriodic generates all periodic job configs for the given repo and configuration.
-func generatePeriodic(repo string, periodicConfig yaml.MapSlice) {
+func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlice) {
 	var data periodicJobTemplateData
-	data.Base = newbaseProwJobTemplateData(repo)
-	data.Base.Command = ""
-	data.Base.Args = make([]string, 0)
-	data.Base.ServiceAccount = testAccount
+	data.Base = newbaseProwJobTemplateData(repoName)
 	parseBasicJobConfig(&data.Base, periodicConfig)
 	jobNameSuffix := ""
 	jobTemplate := periodicJob
-	accountPresets := presetTestAccount
 	for _, item := range periodicConfig {
 		switch item.Key {
 		case "continuous":
@@ -732,7 +710,6 @@ func generatePeriodic(repo string, periodicConfig yaml.MapSlice) {
 			}
 			jobNameSuffix = "nightly-release"
 			data.Base.ServiceAccount = nightlyAccount
-			accountPresets = presetNightlyAccount
 			data.Base.Command = releaseScript
 			data.Base.Args = releaseNightly
 			data.Base.Timeout = 90
@@ -742,13 +719,13 @@ func generatePeriodic(repo string, periodicConfig yaml.MapSlice) {
 			}
 			jobNameSuffix = getString(item.Key)
 			data.Base.ServiceAccount = releaseAccount
-			accountPresets = presetReleaseAccount
 			data.Base.Command = releaseScript
 			data.Base.Args = []string{
 				"--" + jobNameSuffix,
 				"--release-gcs " + data.Base.ReleaseGcs,
 				"--release-gcr gcr.io/knative-releases",
 				"--github-token /etc/hub-token/token"}
+			addVolumeToJob(&data.Base, "/etc/hub-token", "hub-token", true)
 			data.Base.Timeout = 90
 		case "performance":
 			if !getBool(item.Value) {
@@ -796,33 +773,38 @@ func generatePeriodic(repo string, periodicConfig yaml.MapSlice) {
 		log.Fatalf("Job %q is missing command", data.PeriodicJobName)
 	}
 	// Generate config itself.
-	data.PeriodicCommand = append([]string{data.Base.Command}, data.Base.Args...)
-	data.Base.AccountPresets = append(accountPresets, data.Base.AccountPresets...)
-	executeTemplate("periodic", jobTemplate, data)
+	data.PeriodicCommand = createCommand(data.Base)
+        if data.Base.ServiceAccount != "" {
+		addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
+		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-west1")
+	}
+	configureServiceAccountForJob(&data.Base)
+	executeJobTemplate("periodic", jobTemplate, title, repoName, data.PeriodicJobName, false, data)
 }
 
 // generateCleanupPeriodicJob generates the cleanup job config.
 func generateCleanupPeriodicJob() {
 	var data periodicJobTemplateData
 	data.Base = newbaseProwJobTemplateData("knative/test-infra")
-	data.Base.ServiceAccount = testAccount
-	data.Base.AccountPresets = presetTestAccount
 	data.PeriodicJobName = "ci-knative-cleanup"
 	data.CronString = cleanupPeriodicJobCron
-	executeTemplate("periodic cleanup", cleanupPeriodicJob, data)
+	configureServiceAccountForJob(&data.Base)
+	executeJobTemplate("periodic cleanup", cleanupPeriodicJob, "presubmits", "", data.PeriodicJobName, false, data)
 }
 
 // generateBackupPeriodicJob generates the backup job config.
 func generateBackupPeriodicJob() {
 	var data periodicJobTemplateData
 	data.Base = newbaseProwJobTemplateData("none/unused")
+	data.Base.ServiceAccount = "/etc/backup-account/service-account.json"
 	data.PeriodicJobName = "ci-knative-backup-artifacts"
 	data.CronString = backupPeriodicJobCron
-	executeTemplate("periodic backup", backupPeriodicJob, data)
+	configureServiceAccountForJob(&data.Base)
+	executeJobTemplate("periodic backup", backupPeriodicJob, "presubmits", "", data.PeriodicJobName, false, data)
 }
 
 // generateGoCoveragePeriodic generates the go coverage periodic job config for the given repo (configuration is ignored).
-func generateGoCoveragePeriodic(repoName string, periodicConfig yaml.MapSlice) {
+func generateGoCoveragePeriodic(title string, repoName string, periodicConfig yaml.MapSlice) {
 	for _, repo := range repositories {
 		if repoName != repo.Name || !repo.EnableGoCoverage {
 			continue
@@ -833,55 +815,49 @@ func generateGoCoveragePeriodic(repoName string, periodicConfig yaml.MapSlice) {
 		data.PeriodicJobName = fmt.Sprintf("ci-%s-go-coverage", data.Base.RepoNameForJob)
 		data.CronString = goCoveragePeriodicJobCron
 		data.Base.GoCoverageThreshold = repo.GoCoverageThreshold
-		executeTemplate("periodic go coverage", goCoveragePeriodicJob, data)
+		data.Base.ServiceAccount = ""
+		configureServiceAccountForJob(&data.Base)
+		executeJobTemplate("periodic go coverage", goCoveragePeriodicJob, title, repoName, data.PeriodicJobName, false, data)
 		return
 	}
 }
 
 // generateGoCoveragePostsubmits generates the go coverage postsubmit job configs for all repos.
 func generateGoCoveragePostsubmits() {
-	outputConfig("postsubmits:")
 	for i := range repositories { // Keep order for predictable output.
 		if !repositories[i].EnableGoCoverage {
 			continue
 		}
 		repo := repositories[i].Name
-		outputConfig("  " + repo + ":")
 		var data postsubmitJobTemplateData
 		data.Base = newbaseProwJobTemplateData(repo)
 		data.Base.Image = coverageDockerImage
 		data.PostsubmitJobName = fmt.Sprintf("post-%s-go-coverage", data.Base.RepoNameForJob)
-		executeTemplate("postsubmit go coverage", goCoveragePostsubmitJob, data)
+		configureServiceAccountForJob(&data.Base)
+		executeJobTemplate("postsubmit go coverage", goCoveragePostsubmitJob, "postsubmits", repo, data.PostsubmitJobName, true, data)
 		// TODO(adrcunha): remove once the coverage-dev job isn't necessary anymore.
 		// Generate config for post-knative-serving-go-coverage-dev right after post-knative-serving-go-coverage
 		if data.PostsubmitJobName == "post-knative-serving-go-coverage" {
 			data.PostsubmitJobName += "-dev"
 			data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest-dev", -1)
-			executeTemplate("presubmit", goCoveragePostsubmitJob, data)
+			executeJobTemplate("presubmit", goCoveragePostsubmitJob, "postsubmits", repo, data.PostsubmitJobName, false, data)
 		}
 	}
 }
 
 // parseSection generate the configs form a given section of the input yaml file.
-func parseSection(config yaml.MapSlice, title string, groupByRepo bool, generate sectionGenerator, finalize sectionGenerator) {
-	if len(config) == 0 {
-		return
-	}
-	outputConfig(title + ":")
+func parseSection(config yaml.MapSlice, title string, generate sectionGenerator, finalize sectionGenerator) {
 	for _, section := range config {
 		if section.Key != title {
 			continue
 		}
 		for _, repo := range getMapSlice(section.Value) {
 			repoName := getString(repo.Key)
-			if groupByRepo {
-				outputConfig(baseIndent + repoName + ":")
-			}
 			for _, jobConfig := range getInterfaceArray(repo.Value) {
-				generate(repoName, getMapSlice(jobConfig))
+				generate(title, repoName, getMapSlice(jobConfig))
 			}
 			if finalize != nil {
-				finalize(repoName, nil)
+				finalize(title, repoName, nil)
 			}
 		}
 	}
@@ -903,7 +879,7 @@ func gitHubRepo(data baseProwJobTemplateData) string {
 
 // quote returns the given string quoted if it's not a key/value pair or already quoted.
 func quote(s string) string {
-	if strings.Contains(s, "\"") || strings.Contains(s, ": ") {
+	if strings.Contains(s, "\"") || strings.Contains(s, ": ") || strings.HasSuffix(s, ":") {
 		return s
 	}
 	return "\"" + s + "\""
@@ -962,6 +938,24 @@ func outputConfig(line string) {
 	}
 }
 
+// executeTemplate outputs the given job template with the given data, respecting any filtering.
+func executeJobTemplate(name, templ, title, repoName, jobName string, groupByRepo bool, data interface{}) {
+	if jobNameFilter != "" && jobNameFilter != jobName {
+		return
+	}
+	if !sectionMap[title] {
+		outputConfig(title + ":")
+		sectionMap[title] = true
+	}
+	if groupByRepo {
+		if !sectionMap[title+repoName] {
+			outputConfig(baseIndent + repoName + ":")
+			sectionMap[title+repoName] = true
+		}
+	}
+	executeTemplate(name, templ, data)
+}
+
 // executeTemplate outputs the given template with the given data.
 func executeTemplate(name, templ string, data interface{}) {
 	var res bytes.Buffer
@@ -997,6 +991,8 @@ func main() {
 	flag.StringVar(&releaseScript, "release-script", "./hack/release.sh", "Executable for creating releases")
 	flag.StringVar(&performanceScript, "performance-script", "./test/performance-tests.sh", "Executable for running performance tests")
 	flag.StringVar(&repositoryOverride, "repo-override", "", "Repository path (github.com/foo/bar[=branch]) to use instead for a job")
+	flag.StringVar(&jobNameFilter, "job-filter", "", "Generate only this job, instead of all jobs")
+	flag.StringVar(&preCommand, "pre-command", "", "Executable for running instead of the real command of a job")
 	flag.Parse()
 	if len(flag.Args()) != 1 {
 		log.Fatal("Pass the config file as parameter")
@@ -1004,6 +1000,7 @@ func main() {
 	// We use MapSlice instead of maps to keep key order and create predictable output.
 	config := yaml.MapSlice{}
 	repositories = make([]repositoryData, 0)
+	sectionMap = make(map[string]bool)
 
 	// Read input config.
 	name := flag.Arg(0)
@@ -1019,9 +1016,10 @@ func main() {
 	if *includeConfig {
 		executeTemplate("general config", generalConfig, newbaseProwJobTemplateData(""))
 	}
-	parseSection(config, "presubmits", true, generatePresubmit, nil)
-	parseSection(config, "periodics", false, generatePeriodic, generateGoCoveragePeriodic)
+	parseSection(config, "presubmits", generatePresubmit, nil)
+	parseSection(config, "periodics", generatePeriodic, generateGoCoveragePeriodic)
 	generateCleanupPeriodicJob()
 	generateBackupPeriodicJob()
 	generateGoCoveragePostsubmits()
 }
+
