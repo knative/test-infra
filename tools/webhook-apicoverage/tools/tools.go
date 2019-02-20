@@ -18,13 +18,17 @@ package tools
 
 import (
 	"crypto/tls"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os/user"
 	"path"
 
+	"github.com/knative/test-infra/tools/webhook-apicoverage/coveragecalculator"
 	"github.com/knative/test-infra/tools/webhook-apicoverage/view"
+	"github.com/knative/test-infra/tools/webhook-apicoverage/webhook"
+
 	"k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	// Mysteriously required to support GCP auth (required by k8s libs).
@@ -38,7 +42,10 @@ import (
 
 const (
 	// WebhookResourceCoverageEndPoint constant for resource coverage API endpoint.
-	WebhookResourceCoverageEndPoint = "https://%s:443/resourcecoverage?resource=%s"
+	WebhookResourceCoverageEndPoint = "https://%s:443" + webhook.ResourceCoverageEndPoint + "?resource=%s"
+
+	// WebhookTotalCoverageEndPoint constant for total coverage API endpoint.
+	WebhookTotalCoverageEndPoint = "https://%s:443" + webhook.TotalCoverageEndPoint
 )
 
 // GetDefaultKubePath helper method to fetch kubeconfig path.
@@ -124,7 +131,53 @@ func GetAndWriteResourceCoverage(webhookIP string, resourceName string, outputFi
 	}
 
 	if err = ioutil.WriteFile(outputFile, []byte(resourceCoverage), 0400); err !=nil {
-		return fmt.Errorf("error writing resource coverage to output file: %s, error: %v coverage: %s", resourceCoverage, outputFile, err)
+		return fmt.Errorf("error writing resource coverage to output file: %s, error: %v coverage: %s", outputFile, err, resourceCoverage)
+	}
+
+	return nil
+}
+
+// GetTotalCoverage calls the total coverage API to retrieve total coverage values.
+func GetTotalCoverage(webhookIP string) (*coveragecalculator.CoverageValues, error) {
+	client := &http.Client{Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		},
+	}
+
+	resp, err := client.Get(fmt.Sprintf(WebhookTotalCoverageEndPoint, webhookIP))
+	if err != nil {
+		return nil, fmt.Errorf("encountered error making total coverage request: %v", err)
+	} else if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("invalid HTTP Status recieved for total coverage request. Status: %d", resp.StatusCode)
+	}
+
+	var body []byte
+	if body, err = ioutil.ReadAll(resp.Body); err != nil {
+		return nil, fmt.Errorf("error reading total coverage response: %v", err)
+	}
+
+	var coverage coveragecalculator.CoverageValues
+	if err = json.Unmarshal(body, &coverage); err != nil {
+		return nil, fmt.Errorf("error unmarshalling response to CoverageValues instance: %v", err)
+	}
+
+	return &coverage, nil
+}
+
+// GetAndWriteTotalCoverage uses the GetTotalCoverage method to get total coverage and write it to a output file.
+func GetAndWriteTotalCoverage(webhookIP string, outputFile string) error {
+	var (
+		totalCoverage *coveragecalculator.CoverageValues
+		err error
+	)
+
+	if totalCoverage, err = GetTotalCoverage(webhookIP); err != nil {
+		return err
+	}
+
+	totalCoverageDisplay := view.GetCoverageValuesDisplay(totalCoverage)
+	if err = ioutil.WriteFile(outputFile, []byte(totalCoverageDisplay), 0400); err !=nil {
+		return fmt.Errorf("error writing total coverage to output file: %s, error: %v coverage: %s", outputFile, err, totalCoverageDisplay)
 	}
 
 	return nil
