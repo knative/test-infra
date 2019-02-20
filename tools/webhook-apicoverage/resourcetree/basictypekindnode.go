@@ -93,13 +93,9 @@ func (b *BasicTypeKindNode) addValue(value string) {
 	}
 }
 
-func (b *BasicTypeKindNode) getValues() ([]string) {
+func (b *BasicTypeKindNode) getValues() (map[string]bool) {
 	if b.possibleEnum {
-		values := []string{}
-		for key := range b.values {
-			values = append(values, key)
-		}
-		return values
+		return b.values
 	}
 
 	return nil

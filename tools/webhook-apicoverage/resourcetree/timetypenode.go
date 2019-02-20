@@ -53,6 +53,6 @@ func (ti *TimeTypeNode) updateCoverage(v reflect.Value) {
 func (ti *TimeTypeNode) buildCoverageData(typeCoverage *[]coveragecalculator.TypeCoverage, nodeRules NodeRules,
 	fieldRules FieldRules, ignoredFields coveragecalculator.IgnoredFields) {}
 
-func (ti *TimeTypeNode) getValues() ([]string) {
+func (ti *TimeTypeNode) getValues() (map[string]bool) {
 	return nil
 }

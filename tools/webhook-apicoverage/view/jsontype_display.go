@@ -63,7 +63,7 @@ func defaultTypeDisplay(field *coveragecalculator.FieldCoverage) string {
 	} else {
 		buffer.WriteString("\tCovered: " + strconv.FormatBool(field.Coverage))
 		if len(field.Values) > 0 {
-			buffer.WriteString("\tValues: [" + strings.Join(field.Values, ",") + "]")
+			buffer.WriteString("\tValues: [" + strings.Join(field.GetValues(), ",") + "]")
 		}
 	}
 	buffer.WriteString("\n")
