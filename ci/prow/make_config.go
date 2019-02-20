@@ -596,9 +596,6 @@ func configureServiceAccountForJob(data *baseProwJobTemplateData) {
 
 // addExtraEnvVarsToJob adds any extra environment variables (defined on command-line) to a job.
 func addExtraEnvVarsToJob(data *baseProwJobTemplateData) {
-	if len(extraEnvVars) == 0 {
-		return
-	}
 	for _, env := range extraEnvVars {
 		pair := strings.Split(env, "=")
 		if len(pair) != 2 {
