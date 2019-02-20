@@ -137,6 +137,16 @@ test_groups:
 - name: ci-knative-serving-0.2-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.2-continuous
 
+## release-0.3 branch
+
+- name: ci-knative-serving-0.3-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-serving-0.3-continuous
+
+## release-0.4 branch
+
+- name: ci-knative-serving-0.4-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-serving-0.4-continuous
+
 #################################################################
 # Dashboards
 #################################################################
@@ -264,6 +274,22 @@ dashboards:
     test_group_name: ci-knative-serving-0.2-continuous
     base_options: 'sort-by-name='
 
+## release-0.3 branch
+
+- name: knative-serving-0.3
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-serving-0.3-continuous
+    base_options: 'sort-by-name='
+
+## release-0.4 branch
+
+- name: knative-serving-0.4
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-serving-0.4-continuous
+    base_options: 'sort-by-name='
+
 #################################################################
 # Dashboard groups
 #################################################################
@@ -283,3 +309,9 @@ dashboard_groups:
 - name: knative-0.2
   dashboard_names:
   - knative-serving-0.2
+- name: knative-0.3
+  dashboard_names:
+  - knative-serving-0.3
+- name: knative-0.4
+  dashboard_names:
+  - knative-serving-0.4
