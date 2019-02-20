@@ -99,8 +99,8 @@ presubmits:
 periodics:
   knative/serving:
     - continuous: true
-      cron: "1 */2 * * *" # Run every other hour and one minute
-      timeout: 100
+      cron: "1 * * * *" # Run every other hour and one minute
+      timeout: 55
     - continuous: true
       release: "0.2"
       needs-dind: true
