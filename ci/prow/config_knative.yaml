@@ -110,6 +110,24 @@ periodics:
       args:
       - "--nopublish"
       - "--notag-release"
+    - continuous: true
+      release: "0.3"
+      needs-dind: true
+      cron: "20 8 * * *" # Run at 01:20PST every day (08:20 UTC)
+      command:
+      - "./hack/release.sh"
+      args:
+      - "--nopublish"
+      - "--notag-release"
+    - continuous: true
+      release: "0.4"
+      needs-dind: true
+      cron: "25 8 * * *" # Run at 01:25PST every day (08:25 UTC)
+      command:
+      - "./hack/release.sh"
+      args:
+      - "--nopublish"
+      - "--notag-release"
     - nightly: true
       cron: "1 8 * * *" # Run at 01:01PST every day (08:01 UTC)
     - dot-release: true
