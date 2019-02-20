@@ -42,17 +42,6 @@ const (
 	WebhookResourceCoverageEndPoint = "https://%s:443/resourcecoverage?resource=%s"
 )
 
-// GetDefaultClusterName helper method to fetch cluster name from the env variable K8S_CLUSTER_OVERRIDE
-func GetDefaultClusterName() (string, error) {
-	envName := "K8S_CLUSTER_OVERRIDE"
-	var clusterName string
-	if clusterName = os.Getenv(envName); len(clusterName) == 0 {
-		return "", fmt.Errorf("cluster name not set. Method expects the cluster to be set as an environment variable: %s", envName)
-	}
-
-	return clusterName, nil
-}
-
 // GetDefaultKubePath helper method to fetch kubeconfig path.
 func GetDefaultKubePath() (string, error) {
 	var (
