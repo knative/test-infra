@@ -101,6 +101,9 @@ type postsubmitJobTemplateData struct {
 // sectionGenerator is a function that generates Prow job configs given a slice of a yaml file with configs.
 type sectionGenerator func(string, string, yaml.MapSlice)
 
+// stringArrayFlag is the content of a multi-value flag.
+type stringArrayFlag []string
+
 var (
 	// Array constants used throughout the jobs.
 	allPresubmitTests = []string{"--all-tests", "--emit-metrics"}
@@ -123,6 +126,7 @@ var (
 	repositoryOverride string
 	jobNameFilter      string
 	preCommand         string
+	extraEnvVars       stringArrayFlag
 
 	// List of Knative repositories.
 	repositories []repositoryData
@@ -590,6 +594,20 @@ func configureServiceAccountForJob(data *baseProwJobTemplateData) {
 	addVolumeToJob(data, "/etc/"+name, name, true)
 }
 
+// addExtraEnvVarsToJob adds any extra environment variables (defined on command-line) to a job.
+func addExtraEnvVarsToJob(data *baseProwJobTemplateData) {
+	if len(extraEnvVars) == 0 {
+		return
+	}
+	for _, env := range extraEnvVars {
+		pair := strings.Split(env, "=")
+		if len(pair) != 2 {
+			log.Fatalf("Environment variable %q is expected to be \"key=value\"", env)
+		}
+		addEnvToJob(data, pair[0], pair[1])
+	}
+}
+
 // Config parsers.
 
 // parseBasicJobConfig populates the given baseProwJobTemplateData with any basic option present in the given config.
@@ -666,10 +684,11 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	data.PresubmitCommand = createCommand(data.Base)
 	data.PresubmitPullJobName = "pull-" + data.PresubmitJobName
 	data.PresubmitPostJobName = "post-" + data.PresubmitJobName
-        if data.Base.ServiceAccount != "" {
+	if data.Base.ServiceAccount != "" {
 		addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
 		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-west1")
 	}
+	addExtraEnvVarsToJob(&data.Base)
 	configureServiceAccountForJob(&data.Base)
 	executeJobTemplate("presubmit", jobTemplate, title, repoName, data.PresubmitPullJobName, true, data)
 	// TODO(adrcunha): remove once the coverage-dev job isn't necessary anymore.
@@ -774,10 +793,11 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	}
 	// Generate config itself.
 	data.PeriodicCommand = createCommand(data.Base)
-        if data.Base.ServiceAccount != "" {
+	if data.Base.ServiceAccount != "" {
 		addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
 		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-west1")
 	}
+	addExtraEnvVarsToJob(&data.Base)
 	configureServiceAccountForJob(&data.Base)
 	executeJobTemplate("periodic", jobTemplate, title, repoName, data.PeriodicJobName, false, data)
 }
@@ -788,6 +808,7 @@ func generateCleanupPeriodicJob() {
 	data.Base = newbaseProwJobTemplateData("knative/test-infra")
 	data.PeriodicJobName = "ci-knative-cleanup"
 	data.CronString = cleanupPeriodicJobCron
+	addExtraEnvVarsToJob(&data.Base)
 	configureServiceAccountForJob(&data.Base)
 	executeJobTemplate("periodic cleanup", cleanupPeriodicJob, "presubmits", "", data.PeriodicJobName, false, data)
 }
@@ -799,6 +820,7 @@ func generateBackupPeriodicJob() {
 	data.Base.ServiceAccount = "/etc/backup-account/service-account.json"
 	data.PeriodicJobName = "ci-knative-backup-artifacts"
 	data.CronString = backupPeriodicJobCron
+	addExtraEnvVarsToJob(&data.Base)
 	configureServiceAccountForJob(&data.Base)
 	executeJobTemplate("periodic backup", backupPeriodicJob, "presubmits", "", data.PeriodicJobName, false, data)
 }
@@ -816,6 +838,7 @@ func generateGoCoveragePeriodic(title string, repoName string, periodicConfig ya
 		data.CronString = goCoveragePeriodicJobCron
 		data.Base.GoCoverageThreshold = repo.GoCoverageThreshold
 		data.Base.ServiceAccount = ""
+		addExtraEnvVarsToJob(&data.Base)
 		configureServiceAccountForJob(&data.Base)
 		executeJobTemplate("periodic go coverage", goCoveragePeriodicJob, title, repoName, data.PeriodicJobName, false, data)
 		return
@@ -833,6 +856,7 @@ func generateGoCoveragePostsubmits() {
 		data.Base = newbaseProwJobTemplateData(repo)
 		data.Base.Image = coverageDockerImage
 		data.PostsubmitJobName = fmt.Sprintf("post-%s-go-coverage", data.Base.RepoNameForJob)
+		addExtraEnvVarsToJob(&data.Base)
 		configureServiceAccountForJob(&data.Base)
 		executeJobTemplate("postsubmit go coverage", goCoveragePostsubmitJob, "postsubmits", repo, data.PostsubmitJobName, true, data)
 		// TODO(adrcunha): remove once the coverage-dev job isn't necessary anymore.
@@ -975,6 +999,17 @@ func executeTemplate(name, templ string, data interface{}) {
 	}
 }
 
+// Multi-value flag parser.
+
+func (a *stringArrayFlag) String() string {
+	return strings.Join(*a, ", ")
+}
+
+func (a *stringArrayFlag) Set(value string) error {
+	*a = append(*a, value)
+	return nil
+}
+
 // main is the script entry point.
 func main() {
 	// Parse flags and sanity check them.
@@ -993,6 +1028,7 @@ func main() {
 	flag.StringVar(&repositoryOverride, "repo-override", "", "Repository path (github.com/foo/bar[=branch]) to use instead for a job")
 	flag.StringVar(&jobNameFilter, "job-filter", "", "Generate only this job, instead of all jobs")
 	flag.StringVar(&preCommand, "pre-command", "", "Executable for running instead of the real command of a job")
+	flag.Var(&extraEnvVars, "extra-env", "Extra environment variables (key=value) to add to a job")
 	flag.Parse()
 	if len(flag.Args()) != 1 {
 		log.Fatal("Pass the config file as parameter")
@@ -1022,4 +1058,3 @@ func main() {
 	generateBackupPeriodicJob()
 	generateGoCoveragePostsubmits()
 }
-
