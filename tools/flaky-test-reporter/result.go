@@ -26,6 +26,7 @@ import (
 	"io/ioutil"
 	"path"
 	"path/filepath"
+	"sort"
 
 	"github.com/knative/test-infra/shared/prow"
 	"github.com/knative/test-infra/shared/junit"
@@ -144,7 +145,7 @@ func collectTestResultsForRepo(jc *JobConfig) (*RepoData, error) {
 	if !job.PathExists() {
 		return rd, fmt.Errorf("job path not exist '%s'", jc.Name)
 	}
-	builds := job.GetLatestBuilds(buildsCount)
+	builds := getLatestFinishedBuilds(job, buildsCount)
 	
 	log.Printf("latest builds: ")
 	for i, build := range builds {
@@ -164,4 +165,31 @@ func collectTestResultsForRepo(jc *JobConfig) (*RepoData, error) {
 		}
 	}
 	return rd, nil
+}
+
+// getLatestFinishedBuilds is an inexpensive way of listing latest finished builds, in comparing to
+// the GetLatestBuilds function from prow package, as it doesn't precompute start/finish time before sorting.
+// This function takes the assumption that build IDs are always incremental integers, it would fail if it doesn't
+func getLatestFinishedBuilds(job *prow.Job, count int) []prow.Build {
+	var builds []prow.Build
+	buildIDs := job.GetBuildIDs()
+	sort.Sort(sort.Reverse(sort.IntSlice(buildIDs)))
+	for _, buildID := range buildIDs {
+		if len(builds) >= count {
+			break
+		}
+		build := job.NewBuild(buildID)
+		if nil != build.FinishTime {
+			if nil == build.StartTime {
+				log.Fatalf("Failed parsing start time for finished build '%s'", build.StoragePath)
+			}
+			builds = append(builds, *build)
+		}
+	}
+	if ! sort.SliceIsSorted(builds, func(i, j int) bool {
+		return *builds[i].StartTime > *builds[j].StartTime
+	}) {
+		log.Fatalf("Error: found build with smaller buildID started later than one with larger buildID")
+	}
+	return builds
 }
