@@ -210,6 +210,7 @@ tide:
     - knative/test-infra
     - knative/pkg
     - knative/caching
+    - knative/website
     labels:
     - lgtm
     - approved
