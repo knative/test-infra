@@ -81,6 +81,8 @@ test_groups:
   short_text_metric: perf_latency
 - name: ci-knative-serving-auto-release
   gcs_prefix: knative-prow/logs/ci-knative-serving-auto-release
+- name: ci-knative-serving-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-serving-dot-release
 - name: ci-knative-build-continuous
   gcs_prefix: knative-prow/logs/ci-knative-build-continuous
 - name: ci-knative-build-nightly-release
@@ -184,6 +186,9 @@ dashboards:
     base_options: 'exclude-filter-by-regex=Overall$&group-by-target=&expand-groups=&sort-by-name='
   - name: auto-release
     test_group_name: ci-knative-serving-auto-release
+    base_options: 'sort-by-name='
+  - name: dot-release
+    test_group_name: ci-knative-serving-dot-release
     base_options: 'sort-by-name='
 - name: knative-build
   dashboard_tab:
