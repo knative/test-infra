@@ -29,6 +29,11 @@ RUN docker-credential-gcr configure-docker
 RUN apt-get install -y uuid-runtime  # for uuidgen
 RUN apt-get install -y rubygems  # for mdl
 
+# Update go version to 1.12rc1
+RUN go get golang.org/dl/go1.12rc1
+RUN go1.12rc1 download
+RUN cp $(which go1.12rc1) $(which go)
+
 # Extra tools through go get
 RUN go get -u github.com/google/go-containerregistry/cmd/ko
 RUN go get -u github.com/golang/dep/cmd/dep

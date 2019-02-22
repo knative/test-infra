@@ -112,16 +112,18 @@ func (changes *GroupChanges) processChangedFiles(
 		pathFromProfile := githubUtil.FilePathProfileToGithub(inc.base.Name())
 		fmt.Printf("checking if this file is in github change list: %s", pathFromProfile)
 		if (*githubFilePaths)[pathFromProfile] == true {
-			fmt.Printf("\tYes!\n")
+			fmt.Printf("\tYes!")
 			*rows = append(*rows, inc.githubBotRow(i, pathFromProfile))
 			*isEmpty = false
 
 			if inc.new.IsCoverageLow(covThres) {
+				fmt.Printf("\t(Coverage low!)")
 				*isCoverageLow = true
 			}
 		} else {
-			fmt.Printf("\tNo\n")
+			fmt.Printf("\tNo")
 		}
+		fmt.Printf("\n")
 	}
 	fmt.Println("End of Finding joining set of changed files from profile & github")
 	return

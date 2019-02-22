@@ -32,7 +32,7 @@ type NodeInterface interface {
 	updateCoverage(v reflect.Value)
 	buildCoverageData(typeCoverage *[]coveragecalculator.TypeCoverage, nodeRules NodeRules,
 		fieldRules FieldRules, ignoredFields coveragecalculator.IgnoredFields)
-	getValues() ([]string)
+	getValues() (map[string]bool)
 }
 
 // NodeData is the data stored in each node of the resource tree.

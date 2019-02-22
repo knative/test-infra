@@ -79,6 +79,8 @@ test_groups:
 - name: ci-knative-serving-performance
   gcs_prefix: knative-prow/logs/ci-knative-serving-performance
   short_text_metric: perf_latency
+- name: ci-knative-serving-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-serving-auto-release
 - name: ci-knative-build-continuous
   gcs_prefix: knative-prow/logs/ci-knative-build-continuous
 - name: ci-knative-build-nightly-release
@@ -96,6 +98,8 @@ test_groups:
 - name: pull-knative-build-pipeline-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-build-pipeline-go-coverage
   short_text_metric: coverage
+- name: ci-knative-build-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-build-auto-release
 - name: ci-knative-eventing-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-continuous
 - name: ci-knative-eventing-nightly-release
@@ -110,6 +114,8 @@ test_groups:
 - name: pull-knative-eventing-sources-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-go-coverage
   short_text_metric: coverage
+- name: ci-knative-eventing-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-auto-release
 - name: ci-knative-docs-continuous
   gcs_prefix: knative-prow/logs/ci-knative-docs-continuous
 - name: pull-knative-docs-test-coverage
@@ -130,6 +136,16 @@ test_groups:
 
 - name: ci-knative-serving-0.2-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.2-continuous
+
+## release-0.3 branch
+
+- name: ci-knative-serving-0.3-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-serving-0.3-continuous
+
+## release-0.4 branch
+
+- name: ci-knative-serving-0.4-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-serving-0.4-continuous
 
 #################################################################
 # Dashboards
@@ -166,6 +182,9 @@ dashboards:
   - name: performance
     test_group_name: ci-knative-serving-performance
     base_options: 'exclude-filter-by-regex=Overall$&group-by-target=&expand-groups=&sort-by-name='
+  - name: auto-release
+    test_group_name: ci-knative-serving-auto-release
+    base_options: 'sort-by-name='
 - name: knative-build
   dashboard_tab:
   - name: continuous
@@ -181,6 +200,9 @@ dashboards:
     test_group_name: ci-knative-build-latency
     description: '95% latency in ms'
     base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
+  - name: auto-release
+    test_group_name: ci-knative-build-auto-release
+    base_options: 'sort-by-name='
 - name: knative-build-templates
   dashboard_tab:
   - name: continuous
@@ -205,6 +227,9 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-eventing-test-coverage
     base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
+  - name: auto-release
+    test_group_name: ci-knative-eventing-auto-release
+    base_options: 'sort-by-name='
 - name: knative-eventing-sources
   dashboard_tab:
   - name: continuous
@@ -249,6 +274,22 @@ dashboards:
     test_group_name: ci-knative-serving-0.2-continuous
     base_options: 'sort-by-name='
 
+## release-0.3 branch
+
+- name: knative-serving-0.3
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-serving-0.3-continuous
+    base_options: 'sort-by-name='
+
+## release-0.4 branch
+
+- name: knative-serving-0.4
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-serving-0.4-continuous
+    base_options: 'sort-by-name='
+
 #################################################################
 # Dashboard groups
 #################################################################
@@ -268,3 +309,9 @@ dashboard_groups:
 - name: knative-0.2
   dashboard_names:
   - knative-serving-0.2
+- name: knative-0.3
+  dashboard_names:
+  - knative-serving-0.3
+- name: knative-0.4
+  dashboard_names:
+  - knative-serving-0.4

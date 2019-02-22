@@ -244,7 +244,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:140b5be456c96094bc83be1d90c0b55e0f7aa36b43b5b164de57b6d952f827f0"
+  digest = "1:931941940e0dcf62e0473f6df912e5ff68cf21b2c5c3a0d787e7be9c1a298839"
   name = "github.com/knative/pkg"
   packages = [
     "apis",
@@ -256,7 +256,6 @@
     "kmp",
     "logging",
     "logging/logkey",
-    "signals",
     "test/logging",
     "webhook",
   ]
@@ -265,7 +264,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:1d372f7848d429077c001c413e6affe2f7a567763fdf7f4179243897b8747125"
+  digest = "1:69d42740592a4d7a8f7169ac02bd980dc1000eafb1ffc3b2e522a930a64dff8d"
   name = "github.com/knative/serving"
   packages = [
     "pkg/apis/autoscaling",
@@ -273,8 +272,6 @@
     "pkg/apis/networking/v1alpha1",
     "pkg/apis/serving",
     "pkg/apis/serving/v1alpha1",
-    "pkg/system",
-    "pkg/system/testing",
   ]
   pruneopts = "NUT"
   revision = "899424ba28c75dc0c37f40db32f4ce6166dd9fee"
@@ -687,7 +684,7 @@
   version = "kubernetes-1.11.3"
 
 [[projects]]
-  digest = "1:050559856da29b69e5479a48839aef34f2dfabc13ded0074aaf4a630f7e090f1"
+  digest = "1:6e25734727e2f5ea4041e50812f5d2b054d8f08d96f784355dd4da787d1089c0"
   name = "k8s.io/client-go"
   packages = [
     "discovery",
@@ -794,8 +791,10 @@
     "pkg/apis/clientauthentication/v1beta1",
     "pkg/version",
     "plugin/pkg/client/auth/exec",
+    "plugin/pkg/client/auth/gcp",
     "rest",
     "rest/watch",
+    "third_party/forked/golang/template",
     "tools/auth",
     "tools/cache",
     "tools/clientcmd",
@@ -812,6 +811,7 @@
     "util/flowcontrol",
     "util/homedir",
     "util/integer",
+    "util/jsonpath",
     "util/retry",
   ]
   pruneopts = "NUT"
@@ -829,12 +829,9 @@
     "github.com/google/licenseclassifier",
     "github.com/knative/pkg/configmap",
     "github.com/knative/pkg/logging",
-    "github.com/knative/pkg/signals",
     "github.com/knative/pkg/test/logging",
     "github.com/knative/pkg/webhook",
     "github.com/knative/serving/pkg/apis/serving/v1alpha1",
-    "github.com/knative/serving/pkg/system",
-    "github.com/knative/serving/pkg/system/testing",
     "github.com/markbates/inflect",
     "github.com/prometheus/client_golang/api",
     "github.com/prometheus/client_golang/api/prometheus/v1",
@@ -852,6 +849,7 @@
     "k8s.io/apimachinery/pkg/runtime/schema",
     "k8s.io/apimachinery/pkg/runtime/serializer",
     "k8s.io/client-go/kubernetes",
+    "k8s.io/client-go/plugin/pkg/client/auth/gcp",
     "k8s.io/client-go/rest",
     "k8s.io/client-go/tools/clientcmd",
   ]

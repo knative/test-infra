@@ -2,7 +2,6 @@ package artifacts
 
 import (
 	covIo "github.com/knative/test-infra/tools/coverage/io"
-	"github.com/knative/test-infra/tools/coverage/logUtil"
 	"io"
 	"log"
 	"os"
@@ -34,7 +33,7 @@ func runProfiling(covTargets []string, localArts *LocalArtifacts) {
 	goTestCoverStdout, errCmdOutput := cmd.Output()
 
 	if errCmdOutput != nil {
-		logUtil.LogFatalf("Error running 'go test -coverprofile ': error='%v'; stdout='%s'; stderr='%v'",
+		log.Printf("Error running 'go test -coverprofile ': error='%v'; stdout='%s'; stderr='%v'\n",
 			errCmdOutput, goTestCoverStdout, cmd.Stderr)
 	} else {
 		log.Printf("coverage profile created @ '%s'", localArts.ProfilePath())

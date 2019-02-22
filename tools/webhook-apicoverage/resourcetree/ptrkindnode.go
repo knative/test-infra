@@ -63,6 +63,6 @@ func (p *PtrKindNode) buildCoverageData(typeCoverage *[]coveragecalculator.TypeC
 	}
 }
 
-func (p *PtrKindNode) getValues() ([]string) {
+func (p *PtrKindNode) getValues() (map[string]bool) {
 	return nil
 }
