@@ -45,6 +45,8 @@
 
 1. Set **tide** as a required status check for the master branch.
 
+   ![Branch Checks](branch_checks.png)
+
 ### Setting up jobs for a new repo 
 
 1. Have the test infrastructure in place (usually this means having at least `//test/presubmit-tests.sh` working, and optionally `//hack/release.sh` working for automated nightly releases).
@@ -76,3 +78,5 @@
 1. Wait a few minutes, enter `/retest` as a comment in any PR in the repo and ensure the test jobs are executed.
 
 1. Set the new test jobs as required status checks for the master branch.
+
+   ![Branch Checks](branch_checks.png)
