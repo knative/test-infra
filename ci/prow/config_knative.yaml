@@ -95,6 +95,11 @@ presubmits:
     - integration-tests: true
     - go-coverage: true
       go-coverage-threshold: 50
+      
+  knative/website:
+    - build-tests: true
+    - unit-tests: true
+    - integration-tests: true
 
 periodics:
   knative/serving:
