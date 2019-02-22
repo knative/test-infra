@@ -169,11 +169,10 @@ func collectTestResultsForRepo(jc *JobConfig) (*RepoData, error) {
 
 // getLatestFinishedBuilds is an inexpensive way of listing latest finished builds, in comparing to
 // the GetLatestBuilds function from prow package, as it doesn't precompute start/finish time before sorting.
-// This function takes the assumption that build IDs are always incremental integers
+// This function takes the assumption that build IDs are always incremental integers, it would fail if it doesn't
 func getLatestFinishedBuilds(job *prow.Job, count int) []prow.Build {
 	var builds []prow.Build
 	buildIDs := job.GetBuildIDs()
-	fmt.Println(len(buildIDs))
 	sort.Sort(sort.Reverse(sort.IntSlice(buildIDs)))
 	for _, buildID := range buildIDs {
 		if len(builds) >= count {
@@ -181,8 +180,16 @@ func getLatestFinishedBuilds(job *prow.Job, count int) []prow.Build {
 		}
 		build := job.NewBuild(buildID)
 		if nil != build.FinishTime {
+			if nil == build.StartTime {
+				log.Fatalf("Failed parsing start time for finished build '%s'", build.StoragePath)
+			}
 			builds = append(builds, *build)
 		}
+	}
+	if ! sort.SliceIsSorted(builds, func(i, j int) bool {
+		return *builds[i].StartTime > *builds[j].StartTime
+	}) {
+		log.Fatalf("Error: found build with smaller buildID started later than one with larger buildID")
 	}
 	return builds
 }
