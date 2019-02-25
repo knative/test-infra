@@ -89,6 +89,16 @@ function mock_gcloud_function() {
   "$@" 2>&1
 }
 
+# Mocks the kubectl functionality (does nothing and outputs nothing).
+# Parameters: $1..$n - parameters passed to the function.
+function mock_kubectl_function() {
+  set -e
+  function kubectl() {
+    echo ""
+  }
+  "$@" 2>&1
+}
+
 # Convenience method to display a test failure and exit the script.
 # Parameters: $1 - message to display.
 function test_failed() {

@@ -47,6 +47,8 @@ trap cleanup_bazel EXIT
 echo ">> Testing helper functions"
 
 test_function ${SUCCESS} "${REPO_ROOT_DIR}/test/unit/library-tests.sh" get_canonical_path test/unit/library-tests.sh
+test_function ${SUCCESS} "Foo Bar" capitalize "foo bar"
+test_function ${SUCCESS} ">>> Knative Testinfra controller logs:" mock_kubectl_function dump_app_logs "controller" "test-infra"
 
 echo ">> Testing report_go_test()"
 

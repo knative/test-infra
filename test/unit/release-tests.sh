@@ -42,7 +42,6 @@ test_function ${SUCCESS} "0.2" master_version "v0.2.1"
 test_function ${SUCCESS} "0.2" master_version "0.2.1"
 test_function ${SUCCESS} "1" release_build_number "v0.2.1"
 test_function ${SUCCESS} "1" release_build_number "0.2.1"
-test_function ${SUCCESS} "Foo Bar" capitalize "foo bar"
 
 echo ">> Testing flag parsing"
 
