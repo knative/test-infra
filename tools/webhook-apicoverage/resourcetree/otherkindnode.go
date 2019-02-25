@@ -49,6 +49,6 @@ func (o *OtherKindNode) updateCoverage(v reflect.Value) {
 func (o * OtherKindNode) buildCoverageData(typeCoverage *[]coveragecalculator.TypeCoverage, nodeRules NodeRules,
 	fieldRules FieldRules, ignoredFields coveragecalculator.IgnoredFields) {}
 
-func (o *OtherKindNode) getValues() ([]string) {
+func (o *OtherKindNode) getValues() (map[string]bool) {
 	return nil
 }

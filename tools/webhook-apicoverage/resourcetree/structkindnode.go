@@ -99,6 +99,6 @@ func (s *StructKindNode) buildCoverageData(typeCoverage *[]coveragecalculator.Ty
 	}
 }
 
-func (s *StructKindNode) getValues() ([]string) {
+func (s *StructKindNode) getValues() (map[string]bool) {
 	return nil
 }

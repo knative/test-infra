@@ -65,6 +65,6 @@ func (a *ArrayKindNode) buildCoverageData(typeCoverage *[]coveragecalculator.Typ
 	}
 }
 
-func (a *ArrayKindNode) getValues() ([]string) {
+func (a *ArrayKindNode) getValues() (map[string]bool) {
 	return nil
 }

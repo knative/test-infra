@@ -22,3 +22,16 @@ Type: <TypeName>
     ....
 }
 ```
+
+`GetCoverageValuesDisplay()` is a utility method that can be used by repos to produce
+coverage values display. The method takes as input [CoverageValue](../coveragecalculator/calculator.go)
+and produces a display in the format:
+
+```
+CoverageValues:
+
+Total Fields:  <Number of total fields>
+Covered Fields: <Number of fields covered>
+Ignored Fields: <Number of fields ignored>
+Coverage Percentage: <Percentage value of coverage>
+```

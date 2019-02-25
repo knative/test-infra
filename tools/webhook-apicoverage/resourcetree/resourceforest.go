@@ -19,7 +19,6 @@ package resourcetree
 import (
 	"container/list"
 	"reflect"
-	"strings"
 
 	"github.com/knative/test-infra/tools/webhook-apicoverage/coveragecalculator"
 )
@@ -31,10 +30,21 @@ type ResourceForest struct {
 	ConnectedNodes map[string]*list.List // Head of the linked list keyed by nodeData.fieldType.pkg + nodeData.fieldType.Name()
 }
 
+// AddResourceTree adds a resource tree to the resource forest.
+func (r *ResourceForest) AddResourceTree(resourceName string, resourceType reflect.Type) {
+	tree := ResourceTree{
+		ResourceName: resourceName,
+		Forest: r,
+	}
+	tree.BuildResourceTree(resourceType)
+	r.TopLevelTrees[resourceName] = tree
+}
+
 // getConnectedNodeCoverage calculates the outlined coverage for a Type using ConnectedNodes linkedlist. We traverse through each element in the linkedlist and merge
 // coverage data into a single coveragecalculator.TypeCoverage object.
 func (r *ResourceForest) getConnectedNodeCoverage(fieldType reflect.Type, fieldRules FieldRules, ignoredFields coveragecalculator.IgnoredFields) (coveragecalculator.TypeCoverage) {
-	packageName := strings.Replace(fieldType.PkgPath(), "/", ".", -1)
+	//packageName := strings.Replace(fieldType.PkgPath(), "/", ".", -1)
+	packageName := fieldType.PkgPath()
 	coverage := coveragecalculator.TypeCoverage {
 		Type: fieldType.Name(),
 		Package: packageName,
@@ -50,6 +60,7 @@ func (r *ResourceForest) getConnectedNodeCoverage(fieldType reflect.Type, fieldR
 						coverage.Fields[field] = &coveragecalculator.FieldCoverage {
 							Field: field,
 							Ignored: ignoredFields.FieldIgnored(packageName, fieldType.Name(), field),
+							Values : make(map[string]bool),
 						}
 					}
 					// merge values across the list.

@@ -27,7 +27,4 @@ push_versioned: build
 push_latest: build
 	docker push $(IMG):latest
 
-clean:
-	rm -fr githubhelper dep-collector
-
 push: push_versioned push_latest clean

@@ -60,13 +60,16 @@ func GetTabURL(jobName string) (string, error) {
 }
 
 // CreateXMLOutput creates the junit xml file in the provided artifacts directory
-func CreateXMLOutput(testSuites *junit.TestSuites, testName string) error {
+func CreateXMLOutput(tc []junit.TestCase, testName string) error {
+	ts := junit.TestSuites{}
+	ts.AddTestSuite(&junit.TestSuite{Name: testName, TestCases: tc})
+
 	// ensure artifactsDir exist, in case not invoked from this script
 	artifactsDir := prow.GetLocalArtifactsDir()
 	if err := createDir(artifactsDir); nil != err {
 		return err
 	}
-	op, err := testSuites.ToBytes("", "  ")
+	op, err := ts.ToBytes("", "  ")
 	if err != nil {
 		return err
 	}
