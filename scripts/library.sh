@@ -200,7 +200,6 @@ function get_app_pods() {
   kubectl get pods ${namespace} --selector=app=$1 --output=jsonpath="{.items[*].metadata.name}"
 }
 
-
 # Capitalize the first letter of each word.
 # Parameters: $1..$n - words to capitalize.
 function capitalize() {
