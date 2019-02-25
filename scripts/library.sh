@@ -84,6 +84,18 @@ function function_exists() {
   [[ "$(type -t $1)" == "function" ]]
 }
 
+# Capitalize the first letter of each word.
+# Parameters: $1..$n - words to capitalize.
+function capitalize() {
+  local words=("$1")
+  local capitalized=()
+  for word in $@; do
+    local initial="$(echo ${word:0:1}| tr 'a-z' 'A-Z')"
+    capitalized+=("${initial}${word:1}")
+  done
+  echo "${capitalized[@]}"
+}
+
 # Waits until the given object doesn't exist.
 # Parameters: $1 - the kind of the object.
 #             $2 - object's name.
@@ -198,6 +210,18 @@ function get_app_pods() {
   local namespace=""
   [[ -n $2 ]] && namespace="-n $2"
   kubectl get pods ${namespace} --selector=app=$1 --output=jsonpath="{.items[*].metadata.name}"
+}
+
+# Dumps pod logs for the given app.
+# Parameters: $1 - app name.
+#             $2 - namespace.
+function dump_app_logs() {
+  echo ">>> Knative $(capitalize ${REPO_NAME//-/}) $1 logs:"
+  for pod in $(get_app_pods "$1" "$2")
+  do
+    echo ">>> Pod: $pod"
+    kubectl -n "$2" logs "$pod" -c "$1"
+  done
 }
 
 # Sets the given user as cluster admin.

@@ -31,18 +31,6 @@ function banner() {
     make_banner "@" "$1"
 }
 
-# Capitalize the first letter of each word.
-# Parameters: $1..$n - words to capitalize.
-function capitalize() {
-  local words=("$1")
-  local capitalized=()
-  for word in $@; do
-    local initial="$(echo ${word:0:1}| tr 'a-z' 'A-Z')"
-    capitalized+=("${initial}${word:1}")
-  done
-  echo "${capitalized[@]}"
-}
-
 # Tag images in the yaml files if $TAG is not empty.
 # $KO_DOCKER_REPO is the registry containing the images to tag with $TAG.
 # Parameters: $1..$n - yaml files to parse for images.
