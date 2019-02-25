@@ -38,11 +38,24 @@ if [[ -z "${GOPATH:-}" ]]; then
   fi
 fi
 
+# Capitalize the first letter of each word.
+# Parameters: $1..$n - words to capitalize.
+function capitalize() {
+  local words=($1)
+  local capitalized=()
+  for word in $@; do
+    local initial="$(echo ${word:0:1}| tr 'a-z' 'A-Z')"
+    capitalized+=("${initial}${word:1}")
+  done
+  echo "${capitalized[@]}"
+}
+
 # Useful environment variables
 [[ -n "${PROW_JOB_ID:-}" ]] && IS_PROW=1 || IS_PROW=0
 readonly IS_PROW
 readonly REPO_ROOT_DIR="$(git rev-parse --show-toplevel)"
 readonly REPO_NAME="$(basename ${REPO_ROOT_DIR})"
+readonly REPO_NAME_FORMATTED="Knative $(capitalize ${REPO_NAME//-/})"
 
 # On a Prow job, redirect stderr to stdout so it's synchronously added to log
 (( IS_PROW )) && exec 2>&1
@@ -82,17 +95,6 @@ function warning() {
 # Checks whether the given function exists.
 function function_exists() {
   [[ "$(type -t $1)" == "function" ]]
-}
-
-# Capitalize the first letter of each word.
-# Parameters: $1..$n - words to capitalize.
-function capitalize() {
-  local capitalized=()
-  for word in $@; do
-    local initial="$(echo ${word:0:1}| tr 'a-z' 'A-Z')"
-    capitalized+=("${initial}${word:1}")
-  done
-  echo "${capitalized[@]}"
 }
 
 # Waits until the given object doesn't exist.
@@ -215,7 +217,7 @@ function get_app_pods() {
 # Parameters: $1 - app name.
 #             $2 - namespace.
 function dump_app_logs() {
-  echo ">>> Knative $(capitalize ${REPO_NAME//-/}) $1 logs:"
+  echo ">>> ${REPO_NAME_FORMATTED} $1 logs:"
   for pod in $(get_app_pods "$1" "$2")
   do
     echo ">>> Pod: $pod"

@@ -93,7 +93,7 @@ function mock_gcloud_function() {
 # Parameters: $1..$n - parameters passed to the function.
 function mock_kubectl_function() {
   set -e
-  function gcloud() {
+  function kubectl() {
     echo ""
   }
   "$@" 2>&1
