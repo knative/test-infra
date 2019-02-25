@@ -63,23 +63,12 @@
    `//test/presubmit-tests.sh` working, and optionally `//hack/release.sh` working
    for automated nightly releases).
 
-1. Merge a pull request (e.g., <https://github.com/knative/test-infra/pull/203>)
-   that:
+1. Merge a pull request that:
 
-   1. Updates the Prow config file (usually, copy and update existing jobs from
-      another repository).
-
-      1. For the presubmit tests, setup the
-         *pull-knative-**repo**-**(build|unit|integration)**-tests* jobs.
-
-      1. For go test coverage, setup the
-         ***(pull|post|ci)**-knative-**repo**-go-coverage* jobs.
-
-      1. For the continuous integration tests, setup the
-         *ci-knative-**repo**-continuous* job.
-
-      1. For automated nightly releases, setup the
-         *ci-knative-**repo**-nightly-release* job.
+   1. Updates [config_knative.yaml](./config_knative.yaml), the Prow config file
+      (usually, copy and update the existing configuration from another repository).
+      Run `make config` to regenerate [config.yaml](./config.yaml), otherwise the
+      presubmit test will fail.
 
    1. Updates the Gubernator config with the new log dirs.
 
