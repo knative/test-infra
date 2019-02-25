@@ -38,24 +38,11 @@ if [[ -z "${GOPATH:-}" ]]; then
   fi
 fi
 
-# Capitalize the first letter of each word.
-# Parameters: $1..$n - words to capitalize.
-function capitalize() {
-  local words=($1)
-  local capitalized=()
-  for word in $@; do
-    local initial="$(echo ${word:0:1}| tr 'a-z' 'A-Z')"
-    capitalized+=("${initial}${word:1}")
-  done
-  echo "${capitalized[@]}"
-}
-
 # Useful environment variables
 [[ -n "${PROW_JOB_ID:-}" ]] && IS_PROW=1 || IS_PROW=0
 readonly IS_PROW
 readonly REPO_ROOT_DIR="$(git rev-parse --show-toplevel)"
 readonly REPO_NAME="$(basename ${REPO_ROOT_DIR})"
-readonly REPO_NAME_FORMATTED="Knative $(capitalize ${REPO_NAME//-/})"
 
 # On a Prow job, redirect stderr to stdout so it's synchronously added to log
 (( IS_PROW )) && exec 2>&1
@@ -211,6 +198,18 @@ function get_app_pods() {
   local namespace=""
   [[ -n $2 ]] && namespace="-n $2"
   kubectl get pods ${namespace} --selector=app=$1 --output=jsonpath="{.items[*].metadata.name}"
+}
+
+
+# Capitalize the first letter of each word.
+# Parameters: $1..$n - words to capitalize.
+function capitalize() {
+  local capitalized=()
+  for word in $@; do
+    local initial="$(echo ${word:0:1}| tr 'a-z' 'A-Z')"
+    capitalized+=("${initial}${word:1}")
+  done
+  echo "${capitalized[@]}"
 }
 
 # Dumps pod logs for the given app.
@@ -417,3 +416,4 @@ function get_canonical_path() {
 # These MUST come last.
 
 readonly _TEST_INFRA_SCRIPTS_DIR="$(dirname $(get_canonical_path ${BASH_SOURCE[0]}))"
+readonly REPO_NAME_FORMATTED="Knative $(capitalize ${REPO_NAME//-/})"
