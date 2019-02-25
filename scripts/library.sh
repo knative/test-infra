@@ -87,7 +87,6 @@ function function_exists() {
 # Capitalize the first letter of each word.
 # Parameters: $1..$n - words to capitalize.
 function capitalize() {
-  local words=("$1")
   local capitalized=()
   for word in $@; do
     local initial="$(echo ${word:0:1}| tr 'a-z' 'A-Z')"
