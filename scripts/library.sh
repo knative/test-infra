@@ -44,6 +44,11 @@ readonly IS_PROW
 readonly REPO_ROOT_DIR="$(git rev-parse --show-toplevel)"
 readonly REPO_NAME="$(basename ${REPO_ROOT_DIR})"
 
+# Set ARTIFACTS to an empty temp dir if unset
+if [[ -z "${ARTIFACTS:-}" ]]; then
+  export ARTIFACTS="$(mktemp -d)"
+fi
+
 # On a Prow job, redirect stderr to stdout so it's synchronously added to log
 (( IS_PROW )) && exec 2>&1
 
@@ -269,10 +274,6 @@ function report_go_test() {
   local args=" $@ "
   local go_test="go test -race -v ${args/ -v / }"
   # Just run regular go tests if not on Prow.
-  if (( ! IS_PROW )); then
-    ${go_test}
-    return
-  fi
   echo "Running tests with '${go_test}'"
   local report=$(mktemp)
   ${go_test} | tee ${report}
@@ -287,6 +288,13 @@ function report_go_test() {
       | sed -e "s#\"github.com/knative/${REPO_NAME}/#\"#g" \
       > ${xml}
   echo "XML report written to ${xml}"
+  if (( ! IS_PROW )); then
+    # Keep the suffix, so files are related.
+    local logfile=${xml/junit_/go_test_}
+    logfile=${logfile/.xml/.log}
+    cp ${report} ${logfile}
+    echo "Test log written to ${logfile}"
+  fi
   return ${failed}
 }
 
