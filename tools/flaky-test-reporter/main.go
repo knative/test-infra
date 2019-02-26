@@ -30,14 +30,20 @@ import (
 
 func main() {
 	serviceAccount := flag.String("service-account", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"), "JSON key file for service account to use")
-	dryrun         := flag.Bool("dry-run", false, "dry run switch")
+	slackAccount := flag.String("slack-account", "", "slack secret file for authenticating with Slack")
+	dryrun    := flag.Bool("dry-run", false, "dry run switch")
 	flag.Parse()
 
 	if nil != dryrun && true == *dryrun {
 		log.Printf("running in [dry run mode]")
 	}
 	
-	prow.Initialize(*serviceAccount) // Explicit authenticate with gcs Client
+	if err := prow.Initialize(*serviceAccount); nil != err { // Explicit authenticate with gcs Client
+		log.Fatalf("Failed authenticating GCS: '%v'", err)
+	}
+	if err := authenticateSlack(*slackAccount); nil != err {
+		log.Fatalf("Failed authenticating Slack: '%v'", err)
+	}
 
 	// Clean up local artifacts directory, this will be used later for artifacts uploads
 	err := os.RemoveAll(prow.GetLocalArtifactsDir()) // this function returns nil if path not found
@@ -63,5 +69,5 @@ func main() {
 		repoDataAll = append(repoDataAll, rd)
 	}
 
-	// TODO(chaodaiG): pass repoDataAll to functions for Github issues tracking and Slack notification
+	sendSlackNotifications(repoDataAll, dryrun)
 }

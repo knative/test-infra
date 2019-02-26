@@ -35,11 +35,6 @@ const (
 	baseURL    = "https://testgrid.knative.dev"
 )
 
-// Use hardcoded value representing jobname: repo mapping
-var jobNameURLMap = map[string]string {
-    "ci-knative-serving-continuous": "knative-serving#continuous",
-}
-
 // createDir creates dir if does not exist. 
 func createDir(dirPath string) error {
 	if _, err := os.Stat(dirPath); os.IsNotExist(err) {
@@ -50,13 +45,9 @@ func createDir(dirPath string) error {
 	return nil
 }
 
-// GetTabURL gets Testgrid URL for giving job
-func GetTabURL(jobName string) (string, error) {
-	url, ok := jobNameURLMap[jobName]
-	if !ok {
-		return "", fmt.Errorf("cannot find Testgrid tab for job '%s'", jobName)
-	}
-	return fmt.Sprintf("%s/%s", baseURL, url), nil
+// GetBaseURL returns baseURL of testgrid for knative
+func GetBaseURL() string {
+	return baseURL
 }
 
 // CreateXMLOutput creates the junit xml file in the provided artifacts directory
