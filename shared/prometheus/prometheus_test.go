@@ -21,7 +21,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/knative/pkg/test/logging"
 	"github.com/knative/test-infra/shared/prometheus"
 	"github.com/prometheus/client_golang/api/prometheus/v1"
 	"github.com/prometheus/common/model"
@@ -101,10 +100,7 @@ func getTestAPI() *TestPromAPI {
 }
 
 func TestRunQuery(t *testing.T) {
-	logging.InitializeLogger(true)
-	logger := logging.GetContextLogger("TestRunQuery")
-
-	r, err := prometheus.RunQuery(context.Background(), logger, getTestAPI(), query)
+	r, err := prometheus.RunQuery(context.Background(), t.Logf, getTestAPI(), query)
 	if err != nil {
 		t.Fatalf("Error running query: %v", err)
 	}
