@@ -121,6 +121,7 @@ var (
 	presubmitScript      string
 	releaseScript        string
 	performanceScript    string
+	webhookAPICoverageScript string
 
 	// Overrides and behavior changes through command-line flags.
 	repositoryOverride string
@@ -772,6 +773,12 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			version := getString(item.Value)
 			jobNameSuffix = version + "-" + jobNameSuffix
 			data.Base.RepoBranch = "release-" + version
+		case "webhook-apicoverage":
+			if !getBool(item.Value) {
+				return
+			}
+			jobNameSuffix = "webhook-apicoverage"
+			data.Base.Command = webhookAPICoverageScript
 		case nil: // already processed by parseBasicJobConfig
 			continue
 		default:
@@ -1023,6 +1030,7 @@ func main() {
 	flag.StringVar(&presubmitScript, "presubmit-script", "./test/presubmit-tests.sh", "Executable for running presubmit tests")
 	flag.StringVar(&releaseScript, "release-script", "./hack/release.sh", "Executable for creating releases")
 	flag.StringVar(&performanceScript, "performance-script", "./test/performance-tests.sh", "Executable for running performance tests")
+	flag.StringVar(&webhookAPICoverageScript, "webhookAPICoverageScript", "./test/apicoverage.sh", "Executable for running webhook apicoverage tool")
 	flag.StringVar(&repositoryOverride, "repo-override", "", "Repository path (github.com/foo/bar[=branch]) to use instead for a job")
 	flag.StringVar(&jobNameFilter, "job-filter", "", "Generate only this job, instead of all jobs")
 	flag.StringVar(&preCommand, "pre-command", "", "Executable for running instead of the real command of a job")
