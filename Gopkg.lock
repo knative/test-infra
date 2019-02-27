@@ -244,7 +244,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:931941940e0dcf62e0473f6df912e5ff68cf21b2c5c3a0d787e7be9c1a298839"
+  digest = "1:b7d445e9e561dd894ebf2838ee8fb1e349a8677359af1703cde915df1f6c1b8d"
   name = "github.com/knative/pkg"
   packages = [
     "apis",
@@ -260,7 +260,7 @@
     "webhook",
   ]
   pruneopts = "NUT"
-  revision = "819ebda80ca60ec95e67d8db23dec3f67828ccb5"
+  revision = "2a8c1b0e5ad2719b00e20fef8594d63fa202640f"
 
 [[projects]]
   branch = "master"
@@ -323,6 +323,14 @@
   pruneopts = "NUT"
   revision = "5f041e8faa004a95c88a202771f4cc3e991971e6"
   version = "v2.0.1"
+
+[[projects]]
+  digest = "1:14715f705ff5dfe0ffd6571d7d201dd8e921030f8070321a79380d8ca4ec1a24"
+  name = "github.com/pkg/errors"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "ba968bfe8b2f7e042a574c888954fccecfa385b4"
+  version = "v0.8.1"
 
 [[projects]]
   digest = "1:d9e5e9ed96c4ec77b57c3f151d366f7013cc27f0ea72d121086f78c252c4da40"
@@ -825,6 +833,8 @@
     "cloud.google.com/go/storage",
     "fortio.org/fortio/fhttp",
     "fortio.org/fortio/periodic",
+    "fortio.org/fortio/stats",
+    "github.com/golang/glog",
     "github.com/google/go-github/github",
     "github.com/google/licenseclassifier",
     "github.com/knative/pkg/configmap",
