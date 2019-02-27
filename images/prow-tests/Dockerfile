@@ -29,10 +29,13 @@ RUN docker-credential-gcr configure-docker
 RUN apt-get install -y uuid-runtime  # for uuidgen
 RUN apt-get install -y rubygems  # for mdl
 
-# Update go version to 1.12rc1
-RUN go get golang.org/dl/go1.12rc1
-RUN go1.12rc1 download
-RUN cp $(which go1.12rc1) $(which go)
+# Install go at 1.12 same as how it's installed in kubekins-e2e image, reference code here:
+# https://github.com/kubernetes/test-infra/blob/1e9b5dc3de4b268aab57c9c48120aa3dcf096bc6/images/kubekins-e2e/Dockerfile#L64
+ENV GO_TARBALL "go1.12.linux-amd64.tar.gz"
+RUN rm -rf /usr/local/go && \
+    wget -q "https://storage.googleapis.com/golang/${GO_TARBALL}" && \
+    tar xzf "${GO_TARBALL}" -C /usr/local && \
+    rm "${GO_TARBALL}"
 
 # Extra tools through go get
 RUN go get -u github.com/google/go-containerregistry/cmd/ko
