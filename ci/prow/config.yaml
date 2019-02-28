@@ -2642,6 +2642,45 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+- cron: "0 12 * * *"
+  name: ci-knative-flakytestreporter
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: master
+    clone_uri: "https://github.com/knative/test-infra.git"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/flaky-test-reporter:latest
+      imagePullPolicy: Always
+      command:
+      - "/flaky-test-reporter"
+      args:
+      - "--service-account /etc/test-account/service-account.json"
+      - "--github-account /etc/github-token/token"
+      - "--slack-account /etc/slack-token/token"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      - name: github-token
+        mountPath: /etc/github-token
+        readOnly: true
+      - name: slack-token
+        mountPath: /etc/slack-token
+        readOnly: true
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+    - name: github-token
+      secret:
+        secretName: github-token
+    - name: slack-token
+      secret:
+        secretName: slack-token
 - cron: "15 9 * * *"
   name: ci-knative-backup-artifacts
   agent: kubernetes
