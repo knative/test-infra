@@ -9,7 +9,7 @@ Knative uses [Prow](https://github.com/kubernetes/test-infra/tree/master/prow) t
 
 ### Gubernator
 
-Knative uses [gubernator](https://github.com/kubernetes/test-infra) to provide
+Knative uses [gubernator](https://github.com/kubernetes/test-infra) to provide 
 a [PR dashboard](https://gubernator.knative.dev/pr) for contributions in the Knative github organization.
 
 ### TestGrid
