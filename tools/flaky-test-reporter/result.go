@@ -35,7 +35,7 @@ import (
 const (
 	flakyStatus    = "Flaky"
 	passedStatus   = "Passed"
-	lackDataStutus = "NotEnoughData"
+	lackDataStatus = "NotEnoughData"
 	failedStatus   = "Failed"
 )
 
@@ -82,7 +82,7 @@ func (ts *TestStat) getTestStatus() string {
 		case ts.isPassed():
 			return passedStatus
 		case !ts.hasEnoughRuns():
-			return lackDataStutus
+			return lackDataStatus
 		default:
 			return failedStatus
 	}
