@@ -104,7 +104,7 @@ func createCommentForTest(rd *RepoData, testFullName string) string {
 	totalCount := len(ts.Passed) + len(ts.Skipped) + len(ts.Failed)
 	lastBuildStartTimeStr := time.Unix(*rd.LastBuildStartTime, 0).String()
 	content := fmt.Sprintf(`%s
-Time for last build: %s
+Last build start time: %s
 Failed %d times out of %d runs`, 
 		fmt.Sprintf(latestStatusPattern, ts.getTestStatus()),
 		lastBuildStartTimeStr, len(ts.Failed), totalCount)
