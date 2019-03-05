@@ -38,7 +38,7 @@ const (
 	// IssueOpenState is the state of open github issue
 	IssueOpenState IssueStateEnum = "open"
 	// IssueCloseState is the state of closed github issue
-	IssueCloseState IssueStateEnum = "close"
+	IssueCloseState IssueStateEnum = "closed"
 	// IssueAllState is the state for all, useful when querying issues
 	IssueAllState IssueStateEnum = "all"
 )
@@ -46,27 +46,45 @@ const (
 // IssueStateEnum represents different states of Github Issues
 type IssueStateEnum string
 
-var ctx = context.Background()
+var (
+	ctx    = context.Background()
+	client *GithubClient
+	user   *GithubUser
+)
 
 // GithubClient provides methods to perform github operations
 type GithubClient struct {
 	*github.Client
 }
 
+// GithubUser provides methods to perform operations as a github user
+type GithubUser struct {
+	*github.User
+}
+
 // GetGithubClient explicitly authenticates to github with giving token and returns a handle
-func GetGithubClient(tokenFilePath *string) (*GithubClient, error) {
-	b, err := ioutil.ReadFile(*tokenFilePath)
+func GetGithubClient(tokenFilePath string) (*GithubClient, error) {
+	if client != nil {
+		return client, nil
+	}
+
+	b, err := ioutil.ReadFile(tokenFilePath)
 	if err != nil {
 		return nil, err
 	}
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: strings.TrimSpace(string(b))},
 	)
+
 	return &GithubClient{github.NewClient(oauth2.NewClient(ctx, ts))}, nil
 }
 
-// GetCurrentUser gets authenticated user
-func (gc *GithubClient) GetCurrentUser() (*github.User, error) {
+// GetGithubUser gets current authenticated user
+func (gc *GithubClient) GetGithubUser() (*GithubUser, error) {
+	if user != nil {
+		return user, nil
+	}
+
 	var res *github.User
 	_, err := gc.retry(
 		"getting current user",
@@ -78,6 +96,31 @@ func (gc *GithubClient) GetCurrentUser() (*github.User, error) {
 			return resp, err
 		},
 	)
+	return &GithubUser{res}, err
+}
+
+// ListRepos lists repos under org
+func (gc *GithubClient) ListRepos(org string) ([]string, error) {
+	var res []string
+	options := &github.ListOptions{}
+	genericList, err := gc.depaginate(
+		"listing repos",
+		maxRetryCount,
+		options,
+		func() ([]interface{}, *github.Response, error) {
+			page, resp, err := gc.Repositories.List(ctx, org, nil)
+			var interfaceList []interface{}
+			if nil == err {
+				for _, repo := range page {
+					interfaceList = append(interfaceList, repo)
+				}
+			}
+			return interfaceList, resp, err
+		},
+	)
+	for _, repo := range genericList {
+		res = append(res, repo.(*github.Repository).GetName())
+	}
 	return res, err
 }
 
@@ -93,7 +136,7 @@ func (gc *GithubClient) ListIssuesByRepo(org, repo string, labels []string) ([]*
 	var res []*github.Issue
 	options := &github.ListOptions{}
 	genericList, err := gc.depaginate(
-		fmt.Sprintf("listing genericList with label '%v'", labels),
+		fmt.Sprintf("listing issues with label '%v'", labels),
 		maxRetryCount,
 		options,
 		func() ([]interface{}, *github.Response, error) {
