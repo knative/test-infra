@@ -47,5 +47,6 @@ plugins:
   - size
   - skip
   - trigger
+  - verify-owners
   - wip
   - yuks
