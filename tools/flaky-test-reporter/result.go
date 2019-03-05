@@ -99,12 +99,12 @@ func getFlakyTests(rd *RepoData) []string {
 }
 
 
-func getFlakyRate(rd *RepoData) (float32, error) {
+func getFlakyRate(rd *RepoData) float32 {
 	totalCount := len(rd.TestStats)
 	if 0 == totalCount {
-		return 0.0, nil
+		return 0.0
 	}
-	return float32(len(getFlakyTests(rd)))/float32(totalCount), nil
+	return float32(len(getFlakyTests(rd)))/float32(totalCount)
 }
 
 // createArtifactForRepo marshals RepoData into json format and stores it in a json file,
@@ -209,9 +209,6 @@ func (rd *RepoData) getResultSliceForTest(testName string) []junit.TestStatusEnu
 }
 
 func intSliceContains(its []int, target int) bool {
-	if nil == its {
-		return false
-	}
 	for _, it := range its {
 		if it == target {
 			return true

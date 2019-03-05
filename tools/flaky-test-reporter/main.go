@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 // flaky-test-reporter collects test results from continuous flows,
-// identifies flaky tests, tracking flaky tests related github issues, 
+// identifies flaky tests, tracking flaky tests related github issues,
 // and sends slack notifications.
 
 package main
@@ -29,24 +29,25 @@ import (
 )
 
 func main() {
-	serviceAccount := flag.String("service-account", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"), "JSON key file for service account to use")
+	serviceAccount := flag.String("service-account", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"), "JSON key file for GCS service account")
 	slackAccount := flag.String("slack-account", "", "slack secret file for authenticating with Slack")
-	dryrun    := flag.Bool("dry-run", false, "dry run switch")
+	dryrun := flag.Bool("dry-run", false, "dry run switch")
 	flag.Parse()
 
 	if nil != dryrun && true == *dryrun {
 		log.Printf("running in [dry run mode]")
 	}
-	
+
 	if err := prow.Initialize(*serviceAccount); nil != err { // Explicit authenticate with gcs Client
 		log.Fatalf("Failed authenticating GCS: '%v'", err)
 	}
-	if err := authenticateSlack(*slackAccount); nil != err {
+	slackClient, err := newSlackClient(*slackAccount)
+	if nil != err {
 		log.Fatalf("Failed authenticating Slack: '%v'", err)
 	}
 
 	// Clean up local artifacts directory, this will be used later for artifacts uploads
-	err := os.RemoveAll(prow.GetLocalArtifactsDir()) // this function returns nil if path not found
+	err = os.RemoveAll(prow.GetLocalArtifactsDir()) // this function returns nil if path not found
 	if nil == err {
 		if _, err = os.Stat(prow.GetLocalArtifactsDir()); os.IsNotExist(err) {
 			err = os.MkdirAll(prow.GetLocalArtifactsDir(), 0777)
@@ -69,5 +70,5 @@ func main() {
 		repoDataAll = append(repoDataAll, rd)
 	}
 
-	sendSlackNotifications(repoDataAll, dryrun)
+	sendSlackNotifications(repoDataAll, slackClient, dryrun)
 }
