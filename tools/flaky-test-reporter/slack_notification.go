@@ -130,7 +130,7 @@ func createSlackMessageForRepo(rd *RepoData) string {
 	if testgirdTabURL, err := getTestgridTabURL(rd.Config.Name); nil != err {
 		log.Println(err) // don't fail as this could be optional
 	} else {
-		message += fmt.Sprintf("\nSee Testgrid tab for most recent flaky tests: %s", testgirdTabURL)
+		message += fmt.Sprintf("\nSee Testgrid for up-to-date flaky tests information: %s", testgirdTabURL)
 	}
 	return message
 }
