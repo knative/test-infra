@@ -140,7 +140,7 @@ func sendSlackNotifications(repoDataAll []*RepoData, c *SlackClient, dryrun *boo
 	for _, rd := range repoDataAll {
 		channels, ok := slackChannelsMap[rd.Config.Repo]
 		if !ok {
-			log.Printf("cannot find Slack channel for repo '%s', skip Slack notifiction", rd.Config.Repo)
+			log.Printf("cannot find Slack channel for repo '%s', skipping Slack notification", rd.Config.Repo)
 			continue
 		}
 
