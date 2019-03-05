@@ -47,9 +47,7 @@ const (
 type IssueStateEnum string
 
 var (
-	ctx    = context.Background()
-	client *GithubClient
-	user   *GithubUser
+	ctx = context.Background()
 )
 
 // GithubClient provides methods to perform github operations
@@ -64,10 +62,6 @@ type GithubUser struct {
 
 // GetGithubClient explicitly authenticates to github with giving token and returns a handle
 func GetGithubClient(tokenFilePath string) (*GithubClient, error) {
-	if client != nil {
-		return client, nil
-	}
-
 	b, err := ioutil.ReadFile(tokenFilePath)
 	if err != nil {
 		return nil, err
@@ -81,10 +75,6 @@ func GetGithubClient(tokenFilePath string) (*GithubClient, error) {
 
 // GetGithubUser gets current authenticated user
 func (gc *GithubClient) GetGithubUser() (*GithubUser, error) {
-	if user != nil {
-		return user, nil
-	}
-
 	var res *github.User
 	_, err := gc.retry(
 		"getting current user",
