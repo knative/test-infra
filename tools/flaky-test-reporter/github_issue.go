@@ -81,15 +81,13 @@ var (
 	// latestStatusPattern is for creating latest test result line in comment,
 	// expect an argument of test status as defined in result.go
 	latestStatusPattern = fmt.Sprintf(`%s%%s`, latestStatusToken)
+
 	// reLastestStatus is for identifying latest test result from comment
 	reLastestStatus = fmt.Sprintf(`%s([a-zA-Z]*)`, latestStatusToken)
+
+	// Precompute timeConsiderOld so that the same standard used everywhere
+	timeConsiderOld = time.Now().AddDate(0, 0, -daysConsiderOld)
 )
-
-// Precompute timeConsiderOld so that the same standard used everywhere
-var timeConsiderOld = time.Now().AddDate(0, 0, -daysConsiderOld)
-
-// currentUser is current authenticated user, used for identifying comments created by bot
-var currentUser *github.User
 
 // flakyIssue is a wrapper of github.Issue, used for storing pre-computed information
 type flakyIssue struct {
@@ -98,9 +96,30 @@ type flakyIssue struct {
 	comment  *github.IssueComment // The first auto comment, updated for every history
 }
 
+// GithubIssue handles methods for github issues
+type GithubIssue struct {
+	user   *ghutil.GithubUser
+	client *ghutil.GithubClient
+}
+
+// Setup creates the necessary setup to make calls to work with github issues
+func Setup(githubToken string) (*GithubIssue, error) {
+	ghc, err := ghutil.NewGithubClient(githubToken)
+	if err != nil {
+		return nil, fmt.Errorf("Cannot authenticate to github: %v", err)
+	}
+
+	ghUser, err := ghc.GetGithubUser()
+	if nil != err {
+		return nil, fmt.Errorf("Cannot get username: %v", err)
+	}
+
+	return &GithubIssue{user: ghUser, client: ghc}, nil
+}
+
 // createCommentForTest summarizes latest status of current test case,
 // and creates text to be added to issue comment
-func createCommentForTest(rd *RepoData, testFullName string) string {
+func (gi *GithubIssue) createCommentForTest(rd *RepoData, testFullName string) string {
 	ts := rd.TestStats[testFullName]
 	totalCount := len(ts.Passed) + len(ts.Skipped) + len(ts.Failed)
 	lastBuildStartTimeStr := time.Unix(*rd.LastBuildStartTime, 0).String()
@@ -119,7 +138,7 @@ func createCommentForTest(rd *RepoData, testFullName string) string {
 	return content
 }
 
-func createHistoryUnicode(rd *RepoData, comment, testFullName string) string {
+func (gi *GithubIssue) createHistoryUnicode(rd *RepoData, comment, testFullName string) string {
 	res := ""
 	currentUnicode := fmt.Sprintf("%s: ", time.Unix(*rd.LastBuildStartTime, 0).String())
 	resultSlice := rd.getResultSliceForTest(testFullName)
@@ -154,7 +173,7 @@ func createHistoryUnicode(rd *RepoData, comment, testFullName string) string {
 
 // prependComment hides old comment into a collapsible, and prepend
 // new commment on top
-func prependComment(oldComment, newComment string) string {
+func (gi *GithubIssue) prependComment(oldComment, newComment string) string {
 	if "" != oldComment {
 		oldComment = fmt.Sprintf(collapseTemplate, "Click to see older results", oldComment)
 	}
@@ -163,7 +182,7 @@ func prependComment(oldComment, newComment string) string {
 
 // updateIssue adds comments to an existing issue, close an issue if test passed both in previous day and today,
 // reopens the issue if test becomes flaky while issue is closed.
-func updateIssue(fi *flakyIssue, newComment string, ts *TestStat, dryrun *bool) error {
+func (gi *GithubIssue) updateIssue(fi *flakyIssue, newComment string, ts *TestStat, dryrun *bool) error {
 	issue := fi.issue
 	passedLastTime := false
 	latestStatus := regexp.MustCompile(reLastestStatus).FindStringSubmatch(fi.comment.GetBody())
@@ -183,7 +202,7 @@ func updateIssue(fi *flakyIssue, newComment string, ts *TestStat, dryrun *bool) 
 		if err := run(
 			"updating comment",
 			func() error {
-				return ghutil.EditComment(org, repoForIssue, *fi.comment.ID, prependComment(*fi.comment.Body, newComment))
+				return gi.client.EditComment(org, repoForIssue, *fi.comment.ID, gi.prependComment(*fi.comment.Body, newComment))
 			},
 			dryrun); nil != err {
 			return fmt.Errorf("failed updating comments for issue '%s': '%v'", *issue.URL, err)
@@ -196,7 +215,7 @@ func updateIssue(fi *flakyIssue, newComment string, ts *TestStat, dryrun *bool) 
 				if err := run(
 					"closing issue",
 					func() error {
-						return ghutil.CloseIssue(org, repoForIssue, *issue.Number)
+						return gi.client.CloseIssue(org, repoForIssue, *issue.Number)
 					},
 					dryrun); nil != err {
 					return fmt.Errorf("failed closing issue '%s': '%v'", *issue.URL, err)
@@ -208,7 +227,7 @@ func updateIssue(fi *flakyIssue, newComment string, ts *TestStat, dryrun *bool) 
 			if err := run(
 				"reopening issue",
 				func() error {
-					return ghutil.ReopenIssue(org, repoForIssue, *issue.Number)
+					return gi.client.ReopenIssue(org, repoForIssue, *issue.Number)
 				},
 				dryrun); nil != err {
 				return fmt.Errorf("failed reopen issue: '%s'", *issue.URL)
@@ -219,13 +238,13 @@ func updateIssue(fi *flakyIssue, newComment string, ts *TestStat, dryrun *bool) 
 }
 
 // createNewIssue creates an issue, adds flaky label and adds comment.
-func createNewIssue(org, repoForIssue, title, body string, comment string, dryrun *bool) error {
+func (gi *GithubIssue) createNewIssue(org, repoForIssue, title, body string, comment string, dryrun *bool) error {
 	var newIssue *github.Issue
 	if err := run(
 		"creating issue",
 		func() error {
 			var err error
-			newIssue, err = ghutil.CreateIssue(org, repoForIssue, title, body)
+			newIssue, err = gi.client.CreateIssue(org, repoForIssue, title, body)
 			return err
 		},
 		dryrun,
@@ -235,7 +254,7 @@ func createNewIssue(org, repoForIssue, title, body string, comment string, dryru
 	if err := run(
 		"adding comment",
 		func() error {
-			return ghutil.CreateComment(org, repoForIssue, *newIssue.Number, comment)
+			return gi.client.CreateComment(org, repoForIssue, *newIssue.Number, comment)
 		},
 		dryrun,
 	); nil != err {
@@ -244,7 +263,7 @@ func createNewIssue(org, repoForIssue, title, body string, comment string, dryru
 	if err := run(
 		"adding flaky label",
 		func() error {
-			return ghutil.AddLabelsToIssue(org, repoForIssue, *newIssue.Number, []string{flakyLabel})
+			return gi.client.AddLabelsToIssue(org, repoForIssue, *newIssue.Number, []string{flakyLabel})
 		},
 		dryrun,
 	); nil != err {
@@ -255,9 +274,9 @@ func createNewIssue(org, repoForIssue, title, body string, comment string, dryru
 
 // findExistingComment identify existing comment by comment author and test identifier,
 // if multiple comments were found return the earliest one.
-func findExistingComment(issue *github.Issue, issueIdentity string) (*github.IssueComment, error) {
+func (gi *GithubIssue) findExistingComment(issue *github.Issue, issueIdentity string) (*github.IssueComment, error) {
 	var targetComment *github.IssueComment
-	comments, err := ghutil.ListComments(org, repoForIssue, *issue.Number)
+	comments, err := gi.client.ListComments(org, repoForIssue, *issue.Number)
 	if nil != err {
 		return nil, err
 	}
@@ -266,7 +285,7 @@ func findExistingComment(issue *github.Issue, issueIdentity string) (*github.Iss
 	})
 
 	for i, comment := range comments {
-		if *comment.User.ID != *currentUser.ID {
+		if *comment.User.ID != *gi.user.ID {
 			continue
 		}
 		if testNameFromComment := regexp.MustCompile(reTestIdentifier).FindStringSubmatch(*comment.Body); len(testNameFromComment) >= 2 && issueIdentity == testNameFromComment[1] {
@@ -285,14 +304,14 @@ func findExistingComment(issue *github.Issue, issueIdentity string) (*github.Iss
 // also fail if auto comment not found.
 // In most cases there is only 1 issue for each testName, if multiple issues found open for same test,
 // most likely it's caused by old issues being reopened manually, in this case update both issues.
-func getFlakyIssues() (map[string][]*flakyIssue, error) {
+func (gi *GithubIssue) getFlakyIssues() (map[string][]*flakyIssue, error) {
 	issuesMap := make(map[string][]*flakyIssue)
-	reposForIssue, err := ghutil.ListRepos(org)
+	reposForIssue, err := gi.client.ListRepos(org)
 	if nil != err {
 		return nil, err
 	}
 	for _, repoForIssue := range reposForIssue {
-		issues, err := ghutil.ListIssuesByRepo(org, repoForIssue, []string{flakyLabel})
+		issues, err := gi.client.ListIssuesByRepo(org, repoForIssue, []string{flakyLabel})
 		if nil != err {
 			return nil, err
 		}
@@ -304,7 +323,7 @@ func getFlakyIssues() (map[string][]*flakyIssue, error) {
 			if len(issueIdentity) < 2 { // Malformed issue, all auto flaky issues need to be identifiable.
 				return nil, fmt.Errorf("cannot get test identifier from auto flaky issue '%v'", err)
 			}
-			autoComment, err := findExistingComment(issue, issueIdentity[1])
+			autoComment, err := gi.findExistingComment(issue, issueIdentity[1])
 			if nil != err {
 				return nil, fmt.Errorf("cannot find auto comment for issue '%s': '%v'", *issue.URL, err)
 			}
@@ -350,7 +369,7 @@ func getFlakyIssues() (map[string][]*flakyIssue, error) {
 // processGithubIssueForRepo reads RepoData and existing issues, and create/close/reopen/comment on issues.
 // The function returns a slice of messages containing performed actions, and a slice of error messages,
 // these can later on be printed as summary at the end of run
-func processGithubIssueForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyIssue, dryrun *bool) ([]string, error) {
+func (gi *GithubIssue) processGithubIssueForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyIssue, dryrun *bool) ([]string, error) {
 	var messages []string
 	var errs []error
 
@@ -371,7 +390,7 @@ func processGithubIssueForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyI
 		comment := fmt.Sprintf("Bulk issue tracking: %s\n%s", identity, fmt.Sprintf(testIdentifierPattern, identity))
 		message := fmt.Sprintf("Creating issue '%s' in repo '%s'", title, repoForIssue)
 		log.Println(message)
-		return []string{message}, createNewIssue(org, repoForIssue, title,
+		return []string{message}, gi.createNewIssue(org, repoForIssue, title,
 			fmt.Sprintf(issueBodyTemplate, identity, fmt.Sprintf(testIdentifierPattern, identity)),
 			comment, dryrun)
 	}
@@ -382,7 +401,7 @@ func processGithubIssueForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyI
 			continue
 		}
 		identity := fmt.Sprintf("'%s' in repo '%s'", testFullName, rd.Config.Repo)
-		comment := createCommentForTest(rd, testFullName)
+		comment := gi.createCommentForTest(rd, testFullName)
 		if existIssues, ok := flakyIssuesMap[identity]; ok { // update issue with current result
 			for _, existIssue := range existIssues {
 				if strings.Contains(existIssue.comment.GetBody(), comment) {
@@ -390,23 +409,23 @@ func processGithubIssueForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyI
 						*existIssue.issue.URL, *rd.LastBuildStartTime)
 					continue
 				}
-				comment += createHistoryUnicode(rd, existIssue.comment.GetBody(), testFullName)
+				comment += gi.createHistoryUnicode(rd, existIssue.comment.GetBody(), testFullName)
 				message := fmt.Sprintf("Updating issue '%s' for '%s'", *existIssue.issue.URL, *existIssue.identity)
 				log.Println(message)
 				messages = append(messages, message)
-				if err := updateIssue(existIssue, comment, ts, dryrun); nil != err {
+				if err := gi.updateIssue(existIssue, comment, ts, dryrun); nil != err {
 					log.Println(err)
 					errs = append(errs, err)
 				}
 			}
 		} else if ts.isFlaky() {
 			title := fmt.Sprintf("[flaky] %s", identity)
-			comment += createHistoryUnicode(rd, "", testFullName)
+			comment += gi.createHistoryUnicode(rd, "", testFullName)
 			comment += "\n" + fmt.Sprintf(testIdentifierPattern, identity)
 			message := fmt.Sprintf("Creating issue '%s' in repo '%s'", title, repoForIssue)
 			log.Println(message)
 			messages = append(messages, message)
-			if err := createNewIssue(org, repoForIssue, title,
+			if err := gi.createNewIssue(org, repoForIssue, title,
 				fmt.Sprintf(issueBodyTemplate, identity, fmt.Sprintf(testIdentifierPattern, identity)),
 				comment, dryrun); nil != err {
 				log.Println(err)
@@ -418,25 +437,19 @@ func processGithubIssueForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyI
 }
 
 // analyze all results, figure out flaky tests and processing existing auto:flaky issues
-func processGithubIssues(repoDataAll []*RepoData, githubToken *string, dryrun *bool) error {
+func (gi *GithubIssue) processGithubIssues(repoDataAll []*RepoData, dryrun *bool) error {
 	messagesMap := make(map[string][]string)
 	errMap := make(map[string][]error)
-	var err error
-	ghutil.Authenticate(githubToken)
-	currentUser, err = ghutil.GetCurrentUser()
-	if nil != err {
-		log.Fatalf("cannot get current authenticated username '%v'", err)
-	}
 
 	// Collect all flaky test issues from all knative repos, in case issues are moved around
 	// Fail this job if data collection failed
-	flakyGHIssuesMap, err := getFlakyIssues()
+	flakyGHIssuesMap, err := gi.getFlakyIssues()
 	if nil != err {
 		log.Fatalf("%v", err)
 	}
 
 	for _, rd := range repoDataAll {
-		messages, err := processGithubIssueForRepo(rd, flakyGHIssuesMap, dryrun)
+		messages, err := gi.processGithubIssueForRepo(rd, flakyGHIssuesMap, dryrun)
 		messagesMap[rd.Config.Repo] = messages
 		if nil != err {
 			errMap[rd.Config.Repo] = append(errMap[rd.Config.Repo], err)
@@ -454,6 +467,7 @@ func processGithubIssues(repoDataAll []*RepoData, githubToken *string, dryrun *b
 			summary += fmt.Sprintf("Errors in repo '%s':\n%v", rd.Config.Repo, combineErrors(errs))
 		}
 	}
+
 	log.Println(summary)
 	return nil
 }

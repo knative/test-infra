@@ -21,14 +21,14 @@ package ghutil
 
 import (
 	"context"
-	"io/ioutil"
-	"strings"
-	"log"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"strings"
 	"time"
 
-	"golang.org/x/oauth2"
 	"github.com/google/go-github/github"
+	"golang.org/x/oauth2"
 )
 
 const (
@@ -40,56 +40,65 @@ const (
 	// IssueCloseState is the state of closed github issue
 	IssueCloseState IssueStateEnum = "closed"
 	// IssueAllState is the state for all, useful when querying issues
-	IssueAllState  IssueStateEnum = "all"
+	IssueAllState IssueStateEnum = "all"
 )
 
 // IssueStateEnum represents different states of Github Issues
 type IssueStateEnum string
 
-// client for github authentication
-// without explicitly authenticate this client can still be used for anonymous operations
-var client *github.Client
-var ctx = context.Background()
+var (
+	ctx = context.Background()
+)
 
-// Authenticate explicitly authenticate github with giving token
-func Authenticate(tokenFilePath *string) error {
-	b, err := ioutil.ReadFile(*tokenFilePath)
+// GithubClient provides methods to perform github operations
+type GithubClient struct {
+	*github.Client
+}
+
+// GithubUser provides methods to perform operations as a github user
+type GithubUser struct {
+	*github.User
+}
+
+// GetGithubClient explicitly authenticates to github with giving token and returns a handle
+func NewGithubClient(tokenFilePath string) (*GithubClient, error) {
+	b, err := ioutil.ReadFile(tokenFilePath)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: strings.TrimSpace(string(b))},
 	)
-	client = github.NewClient(oauth2.NewClient(ctx, ts))
-	return nil
+
+	return &GithubClient{github.NewClient(oauth2.NewClient(ctx, ts))}, nil
 }
 
-// GetCurrentUser gets authenticated user
-func GetCurrentUser() (*github.User, error) {
+// GetGithubUser gets current authenticated user
+func (gc *GithubClient) GetGithubUser() (*GithubUser, error) {
 	var res *github.User
-	_, err := retry(
+	_, err := gc.retry(
 		"getting current user",
 		maxRetryCount,
 		func() (*github.Response, error) {
 			var resp *github.Response
 			var err error
-			res, resp, err = client.Users.Get(ctx, "")
+			res, resp, err = gc.Users.Get(ctx, "")
 			return resp, err
 		},
 	)
-	return res, err
+	return &GithubUser{res}, err
 }
 
 // ListRepos lists repos under org
-func ListRepos(org string) ([]string, error) {
+func (gc *GithubClient) ListRepos(org string) ([]string, error) {
 	var res []string
 	options := &github.ListOptions{}
-	genericList, err := depaginate(
+	genericList, err := gc.depaginate(
 		"listing repos",
 		maxRetryCount,
 		options,
 		func() ([]interface{}, *github.Response, error) {
-			page, resp, err := client.Repositories.List(ctx, org, nil)
+			page, resp, err := gc.Repositories.List(ctx, org, nil)
 			var interfaceList []interface{}
 			if nil == err {
 				for _, repo := range page {
@@ -106,22 +115,22 @@ func ListRepos(org string) ([]string, error) {
 }
 
 // ListIssuesByRepo lists issues within given repo, filters by labels if provided
-func ListIssuesByRepo(org, repo string, labels []string) ([]*github.Issue, error) {
+func (gc *GithubClient) ListIssuesByRepo(org, repo string, labels []string) ([]*github.Issue, error) {
 	issueListOptions := github.IssueListByRepoOptions{
-		State:  string(IssueAllState),
+		State: string(IssueAllState),
 	}
 	if len(labels) > 0 {
 		issueListOptions.Labels = labels
 	}
-	
+
 	var res []*github.Issue
 	options := &github.ListOptions{}
-	genericList, err := depaginate(
+	genericList, err := gc.depaginate(
 		fmt.Sprintf("listing issues with label '%v'", labels),
 		maxRetryCount,
 		options,
 		func() ([]interface{}, *github.Response, error) {
-			page, resp, err := client.Issues.ListByRepo(ctx, org, repo, &issueListOptions)
+			page, resp, err := gc.Issues.ListByRepo(ctx, org, repo, &issueListOptions)
 			var interfaceList []interface{}
 			if nil == err {
 				for _, issue := range page {
@@ -138,20 +147,20 @@ func ListIssuesByRepo(org, repo string, labels []string) ([]*github.Issue, error
 }
 
 // CreateIssue creates issue
-func CreateIssue(org, repo, title, body string) (*github.Issue, error) {
+func (gc *GithubClient) CreateIssue(org, repo, title, body string) (*github.Issue, error) {
 	issue := &github.IssueRequest{
 		Title: &title,
 		Body:  &body,
 	}
 
 	var res *github.Issue
-	_, err := retry(
+	_, err := gc.retry(
 		fmt.Sprintf("creating issue '%s %s' '%s'", org, repo, title),
 		maxRetryCount,
 		func() (*github.Response, error) {
 			var resp *github.Response
 			var err error
-			res, resp, err = client.Issues.Create(ctx, org, repo, issue)
+			res, resp, err = gc.Issues.Create(ctx, org, repo, issue)
 			return resp, err
 		},
 	)
@@ -159,25 +168,25 @@ func CreateIssue(org, repo, title, body string) (*github.Issue, error) {
 }
 
 // CloseIssue closes issue
-func CloseIssue(org, repo string, issueNumber int) error {
-	return updateIssueState(org, repo, IssueCloseState, issueNumber)
+func (gc *GithubClient) CloseIssue(org, repo string, issueNumber int) error {
+	return gc.updateIssueState(org, repo, IssueCloseState, issueNumber)
 }
 
 // ReopenIssue reopen issue
-func ReopenIssue(org, repo string, issueNumber int) error {
-	return updateIssueState(org, repo, IssueOpenState, issueNumber)
+func (gc *GithubClient) ReopenIssue(org, repo string, issueNumber int) error {
+	return gc.updateIssueState(org, repo, IssueOpenState, issueNumber)
 }
 
 // ListComments gets all comments from issue
-func ListComments(org, repo string, issueNumber int) ([]*github.IssueComment, error) {
+func (gc *GithubClient) ListComments(org, repo string, issueNumber int) ([]*github.IssueComment, error) {
 	var res []*github.IssueComment
 	options := &github.ListOptions{}
-	genericList, err := depaginate(
+	genericList, err := gc.depaginate(
 		fmt.Sprintf("listing comment for issue '%s %s %d'", org, repo, issueNumber),
 		maxRetryCount,
 		options,
 		func() ([]interface{}, *github.Response, error) {
-			page, resp, err := client.Issues.ListComments(ctx, org, repo, issueNumber, nil)
+			page, resp, err := gc.Issues.ListComments(ctx, org, repo, issueNumber, nil)
 			var interfaceList []interface{}
 			if nil == err {
 				for _, issue := range page {
@@ -194,15 +203,15 @@ func ListComments(org, repo string, issueNumber int) ([]*github.IssueComment, er
 }
 
 // GetComment gets comment by comment ID
-func GetComment(org, repo string, commentID int64) (*github.IssueComment, error) {
+func (gc *GithubClient) GetComment(org, repo string, commentID int64) (*github.IssueComment, error) {
 	var res *github.IssueComment
-	_, err := retry(
+	_, err := gc.retry(
 		fmt.Sprintf("getting comment '%s %s %d'", org, repo, commentID),
 		maxRetryCount,
 		func() (*github.Response, error) {
 			var resp *github.Response
 			var err error
-			res, resp, err = client.Issues.GetComment(ctx, org, repo, commentID)
+			res, resp, err = gc.Issues.GetComment(ctx, org, repo, commentID)
 			return resp, err
 		},
 	)
@@ -210,15 +219,15 @@ func GetComment(org, repo string, commentID int64) (*github.IssueComment, error)
 }
 
 // CreateComment adds comment to issue
-func CreateComment(org, repo string, issueNumber int, commentBody string) error {
+func (gc *GithubClient) CreateComment(org, repo string, issueNumber int, commentBody string) error {
 	comment := &github.IssueComment{
 		Body: &commentBody,
 	}
-	_, err := retry(
+	_, err := gc.retry(
 		fmt.Sprintf("commenting issue '%s %s %d'", org, repo, issueNumber),
 		maxRetryCount,
 		func() (*github.Response, error) {
-			_, resp, err := client.Issues.CreateComment(ctx, org, repo, issueNumber, comment)
+			_, resp, err := gc.Issues.CreateComment(ctx, org, repo, issueNumber, comment)
 			return resp, err
 		},
 	)
@@ -226,15 +235,15 @@ func CreateComment(org, repo string, issueNumber int, commentBody string) error 
 }
 
 // EditComment edits comment by replacing with provided comment
-func EditComment(org, repo string, commentID int64, commentBody string) error {
+func (gc *GithubClient) EditComment(org, repo string, commentID int64, commentBody string) error {
 	comment := &github.IssueComment{
 		Body: &commentBody,
 	}
-	_, err := retry(
+	_, err := gc.retry(
 		fmt.Sprintf("editing comment '%s %s %d'", org, repo, commentID),
 		maxRetryCount,
 		func() (*github.Response, error) {
-			_, resp, err := client.Issues.EditComment(ctx, org, repo, commentID, comment)
+			_, resp, err := gc.Issues.EditComment(ctx, org, repo, commentID, comment)
 			return resp, err
 		},
 	)
@@ -242,12 +251,12 @@ func EditComment(org, repo string, commentID int64, commentBody string) error {
 }
 
 // AddLabelsToIssue adds label on issue
-func AddLabelsToIssue(org, repo string, issueNumber int, labels []string) error {
-	_, err := retry(
+func (gc *GithubClient) AddLabelsToIssue(org, repo string, issueNumber int, labels []string) error {
+	_, err := gc.retry(
 		fmt.Sprintf("add labels '%v' to '%s %s %d'", labels, org, repo, issueNumber),
 		maxRetryCount,
 		func() (*github.Response, error) {
-			_, resp, err := client.Issues.AddLabelsToIssue(ctx, org, repo, issueNumber, labels)
+			_, resp, err := gc.Issues.AddLabelsToIssue(ctx, org, repo, issueNumber, labels)
 			return resp, err
 		},
 	)
@@ -255,34 +264,34 @@ func AddLabelsToIssue(org, repo string, issueNumber int, labels []string) error 
 }
 
 // RemoveLabelForIssue removes given label for issue
-func RemoveLabelForIssue(org, repo string, issueNumber int, label string) error {
-	_, err := retry(
+func (gc *GithubClient) RemoveLabelForIssue(org, repo string, issueNumber int, label string) error {
+	_, err := gc.retry(
 		fmt.Sprintf("remove label '%s' from '%s %s %d'", label, org, repo, issueNumber),
 		maxRetryCount,
 		func() (*github.Response, error) {
-			return client.Issues.RemoveLabelForIssue(ctx, org, repo, issueNumber, label)
+			return gc.Issues.RemoveLabelForIssue(ctx, org, repo, issueNumber, label)
 		},
 	)
 	return err
 }
 
-func updateIssueState(org, repo string, state IssueStateEnum, issueNumber int) error {
+func (gc *GithubClient) updateIssueState(org, repo string, state IssueStateEnum, issueNumber int) error {
 	stateString := string(state)
 	issueRequest := &github.IssueRequest{
 		State: &stateString,
 	}
-	_, err := retry(
+	_, err := gc.retry(
 		fmt.Sprintf("applying '%s' action on issue '%s %s %d'", stateString, org, repo, issueNumber),
 		maxRetryCount,
 		func() (*github.Response, error) {
-			_, resp, err := client.Issues.Edit(ctx, org, repo, issueNumber, issueRequest)
+			_, resp, err := gc.Issues.Edit(ctx, org, repo, issueNumber, issueRequest)
 			return resp, err
 		},
 	)
 	return err
 }
 
-func waitForRateReset(r *github.Rate) {
+func (gc *GithubClient) waitForRateReset(r *github.Rate) {
 	if r.Remaining <= tokenReserve {
 		sleepDuration := time.Until(r.Reset.Time) + (time.Second * 10)
 		if sleepDuration > 0 {
@@ -294,7 +303,7 @@ func waitForRateReset(r *github.Rate) {
 
 // Github API has a rate limit, retry waits until rate limit reset if request failed with RateLimitError,
 // then retry maxRetries times until succeed
-func retry(message string, maxRetries int, call func() (*github.Response, error)) (*github.Response, error) {
+func (gc *GithubClient) retry(message string, maxRetries int, call func() (*github.Response, error)) (*github.Response, error) {
 	var err error
 	var resp *github.Response
 
@@ -303,10 +312,10 @@ func retry(message string, maxRetries int, call func() (*github.Response, error)
 			return resp, nil
 		}
 		switch err := err.(type) {
-			case *github.RateLimitError:
-				waitForRateReset(&err.Rate)
-			default:
-				return resp, err
+		case *github.RateLimitError:
+			gc.waitForRateReset(&err.Rate)
+		default:
+			return resp, err
 		}
 		log.Printf("error %s: %v. Will retry.\n", message, err)
 	}
@@ -314,7 +323,7 @@ func retry(message string, maxRetries int, call func() (*github.Response, error)
 }
 
 // depaginate adds depagination on top of the retry, in case list exceeds rate limit
-func depaginate(message string, maxRetries int, options *github.ListOptions, call func() ([]interface{}, *github.Response, error)) ([]interface{}, error) {
+func (gc *GithubClient) depaginate(message string, maxRetries int, options *github.ListOptions, call func() ([]interface{}, *github.Response, error)) ([]interface{}, error) {
 	var allItems []interface{}
 	wrapper := func() (*github.Response, error) {
 		items, resp, err := call()
@@ -328,7 +337,7 @@ func depaginate(message string, maxRetries int, options *github.ListOptions, cal
 	options.PerPage = 100
 	lastPage := 1
 	for ; options.Page <= lastPage; options.Page++ {
-		resp, err := retry(message, maxRetries, wrapper)
+		resp, err := gc.retry(message, maxRetries, wrapper)
 		if err != nil {
 			return allItems, fmt.Errorf("error while depaginating page %d/%d: %v", options.Page, lastPage, err)
 		}
