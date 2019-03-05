@@ -101,33 +101,15 @@ periodics:
     - continuous: true
       cron: "1 * * * *" # Run every other hour and one minute
       timeout: 55
-    - continuous: true
+    - branch-ci: true
       release: "0.2"
-      needs-dind: true
       cron: "15 8 * * *" # Run at 01:15PST every day (08:15 UTC)
-      command:
-      - "./hack/release.sh"
-      args:
-      - "--nopublish"
-      - "--notag-release"
-    - continuous: true
+    - branch-ci: true
       release: "0.3"
-      needs-dind: true
       cron: "20 8 * * *" # Run at 01:20PST every day (08:20 UTC)
-      command:
-      - "./hack/release.sh"
-      args:
-      - "--nopublish"
-      - "--notag-release"
-    - continuous: true
+    - branch-ci: true
       release: "0.4"
-      needs-dind: true
       cron: "25 8 * * *" # Run at 01:25PST every day (08:25 UTC)
-      command:
-      - "./hack/release.sh"
-      args:
-      - "--nopublish"
-      - "--notag-release"
     - nightly: true
       cron: "1 8 * * *" # Run at 01:01PST every day (08:01 UTC)
     - dot-release: true
@@ -147,6 +129,8 @@ periodics:
       cron: "5 8 * * *" # Run at 01:05PST every day (08:05 UTC)
     - performance: true
       cron: "0 1 * * *" # Run at 01:00 every day
+    - webhook-apicoverage: true
+      cron: "5 9 * * *" # Run at 02:05PST every day (09:05 UTC)
 
   knative/build:
     - continuous: true

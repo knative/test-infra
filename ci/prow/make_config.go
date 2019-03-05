@@ -108,6 +108,7 @@ var (
 	// Array constants used throughout the jobs.
 	allPresubmitTests = []string{"--all-tests", "--emit-metrics"}
 	releaseNightly    = []string{"--publish", "--tag-release"}
+	releaseLocal      = []string{"--nopublish", "--notag-release"}
 
 	// Values used in the jobs that can be changed through command-line flags.
 	gcsBucket            string
@@ -121,6 +122,7 @@ var (
 	presubmitScript      string
 	releaseScript        string
 	performanceScript    string
+	webhookAPICoverageScript string
 
 	// Overrides and behavior changes through command-line flags.
 	repositoryOverride string
@@ -606,6 +608,13 @@ func addExtraEnvVarsToJob(data *baseProwJobTemplateData) {
 	}
 }
 
+// setupDockerInDockerForJob enables docker-in-docker for the given job.
+func setupDockerInDockerForJob(data *baseProwJobTemplateData) {
+	addVolumeToJob(data, "/docker-graph", "docker-graph", false)
+	addEnvToJob(data, "DOCKER_IN_DOCKER_ENABLED", "\"true\"")
+	(*data).SecurityContext = []string{"privileged: true"}
+}
+
 // Config parsers.
 
 // parseBasicJobConfig populates the given baseProwJobTemplateData with any basic option present in the given config.
@@ -622,9 +631,7 @@ func parseBasicJobConfig(data *baseProwJobTemplateData, config yaml.MapSlice) {
 			(*data).Command = getString(item.Value)
 		case "needs-dind":
 			if getBool(item.Value) {
-				addVolumeToJob(data, "/docker-graph", "docker-graph", false)
-				addEnvToJob(data, "DOCKER_IN_DOCKER_ENABLED", "\"true\"")
-				(*data).SecurityContext = []string{"privileged: true"}
+				setupDockerInDockerForJob(data)
 			}
 		case "always_run":
 			(*data).AlwaysRun = getBool(item.Value)
@@ -707,12 +714,14 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	parseBasicJobConfig(&data.Base, periodicConfig)
 	jobNameSuffix := ""
 	jobTemplate := periodicJob
+	jobType := ""
 	for _, item := range periodicConfig {
 		switch item.Key {
 		case "continuous":
 			if !getBool(item.Value) {
 				return
 			}
+			jobType = getString(item.Key)
 			jobNameSuffix = "continuous"
 			// Use default command and arguments if none given.
 			if data.Base.Command == "" {
@@ -725,15 +734,27 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			if !getBool(item.Value) {
 				return
 			}
+			jobType = getString(item.Key)
 			jobNameSuffix = "nightly-release"
 			data.Base.ServiceAccount = nightlyAccount
 			data.Base.Command = releaseScript
 			data.Base.Args = releaseNightly
 			data.Base.Timeout = 90
+		case "branch-ci":
+			if !getBool(item.Value) {
+				return
+			}
+			jobType = getString(item.Key)
+			jobNameSuffix = "continuous"
+			data.Base.Command = releaseScript
+			data.Base.Args = releaseLocal
+			setupDockerInDockerForJob(&data.Base)
+			data.Base.Timeout = 90
 		case "dot-release", "auto-release":
 			if !getBool(item.Value) {
 				return
 			}
+			jobType = getString(item.Key)
 			jobNameSuffix = getString(item.Key)
 			data.Base.ServiceAccount = releaseAccount
 			data.Base.Command = releaseScript
@@ -748,12 +769,14 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			if !getBool(item.Value) {
 				return
 			}
+			jobType = getString(item.Key)
 			jobNameSuffix = "performance"
 			data.Base.Command = performanceScript
 		case "latency":
 			if !getBool(item.Value) {
 				return
 			}
+			jobType = getString(item.Key)
 			jobTemplate = latencyJob
 			jobNameSuffix = "latency"
 			data.Base.Command = "unused"
@@ -761,10 +784,12 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			if !getBool(item.Value) {
 				return
 			}
+			jobType = getString(item.Key)
 			jobTemplate = apiCoverageJob
 			jobNameSuffix = "api-coverage"
 			data.Base.Command = "unused"
 		case "custom-job":
+			jobType = getString(item.Key)
 			jobNameSuffix = getString(item.Value)
 		case "cron":
 			data.CronString = getString(item.Value)
@@ -772,6 +797,12 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			version := getString(item.Value)
 			jobNameSuffix = version + "-" + jobNameSuffix
 			data.Base.RepoBranch = "release-" + version
+		case "webhook-apicoverage":
+			if !getBool(item.Value) {
+				return
+			}
+			jobNameSuffix = "webhook-apicoverage"
+			data.Base.Command = webhookAPICoverageScript
 		case nil: // already processed by parseBasicJobConfig
 			continue
 		default:
@@ -788,6 +819,9 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	}
 	if len(data.Base.Args) == 0 && data.Base.Command == "" {
 		log.Fatalf("Job %q is missing command", data.PeriodicJobName)
+	}
+	if jobType == "branch-ci" && data.Base.RepoBranch == "" {
+		log.Fatalf("%q jobs are intended to be used on release branches", jobType)
 	}
 	// Generate config itself.
 	data.PeriodicCommand = createCommand(data.Base)
@@ -1023,6 +1057,7 @@ func main() {
 	flag.StringVar(&presubmitScript, "presubmit-script", "./test/presubmit-tests.sh", "Executable for running presubmit tests")
 	flag.StringVar(&releaseScript, "release-script", "./hack/release.sh", "Executable for creating releases")
 	flag.StringVar(&performanceScript, "performance-script", "./test/performance-tests.sh", "Executable for running performance tests")
+	flag.StringVar(&webhookAPICoverageScript, "webhookAPICoverageScript", "./test/apicoverage.sh", "Executable for running webhook apicoverage tool")
 	flag.StringVar(&repositoryOverride, "repo-override", "", "Repository path (github.com/foo/bar[=branch]) to use instead for a job")
 	flag.StringVar(&jobNameFilter, "job-filter", "", "Generate only this job, instead of all jobs")
 	flag.StringVar(&preCommand, "pre-command", "", "Executable for running instead of the real command of a job")

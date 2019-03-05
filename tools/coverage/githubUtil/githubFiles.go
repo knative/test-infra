@@ -26,13 +26,21 @@ func GetConcernedFiles(data *githubPr.GithubPr, filePathPrefix string) *map[stri
 	fmt.Println()
 	log.Printf("GetConcernedFiles(...) started\n")
 
-	commitFiles, _, err := data.GithubClient.PullRequests.ListFiles(data.Ctx, data.RepoOwner, data.RepoName,
-		data.Pr, listOptions)
-	if err != nil {
-		logUtil.LogFatalf("error running c.PullRequests.ListFiles("+
-			"Ctx, repoOwner=%s, RepoName=%s, pullNum=%v, listOptions): %v\n",
-			data.RepoOwner, data.RepoName, data.Pr, err)
-		return nil
+	commitFiles := make([]*github.CommitFile, 0)
+	for {
+		files, rsp, err := data.GithubClient.PullRequests.ListFiles(data.Ctx, data.RepoOwner, data.RepoName,
+			data.Pr, listOptions)
+		if err != nil {
+			logUtil.LogFatalf("error running c.PullRequests.ListFiles("+
+				"Ctx, repoOwner=%s, RepoName=%s, pullNum=%v, listOptions): %v\n",
+				data.RepoOwner, data.RepoName, data.Pr, err)
+			return nil
+		}
+		commitFiles = append(commitFiles, files...)
+		if rsp.NextPage == 0 {
+			break
+		}
+		listOptions.Page = rsp.NextPage
 	}
 
 	fileNames := make(map[string]bool)
