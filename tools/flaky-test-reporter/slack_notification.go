@@ -1,5 +1,5 @@
 /*
-Copyright 2018 The Knative Authors
+Copyright 2019 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import (
 )
 
 const (
-	knativeBotName          = "Knative bot"
+	knativeBotName          = "Knative Testgrid Robot"
 	slackChatPostMessageURL = "https://slack.com/api/chat.postMessage"
 	// default filter for testgrid link
 	testgridFilter = "exclude-non-failed-tests=20"
@@ -51,6 +51,7 @@ var (
 	}
 )
 
+// SlackClient contains Slack bot related information
 type SlackClient struct {
 	userName  string
 	tokenStr  string
@@ -119,24 +120,33 @@ func getTestgridTabURL(jobName string) (string, error) {
 }
 
 // createSlackMessageForRepo creates slack message layout from RepoData
-func createSlackMessageForRepo(rd *RepoData) string {
+func createSlackMessageForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyIssue) string {
 	flakyTests := getFlakyTests(rd)
 	message := fmt.Sprintf("As of %s, there are %d flaky tests in '%s'",
-		time.Unix(*rd.LastBuildStartTime, 0).String(), rd.Config.Repo, len(flakyTests))
-	for _, testName := range flakyTests {
-		message += fmt.Sprintf("\n>- %s", testName)
-		// TODO(chaodaiG): try adding Github issues when PR #506 merged
+		time.Unix(*rd.LastBuildStartTime, 0).String(), len(flakyTests), rd.Config.Repo)
+	for _, testFullName := range flakyTests {
+		message += fmt.Sprintf("\n>- %s", testFullName)
+		if flakyIssues, ok := flakyIssuesMap[getIdentityForTest(testFullName, rd.Config.Repo)]; ok {
+			for _, fi := range flakyIssues {
+				message += fmt.Sprintf("\t%s", fi.issue.GetHTMLURL())
+			}
+		}
 	}
-	if testgirdTabURL, err := getTestgridTabURL(rd.Config.Name); nil != err {
+	if testgridTabURL, err := getTestgridTabURL(rd.Config.Name); nil != err {
 		log.Println(err) // don't fail as this could be optional
 	} else {
-		message += fmt.Sprintf("\nSee Testgrid for up-to-date flaky tests information: %s", testgirdTabURL)
+		message += fmt.Sprintf("\nSee Testgrid for up-to-date flaky tests information: %s", testgridTabURL)
 	}
 	return message
 }
 
-func sendSlackNotifications(repoDataAll []*RepoData, c *SlackClient, dryrun *bool) error {
+func sendSlackNotifications(repoDataAll []*RepoData, c *SlackClient, dryrun bool) error {
 	var allErrs []error
+	flakyIssuesMap, err := getFlakyIssues()
+	if nil != err { // failure here will make message missing Github issues link, which should not prevent notification
+		allErrs = append(allErrs, err)
+		log.Println("Warning: cannot get flaky Github issues: ", err)
+	}
 	for _, rd := range repoDataAll {
 		channels, ok := slackChannelsMap[rd.Config.Repo]
 		if !ok {
@@ -149,7 +159,7 @@ func sendSlackNotifications(repoDataAll []*RepoData, c *SlackClient, dryrun *boo
 		for _, channel := range channels {
 			wg.Add(1)
 			go func(wg *sync.WaitGroup) {
-				message := createSlackMessageForRepo(rd)
+				message := createSlackMessageForRepo(rd, flakyIssuesMap)
 				if err := run(
 					fmt.Sprintf("post Slack message for repo '%s' in channel '%s'", rd.Config.Repo, channel.name),
 					func() error {

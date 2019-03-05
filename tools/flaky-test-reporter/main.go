@@ -30,9 +30,9 @@ import (
 
 func main() {
 	serviceAccount := flag.String("service-account", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"), "JSON key file for GCS service account")
-	githubToken    := flag.String("github-token", "", "Token file for Github authentication")
-	slackAccount   := flag.String("slack-account", "", "slack secret file for authenticating with Slack")
-	dryrun         := flag.Bool("dry-run", false, "dry run switch")
+	githubToken := flag.String("github-token", "", "Token file for Github authentication")
+	slackAccount := flag.String("slack-account", "", "slack secret file for authenticating with Slack")
+	dryrun := flag.Bool("dry-run", false, "dry run switch")
 	flag.Parse()
 
 	if nil != dryrun && true == *dryrun {
@@ -46,7 +46,7 @@ func main() {
 	if nil != err {
 		log.Fatalf("Failed authenticating Slack: '%v'", err)
 	}
-	
+
 	var repoDataAll []*RepoData
 	// Clean up local artifacts directory, this will be used later for artifacts uploads
 	err = os.RemoveAll(prow.GetLocalArtifactsDir()) // this function returns nil if path not found
@@ -71,6 +71,15 @@ func main() {
 		repoDataAll = append(repoDataAll, rd)
 	}
 
-	processGithubIssues(repoDataAll, githubToken, dryrun)
-	sendSlackNotifications(repoDataAll, slackClient, dryrun)
+	githubErr := processGithubIssues(repoDataAll, githubToken, *dryrun)
+	slackErr := sendSlackNotifications(repoDataAll, slackClient, *dryrun)
+	if nil != githubErr {
+		log.Printf("Github step failures:\n%v", githubErr)
+	}
+	if nil != slackErr {
+		log.Printf("Slack step failures:\n%v", slackErr)
+	}
+	if nil != githubErr || nil != slackErr { // Fail this job if there is any error
+		os.Exit(1)
+	}
 }

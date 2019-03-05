@@ -98,6 +98,11 @@ type flakyIssue struct {
 	comment  *github.IssueComment // The first auto comment, updated for every history
 }
 
+// getIdentityForTest creates a unique string for a test, which will be used for identifying Github issue
+func getIdentityForTest(testFullName, repoName string) string {
+	return fmt.Sprintf("'%s' in repo '%s'", testFullName, repoName)
+}
+
 // createCommentForTest summarizes latest status of current test case,
 // and creates text to be added to issue comment
 func createCommentForTest(rd *RepoData, testFullName string) string {
@@ -163,7 +168,7 @@ func prependComment(oldComment, newComment string) string {
 
 // updateIssue adds comments to an existing issue, close an issue if test passed both in previous day and today,
 // reopens the issue if test becomes flaky while issue is closed.
-func updateIssue(fi *flakyIssue, newComment string, ts *TestStat, dryrun *bool) error {
+func updateIssue(fi *flakyIssue, newComment string, ts *TestStat, dryrun bool) error {
 	issue := fi.issue
 	passedLastTime := false
 	latestStatus := regexp.MustCompile(reLastestStatus).FindStringSubmatch(fi.comment.GetBody())
@@ -219,7 +224,7 @@ func updateIssue(fi *flakyIssue, newComment string, ts *TestStat, dryrun *bool) 
 }
 
 // createNewIssue creates an issue, adds flaky label and adds comment.
-func createNewIssue(org, repoForIssue, title, body string, comment string, dryrun *bool) error {
+func createNewIssue(org, repoForIssue, title, body string, comment string, dryrun bool) error {
 	var newIssue *github.Issue
 	if err := run(
 		"creating issue",
@@ -350,7 +355,7 @@ func getFlakyIssues() (map[string][]*flakyIssue, error) {
 // processGithubIssueForRepo reads RepoData and existing issues, and create/close/reopen/comment on issues.
 // The function returns a slice of messages containing performed actions, and a slice of error messages,
 // these can later on be printed as summary at the end of run
-func processGithubIssueForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyIssue, dryrun *bool) ([]string, error) {
+func processGithubIssueForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyIssue, dryrun bool) ([]string, error) {
 	var messages []string
 	var errs []error
 
@@ -378,7 +383,7 @@ func processGithubIssueForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyI
 		if !ts.hasEnoughRuns() || (!ts.isFlaky() && !ts.isPassed()) {
 			continue
 		}
-		identity := fmt.Sprintf("'%s' in repo '%s'", testFullName, rd.Config.Repo)
+		identity := getIdentityForTest(testFullName, rd.Config.Repo)
 		comment := createCommentForTest(rd, testFullName)
 		if existIssues, ok := flakyIssuesMap[identity]; ok { // update issue with current result
 			for _, existIssue := range existIssues {
@@ -415,7 +420,7 @@ func processGithubIssueForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyI
 }
 
 // analyze all results, figure out flaky tests and processing existing auto:flaky issues
-func processGithubIssues(repoDataAll []*RepoData, githubToken *string, dryrun *bool) error {
+func processGithubIssues(repoDataAll []*RepoData, githubToken *string, dryrun bool) error {
 	messagesMap := make(map[string][]string)
 	errMap := make(map[string][]error)
 	var err error
