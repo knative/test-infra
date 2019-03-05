@@ -104,7 +104,7 @@ type GithubIssue struct {
 
 // Setup creates the necessary setup to make calls to work with github issues
 func Setup(githubToken string) (*GithubIssue, error) {
-	ghc, err := ghutil.GetGithubClient(githubToken)
+	ghc, err := ghutil.NewGithubClient(githubToken)
 	if err != nil {
 		return nil, fmt.Errorf("Cannot authenticate to github: %v", err)
 	}

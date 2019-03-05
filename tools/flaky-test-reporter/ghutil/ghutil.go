@@ -61,7 +61,7 @@ type GithubUser struct {
 }
 
 // GetGithubClient explicitly authenticates to github with giving token and returns a handle
-func GetGithubClient(tokenFilePath string) (*GithubClient, error) {
+func NewGithubClient(tokenFilePath string) (*GithubClient, error) {
 	b, err := ioutil.ReadFile(tokenFilePath)
 	if err != nil {
 		return nil, err
