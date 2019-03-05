@@ -182,10 +182,3 @@ periodics:
   knative/test-infra:
     - flakytool: true
       cron: "0 12 * * *" # Run at 4:00PST/5:00PST every day (12:00 UTC)
-      image: [[.Base.Image]]
-      command:
-      - "/flaky-test-reporter"
-      args:
-      - "--service-account [[.Base.ServiceAccount]]"
-      - "--github-account /etc/github-token/token"
-      - "--slack-account /etc/slack-token/token"

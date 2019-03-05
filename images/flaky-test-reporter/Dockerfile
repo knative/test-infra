@@ -14,7 +14,19 @@
 
 FROM golang:1.10.2
 LABEL maintainer "Chao Dai <chaodai@google.com>"
-RUN apt-get update && apt-get install -y --no-install-recommends
+RUN apt-get update
 
-COPY flaky-test-reporter /flaky-test-reporter
+ENV TEMP_REPO_DIR /go/src/github.com/knative/test-infra
+ENV TOOL_NAME flaky-test-reporter
+
+# Temporarily add test-infra to the image to build custom tools
+ADD . $TEMP_REPO_DIR
+
+# Build flaky test reporter tool in the container
+RUN make -C $TEMP_REPO_DIR/tools/$TOOL_NAME/
+RUN cp $TEMP_REPO_DIR/tools/$TOOL_NAME/$TOOL_NAME .
+
+# Remove test-infra from the container
+RUN rm -fr $TEMP_REPO_DIR
+
 ENTRYPOINT ["/flaky-test-reporter"]

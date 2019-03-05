@@ -1,4 +1,3 @@
-
 # Copyright 2019 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,19 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-IMG = gcr.io/knative-tests/test-infra/flaky-test-reporter
-TAG := $(shell date +v%Y%m%d)-$(shell git describe --always --dirty --match '^$$')
-
-all: build
-
-build:
-	docker build -t $(IMG):$(TAG) -f Dockerfile ../..
-	docker tag $(IMG):$(TAG) $(IMG):latest
-
-push_versioned: build
-	docker push $(IMG):$(TAG)
-
-push_latest: build
-	docker push $(IMG):latest
-
-push: push_versioned push_latest clean
+all:
+	go get -u golang.org/x/oauth2
+	go get -u github.com/google/go-github/github
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build .
