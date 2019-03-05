@@ -121,7 +121,7 @@ func getTestgridTabURL(jobName string) (string, error) {
 // createSlackMessageForRepo creates slack message layout from RepoData
 func createSlackMessageForRepo(rd *RepoData) string {
 	flakyTests := getFlakyTests(rd)
-	message := fmt.Sprintf("(As of %s)\nActive flaky tests in repo '%s': %d",
+	message := fmt.Sprintf("As of %s, there are %d flaky tests in '%s'",
 		time.Unix(*rd.LastBuildStartTime, 0).String(), rd.Config.Repo, len(flakyTests))
 	for _, testName := range flakyTests {
 		message += fmt.Sprintf("\n>- %s", testName)
