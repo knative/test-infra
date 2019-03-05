@@ -140,9 +140,9 @@ func createSlackMessageForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyI
 	return message
 }
 
-func sendSlackNotifications(repoDataAll []*RepoData, c *SlackClient, dryrun bool) error {
+func sendSlackNotifications(repoDataAll []*RepoData, c *SlackClient, ghi *GithubIssue, dryrun bool) error {
 	var allErrs []error
-	flakyIssuesMap, err := getFlakyIssues()
+	flakyIssuesMap, err := ghi.getFlakyIssues()
 	if nil != err { // failure here will make message missing Github issues link, which should not prevent notification
 		allErrs = append(allErrs, err)
 		log.Println("Warning: cannot get flaky Github issues: ", err)

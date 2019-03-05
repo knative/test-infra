@@ -42,6 +42,10 @@ func main() {
 	if err := prow.Initialize(*serviceAccount); nil != err { // Explicit authenticate with gcs Client
 		log.Fatalf("Failed authenticating GCS: '%v'", err)
 	}
+	ghi, err := Setup(*githubToken)
+	if err != nil {
+		log.Fatalf("Cannot setup github: %v", err)
+	}
 	slackClient, err := newSlackClient(*slackAccount)
 	if nil != err {
 		log.Fatalf("Failed authenticating Slack: '%v'", err)
@@ -71,8 +75,8 @@ func main() {
 		repoDataAll = append(repoDataAll, rd)
 	}
 
-	githubErr := processGithubIssues(repoDataAll, githubToken, *dryrun)
-	slackErr := sendSlackNotifications(repoDataAll, slackClient, *dryrun)
+	githubErr := ghi.processGithubIssues(repoDataAll, *dryrun)
+	slackErr := sendSlackNotifications(repoDataAll, slackClient, ghi, *dryrun)
 	if nil != githubErr {
 		log.Printf("Github step failures:\n%v", githubErr)
 	}
