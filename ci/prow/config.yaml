@@ -2059,11 +2059,11 @@ periodics:
       securityContext:
         privileged: true
       volumeMounts:
-      - name: docker-graph
-        mountPath: /docker-graph
       - name: hub-token
         mountPath: /etc/hub-token
         readOnly: true
+      - name: docker-graph
+        mountPath: /docker-graph
       - name: release-account
         mountPath: /etc/release-account
         readOnly: true
@@ -2075,11 +2075,11 @@ periodics:
       - name: E2E_CLUSTER_REGION
         value: us-west1
     volumes:
-    - name: docker-graph
-      emptyDir: {}
     - name: hub-token
       secret:
         secretName: hub-token
+    - name: docker-graph
+      emptyDir: {}
     - name: release-account
       secret:
         secretName: release-account

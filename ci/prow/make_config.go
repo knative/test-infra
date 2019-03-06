@@ -111,17 +111,17 @@ var (
 	releaseLocal      = []string{"--nopublish", "--notag-release"}
 
 	// Values used in the jobs that can be changed through command-line flags.
-	gcsBucket            string
-	logsDir              string
-	presubmitLogsDir     string
-	testAccount          string
-	nightlyAccount       string
-	releaseAccount       string
-	coverageDockerImage  string
-	prowTestsDockerImage string
-	presubmitScript      string
-	releaseScript        string
-	performanceScript    string
+	gcsBucket                string
+	logsDir                  string
+	presubmitLogsDir         string
+	testAccount              string
+	nightlyAccount           string
+	releaseAccount           string
+	coverageDockerImage      string
+	prowTestsDockerImage     string
+	presubmitScript          string
+	releaseScript            string
+	performanceScript        string
 	webhookAPICoverageScript string
 
 	// Overrides and behavior changes through command-line flags.
@@ -617,8 +617,8 @@ func setupDockerInDockerForJob(data *baseProwJobTemplateData) {
 
 // Config parsers.
 
-// parseBasicJobConfig populates the given baseProwJobTemplateData with any basic option present in the given config.
-func parseBasicJobConfig(data *baseProwJobTemplateData, config yaml.MapSlice) {
+// parseBasicJobConfigOverrides updates the given baseProwJobTemplateData with any base option present in the given config.
+func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.MapSlice) {
 	for i, item := range config {
 		switch item.Key {
 		case "skip_branches":
@@ -635,7 +635,10 @@ func parseBasicJobConfig(data *baseProwJobTemplateData, config yaml.MapSlice) {
 			}
 		case "always_run":
 			(*data).AlwaysRun = getBool(item.Value)
+		case nil: // already processed
+			continue
 		default:
+			log.Fatalf("Unknown entry %q for job", item.Key)
 			continue
 		}
 		// Knock-out the item, signalling it was already parsed.
@@ -649,10 +652,9 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	data.Base = newbaseProwJobTemplateData(repoName)
 	data.Base.Command = presubmitScript
 	data.Base.GoCoverageThreshold = 80
-	parseBasicJobConfig(&data.Base, presubmitConfig)
 	jobTemplate := presubmitJob
 	repoData := repositoryData{Name: repoName, EnableGoCoverage: false, GoCoverageThreshold: data.Base.GoCoverageThreshold}
-	for _, item := range presubmitConfig {
+	for i, item := range presubmitConfig {
 		switch item.Key {
 		case "build-tests", "unit-tests", "integration-tests":
 			if !getBool(item.Value) {
@@ -679,12 +681,13 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 		case "go-coverage-threshold":
 			data.Base.GoCoverageThreshold = getInt(item.Value)
 			repoData.GoCoverageThreshold = data.Base.GoCoverageThreshold
-		case nil: // already processed by parseBasicJobConfig
-			continue
 		default:
-			log.Fatalf("Unknown entry %q for a presubmit job", item.Key)
+			continue
 		}
+		// Knock-out the item, signalling it was already parsed.
+		presubmitConfig[i] = yaml.MapItem{}
 	}
+	parseBasicJobConfigOverrides(&data.Base, presubmitConfig)
 	repositories = append(repositories, repoData)
 	data.PresubmitCommand = createCommand(data.Base)
 	data.PresubmitPullJobName = "pull-" + data.PresubmitJobName
@@ -711,11 +714,10 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlice) {
 	var data periodicJobTemplateData
 	data.Base = newbaseProwJobTemplateData(repoName)
-	parseBasicJobConfig(&data.Base, periodicConfig)
 	jobNameSuffix := ""
 	jobTemplate := periodicJob
 	jobType := ""
-	for _, item := range periodicConfig {
+	for i, item := range periodicConfig {
 		switch item.Key {
 		case "continuous":
 			if !getBool(item.Value) {
@@ -803,12 +805,13 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			}
 			jobNameSuffix = "webhook-apicoverage"
 			data.Base.Command = webhookAPICoverageScript
-		case nil: // already processed by parseBasicJobConfig
-			continue
 		default:
-			log.Fatalf("Unknown entry %q for a periodic job", item.Key)
+			continue
 		}
+		// Knock-out the item, signalling it was already parsed.
+		periodicConfig[i] = yaml.MapItem{}
 	}
+	parseBasicJobConfigOverrides(&data.Base, periodicConfig)
 	data.PeriodicJobName = fmt.Sprintf("ci-%s", data.Base.RepoNameForJob)
 	if jobNameSuffix != "" {
 		data.PeriodicJobName += "-" + jobNameSuffix
