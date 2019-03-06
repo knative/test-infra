@@ -98,8 +98,8 @@ type flakyIssue struct {
 
 // GithubIssue handles methods for github issues
 type GithubIssue struct {
-	user   *ghutil.GithubUser
-	client *ghutil.GithubClient
+	user   *github.User
+	client ghutil.GithubClientInterface
 }
 
 // Setup creates the necessary setup to make calls to work with github issues
@@ -113,7 +113,6 @@ func Setup(githubToken string) (*GithubIssue, error) {
 	if nil != err {
 		return nil, fmt.Errorf("Cannot get username: %v", err)
 	}
-
 	return &GithubIssue{user: ghUser, client: ghc}, nil
 }
 
