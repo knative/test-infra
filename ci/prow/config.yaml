@@ -2616,7 +2616,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 28800000000000 # 8 hours
+    timeout: 28800000000000
   extra_refs:
   - org: knative
     repo: test-infra
@@ -2645,6 +2645,7 @@ periodics:
 - cron: "15 9 * * *"
   name: ci-knative-backup-artifacts
   agent: kubernetes
+  decorate: true
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/backups:latest
