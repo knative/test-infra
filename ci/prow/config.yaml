@@ -1929,6 +1929,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: SYSTEM_NAMESPACE
+        value: knative-serving
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
