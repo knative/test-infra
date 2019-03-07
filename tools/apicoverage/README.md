@@ -2,7 +2,7 @@
 This tool is designed to show the field level coverage exercised by the conformance tests.
 
 ## Read from GCS
-This tool reads the logs from the latest continuous build of knative/serving. The logs have the information of which CRD objects are being created and which fields are being set for the testing.
+This tool reads the logs from the latest continous build of knative/serving. The logs have the information of which CRD objects are being created and which fields are being set for the testing.
 It uses the service account passed in or by default will use the GOOGLE_APPLICATION_CREDENTIALS variable to get the logs. 
 
 ## Creating Output
