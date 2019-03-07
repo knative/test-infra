@@ -2643,7 +2643,7 @@ periodics:
       secret:
         secretName: test-account
 - cron: "0 12 * * *"
-  name: ci-knative-flakytool
+  name: ci-knative-flakes-reporter
   agent: kubernetes
   decorate: true
   extra_refs:
