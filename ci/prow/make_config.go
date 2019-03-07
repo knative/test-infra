@@ -714,6 +714,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			}
 			jobNameSuffix = "webhook-apicoverage"
 			data.Base.Command = webhookAPICoverageScript
+			addEnvToJob(&data.Base, "SYSTEM_NAMESPACE", data.Base.RepoNameForJob)
 		default:
 			continue
 		}
