@@ -244,7 +244,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:b7d445e9e561dd894ebf2838ee8fb1e349a8677359af1703cde915df1f6c1b8d"
+  digest = "1:44dbdca1ff5ee94e66043c07b176a5df84bc386f6f2aad136b7367a0467529cf"
   name = "github.com/knative/pkg"
   packages = [
     "apis",
@@ -257,10 +257,11 @@
     "logging",
     "logging/logkey",
     "test/logging",
+    "test/monitoring",
     "webhook",
   ]
   pruneopts = "NUT"
-  revision = "2a8c1b0e5ad2719b00e20fef8594d63fa202640f"
+  revision = "e5c43dce06217a9dfd98f7e7958f6c234ff2f7ea"
 
 [[projects]]
   branch = "master"
@@ -840,6 +841,7 @@
     "github.com/knative/pkg/configmap",
     "github.com/knative/pkg/logging",
     "github.com/knative/pkg/test/logging",
+    "github.com/knative/pkg/test/monitoring",
     "github.com/knative/pkg/webhook",
     "github.com/knative/serving/pkg/apis/serving/v1alpha1",
     "github.com/markbates/inflect",

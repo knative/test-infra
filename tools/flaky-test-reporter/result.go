@@ -32,6 +32,13 @@ import (
 	"github.com/knative/test-infra/shared/junit"
 )
 
+const (
+	flakyStatus    = "Flaky"
+	passedStatus   = "Passed"
+	lackDataStatus = "NotEnoughData"
+	failedStatus   = "Failed"
+)
+
 // RepoData struct contains all configurations and test results for a repo
 type RepoData struct {
 	Config             *JobConfig
@@ -68,7 +75,20 @@ func (ts *TestStat) hasEnoughRuns() bool {
 	return len(ts.Passed) + len(ts.Failed) >= requiredCount
 }
 
-func getFlakyRate(testStats map[string]TestStat) (float32, error) {
+func (ts *TestStat) getTestStatus() string {
+	switch {
+		case ts.isFlaky():
+			return flakyStatus
+		case ts.isPassed():
+			return passedStatus
+		case !ts.hasEnoughRuns():
+			return lackDataStatus
+		default:
+			return failedStatus
+	}
+}
+
+func getFlakyRate(testStats map[string]*TestStat) (float32, error) {
 	totalCount := len(testStats)
 	if 0 == totalCount {
 		return 0.0, nil
@@ -165,6 +185,34 @@ func collectTestResultsForRepo(jc *JobConfig) (*RepoData, error) {
 		}
 	}
 	return rd, nil
+}
+
+func (rd *RepoData) getResultSliceForTest(testName string) []junit.TestStatusEnum {
+	res := make([]junit.TestStatusEnum, len(rd.BuildIDs), len(rd.BuildIDs))
+	ts := rd.TestStats[testName]
+	for i, buildID := range rd.BuildIDs {
+		switch {
+			case true == intSliceContains(ts.Failed, buildID):
+				res[i] = junit.Failed
+			case true == intSliceContains(ts.Passed, buildID):
+				res[i] = junit.Passed
+			default:
+				res[i] = junit.Skipped
+		}
+	}
+	return res
+}
+
+func intSliceContains(its []int, target int) bool {
+	if nil == its {
+		return false
+	}
+	for _, it := range its {
+		if it == target {
+			return true
+		}
+	}
+	return false
 }
 
 // getLatestFinishedBuilds is an inexpensive way of listing latest finished builds, in comparing to

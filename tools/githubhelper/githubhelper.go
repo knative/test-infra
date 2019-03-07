@@ -40,7 +40,6 @@ var (
 
 	// Shared useful variables
 	ctx                   = context.Background()
-	onePageList           = &github.ListOptions{Page: 1}
 	verbose               = false
 	client                *github.Client
 )
@@ -82,10 +81,23 @@ func infof(template string, args ...interface{}) {
 // listChangedFiles simply lists the files changed by the current PR.
 func listChangedFiles() {
 	infof("Listing changed files for PR %d in repository %s/%s", pullNumber, repoOwner, repoName)
-	files, _, err := client.PullRequests.ListFiles(ctx, repoOwner, repoName, pullNumber, onePageList)
-	if err != nil {
-		log.Fatalf("Error listing files: %v", err)
+	files := make([]*github.CommitFile, 0)
+
+	listOptions := &github.ListOptions{
+		Page: 1,
 	}
+	for {
+		commitFiles, rsp, err := client.PullRequests.ListFiles(ctx, repoOwner, repoName, pullNumber, listOptions)
+		if err != nil {
+			log.Fatalf("Error listing files: %v", err)
+		}
+		files = append(files, commitFiles...)
+		if rsp.NextPage == 0 {
+			break
+		}
+		listOptions.Page = rsp.NextPage
+	}
+
 	for _, file := range files {
 		fmt.Println(*file.Filename)
 	}

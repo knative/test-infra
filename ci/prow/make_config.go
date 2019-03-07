@@ -38,6 +38,7 @@ const (
 	// Cron strings for key jobs
 	goCoveragePeriodicJobCron = "0 1 * * *"  // Run at 01:00 every day
 	cleanupPeriodicJobCron    = "0 19 * * 1" // Run at 11:00PST/12:00PST every Monday (19:00 UTC)
+	flakytoolPeriodicJobCron  = "0 12 * * *" // Run at 4:00PST/5:00PST every day (12:00 UTC)
 	backupPeriodicJobCron     = "15 9 * * *" // Run at 02:15PST every day (09:15 UTC)
 )
 
@@ -57,8 +58,11 @@ type baseProwJobTemplateData struct {
 	GcsPresubmitLogDir  string
 	RepoURI             string
 	RepoBranch          string
+	CloneURI            string
 	SecurityContext     []string
 	SkipBranches        []string
+	DecorationConfig    []string
+	ExtraRefs           []string
 	Command             string
 	Args                []string
 	Env                 []string
@@ -118,13 +122,14 @@ var (
 	testAccount              string
 	nightlyAccount           string
 	releaseAccount           string
-	flakyToolDockerImage     string
+	flakytoolDockerImage     string
 	coverageDockerImage      string
 	prowTestsDockerImage     string
 	presubmitScript          string
 	releaseScript            string
 	performanceScript        string
 	webhookAPICoverageScript string
+	cleanupScript            string
 
 	// Overrides and behavior changes through command-line flags.
 	repositoryOverride string
@@ -267,7 +272,7 @@ tide:
     trigger: "(?m)^/test (all|[[.PresubmitPullJobName]]),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "https://[[.Base.RepoURI]].git"
+    clone_uri: [[.Base.CloneURI]]
     spec:
       containers:
       - image: [[.Base.Image]]
@@ -287,8 +292,8 @@ tide:
       [[indent_section 6 "volumes" .Base.Volumes]]
 `
 
-	// periodicJob is the template for periodicJob jobs.
-	periodicJob = `
+	// periodicTestJob is the template for periodic test/release jobs.
+	periodicTestJob = `
 - cron: "[[.CronString]]"
   name: [[.PeriodicJobName]]
   agent: kubernetes
@@ -314,127 +319,21 @@ tide:
     [[indent_section 4 "volumes" .Base.Volumes]]
 `
 
-	// latencyJob is the template for latency metrics aggregation jobs.
-	latencyJob = `
+	// periodicCustomJob is the template for periodic custom jobs.
+	periodicCustomJob = `
 - cron: "[[.CronString]]"
   name: [[.PeriodicJobName]]
   agent: kubernetes
   decorate: true
-  extra_refs:
-  - org: knative
-    repo: [[.Base.RepoName]]
-    base_ref: master
-    clone_uri: "https://[[.Base.RepoURI]].git"
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/metrics:latest
-      imagePullPolicy: Always
-      command:
-      - "/metrics"
-      args:
-      - "--source-directory=ci-[[.Base.RepoNameForJob]]-continuous"
-      - "--artifacts-dir=$(ARTIFACTS)"
-      - "--service-account=[[.Base.ServiceAccount]]"
-      [[indent_section 6 "volumeMounts" .Base.VolumeMounts]]
-      [[indent_section 6 "env" .Base.Env]]
-    [[indent_section 4 "volumes" .Base.Volumes]]
-`
-
-	// apiCoverageJob is the template for API coverage metrics aggregation jobs.
-	apiCoverageJob = `
-- cron: "[[.CronString]]"
-  name: [[.PeriodicJobName]]
-  agent: kubernetes
-  decorate: true
-  extra_refs:
-  - org: knative
-    repo: [[.Base.RepoName]]
-    base_ref: master
-    clone_uri: "https://[[.Base.RepoURI]].git"
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/apicoverage:latest
-      imagePullPolicy: Always
-      command:
-      - "/apicoverage"
-      args:
-      - "--artifacts-dir=$(ARTIFACTS)"
-      - "--service-account=[[.Base.ServiceAccount]]"
-      [[indent_section 6 "volumeMounts" .Base.VolumeMounts]]
-      [[indent_section 6 "env" .Base.Env]]
-    [[indent_section 4 "volumes" .Base.Volumes]]
-`
-
-	// goCoveragePeriodicJob is the template for go coverage periodic jobs.
-	goCoveragePeriodicJob = `
-- cron: "[[.CronString]]"
-  name: [[.PeriodicJobName]]
-  agent: kubernetes
-  decorate: true
-  extra_refs:
-  - org: knative
-    repo: [[.Base.RepoName]]
-    base_ref: master
-    clone_uri: "https://[[.Base.RepoURI]].git"
+  [[indent_section 4 "decoration_config" .Base.DecorationConfig]]
+  [[indent_section 2 "extra_refs" .Base.ExtraRefs]]
   spec:
     containers:
     - image: [[.Base.Image]]
       imagePullPolicy: Always
       command:
-      - "/coverage"
-      args:
-      - "--artifacts=$(ARTIFACTS)"
-      - "--profile-name=coverage_profile.txt"
-      - "--cov-target=."
-      - "--cov-threshold-percentage=[[.Base.GoCoverageThreshold]]"
-      [[indent_section 6 "volumeMounts" .Base.VolumeMounts]]
-      [[indent_section 6 "env" .Base.Env]]
-    [[indent_section 4 "volumes" .Base.Volumes]]
-`
-
-	// cleanupPeriodicJob is the template for the cleanup job.
-	cleanupPeriodicJob = `
-- cron: "[[.CronString]]"
-  name: [[.PeriodicJobName]]
-  agent: kubernetes
-  decorate: true
-  decoration_config:
-    timeout: 28800000000000 # 8 hours
-  extra_refs:
-  - org: knative
-    repo: [[.Base.RepoName]]
-    base_ref: master
-    clone_uri: "https://[[.Base.RepoURI]].git"
-  spec:
-    containers:
-    - image: [[.Base.Image]]
-      imagePullPolicy: Always
-      command:
-      - "./tools/cleanup/cleanup.sh"
-      args:
-      - "delete-old-gcr-images"
-      - "--project-resource-yaml ci/prow/boskos/resources.yaml"
-      - "--days-to-keep 30"
-      - "--service-account [[.Base.ServiceAccount]]"
-      - "--artifacts $(ARTIFACTS)"
-      [[indent_section 6 "volumeMounts" .Base.VolumeMounts]]
-      [[indent_section 6 "env" .Base.Env]]
-    [[indent_section 4 "volumes" .Base.Volumes]]
-`
-
-	// cleanupPeriodicJob is the template for the cleanup job.
-	backupPeriodicJob = `
-- cron: "[[.CronString]]"
-  name: [[.PeriodicJobName]]
-  agent: kubernetes
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/backups:latest
-      imagePullPolicy: Always
-      command:
-      - "/backup.sh"
-      args:
-      - "[[.Base.ServiceAccount]]"
+      - "[[.Base.Command]]"
+      [[indent_array_section 6 "args" .Base.Args]]
       [[indent_section 6 "volumeMounts" .Base.VolumeMounts]]
       [[indent_section 6 "env" .Base.Env]]
     [[indent_section 4 "volumes" .Base.Volumes]]
@@ -447,7 +346,7 @@ tide:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "https://[[.Base.RepoURI]].git"
+    clone_uri: [[.Base.CloneURI]]
     spec:
       containers:
       - image: [[.Base.Image]]
@@ -537,6 +436,7 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.RepoNameForJob = strings.Replace(repo, "/", "-", -1)
 	data.GcsBucket = gcsBucket
 	data.RepoURI = "github.com/" + repo
+	data.CloneURI = fmt.Sprintf("\"https://%s.git\"", data.RepoURI)
 	data.GcsLogDir = fmt.Sprintf("gs://%s/%s", gcsBucket, logsDir)
 	data.GcsPresubmitLogDir = fmt.Sprintf("gs://%s/%s", gcsBucket, presubmitLogsDir)
 	data.Year = time.Now().Year()
@@ -551,6 +451,7 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.Volumes = make([]string, 0)
 	data.VolumeMounts = make([]string, 0)
 	data.Env = make([]string, 0)
+	data.ExtraRefs = []string{"- org: knative", "  repo: " + data.RepoName, "  base_ref: master", "  clone_uri: " + data.CloneURI}
 	return data
 }
 
@@ -619,8 +520,8 @@ func setupDockerInDockerForJob(data *baseProwJobTemplateData) {
 
 // Config parsers.
 
-// parseBasicJobConfig populates the given baseProwJobTemplateData with any basic option present in the given config.
-func parseBasicJobConfig(data *baseProwJobTemplateData, config yaml.MapSlice) {
+// parseBasicJobConfigOverrides updates the given baseProwJobTemplateData with any base option present in the given config.
+func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.MapSlice) {
 	for i, item := range config {
 		switch item.Key {
 		case "skip_branches":
@@ -637,7 +538,10 @@ func parseBasicJobConfig(data *baseProwJobTemplateData, config yaml.MapSlice) {
 			}
 		case "always_run":
 			(*data).AlwaysRun = getBool(item.Value)
+		case nil: // already processed
+			continue
 		default:
+			log.Fatalf("Unknown entry %q for job", item.Key)
 			continue
 		}
 		// Knock-out the item, signalling it was already parsed.
@@ -651,10 +555,9 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	data.Base = newbaseProwJobTemplateData(repoName)
 	data.Base.Command = presubmitScript
 	data.Base.GoCoverageThreshold = 80
-	parseBasicJobConfig(&data.Base, presubmitConfig)
 	jobTemplate := presubmitJob
 	repoData := repositoryData{Name: repoName, EnableGoCoverage: false, GoCoverageThreshold: data.Base.GoCoverageThreshold}
-	for _, item := range presubmitConfig {
+	for i, item := range presubmitConfig {
 		switch item.Key {
 		case "build-tests", "unit-tests", "integration-tests":
 			if !getBool(item.Value) {
@@ -681,12 +584,13 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 		case "go-coverage-threshold":
 			data.Base.GoCoverageThreshold = getInt(item.Value)
 			repoData.GoCoverageThreshold = data.Base.GoCoverageThreshold
-		case nil: // already processed by parseBasicJobConfig
-			continue
 		default:
-			log.Fatalf("Unknown entry %q for a presubmit job", item.Key)
+			continue
 		}
+		// Knock-out the item, signalling it was already parsed.
+		presubmitConfig[i] = yaml.MapItem{}
 	}
+	parseBasicJobConfigOverrides(&data.Base, presubmitConfig)
 	repositories = append(repositories, repoData)
 	data.PresubmitCommand = createCommand(data.Base)
 	data.PresubmitPullJobName = "pull-" + data.PresubmitJobName
@@ -713,11 +617,10 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlice) {
 	var data periodicJobTemplateData
 	data.Base = newbaseProwJobTemplateData(repoName)
-	parseBasicJobConfig(&data.Base, periodicConfig)
 	jobNameSuffix := ""
-	jobTemplate := periodicJob
+	jobTemplate := periodicTestJob
 	jobType := ""
-	for _, item := range periodicConfig {
+	for i, item := range periodicConfig {
 		switch item.Key {
 		case "continuous":
 			if !getBool(item.Value) {
@@ -779,17 +682,26 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 				return
 			}
 			jobType = getString(item.Key)
-			jobTemplate = latencyJob
+			jobTemplate = periodicCustomJob
 			jobNameSuffix = "latency"
-			data.Base.Command = "unused"
+			data.Base.Image = "gcr.io/knative-tests/test-infra/metrics:latest"
+			data.Base.Command = "/metrics"
+			data.Base.Args = []string{
+				fmt.Sprintf("--source-directory=ci-%s-continuous", data.Base.RepoNameForJob),
+				"--artifacts-dir=$(ARTIFACTS)",
+				"--service-account=" + data.Base.ServiceAccount}
 		case "api-coverage":
 			if !getBool(item.Value) {
 				return
 			}
 			jobType = getString(item.Key)
-			jobTemplate = apiCoverageJob
+			jobTemplate = periodicCustomJob
 			jobNameSuffix = "api-coverage"
-			data.Base.Command = "unused"
+			data.Base.Image = "gcr.io/knative-tests/test-infra/apicoverage:latest"
+			data.Base.Command = "/apicoverage"
+			data.Base.Args = []string{
+				"--artifacts-dir=$(ARTIFACTS)",
+				"--service-account=" + data.Base.ServiceAccount}
 		case "custom-job":
 			jobType = getString(item.Key)
 			jobNameSuffix = getString(item.Value)
@@ -805,26 +717,13 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			}
 			jobNameSuffix = "webhook-apicoverage"
 			data.Base.Command = webhookAPICoverageScript
-		case "flakytool":
-			if !getBool(item.Value) {
-				return
-			}
-			jobNameSuffix = "flakytool"
-			data.Base.Image = flakyToolDockerImage
-			data.Base.Command = "/flaky-test-reporter"
-			data.Base.Args = []string{
-				"--service-account " + data.Base.ServiceAccount,
-				"--github-account /etc/github-token/token",
-				"--slack-account /etc/slack-token/token",
-			}
-			addVolumeToJob(&data.Base, "/etc/github-token", "github-token", true)
-			addVolumeToJob(&data.Base, "/etc/slack-token", "slack-token", true)
-		case nil: // already processed by parseBasicJobConfig
-			continue
 		default:
-			log.Fatalf("Unknown entry %q for a periodic job", item.Key)
+			continue
 		}
+		// Knock-out the item, signalling it was already parsed.
+		periodicConfig[i] = yaml.MapItem{}
 	}
+	parseBasicJobConfigOverrides(&data.Base, periodicConfig)
 	data.PeriodicJobName = fmt.Sprintf("ci-%s", data.Base.RepoNameForJob)
 	if jobNameSuffix != "" {
 		data.PeriodicJobName += "-" + jobNameSuffix
@@ -856,9 +755,36 @@ func generateCleanupPeriodicJob() {
 	data.Base = newbaseProwJobTemplateData("knative/test-infra")
 	data.PeriodicJobName = "ci-knative-cleanup"
 	data.CronString = cleanupPeriodicJobCron
+	data.Base.DecorationConfig = []string{"timeout: 28800000000000"} // 8 hours
+	data.Base.Command = cleanupScript
+	data.Base.Args = []string{
+		"delete-old-gcr-images",
+		"--project-resource-yaml ci/prow/boskos/resources.yaml",
+		"--days-to-keep 30",
+		"--service-account " + data.Base.ServiceAccount,
+		"--artifacts $(ARTIFACTS)"}
 	addExtraEnvVarsToJob(&data.Base)
 	configureServiceAccountForJob(&data.Base)
-	executeJobTemplate("periodic cleanup", cleanupPeriodicJob, "presubmits", "", data.PeriodicJobName, false, data)
+	executeJobTemplate("periodic cleanup", periodicCustomJob, "presubmits", "", data.PeriodicJobName, false, data)
+}
+
+// generateFlakytoolPeriodicJob generates the cleanup job config.
+func generateFlakytoolPeriodicJob() {
+	var data periodicJobTemplateData
+	data.Base = newbaseProwJobTemplateData("knative/test-infra")
+	data.Base.Image = flakytoolDockerImage
+	data.PeriodicJobName = "ci-knative-flakytool"
+	data.CronString = flakytoolPeriodicJobCron
+	data.Base.Command = "/flaky-test-reporter"
+	data.Base.Args = []string{
+		"--service-account " + data.Base.ServiceAccount,
+		"--github-account /etc/github-token/token",
+		"--slack-account /etc/slack-token/token"}
+	addExtraEnvVarsToJob(&data.Base)
+	configureServiceAccountForJob(&data.Base)
+	addVolumeToJob(&data.Base, "/etc/github-token", "github-token", true)
+	addVolumeToJob(&data.Base, "/etc/slack-token", "slack-token", true)
+	executeJobTemplate("periodic flakytool", periodicCustomJob, "presubmits", "", data.PeriodicJobName, false, data)
 }
 
 // generateBackupPeriodicJob generates the backup job config.
@@ -866,11 +792,15 @@ func generateBackupPeriodicJob() {
 	var data periodicJobTemplateData
 	data.Base = newbaseProwJobTemplateData("none/unused")
 	data.Base.ServiceAccount = "/etc/backup-account/service-account.json"
+	data.Base.Image = "gcr.io/knative-tests/test-infra/backups:latest"
 	data.PeriodicJobName = "ci-knative-backup-artifacts"
 	data.CronString = backupPeriodicJobCron
+	data.Base.Command = "/backup.sh"
+	data.Base.Args = []string{data.Base.ServiceAccount}
+	data.Base.ExtraRefs = []string{} // no repo clone required
 	addExtraEnvVarsToJob(&data.Base)
 	configureServiceAccountForJob(&data.Base)
-	executeJobTemplate("periodic backup", backupPeriodicJob, "presubmits", "", data.PeriodicJobName, false, data)
+	executeJobTemplate("periodic backup", periodicCustomJob, "presubmits", "", data.PeriodicJobName, false, data)
 }
 
 // generateGoCoveragePeriodic generates the go coverage periodic job config for the given repo (configuration is ignored).
@@ -885,10 +815,16 @@ func generateGoCoveragePeriodic(title string, repoName string, periodicConfig ya
 		data.PeriodicJobName = fmt.Sprintf("ci-%s-go-coverage", data.Base.RepoNameForJob)
 		data.CronString = goCoveragePeriodicJobCron
 		data.Base.GoCoverageThreshold = repo.GoCoverageThreshold
+		data.Base.Command = "/coverage"
+		data.Base.Args = []string{
+			"--artifacts=$(ARTIFACTS)",
+			"--profile-name=coverage_profile.txt",
+			"--cov-target=.",
+			fmt.Sprintf("--cov-threshold-percentage=%d", data.Base.GoCoverageThreshold)}
 		data.Base.ServiceAccount = ""
 		addExtraEnvVarsToJob(&data.Base)
 		configureServiceAccountForJob(&data.Base)
-		executeJobTemplate("periodic go coverage", goCoveragePeriodicJob, title, repoName, data.PeriodicJobName, false, data)
+		executeJobTemplate("periodic go coverage", periodicCustomJob, title, repoName, data.PeriodicJobName, false, data)
 		return
 	}
 }
@@ -1068,13 +1004,14 @@ func main() {
 	flag.StringVar(&testAccount, "test-account", "/etc/test-account/service-account.json", "Path to the service account JSON for test jobs")
 	flag.StringVar(&nightlyAccount, "nightly-account", "/etc/nightly-account/service-account.json", "Path to the service account JSON for nightly release jobs")
 	flag.StringVar(&releaseAccount, "release-account", "/etc/release-account/service-account.json", "Path to the service account JSON for release jobs")
-	flag.StringVar(&flakyToolDockerImage, "flaky-test-reporter-docker", "gcr.io/knative-tests/test-infra/flaky-test-reporter:latest", "Docker image for flaky test reporting tool")
+	flag.StringVar(&flakytoolDockerImage, "flaky-test-reporter-docker", "gcr.io/knative-tests/test-infra/flaky-test-reporter:latest", "Docker image for flaky test reporting tool")
 	flag.StringVar(&coverageDockerImage, "coverage-docker", "gcr.io/knative-tests/test-infra/coverage:latest", "Docker image for coverage tool")
 	flag.StringVar(&prowTestsDockerImage, "prow-tests-docker", "gcr.io/knative-tests/test-infra/prow-tests:stable", "prow-tests docker image")
 	flag.StringVar(&presubmitScript, "presubmit-script", "./test/presubmit-tests.sh", "Executable for running presubmit tests")
 	flag.StringVar(&releaseScript, "release-script", "./hack/release.sh", "Executable for creating releases")
 	flag.StringVar(&performanceScript, "performance-script", "./test/performance-tests.sh", "Executable for running performance tests")
 	flag.StringVar(&webhookAPICoverageScript, "webhookAPICoverageScript", "./test/apicoverage.sh", "Executable for running webhook apicoverage tool")
+	flag.StringVar(&cleanupScript, "cleanup-script", "./tools/cleanup/cleanup.sh", "Executable for running the cleanup tasks")
 	flag.StringVar(&repositoryOverride, "repo-override", "", "Repository path (github.com/foo/bar[=branch]) to use instead for a job")
 	flag.StringVar(&jobNameFilter, "job-filter", "", "Generate only this job, instead of all jobs")
 	flag.StringVar(&preCommand, "pre-command", "", "Executable for running instead of the real command of a job")
@@ -1105,6 +1042,7 @@ func main() {
 	parseSection(config, "presubmits", generatePresubmit, nil)
 	parseSection(config, "periodics", generatePeriodic, generateGoCoveragePeriodic)
 	generateCleanupPeriodicJob()
+	generateFlakytoolPeriodicJob()
 	generateBackupPeriodicJob()
 	generateGoCoveragePostsubmits()
 }

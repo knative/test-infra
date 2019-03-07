@@ -178,7 +178,3 @@ periodics:
   knative/caching:
     - continuous: true
       cron: "30 * * * *" # Run every hour and 30 minutes
-
-  knative/test-infra:
-    - flakytool: true
-      cron: "0 12 * * *" # Run at 4:00PST/5:00PST every day (12:00 UTC)
