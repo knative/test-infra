@@ -69,6 +69,7 @@ function publish_yamls() {
 
 # These are global environment variables.
 SKIP_TESTS=0
+PRESUBMIT_TEST_FAIL_FAST=1
 TAG_RELEASE=0
 PUBLISH_RELEASE=0
 PUBLISH_TO_GITHUB=0
