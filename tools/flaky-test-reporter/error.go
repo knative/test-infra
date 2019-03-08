@@ -25,7 +25,7 @@ import (
 
 // combineErrors combines slice of errors and return a single error
 func combineErrors(errs []error) error {
-	if nil == errs || 0 == len(errs) {
+	if len(errs) == 0 {
 		return nil
 	}
 	var errStrs []string

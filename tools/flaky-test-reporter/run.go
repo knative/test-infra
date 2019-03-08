@@ -22,8 +22,8 @@ import (
 	"log"
 )
 
-func run(message string, call func() error, dryrun *bool) error {
-	if nil != dryrun && true == *dryrun {
+func run(message string, call func() error, dryrun bool) error {
+	if dryrun {
 		log.Printf("[dry run] %s", message)
 		return nil
 	}

@@ -29,8 +29,9 @@ import (
 )
 
 func main() {
-	serviceAccount := flag.String("service-account", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"), "JSON key file for service account to use")
+	serviceAccount := flag.String("service-account", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"), "JSON key file for GCS service account")
 	githubToken := flag.String("github-token", "", "Token file for Github authentication")
+	slackAccount := flag.String("slack-account", "", "slack secret file for authenticating with Slack")
 	dryrun := flag.Bool("dry-run", false, "dry run switch")
 	flag.Parse()
 
@@ -38,11 +39,21 @@ func main() {
 		log.Printf("running in [dry run mode]")
 	}
 
-	var repoDataAll []*RepoData
-	prow.Initialize(*serviceAccount) // Explicit authenticate with gcs Client
+	if err := prow.Initialize(*serviceAccount); nil != err { // Explicit authenticate with gcs Client
+		log.Fatalf("Failed authenticating GCS: '%v'", err)
+	}
+	ghi, err := Setup(*githubToken)
+	if err != nil {
+		log.Fatalf("Cannot setup github: %v", err)
+	}
+	slackClient, err := newSlackClient(*slackAccount)
+	if nil != err {
+		log.Fatalf("Failed authenticating Slack: '%v'", err)
+	}
 
+	var repoDataAll []*RepoData
 	// Clean up local artifacts directory, this will be used later for artifacts uploads
-	err := os.RemoveAll(prow.GetLocalArtifactsDir()) // this function returns nil if path not found
+	err = os.RemoveAll(prow.GetLocalArtifactsDir()) // this function returns nil if path not found
 	if nil == err {
 		if _, err = os.Stat(prow.GetLocalArtifactsDir()); os.IsNotExist(err) {
 			err = os.MkdirAll(prow.GetLocalArtifactsDir(), 0777)
@@ -64,9 +75,18 @@ func main() {
 		repoDataAll = append(repoDataAll, rd)
 	}
 
-	ghi, err := Setup(*githubToken)
-	if err != nil {
-		log.Fatalf("Cannot setup github: %v", err)
+	// Errors that could result in inaccuracy reporting would be treated with fast fail by processGithubIssues,
+	// so any errors returned are github opeations error, which in most cases wouldn't happend, but in case it
+	// happens, it should fail the job after Slack notification 
+	githubErr := ghi.processGithubIssues(repoDataAll, *dryrun)
+	slackErr := sendSlackNotifications(repoDataAll, slackClient, ghi, *dryrun)
+	if nil != githubErr {
+		log.Printf("Github step failures:\n%v", githubErr)
 	}
-	ghi.processGithubIssues(repoDataAll, dryrun)
+	if nil != slackErr {
+		log.Printf("Slack step failures:\n%v", slackErr)
+	}
+	if nil != githubErr || nil != slackErr { // Fail this job if there is any error
+		os.Exit(1)
+	}
 }
