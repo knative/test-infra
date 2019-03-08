@@ -61,7 +61,7 @@ function publish_yamls() {
     gsutil cp $@ ${DEST}
   }
   # Before publishing the YAML files, cleanup the `latest` dir.
-  echo "Cleaning up the `latest` directory first"
+  echo "Cleaning up the 'latest' directory first"
   gsutil -m rm gs://${RELEASE_GCS_BUCKET}/latest/**
   verbose_gsutil_cp latest $@
   [[ -n ${TAG} ]] && verbose_gsutil_cp previous/${TAG} $@
