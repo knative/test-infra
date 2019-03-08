@@ -40,16 +40,10 @@ const (
 	testgridFilter = "exclude-non-failed-tests=20"
 )
 
-var (
-	// jobNameTestgridURLMap contains harded coded mapping of job name: Testgrid tab URL relative to base URL
-	jobNameTestgridURLMap = map[string]string{
-		"ci-knative-serving-continuous": "knative-serving#continuous",
-	}
-	// slackChannelsMap defines mapping of repo: slack channels
-	slackChannelsMap = map[string][]slackChannel{
-		"serving": []slackChannel{{"test", "CA1DTGZ2N"}},
-	}
-)
+// slackChannelsMap defines mapping of repo: slack channels
+var slackChannelsMap = map[string][]slackChannel{
+	"serving": []slackChannel{{"test", "CA1DTGZ2N"}},
+}
 
 // SlackClient contains Slack bot related information
 type SlackClient struct {
@@ -110,15 +104,6 @@ func (c *SlackClient) writeSlackMessage(text, channel string) error {
 	return c.postMessage(slackChatPostMessageURL, uv)
 }
 
-// getTestgridTabURL gets Testgrid URL for giving job
-func getTestgridTabURL(jobName string) (string, error) {
-	url, ok := jobNameTestgridURLMap[jobName]
-	if !ok {
-		return "", fmt.Errorf("cannot find Testgrid tab for job '%s'", jobName)
-	}
-	return fmt.Sprintf("%s/%s&%s", testgrid.BaseURL, url, testgridFilter), nil
-}
-
 // createSlackMessageForRepo creates slack message layout from RepoData
 func createSlackMessageForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyIssue) string {
 	flakyTests := getFlakyTests(rd)
@@ -132,7 +117,7 @@ func createSlackMessageForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyI
 			}
 		}
 	}
-	if testgridTabURL, err := getTestgridTabURL(rd.Config.Name); nil != err {
+	if testgridTabURL, err := testgrid.GetTestgridTabURL(rd.Config.Name, []string{testgridFilter}); nil != err {
 		log.Println(err) // don't fail as this could be optional
 	} else {
 		message += fmt.Sprintf("\nSee Testgrid for up-to-date flaky tests information: %s", testgridTabURL)
