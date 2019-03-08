@@ -208,7 +208,6 @@ tide:
   queries:
   - repos:
     - knative/build
-    - knative/build-pipeline
     - knative/build-templates
     - knative/observability
     - knative/serving
@@ -227,7 +226,6 @@ tide:
     - do-not-merge/work-in-progress
   merge_method:
     knative: squash
-    knative/build-pipeline: rebase
   target_url: https://prow.knative.dev/tide
 `
 

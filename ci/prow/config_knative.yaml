@@ -44,13 +44,6 @@ presubmits:
       needs-dind: true
     - go-coverage: true
 
-  knative/build-pipeline:
-    - build-tests: true
-    - unit-tests: true
-    - integration-tests: true
-    - go-coverage: true
-      go-coverage-threshold: 50
-
   knative/eventing:
     - build-tests: true
     - unit-tests: true
@@ -145,11 +138,6 @@ periodics:
       needs-dind: true
     - latency: true
       cron: "5 8 * * *" # Run at 01:05PST every day (08:05 UTC)
-
-  knative/build-pipeline:
-    - nightly: true
-      cron: "31 8 * * *" # Run at 01:31PST every day (08:31 UTC)
-      needs-dind: true
 
   knative/docs:
     - continuous: true
