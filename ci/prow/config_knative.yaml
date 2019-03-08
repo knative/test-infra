@@ -158,6 +158,8 @@ periodics:
       cron: "30 * * * *" # Run every hour and 30 minutes
     - nightly: true
       cron: "16 9 * * *" # Run at 02:16PST every day (09:16 UTC)
+    - dot-release: true
+      cron: "19 9 * * 2" # Run at 02:19PST every Tuesday (09:19 UTC)
     - auto-release: true
       cron: "5 */2 * * *" # Run every two hours and five minutes
 
