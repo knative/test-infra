@@ -48,21 +48,51 @@ function delete_old_images_from_gcr() {
   done
 }
 
-# Delete old images in the GCP projects defined in the yaml file provided.
-# Parameters: $1 - yaml file path defining projects that will be cleaned up
-#             $2 - regex pattern for parsing the project names
-#             $3 - days to keep images
+# Delete old images in the given GCP projects
+# Parameters: $1 - array of projects names
+#             $2 - days to keep images
 function delete_old_gcr_images() {
-  [[ -z $1 ]] && abort "missing resource yaml path"
-  [[ -z $2 ]] && abort "missing regex pattern for project name"
-  [[ -z $3 ]] && abort "missing days to keep images"
+  [[ -z $1 ]] && abort "missing project names"
+  [[ -z $2 ]] && abort "missing days to keep images"
 
-  local target_projects # delared here as local + assignment in one line always return 0 exit code
-  target_projects="$(grep -Eio "$2" "$1")"
-  [[ $? -eq 0 ]] || abort "no project found in $1"
-
-  for project in ${target_projects}; do
+  for project in $1; do
     echo "Start deleting images from ${project}"
-    delete_old_images_from_gcr "gcr.io/${project}" $3
+    delete_old_images_from_gcr "gcr.io/${project}" $2
+  done
+}
+
+# Delete old clusters in the given GCP projects
+# Parameters: $1 - array of projects names
+#             $2 - hours to keep images
+function delete_old_test_clusters() {
+  [[ -z $1 ]] && abort "missing project names"
+  [[ -z $2 ]] && abort "missing hours to keep clusters"
+
+  for project in $1; do
+    echo "Start deleting clusters from ${project}"
+
+    is_protected_project $project && \
+      abort "Target project set to $project, which is forbidden"
+
+    local current_time=$(date +%s)
+    local target_time=$(date -d "`date -d @${current_time}`-$2hours" +%s)
+    # Fail if the difference of current time and target time is not 3600 times hours to keep
+    if (( ! DRY_RUN )); then # This should only fail this job but not blocking PR
+      [[ "$((3600*$2))" -eq "$(($current_time-$target_time))" ]] || abort "date operation failed"
+    fi
+
+    gcloud --format='get(name,createTime,zone)' container clusters list --project=$project --limit=99999 | \
+    while read cluster_name cluster_createtime cluster_zone; do
+      (( name )) && (( ! cluster_zone )) && abort "list cluster output missing cluster zone"
+      echo "Checking ${cluster_name} for removal"
+      local create_time=$(date -d "$cluster_createtime" +%s)
+      [[ $create_time -gt $current_time ]] && abort "cluster creation time shouldn't be newer than current time"
+      [[ $create_time -gt $target_time ]] && echo "skip deleting as it's created within $2 hours" && continue
+      if (( DRY_RUN )); then
+        echo "[DRY RUN] gcloud container clusters delete -q ${full_image} -zone ${cluster_zone}"
+      else
+        gcloud container clusters delete -q ${full_image} -zone ${cluster_zone}
+      fi
+    done
   done
 }

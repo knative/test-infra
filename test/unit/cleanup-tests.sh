@@ -34,18 +34,17 @@ cd ${REPO_ROOT_DIR}
 
 echo ">> Testing directly invoking cleanup script"
 
-test_function ${FAILURE} "error: unknown option" cleanup_script "action-not-exist"
-test_function ${FAILURE} "error: missing gcr" cleanup_script "delete-old-images-from-gcr"
-test_function ${FAILURE} "error: missing resource" cleanup_script "delete-old-gcr-images"
+test_function ${FAILURE} "error: missing parameter" cleanup_script
 
-test_function ${FAILURE} "error: expecting value following" cleanup_script "delete-old-gcr-images" --project-resource-yaml --dry-run
-test_function ${FAILURE} "error: expecting value following" cleanup_script "delete-old-gcr-images" --re-project-name --dry-run
-test_function ${FAILURE} "error: expecting value following" cleanup_script "delete-old-gcr-images" --gcr-to-cleanup --dry-run
-test_function ${FAILURE} "error: expecting value following" cleanup_script "delete-old-gcr-images" --days-to-keep --dry-run
-test_function ${FAILURE} "error: expecting value following" cleanup_script "delete-old-gcr-images" --artifacts --dry-run
+test_function ${FAILURE} "error: expecting value following" cleanup_script --project-resource-yaml --dry-run
+test_function ${FAILURE} "error: expecting value following" cleanup_script --re-project-name --dry-run
+test_function ${FAILURE} "error: expecting value following" cleanup_script --gcr-to-cleanup --dry-run
+test_function ${FAILURE} "error: expecting value following" cleanup_script --days-to-keep-images --dry-run
+test_function ${FAILURE} "error: expecting value following" cleanup_script --hours-to-keep-clusters --dry-run
+test_function ${FAILURE} "error: expecting value following" cleanup_script --artifacts --dry-run
 
-test_function ${FAILURE} "error: days to keep" cleanup_script "delete-old-images-from-gcr" --days-to-keep "a" --dry-run
-test_function ${FAILURE} "error: days to keep" cleanup_script "delete-old-gcr-images" --days-to-keep "a" --dry-run
+test_function ${FAILURE} "error: days to keep" cleanup_script --days-to-keep-images "a" --dry-run
+test_function ${FAILURE} "error: hours to keep" cleanup_script --hours-to-keep-clusters "a" --dry-run
 
 # Test individual functions
 echo ">> Testing deleting images from single project"
@@ -56,9 +55,14 @@ test_function ${SUCCESS} "" mock_gcloud_function delete_old_images_from_gcr ${_F
 
 echo ">> Testing deleting images from multiple projects"
 
-test_function ${FAILURE} "error: missing resource" delete_old_gcr_images
-test_function ${FAILURE} "error: missing regex" delete_old_gcr_images "file"
-test_function ${FAILURE} "error: missing days" delete_old_gcr_images "file" "regex"
-test_function ${SUCCESS} "Start" mock_gcloud_function delete_old_gcr_images ${_PROJECT_RESOURCE_YAML} ${_RE_PROJECT_NAME} 99
+test_function ${FAILURE} "error: missing project names" delete_old_gcr_images
+test_function ${FAILURE} "error: missing days" delete_old_gcr_images "${_FAKE_BOSKOS_PROJECT_NAME}1"
+test_function ${SUCCESS} "Start" mock_gcloud_function delete_old_gcr_images "${_PROJECT_RESOURCE_YAML}1 ${_PROJECT_RESOURCE_YAML}2" 99
+
+echo ">> Testing deleting clusters from multiple projects"
+
+test_function ${FAILURE} "error: missing project names" delete_old_test_clusters
+test_function ${FAILURE} "error: missing hours" delete_old_test_clusters "${_FAKE_BOSKOS_PROJECT_NAME}1"
+test_function ${SUCCESS} "Start" mock_gcloud_function delete_old_test_clusters "${_FAKE_BOSKOS_PROJECT_NAME}1 ${_FAKE_BOSKOS_PROJECT_NAME}2" 99
 
 echo ">> All tests passed"
