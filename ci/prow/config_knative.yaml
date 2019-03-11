@@ -138,6 +138,8 @@ periodics:
     - nightly: true
       cron: "31 8 * * *" # Run at 01:31PST every day (08:31 UTC)
       needs-dind: true
+    - dot-release: true
+      cron: "11 9 * * 2" # Run at 02:11PST every Tuesday (09:11 UTC)
     - auto-release: true
       cron: "7 */2 * * *" # Run every two hours and seven minutes
       needs-dind: true
