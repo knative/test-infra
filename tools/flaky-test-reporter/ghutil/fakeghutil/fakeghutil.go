@@ -29,8 +29,8 @@ import (
 type FakeGithubClient struct {
 	User     *github.User
 	Repos    []string
-	Issues   map[string][]*github.Issue     // map of repo: slice of issues
-	Comments map[int][]*github.IssueComment // map of issueNumber: slice of comments
+	Issues   map[string]map[int]*github.Issue       // map of repo: map of issueNumber: issues
+	Comments map[int]map[int64]*github.IssueComment // map of issueNumber: map of commentID: comments
 
 	NextNumber int // number to be assigned to next newly created issue/comment
 }
@@ -76,7 +76,7 @@ func (fgc *FakeGithubClient) CreateIssue(org, repo, title, body string) (*github
 		Number: &issueNumber,
 	}
 	fgc.ReopenIssue(org, repo, issueNumber)
-	fgc.Issues[repo] = append(fgc.Issues[repo], newIssue)
+	fgc.Issues[repo][issueNumber] = newIssue
 	return newIssue, nil
 }
 
@@ -92,16 +92,18 @@ func (fgc *FakeGithubClient) ReopenIssue(org, repo string, issueNumber int) erro
 
 // ListComments gets all comments from issue
 func (fgc *FakeGithubClient) ListComments(org, repo string, issueNumber int) ([]*github.IssueComment, error) {
-	return fgc.Comments[issueNumber], nil
+	var comments []*github.IssueComment
+	for _, comment := range fgc.Comments[issueNumber] {
+		comments = append(comments, comment)
+	}
+	return comments, nil
 }
 
 // GetComment gets comment by comment ID
 func (fgc *FakeGithubClient) GetComment(org, repo string, commentID int64) (*github.IssueComment, error) {
 	for _, comments := range fgc.Comments {
-		for _, comment := range comments {
-			if *comment.ID == commentID {
-				return comment, nil
-			}
+		if comment, ok := comments[commentID]; ok {
+			return comment, nil
 		}
 	}
 	return nil, fmt.Errorf("cannot find comment")
@@ -114,7 +116,7 @@ func (fgc *FakeGithubClient) CreateComment(org, repo string, issueNumber int, co
 		ID:   &commentID,
 		Body: &commentBody,
 	}
-	fgc.Comments[issueNumber] = append(fgc.Comments[issueNumber], newComment)
+	fgc.Comments[issueNumber][commentID] = newComment
 	return nil
 }
 
@@ -130,7 +132,7 @@ func (fgc *FakeGithubClient) EditComment(org, repo string, commentID int64, comm
 
 // AddLabelsToIssue adds label on issue
 func (fgc *FakeGithubClient) AddLabelsToIssue(org, repo string, issueNumber int, labels []string) error {
-	targetIssue := fgc.getIssue(org, repo, issueNumber)
+	targetIssue := fgc.Issues[repo][issueNumber]
 	if nil == targetIssue {
 		return fmt.Errorf("cannot find issue")
 	}
@@ -144,7 +146,7 @@ func (fgc *FakeGithubClient) AddLabelsToIssue(org, repo string, issueNumber int,
 
 // RemoveLabelForIssue removes given label for issue
 func (fgc *FakeGithubClient) RemoveLabelForIssue(org, repo string, issueNumber int, label string) error {
-	targetIssue := fgc.getIssue(org, repo, issueNumber)
+	targetIssue := fgc.Issues[repo][issueNumber]
 	if nil == targetIssue {
 		return fmt.Errorf("cannot find issue")
 	}
@@ -161,18 +163,8 @@ func (fgc *FakeGithubClient) RemoveLabelForIssue(org, repo string, issueNumber i
 	return nil
 }
 
-func (fgc *FakeGithubClient) getIssue(org, repo string, issueNumber int) *github.Issue {
-	var targetIssue *github.Issue
-	for _, issue := range fgc.Issues[repo] {
-		if *issue.Number == issueNumber {
-			targetIssue = issue
-		}
-	}
-	return targetIssue
-}
-
 func (fgc *FakeGithubClient) updateIssueState(org, repo string, state ghutil.IssueStateEnum, issueNumber int) error {
-	targetIssue := fgc.getIssue(org, repo, issueNumber)
+	targetIssue := fgc.Issues[repo][issueNumber]
 	if nil == targetIssue {
 		return fmt.Errorf("cannot find issue")
 	}
