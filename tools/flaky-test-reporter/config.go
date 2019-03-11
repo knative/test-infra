@@ -31,12 +31,15 @@ const (
 	threshold     = 0.01
 
 	org           = "knative"
-	// Temporarily creating issues under "test-infra" for better management
-	// TODO(chaodaiG): repo for issue same as the src of the test
-	repoForIssue  = "test-infra"
 )
 
-// jobConfigs defines which job to be monitored for giving repo
-var jobConfigs = []JobConfig{
-	{"ci-knative-serving-continuous", "serving", prow.PostsubmitJob}, // CI flow for serving repo
-}
+var (
+	jobConfigs = []JobConfig{
+		{"ci-knative-serving-continuous", "serving", prow.PostsubmitJob}, // CI flow for serving repo
+	}
+	// Temporarily creating issues under "test-infra" for better management
+	// TODO(chaodaiG): repo for issue same as the src of the test
+	repoIssueMap = map[string]string{
+		"serving": "test-infra",
+	}
+)

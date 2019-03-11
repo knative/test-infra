@@ -32,7 +32,17 @@ type FakeGithubClient struct {
 	Issues   map[string]map[int]*github.Issue       // map of repo: map of issueNumber: issues
 	Comments map[int]map[int64]*github.IssueComment // map of issueNumber: map of commentID: comments
 
-	NextNumber int // number to be assigned to next newly created issue/comment
+	NextNumber int    // number to be assigned to next newly created issue/comment
+	BaseURL    string // base URL of Github
+}
+
+// NewFakeGithubClient creates a FakeGithubClient and initialize it's maps
+func NewFakeGithubClient() *FakeGithubClient {
+	return &FakeGithubClient{
+		Issues:   make(map[string]map[int]*github.Issue),
+		Comments: make(map[int]map[int64]*github.IssueComment),
+		BaseURL:  "fakeurl",
+	}
 }
 
 // GetGithubUser gets current authenticated user
@@ -70,12 +80,20 @@ func (fgc *FakeGithubClient) ListIssuesByRepo(org, repo string, labels []string)
 // CreateIssue creates issue
 func (fgc *FakeGithubClient) CreateIssue(org, repo, title, body string) (*github.Issue, error) {
 	issueNumber := fgc.getNextNumber()
+	stateStr := string(ghutil.IssueOpenState)
+	repoURL := fmt.Sprintf("%s/%s/%s", fgc.BaseURL, org, repo)
+	url := fmt.Sprintf("%s/%d", repoURL, issueNumber)
 	newIssue := &github.Issue{
-		Title:  &title,
-		Body:   &body,
-		Number: &issueNumber,
+		Title:         &title,
+		Body:          &body,
+		Number:        &issueNumber,
+		State:         &stateStr,
+		URL:           &url,
+		RepositoryURL: &repoURL,
 	}
-	fgc.ReopenIssue(org, repo, issueNumber)
+	if _, ok := fgc.Issues[repo]; !ok {
+		fgc.Issues[repo] = make(map[int]*github.Issue)
+	}
 	fgc.Issues[repo][issueNumber] = newIssue
 	return newIssue, nil
 }
@@ -110,14 +128,18 @@ func (fgc *FakeGithubClient) GetComment(org, repo string, commentID int64) (*git
 }
 
 // CreateComment adds comment to issue
-func (fgc *FakeGithubClient) CreateComment(org, repo string, issueNumber int, commentBody string) error {
+func (fgc *FakeGithubClient) CreateComment(org, repo string, issueNumber int, commentBody string) (*github.IssueComment, error) {
 	commentID := int64(fgc.getNextNumber())
 	newComment := &github.IssueComment{
 		ID:   &commentID,
 		Body: &commentBody,
+		User: fgc.User,
+	}
+	if _, ok := fgc.Comments[issueNumber]; !ok {
+		fgc.Comments[issueNumber] = make(map[int64]*github.IssueComment)
 	}
 	fgc.Comments[issueNumber][commentID] = newComment
-	return nil
+	return newComment, nil
 }
 
 // EditComment edits comment by replacing with provided comment
