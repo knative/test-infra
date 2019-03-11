@@ -33,6 +33,8 @@ This is a helper script to run the presubmit tests. To use it:
    - `DISABLE_MD_LINTING`: Disable linting markdown files, defaults to 0 (false).
    - `DISABLE_MD_LINK_CHECK`: Disable checking links in markdown files, defaults
      to 0 (false).
+   - `PRESUBMIT_TEST_FAIL_FAST`: Fail the presubmit test immediately if a test fails,
+     defaults to 0 (false).
 
 1. [optional] Define the functions `pre_build_tests()` and/or
    `post_build_tests()`. These functions will be called before or after the

@@ -19,28 +19,32 @@
 [[ -z "${PULL_PULL_SHA:-}" ]] && PULL_PULL_SHA=456
 [[ -z "${ARTIFATCS:-}" ]] && ARTIFACTS=/tmp
 
-source $(dirname $0)/../../scripts/presubmit-tests.sh
 source $(dirname $0)/test-helper.sh
 
 set -e
 
-# Mock external tools for testing purposes.
+function init_test_env() {
+  source $(dirname $0)/../../scripts/presubmit-tests.sh
 
-function list_changed_files() {
-  echo "foobar.go"
-}
+  # Mock external tools for testing purposes.
+  function list_changed_files() {
+    echo "foobar.go"
+  }
 
-function markdown-link-check() {
-  return 0
-}
+  function markdown-link-check() {
+    return 0
+  }
 
-function mdl() {
-  return 0
+  function mdl() {
+    return 0
+  }
 }
 
 # Helper functions.
 
 function mock_presubmit_runners() {
+  RETURN_CODE="${1:-0}"
+
   RAN_BUILD_TESTS=0
   RAN_UNIT_TESTS=0
   RAN_INTEGRATION_TESTS=0
@@ -52,30 +56,39 @@ function mock_presubmit_runners() {
   POST_INTEGRATION_TESTS=0
   function pre_build_tests() {
     PRE_BUILD_TESTS=1
+    return ${RETURN_CODE}
   }
   function build_tests() {
     RAN_BUILD_TESTS=1
+    return ${RETURN_CODE}
   }
   function post_build_tests() {
     POST_BUILD_TESTS=1
+    return ${RETURN_CODE}
   }
   function pre_unit_tests() {
     PRE_UNIT_TESTS=1
+    return ${RETURN_CODE}
   }
   function unit_tests() {
     RAN_UNIT_TESTS=1
+    return ${RETURN_CODE}
   }
   function post_unit_tests() {
     POST_UNIT_TESTS=1
+    return ${RETURN_CODE}
   }
   function pre_integration_tests() {
     PRE_INTEGRATION_TESTS=1
+    return ${RETURN_CODE}
   }
   function integration_tests() {
     RAN_INTEGRATION_TESTS=1
+    return ${RETURN_CODE}
   }
   function post_integration_tests() {
     POST_INTEGRATION_TESTS=1
+    return ${RETURN_CODE}
   }
 }
 
@@ -117,6 +130,51 @@ function test_custom_runners_basic() {
   }
 }
 
+function test_custom_runners_fail_slow() {
+  mock_presubmit_runners ${FAILURE}
+  unset pre_build_tests
+  unset post_build_tests
+  unset pre_unit_tests
+  unset post_unit_tests
+  unset pre_integration_tests
+  unset post_integration_tests
+  function check_results() {
+    (( ! PRE_BUILD_TESTS )) || test_failed "Pre build tests did run"
+    (( RAN_BUILD_TESTS )) || test_failed "Build tests did not run"
+    (( ! POST_BUILD_TESTS )) || test_failed "Post build tests did run"
+    (( ! PRE_UNIT_TESTS )) || test_failed "Pre unit tests did run"
+    (( RAN_UNIT_TESTS )) || test_failed "Unit tests did not run"
+    (( ! POST_UNIT_TESTS )) || test_failed "Post unit tests did run"
+    (( ! PRE_INTEGRATION_TESTS )) || test_failed "Pre integration tests did run"
+    (( RAN_INTEGRATION_TESTS )) || test_failed "Custom integration tests did not run"
+    (( ! POST_INTEGRATION_TESTS )) || test_failed "Post integration tests did run"
+    echo "Test failed slow"
+  }
+}
+
+function test_custom_runners_fail_fast() {
+  PRESUBMIT_TEST_FAIL_FAST=1
+  mock_presubmit_runners ${FAILURE}
+  unset pre_build_tests
+  unset post_build_tests
+  unset pre_unit_tests
+  unset post_unit_tests
+  unset pre_integration_tests
+  unset post_integration_tests
+  function check_results() {
+    (( ! PRE_BUILD_TESTS )) || test_failed "Pre build tests did run"
+    (( RAN_BUILD_TESTS )) || test_failed "Build tests did not run"
+    (( ! POST_BUILD_TESTS )) || test_failed "Post build tests did run"
+    (( ! PRE_UNIT_TESTS )) || test_failed "Pre unit tests did run"
+    (( ! RAN_UNIT_TESTS )) || test_failed "Unit tests did run"
+    (( ! POST_UNIT_TESTS )) || test_failed "Post unit tests did run"
+    (( ! PRE_INTEGRATION_TESTS )) || test_failed "Pre integration tests did run"
+    (( ! RAN_INTEGRATION_TESTS )) || test_failed "Custom integration tests did run"
+    (( ! POST_INTEGRATION_TESTS )) || test_failed "Post integration tests did run"
+    echo "Test failed fast"
+  }
+}
+
 function run_markdown_build_tests() {
   function list_changed_files() {
     echo "README.md"
@@ -125,6 +183,7 @@ function run_markdown_build_tests() {
 }
 
 function run_main() {
+  init_test_env
   # Keep current EXIT trap, used by `test_function`
   local current_trap="$(trap -p EXIT | cut -d\' -f2)"
   trap -- "${current_trap};check_results" EXIT
@@ -135,9 +194,12 @@ echo ">> Testing custom test runners"
 
 test_function ${SUCCESS} "Test passed" call_function_pre test_custom_runners_all run_main
 test_function ${SUCCESS} "Test passed" call_function_pre test_custom_runners_basic run_main
+test_function ${FAILURE} "Test failed slow" call_function_pre test_custom_runners_fail_slow run_main
+test_function ${FAILURE} "Test failed fast" call_function_pre test_custom_runners_fail_fast run_main
 
 echo ">> Testing default test runners"
 
+init_test_env
 test_function ${SUCCESS} "BUILD TESTS PASSED" main --build-tests
 test_function ${SUCCESS} "BUILD TESTS PASSED" call_function_pre run_markdown_build_tests
 
