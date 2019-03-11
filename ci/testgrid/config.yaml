@@ -60,6 +60,7 @@ test_groups:
 
 ## Master branch (head)
 
+# knative/serving
 - name: ci-knative-serving-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-continuous
 - name: ci-knative-serving-nightly-release
@@ -83,51 +84,75 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-serving-auto-release
 - name: ci-knative-serving-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-serving-dot-release
+
+# knative/build
 - name: ci-knative-build-continuous
   gcs_prefix: knative-prow/logs/ci-knative-build-continuous
 - name: ci-knative-build-nightly-release
   gcs_prefix: knative-prow/logs/ci-knative-build-nightly-release
+- name: ci-knative-build-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-build-auto-release
+- name: ci-knative-build-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-build-dot-release
 - name: pull-knative-build-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-build-go-coverage
   short_text_metric: coverage
 - name: ci-knative-build-latency
   gcs_prefix: knative-prow/logs/ci-knative-build-latency
   short_text_metric: latency
+
+# knative/build-templates
 - name: ci-knative-build-templates-continuous
   gcs_prefix: knative-prow/logs/ci-knative-build-templates-continuous
+
+# knative/build-pipeline
 - name: ci-knative-build-pipeline-nightly-release
   gcs_prefix: knative-prow/logs/ci-knative-build-pipeline-nightly-release
 - name: pull-knative-build-pipeline-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-build-pipeline-go-coverage
   short_text_metric: coverage
-- name: ci-knative-build-auto-release
-  gcs_prefix: knative-prow/logs/ci-knative-build-auto-release
+
+# knative/eventing
 - name: ci-knative-eventing-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-continuous
 - name: ci-knative-eventing-nightly-release
   gcs_prefix: knative-prow/logs/ci-knative-eventing-nightly-release
+- name: ci-knative-eventing-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-auto-release
+- name: ci-knative-eventing-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-dot-release
 - name: pull-knative-eventing-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-eventing-go-coverage
   short_text_metric: coverage
+
+# knative/eventing-sources
 - name: ci-knative-eventing-sources-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-continuous
 - name: ci-knative-eventing-sources-nightly-release
   gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-nightly-release
+- name: ci-knative-eventing-sources-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-auto-release
+- name: ci-knative-eventing-sources-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-dot-release
 - name: pull-knative-eventing-sources-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-go-coverage
   short_text_metric: coverage
-- name: ci-knative-eventing-auto-release
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-auto-release
+
+# knative/docs
 - name: ci-knative-docs-continuous
   gcs_prefix: knative-prow/logs/ci-knative-docs-continuous
 - name: pull-knative-docs-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-docs-go-coverage
   short_text_metric: coverage
+
+# knative/pkg
 - name: ci-knative-pkg-continuous
   gcs_prefix: knative-prow/logs/ci-knative-pkg-continuous
 - name: pull-knative-pkg-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-pkg-go-coverage
   short_text_metric: coverage
+
+# knative/caching
 - name: ci-knative-caching-continuous
   gcs_prefix: knative-prow/logs/ci-knative-caching-continuous
 - name: pull-knative-caching-test-coverage
@@ -157,6 +182,7 @@ dashboards:
 
 ## Master branch (head)
 
+# knative/serving
 - name: knative-serving
   dashboard_tab:
   - name: continuous
@@ -190,6 +216,8 @@ dashboards:
   - name: dot-release
     test_group_name: ci-knative-serving-dot-release
     base_options: 'sort-by-name='
+
+# knative/build
 - name: knative-build
   dashboard_tab:
   - name: continuous
@@ -208,11 +236,18 @@ dashboards:
   - name: auto-release
     test_group_name: ci-knative-build-auto-release
     base_options: 'sort-by-name='
+  - name: dot-release
+    test_group_name: ci-knative-build-dot-release
+    base_options: 'sort-by-name='
+
+# knative/build-templates
 - name: knative-build-templates
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-build-templates-continuous
     base_options: 'sort-by-name='
+
+# knative/build-pipeline
 - name: knative-build-pipeline
   dashboard_tab:
   - name: release
@@ -221,6 +256,8 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-build-pipeline-test-coverage
     base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
+
+# knative/eventing
 - name: knative-eventing
   dashboard_tab:
   - name: continuous
@@ -235,6 +272,11 @@ dashboards:
   - name: auto-release
     test_group_name: ci-knative-eventing-auto-release
     base_options: 'sort-by-name='
+  - name: dot-release
+    test_group_name: ci-knative-eventing-dot-release
+    base_options: 'sort-by-name='
+
+# knative/eventing-sources
 - name: knative-eventing-sources
   dashboard_tab:
   - name: continuous
@@ -246,6 +288,14 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-eventing-sources-test-coverage
     base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
+  - name: auto-release
+    test_group_name: ci-knative-eventing-sources-auto-release
+    base_options: 'sort-by-name='
+  - name: dot-release
+    test_group_name: ci-knative-eventing-sources-dot-release
+    base_options: 'sort-by-name='
+
+# knative/docs
 - name: knative-docs
   dashboard_tab:
   - name: continuous
@@ -254,6 +304,8 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-docs-test-coverage
     base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
+
+# knative/pkg
 - name: knative-pkg
   dashboard_tab:
   - name: continuous
@@ -262,6 +314,8 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-pkg-test-coverage
     base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
+
+# knative/caching
 - name: knative-caching
   dashboard_tab:
   - name: continuous
