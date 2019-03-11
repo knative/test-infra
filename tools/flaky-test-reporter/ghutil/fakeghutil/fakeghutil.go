@@ -47,7 +47,24 @@ func (fgc *FakeGithubClient) ListRepos(org string) ([]string, error) {
 
 // ListIssuesByRepo lists issues within given repo, filters by labels if provided
 func (fgc *FakeGithubClient) ListIssuesByRepo(org, repo string, labels []string) ([]*github.Issue, error) {
-	return fgc.Issues[repo], nil
+	var issues []*github.Issue
+	for _, issue := range fgc.Issues[repo] {
+		labelMap := make(map[string]bool)
+		for _, label := range issue.Labels {
+			labelMap[*label.Name] = true
+		}
+		missingLabel := false
+		for _, label := range labels {
+			if _, ok := labelMap[label]; !ok {
+				missingLabel = true
+				break
+			}
+		}
+		if !missingLabel {
+			issues = append(issues, issue)
+		}
+	}
+	return issues, nil
 }
 
 // CreateIssue creates issue
