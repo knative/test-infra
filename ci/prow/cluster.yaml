@@ -148,7 +148,7 @@ spec:
       serviceAccountName: "plank"
       containers:
       - name: plank
-        image: gcr.io/k8s-prow/plank:v20190109-716fe27
+        image: gcr.io/k8s-prow/plank:v20190311-a967141
         args:
         - --dry-run=false
         volumeMounts:
