@@ -25,6 +25,7 @@ plank:
     timeout: 7200000000000 # 2h
     grace_period: 15000000000 # 15s
     utility_images:
+      # Update these versions when updating plank version in cluster.yaml
       clonerefs: "gcr.io/k8s-prow/clonerefs:v20190311-a967141"
       initupload: "gcr.io/k8s-prow/initupload:v20190311-a967141"
       entrypoint: "gcr.io/k8s-prow/entrypoint:v20190311-a967141"
