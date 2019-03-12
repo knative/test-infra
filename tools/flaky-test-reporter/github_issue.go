@@ -19,6 +19,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"path"
 	"regexp"
 	"sort"
 	"strings"
@@ -121,6 +122,12 @@ func Setup(githubToken string) (*GithubIssue, error) {
 	return &GithubIssue{user: ghUser, client: ghc}, nil
 }
 
+// The Repo field of an github Issue could be empty, use URL is more reliable
+func getRepoFromIssue(issue *github.Issue) string {
+	_, repo := path.Split(*(issue.RepositoryURL))
+	return repo
+}
+
 // createCommentForTest summarizes latest status of current test case,
 // and creates text to be added to issue comment
 func (gi *GithubIssue) createCommentForTest(rd *RepoData, testFullName string) string {
@@ -206,7 +213,7 @@ func (gi *GithubIssue) updateIssue(fi *flakyIssue, newComment string, ts *TestSt
 		if err := run(
 			"updating comment",
 			func() error {
-				return gi.client.EditComment(org, repoForIssue, *fi.comment.ID, gi.prependComment(*fi.comment.Body, newComment))
+				return gi.client.EditComment(org, getRepoFromIssue(issue), *fi.comment.ID, gi.prependComment(*fi.comment.Body, newComment))
 			},
 			dryrun); nil != err {
 			return fmt.Errorf("failed updating comments for issue '%s': '%v'", *issue.URL, err)
@@ -219,7 +226,7 @@ func (gi *GithubIssue) updateIssue(fi *flakyIssue, newComment string, ts *TestSt
 				if err := run(
 					"closing issue",
 					func() error {
-						return gi.client.CloseIssue(org, repoForIssue, *issue.Number)
+						return gi.client.CloseIssue(org, getRepoFromIssue(issue), *issue.Number)
 					},
 					dryrun); nil != err {
 					return fmt.Errorf("failed closing issue '%s': '%v'", *issue.URL, err)
@@ -231,7 +238,7 @@ func (gi *GithubIssue) updateIssue(fi *flakyIssue, newComment string, ts *TestSt
 			if err := run(
 				"reopening issue",
 				func() error {
-					return gi.client.ReopenIssue(org, repoForIssue, *issue.Number)
+					return gi.client.ReopenIssue(org, getRepoFromIssue(issue), *issue.Number)
 				},
 				dryrun); nil != err {
 				return fmt.Errorf("failed reopen issue: '%s'", *issue.URL)
@@ -258,7 +265,8 @@ func (gi *GithubIssue) createNewIssue(org, repoForIssue, title, body string, com
 	if err := run(
 		"adding comment",
 		func() error {
-			return gi.client.CreateComment(org, repoForIssue, *newIssue.Number, comment)
+			_, err := gi.client.CreateComment(org, repoForIssue, *newIssue.Number, comment)
+			return err
 		},
 		dryrun,
 	); nil != err {
@@ -280,7 +288,7 @@ func (gi *GithubIssue) createNewIssue(org, repoForIssue, title, body string, com
 // if multiple comments were found return the earliest one.
 func (gi *GithubIssue) findExistingComment(issue *github.Issue, issueIdentity string) (*github.IssueComment, error) {
 	var targetComment *github.IssueComment
-	comments, err := gi.client.ListComments(org, repoForIssue, *issue.Number)
+	comments, err := gi.client.ListComments(org, getRepoFromIssue(issue), *issue.Number)
 	if nil != err {
 		return nil, err
 	}
@@ -373,7 +381,7 @@ func (gi *GithubIssue) getFlakyIssues() (map[string][]*flakyIssue, error) {
 // processGithubIssueForRepo reads RepoData and existing issues, and create/close/reopen/comment on issues.
 // The function returns a slice of messages containing performed actions, and a slice of error messages,
 // these can later on be printed as summary at the end of run
-func (gi *GithubIssue) processGithubIssueForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyIssue, dryrun bool) ([]string, error) {
+func (gi *GithubIssue) processGithubIssueForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyIssue, repoForIssue string, dryrun bool) ([]string, error) {
 	var messages []string
 	var errs []error
 
@@ -450,7 +458,7 @@ func (gi *GithubIssue) processGithubIssues(repoDataAll []*RepoData, dryrun bool)
 	}
 
 	for _, rd := range repoDataAll {
-		messages, err := gi.processGithubIssueForRepo(rd, flakyGHIssuesMap, dryrun)
+		messages, err := gi.processGithubIssueForRepo(rd, flakyGHIssuesMap, repoIssueMap[rd.Config.Repo], dryrun)
 		messagesMap[rd.Config.Repo] = messages
 		if nil != err {
 			errMap[rd.Config.Repo] = append(errMap[rd.Config.Repo], err)
