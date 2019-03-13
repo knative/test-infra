@@ -25,7 +25,7 @@ import (
 	"github.com/knative/test-infra/tools/flaky-test-reporter/ghutil/fakeghutil"
 )
 
-var tsMapForTest = map[string]TestStat{
+var testStatsMapForTest = map[string]TestStat{
 	"passed": TestStat{
 		TestName: "a",
 		Passed:   []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
@@ -59,11 +59,10 @@ var (
 	fakeUser   = &github.User{
 		ID: &fakeUserID,
 	}
-
 	dryrun = false
 )
 
-func getFakeGithubIssueClient() *GithubIssue {
+func getFakeGithubIssue() *GithubIssue {
 	fg := fakeghutil.NewFakeGithubClient()
 	fg.Repos = []string{fakeRepo}
 	fg.User = fakeUser
@@ -73,18 +72,10 @@ func getFakeGithubIssueClient() *GithubIssue {
 	}
 }
 
-func createFlakyIssue(fgc *GithubIssue, title, body string) (*github.Issue, *github.IssueComment) {
-	return createNewIssue(fgc, title, body, "Flaky")
-}
-
-func createPassedIssue(fgc *GithubIssue, title, body string) (*github.Issue, *github.IssueComment) {
-	return createNewIssue(fgc, title, body, "Passed")
-}
-
-func createNewIssue(fgc *GithubIssue, title, body, testStat string) (*github.Issue, *github.IssueComment) {
-	issue, _ := fgc.client.CreateIssue(fakeOrg, fakeRepo, title, body)
+func createNewIssue(fgi *GithubIssue, title, body, testStat string) (*github.Issue, *github.IssueComment) {
+	issue, _ := fgi.client.CreateIssue(fakeOrg, fakeRepo, title, body)
 	commentBody := fmt.Sprintf("Latest result for this test: %s", testStat)
-	comment, _ := fgc.client.CreateComment(fakeOrg, fakeRepo, *issue.Number, commentBody)
+	comment, _ := fgi.client.CreateComment(fakeOrg, fakeRepo, *issue.Number, commentBody)
 	return issue, comment
 }
 
@@ -93,21 +84,16 @@ func createRepoData(passed, flaky, failed, notenoughdata int, startTime int64) *
 		Repo: fakeRepo,
 	}
 	tss := map[string]*TestStat{}
-	for i := 0; i < passed; i++ {
-		ts := tsMapForTest["passed"]
-		tss[fmt.Sprintf("passedtest_%d", i)] = &ts
-	}
-	for i := 0; i < flaky; i++ {
-		ts := tsMapForTest["flaky"]
-		tss[fmt.Sprintf("flakytest_%d", i)] = &ts
-	}
-	for i := 0; i < failed; i++ {
-		ts := tsMapForTest["failed"]
-		tss[fmt.Sprintf("failedtest_%d", i)] = &ts
-	}
-	for i := 0; i < notenoughdata; i++ {
-		ts := tsMapForTest["notenoughdata"]
-		tss[fmt.Sprintf("notenoughdatatest_%d", i)] = &ts
+	for status, count := range map[string]int{
+		"passed":        passed,
+		"flaky":         flaky,
+		"failed":        failed,
+		"notenoughdata": notenoughdata,
+	} {
+		for i := 0; i < count; i++ {
+			ts := testStatsMapForTest[status]
+			tss[fmt.Sprintf("test%s_%d", status, i)] = &ts
+		}
 	}
 	return &RepoData{
 		Config:             config,
@@ -126,10 +112,10 @@ func TestCreateIssue(t *testing.T) {
 	}
 
 	for _, d := range datas {
-		fgc := getFakeGithubIssueClient()
+		fgi := getFakeGithubIssue()
 		repoData := createRepoData(d.passed, d.flaky, d.failed, d.notenoughdata, int64(0))
-		fgc.processGithubIssueForRepo(repoData, make(map[string][]*flakyIssue), fakeRepo, dryrun)
-		issues, _ := fgc.client.ListIssuesByRepo(fakeOrg, fakeRepo, []string{})
+		fgi.processGithubIssueForRepo(repoData, make(map[string][]*flakyIssue), fakeRepo, dryrun)
+		issues, _ := fgi.client.ListIssuesByRepo(fakeOrg, fakeRepo, []string{})
 		if len(issues) != d.wantIssues {
 			t.Fatalf("2%% tests failed, got %d issues, want %d issue", len(issues), d.wantIssues)
 		}
@@ -137,16 +123,16 @@ func TestCreateIssue(t *testing.T) {
 }
 
 func TestExistingIssue(t *testing.T) {
-	fgc := getFakeGithubIssueClient()
+	fgi := getFakeGithubIssue()
 	repoData := createRepoData(200, 2, 0, 0, int64(0))
-	flakyIssuesMap, _ := fgc.getFlakyIssues()
-	fgc.processGithubIssueForRepo(repoData, flakyIssuesMap, fakeRepo, dryrun)
-	existIssues, _ := fgc.client.ListIssuesByRepo(fakeOrg, fakeRepo, []string{})
-	flakyIssuesMap, _ = fgc.getFlakyIssues()
+	flakyIssuesMap, _ := fgi.getFlakyIssues()
+	fgi.processGithubIssueForRepo(repoData, flakyIssuesMap, fakeRepo, dryrun)
+	existIssues, _ := fgi.client.ListIssuesByRepo(fakeOrg, fakeRepo, []string{})
+	flakyIssuesMap, _ = fgi.getFlakyIssues()
 
 	*repoData.LastBuildStartTime++
-	fgc.processGithubIssueForRepo(repoData, flakyIssuesMap, fakeRepo, dryrun)
-	issues, _ := fgc.client.ListIssuesByRepo(fakeOrg, fakeRepo, []string{})
+	fgi.processGithubIssueForRepo(repoData, flakyIssuesMap, fakeRepo, dryrun)
+	issues, _ := fgi.client.ListIssuesByRepo(fakeOrg, fakeRepo, []string{})
 	if len(existIssues) != len(issues) {
 		t.Fatalf("issues already exists, got %d new issues, want 0 new issues", len(issues)-len(existIssues))
 	}
@@ -161,32 +147,35 @@ func TestUpdateIssue(t *testing.T) {
 		wantStatus     string
 		wantErr        error
 	}{
-		{"open", tsMapForTest["flaky"], false, true, "open", nil},
-		{"open", tsMapForTest["flaky"], true, true, "open", nil},
-		{"open", tsMapForTest["passed"], false, true, "open", nil},
-		{"open", tsMapForTest["passed"], true, true, "closed", nil},
-		{"open", tsMapForTest["failed"], false, true, "open", nil},
-		{"open", tsMapForTest["failed"], true, true, "open", nil},
-		{"open", tsMapForTest["notenoughdata"], false, true, "open", nil},
-		{"open", tsMapForTest["notenoughdata"], true, true, "open", nil},
-		{"closed", tsMapForTest["flaky"], false, true, "open", nil},
-		{"closed", tsMapForTest["flaky"], true, true, "open", nil},
-		{"closed", tsMapForTest["passed"], false, true, "closed", nil},
-		{"closed", tsMapForTest["passed"], true, true, "closed", nil},
-		{"closed", tsMapForTest["failed"], false, true, "closed", nil},
-		{"closed", tsMapForTest["failed"], true, true, "closed", nil},
-		{"closed", tsMapForTest["notenoughdata"], false, true, "closed", nil},
-		{"closed", tsMapForTest["notenoughdata"], true, true, "closed", nil},
+		{"open", testStatsMapForTest["flaky"], false, true, "open", nil},
+		{"open", testStatsMapForTest["flaky"], true, true, "open", nil},
+		{"open", testStatsMapForTest["passed"], false, true, "open", nil},
+		{"open", testStatsMapForTest["passed"], true, true, "closed", nil},
+		{"open", testStatsMapForTest["failed"], false, true, "open", nil},
+		{"open", testStatsMapForTest["failed"], true, true, "open", nil},
+		{"open", testStatsMapForTest["notenoughdata"], false, true, "open", nil},
+		{"open", testStatsMapForTest["notenoughdata"], true, true, "open", nil},
+		{"closed", testStatsMapForTest["flaky"], false, true, "open", nil},
+		{"closed", testStatsMapForTest["flaky"], true, true, "open", nil},
+		{"closed", testStatsMapForTest["passed"], false, true, "closed", nil},
+		{"closed", testStatsMapForTest["passed"], true, true, "closed", nil},
+		{"closed", testStatsMapForTest["failed"], false, true, "closed", nil},
+		{"closed", testStatsMapForTest["failed"], true, true, "closed", nil},
+		{"closed", testStatsMapForTest["notenoughdata"], false, true, "closed", nil},
+		{"closed", testStatsMapForTest["notenoughdata"], true, true, "closed", nil},
 	}
 
-	title := "c"
-	body := "d"
+	title := "fake title"
+	body := "fake body"
 
 	for _, data := range dataForTest {
-		fgc := getFakeGithubIssueClient()
-		issue, comment := createFlakyIssue(fgc, title, body)
+		fgi := getFakeGithubIssue()
+		var issue *github.Issue
+		var comment *github.IssueComment
 		if data.passedLastTime {
-			issue, comment = createPassedIssue(fgc, title, body)
+			issue, comment = createNewIssue(fgi, title, body, "Passed")
+		} else {
+			issue, comment = createNewIssue(fgi, title, body, "Flaky")
 		}
 		commentBody := comment.GetBody()
 
@@ -195,8 +184,7 @@ func TestUpdateIssue(t *testing.T) {
 			comment: comment,
 		}
 
-		dryrun := false
-		gotErr := fgc.updateIssue(&fi, "new", &data.ts, dryrun)
+		gotErr := fgi.updateIssue(&fi, "new", &data.ts, dryrun)
 		if nil == data.wantErr {
 			if nil != gotErr {
 				t.Fatalf("update %v, got err: '%v', want err: '%v'", data, gotErr, data.wantErr)
@@ -207,7 +195,7 @@ func TestUpdateIssue(t *testing.T) {
 			}
 		}
 
-		gotComment, _ := fgc.client.GetComment(fakeOrg, fakeRepo, *comment.ID)
+		gotComment, _ := fgi.client.GetComment(fakeOrg, fakeRepo, *comment.ID)
 		if data.appendComment && gotComment.GetBody() == commentBody {
 			t.Fatalf("update comment %v, got: '%s', want: 'new' on top of existing comment", data, gotComment.GetBody())
 		}
