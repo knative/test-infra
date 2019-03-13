@@ -83,7 +83,7 @@ function delete_old_test_clusters() {
 
     gcloud --format='get(name,createTime,zone)' container clusters list --project=$project --limit=99999 | \
     while read cluster_name cluster_createtime cluster_zone; do
-      (( name )) && (( ! cluster_zone )) && abort "list cluster output missing cluster zone"
+      [[ -n "${cluster_name}" ]]  && [[ -z "${cluster_zone}" ]] && abort "list cluster output missing cluster zone"
       echo "Checking ${cluster_name} for removal"
       local create_time=$(date -d "$cluster_createtime" +%s)
       [[ $create_time -gt $current_time ]] && abort "cluster creation time shouldn't be newer than current time"

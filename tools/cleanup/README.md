@@ -1,6 +1,6 @@
 # Resources Clean Up Tool
 
-This tool is designed to clean up stale resources from gcr, for now it deletes old images and clusters created during testing.
+This tool is designed to clean up stale test resources. For now it deletes GCR images and GKE clusters created during testing.
 
 ## Basic Usage
 
@@ -18,7 +18,7 @@ Projects to be cleaned up are expected to be defined in a `resources.yaml` file.
 
 Example:
 
-```./cleanup.sh "delete-old-gcr-images" --project-resource-yaml "ci/prow/boskos/resources.yaml" --days-to-keep-images 90 --days-to-keep-clusters 24```
+```./cleanup.sh --project-resource-yaml "ci/prow/boskos/resources.yaml" --days-to-keep-images 90 --days-to-keep-clusters 24```
 This command deletes test images older than 90 days and test clusters created more than 24 hours ago.
 
 ## Prow Job

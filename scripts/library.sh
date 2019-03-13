@@ -431,7 +431,7 @@ function remove_broken_symlinks() {
 # Return whether the given parameter is knative-tests.
 # Parameters: $1 - project name
 function is_protected_project() {
-  [[ -n $1 && "$1" =~ "^knative-tests$" ]]
+  [[ -n $1 && "$1" -eq "knative-tests" ]]
 }
 
 # Returns the canonical path of a filesystem object.

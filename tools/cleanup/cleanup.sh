@@ -70,8 +70,8 @@ fi
 
 parse_args $@
 
-(( DRY_RUN )) && echo "-- Running in dry-run mode, no image deletion --"
-echo "- from projects defined in '${PROJECT_RESOURCE_YAML}', matching '${RE_PROJECT_NAME}"
+(( DRY_RUN )) && echo "-- Running in dry-run mode, no resource deletion --"
+echo "Iterating over projects defined in '${PROJECT_RESOURCE_YAML}', matching '${RE_PROJECT_NAME}"
 target_projects="$(grep -Eio "${RE_PROJECT_NAME}" "${PROJECT_RESOURCE_YAML}")"
 [[ $? -eq 0 ]] || abort "no project found in $PROJECT_RESOURCE_YAML"
 
