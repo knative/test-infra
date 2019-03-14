@@ -778,12 +778,12 @@ func generateFlakytoolPeriodicJob() {
 	data.Base.Command = "/flaky-test-reporter"
 	data.Base.Args = []string{
 		"--service-account " + data.Base.ServiceAccount,
-		"--github-account /etc/github-token/token",
-		"--slack-account /etc/slack-token/token"}
+		"--github-account /etc/flaky-test-reporter-github-token/token",
+		"--slack-account /etc/flaky-test-reporter-slack-token/token"}
 	addExtraEnvVarsToJob(&data.Base)
 	configureServiceAccountForJob(&data.Base)
-	addVolumeToJob(&data.Base, "/etc/github-token", "github-token", true)
-	addVolumeToJob(&data.Base, "/etc/slack-token", "slack-token", true)
+	addVolumeToJob(&data.Base, "/etc/flaky-test-reporter-github-token", "flaky-test-reporter-github-token", true)
+	addVolumeToJob(&data.Base, "/etc/flaky-test-reporter-slack-token", "flaky-test-reporter-slack-token", true)
 	executeJobTemplate("periodic flakesreporter", periodicCustomJob, "presubmits", "", data.PeriodicJobName, false, data)
 }
 
