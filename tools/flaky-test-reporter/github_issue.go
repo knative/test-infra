@@ -226,7 +226,12 @@ func (gi *GithubIssue) updateIssue(fi *flakyIssue, newComment string, ts *TestSt
 				if err := run(
 					"closing issue",
 					func() error {
-						return gi.client.CloseIssue(org, getRepoFromIssue(issue), *issue.Number)
+						closeErr := gi.client.CloseIssue(org, getRepoFromIssue(issue), *issue.Number)
+						if nil == closeErr {
+							closeComment := "Closing issue: this test has passed in latest 2 scans"
+							_, closeErr = gi.client.CreateComment(org, getRepoFromIssue(issue), *issue.Number, closeComment)
+						}
+						return closeErr
 					},
 					dryrun); nil != err {
 					return fmt.Errorf("failed closing issue '%s': '%v'", *issue.URL, err)
@@ -238,7 +243,12 @@ func (gi *GithubIssue) updateIssue(fi *flakyIssue, newComment string, ts *TestSt
 			if err := run(
 				"reopening issue",
 				func() error {
-					return gi.client.ReopenIssue(org, getRepoFromIssue(issue), *issue.Number)
+					openErr := gi.client.ReopenIssue(org, getRepoFromIssue(issue), *issue.Number)
+					if nil == openErr {
+						openComment := "Reopening issue: this test is flaky"
+						_, openErr = gi.client.CreateComment(org, getRepoFromIssue(issue), *issue.Number, openComment)
+					}
+					return openErr
 				},
 				dryrun); nil != err {
 				return fmt.Errorf("failed reopen issue: '%s'", *issue.URL)
