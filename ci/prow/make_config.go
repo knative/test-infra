@@ -597,6 +597,7 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	if data.Base.ServiceAccount != "" {
 		addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
 		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-west1")
+		addEnvToJob(&data.Base, "E2E_CLUSTER_ZONE", "a")
 	}
 	addExtraEnvVarsToJob(&data.Base)
 	configureServiceAccountForJob(&data.Base)
