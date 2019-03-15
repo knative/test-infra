@@ -23,12 +23,14 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
 	"strings"
 	"text/template"
 	"time"
+
+	cg "github.com/knative/test-infra/shared/configgenerator"
+	"gopkg.in/yaml.v2"
 )
 
 const (
@@ -358,71 +360,6 @@ tide:
 `
 )
 
-// Yaml parsing helpers.
-
-// getString casts the given interface (expected string) as string.
-// An array of length 1 is also considered a single string.
-func getString(s interface{}) string {
-	if _, ok := s.([]interface{}); ok {
-		values := getStringArray(s)
-		if len(values) == 1 {
-			return values[0]
-		}
-		log.Fatalf("Entry %v is not a string or string array of size 1", s)
-	}
-	if str, ok := s.(string); ok {
-		return str
-	}
-	log.Fatalf("Entry %v is not a string", s)
-	return ""
-}
-
-// getInt casts the given interface (expected int) as int.
-func getInt(s interface{}) int {
-	if value, ok := s.(int); ok {
-		return value
-	}
-	log.Fatalf("Entry %v is not an integer", s)
-	return 0
-}
-
-// getBool casts the given interface (expected bool) as bool.
-func getBool(s interface{}) bool {
-	if value, ok := s.(bool); ok {
-		return value
-	}
-	log.Fatalf("Entry %v is not a boolean", s)
-	return false
-}
-
-// getInterfaceArray casts the given interface (expected interface array) as interface array.
-func getInterfaceArray(s interface{}) []interface{} {
-	if interfaceArray, ok := s.([]interface{}); ok {
-		return interfaceArray
-	}
-	log.Fatalf("Entry %v is not an interface array", s)
-	return nil
-}
-
-// getStringArray casts the given interface (expected string array) as string array.
-func getStringArray(s interface{}) []string {
-	interfaceArray := getInterfaceArray(s)
-	strArray := make([]string, len(interfaceArray))
-	for i := range interfaceArray {
-		strArray[i] = getString(interfaceArray[i])
-	}
-	return strArray
-}
-
-// getMapSlice casts the given interface (expected MapSlice) as MapSlice.
-func getMapSlice(m interface{}) yaml.MapSlice {
-	if mm, ok := m.(yaml.MapSlice); ok {
-		return mm
-	}
-	log.Fatalf("Entry %v is not a yaml.MapSlice", m)
-	return nil
-}
-
 // Config generation functions.
 
 // newbaseProwJobTemplateData returns a baseProwJobTemplateData type with its initial, default values.
@@ -522,19 +459,19 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 	for i, item := range config {
 		switch item.Key {
 		case "skip_branches":
-			(*data).SkipBranches = getStringArray(item.Value)
+			(*data).SkipBranches = cg.GetStringArray(item.Value)
 		case "args":
-			(*data).Args = getStringArray(item.Value)
+			(*data).Args = cg.GetStringArray(item.Value)
 		case "timeout":
-			(*data).Timeout = getInt(item.Value)
+			(*data).Timeout = cg.GetInt(item.Value)
 		case "command":
-			(*data).Command = getString(item.Value)
+			(*data).Command = cg.GetString(item.Value)
 		case "needs-dind":
-			if getBool(item.Value) {
+			if cg.GetBool(item.Value) {
 				setupDockerInDockerForJob(data)
 			}
 		case "always_run":
-			(*data).AlwaysRun = getBool(item.Value)
+			(*data).AlwaysRun = cg.GetBool(item.Value)
 		case nil: // already processed
 			continue
 		default:
@@ -557,17 +494,17 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	for i, item := range presubmitConfig {
 		switch item.Key {
 		case "build-tests", "unit-tests", "integration-tests":
-			if !getBool(item.Value) {
+			if !cg.GetBool(item.Value) {
 				return
 			}
-			jobName := getString(item.Key)
+			jobName := cg.GetString(item.Key)
 			data.PresubmitJobName = data.Base.RepoNameForJob + "-" + jobName
 			// Use default arguments if none given.
 			if len(data.Base.Args) == 0 {
 				data.Base.Args = []string{"--" + jobName}
 			}
 		case "go-coverage":
-			if !getBool(item.Value) {
+			if !cg.GetBool(item.Value) {
 				return
 			}
 			jobTemplate = presubmitGoCoverageJob
@@ -577,9 +514,9 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 			repoData.EnableGoCoverage = true
 			addVolumeToJob(&data.Base, "/etc/covbot-token", "covbot-token", true)
 		case "custom-test":
-			data.PresubmitJobName = data.Base.RepoNameForJob + "-" + getString(item.Value)
+			data.PresubmitJobName = data.Base.RepoNameForJob + "-" + cg.GetString(item.Value)
 		case "go-coverage-threshold":
-			data.Base.GoCoverageThreshold = getInt(item.Value)
+			data.Base.GoCoverageThreshold = cg.GetInt(item.Value)
 			repoData.GoCoverageThreshold = data.Base.GoCoverageThreshold
 		default:
 			continue
@@ -620,10 +557,10 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	for i, item := range periodicConfig {
 		switch item.Key {
 		case "continuous":
-			if !getBool(item.Value) {
+			if !cg.GetBool(item.Value) {
 				return
 			}
-			jobType = getString(item.Key)
+			jobType = cg.GetString(item.Key)
 			jobNameSuffix = "continuous"
 			// Use default command and arguments if none given.
 			if data.Base.Command == "" {
@@ -633,31 +570,31 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 				data.Base.Args = allPresubmitTests
 			}
 		case "nightly":
-			if !getBool(item.Value) {
+			if !cg.GetBool(item.Value) {
 				return
 			}
-			jobType = getString(item.Key)
+			jobType = cg.GetString(item.Key)
 			jobNameSuffix = "nightly-release"
 			data.Base.ServiceAccount = nightlyAccount
 			data.Base.Command = releaseScript
 			data.Base.Args = releaseNightly
 			data.Base.Timeout = 90
 		case "branch-ci":
-			if !getBool(item.Value) {
+			if !cg.GetBool(item.Value) {
 				return
 			}
-			jobType = getString(item.Key)
+			 = cg.GetString(item.Key)
 			jobNameSuffix = "continuous"
 			data.Base.Command = releaseScript
 			data.Base.Args = releaseLocal
 			setupDockerInDockerForJob(&data.Base)
 			data.Base.Timeout = 90
-		case "dot-release", "auto-release":
-			if !getBool(item.Value) {
+		case "dotjobType-release", "auto-release":
+			if !cg.GetBool(item.Value) {
 				return
 			}
-			jobType = getString(item.Key)
-			jobNameSuffix = getString(item.Key)
+			jobType = cg.GetString(item.Key)
+			jobNameSuffix = cg.GetString(item.Key)
 			data.Base.ServiceAccount = releaseAccount
 			data.Base.Command = releaseScript
 			data.Base.Args = []string{
@@ -668,17 +605,17 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			addVolumeToJob(&data.Base, "/etc/hub-token", "hub-token", true)
 			data.Base.Timeout = 90
 		case "performance":
-			if !getBool(item.Value) {
+			if !cg.GetBool(item.Value) {
 				return
 			}
-			jobType = getString(item.Key)
+			jobType = cg.GetString(item.Key)
 			jobNameSuffix = "performance"
 			data.Base.Command = performanceScript
 		case "latency":
-			if !getBool(item.Value) {
+			if !cg.GetBool(item.Value) {
 				return
 			}
-			jobType = getString(item.Key)
+			jobType = cg.GetString(item.Key)
 			jobTemplate = periodicCustomJob
 			jobNameSuffix = "latency"
 			data.Base.Image = "gcr.io/knative-tests/test-infra/metrics:latest"
@@ -688,10 +625,10 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 				"--artifacts-dir=$(ARTIFACTS)",
 				"--service-account=" + data.Base.ServiceAccount}
 		case "api-coverage":
-			if !getBool(item.Value) {
+			if !cg.GetBool(item.Value) {
 				return
 			}
-			jobType = getString(item.Key)
+			jobType = cg.GetString(item.Key)
 			jobTemplate = periodicCustomJob
 			jobNameSuffix = "api-coverage"
 			data.Base.Image = "gcr.io/knative-tests/test-infra/apicoverage:latest"
@@ -700,16 +637,16 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 				"--artifacts-dir=$(ARTIFACTS)",
 				"--service-account=" + data.Base.ServiceAccount}
 		case "custom-job":
-			jobType = getString(item.Key)
-			jobNameSuffix = getString(item.Value)
+			jobType = cg.GetString(item.Key)
+			jobNameSuffix = cg.GetString(item.Value)
 		case "cron":
-			data.CronString = getString(item.Value)
+			data.CronString = cg.GetString(item.Value)
 		case "release":
-			version := getString(item.Value)
+			version := cg.GetString(item.Value)
 			jobNameSuffix = version + "-" + jobNameSuffix
 			data.Base.RepoBranch = "release-" + version
 		case "webhook-apicoverage":
-			if !getBool(item.Value) {
+			if !cg.GetBool(item.Value) {
 				return
 			}
 			jobNameSuffix = "webhook-apicoverage"
@@ -838,10 +775,10 @@ func parseSection(config yaml.MapSlice, title string, generate sectionGenerator,
 		if section.Key != title {
 			continue
 		}
-		for _, repo := range getMapSlice(section.Value) {
-			repoName := getString(repo.Key)
-			for _, jobConfig := range getInterfaceArray(repo.Value) {
-				generate(title, repoName, getMapSlice(jobConfig))
+		for _, repo := range cg.GetMapSlice(section.Value) {
+			repoName := cg.GetString(repo.Key)
+			for _, jobConfig := range cg.GetInterfaceArray(repo.Value) {
+				generate(title, repoName, cg.GetMapSlice(jobConfig))
 			}
 			if finalize != nil {
 				finalize(title, repoName, nil)
@@ -864,79 +801,18 @@ func gitHubRepo(data baseProwJobTemplateData) string {
 	return s
 }
 
-// quote returns the given string quoted if it's not a key/value pair or already quoted.
-func quote(s string) string {
-	if strings.Contains(s, "\"") || strings.Contains(s, ": ") || strings.HasSuffix(s, ":") {
-		return s
-	}
-	return "\"" + s + "\""
-}
-
-// indentBase is a helper function which returns the given array indented.
-func indentBase(indentation int, prefix string, indentFirstLine bool, array []string) string {
-	s := ""
-	if len(array) == 0 {
-		return s
-	}
-	indent := strings.Repeat(" ", indentation)
-	for i := 0; i < len(array); i++ {
-		if i > 0 || indentFirstLine {
-			s += indent
-		}
-		s += prefix + quote(array[i]) + "\n"
-	}
-	return s
-}
-
-// indentArray returns the given array indented, prefixed by "-".
-func indentArray(indentation int, array []string) string {
-	return indentBase(indentation, "- ", false, array)
-}
-
-// indentKeys returns the given array of key/value pairs indented.
-func indentKeys(indentation int, array []string) string {
-	return indentBase(indentation, "", false, array)
-}
-
-// indentSectionBase is a helper function which returns the given array of key/value pairs indented inside a section.
-func indentSectionBase(indentation int, title string, prefix string, array []string) string {
-	keys := indentBase(indentation, prefix, true, array)
-	if keys == "" {
-		return keys
-	}
-	return title + ":\n" + keys
-}
-
-// indentArraySection returns the given array indented inside a section.
-func indentArraySection(indentation int, title string, array []string) string {
-	return indentSectionBase(indentation, title, "- ", array)
-}
-
-// indentSection returns the given array of key/value pairs indented inside a section.
-func indentSection(indentation int, title string, array []string) string {
-	return indentSectionBase(indentation, title, "", array)
-}
-
-// outputConfig outputs the given line, if not empty, to stdout.
-func outputConfig(line string) {
-	s := strings.TrimSpace(line)
-	if s != "" {
-		fmt.Println(line)
-	}
-}
-
 // executeTemplate outputs the given job template with the given data, respecting any filtering.
 func executeJobTemplate(name, templ, title, repoName, jobName string, groupByRepo bool, data interface{}) {
 	if jobNameFilter != "" && jobNameFilter != jobName {
 		return
 	}
 	if !sectionMap[title] {
-		outputConfig(title + ":")
+		cg.OutputConfig(title + ":")
 		sectionMap[title] = true
 	}
 	if groupByRepo {
 		if !sectionMap[title+repoName] {
-			outputConfig(baseIndent + repoName + ":")
+			cg.OutputConfig(baseIndent + repoName + ":")
 			sectionMap[title+repoName] = true
 		}
 	}
@@ -947,10 +823,10 @@ func executeJobTemplate(name, templ, title, repoName, jobName string, groupByRep
 func executeTemplate(name, templ string, data interface{}) {
 	var res bytes.Buffer
 	funcMap := template.FuncMap{
-		"indent_section":       indentSection,
-		"indent_array_section": indentArraySection,
-		"indent_array":         indentArray,
-		"indent_keys":          indentKeys,
+		"indent_section":       cg.IndentSection,
+		"indent_array_section": cg.IndentArraySection,
+		"indent_array":         cg.IndentArray,
+		"indent_keys":          cg.IndentKeys,
 		"repo":                 gitHubRepo,
 	}
 	t := template.Must(template.New(name).Funcs(funcMap).Delims("[[", "]]").Parse(templ))
@@ -958,7 +834,7 @@ func executeTemplate(name, templ string, data interface{}) {
 		log.Fatalf("Error in template %s: %v", name, err)
 	}
 	for _, line := range strings.Split(res.String(), "\n") {
-		outputConfig(line)
+		cg.OutputConfig(line)
 	}
 }
 
