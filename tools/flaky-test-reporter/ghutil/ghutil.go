@@ -60,7 +60,7 @@ type GithubClientInterface interface {
 	ReopenIssue(org, repo string, issueNumber int) error
 	ListComments(org, repo string, issueNumber int) ([]*github.IssueComment, error)
 	GetComment(org, repo string, commentID int64) (*github.IssueComment, error)
-	CreateComment(org, repo string, issueNumber int, commentBody string) error
+	CreateComment(org, repo string, issueNumber int, commentBody string) (*github.IssueComment, error)
 	EditComment(org, repo string, commentID int64, commentBody string) error
 	AddLabelsToIssue(org, repo string, issueNumber int, labels []string) error
 	RemoveLabelForIssue(org, repo string, issueNumber int, label string) error
@@ -231,7 +231,8 @@ func (gc *GithubClient) GetComment(org, repo string, commentID int64) (*github.I
 }
 
 // CreateComment adds comment to issue
-func (gc *GithubClient) CreateComment(org, repo string, issueNumber int, commentBody string) error {
+func (gc *GithubClient) CreateComment(org, repo string, issueNumber int, commentBody string) (*github.IssueComment, error) {
+	var res *github.IssueComment
 	comment := &github.IssueComment{
 		Body: &commentBody,
 	}
@@ -239,11 +240,13 @@ func (gc *GithubClient) CreateComment(org, repo string, issueNumber int, comment
 		fmt.Sprintf("commenting issue '%s %s %d'", org, repo, issueNumber),
 		maxRetryCount,
 		func() (*github.Response, error) {
-			_, resp, err := gc.Client.Issues.CreateComment(ctx, org, repo, issueNumber, comment)
+			var resp *github.Response
+			var err error
+			res, resp, err = gc.Client.Issues.CreateComment(ctx, org, repo, issueNumber, comment)
 			return resp, err
 		},
 	)
-	return err
+	return res, err
 }
 
 // EditComment edits comment by replacing with provided comment

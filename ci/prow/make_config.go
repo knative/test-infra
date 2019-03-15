@@ -179,10 +179,11 @@ plank:
     timeout: 7200000000000 # 2h
     grace_period: 15000000000 # 15s
     utility_images:
-      clonerefs: "gcr.io/k8s-prow/clonerefs@sha256:b62ba1f379ac19c5ec9ee7bcab14d3f0b3c31cea9cdd4bc491e98e2c5f346c07"
-      initupload: "gcr.io/k8s-prow/initupload@sha256:58f89f2aae68f7dc46aaf05c7e8204c4f26b53ec9ce30353d1c27ce44a60d121"
-      entrypoint: "gcr.io/k8s-prow/entrypoint:v20180512-0255926d1"
-      sidecar: "gcr.io/k8s-prow/sidecar@sha256:8807b2565f4d2699920542fcf890878824b1ede4198d7ff46bca53feb064ed44"
+      # Update these versions when updating plank version in cluster.yaml
+      clonerefs: "gcr.io/k8s-prow/clonerefs:v20190311-a967141"
+      initupload: "gcr.io/k8s-prow/initupload:v20190311-a967141"
+      entrypoint: "gcr.io/k8s-prow/entrypoint:v20190311-a967141"
+      sidecar: "gcr.io/k8s-prow/sidecar:v20190311-a967141"
     gcs_configuration:
       bucket: "[[.GcsBucket]]"
       path_strategy: "explicit"
@@ -532,6 +533,7 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	if data.Base.ServiceAccount != "" {
 		addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
 		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-west1")
+		addEnvToJob(&data.Base, "E2E_CLUSTER_ZONE", "a")
 	}
 	addExtraEnvVarsToJob(&data.Base)
 	configureServiceAccountForJob(&data.Base)
@@ -583,13 +585,13 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			if !cg.GetBool(item.Value) {
 				return
 			}
-			 = cg.GetString(item.Key)
+			jobType = cg.GetString(item.Key)
 			jobNameSuffix = "continuous"
 			data.Base.Command = releaseScript
 			data.Base.Args = releaseLocal
 			setupDockerInDockerForJob(&data.Base)
 			data.Base.Timeout = 90
-		case "dotjobType-release", "auto-release":
+		case "dot-release", "auto-release":
 			if !cg.GetBool(item.Value) {
 				return
 			}
@@ -678,6 +680,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	if data.Base.ServiceAccount != "" {
 		addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
 		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-west1")
+		addEnvToJob(&data.Base, "E2E_CLUSTER_ZONE", "a")
 	}
 	addExtraEnvVarsToJob(&data.Base)
 	configureServiceAccountForJob(&data.Base)

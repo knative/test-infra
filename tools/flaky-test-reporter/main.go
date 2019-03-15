@@ -30,7 +30,7 @@ import (
 
 func main() {
 	serviceAccount := flag.String("service-account", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"), "JSON key file for GCS service account")
-	githubToken := flag.String("github-token", "", "Token file for Github authentication")
+	githubAccount := flag.String("github-account", "", "Token file for Github authentication")
 	slackAccount := flag.String("slack-account", "", "slack secret file for authenticating with Slack")
 	dryrun := flag.Bool("dry-run", false, "dry run switch")
 	flag.Parse()
@@ -42,7 +42,7 @@ func main() {
 	if err := prow.Initialize(*serviceAccount); nil != err { // Explicit authenticate with gcs Client
 		log.Fatalf("Failed authenticating GCS: '%v'", err)
 	}
-	ghi, err := Setup(*githubToken)
+	ghi, err := Setup(*githubAccount)
 	if err != nil {
 		log.Fatalf("Cannot setup github: %v", err)
 	}

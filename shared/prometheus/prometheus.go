@@ -58,13 +58,13 @@ func (p *PromProxy) Setup(kubeClientset *kubernetes.Clientset, logf logging.Form
 			return
 		}
 
-		promPods, err := monitoring.GetPods(kubeClientset, appLabel)
+		promPods, err := monitoring.GetPods(kubeClientset, appLabel, p.Namespace)
 		if err != nil {
 			logf("Error retrieving prometheus pod details: %v", err)
 			return
 		}
 
-		p.processID, err = monitoring.PortForward(logf, promPods, prometheusPort, prometheusPort)
+		p.processID, err = monitoring.PortForward(logf, promPods, prometheusPort, prometheusPort, p.Namespace)
 		if err != nil {
 			logf("Error starting kubectl port-forward command: %v", err)
 			return
