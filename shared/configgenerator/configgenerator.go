@@ -147,8 +147,8 @@ func OutputConfig(line string) {
 	}
 }
 
-// Check if an array contains the given string
-func ContainsStr(arr []string, str string) bool {
+// Check if the given string exists in the array
+func StrExists(arr []string, str string) bool {
 	for _, s := range arr {
 		if str == s {
 			return true

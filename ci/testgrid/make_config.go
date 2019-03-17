@@ -23,10 +23,10 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"html/template"
 	"io/ioutil"
 	"log"
 	"strings"
+	"text/template"
 	"time"
 
 	cg "github.com/knative/test-infra/shared/configgenerator"
@@ -38,9 +38,17 @@ var (
 	gcsBucket string
 	logsDir   string
 
+	// keep track of which repo has go code coverage when parsing the simple config file
 	goCoverageMap map[string]bool
-	// save the repo names when parsing the config file, for the purpose of maintaining the output sequence
+	// save the proj names in a list when parsing the simple config file, for the purpose of maintaining the output sequence
+	projNames []string
+	// save the repo names in a list when parsing the simple config file, for the purpose of maintaining the output sequence
 	repoNames []string
+
+	// metaData saves the meta data needed to generate the final config file
+	// key is the main project version, value is another map containing job details
+	//     for the job detail map, key is the repo name, value is the list of job types, like continuous, latency, nightly, and etc.
+	metaData = make(map[string]map[string][]string)
 )
 
 // baseTestgridTemplateData contains basic data about the testgrid config file.
@@ -63,6 +71,15 @@ type dashboardTabTemplateData struct {
 	BaseOptions string
 	Extras      map[string]string
 }
+
+// dashboardGroupTemplateData contains data about a dashboard group
+type dashboardGroupTemplateData struct {
+	Name      string
+	RepoNames []string
+}
+
+// entityGenerator is a function that generates the entity given the repo name and job names
+type entityGenerator func(string, []string)
 
 const (
 
@@ -132,10 +149,16 @@ default_dashboard_tab:
 
 	// dashboardTabTemplate is the template for the dashboard tab config
 	dashboardTabTemplate = `
-	- name: [[.Name]]
-      test_group_name: [[.Base.TestGroupName]]
-      base_options: '[[.BaseOptions]]'
-	  [[indent_map 2 .Extras]]
+  - name: [[.Name]]
+    test_group_name: [[.Base.TestGroupName]]
+    base_options: '[[.BaseOptions]]'
+    [[indent_map 2 .Extras]]
+	`
+
+	dashboardGroupTemplate = `
+- name: [[.Name]]
+  dashboard_names:
+  [[indent_array 2 .RepoNames]]
 	`
 )
 
@@ -198,16 +221,16 @@ func parseGoCoverageMap(presubmitJob yaml.MapSlice) map[string]bool {
 }
 
 // collect the meta data from the original yaml data, which we can then use for building the test groups and dashboards config
-func collectMetaData(periodicJob yaml.MapSlice, metaData *map[string]map[string][]string) {
+func collectMetaData(periodicJob yaml.MapSlice) {
 	for _, repo := range periodicJob {
 		rawName := cg.GetString(repo.Key)
 		projName := strings.Split(rawName, "/")[0]
 		repoName := strings.Split(rawName, "/")[1]
-		jobDetailMap := addProjAndRepoIfNeed(metaData, projName, repoName)
+		jobDetailMap := addProjAndRepoIfNeed(projName, repoName)
 
 		// parse job configs
 		for _, conf := range cg.GetInterfaceArray(repo.Value) {
-			jobDetailMap = (*metaData)[projName]
+			jobDetailMap = metaData[projName]
 			jobConfig := cg.GetMapSlice(conf)
 			enabled := false
 			jobName := ""
@@ -235,7 +258,7 @@ func collectMetaData(periodicJob yaml.MapSlice, metaData *map[string]map[string]
 			if enabled {
 				if releaseVersion != "" {
 					releaseProjName := fmt.Sprintf("%s-%s", projName, releaseVersion)
-					jobDetailMap = addProjAndRepoIfNeed(metaData, releaseProjName, repoName)
+					jobDetailMap = addProjAndRepoIfNeed(releaseProjName, repoName)
 				}
 				newJobTypes := append(jobDetailMap[repoName], jobName)
 				jobDetailMap[repoName] = newJobTypes
@@ -246,16 +269,19 @@ func collectMetaData(periodicJob yaml.MapSlice, metaData *map[string]map[string]
 }
 
 // add the project and repo if they are new in the metaData map, then return the jobDetailMap
-func addProjAndRepoIfNeed(metaData *map[string]map[string][]string, projName string, repoName string) map[string][]string {
+func addProjAndRepoIfNeed(projName string, repoName string) map[string][]string {
 	// add project in the metaData
-	if _, exists := (*metaData)[projName]; !exists {
-		(*metaData)[projName] = make(map[string][]string)
+	if _, exists := metaData[projName]; !exists {
+		metaData[projName] = make(map[string][]string)
+		if !cg.StrExists(projNames, projName) {
+			projNames = append(projNames, projName)
+		}
 	}
 
 	// add repo in the project
-	jobDetailMap := (*metaData)[projName]
+	jobDetailMap := metaData[projName]
 	if _, exists := jobDetailMap[repoName]; !exists {
-		if !cg.ContainsStr(repoNames, repoName) {
+		if !cg.StrExists(repoNames, repoName) {
 			repoNames = append(repoNames, repoName)
 		}
 		jobDetailMap[repoName] = make([]string, 0)
@@ -271,80 +297,53 @@ func addTestCoverageJobIfNeeded(jobDetailMap *map[string][]string, repoName stri
 	}
 }
 
-func generateTestGroups(data yaml.MapSlice, goCoverageMap map[string]bool) {
-	cg.OutputConfig("test_groups:")
-	for _, repo := range data {
-		repoName := cg.GetString(repo.Key)
-		repoNameForConfig := strings.Replace(repoName, "/", "-", -1)
-		for _, item := range cg.GetInterfaceArray(repo.Value) {
-			jobConfig := cg.GetMapSlice(item)
-			generateTestGroup(repoNameForConfig, jobConfig)
+func generateSection(sectionName string, generator entityGenerator) {
+	cg.OutputConfig(sectionName + ":")
+	for _, projName := range projNames {
+		repos := metaData[projName]
+		for _, repoName := range repoNames {
+			if _, exists := repos[repoName]; exists {
+				jobNames := repos[repoName]
+				repoName = buildProjRepoStr(projName, repoName)
+				generator(repoName, jobNames)
+				fmt.Println()
+			}
 		}
-
-		if goCoverageMap[repoName] {
-			generateCoverageTestGroup(repoNameForConfig)
-		}
-
-		fmt.Println()
 	}
 }
 
-func generateTestGroup(repoNameForConfig string, jobConfig yaml.MapSlice) {
-	enabled := false
-	testGroupName := ""
-	gcsLogDir := ""
-	extras := make(map[string]string)
-	for _, item := range jobConfig {
-		switch item.Key {
-		case "continuous", "dot-release", "auto-release", "performance", "latency", "api-coverage", "nightly":
-			enabled = cg.GetBool(item.Value)
-			testGroupName = fmt.Sprintf("ci-%s-%s", repoNameForConfig, item.Key)
-			gcsLogDir = fmt.Sprintf("%s/%s/ci-%s-%s", gcsBucket, logsDir, repoNameForConfig, item.Key)
-
-			if item.Key == "nightly" {
-				testGroupName += "-release"
-				gcsLogDir += "-release"
+func generateTestGroup(repoName string, jobNames []string) {
+	for _, jobName := range jobNames {
+		testGroupName := getTestGroupName(repoName, jobName)
+		gcsLogDir := ""
+		extras := make(map[string]string)
+		switch jobName {
+		case "continuous", "dot-release", "auto-release", "performance", "latency", "api-coverage", "playground":
+			gcsLogDir = fmt.Sprintf("%s/%s/ci-%s-%s", gcsBucket, logsDir, repoName, jobName)
+			if jobName == "playground" {
+				extras["alert_stale_results_hours"] = "168"
 			}
 
 			// TODO: confirm if they are needed or not
-			if item.Key == "latency" {
+			if jobName == "latency" {
 				extras["short_text_metric"] = "latency"
 			}
-			if item.Key == "api-coverage" {
+			if jobName == "api-coverage" {
 				extras["short_text_metric"] = "api_coverage"
 			}
-			if item.Key == "performance" {
+			if jobName == "performance" {
 				extras["short_text_metric"] = "perf_latency"
 			}
-		case "branch-ci":
-			enabled = cg.GetBool(item.Value)
-		case "release":
-			releaseVersion := cg.GetString(item.Value)
-			testGroupName = fmt.Sprintf("ci-%s-%s-%s", repoNameForConfig, releaseVersion, "continuous")
-			gcsLogDir = fmt.Sprintf("%s/%s/ci-%s-%s-%s", gcsBucket, logsDir, repoNameForConfig, releaseVersion, "continuous")
-		case "custom-job":
-			enabled = true
-			customJobName := cg.GetString(item.Value)
-			testGroupName = fmt.Sprintf("ci-%s-%s", repoNameForConfig, customJobName)
-			gcsLogDir = fmt.Sprintf("%s/%s/ci-%s-%s", gcsBucket, logsDir, repoNameForConfig, customJobName)
-			extras["alert_stale_results_hours"] = "168"
+		case "nightly":
+			gcsLogDir = fmt.Sprintf("%s/%s/ci-%s-%s-release", gcsBucket, logsDir, repoName, jobName)
+		case "test-coverage":
+			gcsLogDir = fmt.Sprintf("%s/%s/ci-%s-%s", gcsBucket, logsDir, repoName, "go-coverage")
+			extras["short_text_metric"] = "coverage"
 		default:
 			continue
 		}
+		executeTestGroupTemplate(testGroupName, gcsLogDir, extras)
 	}
-
-	if !enabled {
-		return
-	}
-	executeTestGroupTemplate(testGroupName, gcsLogDir, extras)
-}
-
-func generateCoverageTestGroup(repoNameForConfig string) {
-	testGroupName := fmt.Sprintf("pull-%s-%s", repoNameForConfig, "test-coverage")
-	gcsLogDir := fmt.Sprintf("%s/%s/ci-%s-%s", gcsBucket, logsDir, repoNameForConfig, "go-coverage")
-	extras := make(map[string]string)
-	extras["short_text_metric"] = "coverage"
-	executeTestGroupTemplate(testGroupName, gcsLogDir, extras)
 }
 
 func executeTestGroupTemplate(testGroupName string, gcsLogDir string, extras map[string]string) {
@@ -355,13 +354,112 @@ func executeTestGroupTemplate(testGroupName string, gcsLogDir string, extras map
 	executeTemplate("test group", testGroupTemplate, data)
 }
 
-func generateDashboards(data yaml.MapSlice, goCoverageMap map[string]bool) {
-	cg.OutputConfig("dashboards:")
+func generateDashboard(repoName string, jobNames []string) {
+	fmt.Println("- name:", repoName)
+	fmt.Println("  dashboard_tab:")
+	for _, jobName := range jobNames {
+		testGroupName := getTestGroupName(repoName, jobName)
+		baseOptions := "sort-by-name="
+		extras := make(map[string]string)
+		switch jobName {
+		case "continuous":
+			dashboardTabName := jobName
+			executeDashboardTabTemplate(dashboardTabName, testGroupName, baseOptions, extras)
 
+			if repoName == "knative-serving" {
+				dashboardTabName := "conformance-tests"
+				baseOptions = "include-filter-by-regex=test/conformance\\.&sort-by-name="
+				executeDashboardTabTemplate(dashboardTabName, testGroupName, baseOptions, extras)
+			}
+		case "dot-release", "auto-release", "performance", "latency", "api-coverage", "playground":
+			dashboardTabName := jobName
+
+			if jobName == "latency" || jobName == "api-coverage" {
+				baseOptions = "exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name="
+			}
+			if jobName == "performance" {
+				baseOptions = "exclude-filter-by-regex=Overall&group-by-target=&expand-groups=&sort-by-name="
+			}
+			if jobName == "latency" {
+				extras["description"] = "95% latency in ms"
+			}
+			if jobName == "api-coverage" {
+				extras["description"] = "Conformance tests API coverage."
+			}
+
+			executeDashboardTabTemplate(dashboardTabName, testGroupName, baseOptions, extras)
+		case "nightly":
+			dashboardTabName := "release"
+			executeDashboardTabTemplate(dashboardTabName, testGroupName, baseOptions, extras)
+		case "test-coverage":
+			dashboardTabName := "coverage"
+			baseOptions = "exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name="
+			executeDashboardTabTemplate(dashboardTabName, testGroupName, baseOptions, extras)
+		default:
+			continue
+		}
+	}
+}
+
+func executeDashboardTabTemplate(dashboardTabName string, testGroupName string, baseOptions string, extras map[string]string) {
+	var data dashboardTabTemplateData
+	data.Name = dashboardTabName
+	data.Base.TestGroupName = testGroupName
+	data.BaseOptions = baseOptions
+	data.Extras = extras
+	executeTemplate("dashboard tab", dashboardTabTemplate, data)
+}
+
+func getTestGroupName(repoName string, jobName string) string {
+	testGroupName := ""
+	switch jobName {
+	case "continuous", "dot-release", "auto-release", "performance", "latency", "api-coverage", "playground":
+		testGroupName = fmt.Sprintf("ci-%s-%s", repoName, jobName)
+	case "nightly":
+		testGroupName = fmt.Sprintf("ci-%s-%s-release", repoName, jobName)
+	case "test-coverage":
+		testGroupName = fmt.Sprintf("pull-%s-%s", repoName, jobName)
+	default:
+		// do nothing
+	}
+	return testGroupName
+}
+
+func buildProjRepoStr(projName string, repoName string) string {
+	projVersion := ""
+	if strings.Contains(projName, "-") {
+		projNameAndVersion := strings.Split(projName, "-")
+		projName = projNameAndVersion[0]
+		projVersion = projNameAndVersion[1]
+	}
+	projRepoStr := repoName
+	if projVersion != "" {
+		projRepoStr += ("-" + projVersion)
+	}
+	projRepoStr = projName + "-" + projRepoStr
+
+	return projRepoStr
 }
 
 func generateDashboardGroups() {
+	cg.OutputConfig("dashboard_groups:")
+	for _, projName := range projNames {
+		repos := metaData[projName]
+		dashboardRepoNames := make([]string, 0)
+		for _, repoName := range repoNames {
+			if _, exists := repos[repoName]; exists {
+				dashboardRepoNames = append(dashboardRepoNames, buildProjRepoStr(projName, repoName))
+			}
+		}
+		executeDashboardGroupTemplate(projName, dashboardRepoNames)
+	}
+}
 
+func executeDashboardGroupTemplate(dashboardGroupName string, dashboardRepoNames []string) {
+	var data dashboardGroupTemplateData
+	data.Name = dashboardGroupName
+	data.RepoNames = dashboardRepoNames
+	executeTemplate("dashboard group", dashboardGroupTemplate, data)
 }
 
 // main is the script entry point.
@@ -377,8 +475,6 @@ func main() {
 	}
 	// We use MapSlice instead of maps to keep key order and create predictable output.
 	config := yaml.MapSlice{}
-	// repositories = make([]repositoryData, 0)
-	// sectionMap = make(map[string]bool)
 
 	// Read input config.
 	name := flag.Arg(0)
@@ -397,15 +493,11 @@ func main() {
 
 	presubmitJobData := parseJob(config, "presubmits")
 	goCoverageMap = parseGoCoverageMap(presubmitJobData)
-	// key is the main project version, value is another map containing job details
-	//     for the job detail map, key is the repo name, value is the list of job types, like continuous, latency, nightly, and etc.
-	metaDataMap := make(map[string]map[string][]string)
-	periodicJobData := parseJob(config, "periodics")
-	collectMetaData(periodicJobData, &metaDataMap)
-	fmt.Println(metaDataMap)
-	fmt.Println(repoNames)
 
-	// generateTestGroups(periodicJobData, goCoverageMap)
-	// generateDashboards(periodicJobData, goCoverageMap)
-	// generateDashboardGroups()
+	periodicJobData := parseJob(config, "periodics")
+	collectMetaData(periodicJobData)
+
+	generateSection("test_groups", generateTestGroup)
+	generateSection("dashboards", generateDashboard)
+	generateDashboardGroups()
 }
