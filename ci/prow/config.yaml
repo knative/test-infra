@@ -52,7 +52,6 @@ tide:
   queries:
   - repos:
     - knative/build
-    - knative/build-pipeline
     - knative/build-templates
     - knative/observability
     - knative/serving
@@ -71,7 +70,6 @@ tide:
     - do-not-merge/work-in-progress
   merge_method:
     knative: squash
-    knative/build-pipeline: rebase
   target_url: https://prow.knative.dev/tide
 presubmits:
   knative/serving:
@@ -472,149 +470,6 @@ presubmits:
         - "--profile-name=coverage_profile.txt"
         - "--cov-target=."
         - "--cov-threshold-percentage=80"
-        - "--github-token=/etc/covbot-token/token"
-        volumeMounts:
-        - name: covbot-token
-          mountPath: /etc/covbot-token
-          readOnly: true
-      volumes:
-      - name: covbot-token
-        secret:
-          secretName: covbot-token
-  knative/build-pipeline:
-  - name: pull-knative-build-pipeline-build-tests
-    agent: kubernetes
-    context: pull-knative-build-pipeline-build-tests
-    always_run: true
-    rerun_command: "/test pull-knative-build-pipeline-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-build-pipeline-build-tests),?(\\s+|$)"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
-        - "./test/presubmit-tests.sh"
-        - "--build-tests"
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-west1
-        - name: E2E_CLUSTER_ZONE
-          value: a
-      volumes:
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-build-pipeline-unit-tests
-    agent: kubernetes
-    context: pull-knative-build-pipeline-unit-tests
-    always_run: true
-    rerun_command: "/test pull-knative-build-pipeline-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-build-pipeline-unit-tests),?(\\s+|$)"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
-        - "./test/presubmit-tests.sh"
-        - "--unit-tests"
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-west1
-        - name: E2E_CLUSTER_ZONE
-          value: a
-      volumes:
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-build-pipeline-integration-tests
-    agent: kubernetes
-    context: pull-knative-build-pipeline-integration-tests
-    always_run: true
-    rerun_command: "/test pull-knative-build-pipeline-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-build-pipeline-integration-tests),?(\\s+|$)"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
-        - "./test/presubmit-tests.sh"
-        - "--integration-tests"
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-west1
-        - name: E2E_CLUSTER_ZONE
-          value: a
-      volumes:
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-build-pipeline-go-coverage
-    agent: kubernetes
-    context: pull-knative-build-pipeline-go-coverage
-    always_run: true
-    rerun_command: "/test pull-knative-build-pipeline-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-build-pipeline-go-coverage),?(\\s+|$)"
-    optional: true
-    decorate: true
-    clone_uri: "https://github.com/knative/build-pipeline.git"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--postsubmit-gcs-bucket=knative-prow"
-        - "--postsubmit-job-name=post-knative-build-pipeline-go-coverage"
-        - "--artifacts=$(ARTIFACTS)"
-        - "--profile-name=coverage_profile.txt"
-        - "--cov-target=."
-        - "--cov-threshold-percentage=50"
         - "--github-token=/etc/covbot-token/token"
         volumeMounts:
         - name: covbot-token
@@ -2278,70 +2133,6 @@ periodics:
       - "--profile-name=coverage_profile.txt"
       - "--cov-target=."
       - "--cov-threshold-percentage=80"
-- cron: "31 8 * * *"
-  name: ci-knative-build-pipeline-nightly-release
-  agent: kubernetes
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/build-pipeline"
-      - "--root=/go/src"
-      - "--service-account=/etc/nightly-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=90" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
-      - "./hack/release.sh"
-      - "--publish"
-      - "--tag-release"
-      securityContext:
-        privileged: true
-      volumeMounts:
-      - name: docker-graph
-        mountPath: /docker-graph
-      - name: nightly-account
-        mountPath: /etc/nightly-account
-        readOnly: true
-      env:
-      - name: DOCKER_IN_DOCKER_ENABLED
-        value: "true"
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/nightly-account/service-account.json
-      - name: E2E_CLUSTER_REGION
-        value: us-west1
-      - name: E2E_CLUSTER_ZONE
-        value: a
-    volumes:
-    - name: docker-graph
-      emptyDir: {}
-    - name: nightly-account
-      secret:
-        secretName: nightly-account
-- cron: "0 1 * * *"
-  name: ci-knative-build-pipeline-go-coverage
-  agent: kubernetes
-  decorate: true
-  extra_refs:
-  - org: knative
-    repo: build-pipeline
-    base_ref: master
-    clone_uri: "https://github.com/knative/build-pipeline.git"
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/coverage:latest
-      imagePullPolicy: Always
-      command:
-      - "/coverage"
-      args:
-      - "--artifacts=$(ARTIFACTS)"
-      - "--profile-name=coverage_profile.txt"
-      - "--cov-target=."
-      - "--cov-threshold-percentage=50"
 - cron: "50 * * * *"
   name: ci-knative-docs-continuous
   agent: kubernetes
@@ -2937,6 +2728,45 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+- cron: "0 12 * * *"
+  name: ci-knative-flakes-reporter
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: master
+    clone_uri: "https://github.com/knative/test-infra.git"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/flaky-test-reporter:latest
+      imagePullPolicy: Always
+      command:
+      - "/flaky-test-reporter"
+      args:
+      - "--service-account /etc/test-account/service-account.json"
+      - "--github-account /etc/flaky-test-reporter-github-token/token"
+      - "--slack-account /etc/flaky-test-reporter-slack-token/token"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      - name: flaky-test-reporter-github-token
+        mountPath: /etc/flaky-test-reporter-github-token
+        readOnly: true
+      - name: flaky-test-reporter-slack-token
+        mountPath: /etc/flaky-test-reporter-slack-token
+        readOnly: true
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+    - name: flaky-test-reporter-github-token
+      secret:
+        secretName: flaky-test-reporter-github-token
+    - name: flaky-test-reporter-slack-token
+      secret:
+        secretName: flaky-test-reporter-slack-token
 - cron: "15 9 * * *"
   name: ci-knative-backup-artifacts
   agent: kubernetes
@@ -3000,24 +2830,6 @@ postsubmits:
     agent: kubernetes
     decorate: true
     clone_uri: "https://github.com/knative/build.git"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--artifacts=$(ARTIFACTS)"
-        - "--profile-name=coverage_profile.txt"
-        - "--cov-target=."
-        - "--cov-threshold-percentage=0"
-  knative/build-pipeline:
-  - name: post-knative-build-pipeline-go-coverage
-    branches:
-    - master
-    agent: kubernetes
-    decorate: true
-    clone_uri: "https://github.com/knative/build-pipeline.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest

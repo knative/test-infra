@@ -40,8 +40,6 @@ jobs:
   - pull-knative-build-templates-unit-tests
   - pull-knative-build-templates-build-tests
   - pull-knative-build-templates-integration-tests
-  - pull-knative-build-pipeline-build-tests
-  - pull-knative-build-pipeline-unit-tests
   - pull-knative-build-build-tests
   - pull-knative-build-unit-tests
   - pull-knative-build-integration-tests
@@ -66,7 +64,6 @@ jobs:
   - ci-knative-eventing-sources-continuous
   - ci-knative-eventing-sources-nightly-release
   - ci-knative-build-templates-continuous
-  - ci-knative-build-pipeline-nightly-release
   - ci-knative-docs-continuous
   - ci-knative-pkg-continuous
   - ci-knative-caching-continuous

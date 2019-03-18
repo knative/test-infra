@@ -272,6 +272,7 @@ func (gi *GithubIssue) createNewIssue(org, repoForIssue, title, body string, com
 	); nil != err {
 		return fmt.Errorf("failed creating issue '%s' in repo '%s'", title, repoForIssue)
 	}
+	var addIdentityErrs []error // clean up issue if any error occurred during adding identity, see below
 	if err := run(
 		"adding comment",
 		func() error {
@@ -280,18 +281,42 @@ func (gi *GithubIssue) createNewIssue(org, repoForIssue, title, body string, com
 		},
 		dryrun,
 	); nil != err {
-		return fmt.Errorf("failed adding comment to issue '%s', '%v'", *newIssue.URL, err)
+		addIdentityErrs = append(addIdentityErrs, fmt.Errorf("failed adding comment to issue '%s', '%v'", *newIssue.URL, err))
 	}
-	if err := run(
-		"adding flaky label",
-		func() error {
-			return gi.client.AddLabelsToIssue(org, repoForIssue, *newIssue.Number, []string{flakyLabel})
-		},
-		dryrun,
-	); nil != err {
-		return fmt.Errorf("failed adding '%s' label to issue '%s', '%v'", flakyLabel, *newIssue.URL, err)
+	if nil == combineErrors(addIdentityErrs) {
+		if err := run(
+			"adding flaky label",
+			func() error {
+				return gi.client.AddLabelsToIssue(org, repoForIssue, *newIssue.Number, []string{flakyLabel})
+			},
+			dryrun,
+		); nil != err {
+			addIdentityErrs = append(addIdentityErrs, fmt.Errorf("failed adding '%s' label to issue '%s', '%v'", flakyLabel, *newIssue.URL, err))
+		}
 	}
-	return nil
+	// This tool is designed to ensure a very small pool of issues related to flaky tests, by minimizing
+	// chances of duplicate issues. If for any reason the created issue failed to be labeled with correct identities,
+	// this issue will be invalid, and it's very likely that the same issue will be created the next time around.
+	// So cleanup issue if failed adding identity, by removing flaky label and closing issue
+	if nil != combineErrors(addIdentityErrs) {
+		if err := run(
+			"cleaning up invalid issue",
+			func() error {
+				var gErr []error
+				if rlErr := gi.client.RemoveLabelForIssue(org, repoForIssue, *newIssue.Number, flakyLabel); nil != rlErr {
+					gErr = append(gErr, rlErr)
+				}
+				if cErr := gi.client.CloseIssue(org, repoForIssue, *newIssue.Number); nil != cErr {
+					gErr = append(gErr, cErr)
+				}
+				return combineErrors(gErr)
+			},
+			dryrun,
+		); nil != err {
+			addIdentityErrs = append(addIdentityErrs, err)
+		}
+	}
+	return combineErrors(addIdentityErrs)
 }
 
 // findExistingComment identify existing comment by comment author and test identifier,
