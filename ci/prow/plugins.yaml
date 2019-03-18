@@ -43,6 +43,7 @@ plugins:
   - lgtm
   - lifecycle
   - milestone
+  - owners-label
   - shrug
   - size
   - skip
