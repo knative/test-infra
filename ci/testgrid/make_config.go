@@ -178,7 +178,7 @@ func executeTemplate(name, templ string, data interface{}) {
 	funcMap := template.FuncMap{
 		"indent_section":       cg.IndentSection,
 		"indent_array_section": cg.IndentArraySection,
-		"indent_array":         cg.IndentArray,
+		"indent_array":         cg.IndentArrayWithoutQuote,
 		"indent_map":           cg.IndentMap,
 	}
 	t := template.Must(template.New(name).Funcs(funcMap).Delims("[[", "]]").Parse(templ))

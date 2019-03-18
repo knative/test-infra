@@ -84,7 +84,7 @@ func Quote(s string) string {
 }
 
 // IndentBase is a helper function which returns the given array indented.
-func IndentBase(indentation int, prefix string, indentFirstLine bool, array []string) string {
+func IndentBase(indentation int, prefix string, indentFirstLine bool, quote bool, array []string) string {
 	s := ""
 	if len(array) == 0 {
 		return s
@@ -94,24 +94,33 @@ func IndentBase(indentation int, prefix string, indentFirstLine bool, array []st
 		if i > 0 || indentFirstLine {
 			s += indent
 		}
-		s += prefix + Quote(array[i]) + "\n"
+		if quote {
+			s += prefix + Quote(array[i]) + "\n"
+		} else {
+			s += prefix + array[i] + "\n"
+		}
 	}
 	return s
 }
 
 // IndentArray returns the given array indented, prefixed by "-".
 func IndentArray(indentation int, array []string) string {
-	return IndentBase(indentation, "- ", false, array)
+	return IndentBase(indentation, "- ", false, true, array)
+}
+
+// IndentArrayWithoutQuote returns the given array indented, prefixed by "-" and the content unquoted
+func IndentArrayWithoutQuote(indentation int, array []string) string {
+	return IndentBase(indentation, "- ", false, false, array)
 }
 
 // IndentKeys returns the given array of key/value pairs indented.
 func IndentKeys(indentation int, array []string) string {
-	return IndentBase(indentation, "", false, array)
+	return IndentBase(indentation, "", false, true, array)
 }
 
 // IndentSectionBase is a helper function which returns the given array of key/value pairs indented inside a section.
 func IndentSectionBase(indentation int, title string, prefix string, array []string) string {
-	keys := IndentBase(indentation, prefix, true, array)
+	keys := IndentBase(indentation, prefix, true, true, array)
 	if keys == "" {
 		return keys
 	}
@@ -136,7 +145,7 @@ func IndentMap(indentation int, mp map[string]string) string {
 		arr[i] = k + ": " + v
 		i++
 	}
-	return IndentBase(indentation, "", false, arr)
+	return IndentBase(indentation, "", false, true, arr)
 }
 
 // OutputConfig outputs the given line, if not empty, to stdout.
@@ -147,7 +156,7 @@ func OutputConfig(line string) {
 	}
 }
 
-// Check if the given string exists in the array
+// StrExists checks if the given string exists in the array
 func StrExists(arr []string, str string) bool {
 	for _, s := range arr {
 		if str == s {
