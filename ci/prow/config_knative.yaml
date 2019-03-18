@@ -92,8 +92,8 @@ presubmits:
 periodics:
   knative/serving:
     - continuous: true
-      cron: "1 * * * *" # Run every other hour and one minute
-      timeout: 55
+      cron: "1 */2 * * *" # Run every other hour and one minute
+      timeout: 100
     - branch-ci: true
       release: "0.2"
       cron: "15 8 * * *" # Run at 01:15PST every day (08:15 UTC)
