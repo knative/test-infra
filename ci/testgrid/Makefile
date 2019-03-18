@@ -14,6 +14,9 @@
 
 TESTGRID_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
+config:
+	go run make_config.go ../prow/config_knative.yaml > config.yaml
+
 test:
 	bazel run @k8s//testgrid/cmd/configurator -- \
 		--yaml=$(TESTGRID_DIR)/config.yaml \

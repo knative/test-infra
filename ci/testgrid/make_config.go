@@ -38,11 +38,11 @@ var (
 	gcsBucket string
 	logsDir   string
 
-	// keep track of which repo has go code coverage when parsing the simple config file
+	// goCoverageMap keep track of which repo has go code coverage when parsing the simple config file
 	goCoverageMap map[string]bool
-	// save the proj names in a list when parsing the simple config file, for the purpose of maintaining the output sequence
+	// projNames save the proj names in a list when parsing the simple config file, for the purpose of maintaining the output sequence
 	projNames []string
-	// save the repo names in a list when parsing the simple config file, for the purpose of maintaining the output sequence
+	// repoNames save the repo names in a list when parsing the simple config file, for the purpose of maintaining the output sequence
 	repoNames []string
 
 	// metaData saves the meta data needed to generate the final config file
@@ -137,7 +137,7 @@ default_dashboard_tab:
   code_search_url_template:      # The URL template to visit when searching for changelists
     url: https://github.com/knative/serving/compare/<start-custom-0>...<end-custom-0>
   alert_options:
-	alert_mail_to_addresses: 'knative-productivity-dev@googlegroups.com'
+  alert_mail_to_addresses: 'knative-productivity-dev@googlegroups.com'
 	`
 
 	// testGroupTemplate is the template for the test group config
@@ -155,6 +155,7 @@ default_dashboard_tab:
     [[indent_map 2 .Extras]]
 	`
 
+	// dashboardGroupTemplate is the template for the dashboard tab config
 	dashboardGroupTemplate = `
 - name: [[.Name]]
   dashboard_names:
@@ -162,7 +163,7 @@ default_dashboard_tab:
 	`
 )
 
-// newTestgridTemplateData returns a testgridTemplateData type with its initial, default values.
+// newBaseTestgridTemplateData returns a testgridTemplateData type with its initial, default values.
 func newBaseTestgridTemplateData(testGroupName string) baseTestgridTemplateData {
 	var data baseTestgridTemplateData
 	data.Year = time.Now().Year()
@@ -189,7 +190,7 @@ func executeTemplate(name, templ string, data interface{}) {
 	}
 }
 
-// get the job data from the original yaml data, now the jobName can be "presubmits" or "periodic"
+// parseJob gets the job data from the original yaml data, now the jobName can be "presubmits" or "periodic"
 func parseJob(config yaml.MapSlice, jobName string) yaml.MapSlice {
 	for _, section := range config {
 		if section.Key == jobName {
@@ -201,7 +202,7 @@ func parseJob(config yaml.MapSlice, jobName string) yaml.MapSlice {
 	return nil
 }
 
-// construct a map, indicating which repo is enabled for go coverage check
+// parseGoCoverageMap constructs a map, indicating which repo is enabled for go coverage check
 func parseGoCoverageMap(presubmitJob yaml.MapSlice) map[string]bool {
 	goCoverageMap := make(map[string]bool)
 	for _, repo := range presubmitJob {
@@ -220,7 +221,7 @@ func parseGoCoverageMap(presubmitJob yaml.MapSlice) map[string]bool {
 	return goCoverageMap
 }
 
-// collect the meta data from the original yaml data, which we can then use for building the test groups and dashboards config
+// collectMetaData collects the meta data from the original yaml data, which can be then used for building the test groups and dashboards config
 func collectMetaData(periodicJob yaml.MapSlice) {
 	for _, repo := range periodicJob {
 		rawName := cg.GetString(repo.Key)
@@ -256,6 +257,7 @@ func collectMetaData(periodicJob yaml.MapSlice) {
 			}
 			// add job types for the corresponding repos, if needed
 			if enabled {
+				// if it's an already released project
 				if releaseVersion != "" {
 					releaseProjName := fmt.Sprintf("%s-%s", projName, releaseVersion)
 					jobDetailMap = addProjAndRepoIfNeed(releaseProjName, repoName)
@@ -268,7 +270,7 @@ func collectMetaData(periodicJob yaml.MapSlice) {
 	}
 }
 
-// add the project and repo if they are new in the metaData map, then return the jobDetailMap
+// addProjAndRepoIfNeed adds the project and repo if they are new in the metaData map, then return the jobDetailMap
 func addProjAndRepoIfNeed(projName string, repoName string) map[string][]string {
 	// add project in the metaData
 	if _, exists := metaData[projName]; !exists {
@@ -289,7 +291,7 @@ func addProjAndRepoIfNeed(projName string, repoName string) map[string][]string 
 	return jobDetailMap
 }
 
-// if the repo has go coverage check, add test-coverage job for this repo
+// addTestCoverageJobIfNeeded adds test-coverage job for the repo if it has go coverage check
 func addTestCoverageJobIfNeeded(jobDetailMap *map[string][]string, repoName string) {
 	if goCoverageMap[repoName] {
 		newJobTypes := append((*jobDetailMap)[repoName], "test-coverage")
@@ -297,7 +299,10 @@ func addTestCoverageJobIfNeeded(jobDetailMap *map[string][]string, repoName stri
 	}
 }
 
+// generateSection generates the configs for the section with the given generator
 func generateSection(sectionName string, generator entityGenerator) {
+	fmt.Println()
+	cg.OutputConfig("######################################")
 	cg.OutputConfig(sectionName + ":")
 	for _, projName := range projNames {
 		repos := metaData[projName]
@@ -312,6 +317,7 @@ func generateSection(sectionName string, generator entityGenerator) {
 	}
 }
 
+// generateTestGroup generates the test group configuration
 func generateTestGroup(repoName string, jobNames []string) {
 	for _, jobName := range jobNames {
 		testGroupName := getTestGroupName(repoName, jobName)
@@ -346,6 +352,7 @@ func generateTestGroup(repoName string, jobNames []string) {
 	}
 }
 
+// executeTestGroupTemplate outputs the given test group config template with the given data
 func executeTestGroupTemplate(testGroupName string, gcsLogDir string, extras map[string]string) {
 	var data testGroupTemplateData
 	data.Base.TestGroupName = testGroupName
@@ -354,6 +361,7 @@ func executeTestGroupTemplate(testGroupName string, gcsLogDir string, extras map
 	executeTemplate("test group", testGroupTemplate, data)
 }
 
+// generateDashboard generates the dashboard configuration
 func generateDashboard(repoName string, jobNames []string) {
 	fmt.Println("- name:", repoName)
 	fmt.Println("  dashboard_tab:")
@@ -401,6 +409,7 @@ func generateDashboard(repoName string, jobNames []string) {
 	}
 }
 
+// executeTestGroupTemplate outputs the given dashboard tab config template with the given data
 func executeDashboardTabTemplate(dashboardTabName string, testGroupName string, baseOptions string, extras map[string]string) {
 	var data dashboardTabTemplateData
 	data.Name = dashboardTabName
@@ -410,6 +419,7 @@ func executeDashboardTabTemplate(dashboardTabName string, testGroupName string, 
 	executeTemplate("dashboard tab", dashboardTabTemplate, data)
 }
 
+// getTestGroupName get the testGroupName from the given repoName and jobName
 func getTestGroupName(repoName string, jobName string) string {
 	testGroupName := ""
 	switch jobName {
@@ -420,11 +430,12 @@ func getTestGroupName(repoName string, jobName string) string {
 	case "test-coverage":
 		testGroupName = fmt.Sprintf("pull-%s-%s", repoName, jobName)
 	default:
-		// do nothing
+		log.Fatalf("Unknown jobName: %s", jobName)
 	}
 	return testGroupName
 }
 
+// buildProjRepoStr builds the projRepoStr used in the config file with projName and repoName
 func buildProjRepoStr(projName string, repoName string) string {
 	projVersion := ""
 	if strings.Contains(projName, "-") {
@@ -441,7 +452,9 @@ func buildProjRepoStr(projName string, repoName string) string {
 	return projRepoStr
 }
 
+// generateDashboardGroups generates the dashboard groups configuration
 func generateDashboardGroups() {
+	cg.OutputConfig("######################################")
 	cg.OutputConfig("dashboard_groups:")
 	for _, projName := range projNames {
 		repos := metaData[projName]
@@ -455,6 +468,7 @@ func generateDashboardGroups() {
 	}
 }
 
+// executeDashboardGroupTemplate outputs the given dashboard group config template with the given data
 func executeDashboardGroupTemplate(dashboardGroupName string, dashboardRepoNames []string) {
 	var data dashboardGroupTemplateData
 	data.Name = dashboardGroupName
@@ -465,7 +479,7 @@ func executeDashboardGroupTemplate(dashboardGroupName string, dashboardRepoNames
 // main is the script entry point.
 func main() {
 	// Parse flags and sanity check them.
-	var includeConfig = flag.Bool("include-config", false, "Whether to include general configuration (e.g., plank) in the generated config")
+	var includeConfig = flag.Bool("include-config", true, "Whether to include general configuration (e.g., plank) in the generated config")
 	flag.StringVar(&gcsBucket, "gcs-bucket", "knative-prow", "GCS bucket to upload the logs to")
 	flag.StringVar(&logsDir, "logs-dir", "logs", "Path in the GCS bucket to upload logs of periodic and post-submit jobs")
 
@@ -488,7 +502,7 @@ func main() {
 
 	// Generate Testgrid config.
 	if *includeConfig {
-		// executeTemplate("general config", generalConfig, newBaseTestgridTemplateData(""))
+		executeTemplate("general config", generalConfig, newBaseTestgridTemplateData(""))
 	}
 
 	presubmitJobData := parseJob(config, "presubmits")
