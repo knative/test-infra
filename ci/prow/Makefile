@@ -43,7 +43,7 @@ update-cluster: get-cluster-credentials
 test:
 	@echo "*** Checking config generator"
 	$(eval TMP_YAML := $(shell mktemp))
-	go run make_config.go config_knative.yaml > $(TMP_YAML)
+	go run make_config.go --generate-testgrid-config=false config_knative.yaml > $(TMP_YAML)
 	diff config.yaml $(TMP_YAML)
 	@echo "*** Checking config validity"
 	bazel run @k8s//prow/cmd/checkconfig -- --plugin-config=$(PROW_DIR)/plugins.yaml --config-path=$(PROW_DIR)/config.yaml
