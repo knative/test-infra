@@ -26,6 +26,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 	"text/template"
 	"time"
@@ -1110,7 +1111,12 @@ func indentMap(indentation int, mp map[string]string) string {
 	arr := make([]string, len(mp))
 	i := 0
 	for k, v := range mp {
-		arr[i] = k + ": " + quote(v)
+		_, err := strconv.ParseFloat(v, 64)
+		if err == nil {
+			arr[i] = k + ": " + v
+		} else {
+			arr[i] = k + ": " + quote(v)
+		}
 		i++
 	}
 	return indentBase(indentation, "", false, true, arr)
