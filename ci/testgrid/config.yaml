@@ -66,7 +66,7 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-serving-auto-release
 - name: ci-knative-serving-playground
   gcs_prefix: knative-prow/logs/ci-knative-serving-playground
-  alert_stale_results_hours: "168"
+  alert_stale_results_hours: 168
 - name: ci-knative-serving-latency
   gcs_prefix: knative-prow/logs/ci-knative-serving-latency
   short_text_metric: "latency"
