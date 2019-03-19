@@ -13,9 +13,10 @@
 # limitations under the License.
 
 TESTGRID_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+GENERATOR_DIR := ../prow
 
 config:
-	go run make_config.go ../prow/config_knative.yaml > config.yaml
+	go run ${GENERATOR_DIR}/make_config.go --generate-prow-config=false --testgrid-config-output="config.yaml" ${GENERATOR_DIR}/config_knative.yaml
 
 test:
 	bazel run @k8s//testgrid/cmd/configurator -- \
