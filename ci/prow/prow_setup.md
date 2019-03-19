@@ -41,14 +41,17 @@
 
 1. Run `make update-boskos-config`.
 
-## Setting up Prow for a new repo
+## Setting up Prow for a new repo (reviewers assignment and auto merge)
 
 1. Create the appropriate `OWNERS` files (at least one for the root dir).
 
 1. Make sure that *Knative Robots* is an Admin of the repo.
 
-1. Update the tide section in the Prow config file and run `make update-config`
-   (ask one of the owners of knative/test-infra).
+1. Add the repo to the [tide section](https://github.com/knative/test-infra/blob/6c1fc9978de156385ddbe431c3a5920d321d4382/ci/prow/make_config.go#L222)
+   in the Prow config file generator and run `make config`. Create a PR with the
+   changes to the generator and to the [config.yaml](./config.yaml) file. Once the
+   PR is merged, ask one of the owners of knative/test-infra to deploy the new
+   config.
 
 1. Wait a few minutes, check that Prow is working by entering `/woof` as a
    comment in any PR in the new repo.
