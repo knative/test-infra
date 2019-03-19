@@ -19,17 +19,17 @@ limitations under the License.
 package main
 
 import (
-	"strings"
-	"log"
-	"fmt"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
+	"log"
 	"path"
 	"path/filepath"
 	"sort"
+	"strings"
 
-	"github.com/knative/test-infra/shared/prow"
 	"github.com/knative/test-infra/shared/junit"
+	"github.com/knative/test-infra/shared/prow"
 )
 
 const (
@@ -43,15 +43,15 @@ const (
 type RepoData struct {
 	Config             *JobConfig
 	TestStats          map[string]*TestStat // key is test full name
-	BuildIDs           []int // all build IDs scanned in this run
-	LastBuildStartTime *int64 // timestamp, determines how fresh the data is
+	BuildIDs           []int                // all build IDs scanned in this run
+	LastBuildStartTime *int64               // timestamp, determines how fresh the data is
 }
 
 // JobConfig is initial configuration for a given repo, defines which job to scan
 type JobConfig struct {
-	Name  string
-	Repo  string
-	Type  string
+	Name string
+	Repo string
+	Type string
 }
 
 // TestStat represents test results of a single testcase across all builds,
@@ -64,27 +64,33 @@ type TestStat struct {
 }
 
 func (ts *TestStat) isFlaky() bool {
-	return ts.hasEnoughRuns() && len(ts.Failed) > 0 && len(ts.Passed) != 0
+	// This is only responsible for creating and reopening issue,
+	// can be aggressive even when there is not enough runs.
+	// For example  if there are 10 runs, 1 failed, 1 passed, 8 skipped,
+	// this should still be considered flaky
+	return len(ts.Failed) > 0 && len(ts.Passed) != 0
 }
 
 func (ts *TestStat) isPassed() bool {
+	// This is responsible for marking issue as fixed, needs to be
+	// very strict in terms of runs, so enforcing hasEnoughRuns here
 	return ts.hasEnoughRuns() && len(ts.Failed) == 0
 }
 
 func (ts *TestStat) hasEnoughRuns() bool {
-	return len(ts.Passed) + len(ts.Failed) >= requiredCount
+	return len(ts.Passed)+len(ts.Failed) >= requiredCount
 }
 
 func (ts *TestStat) getTestStatus() string {
 	switch {
-		case ts.isFlaky():
-			return flakyStatus
-		case ts.isPassed():
-			return passedStatus
-		case !ts.hasEnoughRuns():
-			return lackDataStatus
-		default:
-			return failedStatus
+	case ts.isFlaky():
+		return flakyStatus
+	case ts.isPassed():
+		return passedStatus
+	case !ts.hasEnoughRuns():
+		return lackDataStatus
+	default:
+		return failedStatus
 	}
 }
 
@@ -98,19 +104,18 @@ func getFlakyTests(rd *RepoData) []string {
 	return flakyTests
 }
 
-
 func getFlakyRate(rd *RepoData) float32 {
 	totalCount := len(rd.TestStats)
 	if 0 == totalCount {
 		return 0.0
 	}
-	return float32(len(getFlakyTests(rd)))/float32(totalCount)
+	return float32(len(getFlakyTests(rd))) / float32(totalCount)
 }
 
 // createArtifactForRepo marshals RepoData into json format and stores it in a json file,
 // under local artifacts directory
 func createArtifactForRepo(rd *RepoData) error {
-	outFilePath := path.Join(prow.GetLocalArtifactsDir(), rd.Config.Repo + ".json")
+	outFilePath := path.Join(prow.GetLocalArtifactsDir(), rd.Config.Repo+".json")
 	contents, err := json.Marshal(*rd)
 	if nil != err {
 		return err
@@ -129,12 +134,12 @@ func addSuiteToRepoData(suite *junit.TestSuite, buildID int, rd *RepoData) {
 			rd.TestStats[testFullName] = &TestStat{TestName: testFullName}
 		}
 		switch testCase.GetTestStatus() {
-			case junit.Passed:
-				rd.TestStats[testFullName].Passed = append(rd.TestStats[testFullName].Passed, buildID)
-			case junit.Skipped:
-				rd.TestStats[testFullName].Skipped = append(rd.TestStats[testFullName].Skipped, buildID)
-			case junit.Failed:
-				rd.TestStats[testFullName].Failed = append(rd.TestStats[testFullName].Failed, buildID)
+		case junit.Passed:
+			rd.TestStats[testFullName].Passed = append(rd.TestStats[testFullName].Passed, buildID)
+		case junit.Skipped:
+			rd.TestStats[testFullName].Skipped = append(rd.TestStats[testFullName].Skipped, buildID)
+		case junit.Failed:
+			rd.TestStats[testFullName].Failed = append(rd.TestStats[testFullName].Failed, buildID)
 		}
 	}
 }
@@ -145,7 +150,7 @@ func getCombinedResultsForBuild(build *prow.Build) ([]*junit.TestSuites, error) 
 	var allSuites []*junit.TestSuites
 	for _, artifact := range build.GetArtifacts() {
 		_, fileName := filepath.Split(artifact)
-		if ! strings.HasPrefix(fileName, "junit_") || ! strings.HasSuffix(fileName, ".xml") {
+		if !strings.HasPrefix(fileName, "junit_") || !strings.HasSuffix(fileName, ".xml") {
 			continue
 		}
 		relPath, _ := filepath.Rel(build.StoragePath, artifact)
@@ -171,7 +176,7 @@ func collectTestResultsForRepo(jc *JobConfig) (*RepoData, error) {
 		return rd, fmt.Errorf("job path not exist '%s'", jc.Name)
 	}
 	builds := getLatestFinishedBuilds(job, buildsCount)
-	
+
 	log.Printf("latest builds: ")
 	for i, build := range builds {
 		log.Printf("\t%d", build.BuildID)
@@ -197,12 +202,12 @@ func (rd *RepoData) getResultSliceForTest(testName string) []junit.TestStatusEnu
 	ts := rd.TestStats[testName]
 	for i, buildID := range rd.BuildIDs {
 		switch {
-			case true == intSliceContains(ts.Failed, buildID):
-				res[i] = junit.Failed
-			case true == intSliceContains(ts.Passed, buildID):
-				res[i] = junit.Passed
-			default:
-				res[i] = junit.Skipped
+		case true == intSliceContains(ts.Failed, buildID):
+			res[i] = junit.Failed
+		case true == intSliceContains(ts.Passed, buildID):
+			res[i] = junit.Passed
+		default:
+			res[i] = junit.Skipped
 		}
 	}
 	return res
@@ -236,7 +241,7 @@ func getLatestFinishedBuilds(job *prow.Job, count int) []prow.Build {
 			builds = append(builds, *build)
 		}
 	}
-	if ! sort.SliceIsSorted(builds, func(i, j int) bool {
+	if !sort.SliceIsSorted(builds, func(i, j int) bool {
 		return *builds[i].StartTime > *builds[j].StartTime
 	}) {
 		log.Fatalf("Error: found build with smaller buildID started later than one with larger buildID")

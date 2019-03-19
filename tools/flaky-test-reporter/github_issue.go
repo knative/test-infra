@@ -441,7 +441,7 @@ func (gi *GithubIssue) processGithubIssueForRepo(rd *RepoData, flakyIssuesMap ma
 
 	// Update/Create issues for flaky/used-to-be-flaky tests
 	for testFullName, ts := range rd.TestStats {
-		if !ts.hasEnoughRuns() || (!ts.isFlaky() && !ts.isPassed()) {
+		if !ts.isFlaky() && !ts.isPassed() {
 			continue
 		}
 		identity := getIdentityForTest(testFullName, rd.Config.Repo)
