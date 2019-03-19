@@ -19,6 +19,11 @@ config:
 	go run ${GENERATOR_DIR}/make_config.go --generate-prow-config=false --testgrid-config-output="config.yaml" ${GENERATOR_DIR}/config_knative.yaml
 
 test:
+	@echo "*** Checking config generator"
+	$(eval TMP_YAML := $(shell mktemp))
+	go run ${GENERATOR_DIR}/make_config.go --generate-prow-config=false ${GENERATOR_DIR}/config_knative.yaml > $(TMP_YAML)
+	diff config.yaml $(TMP_YAML)
+	@echo "*** Checking config validity"
 	bazel run @k8s//testgrid/cmd/configurator -- \
 		--yaml=$(TESTGRID_DIR)/config.yaml \
 		--validate-config-file
