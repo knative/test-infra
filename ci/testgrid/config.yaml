@@ -38,7 +38,7 @@ default_dashboard_tab:
     url: https://github.com/knative/serving/issues/new
     options:
     - key: title
-      value: 'Test "<test-name>" failed'
+      value: "Test \"<test-name>\" failed"
     - key: body
       value: <test-url>
   attach_bug_template:           # The URL template to visit when attaching a bug
@@ -54,8 +54,7 @@ default_dashboard_tab:
   code_search_url_template:      # The URL template to visit when searching for changelists
     url: https://github.com/knative/serving/compare/<start-custom-0>...<end-custom-0>
   alert_options:
-  alert_mail_to_addresses: 'knative-productivity-dev@googlegroups.com'
-######################################
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
 test_groups:
 - name: ci-knative-serving-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-continuous
@@ -67,19 +66,19 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-serving-auto-release
 - name: ci-knative-serving-playground
   gcs_prefix: knative-prow/logs/ci-knative-serving-playground
-  alert_stale_results_hours: 168
+  alert_stale_results_hours: "168"
 - name: ci-knative-serving-latency
   gcs_prefix: knative-prow/logs/ci-knative-serving-latency
-  short_text_metric: latency
+  short_text_metric: "latency"
 - name: ci-knative-serving-api-coverage
   gcs_prefix: knative-prow/logs/ci-knative-serving-api-coverage
-  short_text_metric: api_coverage
+  short_text_metric: "api_coverage"
 - name: ci-knative-serving-performance
   gcs_prefix: knative-prow/logs/ci-knative-serving-performance
-  short_text_metric: perf_latency
+  short_text_metric: "perf_latency"
 - name: pull-knative-serving-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-serving-go-coverage
-  short_text_metric: coverage
+  short_text_metric: "coverage"
 - name: ci-knative-build-continuous
   gcs_prefix: knative-prow/logs/ci-knative-build-continuous
 - name: ci-knative-build-nightly-release
@@ -90,15 +89,15 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-build-auto-release
 - name: ci-knative-build-latency
   gcs_prefix: knative-prow/logs/ci-knative-build-latency
-  short_text_metric: latency
+  short_text_metric: "latency"
 - name: pull-knative-build-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-build-go-coverage
-  short_text_metric: coverage
+  short_text_metric: "coverage"
 - name: ci-knative-docs-continuous
   gcs_prefix: knative-prow/logs/ci-knative-docs-continuous
 - name: pull-knative-docs-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-docs-go-coverage
-  short_text_metric: coverage
+  short_text_metric: "coverage"
 - name: ci-knative-eventing-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-continuous
 - name: ci-knative-eventing-nightly-release
@@ -109,7 +108,7 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-eventing-auto-release
 - name: pull-knative-eventing-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-eventing-go-coverage
-  short_text_metric: coverage
+  short_text_metric: "coverage"
 - name: ci-knative-eventing-sources-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-continuous
 - name: ci-knative-eventing-sources-nightly-release
@@ -120,161 +119,159 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-auto-release
 - name: pull-knative-eventing-sources-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-go-coverage
-  short_text_metric: coverage
+  short_text_metric: "coverage"
 - name: ci-knative-build-templates-continuous
   gcs_prefix: knative-prow/logs/ci-knative-build-templates-continuous
 - name: ci-knative-pkg-continuous
   gcs_prefix: knative-prow/logs/ci-knative-pkg-continuous
 - name: pull-knative-pkg-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-pkg-go-coverage
-  short_text_metric: coverage
+  short_text_metric: "coverage"
 - name: ci-knative-caching-continuous
   gcs_prefix: knative-prow/logs/ci-knative-caching-continuous
 - name: pull-knative-caching-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-caching-go-coverage
-  short_text_metric: coverage
+  short_text_metric: "coverage"
 - name: ci-knative-serving-0.2-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.2-continuous
 - name: ci-knative-serving-0.3-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.3-continuous
 - name: ci-knative-serving-0.4-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.4-continuous
-######################################
 dashboards:
 - name: knative-serving
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-serving-continuous
-    base_options: 'sort-by-name='
+    base_options: "sort-by-name="
   - name: conformance-tests
     test_group_name: ci-knative-serving-continuous
-    base_options: 'include-filter-by-regex=test/conformance\.&sort-by-name='
+    base_options: "include-filter-by-regex=test/conformance\\.&sort-by-name="
   - name: release
     test_group_name: ci-knative-serving-nightly-release
-    base_options: 'sort-by-name='
+    base_options: "sort-by-name="
   - name: dot-release
     test_group_name: ci-knative-serving-dot-release
-    base_options: 'sort-by-name='
+    base_options: "sort-by-name="
   - name: auto-release
     test_group_name: ci-knative-serving-auto-release
-    base_options: 'sort-by-name='
+    base_options: "sort-by-name="
   - name: playground
     test_group_name: ci-knative-serving-playground
-    base_options: 'sort-by-name='
+    base_options: "sort-by-name="
   - name: latency
     test_group_name: ci-knative-serving-latency
-    base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
-    description: 95% latency in ms
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+    description: "95% latency in ms"
   - name: api-coverage
     test_group_name: ci-knative-serving-api-coverage
-    base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
-    description: Conformance tests API coverage.
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+    description: "Conformance tests API coverage."
   - name: performance
     test_group_name: ci-knative-serving-performance
-    base_options: 'exclude-filter-by-regex=Overall&group-by-target=&expand-groups=&sort-by-name='
+    base_options: "exclude-filter-by-regex=Overall$&group-by-target=&expand-groups=&sort-by-name="
   - name: coverage
     test_group_name: pull-knative-serving-test-coverage
-    base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: knative-build
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-build-continuous
-    base_options: 'sort-by-name='
+    base_options: "sort-by-name="
   - name: release
     test_group_name: ci-knative-build-nightly-release
-    base_options: 'sort-by-name='
+    base_options: "sort-by-name="
   - name: dot-release
     test_group_name: ci-knative-build-dot-release
-    base_options: 'sort-by-name='
+    base_options: "sort-by-name="
   - name: auto-release
     test_group_name: ci-knative-build-auto-release
-    base_options: 'sort-by-name='
+    base_options: "sort-by-name="
   - name: latency
     test_group_name: ci-knative-build-latency
-    base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
-    description: 95% latency in ms
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+    description: "95% latency in ms"
   - name: coverage
     test_group_name: pull-knative-build-test-coverage
-    base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: knative-docs
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-docs-continuous
-    base_options: 'sort-by-name='
+    base_options: "sort-by-name="
   - name: coverage
     test_group_name: pull-knative-docs-test-coverage
-    base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: knative-eventing
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-eventing-continuous
-    base_options: 'sort-by-name='
+    base_options: "sort-by-name="
   - name: release
     test_group_name: ci-knative-eventing-nightly-release
-    base_options: 'sort-by-name='
+    base_options: "sort-by-name="
   - name: dot-release
     test_group_name: ci-knative-eventing-dot-release
-    base_options: 'sort-by-name='
+    base_options: "sort-by-name="
   - name: auto-release
     test_group_name: ci-knative-eventing-auto-release
-    base_options: 'sort-by-name='
+    base_options: "sort-by-name="
   - name: coverage
     test_group_name: pull-knative-eventing-test-coverage
-    base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: knative-eventing-sources
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-eventing-sources-continuous
-    base_options: 'sort-by-name='
+    base_options: "sort-by-name="
   - name: release
     test_group_name: ci-knative-eventing-sources-nightly-release
-    base_options: 'sort-by-name='
+    base_options: "sort-by-name="
   - name: dot-release
     test_group_name: ci-knative-eventing-sources-dot-release
-    base_options: 'sort-by-name='
+    base_options: "sort-by-name="
   - name: auto-release
     test_group_name: ci-knative-eventing-sources-auto-release
-    base_options: 'sort-by-name='
+    base_options: "sort-by-name="
   - name: coverage
     test_group_name: pull-knative-eventing-sources-test-coverage
-    base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: knative-build-templates
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-build-templates-continuous
-    base_options: 'sort-by-name='
+    base_options: "sort-by-name="
 - name: knative-pkg
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-pkg-continuous
-    base_options: 'sort-by-name='
+    base_options: "sort-by-name="
   - name: coverage
     test_group_name: pull-knative-pkg-test-coverage
-    base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: knative-caching
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-caching-continuous
-    base_options: 'sort-by-name='
+    base_options: "sort-by-name="
   - name: coverage
     test_group_name: pull-knative-caching-test-coverage
-    base_options: 'exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name='
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: knative-serving-0.2
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-serving-0.2-continuous
-    base_options: 'sort-by-name='
+    base_options: "sort-by-name="
 - name: knative-serving-0.3
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-serving-0.3-continuous
-    base_options: 'sort-by-name='
+    base_options: "sort-by-name="
 - name: knative-serving-0.4
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-serving-0.4-continuous
-    base_options: 'sort-by-name='
-######################################
+    base_options: "sort-by-name="
 dashboard_groups:
 - name: knative
   dashboard_names:
