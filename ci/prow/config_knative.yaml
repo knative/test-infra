@@ -44,6 +44,13 @@ presubmits:
       needs-dind: true
     - go-coverage: true
 
+  knative/client:
+    - build-tests: true
+    - unit-tests: true
+    - integration-tests: true
+    - go-coverage: true
+      go-coverage-threshold: 50
+
   knative/eventing:
     - build-tests: true
     - unit-tests: true
