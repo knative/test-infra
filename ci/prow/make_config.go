@@ -466,7 +466,7 @@ default_dashboard_tab:
     url: https://github.com/knative/serving/issues/new
     options:
     - key: title
-      value: 'Test "<test-name>" failed'
+      value: "Test \"<test-name>\" failed"
     - key: body
       value: <test-url>
   attach_bug_template:           # The URL template to visit when attaching a bug
@@ -482,7 +482,7 @@ default_dashboard_tab:
   code_search_url_template:      # The URL template to visit when searching for changelists
     url: https://github.com/knative/serving/compare/<start-custom-0>...<end-custom-0>
   alert_options:
-  alert_mail_to_addresses: 'knative-productivity-dev@googlegroups.com'
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
 	`
 
 	// testGroupTemplate is the template for the test group config
@@ -496,7 +496,7 @@ default_dashboard_tab:
 	dashboardTabTemplate = `
   - name: [[.Name]]
     test_group_name: [[.Base.TestGroupName]]
-    base_options: '[[.BaseOptions]]'
+    base_options: "[[.BaseOptions]]"
     [[indent_map 2 .Extras]]
 	`
 
@@ -1110,7 +1110,7 @@ func indentMap(indentation int, mp map[string]string) string {
 	arr := make([]string, len(mp))
 	i := 0
 	for k, v := range mp {
-		arr[i] = k + ": " + v
+		arr[i] = k + ": " + quote(v)
 		i++
 	}
 	return indentBase(indentation, "", false, true, arr)
@@ -1295,7 +1295,6 @@ func addTestCoverageJobIfNeeded(jobDetailMap *map[string][]string, repoName stri
 
 // generateSection generates the configs for the section with the given generator
 func generateSection(sectionName string, generator testgridEntityGenerator) {
-	outputConfig("######################################")
 	outputConfig(sectionName + ":")
 	for _, projName := range projNames {
 		repos := metaData[projName]
@@ -1367,17 +1366,17 @@ func generateDashboard(repoName string, jobNames []string) {
 
 			if repoName == "knative-serving" {
 				dashboardTabName := "conformance-tests"
-				baseOptions = "include-filter-by-regex=test/conformance\\.&sort-by-name="
+				baseOptions = "include-filter-by-regex=test/conformance\\\\.&sort-by-name="
 				executeDashboardTabTemplate(dashboardTabName, testGroupName, baseOptions, extras)
 			}
 		case "dot-release", "auto-release", "performance", "latency", "api-coverage", "playground":
 			dashboardTabName := jobName
 
 			if jobName == "latency" || jobName == "api-coverage" {
-				baseOptions = "exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name="
+				baseOptions = "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 			}
 			if jobName == "performance" {
-				baseOptions = "exclude-filter-by-regex=Overall&group-by-target=&expand-groups=&sort-by-name="
+				baseOptions = "exclude-filter-by-regex=Overall$&group-by-target=&expand-groups=&sort-by-name="
 			}
 			if jobName == "latency" {
 				extras["description"] = "95% latency in ms"
@@ -1392,7 +1391,7 @@ func generateDashboard(repoName string, jobNames []string) {
 			executeDashboardTabTemplate(dashboardTabName, testGroupName, baseOptions, extras)
 		case "test-coverage":
 			dashboardTabName := "coverage"
-			baseOptions = "exclude-filter-by-regex=Overall&group-by-directory=&expand-groups=&sort-by-name="
+			baseOptions = "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 			executeDashboardTabTemplate(dashboardTabName, testGroupName, baseOptions, extras)
 		default:
 			continue
@@ -1445,7 +1444,6 @@ func buildProjRepoStr(projName string, repoName string) string {
 
 // generateDashboardGroups generates the dashboard groups configuration
 func generateDashboardGroups() {
-	outputConfig("######################################")
 	outputConfig("dashboard_groups:")
 	for _, projName := range projNames {
 		repos := metaData[projName]
@@ -1467,6 +1465,7 @@ func executeDashboardGroupTemplate(dashboardGroupName string, dashboardRepoNames
 	executeTemplate("dashboard group", dashboardGroupTemplate, data)
 }
 
+// setOutput set the given file as the output target, then all the output will be written to this file
 func setOutput(fileName string) {
 	configFile, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE, 0666)
 	if err != nil {
