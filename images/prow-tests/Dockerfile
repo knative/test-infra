@@ -15,9 +15,6 @@
 FROM gcr.io/k8s-testimages/kubekins-e2e:v20190103-edc7696cc-master
 LABEL maintainer "Adriano Cunha <adrcunha@google.com>"
 
-# Add Node.js repo so nodejs/npm can be installed
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
-
 # Install extras on top of base image
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -30,24 +27,34 @@ RUN docker-credential-gcr configure-docker
 
 # Extra tools through apt-get
 RUN apt-get install -y uuid-runtime  # for uuidgen
-RUN apt-get install -y nodejs  # for npm and markdown-link-check
 RUN apt-get install -y rubygems  # for mdl
+
+# Install go at 1.12 same as how it's installed in kubekins-e2e image, reference code here:
+# https://github.com/kubernetes/test-infra/blob/1e9b5dc3de4b268aab57c9c48120aa3dcf096bc6/images/kubekins-e2e/Dockerfile#L64
+ENV GO_TARBALL "go1.12.linux-amd64.tar.gz"
+RUN rm -rf /usr/local/go && \
+    wget -q "https://storage.googleapis.com/golang/${GO_TARBALL}" && \
+    tar xzf "${GO_TARBALL}" -C /usr/local && \
+    rm "${GO_TARBALL}"
 
 # Extra tools through go get
 RUN go get -u github.com/google/go-containerregistry/cmd/ko
 RUN go get -u github.com/golang/dep/cmd/dep
 RUN go get -u github.com/google/licenseclassifier
 RUN go get -u github.com/jstemmer/go-junit-report
-
-# Extra tools through npm
-RUN npm install -g markdown-link-check
+RUN go get -u github.com/raviqqe/liche
 
 # Extra tools through gem
 RUN gem install mixlib-config -v 2.2.4  # required because ruby is 2.1
 RUN gem install mdl
 
+# Temporarily add test-infra to the image to build custom tools
 ADD . /go/src/github.com/knative/test-infra
 
-# Extra custom tools
+# Build custom tools in the container
+RUN make -C /go/src/github.com/knative/test-infra/tools/githubhelper
 RUN cp /go/src/github.com/knative/test-infra/tools/githubhelper/githubhelper .
 RUN go install github.com/knative/test-infra/tools/dep-collector
+
+# Remove test-infra from the container
+RUN rm -fr /go/src/github.com/knative/test-infra

@@ -1,5 +1,5 @@
 /*
-Copyright 2018 The Knative Authors
+Copyright 2019 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,13 +19,25 @@ package resourcetree
 import (
 	"container/list"
 	"reflect"
+
+	"github.com/knative/test-infra/tools/webhook-apicoverage/coveragecalculator"
 )
 
 // ResourceTree encapsulates a tree corresponding to a resource type.
 type ResourceTree struct {
 	ResourceName string
 	Root NodeInterface
-	forest *ResourceForest
+	Forest *ResourceForest
+}
+
+// coverageDataHelper is a encapsulator parameter type to the BuildCoverageData method
+// so as to avoid long parameter list.
+type coverageDataHelper struct {
+	typeCoverage *[]coveragecalculator.TypeCoverage
+	nodeRules NodeRules
+	fieldRules FieldRules
+	ignoredFields coveragecalculator.IgnoredFields
+	coveredTypes map[string]bool
 }
 
 func (r *ResourceTree) createNode(field string, parent NodeInterface, t reflect.Type) NodeInterface {
@@ -38,8 +50,8 @@ func (r *ResourceTree) createNode(field string, parent NodeInterface, t reflect.
 	case reflect.Ptr, reflect.UnsafePointer, reflect.Uintptr:
 		n = new(PtrKindNode)
 	case reflect.Bool, reflect.String, reflect.Float32, reflect.Float64,
-		reflect.Int, reflect.Int16, reflect.Int32, reflect.Int64,
-		reflect.Uint, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+		reflect.Int, reflect.Int16, reflect.Int32, reflect.Int64, reflect.Uint,
+		reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 		n = new(BasicTypeKindNode)
 	default:
 		n = new(OtherKindNode) // Maps, interfaces, etc
@@ -49,10 +61,10 @@ func (r *ResourceTree) createNode(field string, parent NodeInterface, t reflect.
 
 	if len(t.PkgPath()) != 0 {
 		typeName := t.PkgPath() + "." + t.Name()
-		if _, ok := r.forest.ConnectedNodes[typeName]; !ok {
-			r.forest.ConnectedNodes[typeName] = list.New()
+		if _, ok := r.Forest.ConnectedNodes[typeName]; !ok {
+			r.Forest.ConnectedNodes[typeName] = list.New()
 		}
-		r.forest.ConnectedNodes[typeName].PushBack(n)
+		r.Forest.ConnectedNodes[typeName].PushBack(n)
 	}
 
 	return n
@@ -62,4 +74,23 @@ func (r *ResourceTree) createNode(field string, parent NodeInterface, t reflect.
 func (r *ResourceTree) BuildResourceTree(t reflect.Type) {
 	r.Root = r.createNode(r.ResourceName, nil, t)
 	r.Root.buildChildNodes(t)
+}
+
+// UpdateCoverage updates coverage data in the resource tree based on the provided reflect.Value
+func (r *ResourceTree) UpdateCoverage(v reflect.Value) {
+	r.Root.updateCoverage(v)
+}
+
+// BuildCoverageData calculates the coverage information for a resource tree by applying provided Node and Field rules.
+func (r *ResourceTree) BuildCoverageData(nodeRules NodeRules, fieldRules FieldRules,
+	ignoredFields coveragecalculator.IgnoredFields) ([]coveragecalculator.TypeCoverage) {
+	coverageHelper := coverageDataHelper{
+		nodeRules: nodeRules,
+		fieldRules: fieldRules,
+		typeCoverage: &[]coveragecalculator.TypeCoverage{},
+		ignoredFields: ignoredFields,
+		coveredTypes: make(map[string]bool),
+	}
+	r.Root.buildCoverageData(coverageHelper)
+	return *coverageHelper.typeCoverage
 }

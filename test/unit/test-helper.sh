@@ -52,7 +52,7 @@ function test_function() {
       return 1
     fi
   fi
-  echo "'$@' returns code ${expected_retcode} and displays '${expected_string}'"
+  echo "'$@' returns code ${expected_retcode} and output matches with expected"
 }
 
 # Test helper that calls two functions in sequence.
@@ -84,6 +84,16 @@ function call_function_post() {
 function mock_gcloud_function() {
   set -e
   function gcloud() {
+    echo ""
+  }
+  "$@" 2>&1
+}
+
+# Mocks the kubectl functionality (does nothing and outputs nothing).
+# Parameters: $1..$n - parameters passed to the function.
+function mock_kubectl_function() {
+  set -e
+  function kubectl() {
     echo ""
   }
   "$@" 2>&1

@@ -1,0 +1,176 @@
+# Copyright 2018 The Knative Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+presubmits:
+  knative/serving:
+    - build-tests: true
+    - unit-tests: true
+    - integration-tests: true
+      args:
+      - "--run-test"
+      - "./test/e2e-tests.sh"
+    - custom-test: upgrade-tests
+      skip_branches:  # Skip these branches, as test isn't available.
+      - release-0.1
+      - release-0.2
+      args:
+      - "--run-test"
+      - "./test/e2e-upgrade-tests.sh"
+    - go-coverage: true
+    - custom-test: perf-tests
+      always_run: false
+      skip_branches:  # Skip these branches, as test isn't available.
+      - release-0.1
+      - release-0.2
+      - release-0.3
+      command:
+      - "./test/performance-tests.sh"
+
+  knative/build:
+    - build-tests: true
+    - unit-tests: true
+    - integration-tests: true
+      needs-dind: true
+    - go-coverage: true
+
+  knative/eventing:
+    - build-tests: true
+    - unit-tests: true
+    - integration-tests: true
+    - go-coverage: true
+      go-coverage-threshold: 50
+
+  knative/eventing-sources:
+    - build-tests: true
+    - unit-tests: true
+    - integration-tests: true
+    - go-coverage: true
+      go-coverage-threshold: 50
+
+  knative/docs:
+    - build-tests: true
+    - unit-tests: true
+    - integration-tests: true
+    - go-coverage: true
+      go-coverage-threshold: 50
+
+  knative/build-templates:
+    - build-tests: true
+    - unit-tests: true
+    - integration-tests: true
+
+  knative/pkg:
+    - build-tests: true
+    - unit-tests: true
+    - integration-tests: true
+    - go-coverage: true
+      go-coverage-threshold: 50
+
+  knative/test-infra:
+    - build-tests: true
+    - unit-tests: true
+    - integration-tests: true
+
+  knative/caching:
+    - build-tests: true
+    - unit-tests: true
+    - integration-tests: true
+    - go-coverage: true
+      go-coverage-threshold: 50
+
+periodics:
+  knative/serving:
+    - continuous: true
+      cron: "1 */2 * * *" # Run every other hour and one minute
+      timeout: 100
+    - branch-ci: true
+      release: "0.2"
+      cron: "15 8 * * *" # Run at 01:15PST every day (08:15 UTC)
+    - branch-ci: true
+      release: "0.3"
+      cron: "20 8 * * *" # Run at 01:20PST every day (08:20 UTC)
+    - branch-ci: true
+      release: "0.4"
+      cron: "25 8 * * *" # Run at 01:25PST every day (08:25 UTC)
+    - nightly: true
+      cron: "1 8 * * *" # Run at 01:01PST every day (08:01 UTC)
+    - dot-release: true
+      cron: "1 9 * * 2" # Run at 02:01PST every Tuesday (09:01 UTC)
+    - auto-release: true
+      cron: "3 */2 * * *" # Run every two hours and three minutes
+    - custom-job: playground
+      cron: "1 9 * * 6" # Run at 02:01PST every Saturday (09:01 UTC)
+      command:
+      - "./hack/deploy.sh"
+      args:
+      - "knative-playground"
+      timeout: 90
+    - latency: true
+      cron: "5 8 * * *" # Run at 01:05PST every day (08:05 UTC)
+    - api-coverage: true
+      cron: "5 8 * * *" # Run at 01:05PST every day (08:05 UTC)
+    - performance: true
+      cron: "0 1 * * *" # Run at 01:00 every day
+    - webhook-apicoverage: true
+      cron: "5 9 * * *" # Run at 02:05PST every day (09:05 UTC)
+
+  knative/build:
+    - continuous: true
+      cron: "15 * * * *" # Run every hour and 15 minutes
+    - nightly: true
+      cron: "31 8 * * *" # Run at 01:31PST every day (08:31 UTC)
+      needs-dind: true
+    - dot-release: true
+      cron: "11 9 * * 2" # Run at 02:11PST every Tuesday (09:11 UTC)
+    - auto-release: true
+      cron: "7 */2 * * *" # Run every two hours and seven minutes
+      needs-dind: true
+    - latency: true
+      cron: "5 8 * * *" # Run at 01:05PST every day (08:05 UTC)
+
+  knative/docs:
+    - continuous: true
+      cron: "50 * * * *" # Run every hour and 50 minutes
+
+  knative/eventing:
+    - continuous: true
+      cron: "30 * * * *" # Run every hour and 30 minutes
+    - nightly: true
+      cron: "16 9 * * *" # Run at 02:16PST every day (09:16 UTC)
+    - dot-release: true
+      cron: "19 9 * * 2" # Run at 02:19PST every Tuesday (09:19 UTC)
+    - auto-release: true
+      cron: "5 */2 * * *" # Run every two hours and five minutes
+
+  knative/eventing-sources:
+    - continuous: true
+      cron: "30 * * * *" # Run every hour and 30 minutes
+    - nightly: true
+      cron: "16 9 * * *" # Run at 02:16PST every day (09:16 UTC)
+    - dot-release: true
+      cron: "17 9 * * 2" # Run at 02:17PST every Tuesday (09:17 UTC)
+    - auto-release: true
+      cron: "5 */2 * * *" # Run every two hours and five minutes
+
+  knative/build-templates:
+    - continuous: true
+      cron: "40 * * * *" # Run every hour and 40 minutes
+
+  knative/pkg:
+    - continuous: true
+      cron: "45 * * * *" # Run every hour and 45 minutes
+
+  knative/caching:
+    - continuous: true
+      cron: "30 * * * *" # Run every hour and 30 minutes

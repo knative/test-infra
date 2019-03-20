@@ -1,5 +1,5 @@
 /*
-Copyright 2018 The Knative Authors
+Copyright 2019 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,26 +20,48 @@ import (
 	"reflect"
 )
 
-const arrayNodeNameSuffix = "-arr"
+const (
+	arrayNodeNameSuffix = "-arr"
+)
 
 // ArrayKindNode represents resource tree node of types reflect.Kind.Array and reflect.Kind.Slice
 type ArrayKindNode struct {
-	nodeData
+	NodeData
 	arrKind reflect.Kind // Array type e.g. []int will store reflect.Kind.Int. This is required for type-expansion and value-evaluation decisions.
 }
 
-func (a *ArrayKindNode ) getData() nodeData {
-	return a.nodeData
+// GetData returns node data
+func (a *ArrayKindNode ) GetData() NodeData {
+	return a.NodeData
 }
 
 func (a *ArrayKindNode ) initialize(field string, parent NodeInterface, t reflect.Type, rt *ResourceTree) {
-	a.nodeData.initialize(field, parent, t, rt)
+	a.NodeData.initialize(field, parent, t, rt)
 	a.arrKind = t.Elem().Kind()
 }
 
 func (a *ArrayKindNode) buildChildNodes(t reflect.Type) {
-	childName := a.field + arrayNodeNameSuffix
-	childNode := a.tree.createNode(childName, a, t.Elem())
-	a.children[childName] = childNode
+	childName := a.Field + arrayNodeNameSuffix
+	childNode := a.Tree.createNode(childName, a, t.Elem())
+	a.Children[childName] = childNode
 	childNode.buildChildNodes(t.Elem())
+}
+
+func (a *ArrayKindNode) updateCoverage(v reflect.Value) {
+	if !v.IsNil() {
+		a.Covered = true
+		for i := 0; i < v.Len(); i++ {
+			a.Children[a.Field + arrayNodeNameSuffix].updateCoverage(v.Index(i))
+		}
+	}
+}
+
+func (a *ArrayKindNode) buildCoverageData(coverageHelper coverageDataHelper) {
+	if a.arrKind == reflect.Struct {
+		a.Children[a.Field + arrayNodeNameSuffix].buildCoverageData(coverageHelper)
+	}
+}
+
+func (a *ArrayKindNode) getValues() (map[string]bool) {
+	return nil
 }

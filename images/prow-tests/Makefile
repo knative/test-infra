@@ -18,7 +18,6 @@ TAG := $(shell date +v%Y%m%d)-$(shell git describe --always --dirty --match '^$$
 all: build
 
 build:
-	make -C ../../tools/githubhelper
 	docker build -t $(IMG):$(TAG) -f Dockerfile ../..
 	docker tag $(IMG):$(TAG) $(IMG):latest
 
@@ -27,8 +26,5 @@ push_versioned: build
 
 push_latest: build
 	docker push $(IMG):latest
-
-clean:
-	rm -fr githubhelper dep-collector
 
 push: push_versioned push_latest clean

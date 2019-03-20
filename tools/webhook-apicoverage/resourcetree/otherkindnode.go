@@ -1,5 +1,5 @@
 /*
-Copyright 2018 The Knative Authors
+Copyright 2019 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,16 +22,30 @@ import (
 
 // OtherKindNode represents nodes in the resource tree of types like maps, interfaces, etc
 type OtherKindNode struct {
-	nodeData
+	NodeData
 }
 
-func (o *OtherKindNode) getData() nodeData {
-	return o.nodeData
+// GetData returns node data
+func (o *OtherKindNode) GetData() NodeData {
+	return o.NodeData
 }
 
 func (o *OtherKindNode) initialize(field string, parent NodeInterface, t reflect.Type, rt *ResourceTree) {
-	o.nodeData.initialize(field, parent, t, rt)
-	o.nodeData.leafNode = true
+	o.NodeData.initialize(field, parent, t, rt)
+	o.NodeData.LeafNode = true
 }
 
 func (o *OtherKindNode) buildChildNodes(t reflect.Type) {}
+
+func (o *OtherKindNode) updateCoverage(v reflect.Value) {
+	if !v.IsNil() {
+		o.Covered = true
+	}
+}
+
+// no-op as the coverage is calculated as field coverage in parent node.
+func (o * OtherKindNode) buildCoverageData(coverageHelper coverageDataHelper) {}
+
+func (o *OtherKindNode) getValues() (map[string]bool) {
+	return nil
+}

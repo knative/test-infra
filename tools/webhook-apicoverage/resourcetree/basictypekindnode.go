@@ -1,5 +1,5 @@
 /*
-Copyright 2018 The Knative Authors
+Copyright 2019 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,26 +24,40 @@ import (
 
 // BasicTypeKindNode represents resource tree node of basic types like int, float, etc.
 type BasicTypeKindNode struct {
-	nodeData
+	NodeData
 	values map[string]bool // Values seen for this node. Useful for enum types.
 	possibleEnum bool // Flag to indicate if this is a possible enum.
 }
 
-func (b *BasicTypeKindNode) getData() nodeData {
-	return b.nodeData
+// GetData returns node data
+func (b *BasicTypeKindNode) GetData() NodeData {
+	return b.NodeData
 }
 
 func (b *BasicTypeKindNode) initialize(field string, parent NodeInterface, t reflect.Type, rt *ResourceTree) {
-	b.nodeData.initialize(field, parent, t, rt)
+	b.NodeData.initialize(field, parent, t, rt)
 	b.values = make(map[string]bool)
-	b.nodeData.leafNode = true
+	b.NodeData.LeafNode = true
 }
 
 func (b *BasicTypeKindNode) buildChildNodes(t reflect.Type) {
-	if t.Name() != t.Kind().String() {
+	// Treating bools as possible enums to support tighter coverage information.
+	if t.Name() != t.Kind().String() || b.FieldType.Kind() == reflect.Bool {
 		b.possibleEnum = true
 	}
 }
+
+func (b *BasicTypeKindNode) updateCoverage(v reflect.Value) {
+	if value := b.string(v); len(value) > 0 {
+		if b.possibleEnum || b.FieldType.Kind() == reflect.Bool {
+			b.addValue(value)
+		}
+		b.Covered = true
+	}
+}
+
+// no-op as the coverage is calculated as field coverage in parent node.
+func (b *BasicTypeKindNode) buildCoverageData(coverageHelper coverageDataHelper) {}
 
 func (b *BasicTypeKindNode) string(v reflect.Value) string {
 	switch v.Kind() {
@@ -51,7 +65,7 @@ func (b *BasicTypeKindNode) string(v reflect.Value) string {
 		if v.Int() != 0 {
 			return strconv.Itoa(int(v.Int()))
 		}
-	case reflect.Uint, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 		if v.Uint() != 0 {
 			return strconv.FormatUint(v.Uint(), 10)
 		}
@@ -68,4 +82,18 @@ func (b *BasicTypeKindNode) string(v reflect.Value) string {
 	}
 
 	return ""
+}
+
+func (b *BasicTypeKindNode) addValue(value string) {
+	if _, ok := b.values[value]; !ok {
+		b.values[value] = true
+	}
+}
+
+func (b *BasicTypeKindNode) getValues() (map[string]bool) {
+	if b.possibleEnum {
+		return b.values
+	}
+
+	return nil
 }

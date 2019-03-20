@@ -25,11 +25,13 @@
 
 source $(dirname $0)/../scripts/e2e-tests.sh
 
+function knative_setup() {
+  start_latest_knative_serving
+}
+
 # Script entry point.
 
 initialize $@
-
-start_latest_knative_serving || fail_test "Knative Serving is not up"
 
 # This is actually a unit test, but it does exercise the necessary helper functions.
 go_test_e2e -run TestE2ESucceeds ./test || fail_test

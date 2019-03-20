@@ -97,7 +97,7 @@ func ProfileToTestsuiteXML(arts *artifacts.LocalArtifacts, covThres int) {
 	}
 	defer f.Close()
 
-	ts := toTestsuite(groupCov, getDirs(arts.CovStdoutPath()))
+	ts := toTestsuite(groupCov, groupCov.GetDirs())
 	output, err := xml.MarshalIndent(ts, "", "    ")
 	if err != nil {
 		logUtil.LogFatalf("error: %v\n", err)

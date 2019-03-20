@@ -1,5 +1,5 @@
 /*
-Copyright 2018 The Knative Authors
+Copyright 2019 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,93 +19,71 @@ limitations under the License.
 package testgrid
 
 import (
-	"encoding/xml"
 	"fmt"
 	"log"
 	"os"
+	"path"
+
+	"github.com/knative/test-infra/shared/junit"
+	"github.com/knative/test-infra/shared/prow"
 )
 
 const (
 	filePrefix = "junit_"
-	extension = ".xml"
-	artifactsDir = "./artifacts"
+	extension  = ".xml"
+	// BaseURL is Knative testgrid base URL
+	BaseURL = "https://testgrid.knative.dev"
 )
 
-// TestProperty defines a property of the test
-type TestProperty struct {
-	Name  string  `xml:"name,attr"`
-	Value float32 `xml:"value,attr"`
+// jobNameTestgridURLMap contains harded coded mapping of job name: Testgrid tab URL relative to base URL
+var jobNameTestgridURLMap = map[string]string{
+	"ci-knative-serving-continuous": "knative-serving#continuous",
 }
 
-// TestProperties is an array of test properties
-type TestProperties struct {
-	Property []TestProperty `xml:"property"`
-}
-
-// TestCase defines a test case that was executed
-type TestCase struct {
-	ClassName  string         `xml:"class_name,attr"`
-	Name       string         `xml:"name,attr"`
-	Time       int            `xml:"time,attr"`
-	Properties TestProperties `xml:"properties"`
-	Fail       bool           `xml:"failure,omitempty"`
-}
-
-// TestSuite defines the set of relevant test cases
-type TestSuite struct {
-	XMLName   xml.Name   `xml:"testsuite"`
-	TestCases []TestCase `xml:"testcase"`
-}
-
-// createDir creates the artifacts dir if does not exist. 
-func createDir(name string) error {
-	_, err := os.Stat(name)
-	if os.IsNotExist(err) {
-		if err = os.Mkdir(name, 0777); err != nil {
-			return fmt.Errorf("Failed to create artifacts dir: %v", err)
+// createDir creates dir if does not exist.
+func createDir(dirPath string) error {
+	if _, err := os.Stat(dirPath); os.IsNotExist(err) {
+		if err = os.MkdirAll(dirPath, 0777); err != nil {
+			return fmt.Errorf("Failed to create directory: %v", err)
 		}
 	}
 	return nil
 }
 
-// GetArtifactsDir gets the aritfacts directory where we should put the artifacts.
-// By default, it will look at the env var ARTIFACTS.
-func GetArtifactsDir() (string, error) {
-	dir := os.Getenv("ARTIFACTS")
-	if dir == "" {
-		log.Printf("Env variable ARTIFACTS not set. Using %s instead.", artifactsDir)
-		if err := createDir(artifactsDir); err != nil {
-			return "", err
-		}
-		return artifactsDir, nil
+// GetTestgridTabURL gets Testgrid URL for giving job and filters for Testgrid
+func GetTestgridTabURL(jobName string, filters []string) (string, error) {
+	url, ok := jobNameTestgridURLMap[jobName]
+	if !ok {
+		return "", fmt.Errorf("cannot find Testgrid tab for job '%s'", jobName)
 	}
-	return dir, nil
-}
-
-// CreateTestgridXML creates junit_<TestName>.xml in the artifacts directory
-func CreateTestgridXML(tc []TestCase, testName string) error {
-	ts := TestSuite{TestCases: tc}
-	dir, err := GetArtifactsDir()
-	if err != nil {
-		return err
+	for _, filter := range filters {
+		url += "&" + filter
 	}
-	return CreateXMLOutput(ts, dir, testName)
+	return fmt.Sprintf("%s/%s", BaseURL, url), nil
 }
 
 // CreateXMLOutput creates the junit xml file in the provided artifacts directory
-func CreateXMLOutput(ts TestSuite, artifactsDir, testName string) error {
-	op, err := xml.MarshalIndent(ts, "", "  ")
+func CreateXMLOutput(tc []junit.TestCase, testName string) error {
+	ts := junit.TestSuites{}
+	ts.AddTestSuite(&junit.TestSuite{Name: testName, TestCases: tc})
+
+	// ensure artifactsDir exist, in case not invoked from this script
+	artifactsDir := prow.GetLocalArtifactsDir()
+	if err := createDir(artifactsDir); nil != err {
+		return err
+	}
+	op, err := ts.ToBytes("", "  ")
 	if err != nil {
 		return err
 	}
 
-	outputFile := artifactsDir + "/" + filePrefix + testName + extension
+	outputFile := path.Join(artifactsDir, filePrefix+testName+extension)
 	log.Printf("Storing output in %s", outputFile)
 	f, err := os.OpenFile(outputFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	defer f.Close()
 	if err != nil {
 		return err
 	}
-	defer f.Close()
 	if _, err := f.WriteString(string(op) + "\n"); err != nil {
 		return err
 	}

@@ -72,7 +72,15 @@ func (issues *FakeGithubIssues) ListComments(ctx context.Context, owner string, 
 
 func (pr *FakeGithubPullRequests) ListFiles(ctx context.Context, owner string, repo string, number int, opt *github.ListOptions) (
 	[]*github.CommitFile, *github.Response, error) {
-	return testCommitFiles(), nil, nil
+	if opt == nil {
+		return testCommitFiles(), nil, nil
+	}
+	files := testCommitFiles()
+	rsp := &github.Response{
+		NextPage: (opt.Page + 1) % len(files),
+	}
+	return []*github.CommitFile{files[opt.Page]}, rsp, nil
+
 }
 
 func FakeRepoData() *githubPr.GithubPr {

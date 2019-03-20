@@ -21,7 +21,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/knative/pkg/test/logging"
 	"github.com/knative/test-infra/shared/prometheus"
 	"github.com/prometheus/client_golang/api/prometheus/v1"
 	"github.com/prometheus/common/model"
@@ -30,6 +29,7 @@ import (
 const (
 	expected = 1.0
 	query    = "test"
+	duration = 10 * time.Second
 )
 
 type TestPromAPI struct {
@@ -65,7 +65,7 @@ func (tpa *TestPromAPI) LabelValues(ctx context.Context, label string) (model.La
 	return nil, nil
 }
 
-// Query performas a query on the prom api
+// Query performs a query on the prom api
 func (tpa *TestPromAPI) Query(c context.Context, query string, ts time.Time) (model.Value, error) {
 	s := model.Sample{Value: expected}
 	var v []*model.Sample
@@ -76,7 +76,11 @@ func (tpa *TestPromAPI) Query(c context.Context, query string, ts time.Time) (mo
 
 // QueryRange performs a query for the given range.
 func (tpa *TestPromAPI) QueryRange(ctx context.Context, query string, r v1.Range) (model.Value, error) {
-	return nil, nil
+	s := model.Sample{Value: expected}
+	var v []*model.Sample
+	v = append(v, &s)
+
+	return model.Vector(v), nil
 }
 
 // Series finds series by label matchers.
@@ -101,14 +105,22 @@ func getTestAPI() *TestPromAPI {
 }
 
 func TestRunQuery(t *testing.T) {
-	logging.InitializeLogger(true)
-	logger := logging.GetContextLogger("TestRunQuery")
-
-	r, err := prometheus.RunQuery(context.Background(), logger, getTestAPI(), query)
+	r, err := prometheus.RunQuery(context.Background(), t.Logf, getTestAPI(), query)
 	if err != nil {
 		t.Fatalf("Error running query: %v", err)
 	}
 	if r != expected {
-		t.Fatalf("Expected: %f Actual: %f", expected, r)
+		t.Fatalf("Want: %f Got: %f", expected, r)
+	}
+}
+
+func TestRunQueryRange(t *testing.T) {
+	r := v1.Range{Start: time.Now(), End: time.Now().Add(duration)}
+	val, err := prometheus.RunQueryRange(context.Background(), t.Logf, getTestAPI(), query, r)
+	if err != nil {
+		t.Fatalf("Error running query: %v", err)
+	}
+	if val != expected {
+		t.Fatalf("Want: %f Got: %f", expected, val)
 	}
 }

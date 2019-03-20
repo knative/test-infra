@@ -27,22 +27,23 @@ const (
 
 // StructKindNode represents nodes in the resource tree of type reflect.Kind.Struct
 type StructKindNode struct {
-	nodeData
+	NodeData
 }
 
-func (s *StructKindNode) getData() nodeData {
-	return s.nodeData
+// GetData returns node data
+func (s *StructKindNode) GetData() NodeData {
+	return s.NodeData
 }
 
 func (s *StructKindNode) initialize(field string, parent NodeInterface, t reflect.Type, rt *ResourceTree) {
-	s.nodeData.initialize(field, parent, t, rt)
+	s.NodeData.initialize(field, parent, t, rt)
 }
 
 func (s *StructKindNode) buildChildNodes(t reflect.Type) {
 	// For types that are part of the standard package, we treat them as leaf nodes and don't expand further.
 	// https://golang.org/pkg/reflect/#StructField.
-	if len(s.fieldType.PkgPath()) == 0 {
-		s.leafNode = true
+	if len(s.FieldType.PkgPath()) == 0 {
+		s.LeafNode = true
 		return
 	}
 
@@ -50,11 +51,11 @@ func (s *StructKindNode) buildChildNodes(t reflect.Type) {
 		var childNode NodeInterface
 		if s.isTimeNode(t.Field(i).Type) {
 			childNode = new(TimeTypeNode)
-			childNode.initialize(t.Field(i).Name, s, t.Field(i).Type, s.tree)
+			childNode.initialize(t.Field(i).Name, s, t.Field(i).Type, s.Tree)
 		} else {
-			childNode = s.tree.createNode(t.Field(i).Name, s, t.Field(i).Type)
+			childNode = s.Tree.createNode(t.Field(i).Name, s, t.Field(i).Type)
 		}
-		s.children[t.Field(i).Name] = childNode
+		s.Children[t.Field(i).Name] = childNode
 		childNode.buildChildNodes(t.Field(i).Type)
 	}
 }
@@ -67,4 +68,40 @@ func (s *StructKindNode) isTimeNode(t reflect.Type) bool {
 	} else {
 		return false
 	}
+}
+
+func (s *StructKindNode) updateCoverage(v reflect.Value) {
+	if v.IsValid() {
+		s.Covered = true
+		if !s.LeafNode {
+			for i := 0; i < v.NumField(); i++ {
+				s.Children[v.Type().Field(i).Name].updateCoverage(v.Field(i))
+			}
+		}
+	}
+}
+
+func (s *StructKindNode) buildCoverageData(coverageHelper coverageDataHelper) {
+	if len(s.Children) == 0 {
+		return
+	}
+
+	coverage := s.Tree.Forest.getConnectedNodeCoverage(s.FieldType, coverageHelper.fieldRules, coverageHelper.ignoredFields)
+	*coverageHelper.typeCoverage = append(*coverageHelper.typeCoverage, coverage)
+	// Adding the type to covered fields so as to avoid revisiting the same node in other parts of the resource tree.
+	coverageHelper.coveredTypes[s.FieldType.PkgPath() + "." + s.FieldType.Name()] = true
+
+	for field := range coverage.Fields {
+		node := s.Children[field]
+		if !coverage.Fields[field].Ignored && node.GetData().Covered && coverageHelper.nodeRules.Apply(node) {
+			// Check to see if the type has already been covered.
+			if ok, _ := coverageHelper.coveredTypes[node.GetData().FieldType.PkgPath() + "." + node.GetData().FieldType.Name()]; !ok {
+				node.buildCoverageData(coverageHelper)
+			}
+		}
+	}
+}
+
+func (s *StructKindNode) getValues() (map[string]bool) {
+	return nil
 }

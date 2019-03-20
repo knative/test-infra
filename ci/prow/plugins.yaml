@@ -43,9 +43,11 @@ plugins:
   - lgtm
   - lifecycle
   - milestone
+  - owners-label
   - shrug
   - size
   - skip
   - trigger
+  - verify-owners
   - wip
   - yuks

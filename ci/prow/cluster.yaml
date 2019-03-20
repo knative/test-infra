@@ -148,7 +148,8 @@ spec:
       serviceAccountName: "plank"
       containers:
       - name: plank
-        image: gcr.io/k8s-prow/plank:v20180709-7109caeb1
+        # Update plank utility_images versions in config.yaml when updating this version
+        image: gcr.io/k8s-prow/plank:v20190311-a967141
         args:
         - --dry-run=false
         volumeMounts:
@@ -327,7 +328,7 @@ spec:
       serviceAccountName: "tide"
       containers:
       - name: tide
-        image: gcr.io/k8s-prow/tide:v20180808-68cee5a41
+        image: gcr.io/k8s-prow/tide:v20190109-716fe27
         args:
         - --dry-run=false
         ports:

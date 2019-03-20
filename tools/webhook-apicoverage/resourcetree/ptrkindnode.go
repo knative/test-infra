@@ -1,5 +1,5 @@
 /*
-Copyright 2018 The Knative Authors
+Copyright 2019 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,26 +20,46 @@ import (
 	"reflect"
 )
 
-const ptrNodeNameSuffice = "-ptr"
+const (
+	ptrNodeNameSuffix = "-ptr"
+)
 
 // PtrKindNode represents nodes in the resource tree of type reflect.Kind.Ptr, reflect.Kind.UnsafePointer, etc.
 type PtrKindNode struct {
-	nodeData
+	NodeData
 	objKind reflect.Kind // Type of the object being pointed to. Eg: *int will store reflect.Kind.Int. This is required for type-expansion and value-evaluation decisions.
 }
 
-func (p *PtrKindNode) getData() nodeData {
-	return p.nodeData
+// GetData returns node data
+func (p *PtrKindNode) GetData() NodeData {
+	return p.NodeData
 }
 
 func (p *PtrKindNode) initialize(field string, parent NodeInterface, t reflect.Type, rt *ResourceTree) {
-	p.nodeData.initialize(field, parent, t, rt)
+	p.NodeData.initialize(field, parent, t, rt)
 	p.objKind = t.Elem().Kind()
 }
 
 func (p *PtrKindNode) buildChildNodes(t reflect.Type) {
-	childName := p.field + ptrNodeNameSuffice
-	childNode := p.tree.createNode(childName, p, t.Elem())
-	p.children[childName] = childNode
+	childName := p.Field + ptrNodeNameSuffix
+	childNode := p.Tree.createNode(childName, p, t.Elem())
+	p.Children[childName] = childNode
 	childNode.buildChildNodes(t.Elem())
+}
+
+func (p *PtrKindNode) updateCoverage(v reflect.Value) {
+	if !v.IsNil() {
+		p.Covered = true
+		p.Children[p.Field + ptrNodeNameSuffix].updateCoverage(v.Elem())
+	}
+}
+
+func (p *PtrKindNode) buildCoverageData(coverageHelper coverageDataHelper) {
+	if p.objKind == reflect.Struct {
+		p.Children[p.Field + ptrNodeNameSuffix].buildCoverageData(coverageHelper)
+	}
+}
+
+func (p *PtrKindNode) getValues() (map[string]bool) {
+	return nil
 }

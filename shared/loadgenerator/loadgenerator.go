@@ -1,5 +1,5 @@
 /*
-Copyright 2018 The Knative Authors
+Copyright 2019 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,14 +27,16 @@ import (
 
 	"fortio.org/fortio/fhttp"
 	"fortio.org/fortio/periodic"
-	"github.com/knative/test-infra/shared/testgrid"
+	"github.com/knative/test-infra/shared/prow"
 )
 
 const (
-	p50     = 50.0
-	p90     = 90.0
-	p99     = 99.0
-	jsonExt = ".json"
+	p50      = 50.0
+	p90      = 90.0
+	p99      = 99.0
+	duration = 1 * time.Minute
+	qps 	 = 10
+	jsonExt  = ".json"
 )
 
 // GeneratorOptions provides knobs to run the perf test
@@ -46,6 +48,7 @@ type GeneratorOptions struct {
 	Domain         string
 	RequestTimeout time.Duration
 	QPS            float64
+	AllowInitialErrors bool
 }
 
 // GeneratorResults contains the results of running the per test
@@ -53,8 +56,20 @@ type GeneratorResults struct {
 	Result *fhttp.HTTPRunnerResults
 }
 
+// addDefaults adds default values to non mandatory params
+func (g *GeneratorOptions) addDefaults() {
+	if (g.RequestTimeout == 0) {
+		g.RequestTimeout = duration
+	}
+
+	if (g.QPS == 0) {
+		g.QPS = qps
+	}
+}
+
 // CreateRunnerOptions sets up the fortio client with the knobs needed to run the load test
 func (g *GeneratorOptions) CreateRunnerOptions(resolvableDomain bool) *fhttp.HTTPRunnerOptions {
+	g.addDefaults()
 	o := fhttp.NewHTTPOptions(g.URL)
 
 	o.NumConnections = g.NumConnections
@@ -73,7 +88,7 @@ func (g *GeneratorOptions) CreateRunnerOptions(resolvableDomain bool) *fhttp.HTT
 			QPS:         g.QPS,
 		},
 		HTTPOptions:        *o,
-		AllowInitialErrors: true,
+		AllowInitialErrors: g.AllowInitialErrors,
 	}
 }
 
@@ -85,9 +100,11 @@ func (g *GeneratorOptions) RunLoadTest(resolvableDomain bool) (*GeneratorResults
 
 // SaveJSON saves the results as Json in the artifacts directory
 func (gr *GeneratorResults) SaveJSON(testName string) error {
-	dir, err := testgrid.GetArtifactsDir()
-	if err != nil {
-		return err
+	dir := prow.GetLocalArtifactsDir()
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		if err = os.MkdirAll(dir, 0777); err != nil {
+			return fmt.Errorf("Failed to create dir: %v", err)
+		}
 	}
 
 	outputFile := dir + "/" + testName + jsonExt

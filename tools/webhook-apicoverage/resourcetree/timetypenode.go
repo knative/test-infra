@@ -16,22 +16,40 @@ limitations under the License.
 
 package resourcetree
 
-import "reflect"
+import (
+	"reflect"
+)
 
 // TimeTypeNode is a node type that encapsulates fields that are internally time based. E.g metav1.ObjectMeta.CreationTimestamp or metav1.ObjectMeta.DeletionTimestamp.
 // These are internally of type metav1.Time which use standard time type, but their values are specified as timestamp strings with parsing logic to create time objects. For
 // use-case we only care if the value is set, so we create TimeTypeNodes and mark them as leafnodes.
 type TimeTypeNode struct {
-	nodeData
+	NodeData
 }
 
-func (ti *TimeTypeNode) getData() nodeData {
-	return ti.nodeData
+// GetData returns node data
+func (ti *TimeTypeNode) GetData() NodeData {
+	return ti.NodeData
 }
 
 func (ti *TimeTypeNode) initialize(field string, parent NodeInterface, t reflect.Type, rt *ResourceTree) {
-	ti.nodeData.initialize(field, parent, t, rt)
-	ti.leafNode = true
+	ti.NodeData.initialize(field, parent, t, rt)
+	ti.LeafNode = true
 }
 
 func (ti *TimeTypeNode) buildChildNodes(t reflect.Type) {}
+
+func (ti *TimeTypeNode) updateCoverage(v reflect.Value) {
+	if v.Type().Kind() == reflect.Struct && v.IsValid() {
+		ti.Covered = true
+	} else if v.Type().Kind() == reflect.Ptr && !v.IsNil() {
+		ti.Covered = true
+	}
+}
+
+// no-op as the coverage is calculated as field coverage in parent node.
+func (ti *TimeTypeNode) buildCoverageData(coverageHelper coverageDataHelper) {}
+
+func (ti *TimeTypeNode) getValues() (map[string]bool) {
+	return nil
+}
