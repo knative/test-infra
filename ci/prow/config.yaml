@@ -1419,7 +1419,7 @@ presubmits:
         secret:
           secretName: covbot-token
 periodics:
-- cron: "1 * * * *"
+- cron: "1 */2 * * *"
   name: ci-knative-serving-continuous
   agent: kubernetes
   spec:
@@ -1434,7 +1434,7 @@ periodics:
       - "--root=/go/src"
       - "--service-account=/etc/test-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
-      - "--timeout=55" # Avoid overrun
+      - "--timeout=100" # Avoid overrun
       - "--" # end bootstrap args, scenario args below
       - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/presubmit-tests.sh"
