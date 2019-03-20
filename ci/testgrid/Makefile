@@ -13,11 +13,13 @@
 # limitations under the License.
 
 TESTGRID_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+PROW_DIR := $(TESTGRID_DIR)/../prow
+
+config:
+	cd $(PROW_DIR) && make config && cd -
 
 test:
-	bazel run @k8s//testgrid/cmd/configurator -- \
-		--yaml=$(TESTGRID_DIR)/config.yaml \
-		--validate-config-file
+	cd $(PROW_DIR) && make test && cd -
 
 update-config:
 ifndef GOOGLE_APPLICATION_CREDENTIALS

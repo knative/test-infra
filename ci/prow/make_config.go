@@ -42,6 +42,10 @@ const (
 	cleanupPeriodicJobCron        = "0 19 * * 1" // Run at 11:00PST/12:00PST every Monday (19:00 UTC)
 	flakesreporterPeriodicJobCron = "0 12 * * *" // Run at 4:00PST/5:00PST every day (12:00 UTC)
 	backupPeriodicJobCron         = "15 9 * * *" // Run at 02:15PST every day (09:15 UTC)
+
+	// baseOptions setting for specific dashboard tabs
+	dashboardBaseOptionsDir    = "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+	dashboardBaseOptionsTarget = "exclude-filter-by-regex=Overall$&group-by-target=&expand-groups=&sort-by-name="
 )
 
 // repositoryData contains basic data about each Knative repository.
@@ -118,6 +122,7 @@ type stringArrayFlag []string
 // ############## data definitions that are used for the testgrid config file generation ##############
 // ####################################################################################################
 // baseTestgridTemplateData contains basic data about the testgrid config file.
+// TODO(chizhg): remove this structure and use baseProwJobTemplateData instead
 type baseTestgridTemplateData struct {
 	TestGroupName string
 	Year          int
@@ -125,7 +130,8 @@ type baseTestgridTemplateData struct {
 
 // testGroupTemplateData contains data about a test group
 type testGroupTemplateData struct {
-	Base      baseTestgridTemplateData
+	Base baseTestgridTemplateData
+	// TODO(chizhg): use baseProwJobTemplateData then this attribute can be removed
 	GcsLogDir string
 	Extras    map[string]string
 }
@@ -202,7 +208,6 @@ var (
 )
 
 // Templates for config generation.
-// TODO(adrcunha): eliminate redundant templates (e.g., latency job) by factoring them as standard jobs (e.g., periodic job).
 
 const (
 	// ##########################################################
@@ -505,7 +510,7 @@ default_dashboard_tab:
 	dashboardGroupTemplate = `
 - name: [[.Name]]
   dashboard_names:
-  [[indent_array_without_quote 2 .RepoNames]]
+  [[indent_array 2 .RepoNames]]
 	`
 )
 
@@ -1044,8 +1049,11 @@ func gitHubRepo(data baseProwJobTemplateData) string {
 	return s
 }
 
-// quote returns the given string quoted if it's not a key/value pair or already quoted.
+// quote returns the given string quoted if it's a number, or not a key/value pair, or already quoted.
 func quote(s string) string {
+	if _, err := strconv.ParseFloat(s, 64); err == nil {
+		return s
+	}
 	if strings.Contains(s, "\"") || strings.Contains(s, ": ") || strings.HasSuffix(s, ":") {
 		return s
 	}
@@ -1053,7 +1061,7 @@ func quote(s string) string {
 }
 
 // indentBase is a helper function which returns the given array indented.
-func indentBase(indentation int, prefix string, indentFirstLine bool, addQuote bool, array []string) string {
+func indentBase(indentation int, prefix string, indentFirstLine bool, array []string) string {
 	s := ""
 	if len(array) == 0 {
 		return s
@@ -1063,33 +1071,25 @@ func indentBase(indentation int, prefix string, indentFirstLine bool, addQuote b
 		if i > 0 || indentFirstLine {
 			s += indent
 		}
-		if addQuote {
-			s += prefix + quote(array[i]) + "\n"
-		} else {
-			s += prefix + array[i] + "\n"
-		}
+
+		s += prefix + quote(array[i]) + "\n"
 	}
 	return s
 }
 
 // indentArray returns the given array indented, prefixed by "-".
 func indentArray(indentation int, array []string) string {
-	return indentBase(indentation, "- ", false, true, array)
-}
-
-// indentArrayWithoutQuote returns the given array indented, prefixed by "-" and the content unquoted
-func indentArrayWithoutQuote(indentation int, array []string) string {
-	return indentBase(indentation, "- ", false, false, array)
+	return indentBase(indentation, "- ", false, array)
 }
 
 // indentKeys returns the given array of key/value pairs indented.
 func indentKeys(indentation int, array []string) string {
-	return indentBase(indentation, "", false, true, array)
+	return indentBase(indentation, "", false, array)
 }
 
 // indentSectionBase is a helper function which returns the given array of key/value pairs indented inside a section.
 func indentSectionBase(indentation int, title string, prefix string, array []string) string {
-	keys := indentBase(indentation, prefix, true, true, array)
+	keys := indentBase(indentation, prefix, true, array)
 	if keys == "" {
 		return keys
 	}
@@ -1111,15 +1111,10 @@ func indentMap(indentation int, mp map[string]string) string {
 	arr := make([]string, len(mp))
 	i := 0
 	for k, v := range mp {
-		_, err := strconv.ParseFloat(v, 64)
-		if err == nil {
-			arr[i] = k + ": " + v
-		} else {
-			arr[i] = k + ": " + quote(v)
-		}
+		arr[i] = k + ": " + quote(v)
 		i++
 	}
-	return indentBase(indentation, "", false, true, arr)
+	return indentBase(indentation, "", false, arr)
 }
 
 // outputConfig outputs the given line, if not empty, to stdout.
@@ -1162,13 +1157,12 @@ func executeJobTemplate(name, templ, title, repoName, jobName string, groupByRep
 func executeTemplate(name, templ string, data interface{}) {
 	var res bytes.Buffer
 	funcMap := template.FuncMap{
-		"indent_section":             indentSection,
-		"indent_array_section":       indentArraySection,
-		"indent_array":               indentArray,
-		"indent_array_without_quote": indentArrayWithoutQuote,
-		"indent_keys":                indentKeys,
-		"indent_map":                 indentMap,
-		"repo":                       gitHubRepo,
+		"indent_section":       indentSection,
+		"indent_array_section": indentArraySection,
+		"indent_array":         indentArray,
+		"indent_keys":          indentKeys,
+		"indent_map":           indentMap,
+		"repo":                 gitHubRepo,
 	}
 	t := template.Must(template.New(name).Funcs(funcMap).Delims("[[", "]]").Parse(templ))
 	if err := t.Execute(&res, data); err != nil {
@@ -1252,12 +1246,13 @@ func collectMetaData(periodicJob yaml.MapSlice) {
 					enabled = true
 					jobName = getString(item.Value)
 				default:
+					// continue here since we do not need to care about other entries, like cron, command, etc.
 					continue
 				}
 			}
 			// add job types for the corresponding repos, if needed
 			if enabled {
-				// if it's an already released project
+				// if it's a job for a release branch
 				if releaseVersion != "" {
 					releaseProjName := fmt.Sprintf("%s-%s", projName, releaseVersion)
 					jobDetailMap = addProjAndRepoIfNeed(releaseProjName, repoName)
@@ -1322,12 +1317,12 @@ func generateTestGroup(repoName string, jobNames []string) {
 		extras := make(map[string]string)
 		switch jobName {
 		case "continuous", "dot-release", "auto-release", "performance", "latency", "api-coverage", "playground":
-			gcsLogDir = fmt.Sprintf("%s/%s/ci-%s-%s", gcsBucket, logsDir, repoName, jobName)
+			gcsLogDir = fmt.Sprintf("%s/%s/%s", gcsBucket, logsDir, testGroupName)
 			if jobName == "playground" {
+				// TODO(chizhg): this value should be derived from the cron string
 				extras["alert_stale_results_hours"] = "168"
 			}
 
-			// TODO: confirm if they are needed or not
 			if jobName == "latency" {
 				extras["short_text_metric"] = "latency"
 			}
@@ -1338,12 +1333,12 @@ func generateTestGroup(repoName string, jobNames []string) {
 				extras["short_text_metric"] = "perf_latency"
 			}
 		case "nightly":
-			gcsLogDir = fmt.Sprintf("%s/%s/ci-%s-%s-release", gcsBucket, logsDir, repoName, jobName)
+			gcsLogDir = fmt.Sprintf("%s/%s/%s", gcsBucket, logsDir, testGroupName)
 		case "test-coverage":
 			gcsLogDir = fmt.Sprintf("%s/%s/ci-%s-%s", gcsBucket, logsDir, repoName, "go-coverage")
 			extras["short_text_metric"] = "coverage"
 		default:
-			continue
+			log.Fatalf("Unknown jobName: %s", jobName)
 		}
 		executeTestGroupTemplate(testGroupName, gcsLogDir, extras)
 	}
@@ -1370,6 +1365,7 @@ func generateDashboard(repoName string, jobNames []string) {
 			dashboardTabName := jobName
 			executeDashboardTabTemplate(dashboardTabName, testGroupName, baseOptions, extras)
 
+			// This is a special case for knative/serving, as conformance-tests tab is just a filtered view of the continuous tab.
 			if repoName == "knative-serving" {
 				dashboardTabName := "conformance-tests"
 				baseOptions = "include-filter-by-regex=test/conformance\\\\.&sort-by-name="
@@ -1379,10 +1375,10 @@ func generateDashboard(repoName string, jobNames []string) {
 			dashboardTabName := jobName
 
 			if jobName == "latency" || jobName == "api-coverage" {
-				baseOptions = "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+				baseOptions = dashboardBaseOptionsDir
 			}
 			if jobName == "performance" {
-				baseOptions = "exclude-filter-by-regex=Overall$&group-by-target=&expand-groups=&sort-by-name="
+				baseOptions = dashboardBaseOptionsTarget
 			}
 			if jobName == "latency" {
 				extras["description"] = "95% latency in ms"
@@ -1397,10 +1393,10 @@ func generateDashboard(repoName string, jobNames []string) {
 			executeDashboardTabTemplate(dashboardTabName, testGroupName, baseOptions, extras)
 		case "test-coverage":
 			dashboardTabName := "coverage"
-			baseOptions = "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+			baseOptions = dashboardBaseOptionsDir
 			executeDashboardTabTemplate(dashboardTabName, testGroupName, baseOptions, extras)
 		default:
-			continue
+			log.Fatalf("Unknown jobName: %s", jobName)
 		}
 	}
 }
@@ -1420,11 +1416,11 @@ func getTestGroupName(repoName string, jobName string) string {
 	testGroupName := ""
 	switch jobName {
 	case "continuous", "dot-release", "auto-release", "performance", "latency", "api-coverage", "playground":
-		testGroupName = fmt.Sprintf("ci-%s-%s", repoName, jobName)
+		return fmt.Sprintf("ci-%s-%s", repoName, jobName)
 	case "nightly":
-		testGroupName = fmt.Sprintf("ci-%s-%s-release", repoName, jobName)
+		return fmt.Sprintf("ci-%s-%s-release", repoName, jobName)
 	case "test-coverage":
-		testGroupName = fmt.Sprintf("pull-%s-%s", repoName, jobName)
+		return fmt.Sprintf("pull-%s-%s", repoName, jobName)
 	default:
 		log.Fatalf("Unknown jobName: %s", jobName)
 	}
@@ -1475,7 +1471,7 @@ func executeDashboardGroupTemplate(dashboardGroupName string, dashboardRepoNames
 func setOutput(fileName string) {
 	configFile, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE, 0666)
 	if err != nil {
-		log.Fatal("Cannot open the configuration file")
+		log.Fatalf("Cannot open the configuration file %q: %v", fileName, err)
 	}
 	configFile.Truncate(0)
 	configFile.Seek(0, 0)
@@ -1547,6 +1543,10 @@ func main() {
 		generateGoCoveragePostsubmits()
 	}
 
+	// config object is modified when we generate prow config, so we'll need to reload it here
+	if err = yaml.Unmarshal(content, &config); err != nil {
+		log.Fatalf("Cannot parse config %q: %v", name, err)
+	}
 	// Generate Testgrid config.
 	if *generateTestgridConfig {
 		output = os.Stdout
