@@ -46,6 +46,7 @@ test:
 	$(eval TMP_YAML_PROW := $(shell mktemp)) $(eval TMP_YAML_TESTGRID := $(shell mktemp))
 	go run make_config.go --prow-config-output="$(TMP_YAML_PROW)" --testgrid-config-output="$(TMP_YAML_TESTGRID)" config_knative.yaml
 	diff config.yaml $(TMP_YAML_PROW)
-	diff $(TESTGRID_DIR)/config.yaml $(TMP_YAML_TESTGRID)
+	# TODO(chizhg): this line needs to be commented before we replace the testgrid config file with the auto-generated one
+	# diff $(TESTGRID_DIR)/config.yaml $(TMP_YAML_TESTGRID)
 	@echo "*** Checking config validity"
 	bazel run @k8s//prow/cmd/checkconfig -- --plugin-config=$(PROW_DIR)/plugins.yaml --config-path=$(PROW_DIR)/config.yaml
