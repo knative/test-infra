@@ -113,6 +113,8 @@ func createSlackMessageForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyI
 	if flakyRate > threshold { // Don't list each test as this can be huge
 		message += fmt.Sprintf("\n>- skip displaying all tests as flaky rate above '%0.2f%%'", threshold)
 		if flakyIssues, ok := flakyIssuesMap[getBulkIssueIdentity(rd, flakyRate)]; ok {
+			// When flaky rate is above threthold, there is only one issue created,
+			// so there is only one element in flakyIssues
 			for _, fi := range flakyIssues {
 				message += fmt.Sprintf("\t%s", fi.issue.GetHTMLURL())
 			}
