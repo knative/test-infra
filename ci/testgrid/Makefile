@@ -16,10 +16,10 @@ TESTGRID_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 PROW_DIR := $(TESTGRID_DIR)/../prow
 
 config:
-	cd $(PROW_DIR) && make config && cd -
+	make -C $(PROW_DIR) config
 
 test:
-	cd $(PROW_DIR) && make test && cd -
+	make -C $(PROW_DIR) test
 
 update-config:
 ifndef GOOGLE_APPLICATION_CREDENTIALS

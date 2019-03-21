@@ -43,9 +43,9 @@ const (
 	flakesreporterPeriodicJobCron = "0 12 * * *" // Run at 4:00PST/5:00PST every day (12:00 UTC)
 	backupPeriodicJobCron         = "15 9 * * *" // Run at 02:15PST every day (09:15 UTC)
 
-	// baseOptions setting for specific dashboard tabs
-	dashboardBaseOptionsDir    = "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-	dashboardBaseOptionsTarget = "exclude-filter-by-regex=Overall$&group-by-target=&expand-groups=&sort-by-name="
+	// baseOptions setting for testgrid dashboard tabs
+	testgridTabGroupByDir    = "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+	testgridTabGroupByTarget = "exclude-filter-by-regex=Overall$&group-by-target=&expand-groups=&sort-by-name="
 )
 
 // repositoryData contains basic data about each Knative repository.
@@ -122,7 +122,7 @@ type stringArrayFlag []string
 // ############## data definitions that are used for the testgrid config file generation ##############
 // ####################################################################################################
 // baseTestgridTemplateData contains basic data about the testgrid config file.
-// TODO(chizhg): remove this structure and use baseProwJobTemplateData instead
+// TODO(Fredy-Z): remove this structure and use baseProwJobTemplateData instead
 type baseTestgridTemplateData struct {
 	TestGroupName string
 	Year          int
@@ -131,7 +131,7 @@ type baseTestgridTemplateData struct {
 // testGroupTemplateData contains data about a test group
 type testGroupTemplateData struct {
 	Base baseTestgridTemplateData
-	// TODO(chizhg): use baseProwJobTemplateData then this attribute can be removed
+	// TODO(Fredy-Z): use baseProwJobTemplateData then this attribute can be removed
 	GcsLogDir string
 	Extras    map[string]string
 }
@@ -1049,7 +1049,7 @@ func gitHubRepo(data baseProwJobTemplateData) string {
 	return s
 }
 
-// quote returns the given string quoted if it's a number, or not a key/value pair, or already quoted.
+// quote returns the given string quoted if it's not a number, or not a key/value pair, or already quoted.
 func quote(s string) string {
 	if _, err := strconv.ParseFloat(s, 64); err == nil {
 		return s
@@ -1071,7 +1071,6 @@ func indentBase(indentation int, prefix string, indentFirstLine bool, array []st
 		if i > 0 || indentFirstLine {
 			s += indent
 		}
-
 		s += prefix + quote(array[i]) + "\n"
 	}
 	return s
@@ -1313,13 +1312,12 @@ func generateSection(sectionName string, generator testgridEntityGenerator) {
 func generateTestGroup(repoName string, jobNames []string) {
 	for _, jobName := range jobNames {
 		testGroupName := getTestGroupName(repoName, jobName)
-		gcsLogDir := ""
+		gcsLogDir := fmt.Sprintf("%s/%s/%s", gcsBucket, logsDir, testGroupName)
 		extras := make(map[string]string)
 		switch jobName {
-		case "continuous", "dot-release", "auto-release", "performance", "latency", "api-coverage", "playground":
-			gcsLogDir = fmt.Sprintf("%s/%s/%s", gcsBucket, logsDir, testGroupName)
+		case "continuous", "dot-release", "auto-release", "performance", "latency", "api-coverage", "playground", "nightly":
 			if jobName == "playground" {
-				// TODO(chizhg): this value should be derived from the cron string
+				// TODO(Fredy-Z): this value should be derived from the cron string
 				extras["alert_stale_results_hours"] = "168"
 			}
 
@@ -1332,8 +1330,6 @@ func generateTestGroup(repoName string, jobNames []string) {
 			if jobName == "performance" {
 				extras["short_text_metric"] = "perf_latency"
 			}
-		case "nightly":
-			gcsLogDir = fmt.Sprintf("%s/%s/%s", gcsBucket, logsDir, testGroupName)
 		case "test-coverage":
 			gcsLogDir = fmt.Sprintf("%s/%s/ci-%s-%s", gcsBucket, logsDir, repoName, "go-coverage")
 			extras["short_text_metric"] = "coverage"
@@ -1375,10 +1371,10 @@ func generateDashboard(repoName string, jobNames []string) {
 			dashboardTabName := jobName
 
 			if jobName == "latency" || jobName == "api-coverage" {
-				baseOptions = dashboardBaseOptionsDir
+				baseOptions = testgridTabGroupByDir
 			}
 			if jobName == "performance" {
-				baseOptions = dashboardBaseOptionsTarget
+				baseOptions = testgridTabGroupByTarget
 			}
 			if jobName == "latency" {
 				extras["description"] = "95% latency in ms"
@@ -1393,7 +1389,7 @@ func generateDashboard(repoName string, jobNames []string) {
 			executeDashboardTabTemplate(dashboardTabName, testGroupName, baseOptions, extras)
 		case "test-coverage":
 			dashboardTabName := "coverage"
-			baseOptions = dashboardBaseOptionsDir
+			baseOptions = testgridTabGroupByDir
 			executeDashboardTabTemplate(dashboardTabName, testGroupName, baseOptions, extras)
 		default:
 			log.Fatalf("Unknown jobName: %s", jobName)
@@ -1413,7 +1409,6 @@ func executeDashboardTabTemplate(dashboardTabName string, testGroupName string, 
 
 // getTestGroupName get the testGroupName from the given repoName and jobName
 func getTestGroupName(repoName string, jobName string) string {
-	testGroupName := ""
 	switch jobName {
 	case "continuous", "dot-release", "auto-release", "performance", "latency", "api-coverage", "playground":
 		return fmt.Sprintf("ci-%s-%s", repoName, jobName)
@@ -1421,10 +1416,9 @@ func getTestGroupName(repoName string, jobName string) string {
 		return fmt.Sprintf("ci-%s-%s-release", repoName, jobName)
 	case "test-coverage":
 		return fmt.Sprintf("pull-%s-%s", repoName, jobName)
-	default:
-		log.Fatalf("Unknown jobName: %s", jobName)
 	}
-	return testGroupName
+	log.Fatalf("Unknown jobName: %s", jobName)
+	return ""
 }
 
 // buildProjRepoStr builds the projRepoStr used in the config file with projName and repoName
@@ -1471,7 +1465,7 @@ func executeDashboardGroupTemplate(dashboardGroupName string, dashboardRepoNames
 func setOutput(fileName string) {
 	configFile, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE, 0666)
 	if err != nil {
-		log.Fatalf("Cannot open the configuration file %q: %v", fileName, err)
+		log.Fatalf("Cannot create the configuration file %q: %v", fileName, err)
 	}
 	configFile.Truncate(0)
 	configFile.Seek(0, 0)
