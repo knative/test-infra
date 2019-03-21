@@ -102,7 +102,7 @@ func getIdentityForTest(testFullName, repoName string) string {
 	return fmt.Sprintf("'%s' in repo '%s'", testFullName, repoName)
 }
 
-// getBulkIssueIdentity creates a unique identify for bulk issue when flaky rate above threshold
+// getBulkIssueIdentity creates a unique identity for a bulk issue when the flaky rate is above a threshold
 func getBulkIssueIdentity(rd *RepoData, flakyRate float32) string {
 	return fmt.Sprintf("%.2f%% tests failed in repo %s on %s",
 		flakyRate*100, rd.Config.Repo, time.Unix(*rd.LastBuildStartTime, 0).String())
