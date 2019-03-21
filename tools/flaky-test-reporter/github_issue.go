@@ -102,6 +102,12 @@ func getIdentityForTest(testFullName, repoName string) string {
 	return fmt.Sprintf("'%s' in repo '%s'", testFullName, repoName)
 }
 
+// getBulkIssueIdentity creates a unique identify for bulk issue when flaky rate above threshold
+func getBulkIssueIdentity(rd *RepoData, flakyRate float32) string {
+	return fmt.Sprintf("%.2f%% tests failed in repo %s on %s",
+		flakyRate*100, rd.Config.Repo, time.Unix(*rd.LastBuildStartTime, 0).String())
+}
+
 // GithubIssue handles methods for github issues
 type GithubIssue struct {
 	user   *github.User
@@ -424,8 +430,7 @@ func (gi *GithubIssue) processGithubIssueForRepo(rd *RepoData, flakyIssuesMap ma
 	flakyRate := getFlakyRate(rd)
 	if flakyRate > threshold {
 		log.Printf("flaky rate above '%f', creating a single issue", threshold)
-		identity := fmt.Sprintf("%.2f%% tests failed in repo %s on %s",
-			flakyRate*100, rd.Config.Repo, time.Unix(*rd.LastBuildStartTime, 0).String())
+		identity := getBulkIssueIdentity(rd, flakyRate)
 		if _, ok := flakyIssuesMap[identity]; ok {
 			log.Printf("issue already exist, skip creating")
 			return nil, nil

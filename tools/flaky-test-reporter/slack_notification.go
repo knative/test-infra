@@ -109,11 +109,21 @@ func createSlackMessageForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyI
 	flakyTests := getFlakyTests(rd)
 	message := fmt.Sprintf("As of %s, there are %d flaky tests in '%s'",
 		time.Unix(*rd.LastBuildStartTime, 0).String(), len(flakyTests), rd.Config.Repo)
-	for _, testFullName := range flakyTests {
-		message += fmt.Sprintf("\n>- %s", testFullName)
-		if flakyIssues, ok := flakyIssuesMap[getIdentityForTest(testFullName, rd.Config.Repo)]; ok {
+	flakyRate := getFlakyRate(rd)
+	if flakyRate > threshold { // Don't list each test as this can be huge
+		message += fmt.Sprintf("\n>- skip displaying all tests as flaky rate above '%0.2f%%'", threshold)
+		if flakyIssues, ok := flakyIssuesMap[getBulkIssueIdentity(rd, flakyRate)]; ok {
 			for _, fi := range flakyIssues {
 				message += fmt.Sprintf("\t%s", fi.issue.GetHTMLURL())
+			}
+		}
+	} else {
+		for _, testFullName := range flakyTests {
+			message += fmt.Sprintf("\n>- %s", testFullName)
+			if flakyIssues, ok := flakyIssuesMap[getIdentityForTest(testFullName, rd.Config.Repo)]; ok {
+				for _, fi := range flakyIssues {
+					message += fmt.Sprintf("\t%s", fi.issue.GetHTMLURL())
+				}
 			}
 		}
 	}
