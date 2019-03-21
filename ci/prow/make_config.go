@@ -596,7 +596,7 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	data.PresubmitPostJobName = "post-" + data.PresubmitJobName
 	if data.Base.ServiceAccount != "" {
 		addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
-		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-west2")
+		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-central1")
 	}
 	addExtraEnvVarsToJob(&data.Base)
 	configureServiceAccountForJob(&data.Base)
@@ -742,7 +742,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	data.PeriodicCommand = createCommand(data.Base)
 	if data.Base.ServiceAccount != "" {
 		addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
-		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-west2")
+		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-central1")
 	}
 	addExtraEnvVarsToJob(&data.Base)
 	configureServiceAccountForJob(&data.Base)
