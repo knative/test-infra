@@ -38,7 +38,7 @@ RUN rm -rf /usr/local/go && \
     rm "${GO_TARBALL}"
 
 # Extra tools through go get
-RUN go get -u github.com/google/go-containerregistry/cmd/ko
+RUN go get -u github.com/google/ko/cmd/ko
 RUN go get -u github.com/golang/dep/cmd/dep
 RUN go get -u github.com/google/licenseclassifier
 RUN go get -u github.com/jstemmer/go-junit-report
