@@ -48,5 +48,8 @@ test:
 	go run make_config.go --prow-config-output="$(TMP_YAML_PROW)" --testgrid-config-output="$(TMP_YAML_TESTGRID)" config_knative.yaml
 	diff config.yaml $(TMP_YAML_PROW)
 	diff $(TESTGRID_DIR)/config.yaml $(TMP_YAML_TESTGRID)
-	@echo "*** Checking config validity"
+	@echo "*** Checking configs validity"
 	bazel run @k8s//prow/cmd/checkconfig -- --plugin-config=$(PROW_DIR)/plugins.yaml --config-path=$(PROW_DIR)/config.yaml
+	bazel run @k8s//testgrid/cmd/configurator -- \
+		--yaml=$(TESTGRID_DIR)/config.yaml \
+		--validate-config-file

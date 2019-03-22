@@ -46,6 +46,7 @@ const (
 	// baseOptions setting for testgrid dashboard tabs
 	testgridTabGroupByDir    = "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 	testgridTabGroupByTarget = "exclude-filter-by-regex=Overall$&group-by-target=&expand-groups=&sort-by-name="
+	testgridTabSortByName    = "sort-by-name="
 )
 
 // repositoryData contains basic data about each Knative repository.
@@ -852,18 +853,6 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 				fmt.Sprintf("--source-directory=ci-%s-continuous", data.Base.RepoNameForJob),
 				"--artifacts-dir=$(ARTIFACTS)",
 				"--service-account=" + data.Base.ServiceAccount}
-		case "api-coverage":
-			if !getBool(item.Value) {
-				return
-			}
-			jobType = getString(item.Key)
-			jobTemplate = periodicCustomJob
-			jobNameSuffix = "api-coverage"
-			data.Base.Image = "gcr.io/knative-tests/test-infra/apicoverage:latest"
-			data.Base.Command = "/apicoverage"
-			data.Base.Args = []string{
-				"--artifacts-dir=$(ARTIFACTS)",
-				"--service-account=" + data.Base.ServiceAccount}
 		case "custom-job":
 			jobType = getString(item.Key)
 			jobNameSuffix = getString(item.Value)
@@ -1230,7 +1219,7 @@ func collectMetaData(periodicJob yaml.MapSlice) {
 			releaseVersion := ""
 			for _, item := range jobConfig {
 				switch item.Key {
-				case "continuous", "dot-release", "auto-release", "performance", "latency", "api-coverage", "nightly":
+				case "continuous", "dot-release", "auto-release", "performance", "latency", "nightly":
 					if getBool(item.Value) {
 						enabled = true
 						jobName = getString(item.Key)
@@ -1314,7 +1303,7 @@ func generateTestGroup(repoName string, jobNames []string) {
 		gcsLogDir := fmt.Sprintf("%s/%s/%s", gcsBucket, logsDir, testGroupName)
 		extras := make(map[string]string)
 		switch jobName {
-		case "continuous", "dot-release", "auto-release", "performance", "latency", "api-coverage", "playground", "nightly":
+		case "continuous", "dot-release", "auto-release", "performance", "latency", "playground", "nightly":
 			if jobName == "playground" {
 				// TODO(Fredy-Z): this value should be derived from the cron string
 				extras["alert_stale_results_hours"] = "168"
@@ -1322,9 +1311,6 @@ func generateTestGroup(repoName string, jobNames []string) {
 
 			if jobName == "latency" {
 				extras["short_text_metric"] = "latency"
-			}
-			if jobName == "api-coverage" {
-				extras["short_text_metric"] = "api_coverage"
 			}
 			if jobName == "performance" {
 				extras["short_text_metric"] = "perf_latency"
@@ -1350,48 +1336,34 @@ func executeTestGroupTemplate(testGroupName string, gcsLogDir string, extras map
 
 // generateDashboard generates the dashboard configuration
 func generateDashboard(repoName string, jobNames []string) {
-	outputConfig(fmt.Sprintf("- name: %s\n  dashboard_tab:", repoName))
+	outputConfig("- name: " + repoName + "\n" + baseIndent + "dashboard_tab:")
+	noExtras := make(map[string]string)
 	for _, jobName := range jobNames {
 		testGroupName := getTestGroupName(repoName, jobName)
-		baseOptions := "sort-by-name="
-		extras := make(map[string]string)
 		switch jobName {
 		case "continuous":
-			dashboardTabName := jobName
-			executeDashboardTabTemplate(dashboardTabName, testGroupName, baseOptions, extras)
-
+			executeDashboardTabTemplate("continuous", testGroupName, testgridTabSortByName, noExtras)
 			// This is a special case for knative/serving, as conformance-tests tab is just a filtered view of the continuous tab.
 			if repoName == "knative-serving" {
-				dashboardTabName := "conformance-tests"
-				baseOptions = "include-filter-by-regex=test/conformance\\\\.&sort-by-name="
-				executeDashboardTabTemplate(dashboardTabName, testGroupName, baseOptions, extras)
+				executeDashboardTabTemplate("conformance-tests", testGroupName, "include-filter-by-regex=test/conformance\\\\.&sort-by-name=", noExtras)
 			}
-		case "dot-release", "auto-release", "performance", "latency", "api-coverage", "playground":
-			dashboardTabName := jobName
-
-			if jobName == "latency" || jobName == "api-coverage" {
-				baseOptions = testgridTabGroupByDir
-			}
-			if jobName == "performance" {
+		case "dot-release", "auto-release", "performance", "latency", "playground":
+			extras := make(map[string]string)
+			baseOptions := testgridTabSortByName
+			switch jobName {
+			case "performance":
 				baseOptions = testgridTabGroupByTarget
-			}
-			if jobName == "latency" {
+			case "latency":
+				baseOptions = testgridTabGroupByDir
 				extras["description"] = "95% latency in ms"
 			}
-			if jobName == "api-coverage" {
-				extras["description"] = "Conformance tests API coverage."
-			}
-
-			executeDashboardTabTemplate(dashboardTabName, testGroupName, baseOptions, extras)
+			executeDashboardTabTemplate(jobName, testGroupName, baseOptions, extras)
 		case "nightly":
-			dashboardTabName := "release"
-			executeDashboardTabTemplate(dashboardTabName, testGroupName, baseOptions, extras)
+			executeDashboardTabTemplate("nightly", testGroupName, testgridTabSortByName, noExtras)
 		case "test-coverage":
-			dashboardTabName := "coverage"
-			baseOptions = testgridTabGroupByDir
-			executeDashboardTabTemplate(dashboardTabName, testGroupName, baseOptions, extras)
+			executeDashboardTabTemplate("coverage", testGroupName, testgridTabGroupByDir, noExtras)
 		default:
-			log.Fatalf("Unknown jobName: %s", jobName)
+			log.Fatalf("Unknown job name %q", jobName)
 		}
 	}
 }
@@ -1409,7 +1381,7 @@ func executeDashboardTabTemplate(dashboardTabName string, testGroupName string, 
 // getTestGroupName get the testGroupName from the given repoName and jobName
 func getTestGroupName(repoName string, jobName string) string {
 	switch jobName {
-	case "continuous", "dot-release", "auto-release", "performance", "latency", "api-coverage", "playground":
+	case "continuous", "dot-release", "auto-release", "performance", "latency", "playground":
 		return fmt.Sprintf("ci-%s-%s", repoName, jobName)
 	case "nightly":
 		return fmt.Sprintf("ci-%s-%s-release", repoName, jobName)

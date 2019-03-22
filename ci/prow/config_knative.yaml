@@ -125,8 +125,6 @@ periodics:
       timeout: 90
     - latency: true
       cron: "5 8 * * *" # Run at 01:05PST every day (08:05 UTC)
-    - api-coverage: true
-      cron: "5 8 * * *" # Run at 01:05PST every day (08:05 UTC)
     - performance: true
       cron: "0 1 * * *" # Run at 01:00 every day
     - webhook-apicoverage: true
