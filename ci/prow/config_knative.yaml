@@ -69,6 +69,7 @@ presubmits:
     - build-tests: true
     - unit-tests: true
     - integration-tests: true
+      needs-dind: true
     - go-coverage: true
       go-coverage-threshold: 50
 
@@ -146,6 +147,7 @@ periodics:
 
   knative/docs:
     - continuous: true
+      needs-dind: true
       cron: "50 * * * *" # Run every hour and 50 minutes
 
   knative/eventing:
