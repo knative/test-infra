@@ -26,6 +26,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 	"text/template"
@@ -451,7 +452,7 @@ tide:
 # ####     USE "make config" TO REGENERATE THIS FILE.     ####
 # ####                                                    ####
 # ############################################################
-	
+
 # Default testgroup and dashboardtab, please do not change them
 default_test_group:
   days_of_results: 14            # Number of days of test results to gather and serve
@@ -463,8 +464,8 @@ default_test_group:
   num_columns_recent: 10         # The number of columns to consider "recent" for a variety of purposes
   use_kubernetes_client: true    # ** This field is deprecated and should always be true **
   is_external: true              # ** This field is deprecated and should always be true **
-  alert_stale_results_hours: 24  # Alert if tests haven't run for a day
-  num_failures_to_alert: 3       # Consider a test failed if it has 3 or more consecutive failures
+  alert_stale_results_hours: 25  # Alert if tests haven't run for a day
+  num_failures_to_alert: 1       # Alert for every failure
   num_passes_to_disable_alert: 1 # Consider a failing test passing if it has 1 or more consecutive passes
 
 default_dashboard_tab:
@@ -1095,11 +1096,15 @@ func indentSection(indentation int, title string, array []string) string {
 
 // indentMap returns the given map indented, with each key/value separated by ": "
 func indentMap(indentation int, mp map[string]string) string {
+	// Extract map keys to keep order consistent.
+	keys := make([]string, 0, len(mp))
+	for key := range mp {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
 	arr := make([]string, len(mp))
-	i := 0
-	for k, v := range mp {
-		arr[i] = k + ": " + quote(v)
-		i++
+	for i := 0; i < len(mp); i++ {
+		arr[i] = keys[i] + ": " + quote(mp[keys[i]])
 	}
 	return indentBase(indentation, "", false, arr)
 }
@@ -1304,11 +1309,18 @@ func generateTestGroup(repoName string, jobNames []string) {
 		extras := make(map[string]string)
 		switch jobName {
 		case "continuous", "dot-release", "auto-release", "performance", "latency", "playground", "nightly":
-			if jobName == "playground" {
+			if jobName == "continuous" || jobName == "auto-release" {
 				// TODO(Fredy-Z): this value should be derived from the cron string
-				extras["alert_stale_results_hours"] = "168"
+				extras["alert_stale_results_hours"] = "3"
+				if jobName == "continuous" {
+					// For continuous flows, alert after 3 failures due to flakiness
+					extras["num_failures_to_alert"] = "3"
+				}
 			}
-
+			if jobName == "playground" || jobName == "dot-release" {
+				// TODO(Fredy-Z): this value should be derived from the cron string
+				extras["alert_stale_results_hours"] = "169"
+			}
 			if jobName == "latency" {
 				extras["short_text_metric"] = "latency"
 			}
@@ -1318,6 +1330,8 @@ func generateTestGroup(repoName string, jobNames []string) {
 		case "test-coverage":
 			gcsLogDir = fmt.Sprintf("%s/%s/ci-%s-%s", gcsBucket, logsDir, repoName, "go-coverage")
 			extras["short_text_metric"] = "coverage"
+			// Do not alert on coverage failures (i.e., coverage below threshold)
+			extras["num_failures_to_alert"] = "0"
 		default:
 			log.Fatalf("Unknown jobName: %s", jobName)
 		}
@@ -1350,10 +1364,10 @@ func generateDashboard(repoName string, jobNames []string) {
 		case "dot-release", "auto-release", "performance", "latency", "playground":
 			extras := make(map[string]string)
 			baseOptions := testgridTabSortByName
-			switch jobName {
-			case "performance":
+			if jobName == "performance" {
 				baseOptions = testgridTabGroupByTarget
-			case "latency":
+			}
+			if jobName == "latency" {
 				baseOptions = testgridTabGroupByDir
 				extras["description"] = "95% latency in ms"
 			}
