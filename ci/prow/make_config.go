@@ -275,6 +275,7 @@ tide:
   - repos:
     - knative/build
     - knative/build-templates
+    - knative/client
     - knative/observability
     - knative/serving
     - knative/eventing
