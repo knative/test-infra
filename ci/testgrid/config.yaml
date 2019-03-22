@@ -147,7 +147,7 @@ dashboards:
   - name: conformance-tests
     test_group_name: ci-knative-serving-continuous
     base_options: "include-filter-by-regex=test/conformance\\.&sort-by-name="
-  - name: release
+  - name: nightly
     test_group_name: ci-knative-serving-nightly-release
     base_options: "sort-by-name="
   - name: dot-release
@@ -178,7 +178,7 @@ dashboards:
   - name: continuous
     test_group_name: ci-knative-build-continuous
     base_options: "sort-by-name="
-  - name: release
+  - name: nightly
     test_group_name: ci-knative-build-nightly-release
     base_options: "sort-by-name="
   - name: dot-release
@@ -207,7 +207,7 @@ dashboards:
   - name: continuous
     test_group_name: ci-knative-eventing-continuous
     base_options: "sort-by-name="
-  - name: release
+  - name: nightly
     test_group_name: ci-knative-eventing-nightly-release
     base_options: "sort-by-name="
   - name: dot-release
@@ -224,7 +224,7 @@ dashboards:
   - name: continuous
     test_group_name: ci-knative-eventing-sources-continuous
     base_options: "sort-by-name="
-  - name: release
+  - name: nightly
     test_group_name: ci-knative-eventing-sources-nightly-release
     base_options: "sort-by-name="
   - name: dot-release

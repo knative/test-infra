@@ -46,6 +46,7 @@ const (
 	// baseOptions setting for testgrid dashboard tabs
 	testgridTabGroupByDir    = "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 	testgridTabGroupByTarget = "exclude-filter-by-regex=Overall$&group-by-target=&expand-groups=&sort-by-name="
+	testgridTabSortByName    = "sort-by-name="
 )
 
 // repositoryData contains basic data about each Knative repository.
@@ -1349,48 +1350,37 @@ func executeTestGroupTemplate(testGroupName string, gcsLogDir string, extras map
 
 // generateDashboard generates the dashboard configuration
 func generateDashboard(repoName string, jobNames []string) {
-	outputConfig(fmt.Sprintf("- name: %s\n  dashboard_tab:", repoName))
+	outputConfig("- name: " + repoName + "\n" + baseIndent + "dashboard_tab:")
+	noExtras := make(map[string]string)
 	for _, jobName := range jobNames {
 		testGroupName := getTestGroupName(repoName, jobName)
-		baseOptions := "sort-by-name="
-		extras := make(map[string]string)
 		switch jobName {
 		case "continuous":
-			dashboardTabName := jobName
-			executeDashboardTabTemplate(dashboardTabName, testGroupName, baseOptions, extras)
-
+			executeDashboardTabTemplate("continuous", testGroupName, testgridTabSortByName, noExtras)
 			// This is a special case for knative/serving, as conformance-tests tab is just a filtered view of the continuous tab.
 			if repoName == "knative-serving" {
-				dashboardTabName := "conformance-tests"
-				baseOptions = "include-filter-by-regex=test/conformance\\\\.&sort-by-name="
-				executeDashboardTabTemplate(dashboardTabName, testGroupName, baseOptions, extras)
+				executeDashboardTabTemplate("conformance-tests", testGroupName, "include-filter-by-regex=test/conformance\\\\.&sort-by-name=", noExtras)
 			}
 		case "dot-release", "auto-release", "performance", "latency", "api-coverage", "playground":
-			dashboardTabName := jobName
-
-			if jobName == "latency" || jobName == "api-coverage" {
-				baseOptions = testgridTabGroupByDir
-			}
-			if jobName == "performance" {
+			extras := make(map[string]string)
+			baseOptions := testgridTabSortByName
+			switch jobName {
+			case "performance":
 				baseOptions = testgridTabGroupByTarget
-			}
-			if jobName == "latency" {
+			case "latency":
+				baseOptions = testgridTabGroupByDir
 				extras["description"] = "95% latency in ms"
-			}
-			if jobName == "api-coverage" {
+			case "api-coverage":
+				baseOptions = testgridTabGroupByDir
 				extras["description"] = "Conformance tests API coverage."
 			}
-
-			executeDashboardTabTemplate(dashboardTabName, testGroupName, baseOptions, extras)
+			executeDashboardTabTemplate(jobName, testGroupName, baseOptions, extras)
 		case "nightly":
-			dashboardTabName := "release"
-			executeDashboardTabTemplate(dashboardTabName, testGroupName, baseOptions, extras)
+			executeDashboardTabTemplate("nightly", testGroupName, testgridTabSortByName, noExtras)
 		case "test-coverage":
-			dashboardTabName := "coverage"
-			baseOptions = testgridTabGroupByDir
-			executeDashboardTabTemplate(dashboardTabName, testGroupName, baseOptions, extras)
+			executeDashboardTabTemplate("coverage", testGroupName, testgridTabGroupByDir, noExtras)
 		default:
-			log.Fatalf("Unknown jobName: %s", jobName)
+			log.Fatalf("Unknown job name %q", jobName)
 		}
 	}
 }
