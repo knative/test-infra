@@ -132,6 +132,9 @@ test_groups:
 - name: pull-knative-caching-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-caching-go-coverage
   short_text_metric: "coverage"
+- name: pull-knative-client-test-coverage
+  gcs_prefix: knative-prow/logs/ci-knative-client-go-coverage
+  short_text_metric: "coverage"
 - name: ci-knative-serving-0.2-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.2-continuous
 - name: ci-knative-serving-0.3-continuous
@@ -257,6 +260,11 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-caching-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+- name: knative-client
+  dashboard_tab:
+  - name: coverage
+    test_group_name: pull-knative-client-test-coverage
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: knative-serving-0.2
   dashboard_tab:
   - name: continuous
@@ -283,6 +291,7 @@ dashboard_groups:
   - "knative-build-templates"
   - "knative-pkg"
   - "knative-caching"
+  - "knative-client"
 - name: knative-0.2
   dashboard_names:
   - "knative-serving-0.2"
