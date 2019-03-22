@@ -42,6 +42,7 @@ test_function ${SUCCESS} "0.2" master_version "v0.2.1"
 test_function ${SUCCESS} "0.2" master_version "0.2.1"
 test_function ${SUCCESS} "1" release_build_number "v0.2.1"
 test_function ${SUCCESS} "1" release_build_number "0.2.1"
+test_function ${SUCCESS} "deadbeef" hash_from_tag "v20010101-deadbeef"
 
 echo ">> Testing flag parsing"
 
@@ -68,6 +69,9 @@ test_function ${SUCCESS} "" parse_flags --release-gcr a --publish
 test_function ${FAILURE} "error: cannot have both --dot-release and --auto-release set simultaneously" parse_flags --dot-release --auto-release
 test_function ${FAILURE} "error: cannot have both --version and --auto-release set simultaneously" parse_flags --auto-release --version 1.0.0
 test_function ${FAILURE} "error: cannot have both --branch and --auto-release set simultaneously" parse_flags --auto-release --branch release-0.0
+
+test_function ${FAILURE} "error: missing parameter" parse_flags --from-nightly
+test_function ${FAILURE} "error: nightly tag" parse_flags --from-nightly aaa
 
 token_file=$(mktemp)
 echo -e "abc " > ${token_file}
