@@ -23,7 +23,7 @@ There is a prow job that triggers this tool at 4:00/5:00AM(Day light saving) eve
 
 ### Criterias for a test to be considered flaky/passed
 
-This tool scans latest 10 runs. A test is considered flaky if it failed in some but not all runs. For a test to be considered pass, there needs be enough data, which means at least 8 valid runs(either pass or failed), and it passed in all of them.
+This tool scans latest 10 runs. A test is considered flaky if it failed in some but not all runs. For a test to be considered pass, it has to pass in all runs. Exceptions are test being ignored or omitted, these may be results of bad runs or test being omitted for any reason, which is tolerized for up to 2 runs. For example, if a test passed 8 times and skipped/omitted 2 times, it's still considered pass.
 
 ### Logics for Github issue to be created/closed/reopened
 
