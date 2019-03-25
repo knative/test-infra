@@ -35,15 +35,6 @@ Efficient deduplication is crucial for the sustainability of this tool, and this
 - `auto:flaky` label. This tool adds this label when creating issues, and only manages issues with this label
 - `[DONT_MODIFY_TEST_IDENTIFIER]...[DONT_MODIFY_TEST_IDENTIFIER]` section in issue body. Issue with `auto:flaky` label but not this identifier is considered abnormal and this tool will stop at information collection phase.
 
-The `[DONT_MODIFY_TEST_IDENTIFIER]...[DONT_MODIFY_TEST_IDENTIFIER]` section doesn't look good, for a test named `some/test/that/flaky/very/often`, the identifier in issue body is:
-
-`[DONT_MODIFY_TEST_IDENTIFIER]some/test/that/flaky/very/often[DONT_MODIFY_TEST_IDENTIFIER]`
-
-Alternatives have been considered, like hiding them in html tag like [DONT_MODIFY_TEST_IDENTIFIER]([DONT_MODIFY_TEST_IDENTIFIER]some/test/that/flaky/very/often[DONT_MODIFY_TEST_IDENTIFIER]), but decided not to do so for mainly 2 reasons:
-
-- The html link points to 404
-- It's not obvious if this identifier was accidentally edited
-
 ### Minimize Noise
 #### Too many flaky tests identified
 When there are too many tests found to be flaky, most likely something abnormal is going on, and we don't want to create Github issues for all of them, or list all of them in Slack notifications. There is a threshold defined in [`config.go`](config.go), if the flaky rate went over the threshold there will be only 1 Github issue created, and Slack notification will not list all flaky tests.
