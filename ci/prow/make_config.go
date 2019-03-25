@@ -635,6 +635,11 @@ func createCommand(data baseProwJobTemplateData) []string {
 
 // addEnvToJob adds the given key/pair environment variable to the job.
 func addEnvToJob(data *baseProwJobTemplateData, key, value string) {
+	// Value should always be string. Add quotes if we get a number
+	if isNum(value) {
+		value = "\"" + value + "\""
+	}
+
 	(*data).Env = append((*data).Env, []string{"- name: " + key, "  value: " + value}...)
 }
 
@@ -847,6 +852,9 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			jobType = getString(item.Key)
 			jobNameSuffix = "performance"
 			data.Base.Command = performanceScript
+			// We need a larger cluster of at least 16 nodes for perf tests
+			addEnvToJob(&data.Base, "E2E_MIN_CLUSTER_NODES", "16")
+			addEnvToJob(&data.Base, "E2E_MAX_CLUSTER_NODES", "16")
 		case "latency":
 			if !getBool(item.Value) {
 				return
@@ -1044,9 +1052,15 @@ func gitHubRepo(data baseProwJobTemplateData) string {
 	return s
 }
 
+// isNum checks if the given string is a valid number
+func isNum(s string) bool {
+	_, err := strconv.ParseFloat(s, 64)
+	return err == nil
+}
+
 // quote returns the given string quoted if it's not a number, or not a key/value pair, or already quoted.
 func quote(s string) string {
-	if _, err := strconv.ParseFloat(s, 64); err == nil {
+	if isNum(s) {
 		return s
 	}
 	if strings.Contains(s, "\"") || strings.Contains(s, ": ") || strings.HasSuffix(s, ":") {
