@@ -103,12 +103,6 @@ periodics:
       cron: "1 */2 * * *" # Run every other hour and one minute
       timeout: 100
     - branch-ci: true
-      release: "0.2"
-      cron: "15 8 * * *" # Run at 01:15PST every day (08:15 UTC)
-    - branch-ci: true
-      release: "0.3"
-      cron: "20 8 * * *" # Run at 01:20PST every day (08:20 UTC)
-    - branch-ci: true
       release: "0.4"
       cron: "25 8 * * *" # Run at 01:25PST every day (08:25 UTC)
     - nightly: true
