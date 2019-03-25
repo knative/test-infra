@@ -847,7 +847,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			jobType = getString(item.Key)
 			jobNameSuffix = "performance"
 			data.Base.Command = performanceScript
-			// We need a larger cluster of atleast 16 nodes for perf tests
+			// We need a larger cluster of at least 16 nodes for perf tests
 			addEnvToJob(&data.Base, "E2E_MIN_CLUSTER_NODES", "16")
 			addEnvToJob(&data.Base, "E2E_MAX_CLUSTER_NODES", "16")
 		case "latency":
@@ -1049,10 +1049,8 @@ func gitHubRepo(data baseProwJobTemplateData) string {
 
 // isNum checks if the given string is a valid number
 func isNum(s string) bool {
-	if _, err := strconv.ParseFloat(s, 64); err == nil {
-		return true
-	}
-	return false
+	_, err := strconv.ParseFloat(s, 64)
+	return err == nil
 }
 
 // quote returns the given string quoted if it's not a number, or not a key/value pair, or already quoted.
