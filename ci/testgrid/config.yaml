@@ -28,7 +28,7 @@ default_test_group:
   num_columns_recent: 10         # The number of columns to consider "recent" for a variety of purposes
   use_kubernetes_client: true    # ** This field is deprecated and should always be true **
   is_external: true              # ** This field is deprecated and should always be true **
-  alert_stale_results_hours: 25  # Alert if tests haven't run for a day
+  alert_stale_results_hours: 26  # Alert if tests haven't run for a day (1 day + 2h)
   num_failures_to_alert: 1       # Alert for every failure
   num_passes_to_disable_alert: 1 # Consider a failing test passing if it has 1 or more consecutive passes
 default_dashboard_tab:
@@ -64,13 +64,13 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-serving-nightly-release
 - name: ci-knative-serving-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-serving-dot-release
-  alert_stale_results_hours: 169
+  alert_stale_results_hours: 170
 - name: ci-knative-serving-auto-release
   gcs_prefix: knative-prow/logs/ci-knative-serving-auto-release
   alert_stale_results_hours: 3
 - name: ci-knative-serving-playground
   gcs_prefix: knative-prow/logs/ci-knative-serving-playground
-  alert_stale_results_hours: 169
+  alert_stale_results_hours: 170
 - name: ci-knative-serving-latency
   gcs_prefix: knative-prow/logs/ci-knative-serving-latency
   short_text_metric: "latency"
@@ -79,7 +79,7 @@ test_groups:
   short_text_metric: "perf_latency"
 - name: pull-knative-serving-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-serving-go-coverage
-  num_failures_to_alert: 0
+  num_failures_to_alert: 9999
   short_text_metric: "coverage"
 - name: ci-knative-build-continuous
   gcs_prefix: knative-prow/logs/ci-knative-build-continuous
@@ -89,7 +89,7 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-build-nightly-release
 - name: ci-knative-build-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-build-dot-release
-  alert_stale_results_hours: 169
+  alert_stale_results_hours: 170
 - name: ci-knative-build-auto-release
   gcs_prefix: knative-prow/logs/ci-knative-build-auto-release
   alert_stale_results_hours: 3
@@ -98,7 +98,7 @@ test_groups:
   short_text_metric: "latency"
 - name: pull-knative-build-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-build-go-coverage
-  num_failures_to_alert: 0
+  num_failures_to_alert: 9999
   short_text_metric: "coverage"
 - name: ci-knative-docs-continuous
   gcs_prefix: knative-prow/logs/ci-knative-docs-continuous
@@ -106,7 +106,7 @@ test_groups:
   num_failures_to_alert: 3
 - name: pull-knative-docs-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-docs-go-coverage
-  num_failures_to_alert: 0
+  num_failures_to_alert: 9999
   short_text_metric: "coverage"
 - name: ci-knative-eventing-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-continuous
@@ -116,13 +116,13 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-eventing-nightly-release
 - name: ci-knative-eventing-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-eventing-dot-release
-  alert_stale_results_hours: 169
+  alert_stale_results_hours: 170
 - name: ci-knative-eventing-auto-release
   gcs_prefix: knative-prow/logs/ci-knative-eventing-auto-release
   alert_stale_results_hours: 3
 - name: pull-knative-eventing-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-eventing-go-coverage
-  num_failures_to_alert: 0
+  num_failures_to_alert: 9999
   short_text_metric: "coverage"
 - name: ci-knative-eventing-sources-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-continuous
@@ -132,13 +132,13 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-nightly-release
 - name: ci-knative-eventing-sources-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-dot-release
-  alert_stale_results_hours: 169
+  alert_stale_results_hours: 170
 - name: ci-knative-eventing-sources-auto-release
   gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-auto-release
   alert_stale_results_hours: 3
 - name: pull-knative-eventing-sources-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-go-coverage
-  num_failures_to_alert: 0
+  num_failures_to_alert: 9999
   short_text_metric: "coverage"
 - name: ci-knative-build-templates-continuous
   gcs_prefix: knative-prow/logs/ci-knative-build-templates-continuous
@@ -150,7 +150,7 @@ test_groups:
   num_failures_to_alert: 3
 - name: pull-knative-pkg-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-pkg-go-coverage
-  num_failures_to_alert: 0
+  num_failures_to_alert: 9999
   short_text_metric: "coverage"
 - name: ci-knative-caching-continuous
   gcs_prefix: knative-prow/logs/ci-knative-caching-continuous
@@ -158,24 +158,18 @@ test_groups:
   num_failures_to_alert: 3
 - name: pull-knative-caching-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-caching-go-coverage
-  num_failures_to_alert: 0
+  num_failures_to_alert: 9999
   short_text_metric: "coverage"
 - name: pull-knative-client-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-client-go-coverage
-  num_failures_to_alert: 0
+  num_failures_to_alert: 9999
   short_text_metric: "coverage"
 - name: ci-knative-serving-0.2-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.2-continuous
-  alert_stale_results_hours: 3
-  num_failures_to_alert: 3
 - name: ci-knative-serving-0.3-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.3-continuous
-  alert_stale_results_hours: 3
-  num_failures_to_alert: 3
 - name: ci-knative-serving-0.4-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.4-continuous
-  alert_stale_results_hours: 3
-  num_failures_to_alert: 3
 dashboards:
 - name: knative-serving
   dashboard_tab:
