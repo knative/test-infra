@@ -187,6 +187,7 @@ var (
 	jobNameFilter      string
 	preCommand         string
 	extraEnvVars       stringArrayFlag
+	timeoutOverride    int
 
 	// List of Knative repositories.
 	repositories []repositoryData
@@ -711,6 +712,10 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 		}
 		// Knock-out the item, signalling it was already parsed.
 		config[i] = yaml.MapItem{}
+	}
+	// Override any values if provided by command-line flags.
+	if timeoutOverride > 0 {
+		(*data).Timeout = timeoutOverride
 	}
 }
 
@@ -1485,6 +1490,7 @@ func main() {
 	flag.StringVar(&webhookAPICoverageScript, "webhookAPICoverageScript", "./test/apicoverage.sh", "Executable for running webhook apicoverage tool")
 	flag.StringVar(&cleanupScript, "cleanup-script", "./tools/cleanup/cleanup.sh", "Executable for running the cleanup tasks")
 	flag.StringVar(&repositoryOverride, "repo-override", "", "Repository path (github.com/foo/bar[=branch]) to use instead for a job")
+	flag.IntVar(&timeoutOverride, "timeout-override", 0, "Timeout (in minutes) to use instead for a job")
 	flag.StringVar(&jobNameFilter, "job-filter", "", "Generate only this job, instead of all jobs")
 	flag.StringVar(&preCommand, "pre-command", "", "Executable for running instead of the real command of a job")
 	flag.Var(&extraEnvVars, "extra-env", "Extra environment variables (key=value) to add to a job")
