@@ -26,6 +26,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -464,7 +465,7 @@ default_test_group:
   num_columns_recent: 10         # The number of columns to consider "recent" for a variety of purposes
   use_kubernetes_client: true    # ** This field is deprecated and should always be true **
   is_external: true              # ** This field is deprecated and should always be true **
-  alert_stale_results_hours: 25  # Alert if tests haven't run for a day
+  alert_stale_results_hours: 26  # Alert if tests haven't run for a day (1 day + 2h)
   num_failures_to_alert: 1       # Alert for every failure
   num_passes_to_disable_alert: 1 # Consider a failing test passing if it has 1 or more consecutive passes
 
@@ -1309,7 +1310,8 @@ func generateTestGroup(repoName string, jobNames []string) {
 		extras := make(map[string]string)
 		switch jobName {
 		case "continuous", "dot-release", "auto-release", "performance", "latency", "playground", "nightly":
-			if jobName == "continuous" || jobName == "auto-release" {
+			isDailyBranch := regexp.MustCompile(`-[0-9\.]+-continuous`).FindString(testGroupName) != ""
+			if !isDailyBranch && (jobName == "continuous" || jobName == "auto-release") {
 				// TODO(Fredy-Z): this value should be derived from the cron string
 				extras["alert_stale_results_hours"] = "3"
 				if jobName == "continuous" {
@@ -1319,7 +1321,7 @@ func generateTestGroup(repoName string, jobNames []string) {
 			}
 			if jobName == "playground" || jobName == "dot-release" {
 				// TODO(Fredy-Z): this value should be derived from the cron string
-				extras["alert_stale_results_hours"] = "169"
+				extras["alert_stale_results_hours"] = "170" // 1 week + 2h
 			}
 			if jobName == "latency" {
 				extras["short_text_metric"] = "latency"
@@ -1331,7 +1333,7 @@ func generateTestGroup(repoName string, jobNames []string) {
 			gcsLogDir = fmt.Sprintf("%s/%s/ci-%s-%s", gcsBucket, logsDir, repoName, "go-coverage")
 			extras["short_text_metric"] = "coverage"
 			// Do not alert on coverage failures (i.e., coverage below threshold)
-			extras["num_failures_to_alert"] = "0"
+			extras["num_failures_to_alert"] = "9999"
 		default:
 			log.Fatalf("Unknown jobName: %s", jobName)
 		}
