@@ -427,6 +427,7 @@ function remove_broken_symlinks() {
       continue
     fi
   done
+}
 
 # Return whether the given parameter is knative-tests.
 # Parameters: $1 - project name
