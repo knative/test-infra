@@ -925,9 +925,9 @@ func generateCleanupPeriodicJob() {
 	data.Base.DecorationConfig = []string{"timeout: 28800000000000"} // 8 hours
 	data.Base.Command = cleanupScript
 	data.Base.Args = []string{
-		"delete-old-gcr-images",
 		"--project-resource-yaml ci/prow/boskos/resources.yaml",
-		"--days-to-keep 30",
+		"--days-to-keep-images 30",
+		"--hours-to-keep-clusters 24",
 		"--service-account " + data.Base.ServiceAccount,
 		"--artifacts $(ARTIFACTS)"}
 	addExtraEnvVarsToJob(&data.Base)

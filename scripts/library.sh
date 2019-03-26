@@ -429,6 +429,12 @@ function remove_broken_symlinks() {
   done
 }
 
+# Return whether the given parameter is knative-tests.
+# Parameters: $1 - project name
+function is_protected_project() {
+  [[ -n "$1" && "$1" == "knative-tests" ]]
+}
+
 # Returns the canonical path of a filesystem object.
 # Parameters: $1 - path to return in canonical form
 #             $2 - base dir for relative links; optional, defaults to current
