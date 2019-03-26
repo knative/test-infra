@@ -77,7 +77,7 @@ function delete_old_test_clusters() {
     local current_time=$(date +%s)
     local target_time=$(date -d "`date -d @${current_time}`-$2hours" +%s)
     # Fail if the difference of current time and target time is not 3600 times hours to keep
-    if (( ! DRY_RUN )); then # This should only fail this job but not blocking PR
+    if (( ! DRY_RUN )); then # Don't check on dry runs, as dry run is used for unit testing
       [[ "$((3600*$2))" -eq "$(($current_time-$target_time))" ]] || abort "date operation failed"
     fi
 
