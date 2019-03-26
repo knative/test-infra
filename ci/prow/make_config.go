@@ -56,6 +56,7 @@ type repositoryData struct {
 	Name                string
 	EnableGoCoverage    bool
 	GoCoverageThreshold int
+	Processed           bool
 }
 
 // baseProwJobTemplateData contains basic data about a Prow job.
@@ -916,6 +917,15 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	executeJobTemplate("periodic", jobTemplate, title, repoName, data.PeriodicJobName, false, data)
 }
 
+// generateRemainingGoCoveragePeriodicJobs generate the go coverage periodic jobs for repositories that are not processed in the periodic job configuration
+func generateRemainingGoCoveragePeriodicJobs() {
+	for _, repo := range repositories {
+		if !repo.Processed && repo.EnableGoCoverage {
+			generateGoCoveragePeriodic("periodics", repo.Name, nil)
+		}
+	}
+}
+
 // generateCleanupPeriodicJob generates the cleanup job config.
 func generateCleanupPeriodicJob() {
 	var data periodicJobTemplateData
@@ -972,10 +982,11 @@ func generateBackupPeriodicJob() {
 
 // generateGoCoveragePeriodic generates the go coverage periodic job config for the given repo (configuration is ignored).
 func generateGoCoveragePeriodic(title string, repoName string, periodicConfig yaml.MapSlice) {
-	for _, repo := range repositories {
+	for i, repo := range repositories {
 		if repoName != repo.Name || !repo.EnableGoCoverage {
 			continue
 		}
+		repositories[i].Processed = true
 		var data periodicJobTemplateData
 		data.Base = newbaseProwJobTemplateData(repoName)
 		data.Base.Image = coverageDockerImage
@@ -1275,6 +1286,14 @@ func collectMetaData(periodicJob yaml.MapSlice) {
 		}
 		addTestCoverageJobIfNeeded(&jobDetailMap, repoName)
 	}
+
+	// handle repos that only have go coverage
+	for repoName, hasGoCoverage := range goCoverageMap {
+		if hasGoCoverage {
+			jobDetailMap := addProjAndRepoIfNeed(projNames[0], repoName)
+			jobDetailMap[repoName] = []string{"test-coverage"}
+		}
+	}
 }
 
 // addProjAndRepoIfNeed adds the project and repo if they are new in the metaData map, then return the jobDetailMap
@@ -1303,6 +1322,7 @@ func addTestCoverageJobIfNeeded(jobDetailMap *map[string][]string, repoName stri
 	if goCoverageMap[repoName] {
 		newJobTypes := append((*jobDetailMap)[repoName], "test-coverage")
 		(*jobDetailMap)[repoName] = newJobTypes
+		delete(goCoverageMap, repoName)
 	}
 }
 
@@ -1538,6 +1558,7 @@ func main() {
 		}
 		parseSection(config, "presubmits", generatePresubmit, nil)
 		parseSection(config, "periodics", generatePeriodic, generateGoCoveragePeriodic)
+		generateRemainingGoCoveragePeriodicJobs()
 		generateCleanupPeriodicJob()
 		generateFlakytoolPeriodicJob()
 		generateBackupPeriodicJob()

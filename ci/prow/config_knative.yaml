@@ -175,6 +175,3 @@ periodics:
   knative/caching:
     - continuous: true
       cron: "30 * * * *" # Run every hour and 30 minutes
-
-  knative/client:
-    - continuous: false
