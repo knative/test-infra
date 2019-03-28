@@ -33,7 +33,7 @@ const (
 	defaultStdoutRedirect    = "stdout.txt"
 	defaultCoverageTargetDir = "./pkg/"
 	defaultGcsBucket         = "knative-prow"
-	defaultPostSubmitJobName = "post-knative-serving-go-coverage"
+	defaultPostSubmitJobName = ""
 	defaultCovThreshold      = 80
 )
 
