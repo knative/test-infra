@@ -190,7 +190,7 @@ func parseMetricEntry(fields []string, dataStartIndex int) (string, int) {
 	endTime := atoi(fields[dataStartIndex+2], "end time")
 	duration := endTime - startTime
 	if duration < 1 {
-		log.Printf("Unexpected duration %f for %s", duration, name)
+		log.Printf("Unexpected duration %d for %s", duration, name)
 		return "", 0
 	}
 	return name, duration
