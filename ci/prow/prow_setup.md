@@ -29,9 +29,7 @@
    * `prow-job@knative-nightly.iam.gserviceaccount.com`
    * `prow-job@knative-releases.iam.gserviceaccount.com`
 
-1. Ensure that there is at least one other owner of the project. A good choice
-   is one of the members of the `knative-productivity-admins@googlegroups.com`
-   group.
+1. Ensure that there is at least one other owner of the project.
 
 1. Enable the Compute Engine API for the project (e.g., by visiting
    <https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=XXXXXXXX>).
