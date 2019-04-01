@@ -465,6 +465,9 @@ function main() {
   parse_flags $@
   # Log what will be done and where.
   banner "Release configuration"
+  echo "- gcloud user: $(gcloud config get-value core/account)"
+  echo "- Go path: ${GOPATH}"
+  echo "- Repository root: ${REPO_ROOT_DIR}"
   echo "- Destination GCR: ${KO_DOCKER_REPO}"
   (( SKIP_TESTS )) && echo "- Tests will NOT be run" || echo "- Tests will be run"
   if (( TAG_RELEASE )); then
