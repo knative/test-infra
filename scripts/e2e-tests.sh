@@ -167,17 +167,19 @@ function create_test_cluster() {
   (( SKIP_KNATIVE_SETUP )) && test_cmd_args+=" --skip-knative-setup"
   [[ -n "${GCP_PROJECT}" ]] && test_cmd_args+=" --gcp-project ${GCP_PROJECT}"
   [[ -n "${E2E_SCRIPT_CUSTOM_FLAGS[@]}" ]] && test_cmd_args+=" ${E2E_SCRIPT_CUSTOM_FLAGS[@]}"
+  local extra_flags=()
+  (( ! IS_BOSKOS )) && extra_flags+=(--down)
   # Don't fail test for kubetest, as it might incorrectly report test failure
   # if teardown fails (for details, see success() below)
   set +o errexit
   run_go_tool k8s.io/test-infra/kubetest \
     kubetest "${CLUSTER_CREATION_ARGS[@]}" \
     --up \
-    --down \
     --extract "${E2E_CLUSTER_VERSION}" \
     --gcp-node-image "${SERVING_GKE_IMAGE}" \
     --test-cmd "${E2E_SCRIPT}" \
     --test-cmd-args "${test_cmd_args}" \
+    ${extra_flags[@]} \
     ${EXTRA_KUBETEST_FLAGS[@]}
   echo "Test subprocess exited with code $?"
   # Ignore any errors below, this is a best-effort cleanup and shouldn't affect the test result.
