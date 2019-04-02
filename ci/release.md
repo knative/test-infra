@@ -5,7 +5,7 @@ Prow cluster, otherwise the job won't run.
 
 This is the preferred method of manually building a new release.
 
-## Step-by-step instructions
+## Creating an arbitrary release
 
 1. Create a temporary config file like the one below. Replace `MODULE` with the
    right Knative module name (e.g., `serving` or `build`). Replace `VERSION`
@@ -15,7 +15,7 @@ This is the preferred method of manually building a new release.
 
    ```
    periodics:
-     knative/**MODULE**:
+     knative/MODULE:
        - auto-release: true
          cron: "* * * * *"
          args:
@@ -23,9 +23,9 @@ This is the preferred method of manually building a new release.
          - "--tag-release"
          - "--github-token /etc/hub-token/token"
          - "--release-gcr gcr.io/knative-releases"
-         - "--release-gcs knative-releases/**MODULE**"
-         - "--version **VERSION**"
-         - "--branch **BRANCH**"
+         - "--release-gcs knative-releases/MODULE"
+         - "--version VERSION"
+         - "--branch BRANCH"
    ```
 
 1. Generate the full config from the file above. For the rest of this doc,
@@ -35,7 +35,7 @@ This is the preferred method of manually building a new release.
    ```
    cd ci/prow
    go run make_config.go \
-     --job-filter=ci-knative-**MODULE**-auto-release \
+     --job-filter=ci-knative-MODULE-auto-release \
      --generate-testgrid-config=false \
      --prow-config-output=/tmp/release_config.yaml \
      /tmp/release.yaml
@@ -46,7 +46,7 @@ This is the preferred method of manually building a new release.
    the right Knative module name (e.g., `serving` or `build`).
 
    ```
-   bazel run @k8s//prow/cmd/mkpj -- --job=ci-knative-**MODULE**-auto-release \
+   bazel run @k8s//prow/cmd/mkpj -- --job=ci-knative-MODULE-auto-release \
      --config-path=/tmp/release_config.yaml \
      > /tmp/release_job.yaml
    ```
@@ -57,6 +57,19 @@ This is the preferred method of manually building a new release.
    cd ci/prow
    make get-cluster-credentials
    kubectl apply -f /tmp/release_job.yaml
+   ```
+
+1. Monitor the new job through [Prow UI](https://prow.knative.dev).
+
+## Creating a "dot" release on demand
+
+1. Use the `run_job.sh` script to start the dot release job for the module you
+   want, like in the example below. Replace `MODULE` with the right module right
+   Knative module name (e.g., `serving` or `build`).
+
+   ```
+   cd ci/prow
+   ./run_job.sh ci-knative-MODULE-dot-release
    ```
 
 1. Monitor the new job through [Prow UI](https://prow.knative.dev).
