@@ -89,9 +89,9 @@ function delete_old_test_clusters() {
       [[ $create_time -gt $current_time ]] && abort "cluster creation time shouldn't be newer than current time"
       [[ $create_time -gt $target_time ]] && echo "skip deleting as it's created within $2 hours" && continue
       if (( DRY_RUN )); then
-        echo "[DRY RUN] gcloud container clusters delete -q ${full_image} -zone ${cluster_zone}"
+        echo "[DRY RUN] gcloud container clusters delete -q ${cluster_name} -zone ${cluster_zone}"
       else
-        gcloud container clusters delete -q ${full_image} -zone ${cluster_zone}
+        gcloud container clusters delete -q ${cluster_name} -zone ${cluster_zone}
       fi
     done
   done
