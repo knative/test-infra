@@ -161,6 +161,8 @@ function create_test_cluster() {
   set -o errexit
   set -o pipefail
 
+  header "Creating test cluster"
+
   echo "Cluster will have a minimum of ${E2E_MIN_CLUSTER_NODES} and a maximum of ${E2E_MAX_CLUSTER_NODES} nodes."
 
   # Smallest cluster required to run the end-to-end-tests
@@ -243,6 +245,10 @@ function try_create_test_cluster() {
   local cluster_creation_args=("$@")
   local geoflag="--gcp-region=${E2E_CLUSTER_REGION}"
   [[ -n "${E2E_CLUSTER_ZONE}" ]] && geoflag="--gcp-zone=${E2E_CLUSTER_REGION}-${E2E_CLUSTER_ZONE}"
+
+  if function_exists cluster_setup; then
+    cluster_setup || fail_test "cluster setup failed"
+  fi
   
   # Don't fail test for kubetest, as it might incorrectly report test failure
   # if teardown fails (for details, see success() below)
@@ -254,6 +260,7 @@ function try_create_test_cluster() {
   echo "Test subprocess exited with code $?"
   # Ignore any errors below, this is a best-effort cleanup and shouldn't affect the test result.
   set +o errexit
+  function_exists cluster_teardown && cluster_teardown
   delete_leaked_network_resources
 }
 
