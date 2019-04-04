@@ -334,15 +334,6 @@ function start_latest_knative_serving() {
   wait_until_pods_running knative-serving || return 1
 }
 
-# Install the latest stable Knative/build in the current cluster.
-function start_latest_knative_build() {
-  header "Starting Knative Build"
-  subheader "Installing Knative Build"
-  echo "Installing Build from ${KNATIVE_BUILD_RELEASE}"
-  kubectl apply -f ${KNATIVE_BUILD_RELEASE} || return 1
-  wait_until_pods_running knative-build || return 1
-}
-
 # Run a go tool, installing it first if necessary.
 # Parameters: $1 - tool package/dir for go get/install.
 #             $2 - tool to run.
