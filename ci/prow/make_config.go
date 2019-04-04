@@ -829,7 +829,8 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			data.Base.Command = releaseScript
 			data.Base.Args = releaseLocal
 			setupDockerInDockerForJob(&data.Base)
-			data.Base.Timeout = 90
+			// TODO(adrcunha): Consider reducing the timeout in the future.
+			data.Base.Timeout = 180
 		case "dot-release", "auto-release":
 			if !getBool(item.Value) {
 				return
