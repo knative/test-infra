@@ -27,7 +27,7 @@ import (
 
 	"fortio.org/fortio/fhttp"
 	"fortio.org/fortio/periodic"
-	"github.com/knative/pkg/test/helpers"
+	"github.com/knative/test-infra/shared/common"
 	"github.com/knative/test-infra/shared/prow"
 )
 
@@ -110,7 +110,7 @@ func (g *GeneratorOptions) RunLoadTest(resolvableDomain bool) (*GeneratorResults
 // SaveJSON saves the results as Json in the artifacts directory
 func (gr *GeneratorResults) SaveJSON(testName string) error {
 	dir := prow.GetLocalArtifactsDir()
-	if err := helpers.CreateDir(dir); err != nil {
+	if err := common.CreateDir(dir); err != nil {
 		return err
 	}
 

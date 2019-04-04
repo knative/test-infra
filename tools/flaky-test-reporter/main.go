@@ -25,7 +25,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/knative/pkg/test/helpers"
+	"github.com/knative/test-infra/shared/common"
 	"github.com/knative/test-infra/shared/prow"
 )
 
@@ -56,7 +56,7 @@ func main() {
 	// Clean up local artifacts directory, this will be used later for artifacts uploads
 	err = os.RemoveAll(prow.GetLocalArtifactsDir()) // this function returns nil if path not found
 	if nil == err {
-		err = helpers.CreateDir(prow.GetLocalArtifactsDir())
+		err = common.CreateDir(prow.GetLocalArtifactsDir())
 	}
 	if nil != err {
 		log.Fatalf("Failed preparing local artifacts directory: %v", err)

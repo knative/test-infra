@@ -24,7 +24,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/knative/pkg/test/helpers"
+	"github.com/knative/test-infra/shared/common"
 	"github.com/knative/test-infra/shared/junit"
 	"github.com/knative/test-infra/shared/prow"
 )
@@ -60,7 +60,7 @@ func CreateXMLOutput(tc []junit.TestCase, testName string) error {
 
 	// ensure artifactsDir exist, in case not invoked from this script
 	artifactsDir := prow.GetLocalArtifactsDir()
-	if err := helpers.CreateDir(artifactsDir); nil != err {
+	if err := common.CreateDir(artifactsDir); nil != err {
 		return err
 	}
 	op, err := ts.ToBytes("", "  ")
