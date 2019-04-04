@@ -41,8 +41,8 @@ function build_resource_name() {
 E2E_CLUSTER_REGION=${E2E_CLUSTER_REGION:-us-central1}
 # By default we use regional clusters.
 E2E_CLUSTER_ZONE=${E2E_CLUSTER_ZONE:-}
-readonly E2E_CLUSTER_BACKUP_REGION=${E2E_CLUSTER_BACKUP_REGION:-us-west1 us-east1}
-readonly E2E_CLUSTER_BACKUP_ZONE=${E2E_CLUSTER_BACKUP_ZONE:-}
+readonly E2E_CLUSTER_BACKUP_REGIONS=${E2E_CLUSTER_BACKUP_REGIONS:-us-west1 us-east1}
+readonly E2E_CLUSTER_BACKUP_ZONES=${E2E_CLUSTER_BACKUP_ZONES:-}
 
 readonly E2E_CLUSTER_MACHINE=${E2E_CLUSTER_MACHINE:-n1-standard-4}
 readonly E2E_GKE_ENVIRONMENT=${E2E_GKE_ENVIRONMENT:-prod}
@@ -157,32 +157,6 @@ function cluster_creation_stockout() {
 # Wrapper for cluster creation function, ensure cluster creation by retrying
 # backup region/zone if stockout
 function create_test_cluster() {
-  header "Creating test cluster"
-
-  # Create cluster with default region/zone
-  try_create_test_cluster && return
-  cluster_creation_stockout || fail_test "Failed creating cluster"
-
-  # If failed above try backup regions/zones
-  if [[ -n "$E2E_CLUSTER_BACKUP_ZONE" ]]; then # Only retry backup zones if provided
-    for backup_zone in $E2E_CLUSTER_BACKUP_ZONE; do
-      header "Creating test cluster in zone: $backup_zone"
-      E2E_CLUSTER_ZONE=$backup_zone
-      try_create_test_cluster && return
-      cluster_creation_stockout || fail_test "Failed creating cluster"
-    done
-  elif [[ -n "$E2E_CLUSTER_BACKUP_REGION" ]]; then # Retry regions if provided
-    for backup_region in $E2E_CLUSTER_BACKUP_REGION; do
-      header "Creating test cluster in region: $backup_region"
-      E2E_CLUSTER_REGION=$backup_region
-      try_create_test_cluster && return
-      cluster_creation_stockout || fail_test "Failed creating cluster"
-    done
-  fi
-}
-
-# Create a test cluster with kubetest and call the current script again.
-function try_create_test_cluster() {
   # Fail fast during setup.
   set -o errexit
   set -o pipefail
@@ -190,22 +164,19 @@ function try_create_test_cluster() {
   echo "Cluster will have a minimum of ${E2E_MIN_CLUSTER_NODES} and a maximum of ${E2E_MAX_CLUSTER_NODES} nodes."
 
   # Smallest cluster required to run the end-to-end-tests
-  local geoflag="--gcp-region=${E2E_CLUSTER_REGION}"
-  [[ -n "${E2E_CLUSTER_ZONE}" ]] && geoflag="--gcp-zone=${E2E_CLUSTER_REGION}-${E2E_CLUSTER_ZONE}"
-  local CLUSTER_CREATION_ARGS=(
+  local cluster_creation_args=(
     --gke-create-command="container clusters create --quiet --enable-autoscaling --min-nodes=${E2E_MIN_CLUSTER_NODES} --max-nodes=${E2E_MAX_CLUSTER_NODES} --scopes=cloud-platform --enable-basic-auth --no-issue-client-certificate ${EXTRA_CLUSTER_CREATION_FLAGS[@]}"
     --gke-shape={\"default\":{\"Nodes\":${E2E_MIN_CLUSTER_NODES}\,\"MachineType\":\"${E2E_CLUSTER_MACHINE}\"}}
     --provider=gke
     --deployment=gke
     --cluster="${E2E_CLUSTER_NAME}"
-    ${geoflag}
     --gcp-network="${E2E_NETWORK_NAME}"
     --gke-environment="${E2E_GKE_ENVIRONMENT}"
     --gke-command-group="${E2E_GKE_COMMAND_GROUP}"
     --test=false
   )
   if (( ! IS_BOSKOS )); then
-    CLUSTER_CREATION_ARGS+=(--gcp-project=${GCP_PROJECT})
+    cluster_creation_args+=(--gcp-project=${GCP_PROJECT})
   fi
   # SSH keys are not used, but kubetest checks for their existence.
   # Touch them so if they don't exist, empty files are create to satisfy the check.
@@ -226,29 +197,64 @@ function try_create_test_cluster() {
   (( SKIP_KNATIVE_SETUP )) && test_cmd_args+=" --skip-knative-setup"
   [[ -n "${GCP_PROJECT}" ]] && test_cmd_args+=" --gcp-project ${GCP_PROJECT}"
   [[ -n "${E2E_SCRIPT_CUSTOM_FLAGS[@]}" ]] && test_cmd_args+=" ${E2E_SCRIPT_CUSTOM_FLAGS[@]}"
-  local extra_flags=()
+  cluster_creation_args+=(--test-cmd-args="${test_cmd_args}")
   # If using boskos, save time and let it tear down the cluster
-  (( ! IS_BOSKOS )) && extra_flags+=(--down)
+  (( ! IS_BOSKOS )) && cluster_creation_args+=(--down)
+
+  cluster_creation_args+=(--up)
+  cluster_creation_args+=(--extract="${E2E_CLUSTER_VERSION}")
+  cluster_creation_args+=(--gcp-node-image="${SERVING_GKE_IMAGE}")
+  cluster_creation_args+=(--test-cmd="${E2E_SCRIPT}")
+  
+  header "Creating test cluster"
+
+  # Create cluster with default region/zone
+  try_create_test_cluster "${cluster_creation_args[@]}"
+
+  # If failed above and because of stockout, try backup regions/zones
+  if [[ "$(cat ${TEST_RESULT_FILE})" == "0" ]] || ! cluster_creation_stockout; then
+    echo "Test finished"
+  elif [[ -n "$E2E_CLUSTER_BACKUP_ZONES" ]]; then # Only retry backup zones if provided
+    for backup_zone in $E2E_CLUSTER_BACKUP_ZONES; do
+      header "Creating test cluster in zone: $backup_zone"
+      E2E_CLUSTER_ZONE=$backup_zone
+      try_create_test_cluster "${cluster_creation_args[@]}"
+      [[ "$(cat ${TEST_RESULT_FILE})" == "0" ]] && break
+      cluster_creation_stockout || break
+    done
+  elif [[ -n "$E2E_CLUSTER_BACKUP_REGIONS" ]]; then # Retry regions if provided
+    for backup_region in $E2E_CLUSTER_BACKUP_REGIONS; do
+      header "Creating test cluster in region: $backup_region"
+      E2E_CLUSTER_REGION=$backup_region
+      try_create_test_cluster "${cluster_creation_args[@]}"
+      [[ "$(cat ${TEST_RESULT_FILE})" == "0" ]] && break
+      cluster_creation_stockout || break
+    done
+  fi
+  
+  local result="$(cat ${TEST_RESULT_FILE})"
+  echo "Artifacts were written to ${ARTIFACTS}"
+  echo "Test result code is ${result}"
+  exit ${result}
+}
+
+# Create a test cluster with kubetest and call the current script again.
+function try_create_test_cluster() {
+  local cluster_creation_args=("$@")
+  local geoflag="--gcp-region=${E2E_CLUSTER_REGION}"
+  [[ -n "${E2E_CLUSTER_ZONE}" ]] && geoflag="--gcp-zone=${E2E_CLUSTER_REGION}-${E2E_CLUSTER_ZONE}"
+  
   # Don't fail test for kubetest, as it might incorrectly report test failure
   # if teardown fails (for details, see success() below)
   set +o errexit
   { run_go_tool k8s.io/test-infra/kubetest \
-    kubetest "${CLUSTER_CREATION_ARGS[@]}" \
-    --up \
-    --extract "${E2E_CLUSTER_VERSION}" \
-    --gcp-node-image "${SERVING_GKE_IMAGE}" \
-    --test-cmd "${E2E_SCRIPT}" \
-    --test-cmd-args "${test_cmd_args}" \
-    ${extra_flags[@]} \
+    kubetest "${cluster_creation_args[@]}" \
+    ${geoflag}
     ${EXTRA_KUBETEST_FLAGS[@]}; } 2>&1 | tee $CLUSTER_CREATION_LOG
   echo "Test subprocess exited with code $?"
   # Ignore any errors below, this is a best-effort cleanup and shouldn't affect the test result.
   set +o errexit
   delete_leaked_network_resources
-  local result="$(cat ${TEST_RESULT_FILE})"
-  echo "Artifacts were written to ${ARTIFACTS}"
-  echo "Test result code is ${result}"
-  return ${result}
 }
 
 # Setup the test cluster for running the tests.
