@@ -3,14 +3,14 @@
 ## Creating the cluster
 
 1. Create the GKE cluster, the role bindings and the GitHub secrets. You might
-   need to update [Makefile](./Makefile). For details, see <https://github.com/kubernetes/test-infra/blob/master/prow/getting_started.md>.
+   need to update [Makefile](./prow/Makefile). For details, see <https://github.com/kubernetes/test-infra/blob/master/prow/getting_started.md>.
 
-1. Ensure the GCP projects listed in [resources.yaml](./boskos/resources.yaml)
+1. Ensure the GCP projects listed in [resources.yaml](./prow/boskos/resources.yaml)
    are created.
 
-1. Apply [config_start.yaml](./config_start.yaml) to the cluster.
+1. Apply [config_start.yaml](./prow/config_start.yaml) to the cluster.
 
-1. Apply Boskos [config_start.yaml](./boskos/config_start.yaml) to the cluster.
+1. Apply Boskos [config_start.yaml](./prow/boskos/config_start.yaml) to the cluster.
 
 1. Run `make update-cluster`, `make update-boskos`, `make update-config`,
    `make update-plugins` and `make update-boskos-config`.
@@ -20,7 +20,7 @@
 
 ## Expanding Boskos pool
 
-1. Create a new GCP project and add it to [resources.yaml](./boskos/resources.yaml).
+1. Create a new GCP project and add it to [resources.yaml](./prow/boskos/resources.yaml).
 
 1. Make the following accounts editors of the project:
    * `knative-productivity-admins@googlegroups.com`
@@ -49,8 +49,8 @@
 
 1. Add the repo to the [tide section](https://github.com/knative/test-infra/blob/6c1fc9978de156385ddbe431c3a5920d321d4382/ci/prow/make_config.go#L222)
    in the Prow config file generator and run `make config`. Create a PR with the
-   changes to the generator and to the [config.yaml](./config.yaml) file. Once the
-   PR is merged, ask one of the owners of knative/test-infra to deploy the new
+   changes to the generator and to the [config.yaml](./prow/config.yaml) file. Once
+   the PR is merged, ask one of the owners of knative/test-infra to deploy the new
    config.
 
 1. Wait a few minutes, check that Prow is working by entering `/woof` as a
@@ -68,10 +68,10 @@
 
 1. Merge a pull request that:
 
-   1. Updates [config_knative.yaml](./config_knative.yaml), the Prow config file
-      (usually, copy and update the existing configuration from another repository).
-      Run `make config` to regenerate [config.yaml](./config.yaml), otherwise the
-      presubmit test will fail.
+   1. Updates [config_knative.yaml](./prow/config_knative.yaml), the Prow config
+      file (usually, copy and update the existing configuration from another repository).
+      Run `make config` to regenerate [config.yaml](./prow/config.yaml), otherwise
+      the presubmit test will fail.
 
    1. Updates the Gubernator config with the new log dirs.
 
