@@ -37,10 +37,12 @@ function build_resource_name() {
 
 # Test cluster parameters
 
+# export E2E_CLUSTER_REGION and E2E_CLUSTER_ZONE to make save_metadata work
 # Configurable parameters
-E2E_CLUSTER_REGION=${E2E_CLUSTER_REGION:-us-central1}
+export E2E_CLUSTER_REGION=${E2E_CLUSTER_REGION:-us-central1}
 # By default we use regional clusters.
-E2E_CLUSTER_ZONE=${E2E_CLUSTER_ZONE:-}
+export E2E_CLUSTER_ZONE=${E2E_CLUSTER_ZONE:-}
+
 readonly E2E_CLUSTER_BACKUP_REGIONS=${E2E_CLUSTER_BACKUP_REGIONS:-us-west1 us-east1}
 readonly E2E_CLUSTER_BACKUP_ZONES=${E2E_CLUSTER_BACKUP_ZONES:-}
 
@@ -58,7 +60,6 @@ readonly E2E_BASE_NAME="k${REPO_NAME}"
 readonly E2E_CLUSTER_NAME=$(build_resource_name e2e-cls)
 readonly E2E_NETWORK_NAME=$(build_resource_name e2e-net)
 readonly TEST_RESULT_FILE=/tmp/${E2E_BASE_NAME}-e2e-result
-readonly CLUSTER_CREATION_LOG=/tmp/${E2E_BASE_NAME}-cluster_creation-log
 
 # Flag whether test is using a boskos GCP project
 IS_BOSKOS=0
@@ -148,25 +149,20 @@ function delete_leaked_network_resources() {
   fi
 }
 
-# Check ${CLUSTER_CREATION_LOG} to see if it contains key words for stockout
-function cluster_creation_stockout() {
-  grep -Eio "does not have enough resources available to fulfill the request" "${CLUSTER_CREATION_LOG}">/dev/null 2>&1
-  return $?
-}
-
-# Wrapper for cluster creation function, ensure cluster creation by retrying
-# backup region/zone if stockout
+# Create a test cluster with kubetest and call the current script again.
 function create_test_cluster() {
   # Fail fast during setup.
   set -o errexit
   set -o pipefail
 
-  header "Creating test cluster"
+  if function_exists cluster_setup; then
+    cluster_setup || fail_test "cluster setup failed"
+  fi
 
   echo "Cluster will have a minimum of ${E2E_MIN_CLUSTER_NODES} and a maximum of ${E2E_MAX_CLUSTER_NODES} nodes."
 
   # Smallest cluster required to run the end-to-end-tests
-  local cluster_creation_args=(
+  local CLUSTER_CREATION_ARGS=(
     --gke-create-command="container clusters create --quiet --enable-autoscaling --min-nodes=${E2E_MIN_CLUSTER_NODES} --max-nodes=${E2E_MAX_CLUSTER_NODES} --scopes=cloud-platform --enable-basic-auth --no-issue-client-certificate ${EXTRA_CLUSTER_CREATION_FLAGS[@]}"
     --gke-shape={\"default\":{\"Nodes\":${E2E_MIN_CLUSTER_NODES}\,\"MachineType\":\"${E2E_CLUSTER_MACHINE}\"}}
     --provider=gke
@@ -178,7 +174,7 @@ function create_test_cluster() {
     --test=false
   )
   if (( ! IS_BOSKOS )); then
-    cluster_creation_args+=(--gcp-project=${GCP_PROJECT})
+    CLUSTER_CREATION_ARGS+=(--gcp-project=${GCP_PROJECT})
   fi
   # SSH keys are not used, but kubetest checks for their existence.
   # Touch them so if they don't exist, empty files are create to satisfy the check.
@@ -199,69 +195,68 @@ function create_test_cluster() {
   (( SKIP_KNATIVE_SETUP )) && test_cmd_args+=" --skip-knative-setup"
   [[ -n "${GCP_PROJECT}" ]] && test_cmd_args+=" --gcp-project ${GCP_PROJECT}"
   [[ -n "${E2E_SCRIPT_CUSTOM_FLAGS[@]}" ]] && test_cmd_args+=" ${E2E_SCRIPT_CUSTOM_FLAGS[@]}"
-  cluster_creation_args+=(--test-cmd-args="${test_cmd_args}")
+  local extra_flags=()
   # If using boskos, save time and let it tear down the cluster
-  (( ! IS_BOSKOS )) && cluster_creation_args+=(--down)
-
-  cluster_creation_args+=(--up)
-  cluster_creation_args+=(--extract="${E2E_CLUSTER_VERSION}")
-  cluster_creation_args+=(--gcp-node-image="${SERVING_GKE_IMAGE}")
-  cluster_creation_args+=(--test-cmd="${E2E_SCRIPT}")
-  
-  header "Creating test cluster"
-
-  # Create cluster with default region/zone
-  try_create_test_cluster "${cluster_creation_args[@]}"
-
-  # If failed above and because of stockout, try backup regions/zones
-  if [[ "$(cat ${TEST_RESULT_FILE})" == "0" ]] || ! cluster_creation_stockout; then
-    echo "Test finished"
-  elif [[ -n "$E2E_CLUSTER_BACKUP_ZONES" ]]; then # Only retry backup zones if provided
-    for backup_zone in $E2E_CLUSTER_BACKUP_ZONES; do
-      header "Creating test cluster in zone: $backup_zone"
-      E2E_CLUSTER_ZONE=$backup_zone
-      try_create_test_cluster "${cluster_creation_args[@]}"
-      [[ "$(cat ${TEST_RESULT_FILE})" == "0" ]] && break
-      cluster_creation_stockout || break
-    done
-  elif [[ -n "$E2E_CLUSTER_BACKUP_REGIONS" ]]; then # Retry regions if provided
-    for backup_region in $E2E_CLUSTER_BACKUP_REGIONS; do
-      header "Creating test cluster in region: $backup_region"
-      E2E_CLUSTER_REGION=$backup_region
-      try_create_test_cluster "${cluster_creation_args[@]}"
-      [[ "$(cat ${TEST_RESULT_FILE})" == "0" ]] && break
-      cluster_creation_stockout || break
-    done
-  fi
-  
+  (( ! IS_BOSKOS )) && extra_flags+=(--down)
+  # Don't fail test for kubetest, as it might incorrectly report test failure
+  # if teardown fails (for details, see success() below)
+  set +o errexit
+  retry_create_test_cluster "${CLUSTER_CREATION_ARGS[@]}" \
+    --up \
+    --extract "${E2E_CLUSTER_VERSION}" \
+    --gcp-node-image "${SERVING_GKE_IMAGE}" \
+    --test-cmd "${E2E_SCRIPT}" \
+    --test-cmd-args "${test_cmd_args}" \
+    ${extra_flags[@]} \
+    ${EXTRA_KUBETEST_FLAGS[@]}
+  echo "Test subprocess exited with code $?"
+  # Ignore any errors below, this is a best-effort cleanup and shouldn't affect the test result.
+  set +o errexit
+  function_exists cluster_teardown && cluster_teardown
+  delete_leaked_network_resources
   local result="$(cat ${TEST_RESULT_FILE})"
   echo "Artifacts were written to ${ARTIFACTS}"
   echo "Test result code is ${result}"
   exit ${result}
 }
 
-# Create a test cluster with kubetest and call the current script again.
-function try_create_test_cluster() {
-  local cluster_creation_args=("$@")
-  local geoflag="--gcp-region=${E2E_CLUSTER_REGION}"
-  [[ -n "${E2E_CLUSTER_ZONE}" ]] && geoflag="--gcp-zone=${E2E_CLUSTER_REGION}-${E2E_CLUSTER_ZONE}"
+# Retry backup regions/zones if cluster creations failed due to stockout.
+# Parameters: $1..$n - any kubetest flags other than geo flag.
+function retry_create_test_cluster() {
+  local cluster_creation_log=/tmp/${E2E_BASE_NAME}-cluster_creation-log
+  # zone_not_provided is a placeholder for e2e_cluster_zone to make for loop below work
+  local zone_not_provided="zone_not_provided"
 
-  if function_exists cluster_setup; then
-    cluster_setup || fail_test "cluster setup failed"
+  local e2e_cluster_regions=(${E2E_CLUSTER_REGION})
+  local e2e_cluster_zones=(${E2E_CLUSTER_ZONE})
+
+  if [[ -n "${E2E_CLUSTER_BACKUP_ZONES}" ]]; then
+    e2e_cluster_zones+=(${E2E_CLUSTER_BACKUP_ZONES})
+  elif [[ -n "${E2E_CLUSTER_BACKUP_REGIONS}" ]]; then
+    e2e_cluster_regions+=(${E2E_CLUSTER_BACKUP_REGIONS})
+    e2e_cluster_zones=(${zone_not_provided})
   fi
-  
-  # Don't fail test for kubetest, as it might incorrectly report test failure
-  # if teardown fails (for details, see success() below)
-  set +o errexit
-  { run_go_tool k8s.io/test-infra/kubetest \
-    kubetest "${cluster_creation_args[@]}" \
-    ${geoflag}
-    ${EXTRA_KUBETEST_FLAGS[@]}; } 2>&1 | tee $CLUSTER_CREATION_LOG
-  echo "Test subprocess exited with code $?"
-  # Ignore any errors below, this is a best-effort cleanup and shouldn't affect the test result.
-  set +o errexit
-  function_exists cluster_teardown && cluster_teardown
-  delete_leaked_network_resources
+
+  for e2e_cluter_region in "${e2e_cluster_regions[@]}"; do
+    for e2e_cluster_zone in "${e2e_cluster_zones[@]}"; do
+      E2E_CLUSTER_REGION=${e2e_cluter_region}
+      E2E_CLUSTER_ZONE=${e2e_cluster_zone}
+      [[ "${E2E_CLUSTER_ZONE}" == "${zone_not_provided}" ]] && E2E_CLUSTER_ZONE=""
+
+      local geoflag="--gcp-region=${E2E_CLUSTER_REGION}"
+      [[ -n "${E2E_CLUSTER_ZONE}" ]] && geoflag="--gcp-zone=${E2E_CLUSTER_REGION}-${E2E_CLUSTER_ZONE}"
+
+      header "Creating test cluster in $E2E_CLUSTER_REGION $E2E_CLUSTER_ZONE"
+      set +o errexit
+      { run_go_tool k8s.io/test-infra/kubetest \
+        kubetest "$@" ${geoflag}; } 2>&1 | tee ${cluster_creation_log}
+
+      [[ "$(cat ${TEST_RESULT_FILE})" == "0" ]] && return
+      # Check if creation logs contains keywords about stockout
+      grep -Eio "does not have enough resources available to fulfill the request" "${CLUSTER_CREATION_LOG}">/dev/null 2>&1
+      [[ "$?" != "0" ]] && return # Fail if creation didn't fail due to stockout
+    done
+  done
 }
 
 # Setup the test cluster for running the tests.
