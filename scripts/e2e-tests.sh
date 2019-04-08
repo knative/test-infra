@@ -37,7 +37,7 @@ function build_resource_name() {
 
 # Test cluster parameters
 
-# export E2E_CLUSTER_REGION and E2E_CLUSTER_ZONE to make save_metadata work
+# export E2E_CLUSTER_REGION and E2E_CLUSTER_ZONE as they're used in the cluster setup subprocess
 # Configurable parameters
 export E2E_CLUSTER_REGION=${E2E_CLUSTER_REGION:-us-central1}
 # By default we use regional clusters.
