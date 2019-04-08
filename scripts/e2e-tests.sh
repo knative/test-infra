@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2018 The Knative Authors
+# Copyright 2019 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -37,12 +37,13 @@ function build_resource_name() {
 
 # Test cluster parameters
 
-# export E2E_CLUSTER_REGION and E2E_CLUSTER_ZONE as they're used in the cluster setup subprocess
 # Configurable parameters
+# export E2E_CLUSTER_REGION and E2E_CLUSTER_ZONE as they're used in the cluster setup subprocess
 export E2E_CLUSTER_REGION=${E2E_CLUSTER_REGION:-us-central1}
 # By default we use regional clusters.
 export E2E_CLUSTER_ZONE=${E2E_CLUSTER_ZONE:-}
 
+# Default backup regions in case of stockouts; by default we don't fall back to a different zone in the same region
 readonly E2E_CLUSTER_BACKUP_REGIONS=${E2E_CLUSTER_BACKUP_REGIONS:-us-west1 us-east1}
 readonly E2E_CLUSTER_BACKUP_ZONES=${E2E_CLUSTER_BACKUP_ZONES:-}
 
@@ -198,10 +199,7 @@ function create_test_cluster() {
   local extra_flags=()
   # If using boskos, save time and let it tear down the cluster
   (( ! IS_BOSKOS )) && extra_flags+=(--down)
-  # Don't fail test for kubetest, as it might incorrectly report test failure
-  # if teardown fails (for details, see success() below)
-  set +o errexit
-  retry_create_test_cluster "${CLUSTER_CREATION_ARGS[@]}" \
+  create_test_cluster_with_retries "${CLUSTER_CREATION_ARGS[@]}" \
     --up \
     --extract "${E2E_CLUSTER_VERSION}" \
     --gcp-node-image "${SERVING_GKE_IMAGE}" \
@@ -214,7 +212,7 @@ function create_test_cluster() {
   set +o errexit
   function_exists cluster_teardown && cluster_teardown
   delete_leaked_network_resources
-  local result="$(cat ${TEST_RESULT_FILE})"
+  local result=$(get_test_return_code)
   echo "Artifacts were written to ${ARTIFACTS}"
   echo "Test result code is ${result}"
   exit ${result}
@@ -222,7 +220,7 @@ function create_test_cluster() {
 
 # Retry backup regions/zones if cluster creations failed due to stockout.
 # Parameters: $1..$n - any kubetest flags other than geo flag.
-function retry_create_test_cluster() {
+function create_test_cluster_with_retries() {
   local cluster_creation_log=/tmp/${E2E_BASE_NAME}-cluster_creation-log
   # zone_not_provided is a placeholder for e2e_cluster_zone to make for loop below work
   local zone_not_provided="zone_not_provided"
@@ -235,11 +233,13 @@ function retry_create_test_cluster() {
   elif [[ -n "${E2E_CLUSTER_BACKUP_REGIONS}" ]]; then
     e2e_cluster_regions+=(${E2E_CLUSTER_BACKUP_REGIONS})
     e2e_cluster_zones=(${zone_not_provided})
+  else
+    echo "No backup region/zone set, cluster creation will fail in case of stockout"
   fi
 
-  for e2e_cluter_region in "${e2e_cluster_regions[@]}"; do
+  for e2e_cluster_region in "${e2e_cluster_regions[@]}"; do
     for e2e_cluster_zone in "${e2e_cluster_zones[@]}"; do
-      E2E_CLUSTER_REGION=${e2e_cluter_region}
+      E2E_CLUSTER_REGION=${e2e_cluster_region}
       E2E_CLUSTER_ZONE=${e2e_cluster_zone}
       [[ "${E2E_CLUSTER_ZONE}" == "${zone_not_provided}" ]] && E2E_CLUSTER_ZONE=""
 
@@ -247,14 +247,16 @@ function retry_create_test_cluster() {
       [[ -n "${E2E_CLUSTER_ZONE}" ]] && geoflag="--gcp-zone=${E2E_CLUSTER_REGION}-${E2E_CLUSTER_ZONE}"
 
       header "Creating test cluster in $E2E_CLUSTER_REGION $E2E_CLUSTER_ZONE"
+      # Don't fail test for kubetest, as it might incorrectly report test failure
+      # if teardown fails (for details, see success() below)
       set +o errexit
       { run_go_tool k8s.io/test-infra/kubetest \
         kubetest "$@" ${geoflag}; } 2>&1 | tee ${cluster_creation_log}
 
-      [[ "$(cat ${TEST_RESULT_FILE})" == "0" ]] && return
-      # Check if creation logs contains keywords about stockout
-      grep -Eio "does not have enough resources available to fulfill the request" "${CLUSTER_CREATION_LOG}">/dev/null 2>&1
-      [[ "$?" != "0" ]] && return # Fail if creation didn't fail due to stockout
+      # Exit if test succeeded
+      [[ "$(get_test_return_code)" == "0" ]] && return
+      # If test failed not because of cluster creation stockout, return
+      [[ -z "$(grep -Eio 'does not have enough resources to fulfill the request' ${cluster_creation_log})" ]] && return
     done
   done
 }
@@ -299,6 +301,12 @@ function setup_test_cluster() {
   if function_exists test_setup; then
     test_setup || fail_test "test setup failed"
   fi
+}
+
+# Gets the exit of of the test script.
+# For more details, see set_test_return_code().
+function get_test_return_code() {
+  echo $(cat ${TEST_RESULT_FILE})
 }
 
 # Set the return code that the test script will return.
