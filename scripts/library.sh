@@ -151,7 +151,7 @@ function wait_until_pods_running() {
 function wait_until_batch_job_complete() {
   echo -n "Waiting until all batch jobs in namespace $1 run to completion."
   for i in {1..150}; do  # timeout after 5 minutes
-    local jobs=$(kubectl get jobs -n $1 --no-headers
+    local jobs=$(kubectl get jobs -n $1 --no-headers \
                  -ocustom-columns='n:{.metadata.name},c:{.spec.completions},s:{.status.succeeded}')
     # All jobs must be complete
     local not_complete=$(echo "${jobs}" | awk '{if ($2!=$3) print $0}' | wc -l)
