@@ -153,7 +153,7 @@ function wait_until_batch_job_complete() {
   for i in {1..150}; do  # timeout after 5 minutes
     local pods="$(kubectl get pods --selector=job-name --no-headers -n $1 2>/dev/null | grep -v '^[[:space:]]*$')"
     # All pods must be complete
-    local not_complete=$(echo "${pods}" | grep -v Completed | wc -l)
+    local not_complete=$(echo "${pods}" | grep -v Completed | grep -v "^[[:space:]]*$" | wc -l)
     if [[ ${not_complete} -eq 0 ]]; then
       echo -e "\nAll pods are complete:\n${pods}"
       return 0
