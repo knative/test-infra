@@ -27,7 +27,7 @@ import (
 
 func loadTest(t *testing.T, numSteps int) {
 	opts := loadgenerator.GeneratorOptions{
-		URL:            "http://localhost",
+		URL:            "http://www.google.com",
 		Duration:       10 * time.Second,
 		QPS:            10,
 		NumThreads:     1,
