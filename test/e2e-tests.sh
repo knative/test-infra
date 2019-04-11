@@ -33,7 +33,6 @@ function knative_setup() {
 
 initialize $@
 
-# This is actually a unit test, but it does exercise the necessary helper functions.
-go_test_e2e -run TestE2ESucceeds ./test || fail_test
+go_test_e2e ./test/e2e || fail_test
 
 success
