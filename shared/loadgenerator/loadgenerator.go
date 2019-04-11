@@ -116,13 +116,13 @@ RunLoadTest runs the load test with fortio and returns the response
 By default, numsteps = 1 => test full load directly with no intermediate steps
 
 For numsteps=3, qps=q, duration=d
-
-	QPS				____d____
-	|				|	|	|
-	|		____d___|	|4q	|
-	|___d___|	|2q		|	|
+	QPS
+	|		|---d---|
+	|		|   |	|
+	|       |---d---|   |4q	|
+	|---d---|   |2q	    |	|
 	|___|q______|_______|___|____duration(time)
-		1		2		3  <--- steps
+            1       2       3  <--- steps
 */
 func (g *GeneratorOptions) RunLoadTest(resolvableDomain bool) (*GeneratorResults, error) {
 	res := make([]*fhttp.HTTPRunnerResults, g.NumSteps)
