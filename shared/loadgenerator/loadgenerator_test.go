@@ -39,7 +39,7 @@ func getOptions() *loadgenerator.GeneratorOptions {
 		NumConnections: testNum,
 		URL:            testUrl,
 		Domain:         testUrl,
-		QPS:            testQPS,
+		BaseQPS:        testQPS,
 	}
 }
 
