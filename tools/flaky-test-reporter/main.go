@@ -25,6 +25,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/knative/test-infra/shared/common"
 	"github.com/knative/test-infra/shared/prow"
 )
 
@@ -55,9 +56,7 @@ func main() {
 	// Clean up local artifacts directory, this will be used later for artifacts uploads
 	err = os.RemoveAll(prow.GetLocalArtifactsDir()) // this function returns nil if path not found
 	if nil == err {
-		if _, err = os.Stat(prow.GetLocalArtifactsDir()); os.IsNotExist(err) {
-			err = os.MkdirAll(prow.GetLocalArtifactsDir(), 0777)
-		}
+		err = common.CreateDir(prow.GetLocalArtifactsDir())
 	}
 	if nil != err {
 		log.Fatalf("Failed preparing local artifacts directory: %v", err)
@@ -77,7 +76,7 @@ func main() {
 
 	// Errors that could result in inaccuracy reporting would be treated with fast fail by processGithubIssues,
 	// so any errors returned are github opeations error, which in most cases wouldn't happend, but in case it
-	// happens, it should fail the job after Slack notification 
+	// happens, it should fail the job after Slack notification
 	githubErr := ghi.processGithubIssues(repoDataAll, *dryrun)
 	slackErr := sendSlackNotifications(repoDataAll, slackClient, ghi, *dryrun)
 	if nil != githubErr {
