@@ -273,6 +273,7 @@ function setup_test_cluster() {
 
   header "Setting up test cluster"
 
+  # Set the actual project the test cluster resides in
   E2E_CLUSTER_PROJECT="$(gcloud config get-value project)"
   readonly E2E_CLUSTER_PROJECT
 
