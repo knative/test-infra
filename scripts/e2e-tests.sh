@@ -113,7 +113,7 @@ function save_metadata() {
     geo_key="Zone"
     geo_value="${E2E_CLUSTER_REGION}-${E2E_CLUSTER_ZONE}"
   fi
-  local cluster_version="$(gcloud container clusters list --project=${E2E_CLUSTER_PROJECT} --format='value(currentMasterVersion)')"
+  local cluster_version="$(gcloud container clusters list --project=${E2E_PROJECT_ID} --format='value(currentMasterVersion)')"
   cat << EOF > ${ARTIFACTS}/metadata.json
 {
   "E2E:${geo_key}": "${geo_value}",
@@ -271,7 +271,7 @@ function setup_test_cluster() {
   # Set the actual project the test cluster resides in
   # It will be a project assigned by Boskos if test is running on Prow, 
   # otherwise will be ${GCP_PROJECT} set up by user.
-  export E2E_CLUSTER_PROJECT="$(gcloud config get-value project)"
+  readonly export E2E_PROJECT_ID="$(gcloud config get-value project)"
 
   # Save some metadata about cluster creation for using in prow and testgrid
   save_metadata
@@ -284,15 +284,15 @@ function setup_test_cluster() {
   if [[ -z "$(kubectl get clusterrolebinding cluster-admin-binding 2> /dev/null)" ]]; then
     acquire_cluster_admin_role ${k8s_user} ${E2E_CLUSTER_NAME} ${E2E_CLUSTER_REGION} ${E2E_CLUSTER_ZONE}
     kubectl config set-context ${k8s_cluster} --namespace=default
-    export KO_DOCKER_REPO=gcr.io/${E2E_CLUSTER_PROJECT}/${E2E_BASE_NAME}-e2e-img
+    readonly export KO_DOCKER_REPO=gcr.io/${E2E_PROJECT_ID}/${E2E_BASE_NAME}-e2e-img
   fi
 
-  echo "- Project is ${E2E_CLUSTER_PROJECT}"
+  echo "- Project is ${E2E_PROJECT_ID}"
   echo "- Cluster is ${k8s_cluster}"
   echo "- User is ${k8s_user}"
   echo "- Docker is ${KO_DOCKER_REPO}"
 
-  export KO_DATA_PATH="${REPO_ROOT_DIR}/.git"
+  readonly export KO_DATA_PATH="${REPO_ROOT_DIR}/.git"
 
   trap teardown_test_resources EXIT
 
