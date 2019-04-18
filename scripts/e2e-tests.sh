@@ -260,11 +260,6 @@ function create_test_cluster_with_retries() {
   done
 }
 
-# Flag which project holds the actual e2e test cluster.
-# It will be a project assigned by Boskos if test is running on Prow, 
-# otherwise will be ${GCP_PROJECT} set up by user.
-E2E_CLUSTER_PROJECT=""
-
 # Setup the test cluster for running the tests.
 function setup_test_cluster() {
   # Fail fast during setup.
@@ -274,8 +269,9 @@ function setup_test_cluster() {
   header "Setting up test cluster"
 
   # Set the actual project the test cluster resides in
-  E2E_CLUSTER_PROJECT="$(gcloud config get-value project)"
-  readonly E2E_CLUSTER_PROJECT
+  # It will be a project assigned by Boskos if test is running on Prow, 
+  # otherwise will be ${GCP_PROJECT} set up by user.
+  export E2E_CLUSTER_PROJECT="$(gcloud config get-value project)"
 
   # Save some metadata about cluster creation for using in prow and testgrid
   save_metadata
