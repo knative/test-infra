@@ -113,8 +113,7 @@ function save_metadata() {
     geo_key="Zone"
     geo_value="${E2E_CLUSTER_REGION}-${E2E_CLUSTER_ZONE}"
   fi
-  local gcloud_project="$(gcloud config get-value project)"
-  local cluster_version="$(gcloud container clusters list --project=${gcloud_project} --format='value(currentMasterVersion)')"
+  local cluster_version="$(gcloud container clusters list --project=${E2E_CLUSTER_PROJECT} --format='value(currentMasterVersion)')"
   cat << EOF > ${ARTIFACTS}/metadata.json
 {
   "E2E:${geo_key}": "${geo_value}",
@@ -261,6 +260,11 @@ function create_test_cluster_with_retries() {
   done
 }
 
+# Flag which project holds the actual e2e test cluster.
+# It will be a project assigned by Boskos if test is running on Prow, 
+# otherwise will be ${GCP_PROJECT} set up by user.
+E2E_CLUSTER_PROJECT=""
+
 # Setup the test cluster for running the tests.
 function setup_test_cluster() {
   # Fail fast during setup.
@@ -268,6 +272,9 @@ function setup_test_cluster() {
   set -o pipefail
 
   header "Setting up test cluster"
+
+  E2E_CLUSTER_PROJECT="$(gcloud config get-value project)"
+  readonly E2E_CLUSTER_PROJECT
 
   # Save some metadata about cluster creation for using in prow and testgrid
   save_metadata
@@ -280,9 +287,10 @@ function setup_test_cluster() {
   if [[ -z "$(kubectl get clusterrolebinding cluster-admin-binding 2> /dev/null)" ]]; then
     acquire_cluster_admin_role ${k8s_user} ${E2E_CLUSTER_NAME} ${E2E_CLUSTER_REGION} ${E2E_CLUSTER_ZONE}
     kubectl config set-context ${k8s_cluster} --namespace=default
-    export KO_DOCKER_REPO=gcr.io/$(gcloud config get-value project)/${E2E_BASE_NAME}-e2e-img
+    export KO_DOCKER_REPO=gcr.io/${E2E_CLUSTER_PROJECT}/${E2E_BASE_NAME}-e2e-img
   fi
 
+  echo "- Project is ${E2E_CLUSTER_PROJECT}"
   echo "- Cluster is ${k8s_cluster}"
   echo "- User is ${k8s_user}"
   echo "- Docker is ${KO_DOCKER_REPO}"
