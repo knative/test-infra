@@ -856,6 +856,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			// We need a larger cluster of at least 16 nodes for perf tests
 			addEnvToJob(&data.Base, "E2E_MIN_CLUSTER_NODES", "16")
 			addEnvToJob(&data.Base, "E2E_MAX_CLUSTER_NODES", "16")
+			data.Base.Timeout = 120
 		case "latency":
 			if !getBool(item.Value) {
 				return
