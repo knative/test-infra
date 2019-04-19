@@ -284,7 +284,7 @@ function setup_test_cluster() {
   if [[ -z "$(kubectl get clusterrolebinding cluster-admin-binding 2> /dev/null)" ]]; then
     acquire_cluster_admin_role ${k8s_user} ${E2E_CLUSTER_NAME} ${E2E_CLUSTER_REGION} ${E2E_CLUSTER_ZONE}
     kubectl config set-context ${k8s_cluster} --namespace=default
-    readonly export KO_DOCKER_REPO=gcr.io/${E2E_PROJECT_ID}/${E2E_BASE_NAME}-e2e-img
+    export KO_DOCKER_REPO=gcr.io/${E2E_PROJECT_ID}/${E2E_BASE_NAME}-e2e-img
   fi
 
   echo "- Project is ${E2E_PROJECT_ID}"
@@ -292,7 +292,7 @@ function setup_test_cluster() {
   echo "- User is ${k8s_user}"
   echo "- Docker is ${KO_DOCKER_REPO}"
 
-  readonly export KO_DATA_PATH="${REPO_ROOT_DIR}/.git"
+  export KO_DATA_PATH="${REPO_ROOT_DIR}/.git"
 
   trap teardown_test_resources EXIT
 
