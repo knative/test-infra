@@ -308,7 +308,7 @@ function setup_test_cluster() {
   fi
 }
 
-# Gets the exit of of the test script.
+# Gets the exit of the test script.
 # For more details, see set_test_return_code().
 function get_test_return_code() {
   echo $(cat ${TEST_RESULT_FILE})
