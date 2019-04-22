@@ -155,7 +155,7 @@ func (g *GeneratorOptions) RunLoadTest(resolvableDomain bool) (*GeneratorResults
 		res[i] = r
 	}
 
-	return &GeneratorResults{Result: res}, nil
+	return &GeneratorResults{Result: res, FileNamePrefix: g.FileNamePrefix}, nil
 }
 
 // SaveJSON saves the results as Json in the artifacts directory
