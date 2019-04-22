@@ -118,7 +118,12 @@ func (g *GeneratorOptions) CreateRunnerOptions(resolvableDomain bool) *fhttp.HTT
 	}
 
 	if len(g.FileNamePrefix) != 0 {
-		ro.Profiler = g.FileNamePrefix
+		dir := prow.GetLocalArtifactsDir()
+		if err := common.CreateDir(dir); err != nil {
+			return nil
+		}
+
+		ro.Profiler = path.Join(dir, g.FileNamePrefix)
 	}
 
 	return &ro
