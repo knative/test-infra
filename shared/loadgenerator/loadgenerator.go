@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path"
 	"time"
 
 	"fortio.org/fortio/fhttp"
@@ -64,11 +65,19 @@ type GeneratorOptions struct {
 	// LoadFactors defines the multiplier for baseQPS.
 	// Len(loadfactors) defines the number of QPS changes.
 	LoadFactors []float64
+	// FileNamePrefix is the prefix used to identify the stored files in artifacts.
+	// If not empty, this can be used to store cpu/mem profile from loadgenerator.
+	// Typically, we can use t.Name() to differentiate between the tests.
+	FileNamePrefix string
 }
 
 // GeneratorResults contains the results of running the per test
 type GeneratorResults struct {
 	Result []*fhttp.HTTPRunnerResults
+	// FileNamePrefix is the prefix used to identify the stored files in artifacts.
+	// This will be used to store the JSON output from loadgenerator.
+	// Typically, we can use t.Name() to differentiate between the tests.
+	FileNamePrefix string
 }
 
 // addDefaults adds default values to non mandatory params
@@ -97,7 +106,7 @@ func (g *GeneratorOptions) CreateRunnerOptions(resolvableDomain bool) *fhttp.HTT
 		o.AddAndValidateExtraHeader(fmt.Sprintf("Host: %s", g.Domain))
 	}
 
-	return &fhttp.HTTPRunnerOptions{
+	ro := fhttp.HTTPRunnerOptions{
 		RunnerOptions: periodic.RunnerOptions{
 			Duration:    g.Duration,
 			NumThreads:  g.NumThreads,
@@ -107,6 +116,12 @@ func (g *GeneratorOptions) CreateRunnerOptions(resolvableDomain bool) *fhttp.HTT
 		HTTPOptions:        *o,
 		AllowInitialErrors: g.AllowInitialErrors,
 	}
+
+	if len(g.FileNamePrefix) != 0 {
+		ro.Profiler = g.FileNamePrefix
+	}
+
+	return &ro
 }
 
 /*
@@ -115,8 +130,8 @@ By default, LoadFactors = [1] => test full load directly with no intermediate st
 
 For LoadFactors=[1,2,4], baseQPS=q, duration=d
 	QPS
-	|		|---d---|
-	|		|   |	|
+	|               |---d---|
+	|               |   |   |
 	|       |---d---|   |4q	|
 	|---d---|   |2q	    |	|
 	|___|q______|_______|___|____duration(time)
@@ -139,13 +154,13 @@ func (g *GeneratorOptions) RunLoadTest(resolvableDomain bool) (*GeneratorResults
 }
 
 // SaveJSON saves the results as Json in the artifacts directory
-func (gr *GeneratorResults) SaveJSON(testName string) error {
+func (gr *GeneratorResults) SaveJSON() error {
 	dir := prow.GetLocalArtifactsDir()
 	if err := common.CreateDir(dir); err != nil {
 		return err
 	}
 
-	outputFile := dir + "/" + testName + jsonExt
+	outputFile := path.Join(dir, gr.FileNamePrefix+jsonExt)
 	log.Printf("Storing json output in %s", outputFile)
 	f, err := os.OpenFile(outputFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {

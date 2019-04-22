@@ -25,7 +25,7 @@ import (
 	"github.com/knative/test-infra/shared/loadgenerator"
 )
 
-func loadTest(t *testing.T, factors []float64) {
+func loadTest(t *testing.T, factors bool, profiler bool) {
 	opts := loadgenerator.GeneratorOptions{
 		URL:            "http://www.google.com",
 		Duration:       10 * time.Second,
@@ -33,7 +33,14 @@ func loadTest(t *testing.T, factors []float64) {
 		NumThreads:     1,
 		NumConnections: 1,
 		RequestTimeout: 10 * time.Second,
-		LoadFactors:    factors,
+	}
+
+	if factors {
+		opts.LoadFactors = []float64{1, 2, 4}
+	}
+
+	if profiler {
+		opts.FileNamePrefix = t.Name()
 	}
 
 	res, err := opts.RunLoadTest(true)
@@ -41,14 +48,18 @@ func loadTest(t *testing.T, factors []float64) {
 		t.Fatalf("Error performing load test: %v", err)
 	}
 
-	if len(res.Result) != len(factors) {
-		t.Logf("got:%d, want: %d", len(res.Result), len(factors))
+	if factors && len(res.Result) != 3 {
+		t.Logf("got:%d, want: 3", len(res.Result))
 	}
 }
-func TestLoadGeneratorFullLoad(t *testing.T) {
-	loadTest(t, []float64{1})
+func TestFullLoad(t *testing.T) {
+	loadTest(t, false, false)
 }
 
-func TestLoadGeneratorStepLoad(t *testing.T) {
-	loadTest(t, []float64{1, 2, 4})
+func TestStepLoad(t *testing.T) {
+	loadTest(t, true, false)
+}
+
+func TestProfiler(t *testing.T) {
+	loadTest(t, false, true)
 }
