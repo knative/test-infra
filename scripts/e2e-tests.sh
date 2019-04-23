@@ -67,6 +67,8 @@ IS_BOSKOS=0
 
 # Tear down the test resources.
 function teardown_test_resources() {
+  # On boskos, save time and don't teardown as the cluster will be destroyed anyway.
+  (( IS_BOSKOS )) && return
   header "Tearing down test environment"
   function_exists test_teardown && test_teardown
   (( ! SKIP_KNATIVE_SETUP )) && function_exists knative_teardown && knative_teardown
@@ -129,6 +131,7 @@ EOF
 # See https://github.com/knative/serving/issues/959 for details.
 # TODO(adrcunha): Remove once the leak issue is resolved.
 function delete_leaked_network_resources() {
+  # On boskos, don't bother with leaks as the janitor will delete everything in the project.
   (( IS_BOSKOS )) && return
   # Ensure we're using the GCP project used by kubetest
   local gcloud_project="$(gcloud config get-value project)"
