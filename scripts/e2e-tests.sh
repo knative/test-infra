@@ -67,6 +67,7 @@ IS_BOSKOS=0
 
 # Tear down the test resources.
 function teardown_test_resources() {
+  (( IS_BOSKOS )) && return
   header "Tearing down test environment"
   function_exists test_teardown && test_teardown
   (( ! SKIP_KNATIVE_SETUP )) && function_exists knative_teardown && knative_teardown
