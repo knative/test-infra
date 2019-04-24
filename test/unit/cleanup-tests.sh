@@ -22,7 +22,7 @@ readonly _FAKE_BOSKOS_PROJECT_NAME="gcr.io/fake-boskos-project"
 readonly _PROJECT_RESOURCE_YAML="ci/prow/boskos/resources.yaml"
 readonly _RE_PROJECT_NAME="knative-boskos-[a-zA-Z0-9]+"
 
-# Call "cleanup.sh" function with given paramters
+# Call "cleanup.sh" function with given parameters
 # Parameters: $1..$n - parameters passed to "cleanup.sh" script
 function cleanup_script() {
   "./tools/cleanup/cleanup.sh" $@
