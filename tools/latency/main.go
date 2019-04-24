@@ -240,7 +240,8 @@ func parseLog(dir string, dateRestriction time.Time, metrics MetricsMap) {
 			startedE2ETests = true
 		}
 		// I0911 16:05:43.464] ==== CREATING TEST CLUSTER ====
-		if len(fields) == 7 && fields[3] == "CREATING" && fields[4] == "TEST" && fields[5] == "CLUSTER" {
+		// I0424 14:10:56.870] ==== CREATING TEST CLUSTER IN US-CENTRAL1 ====
+		if len(fields) >= 7 && fields[3] == "CREATING" && fields[4] == "TEST" && fields[5] == "CLUSTER" {
 			startedE2ETests = true
 		}
 		// I0711 22:23:20.729] --- PASS: TestHelloWorldFromShell (36.85s)
