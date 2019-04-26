@@ -108,6 +108,42 @@ periodics:
     - branch-ci: true
       release: "0.5"
       cron: "35 8 * * *" # Run at 01:35PST every day (08:35 UTC)
+    - custom-job: istio-1.0.7-mesh
+      cron: "7 */2 * * *" # Run every other hour and seven minute
+      command:
+      - "./test/e2e-tests.sh"
+      args:
+      - "--istio-version"
+      - "1.0.7"
+      - "--mesh"
+      timeout: 100
+    - custom-job: istio-1.0.7-no-mesh
+      cron: "22 */2 * * *" # Run every other hour and twenty-two minute
+      command:
+      - "./test/e2e-tests.sh"
+      args:
+      - "--istio-version"
+      - "1.0.7"
+      - "--no-mesh"
+      timeout: 100
+    - custom-job: istio-1.1.2-mesh
+      cron: "37 */2 * * *" # Run every other hour and thirty-seven minute
+      command:
+      - "./test/e2e-tests.sh"
+      args:
+      - "--istio-version"
+      - "1.1.2"
+      - "--mesh"
+      timeout: 100
+    - custom-job: istio-1.1.2-no-mesh
+      cron: "52 */2 * * *" # Run every other hour and fifty-two minute
+      command:
+      - "./test/e2e-tests.sh"
+      args:
+      - "--istio-version"
+      - "1.1.2"
+      - "--no-mesh"
+      timeout: 100
     - nightly: true
       cron: "1 8 * * *" # Run at 01:01PST every day (08:01 UTC)
     - dot-release: true
