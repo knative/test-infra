@@ -96,7 +96,7 @@ func (g *GeneratorOptions) addDefaults() {
 }
 
 // CreateRunnerOptions sets up the fortio client with the knobs needed to run the load test
-func (g *GeneratorOptions) CreateRunnerOptions(resolvableDomain bool) *fhttp.HTTPRunnerOptions {
+func (g *GeneratorOptions) CreateRunnerOptions(resolvableDomain bool) (*fhttp.HTTPRunnerOptions, error) {
 	o := fhttp.NewHTTPOptions(g.URL)
 	o.NumConnections = g.NumConnections
 	o.HTTPReqTimeOut = g.RequestTimeout
@@ -120,13 +120,13 @@ func (g *GeneratorOptions) CreateRunnerOptions(resolvableDomain bool) *fhttp.HTT
 	if len(g.FileNamePrefix) != 0 {
 		dir := prow.GetLocalArtifactsDir()
 		if err := common.CreateDir(dir); err != nil {
-			return nil
+			return nil, err
 		}
 
 		ro.Profiler = path.Join(dir, g.FileNamePrefix)
 	}
 
-	return &ro
+	return &ro, nil
 }
 
 /*
@@ -148,7 +148,11 @@ func (g *GeneratorOptions) RunLoadTest(resolvableDomain bool) (*GeneratorResults
 
 	for i, f := range g.LoadFactors {
 		g.BaseQPS = g.BaseQPS * f
-		r, err := fhttp.RunHTTPTest(g.CreateRunnerOptions(resolvableDomain))
+		ro, err := g.CreateRunnerOptions(resolvableDomain)
+		if err != nil {
+			return &GeneratorResults{Result: res}, err
+		}
+		r, err := fhttp.RunHTTPTest(ro)
 		if err != nil {
 			return &GeneratorResults{Result: res}, err
 		}

@@ -49,7 +49,7 @@ func loadTest(t *testing.T, factors bool, profiler bool) {
 	}
 
 	if factors && len(res.Result) != 3 {
-		t.Logf("got:%d, want: 3", len(res.Result))
+		t.Fatalf("got:%d, want: 3", len(res.Result))
 	}
 }
 func TestFullLoad(t *testing.T) {
