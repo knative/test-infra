@@ -46,11 +46,11 @@ func runProfiling(covTargets []string, localArts *LocalArtifacts) {
 	log.Printf("go cmdArgs=%v\n", cmdArgs)
 	cmd := exec.Command("go", cmdArgs...)
 
-	goTestCoverStdout, errCmdOutput := cmd.Output()
+	output, errCmdOutput := cmd.CombinedOutput()
 
 	if errCmdOutput != nil {
-		log.Printf("Error running 'go test -coverprofile ': error='%v'; stdout='%s'; stderr='%v'\n",
-			errCmdOutput, goTestCoverStdout, cmd.Stderr)
+		log.Printf("Error running 'go test -coverprofile ': error='%v'; combined output='%s'\n",
+			errCmdOutput, output)
 	} else {
 		log.Printf("coverage profile created @ '%s'", localArts.ProfilePath())
 		covIo.CreateMarker(localArts.Directory(), CovProfileCompletionMarker)
@@ -59,7 +59,7 @@ func runProfiling(covTargets []string, localArts *LocalArtifacts) {
 	stdoutPath := localArts.CovStdoutPath()
 	stdoutFile, err := os.Create(stdoutPath)
 	if err == nil {
-		stdoutFile.Write(goTestCoverStdout)
+		stdoutFile.Write(output)
 	} else {
 		log.Printf("Error creating stdout file: %v", err)
 	}
