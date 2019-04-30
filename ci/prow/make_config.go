@@ -1376,7 +1376,9 @@ func executeTestGroupTemplate(testGroupName string, gcsLogDir string, extras map
 
 // generateDashboard generates the dashboard configuration
 func generateDashboard(repoName string, jobNames []string) {
-	outputConfig("- name: " + repoName + "\n" + baseIndent + "dashboard_tab:")
+	dashboardName := getDashboardName(repoName)
+	outputConfig("- name: " + dashboardName + "\n" + baseIndent + "dashboard_tab:")
+
 	noExtras := make(map[string]string)
 	for _, jobName := range jobNames {
 		testGroupName := getTestGroupName(repoName, jobName)
@@ -1458,14 +1460,21 @@ func generateDashboardGroups() {
 	outputConfig("dashboard_groups:")
 	for _, projName := range projNames {
 		repos := metaData[projName]
-		dashboardRepoNames := make([]string, 0)
+		dashboardNames := make([]string, 0)
 		for _, repoName := range repoNames {
 			if _, exists := repos[repoName]; exists {
-				dashboardRepoNames = append(dashboardRepoNames, buildProjRepoStr(projName, repoName))
+				repoName := buildProjRepoStr(projName, repoName)
+				dashboardName := getDashboardName(repoName)
+				dashboardNames = append(dashboardNames, dashboardName)
 			}
 		}
-		executeDashboardGroupTemplate(projName, dashboardRepoNames)
+		executeDashboardGroupTemplate(projName, dashboardNames)
 	}
+}
+
+// getDashboardName gets the dashboardName from the repoName by removing the prefixed "knative-"
+func getDashboardName(repoName string) string {
+	return strings.TrimPrefix(repoName, "knative-")
 }
 
 // executeDashboardGroupTemplate outputs the given dashboard group config template with the given data
