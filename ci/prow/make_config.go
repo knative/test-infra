@@ -893,7 +893,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		periodicConfig[i] = yaml.MapItem{}
 	}
 	parseBasicJobConfigOverrides(&data.Base, periodicConfig)
-	data.PeriodicJobName = getJobNameForConfig(data.Base.RepoNameForJob, jobNameSuffix)
+	data.PeriodicJobName = getJobNameForConfig(data.Base.RepoName, jobNameSuffix)
 	// Ensure required data exist.
 	if data.CronString == "" {
 		log.Fatalf("Job %q is missing cron string", data.PeriodicJobName)
@@ -1313,7 +1313,7 @@ func generateSection(sectionName string, generator testgridEntityGenerator) {
 		for _, repoName := range repoNames {
 			if _, exists := repos[repoName]; exists {
 				jobNames := repos[repoName]
-				repoName = buildProjRepoStr(projName, repoName)
+				repoName = buildVersionedRepoName(projName, repoName)
 				generator(repoName, jobNames)
 			}
 		}
@@ -1374,7 +1374,7 @@ func executeTestGroupTemplate(testGroupName string, gcsLogDir string, extras map
 
 // generateDashboard generates the dashboard configuration
 func generateDashboard(repoName string, jobNames []string) {
-	dashboardName := getDashboardName(repoName)
+	dashboardName := repoName
 	outputConfig("- name: " + dashboardName + "\n" + baseIndent + "dashboard_tab:")
 
 	noExtras := make(map[string]string)
@@ -1384,7 +1384,7 @@ func generateDashboard(repoName string, jobNames []string) {
 		case "continuous":
 			executeDashboardTabTemplate("continuous", testGroupName, testgridTabSortByName, noExtras)
 			// This is a special case for knative/serving, as conformance tab is just a filtered view of the continuous tab.
-			if repoName == "knative-serving" {
+			if repoName == "serving" {
 				executeDashboardTabTemplate("conformance", testGroupName, "include-filter-by-regex=test/conformance\\\\.&sort-by-name=", noExtras)
 			}
 		case "dot-release", "auto-release", "performance", "latency", "playground":
@@ -1422,7 +1422,6 @@ func executeDashboardTabTemplate(dashboardTabName string, testGroupName string, 
 
 // getJobNameForConfig get the jobNameForConfig from the given repoName and jobName
 func getJobNameForConfig(repoName string, jobName string) string {
-	repoName = strings.Replace(repoName, "knative-", "", 1)
 	switch {
 	case jobName == "continuous":
 		return fmt.Sprintf("ci-%s", repoName)
@@ -1441,18 +1440,16 @@ func getJobNameForConfig(repoName string, jobName string) string {
 }
 
 // buildProjRepoStr builds the projRepoStr used in the config file with projName and repoName
-func buildProjRepoStr(projName string, repoName string) string {
+func buildVersionedRepoName(projName string, repoName string) string {
 	projVersion := ""
 	if strings.Contains(projName, "-") {
 		projNameAndVersion := strings.Split(projName, "-")
-		projName = projNameAndVersion[0]
 		projVersion = projNameAndVersion[1]
 	}
 	projRepoStr := repoName
 	if projVersion != "" {
 		projRepoStr += ("-" + projVersion)
 	}
-	projRepoStr = projName + "-" + projRepoStr
 
 	return projRepoStr
 }
@@ -1465,18 +1462,13 @@ func generateDashboardGroups() {
 		dashboardNames := make([]string, 0)
 		for _, repoName := range repoNames {
 			if _, exists := repos[repoName]; exists {
-				repoName := buildProjRepoStr(projName, repoName)
-				dashboardName := getDashboardName(repoName)
+				repoName := buildVersionedRepoName(projName, repoName)
+				dashboardName := repoName
 				dashboardNames = append(dashboardNames, dashboardName)
 			}
 		}
 		executeDashboardGroupTemplate(projName, dashboardNames)
 	}
-}
-
-// getDashboardName gets the dashboardName from the repoName by removing the prefixed "knative-"
-func getDashboardName(repoName string) string {
-	return strings.TrimPrefix(repoName, "knative-")
 }
 
 // executeDashboardGroupTemplate outputs the given dashboard group config template with the given data
