@@ -64,12 +64,25 @@ This is the preferred method of manually building a new release.
 ## Creating a "dot" release on demand
 
 1. Use the `run_job.sh` script to start the dot release job for the module you
-   want, like in the example below. Replace `MODULE` with the right module right
-   Knative module name (e.g., `serving` or `build`).
+   want, like in the example below. Replace `MODULE` with the right Knative module
+   name (e.g., `serving` or `build`).
 
    ```
    cd ci/prow
    ./run_job.sh ci-knative-MODULE-dot-release
+   ```
+
+1. Monitor the new job through [Prow UI](https://prow.knative.dev).
+
+## Creating a nightly release on demand
+
+1. Use the `run_job.sh` script to start the nightly release job for the module you
+   want, like in the example below. Replace `MODULE` with the right Knative module
+   name (e.g., `serving` or `build`).
+
+   ```
+   cd ci/prow
+   ./run_job.sh ci-knative-MODULE-nightly-release
    ```
 
 1. Monitor the new job through [Prow UI](https://prow.knative.dev).
