@@ -29,13 +29,19 @@ import (
 func TestProfiling(t *testing.T) {
 	logUtil.LogFatalf = log.Fatalf
 
-	arts := localArtsForTest("TestProfiling")
+	arts := LocalArtifacts{
+		Artifacts: *New(
+			test.NewArtsDir(t.Name()),
+			"cov-profile.txt",
+			"key-cov-profile.txt",
+			"stdout.txt"),
+	}
 	arts.ProduceProfileFile(fmt.Sprintf("../%s/subPkg1/ "+
 		"../%s/subPkg2/", test.CovTargetRootRel, test.CovTargetRootRel))
 
 	t.Logf("Verifying profile file...\n")
 	expectedFirstLine := "mode: count"
-	expectedLine := "github.com/knative/test-infra/tools/coverage/testTarget/subPkg1/common.go:4.19,6.2 0 2"
+	expectedLine := "github.com/knative/test-infra/tools/coverage/testTarget/subPkg1/common.go:19.19,21.2 0 2"
 
 	scanner := bufio.NewScanner(arts.ProfileReader())
 	scanner.Scan()
@@ -51,13 +57,4 @@ func TestProfiling(t *testing.T) {
 	}
 
 	t.Fatalf("line not found '%s'", expectedLine)
-}
-
-func localArtsForTest(dirPrefix string) *LocalArtifacts {
-	return &LocalArtifacts{Artifacts: *New(
-		test.NewArtsDir(dirPrefix),
-		"cov-profile.txt",
-		"key-cov-profile.txt",
-		"stdout.txt",
-	)}
 }
