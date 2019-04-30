@@ -295,9 +295,15 @@ tide:
     missingLabels:
     - do-not-merge/hold
     - do-not-merge/work-in-progress
+    - do-not-merge/invalid-owners-file
   merge_method:
     knative: squash
   target_url: https://prow.knative.dev/tide
+  pr_status_base_url: https://prow.knative.dev/pr
+  blocker_label: tide/merge-blocker
+  squash_label: tide/merge-method-squash
+  rebase_label: tide/merge-method-rebase
+  merge_label: tide/merge-method-merge
 `
 
 	// presubmitJob is the template for presubmit jobs.
