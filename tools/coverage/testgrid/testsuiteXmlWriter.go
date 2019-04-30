@@ -16,86 +16,67 @@ limitations under the License.
 package testgrid
 
 import (
-	"encoding/xml"
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 
+	"github.com/knative/test-infra/shared/junit"
 	"github.com/knative/test-infra/tools/coverage/artifacts"
 	"github.com/knative/test-infra/tools/coverage/calc"
 	"github.com/knative/test-infra/tools/coverage/logUtil"
 )
 
-type Property struct {
-	XMLName string `xml:"property"`
-	Name    string `xml:"name,attr"`
-	Value   string `xml:"value,attr"`
-}
-
-type Properties struct {
-	XMLName      string `xml:"properties"`
-	PropertyList []Property
-}
-
-type TestCase struct {
-	XMLName      string     `xml:"testcase"`
-	ClassName    string     `xml:"class_name,attr"`
-	Name         string     `xml:"name,attr"`
-	Time         string     `xml:"time,attr"`
-	Failure      bool       `xml:"failure,omitempty"`
-	PropertyList Properties `xml:"properties"`
-}
-
 // NewTestCase constructs the TestCase struct
-func NewTestCase(targetName, coverage string, failure bool) *TestCase {
-	properties := &Properties{}
-	properties.PropertyList = append(properties.PropertyList, Property{"", "coverage", coverage})
+func NewTestCase(targetName, coverage string, failure bool) junit.TestCase {
+	f := strconv.FormatBool(failure)
+	tc := junit.TestCase{
+		ClassName: "go_coverage",
+		Name:      targetName,
+		Failure:   &f,
+	}
+	tc.AddProperty("coverage", coverage)
 
-	return &TestCase{"", "go_coverage", targetName, "0", failure, *properties}
-}
-
-type Testsuite struct {
-	XMLName   string     `xml:"testsuite"`
-	Testcases []TestCase `xml:"testsuite"`
-}
-
-// addTestCase adds one test case to testsuite
-func (ts *Testsuite) addTestCase(tc TestCase) {
-	ts.Testcases = append(ts.Testcases, tc)
+	return tc
 }
 
 // toTestsuite populates Testsuite struct with data from CoverageList and actual file
 // directories from OS
-func toTestsuite(g *calc.CoverageList, dirs []string) (ts *Testsuite) {
-	ts = &Testsuite{}
+func toTestsuite(g *calc.CoverageList, dirs []string) *junit.TestSuite {
 	g.Summarize()
 	covThresInt := g.CovThresInt()
-	ts.addTestCase(*NewTestCase("OVERALL", g.PercentageForTestgrid(),
-		g.IsCoverageLow(covThresInt)))
+	tc := []junit.TestCase{}
+
+	// Add overall coverage
+	tc = append(tc, NewTestCase("OVERALL", g.PercentageForTestgrid(), g.IsCoverageLow(covThresInt)))
 
 	fmt.Println("")
 	log.Println("Constructing Testsuite Struct for Testgrid")
+
+	// Add coverage for individual files
 	for _, cov := range *g.Group() {
 		coverage := cov.PercentageForTestgrid()
 		if coverage != "" {
-			ts.addTestCase(*NewTestCase(cov.Name(), coverage, cov.IsCoverageLow(covThresInt)))
+			tc = append(tc, NewTestCase(cov.Name(), coverage, cov.IsCoverageLow(covThresInt)))
 		} else {
 			log.Printf("Skipping file %s as it has no coverage data.\n", cov.Name())
 		}
 	}
 
+	// Add coverage for dirs
 	for _, dir := range dirs {
 		dirCov := g.Subset(dir)
 		coverage := dirCov.PercentageForTestgrid()
 		if coverage != "" {
-			ts.addTestCase(*NewTestCase(dir, coverage, dirCov.IsCoverageLow(covThresInt)))
+			tc = append(tc, NewTestCase(dir, coverage, dirCov.IsCoverageLow(covThresInt)))
 		} else {
 			log.Printf("Skipping directory %s as it has no files with coverage data.\n", dir)
 		}
 	}
 	log.Println("Finished Constructing Testsuite Struct for Testgrid")
 	fmt.Println("")
-	return
+
+	return &junit.TestSuite{TestCases: tc}
 }
 
 // ProfileToTestsuiteXML uses coverage profile (and it's corresponding stdout) to produce junit xml
@@ -113,8 +94,9 @@ func ProfileToTestsuiteXML(arts *artifacts.LocalArtifacts, covThres int) {
 	}
 	defer f.Close()
 
-	ts := toTestsuite(groupCov, groupCov.GetDirs())
-	output, err := xml.MarshalIndent(ts, "", "    ")
+	ts := junit.TestSuites{}
+	ts.AddTestSuite(toTestsuite(groupCov, groupCov.GetDirs()))
+	output, err := ts.ToBytes("", "    ")
 	if err != nil {
 		logUtil.LogFatalf("error: %v\n", err)
 	}
