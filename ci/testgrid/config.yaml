@@ -191,12 +191,12 @@ test_groups:
 - name: ci-knative-eventing-sources-0.5-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-0.5-continuous
 dashboards:
-- name: knative-serving
+- name: serving
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-serving-continuous
     base_options: "sort-by-name="
-  - name: conformance-tests
+  - name: conformance
     test_group_name: ci-knative-serving-continuous
     base_options: "include-filter-by-regex=test/conformance\\.&sort-by-name="
   - name: istio-1.0.7-mesh
@@ -233,7 +233,7 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-serving-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-build
+- name: build
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-build-continuous
@@ -254,7 +254,7 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-build-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-docs
+- name: docs
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-docs-continuous
@@ -262,7 +262,7 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-docs-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-eventing
+- name: eventing
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-eventing-continuous
@@ -279,7 +279,7 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-eventing-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-eventing-sources
+- name: eventing-sources
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-eventing-sources-continuous
@@ -296,12 +296,12 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-eventing-sources-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-build-templates
+- name: build-templates
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-build-templates-continuous
     base_options: "sort-by-name="
-- name: knative-pkg
+- name: pkg
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-pkg-continuous
@@ -309,7 +309,7 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-pkg-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-caching
+- name: caching
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-caching-continuous
@@ -317,32 +317,32 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-caching-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-client
+- name: client
   dashboard_tab:
   - name: coverage
     test_group_name: pull-knative-client-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-serving-0.4
+- name: serving-0.4
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-serving-0.4-continuous
     base_options: "sort-by-name="
-- name: knative-serving-0.5
+- name: serving-0.5
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-serving-0.5-continuous
     base_options: "sort-by-name="
-- name: knative-build-0.5
+- name: build-0.5
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-build-0.5-continuous
     base_options: "sort-by-name="
-- name: knative-eventing-0.5
+- name: eventing-0.5
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-eventing-0.5-continuous
     base_options: "sort-by-name="
-- name: knative-eventing-sources-0.5
+- name: eventing-sources-0.5
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-eventing-sources-0.5-continuous
@@ -350,21 +350,21 @@ dashboards:
 dashboard_groups:
 - name: knative
   dashboard_names:
-  - "knative-serving"
-  - "knative-build"
-  - "knative-docs"
-  - "knative-eventing"
-  - "knative-eventing-sources"
-  - "knative-build-templates"
-  - "knative-pkg"
-  - "knative-caching"
-  - "knative-client"
+  - "serving"
+  - "build"
+  - "docs"
+  - "eventing"
+  - "eventing-sources"
+  - "build-templates"
+  - "pkg"
+  - "caching"
+  - "client"
 - name: knative-0.4
   dashboard_names:
-  - "knative-serving-0.4"
+  - "serving-0.4"
 - name: knative-0.5
   dashboard_names:
-  - "knative-serving-0.5"
-  - "knative-build-0.5"
-  - "knative-eventing-0.5"
-  - "knative-eventing-sources-0.5"
+  - "serving-0.5"
+  - "build-0.5"
+  - "eventing-0.5"
+  - "eventing-sources-0.5"
