@@ -893,10 +893,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		periodicConfig[i] = yaml.MapItem{}
 	}
 	parseBasicJobConfigOverrides(&data.Base, periodicConfig)
-	data.PeriodicJobName = fmt.Sprintf("ci-%s", data.Base.RepoNameForJob)
-	if jobNameSuffix != "" {
-		data.PeriodicJobName += "-" + jobNameSuffix
-	}
+	data.PeriodicJobName = getJobNameForConfig(data.Base.RepoNameForJob, jobNameSuffix)
 	// Ensure required data exist.
 	if data.CronString == "" {
 		log.Fatalf("Job %q is missing cron string", data.PeriodicJobName)
@@ -1326,12 +1323,13 @@ func generateSection(sectionName string, generator testgridEntityGenerator) {
 // generateTestGroup generates the test group configuration
 func generateTestGroup(repoName string, jobNames []string) {
 	for _, jobName := range jobNames {
-		testGroupName := getTestGroupName(repoName, jobName)
+		testGroupName := getJobNameForConfig(repoName, jobName)
 		gcsLogDir := fmt.Sprintf("%s/%s/%s", gcsBucket, logsDir, testGroupName)
 		extras := make(map[string]string)
 		switch jobName {
 		case "continuous", "dot-release", "auto-release", "performance", "latency", "playground", "nightly":
-			isDailyBranch := regexp.MustCompile(`-[0-9\.]+-continuous`).FindString(testGroupName) != ""
+			// isDailyBranch := regexp.MustCompile(`-[0-9\.]+-continuous`).FindString(testGroupName) != ""
+			isDailyBranch := regexp.MustCompile(`ci-.+-[0-9\.]+`).FindString(testGroupName) != ""
 			if !isDailyBranch && (jobName == "continuous" || jobName == "auto-release") {
 				// TODO(Fredy-Z): this value should be derived from the cron string
 				extras["alert_stale_results_hours"] = "3"
@@ -1355,7 +1353,7 @@ func generateTestGroup(repoName string, jobNames []string) {
 			extras["short_text_metric"] = "coverage"
 			// Do not alert on coverage failures (i.e., coverage below threshold)
 			extras["num_failures_to_alert"] = "9999"
-		case "istio-1.0.7-mesh", "istio-1.0.7-no-mesh", "istio-1.1.2-mesh", "istio-1.1.2-no-mesh":
+		case "istio-1.0.7-mesh", "istio-1.0.7-nomesh", "istio-1.1.2-mesh", "istio-1.1.2-nomesh":
 			extras["alert_stale_results_hours"] = "3"
 			extras["num_failures_to_alert"] = "3"
 		default:
@@ -1381,7 +1379,7 @@ func generateDashboard(repoName string, jobNames []string) {
 
 	noExtras := make(map[string]string)
 	for _, jobName := range jobNames {
-		testGroupName := getTestGroupName(repoName, jobName)
+		testGroupName := getJobNameForConfig(repoName, jobName)
 		switch jobName {
 		case "continuous":
 			executeDashboardTabTemplate("continuous", testGroupName, testgridTabSortByName, noExtras)
@@ -1404,7 +1402,7 @@ func generateDashboard(repoName string, jobNames []string) {
 			executeDashboardTabTemplate("nightly", testGroupName, testgridTabSortByName, noExtras)
 		case "test-coverage":
 			executeDashboardTabTemplate("coverage", testGroupName, testgridTabGroupByDir, noExtras)
-		case "istio-1.0.7-mesh", "istio-1.0.7-no-mesh", "istio-1.1.2-mesh", "istio-1.1.2-no-mesh":
+		case "istio-1.0.7-mesh", "istio-1.0.7-nomesh", "istio-1.1.2-mesh", "istio-1.1.2-nomesh":
 			executeDashboardTabTemplate(jobName, testGroupName, testgridTabSortByName, noExtras)
 		default:
 			log.Fatalf("Unknown job name %q", jobName)
@@ -1422,20 +1420,24 @@ func executeDashboardTabTemplate(dashboardTabName string, testGroupName string, 
 	executeTemplate("dashboard tab", dashboardTabTemplate, data)
 }
 
-// getTestGroupName get the testGroupName from the given repoName and jobName
-func getTestGroupName(repoName string, jobName string) string {
-	switch jobName {
-	case "continuous", "dot-release", "auto-release", "performance", "latency", "playground":
+// getJobNameForConfig get the jobNameForConfig from the given repoName and jobName
+func getJobNameForConfig(repoName string, jobName string) string {
+	repoName = strings.Replace(repoName, "knative-", "", 1)
+	switch {
+	case jobName == "continuous":
+		return fmt.Sprintf("ci-%s", repoName)
+	case regexp.MustCompile(`[0-9\.]+-continuous`).FindString(jobName) != "":
+		version := strings.Split(jobName, "-")[0]
+		return fmt.Sprintf("ci-%s-%s", repoName, version)
+	case strings.Contains(jobName, "istio"):
 		return fmt.Sprintf("ci-%s-%s", repoName, jobName)
-	case "nightly":
-		return fmt.Sprintf("ci-%s-%s-release", repoName, jobName)
-	case "test-coverage":
+	case jobName == "nightly":
+		return fmt.Sprintf("nightly-release-%s", repoName)
+	case jobName == "test-coverage":
 		return fmt.Sprintf("pull-%s-%s", repoName, jobName)
-	case "istio-1.0.7-mesh", "istio-1.0.7-no-mesh", "istio-1.1.2-mesh", "istio-1.1.2-no-mesh":
-		return fmt.Sprintf("ci-%s-%s", repoName, jobName)
+	default:
+		return fmt.Sprintf("%s-%s", jobName, repoName)
 	}
-	log.Fatalf("Unknown jobName for getTestGroupName: %s", jobName)
-	return ""
 }
 
 // buildProjRepoStr builds the projRepoStr used in the config file with projName and repoName
