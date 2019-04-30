@@ -74,12 +74,12 @@ tide:
   target_url: https://prow.knative.dev/tide
 presubmits:
   knative/serving:
-  - name: pull-knative-serving-build-tests
+  - name: pull-serving-build-tests
     agent: kubernetes
-    context: pull-knative-serving-build-tests
+    context: pull-serving-build-tests
     always_run: true
-    rerun_command: "/test pull-knative-serving-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-serving-build-tests),?(\\s+|$)"
+    rerun_command: "/test pull-serving-build-tests"
+    trigger: "(?m)^/test (all|pull-serving-build-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -109,12 +109,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-serving-unit-tests
+  - name: pull-serving-unit-tests
     agent: kubernetes
-    context: pull-knative-serving-unit-tests
+    context: pull-serving-unit-tests
     always_run: true
-    rerun_command: "/test pull-knative-serving-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-serving-unit-tests),?(\\s+|$)"
+    rerun_command: "/test pull-serving-unit-tests"
+    trigger: "(?m)^/test (all|pull-serving-unit-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -144,12 +144,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-serving-integration-tests
+  - name: pull-serving-integration-tests
     agent: kubernetes
-    context: pull-knative-serving-integration-tests
+    context: pull-serving-integration-tests
     always_run: true
-    rerun_command: "/test pull-knative-serving-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-serving-integration-tests),?(\\s+|$)"
+    rerun_command: "/test pull-serving-integration-tests"
+    trigger: "(?m)^/test (all|pull-serving-integration-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -180,12 +180,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-serving-upgrade-tests
+  - name: pull-serving-upgrade-tests
     agent: kubernetes
-    context: pull-knative-serving-upgrade-tests
+    context: pull-serving-upgrade-tests
     always_run: true
-    rerun_command: "/test pull-knative-serving-upgrade-tests"
-    trigger: "(?m)^/test (all|pull-knative-serving-upgrade-tests),?(\\s+|$)"
+    rerun_command: "/test pull-serving-upgrade-tests"
+    trigger: "(?m)^/test (all|pull-serving-upgrade-tests),?(\\s+|$)"
     skip_branches:
     - "release-0.1"
     - "release-0.2"
@@ -219,12 +219,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-serving-go-coverage
+  - name: pull-serving-go-coverage
     agent: kubernetes
-    context: pull-knative-serving-go-coverage
+    context: pull-serving-go-coverage
     always_run: true
-    rerun_command: "/test pull-knative-serving-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-serving-go-coverage),?(\\s+|$)"
+    rerun_command: "/test pull-serving-go-coverage"
+    trigger: "(?m)^/test (all|pull-serving-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
     clone_uri: "https://github.com/knative/serving.git"
@@ -236,7 +236,7 @@ presubmits:
         - "/coverage"
         args:
         - "--postsubmit-gcs-bucket=knative-prow"
-        - "--postsubmit-job-name=post-knative-serving-go-coverage"
+        - "--postsubmit-job-name=post-serving-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--profile-name=coverage_profile.txt"
         - "--cov-target=."
@@ -250,12 +250,12 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
-  - name: pull-knative-serving-go-coverage-dev
+  - name: pull-serving-go-coverage-dev
     agent: kubernetes
-    context: pull-knative-serving-go-coverage-dev
+    context: pull-serving-go-coverage-dev
     always_run: false
-    rerun_command: "/test pull-knative-serving-go-coverage-dev"
-    trigger: "(?m)^/test (pull-knative-serving-go-coverage-dev),?(\\s+|$)"
+    rerun_command: "/test pull-serving-go-coverage-dev"
+    trigger: "(?m)^/test (pull-serving-go-coverage-dev),?(\\s+|$)"
     optional: true
     decorate: true
     clone_uri: "https://github.com/knative/serving.git"
@@ -267,7 +267,7 @@ presubmits:
         - "/coverage"
         args:
         - "--postsubmit-gcs-bucket=knative-prow"
-        - "--postsubmit-job-name=post-knative-serving-go-coverage"
+        - "--postsubmit-job-name=post-serving-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--profile-name=coverage_profile.txt"
         - "--cov-target=."
@@ -281,12 +281,12 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
-  - name: pull-knative-serving-perf-tests
+  - name: pull-serving-perf-tests
     agent: kubernetes
-    context: pull-knative-serving-perf-tests
+    context: pull-serving-perf-tests
     always_run: false
-    rerun_command: "/test pull-knative-serving-perf-tests"
-    trigger: "(?m)^/test (all|pull-knative-serving-perf-tests),?(\\s+|$)"
+    rerun_command: "/test pull-serving-perf-tests"
+    trigger: "(?m)^/test (all|pull-serving-perf-tests),?(\\s+|$)"
     skip_branches:
     - "release-0.1"
     - "release-0.2"
@@ -320,12 +320,12 @@ presubmits:
         secret:
           secretName: test-account
   knative/build:
-  - name: pull-knative-build-build-tests
+  - name: pull-build-build-tests
     agent: kubernetes
-    context: pull-knative-build-build-tests
+    context: pull-build-build-tests
     always_run: true
-    rerun_command: "/test pull-knative-build-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-build-build-tests),?(\\s+|$)"
+    rerun_command: "/test pull-build-build-tests"
+    trigger: "(?m)^/test (all|pull-build-build-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -355,12 +355,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-build-unit-tests
+  - name: pull-build-unit-tests
     agent: kubernetes
-    context: pull-knative-build-unit-tests
+    context: pull-build-unit-tests
     always_run: true
-    rerun_command: "/test pull-knative-build-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-build-unit-tests),?(\\s+|$)"
+    rerun_command: "/test pull-build-unit-tests"
+    trigger: "(?m)^/test (all|pull-build-unit-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -390,12 +390,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-build-integration-tests
+  - name: pull-build-integration-tests
     agent: kubernetes
-    context: pull-knative-build-integration-tests
+    context: pull-build-integration-tests
     always_run: true
-    rerun_command: "/test pull-knative-build-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-build-integration-tests),?(\\s+|$)"
+    rerun_command: "/test pull-build-integration-tests"
+    trigger: "(?m)^/test (all|pull-build-integration-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -433,12 +433,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-build-go-coverage
+  - name: pull-build-go-coverage
     agent: kubernetes
-    context: pull-knative-build-go-coverage
+    context: pull-build-go-coverage
     always_run: true
-    rerun_command: "/test pull-knative-build-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-build-go-coverage),?(\\s+|$)"
+    rerun_command: "/test pull-build-go-coverage"
+    trigger: "(?m)^/test (all|pull-build-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
     clone_uri: "https://github.com/knative/build.git"
@@ -450,7 +450,7 @@ presubmits:
         - "/coverage"
         args:
         - "--postsubmit-gcs-bucket=knative-prow"
-        - "--postsubmit-job-name=post-knative-build-go-coverage"
+        - "--postsubmit-job-name=post-build-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--profile-name=coverage_profile.txt"
         - "--cov-target=."
@@ -465,12 +465,12 @@ presubmits:
         secret:
           secretName: covbot-token
   knative/client:
-  - name: pull-knative-client-build-tests
+  - name: pull-client-build-tests
     agent: kubernetes
-    context: pull-knative-client-build-tests
+    context: pull-client-build-tests
     always_run: true
-    rerun_command: "/test pull-knative-client-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-client-build-tests),?(\\s+|$)"
+    rerun_command: "/test pull-client-build-tests"
+    trigger: "(?m)^/test (all|pull-client-build-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -500,12 +500,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-client-unit-tests
+  - name: pull-client-unit-tests
     agent: kubernetes
-    context: pull-knative-client-unit-tests
+    context: pull-client-unit-tests
     always_run: true
-    rerun_command: "/test pull-knative-client-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-client-unit-tests),?(\\s+|$)"
+    rerun_command: "/test pull-client-unit-tests"
+    trigger: "(?m)^/test (all|pull-client-unit-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -535,12 +535,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-client-integration-tests
+  - name: pull-client-integration-tests
     agent: kubernetes
-    context: pull-knative-client-integration-tests
+    context: pull-client-integration-tests
     always_run: true
-    rerun_command: "/test pull-knative-client-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-client-integration-tests),?(\\s+|$)"
+    rerun_command: "/test pull-client-integration-tests"
+    trigger: "(?m)^/test (all|pull-client-integration-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -570,12 +570,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-client-go-coverage
+  - name: pull-client-go-coverage
     agent: kubernetes
-    context: pull-knative-client-go-coverage
+    context: pull-client-go-coverage
     always_run: true
-    rerun_command: "/test pull-knative-client-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-client-go-coverage),?(\\s+|$)"
+    rerun_command: "/test pull-client-go-coverage"
+    trigger: "(?m)^/test (all|pull-client-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
     clone_uri: "https://github.com/knative/client.git"
@@ -587,7 +587,7 @@ presubmits:
         - "/coverage"
         args:
         - "--postsubmit-gcs-bucket=knative-prow"
-        - "--postsubmit-job-name=post-knative-client-go-coverage"
+        - "--postsubmit-job-name=post-client-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--profile-name=coverage_profile.txt"
         - "--cov-target=."
@@ -602,12 +602,12 @@ presubmits:
         secret:
           secretName: covbot-token
   knative/eventing:
-  - name: pull-knative-eventing-build-tests
+  - name: pull-eventing-build-tests
     agent: kubernetes
-    context: pull-knative-eventing-build-tests
+    context: pull-eventing-build-tests
     always_run: true
-    rerun_command: "/test pull-knative-eventing-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-eventing-build-tests),?(\\s+|$)"
+    rerun_command: "/test pull-eventing-build-tests"
+    trigger: "(?m)^/test (all|pull-eventing-build-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -637,12 +637,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-eventing-unit-tests
+  - name: pull-eventing-unit-tests
     agent: kubernetes
-    context: pull-knative-eventing-unit-tests
+    context: pull-eventing-unit-tests
     always_run: true
-    rerun_command: "/test pull-knative-eventing-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-eventing-unit-tests),?(\\s+|$)"
+    rerun_command: "/test pull-eventing-unit-tests"
+    trigger: "(?m)^/test (all|pull-eventing-unit-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -672,12 +672,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-eventing-integration-tests
+  - name: pull-eventing-integration-tests
     agent: kubernetes
-    context: pull-knative-eventing-integration-tests
+    context: pull-eventing-integration-tests
     always_run: true
-    rerun_command: "/test pull-knative-eventing-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-eventing-integration-tests),?(\\s+|$)"
+    rerun_command: "/test pull-eventing-integration-tests"
+    trigger: "(?m)^/test (all|pull-eventing-integration-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -707,12 +707,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-eventing-go-coverage
+  - name: pull-eventing-go-coverage
     agent: kubernetes
-    context: pull-knative-eventing-go-coverage
+    context: pull-eventing-go-coverage
     always_run: true
-    rerun_command: "/test pull-knative-eventing-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-eventing-go-coverage),?(\\s+|$)"
+    rerun_command: "/test pull-eventing-go-coverage"
+    trigger: "(?m)^/test (all|pull-eventing-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
     clone_uri: "https://github.com/knative/eventing.git"
@@ -724,7 +724,7 @@ presubmits:
         - "/coverage"
         args:
         - "--postsubmit-gcs-bucket=knative-prow"
-        - "--postsubmit-job-name=post-knative-eventing-go-coverage"
+        - "--postsubmit-job-name=post-eventing-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--profile-name=coverage_profile.txt"
         - "--cov-target=."
@@ -739,12 +739,12 @@ presubmits:
         secret:
           secretName: covbot-token
   knative/eventing-sources:
-  - name: pull-knative-eventing-sources-build-tests
+  - name: pull-eventing-sources-build-tests
     agent: kubernetes
-    context: pull-knative-eventing-sources-build-tests
+    context: pull-eventing-sources-build-tests
     always_run: true
-    rerun_command: "/test pull-knative-eventing-sources-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-eventing-sources-build-tests),?(\\s+|$)"
+    rerun_command: "/test pull-eventing-sources-build-tests"
+    trigger: "(?m)^/test (all|pull-eventing-sources-build-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -774,12 +774,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-eventing-sources-unit-tests
+  - name: pull-eventing-sources-unit-tests
     agent: kubernetes
-    context: pull-knative-eventing-sources-unit-tests
+    context: pull-eventing-sources-unit-tests
     always_run: true
-    rerun_command: "/test pull-knative-eventing-sources-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-eventing-sources-unit-tests),?(\\s+|$)"
+    rerun_command: "/test pull-eventing-sources-unit-tests"
+    trigger: "(?m)^/test (all|pull-eventing-sources-unit-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -809,12 +809,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-eventing-sources-integration-tests
+  - name: pull-eventing-sources-integration-tests
     agent: kubernetes
-    context: pull-knative-eventing-sources-integration-tests
+    context: pull-eventing-sources-integration-tests
     always_run: true
-    rerun_command: "/test pull-knative-eventing-sources-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-eventing-sources-integration-tests),?(\\s+|$)"
+    rerun_command: "/test pull-eventing-sources-integration-tests"
+    trigger: "(?m)^/test (all|pull-eventing-sources-integration-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -844,12 +844,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-eventing-sources-go-coverage
+  - name: pull-eventing-sources-go-coverage
     agent: kubernetes
-    context: pull-knative-eventing-sources-go-coverage
+    context: pull-eventing-sources-go-coverage
     always_run: true
-    rerun_command: "/test pull-knative-eventing-sources-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-eventing-sources-go-coverage),?(\\s+|$)"
+    rerun_command: "/test pull-eventing-sources-go-coverage"
+    trigger: "(?m)^/test (all|pull-eventing-sources-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
     clone_uri: "https://github.com/knative/eventing-sources.git"
@@ -861,7 +861,7 @@ presubmits:
         - "/coverage"
         args:
         - "--postsubmit-gcs-bucket=knative-prow"
-        - "--postsubmit-job-name=post-knative-eventing-sources-go-coverage"
+        - "--postsubmit-job-name=post-eventing-sources-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--profile-name=coverage_profile.txt"
         - "--cov-target=."
@@ -876,12 +876,12 @@ presubmits:
         secret:
           secretName: covbot-token
   knative/docs:
-  - name: pull-knative-docs-build-tests
+  - name: pull-docs-build-tests
     agent: kubernetes
-    context: pull-knative-docs-build-tests
+    context: pull-docs-build-tests
     always_run: true
-    rerun_command: "/test pull-knative-docs-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-docs-build-tests),?(\\s+|$)"
+    rerun_command: "/test pull-docs-build-tests"
+    trigger: "(?m)^/test (all|pull-docs-build-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -911,12 +911,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-docs-unit-tests
+  - name: pull-docs-unit-tests
     agent: kubernetes
-    context: pull-knative-docs-unit-tests
+    context: pull-docs-unit-tests
     always_run: true
-    rerun_command: "/test pull-knative-docs-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-docs-unit-tests),?(\\s+|$)"
+    rerun_command: "/test pull-docs-unit-tests"
+    trigger: "(?m)^/test (all|pull-docs-unit-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -946,12 +946,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-docs-integration-tests
+  - name: pull-docs-integration-tests
     agent: kubernetes
-    context: pull-knative-docs-integration-tests
+    context: pull-docs-integration-tests
     always_run: true
-    rerun_command: "/test pull-knative-docs-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-docs-integration-tests),?(\\s+|$)"
+    rerun_command: "/test pull-docs-integration-tests"
+    trigger: "(?m)^/test (all|pull-docs-integration-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -989,12 +989,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-docs-go-coverage
+  - name: pull-docs-go-coverage
     agent: kubernetes
-    context: pull-knative-docs-go-coverage
+    context: pull-docs-go-coverage
     always_run: true
-    rerun_command: "/test pull-knative-docs-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-docs-go-coverage),?(\\s+|$)"
+    rerun_command: "/test pull-docs-go-coverage"
+    trigger: "(?m)^/test (all|pull-docs-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
     clone_uri: "https://github.com/knative/docs.git"
@@ -1006,7 +1006,7 @@ presubmits:
         - "/coverage"
         args:
         - "--postsubmit-gcs-bucket=knative-prow"
-        - "--postsubmit-job-name=post-knative-docs-go-coverage"
+        - "--postsubmit-job-name=post-docs-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--profile-name=coverage_profile.txt"
         - "--cov-target=."
@@ -1021,12 +1021,12 @@ presubmits:
         secret:
           secretName: covbot-token
   knative/build-templates:
-  - name: pull-knative-build-templates-build-tests
+  - name: pull-build-templates-build-tests
     agent: kubernetes
-    context: pull-knative-build-templates-build-tests
+    context: pull-build-templates-build-tests
     always_run: true
-    rerun_command: "/test pull-knative-build-templates-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-build-templates-build-tests),?(\\s+|$)"
+    rerun_command: "/test pull-build-templates-build-tests"
+    trigger: "(?m)^/test (all|pull-build-templates-build-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1056,12 +1056,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-build-templates-unit-tests
+  - name: pull-build-templates-unit-tests
     agent: kubernetes
-    context: pull-knative-build-templates-unit-tests
+    context: pull-build-templates-unit-tests
     always_run: true
-    rerun_command: "/test pull-knative-build-templates-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-build-templates-unit-tests),?(\\s+|$)"
+    rerun_command: "/test pull-build-templates-unit-tests"
+    trigger: "(?m)^/test (all|pull-build-templates-unit-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1091,12 +1091,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-build-templates-integration-tests
+  - name: pull-build-templates-integration-tests
     agent: kubernetes
-    context: pull-knative-build-templates-integration-tests
+    context: pull-build-templates-integration-tests
     always_run: true
-    rerun_command: "/test pull-knative-build-templates-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-build-templates-integration-tests),?(\\s+|$)"
+    rerun_command: "/test pull-build-templates-integration-tests"
+    trigger: "(?m)^/test (all|pull-build-templates-integration-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1127,12 +1127,12 @@ presubmits:
         secret:
           secretName: test-account
   knative/pkg:
-  - name: pull-knative-pkg-build-tests
+  - name: pull-pkg-build-tests
     agent: kubernetes
-    context: pull-knative-pkg-build-tests
+    context: pull-pkg-build-tests
     always_run: true
-    rerun_command: "/test pull-knative-pkg-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-pkg-build-tests),?(\\s+|$)"
+    rerun_command: "/test pull-pkg-build-tests"
+    trigger: "(?m)^/test (all|pull-pkg-build-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1162,12 +1162,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-pkg-unit-tests
+  - name: pull-pkg-unit-tests
     agent: kubernetes
-    context: pull-knative-pkg-unit-tests
+    context: pull-pkg-unit-tests
     always_run: true
-    rerun_command: "/test pull-knative-pkg-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-pkg-unit-tests),?(\\s+|$)"
+    rerun_command: "/test pull-pkg-unit-tests"
+    trigger: "(?m)^/test (all|pull-pkg-unit-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1197,12 +1197,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-pkg-integration-tests
+  - name: pull-pkg-integration-tests
     agent: kubernetes
-    context: pull-knative-pkg-integration-tests
+    context: pull-pkg-integration-tests
     always_run: true
-    rerun_command: "/test pull-knative-pkg-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-pkg-integration-tests),?(\\s+|$)"
+    rerun_command: "/test pull-pkg-integration-tests"
+    trigger: "(?m)^/test (all|pull-pkg-integration-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1232,12 +1232,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-pkg-go-coverage
+  - name: pull-pkg-go-coverage
     agent: kubernetes
-    context: pull-knative-pkg-go-coverage
+    context: pull-pkg-go-coverage
     always_run: true
-    rerun_command: "/test pull-knative-pkg-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-pkg-go-coverage),?(\\s+|$)"
+    rerun_command: "/test pull-pkg-go-coverage"
+    trigger: "(?m)^/test (all|pull-pkg-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
     clone_uri: "https://github.com/knative/pkg.git"
@@ -1249,7 +1249,7 @@ presubmits:
         - "/coverage"
         args:
         - "--postsubmit-gcs-bucket=knative-prow"
-        - "--postsubmit-job-name=post-knative-pkg-go-coverage"
+        - "--postsubmit-job-name=post-pkg-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--profile-name=coverage_profile.txt"
         - "--cov-target=."
@@ -1264,12 +1264,12 @@ presubmits:
         secret:
           secretName: covbot-token
   knative/test-infra:
-  - name: pull-knative-test-infra-build-tests
+  - name: pull-test-infra-build-tests
     agent: kubernetes
-    context: pull-knative-test-infra-build-tests
+    context: pull-test-infra-build-tests
     always_run: true
-    rerun_command: "/test pull-knative-test-infra-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-test-infra-build-tests),?(\\s+|$)"
+    rerun_command: "/test pull-test-infra-build-tests"
+    trigger: "(?m)^/test (all|pull-test-infra-build-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1299,12 +1299,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-test-infra-unit-tests
+  - name: pull-test-infra-unit-tests
     agent: kubernetes
-    context: pull-knative-test-infra-unit-tests
+    context: pull-test-infra-unit-tests
     always_run: true
-    rerun_command: "/test pull-knative-test-infra-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-test-infra-unit-tests),?(\\s+|$)"
+    rerun_command: "/test pull-test-infra-unit-tests"
+    trigger: "(?m)^/test (all|pull-test-infra-unit-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1334,12 +1334,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-test-infra-integration-tests
+  - name: pull-test-infra-integration-tests
     agent: kubernetes
-    context: pull-knative-test-infra-integration-tests
+    context: pull-test-infra-integration-tests
     always_run: true
-    rerun_command: "/test pull-knative-test-infra-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-test-infra-integration-tests),?(\\s+|$)"
+    rerun_command: "/test pull-test-infra-integration-tests"
+    trigger: "(?m)^/test (all|pull-test-infra-integration-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1370,12 +1370,12 @@ presubmits:
         secret:
           secretName: test-account
   knative/caching:
-  - name: pull-knative-caching-build-tests
+  - name: pull-caching-build-tests
     agent: kubernetes
-    context: pull-knative-caching-build-tests
+    context: pull-caching-build-tests
     always_run: true
-    rerun_command: "/test pull-knative-caching-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-caching-build-tests),?(\\s+|$)"
+    rerun_command: "/test pull-caching-build-tests"
+    trigger: "(?m)^/test (all|pull-caching-build-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1405,12 +1405,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-caching-unit-tests
+  - name: pull-caching-unit-tests
     agent: kubernetes
-    context: pull-knative-caching-unit-tests
+    context: pull-caching-unit-tests
     always_run: true
-    rerun_command: "/test pull-knative-caching-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-caching-unit-tests),?(\\s+|$)"
+    rerun_command: "/test pull-caching-unit-tests"
+    trigger: "(?m)^/test (all|pull-caching-unit-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1440,12 +1440,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-caching-integration-tests
+  - name: pull-caching-integration-tests
     agent: kubernetes
-    context: pull-knative-caching-integration-tests
+    context: pull-caching-integration-tests
     always_run: true
-    rerun_command: "/test pull-knative-caching-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-caching-integration-tests),?(\\s+|$)"
+    rerun_command: "/test pull-caching-integration-tests"
+    trigger: "(?m)^/test (all|pull-caching-integration-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1475,12 +1475,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-caching-go-coverage
+  - name: pull-caching-go-coverage
     agent: kubernetes
-    context: pull-knative-caching-go-coverage
+    context: pull-caching-go-coverage
     always_run: true
-    rerun_command: "/test pull-knative-caching-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-caching-go-coverage),?(\\s+|$)"
+    rerun_command: "/test pull-caching-go-coverage"
+    trigger: "(?m)^/test (all|pull-caching-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
     clone_uri: "https://github.com/knative/caching.git"
@@ -1492,7 +1492,7 @@ presubmits:
         - "/coverage"
         args:
         - "--postsubmit-gcs-bucket=knative-prow"
-        - "--postsubmit-job-name=post-knative-caching-go-coverage"
+        - "--postsubmit-job-name=post-caching-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--profile-name=coverage_profile.txt"
         - "--cov-target=."
@@ -1932,7 +1932,7 @@ periodics:
       command:
       - "/metrics"
       args:
-      - "--source-directory=ci-knative-serving-continuous"
+      - "--source-directory=ci-serving-continuous"
       - "--artifacts-dir=$(ARTIFACTS)"
       - "--service-account=/etc/test-account/service-account.json"
       volumeMounts:
@@ -2009,7 +2009,7 @@ periodics:
         readOnly: true
       env:
       - name: SYSTEM_NAMESPACE
-        value: knative-serving
+        value: serving
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -2019,7 +2019,7 @@ periodics:
       secret:
         secretName: test-account
 - cron: "0 1 * * *"
-  name: ci-knative-serving-go-coverage
+  name: ci-serving-go-coverage
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -2264,7 +2264,7 @@ periodics:
       command:
       - "/metrics"
       args:
-      - "--source-directory=ci-knative-build-continuous"
+      - "--source-directory=ci-build-continuous"
       - "--artifacts-dir=$(ARTIFACTS)"
       - "--service-account=/etc/test-account/service-account.json"
       volumeMounts:
@@ -2281,7 +2281,7 @@ periodics:
       secret:
         secretName: test-account
 - cron: "0 1 * * *"
-  name: ci-knative-build-go-coverage
+  name: ci-build-go-coverage
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -2343,7 +2343,7 @@ periodics:
       secret:
         secretName: test-account
 - cron: "0 1 * * *"
-  name: ci-knative-docs-go-coverage
+  name: ci-docs-go-coverage
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -2557,7 +2557,7 @@ periodics:
       secret:
         secretName: release-account
 - cron: "0 1 * * *"
-  name: ci-knative-eventing-go-coverage
+  name: ci-eventing-go-coverage
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -2771,7 +2771,7 @@ periodics:
       secret:
         secretName: release-account
 - cron: "0 1 * * *"
-  name: ci-knative-eventing-sources-go-coverage
+  name: ci-eventing-sources-go-coverage
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -2859,7 +2859,7 @@ periodics:
       secret:
         secretName: test-account
 - cron: "0 1 * * *"
-  name: ci-knative-pkg-go-coverage
+  name: ci-pkg-go-coverage
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -2913,7 +2913,7 @@ periodics:
       secret:
         secretName: test-account
 - cron: "0 1 * * *"
-  name: ci-knative-caching-go-coverage
+  name: ci-caching-go-coverage
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -2933,7 +2933,7 @@ periodics:
       - "--cov-target=."
       - "--cov-threshold-percentage=50"
 - cron: "0 1 * * *"
-  name: ci-knative-client-go-coverage
+  name: ci-client-go-coverage
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -3044,7 +3044,7 @@ periodics:
         secretName: backup-account
 postsubmits:
   knative/serving:
-  - name: post-knative-serving-go-coverage
+  - name: post-serving-go-coverage
     branches:
     - master
     agent: kubernetes
@@ -3061,25 +3061,8 @@ postsubmits:
         - "--profile-name=coverage_profile.txt"
         - "--cov-target=."
         - "--cov-threshold-percentage=0"
-  - name: post-knative-serving-go-coverage-dev
-    branches:
-    - master
-    agent: kubernetes
-    decorate: true
-    clone_uri: "https://github.com/knative/serving.git"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-dev:latest-dev
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--artifacts=$(ARTIFACTS)"
-        - "--profile-name=coverage_profile.txt"
-        - "--cov-target=."
-        - "--cov-threshold-percentage=0"
   knative/build:
-  - name: post-knative-build-go-coverage
+  - name: post-build-go-coverage
     branches:
     - master
     agent: kubernetes
@@ -3097,7 +3080,7 @@ postsubmits:
         - "--cov-target=."
         - "--cov-threshold-percentage=0"
   knative/client:
-  - name: post-knative-client-go-coverage
+  - name: post-client-go-coverage
     branches:
     - master
     agent: kubernetes
@@ -3115,7 +3098,7 @@ postsubmits:
         - "--cov-target=."
         - "--cov-threshold-percentage=0"
   knative/eventing:
-  - name: post-knative-eventing-go-coverage
+  - name: post-eventing-go-coverage
     branches:
     - master
     agent: kubernetes
@@ -3133,7 +3116,7 @@ postsubmits:
         - "--cov-target=."
         - "--cov-threshold-percentage=0"
   knative/eventing-sources:
-  - name: post-knative-eventing-sources-go-coverage
+  - name: post-eventing-sources-go-coverage
     branches:
     - master
     agent: kubernetes
@@ -3151,7 +3134,7 @@ postsubmits:
         - "--cov-target=."
         - "--cov-threshold-percentage=0"
   knative/docs:
-  - name: post-knative-docs-go-coverage
+  - name: post-docs-go-coverage
     branches:
     - master
     agent: kubernetes
@@ -3169,7 +3152,7 @@ postsubmits:
         - "--cov-target=."
         - "--cov-threshold-percentage=0"
   knative/pkg:
-  - name: post-knative-pkg-go-coverage
+  - name: post-pkg-go-coverage
     branches:
     - master
     agent: kubernetes
@@ -3187,7 +3170,7 @@ postsubmits:
         - "--cov-target=."
         - "--cov-threshold-percentage=0"
   knative/caching:
-  - name: post-knative-caching-go-coverage
+  - name: post-caching-go-coverage
     branches:
     - master
     agent: kubernetes

@@ -591,7 +591,7 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	var data baseProwJobTemplateData
 	data.Timeout = 50
 	data.RepoName = strings.Replace(repo, "knative/", "", 1)
-	data.RepoNameForJob = strings.Replace(repo, "/", "-", -1)
+	data.RepoNameForJob = data.RepoName
 	data.GcsBucket = gcsBucket
 	data.RepoURI = "github.com/" + repo
 	data.CloneURI = fmt.Sprintf("\"https://%s.git\"", data.RepoURI)
@@ -778,8 +778,8 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	configureServiceAccountForJob(&data.Base)
 	executeJobTemplate("presubmit", jobTemplate, title, repoName, data.PresubmitPullJobName, true, data)
 	// TODO(adrcunha): remove once the coverage-dev job isn't necessary anymore.
-	// Generate config for pull-knative-serving-go-coverage-dev right after pull-knative-serving-go-coverage
-	if data.PresubmitPullJobName == "pull-knative-serving-go-coverage" {
+	// Generate config for pull-serving-go-coverage-dev right after pull-serving-go-coverage
+	if data.PresubmitPullJobName == "pull-serving-go-coverage" {
 		data.PresubmitPullJobName += "-dev"
 		data.Base.AlwaysRun = false
 		data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest-dev", -1)
