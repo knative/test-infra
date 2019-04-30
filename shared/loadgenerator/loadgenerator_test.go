@@ -25,8 +25,8 @@ import (
 )
 
 func TestSaveJSON(t *testing.T) {
-	res := &loadgenerator.GeneratorResults{}
-	err := res.SaveJSON("TestSaveJSON")
+	res := &loadgenerator.GeneratorResults{FileNamePrefix: t.Name()}
+	err := res.SaveJSON()
 	if err != nil {
 		t.Fatalf("Cannot save JSON: %v", err)
 	}
