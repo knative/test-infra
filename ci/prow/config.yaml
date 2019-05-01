@@ -2963,7 +2963,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 28800000000000
+    timeout: 86400000000000
   extra_refs:
   - org: knative
     repo: test-infra
