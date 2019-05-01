@@ -29,7 +29,10 @@ import (
 	"github.com/knative/test-infra/tools/coverage/githubUtil/githubPr"
 )
 
-const ArtifactsDirNameOnGcs = "artifacts"
+const (
+	ArtifactsDirNameOnGcs = "artifacts"
+	gcsUrlHost            = "storage.cloud.google.com/"
+)
 
 type PresubmitBuild struct {
 	GcsBuild
