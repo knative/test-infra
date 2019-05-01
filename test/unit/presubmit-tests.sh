@@ -175,6 +175,55 @@ function test_custom_runners_fail_fast() {
   }
 }
 
+function test_exempt_md() {
+  source $(dirname $0)/../../scripts/presubmit-tests.sh
+
+  function list_changed_files() {
+    echo "README.md"
+    echo "OWNERS"
+    echo "foo.png"
+  }
+  initialize_environment
+  (( IS_DOCUMENTATION_PR )) || test_failed "README.md is documentation"
+  (( ! IS_PRESUBMIT_EXEMPT_PR )) || test_failed "README.md is not exempt"
+}
+
+function test_exempt_no_md() {
+  source $(dirname $0)/../../scripts/presubmit-tests.sh
+
+  function list_changed_files() {
+    echo "OWNERS"
+    echo "AUTHORS"
+  }
+  initialize_environment
+  (( IS_DOCUMENTATION_PR )) || test_failed "OWNERS is considered documentation"
+  (( IS_PRESUBMIT_EXEMPT_PR )) || test_failed "OWNERS is exempt"
+}
+
+function test_exempt_md_code() {
+  source $(dirname $0)/../../scripts/presubmit-tests.sh
+
+  function list_changed_files() {
+    echo "OWNERS"
+    echo "README.md"
+    echo "foo.go"
+  }
+  initialize_environment
+  (( ! IS_DOCUMENTATION_PR )) || test_failed "README.md is documentation"
+  (( ! IS_PRESUBMIT_EXEMPT_PR )) || test_failed "foo.go is not exempt"
+}
+
+function test_exempt_code() {
+  source $(dirname $0)/../../scripts/presubmit-tests.sh
+
+  function list_changed_files() {
+    echo "foo.go"
+  }
+  initialize_environment
+  (( ! IS_DOCUMENTATION_PR )) || test_failed "foo.go is not documentation"
+  (( ! IS_PRESUBMIT_EXEMPT_PR )) || test_failed "foo.go is not exempt"
+}
+
 function run_markdown_build_tests() {
   function list_changed_files() {
     echo "README.md"
@@ -189,6 +238,13 @@ function run_main() {
   trap -- "${current_trap};check_results" EXIT
   main
 }
+
+echo ">> Testing presubmit exempt flow"
+
+test_function ${SUCCESS} "Changed files in commit" call_function_pre test_exempt_md
+test_function ${SUCCESS} "Changed files in commit" call_function_pre test_exempt_no_md
+test_function ${SUCCESS} "Changed files in commit" call_function_pre test_exempt_md_code
+test_function ${SUCCESS} "Changed files in commit" call_function_pre test_exempt_code
 
 echo ">> Testing custom test runners"
 

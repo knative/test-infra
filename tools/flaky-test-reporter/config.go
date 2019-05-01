@@ -24,22 +24,20 @@ import (
 
 const (
 	// Builds to be analyzed, this is an arbitrary number
-	buildsCount   = 10
+	buildsCount = 10
 	// Minimal number of results to be counted as valid results for each testcase, this is an arbitrary number
 	requiredCount = 8
 	// Don't do anything if found more than 1% tests flaky, this is an arbitrary number
-	threshold     = 0.01
+	threshold = 0.01
 
-	org           = "knative"
+	org = "knative"
 )
 
 var (
 	jobConfigs = []JobConfig{
 		{"ci-knative-serving-continuous", "serving", prow.PostsubmitJob}, // CI flow for serving repo
 	}
-	// Temporarily creating issues under "test-infra" for better management
-	// TODO(chaodaiG): repo for issue same as the src of the test
 	repoIssueMap = map[string]string{
-		"serving": "test-infra",
+		"serving": "serving",
 	}
 )

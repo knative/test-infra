@@ -250,10 +250,10 @@ plank:
     grace_period: 15000000000 # 15s
     utility_images:
       # Update these versions when updating plank version in cluster.yaml
-      clonerefs: "gcr.io/k8s-prow/clonerefs:v20190311-a967141"
-      initupload: "gcr.io/k8s-prow/initupload:v20190311-a967141"
-      entrypoint: "gcr.io/k8s-prow/entrypoint:v20190311-a967141"
-      sidecar: "gcr.io/k8s-prow/sidecar:v20190311-a967141"
+      clonerefs: "gcr.io/k8s-prow/clonerefs:v20190415-c700e7878"
+      initupload: "gcr.io/k8s-prow/initupload:v20190415-c700e7878"
+      entrypoint: "gcr.io/k8s-prow/entrypoint:v20190415-c700e7878"
+      sidecar: "gcr.io/k8s-prow/sidecar:v20190415-c700e7878"
     gcs_configuration:
       bucket: "[[.GcsBucket]]"
       path_strategy: "explicit"
@@ -296,9 +296,15 @@ tide:
     missingLabels:
     - do-not-merge/hold
     - do-not-merge/work-in-progress
+    - do-not-merge/invalid-owners-file
   merge_method:
     knative: squash
   target_url: https://prow.knative.dev/tide
+  pr_status_base_url: https://prow.knative.dev/pr
+  blocker_label: tide/merge-blocker
+  squash_label: tide/merge-method-squash
+  rebase_label: tide/merge-method-rebase
+  merge_label: tide/merge-method-merge
 `
 
 	// presubmitJob is the template for presubmit jobs.
@@ -830,7 +836,8 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			data.Base.Command = releaseScript
 			data.Base.Args = releaseLocal
 			setupDockerInDockerForJob(&data.Base)
-			data.Base.Timeout = 90
+			// TODO(adrcunha): Consider reducing the timeout in the future.
+			data.Base.Timeout = 180
 		case "dot-release", "auto-release":
 			if !getBool(item.Value) {
 				return
@@ -856,6 +863,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			// We need a larger cluster of at least 16 nodes for perf tests
 			addEnvToJob(&data.Base, "E2E_MIN_CLUSTER_NODES", "16")
 			addEnvToJob(&data.Base, "E2E_MAX_CLUSTER_NODES", "16")
+			data.Base.Timeout = 120
 		case "latency":
 			if !getBool(item.Value) {
 				return
@@ -932,7 +940,7 @@ func generateCleanupPeriodicJob() {
 	data.Base = newbaseProwJobTemplateData("knative/test-infra")
 	data.PeriodicJobName = "ci-knative-cleanup"
 	data.CronString = cleanupPeriodicJobCron
-	data.Base.DecorationConfig = []string{"timeout: 28800000000000"} // 8 hours
+	data.Base.DecorationConfig = []string{"timeout: 86400000000000"} // 24 hours
 	data.Base.Command = cleanupScript
 	data.Base.Args = []string{
 		"--project-resource-yaml ci/prow/boskos/resources.yaml",
@@ -1373,8 +1381,11 @@ func generateTestGroup(repoName string, jobNames []string) {
 			extras["short_text_metric"] = "coverage"
 			// Do not alert on coverage failures (i.e., coverage below threshold)
 			extras["num_failures_to_alert"] = "9999"
+		case "istio-1.0.7-mesh", "istio-1.0.7-no-mesh", "istio-1.1.2-mesh", "istio-1.1.2-no-mesh":
+			extras["alert_stale_results_hours"] = "3"
+			extras["num_failures_to_alert"] = "3"
 		default:
-			log.Fatalf("Unknown jobName: %s", jobName)
+			log.Fatalf("Unknown jobName for generateTestGroup: %s", jobName)
 		}
 		executeTestGroupTemplate(testGroupName, gcsLogDir, extras)
 	}
@@ -1417,6 +1428,8 @@ func generateDashboard(repoName string, jobNames []string) {
 			executeDashboardTabTemplate("nightly", testGroupName, testgridTabSortByName, noExtras)
 		case "test-coverage":
 			executeDashboardTabTemplate("coverage", testGroupName, testgridTabGroupByDir, noExtras)
+		case "istio-1.0.7-mesh", "istio-1.0.7-no-mesh", "istio-1.1.2-mesh", "istio-1.1.2-no-mesh":
+			executeDashboardTabTemplate(jobName, testGroupName, testgridTabSortByName, noExtras)
 		default:
 			log.Fatalf("Unknown job name %q", jobName)
 		}
@@ -1442,8 +1455,10 @@ func getTestGroupName(repoName string, jobName string) string {
 		return fmt.Sprintf("ci-%s-%s-release", repoName, jobName)
 	case "test-coverage":
 		return fmt.Sprintf("pull-%s-%s", repoName, jobName)
+	case "istio-1.0.7-mesh", "istio-1.0.7-no-mesh", "istio-1.1.2-mesh", "istio-1.1.2-no-mesh":
+		return fmt.Sprintf("ci-%s-%s", repoName, jobName)
 	}
-	log.Fatalf("Unknown jobName: %s", jobName)
+	log.Fatalf("Unknown jobName for getTestGroupName: %s", jobName)
 	return ""
 }
 

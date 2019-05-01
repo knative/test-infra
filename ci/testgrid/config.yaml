@@ -60,6 +60,22 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-serving-continuous
   alert_stale_results_hours: 3
   num_failures_to_alert: 3
+- name: ci-knative-serving-istio-1.0.7-mesh
+  gcs_prefix: knative-prow/logs/ci-knative-serving-istio-1.0.7-mesh
+  alert_stale_results_hours: 3
+  num_failures_to_alert: 3
+- name: ci-knative-serving-istio-1.0.7-no-mesh
+  gcs_prefix: knative-prow/logs/ci-knative-serving-istio-1.0.7-no-mesh
+  alert_stale_results_hours: 3
+  num_failures_to_alert: 3
+- name: ci-knative-serving-istio-1.1.2-mesh
+  gcs_prefix: knative-prow/logs/ci-knative-serving-istio-1.1.2-mesh
+  alert_stale_results_hours: 3
+  num_failures_to_alert: 3
+- name: ci-knative-serving-istio-1.1.2-no-mesh
+  gcs_prefix: knative-prow/logs/ci-knative-serving-istio-1.1.2-no-mesh
+  alert_stale_results_hours: 3
+  num_failures_to_alert: 3
 - name: ci-knative-serving-nightly-release
   gcs_prefix: knative-prow/logs/ci-knative-serving-nightly-release
 - name: ci-knative-serving-dot-release
@@ -166,6 +182,14 @@ test_groups:
   short_text_metric: "coverage"
 - name: ci-knative-serving-0.4-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.4-continuous
+- name: ci-knative-serving-0.5-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-serving-0.5-continuous
+- name: ci-knative-build-0.5-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-build-0.5-continuous
+- name: ci-knative-eventing-0.5-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-0.5-continuous
+- name: ci-knative-eventing-sources-0.5-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-0.5-continuous
 dashboards:
 - name: knative-serving
   dashboard_tab:
@@ -175,6 +199,18 @@ dashboards:
   - name: conformance-tests
     test_group_name: ci-knative-serving-continuous
     base_options: "include-filter-by-regex=test/conformance\\.&sort-by-name="
+  - name: istio-1.0.7-mesh
+    test_group_name: ci-knative-serving-istio-1.0.7-mesh
+    base_options: "sort-by-name="
+  - name: istio-1.0.7-no-mesh
+    test_group_name: ci-knative-serving-istio-1.0.7-no-mesh
+    base_options: "sort-by-name="
+  - name: istio-1.1.2-mesh
+    test_group_name: ci-knative-serving-istio-1.1.2-mesh
+    base_options: "sort-by-name="
+  - name: istio-1.1.2-no-mesh
+    test_group_name: ci-knative-serving-istio-1.1.2-no-mesh
+    base_options: "sort-by-name="
   - name: nightly
     test_group_name: ci-knative-serving-nightly-release
     base_options: "sort-by-name="
@@ -291,6 +327,26 @@ dashboards:
   - name: continuous
     test_group_name: ci-knative-serving-0.4-continuous
     base_options: "sort-by-name="
+- name: knative-serving-0.5
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-serving-0.5-continuous
+    base_options: "sort-by-name="
+- name: knative-build-0.5
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-build-0.5-continuous
+    base_options: "sort-by-name="
+- name: knative-eventing-0.5
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-eventing-0.5-continuous
+    base_options: "sort-by-name="
+- name: knative-eventing-sources-0.5
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-eventing-sources-0.5-continuous
+    base_options: "sort-by-name="
 dashboard_groups:
 - name: knative
   dashboard_names:
@@ -306,3 +362,9 @@ dashboard_groups:
 - name: knative-0.4
   dashboard_names:
   - "knative-serving-0.4"
+- name: knative-0.5
+  dashboard_names:
+  - "knative-serving-0.5"
+  - "knative-build-0.5"
+  - "knative-eventing-0.5"
+  - "knative-eventing-sources-0.5"
