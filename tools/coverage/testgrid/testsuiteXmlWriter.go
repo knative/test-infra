@@ -45,10 +45,10 @@ func NewTestCase(targetName, coverage string, failure bool) junit.TestCase {
 func toTestsuite(g *calc.CoverageList, dirs []string) *junit.TestSuite {
 	g.Summarize()
 	covThresInt := g.CovThresInt()
-	tc := []junit.TestCase{}
+	ts := junit.TestSuite{}
 
 	// Add overall coverage
-	tc = append(tc, NewTestCase("OVERALL", g.PercentageForTestgrid(), g.IsCoverageLow(covThresInt)))
+	ts.AddTestCase(NewTestCase("OVERALL", g.PercentageForTestgrid(), g.IsCoverageLow(covThresInt)))
 
 	fmt.Println("")
 	log.Println("Constructing Testsuite Struct for Testgrid")
@@ -57,7 +57,7 @@ func toTestsuite(g *calc.CoverageList, dirs []string) *junit.TestSuite {
 	for _, cov := range *g.Group() {
 		coverage := cov.PercentageForTestgrid()
 		if coverage != "" {
-			tc = append(tc, NewTestCase(cov.Name(), coverage, cov.IsCoverageLow(covThresInt)))
+			ts.AddTestCase(NewTestCase(cov.Name(), coverage, cov.IsCoverageLow(covThresInt)))
 		} else {
 			log.Printf("Skipping file %s as it has no coverage data.\n", cov.Name())
 		}
@@ -68,7 +68,7 @@ func toTestsuite(g *calc.CoverageList, dirs []string) *junit.TestSuite {
 		dirCov := g.Subset(dir)
 		coverage := dirCov.PercentageForTestgrid()
 		if coverage != "" {
-			tc = append(tc, NewTestCase(dir, coverage, dirCov.IsCoverageLow(covThresInt)))
+			ts.AddTestCase(NewTestCase(dir, coverage, dirCov.IsCoverageLow(covThresInt)))
 		} else {
 			log.Printf("Skipping directory %s as it has no files with coverage data.\n", dir)
 		}
@@ -76,7 +76,7 @@ func toTestsuite(g *calc.CoverageList, dirs []string) *junit.TestSuite {
 	log.Println("Finished Constructing Testsuite Struct for Testgrid")
 	fmt.Println("")
 
-	return &junit.TestSuite{TestCases: tc}
+	return &ts
 }
 
 // ProfileToTestsuiteXML uses coverage profile (and it's corresponding stdout) to produce junit xml
@@ -94,9 +94,9 @@ func ProfileToTestsuiteXML(arts *artifacts.LocalArtifacts, covThres int) {
 	}
 	defer f.Close()
 
-	ts := junit.TestSuites{}
-	ts.AddTestSuite(toTestsuite(groupCov, groupCov.GetDirs()))
-	output, err := ts.ToBytes("", "    ")
+	suites := junit.TestSuites{}
+	suites.AddTestSuite(toTestsuite(groupCov, groupCov.GetDirs()))
+	output, err := suites.ToBytes("", "    ")
 	if err != nil {
 		logUtil.LogFatalf("error: %v\n", err)
 	}
