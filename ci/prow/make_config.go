@@ -42,7 +42,7 @@ const (
 	// Cron strings for key jobs
 	goCoveragePeriodicJobCron     = "0 1 * * *"  // Run at 01:00 every day
 	cleanupPeriodicJobCron        = "0 19 * * 1" // Run at 11:00PST/12:00PST every Monday (19:00 UTC)
-	flakesreporterPeriodicJobCron = "0 12 * * *" // Run at 4:00PST/5:00PST every day (12:00 UTC)
+	flakesReporterPeriodicJobCron = "0 12 * * *" // Run at 4:00PST/5:00PST every day (12:00 UTC)
 	backupPeriodicJobCron         = "15 9 * * *" // Run at 02:15PST every day (09:15 UTC)
 
 	// baseOptions setting for testgrid dashboard tabs
@@ -959,7 +959,7 @@ func generateFlakytoolPeriodicJob() {
 	data.Base = newbaseProwJobTemplateData("knative/test-infra")
 	data.Base.Image = flakesreporterDockerImage
 	data.PeriodicJobName = "ci-knative-flakes-reporter"
-	data.CronString = flakesreporterPeriodicJobCron
+	data.CronString = flakesReporterPeriodicJobCron
 	data.Base.Command = "/flaky-test-reporter"
 	data.Base.Args = []string{
 		"--service-account=" + data.Base.ServiceAccount,
