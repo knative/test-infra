@@ -1932,7 +1932,7 @@ periodics:
       command:
       - "/metrics"
       args:
-      - "--source-directory=ci-serving-continuous"
+      - "--source-directory=ci-serving"
       - "--artifacts-dir=$(ARTIFACTS)"
       - "--service-account=/etc/test-account/service-account.json"
       volumeMounts:
@@ -2019,7 +2019,7 @@ periodics:
       secret:
         secretName: test-account
 - cron: "0 1 * * *"
-  name: ci-serving-go-coverage
+  name: go-coverage-serving
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -2264,7 +2264,7 @@ periodics:
       command:
       - "/metrics"
       args:
-      - "--source-directory=ci-build-continuous"
+      - "--source-directory=ci-build"
       - "--artifacts-dir=$(ARTIFACTS)"
       - "--service-account=/etc/test-account/service-account.json"
       volumeMounts:
@@ -2281,7 +2281,7 @@ periodics:
       secret:
         secretName: test-account
 - cron: "0 1 * * *"
-  name: ci-build-go-coverage
+  name: go-coverage-build
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -2343,7 +2343,7 @@ periodics:
       secret:
         secretName: test-account
 - cron: "0 1 * * *"
-  name: ci-docs-go-coverage
+  name: go-coverage-docs
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -2557,7 +2557,7 @@ periodics:
       secret:
         secretName: release-account
 - cron: "0 1 * * *"
-  name: ci-eventing-go-coverage
+  name: go-coverage-eventing
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -2771,7 +2771,7 @@ periodics:
       secret:
         secretName: release-account
 - cron: "0 1 * * *"
-  name: ci-eventing-sources-go-coverage
+  name: go-coverage-eventing-sources
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -2859,7 +2859,7 @@ periodics:
       secret:
         secretName: test-account
 - cron: "0 1 * * *"
-  name: ci-pkg-go-coverage
+  name: go-coverage-pkg
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -2913,7 +2913,7 @@ periodics:
       secret:
         secretName: test-account
 - cron: "0 1 * * *"
-  name: ci-caching-go-coverage
+  name: go-coverage-caching
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -2933,7 +2933,7 @@ periodics:
       - "--cov-target=."
       - "--cov-threshold-percentage=50"
 - cron: "0 1 * * *"
-  name: ci-client-go-coverage
+  name: go-coverage-client
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -2953,7 +2953,7 @@ periodics:
       - "--cov-target=."
       - "--cov-threshold-percentage=50"
 - cron: "0 19 * * 1"
-  name: ci-knative-cleanup
+  name: cleanup
   agent: kubernetes
   decorate: true
   decoration_config:
@@ -2984,7 +2984,7 @@ periodics:
       secret:
         secretName: test-account
 - cron: "0 12 * * *"
-  name: ci-knative-flakes-reporter
+  name: flakes-reporter
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -3023,7 +3023,7 @@ periodics:
       secret:
         secretName: flaky-test-reporter-slack-token
 - cron: "15 9 * * *"
-  name: ci-knative-backup-artifacts
+  name: backup-artifacts
   agent: kubernetes
   decorate: true
   spec:

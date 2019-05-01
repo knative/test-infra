@@ -94,7 +94,7 @@ test_groups:
   gcs_prefix: knative-prow/logs/performance-serving
   short_text_metric: "perf_latency"
 - name: pull-serving-test-coverage
-  gcs_prefix: knative-prow/logs/ci-serving-go-coverage
+  gcs_prefix: knative-prow/logs/go-coverage-serving
   num_failures_to_alert: 9999
   short_text_metric: "coverage"
 - name: ci-build
@@ -113,7 +113,7 @@ test_groups:
   gcs_prefix: knative-prow/logs/latency-build
   short_text_metric: "latency"
 - name: pull-build-test-coverage
-  gcs_prefix: knative-prow/logs/ci-build-go-coverage
+  gcs_prefix: knative-prow/logs/go-coverage-build
   num_failures_to_alert: 9999
   short_text_metric: "coverage"
 - name: ci-docs
@@ -121,7 +121,7 @@ test_groups:
   alert_stale_results_hours: 3
   num_failures_to_alert: 3
 - name: pull-docs-test-coverage
-  gcs_prefix: knative-prow/logs/ci-docs-go-coverage
+  gcs_prefix: knative-prow/logs/go-coverage-docs
   num_failures_to_alert: 9999
   short_text_metric: "coverage"
 - name: ci-eventing
@@ -137,7 +137,7 @@ test_groups:
   gcs_prefix: knative-prow/logs/auto-release-eventing
   alert_stale_results_hours: 3
 - name: pull-eventing-test-coverage
-  gcs_prefix: knative-prow/logs/ci-eventing-go-coverage
+  gcs_prefix: knative-prow/logs/go-coverage-eventing
   num_failures_to_alert: 9999
   short_text_metric: "coverage"
 - name: ci-eventing-sources
@@ -153,7 +153,7 @@ test_groups:
   gcs_prefix: knative-prow/logs/auto-release-eventing-sources
   alert_stale_results_hours: 3
 - name: pull-eventing-sources-test-coverage
-  gcs_prefix: knative-prow/logs/ci-eventing-sources-go-coverage
+  gcs_prefix: knative-prow/logs/go-coverage-eventing-sources
   num_failures_to_alert: 9999
   short_text_metric: "coverage"
 - name: ci-build-templates
@@ -165,7 +165,7 @@ test_groups:
   alert_stale_results_hours: 3
   num_failures_to_alert: 3
 - name: pull-pkg-test-coverage
-  gcs_prefix: knative-prow/logs/ci-pkg-go-coverage
+  gcs_prefix: knative-prow/logs/go-coverage-pkg
   num_failures_to_alert: 9999
   short_text_metric: "coverage"
 - name: ci-caching
@@ -173,11 +173,11 @@ test_groups:
   alert_stale_results_hours: 3
   num_failures_to_alert: 3
 - name: pull-caching-test-coverage
-  gcs_prefix: knative-prow/logs/ci-caching-go-coverage
+  gcs_prefix: knative-prow/logs/go-coverage-caching
   num_failures_to_alert: 9999
   short_text_metric: "coverage"
 - name: pull-client-test-coverage
-  gcs_prefix: knative-prow/logs/ci-client-go-coverage
+  gcs_prefix: knative-prow/logs/go-coverage-client
   num_failures_to_alert: 9999
   short_text_metric: "coverage"
 - name: ci-serving-0.4

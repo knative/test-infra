@@ -867,7 +867,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			data.Base.Image = "gcr.io/knative-tests/test-infra/metrics:latest"
 			data.Base.Command = "/metrics"
 			data.Base.Args = []string{
-				fmt.Sprintf("--source-directory=ci-%s-continuous", data.Base.RepoNameForJob),
+				fmt.Sprintf("--source-directory=ci-%s", data.Base.RepoNameForJob),
 				"--artifacts-dir=$(ARTIFACTS)",
 				"--service-account=" + data.Base.ServiceAccount}
 		case "custom-job":
@@ -919,7 +919,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 func generateCleanupPeriodicJob() {
 	var data periodicJobTemplateData
 	data.Base = newbaseProwJobTemplateData("knative/test-infra")
-	data.PeriodicJobName = "ci-knative-cleanup"
+	data.PeriodicJobName = "cleanup"
 	data.CronString = cleanupPeriodicJobCron
 	data.Base.DecorationConfig = []string{"timeout: 28800000000000"} // 8 hours
 	data.Base.Command = cleanupScript
@@ -939,7 +939,7 @@ func generateFlakytoolPeriodicJob() {
 	var data periodicJobTemplateData
 	data.Base = newbaseProwJobTemplateData("knative/test-infra")
 	data.Base.Image = flakesreporterDockerImage
-	data.PeriodicJobName = "ci-knative-flakes-reporter"
+	data.PeriodicJobName = "flakes-reporter"
 	data.CronString = flakesreporterPeriodicJobCron
 	data.Base.Command = "/flaky-test-reporter"
 	data.Base.Args = []string{
@@ -959,7 +959,7 @@ func generateBackupPeriodicJob() {
 	data.Base = newbaseProwJobTemplateData("none/unused")
 	data.Base.ServiceAccount = "/etc/backup-account/service-account.json"
 	data.Base.Image = "gcr.io/knative-tests/test-infra/backups:latest"
-	data.PeriodicJobName = "ci-knative-backup-artifacts"
+	data.PeriodicJobName = "backup-artifacts"
 	data.CronString = backupPeriodicJobCron
 	data.Base.Command = "/backup.sh"
 	data.Base.Args = []string{data.Base.ServiceAccount}
@@ -978,7 +978,7 @@ func generateGoCoveragePeriodic(title string, repoName string, periodicConfig ya
 		var data periodicJobTemplateData
 		data.Base = newbaseProwJobTemplateData(repoName)
 		data.Base.Image = coverageDockerImage
-		data.PeriodicJobName = fmt.Sprintf("ci-%s-go-coverage", data.Base.RepoNameForJob)
+		data.PeriodicJobName = fmt.Sprintf("go-coverage-%s", data.Base.RepoNameForJob)
 		data.CronString = goCoveragePeriodicJobCron
 		data.Base.GoCoverageThreshold = repo.GoCoverageThreshold
 		data.Base.Command = "/coverage"
@@ -1328,7 +1328,6 @@ func generateTestGroup(repoName string, jobNames []string) {
 		extras := make(map[string]string)
 		switch jobName {
 		case "continuous", "dot-release", "auto-release", "performance", "latency", "playground", "nightly":
-			// isDailyBranch := regexp.MustCompile(`-[0-9\.]+-continuous`).FindString(testGroupName) != ""
 			isDailyBranch := regexp.MustCompile(`ci-.+-[0-9\.]+`).FindString(testGroupName) != ""
 			if !isDailyBranch && (jobName == "continuous" || jobName == "auto-release") {
 				// TODO(Fredy-Z): this value should be derived from the cron string
@@ -1349,7 +1348,7 @@ func generateTestGroup(repoName string, jobNames []string) {
 				extras["short_text_metric"] = "perf_latency"
 			}
 		case "test-coverage":
-			gcsLogDir = fmt.Sprintf("%s/%s/ci-%s-%s", gcsBucket, logsDir, repoName, "go-coverage")
+			gcsLogDir = fmt.Sprintf("%s/%s/%s-%s", gcsBucket, logsDir, "go-coverage", repoName)
 			extras["short_text_metric"] = "coverage"
 			// Do not alert on coverage failures (i.e., coverage below threshold)
 			extras["num_failures_to_alert"] = "9999"
