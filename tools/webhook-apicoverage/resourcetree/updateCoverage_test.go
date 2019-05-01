@@ -68,4 +68,3 @@ func TestOtherValue(t *testing.T) {
 		t.Fatal(err)
 	}
 }
-

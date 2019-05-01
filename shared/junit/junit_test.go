@@ -78,13 +78,13 @@ func newTestCase(name string, status TestStatusEnum) *TestCase {
 	}
 
 	var tmp string // cast const to string
-	switch{
-		case status == Failed:
-			tmp = string(Failed)
-			testCase.Failure = &tmp
-		case status == Skipped:
-			tmp = string(Skipped)
-			testCase.Skipped = &tmp
+	switch {
+	case status == Failed:
+		tmp = string(Failed)
+		testCase.Failure = &tmp
+	case status == Skipped:
+		tmp = string(Skipped)
+		testCase.Skipped = &tmp
 	}
 
 	return &testCase

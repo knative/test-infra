@@ -19,8 +19,8 @@ limitations under the License.
 package junit
 
 import (
-	"fmt"
 	"encoding/xml"
+	"fmt"
 )
 
 // TestStatusEnum is a enum for test result status
@@ -37,52 +37,52 @@ const (
 
 // TestSuites holds a <testSuites/> list of TestSuite results
 type TestSuites struct {
-	XMLName     xml.Name        `xml:"testsuites"`
-	Suites      []TestSuite     `xml:"testsuite"`
+	XMLName xml.Name    `xml:"testsuites"`
+	Suites  []TestSuite `xml:"testsuite"`
 }
 
 // TestSuite holds <testSuite/> results
 type TestSuite struct {
-	XMLName     xml.Name        `xml:"testsuite"`
-	Name        string          `xml:"name,attr"`
-	Time        float64         `xml:"time,attr"` // Seconds
-	Failures    int             `xml:"failures,attr"`
-	Tests       int             `xml:"tests,attr"`
-	TestCases   []TestCase      `xml:"testcase"`
-	Properties  TestProperties  `xml:"properties"`
+	XMLName    xml.Name       `xml:"testsuite"`
+	Name       string         `xml:"name,attr"`
+	Time       float64        `xml:"time,attr"` // Seconds
+	Failures   int            `xml:"failures,attr"`
+	Tests      int            `xml:"tests,attr"`
+	TestCases  []TestCase     `xml:"testcase"`
+	Properties TestProperties `xml:"properties"`
 }
 
 // TestCase holds <testcase/> results
 type TestCase struct {
-	Name        string          `xml:"name,attr"`
-	Time        float64         `xml:"time,attr"`  // Seconds
-	ClassName   string          `xml:"classname,attr"`
-	Failure     *string         `xml:"failure,omitempty"`
-	Output      *string         `xml:"system-out,omitempty"`
-	Error       *string         `xml:"system-err,omitempty"`
-	Skipped     *string         `xml:"skipped,omitempty"`
-	Properties  TestProperties  `xml:"properties"`
+	Name       string         `xml:"name,attr"`
+	Time       float64        `xml:"time,attr"` // Seconds
+	ClassName  string         `xml:"classname,attr"`
+	Failure    *string        `xml:"failure,omitempty"`
+	Output     *string        `xml:"system-out,omitempty"`
+	Error      *string        `xml:"system-err,omitempty"`
+	Skipped    *string        `xml:"skipped,omitempty"`
+	Properties TestProperties `xml:"properties"`
 }
 
 // TestProperties is an array of test properties
 type TestProperties struct {
-	Properties  []TestProperty  `xml:"property"`
+	Properties []TestProperty `xml:"property"`
 }
 
 // TestProperty defines a property of the test
 type TestProperty struct {
-	Name        string          `xml:"name,attr"`
-	Value       string          `xml:"value,attr"`
+	Name  string `xml:"name,attr"`
+	Value string `xml:"value,attr"`
 }
 
 // GetTestStatus returns the test status as a string
 func (testCase *TestCase) GetTestStatus() TestStatusEnum {
 	testStatus := Passed
 	switch {
-		case testCase.Failure != nil:
-			testStatus = Failed
-		case testCase.Skipped != nil:
-			testStatus = Skipped
+	case testCase.Failure != nil:
+		testStatus = Failed
+	case testCase.Skipped != nil:
+		testStatus = Skipped
 	}
 	return testStatus
 }
@@ -124,7 +124,7 @@ func (testSuites *TestSuites) ToBytes(prefix, indent string) ([]byte, error) {
 // the input Suite
 func UnMarshal(buf []byte) (*TestSuites, error) {
 	var testSuites TestSuites
-	if err := xml.Unmarshal(buf, &testSuites); nil == err { 
+	if err := xml.Unmarshal(buf, &testSuites); nil == err {
 		return &testSuites, nil
 	}
 
