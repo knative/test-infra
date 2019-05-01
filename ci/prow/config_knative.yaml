@@ -105,6 +105,45 @@ periodics:
     - branch-ci: true
       release: "0.4"
       cron: "25 8 * * *" # Run at 01:25PST every day (08:25 UTC)
+    - branch-ci: true
+      release: "0.5"
+      cron: "35 8 * * *" # Run at 01:35PST every day (08:35 UTC)
+    - custom-job: istio-1.0.7-mesh
+      cron: "7 */2 * * *" # Run every other hour and seven minute
+      command:
+      - "./test/e2e-tests.sh"
+      args:
+      - "--istio-version"
+      - "1.0.7"
+      - "--mesh"
+      timeout: 100
+    - custom-job: istio-1.0.7-no-mesh
+      cron: "22 */2 * * *" # Run every other hour and twenty-two minute
+      command:
+      - "./test/e2e-tests.sh"
+      args:
+      - "--istio-version"
+      - "1.0.7"
+      - "--no-mesh"
+      timeout: 100
+    - custom-job: istio-1.1.2-mesh
+      cron: "37 */2 * * *" # Run every other hour and thirty-seven minute
+      command:
+      - "./test/e2e-tests.sh"
+      args:
+      - "--istio-version"
+      - "1.1.2"
+      - "--mesh"
+      timeout: 100
+    - custom-job: istio-1.1.2-no-mesh
+      cron: "52 */2 * * *" # Run every other hour and fifty-two minute
+      command:
+      - "./test/e2e-tests.sh"
+      args:
+      - "--istio-version"
+      - "1.1.2"
+      - "--no-mesh"
+      timeout: 100
     - nightly: true
       cron: "1 8 * * *" # Run at 01:01PST every day (08:01 UTC)
     - dot-release: true
@@ -128,6 +167,9 @@ periodics:
   knative/build:
     - continuous: true
       cron: "15 * * * *" # Run every hour and 15 minutes
+    - branch-ci: true
+      release: "0.5"
+      cron: "45 8 * * *" # Run at 01:45PST every day (08:45 UTC)
     - nightly: true
       cron: "31 8 * * *" # Run at 01:31PST every day (08:31 UTC)
       needs-dind: true
@@ -147,6 +189,9 @@ periodics:
   knative/eventing:
     - continuous: true
       cron: "30 * * * *" # Run every hour and 30 minutes
+    - branch-ci: true
+      release: "0.5"
+      cron: "40 8 * * *" # Run at 01:40PST every day (08:40 UTC)
     - nightly: true
       cron: "16 9 * * *" # Run at 02:16PST every day (09:16 UTC)
     - dot-release: true
@@ -157,6 +202,9 @@ periodics:
   knative/eventing-sources:
     - continuous: true
       cron: "30 * * * *" # Run every hour and 30 minutes
+    - branch-ci: true
+      release: "0.5"
+      cron: "50 8 * * *" # Run at 01:50PST every day (08:50 UTC)
     - nightly: true
       cron: "16 9 * * *" # Run at 02:16PST every day (09:16 UTC)
     - dot-release: true

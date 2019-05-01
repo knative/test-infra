@@ -1,14 +1,32 @@
 /*
+Copyright 2019 The Knative Authors
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+/*
 Package main prototypes uploading resource (go test coverage profile) to GCS
 if enable debug, then the reading from GCS feature would be run as well
 */
+
 package gcs
 
 import (
-	"github.com/knative/test-infra/tools/coverage/artifacts"
-	"github.com/knative/test-infra/tools/coverage/githubUtil/githubPr"
 	"path"
 	"strconv"
+
+	"github.com/knative/test-infra/tools/coverage/artifacts"
+	"github.com/knative/test-infra/tools/coverage/githubUtil/githubPr"
 )
 
 const ArtifactsDirNameOnGcs = "artifacts"

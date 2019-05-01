@@ -19,62 +19,14 @@ package loadgenerator_test
 import (
 	"os"
 	"testing"
-	"time"
 
 	"github.com/knative/test-infra/shared/loadgenerator"
 	"github.com/knative/test-infra/shared/prow"
 )
 
-const (
-	testTime = 1 * time.Minute
-	testNum  = 5
-	testUrl  = "http://example.com"
-	testQPS  = 100.0
-)
-
-func getOptions() *loadgenerator.GeneratorOptions {
-	return &loadgenerator.GeneratorOptions{
-		Duration:       testTime,
-		NumThreads:     testNum,
-		NumConnections: testNum,
-		URL:            testUrl,
-		Domain:         testUrl,
-		QPS:            testQPS,
-	}
-}
-
-func TestCreateRunnerOptions(t *testing.T) {
-	o := getOptions()
-	opts := o.CreateRunnerOptions(false)
-
-	if opts.RunnerOptions.Duration != testTime {
-		t.Fatalf("Duration is %v. Expected %v", opts.RunnerOptions.Duration, testTime)
-	}
-
-	if opts.RunnerOptions.NumThreads != testNum {
-		t.Fatalf("Number of threads is %d. Expected %d", opts.RunnerOptions.NumThreads, testNum)
-	}
-
-	if opts.RunnerOptions.QPS != testQPS {
-		t.Fatalf("QPS is %f. Expected %f", opts.RunnerOptions.QPS, testQPS)
-	}
-
-	if opts.HTTPOptions.NumConnections != testNum {
-		t.Fatalf("Number of connections is %d. Expected %d", opts.HTTPOptions.NumConnections, testNum)
-	}
-
-	if opts.HTTPOptions.HTTPReqTimeOut != testTime {
-		t.Fatalf("Request timeout is %v. Expected %v", opts.HTTPOptions.HTTPReqTimeOut, testTime)
-	}
-
-	if opts.HTTPOptions.URL != testUrl {
-		t.Fatalf("Url is %s. Expected %s", opts.HTTPOptions.URL, testUrl)
-	}
-}
-
 func TestSaveJSON(t *testing.T) {
-	res := &loadgenerator.GeneratorResults{}
-	err := res.SaveJSON("TestSaveJSON")
+	res := &loadgenerator.GeneratorResults{FileNamePrefix: t.Name()}
+	err := res.SaveJSON()
 	if err != nil {
 		t.Fatalf("Cannot save JSON: %v", err)
 	}
