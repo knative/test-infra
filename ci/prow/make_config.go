@@ -928,15 +928,6 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	executeJobTemplate("periodic", jobTemplate, title, repoName, data.PeriodicJobName, false, data)
 }
 
-// generateRemainingGoCoveragePeriodicJobs generates the go coverage periodic jobs for repositories that are not processed in the periodic job configuration
-func generateRemainingGoCoveragePeriodicJobs() {
-	for _, repo := range repositories {
-		if !repo.Processed && repo.EnableGoCoverage {
-			generateGoCoveragePeriodic("periodics", repo.Name, nil)
-		}
-	}
-}
-
 // generateCleanupPeriodicJob generates the cleanup job config.
 func generateCleanupPeriodicJob() {
 	var data periodicJobTemplateData
