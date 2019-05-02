@@ -18,10 +18,12 @@ limitations under the License.
 // identifies flaky tests, tracking flaky tests related github issues,
 // and sends slack notifications.
 
-package gcslogparser
+package main
 
 import (
 	"fmt"
+	"os"
+	"os/signal"
 	"time"
 
 	"github.com/knative/test-infra/shared/prow"
@@ -31,6 +33,10 @@ type Client struct {
 	StartDate time.Time         // Earliest date to be analyzed, i.e. "2019-02-22"
 	Parser    func(string) bool // Parser function
 	JobFilter []string          // Jobs to be parsed. If not provided will parse all jobs
+	PrChan    chan prInfo
+	JobChan   chan prow.Job
+	BuildChan chan prow.Build
+	LogChan   chan logInfo
 	Dryrun    bool
 }
 
@@ -39,7 +45,10 @@ func NewClient(serviceAccount string, parser func(string) bool) (*Client, error)
 		return nil, fmt.Errorf("Failed authenticating GCS: '%v'", err)
 	}
 
-	return &Client{Parser: parser}, nil
+	c := &Client{Parser: parser}
+	c.refreshChans()
+
+	return c, nil
 }
 
 func (c *Client) SetStartDate(startDate string) error {
@@ -48,4 +57,49 @@ func (c *Client) SetStartDate(startDate string) error {
 		return fmt.Errorf("invalid start date string, expecing format YYYY-MM-DD: '%v'", err)
 	}
 	c.StartDate = tt
+	return nil
+}
+
+func sliceContains(sl []string, target string) bool {
+	for _, s := range sl {
+		if s == target {
+			return true
+		}
+	}
+	return false
+}
+
+func (c *Client) refreshChans() {
+	c.cleanup()
+	c.PrChan = make(chan prInfo)
+	c.JobChan = make(chan prow.Job, 50)
+	c.BuildChan = make(chan prow.Build, 500)
+	c.LogChan = make(chan logInfo, 500)
+}
+
+func (c *Client) cleanup() {
+	if c.PrChan != nil {
+		close(c.PrChan)
+	}
+	if c.JobChan != nil {
+		close(c.JobChan)
+	}
+	if c.BuildChan != nil {
+		close(c.BuildChan)
+	}
+	if c.LogChan != nil {
+		close(c.LogChan)
+	}
+}
+
+// CleanupOnInterrupt will execute the function cleanup if an interrupt signal is caught
+func (c *Client) CleanupOnInterrupt() {
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, os.Interrupt)
+	go func() {
+		for range ch {
+			c.cleanup()
+			os.Exit(1)
+		}
+	}()
 }

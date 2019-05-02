@@ -33,36 +33,32 @@ type prInfo struct {
 	ID       int
 }
 
-func (c *Client) processPR(prChan chan prInfo, jobChan chan prow.Job, wg *sync.WaitGroup) {
+func (c *Client) processPR(wg *sync.WaitGroup) {
 	for {
 		select {
-		case pr := <-prChan:
-			for _, j := range prow.GetBuildsFromPullRequest(pr.repoName, pr.ID) {
-				if len(c.JobFilter) > 0 && !c.JobFilter.Contains(j.Name) {
+		case pr := <-c.PrChan:
+			for _, j := range prow.GetJobsFromPullRequest(pr.repoName, pr.ID) {
+				if len(c.JobFilter) > 0 && !sliceContains(c.JobFilter, j.Name) {
 					continue
 				}
-				jobChan <- prow.NewJob(j.Name, prow.PresubmitJob, pr.repoName, j.PullID)
-				wg.Add(1)
+				c.JobChan <- j
 			}
+			wg.Done()
 		}
 	}
 }
 
-func (c *Client) feedPresubmitJobsFromRepo(repoName string, jobChan chan prow.Job) {
-	prChan := make(chan prInfo)
+func (c *Client) feedPresubmitJobsFromRepo(repoName string) {
 	wg := &sync.WaitGroup{}
 
-	defer func() {
-		close(prChan)
-	}()
-
 	for i := 0; i < 100; i++ {
-		go c.processPR(prChan, buildChan, wg)
+		go c.processPR(wg)
 	}
 
 	for _, pr := range prow.GetPullRequestsFromRepo(repoName) {
 		if ID, _ := strconv.Atoi(path.Base(pr)); -1 != ID {
-			prChan <- prInfo{
+			wg.Add(1)
+			c.PrChan <- prInfo{
 				repoName: repoName,
 				ID:       ID,
 			}

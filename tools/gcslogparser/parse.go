@@ -18,58 +18,47 @@ limitations under the License.
 // identifies flaky tests, tracking flaky tests related github issues,
 // and sends slack notifications.
 
-package gcslogparser
+package main
 
 import (
+	"flag"
 	"fmt"
+	"log"
+	"os"
+	"strings"
 	"sync"
 
 	"github.com/knative/test-infra/shared/prow"
 )
 
-type jobInfo struct {
-	repoName string
-	jobName  string
-}
-
-type buildInfo struct {
-	job *prow.Job
-	ID  int // Build ID
-}
-
 type logInfo struct {
-	build *prow.Build
+	build prow.Build
 	l     string
 }
 
-func (c *Client) processJob(jobChan chan prow.Job, buildChan chan prow.Build, wgBuild *sync.WaitGroup) {
+func (c *Client) processJob(wgBuild *sync.WaitGroup) {
 	for {
 		select {
-		case pr := <-prChan:
-			// fmt.Printf("Process PR '%v'\n", pr)
-			for _, j := range prow.ListJobsFromPR(pr.repoName, pr.ID) {
-				// fmt.Printf("job: %s\n", j.Name)
-				for _, buildID := range prow.NewJob(j.Name, prow.PresubmitJob, pr.repoName, j.PullID).GetBuildIDs() {
-					wgBuild.Add(1)
-					// fmt.Printf("build: %s %d\n", j.Name, buildID)
-					buildChan <- buildInfo{job: j, ID: buildID}
-				}
+		case j := <-c.JobChan:
+			// fmt.Println(j.StoragePath)
+			for _, buildID := range j.GetBuildIDs() {
+				wgBuild.Add(1)
+				c.BuildChan <- *(j.NewBuild(buildID))
 			}
 		}
 	}
 }
 
-func (c *Client) processBuild(buildChan chan prow.Build, logChan chan logInfo, startTimestamp int64, wgBuild, wgLog *sync.WaitGroup) {
+func (c *Client) processBuild(wgBuild, wgLog *sync.WaitGroup) {
 	for {
 		select {
-		case b := <-buildChan:
-			// fmt.Print(b.job, b.ID)
-			build := b.job.NewBuild(b.ID)
-			if build.FinishTime != nil && *build.FinishTime > startTimestamp {
+		case b := <-c.BuildChan:
+			// fmt.Println(b.StoragePath)
+			if b.FinishTime != nil && *b.FinishTime > c.StartDate.Unix() {
 				wgLog.Add(1)
-				content, _ := build.ReadFile("build-log.txt")
-				logChan <- logInfo{
-					build: build,
+				content, _ := b.ReadFile("build-log.txt")
+				c.LogChan <- logInfo{
+					build: b,
 					l:     string(content),
 				}
 			}
@@ -78,12 +67,14 @@ func (c *Client) processBuild(buildChan chan prow.Build, logChan chan logInfo, s
 	}
 }
 
-func (c *Client) parseLog(logChan chan logInfo, wgLog *sync.WaitGroup) {
+func (c *Client) parseLog(wgLog *sync.WaitGroup) {
 	for {
 		select {
-		case li := <-logChan:
-			if c.Parser(li.l) {
-				fmt.Println(li.build.StoragePath)
+		case l := <-c.LogChan:
+			if c.Parser(l.l) {
+				fmt.Println(l.build.StoragePath)
+			} else {
+				fmt.Println("not found")
 			}
 			wgLog.Done()
 		}
@@ -91,28 +82,20 @@ func (c *Client) parseLog(logChan chan logInfo, wgLog *sync.WaitGroup) {
 }
 
 // ParseRepo parses all jobs within a repo, including Presubmit and Postsubmit
-func (c *Client) ParseRepo(repoName, f func() bool, startTime string) {
-	jobChan := make(chan prow.Job, 50)
-	buildChan := make(chan prow.Build, 500)
-	logChan := make(chan logInfo, 500)
+func (c *Client) ParseRepo(repoName string) {
+	c.refreshChans()
 
 	wgBuild := &sync.WaitGroup{}
 	wgLog := &sync.WaitGroup{}
 
-	defer func() {
-		close(jobChan)
-		close(buildChan)
-		close(logChan)
-	}()
-
 	for i := 0; i < 500; i++ {
-		go c.processJob(jobChan, buildChan, wgBuild)
+		go c.processJob(wgBuild)
 	}
 	for i := 0; i < 500; i++ {
-		go c.processBuild(buildChan, logChan, startTimestamp, wgBuild, wgLog)
+		go c.processBuild(wgBuild, wgLog)
 	}
 	for i := 0; i < 500; i++ {
-		go c.parseLog(logChan, wgLog)
+		go c.parseLog(wgLog)
 	}
 
 	c.feedPresubmitJobsFromRepo(repoName)
@@ -120,4 +103,27 @@ func (c *Client) ParseRepo(repoName, f func() bool, startTime string) {
 
 	wgBuild.Wait()
 	wgLog.Wait()
+}
+
+func main() {
+	serviceAccount := flag.String("service-account", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"), "JSON key file for GCS service account")
+	// repoNames := flag.String("repo", "test-infra", "repo to be downloaded")
+	startDate := flag.String("start-date", "2019-02-22", "cut off date to be analyzed")
+	dryrun := flag.Bool("dry-run", false, "dry run switch")
+	flag.Parse()
+
+	if nil != dryrun && true == *dryrun {
+		log.Printf("running in [dry run mode]")
+	}
+
+	c, _ := NewClient(*serviceAccount, func(s string) bool {
+		return strings.Contains(s, "Running coverage for PR")
+	})
+
+	defer c.cleanup()
+	c.CleanupOnInterrupt()
+
+	c.Dryrun = *dryrun
+	c.SetStartDate(*startDate)
+	c.ParseRepo("test-infra")
 }

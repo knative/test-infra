@@ -24,11 +24,11 @@ import (
 	"github.com/knative/test-infra/shared/prow"
 )
 
-func (c *Client) feedPostsubmitJobsFromRepo(repoName string, jobChan chan prow.Job) {
+func (c *Client) feedPostsubmitJobsFromRepo(repoName string) {
 	for _, j := range prow.GetPostsubmitJobsFromRepo(repoName) {
-		if len(c.JobFilter) > 0 && !c.JobFilter.Contains(j.Name) {
+		if len(c.JobFilter) > 0 && !sliceContains(c.JobFilter, j.Name) {
 			continue
 		}
-		jobChan <- j
+		c.JobChan <- j
 	}
 }
