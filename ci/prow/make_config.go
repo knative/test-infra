@@ -119,6 +119,9 @@ type postsubmitJobTemplateData struct {
 // sectionGenerator is a function that generates Prow job configs given a slice of a yaml file with configs.
 type sectionGenerator func(string, string, yaml.MapSlice)
 
+// newJobNeeded is a function that determined if we need to add a new job for this repository.
+type newJobNeeded func(repositoryData) bool
+
 // stringArrayFlag is the content of a multi-value flag.
 type stringArrayFlag []string
 
@@ -925,7 +928,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	executeJobTemplate("periodic", jobTemplate, title, repoName, data.PeriodicJobName, false, data)
 }
 
-// generateRemainingGoCoveragePeriodicJobs generate the go coverage periodic jobs for repositories that are not processed in the periodic job configuration
+// generateRemainingGoCoveragePeriodicJobs generates the go coverage periodic jobs for repositories that are not processed in the periodic job configuration
 func generateRemainingGoCoveragePeriodicJobs() {
 	for _, repo := range repositories {
 		if !repo.Processed && repo.EnableGoCoverage {
@@ -989,7 +992,7 @@ func generateBackupPeriodicJob() {
 }
 
 // generateGoCoveragePeriodic generates the go coverage periodic job config for the given repo (configuration is ignored).
-func generateGoCoveragePeriodic(title string, repoName string, periodicConfig yaml.MapSlice) {
+func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) {
 	for i, repo := range repositories {
 		if repoName != repo.Name || !repo.EnableGoCoverage {
 			continue
@@ -1015,27 +1018,21 @@ func generateGoCoveragePeriodic(title string, repoName string, periodicConfig ya
 	}
 }
 
-// generateGoCoveragePostsubmits generates the go coverage postsubmit job configs for all repos.
-func generateGoCoveragePostsubmits() {
-	for i := range repositories { // Keep order for predictable output.
-		if !repositories[i].EnableGoCoverage {
-			continue
-		}
-		repo := repositories[i].Name
-		var data postsubmitJobTemplateData
-		data.Base = newbaseProwJobTemplateData(repo)
-		data.Base.Image = coverageDockerImage
-		data.PostsubmitJobName = fmt.Sprintf("post-%s-go-coverage", data.Base.RepoNameForJob)
-		addExtraEnvVarsToJob(&data.Base)
-		configureServiceAccountForJob(&data.Base)
-		executeJobTemplate("postsubmit go coverage", goCoveragePostsubmitJob, "postsubmits", repo, data.PostsubmitJobName, true, data)
-		// TODO(adrcunha): remove once the coverage-dev job isn't necessary anymore.
-		// Generate config for post-knative-serving-go-coverage-dev right after post-knative-serving-go-coverage
-		if data.PostsubmitJobName == "post-knative-serving-go-coverage" {
-			data.PostsubmitJobName += "-dev"
-			data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest-dev", -1)
-			executeJobTemplate("presubmit", goCoveragePostsubmitJob, "postsubmits", repo, data.PostsubmitJobName, false, data)
-		}
+// generateGoCoveragePostsubmit generates the go coverage postsubmit job config for the given repo.
+func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
+	var data postsubmitJobTemplateData
+	data.Base = newbaseProwJobTemplateData(repoName)
+	data.Base.Image = coverageDockerImage
+	data.PostsubmitJobName = fmt.Sprintf("post-%s-go-coverage", data.Base.RepoNameForJob)
+	addExtraEnvVarsToJob(&data.Base)
+	configureServiceAccountForJob(&data.Base)
+	executeJobTemplate("postsubmit go coverage", goCoveragePostsubmitJob, "postsubmits", repoName, data.PostsubmitJobName, true, data)
+	// TODO(adrcunha): remove once the coverage-dev job isn't necessary anymore.
+	// Generate config for post-knative-serving-go-coverage-dev right after post-knative-serving-go-coverage
+	if data.PostsubmitJobName == "post-knative-serving-go-coverage" {
+		data.PostsubmitJobName += "-dev"
+		data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest-dev", -1)
+		executeJobTemplate("presubmit", goCoveragePostsubmitJob, "postsubmits", repoName, data.PostsubmitJobName, false, data)
 	}
 }
 
@@ -1054,6 +1051,17 @@ func parseSection(config yaml.MapSlice, title string, generate sectionGenerator,
 				finalize(title, repoName, nil)
 			}
 		}
+	}
+}
+
+// generateOtherJobConfigs generates job config with the generator if new job is required for it.
+func generateOtherJobConfigs(title string, newJobNeeded newJobNeeded, generate sectionGenerator) {
+	for i := range repositories { // Keep order for predictable output.
+		if !newJobNeeded(repositories[i]) {
+			continue
+		}
+
+		generate(title, repositories[i].Name, nil)
 	}
 }
 
@@ -1573,11 +1581,15 @@ func main() {
 		}
 		parseSection(config, "presubmits", generatePresubmit, nil)
 		parseSection(config, "periodics", generatePeriodic, generateGoCoveragePeriodic)
-		generateRemainingGoCoveragePeriodicJobs()
+		generateOtherJobConfigs("periodics", func(repo repositoryData) bool {
+			return !repo.Processed && repo.EnableGoCoverage
+		}, generateGoCoveragePeriodic)
 		generateCleanupPeriodicJob()
 		generateFlakytoolPeriodicJob()
 		generateBackupPeriodicJob()
-		generateGoCoveragePostsubmits()
+		generateOtherJobConfigs("postsubmits", func(repo repositoryData) bool {
+			return repo.EnableGoCoverage
+		}, generateGoCoveragePostsubmit)
 	}
 
 	// config object is modified when we generate prow config, so we'll need to reload it here
