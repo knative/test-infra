@@ -14,23 +14,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// error.go helps with error handling
+// flaky-test-reporter collects test results from continuous flows,
+// identifies flaky tests, tracking flaky tests related github issues,
+// and sends slack notifications.
 
 package main
 
 import (
-	"fmt"
-	"strings"
+	"github.com/knative/test-infra/shared/prow"
 )
 
-// combineErrors combines slice of errors and return a single error
-func combineErrors(errs []error) error {
-	if len(errs) == 0 {
-		return nil
+func (c *Client) feedPostsubmitJobsFromRepo(repoName string, jobChan chan prow.Job) {
+	for _, j := range prow.GetPostsubmitJobsFromRepo(repoName) {
+		if len(c.JobFilter) > 0 && !c.JobFilter.Contains(j.Name) {
+			continue
+		}
+		jobChan <- j
 	}
-	var errStrs []string
-	for _, err := range errs {
-		errStrs = append(errStrs, err.Error())
-	}
-	return fmt.Errorf(strings.Join(errStrs, "\n"))
 }
