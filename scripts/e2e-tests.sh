@@ -189,6 +189,7 @@ function create_test_cluster() {
   local gcloud_project="${GCP_PROJECT}"
   [[ -z "${gcloud_project}" ]] && gcloud_project="$(gcloud config get-value project)"
   echo "gcloud project is ${gcloud_project}"
+  echo "gcloud user is $(gcloud config get-value core/account)"
   (( IS_BOSKOS )) && echo "Using boskos for the test cluster"
   [[ -n "${GCP_PROJECT}" ]] && echo "GCP project for test cluster is ${GCP_PROJECT}"
   echo "Test script is ${E2E_SCRIPT}"
