@@ -1051,7 +1051,6 @@ func generateOtherJobConfigs(title string, newJobNeeded newJobNeeded, generate s
 		if !newJobNeeded(repositories[i]) {
 			continue
 		}
-
 		generate(title, repositories[i].Name, nil)
 	}
 }
