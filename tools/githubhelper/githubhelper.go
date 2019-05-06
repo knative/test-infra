@@ -22,14 +22,14 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"strconv"
 	"strings"
-	"io/ioutil"
 
-	"golang.org/x/oauth2"
 	"github.com/google/go-github/github"
+	"golang.org/x/oauth2"
 )
 
 var (
@@ -39,9 +39,9 @@ var (
 	pullNumber = atoi(os.Getenv("PULL_NUMBER"), "pull number")
 
 	// Shared useful variables
-	ctx                   = context.Background()
-	verbose               = false
-	client                *github.Client
+	ctx     = context.Background()
+	verbose = false
+	client  *github.Client
 )
 
 // authenticate creates client with given token if it's provided and exists,
@@ -60,7 +60,6 @@ func authenticate(githubTokenPath *string) {
 		client = github.NewClient(oauth2.NewClient(ctx, ts))
 	}
 }
-
 
 // atoi is a convenience function to convert a string to integer, failing in case of error.
 func atoi(str, valueName string) int {

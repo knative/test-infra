@@ -26,25 +26,25 @@ import (
 )
 
 var testStatsMapForTest = map[string]TestStat{
-	"passed": TestStat{
+	"passed": {
 		TestName: "a",
 		Passed:   []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
 		Failed:   []int{},
 		Skipped:  []int{},
 	},
-	"flaky": TestStat{
+	"flaky": {
 		TestName: "a",
 		Passed:   []int{1, 2, 3, 4, 5, 6, 7, 8, 9},
 		Failed:   []int{0},
 		Skipped:  []int{},
 	},
-	"failed": TestStat{
+	"failed": {
 		TestName: "a",
 		Passed:   []int{},
 		Failed:   []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
 		Skipped:  []int{},
 	},
-	"notenoughdata": TestStat{
+	"notenoughdata": {
 		TestName: "a",
 		Passed:   []int{0, 1, 2, 3, 4, 5, 6},
 		Failed:   []int{},

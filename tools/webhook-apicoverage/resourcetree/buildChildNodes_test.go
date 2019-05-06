@@ -23,7 +23,7 @@ import (
 
 func TestSimpleStructType(t *testing.T) {
 	tree := getTestTree(basicTypeName, reflect.TypeOf(baseType{}))
-	if err := verifyBaseTypeNode("", tree.Root.GetData()); err  != nil {
+	if err := verifyBaseTypeNode("", tree.Root.GetData()); err != nil {
 		t.Fatal(err)
 	}
 }
