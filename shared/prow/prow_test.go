@@ -19,14 +19,14 @@ limitations under the License.
 package prow
 
 import (
-	"testing"
 	"os"
+	"testing"
 )
 
-const(
-	repoName = "test-repo"
+const (
+	repoName       = "test-repo"
 	invalidJobType = "invalid"
-	testJobName = "job_0"
+	testJobName    = "job_0"
 )
 
 var jobPathTests = []struct {

@@ -42,7 +42,7 @@ const (
 
 // slackChannelsMap defines mapping of repo: slack channels
 var slackChannelsMap = map[string][]slackChannel{
-	"serving": []slackChannel{{"api", "CA4DNJ9A4"}},
+	"serving": {{"api", "CA4DNJ9A4"}},
 }
 
 // SlackClient contains Slack bot related information

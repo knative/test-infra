@@ -1,11 +1,12 @@
 package gcsFakes
 
 import (
-	"cloud.google.com/go/storage"
 	"context"
+	"log"
+
+	"cloud.google.com/go/storage"
 	"github.com/knative/test-infra/tools/coverage/artifacts"
 	"github.com/knative/test-infra/tools/coverage/artifacts/artsTest"
-	"log"
 )
 
 type fakeStorageClient struct{}

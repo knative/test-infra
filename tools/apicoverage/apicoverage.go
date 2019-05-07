@@ -29,9 +29,9 @@ import (
 	"strings"
 
 	"github.com/knative/serving/pkg/apis/serving/v1alpha1"
+	"github.com/knative/test-infra/shared/junit"
 	"github.com/knative/test-infra/shared/prow"
 	"github.com/knative/test-infra/shared/testgrid"
-	"github.com/knative/test-infra/shared/junit"
 )
 
 const (
@@ -189,7 +189,7 @@ func getRelevantLogs(fields []string) *string {
 
 func addTestCases(tcName string, covered map[string]int, notCovered map[string]int) []junit.TestCase {
 	tc := []junit.TestCase{}
-	if (len(covered) == 0 && len(notCovered) == 0) {
+	if len(covered) == 0 && len(notCovered) == 0 {
 		return tc
 	}
 
