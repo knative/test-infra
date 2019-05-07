@@ -1510,7 +1510,7 @@ func executeDashboardGroupTemplate(dashboardGroupName string, dashboardRepoNames
 
 // isReleased returns true for project name that has version
 func isReleased(projName string) bool {
-	return regexp.MustCompile(`.+[0-9\.]+`).FindString(projName) != ""
+	return regexp.MustCompile(`.+-[0-9\.]+$`).FindString(projName) != ""
 }
 
 // setOutput set the given file as the output target, then all the output will be written to this file
