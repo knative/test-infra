@@ -1485,15 +1485,16 @@ func generateDashboardsForReleases() {
 func generateDashboardGroups() {
 	outputConfig("dashboard_groups:")
 	for _, projName := range projNames {
-		dashboardRepoNames := make([]string, 0)
+		// there is only one dashboard for each released project, so we do not need to group them
 		if isReleased(projName) {
-			dashboardRepoNames = []string{projName}
-		} else {
-			repos := metaData[projName]
-			for _, repoName := range repoNames {
-				if _, exists := repos[repoName]; exists {
-					dashboardRepoNames = append(dashboardRepoNames, buildProjRepoStr(projName, repoName))
-				}
+			continue
+		}
+
+		dashboardRepoNames := make([]string, 0)
+		repos := metaData[projName]
+		for _, repoName := range repoNames {
+			if _, exists := repos[repoName]; exists {
+				dashboardRepoNames = append(dashboardRepoNames, buildProjRepoStr(projName, repoName))
 			}
 		}
 		executeDashboardGroupTemplate(projName, dashboardRepoNames)
