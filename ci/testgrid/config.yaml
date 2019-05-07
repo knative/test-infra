@@ -331,29 +331,23 @@ dashboards:
   - name: continuous
     test_group_name: ci-knative-observability-continuous
     base_options: "sort-by-name="
-- name: knative-serving-0.4
+- name: knative-0.4
   dashboard_tab:
-  - name: continuous
+  - name: serving
     test_group_name: ci-knative-serving-0.4-continuous
     base_options: "sort-by-name="
-- name: knative-serving-0.5
+- name: knative-0.5
   dashboard_tab:
-  - name: continuous
+  - name: serving
     test_group_name: ci-knative-serving-0.5-continuous
     base_options: "sort-by-name="
-- name: knative-build-0.5
-  dashboard_tab:
-  - name: continuous
+  - name: build
     test_group_name: ci-knative-build-0.5-continuous
     base_options: "sort-by-name="
-- name: knative-eventing-0.5
-  dashboard_tab:
-  - name: continuous
+  - name: eventing
     test_group_name: ci-knative-eventing-0.5-continuous
     base_options: "sort-by-name="
-- name: knative-eventing-sources-0.5
-  dashboard_tab:
-  - name: continuous
+  - name: eventing-sources
     test_group_name: ci-knative-eventing-sources-0.5-continuous
     base_options: "sort-by-name="
 dashboard_groups:
@@ -371,10 +365,7 @@ dashboard_groups:
   - "knative-observability"
 - name: knative-0.4
   dashboard_names:
-  - "knative-serving-0.4"
+  - "knative-0.4"
 - name: knative-0.5
   dashboard_names:
-  - "knative-serving-0.5"
-  - "knative-build-0.5"
-  - "knative-eventing-0.5"
-  - "knative-eventing-sources-0.5"
+  - "knative-0.5"
