@@ -1,4 +1,4 @@
-# Copyright 2018 The Knative Authors
+# Copyright 2019 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,27 +20,29 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 http_archive(
     name = "io_bazel_rules_go",
-    sha256 = "7be7dc01f1e0afdba6c8eb2b43d2fa01c743be1b9273ab1eaf6c233df078d705",
-    urls = ["https://github.com/bazelbuild/rules_go/releases/download/0.16.5/rules_go-0.16.5.tar.gz"],
+    url = "https://github.com/bazelbuild/rules_go/releases/download/0.18.3/rules_go-0.18.3.tar.gz",
+    sha256 = "86ae934bd4c43b99893fc64be9d9fc684b81461581df7ea8fc291c816f5ee8c5",
 )
 
-load("@io_bazel_rules_go//go:def.bzl", "go_rules_dependencies", "go_register_toolchains")
+load("@io_bazel_rules_go//go:deps.bzl", "go_rules_dependencies", "go_register_toolchains")
 
 go_rules_dependencies()
 
-go_register_toolchains(go_version = "1.11.4")
+go_register_toolchains(
+    go_version = "1.12.2",
+)
 
 git_repository(
     name = "io_bazel_rules_k8s",
-    commit = "9d2f6e8e21f1b5e58e721fc29b806957d9931930",
+    commit = "94e92d11da6fa178d035cedf9041bae9a104b948",
     remote = "https://github.com/bazelbuild/rules_k8s.git",
 )
 
 http_archive(
     name = "io_bazel_rules_docker",
-    sha256 = "5235045774d2f40f37331636378f21fe11f69906c0386a790c5987a09211c3c4",
-    strip_prefix = "rules_docker-8010a50ef03d1e13f1bebabfc625478da075fa60",
-    urls = ["https://github.com/bazelbuild/rules_docker/archive/8010a50ef03d1e13f1bebabfc625478da075fa60.tar.gz"],
+    sha256 = "aed1c249d4ec8f703edddf35cbe9dfaca0b5f5ea6e4cd9e83e99f3b0d1136c3d",
+    strip_prefix = "rules_docker-0.7.0",
+    urls = ["https://github.com/bazelbuild/rules_docker/archive/v0.7.0.tar.gz"],
 )
 
 # External repositories
@@ -48,6 +50,6 @@ http_archive(
 git_repository(
     name = "k8s",
     remote = "http://github.com/kubernetes/test-infra.git",
-    commit = "c4a1fe42ebf91a06a81b189223d19f7e4332634b",  # HEAD as of 12/15/2018
+    commit = "f56e8904a7430e907f03fb4d0236511fe9d36ee6",  # HEAD as of 5/7/2019
 )
 
