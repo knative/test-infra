@@ -96,6 +96,11 @@ presubmits:
     - integration-tests: true
     - go-coverage: true
       go-coverage-threshold: 50
+  
+  knative/observability:
+    - build-tests: true
+    - unit-tests: true
+    - integration-tests: true
 
 periodics:
   knative/serving:
@@ -221,5 +226,9 @@ periodics:
       cron: "45 * * * *" # Run every hour and 45 minutes
 
   knative/caching:
+    - continuous: true
+      cron: "30 * * * *" # Run every hour and 30 minutes
+  
+  knative/observability:
     - continuous: true
       cron: "30 * * * *" # Run every hour and 30 minutes

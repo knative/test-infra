@@ -18,13 +18,9 @@ package main
 
 import (
 	"bufio"
-	"cloud.google.com/go/storage"
 	"encoding/json"
 	"flag"
 	"fmt"
-	"golang.org/x/net/context"
-	"google.golang.org/api/iterator"
-	"google.golang.org/api/option"
 	"io/ioutil"
 	"log"
 	"math"
@@ -35,6 +31,11 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"cloud.google.com/go/storage"
+	"golang.org/x/net/context"
+	"google.golang.org/api/iterator"
+	"google.golang.org/api/option"
 )
 
 var ctx = context.Background()

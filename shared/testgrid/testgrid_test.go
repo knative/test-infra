@@ -19,12 +19,12 @@ package testgrid_test
 import (
 	"io/ioutil"
 	"os"
-	"testing"
 	"path"
+	"testing"
 
-	"github.com/knative/test-infra/shared/testgrid"
 	"github.com/knative/test-infra/shared/junit"
 	"github.com/knative/test-infra/shared/prow"
+	"github.com/knative/test-infra/shared/testgrid"
 )
 
 const (

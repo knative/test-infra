@@ -30,20 +30,6 @@ import (
 	"google.golang.org/api/iterator"
 )
 
-const (
-	gcsUrlHost = "storage.cloud.google.com/"
-)
-
-// DoesObjectExist checks whether an object exists in GCS bucket
-func (client StorageClient) DoesObjectExist(ctx context.Context, bucket, object string) bool {
-	_, err := client.Bucket(bucket).Object(object).Attrs(ctx)
-	if err != nil {
-		log.Printf("Error getting attrs from object '%s': %v", object, err)
-		return false
-	}
-	return true
-}
-
 type StorageClientIntf interface {
 	Bucket(bucketName string) *storage.BucketHandle
 	ListGcsObjects(ctx context.Context, bucketName, prefix, delim string) (
@@ -101,6 +87,16 @@ func (client StorageClient) ProfileReader(ctx context.Context, bucket,
 		logUtil.LogFatalf("o.NewReader(Ctx) error: %v", err)
 	}
 	return artifacts.NewProfileReader(reader)
+}
+
+// DoesObjectExist checks whether an object exists in GCS bucket
+func (client StorageClient) DoesObjectExist(ctx context.Context, bucket, object string) bool {
+	_, err := client.Bucket(bucket).Object(object).Attrs(ctx)
+	if err != nil {
+		log.Printf("Error getting attrs from object '%s': %v", object, err)
+		return false
+	}
+	return true
 }
 
 type GcsBuild struct {

@@ -30,7 +30,7 @@ import (
 func signal(s os.Signal) {
 	p, _ := os.FindProcess(os.Getpid())
 	_ = p.Signal(s)
-        // Sleep so test won't finish and signal will be received.
+	// Sleep so test won't finish and signal will be received.
 	time.Sleep(999)
 }
 

@@ -1294,13 +1294,8 @@ func collectMetaData(periodicJob yaml.MapSlice) {
 		addTestCoverageJobIfNeeded(&jobDetailMap, repoName)
 	}
 
-	// handle repos that only have go coverage
-	for repoName, hasGoCoverage := range goCoverageMap {
-		if hasGoCoverage {
-			jobDetailMap := addProjAndRepoIfNeed(projNames[0], repoName)
-			jobDetailMap[repoName] = []string{"test-coverage"}
-		}
-	}
+	// add test coverage jobs for the repos that haven't been handled
+	addRemainingTestCoverageJobs()
 }
 
 // addProjAndRepoIfNeed adds the project and repo if they are new in the metaData map, then return the jobDetailMap
@@ -1329,7 +1324,20 @@ func addTestCoverageJobIfNeeded(jobDetailMap *map[string][]string, repoName stri
 	if goCoverageMap[repoName] {
 		newJobTypes := append((*jobDetailMap)[repoName], "test-coverage")
 		(*jobDetailMap)[repoName] = newJobTypes
+		// delete this repoName from the goCoverageMap to avoid it being processed again when we
+		// call the function addRemainingTestCoverageJobs
 		delete(goCoverageMap, repoName)
+	}
+}
+
+// addRemainingTestCoverageJobs adds test-coverage jobs for the repos that haven't been processed.
+func addRemainingTestCoverageJobs() {
+	// handle repos that only have go coverage
+	for repoName, hasGoCoverage := range goCoverageMap {
+		if hasGoCoverage {
+			jobDetailMap := addProjAndRepoIfNeed(projNames[0], repoName)
+			jobDetailMap[repoName] = []string{"test-coverage"}
+		}
 	}
 }
 
