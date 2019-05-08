@@ -42,7 +42,7 @@ const (
 	// Cron strings for key jobs
 	goCoveragePeriodicJobCron     = "0 1 * * *"  // Run at 01:00 every day
 	cleanupPeriodicJobCron        = "0 19 * * 1" // Run at 11:00PST/12:00PST every Monday (19:00 UTC)
-	flakesreporterPeriodicJobCron = "0 12 * * *" // Run at 4:00PST/5:00PST every day (12:00 UTC)
+	flakesReporterPeriodicJobCron = "0 12 * * *" // Run at 4:00PST/5:00PST every day (12:00 UTC)
 	backupPeriodicJobCron         = "15 9 * * *" // Run at 02:15PST every day (09:15 UTC)
 
 	// baseOptions setting for testgrid dashboard tabs
@@ -56,6 +56,7 @@ type repositoryData struct {
 	Name                string
 	EnableGoCoverage    bool
 	GoCoverageThreshold int
+	Processed           bool
 }
 
 // baseProwJobTemplateData contains basic data about a Prow job.
@@ -117,6 +118,9 @@ type postsubmitJobTemplateData struct {
 
 // sectionGenerator is a function that generates Prow job configs given a slice of a yaml file with configs.
 type sectionGenerator func(string, string, yaml.MapSlice)
+
+// newJobNeeded is a function that determined if we need to add a new job for this repository.
+type newJobNeeded func(repositoryData) bool
 
 // stringArrayFlag is the content of a multi-value flag.
 type stringArrayFlag []string
@@ -949,7 +953,7 @@ func generateFlakytoolPeriodicJob() {
 	data.Base = newbaseProwJobTemplateData("knative/test-infra")
 	data.Base.Image = flakesreporterDockerImage
 	data.PeriodicJobName = "ci-knative-flakes-reporter"
-	data.CronString = flakesreporterPeriodicJobCron
+	data.CronString = flakesReporterPeriodicJobCron
 	data.Base.Command = "/flaky-test-reporter"
 	data.Base.Args = []string{
 		"--service-account=" + data.Base.ServiceAccount,
@@ -979,11 +983,12 @@ func generateBackupPeriodicJob() {
 }
 
 // generateGoCoveragePeriodic generates the go coverage periodic job config for the given repo (configuration is ignored).
-func generateGoCoveragePeriodic(title string, repoName string, periodicConfig yaml.MapSlice) {
-	for _, repo := range repositories {
+func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) {
+	for i, repo := range repositories {
 		if repoName != repo.Name || !repo.EnableGoCoverage {
 			continue
 		}
+		repositories[i].Processed = true
 		var data periodicJobTemplateData
 		data.Base = newbaseProwJobTemplateData(repoName)
 		data.Base.Image = coverageDockerImage
@@ -1004,27 +1009,21 @@ func generateGoCoveragePeriodic(title string, repoName string, periodicConfig ya
 	}
 }
 
-// generateGoCoveragePostsubmits generates the go coverage postsubmit job configs for all repos.
-func generateGoCoveragePostsubmits() {
-	for i := range repositories { // Keep order for predictable output.
-		if !repositories[i].EnableGoCoverage {
-			continue
-		}
-		repo := repositories[i].Name
-		var data postsubmitJobTemplateData
-		data.Base = newbaseProwJobTemplateData(repo)
-		data.Base.Image = coverageDockerImage
-		data.PostsubmitJobName = fmt.Sprintf("post-%s-go-coverage", data.Base.RepoNameForJob)
-		addExtraEnvVarsToJob(&data.Base)
-		configureServiceAccountForJob(&data.Base)
-		executeJobTemplate("postsubmit go coverage", goCoveragePostsubmitJob, "postsubmits", repo, data.PostsubmitJobName, true, data)
-		// TODO(adrcunha): remove once the coverage-dev job isn't necessary anymore.
-		// Generate config for post-knative-serving-go-coverage-dev right after post-knative-serving-go-coverage
-		if data.PostsubmitJobName == "post-knative-serving-go-coverage" {
-			data.PostsubmitJobName += "-dev"
-			data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest-dev", -1)
-			executeJobTemplate("presubmit", goCoveragePostsubmitJob, "postsubmits", repo, data.PostsubmitJobName, false, data)
-		}
+// generateGoCoveragePostsubmit generates the go coverage postsubmit job config for the given repo.
+func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
+	var data postsubmitJobTemplateData
+	data.Base = newbaseProwJobTemplateData(repoName)
+	data.Base.Image = coverageDockerImage
+	data.PostsubmitJobName = fmt.Sprintf("post-%s-go-coverage", data.Base.RepoNameForJob)
+	addExtraEnvVarsToJob(&data.Base)
+	configureServiceAccountForJob(&data.Base)
+	executeJobTemplate("postsubmit go coverage", goCoveragePostsubmitJob, "postsubmits", repoName, data.PostsubmitJobName, true, data)
+	// TODO(adrcunha): remove once the coverage-dev job isn't necessary anymore.
+	// Generate config for post-knative-serving-go-coverage-dev right after post-knative-serving-go-coverage
+	if data.PostsubmitJobName == "post-knative-serving-go-coverage" {
+		data.PostsubmitJobName += "-dev"
+		data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest-dev", -1)
+		executeJobTemplate("presubmit", goCoveragePostsubmitJob, "postsubmits", repoName, data.PostsubmitJobName, false, data)
 	}
 }
 
@@ -1043,6 +1042,16 @@ func parseSection(config yaml.MapSlice, title string, generate sectionGenerator,
 				finalize(title, repoName, nil)
 			}
 		}
+	}
+}
+
+// generateOtherJobConfigs generates job config with the generator if new job is required for it.
+func generateOtherJobConfigs(title string, newJobNeeded newJobNeeded, generate sectionGenerator) {
+	for i := range repositories { // Keep order for predictable output.
+		if !newJobNeeded(repositories[i]) {
+			continue
+		}
+		generate(title, repositories[i].Name, nil)
 	}
 }
 
@@ -1283,6 +1292,9 @@ func collectMetaData(periodicJob yaml.MapSlice) {
 		}
 		addTestCoverageJobIfNeeded(&jobDetailMap, repoName)
 	}
+
+	// add test coverage jobs for the repos that haven't been handled
+	addRemainingTestCoverageJobs()
 }
 
 // addProjAndRepoIfNeed adds the project and repo if they are new in the metaData map, then return the jobDetailMap
@@ -1311,6 +1323,20 @@ func addTestCoverageJobIfNeeded(jobDetailMap *map[string][]string, repoName stri
 	if goCoverageMap[repoName] {
 		newJobTypes := append((*jobDetailMap)[repoName], "test-coverage")
 		(*jobDetailMap)[repoName] = newJobTypes
+		// delete this repoName from the goCoverageMap to avoid it being processed again when we
+		// call the function addRemainingTestCoverageJobs
+		delete(goCoverageMap, repoName)
+	}
+}
+
+// addRemainingTestCoverageJobs adds test-coverage jobs for the repos that haven't been processed.
+func addRemainingTestCoverageJobs() {
+	// handle repos that only have go coverage
+	for repoName, hasGoCoverage := range goCoverageMap {
+		if hasGoCoverage {
+			jobDetailMap := addProjAndRepoIfNeed(projNames[0], repoName)
+			jobDetailMap[repoName] = []string{"test-coverage"}
+		}
 	}
 }
 
@@ -1584,10 +1610,15 @@ func main() {
 		}
 		parseSection(config, "presubmits", generatePresubmit, nil)
 		parseSection(config, "periodics", generatePeriodic, generateGoCoveragePeriodic)
+		generateOtherJobConfigs("periodics", func(repo repositoryData) bool {
+			return !repo.Processed && repo.EnableGoCoverage
+		}, generateGoCoveragePeriodic)
 		generateCleanupPeriodicJob()
 		generateFlakytoolPeriodicJob()
 		generateBackupPeriodicJob()
-		generateGoCoveragePostsubmits()
+		generateOtherJobConfigs("postsubmits", func(repo repositoryData) bool {
+			return repo.EnableGoCoverage
+		}, generateGoCoveragePostsubmit)
 	}
 
 	// config object is modified when we generate prow config, so we'll need to reload it here
