@@ -1341,9 +1341,13 @@ func addRemainingTestCoverageJobs() {
 }
 
 // generateSection generates the configs for the section with the given generator
-func generateSection(sectionName string, generator testgridEntityGenerator) {
+func generateSection(sectionName string, generator testgridEntityGenerator, skipReleasedProj bool) {
 	outputConfig(sectionName + ":")
 	for _, projName := range projNames {
+		// Do not handle the project if it is released and we want to skip it.
+		if skipReleasedProj && isReleased(projName) {
+			continue
+		}
 		repos := metaData[projName]
 		for _, repoName := range repoNames {
 			if _, exists := repos[repoName]; exists {
@@ -1485,15 +1489,37 @@ func buildProjRepoStr(projName string, repoName string) string {
 	return projRepoStr
 }
 
+func generateDashboardsForReleases() {
+	for _, projName := range projNames {
+		// Do not handle the project if it is not released.
+		if !isReleased(projName) {
+			continue
+		}
+		repos := metaData[projName]
+		outputConfig("- name: " + projName + "\n" + baseIndent + "dashboard_tab:")
+		noExtras := make(map[string]string)
+		for _, repoName := range repoNames {
+			if _, exists := repos[repoName]; exists {
+				testGroupName := getTestGroupName(buildProjRepoStr(projName, repoName), "continuous")
+				executeDashboardTabTemplate(repoName, testGroupName, testgridTabSortByName, noExtras)
+			}
+		}
+	}
+}
+
 // generateDashboardGroups generates the dashboard groups configuration
 func generateDashboardGroups() {
 	outputConfig("dashboard_groups:")
 	for _, projName := range projNames {
-		repos := metaData[projName]
 		dashboardRepoNames := make([]string, 0)
-		for _, repoName := range repoNames {
-			if _, exists := repos[repoName]; exists {
-				dashboardRepoNames = append(dashboardRepoNames, buildProjRepoStr(projName, repoName))
+		if isReleased(projName) {
+			dashboardRepoNames = []string{projName}
+		} else {
+			repos := metaData[projName]
+			for _, repoName := range repoNames {
+				if _, exists := repos[repoName]; exists {
+					dashboardRepoNames = append(dashboardRepoNames, buildProjRepoStr(projName, repoName))
+				}
 			}
 		}
 		executeDashboardGroupTemplate(projName, dashboardRepoNames)
@@ -1506,6 +1532,11 @@ func executeDashboardGroupTemplate(dashboardGroupName string, dashboardRepoNames
 	data.Name = dashboardGroupName
 	data.RepoNames = dashboardRepoNames
 	executeTemplate("dashboard group", dashboardGroupTemplate, data)
+}
+
+// isReleased returns true for project name that has version
+func isReleased(projName string) bool {
+	return regexp.MustCompile(`.+-[0-9\.]+$`).FindString(projName) != ""
 }
 
 // setOutput set the given file as the output target, then all the output will be written to this file
@@ -1611,8 +1642,9 @@ func main() {
 		periodicJobData := parseJob(config, "periodics")
 		collectMetaData(periodicJobData)
 
-		generateSection("test_groups", generateTestGroup)
-		generateSection("dashboards", generateDashboard)
+		generateSection("test_groups", generateTestGroup, false)
+		generateSection("dashboards", generateDashboard, true)
+		generateDashboardsForReleases()
 		generateDashboardGroups()
 	}
 }
