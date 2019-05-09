@@ -24,10 +24,10 @@ readonly SERVING_GKE_IMAGE=cos
 
 # Public latest stable nightly images and yaml files.
 KNATIVE_BASE_YAML_SOURCE=""
-if [[ -z "${BRANCH_VERSION}"]]; then
-  KNATIVE_BASE_YAML_SOURCE=https://storage.googleapis.com/knative-releases/@/previous/v${BRANCH_VERSION}.0
-else
+if [[ -z "${BRANCH_VERSION}" ]]; then
   KNATIVE_BASE_YAML_SOURCE=https://storage.googleapis.com/knative-nightly/@/latest
+else
+  KNATIVE_BASE_YAML_SOURCE=https://storage.googleapis.com/knative-releases/@/previous/v${BRANCH_VERSION}.0
 fi
 readonly KNATIVE_BASE_YAML_SOURCE
 readonly KNATIVE_SERVING_RELEASE=${KNATIVE_BASE_YAML_SOURCE/@/serving}/serving.yaml
