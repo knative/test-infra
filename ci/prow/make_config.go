@@ -293,6 +293,7 @@ tide:
     - knative/pkg
     - knative/caching
     - knative/website
+    - knative/community
     labels:
     - lgtm
     - approved
