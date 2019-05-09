@@ -806,6 +806,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	jobNameSuffix := ""
 	jobTemplate := periodicTestJob
 	jobType := ""
+	version := ""
 	for i, item := range periodicConfig {
 		switch item.Key {
 		case "continuous":
@@ -887,7 +888,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		case "cron":
 			data.CronString = getString(item.Value)
 		case "release":
-			version := getString(item.Value)
+			version = getString(item.Value)
 			jobNameSuffix = version + "-" + jobNameSuffix
 			data.Base.RepoBranch = "release-" + version
 		case "webhook-apicoverage":
@@ -923,6 +924,9 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	if data.Base.ServiceAccount != "" {
 		addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
 		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-central1")
+	}
+	if version != "" {
+		addEnvToJob(&data.Base, "VERSION_NUMBER", version)
 	}
 	addExtraEnvVarsToJob(&data.Base)
 	configureServiceAccountForJob(&data.Base)
