@@ -926,7 +926,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-central1")
 	}
 	if version != "" {
-		addEnvToJob(&data.Base, "VERSION_NUMBER", version)
+		addEnvToJob(&data.Base, "BRANCH_VERSION", version)
 	}
 	addExtraEnvVarsToJob(&data.Base)
 	configureServiceAccountForJob(&data.Base)
