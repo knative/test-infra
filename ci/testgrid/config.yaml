@@ -363,9 +363,3 @@ dashboard_groups:
   - "knative-caching"
   - "knative-observability"
   - "knative-client"
-- name: knative-0.4
-  dashboard_names:
-  - "knative-0.4"
-- name: knative-0.5
-  dashboard_names:
-  - "knative-0.5"
