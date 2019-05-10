@@ -445,13 +445,13 @@ function get_canonical_path() {
 # Return the version for the current branch.
 function get_branch_version() {
   local branch_name="$(git rev-parse --abbrev-ref HEAD)"
-  # Return empty string for the master branch.
-  if [ ${branch_name} == "master" ]; then
-    echo ""
   # Return the actual version number for the release branch.
   # For example, we will return "0.5" if the branch name is "release-0.5".
-  else
+  if [[ $name =~ ^release-[0-9\.]+ ]]; then
     echo ${branch_name} | sed 's/release-//g'
+  # Return empty string for any other branch.
+  else
+    echo ""
   fi
 }
 
