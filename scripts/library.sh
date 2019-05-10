@@ -18,22 +18,6 @@
 # to be used in test scripts and the like. It doesn't do anything when
 # called from command line.
 
-# Default GKE version to be used with Knative Serving
-readonly SERVING_GKE_VERSION=gke-latest
-readonly SERVING_GKE_IMAGE=cos
-
-# Public latest stable nightly images and yaml files.
-KNATIVE_BASE_YAML_SOURCE=""
-if [[ -z "${BRANCH_VERSION}" ]]; then
-  KNATIVE_BASE_YAML_SOURCE=https://storage.googleapis.com/knative-nightly/@/latest
-else
-  KNATIVE_BASE_YAML_SOURCE=https://storage.googleapis.com/knative-releases/@/previous/v${BRANCH_VERSION}.0
-fi
-readonly KNATIVE_BASE_YAML_SOURCE
-readonly KNATIVE_SERVING_RELEASE=${KNATIVE_BASE_YAML_SOURCE/@/serving}/serving.yaml
-readonly KNATIVE_BUILD_RELEASE=${KNATIVE_BASE_YAML_SOURCE/@/build}/build.yaml
-readonly KNATIVE_EVENTING_RELEASE=${KNATIVE_BASE_YAML_SOURCE/@/eventing}/release.yaml
-
 # Conveniently set GOPATH if unset
 if [[ -z "${GOPATH:-}" ]]; then
   export GOPATH="$(go env GOPATH)"
@@ -454,8 +438,37 @@ function get_canonical_path() {
   echo "$(cd ${path%/*} && echo $PWD/${path##*/})"
 }
 
+# Return the version for the current branch.
+function get_branch_version() {
+  local branch_name="$(git rev-parse --abbrev-ref HEAD)"
+  # Return empty string for the master branch.
+  if [ ${branch_name} != "master" ]; then
+    echo ""
+  # Return the actual version number for the release branch.
+  # For example, we will return "0.5" if the branch name is "release-0.5".
+  else
+    echo "$(echo ${branch_name} | sed 's/release-//g')"
+  fi 
+}
+
 # Initializations that depend on previous functions.
 # These MUST come last.
 
 readonly _TEST_INFRA_SCRIPTS_DIR="$(dirname $(get_canonical_path ${BASH_SOURCE[0]}))"
 readonly REPO_NAME_FORMATTED="Knative $(capitalize ${REPO_NAME//-/})"
+
+# Default GKE version to be used with Knative Serving
+readonly SERVING_GKE_VERSION=gke-latest
+readonly SERVING_GKE_IMAGE=cos
+
+# Public latest stable nightly images and yaml files.
+KNATIVE_BASE_YAML_SOURCE=""
+if [[ -z "$(get_branch_version)" ]]; then
+  KNATIVE_BASE_YAML_SOURCE=https://storage.googleapis.com/knative-nightly/@/latest
+else
+  KNATIVE_BASE_YAML_SOURCE=https://storage.googleapis.com/knative-releases/@/previous/v${BRANCH_VERSION}.0
+fi
+readonly KNATIVE_BASE_YAML_SOURCE
+readonly KNATIVE_SERVING_RELEASE=${KNATIVE_BASE_YAML_SOURCE/@/serving}/serving.yaml
+readonly KNATIVE_BUILD_RELEASE=${KNATIVE_BASE_YAML_SOURCE/@/build}/build.yaml
+readonly KNATIVE_EVENTING_RELEASE=${KNATIVE_BASE_YAML_SOURCE/@/eventing}/release.yaml
