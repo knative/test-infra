@@ -442,7 +442,7 @@ function get_canonical_path() {
 function get_branch_version() {
   local branch_name="$(git rev-parse --abbrev-ref HEAD)"
   # Return empty string for the master branch.
-  if [ ${branch_name} != "master" ]; then
+  if [ ${branch_name} == "master" ]; then
     echo ""
   # Return the actual version number for the release branch.
   # For example, we will return "0.5" if the branch name is "release-0.5".
