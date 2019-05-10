@@ -450,7 +450,7 @@ function get_knative_base_yaml_source() {
   if [[ $branch_name =~ ^release-[0-9\.]+$ ]]; then
     # Get the actual version number for the release branch.
     # For example, branch_version will be "0.5" if the branch name is "release-0.5".
-    local branch_version=$(echo ${branch_name} | sed 's/release-//g')
+    local branch_version=$(echo ${branch_name} | sed "s/release-//g")
     knative_base_yaml_source=https://storage.googleapis.com/knative-releases/@/previous/v${branch_version}.0
   fi
   echo ${knative_base_yaml_source}
