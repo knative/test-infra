@@ -18,6 +18,10 @@
 # to be used in test scripts and the like. It doesn't do anything when
 # called from command line.
 
+# Default GKE version to be used with Knative Serving
+readonly SERVING_GKE_VERSION=gke-latest
+readonly SERVING_GKE_IMAGE=cos
+
 # Conveniently set GOPATH if unset
 if [[ -z "${GOPATH:-}" ]]; then
   export GOPATH="$(go env GOPATH)"
@@ -456,10 +460,6 @@ function get_branch_version() {
 
 readonly _TEST_INFRA_SCRIPTS_DIR="$(dirname $(get_canonical_path ${BASH_SOURCE[0]}))"
 readonly REPO_NAME_FORMATTED="Knative $(capitalize ${REPO_NAME//-/})"
-
-# Default GKE version to be used with Knative Serving
-readonly SERVING_GKE_VERSION=gke-latest
-readonly SERVING_GKE_IMAGE=cos
 
 # Public latest stable nightly images and yaml files.
 KNATIVE_BASE_YAML_SOURCE=""
