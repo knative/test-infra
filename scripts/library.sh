@@ -462,7 +462,7 @@ function get_knative_base_yaml_source() {
 readonly _TEST_INFRA_SCRIPTS_DIR="$(dirname $(get_canonical_path ${BASH_SOURCE[0]}))"
 readonly REPO_NAME_FORMATTED="Knative $(capitalize ${REPO_NAME//-/})"
 
-# Public latest stable nightly images and yaml files.
+# Public latest nightly or release yaml files.
 readonly KNATIVE_BASE_YAML_SOURCE="$(get_knative_base_yaml_source)"
 readonly KNATIVE_SERVING_RELEASE=${KNATIVE_BASE_YAML_SOURCE/@/serving}/serving.yaml
 readonly KNATIVE_BUILD_RELEASE=${KNATIVE_BASE_YAML_SOURCE/@/build}/build.yaml
