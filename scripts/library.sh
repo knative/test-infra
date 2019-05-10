@@ -442,17 +442,18 @@ function get_canonical_path() {
   echo "$(cd ${path%/*} && echo $PWD/${path##*/})"
 }
 
-# Return the version for the current branch.
-function get_branch_version() {
+# Return the base url we use to build the actual knative yaml sources.
+function get_knative_base_yaml_source() {
+  local knative_base_yaml_source=https://storage.googleapis.com/knative-nightly/@/latest
   local branch_name="$(git rev-parse --abbrev-ref HEAD)"
-  # Return the actual version number for the release branch.
-  # For example, we will return "0.5" if the branch name is "release-0.5".
-  if [[ $name =~ ^release-[0-9\.]+ ]]; then
-    echo ${branch_name} | sed 's/release-//g'
-  # Return empty string for any other branch.
-  else
-    echo ""
+  # If it's a release branch, we should have a different knative_base_yaml_source.
+  if [[ $branch_name =~ ^release-[0-9\.]+$ ]]; then
+    # Get the actual version number for the release branch.
+    # For example, branch_version will be "0.5" if the branch name is "release-0.5".
+    local branch_version=$(echo ${branch_name} | sed 's/release-//g')
+    knative_base_yaml_source=https://storage.googleapis.com/knative-releases/@/previous/v${branch_version}.0
   fi
+  echo ${knative_base_yaml_source}
 }
 
 # Initializations that depend on previous functions.
@@ -462,14 +463,7 @@ readonly _TEST_INFRA_SCRIPTS_DIR="$(dirname $(get_canonical_path ${BASH_SOURCE[0
 readonly REPO_NAME_FORMATTED="Knative $(capitalize ${REPO_NAME//-/})"
 
 # Public latest stable nightly images and yaml files.
-readonly BRANCH_VERSION="$(get_branch_version)"
-KNATIVE_BASE_YAML_SOURCE=""
-if [[ -z ${BRANCH_VERSION} ]]; then
-  KNATIVE_BASE_YAML_SOURCE=https://storage.googleapis.com/knative-nightly/@/latest
-else
-  KNATIVE_BASE_YAML_SOURCE=https://storage.googleapis.com/knative-releases/@/previous/v${BRANCH_VERSION}.0
-fi
-readonly KNATIVE_BASE_YAML_SOURCE
+readonly KNATIVE_BASE_YAML_SOURCE="$(get_knative_base_yaml_source)"
 readonly KNATIVE_SERVING_RELEASE=${KNATIVE_BASE_YAML_SOURCE/@/serving}/serving.yaml
 readonly KNATIVE_BUILD_RELEASE=${KNATIVE_BASE_YAML_SOURCE/@/build}/build.yaml
 readonly KNATIVE_EVENTING_RELEASE=${KNATIVE_BASE_YAML_SOURCE/@/eventing}/release.yaml
