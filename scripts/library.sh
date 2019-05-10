@@ -462,8 +462,9 @@ readonly _TEST_INFRA_SCRIPTS_DIR="$(dirname $(get_canonical_path ${BASH_SOURCE[0
 readonly REPO_NAME_FORMATTED="Knative $(capitalize ${REPO_NAME//-/})"
 
 # Public latest stable nightly images and yaml files.
+readonly BRANCH_VERSION="$(get_branch_version)"
 KNATIVE_BASE_YAML_SOURCE=""
-if [[ -z "$(get_branch_version)" ]]; then
+if [[ -z ${BRANCH_VERSION} ]]; then
   KNATIVE_BASE_YAML_SOURCE=https://storage.googleapis.com/knative-nightly/@/latest
 else
   KNATIVE_BASE_YAML_SOURCE=https://storage.googleapis.com/knative-releases/@/previous/v${BRANCH_VERSION}.0
