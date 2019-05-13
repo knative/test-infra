@@ -22,12 +22,6 @@
 readonly SERVING_GKE_VERSION=gke-latest
 readonly SERVING_GKE_IMAGE=cos
 
-# Public latest stable nightly images and yaml files.
-readonly KNATIVE_BASE_YAML_SOURCE=https://storage.googleapis.com/knative-nightly/@/latest
-readonly KNATIVE_SERVING_RELEASE=${KNATIVE_BASE_YAML_SOURCE/@/serving}/serving.yaml
-readonly KNATIVE_BUILD_RELEASE=${KNATIVE_BASE_YAML_SOURCE/@/build}/build.yaml
-readonly KNATIVE_EVENTING_RELEASE=${KNATIVE_BASE_YAML_SOURCE/@/eventing}/release.yaml
-
 # Conveniently set GOPATH if unset
 if [[ -z "${GOPATH:-}" ]]; then
   export GOPATH="$(go env GOPATH)"
@@ -448,8 +442,27 @@ function get_canonical_path() {
   echo "$(cd ${path%/*} && echo $PWD/${path##*/})"
 }
 
+# Return the base url we use to build the actual knative yaml sources.
+function get_knative_base_yaml_source() {
+  local knative_base_yaml_source="https://storage.googleapis.com/knative-nightly/@/latest"
+  local branch_name="$(git rev-parse --abbrev-ref HEAD)"
+  # If it's a release branch, we should have a different knative_base_yaml_source.
+  if [[ $branch_name =~ ^release-[0-9\.]+$ ]]; then
+    # Get the latest tag name for the current branch, which is likely formatted as v0.5.0
+    local tag_name="$(git describe --tags)"
+    knative_base_yaml_source="https://storage.googleapis.com/knative-releases/@/previous/${tag_name}"
+  fi
+  echo "${knative_base_yaml_source}"
+}
+
 # Initializations that depend on previous functions.
 # These MUST come last.
 
 readonly _TEST_INFRA_SCRIPTS_DIR="$(dirname $(get_canonical_path ${BASH_SOURCE[0]}))"
 readonly REPO_NAME_FORMATTED="Knative $(capitalize ${REPO_NAME//-/})"
+
+# Public latest nightly or release yaml files.
+readonly KNATIVE_BASE_YAML_SOURCE="$(get_knative_base_yaml_source)"
+readonly KNATIVE_SERVING_RELEASE="${KNATIVE_BASE_YAML_SOURCE/@/serving}/serving.yaml"
+readonly KNATIVE_BUILD_RELEASE="${KNATIVE_BASE_YAML_SOURCE/@/build}/build.yaml"
+readonly KNATIVE_EVENTING_RELEASE="${KNATIVE_BASE_YAML_SOURCE/@/eventing}/release.yaml"
