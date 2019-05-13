@@ -448,10 +448,9 @@ function get_knative_base_yaml_source() {
   local branch_name="$(git rev-parse --abbrev-ref HEAD)"
   # If it's a release branch, we should have a different knative_base_yaml_source.
   if [[ $branch_name =~ ^release-[0-9\.]+$ ]]; then
-    # Get the actual version number for the release branch.
-    # For example, branch_version will be "0.5" if the branch name is "release-0.5".
-    local branch_version=$(echo ${branch_name} | sed "s/release-//g")
-    knative_base_yaml_source=https://storage.googleapis.com/knative-releases/@/previous/v${branch_version}.0
+    # Get the latest tag name for the current branch, which is likely formatted as v0.5.0
+    local tag_name=$(git describe --tags)
+    knative_base_yaml_source=https://storage.googleapis.com/knative-releases/@/previous/${tag_name}
   fi
   echo ${knative_base_yaml_source}
 }
