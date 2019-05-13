@@ -444,15 +444,15 @@ function get_canonical_path() {
 
 # Return the base url we use to build the actual knative yaml sources.
 function get_knative_base_yaml_source() {
-  local knative_base_yaml_source=https://storage.googleapis.com/knative-nightly/@/latest
+  local knative_base_yaml_source="https://storage.googleapis.com/knative-nightly/@/latest"
   local branch_name="$(git rev-parse --abbrev-ref HEAD)"
   # If it's a release branch, we should have a different knative_base_yaml_source.
   if [[ $branch_name =~ ^release-[0-9\.]+$ ]]; then
     # Get the latest tag name for the current branch, which is likely formatted as v0.5.0
-    local tag_name=$(git describe --tags)
-    knative_base_yaml_source=https://storage.googleapis.com/knative-releases/@/previous/${tag_name}
+    local tag_name="$(git describe --tags)"
+    knative_base_yaml_source="https://storage.googleapis.com/knative-releases/@/previous/${tag_name}"
   fi
-  echo ${knative_base_yaml_source}
+  echo "${knative_base_yaml_source}"
 }
 
 # Initializations that depend on previous functions.
@@ -463,6 +463,6 @@ readonly REPO_NAME_FORMATTED="Knative $(capitalize ${REPO_NAME//-/})"
 
 # Public latest nightly or release yaml files.
 readonly KNATIVE_BASE_YAML_SOURCE="$(get_knative_base_yaml_source)"
-readonly KNATIVE_SERVING_RELEASE=${KNATIVE_BASE_YAML_SOURCE/@/serving}/serving.yaml
-readonly KNATIVE_BUILD_RELEASE=${KNATIVE_BASE_YAML_SOURCE/@/build}/build.yaml
-readonly KNATIVE_EVENTING_RELEASE=${KNATIVE_BASE_YAML_SOURCE/@/eventing}/release.yaml
+readonly KNATIVE_SERVING_RELEASE="${KNATIVE_BASE_YAML_SOURCE/@/serving}/serving.yaml"
+readonly KNATIVE_BUILD_RELEASE="${KNATIVE_BASE_YAML_SOURCE/@/build}/build.yaml"
+readonly KNATIVE_EVENTING_RELEASE="${KNATIVE_BASE_YAML_SOURCE/@/eventing}/release.yaml"
