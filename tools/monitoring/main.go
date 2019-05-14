@@ -18,10 +18,14 @@ package main
 
 import (
 	"fmt"
+	"github.com/knative/test-infra/tools/monitoring/yaml-handler"
 	"log"
 	"net/http"
 	"os"
 )
+
+// TODO: replace this with permanent url (or a function) that returns the yaml from test-infra master branch
+const yamlURL = "https://raw.githubusercontent.com/steuhs/test-infra-1/7282b8924d8e2f6f68fe3d34b33ec52a804790fb/tools/monitoring/config-getter/sample.yaml"
 
 func main() {
 	// use PORT environment variable, or default to 8080
@@ -46,4 +50,8 @@ func hello(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello, world!\n")
 	fmt.Fprintf(w, "Version: 1.0.0\n")
 	fmt.Fprintf(w, "Hostname: %s\n", host)
+
+	yamlFile := yamlHandler.ParseYaml(yamlURL)
+	errorPatterns := yamlHandler.CollectErrorPatterns(yamlFile)
+	fmt.Fprintf(w, "error patterns collected from yaml:%s", errorPatterns)
 }
