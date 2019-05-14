@@ -14,28 +14,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-project=$1
-owners=("prime-engprod-sea@google.com")
-groups=("knative-productivity-admins@googlegroups.com")
-sas=("knative-tests@appspot.gserviceaccount.com" "prow-job@knative-tests.iam.gserviceaccount.com" "prow-job@knative-nightly.iam.gserviceaccount.com" "prow-job@knative-releases.iam.gserviceaccount.com") 
-apis=("compute.googleapis.com" "container.googleapis.com")
+set -e
 
-# Add an owner to the project
-for owner in ${owners[@]}; do
-    gcloud projects add-iam-policy-binding $project --member group:$owner --role roles/OWNER
+readonly PROJECT=${1:?"First argument must be the new boskos project name."}
+readonly OWNERS=("prime-engprod-sea@google.com")
+readonly GROUPS=("knative-productivity-admins@googlegroups.com")
+readonly SAS=(
+    "knative-tests@appspot.gserviceaccount.com" \
+    "prow-job@knative-tests.iam.gserviceaccount.com" \
+    "prow-job@knative-nightly.iam.gserviceaccount.com" \
+    "prow-job@knative-releases.iam.gserviceaccount.com")
+readonly APIS=(
+    "compute.googleapis.com" \
+    "container.googleapis.com")
+
+# Add an owner to the PROJECT
+for owner in ${OWNERS[@]}; do
+  gcloud projects add-iam-policy-binding ${PROJECT} --member group:${owner} --role roles/OWNER
 done
 
-# Add all groups as editors
-for group in ${groups[@]}; do
-    gcloud projects add-iam-policy-binding $project --member group:$group --role roles/EDITOR
+# Add all GROUPS as editors
+for group in ${GROUPS[@]}; do
+  gcloud projects add-iam-policy-binding ${PROJECT} --member group:${group} --role roles/EDITOR
 done
 
 # Add all service accounts as editors
-for sa in ${sas[@]}; do
-    gcloud projects add-iam-policy-binding $project --member serviceAccount:$sa --role roles/EDITOR
+for sa in ${SAS[@]}; do
+  gcloud projects add-iam-policy-binding ${PROJECT} --member serviceAccount:${sa} --role roles/EDITOR
 done
 
-# Enable apis
-for api in ${apis[@]}; do
-    gcloud services enable $api --project=$1
+# Enable APIS
+for api in ${APIS[@]}; do
+  gcloud services enable ${api} --project=${PROJECT}
 done
