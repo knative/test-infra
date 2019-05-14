@@ -1,0 +1,28 @@
+spec:
+  - error-pattern: 'Something went wrong: starting e2e cluster: error creating cluster'
+    hint: 'Check gcp status'
+    alerts:
+      - job-name-regex: 'pull.*'
+        occurrences: 2
+        jobs-affected: 1
+        prs-affected: 2
+        period: 1440 # 1440 minutes = 24 hours
+      - job-name-regex: '.*'
+        occurrences: 5
+        jobs-affected: 2
+        prs-affected: 1 # for non-pull jobs, we don't care about the number of prs affected, so we set the number to 1, which will basically make this particular condition always true
+        period: 1440
+
+  - error-pattern: 'sample*error2'
+    hint: 'hint_for_pattern_2'
+    alerts:
+      - job-name-regex: 'pull.*'
+        occurrences: 20
+        jobs-affected: 10
+        prs-affected: 20
+        period: 60 # 1440 minutes = 24 hours
+      - job-name-regex: '.*'
+        occurrences: 50
+        jobs-affected: 20
+        prs-affected: 10 # for non-pull jobs, we don't care about the number of prs affected, so we set the number to 1, which will basically make this particular condition always true
+        period: 60
