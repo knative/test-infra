@@ -194,6 +194,8 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-eventing-0.5-continuous
 - name: ci-knative-eventing-sources-0.5-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-0.5-continuous
+- name: ci-knative-serving-0.6-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-serving-0.6-continuous
 dashboards:
 - name: knative-serving
   dashboard_tab:
@@ -349,6 +351,11 @@ dashboards:
     base_options: "sort-by-name="
   - name: eventing-sources
     test_group_name: ci-knative-eventing-sources-0.5-continuous
+    base_options: "sort-by-name="
+- name: knative-0.6
+  dashboard_tab:
+  - name: serving
+    test_group_name: ci-knative-serving-0.6-continuous
     base_options: "sort-by-name="
 dashboard_groups:
 - name: knative

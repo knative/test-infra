@@ -113,6 +113,9 @@ periodics:
     - branch-ci: true
       release: "0.5"
       cron: "35 8 * * *" # Run at 01:35PST every day (08:35 UTC)
+    - branch-ci: true
+      release: "0.6"
+      cron: "45 8 * * *" # Run at 01:45 PST every day (08:45 UTC)
     - custom-job: istio-1.0.7-mesh
       cron: "7 */2 * * *" # Run every other hour and seven minute
       command:
