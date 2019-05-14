@@ -20,11 +20,11 @@
 
 ## Expanding Boskos pool
 
-1. Create a new GCP project and add it to [resources.yaml](./prow/boskos/resources.yaml).
+1. Create a new GCP project and add it to [resources.yaml](./prow/boskos/resources.yaml). Please follow the current naming scheme.
 
-1. Run `./ci/prow/boskos/permissions.sh <project_name>` to setup IAM permissions and APIs needed
+1. Run `./ci/prow/boskos/permissions.sh <project_name>` to setup the IAM permissions and APIs needed.
 
-1. Run `make update-boskos-config` to update the boskos config.
+1. Run `make update-boskos-config` to update the Boskos config.
 
 ## Setting up Prow for a new repo (reviewers assignment and auto merge)
 
