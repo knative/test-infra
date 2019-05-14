@@ -19,6 +19,9 @@
 
 source $(dirname ${BASH_SOURCE})/library.sh
 
+# TODO: experimental, will remove
+set
+
 # Custom configuration of presubmit tests
 readonly DISABLE_MD_LINTING=${DISABLE_MD_LINTING:-0}
 readonly DISABLE_MD_LINK_CHECK=${DISABLE_MD_LINK_CHECK:-0}
