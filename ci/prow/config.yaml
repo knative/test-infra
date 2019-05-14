@@ -1690,6 +1690,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: RELEASE_VERSION
+        value: "0.4"
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -1732,6 +1734,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: RELEASE_VERSION
+        value: "0.5"
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -1774,6 +1778,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: RELEASE_VERSION
+        value: "0.6"
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -2263,6 +2269,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: RELEASE_VERSION
+        value: "0.5"
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -2587,6 +2595,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: RELEASE_VERSION
+        value: "0.5"
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -2801,6 +2811,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: RELEASE_VERSION
+        value: "0.5"
     volumes:
     - name: docker-graph
       emptyDir: {}
