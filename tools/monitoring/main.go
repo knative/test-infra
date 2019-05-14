@@ -32,7 +32,8 @@ func main() {
 
 	// register hello function to handle all requests
 	server := http.NewServeMux()
-	server.HandleFunc("/", hello)
+	server.HandleFunc("/hello", hello)
+	server.HandleFunc("/test-conn", testCloudSQLConn)
 
 	// start the web server on port and accept requests
 	log.Printf("Server listening on port %s", port)
@@ -46,4 +47,17 @@ func hello(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello, world!\n")
 	fmt.Fprintf(w, "Version: 1.0.0\n")
 	fmt.Fprintf(w, "Hostname: %s\n", host)
+}
+
+func testCloudSQLConn(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Serving request: %s", r.URL.Path)
+
+	log.Println("Testing mysql database connection.")
+
+	err := testConn(databaseConfig)
+	if err != nil {
+		fmt.Fprintf(w, "Failed to ping database: %v\n", err)
+	} else {
+		fmt.Fprintf(w, "Success\n")
+	}
 }

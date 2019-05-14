@@ -41,6 +41,23 @@ spec:
       containers:
       - name: monitoring-app
         image: gcr.io/knative-tests/test-infra/monitoring:latest
+        env:
+        - name: MONITORING_DB_NAME
+          value: monitoring
+        - name: MONITORING_DB_HOST
+          value: "127.0.0.1"
+        - name: MONITORING_DB_PORT
+          value: "3306"
+        - name: MONITORING_DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: monitoring-db-credentials
+              key: username
+        - name: MONITORING_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: monitoring-db-credentials
+              key: password
         # This setting makes nodes pull the docker image every time before
         # starting the pod. This is useful when debugging, but should be turned
         # off in production.
@@ -49,3 +66,19 @@ spec:
         ports:
         - name: http-server
           containerPort: 8080
+        volumeMounts:
+        - name: monitoring-db-credentials
+          mountPath: "/etc/monitoring-db-credentials"
+          readOnly: true
+      - name: cloudsql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.11
+        command: ["/cloud_sql_proxy",
+                  "-instances=knative-tests:us-central1:knative-monitoring=tcp:3306",
+                  ]
+        securityContext:
+          runAsUser: 2  # non-root user
+          allowPrivilegeEscalation: false
+      volumes:
+      - name: monitoring-db-credentials
+        secret:
+          secretName: monitoring-db-credentials

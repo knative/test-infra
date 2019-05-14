@@ -13,4 +13,5 @@
 # limitations under the License.
 
 all:
+	go get -u github.com/go-sql-driver/mysql
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build .
