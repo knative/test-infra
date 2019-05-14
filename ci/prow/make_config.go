@@ -1028,7 +1028,7 @@ func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
 	}
 }
 
-// parseSection generate the configs form a given section of the input yaml file.
+// parseSection generate the configs from a given section of the input yaml file.
 func parseSection(config yaml.MapSlice, title string, generate sectionGenerator, finalize sectionGenerator) {
 	for _, section := range config {
 		if section.Key != title {
