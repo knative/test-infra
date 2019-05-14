@@ -178,6 +178,9 @@ periodics:
     - branch-ci: true
       release: "0.5"
       cron: "45 8 * * *" # Run at 01:45PST every day (08:45 UTC)
+    - branch-ci: true
+      release: "0.6"
+      cron: "55 8 * * *" # Run at 01:55PST every day (08:55 UTC)
     - nightly: true
       cron: "31 8 * * *" # Run at 01:31PST every day (08:31 UTC)
       needs-dind: true
@@ -200,6 +203,9 @@ periodics:
     - branch-ci: true
       release: "0.5"
       cron: "40 8 * * *" # Run at 01:40PST every day (08:40 UTC)
+    - branch-ci: true
+      release: "0.6"
+      cron: "50 8 * * *" # Run at 01:50 PST every day (08:50 UTC)
     - nightly: true
       cron: "16 9 * * *" # Run at 02:16PST every day (09:16 UTC)
     - dot-release: true
@@ -213,6 +219,9 @@ periodics:
     - branch-ci: true
       release: "0.5"
       cron: "50 8 * * *" # Run at 01:50PST every day (08:50 UTC)
+    - branch-ci: true
+      release: "0.6"
+      cron: "0 9 * * *" # Run at 02:00 PST every day (09:00 UTC)
     - nightly: true
       cron: "16 9 * * *" # Run at 02:16PST every day (09:16 UTC)
     - dot-release: true
