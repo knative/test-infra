@@ -22,24 +22,9 @@
 
 1. Create a new GCP project and add it to [resources.yaml](./prow/boskos/resources.yaml).
 
-1. Make the following accounts editors of the project:
-   * `knative-productivity-admins@googlegroups.com`
-   * `knative-tests@appspot.gserviceaccount.com`
-   * `prow-job@knative-tests.iam.gserviceaccount.com`
-   * `prow-job@knative-nightly.iam.gserviceaccount.com`
-   * `prow-job@knative-releases.iam.gserviceaccount.com`
+1. Run `./ci/prow/boskos/permissions.sh <project_name>` to setup IAM permissions and APIs needed
 
-1. Ensure that there is at least one other owner of the project. A good choice
-   is one of the members of the `knative-productivity-admins@googlegroups.com`
-   group.
-
-1. Enable the Compute Engine API for the project (e.g., by visiting
-   <https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=XXXXXXXX>).
-
-1. Enable the Kubernetes Engine API for the project (e.g., by visiting
-   <https://console.cloud.google.com/apis/api/container.googleapis.com/overview?project=XXXXXXXX>).
-
-1. Run `make update-boskos-config`.
+1. Run `make update-boskos-config` to update the boskos config.
 
 ## Setting up Prow for a new repo (reviewers assignment and auto merge)
 
