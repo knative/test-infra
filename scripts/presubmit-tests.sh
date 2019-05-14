@@ -19,6 +19,8 @@
 
 source $(dirname ${BASH_SOURCE})/library.sh
 
+set # for discovering purpose, will remove
+
 # Custom configuration of presubmit tests
 readonly DISABLE_MD_LINTING=${DISABLE_MD_LINTING:-0}
 readonly DISABLE_MD_LINK_CHECK=${DISABLE_MD_LINK_CHECK:-0}
