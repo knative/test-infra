@@ -806,7 +806,6 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	jobNameSuffix := ""
 	jobTemplate := periodicTestJob
 	jobType := ""
-	version := ""
 	for i, item := range periodicConfig {
 		switch item.Key {
 		case "continuous":
@@ -888,7 +887,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		case "cron":
 			data.CronString = getString(item.Value)
 		case "release":
-			version = getString(item.Value)
+			version := getString(item.Value)
 			jobNameSuffix = version + "-" + jobNameSuffix
 			data.Base.RepoBranch = "release-" + version
 		case "webhook-apicoverage":
@@ -925,12 +924,10 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
 		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-central1")
 	}
-	if version != "" {
+	if data.Base.RepoBranch != "" {
 		// If it's a release version, add env var PULL_BASE_REF as ref name of the base branch.
-		// NOTE:
-		// This serves as a workaround since Prow does not have PULL_BASE_REF set for periodic jobs - https://github.com/kubernetes/test-infra/blob/abcd35c4dbfb0feadd09fc452b533222e3a16b29/prow/jobs.md.
-		// We are checking with Kubernetes test-infra team. If we can actually add this env var for all periodic jobs, we can safely delete it here.
-		addEnvToJob(&data.Base, "PULL_BASE_REF", "release-"+version)
+		// TODO(Fredy-Z): this serves as a workaround, see https://github.com/knative/test-infra/issues/780.
+		addEnvToJob(&data.Base, "PULL_BASE_REF", data.Base.RepoBranch)
 	}
 	addExtraEnvVarsToJob(&data.Base)
 	configureServiceAccountForJob(&data.Base)
