@@ -447,13 +447,12 @@ function get_knative_base_yaml_source() {
   local knative_base_yaml_source="https://storage.googleapis.com/knative-nightly/@/latest"
   local branch_name=""
   # For non-periodic jobs, we get the branch name from env var set by Prow - https://github.com/kubernetes/test-infra/blob/abcd35c4dbfb0feadd09fc452b533222e3a16b29/prow/jobs.md
-  if [[ -n "${PULL_BASE_REF}" ]]; then
-    branch_name="${PULL_BASE_REF}"
-  fi
-  # For periodic jobs, we only care if it's running against a release branch.
-  # If RELEASE_VERSION is set, branch_name will be the actual release version, like 0.5. Otherwise it will still be an empty string.
-  if [[ -n "${RELEASE_VERSION}" ]]; then
-    branch_name="${RELEASE_VERSION}"
+  # For peroidic jobs, we get the branch name from env var set on our Prow jobs.
+  # The two env vars have the same name to keep consistence. Check `make_config.go` for more information.
+  branch_name="${PULL_BASE_REF}"
+  if (( ! IS_PROW )); then
+    # If the test job is not running on Prow, we get the branch name directly via git command.
+    branch_name="$(git rev-parse --abbrev-ref HEAD)"
   fi
   # If it's a release branch, we should have a different knative_base_yaml_source.
   if [[ $branch_name =~ ^release-[0-9\.]+$ ]]; then

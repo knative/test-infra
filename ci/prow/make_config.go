@@ -926,7 +926,11 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-central1")
 	}
 	if version != "" {
-		addEnvToJob(&data.Base, "RELEASE_VERSION", version)
+		// If it's a release version, add env var PULL_BASE_REF as ref name of the base branch.
+		// NOTE:
+		// This serves as a workaround since Prow does not have PULL_BASE_REF set for periodic jobs - https://github.com/kubernetes/test-infra/blob/abcd35c4dbfb0feadd09fc452b533222e3a16b29/prow/jobs.md.
+		// We are checking with Kubernetes test-infra team. If we can actually add this env var for all periodic jobs, we can safely delete it here.
+		addEnvToJob(&data.Base, "PULL_BASE_REF", "release-"+version)
 	}
 	addExtraEnvVarsToJob(&data.Base)
 	configureServiceAccountForJob(&data.Base)
