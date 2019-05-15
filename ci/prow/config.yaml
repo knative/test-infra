@@ -2277,6 +2277,50 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+- cron: "55 8 * * *"
+  name: ci-knative-build-0.6-continuous
+  agent: kubernetes
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      args:
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=github.com/knative/build=release-0.6"
+      - "--root=/go/src"
+      - "--service-account=/etc/test-account/service-account.json"
+      - "--upload=gs://knative-prow/logs"
+      - "--timeout=180" # Avoid overrun
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.6
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
 - cron: "31 8 * * *"
   name: ci-knative-build-nightly-release
   agent: kubernetes
@@ -2603,6 +2647,50 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+- cron: "50 8 * * *"
+  name: ci-knative-eventing-0.6-continuous
+  agent: kubernetes
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      args:
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=github.com/knative/eventing=release-0.6"
+      - "--root=/go/src"
+      - "--service-account=/etc/test-account/service-account.json"
+      - "--upload=gs://knative-prow/logs"
+      - "--timeout=180" # Avoid overrun
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.6
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
 - cron: "16 9 * * *"
   name: ci-knative-eventing-nightly-release
   agent: kubernetes
@@ -2813,6 +2901,50 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.5
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "0 9 * * *"
+  name: ci-knative-eventing-sources-0.6-continuous
+  agent: kubernetes
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      args:
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=github.com/knative/eventing-sources=release-0.6"
+      - "--root=/go/src"
+      - "--service-account=/etc/test-account/service-account.json"
+      - "--upload=gs://knative-prow/logs"
+      - "--timeout=180" # Avoid overrun
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.6
     volumes:
     - name: docker-graph
       emptyDir: {}
