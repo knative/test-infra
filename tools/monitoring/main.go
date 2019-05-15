@@ -18,7 +18,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/knative/test-infra/tools/monitoring/yaml-handler"
 	"log"
 	"net/http"
 	"os"
@@ -51,7 +50,11 @@ func hello(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Version: 1.0.0\n")
 	fmt.Fprintf(w, "Hostname: %s\n", host)
 
-	yamlFile := yamlHandler.ParseYaml(yamlURL)
-	errorPatterns := yamlHandler.CollectErrorPatterns(yamlFile)
+	yamlFile, err := ParseYaml(yamlURL)
+	if err != nil {
+		log.Fatalf("Cannot parse yaml: %v", err)
+	}
+
+	errorPatterns := yamlFile.CollectErrorPatterns()
 	fmt.Fprintf(w, "error patterns collected from yaml:%s", errorPatterns)
 }

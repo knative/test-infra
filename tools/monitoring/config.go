@@ -14,57 +14,64 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// The yamlHandler is responsible for fetching, parsing config yaml file. It also allows user to
+// config is responsible for fetching, parsing config yaml file. It also allows user to
 // retrieve a particular record from the yaml.
 
-package yamlHandler
+package main
 
 import (
 	"fmt"
-	"github.com/pkg/errors"
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"regexp"
+
+	"gopkg.in/yaml.v2"
 )
 
-type AlertConditions struct {
+type alertConditions struct {
 	JobNameRegex string `yaml:"job-name-regex"`
 	Occurrences  int
-	JobsAffected string `yaml:"jobs-affected"`
-	PrsAffected  string `yaml:"prs-affected"`
+	JobsAffected int `yaml:"jobs-affected"`
+	PrsAffected  int `yaml:"prs-affected"`
 	Period       int
 }
 
-type PatternSpec struct {
+type patternSpec struct {
 	ErrorPattern string `yaml:"error-pattern"`
 	Hint         string
-	Alerts       []AlertConditions
+	Alerts       []alertConditions
 }
 
-type YamlFile struct {
-	Spec []PatternSpec `yaml:"spec"`
+// Config stores all information read from the config yaml
+type Config struct {
+	Spec []patternSpec `yaml:"spec"`
 }
 
-type Output struct {
+// SelectedConfig stores the recovery hint as well as alert conditions for a selected error pattern
+// and qualifying job name
+type SelectedConfig struct {
 	Hint         string
 	Occurrences  int
-	JobsAffected string
-	PrsAffected  string
+	JobsAffected int
+	PrsAffected  int
 	Period       int
 }
 
-//GetSpec gets the spec for a particular error pattern and a matching job name pattern
-func GetSpec(f YamlFile, pattern, jobName string) (output Output, noMatchError error) {
-	noMatchError = errors.New(fmt.Sprintf("No spec found for pattern[%s] and jobName[%s]", pattern, jobName))
+// Select gets the spec for a particular error pattern and a matching job name pattern
+func (f Config) Select(pattern, jobName string) (SelectedConfig, error) {
+	output := SelectedConfig{}
+	noMatchError := fmt.Errorf("no spec found for pattern[%s] and jobName[%s]",
+		pattern, jobName)
 	for _, patternSpec := range f.Spec {
 		if pattern == patternSpec.ErrorPattern {
-			noMatchError = errors.New(fmt.Sprintf("Spec found for pattern[%s], but no match for job name[%s]", pattern, jobName))
+			noMatchError = fmt.Errorf("spec found for pattern[%s], but no match for job name[%s]", pattern, jobName)
 			output.Hint = patternSpec.Hint
 			for _, alertCondition := range patternSpec.Alerts {
 				matched, err := regexp.MatchString(alertCondition.JobNameRegex, jobName)
 				if err != nil {
+					log.Printf("Error matching pattern '%s' on string '%s': %v",
+						alertCondition.JobNameRegex, jobName, err)
 					continue
 				}
 				if matched {
@@ -82,32 +89,32 @@ func GetSpec(f YamlFile, pattern, jobName string) (output Output, noMatchError e
 	return output, noMatchError
 }
 
-func getFileBytes(url string) []byte {
+func getFileBytes(url string) ([]byte, error) {
 	res, err := http.Get(url)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	content, err := ioutil.ReadAll(res.Body)
-	res.Body.Close()
-	if err != nil {
-		log.Fatal(err)
-	}
-	return content
+	defer res.Body.Close()
+	return content, nil
 }
 
-//ParseYaml reads the yaml text and convert it to the YamlFile struct defined
-func ParseYaml(url string) YamlFile {
-	content := getFileBytes(url)
-	file := YamlFile{}
+// ParseYaml reads the yaml text and converts it to the Config struct defined
+func ParseYaml(url string) (Config, error) {
+	file := Config{}
+	content, err := getFileBytes(url)
+	if err != nil {
+		return file, nil
+	}
 
 	if err := yaml.Unmarshal(content, &file); err != nil {
-		log.Fatalf("Cannot parse config %q: %v", url, err)
+		return file, fmt.Errorf("Cannot parse config %q: %v", url, err)
 	}
-	return file
+	return file, nil
 }
 
-//CollectErrorPatterns collects and returns all error patterns in the yaml file
-func CollectErrorPatterns(f YamlFile) []string {
+// CollectErrorPatterns collects and returns all error patterns in the yaml file
+func (f Config) CollectErrorPatterns() []string {
 	var patterns []string
 	for _, patternSpec := range f.Spec {
 		patterns = append(patterns, patternSpec.ErrorPattern)
