@@ -23,8 +23,7 @@ import (
 	"os"
 )
 
-// TODO: replace this with permanent url (or a function) that returns the yaml from test-infra master branch
-const yamlURL = "https://raw.githubusercontent.com/steuhs/test-infra-1/7282b8924d8e2f6f68fe3d34b33ec52a804790fb/tools/monitoring/config-getter/sample.yaml"
+const yamlURL = "https://raw.githubusercontent.com/knative/test-infra/master/tools/monitoring/sample.yaml"
 
 func main() {
 	// use PORT environment variable, or default to 8080

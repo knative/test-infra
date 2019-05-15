@@ -29,7 +29,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-type alertConditions struct {
+type alertCondition struct {
 	JobNameRegex string `yaml:"job-name-regex"`
 	Occurrences  int
 	JobsAffected int `yaml:"jobs-affected"`
@@ -40,7 +40,7 @@ type alertConditions struct {
 type patternSpec struct {
 	ErrorPattern string `yaml:"error-pattern"`
 	Hint         string
-	Alerts       []alertConditions
+	Alerts       []alertCondition
 }
 
 // Config stores all information read from the config yaml
@@ -89,14 +89,22 @@ func (f Config) Select(pattern, jobName string) (SelectedConfig, error) {
 	return output, noMatchError
 }
 
+// CollectErrorPatterns collects and returns all error patterns in the yaml file
+func (f Config) CollectErrorPatterns() []string {
+	var patterns []string
+	for _, patternSpec := range f.Spec {
+		patterns = append(patterns, patternSpec.ErrorPattern)
+	}
+	return patterns
+}
+
 func getFileBytes(url string) ([]byte, error) {
 	res, err := http.Get(url)
 	if err != nil {
 		return nil, err
 	}
-	content, err := ioutil.ReadAll(res.Body)
 	defer res.Body.Close()
-	return content, nil
+	return ioutil.ReadAll(res.Body)
 }
 
 // ParseYaml reads the yaml text and converts it to the Config struct defined
@@ -108,16 +116,7 @@ func ParseYaml(url string) (Config, error) {
 	}
 
 	if err := yaml.Unmarshal(content, &file); err != nil {
-		return file, fmt.Errorf("Cannot parse config %q: %v", url, err)
+		return file, fmt.Errorf("cannot parse config %s: %v", url, err)
 	}
 	return file, nil
-}
-
-// CollectErrorPatterns collects and returns all error patterns in the yaml file
-func (f Config) CollectErrorPatterns() []string {
-	var patterns []string
-	for _, patternSpec := range f.Spec {
-		patterns = append(patterns, patternSpec.ErrorPattern)
-	}
-	return patterns
 }
