@@ -112,7 +112,7 @@ func ParseYaml(url string) (Config, error) {
 	file := Config{}
 	content, err := getFileBytes(url)
 	if err != nil {
-		return file, nil
+		return file, err
 	}
 
 	if err := yaml.Unmarshal(content, &file); err != nil {
