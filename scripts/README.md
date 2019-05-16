@@ -112,7 +112,7 @@ This is a helper script for Knative E2E test scripts. To use it:
      cluster creation in case of stockout. Defaults to `us-west1 us-east1`.
    - `E2E_CLUSTER_ZONE`: Cluster zone (e.g., `a`), defaults to none (i.e. use a regional
      cluster).
-   - `E2E_CLUSTER_BACKUP_ZONES`: Space-separated list of zones to retry test cluster 
+   - `E2E_CLUSTER_BACKUP_ZONES`: Space-separated list of zones to retry test cluster
      creation in case of stockout. If defined, `E2E_CLUSTER_BACKUP_REGIONS` will be
      ignored thus it defaults to none.
    - `E2E_CLUSTER_MACHINE`: Cluster node machine type, defaults to `n1-standard-4}`.
