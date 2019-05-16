@@ -17,13 +17,31 @@ limitations under the License.
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+
+	"io/ioutil"
 )
 
+var dbConfig DBConfig
+
 func main() {
+	var err error
+
+	fDbUser := flag.String("monitoring-database-user", "",
+		"Text file containing the user name of to connect to the monitoring database")
+	fDbPass := flag.String("monitoring-database-password", "",
+		"Text file containing the password to connect to the monitoring database")
+	flag.Parse()
+
+	dbConfig, err = configureMonitoringDatabase(*fDbUser, *fDbPass)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// use PORT environment variable, or default to 8080
 	port := "8080"
 	if fromEnv := os.Getenv("PORT"); fromEnv != "" {
@@ -37,7 +55,7 @@ func main() {
 
 	// start the web server on port and accept requests
 	log.Printf("Server listening on port %s", port)
-	err := http.ListenAndServe(":"+port, server)
+	err = http.ListenAndServe(":"+port, server)
 	log.Fatal(err)
 }
 
@@ -51,13 +69,37 @@ func hello(w http.ResponseWriter, r *http.Request) {
 
 func testCloudSQLConn(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Serving request: %s", r.URL.Path)
-
 	log.Println("Testing mysql database connection.")
 
-	err := testConn(databaseConfig)
+	conn, err := getConn(dbConfig)
 	if err != nil {
 		fmt.Fprintf(w, "Failed to ping database: %v\n", err)
-	} else {
-		fmt.Fprintf(w, "Success\n")
+		return
 	}
+	defer conn.Close()
+
+	fmt.Fprintf(w, "Success\n")
+}
+
+func configureMonitoringDatabase(fUser string, fPass string) (DBConfig, error) {
+	var config DBConfig
+
+	user, err := ioutil.ReadFile(fUser)
+	if err != nil {
+		return config, err
+	}
+
+	pass, err := ioutil.ReadFile(fPass)
+	if err != nil {
+		return config, err
+	}
+
+	config = DBConfig{
+		Username:     string(user),
+		Password:     string(pass),
+		DatabaseName: os.Getenv("MONITORING_DB_NAME"),
+		Instance:     os.Getenv("MONITORING_DB_INSTANCE"),
+	}
+
+	return config, nil
 }

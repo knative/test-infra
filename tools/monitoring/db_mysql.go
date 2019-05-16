@@ -26,26 +26,15 @@ import (
 
 const driverName = "mysql"
 
-// MySQLConfig is the configuration used to connection to a MySQL database
-type MySQLConfig struct {
-	DatabaseName string
+// DBConfig is the configuration used to connection to database
+type DBConfig struct {
 	Username     string
 	Password     string
-	Host         string
-	Port         int
+	Instance     string
+	DatabaseName string
 }
 
-func testConn(config MySQLConfig) error {
-	conn, err := getConn(config)
-	if err != nil {
-		return err
-	}
-	defer conn.Close()
-
-	return nil
-}
-
-func getConn(config MySQLConfig) (*sql.DB, error) {
+func getConn(config DBConfig) (*sql.DB, error) {
 	conn, err := sql.Open(driverName, config.dataStoreName(config.DatabaseName))
 	if err != nil {
 		return nil, fmt.Errorf("mysql: could not get a connection: %v", err)
@@ -59,7 +48,7 @@ func getConn(config MySQLConfig) (*sql.DB, error) {
 	return conn, nil
 }
 
-func (c MySQLConfig) dataStoreName(databaseName string) string {
+func (c DBConfig) dataStoreName(dbName string) string {
 	var cred string
 	// [username[:password]@]
 	if c.Username != "" {
@@ -70,5 +59,5 @@ func (c MySQLConfig) dataStoreName(databaseName string) string {
 		cred = cred + "@"
 	}
 
-	return fmt.Sprintf("%stcp([%s]:%d)/%s", cred, c.Host, c.Port, databaseName)
+	return fmt.Sprintf("%sunix(%s)/%s", cred, "/cloudsql/"+c.Instance, dbName)
 }
