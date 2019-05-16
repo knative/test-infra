@@ -157,30 +157,30 @@ function prepare_auto_release() {
   TAG_RELEASE=1
   PUBLISH_RELEASE=1
 
-  git fetch --all
+  git fetch --all || abort "error fetching branches/tags from remote"
   local tags="$(git tag | cut -d 'v' -f2 | cut -d '.' -f1-2 | sort | uniq)"
   local branches="$( { (git branch -r | grep upstream/release-) ; (git branch | grep release-); } | cut -d '-' -f2 | sort | uniq)"
-  RELEASE_VERSION=""
 
-  [[ -n "${tags}" ]] || abort "cannot obtain release tags for the repository"
-  [[ -n "${branches}" ]] || abort "cannot obtain release branches for the repository"
+  echo "Versions released (from tags): [" ${tags} "]"
+  echo "Versions released (from branches): [" ${branches} "]"
 
-  for i in $branches; do
-    RELEASE_NUMBER=$i
-    for j in $tags; do
-      if [[ "$i" == "$j" ]]; then
-        RELEASE_NUMBER=""
+  local release_number=""
+  for i in ${branches}; do
+    release_number="${i}"
+    for j in ${tags}; do
+      if [[ "${i}" == "${j}" ]]; then
+        release_number=""
       fi
     done
   done
 
-  if [ -z "$RELEASE_NUMBER" ]; then
+  if [[ -z "${release_number}" ]]; then
     echo "*** No new release will be generated, as no new branches exist"
     exit  0
   fi
 
-  RELEASE_VERSION="${RELEASE_NUMBER}.0"
-  RELEASE_BRANCH="release-${RELEASE_NUMBER}"
+  RELEASE_VERSION="${release_number}.0"
+  RELEASE_BRANCH="release-${release_number}"
   echo "Will create release ${RELEASE_VERSION} from branch ${RELEASE_BRANCH}"
   # If --release-notes not used, add a placeholder
   if [[ -z "${RELEASE_NOTES}" ]]; then
@@ -513,13 +513,12 @@ function main() {
     git checkout upstream/${RELEASE_BRANCH} || abort "cannot checkout branch ${RELEASE_BRANCH}"
   fi
 
-  set -o errexit
-  set -o pipefail
-
   if [[ -n "${FROM_NIGHTLY_RELEASE}" ]]; then
     build_from_nightly_release
   else
+    set -e -o pipefail
     build_from_source
+    set +e +o pipefail
   fi
   # TODO(adrcunha): Remove once all repos use ARTIFACTS_TO_PUBLISH.
   [[ -z "${ARTIFACTS_TO_PUBLISH}" ]] && ARTIFACTS_TO_PUBLISH="${YAMLS_TO_PUBLISH}"
