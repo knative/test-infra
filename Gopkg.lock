@@ -42,6 +42,14 @@
   version = "v1.0.0"
 
 [[projects]]
+  digest = "1:13e9a236e56e18fecb73f5b2f2eb7f60060a1a9bc27e5a7328ab22e275ecb63e"
+  name = "github.com/go-sql-driver/mysql"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "72cd26f257d44c1114970e19afddcd812016007e"
+  version = "v1.4.1"
+
+[[projects]]
   digest = "1:acaf854c7e302a7e13a665d00e6579fb72ead2ecd4932286deeac94ad3070fe7"
   name = "github.com/gobuffalo/envy"
   packages = ["."]
@@ -103,13 +111,6 @@
   pruneopts = "NUT"
   revision = "3af367b6b30c263d47e8895973edcca9a49cf029"
   version = "v0.2.0"
-
-[[projects]]
-  digest = "1:5ae77b6deaf1be337861bb792537719511f7372cb3b05905b47a45730d85f122"
-  name = "github.com/google/go-containerregistry"
-  packages = ["pkg/name"]
-  pruneopts = "NUT"
-  revision = "15b751c1c044fd2c31a13c46d9e97600a88eb8cb"
 
 [[projects]]
   digest = "1:f4f203acd8b11b8747bdcd91696a01dbc95ccb9e2ca2db6abf81c3a4f5e950ce"
@@ -217,27 +218,14 @@
   version = "v1.1.5"
 
 [[projects]]
-  digest = "1:345bbba667abadd6263391c915251ede8d9fa6f6852839c60bb6738b6122b89c"
-  name = "github.com/knative/build"
-  packages = [
-    "pkg/apis/build",
-    "pkg/apis/build/v1alpha1",
-  ]
-  pruneopts = "NUT"
-  revision = "94859753e2c6724df2be86f6a254f810895fa3eb"
-  version = "v0.2.0"
-
-[[projects]]
   branch = "master"
-  digest = "1:4f3dc813fd0a202636a74a24b07a04a2713583f434e038ac972734cdd919fb06"
+  digest = "1:80b91de397269dae1dc54e3cea73316da6d22091c58cd59ea8195c60f70aedd5"
   name = "github.com/knative/pkg"
   packages = [
     "apis",
     "apis/duck",
-    "apis/duck/v1alpha1",
     "changeset",
     "configmap",
-    "kmeta",
     "kmp",
     "logging",
     "logging/logkey",
@@ -247,20 +235,6 @@
   ]
   pruneopts = "NUT"
   revision = "684620ff81ae137be5cda634a03831b373adc4eb"
-
-[[projects]]
-  branch = "master"
-  digest = "1:69d42740592a4d7a8f7169ac02bd980dc1000eafb1ffc3b2e522a930a64dff8d"
-  name = "github.com/knative/serving"
-  packages = [
-    "pkg/apis/autoscaling",
-    "pkg/apis/networking",
-    "pkg/apis/networking/v1alpha1",
-    "pkg/apis/serving",
-    "pkg/apis/serving/v1alpha1",
-  ]
-  pruneopts = "NUT"
-  revision = "899424ba28c75dc0c37f40db32f4ce6166dd9fee"
 
 [[projects]]
   digest = "1:56dbf15e091bf7926cb33a57cb6bdfc658fc6d3498d2f76f10a97ce7856f1fde"
@@ -508,10 +482,11 @@
   revision = "faade3cbb06a30202f2da53a8a5e3c4afe60b0c2"
 
 [[projects]]
-  digest = "1:b63b351b57e64ae8aec1af030dc5e74a2676fcda62102f006ae4411fac1b04c8"
+  digest = "1:b735a19aee32fa73622609180b2d33a96e644fe38041efae4ae8179b1791f8e5"
   name = "google.golang.org/appengine"
   packages = [
     ".",
+    "cloudsql",
     "internal",
     "internal/app_identity",
     "internal/base",
@@ -831,6 +806,7 @@
   analyzer-version = 1
   input-imports = [
     "cloud.google.com/go/storage",
+    "github.com/go-sql-driver/mysql",
     "github.com/google/go-github/github",
     "github.com/google/licenseclassifier",
     "github.com/knative/pkg/configmap",
@@ -838,7 +814,6 @@
     "github.com/knative/pkg/test/logging",
     "github.com/knative/pkg/test/monitoring",
     "github.com/knative/pkg/webhook",
-    "github.com/knative/serving/pkg/apis/serving/v1alpha1",
     "github.com/markbates/inflect",
     "github.com/prometheus/client_golang/api",
     "github.com/prometheus/client_golang/api/prometheus/v1",
