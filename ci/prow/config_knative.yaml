@@ -192,6 +192,14 @@ periodics:
     - latency: true
       cron: "5 8 * * *" # Run at 01:05PST every day (08:05 UTC)
 
+  knative/client:
+    - nightly: true
+      cron: "11 8 * * *" # Run at 01:11PST every day (08:11 UTC)
+    - dot-release: true
+      cron: "11 9 * * 2" # Run at 02:11PST every Tuesday (09:11 UTC)
+    - auto-release: true
+      cron: "13 */2 * * *" # Run every two hours and thirteen minutes
+
   knative/docs:
     - continuous: true
       needs-dind: true
