@@ -37,12 +37,16 @@ for repo in *; do
   git remote update -p
   git pull
   git checkout -b ${branch} upstream/master
-  dep ensure -update github.com/knative/test-infra
-  ./hack/update-deps.sh
-  [[ -z "$(git diff)" ]] && continue
-  git commit -a -m "Update test-infra to the latest version"
-  git push -u origin ${branch}
-  echo -e "\nCheck the PR created above, and make changes if necessary"
+  if [[ -f "Gopkg.lock" ]]; then
+    dep ensure -update github.com/knative/test-infra
+    ./hack/update-deps.sh
+    [[ -z "$(git diff)" ]] && continue
+    git commit -a -m "Update test-infra to the latest version"
+    git push -u origin ${branch}
+    echo -e "\nCheck the PR created above, and make changes if necessary"
+  else
+    echo -e "\nGopkg.lock not found, skip updating"
+  fi
   echo -n "Hit [ENTER] to continue..."
   read
   cd ..
