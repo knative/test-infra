@@ -1,0 +1,14 @@
+---
+projects:
+  knative:
+    order: 1
+    name: Knative
+    status: "-"
+    command_line:
+      - Knative
+    start_date: 2018-01-15T00:00:00Z
+    join_date: null
+    psql_db: knative
+    main_repo: 'knative/serving'
+    annotation_regexp: '^\d+\.\d+\.\d+$'
+    files_skip_pattern: ''

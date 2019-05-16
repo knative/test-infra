@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: devstats-env
+  namespace: default
+data:
+  PG_HOST: "postgres-db-0.postgres-db.default.svc.cluster.local"
+  PG_DB: "knative"
+  PG_PASS_ROLE: "ro_user"
+  PGHOST: "postgres-db-0.postgres-db.default.svc.cluster.local"
+  PGDATABASE: "knative"
+  PGUSER: "gha_admin"
+  GHA2DB_PROJECT: "knative"
+  GHA2DB_REPOS_DIR: "/mount/data/devstats_repos"
+

@@ -1,0 +1,65 @@
+---
+# Create a PVC to use for the home directory of the CLI. This way data will be persistent across restarts.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cli-pvc
+  namespace: default
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: devstats-cli
+  namespace: default
+  labels:
+    app: devstats-cli
+spec:
+  replicas: 1
+  serviceName: postgres-db
+  selector:
+    matchLabels:
+      app: devstats-cli
+  template:
+    metadata:
+      labels:
+        app: devstats-cli
+    spec:
+      containers:
+      - name: devstats-image
+        image: gcr.io/knative-tests/devstats:latest
+        imagePullPolicy: Always
+        command: ["tail", "-f", "/dev/null",]
+        envFrom:
+        - configMapRef:
+            name: devstats-env
+        env:
+        - name: PG_PASS
+          valueFrom:
+            secretKeyRef:
+              name: postgres-pass
+              key: pg_postgres_password
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-pass
+              key: pg_postgres_password
+        volumeMounts:
+        - mountPath: "/home"
+          name: "cli-pvc"
+        - mountPath: "/mount/data"
+          name: "nfs"
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - name: "cli-pvc"
+        persistentVolumeClaim:
+          claimName: "cli-pvc"
+      - name: "nfs"
+        persistentVolumeClaim:
+          claimName: "devstats-claim"
+

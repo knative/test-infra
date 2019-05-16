@@ -1,0 +1,43 @@
+# cron job for populating the database hourly
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: devstats-cron
+  namespace: default
+spec:
+  schedule: "@hourly"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: devstats-cron
+            image: gcr.io/knative-tests/devstats:latest
+            imagePullPolicy: Always
+            workingDir: "/mount/data/src/test-infra/devstats"
+            command: ["/bin/sh","-c"]
+            args: ["rm -rf /etc/gha2db; ln -sf /mount/data/src/test-infra/devstats /etc/gha2db; git pull origin master; ./devstats"]
+            envFrom:
+            - configMapRef:
+                name: devstats-env
+            env:
+            - name: PG_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-pass
+                  key: pg_postgres_password
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-pass
+                  key: pg_postgres_password
+            volumeMounts:
+            - mountPath: "/mount/data"
+              name: "nfs"
+          terminationGracePeriodSeconds: 10
+          volumes:
+          - name: "nfs"
+            persistentVolumeClaim:
+              claimName: "devstats-claim"
+

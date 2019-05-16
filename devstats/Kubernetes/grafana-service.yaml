@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana-service
+  namespace: default
+spec:
+  ports:
+  - protocol: "TCP"
+    port: 3000
+  selector:
+    app: grafana
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+      - image: grafana/grafana:master
+        imagePullPolicy: Always
+        name: grafana
+        ports:
+        - containerPort: 3000
+        env:
+        - name: GF_PATHS_DATA
+          value: "/mount/data/grafana"
+        - name: GF_PATHS_PROVISIONING
+          value: "/mount/data/src/test-infra/devstats/grafana/provisioning"
+        - name: GF_AUTH_ANONYMOUS_ENABLED
+          value: "true"
+        - name: GF_AUTH_ANONYMOUS_ORG_NAME
+          value: "Main Org."
+        - name: GF_AUTH_ANONYMOUS_ORG_ROLE
+          value: "Viewer"
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: grafana-pass
+              key: grafana_admin_password
+        - name: PG_PASS
+          valueFrom:
+            secretKeyRef:
+              name: postgres-pass
+              key: pg_postgres_password
+        volumeMounts:
+        - mountPath: "/mount/data"
+          name: "nfs"
+      volumes:
+      - name: "nfs"
+        persistentVolumeClaim:
+          claimName: "devstats-claim"
