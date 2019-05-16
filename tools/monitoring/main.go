@@ -23,6 +23,8 @@ import (
 	"os"
 )
 
+const yamlURL = "https://raw.githubusercontent.com/knative/test-infra/master/tools/monitoring/sample.yaml"
+
 func main() {
 	// use PORT environment variable, or default to 8080
 	port := "8080"
@@ -46,4 +48,12 @@ func hello(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello, world!\n")
 	fmt.Fprintf(w, "Version: 1.0.0\n")
 	fmt.Fprintf(w, "Hostname: %s\n", host)
+
+	yamlFile, err := ParseYaml(yamlURL)
+	if err != nil {
+		log.Fatalf("Cannot parse yaml: %v", err)
+	}
+
+	errorPatterns := yamlFile.CollectErrorPatterns()
+	fmt.Fprintf(w, "error patterns collected from yaml:%s", errorPatterns)
 }
