@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package main
+package mysql
 
 import (
 	"database/sql"
@@ -34,15 +34,25 @@ type DBConfig struct {
 	DatabaseName string
 }
 
-func getConn(config DBConfig) (*sql.DB, error) {
-	conn, err := sql.Open(driverName, config.dataStoreName(config.DatabaseName))
+func (c DBConfig) TestConn() error {
+	conn, err := c.getConn()
 	if err != nil {
-		return nil, fmt.Errorf("mysql: could not get a connection: %v", err)
+		return err
+	}
+	defer conn.Close()
+
+	return nil
+}
+
+func (c DBConfig) getConn() (*sql.DB, error) {
+	conn, err := sql.Open(driverName, c.dataStoreName(c.DatabaseName))
+	if err != nil {
+		return nil, fmt.Errorf("could not get a connection: %v", err)
 	}
 
 	if conn.Ping() == driver.ErrBadConn {
-		return nil, fmt.Errorf("mysql: could not connect to the datastore. " +
-			"could be bad address, or this address is not whitelisted for access.\n")
+		return nil, fmt.Errorf("could not connect to the datastore. " +
+			"could be bad address, or this address is inaccessible from your host.\n")
 	}
 
 	return conn, nil
@@ -51,9 +61,9 @@ func getConn(config DBConfig) (*sql.DB, error) {
 func (c DBConfig) dataStoreName(dbName string) string {
 	var cred string
 	// [username[:password]@]
-	if c.Username != "" {
+	if len(c.Username) > 0 {
 		cred = c.Username
-		if c.Password != "" {
+		if len(c.Password) > 0 {
 			cred = cred + ":" + c.Password
 		}
 		cred = cred + "@"

@@ -19,27 +19,30 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 
-	"io/ioutil"
+	"github.com/knative/test-infra/tools/monitoring/mysql"
 )
 
-var dbConfig DBConfig
+var dbConfig mysql.DBConfig
 
-const yamlURL = "https://raw.githubusercontent.com/knative/test-infra/master/tools/monitoring/sample.yaml"
+const (
+	yamlURL              = "https://raw.githubusercontent.com/knative/test-infra/master/tools/monitoring/sample.yaml"
+	dbUserSecretFile     = "/secrets/cloudsql/monitoringdb/username"
+	dbPasswordSecretFile = "/secrets/cloudsql/monitoringdb/password"
+)
 
 func main() {
 	var err error
 
-	fDbUser := flag.String("monitoring-database-user", "",
-		"Text file containing the user name of to connect to the monitoring database")
-	fDbPass := flag.String("monitoring-database-password", "",
-		"Text file containing the password to connect to the monitoring database")
+	dbName := flag.String("database-name", "", "The monitoring database name")
+	dbInst := flag.String("database-instance", "", "The monitoring CloudSQL instance connection name")
 	flag.Parse()
 
-	dbConfig, err = configureMonitoringDatabase(*fDbUser, *fDbPass)
+	dbConfig, err = configureMonitoringDatabase(*dbName, *dbInst)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -81,34 +84,32 @@ func testCloudSQLConn(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Serving request: %s", r.URL.Path)
 	log.Println("Testing mysql database connection.")
 
-	conn, err := getConn(dbConfig)
+	err := dbConfig.TestConn()
 	if err != nil {
-		fmt.Fprintf(w, "Failed to ping database: %v\n", err)
+		fmt.Fprintf(w, "Failed to ping the database %v", err)
 		return
 	}
-	defer conn.Close()
-
 	fmt.Fprintf(w, "Success\n")
 }
 
-func configureMonitoringDatabase(fUser string, fPass string) (DBConfig, error) {
-	var config DBConfig
+func configureMonitoringDatabase(dbName string, dbInst string) (mysql.DBConfig, error) {
+	var config mysql.DBConfig
 
-	user, err := ioutil.ReadFile(fUser)
+	user, err := ioutil.ReadFile(dbUserSecretFile)
 	if err != nil {
 		return config, err
 	}
 
-	pass, err := ioutil.ReadFile(fPass)
+	pass, err := ioutil.ReadFile(dbPasswordSecretFile)
 	if err != nil {
 		return config, err
 	}
 
-	config = DBConfig{
+	config = mysql.DBConfig{
 		Username:     string(user),
 		Password:     string(pass),
-		DatabaseName: os.Getenv("MONITORING_DB_NAME"),
-		Instance:     os.Getenv("MONITORING_DB_INSTANCE"),
+		DatabaseName: dbName,
+		Instance:     dbInst,
 	}
 
 	return config, nil

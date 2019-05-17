@@ -42,13 +42,8 @@ spec:
       - name: monitoring-app
         image: gcr.io/knative-tests/test-infra/monitoring:latest
         command: ["/monitoring",
-                  "--monitoring-database-user=/secrets/cloudsql/monitoringdb/username",
-                  "--monitoring-database-password=/secrets/cloudsql/monitoringdb/password"]
-        env:
-        - name: MONITORING_DB_NAME
-          value: monitoring
-        - name: MONITORING_DB_INSTANCE
-          value: knative-tests:us-central1:knative-monitoring
+                  "--database-name=monitoring",
+                  "--database-instance='knative-tests:us-central1:knative-monitoring'"]
         # This setting makes nodes pull the docker image every time before
         # starting the pod. This is useful when debugging, but should be turned
         # off in production.
