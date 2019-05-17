@@ -80,7 +80,7 @@ func createNewIssue(fgi *GithubIssue, title, body, testStat string) (*github.Iss
 }
 
 func createRepoData(passed, flaky, failed, notenoughdata int, startTime int64) *RepoData {
-	config := &JobConfig{
+	config := JobConfig{
 		Repo: fakeRepo,
 	}
 	tss := map[string]*TestStat{}
