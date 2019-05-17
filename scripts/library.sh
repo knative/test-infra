@@ -44,7 +44,7 @@ case "${OSTYPE}" in
   darwin*) IS_OSX=1 ;;
   linux*) IS_LINUX=1 ;;
   msys*) IS_WINDOWS=1 ;;
-  *) echo "** Internal error in library.sh, unknown OS" ; exit 1 ;;
+  *) echo "** Internal error in library.sh, unknown OS '${OSTYPE}'" ; exit 1 ;;
 esac
 readonly IS_LINUX
 readonly IS_OSX
