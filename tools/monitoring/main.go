@@ -17,6 +17,7 @@ limitations under the License.
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -24,6 +25,9 @@ import (
 	"net/http"
 	"os"
 
+	mail "cloud.google.com/go/mail/apiv1alpha3"
+
+	"github.com/knative/test-infra/tools/monitoring/cloudmail"
 	"github.com/knative/test-infra/tools/monitoring/config"
 	"github.com/knative/test-infra/tools/monitoring/mysql"
 )
@@ -34,7 +38,13 @@ const (
 	yamlURL              = "https://raw.githubusercontent.com/knative/test-infra/master/tools/monitoring/sample.yaml"
 	dbUserSecretFile     = "/secrets/cloudsql/monitoringdb/username"
 	dbPasswordSecretFile = "/secrets/cloudsql/monitoringdb/password"
+
+	// TODO(yt3liu): Replace mail domain with the one created in mail setup
+	mailDomain = "REPLACE-WITH-DOMAIN-NAME-CREATED-IN-MAIL-SETUP"
+	alertAddr  = "knative-productivity-oncall@googlegroups.com"
 )
+
+var mailClient *mail.CloudMailClient
 
 func main() {
 	var err error
@@ -48,6 +58,12 @@ func main() {
 		log.Fatal(err)
 	}
 
+	ctx := context.Background()
+	mailClient, err = mail.NewCloudMailClient(ctx)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Failed to create Cloud Mail client: %s", err)
+	}
+
 	// use PORT environment variable, or default to 8080
 	port := "8080"
 	if fromEnv := os.Getenv("PORT"); fromEnv != "" {
@@ -58,6 +74,7 @@ func main() {
 	server := http.NewServeMux()
 	server.HandleFunc("/hello", hello)
 	server.HandleFunc("/test-conn", testCloudSQLConn)
+	server.HandleFunc("/mail", testSendMail)
 
 	// start the web server on port and accept requests
 	log.Printf("Server listening on port %s", port)
@@ -115,4 +132,18 @@ func configureMonitoringDatabase(dbName string, dbInst string) (mysql.DBConfig, 
 	}
 
 	return config, nil
+}
+
+func testSendMail(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Serving request: %s", r.URL.Path)
+	log.Println("Testing sending an email.")
+
+	ctx := context.Background()
+	err := cloudmail.SendTestMessage(ctx, mailClient, mailDomain, alertAddr)
+	if err != nil {
+		fmt.Fprintf(w, "Failed to send mail: %v", err)
+		return
+	}
+
+	fmt.Fprintf(w, "Mail sent.")
 }

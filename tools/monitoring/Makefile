@@ -14,5 +14,19 @@
 
 all:
 	go get -u github.com/go-sql-driver/mysql
+	go get -u github.com/golang/protobuf/proto
+	go get -u github.com/golang/protobuf/ptypes/empty
+	go get -u github.com/golang/protobuf/ptypes/timestamp
+	go get -u github.com/googleapis/gax-go/v2
+
+	go get -u google.golang.org/api/iterator
+	go get -u google.golang.org/api/option
+	go get -u google.golang.org/api/transport
+	go get -u google.golang.org/grpc
+	go get -u google.golang.org/grpc/codes
+	go get -u google.golang.org/grpc/metadata
+	go get -u google.golang.org/grpc/status
+
 	go get -u gopkg.in/yaml.v2
+
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build .

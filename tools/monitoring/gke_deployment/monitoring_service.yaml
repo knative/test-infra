@@ -44,6 +44,9 @@ spec:
         command: ["/monitoring",
                   "--database-name=monitoring",
                   "--database-instance='knative-tests:us-central1:knative-monitoring'"]
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /secrets/google-app-credential/google-app-credential.json
         # This setting makes nodes pull the docker image every time before
         # starting the pod. This is useful when debugging, but should be turned
         # off in production.
@@ -56,7 +59,13 @@ spec:
         - name: monitoring-db-credentials
           mountPath: /secrets/cloudsql/monitoringdb
           readOnly: true
+        - name: google-app-credential
+          mountPath: /secrets/google-app-credential
+          readOnly: true
       volumes:
       - name: monitoring-db-credentials
         secret:
           secretName: monitoring-db-credentials
+      - name: google-app-credential
+        secret:
+          secretName: google-app-credential
