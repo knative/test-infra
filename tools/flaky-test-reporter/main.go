@@ -64,7 +64,7 @@ func main() {
 
 	for _, jc := range jobConfigs {
 		log.Printf("collecting results for repo '%s'\n", jc.Repo)
-		rd, err := collectTestResultsForRepo(&jc)
+		rd, err := collectTestResultsForRepo(jc)
 		if nil != err {
 			log.Fatalf("Error collecting results for repo '%s': %v", jc.Repo, err)
 		}

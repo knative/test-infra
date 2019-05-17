@@ -41,7 +41,7 @@ const (
 
 // RepoData struct contains all configurations and test results for a repo
 type RepoData struct {
-	Config             *JobConfig
+	Config             JobConfig
 	TestStats          map[string]*TestStat // key is test full name
 	BuildIDs           []int                // all build IDs scanned in this run
 	LastBuildStartTime *int64               // timestamp, determines how fresh the data is
@@ -169,7 +169,7 @@ func getCombinedResultsForBuild(build *prow.Build) ([]*junit.TestSuites, error) 
 
 // collectTestResultsForRepo collects test results, build IDs from all builds,
 // as well as LastBuildStartTime, and stores them in RepoData
-func collectTestResultsForRepo(jc *JobConfig) (*RepoData, error) {
+func collectTestResultsForRepo(jc JobConfig) (*RepoData, error) {
 	rd := &RepoData{Config: jc}
 	job := prow.NewJob(jc.Name, jc.Type, jc.Repo, 0)
 	if !job.PathExists() {
