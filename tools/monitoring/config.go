@@ -108,15 +108,18 @@ func getFileBytes(url string) ([]byte, error) {
 }
 
 // ParseYaml reads the yaml text and converts it to the Config struct defined
-func ParseYaml(url string) (Config, error) {
-	file := Config{}
+func ParseYaml(url string) (*Config, error) {
 	content, err := getFileBytes(url)
 	if err != nil {
-		return file, err
+		return nil, err
 	}
+	return newConfig(content)
+}
 
-	if err := yaml.Unmarshal(content, &file); err != nil {
-		return file, fmt.Errorf("cannot parse config %s: %v", url, err)
+func newConfig(text []byte) (*Config, error) {
+	file := new(Config)
+	if err := yaml.Unmarshal(text, &file); err != nil {
+		return file, err
 	}
 	return file, nil
 }
