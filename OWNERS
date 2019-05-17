@@ -1,9 +1,7 @@
 # The OWNERS file is used by prow to automatically merge approved PRs.
 
 approvers:
-- adrcunha
-- dushyanthsc
-- ericKlawitter
-- chaodaig
-- srinivashegde86
-- steuhs
+- test-infra-approvers
+
+reviewers:
+- test-infra-reviewers
