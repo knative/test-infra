@@ -37,15 +37,23 @@ for repo in *; do
   git remote update -p
   git pull
   git checkout -b ${branch} upstream/master
+  needs_update=0
   if [[ -f "Gopkg.lock" ]]; then
+    needs_update=1
     dep ensure -update github.com/knative/test-infra
     ./hack/update-deps.sh
+  elif [[ -f "go.mod" ]]; then
+    needs_update=1
+    GO111MODULE=on go get -u github.com/knative/test-infra/scripts
+    GO111MODULE=on go mod vendor
+  fi
+  if (( needs_update )); then
     [[ -z "$(git diff)" ]] && continue
     git commit -a -m "Update test-infra to the latest version"
     git push -u origin ${branch}
     echo -e "\nCheck the PR created above, and make changes if necessary"
   else
-    echo -e "\nGopkg.lock not found, skip updating"
+    echo -e "\nGopkg.lock or go.mod not found, skip updating"
   fi
   echo -n "Hit [ENTER] to continue..."
   read
