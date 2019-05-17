@@ -184,7 +184,7 @@ function test_exempt_md() {
     echo "foo.png"
   }
   initialize_environment
-  (( IS_DOCUMENTATION_PR )) || test_failed "README.md is documentation"
+  (( IS_DOCUMENTATION_PR )) || test_failed "PR has no code"
   (( ! IS_PRESUBMIT_EXEMPT_PR )) || test_failed "README.md is not exempt"
 }
 
@@ -196,7 +196,7 @@ function test_exempt_no_md() {
     echo "AUTHORS"
   }
   initialize_environment
-  (( IS_DOCUMENTATION_PR )) || test_failed "OWNERS is considered documentation"
+  (( ! IS_DOCUMENTATION_PR )) || test_failed "OWNERS is not considered documentation"
   (( IS_PRESUBMIT_EXEMPT_PR )) || test_failed "OWNERS is exempt"
 }
 
@@ -209,7 +209,7 @@ function test_exempt_md_code() {
     echo "foo.go"
   }
   initialize_environment
-  (( ! IS_DOCUMENTATION_PR )) || test_failed "README.md is documentation"
+  (( ! IS_DOCUMENTATION_PR )) || test_failed "foo.go is not documentation"
   (( ! IS_PRESUBMIT_EXEMPT_PR )) || test_failed "foo.go is not exempt"
 }
 
@@ -218,6 +218,7 @@ function test_exempt_code() {
 
   function list_changed_files() {
     echo "foo.go"
+    echo "foo.sh"
   }
   initialize_environment
   (( ! IS_DOCUMENTATION_PR )) || test_failed "foo.go is not documentation"
