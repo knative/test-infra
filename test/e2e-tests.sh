@@ -27,6 +27,7 @@ source $(dirname $0)/../scripts/e2e-tests.sh
 
 function knative_setup() {
   start_latest_knative_serving
+  
 }
 
 # Script entry point.
