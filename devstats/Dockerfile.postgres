@@ -1,7 +1,0 @@
-FROM postgres:9.6
-
-COPY postgre-docker-entrypoint.sh /usr/local/bin/
-RUN chmod a+x /usr/local/bin/postgre-docker-entrypoint.sh
-COPY postgresql.conf /tmp/postgresql.conf
-COPY pg_hba.conf /tmp/pg_hba.conf
-COPY updateConfig.sh      /docker-entrypoint-initdb.d/_updateConfig.sh
