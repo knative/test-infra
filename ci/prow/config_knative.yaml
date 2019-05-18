@@ -193,6 +193,8 @@ periodics:
       cron: "5 8 * * *" # Run at 01:05PST every day (08:05 UTC)
 
   knative/client:
+    - continuous: true
+      cron: "45 * * * *" # Run every hour and 45 minutes
     - nightly: true
       cron: "11 8 * * *" # Run at 01:11PST every day (08:11 UTC)
     - dot-release: true
