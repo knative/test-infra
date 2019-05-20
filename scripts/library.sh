@@ -18,6 +18,9 @@
 # to be used in test scripts and the like. It doesn't do anything when
 # called from command line.
 
+# GCP project where all tests releate resources live
+readonly KNATIVE_TESTS_PROJECT=knative-tests
+
 # Default GKE version to be used with Knative Serving
 readonly SERVING_GKE_VERSION=gke-latest
 readonly SERVING_GKE_IMAGE=cos
@@ -415,13 +418,20 @@ function is_int() {
 # Return whether the given parameter is the knative release/nightly GCF.
 # Parameters: $1 - full GCR name, e.g. gcr.io/knative-foo-bar
 function is_protected_gcr() {
-  [[ -n $1 && "$1" =~ "^gcr.io/knative-(releases|nightly)/?$" ]]
+  [[ -n $1 && $1 =~ ^gcr.io/knative-(releases|nightly)/?$ ]]
 }
 
-# Return whether the given parameter is the knative-prow cluster.
+# Return whether the given parameter is the knative prow cluster.
 # Parameters: $1 - Kubernetes cluster context (output of kubectl config current-context)
 function is_protected_cluster() {
-  [[ -n $1 && "$1" = "gke_knative-tests_us-central1-f_prow" ]]
+  # Example: gke_knative-tests_us-central1-f_prow
+  [[ -n $1 && $1 =~ ^gke_${KNATIVE_TESTS_PROJECT}_us\-[a-zA-Z0-9]+\-[a-z]+_prow$ ]]
+}
+
+# Return whether the given parameter is ${KNATIVE_TESTS_PROJECT}.
+# Parameters: $1 - project name
+function is_protected_project() {
+  [[ -n $1 && "$1" == "${KNATIVE_TESTS_PROJECT}" ]]
 }
 
 # Remove symlinks in a path that are broken or lead outside the repo.
@@ -443,12 +453,6 @@ function remove_broken_symlinks() {
       continue
     fi
   done
-}
-
-# Return whether the given parameter is knative-tests.
-# Parameters: $1 - project name
-function is_protected_project() {
-  [[ -n "$1" && "$1" == "knative-tests" ]]
 }
 
 # Returns the canonical path of a filesystem object.
