@@ -44,10 +44,10 @@ var (
 			{Name: "ci-knative-serving-istio-1.1.2-no-mesh", Type: prow.PostsubmitJob, PostIssue: false},
 		},
 	}
-	// slackChannelsMap lists which slack channel to post results in for each job in repo
+	// slackChannelsMap lists which Slack channel to post results in for each job in repo
 	slackChannelsMap = map[string]map[string][]slackChannel{
 		// channel mapping for serving repo
-		"serving": {"default": {{"api", "CA4DNJ9A4"}},
+		"serving": {"ci-knative-serving-continuous": {{"api", "CA4DNJ9A4"}},
 			"ci-knative-serving-istio-1.0.7-mesh":    {{"networking", "CA9RHBGJX"}},
 			"ci-knative-serving-istio-1.0.7-no-mesh": {{"networking", "CA9RHBGJX"}},
 			"ci-knative-serving-istio-1.1.2-mesh":    {{"networking", "CA9RHBGJX"}},
