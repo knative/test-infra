@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 // config.go contains configurations for flaky tests reporting
-// TODO: change testing customizations back to default before PR
 
 package main
 
@@ -31,7 +30,7 @@ const (
 	// Don't do anything if found more than 1% tests flaky, this is an arbitrary number
 	threshold = 0.01
 
-	org = "TrevorFarrelly"
+	org = "knative"
 )
 
 var (
@@ -48,15 +47,15 @@ var (
 	// slackChannelsMap lists which slack channel to post results in for each job in repo
 	slackChannelsMap = map[string]map[string][]slackChannel{
 		// channel mapping for serving repo
-		"serving": {"default": {{"api", "CJEQ0MB50" /*"CA4DNJ9A4"*/}},
-			"ci-knative-serving-istio-1.0.7-mesh":    {{"networking", "CJS634MKP"}},
-			"ci-knative-serving-istio-1.0.7-no-mesh": {{"networking", "CJS634MKP"}},
-			"ci-knative-serving-istio-1.1.2-mesh":    {{"networking", "CJS634MKP"}},
-			"ci-knative-serving-istio-1.1.2-no-mesh": {{"networking", "CJS634MKP"}},
+		"serving": {"default": {{"api", "CA4DNJ9A4"}},
+			"ci-knative-serving-istio-1.0.7-mesh":    {{"networking", ""}},
+			"ci-knative-serving-istio-1.0.7-no-mesh": {{"networking", ""}},
+			"ci-knative-serving-istio-1.1.2-mesh":    {{"networking", ""}},
+			"ci-knative-serving-istio-1.1.2-no-mesh": {{"networking", ""}},
 		},
 	}
 
 	githubIssueMap = map[string]string{
-		"serving": "knative-testing",
+		"serving": "serving",
 	}
 )

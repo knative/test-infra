@@ -34,8 +34,7 @@ import (
 )
 
 const (
-	// TODO: revert
-	knativeBotName          = "knative-bot" // "Knative Testgrid Robot"
+	knativeBotName          = "Knative Testgrid Robot"
 	slackChatPostMessageURL = "https://slack.com/api/chat.postMessage"
 	// default filter for testgrid link
 	testgridFilter = "exclude-non-failed-tests=20"
