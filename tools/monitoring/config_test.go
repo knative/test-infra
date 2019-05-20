@@ -120,7 +120,7 @@ func TestCollectErrorPatterns(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.args.f.CollectErrorPatterns(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("CollectErrorPatterns() = %v, want %v", got, tt.want)
+				t.Errorf("Collected Error Patterns, got: %v, want: %v", got, tt.want)
 			}
 		})
 	}
@@ -184,11 +184,11 @@ func TestConfig_Select(t *testing.T) {
 			}
 			got, err := f.Select(tt.args.pattern, tt.args.jobName)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("Config.Select() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("Config Selector returned error.")
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Config.Select() = %v, want %v", got, tt.want)
+				t.Errorf("Config selected, got : %v, want: %v", got, tt.want)
 			}
 		})
 	}
@@ -217,11 +217,11 @@ func Test_newConfig(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := newConfig(tt.args.text)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("newConfig() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("config construction failed")
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("newConfig() = %v, want %v", got, tt.want)
+				t.Errorf("config constructed,  got: %v, want: %v", got, tt.want)
 			}
 		})
 	}
