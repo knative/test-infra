@@ -421,11 +421,11 @@ function is_protected_gcr() {
   [[ -n $1 && $1 =~ ^gcr.io/knative-(releases|nightly)/?$ ]]
 }
 
-# Return whether the given parameter is the knative prow cluster.
+# Return whether the given parameter is any cluster under ${KNATIVE_TESTS_PROJECT}.
 # Parameters: $1 - Kubernetes cluster context (output of kubectl config current-context)
 function is_protected_cluster() {
   # Example: gke_knative-tests_us-central1-f_prow
-  [[ -n $1 && $1 =~ ^gke_${KNATIVE_TESTS_PROJECT}_us\-[a-zA-Z0-9]+\-[a-z]+_prow$ ]]
+  [[ -n $1 && $1 =~ ^gke_${KNATIVE_TESTS_PROJECT}_us\-[a-zA-Z0-9]+\-[a-z]+_[a-z0-9\-]+$ ]]
 }
 
 # Return whether the given parameter is ${KNATIVE_TESTS_PROJECT}.
