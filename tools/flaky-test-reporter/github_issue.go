@@ -499,6 +499,10 @@ func (gi *GithubIssue) processGithubIssues(repoDataAll []*RepoData, dryrun bool)
 	}
 
 	for _, rd := range repoDataAll {
+		if !rd.Config.PostIssue {
+			log.Printf("Job '%s' is marked to not create GitHub issues, skipping", rd.Config.Name)
+			continue
+		}
 		messages, err := gi.processGithubIssueForRepo(rd, flakyGHIssuesMap, githubIssueMap[rd.Config.Repo], dryrun)
 		messagesMap[rd.Config.Repo] = messages
 		if nil != err {

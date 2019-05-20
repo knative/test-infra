@@ -52,6 +52,7 @@ type JobConfig struct {
 	Name      string
 	Repo      string
 	Type      string
+	PostIssue bool
 }
 
 // TestStat represents test results of a single testcase across all builds,

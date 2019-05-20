@@ -38,11 +38,11 @@ var (
 	// jobConfigs lists all repos and jobs to run within those repos
 	jobConfigs = map[string][]JobConfig{
 		// CI flows for serving repo
-		"serving": {{Name: "ci-knative-serving-continuous", Type: prow.PostsubmitJob},
-			{Name: "ci-knative-serving-istio-1.0.7-mesh", Type: prow.PostsubmitJob},
-			{Name: "ci-knative-serving-istio-1.0.7-no-mesh", Type: prow.PostsubmitJob},
-			{Name: "ci-knative-serving-istio-1.1.2-mesh", Type: prow.PostsubmitJob},
-			{Name: "ci-knative-serving-istio-1.1.2-no-mesh", Type: prow.PostsubmitJo},
+		"serving": {{Name: "ci-knative-serving-continuous", Type: prow.PostsubmitJob, PostIssue: true},
+			{Name: "ci-knative-serving-istio-1.0.7-mesh", Type: prow.PostsubmitJob, PostIssue: true},
+			{Name: "ci-knative-serving-istio-1.0.7-no-mesh", Type: prow.PostsubmitJob, PostIssue: false},
+			{Name: "ci-knative-serving-istio-1.1.2-mesh", Type: prow.PostsubmitJob, PostIssue: false},
+			{Name: "ci-knative-serving-istio-1.1.2-no-mesh", Type: prow.PostsubmitJob, PostIssue: false},
 		},
 	}
 	// slackChannelsMap lists which slack channel to post results in for each job in repo
