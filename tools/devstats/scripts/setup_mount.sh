@@ -21,7 +21,7 @@ mkdir -p /mount/data/devstats_repos/knative
 git clone https://github.com/knative/serving.git /mount/data/devstats_repos/knative/serving
 
 cd /mount/data/src/
-git clone https://github.com/ericKlawitter/test-infra.git
+git clone https://github.com/knative/test-infra.git
 cd test-infra/tools/devstats
 ./scripts/copy_devstats_binaries.sh
 
