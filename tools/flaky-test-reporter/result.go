@@ -49,9 +49,9 @@ type RepoData struct {
 
 // JobConfig is initial configuration for a given repo, defines which job to scan
 type JobConfig struct {
-	Name string
-	Repo string
-	Type string
+	Name      string
+	Repo      string
+	Type      string
 }
 
 // TestStat represents test results of a single testcase across all builds,

@@ -499,7 +499,7 @@ func (gi *GithubIssue) processGithubIssues(repoDataAll []*RepoData, dryrun bool)
 	}
 
 	for _, rd := range repoDataAll {
-		messages, err := gi.processGithubIssueForRepo(rd, flakyGHIssuesMap, repoIssueMap[rd.Config.Repo], dryrun)
+		messages, err := gi.processGithubIssueForRepo(rd, flakyGHIssuesMap, githubIssueMap[rd.Config.Repo], dryrun)
 		messagesMap[rd.Config.Repo] = messages
 		if nil != err {
 			errMap[rd.Config.Repo] = append(errMap[rd.Config.Repo], err)

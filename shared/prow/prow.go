@@ -38,7 +38,8 @@ const (
 	OrgName = "knative"
 
 	// BucketName is the gcs bucket for all knative builds
-	BucketName = "knative-prow"
+	// TODO: change back to default before PR
+	BucketName = "trevorfarrelly-knative-2019" // "knative-prow"
 	// Latest is the filename storing latest build number
 	Latest = "latest-build.txt"
 	// BuildLog is the filename for build log
