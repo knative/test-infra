@@ -283,6 +283,9 @@ function setup_test_cluster() {
   local k8s_user=$(gcloud config get-value core/account)
   local k8s_cluster=$(kubectl config current-context)
 
+  is_protected_cluster ${k8s_cluster} && \
+    abort "kubeconfig context set to ${k8s_cluster}, which is forbidden"
+
   # If cluster admin role isn't set, this is a brand new cluster
   # Setup the admin role and also KO_DOCKER_REPO
   if [[ -z "$(kubectl get clusterrolebinding cluster-admin-binding 2> /dev/null)" ]]; then
