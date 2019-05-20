@@ -47,6 +47,8 @@ var (
 	// slackChannelsMap lists which Slack channel to post results in for each job in repo
 	slackChannelsMap = map[string]map[string][]slackChannel{
 		// channel mapping for serving repo
+		// "CA4DNJ9A4" => serving-api
+		// "CA9RHBGJX" => networking
 		"serving": {"ci-knative-serving-continuous": {{"api", "CA4DNJ9A4"}},
 			"ci-knative-serving-istio-1.0.7-mesh":    {{"networking", "CA9RHBGJX"}},
 			"ci-knative-serving-istio-1.0.7-no-mesh": {{"networking", "CA9RHBGJX"}},
