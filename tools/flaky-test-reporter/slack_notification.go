@@ -136,6 +136,22 @@ func createSlackMessageForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyI
 	return message
 }
 
+// getSlackChannel gets the channel(s) to send messages to for a given job configuration
+func getSlackChannel(rd *RepoData) []string {
+	jobMap, ok := slackChannelsMap[rd.Config.Repo]
+	if !ok {
+		log.Printf("cannot find Slack channel mapping for repo '%s', skipping Slack notification", rd.Config.Repo)
+		continue
+	}
+	channels, ok := jobMap[rd.Config.Name]
+	// if no channel(s) are explicity specified for this job, use the default channel
+	if !ok {
+		log.Printf("cannot find Slack channel for job '%s' in repo '%s', using default channel", rd.Config.Name, rd.Config.Repo)
+		channels = slackChannelsMap[rd.Config.Repo]["default"]
+	}
+	return channels
+}
+
 func sendSlackNotifications(repoDataAll []*RepoData, c *SlackClient, ghi *GithubIssue, dryrun bool) error {
 	var allErrs []error
 	flakyIssuesMap, err := ghi.getFlakyIssues()
@@ -144,17 +160,7 @@ func sendSlackNotifications(repoDataAll []*RepoData, c *SlackClient, ghi *Github
 		log.Println("Warning: cannot get flaky Github issues: ", err)
 	}
 	for _, rd := range repoDataAll {
-		testMap, ok := slackChannelsMap[rd.Config.Repo]
-		if !ok {
-			log.Printf("cannot find Slack channel mapping for repo '%s', skipping Slack notification", rd.Config.Repo)
-			continue
-		}
-		channels, ok := testMap[rd.Config.Name]
-		if !ok {
-			log.Printf("cannot find Slack channel for job '%s' in repo '%s', using default channel", rd.Config.Name, rd.Config.Repo)
-			channels = slackChannelsMap[rd.Config.Repo]["default"]
-		}
-
+		channels := getSlackChannel(rd)
 		ch := make(chan bool, len(channels))
 		wg := sync.WaitGroup{}
 		for _, channel := range channels {
