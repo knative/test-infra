@@ -418,6 +418,12 @@ function is_protected_gcr() {
   [[ -n $1 && "$1" =~ "^gcr.io/knative-(releases|nightly)/?$" ]]
 }
 
+# Return whether the given parameter is the knative-prow cluster.
+# Parameters: $1 - Kubernetes cluster context (output of kubectl config current-context)
+function is_protected_cluster() {
+  [[ -n $1 && "$1" = "gke_knative-tests_us-central1-f_prow" ]]
+}
+
 # Remove symlinks in a path that are broken or lead outside the repo.
 # Parameters: $1 - path name, e.g. vendor
 function remove_broken_symlinks() {
