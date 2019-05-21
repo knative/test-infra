@@ -34,10 +34,30 @@ const (
 )
 
 var (
-	jobConfigs = []JobConfig{
-		{"ci-knative-serving-continuous", "serving", prow.PostsubmitJob}, // CI flow for serving repo
+	// jobConfigs lists all repos and jobs to analyze within those repos
+	jobConfigs = map[string][]JobConfig{
+		// CI flows for serving repo
+		"serving": {{Name: "ci-knative-serving-continuous", Type: prow.PostsubmitJob, PostIssue: true},
+			{Name: "ci-knative-serving-istio-1.0.7-mesh", Type: prow.PostsubmitJob, PostIssue: false},
+			{Name: "ci-knative-serving-istio-1.0.7-no-mesh", Type: prow.PostsubmitJob, PostIssue: false},
+			{Name: "ci-knative-serving-istio-1.1.2-mesh", Type: prow.PostsubmitJob, PostIssue: false},
+			{Name: "ci-knative-serving-istio-1.1.2-no-mesh", Type: prow.PostsubmitJob, PostIssue: false},
+		},
 	}
-	repoIssueMap = map[string]string{
+	// slackChannelsMap lists which Slack channel to post results in for each job in repo
+	slackChannelsMap = map[string]map[string][]slackChannel{
+		// channel mapping for serving repo
+		// "CA4DNJ9A4" => serving-api
+		// "CA9RHBGJX" => networking
+		"serving": {"ci-knative-serving-continuous": {{"api", "CA4DNJ9A4"}},
+			"ci-knative-serving-istio-1.0.7-mesh":    {{"networking", "CA9RHBGJX"}},
+			"ci-knative-serving-istio-1.0.7-no-mesh": {{"networking", "CA9RHBGJX"}},
+			"ci-knative-serving-istio-1.1.2-mesh":    {{"networking", "CA9RHBGJX"}},
+			"ci-knative-serving-istio-1.1.2-no-mesh": {{"networking", "CA9RHBGJX"}},
+		},
+	}
+
+	githubIssueMap = map[string]string{
 		"serving": "serving",
 	}
 )
