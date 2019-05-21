@@ -57,7 +57,7 @@ spec:
           value: "postgres"
         - name: PGDATA
           value: "/mount/data/postgresql"
-        image: gcr.io/knative-tests/devstats-postgres:latest
+        image: gcr.io/knative-tests/devstats/devstats-postgres:latest
         imagePullPolicy: Always
         command: ["/usr/local/bin/postgre-docker-entrypoint.sh", "postgres",]
         ports:
