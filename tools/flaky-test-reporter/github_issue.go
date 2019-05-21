@@ -494,7 +494,9 @@ func (gi *GithubIssue) processGithubIssueForRepo(rd *RepoData, flakyIssuesMap ma
 
 // analyze all results, figure out flaky tests and processing existing auto:flaky issues
 func (gi *GithubIssue) processGithubIssues(repoDataAll []*RepoData, dryrun bool) error {
+	// map repo to jobs, and jobs to messages
 	messagesMap := make(map[string]map[string][]string)
+	// map repo to jobs, and jobs to errors
 	errMap := make(map[string]map[string][]error)
 
 	// Collect all flaky test issues from all knative repos, in case issues are moved around
