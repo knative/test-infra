@@ -427,6 +427,12 @@ func (gi *GithubIssue) processGithubIssueForRepo(rd *RepoData, flakyIssuesMap ma
 	var messages []string
 	var errs []error
 
+	// if flag is not set, do not create an issue at all
+	if rd.Config.SkipGithubIssue {
+		messages = append(messages, "skip creating/updating issues, job is marked to not create GitHub issues\n")
+		return messages, combineErrors(errs)
+	}
+
 	// If there are too many failures, create a single issue tracking it.
 	flakyRate := getFlakyRate(rd)
 	if flakyRate > threshold {
@@ -488,8 +494,10 @@ func (gi *GithubIssue) processGithubIssueForRepo(rd *RepoData, flakyIssuesMap ma
 
 // analyze all results, figure out flaky tests and processing existing auto:flaky issues
 func (gi *GithubIssue) processGithubIssues(repoDataAll []*RepoData, dryrun bool) error {
-	messagesMap := make(map[string][]string)
-	errMap := make(map[string][]error)
+	// map repo to jobs, and jobs to messages
+	messagesMap := make(map[string]map[string][]string)
+	// map repo to jobs, and jobs to errors
+	errMap := make(map[string]map[string][]error)
 
 	// Collect all flaky test issues from all knative repos, in case issues are moved around
 	// Fail this job if data collection failed
@@ -499,26 +507,28 @@ func (gi *GithubIssue) processGithubIssues(repoDataAll []*RepoData, dryrun bool)
 	}
 
 	for _, rd := range repoDataAll {
-		if !rd.Config.PostIssue {
-			log.Printf("Job '%s' is marked to not create GitHub issues, skipping", rd.Config.Name)
-			continue
-		}
 		messages, err := gi.processGithubIssueForRepo(rd, flakyGHIssuesMap, githubIssueMap[rd.Config.Repo], dryrun)
-		messagesMap[rd.Config.Repo] = messages
+		if _, ok := messagesMap[rd.Config.Repo]; !ok {
+			messagesMap[rd.Config.Repo] = make(map[string][]string)
+		}
+		messagesMap[rd.Config.Repo][rd.Config.Name] = messages
 		if nil != err {
-			errMap[rd.Config.Repo] = append(errMap[rd.Config.Repo], err)
+			if _, ok := errMap[rd.Config.Repo]; !ok {
+				errMap[rd.Config.Repo] = make(map[string][]error)
+			}
+			errMap[rd.Config.Repo][rd.Config.Name] = append(errMap[rd.Config.Repo][rd.Config.Name], err)
 		}
 	}
 
 	// Print summaries
 	summary := "Summary:\n"
 	for _, rd := range repoDataAll {
-		if messages, ok := messagesMap[rd.Config.Repo]; ok {
-			summary += fmt.Sprintf("Summary of repo '%s':\n", rd.Config.Repo)
+		if messages, ok := messagesMap[rd.Config.Repo][rd.Config.Name]; ok {
+			summary += fmt.Sprintf("Summary of job '%s' in repo '%s':\n", rd.Config.Name, rd.Config.Repo)
 			summary += strings.Join(messages, "\n")
 		}
-		if errs, ok := errMap[rd.Config.Repo]; ok {
-			summary += fmt.Sprintf("Errors in repo '%s':\n%v", rd.Config.Repo, combineErrors(errs))
+		if errs, ok := errMap[rd.Config.Repo][rd.Config.Name]; ok {
+			summary += fmt.Sprintf("Errors in job '%s' in repo '%s':\n%v", rd.Config.Name, rd.Config.Repo, combineErrors(errs))
 		}
 	}
 

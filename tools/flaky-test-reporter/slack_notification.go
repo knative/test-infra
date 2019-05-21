@@ -104,13 +104,13 @@ func createSlackMessageForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyI
 	flakyTests := getFlakyTests(rd)
 	message := fmt.Sprintf("As of %s, there are %d flaky tests in '%s' from repo '%s'",
 		time.Unix(*rd.LastBuildStartTime, 0).String(), len(flakyTests), rd.Config.Name, rd.Config.Repo)
-	if !rd.Config.PostIssue {
-			message += fmt.Sprintf("\n(Job is marked to not create GitHub issues)")
+	if rd.Config.SkipGithubIssue {
+		message += fmt.Sprintf("\n(Job is marked to not create GitHub issues)")
 	}
 	flakyRate := getFlakyRate(rd)
 	if flakyRate > threshold { // Don't list each test as this can be huge
 		message += fmt.Sprintf("\n>- skip displaying all tests as flaky rate above '%0.2f%%'", threshold)
-		if flakyIssues, ok := flakyIssuesMap[getBulkIssueIdentity(rd, flakyRate)]; ok && rd.Config.PostIssue {
+		if flakyIssues, ok := flakyIssuesMap[getBulkIssueIdentity(rd, flakyRate)]; ok && !rd.Config.SkipGithubIssue {
 			// When flaky rate is above threshold, there is only one issue created,
 			// so there is only one element in flakyIssues
 			for _, fi := range flakyIssues {
@@ -120,7 +120,7 @@ func createSlackMessageForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyI
 	} else {
 		for _, testFullName := range flakyTests {
 			message += fmt.Sprintf("\n>- %s", testFullName)
-			if flakyIssues, ok := flakyIssuesMap[getIdentityForTest(testFullName, rd.Config.Repo)]; ok && rd.Config.PostIssue {
+			if flakyIssues, ok := flakyIssuesMap[getIdentityForTest(testFullName, rd.Config.Repo)]; ok && !rd.Config.SkipGithubIssue {
 				for _, fi := range flakyIssues {
 					message += fmt.Sprintf("\t%s", fi.issue.GetHTMLURL())
 				}
@@ -176,6 +176,9 @@ func sendSlackNotifications(repoDataAll []*RepoData, c *SlackClient, ghi *Github
 					dryrun); nil != err {
 					allErrs = append(allErrs, err)
 					log.Printf("failed sending notification to Slack channel '%s': '%v'", channel.name, err)
+				}
+				if dryrun {
+					log.Printf("[dry run] Slack message not sent. See it below:\n%s\n\n", message)
 				}
 				ch <- true
 				wg.Done()
