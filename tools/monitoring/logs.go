@@ -21,12 +21,14 @@ import (
 	"regexp"
 )
 
-// ErrorInLog stores the error pattern and the corresponding error message found in the log
-type ErrorInLog struct {
-	ErrorPattern string
-	ErrorMsg     string
+// ErrorLog stores the error pattern and the corresponding error message found in the log
+type ErrorLog struct {
+	Pattern string
+	Msg     string
 }
 
+// compilePatterns compiles the patterns from string to Regexp. In addition it returns the list of
+// patterns that cannot be compiled
 func compilePatterns(patterns []string) ([]regexp.Regexp, []string) {
 	var regexps []regexp.Regexp
 	var badPatterns []string // patterns that cannot be compiled into regex
@@ -43,14 +45,15 @@ func compilePatterns(patterns []string) ([]regexp.Regexp, []string) {
 	return regexps, badPatterns
 }
 
-func findMatches(regexps []regexp.Regexp, text []byte) []ErrorInLog {
-	var errorLogs []ErrorInLog
+// collectMatches collects error messages that matches the patterns from text.
+func collectMatches(regexps []regexp.Regexp, text []byte) []ErrorLog {
+	var errorLogs []ErrorLog
 	for _, r := range regexps {
 		found := r.Find(text)
 		if found != nil {
-			errorLogs = append(errorLogs, ErrorInLog{
-				ErrorPattern: r.String(),
-				ErrorMsg:     string(found),
+			errorLogs = append(errorLogs, ErrorLog{
+				Pattern: r.String(),
+				Msg:     string(found),
 			})
 		}
 	}
@@ -59,16 +62,15 @@ func findMatches(regexps []regexp.Regexp, text []byte) []ErrorInLog {
 
 // ParseLog fetches build log from given url and checks it against given error patterns. Return
 // all found error patterns and error messages in pairs.
-func ParseLog(url string, patterns []string) ([]ErrorInLog, error) {
+func ParseLog(url string, patterns []string) ([]ErrorLog, error) {
 	content, err := getFileBytes(url)
 	if err != nil {
 		return nil, err
 	}
 	regexps, badPatterns := compilePatterns(patterns)
 	if len(badPatterns) != 0 {
-		log.Printf("The following pattern cannot be compiled: %v", badPatterns)
-		// TODO: after email feature is done, send an email to oncall about the pattern issues
+		log.Printf("The following patterns cannot be compiled: %v", badPatterns)
 	}
 
-	return findMatches(regexps, content), nil
+	return collectMatches(regexps, content), nil
 }

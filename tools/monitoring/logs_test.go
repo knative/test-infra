@@ -71,12 +71,12 @@ func Test_compilePatterns(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := compilePatterns(tt.args.patterns)
-			if !reflect.DeepEqual(got, tt.wantedRegexps) {
-				t.Errorf("all compiled patterns: got = %v, want %v", got, tt.wantedRegexps)
+			compiledPatterns, badPatterns := compilePatterns(tt.args.patterns)
+			if !reflect.DeepEqual(compiledPatterns, tt.wantedRegexps) {
+				t.Errorf("all compiled patterns: compiledPatterns = %v, want %v", compiledPatterns, tt.wantedRegexps)
 			}
-			if !reflect.DeepEqual(got1, tt.wantedBadPatterns) {
-				t.Errorf("all bad patterns: got = %v, want %v", got1, tt.wantedBadPatterns)
+			if !reflect.DeepEqual(badPatterns, tt.wantedBadPatterns) {
+				t.Errorf("all bad patterns: compiledPatterns = %v, want %v", badPatterns, tt.wantedBadPatterns)
 			}
 		})
 	}
@@ -90,7 +90,7 @@ func Test_findMatches(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want []ErrorInLog
+		want []ErrorLog
 	}{
 		{
 			name: "single match",
@@ -102,17 +102,17 @@ func Test_findMatches(t *testing.T) {
 				},
 				text: []byte(sampleLog),
 			},
-			want: []ErrorInLog{
+			want: []ErrorLog{
 				{
-					ErrorPattern: "Something went wrong:.*\n",
-					ErrorMsg:     "Something went wrong: encountered 1 errors: [error during /go/src/github.com/knative/docs/test/e2e-tests.sh --run-tests --emit-metrics: exit status 1]\n",
+					Pattern: "Something went wrong:.*\n",
+					Msg:     "Something went wrong: encountered 1 errors: [error during /go/src/github.com/knative/docs/test/e2e-tests.sh --run-tests --emit-metrics: exit status 1]\n",
 				},
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := findMatches(tt.args.regexps, tt.args.text); !reflect.DeepEqual(got, tt.want) {
+			if got := collectMatches(tt.args.regexps, tt.args.text); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("find all matching errors: got = %v, want %v", got, tt.want)
 			}
 		})
