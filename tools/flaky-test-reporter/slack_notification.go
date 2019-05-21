@@ -141,6 +141,7 @@ func getSlackChannel(repo string, name string) []slackChannel {
 	jobMap, ok := slackChannelsMap[repo]
 	if !ok {
 		log.Printf("cannot find Slack channel mapping for repo '%s', skipping Slack notification", repo)
+		return nil
 	}
 	channels, ok := jobMap[name]
 	if !ok {
