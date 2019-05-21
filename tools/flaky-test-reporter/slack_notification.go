@@ -177,6 +177,9 @@ func sendSlackNotifications(repoDataAll []*RepoData, c *SlackClient, ghi *Github
 					allErrs = append(allErrs, err)
 					log.Printf("failed sending notification to Slack channel '%s': '%v'", channel.name, err)
 				}
+				if dryrun {
+					log.Printf("[dry run] Slack message not sent. See it below:\n%s\n\n", message)
+				}
 				ch <- true
 				wg.Done()
 			}(&wg)
