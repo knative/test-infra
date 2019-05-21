@@ -428,7 +428,7 @@ func (gi *GithubIssue) processGithubIssueForRepo(rd *RepoData, flakyIssuesMap ma
 	var errs []error
 
 	// if flag is not set, do not create an issue at all
-	if !rd.Config.PostIssue {
+	if rd.Config.SkipGithubIssue {
 		messages = append(messages, "skip creating/updating issues, job is marked to not create GitHub issues\n")
 		return messages, combineErrors(errs)
 	}
@@ -507,12 +507,12 @@ func (gi *GithubIssue) processGithubIssues(repoDataAll []*RepoData, dryrun bool)
 	for _, rd := range repoDataAll {
 		messages, err := gi.processGithubIssueForRepo(rd, flakyGHIssuesMap, githubIssueMap[rd.Config.Repo], dryrun)
 		if _, ok := messagesMap[rd.Config.Repo]; !ok {
-		 	messagesMap[rd.Config.Repo] = make(map[string][]string)
+			messagesMap[rd.Config.Repo] = make(map[string][]string)
 		}
 		messagesMap[rd.Config.Repo][rd.Config.Name] = messages
 		if nil != err {
 			if _, ok := errMap[rd.Config.Repo]; !ok {
-			 	errMap[rd.Config.Repo] = make(map[string][]error)
+				errMap[rd.Config.Repo] = make(map[string][]error)
 			}
 			errMap[rd.Config.Repo][rd.Config.Name] = append(errMap[rd.Config.Repo][rd.Config.Name], err)
 		}
