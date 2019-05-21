@@ -26,7 +26,7 @@ spec:
           restartPolicy: OnFailure
           containers:
           - name: devstats-cron
-            image: gcr.io/knative-tests/devstats:latest
+            image: gcr.io/knative-tests/devstats/devstats:latest
             imagePullPolicy: Always
             workingDir: "/mount/data/src/test-infra/tools/devstats"
             command: ["/bin/sh","-c"]

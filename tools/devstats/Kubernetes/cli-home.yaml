@@ -44,7 +44,7 @@ spec:
     spec:
       containers:
       - name: devstats-image
-        image: gcr.io/knative-tests/devstats:latest
+        image: gcr.io/knative-tests/devstats/devstats:latest
         imagePullPolicy: Always
         command: ["tail", "-f", "/dev/null",]
         envFrom:
