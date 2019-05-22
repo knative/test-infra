@@ -41,6 +41,9 @@ spec:
       containers:
       - name: monitoring-app
         image: gcr.io/knative-tests/test-infra/monitoring:latest
+        command: ["/monitoring",
+                  "--database-name=monitoring",
+                  "--database-instance='knative-tests:us-central1:knative-monitoring'"]
         # This setting makes nodes pull the docker image every time before
         # starting the pod. This is useful when debugging, but should be turned
         # off in production.
@@ -49,3 +52,11 @@ spec:
         ports:
         - name: http-server
           containerPort: 8080
+        volumeMounts:
+        - name: monitoring-db-credentials
+          mountPath: /secrets/cloudsql/monitoringdb
+          readOnly: true
+      volumes:
+      - name: monitoring-db-credentials
+        secret:
+          secretName: monitoring-db-credentials
