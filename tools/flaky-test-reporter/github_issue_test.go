@@ -79,9 +79,10 @@ func createNewIssue(fgi *GithubIssue, title, body, testStat string) (*github.Iss
 	return issue, comment
 }
 
-func createRepoData(passed, flaky, failed, notenoughdata int, startTime int64) *RepoData {
+func createRepoData(passed, flaky, failed, notenoughdata int, createissue bool, startTime int64) *RepoData {
 	config := JobConfig{
-		Repo: fakeRepo,
+		Repo:            fakeRepo,
+		SkipGithubIssue: createissue,
 	}
 	tss := map[string]*TestStat{}
 	for status, count := range map[string]int{
@@ -105,15 +106,18 @@ func createRepoData(passed, flaky, failed, notenoughdata int, startTime int64) *
 func TestCreateIssue(t *testing.T) {
 	datas := []struct {
 		passed, flaky, failed, notenoughdata int
+		createissue                          bool
 		wantIssues                           int
 	}{
-		{197, 2, 0, 0, 1}, // flaky rate > 1%, create only 1 issue
-		{200, 2, 0, 0, 2}, // flaky rate < 1%, create issue for each
+		{197, 2, 0, 0, false, 1}, // flaky rate > 1%, create only 1 issue
+		{200, 2, 0, 0, false, 2}, // flaky rate < 1%, create issue for each
+		{197, 2, 0, 0, true, 0},  // flaky rate > 1%, flag is set to not create issue
+		{200, 2, 0, 0, true, 0},  // flaky rate < 1%, flag is set to not create issue
 	}
 
 	for _, d := range datas {
 		fgi := getFakeGithubIssue()
-		repoData := createRepoData(d.passed, d.flaky, d.failed, d.notenoughdata, int64(0))
+		repoData := createRepoData(d.passed, d.flaky, d.failed, d.notenoughdata, d.createissue, int64(0))
 		fgi.processGithubIssueForRepo(repoData, make(map[string][]*flakyIssue), fakeRepo, dryrun)
 		issues, _ := fgi.client.ListIssuesByRepo(fakeOrg, fakeRepo, []string{})
 		if len(issues) != d.wantIssues {
@@ -124,7 +128,7 @@ func TestCreateIssue(t *testing.T) {
 
 func TestExistingIssue(t *testing.T) {
 	fgi := getFakeGithubIssue()
-	repoData := createRepoData(200, 2, 0, 0, int64(0))
+	repoData := createRepoData(200, 2, 0, 0, false, int64(0))
 	flakyIssuesMap, _ := fgi.getFlakyIssues()
 	fgi.processGithubIssueForRepo(repoData, flakyIssuesMap, fakeRepo, dryrun)
 	existIssues, _ := fgi.client.ListIssuesByRepo(fakeOrg, fakeRepo, []string{})
