@@ -118,7 +118,7 @@ func ParseYaml(url string) (*Config, error) {
 
 func newConfig(text []byte) (*Config, error) {
 	file := new(Config)
-	if err := yaml.Unmarshal(text, &file); err != nil {
+	if err := yaml.UnmarshalStrict(text, &file); err != nil {
 		return file, err
 	}
 	return file, nil
