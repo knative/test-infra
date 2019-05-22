@@ -15,9 +15,9 @@
 
     1. `../setup_mount.sh`
 
-    1. `/mount/data/src/test-infra/tools/devstats/shared/tags.sh`
+    1. `/mount/data/src/test-infra/devstats/shared/tags.sh`
 
-    1. `/mount/data/src/test-infra/tools/devstats/annotations`
+    1. `/mount/data/src/test-infra/devstats/annotations`
 
 1. Exit out of the pod and run `kubectl create -f Kubernetes/batch-job-backfill.yaml`. This creates the job to backfill the database with the github archive data. After that job finishes (it takes a few hours), run `kubectl create -f Kubernetes/cron-updates.yaml`. This creates the hourly job to update the database.
 

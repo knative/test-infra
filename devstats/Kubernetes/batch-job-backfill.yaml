@@ -25,7 +25,7 @@ spec:
       - name: devstats-backfill
         image: gcr.io/knative-tests/devstats/devstats:latest
         imagePullPolicy: Always
-        workingDir: "/mount/data/src/test-infra/tools/devstats"
+        workingDir: "/mount/data/src/test-infra/devstats"
         command: ["/bin/bash", "-c"]
         args: ["./gha2db 2019-03-29 0 `date +%Y-%m-%d` 23 knative"]
         envFrom:
