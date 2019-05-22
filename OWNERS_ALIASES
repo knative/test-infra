@@ -1,11 +1,11 @@
 # Aliases for approvers and reviewers in test-infra
 
 aliases:
-  test-infra-approvers:
+  productivity-approvers:
   - adrcunha
   - chaodaiG
   - srinivashegde86
-  test-infra-reviewers:
+  productivity-reviewers:
   - adrcunha
   - chaodaiG
   - coryrc
