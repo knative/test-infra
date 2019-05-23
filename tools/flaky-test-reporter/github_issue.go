@@ -434,8 +434,7 @@ func (gi *GithubIssue) processGithubIssueForRepo(rd *RepoData, flakyIssuesMap ma
 	}
 
 	// If there are too many failures, create a single issue tracking it.
-	flakyRate := getFlakyRate(rd)
-	if flakyRate > threshold {
+	if flakyRateAboveThreshold(rd) {
 		log.Printf("flaky rate above '%f', creating a single issue", threshold)
 		identity := getBulkIssueIdentity(rd, flakyRate)
 		if _, ok := flakyIssuesMap[identity]; ok {

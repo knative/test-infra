@@ -113,6 +113,19 @@ func getFlakyRate(rd *RepoData) float32 {
 	return float32(len(getFlakyTests(rd))) / float32(totalCount)
 }
 
+func flakyRateAboveThreshold(rd *RepoData) bool {
+	// if the percent determined by the test count threshold is higher than
+	// the percent threshold, use that instead of the percent threshold
+	var threshold float32
+	totalCount := len(rd.TestStats)
+	if 0 == totalCount || float32(countThreshold) / float32(totalCount) < percentThreshold {
+		threshold = percentThreshold
+	} else {
+		threshold = float32(countThreshold) / float32(totalCount)
+	}
+	return getFlakyRate(rd) > threshold
+}
+
 // createArtifactForRepo marshals RepoData into json format and stores it in a json file,
 // under local artifacts directory
 func createArtifactForRepo(rd *RepoData) error {

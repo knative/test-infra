@@ -107,8 +107,7 @@ func createSlackMessageForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyI
 	if rd.Config.SkipGithubIssue {
 		message += fmt.Sprintf("\n(Job is marked to not create GitHub issues)")
 	}
-	flakyRate := getFlakyRate(rd)
-	if flakyRate > threshold { // Don't list each test as this can be huge
+	if flakyRateAboveThreshold(rd) { // Don't list each test as this can be huge
 		message += fmt.Sprintf("\n>- skip displaying all tests as flaky rate above '%0.2f%%'", threshold)
 		if flakyIssues, ok := flakyIssuesMap[getBulkIssueIdentity(rd, flakyRate)]; ok && !rd.Config.SkipGithubIssue {
 			// When flaky rate is above threshold, there is only one issue created,
