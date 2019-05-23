@@ -116,12 +116,13 @@ func getFlakyRate(rd *RepoData) float32 {
 func flakyRateAboveThreshold(rd *RepoData) bool {
 	// if the percent determined by the test count threshold is higher than
 	// the percent threshold, use that instead of the percent threshold
-	var threshold float32
 	totalCount := len(rd.TestStats)
-	if 0 == totalCount || float32(countThreshold) / float32(totalCount) < percentThreshold {
+	if totalCount == 0 {
+		return true
+	}
+	threshold := float32(countThreshold) / float32(totalCount)
+	if percentThreshold > threshold {
 		threshold = percentThreshold
-	} else {
-		threshold = float32(countThreshold) / float32(totalCount)
 	}
 	return getFlakyRate(rd) > threshold
 }
