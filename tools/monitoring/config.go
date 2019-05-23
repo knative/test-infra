@@ -123,3 +123,17 @@ func newConfig(text []byte) (*Config, error) {
 	}
 	return file, nil
 }
+
+// GetAllPatterns collects all regexp patterns, including both error message patterns
+// and job name patterns
+func (config *Config) GetAllPatterns() []string {
+	var patterns []string
+	for _, patternSpec := range config.Spec {
+		patterns = append(patterns, patternSpec.ErrorPattern)
+		for _, alertCondition := range patternSpec.Alerts {
+			patterns = append(patterns, alertCondition.JobNameRegex)
+		}
+	}
+
+	return patterns
+}
