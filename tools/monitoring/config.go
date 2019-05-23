@@ -58,6 +58,22 @@ type SelectedConfig struct {
 	Period       int
 }
 
+// applyDefaults set fields to desired defaults values if they are missing from yaml
+func (selected SelectedConfig) applyDefaults() {
+	if selected.Occurrences == 0 {
+		selected.Occurrences = 1
+	}
+	if selected.JobsAffected == 0 {
+		selected.JobsAffected = 1
+	}
+	if selected.PrsAffected == 0 {
+		selected.PrsAffected = 1
+	}
+	if selected.Period == 0 {
+		selected.Period = 24 * 60
+	}
+}
+
 // Select gets the spec for a particular error pattern and a matching job name pattern
 func (f Config) Select(pattern, jobName string) (SelectedConfig, error) {
 	output := SelectedConfig{}
