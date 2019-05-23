@@ -139,8 +139,7 @@ func testSendMail(w http.ResponseWriter, r *http.Request) {
 	log.Println("Testing sending an email.")
 
 	ctx := context.Background()
-	err := cloudmail.SendTestMessage(ctx, mailClient, mailDomain, alertAddr)
-	if err != nil {
+	if err := cloudmail.SendTestMessage(ctx, mailClient, mailDomain, alertAddr); err != nil {
 		fmt.Fprintf(w, "Failed to send mail: %v", err)
 		return
 	}

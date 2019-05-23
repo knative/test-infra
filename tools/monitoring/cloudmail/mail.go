@@ -69,12 +69,10 @@ func CreateAddressSet(ctx context.Context, client *mail.CloudMailClient, domainI
 		AddressSet:   addressSet,
 	}
 
-	_, err := client.CreateAddressSet(ctx, req)
-	if err != nil {
+	if _, err := client.CreateAddressSet(ctx, req); err != nil {
 		return err
 	}
-	fmt.Printf("Address set created.\n")
-	fmt.Printf("Address set ID: %s\n", addressSetID)
+	fmt.Printf("Address set created.\nAddress set ID: %s\n", addressSetID)
 	return nil
 }
 
@@ -92,12 +90,10 @@ func CreateSenderDomain(ctx context.Context, client *mail.CloudMailClient, domai
 		Sender:   sender,
 	}
 
-	_, err := client.CreateSender(ctx, req)
-	if err != nil {
+	if _, err := client.CreateSender(ctx, req); err != nil {
 		return err
 	}
-	fmt.Printf("Sender created.\n")
-	fmt.Printf("Sender ID: %s\n", senderID)
+	fmt.Printf("Sender created.\nSender ID: %s\n", senderID)
 	return nil
 }
 
@@ -125,8 +121,7 @@ func CreateAndApplyReceiptRuleDrop(ctx context.Context, client *mail.CloudMailCl
 		ReceiptRule: receiptRule,
 	}
 
-	_, err := client.CreateReceiptRule(ctx, createReceiptRuleReq)
-	if err != nil {
+	if _, err := client.CreateReceiptRule(ctx, createReceiptRuleReq); err != nil {
 		return err
 	}
 	fmt.Printf("Receipt rule %s created.\n", receiptRuleID)
@@ -147,8 +142,7 @@ func CreateAndApplyReceiptRuleDrop(ctx context.Context, client *mail.CloudMailCl
 		UpdateMask: mask,
 	}
 
-	_, updateDomainErr := client.UpdateDomain(ctx, updateDomainReq)
-	if updateDomainErr != nil {
+	if _, updateDomainErr := client.UpdateDomain(ctx, updateDomainReq); updateDomainErr != nil {
 		return updateDomainErr
 	}
 	fmt.Printf("New receipt rule %s applied to domain %s.\n", receiptRuleID, domainID)
@@ -159,7 +153,7 @@ func CreateAndApplyReceiptRuleDrop(ctx context.Context, client *mail.CloudMailCl
 func SendTestMessage(ctx context.Context, client *mail.CloudMailClient, domainName string, toAddress string) error {
 	return SendEmailMessage(ctx, client, domainName, toAddress,
 		"Knative Monitoring Cloud Mail Test",
-		"This is a test message from Cloud Mail")
+		"This is a test message.")
 }
 
 // SendEmailMessage sends an email
@@ -198,7 +192,6 @@ func SendEmailMessage(ctx context.Context, client *mail.CloudMailClient, domainN
 	if err != nil {
 		return err
 	}
-	fmt.Printf("Messsage sent.\n")
-	fmt.Printf("Message ID: %s\n", resp.GetRfc822MessageId())
+	fmt.Printf("Messsage sent.\nMessage ID: %s\n", resp.GetRfc822MessageId())
 	return nil
 }

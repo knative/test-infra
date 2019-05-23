@@ -38,31 +38,30 @@ func main() {
 	flag.Parse()
 
 	ctx := context.Background()
-
 	client, err := mail.NewCloudMailClient(ctx)
 	if err != nil {
-		handleError("Failed to create Cloud Mail client: %s", err)
+		failIfError("Failed to create Cloud Mail client: %s", err)
 	}
 
 	if *actionCreateDomain {
 		fmt.Println("Creating the email domain")
-		handleError("Failed to create the domain", cloudmail.CreateDomain(ctx, client))
+		failIfError("Failed to create the domain", cloudmail.CreateDomain(ctx, client))
 	}
 
 	if *actionSetupSender {
 		fmt.Println("Setting up the sender")
-		handleError("Failed to create address set", cloudmail.CreateAddressSet(ctx, client, *domainID))
-		handleError("Failed to create sender domain", cloudmail.CreateSenderDomain(ctx, client, *domainID))
-		handleError("Failed to setup receipt rule", cloudmail.CreateAndApplyReceiptRuleDrop(ctx, client, *domainID))
+		failIfError("Failed to create address set", cloudmail.CreateAddressSet(ctx, client, *domainID))
+		failIfError("Failed to create sender domain", cloudmail.CreateSenderDomain(ctx, client, *domainID))
+		failIfError("Failed to setup receipt rule", cloudmail.CreateAndApplyReceiptRuleDrop(ctx, client, *domainID))
 	}
 
 	if *actionSendTestMail {
 		fmt.Println("Sending a Test Email")
-		handleError("Failed to send test message", cloudmail.SendTestMessage(ctx, client, *domainName, *toAddr))
+		failIfError("Failed to send test message", cloudmail.SendTestMessage(ctx, client, *domainName, *toAddr))
 	}
 }
 
-func handleError(errFmtMsg string, err error) {
+func failIfError(errFmtMsg string, err error) {
 	if err != nil {
 		log.Fatalf(errFmtMsg, err)
 	}

@@ -1,6 +1,6 @@
-## Cloud Mail Setup
+# Cloud Mail Setup
 
-### `setup.go`
+## `setup.go`
 
 `setup.go` sets up the cloud mail domain with the knative monitoring configuration. The setup actions
 only need to be done once.
@@ -25,13 +25,25 @@ all the resources under the specified domain.
    go run setup.go -send-test-mail -domain-name "<Domain Name generated in (1)>" -to-address "<recipient email>"
    ```
 
-### Cloud Mail Command Line Utility
+## Set up Go Client Library
+
+1. Install the following packages with `go get`
+```bash
+go get -u cloud.google.com/go
+go get -u google.golang.org/genproto/googleapis/api/annotations
+go get -u google.golang.org/genproto/googleapis/iam/v1
+go get -u google.golang.org/genproto/protobuf/field_mask
+```
+
+2. Download the [zip file](https://storage.googleapis.com/cloud-mail-client-libraries/cloudmail-v1alpha3-go.zip).
+Extract its contents, copy and merge the content in the zip file with the src folder of your Go workspace.
+
+## Cloud Mail Command Line Utility
 
 For more complex usage of cloud mail, use the command line interface directly. It is required
-to sign up for [cloud mail alpha](go/cloud-mail-alpha-form) before the command line utility
-can be used.
+to [sign up](https://goo.gl/UC8Eb4) for cloud mail alpha before the command line utility can be used.
 
-##### Useful Commands
+### Useful Commands
 
 List resources (domains, sender, address-set, receipt rules)
 ```bash
