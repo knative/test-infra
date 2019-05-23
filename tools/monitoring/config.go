@@ -75,11 +75,11 @@ func (selected SelectedConfig) applyDefaults() {
 }
 
 // Select gets the spec for a particular error pattern and a matching job name pattern
-func (f Config) Select(pattern, jobName string) (SelectedConfig, error) {
+func (config Config) Select(pattern, jobName string) (SelectedConfig, error) {
 	output := SelectedConfig{}
 	noMatchError := fmt.Errorf("no spec found for pattern[%s] and jobName[%s]",
 		pattern, jobName)
-	for _, patternSpec := range f.Spec {
+	for _, patternSpec := range config.Spec {
 		if pattern == patternSpec.ErrorPattern {
 			noMatchError = fmt.Errorf("spec found for pattern[%s], but no match for job name[%s]", pattern, jobName)
 			output.Hint = patternSpec.Hint
@@ -106,9 +106,9 @@ func (f Config) Select(pattern, jobName string) (SelectedConfig, error) {
 }
 
 // CollectErrorPatterns collects and returns all error patterns in the yaml file
-func (f Config) CollectErrorPatterns() []string {
+func (config Config) CollectErrorPatterns() []string {
 	var patterns []string
-	for _, patternSpec := range f.Spec {
+	for _, patternSpec := range config.Spec {
 		patterns = append(patterns, patternSpec.ErrorPattern)
 	}
 	return patterns
