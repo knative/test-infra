@@ -27,8 +27,9 @@ const (
 	buildsCount = 10
 	// Minimal number of results to be counted as valid results for each testcase, this is an arbitrary number
 	requiredCount = 8
-	// Don't do anything if found more than 1% tests flaky, this is an arbitrary number
-	threshold = 0.01
+	// Don't do anything if found more than 5 tests flaky, or 1% tests flaky, whichever comes first
+	countThreshold = 5
+	percentThreshold = 0.01
 
 	org = "knative"
 )

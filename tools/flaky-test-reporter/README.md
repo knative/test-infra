@@ -42,7 +42,7 @@ Efficient deduplication is crucial for the sustainability of this tool, and this
 
 #### Too many flaky tests identified
 
-When there are too many tests found to be flaky, most likely something abnormal is going on, and we don't want to create Github issues for all of them, or list all of them in Slack notifications. There is a threshold defined in [`config.go`](config.go), if the flaky rate went over the threshold there will be only 1 Github issue created, and Slack notification will not list all flaky tests.
+When there are too many tests found to be flaky, most likely something abnormal is going on, and we don't want to create Github issues for all of them, or list all of them in Slack notifications. There are thresholds defined in [`config.go`](config.go), if the flaky rate went over a threshold there will be only 1 Github issue created, and Slack notification will not list all flaky tests.
 
 #### Github issue updates
 

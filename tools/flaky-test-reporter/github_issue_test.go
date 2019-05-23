@@ -109,10 +109,12 @@ func TestCreateIssue(t *testing.T) {
 		createissue                          bool
 		wantIssues                           int
 	}{
-		{197, 2, 0, 0, false, 1}, // flaky rate > 1%, create only 1 issue
+		{197, 6, 0, 0, false, 1}, // flaky rate > 1% and > 5 flaky tests, create only 1 issue
+		{197, 2, 0, 0, false, 2}, // flaky rate > 1% and < 5 flaky tests, create issue for each
 		{200, 2, 0, 0, false, 2}, // flaky rate < 1%, create issue for each
 		{197, 2, 0, 0, true, 0},  // flaky rate > 1%, flag is set to not create issue
 		{200, 2, 0, 0, true, 0},  // flaky rate < 1%, flag is set to not create issue
+
 	}
 
 	for _, d := range datas {
