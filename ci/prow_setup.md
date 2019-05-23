@@ -3,7 +3,7 @@
 ## Creating the cluster
 
 1. Create the GKE cluster, the role bindings and the GitHub secrets. You might
-   need to update [Makefile](./prow/Makefile). For details, see <https://github.com/kubernetes/test-infra/blob/master/prow/getting_started.md>.
+   need to update [Makefile](./prow/Makefile). For details, see <https://github.com/kubernetes/test-infra/blob/master/prow/getting_started_deploy.md>.
 
 1. Ensure the GCP projects listed in [resources.yaml](./prow/boskos/resources.yaml)
    are created.
