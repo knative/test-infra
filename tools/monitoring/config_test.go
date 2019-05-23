@@ -237,8 +237,8 @@ func validate(text []byte) error {
 		return err
 	}
 	patterns := config.GetAllPatterns()
-	_, badPatterns := compilePatterns(patterns)
-	if len(badPatterns) > 0 {
+
+	if _, badPatterns := compilePatterns(patterns); len(badPatterns) > 0 {
 		return fmt.Errorf("bad patterns found: %v", badPatterns)
 	}
 	return nil
