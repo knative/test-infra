@@ -14,16 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// flaky-test-reporter collects test results from continuous flows,
-// identifies flaky tests, tracking flaky tests related github issues,
-// and sends slack notifications.
-
 package main
 
 import (
 	"path"
 	"strconv"
-	"sync"
 
 	"github.com/knative/test-infra/shared/prow"
 )
@@ -33,37 +28,34 @@ type prInfo struct {
 	ID       int
 }
 
-func (c *Client) processPR(wg *sync.WaitGroup) {
+func (c *Parser) processPR() {
 	for {
 		select {
 		case pr := <-c.PrChan:
 			for _, j := range prow.GetJobsFromPullRequest(pr.repoName, pr.ID) {
-				if len(c.JobFilter) > 0 && !sliceContains(c.JobFilter, j.Name) {
+				if len(c.jobFilter) > 0 && !sliceContains(c.jobFilter, j.Name) {
 					continue
 				}
-				c.JobChan <- j
+				c.wgJob.Add(1)
+				c.jobChan <- j
 			}
-			wg.Done()
+			c.wgPR.Done()
 		}
 	}
 }
 
-func (c *Client) feedPresubmitJobsFromRepo(repoName string) {
-	wg := &sync.WaitGroup{}
-
+func (c *Parser) feedPresubmitJobsFromRepo(repoName string) {
 	for i := 0; i < 100; i++ {
-		go c.processPR(wg)
+		go c.processPR()
 	}
 
 	for _, pr := range prow.GetPullRequestsFromRepo(repoName) {
 		if ID, _ := strconv.Atoi(path.Base(pr)); -1 != ID {
-			wg.Add(1)
+			c.wgPR.Add(1)
 			c.PrChan <- prInfo{
 				repoName: repoName,
 				ID:       ID,
 			}
 		}
 	}
-
-	wg.Wait()
 }

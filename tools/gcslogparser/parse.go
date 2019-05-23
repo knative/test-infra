@@ -14,116 +14,58 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// flaky-test-reporter collects test results from continuous flows,
-// identifies flaky tests, tracking flaky tests related github issues,
-// and sends slack notifications.
-
 package main
 
 import (
 	"flag"
-	"fmt"
-	"log"
 	"os"
+	"log"
 	"strings"
-	"sync"
-
-	"github.com/knative/test-infra/shared/prow"
+	"regexp"
 )
-
-type logInfo struct {
-	build prow.Build
-	l     string
-}
-
-func (c *Client) processJob(wgBuild *sync.WaitGroup) {
-	for {
-		select {
-		case j := <-c.JobChan:
-			// fmt.Println(j.StoragePath)
-			for _, buildID := range j.GetBuildIDs() {
-				wgBuild.Add(1)
-				c.BuildChan <- *(j.NewBuild(buildID))
-			}
-		}
-	}
-}
-
-func (c *Client) processBuild(wgBuild, wgLog *sync.WaitGroup) {
-	for {
-		select {
-		case b := <-c.BuildChan:
-			// fmt.Println(b.StoragePath)
-			if b.FinishTime != nil && *b.FinishTime > c.StartDate.Unix() {
-				wgLog.Add(1)
-				content, _ := b.ReadFile("build-log.txt")
-				c.LogChan <- logInfo{
-					build: b,
-					l:     string(content),
-				}
-			}
-			wgBuild.Done()
-		}
-	}
-}
-
-func (c *Client) parseLog(wgLog *sync.WaitGroup) {
-	for {
-		select {
-		case l := <-c.LogChan:
-			if c.Parser(l.l) {
-				fmt.Println(l.build.StoragePath)
-			} else {
-				fmt.Println("not found")
-			}
-			wgLog.Done()
-		}
-	}
-}
-
-// ParseRepo parses all jobs within a repo, including Presubmit and Postsubmit
-func (c *Client) ParseRepo(repoName string) {
-	c.refreshChans()
-
-	wgBuild := &sync.WaitGroup{}
-	wgLog := &sync.WaitGroup{}
-
-	for i := 0; i < 500; i++ {
-		go c.processJob(wgBuild)
-	}
-	for i := 0; i < 500; i++ {
-		go c.processBuild(wgBuild, wgLog)
-	}
-	for i := 0; i < 500; i++ {
-		go c.parseLog(wgLog)
-	}
-
-	c.feedPresubmitJobsFromRepo(repoName)
-	c.feedPostsubmitJobsFromRepo(repoName)
-
-	wgBuild.Wait()
-	wgLog.Wait()
-}
 
 func main() {
 	serviceAccount := flag.String("service-account", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"), "JSON key file for GCS service account")
-	// repoNames := flag.String("repo", "test-infra", "repo to be downloaded")
+	repoNames := flag.String("repo", "test-infra", "repo to be analyzed, comma separated")
 	startDate := flag.String("start-date", "2019-02-22", "cut off date to be analyzed")
-	dryrun := flag.Bool("dry-run", false, "dry run switch")
+	parseRegex := flag.String("parser", "", "regex string used for parsing")
+	jobFilter := flag.String("jobs", "", "jobs to be analyzed, comma separated")
+	prOnly := flag.Bool("pr-only", false, "supplied if just want to analyze PR jobs")
+	ciOnly := flag.Bool("ci-only", false, "supplied if just want to analyze CI jobs")
 	flag.Parse()
 
-	if nil != dryrun && true == *dryrun {
-		log.Printf("running in [dry run mode]")
+	if "" == *parseRegex {
+		log.Fatal("--parser must be provided")
 	}
 
-	c, _ := NewClient(*serviceAccount, func(s string) bool {
-		return strings.Contains(s, "Running coverage for PR")
-	})
-
-	defer c.cleanup()
+	c, _ := NewParser(*serviceAccount)
+	c.logParser = func(s string) bool {
+		return regexp.MustCompile(*parseRegex).MatchString(s)
+	}
 	c.CleanupOnInterrupt()
+	defer c.cleanup()
 
-	c.Dryrun = *dryrun
-	c.SetStartDate(*startDate)
-	c.ParseRepo("test-infra")
+	c.setStartDate(*startDate)
+	for _, j := range strings.Split(*jobFilter, ",") {
+		if "" != j {
+			c.jobFilter = append(c.jobFilter, j)
+		}
+	}
+
+	for _, repo := range strings.Split(*repoNames, ",") {
+		log.Printf("Repo: '%s'", repo)
+		if ! *prOnly {
+			log.Println("\tProcessing postsubmit jobs")
+			c.feedPostsubmitJobsFromRepo(repo)
+		}
+		if ! *ciOnly {
+			log.Println("\tProcessing presubmit jobs")
+			c.feedPresubmitJobsFromRepo(repo)
+		}
+	}
+	c.wait()
+	log.Printf("Processed %d builds, and found %d matches", len(c.processed), len(c.found))
+	for _, l := range c.found {
+		log.Printf("\t%s", l)
+	}
 }

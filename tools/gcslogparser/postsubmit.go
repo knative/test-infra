@@ -14,21 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// flaky-test-reporter collects test results from continuous flows,
-// identifies flaky tests, tracking flaky tests related github issues,
-// and sends slack notifications.
-
 package main
 
 import (
 	"github.com/knative/test-infra/shared/prow"
 )
 
-func (c *Client) feedPostsubmitJobsFromRepo(repoName string) {
-	for _, j := range prow.GetPostsubmitJobsFromRepo(repoName) {
-		if len(c.JobFilter) > 0 && !sliceContains(c.JobFilter, j.Name) {
+func (c *Parser) feedPostsubmitJobsFromRepo(repoName string) {
+	jobs := prow.GetPostsubmitJobsFromRepo(repoName)
+	for _, j := range jobs {
+		if len(c.jobFilter) > 0 && !sliceContains(c.jobFilter, j.Name) {
 			continue
 		}
-		c.JobChan <- j
+		c.wgJob.Add(1)
+		c.jobChan <- j
 	}
 }

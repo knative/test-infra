@@ -65,7 +65,13 @@ func ListDirectChildren(ctx context.Context, bucketName, storagePath string) []s
 	// If there are 2 directories named "foo" and "foobar",
 	// then given storagePath "foo" will get files both under "foo" and "foobar".
 	// Add trailling slash to storagePath, so that only gets children under given directory.
-	return list(ctx, bucketName, strings.TrimRight(storagePath, " /") + "/", "/")
+	var res []string
+	for _, child := range list(ctx, bucketName, strings.TrimRight(storagePath, " /") + "/", "/") {
+		if strings.TrimRight(storagePath, " /") != strings.TrimRight(child, " /") {
+			res = append(res, child)
+		}
+	}
+	return res
 }
 
 // Copy file from within gcs

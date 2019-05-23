@@ -328,7 +328,9 @@ func getBuildIDFromBuildPath(buildPath string) (int, error) {
 func GetPostsubmitJobsFromRepo(repoName string) []Job {
 	var jobs []Job
 	for _, c := range gcs.ListDirectChildren(ctx, BucketName, "logs") {
-		jobs = append(jobs, *NewJob(path.Base(c), PostsubmitJob, repoName, 0))
+		if strings.Contains(path.Base(c), "knative-" + repoName) {
+			jobs = append(jobs, *NewJob(path.Base(c), PostsubmitJob, repoName, 0))
+		}
 	}
 	return jobs
 }
