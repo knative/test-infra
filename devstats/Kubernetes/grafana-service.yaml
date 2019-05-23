@@ -50,7 +50,7 @@ spec:
         - name: GF_PATHS_DATA
           value: "/mount/data/grafana"
         - name: GF_PATHS_PROVISIONING
-          value: "/mount/data/src/test-infra/tools/devstats/grafana/provisioning"
+          value: "/mount/data/src/test-infra/devstats/grafana/provisioning"
         - name: GF_AUTH_ANONYMOUS_ENABLED
           value: "true"
         - name: GF_AUTH_ANONYMOUS_ORG_NAME
