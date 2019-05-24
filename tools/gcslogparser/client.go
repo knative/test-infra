@@ -20,24 +20,24 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
-	"time"
 	"sync"
+	"time"
 
 	"github.com/knative/test-infra/shared/prow"
 )
 
 type Parser struct {
-	StartDate time.Time         // Earliest date to be analyzed, i.e. "2019-02-22"
-	logParser    func(s string) bool // logParser function
-	jobFilter []string          // Jobs to be parsed. If not provided will parse all jobs
-	PrChan    chan prInfo // For PR use only, make it here so it's easier to cleanup
+	StartDate time.Time           // Earliest date to be analyzed, i.e. "2019-02-22"
+	logParser func(s string) bool // logParser function
+	jobFilter []string            // Jobs to be parsed. If not provided will parse all jobs
+	PrChan    chan prInfo         // For PR use only, make it here so it's easier to cleanup
 	jobChan   chan prow.Job
 	buildChan chan buildInfo
-	wgPR sync.WaitGroup
-	wgJob sync.WaitGroup
-	wgBuild sync.WaitGroup
+	wgPR      sync.WaitGroup
+	wgJob     sync.WaitGroup
+	wgBuild   sync.WaitGroup
 
-	found []string
+	found     []string
 	processed []string
 
 	mutex *sync.Mutex
@@ -45,7 +45,7 @@ type Parser struct {
 
 type buildInfo struct {
 	job prow.Job
-	ID int
+	ID  int
 }
 
 func NewParser(serviceAccount string) (*Parser, error) {
@@ -56,14 +56,14 @@ func NewParser(serviceAccount string) (*Parser, error) {
 	c := &Parser{}
 	c.mutex = &sync.Mutex{}
 
-	c.PrChan = make(chan prInfo, 500)
-	c.jobChan = make(chan prow.Job, 500)
-	c.buildChan = make(chan buildInfo, 5000)
+	c.PrChan = make(chan prInfo, 100)
+	c.jobChan = make(chan prow.Job, 100)
+	c.buildChan = make(chan buildInfo, 10000)
 
-	for i := 0; i < 500; i++ {
+	for i := 0; i < 100; i++ {
 		go c.jobListener()
 	}
-	for i := 0; i < 5000; i++ {
+	for i := 0; i < 1000; i++ {
 		go c.buildListener()
 	}
 
@@ -93,7 +93,7 @@ func (c *Parser) jobListener() {
 				c.wgBuild.Add(1)
 				c.buildChan <- buildInfo{
 					job: j,
-					ID: buildID,
+					ID:  buildID,
 				}
 			}
 			c.wgJob.Done()

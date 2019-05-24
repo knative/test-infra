@@ -18,10 +18,10 @@ package main
 
 import (
 	"flag"
-	"os"
 	"log"
-	"strings"
+	"os"
 	"regexp"
+	"strings"
 )
 
 func main() {
@@ -54,11 +54,11 @@ func main() {
 
 	for _, repo := range strings.Split(*repoNames, ",") {
 		log.Printf("Repo: '%s'", repo)
-		if ! *prOnly {
+		if !*prOnly {
 			log.Println("\tProcessing postsubmit jobs")
 			c.feedPostsubmitJobsFromRepo(repo)
 		}
-		if ! *ciOnly {
+		if !*ciOnly {
 			log.Println("\tProcessing presubmit jobs")
 			c.feedPresubmitJobsFromRepo(repo)
 		}
