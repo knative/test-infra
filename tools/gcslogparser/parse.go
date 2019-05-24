@@ -27,7 +27,7 @@ import (
 func main() {
 	serviceAccount := flag.String("service-account", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"), "JSON key file for GCS service account")
 	repoNames := flag.String("repo", "test-infra", "repo to be analyzed, comma separated")
-	startDate := flag.String("start-date", "2019-02-22", "cut off date to be analyzed")
+	startDate := flag.String("start-date", "2017-01-01", "cut off date to be analyzed")
 	parseRegex := flag.String("parser", "", "regex string used for parsing")
 	jobFilter := flag.String("jobs", "", "jobs to be analyzed, comma separated")
 	prOnly := flag.Bool("pr-only", false, "supplied if just want to analyze PR jobs")
