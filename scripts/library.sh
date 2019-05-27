@@ -466,10 +466,13 @@ function get_canonical_path() {
   echo "$(cd ${path%/*} && echo $PWD/${path##*/})"
 }
 
-# Return the base url we use to build the actual knative yaml sources.
-function get_knative_base_yaml_source() {
-  local knative_base_yaml_source="https://storage.googleapis.com/knative-nightly/@/latest"
+# Returns latest yaml source for the given knative project.
+# Parameters: $1 - repository name of the given project
+#             $2 - short name of the yaml source file
+function get_latest_knative_yaml_source() {
   local branch_name=""
+  local repo_name=$1
+  local source_name=$2
   # Get the branch name from Prow's env var, see https://github.com/kubernetes/test-infra/blob/master/prow/jobs.md.
   # Otherwise, try getting the current branch from git.
   (( IS_PROW )) && branch_name="${PULL_BASE_REF:-}"
@@ -478,9 +481,34 @@ function get_knative_base_yaml_source() {
   if [[ ${branch_name} =~ ^release-[0-9\.]+$ ]]; then
     # Get the latest tag name for the current branch, which is likely formatted as v0.5.0
     local tag_name="$(git describe --tags --abbrev=0)"
-    knative_base_yaml_source="https://storage.googleapis.com/knative-releases/@/previous/${tag_name}"
+    # The other repo might not have this tag, so we need to find the first available tag before it.
+    echo "$(find_latest_release_yaml_source ${tag_name} ${repo_name} ${source_name})"
+  else
+    local knative_base_yaml_source="https://storage.googleapis.com/knative-nightly/@/latest"
+    echo "${knative_base_yaml_source/@/${repo_name}}/${source_name}.yaml"
   fi
-  echo "${knative_base_yaml_source}"
+}
+
+# Returns latest release yaml source for the given knative project.
+# Parameters: $1 - git tag name of the current branch, e.g. v0.5.1
+#             $2 - repository name of the given project
+#             $3 - short name of the yaml source file
+function find_latest_release_yaml_source() {
+  local tag_name=$1
+  local repo_name=$2
+  local source_name=$3
+  local major_minor=`echo $tag_name | cut -d. -f-2`
+  local revision=`echo $tag_name | cut -d. -f3`
+  for (( ; revision>=0; revision-- ))
+  do
+    local tag_name="$major_minor.$revision"
+    local yaml_source="https://storage.googleapis.com/knative-releases/${repo_name}/previous/${tag_name}/${source_name}.yaml"
+    local ret_code=$(curl -s -o /dev/null -w "%{http_code}" "${yaml_source}")
+    if [[ "${ret_code}" -lt 400 ]]; then
+      echo "${yaml_source}"
+      break
+    fi
+  done
 }
 
 # Initializations that depend on previous functions.
@@ -490,7 +518,6 @@ readonly _TEST_INFRA_SCRIPTS_DIR="$(dirname $(get_canonical_path ${BASH_SOURCE[0
 readonly REPO_NAME_FORMATTED="Knative $(capitalize ${REPO_NAME//-/})"
 
 # Public latest nightly or release yaml files.
-readonly KNATIVE_BASE_YAML_SOURCE="$(get_knative_base_yaml_source)"
-readonly KNATIVE_SERVING_RELEASE="${KNATIVE_BASE_YAML_SOURCE/@/serving}/serving.yaml"
-readonly KNATIVE_BUILD_RELEASE="${KNATIVE_BASE_YAML_SOURCE/@/build}/build.yaml"
-readonly KNATIVE_EVENTING_RELEASE="${KNATIVE_BASE_YAML_SOURCE/@/eventing}/release.yaml"
+readonly KNATIVE_SERVING_RELEASE="$(get_latest_knative_yaml_source "serving" "serving")"
+readonly KNATIVE_BUILD_RELEASE="$(get_latest_knative_yaml_source "build" "build")"
+readonly KNATIVE_EVENTING_RELEASE="$(get_latest_knative_yaml_source "eventing" "release")"
