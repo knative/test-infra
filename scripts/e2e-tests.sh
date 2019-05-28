@@ -279,7 +279,7 @@ function setup_test_cluster() {
   header "Setting up test cluster"
 
   # Set the actual project the test cluster resides in
-  # It will be a project assigned by Boskos if test is running on Prow, 
+  # It will be a project assigned by Boskos if test is running on Prow,
   # otherwise will be ${GCP_PROJECT} set up by user.
   readonly export E2E_PROJECT_ID="$(gcloud config get-value project)"
 
@@ -314,6 +314,7 @@ function setup_test_cluster() {
   set +o pipefail
 
   if (( ! SKIP_KNATIVE_SETUP )) && function_exists knative_setup; then
+    (( ! SKIP_ISTIO_ADDON )) && (wait_until_batch_job_complete istio-system || return 1)
     knative_setup || fail_test "Knative setup failed"
   fi
   if function_exists test_setup; then
