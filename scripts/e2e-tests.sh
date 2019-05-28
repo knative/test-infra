@@ -211,6 +211,7 @@ function create_test_cluster() {
     ${extra_flags[@]} \
     ${EXTRA_KUBETEST_FLAGS[@]}
   echo "Test subprocess exited with code $?"
+  (( ! SKIP_ISTIO_ADDON )) && (wait_until_batch_job_complete istio-system || return 1)
   # Ignore any errors below, this is a best-effort cleanup and shouldn't affect the test result.
   set +o errexit
   function_exists cluster_teardown && cluster_teardown
