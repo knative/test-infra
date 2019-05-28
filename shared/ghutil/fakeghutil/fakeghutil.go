@@ -22,7 +22,7 @@ import (
 	"fmt"
 
 	"github.com/google/go-github/github"
-	"github.com/knative/test-infra/tools/flaky-test-reporter/ghutil"
+	"github.com/knative/test-infra/shared/ghutil"
 )
 
 // FakeGithubClient is a faked client, implements all functions of ghutil.GithubClientInterface
