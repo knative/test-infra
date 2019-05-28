@@ -253,10 +253,10 @@ plank:
     grace_period: 15000000000 # 15s
     utility_images:
       # Update these versions when updating plank version in cluster.yaml
-      clonerefs: "gcr.io/k8s-prow/clonerefs:v20190415-c700e7878"
-      initupload: "gcr.io/k8s-prow/initupload:v20190415-c700e7878"
-      entrypoint: "gcr.io/k8s-prow/entrypoint:v20190415-c700e7878"
-      sidecar: "gcr.io/k8s-prow/sidecar:v20190415-c700e7878"
+      clonerefs: "gcr.io/k8s-prow/clonerefs:v20190517-bb7028b16"
+      initupload: "gcr.io/k8s-prow/initupload:v20190517-bb7028b16"
+      entrypoint: "gcr.io/k8s-prow/entrypoint:v20190517-bb7028b16"
+      sidecar: "gcr.io/k8s-prow/sidecar:v20190517-bb7028b16"
     gcs_configuration:
       bucket: "[[.GcsBucket]]"
       path_strategy: "explicit"
@@ -293,6 +293,7 @@ tide:
     - knative/pkg
     - knative/caching
     - knative/website
+    - knative/community
     labels:
     - lgtm
     - approved
@@ -923,6 +924,11 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
 		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-central1")
 	}
+	if data.Base.RepoBranch != "" {
+		// If it's a release version, add env var PULL_BASE_REF as ref name of the base branch.
+		// TODO(Fredy-Z): this serves as a workaround, see https://github.com/knative/test-infra/issues/780.
+		addEnvToJob(&data.Base, "PULL_BASE_REF", data.Base.RepoBranch)
+	}
 	addExtraEnvVarsToJob(&data.Base)
 	configureServiceAccountForJob(&data.Base)
 	executeJobTemplate("periodic", jobTemplate, title, repoName, data.PeriodicJobName, false, data)
@@ -1027,7 +1033,7 @@ func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
 	}
 }
 
-// parseSection generate the configs form a given section of the input yaml file.
+// parseSection generate the configs from a given section of the input yaml file.
 func parseSection(config yaml.MapSlice, title string, generate sectionGenerator, finalize sectionGenerator) {
 	for _, section := range config {
 		if section.Key != title {
@@ -1511,15 +1517,16 @@ func generateDashboardsForReleases() {
 func generateDashboardGroups() {
 	outputConfig("dashboard_groups:")
 	for _, projName := range projNames {
-		dashboardRepoNames := make([]string, 0)
+		// there is only one dashboard for each released project, so we do not need to group them
 		if isReleased(projName) {
-			dashboardRepoNames = []string{projName}
-		} else {
-			repos := metaData[projName]
-			for _, repoName := range repoNames {
-				if _, exists := repos[repoName]; exists {
-					dashboardRepoNames = append(dashboardRepoNames, buildProjRepoStr(projName, repoName))
-				}
+			continue
+		}
+
+		dashboardRepoNames := make([]string, 0)
+		repos := metaData[projName]
+		for _, repoName := range repoNames {
+			if _, exists := repos[repoName]; exists {
+				dashboardRepoNames = append(dashboardRepoNames, buildProjRepoStr(projName, repoName))
 			}
 		}
 		executeDashboardGroupTemplate(projName, dashboardRepoNames)

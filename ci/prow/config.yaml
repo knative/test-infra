@@ -26,10 +26,10 @@ plank:
     grace_period: 15000000000 # 15s
     utility_images:
       # Update these versions when updating plank version in cluster.yaml
-      clonerefs: "gcr.io/k8s-prow/clonerefs:v20190415-c700e7878"
-      initupload: "gcr.io/k8s-prow/initupload:v20190415-c700e7878"
-      entrypoint: "gcr.io/k8s-prow/entrypoint:v20190415-c700e7878"
-      sidecar: "gcr.io/k8s-prow/sidecar:v20190415-c700e7878"
+      clonerefs: "gcr.io/k8s-prow/clonerefs:v20190517-bb7028b16"
+      initupload: "gcr.io/k8s-prow/initupload:v20190517-bb7028b16"
+      entrypoint: "gcr.io/k8s-prow/entrypoint:v20190517-bb7028b16"
+      sidecar: "gcr.io/k8s-prow/sidecar:v20190517-bb7028b16"
     gcs_configuration:
       bucket: "knative-prow"
       path_strategy: "explicit"
@@ -63,6 +63,7 @@ tide:
     - knative/pkg
     - knative/caching
     - knative/website
+    - knative/community
     labels:
     - lgtm
     - approved
@@ -1689,6 +1690,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.4
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -1731,6 +1734,52 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.5
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "45 8 * * *"
+  name: ci-knative-serving-0.6-continuous
+  agent: kubernetes
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      args:
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=github.com/knative/serving=release-0.6"
+      - "--root=/go/src"
+      - "--service-account=/etc/test-account/service-account.json"
+      - "--upload=gs://knative-prow/logs"
+      - "--timeout=180" # Avoid overrun
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.6
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -2220,6 +2269,52 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.5
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "55 8 * * *"
+  name: ci-knative-build-0.6-continuous
+  agent: kubernetes
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      args:
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=github.com/knative/build=release-0.6"
+      - "--root=/go/src"
+      - "--service-account=/etc/test-account/service-account.json"
+      - "--upload=gs://knative-prow/logs"
+      - "--timeout=180" # Avoid overrun
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.6
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -2412,6 +2507,178 @@ periodics:
       - "--profile-name=coverage_profile.txt"
       - "--cov-target=."
       - "--cov-threshold-percentage=80"
+- cron: "45 * * * *"
+  name: ci-knative-client-continuous
+  agent: kubernetes
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      args:
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=github.com/knative/client"
+      - "--root=/go/src"
+      - "--service-account=/etc/test-account/service-account.json"
+      - "--upload=gs://knative-prow/logs"
+      - "--timeout=50" # Avoid overrun
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./test/presubmit-tests.sh"
+      - "--all-tests"
+      - "--emit-metrics"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "11 8 * * *"
+  name: ci-knative-client-nightly-release
+  agent: kubernetes
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      args:
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=github.com/knative/client"
+      - "--root=/go/src"
+      - "--service-account=/etc/nightly-account/service-account.json"
+      - "--upload=gs://knative-prow/logs"
+      - "--timeout=90" # Avoid overrun
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./hack/release.sh"
+      - "--publish"
+      - "--tag-release"
+      volumeMounts:
+      - name: nightly-account
+        mountPath: /etc/nightly-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/nightly-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: nightly-account
+      secret:
+        secretName: nightly-account
+- cron: "11 9 * * 2"
+  name: ci-knative-client-dot-release
+  agent: kubernetes
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      args:
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=github.com/knative/client"
+      - "--root=/go/src"
+      - "--service-account=/etc/release-account/service-account.json"
+      - "--upload=gs://knative-prow/logs"
+      - "--timeout=90" # Avoid overrun
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./hack/release.sh"
+      - "--dot-release"
+      - "--release-gcs knative-releases/client"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
+- cron: "13 */2 * * *"
+  name: ci-knative-client-auto-release
+  agent: kubernetes
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      args:
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=github.com/knative/client"
+      - "--root=/go/src"
+      - "--service-account=/etc/release-account/service-account.json"
+      - "--upload=gs://knative-prow/logs"
+      - "--timeout=90" # Avoid overrun
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./hack/release.sh"
+      - "--auto-release"
+      - "--release-gcs knative-releases/client"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
+- cron: "0 1 * * *"
+  name: ci-knative-client-go-coverage
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: client
+    base_ref: master
+    clone_uri: "https://github.com/knative/client.git"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/coverage:latest
+      imagePullPolicy: Always
+      command:
+      - "/coverage"
+      args:
+      - "--artifacts=$(ARTIFACTS)"
+      - "--profile-name=coverage_profile.txt"
+      - "--cov-target=."
+      - "--cov-threshold-percentage=50"
 - cron: "50 * * * *"
   name: ci-knative-docs-continuous
   agent: kubernetes
@@ -2544,6 +2811,52 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.5
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "50 8 * * *"
+  name: ci-knative-eventing-0.6-continuous
+  agent: kubernetes
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      args:
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=github.com/knative/eventing=release-0.6"
+      - "--root=/go/src"
+      - "--service-account=/etc/test-account/service-account.json"
+      - "--upload=gs://knative-prow/logs"
+      - "--timeout=180" # Avoid overrun
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.6
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -2758,6 +3071,52 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.5
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "0 9 * * *"
+  name: ci-knative-eventing-sources-0.6-continuous
+  agent: kubernetes
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      args:
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=github.com/knative/eventing-sources=release-0.6"
+      - "--root=/go/src"
+      - "--service-account=/etc/test-account/service-account.json"
+      - "--upload=gs://knative-prow/logs"
+      - "--timeout=180" # Avoid overrun
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.6
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -3078,26 +3437,6 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 1 * * *"
-  name: ci-knative-client-go-coverage
-  agent: kubernetes
-  decorate: true
-  extra_refs:
-  - org: knative
-    repo: client
-    base_ref: master
-    clone_uri: "https://github.com/knative/client.git"
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/coverage:latest
-      imagePullPolicy: Always
-      command:
-      - "/coverage"
-      args:
-      - "--artifacts=$(ARTIFACTS)"
-      - "--profile-name=coverage_profile.txt"
-      - "--cov-target=."
-      - "--cov-threshold-percentage=50"
 - cron: "0 19 * * 1"
   name: ci-knative-cleanup
   agent: kubernetes

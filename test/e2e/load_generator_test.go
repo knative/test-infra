@@ -43,7 +43,7 @@ func loadTest(t *testing.T, factors bool, profiler bool) {
 		opts.FileNamePrefix = t.Name()
 	}
 
-	res, err := opts.RunLoadTest(true)
+	res, err := opts.RunLoadTest()
 	if err != nil {
 		t.Fatalf("Error performing load test: %v", err)
 	}

@@ -62,16 +62,19 @@ func main() {
 		log.Fatalf("Failed preparing local artifacts directory: %v", err)
 	}
 
-	for _, jc := range jobConfigs {
-		log.Printf("collecting results for repo '%s'\n", jc.Repo)
-		rd, err := collectTestResultsForRepo(&jc)
-		if nil != err {
-			log.Fatalf("Error collecting results for repo '%s': %v", jc.Repo, err)
+	for repoName, jobList := range jobConfigs {
+		for _, jc := range jobList {
+			jc.Repo = repoName
+			log.Printf("collecting results for job '%s' in repo '%s'\n", jc.Name, jc.Repo)
+			rd, err := collectTestResultsForRepo(jc)
+			if nil != err {
+				log.Fatalf("Error collecting results for job '%s' in repo '%s': %v", jc.Name, jc.Repo, err)
+			}
+			if err = createArtifactForRepo(rd); nil != err {
+				log.Fatalf("Error creating artifacts for job '%s' in repo '%s': %v", jc.Name, jc.Repo, err)
+			}
+			repoDataAll = append(repoDataAll, rd)
 		}
-		if err = createArtifactForRepo(rd); nil != err {
-			log.Fatalf("Error creating artifacts for repo '%s': %v", jc.Repo, err)
-		}
-		repoDataAll = append(repoDataAll, rd)
 	}
 
 	// Errors that could result in inaccuracy reporting would be treated with fast fail by processGithubIssues,

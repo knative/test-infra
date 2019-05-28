@@ -50,6 +50,24 @@ test_function ${SUCCESS} "${REPO_ROOT_DIR}/test/unit/library-tests.sh" get_canon
 test_function ${SUCCESS} "Foo Bar" capitalize "foo bar"
 test_function ${SUCCESS} ">>> Knative Testinfra controller logs:" mock_kubectl_function dump_app_logs "controller" "test-infra"
 
+test_function ${SUCCESS} "" is_protected_gcr "gcr.io/knative-releases"
+test_function ${SUCCESS} "" is_protected_gcr "gcr.io/knative-nightly"
+test_function ${FAILURE} "" is_protected_gcr "gcr.io/knative-foobar"
+test_function ${FAILURE} "" is_protected_gcr "gcr.io/foobar-releases"
+test_function ${FAILURE} "" is_protected_gcr "gcr.io/foobar-nightly"
+test_function ${FAILURE} "" is_protected_gcr ""
+
+test_function ${SUCCESS} "" is_protected_cluster "gke_knative-tests_us-central1-f_prow"
+test_function ${SUCCESS} "" is_protected_cluster "gke_knative-tests_us-west2-a_prow"
+test_function ${SUCCESS} "" is_protected_cluster "gke_knative-tests_us-west2-a_foobar"
+test_function ${FAILURE} "" is_protected_cluster "gke_knative-foobar_us-west2-a_prow"
+test_function ${FAILURE} "" is_protected_cluster ""
+
+test_function ${SUCCESS} "" is_protected_project "knative-tests"
+test_function ${FAILURE} "" is_protected_project "knative-foobar"
+test_function ${FAILURE} "" is_protected_project "foobar-tests"
+test_function ${FAILURE} "" is_protected_project ""
+
 echo ">> Testing report_go_test()"
 
 test_report TestSucceeds "^--- PASS: TestSucceeds"
