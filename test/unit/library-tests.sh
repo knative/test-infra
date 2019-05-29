@@ -68,6 +68,11 @@ test_function ${FAILURE} "" is_protected_project "knative-foobar"
 test_function ${FAILURE} "" is_protected_project "foobar-tests"
 test_function ${FAILURE} "" is_protected_project ""
 
+test_function ${SUCCESS} "" execute_with_retries 3 5 true
+test_function ${FAILURE} "false' exited 1, current run: 1, max retries: 3, retrying in 1 seconds.
+'false' exited 1, current run: 2, max retries: 3, retrying in 1 seconds.
+'false' exited 1, current run: 3, max retries: 3, no more retries left." execute_with_retries 1 3 false
+
 echo ">> Testing report_go_test()"
 
 test_report TestSucceeds "^--- PASS: TestSucceeds"
