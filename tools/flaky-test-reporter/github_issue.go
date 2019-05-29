@@ -112,7 +112,7 @@ func getBulkIssueIdentity(rd *RepoData, flakyRate float32) string {
 // GithubIssue handles methods for github issues
 type GithubIssue struct {
 	user   *github.User
-	client ghutil.GithubClientInterface
+	client ghutil.GithubOperations
 }
 
 // Setup creates the necessary setup to make calls to work with github issues

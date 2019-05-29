@@ -25,7 +25,7 @@ import (
 	"github.com/knative/test-infra/shared/ghutil"
 )
 
-// FakeGithubClient is a faked client, implements all functions of ghutil.GithubClientInterface
+// FakeGithubClient is a faked client, implements all functions of ghutil.GithubOperations
 type FakeGithubClient struct {
 	User     *github.User
 	Repos    []string
