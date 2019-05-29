@@ -169,6 +169,10 @@ periodics:
       cron: "5 8 * * *" # Run at 01:05PST every day (08:05 UTC)
     - performance: true
       cron: "0 1 * * *" # Run at 01:00 every day
+    - performance-mesh: true
+      cron: "0 3 * * *" # Run at 03:00 every day
+      args:
+      - "--mesh"
     - webhook-apicoverage: true
       cron: "5 9 * * *" # Run at 02:05PST every day (09:05 UTC)
 
