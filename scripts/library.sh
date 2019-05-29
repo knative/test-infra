@@ -336,33 +336,12 @@ function start_latest_knative_serving() {
   # time for CRDs to become effective, there is a race condition between when the CRDs are effective
   # and when the resources that references those CRDs are created.
   # The current workaround is to re-apply serving.yaml if it fails. Remove the retry logic after the
-  # race condition is fixed.
-  execute_with_retries 30 3 kubectl apply -f ${KNATIVE_SERVING_RELEASE} || return 1
+  # race condition is fixed. (https://github.com/knative/serving/issues/4176)
+  if [[ `kubectl apply -f ${KNATIVE_SERVING_RELEASE}` ]]; then
+    sleep 60
+    kubectl apply -f ${KNATIVE_SERVING_RELEASE} || return 1
+  fi
   wait_until_pods_running knative-serving || return 1
-}
-
-# Retry the command a certain number of times before failing it
-# Parameters: $1 - the time to wait before the next retry
-#             $2 - the max number of retries
-#             $3..$n - function to call and its parameters.
-function execute_with_retries() {
-  local runs=0
-  local wt=${1}
-  local ntries=${2}
-  shift 2
-
-  until ${@}; do
-    retval=$?
-    runs=$(($runs + 1))
-    if [[ ${runs} -lt ${ntries} ]]; then
-      echo "'${@}' exited ${retval}, current run: ${runs}, max retries: ${ntries}, retrying in ${wt} seconds."
-      sleep ${wt}
-    else
-      echo "'${@}' exited ${retval}, current run: ${runs}, max retries: ${ntries}, no more retries left."
-      return ${retval}
-    fi
-  done
-  return 0
 }
 
 # Run a go tool, installing it first if necessary.
