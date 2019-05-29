@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// pullrequest.go provides generic functions related to pullrequest
+// pullrequest.go provides generic functions related to PullRequest
 
 package ghutil
 
@@ -26,11 +26,11 @@ import (
 
 const (
 	// PullRequestOpenState is the state of open PullRequest
-	PullRequestOpenState IssueStateEnum = "open"
+	PullRequestOpenState PullRequestStateEnum = "open"
 	// PullRequestCloseState is the state of closed PullRequest
-	PullRequestCloseState IssueStateEnum = "closed"
+	PullRequestCloseState PullRequestStateEnum = "closed"
 	// PullRequestAllState is the state for all, useful when querying PullRequest
-	PullRequestAllState IssueStateEnum = "all"
+	PullRequestAllState PullRequestStateEnum = "all"
 )
 
 // PullRequestStateEnum represents different states of PullRequest
