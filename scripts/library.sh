@@ -506,8 +506,8 @@ function find_latest_release_yaml_source() {
   local tag_name=$1
   local repo_name=$2
   local source_name=$3
-  local major_minor="$(echo $tag_name | cut -d. -f-2)"
-  local revision="$(echo $tag_name | cut -d. -f3)"
+  local major_minor="$(echo ${tag_name} | cut -d. -f-2)"
+  local revision="$(echo ${tag_name} | cut -d. -f3)"
   for (( ; revision>=0; revision-- ))
   do
     local tag_name="$major_minor.$revision"
