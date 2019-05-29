@@ -314,6 +314,7 @@ function setup_test_cluster() {
   set +o pipefail
 
   if (( ! SKIP_KNATIVE_SETUP )) && function_exists knative_setup; then
+    echo "Waiting for Istio installation to complete before starting knative_setup"
     (( ! SKIP_ISTIO_ADDON )) && (wait_until_batch_job_complete istio-system || return 1)
     knative_setup || fail_test "Knative setup failed"
   fi

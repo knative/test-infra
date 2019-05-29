@@ -337,7 +337,8 @@ function start_latest_knative_serving() {
   # and when the resources that references those CRDs are created.
   # The current workaround is to re-apply serving.yaml if it fails. Remove the retry logic after the
   # race condition is fixed. (https://github.com/knative/serving/issues/4176)
-  if [[ `kubectl apply -f ${KNATIVE_SERVING_RELEASE}` ]]; then
+  if ! kubectl apply -f ${KNATIVE_SERVING_RELEASE}; then
+    echo "Install failed, waiting 60s and then retrying..."
     sleep 60
     kubectl apply -f ${KNATIVE_SERVING_RELEASE} || return 1
   fi
