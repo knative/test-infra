@@ -39,8 +39,8 @@ var (
 	ctx = context.Background()
 )
 
-// GithubClientInterface contains a set of functions for Github operations
-type GithubClientInterface interface {
+// GithubOperations contains a set of functions for Github operations
+type GithubOperations interface {
 	GetGithubUser() (*github.User, error)
 	ListRepos(org string) ([]string, error)
 	ListIssuesByRepo(org, repo string, labels []string) ([]*github.Issue, error)
@@ -56,7 +56,7 @@ type GithubClientInterface interface {
 }
 
 // GithubClient provides methods to perform github operations
-// It implements all functions in GithubClientInterface
+// It implements all functions in GithubOperations
 type GithubClient struct {
 	Client *github.Client
 }

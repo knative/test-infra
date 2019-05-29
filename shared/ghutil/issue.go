@@ -38,7 +38,6 @@ type IssueStateEnum string
 
 // ListRepos lists repos under org
 func (gc *GithubClient) ListRepos(org string) ([]string, error) {
-	var res []string
 	options := &github.ListOptions{}
 	genericList, err := gc.depaginate(
 		"listing repos",
@@ -55,8 +54,9 @@ func (gc *GithubClient) ListRepos(org string) ([]string, error) {
 			return interfaceList, resp, err
 		},
 	)
-	for _, repo := range genericList {
-		res = append(res, repo.(*github.Repository).GetName())
+	res := make([]string, len(genericList))
+	for i, elem := range genericList {
+		res[i] = elem.(*github.Repository).GetName()
 	}
 	return res, err
 }
@@ -70,7 +70,6 @@ func (gc *GithubClient) ListIssuesByRepo(org, repo string, labels []string) ([]*
 		issueListOptions.Labels = labels
 	}
 
-	var res []*github.Issue
 	options := &github.ListOptions{}
 	genericList, err := gc.depaginate(
 		fmt.Sprintf("listing issues with label '%v'", labels),
@@ -87,8 +86,9 @@ func (gc *GithubClient) ListIssuesByRepo(org, repo string, labels []string) ([]*
 			return interfaceList, resp, err
 		},
 	)
-	for _, issue := range genericList {
-		res = append(res, issue.(*github.Issue))
+	res := make([]*github.Issue, len(genericList))
+	for i, elem := range genericList {
+		res[i] = elem.(*github.Issue)
 	}
 	return res, err
 }
@@ -126,7 +126,6 @@ func (gc *GithubClient) ReopenIssue(org, repo string, issueNumber int) error {
 
 // ListComments gets all comments from issue
 func (gc *GithubClient) ListComments(org, repo string, issueNumber int) ([]*github.IssueComment, error) {
-	var res []*github.IssueComment
 	options := &github.ListOptions{}
 	genericList, err := gc.depaginate(
 		fmt.Sprintf("listing comment for issue '%s %s %d'", org, repo, issueNumber),
@@ -143,8 +142,9 @@ func (gc *GithubClient) ListComments(org, repo string, issueNumber int) ([]*gith
 			return interfaceList, resp, err
 		},
 	)
-	for _, issue := range genericList {
-		res = append(res, issue.(*github.IssueComment))
+	res := make([]*github.IssueComment, len(genericList))
+	for i, elem := range genericList {
+		res[i] = elem.(*github.IssueComment)
 	}
 	return res, err
 }

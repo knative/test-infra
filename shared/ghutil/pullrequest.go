@@ -26,30 +26,25 @@ import (
 
 const (
 	// PullRequestOpenState is the state of open PullRequest
-	PullRequestOpenState PullRequestStateEnum = "open"
+	PullRequestOpenState PullRequestState = "open"
 	// PullRequestCloseState is the state of closed PullRequest
-	PullRequestCloseState PullRequestStateEnum = "closed"
+	PullRequestCloseState PullRequestState = "closed"
 	// PullRequestAllState is the state for all, useful when querying PullRequest
-	PullRequestAllState PullRequestStateEnum = "all"
+	PullRequestAllState PullRequestState = "all"
 )
 
-// PullRequestStateEnum represents different states of PullRequest
-type PullRequestStateEnum string
+// PullRequestState represents different states of PullRequest
+type PullRequestState string
 
 // ListPullRequests lists pull requests within given repo, filters by head user and branch name if
 // provided as "user:ref-name", and by base name if provided, i.e. "master"
 func (gc *GithubClient) ListPullRequests(org, repo, head, base string) ([]*github.PullRequest, error) {
 	PRsListOptions := github.PullRequestListOptions{
-		State: "all",
-	}
-	if "" != head {
-		PRsListOptions.Head = head
-	}
-	if "" != base {
-		PRsListOptions.Base = base
+		State: string(PullRequestAllState),
+		Head:  head,
+		Base:  base,
 	}
 
-	var res []*github.PullRequest
 	options := &github.ListOptions{}
 	genericList, err := gc.depaginate(
 		fmt.Sprintf("listing Pull Requests with head '%s' and base '%s'", head, base),
@@ -66,15 +61,15 @@ func (gc *GithubClient) ListPullRequests(org, repo, head, base string) ([]*githu
 			return interfaceList, resp, err
 		},
 	)
-	for _, PR := range genericList {
-		res = append(res, PR.(*github.PullRequest))
+	res := make([]*github.PullRequest, len(genericList))
+	for i, elem := range genericList {
+		res[i] = elem.(*github.PullRequest)
 	}
 	return res, err
 }
 
 // ListCommits lists commits from a pull request
 func (gc *GithubClient) ListCommits(org, repo string, ID int) ([]*github.RepositoryCommit, error) {
-	var res []*github.RepositoryCommit
 	options := &github.ListOptions{}
 	genericList, err := gc.depaginate(
 		fmt.Sprintf("listing commits in Pull Requests '%d'", ID),
@@ -91,15 +86,15 @@ func (gc *GithubClient) ListCommits(org, repo string, ID int) ([]*github.Reposit
 			return interfaceList, resp, err
 		},
 	)
-	for _, commit := range genericList {
-		res = append(res, commit.(*github.RepositoryCommit))
+	res := make([]*github.RepositoryCommit, len(genericList))
+	for i, elem := range genericList {
+		res[i] = elem.(*github.RepositoryCommit)
 	}
 	return res, err
 }
 
 // ListFiles lists files from a pull request
 func (gc *GithubClient) ListFiles(org, repo string, ID int) ([]*github.CommitFile, error) {
-	var res []*github.CommitFile
 	options := &github.ListOptions{}
 	genericList, err := gc.depaginate(
 		fmt.Sprintf("listing files in Pull Requests '%d'", ID),
@@ -116,8 +111,9 @@ func (gc *GithubClient) ListFiles(org, repo string, ID int) ([]*github.CommitFil
 			return interfaceList, resp, err
 		},
 	)
-	for _, f := range genericList {
-		res = append(res, f.(*github.CommitFile))
+	res := make([]*github.CommitFile, len(genericList))
+	for i, elem := range genericList {
+		res[i] = elem.(*github.CommitFile)
 	}
 	return res, err
 }
