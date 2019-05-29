@@ -806,6 +806,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	jobNameSuffix := ""
 	jobTemplate := periodicTestJob
 	jobType := ""
+
 	for i, item := range periodicConfig {
 		switch item.Key {
 		case "continuous":
@@ -857,12 +858,12 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 				"--github-token /etc/hub-token/token"}
 			addVolumeToJob(&data.Base, "/etc/hub-token", "hub-token", true)
 			data.Base.Timeout = 90
-		case "performance":
+		case "performance", "performance-mesh":
 			if !getBool(item.Value) {
 				return
 			}
 			jobType = getString(item.Key)
-			jobNameSuffix = "performance"
+			jobNameSuffix = getString(item.Key)
 			data.Base.Command = performanceScript
 			// We need a larger cluster of at least 16 nodes for perf tests
 			addEnvToJob(&data.Base, "E2E_MIN_CLUSTER_NODES", "16")
@@ -903,6 +904,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		// Knock-out the item, signalling it was already parsed.
 		periodicConfig[i] = yaml.MapItem{}
 	}
+
 	parseBasicJobConfigOverrides(&data.Base, periodicConfig)
 	data.PeriodicJobName = fmt.Sprintf("ci-%s", data.Base.RepoNameForJob)
 	if jobNameSuffix != "" {
@@ -1267,7 +1269,7 @@ func collectMetaData(periodicJob yaml.MapSlice) {
 			releaseVersion := ""
 			for _, item := range jobConfig {
 				switch item.Key {
-				case "continuous", "dot-release", "auto-release", "performance", "latency", "nightly":
+				case "continuous", "dot-release", "auto-release", "performance", "performance-mesh", "latency", "nightly":
 					if getBool(item.Value) {
 						enabled = true
 						jobName = getString(item.Key)
@@ -1372,7 +1374,7 @@ func generateTestGroup(repoName string, jobNames []string) {
 		gcsLogDir := fmt.Sprintf("%s/%s/%s", gcsBucket, logsDir, testGroupName)
 		extras := make(map[string]string)
 		switch jobName {
-		case "continuous", "dot-release", "auto-release", "performance", "latency", "playground", "nightly":
+		case "continuous", "dot-release", "auto-release", "performance", "performance-mesh", "latency", "playground", "nightly":
 			isDailyBranch := regexp.MustCompile(`-[0-9\.]+-continuous`).FindString(testGroupName) != ""
 			if !isDailyBranch && (jobName == "continuous" || jobName == "auto-release") {
 				// TODO(Fredy-Z): this value should be derived from the cron string
@@ -1389,7 +1391,7 @@ func generateTestGroup(repoName string, jobNames []string) {
 			if jobName == "latency" {
 				extras["short_text_metric"] = "latency"
 			}
-			if jobName == "performance" {
+			if jobName == "performance" || jobName == "performance-mesh" {
 				extras["short_text_metric"] = "perf_latency"
 			}
 		case "test-coverage":
@@ -1429,10 +1431,10 @@ func generateDashboard(repoName string, jobNames []string) {
 			if repoName == "knative-serving" {
 				executeDashboardTabTemplate("conformance-tests", testGroupName, "include-filter-by-regex=test/conformance\\\\.&sort-by-name=", noExtras)
 			}
-		case "dot-release", "auto-release", "performance", "latency", "playground":
+		case "dot-release", "auto-release", "performance", "performance-mesh", "latency", "playground":
 			extras := make(map[string]string)
 			baseOptions := testgridTabSortByName
-			if jobName == "performance" {
+			if jobName == "performance" || jobName == "performance-mesh" {
 				baseOptions = testgridTabGroupByTarget
 			}
 			if jobName == "latency" {
@@ -1465,7 +1467,7 @@ func executeDashboardTabTemplate(dashboardTabName string, testGroupName string, 
 // getTestGroupName get the testGroupName from the given repoName and jobName
 func getTestGroupName(repoName string, jobName string) string {
 	switch jobName {
-	case "continuous", "dot-release", "auto-release", "performance", "latency", "playground":
+	case "continuous", "dot-release", "auto-release", "performance", "performance-mesh", "latency", "playground":
 		return fmt.Sprintf("ci-%s-%s", repoName, jobName)
 	case "nightly":
 		return fmt.Sprintf("ci-%s-%s-release", repoName, jobName)
