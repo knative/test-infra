@@ -475,13 +475,13 @@ function get_canonical_path() {
   echo "$(cd ${path%/*} && echo $PWD/${path##*/})"
 }
 
-# Returns latest yaml source for the given knative project.
+# Returns the URL to the latest manifest for the given Knative project.
 # Parameters: $1 - repository name of the given project
-#             $2 - short name of the yaml source file
+#             $2 - name of the yaml file, without extension
 function get_latest_knative_yaml_source() {
   local branch_name=""
-  local repo_name=$1
-  local source_name=$2
+  local repo_name="$1"
+  local yaml_name="$2"
   # Get the branch name from Prow's env var, see https://github.com/kubernetes/test-infra/blob/master/prow/jobs.md.
   # Otherwise, try getting the current branch from git.
   (( IS_PROW )) && branch_name="${PULL_BASE_REF:-}"
@@ -490,36 +490,13 @@ function get_latest_knative_yaml_source() {
   if [[ ${branch_name} =~ ^release-[0-9\.]+$ ]]; then
     # Get the latest tag name for the current branch, which is likely formatted as v0.5.0
     local tag_name="$(git describe --tags --abbrev=0)"
-    # The other repo might not have this tag, so we need to find the first available tag before it.
-    echo "$(find_latest_release_yaml_source ${tag_name} ${repo_name} ${source_name})"
+    # The given repo might not have this tag, so we need to find its latest release manifest with the same major&minor version.
+    local major_minor="$(echo ${tag_name} | cut -d. -f-2)"
+    echo "$(gsutil ls gs://knative-releases/${repo_name}/previous/${major_minor}.*/${yaml_name}.yaml | tail -n 1)"
   # If it's not a release branch, the yaml source URL should be nightly build.
   else
-    echo "https://storage.googleapis.com/knative-nightly/${repo_name}/latest/${source_name}.yaml"
+    echo "https://storage.googleapis.com/knative-nightly/${repo_name}/latest/${yaml_name}.yaml"
   fi
-}
-
-# Returns latest release yaml source for the given knative project.
-# Parameters: $1 - git tag name of the current branch, e.g. v0.5.1
-#             $2 - repository name of the given project
-#             $3 - short name of the yaml source file
-function find_latest_release_yaml_source() {
-  local tag_name=$1
-  local repo_name=$2
-  local source_name=$3
-  local major_minor="$(echo ${tag_name} | cut -d. -f-2)"
-  local revision="$(echo ${tag_name} | cut -d. -f3)"
-  for (( ; revision>=0; revision-- ))
-  do
-    local tag_name="$major_minor.$revision"
-    local gcs_yaml_source="gs://knative-releases/${repo_name}/previous/${tag_name}/${source_name}.yaml"
-    # Check if the yaml file exists on gs.
-    gsutil ls "${gcs_yaml_source}" > /dev/null 2>&1
-    local ret_code=$?
-    if [[ ${ret_code} -eq 0 ]]; then
-      echo "$(echo ${gcs_yaml_source} | sed 's/gs:\/\//https:\/\/storage.googleapis.com\//')"
-      break
-    fi
-  done
 }
 
 # Initializations that depend on previous functions.
