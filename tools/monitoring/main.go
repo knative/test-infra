@@ -17,6 +17,7 @@ limitations under the License.
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -26,18 +27,23 @@ import (
 
 	"github.com/knative/test-infra/shared/mysql"
 	"github.com/knative/test-infra/tools/monitoring/config"
+	"github.com/knative/test-infra/tools/monitoring/criersub"
 	"github.com/knative/test-infra/tools/monitoring/mail"
 )
 
 var (
 	dbConfig   mysql.DBConfig
 	mailConfig *mail.Config
+	subClient  *criersub.SubscriberClient
 
 	alertEmailRecipients = []string{"knative-productivity-oncall@googlegroups.com"}
 )
 
 const (
-	yamlURL = "https://raw.githubusercontent.com/knative/test-infra/master/tools/monitoring/sample.yaml"
+	projectID = "knative-tests"
+
+	yamlURL      = "https://raw.githubusercontent.com/knative/test-infra/master/tools/monitoring/sample.yaml"
+	crierSubName = "test-infra-monitoring-sub"
 )
 
 func main() {
@@ -62,6 +68,20 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	ctx := context.Background()
+	subClient, err = criersub.NewSubscriberClient(ctx, projectID, crierSubName)
+	if err != nil {
+		log.Fatalf("Failed to initialize the subscriber %+v", err)
+	}
+	go func() {
+		err := subClient.ReceiveMessageAckAll(ctx, func(rmsg *criersub.ReportMessage) {
+			log.Printf("Report Message: %+v\n", rmsg)
+		})
+		if err != nil {
+			log.Fatalf("Failed to retrieve messages due to %v", err)
+		}
+	}()
 
 	// use PORT environment variable, or default to 8080
 	port := "8080"
