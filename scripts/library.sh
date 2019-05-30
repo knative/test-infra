@@ -331,17 +331,10 @@ function report_go_test() {
 function start_latest_knative_serving() {
   header "Starting Knative Serving"
   subheader "Installing Knative Serving"
-  echo "Installing Serving from ${KNATIVE_SERVING_RELEASE}"
-  # Some CRDs defined in serving YAML are also referenced by other components in serving. As it takes
-  # time for CRDs to become effective, there is a race condition between when the CRDs are effective
-  # and when the resources that references those CRDs are created.
-  # The current workaround is to re-apply serving.yaml if it fails. Remove the retry logic after the
-  # race condition is fixed. (https://github.com/knative/serving/issues/4176)
-  if ! kubectl apply -f ${KNATIVE_SERVING_RELEASE}; then
-    echo "Install failed, waiting 60s and then retrying..."
-    sleep 60
-    kubectl apply -f ${KNATIVE_SERVING_RELEASE} || return 1
-  fi
+  echo "Installing Serving CRDs from ${KNATIVE_SERVING_RELEASE}"
+  kubectl apply --selector knative.dev/crd-install=true -f ${KNATIVE_SERVING_RELEASE}
+  echo "Installing the rest of serving components from ${KNATIVE_SERVING_RELEASE}"
+  kubectl apply -f ${KNATIVE_SERVING_RELEASE}
   wait_until_pods_running knative-serving || return 1
 }
 
