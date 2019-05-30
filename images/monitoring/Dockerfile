@@ -21,8 +21,7 @@ ENV TOOL_NAME monitoring
 # Temporarily add test-infra to the image to build custom tools
 ADD ./tools $TEMP_TOOLS_REPO_DIR
 
-# These go dependencies need to be included before cloud mail files to avoid stale checkout due to
-# no .git file in cloud mail
+# Add cloud mail go dependencies first before extracting the source
 RUN go get -u cloud.google.com/go
 RUN go get -u google.golang.org/genproto/googleapis/api/annotations
 RUN go get -u google.golang.org/genproto/googleapis/iam/v1
@@ -30,19 +29,10 @@ RUN go get -u google.golang.org/genproto/protobuf/field_mask
 
 #TODO(yt3liu): Use the alpha released after the go library builds correctly with the latest release
 #RUN wget https://storage.googleapis.com/cloud-mail-client-libraries/cloudmail-v1alpha3-go.zip
-#RUN wget https://storage.cloud.google.com/cloud-mail-client-libraries/cloudmail-v1alpha3-go.zip
-#RUN wget https://storage.googleapis.com/knative-monitoring/cloudmail-v1alpha3-go.zip
-RUN wget https://storage.googleapis.com/joyceyu-test/cloudmail-v1alpha3-go-2.zip
+RUN wget https://storage.googleapis.com/knative-monitoring/cloudmail-v1alpha3-go.zip
 
 RUN apt-get install zip unzip
-#RUN apt-get install fastjar
-#RUN apt-get -qq install file
-#RUN ls
-#RUN jar xvf cloudmail-v1alpha3-go.zip
-#RUN unzip -v
-#RUN file cloudmail-v1alpha3-go.zip
-#RUN unzip cloudmail-v1alpha3-go.zip -d cloudmail-v1alpha3-go
-RUN unzip cloudmail-v1alpha3-go-2.zip
+RUN unzip cloudmail-v1alpha3-go.zip -d cloudmail-v1alpha3-go
 RUN ls
 RUN apt-get -qq install rsync
 RUN cp -r cloudmail-v1alpha3-go/google.golang.org/genproto/googleapis/cloud/mail /go/src/google.golang.org/genproto/googleapis/cloud/mail
@@ -50,6 +40,8 @@ RUN cp -r cloudmail-v1alpha3-go/cloud.google.com/go/mail /go/src/cloud.google.co
 
 RUN make -C $TEMP_TOOLS_REPO_DIR/$TOOL_NAME/
 RUN cp $TEMP_TOOLS_REPO_DIR/$TOOL_NAME/$TOOL_NAME /$TOOL_NAME
+
+RUN go build -v ./...
 
 # Remove test-infra from the container
 RUN rm -fr $TEMP_TOOLS_REPO_DIR

@@ -27,35 +27,9 @@ all the resources under the specified domain.
 
 ## Set up Go Client Library
 
-1. Install the following packages with `go get`
-```bash
-go get -u cloud.google.com/go
-go get -u google.golang.org/genproto/googleapis/api/annotations
-go get -u google.golang.org/genproto/googleapis/iam/v1
-go get -u google.golang.org/genproto/protobuf/field_mask
-```
-
-2. Download the [zip file](https://storage.googleapis.com/cloud-mail-client-libraries/cloudmail-v1alpha3-go.zip).
-Extract its contents, copy and merge the content in the zip file with the src folder of your Go workspace.
+Follow the instructions at [Quickstart go client library setup](https://cloud.google.com/mail/docs/quickstart-client-libraries#cloud-mail-client-libraries-go)
 
 ## Cloud Mail Command Line Utility
 
-For more complex usage of cloud mail, use the command line interface directly. It is required
-to [sign up](https://goo.gl/UC8Eb4) for cloud mail alpha before the command line utility can be used.
-
-### Useful Commands
-
-List resources (domains, sender, address-set, receipt rules)
-```bash
-gcloud alpha mail [domains|senders] list --location="<region>"
-gcloud alpha mail domains [address-sets|receipt-rules] list  --location="<region>" --domain="<domainId>"
-```
-
-Delete resources (domains, sender, address-set, receipt rules)
-
-```bash
-gcloud alpha mail domains delete <domainid> --location="<region>"
-gcloud alpha mail senders delete <senderid> --location="<region>"
-gcloud alpha mail domains address-sets delete <address-set-id>  --location="<region>" --domain="<domainId>"
-gcloud alpha mail domains receipt-rules delete <receipt-rule-id>  ---location="<region>" --domain="<domainId>"
-```
+For more complex usage of cloud mail, use the [gcloud command line interface](https://cloud.google.com/mail/docs/quickstart-cli)
+directly. It is required to [sign up](https://goo.gl/UC8Eb4) for cloud mail alpha before the command line utility can be used.
