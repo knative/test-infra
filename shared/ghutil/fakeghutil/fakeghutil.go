@@ -20,6 +20,7 @@ package fakeghutil
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/google/go-github/github"
 	"github.com/knative/test-infra/shared/ghutil"
@@ -27,10 +28,13 @@ import (
 
 // FakeGithubClient is a faked client, implements all functions of ghutil.GithubOperations
 type FakeGithubClient struct {
-	User     *github.User
-	Repos    []string
-	Issues   map[string]map[int]*github.Issue       // map of repo: map of issueNumber: issues
-	Comments map[int]map[int64]*github.IssueComment // map of issueNumber: map of commentID: comments
+	User         *github.User
+	Repos        []string
+	Issues       map[string]map[int]*github.Issue       // map of repo: map of issueNumber: issues
+	Comments     map[int]map[int64]*github.IssueComment // map of issueNumber: map of commentID: comments
+	PullRequests map[string]map[int]*github.PullRequest // map of repo: map of PullRequest Number: pullrequests
+	PRCommits    map[int][]*github.RepositoryCommit     // map of PR number: slice of commits
+	CommitFiles  map[string][]*github.CommitFile        // map of commit SHA: slice of files
 
 	NextNumber int    // number to be assigned to next newly created issue/comment
 	BaseURL    string // base URL of Github
@@ -182,6 +186,130 @@ func (fgc *FakeGithubClient) RemoveLabelForIssue(org, repo string, issueNumber i
 		return fmt.Errorf("cannot find label")
 	}
 	targetIssue.Labels = append(targetIssue.Labels[:targetI], targetIssue.Labels[targetI+1:]...)
+	return nil
+}
+
+// ListPullRequests lists pull requests within given repo, filters by head user and branch name if
+// provided as "user:ref-name", and by base name if provided, i.e. "master"
+func (fgc *FakeGithubClient) ListPullRequests(org, repo, head, base string) ([]*github.PullRequest, error) {
+	var res []*github.PullRequest
+	PRs, ok := fgc.PullRequests[repo]
+	if !ok {
+		return res, fmt.Errorf("repo %s not exist", repo)
+	}
+	for _, PR := range PRs {
+		// Filter with consistent logic of CreatePullRequest function below
+		if ("" == head || *PR.Head.Label == head) &&
+			("" == base || *PR.Base.Ref == base) {
+			res = append(res, PR)
+		}
+	}
+	return res, nil
+}
+
+// ListCommits lists commits from a pull request
+func (fgc *FakeGithubClient) ListCommits(org, repo string, ID int) ([]*github.RepositoryCommit, error) {
+	commits, ok := fgc.PRCommits[ID]
+	if !ok {
+		return commits, fmt.Errorf("no commits found for PR '%d'", ID)
+	}
+	return commits, nil
+}
+
+// ListFiles lists files from a pull request
+func (fgc *FakeGithubClient) ListFiles(org, repo string, ID int) ([]*github.CommitFile, error) {
+	var res []*github.CommitFile
+	commits, err := fgc.ListCommits(org, repo, ID)
+	if nil != err {
+		return res, err
+	}
+	for _, commit := range commits {
+		files, ok := fgc.CommitFiles[*commit.SHA]
+		if !ok {
+			// don't allow empty commit
+			return res, fmt.Errorf("no files found for commit '%s'", *commit.SHA)
+		}
+		res = append(res, files...)
+	}
+	return res, nil
+}
+
+// CreatePullRequest creates PullRequest, passing head user and branch name "user:ref-name", and base branch name like "master"
+func (fgc *FakeGithubClient) CreatePullRequest(org, repo, head, base, title, body string) (*github.PullRequest, error) {
+	PRNumber := fgc.getNextNumber()
+	stateStr := string(ghutil.PullRequestOpenState)
+	b := true
+	PR := &github.PullRequest{
+		Title:               &title,
+		Body:                &body,
+		MaintainerCanModify: &b,
+		State:               &stateStr,
+	}
+	if "" != head {
+		tokens := strings.Split(head, ":")
+		if len(tokens) != 2 {
+			return nil, fmt.Errorf("invalid head, want: 'user:ref', got: '%s'", head)
+		}
+		PR.Head = &github.PullRequestBranch{
+			Label: &head,
+			Ref:   &tokens[1],
+		}
+	}
+	if "" != base {
+		l := fmt.Sprintf("%s:%s", repo, base)
+		PR.Base = &github.PullRequestBranch{
+			Label: &l,
+			Ref:   &base,
+		}
+	}
+
+	if _, ok := fgc.PullRequests[repo]; !ok {
+		fgc.PullRequests[repo] = make(map[int]*github.PullRequest)
+	}
+	fgc.PullRequests[repo][PRNumber] = PR
+	return PR, nil
+}
+
+// AddFileToCommit adds file to commit
+// This is complementary of mocking CreatePullRequest, so that newly created pull request can have files
+func (fgc *FakeGithubClient) AddFileToCommit(org, repo, SHA, filename, patch string) error {
+	var commit *github.RepositoryCommit
+	for _, commits := range fgc.PRCommits {
+		for _, c := range commits {
+			if *c.SHA == SHA {
+				commit = c
+				break
+			}
+		}
+	}
+	if nil == commit {
+		return fmt.Errorf("commit %s not exist", SHA)
+	}
+	f := &github.CommitFile{
+		Filename: &filename,
+		Patch:    &patch,
+	}
+	if _, ok := fgc.CommitFiles[SHA]; !ok {
+		fgc.CommitFiles[SHA] = make([]*github.CommitFile, 0, 0)
+	}
+	fgc.CommitFiles[SHA] = append(fgc.CommitFiles[SHA], f)
+	return nil
+}
+
+// AddCommitToPullRequest adds commit to pullrequest
+// This is complementary of mocking CreatePullRequest, so that newly created pull request can have commits
+func (fgc *FakeGithubClient) AddCommitToPullRequest(org, repo string, ID int, SHA string) error {
+	PRs, ok := fgc.PullRequests[repo]
+	if !ok {
+		return fmt.Errorf("repo %s not exist", repo)
+	}
+	if _, ok = PRs[ID]; !ok {
+		return fmt.Errorf("Pull Request %d not exist", ID)
+	}
+	if _, ok = fgc.PRCommits[ID]; !ok {
+		fgc.PRCommits[ID] = make([]*github.RepositoryCommit, 0, 0)
+	}
+	fgc.PRCommits[ID] = append(fgc.PRCommits[ID], &github.RepositoryCommit{SHA: &SHA})
 	return nil
 }
 

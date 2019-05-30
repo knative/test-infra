@@ -53,6 +53,10 @@ type GithubOperations interface {
 	EditComment(org, repo string, commentID int64, commentBody string) error
 	AddLabelsToIssue(org, repo string, issueNumber int, labels []string) error
 	RemoveLabelForIssue(org, repo string, issueNumber int, label string) error
+	ListPullRequests(org, repo, head, base string) ([]*github.PullRequest, error)
+	ListCommits(org, repo string, ID int) ([]*github.RepositoryCommit, error)
+	ListFiles(org, repo string, ID int) ([]*github.CommitFile, error)
+	CreatePullRequest(org, repo, head, base, title, body string) (*github.PullRequest, error)
 }
 
 // GithubClient provides methods to perform github operations
