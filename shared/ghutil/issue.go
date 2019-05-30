@@ -38,13 +38,13 @@ type IssueStateEnum string
 
 // ListRepos lists repos under org
 func (gc *GithubClient) ListRepos(org string) ([]string, error) {
-	options := &github.ListOptions{}
+	repoListOptions := &github.RepositoryListOptions{}
 	genericList, err := gc.depaginate(
 		"listing repos",
 		maxRetryCount,
-		options,
+		&repoListOptions.ListOptions,
 		func() ([]interface{}, *github.Response, error) {
-			page, resp, err := gc.Client.Repositories.List(ctx, org, nil)
+			page, resp, err := gc.Client.Repositories.List(ctx, org, repoListOptions)
 			var interfaceList []interface{}
 			if nil == err {
 				for _, repo := range page {
@@ -63,20 +63,19 @@ func (gc *GithubClient) ListRepos(org string) ([]string, error) {
 
 // ListIssuesByRepo lists issues within given repo, filters by labels if provided
 func (gc *GithubClient) ListIssuesByRepo(org, repo string, labels []string) ([]*github.Issue, error) {
-	issueListOptions := github.IssueListByRepoOptions{
+	issueListOptions := &github.IssueListByRepoOptions{
 		State: string(IssueAllState),
 	}
 	if len(labels) > 0 {
 		issueListOptions.Labels = labels
 	}
 
-	options := &github.ListOptions{}
 	genericList, err := gc.depaginate(
 		fmt.Sprintf("listing issues with label '%v'", labels),
 		maxRetryCount,
-		options,
+		&issueListOptions.ListOptions,
 		func() ([]interface{}, *github.Response, error) {
-			page, resp, err := gc.Client.Issues.ListByRepo(ctx, org, repo, &issueListOptions)
+			page, resp, err := gc.Client.Issues.ListByRepo(ctx, org, repo, issueListOptions)
 			var interfaceList []interface{}
 			if nil == err {
 				for _, issue := range page {
@@ -126,13 +125,13 @@ func (gc *GithubClient) ReopenIssue(org, repo string, issueNumber int) error {
 
 // ListComments gets all comments from issue
 func (gc *GithubClient) ListComments(org, repo string, issueNumber int) ([]*github.IssueComment, error) {
-	options := &github.ListOptions{}
+	commentListOptions := &github.IssueListCommentsOptions{}
 	genericList, err := gc.depaginate(
 		fmt.Sprintf("listing comment for issue '%s %s %d'", org, repo, issueNumber),
 		maxRetryCount,
-		options,
+		&commentListOptions.ListOptions,
 		func() ([]interface{}, *github.Response, error) {
-			page, resp, err := gc.Client.Issues.ListComments(ctx, org, repo, issueNumber, nil)
+			page, resp, err := gc.Client.Issues.ListComments(ctx, org, repo, issueNumber, commentListOptions)
 			var interfaceList []interface{}
 			if nil == err {
 				for _, issue := range page {

@@ -45,11 +45,10 @@ func (gc *GithubClient) ListPullRequests(org, repo, head, base string) ([]*githu
 		Base:  base,
 	}
 
-	options := &github.ListOptions{}
 	genericList, err := gc.depaginate(
 		fmt.Sprintf("listing Pull Requests with head '%s' and base '%s'", head, base),
 		maxRetryCount,
-		options,
+		&PRsListOptions.ListOptions,
 		func() ([]interface{}, *github.Response, error) {
 			page, resp, err := gc.Client.PullRequests.List(ctx, org, repo, &PRsListOptions)
 			var interfaceList []interface{}
@@ -76,7 +75,7 @@ func (gc *GithubClient) ListCommits(org, repo string, ID int) ([]*github.Reposit
 		maxRetryCount,
 		options,
 		func() ([]interface{}, *github.Response, error) {
-			page, resp, err := gc.Client.PullRequests.ListCommits(ctx, org, repo, ID, nil)
+			page, resp, err := gc.Client.PullRequests.ListCommits(ctx, org, repo, ID, options)
 			var interfaceList []interface{}
 			if nil == err {
 				for _, commit := range page {
@@ -101,7 +100,7 @@ func (gc *GithubClient) ListFiles(org, repo string, ID int) ([]*github.CommitFil
 		maxRetryCount,
 		options,
 		func() ([]interface{}, *github.Response, error) {
-			page, resp, err := gc.Client.PullRequests.ListFiles(ctx, org, repo, ID, nil)
+			page, resp, err := gc.Client.PullRequests.ListFiles(ctx, org, repo, ID, options)
 			var interfaceList []interface{}
 			if nil == err {
 				for _, f := range page {
