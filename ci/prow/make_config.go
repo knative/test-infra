@@ -264,7 +264,7 @@ plank:
 
 prowjob_namespace: default
 pod_namespace: test-pods
-log_level: info
+log_level: debug
 
 branch-protection:
   orgs:
