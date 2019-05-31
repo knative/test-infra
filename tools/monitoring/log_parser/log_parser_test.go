@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package main
+package log_parser
 
 import (
 	"reflect"
@@ -38,49 +38,6 @@ I0515 00:00:32.677] ==================================
 W0515 00:00:32.677] Run: ('/workspace/./test-infra/jenkins/../scenarios/../hack/coalesce.py',)
 E0515 00:00:32.677] Command failed`
 )
-
-func Test_compilePatterns(t *testing.T) {
-	type args struct {
-		patterns []string
-	}
-	tests := []struct {
-		name              string
-		args              args
-		wantedRegexps     []regexp.Regexp
-		wantedBadPatterns []string
-	}{
-		{
-			name: "compile patterns",
-			args: args{
-				[]string{
-					"Something went wrong: starting e2e cluster: error creating cluster",
-					"sample*error2",
-					"[0",
-					"Something went wrong:.*\n",
-				},
-			},
-			wantedRegexps: []regexp.Regexp{
-				*regexp.MustCompile("Something went wrong: starting e2e cluster: error creating cluster"),
-				*regexp.MustCompile("sample*error2"),
-				*regexp.MustCompile("Something went wrong:.*\n"),
-			},
-			wantedBadPatterns: []string{
-				"[0",
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			compiledPatterns, badPatterns := compilePatterns(tt.args.patterns)
-			if !reflect.DeepEqual(compiledPatterns, tt.wantedRegexps) {
-				t.Errorf("all compiled patterns: compiledPatterns = %v, want %v", compiledPatterns, tt.wantedRegexps)
-			}
-			if !reflect.DeepEqual(badPatterns, tt.wantedBadPatterns) {
-				t.Errorf("all bad patterns: compiledPatterns = %v, want %v", badPatterns, tt.wantedBadPatterns)
-			}
-		})
-	}
-}
 
 func Test_findMatches(t *testing.T) {
 	type args struct {

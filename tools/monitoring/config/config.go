@@ -17,7 +17,7 @@ limitations under the License.
 // config is responsible for fetching, parsing config yaml file. It also allows user to
 // retrieve a particular record from the yaml.
 
-package main
+package config
 
 import (
 	"fmt"
@@ -114,7 +114,8 @@ func (config Config) CollectErrorPatterns() []string {
 	return patterns
 }
 
-func getFileBytes(url string) ([]byte, error) {
+// GetFileBytes retrieves a file by URL and returns its text content
+func GetFileBytes(url string) ([]byte, error) {
 	res, err := http.Get(url)
 	if err != nil {
 		return nil, err
@@ -123,9 +124,27 @@ func getFileBytes(url string) ([]byte, error) {
 	return ioutil.ReadAll(res.Body)
 }
 
+// CompilePatterns compiles the patterns from string to Regexp. In addition it returns the list of
+// patterns that cannot be compiled
+func CompilePatterns(patterns []string) ([]regexp.Regexp, []string) {
+	var regexps []regexp.Regexp
+	var badPatterns []string // patterns that cannot be compiled into regex
+
+	for _, pattern := range patterns {
+		r, err := regexp.Compile(pattern)
+		if err != nil {
+			log.Printf("Error compiling pattern [%s]: %v", pattern, err)
+			badPatterns = append(badPatterns, pattern)
+		} else {
+			regexps = append(regexps, *r)
+		}
+	}
+	return regexps, badPatterns
+}
+
 // ParseYaml reads the yaml text and converts it to the Config struct defined
 func ParseYaml(url string) (*Config, error) {
-	content, err := getFileBytes(url)
+	content, err := GetFileBytes(url)
 	if err != nil {
 		return nil, err
 	}

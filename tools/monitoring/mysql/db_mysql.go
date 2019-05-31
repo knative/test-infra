@@ -20,6 +20,10 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"fmt"
+	"time"
+
+	"github.com/knative/test-infra/tools/monitoring/config"
+	"github.com/knative/test-infra/tools/monitoring/log_parser"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -70,4 +74,39 @@ func (c DBConfig) dataStoreName(dbName string) string {
 	}
 
 	return fmt.Sprintf("%sunix(%s)/%s", cred, "/cloudsql/"+c.Instance, dbName)
+}
+
+// PubsubMsgHandler adds record(s) to ErrorLogs table in database,
+// after parsing build log and compares the result with config yaml
+func PubsubMsgHandler(db *sql.DB, configURL, buildLogURL, jobname string, prNumber int) error {
+	config, err := config.ParseYaml(configURL)
+	if err != nil {
+		return err
+	}
+
+	errorLogs, err := log_parser.ParseLog(buildLogURL, config.CollectErrorPatterns())
+	if err != nil {
+		return err
+	}
+
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	stmt, err := tx.Prepare("INSERT INTO ErrorLogs VALUES()")
+
+	for _, errorLog := range errorLogs {
+		_, err := stmt.Exec(errorLog.Pattern, errorLog.Msg, jobname, prNumber, buildLogURL, time.Now())
+		if err != nil {
+			return err
+		}
+	}
+
+	err = stmt.Close()
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }

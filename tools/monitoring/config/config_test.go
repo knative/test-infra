@@ -14,13 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package main
+package config
 
 import (
 	"fmt"
 	"io/ioutil"
 	"log"
 	"reflect"
+	"regexp"
 	"testing"
 )
 
@@ -238,7 +239,7 @@ func validate(text []byte) error {
 	}
 	patterns := config.GetAllPatterns()
 
-	if _, badPatterns := compilePatterns(patterns); len(badPatterns) > 0 {
+	if _, badPatterns := CompilePatterns(patterns); len(badPatterns) > 0 {
 		return fmt.Errorf("bad patterns found: %v", badPatterns)
 	}
 	return nil
@@ -254,6 +255,49 @@ func getConfigYaml() []byte {
 		return nil
 	}
 	return text
+}
+
+func Test_compilePatterns(t *testing.T) {
+	type args struct {
+		patterns []string
+	}
+	tests := []struct {
+		name              string
+		args              args
+		wantedRegexps     []regexp.Regexp
+		wantedBadPatterns []string
+	}{
+		{
+			name: "compile patterns",
+			args: args{
+				[]string{
+					"Something went wrong: starting e2e cluster: error creating cluster",
+					"sample*error2",
+					"[0",
+					"Something went wrong:.*\n",
+				},
+			},
+			wantedRegexps: []regexp.Regexp{
+				*regexp.MustCompile("Something went wrong: starting e2e cluster: error creating cluster"),
+				*regexp.MustCompile("sample*error2"),
+				*regexp.MustCompile("Something went wrong:.*\n"),
+			},
+			wantedBadPatterns: []string{
+				"[0",
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			compiledPatterns, badPatterns := CompilePatterns(tt.args.patterns)
+			if !reflect.DeepEqual(compiledPatterns, tt.wantedRegexps) {
+				t.Errorf("all compiled patterns: compiledPatterns = %v, want %v", compiledPatterns, tt.wantedRegexps)
+			}
+			if !reflect.DeepEqual(badPatterns, tt.wantedBadPatterns) {
+				t.Errorf("all bad patterns: compiledPatterns = %v, want %v", badPatterns, tt.wantedBadPatterns)
+			}
+		})
+	}
 }
 
 func Test_validate(t *testing.T) {
