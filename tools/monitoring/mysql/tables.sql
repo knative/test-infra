@@ -31,6 +31,8 @@ CREATE TABLE ErrorLogs
 
 CREATE TABLE Alerts
 (
+  ID           int           NOT NULL AUTO_INCREMENT,
   ErrorPattern varchar(4095) NOT NULL UNIQUE,
-  Sent         timestamp
+  Sent         timestamp,
+  PRIMARY KEY (ID)
 )
