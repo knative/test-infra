@@ -35,7 +35,7 @@ const (
 	defaultCoverageTargetDir   = "."
 	defaultGcsBucket           = "knative-prow"
 	defaultPostSubmitJobName   = ""
-	defaultCovThreshold        = 80
+	defaultCovThreshold        = 50
 	defaultArtifactsDir        = "./artifacts/"
 	defaultCoverageProfileName = "coverage_profile.txt"
 )
