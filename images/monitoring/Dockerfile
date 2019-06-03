@@ -33,7 +33,6 @@ RUN wget https://storage.googleapis.com/knative-monitoring/cloudmail-v1alpha3-go
 
 RUN apt-get install zip unzip
 RUN unzip cloudmail-v1alpha3-go.zip -d cloudmail-v1alpha3-go
-RUN ls
 RUN apt-get -qq install rsync
 RUN cp -r cloudmail-v1alpha3-go/google.golang.org/genproto/googleapis/cloud/mail /go/src/google.golang.org/genproto/googleapis/cloud/mail
 RUN cp -r cloudmail-v1alpha3-go/cloud.google.com/go/mail /go/src/cloud.google.com/go/mail

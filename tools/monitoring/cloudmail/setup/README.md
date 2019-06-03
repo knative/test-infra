@@ -5,7 +5,7 @@
 `setup.go` sets up the cloud mail domain with the knative monitoring configuration. The setup actions
 only need to be done once.
 
-There are three actions in `setup.go`:
+Here are the actions in `setup.go`:
 
 1. `setup-domain`: Sets up the email domain. This prints out the domain ID and domain name. The domain id and the region together uniquely identifies the cloud mail domain. The domain name is used to send the emails.
 
@@ -17,6 +17,12 @@ There are three actions in `setup.go`:
 
    ```level x 4 spaces
    go run setup.go -setup-sender -domain-id "<DomainID generated in (1)"
+   ```
+
+1. `setup-all`: Does both `-setup-domain` and `setup-sender`. It uses the domain created to setup the sender.
+
+   ```level x 4 spaces
+   go run setup.go -setup-all
    ```
 
 1. `send-test-mail`: Send a test mail from the resources created in the previous setup steps

@@ -25,8 +25,6 @@ import (
 	"net/http"
 	"os"
 
-	mail "cloud.google.com/go/mail/apiv1alpha3"
-
 	"github.com/knative/test-infra/tools/monitoring/cloudmail"
 	"github.com/knative/test-infra/tools/monitoring/config"
 	"github.com/knative/test-infra/tools/monitoring/mysql"
@@ -44,7 +42,7 @@ const (
 	alertAddr  = "knative-productivity-oncall@googlegroups.com"
 )
 
-var mailClient *mail.CloudMailClient
+var mailClient *cloudmail.MailClient
 
 func main() {
 	var err error
@@ -59,9 +57,9 @@ func main() {
 	}
 
 	ctx := context.Background()
-	mailClient, err = mail.NewCloudMailClient(ctx)
+	mailClient, err = cloudmail.NewMailClient(ctx)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to create Cloud Mail client: %s", err)
+		fmt.Fprintf(os.Stderr, "Failed to create Mail client: %s", err)
 	}
 
 	// use PORT environment variable, or default to 8080
@@ -139,7 +137,7 @@ func testSendMail(w http.ResponseWriter, r *http.Request) {
 	log.Println("Testing sending an email.")
 
 	ctx := context.Background()
-	if err := cloudmail.SendTestMessage(ctx, mailClient, mailDomain, alertAddr); err != nil {
+	if err := mailClient.SendTestMessage(ctx, mailDomain, alertAddr); err != nil {
 		fmt.Fprintf(w, "Failed to send mail: %v", err)
 		return
 	}
