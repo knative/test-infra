@@ -215,7 +215,7 @@ var (
 	//     for the job detail map, key is the repo name, value is the list of job types, like continuous, latency, nightly, and etc.
 	metaData = make(map[string]map[string][]string)
 
-	// tempaltesCache caches templates in memory to avoid I/O
+	// templatesCache caches templates in memory to avoid I/O
 	templatesCache = make(map[string]string)
 )
 
