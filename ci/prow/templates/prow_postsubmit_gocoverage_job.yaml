@@ -12,6 +12,5 @@
         - "/coverage"
         args:
         - "--artifacts=$(ARTIFACTS)"
-        - "--profile-name=coverage_profile.txt"
         - "--cov-target=."
         - "--cov-threshold-percentage=0"

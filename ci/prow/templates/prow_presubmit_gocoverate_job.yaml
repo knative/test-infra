@@ -16,7 +16,6 @@
         args:
         - "--postsubmit-job-name=[[.PresubmitPostJobName]]"
         - "--artifacts=$(ARTIFACTS)"
-        - "--profile-name=coverage_profile.txt"
         - "--cov-target=."
         - "--cov-threshold-percentage=[[.Base.GoCoverageThreshold]]"
         - "--github-token=/etc/covbot-token/token"
