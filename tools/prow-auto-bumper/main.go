@@ -65,6 +65,11 @@ var (
 	targetTime = time.Now().Add(-time.Hour * 7 * 24) // 7 days
 )
 
+// Client handles methods for github issues
+type Client struct {
+	client ghutil.GithubOperations
+}
+
 // versions holds the version change for an image
 // oldVersion and newVersion are both in the format of "vYYYYMMDD-HASH-VARIANT"
 type versions struct {
@@ -153,8 +158,8 @@ func (pv *PRVersions) getDominantVersions() versions {
 }
 
 // parse changelist, find all version changes, and store them in image name: versions map
-func (pv *PRVersions) parseChangelist(ghc *ghutil.GithubClient) error {
-	fs, err := ghc.ListFiles(org, repo, *pv.PR.Number)
+func (pv *PRVersions) parseChangelist(client *Client) error {
+	fs, err := client.client.ListFiles(org, repo, *pv.PR.Number)
 	if nil != err {
 		return err
 	}
@@ -180,12 +185,12 @@ func (pv *PRVersions) parseChangelist(ghc *ghutil.GithubClient) error {
 
 // Query all PRs from "k8s-ci-robot:autobump", find PR roughly 7 days old and was not reverted later.
 // Only return error if it's github related
-func getBestVersion(ghc *ghutil.GithubClient, org, repo string) (*PRVersions, error) {
+func getBestVersion(client *Client, org, repo, head, base string) (*PRVersions, error) {
 	visited := make(map[string]PRVersions)
 	var bestPv *PRVersions
 	var overallErr error
 	var bestDelta float64 = maxDelta + 1
-	PRs, err := ghc.ListPullRequests(org, repo, PRHead, PRBase)
+	PRs, err := client.client.ListPullRequests(org, repo, head, base)
 	if nil != err {
 		return bestPv, fmt.Errorf("failed list pull request: '%v'", err)
 	}
@@ -202,7 +207,7 @@ func getBestVersion(ghc *ghutil.GithubClient, org, repo string) (*PRVersions, er
 			images: make(map[string][]versions),
 			PR:     PR,
 		}
-		if err := pv.parseChangelist(ghc); nil != err {
+		if err := pv.parseChangelist(client); nil != err {
 			overallErr = fmt.Errorf("failed listing files from PR '%d': '%v'", *PR.Number, err)
 			break
 		}
@@ -217,28 +222,28 @@ func getBestVersion(ghc *ghutil.GithubClient, org, repo string) (*PRVersions, er
 			continue
 		}
 		if updatePR, ok := visited[vs.newVersion]; ok {
-			if updatePR.dominantVs.newVersion == vs.oldVersion { // The updatePR is reverting this PR
+			if updatePR.getDominantVersions().newVersion == vs.oldVersion { // The updatePR is reverting this PR
 				continue
 			}
 			if updatePR.PR.CreatedAt.Before(PR.CreatedAt.Add(time.Hour * safeDuration)) {
 				// The update PR is within 12 hours of current PR, consider unsafe
 				continue
 			}
-			if nil == bestPv || math.Abs(delta) < math.Abs(bestDelta) {
-				bestDelta = delta
-				bestPv = &pv
-			}
+		}
+		if nil == bestPv || math.Abs(delta) < math.Abs(bestDelta) {
+			bestDelta = delta
+			bestPv = &pv
 		}
 	}
 	return bestPv, overallErr
 }
 
-func retryGetBestVersion(ghc *ghutil.GithubClient, org, repo string) (*PRVersions, error) {
+func retryGetBestVersion(client *Client, org, repo, head, base string) (*PRVersions, error) {
 	var bestPv *PRVersions
 	var overallErr error
 	// retry if there is github related error
 	for retryCount := 0; nil == overallErr && retryCount < maxRetry; retryCount++ {
-		bestPv, overallErr = getBestVersion(ghc, org, repo)
+		bestPv, overallErr = getBestVersion(client, org, repo, head, base)
 		if nil != overallErr {
 			log.Println(overallErr)
 			if maxRetry-1 != retryCount {
@@ -253,12 +258,13 @@ func main() {
 	githubAccount := flag.String("github-account", "", "Token file for Github authentication")
 	flag.Parse()
 
-	ghc, err := ghutil.NewGithubClient(*githubAccount)
+	GHClient, err := ghutil.NewGithubClient(*githubAccount)
 	if nil != err {
 		log.Fatalf("cannot authenticate to github: %v", err)
 	}
+	client := &Client{GHClient}
 
-	bestVersion, err := getBestVersion(ghc, org, repo)
+	bestVersion, err := retryGetBestVersion(client, org, repo, PRHead, PRBase)
 	if nil != err {
 		log.Fatalf("cannot get best version from %s/%s: '%v'", org, repo, err)
 	}

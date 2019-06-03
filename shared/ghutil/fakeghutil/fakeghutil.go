@@ -20,6 +20,7 @@ package fakeghutil
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/google/go-github/github"
@@ -43,9 +44,12 @@ type FakeGithubClient struct {
 // NewFakeGithubClient creates a FakeGithubClient and initialize it's maps
 func NewFakeGithubClient() *FakeGithubClient {
 	return &FakeGithubClient{
-		Issues:   make(map[string]map[int]*github.Issue),
-		Comments: make(map[int]map[int64]*github.IssueComment),
-		BaseURL:  "fakeurl",
+		Issues:       make(map[string]map[int]*github.Issue),
+		Comments:     make(map[int]map[int64]*github.IssueComment),
+		PullRequests: make(map[string]map[int]*github.PullRequest),
+		PRCommits:    make(map[int][]*github.RepositoryCommit),
+		CommitFiles:  make(map[string][]*github.CommitFile),
+		BaseURL:      "fakeurl",
 	}
 }
 
@@ -204,6 +208,9 @@ func (fgc *FakeGithubClient) ListPullRequests(org, repo, head, base string) ([]*
 			res = append(res, PR)
 		}
 	}
+	sort.Slice(res, func(i, j int) bool {
+		return nil != res[i].CreatedAt && res[i].CreatedAt.After(*res[j].CreatedAt)
+	})
 	return res, nil
 }
 
@@ -244,6 +251,7 @@ func (fgc *FakeGithubClient) CreatePullRequest(org, repo, head, base, title, bod
 		Body:                &body,
 		MaintainerCanModify: &b,
 		State:               &stateStr,
+		Number:              &PRNumber,
 	}
 	if "" != head {
 		tokens := strings.Split(head, ":")
