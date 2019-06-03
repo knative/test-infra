@@ -28,6 +28,7 @@ presubmits:
       - "--run-test"
       - "./test/e2e-upgrade-tests.sh"
     - go-coverage: true
+      go-coverage-threshold: 80
     - custom-test: perf-tests
       always_run: false
       skip_branches:  # Skip these branches, as test isn't available.
@@ -43,27 +44,25 @@ presubmits:
     - integration-tests: true
       needs-dind: true
     - go-coverage: true
+      go-coverage-threshold: 80
 
   knative/client:
     - build-tests: true
     - unit-tests: true
     - integration-tests: true
     - go-coverage: true
-      go-coverage-threshold: 50
 
   knative/eventing:
     - build-tests: true
     - unit-tests: true
     - integration-tests: true
     - go-coverage: true
-      go-coverage-threshold: 50
 
   knative/eventing-sources:
     - build-tests: true
     - unit-tests: true
     - integration-tests: true
     - go-coverage: true
-      go-coverage-threshold: 50
 
   knative/docs:
     - build-tests: true
@@ -71,7 +70,6 @@ presubmits:
     - integration-tests: true
       needs-dind: true
     - go-coverage: true
-      go-coverage-threshold: 50
 
   knative/build-templates:
     - build-tests: true
@@ -83,7 +81,6 @@ presubmits:
     - unit-tests: true
     - integration-tests: true
     - go-coverage: true
-      go-coverage-threshold: 50
 
   knative/test-infra:
     - build-tests: true
@@ -95,7 +92,6 @@ presubmits:
     - unit-tests: true
     - integration-tests: true
     - go-coverage: true
-      go-coverage-threshold: 50
   
   knative/observability:
     - build-tests: true

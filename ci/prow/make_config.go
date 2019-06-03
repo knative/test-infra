@@ -484,7 +484,7 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	var data presubmitJobTemplateData
 	data.Base = newbaseProwJobTemplateData(repoName)
 	data.Base.Command = presubmitScript
-	data.Base.GoCoverageThreshold = 80
+	data.Base.GoCoverageThreshold = 50
 	jobTemplate := readTemplate(presubmitJob)
 	repoData := repositoryData{Name: repoName, EnableGoCoverage: false, GoCoverageThreshold: data.Base.GoCoverageThreshold}
 	for i, item := range presubmitConfig {
@@ -750,8 +750,6 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 		data.Base.Command = "/coverage"
 		data.Base.Args = []string{
 			"--artifacts=$(ARTIFACTS)",
-			"--profile-name=coverage_profile.txt",
-			"--cov-target=.",
 			fmt.Sprintf("--cov-threshold-percentage=%d", data.Base.GoCoverageThreshold)}
 		data.Base.ServiceAccount = ""
 		addExtraEnvVarsToJob(&data.Base)

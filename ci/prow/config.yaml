@@ -242,11 +242,8 @@ presubmits:
         command:
         - "/coverage"
         args:
-        - "--postsubmit-gcs-bucket=knative-prow"
         - "--postsubmit-job-name=post-knative-serving-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
-        - "--profile-name=coverage_profile.txt"
-        - "--cov-target=."
         - "--cov-threshold-percentage=80"
         - "--github-token=/etc/covbot-token/token"
         volumeMounts:
@@ -273,11 +270,8 @@ presubmits:
         command:
         - "/coverage"
         args:
-        - "--postsubmit-gcs-bucket=knative-prow"
         - "--postsubmit-job-name=post-knative-serving-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
-        - "--profile-name=coverage_profile.txt"
-        - "--cov-target=."
         - "--cov-threshold-percentage=80"
         - "--github-token=/etc/covbot-token/token"
         volumeMounts:
@@ -456,11 +450,8 @@ presubmits:
         command:
         - "/coverage"
         args:
-        - "--postsubmit-gcs-bucket=knative-prow"
         - "--postsubmit-job-name=post-knative-build-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
-        - "--profile-name=coverage_profile.txt"
-        - "--cov-target=."
         - "--cov-threshold-percentage=80"
         - "--github-token=/etc/covbot-token/token"
         volumeMounts:
@@ -593,11 +584,8 @@ presubmits:
         command:
         - "/coverage"
         args:
-        - "--postsubmit-gcs-bucket=knative-prow"
         - "--postsubmit-job-name=post-knative-client-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
-        - "--profile-name=coverage_profile.txt"
-        - "--cov-target=."
         - "--cov-threshold-percentage=50"
         - "--github-token=/etc/covbot-token/token"
         volumeMounts:
@@ -730,11 +718,8 @@ presubmits:
         command:
         - "/coverage"
         args:
-        - "--postsubmit-gcs-bucket=knative-prow"
         - "--postsubmit-job-name=post-knative-eventing-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
-        - "--profile-name=coverage_profile.txt"
-        - "--cov-target=."
         - "--cov-threshold-percentage=50"
         - "--github-token=/etc/covbot-token/token"
         volumeMounts:
@@ -867,11 +852,8 @@ presubmits:
         command:
         - "/coverage"
         args:
-        - "--postsubmit-gcs-bucket=knative-prow"
         - "--postsubmit-job-name=post-knative-eventing-sources-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
-        - "--profile-name=coverage_profile.txt"
-        - "--cov-target=."
         - "--cov-threshold-percentage=50"
         - "--github-token=/etc/covbot-token/token"
         volumeMounts:
@@ -1012,11 +994,8 @@ presubmits:
         command:
         - "/coverage"
         args:
-        - "--postsubmit-gcs-bucket=knative-prow"
         - "--postsubmit-job-name=post-knative-docs-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
-        - "--profile-name=coverage_profile.txt"
-        - "--cov-target=."
         - "--cov-threshold-percentage=50"
         - "--github-token=/etc/covbot-token/token"
         volumeMounts:
@@ -1255,11 +1234,8 @@ presubmits:
         command:
         - "/coverage"
         args:
-        - "--postsubmit-gcs-bucket=knative-prow"
         - "--postsubmit-job-name=post-knative-pkg-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
-        - "--profile-name=coverage_profile.txt"
-        - "--cov-target=."
         - "--cov-threshold-percentage=50"
         - "--github-token=/etc/covbot-token/token"
         volumeMounts:
@@ -1498,11 +1474,8 @@ presubmits:
         command:
         - "/coverage"
         args:
-        - "--postsubmit-gcs-bucket=knative-prow"
         - "--postsubmit-job-name=post-knative-caching-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
-        - "--profile-name=coverage_profile.txt"
-        - "--cov-target=."
         - "--cov-threshold-percentage=50"
         - "--github-token=/etc/covbot-token/token"
         volumeMounts:
@@ -2233,8 +2206,6 @@ periodics:
       - "/coverage"
       args:
       - "--artifacts=$(ARTIFACTS)"
-      - "--profile-name=coverage_profile.txt"
-      - "--cov-target=."
       - "--cov-threshold-percentage=80"
 - cron: "15 * * * *"
   name: ci-knative-build-continuous
@@ -2541,8 +2512,6 @@ periodics:
       - "/coverage"
       args:
       - "--artifacts=$(ARTIFACTS)"
-      - "--profile-name=coverage_profile.txt"
-      - "--cov-target=."
       - "--cov-threshold-percentage=80"
 - cron: "45 * * * *"
   name: ci-knative-client-continuous
@@ -2713,8 +2682,6 @@ periodics:
       - "/coverage"
       args:
       - "--artifacts=$(ARTIFACTS)"
-      - "--profile-name=coverage_profile.txt"
-      - "--cov-target=."
       - "--cov-threshold-percentage=50"
 - cron: "50 * * * *"
   name: ci-knative-docs-continuous
@@ -2775,8 +2742,6 @@ periodics:
       - "/coverage"
       args:
       - "--artifacts=$(ARTIFACTS)"
-      - "--profile-name=coverage_profile.txt"
-      - "--cov-target=."
       - "--cov-threshold-percentage=50"
 - cron: "30 * * * *"
   name: ci-knative-eventing-continuous
@@ -3035,8 +3000,6 @@ periodics:
       - "/coverage"
       args:
       - "--artifacts=$(ARTIFACTS)"
-      - "--profile-name=coverage_profile.txt"
-      - "--cov-target=."
       - "--cov-threshold-percentage=50"
 - cron: "30 * * * *"
   name: ci-knative-eventing-sources-continuous
@@ -3295,8 +3258,6 @@ periodics:
       - "/coverage"
       args:
       - "--artifacts=$(ARTIFACTS)"
-      - "--profile-name=coverage_profile.txt"
-      - "--cov-target=."
       - "--cov-threshold-percentage=50"
 - cron: "40 * * * *"
   name: ci-knative-build-templates-continuous
@@ -3383,8 +3344,6 @@ periodics:
       - "/coverage"
       args:
       - "--artifacts=$(ARTIFACTS)"
-      - "--profile-name=coverage_profile.txt"
-      - "--cov-target=."
       - "--cov-threshold-percentage=50"
 - cron: "30 * * * *"
   name: ci-knative-caching-continuous
@@ -3437,8 +3396,6 @@ periodics:
       - "/coverage"
       args:
       - "--artifacts=$(ARTIFACTS)"
-      - "--profile-name=coverage_profile.txt"
-      - "--cov-target=."
       - "--cov-threshold-percentage=50"
 - cron: "30 * * * *"
   name: ci-knative-observability-continuous
@@ -3580,8 +3537,6 @@ postsubmits:
         - "/coverage"
         args:
         - "--artifacts=$(ARTIFACTS)"
-        - "--profile-name=coverage_profile.txt"
-        - "--cov-target=."
         - "--cov-threshold-percentage=0"
   - name: post-knative-serving-go-coverage-dev
     branches:
@@ -3597,8 +3552,6 @@ postsubmits:
         - "/coverage"
         args:
         - "--artifacts=$(ARTIFACTS)"
-        - "--profile-name=coverage_profile.txt"
-        - "--cov-target=."
         - "--cov-threshold-percentage=0"
   knative/build:
   - name: post-knative-build-go-coverage
@@ -3615,8 +3568,6 @@ postsubmits:
         - "/coverage"
         args:
         - "--artifacts=$(ARTIFACTS)"
-        - "--profile-name=coverage_profile.txt"
-        - "--cov-target=."
         - "--cov-threshold-percentage=0"
   knative/client:
   - name: post-knative-client-go-coverage
@@ -3633,8 +3584,6 @@ postsubmits:
         - "/coverage"
         args:
         - "--artifacts=$(ARTIFACTS)"
-        - "--profile-name=coverage_profile.txt"
-        - "--cov-target=."
         - "--cov-threshold-percentage=0"
   knative/eventing:
   - name: post-knative-eventing-go-coverage
@@ -3651,8 +3600,6 @@ postsubmits:
         - "/coverage"
         args:
         - "--artifacts=$(ARTIFACTS)"
-        - "--profile-name=coverage_profile.txt"
-        - "--cov-target=."
         - "--cov-threshold-percentage=0"
   knative/eventing-sources:
   - name: post-knative-eventing-sources-go-coverage
@@ -3669,8 +3616,6 @@ postsubmits:
         - "/coverage"
         args:
         - "--artifacts=$(ARTIFACTS)"
-        - "--profile-name=coverage_profile.txt"
-        - "--cov-target=."
         - "--cov-threshold-percentage=0"
   knative/docs:
   - name: post-knative-docs-go-coverage
@@ -3687,8 +3632,6 @@ postsubmits:
         - "/coverage"
         args:
         - "--artifacts=$(ARTIFACTS)"
-        - "--profile-name=coverage_profile.txt"
-        - "--cov-target=."
         - "--cov-threshold-percentage=0"
   knative/pkg:
   - name: post-knative-pkg-go-coverage
@@ -3705,8 +3648,6 @@ postsubmits:
         - "/coverage"
         args:
         - "--artifacts=$(ARTIFACTS)"
-        - "--profile-name=coverage_profile.txt"
-        - "--cov-target=."
         - "--cov-threshold-percentage=0"
   knative/caching:
   - name: post-knative-caching-go-coverage
@@ -3723,6 +3664,4 @@ postsubmits:
         - "/coverage"
         args:
         - "--artifacts=$(ARTIFACTS)"
-        - "--profile-name=coverage_profile.txt"
-        - "--cov-target=."
         - "--cov-threshold-percentage=0"
