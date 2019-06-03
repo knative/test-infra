@@ -12,5 +12,4 @@
         - "/coverage"
         args:
         - "--artifacts=$(ARTIFACTS)"
-        - "--cov-target=."
         - "--cov-threshold-percentage=0"

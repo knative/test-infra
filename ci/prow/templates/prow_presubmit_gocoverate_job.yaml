@@ -16,7 +16,6 @@
         args:
         - "--postsubmit-job-name=[[.PresubmitPostJobName]]"
         - "--artifacts=$(ARTIFACTS)"
-        - "--cov-target=."
         - "--cov-threshold-percentage=[[.Base.GoCoverageThreshold]]"
         - "--github-token=/etc/covbot-token/token"
         [[indent_section 8 "volumeMounts" .Base.VolumeMounts]]
