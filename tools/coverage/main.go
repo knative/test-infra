@@ -30,17 +30,14 @@ import (
 )
 
 const (
-	keyCovProfileFileName    = "key-cov-prof.txt"
-	defaultStdoutRedirect    = "stdout.txt"
-	defaultCoverageTargetDir = "./pkg/"
-	defaultGcsBucket         = "knative-prow"
-	defaultPostSubmitJobName = ""
-	defaultCovThreshold      = 80
-)
-
-var (
-	artifactsDir        = "./artifacts/"
-	coverageProfileName = "coverage_profile.txt"
+	keyCovProfileFileName      = "key-cov-prof.txt"
+	defaultStdoutRedirect      = "stdout.txt"
+	defaultCoverageTargetDir   = "."
+	defaultGcsBucket           = "knative-prow"
+	defaultPostSubmitJobName   = ""
+	defaultCovThreshold        = 80
+	defaultArtifactsDir        = "./artifacts/"
+	defaultCoverageProfileName = "coverage_profile.txt"
 )
 
 func main() {
@@ -48,9 +45,9 @@ func main() {
 
 	gcsBucketName := flag.String("postsubmit-gcs-bucket", defaultGcsBucket, "gcs bucket name")
 	postSubmitJobName := flag.String("postsubmit-job-name", defaultPostSubmitJobName, "name of the prow job")
-	artifactsDirFlag := flag.String("artifacts", artifactsDir, "directory for artifacts")
+	artifactsDir := flag.String("artifacts", defaultArtifactsDir, "directory for artifacts")
 	coverageTargetDir := flag.String("cov-target", defaultCoverageTargetDir, "target directory for test coverage")
-	flag.StringVar(&coverageProfileName, "profile-name", coverageProfileName, "file name for coverage profile")
+	coverageProfileName := flag.String("profile-name", defaultCoverageProfileName, "file name for coverage profile")
 	githubTokenPath := flag.String("github-token", "", "path to token to access github repo")
 	covThresholdFlag := flag.Int("cov-threshold-percentage", defaultCovThreshold, "token to access github repo")
 	covbotUserName := flag.String("covbot-username", "covbot", "github user name for coverage robot")
@@ -59,7 +56,7 @@ func main() {
 	log.Printf("container flag list: postsubmit-gcs-bucket=%s; postSubmitJobName=%s; "+
 		"artifacts=%s; cov-target=%s; profile-name=%s; github-token=%s; "+
 		"cov-threshold-percentage=%d; covbot-username=%s;",
-		*gcsBucketName, *postSubmitJobName, *artifactsDirFlag, *coverageTargetDir, coverageProfileName,
+		*gcsBucketName, *postSubmitJobName, *artifactsDir, *coverageTargetDir, *coverageProfileName,
 		*githubTokenPath, *covThresholdFlag, *covbotUserName)
 
 	log.Println("Getting env values")
@@ -73,11 +70,9 @@ func main() {
 
 	fmt.Printf("Running coverage for PR %s with PR commit SHA %s and base SHA %s", pr, pullSha, baseSha)
 
-	artifactsDir = *artifactsDirFlag
-
 	localArtifacts := artifacts.NewLocalArtifacts(
-		artifactsDir,
-		coverageProfileName,
+		*artifactsDir,
+		*coverageProfileName,
 		keyCovProfileFileName,
 		defaultStdoutRedirect,
 	)
