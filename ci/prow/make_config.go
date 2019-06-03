@@ -359,7 +359,6 @@ tide:
         command:
         - "/coverage"
         args:
-        - "--postsubmit-gcs-bucket=[[.Base.GcsBucket]]"
         - "--postsubmit-job-name=[[.PresubmitPostJobName]]"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=[[.Base.GoCoverageThreshold]]"
@@ -736,7 +735,7 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	var data presubmitJobTemplateData
 	data.Base = newbaseProwJobTemplateData(repoName)
 	data.Base.Command = presubmitScript
-	data.Base.GoCoverageThreshold = 80
+	data.Base.GoCoverageThreshold = 50
 	jobTemplate := presubmitJob
 	repoData := repositoryData{Name: repoName, EnableGoCoverage: false, GoCoverageThreshold: data.Base.GoCoverageThreshold}
 	for i, item := range presubmitConfig {
