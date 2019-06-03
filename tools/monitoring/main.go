@@ -24,6 +24,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/knative/test-infra/tools/monitoring/config"
 	"github.com/knative/test-infra/tools/monitoring/mysql"
 )
 
@@ -64,6 +65,7 @@ func main() {
 	log.Fatal(err)
 }
 
+// hello tests the as much completed steps in the entire monitoring workflow as possible
 func hello(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Serving request: %s", r.URL.Path)
 	host, _ := os.Hostname()
@@ -71,7 +73,7 @@ func hello(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Version: 1.0.0\n")
 	fmt.Fprintf(w, "Hostname: %s\n", host)
 
-	yamlFile, err := ParseYaml(yamlURL)
+	yamlFile, err := config.ParseYaml(yamlURL)
 	if err != nil {
 		log.Fatalf("Cannot parse yaml: %v", err)
 	}

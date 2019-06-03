@@ -20,6 +20,10 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"fmt"
+	"time"
+
+	"github.com/knative/test-infra/tools/monitoring/config"
+	"github.com/knative/test-infra/tools/monitoring/log_parser"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -70,4 +74,47 @@ func (c DBConfig) dataStoreName(dbName string) string {
 	}
 
 	return fmt.Sprintf("%sunix(%s)/%s", cred, "/cloudsql/"+c.Instance, dbName)
+}
+
+// PubsubMsgHandler adds record(s) to ErrorLogs table in database,
+// after parsing build log and compares the result with config yaml
+func PubsubMsgHandler(db *sql.DB, configURL, buildLogURL, jobname string, prNumber int) error {
+	config, err := config.ParseYaml(configURL)
+	if err != nil {
+		return err
+	}
+
+	errorLogs, err := log_parser.ParseLog(buildLogURL, config.CollectErrorPatterns())
+	if err != nil {
+		return err
+	}
+
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+	stmt, err := tx.Prepare("INSERT INTO ErrorLogs('ErrorPattern', 'ErrorMsg', 'JobName', 'PRNumber', 'BuildLogURL', 'TimeStamp') VALUES(?,?,?,?,?,?)")
+	if err != nil {
+		rollbackErr := tx.Rollback()
+		if rollbackErr == nil {
+			return fmt.Errorf("SQL Statement preparation failed: %v; rolled back", err)
+
+		}
+		return fmt.Errorf("SQL Statement preparation failed: %v; rollback failed: %v", err, rollbackErr)
+	}
+
+	defer stmt.Close()
+
+	for _, errorLog := range errorLogs {
+		_, err := stmt.Exec(errorLog.Pattern, errorLog.Msg, jobname, prNumber, buildLogURL, time.Now())
+		if err != nil {
+			rollbackErr := tx.Rollback()
+			if rollbackErr == nil {
+				return fmt.Errorf("SQL Statement execution failed: %v; rolled back", err)
+			}
+			return fmt.Errorf("SQL Statement execution failed: %v; rollback failed: %v", err, rollbackErr)
+		}
+	}
+
+	return tx.Commit()
 }
