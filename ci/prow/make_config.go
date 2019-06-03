@@ -362,8 +362,6 @@ tide:
         - "--postsubmit-gcs-bucket=[[.Base.GcsBucket]]"
         - "--postsubmit-job-name=[[.PresubmitPostJobName]]"
         - "--artifacts=$(ARTIFACTS)"
-        - "--profile-name=coverage_profile.txt"
-        - "--cov-target=."
         - "--cov-threshold-percentage=[[.Base.GoCoverageThreshold]]"
         - "--github-token=/etc/covbot-token/token"
         [[indent_section 8 "volumeMounts" .Base.VolumeMounts]]
@@ -434,8 +432,6 @@ tide:
         - "/coverage"
         args:
         - "--artifacts=$(ARTIFACTS)"
-        - "--profile-name=coverage_profile.txt"
-        - "--cov-target=."
         - "--cov-threshold-percentage=0"
 `
 
@@ -1006,8 +1002,6 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 		data.Base.Command = "/coverage"
 		data.Base.Args = []string{
 			"--artifacts=$(ARTIFACTS)",
-			"--profile-name=coverage_profile.txt",
-			"--cov-target=.",
 			fmt.Sprintf("--cov-threshold-percentage=%d", data.Base.GoCoverageThreshold)}
 		data.Base.ServiceAccount = ""
 		addExtraEnvVarsToJob(&data.Base)
