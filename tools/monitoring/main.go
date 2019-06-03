@@ -37,9 +37,7 @@ const (
 	dbUserSecretFile     = "/secrets/cloudsql/monitoringdb/username"
 	dbPasswordSecretFile = "/secrets/cloudsql/monitoringdb/password"
 
-	// TODO(yt3liu): Replace mail domain with the one created in mail setup
-	mailDomain = "REPLACE-WITH-DOMAIN-NAME-CREATED-IN-MAIL-SETUP"
-	alertAddr  = "knative-productivity-oncall@googlegroups.com"
+	alertAddr = "knative-productivity-oncall@googlegroups.com"
 )
 
 var mailClient *cloudmail.MailClient
@@ -137,7 +135,7 @@ func testSendMail(w http.ResponseWriter, r *http.Request) {
 	log.Println("Testing sending an email.")
 
 	ctx := context.Background()
-	if err := mailClient.SendTestMessage(ctx, mailDomain, alertAddr); err != nil {
+	if err := mailClient.SendTestMessage(ctx, alertAddr); err != nil {
 		fmt.Fprintf(w, "Failed to send mail: %v", err)
 		return
 	}

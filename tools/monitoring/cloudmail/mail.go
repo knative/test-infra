@@ -38,25 +38,24 @@ const (
 
 // MailClient holds instance of CloudMailClient for making mail-related requests
 type MailClient struct {
-	*mail.CloudMailClient
+	CloudMailClient *mail.CloudMailClient
+	DomainName      string
+	DomainID        string
 }
 
 // NewMailClient creates a new MailClient to handle all the mail interaction
 func NewMailClient(ctx context.Context) (*MailClient, error) {
-	var err error
-
-	client := &MailClient{}
-	if client.CloudMailClient, err = mail.NewCloudMailClient(ctx); err != nil {
-		return nil, err
-	}
-
-	return client, nil
+	c, err := mail.NewCloudMailClient(ctx)
+	return &MailClient{
+		CloudMailClient: c,
+		// TODO(yt3liu): Update it with the domain name created in knative-tests
+		DomainName: "",
+		DomainID:   "",
+	}, err
 }
 
 // CreateDomain creates a new project domain for cloud main
-func (c *MailClient) CreateDomain(ctx context.Context) (string, error) {
-	var domainID string
-
+func (c *MailClient) CreateDomain(ctx context.Context) error {
 	domain := &mailpb.Domain{
 		ProjectDomain: true,
 		DomainName:    "",
@@ -68,25 +67,27 @@ func (c *MailClient) CreateDomain(ctx context.Context) (string, error) {
 	}
 	resp, err := c.CloudMailClient.CreateDomain(ctx, req)
 	if err != nil {
-		return domainID, err
+		return err
 	}
 
-	domainID = strings.Replace(resp.GetName(), fmt.Sprintf("regions/%s/domains/", region), "", 1)
-	fmt.Printf("Domain created.\n")
-	fmt.Printf("Domain name: %s\n", resp.GetDomainName())
-	fmt.Printf("Domain region: %s\n", region)
-	fmt.Printf("Domain ID: %s\n", domainID)
+	c.DomainID = strings.Replace(resp.GetName(), fmt.Sprintf("regions/%s/domains/", region), "", 1)
+	c.DomainName = resp.GetDomainName()
 
-	return domainID, nil
+	fmt.Printf("Domain created.\n")
+	fmt.Printf("Domain name: %s\n", c.DomainName)
+	fmt.Printf("Domain region: %s\n", region)
+	fmt.Printf("Domain ID: %s\n", c.DomainID)
+
+	return nil
 }
 
 // CreateAddressSet enables email addresses under the domain
-func (c *MailClient) CreateAddressSet(ctx context.Context, domainID string) error {
+func (c *MailClient) CreateAddressSet(ctx context.Context) error {
 	addressSet := &mailpb.AddressSet{
 		AddressPatterns: []string{addressPattern},
 	}
 	req := &mailpb.CreateAddressSetRequest{
-		Parent:       fmt.Sprintf("regions/%s/domains/%s", region, domainID),
+		Parent:       fmt.Sprintf("regions/%s/domains/%s", region, c.DomainID),
 		AddressSetId: addressSetID,
 		AddressSet:   addressSet,
 	}
@@ -99,8 +100,8 @@ func (c *MailClient) CreateAddressSet(ctx context.Context, domainID string) erro
 }
 
 // CreateSenderDomain configures the sender email
-func (c *MailClient) CreateSenderDomain(ctx context.Context, domainID string) error {
-	addressSetPath := fmt.Sprintf("regions/%s/domains/%s/addressSets/%s", region, domainID, addressSetID)
+func (c *MailClient) CreateSenderDomain(ctx context.Context) error {
+	addressSetPath := fmt.Sprintf("regions/%s/domains/%s/addressSets/%s", region, c.DomainID, addressSetID)
 	sender := &mailpb.Sender{
 		DefaultEnvelopeFromAuthority: addressSetPath,
 		DefaultHeaderFromAuthority:   addressSetPath,
@@ -120,7 +121,7 @@ func (c *MailClient) CreateSenderDomain(ctx context.Context, domainID string) er
 }
 
 // CreateAndApplyReceiptRuleDrop configures the bounce message behaviour to do nothing when an email cannot be delivered
-func (c *MailClient) CreateAndApplyReceiptRuleDrop(ctx context.Context, domainID string) error {
+func (c *MailClient) CreateAndApplyReceiptRuleDrop(ctx context.Context) error {
 	const matchMode = "PREFIX"
 
 	cloudMailClient := c.CloudMailClient
@@ -140,7 +141,7 @@ func (c *MailClient) CreateAndApplyReceiptRuleDrop(ctx context.Context, domainID
 		Action:             action,
 	}
 	createReceiptRuleReq := &mailpb.CreateReceiptRuleRequest{
-		Parent:      fmt.Sprintf("regions/%s/domains/%s", region, domainID),
+		Parent:      fmt.Sprintf("regions/%s/domains/%s", region, c.DomainID),
 		RuleId:      receiptRuleID,
 		ReceiptRule: receiptRule,
 	}
@@ -151,10 +152,10 @@ func (c *MailClient) CreateAndApplyReceiptRuleDrop(ctx context.Context, domainID
 	fmt.Printf("Receipt rule %s created.\n", receiptRuleID)
 
 	receiptRuleset := &mailpb.ReceiptRuleset{
-		ReceiptRules: []string{fmt.Sprintf("regions/%s/domains/%s/receiptRules/%s", region, domainID, receiptRuleID)},
+		ReceiptRules: []string{fmt.Sprintf("regions/%s/domains/%s/receiptRules/%s", region, c.DomainID, receiptRuleID)},
 	}
 	domain := &mailpb.Domain{
-		Name:           fmt.Sprintf("regions/%s/domains/%s", region, domainID),
+		Name:           fmt.Sprintf("regions/%s/domains/%s", region, c.DomainID),
 		ReceiptRuleset: receiptRuleset,
 	}
 
@@ -169,20 +170,20 @@ func (c *MailClient) CreateAndApplyReceiptRuleDrop(ctx context.Context, domainID
 	if _, updateDomainErr := cloudMailClient.UpdateDomain(ctx, updateDomainReq); updateDomainErr != nil {
 		return updateDomainErr
 	}
-	fmt.Printf("New receipt rule %s applied to domain %s.\n", receiptRuleID, domainID)
+	fmt.Printf("New receipt rule %s applied to domain %s.\n", receiptRuleID, c.DomainID)
 	return nil
 }
 
 // SendTestMessage sends a test email
-func (c *MailClient) SendTestMessage(ctx context.Context, domainName string, toAddress string) error {
-	return c.SendEmailMessage(ctx, domainName, toAddress,
+func (c *MailClient) SendTestMessage(ctx context.Context, toAddress string) error {
+	return c.SendEmailMessage(ctx, toAddress,
 		"Knative Monitoring Cloud Mail Test",
 		"This is a test message.")
 }
 
 // SendEmailMessage sends an email
-func (c *MailClient) SendEmailMessage(ctx context.Context, domainName string, toAddress string, subject string, body string) error {
-	fromAddress := fmt.Sprintf("%s@%s", addressPattern, domainName)
+func (c *MailClient) SendEmailMessage(ctx context.Context, toAddress string, subject string, body string) error {
+	fromAddress := fmt.Sprintf("%s@%s", addressPattern, c.DomainName)
 
 	from := &mailpb.Address{
 		AddressSpec: fromAddress,

@@ -31,8 +31,6 @@ func main() {
 	actionSetupAll := flag.Bool("setup-all", false, "Setup up the domain, address set, sender, receipt rules with default settings")
 	actionSendTestMail := flag.Bool("send-test-mail", false, "Send a test message")
 
-	domainID := flag.String("domain-id", "", "Cloud Mail domain ID")
-	domainName := flag.String("domain-name", "", "The domain name used to send the test email")
 	toAddr := flag.String("to-address", "", "The test email recipient address")
 
 	flag.Parse()
@@ -48,34 +46,32 @@ func main() {
 	}
 
 	if *actionSetupSender {
-		setupSender(client, ctx, *domainID)
+		setupSender(client, ctx)
 	}
 
 	if *actionSetupAll {
-		domainID := createDomain(client, ctx)
-		setupSender(client, ctx, domainID)
+		createDomain(client, ctx)
+		setupSender(client, ctx)
 	}
 
 	if *actionSendTestMail {
 		fmt.Println("Sending a Test Email")
-		failIfError("Failed to send test message", client.SendTestMessage(ctx, *domainName, *toAddr))
+		failIfError("Failed to send test message", client.SendTestMessage(ctx, *toAddr))
 	}
 }
 
-func createDomain(client *cloudmail.MailClient, ctx context.Context) string {
+func createDomain(client *cloudmail.MailClient, ctx context.Context) {
 	fmt.Println("Creating the email domain")
-	domainID, err := client.CreateDomain(ctx)
-	if err != nil {
+	if err := client.CreateDomain(ctx); err != nil {
 		log.Fatalf("Failed to create domain %v", err)
 	}
-	return domainID
 }
 
-func setupSender(client *cloudmail.MailClient, ctx context.Context, domainID string) {
+func setupSender(client *cloudmail.MailClient, ctx context.Context) {
 	fmt.Println("Setting up the sender")
-	failIfError("Failed to create address set %v", client.CreateAddressSet(ctx, domainID))
-	failIfError("Failed to create sender domain %v", client.CreateSenderDomain(ctx, domainID))
-	failIfError("Failed to setup receipt rule %v", client.CreateAndApplyReceiptRuleDrop(ctx, domainID))
+	failIfError("Failed to create address set %v", client.CreateAddressSet(ctx))
+	failIfError("Failed to create sender domain %v", client.CreateSenderDomain(ctx))
+	failIfError("Failed to setup receipt rule %v", client.CreateAndApplyReceiptRuleDrop(ctx))
 }
 
 func failIfError(errFmtMsg string, err error) {
