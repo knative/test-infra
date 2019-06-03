@@ -2,7 +2,7 @@
 # for detailed Gopkg.toml documentation.
 
 required = [
-  # TODO(joyceyu): The below dependencies are used in mail. Since the mail source is
+  # TODO(yt3liu): The below dependencies are used in mail. Since the mail source is
   # added manually after dep ensure is done, including these dependencies here to make
   # sure those dependencies are included.
   # Remove this once the dependency is available through go get
@@ -24,7 +24,7 @@ required = [
   "google.golang.org/genproto/protobuf/field_mask",
 ]
 
-# TODO(joyceyu): Remove this once the dependency is available through go get
+# TODO(yt3liu): Remove this once the dependency is available through go get
 # https://github.com/knative/test-infra/issues/841
 ignored = [
   "cloud.google.com/go/mail*",

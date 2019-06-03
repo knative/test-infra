@@ -7,21 +7,21 @@ only need to be done once.
 
 There are three actions in `setup.go`:
 
-1. `setup-domain`: Sets up the email domain. This prints out the domain ID and domain name.
-The domain id and the region together uniquely identifies the cloud mail domain. The domain
-name is used to send the emails.
-    ```bash
+1. `setup-domain`: Sets up the email domain. This prints out the domain ID and domain name. The domain id and the region together uniquely identifies the cloud mail domain. The domain name is used to send the emails.
+
+    ```level x 4 spaces
     go run setup.go -setup-domain
     ```
 
-1. `setup-sender`: Sets up a sender mail address. It requires the `-domainID` to be set and create
-all the resources under the specified domain.
-   ```bash
+1. `setup-sender`: Sets up a sender mail address. It requires the `-domainID` to be set and create all the resources under the specified domain.
+
+   ```level x 4 spaces
    go run setup.go -setup-sender -domain-id "<DomainID generated in (1)"
    ```
 
 1. `send-test-mail`: Send a test mail from the resources created in the previous setup steps
-   ```bash
+
+   ```level x 4 spaces`
    go run setup.go -send-test-mail -domain-name "<Domain Name generated in (1)>" -to-address "<recipient email>"
    ```
 
