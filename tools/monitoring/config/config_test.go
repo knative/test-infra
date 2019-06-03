@@ -198,7 +198,7 @@ func TestConfig_Select(t *testing.T) {
 	}
 }
 
-func Test_newConfig(t *testing.T) {
+func TestNewConfig(t *testing.T) {
 	type args struct {
 		text []byte
 	}
@@ -257,7 +257,7 @@ func getConfigYaml() []byte {
 	return text
 }
 
-func Test_compilePatterns(t *testing.T) {
+func TestCompilePatterns(t *testing.T) {
 	type args struct {
 		patterns []string
 	}
@@ -300,7 +300,7 @@ func Test_compilePatterns(t *testing.T) {
 	}
 }
 
-func Test_validate(t *testing.T) {
+func TestValidate(t *testing.T) {
 	type args struct {
 		text []byte
 	}

@@ -39,7 +39,7 @@ W0515 00:00:32.677] Run: ('/workspace/./test-infra/jenkins/../scenarios/../hack/
 E0515 00:00:32.677] Command failed`
 )
 
-func Test_findMatches(t *testing.T) {
+func TestFindMatches(t *testing.T) {
 	type args struct {
 		regexps []regexp.Regexp
 		text    []byte

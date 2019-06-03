@@ -93,7 +93,7 @@ func PubsubMsgHandler(db *sql.DB, configURL, buildLogURL, jobname string, prNumb
 	if err != nil {
 		return err
 	}
-	stmt, err := tx.Prepare("INSERT INTO ErrorLogs VALUES()")
+	stmt, err := tx.Prepare("INSERT INTO ErrorLogs('ErrorPattern', 'ErrorMsg', 'JobName', 'PRNumber', 'BuildLogURL', 'TimeStamp') VALUES(?,?,?,?,?,?)")
 	if err != nil {
 		rollbackErr := tx.Rollback()
 		if rollbackErr == nil {
@@ -103,21 +103,17 @@ func PubsubMsgHandler(db *sql.DB, configURL, buildLogURL, jobname string, prNumb
 		return fmt.Errorf("SQL Statement preparation failed: %v; rollback failed: %v", err, rollbackErr)
 	}
 
+	defer stmt.Close()
+
 	for _, errorLog := range errorLogs {
 		_, err := stmt.Exec(errorLog.Pattern, errorLog.Msg, jobname, prNumber, buildLogURL, time.Now())
 		if err != nil {
 			rollbackErr := tx.Rollback()
 			if rollbackErr == nil {
 				return fmt.Errorf("SQL Statement execution failed: %v; rolled back", err)
-
 			}
 			return fmt.Errorf("SQL Statement execution failed: %v; rollback failed: %v", err, rollbackErr)
 		}
-	}
-
-	err = stmt.Close()
-	if err != nil {
-		return err
 	}
 
 	return tx.Commit()
