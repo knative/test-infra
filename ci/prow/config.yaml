@@ -242,7 +242,6 @@ presubmits:
         command:
         - "/coverage"
         args:
-        - "--postsubmit-gcs-bucket=knative-prow"
         - "--postsubmit-job-name=post-knative-serving-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--profile-name=coverage_profile.txt"
@@ -273,7 +272,6 @@ presubmits:
         command:
         - "/coverage"
         args:
-        - "--postsubmit-gcs-bucket=knative-prow"
         - "--postsubmit-job-name=post-knative-serving-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--profile-name=coverage_profile.txt"
@@ -456,7 +454,6 @@ presubmits:
         command:
         - "/coverage"
         args:
-        - "--postsubmit-gcs-bucket=knative-prow"
         - "--postsubmit-job-name=post-knative-build-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--profile-name=coverage_profile.txt"
@@ -593,7 +590,6 @@ presubmits:
         command:
         - "/coverage"
         args:
-        - "--postsubmit-gcs-bucket=knative-prow"
         - "--postsubmit-job-name=post-knative-client-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--profile-name=coverage_profile.txt"
@@ -730,7 +726,6 @@ presubmits:
         command:
         - "/coverage"
         args:
-        - "--postsubmit-gcs-bucket=knative-prow"
         - "--postsubmit-job-name=post-knative-eventing-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--profile-name=coverage_profile.txt"
@@ -867,7 +862,6 @@ presubmits:
         command:
         - "/coverage"
         args:
-        - "--postsubmit-gcs-bucket=knative-prow"
         - "--postsubmit-job-name=post-knative-eventing-sources-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--profile-name=coverage_profile.txt"
@@ -1012,7 +1006,6 @@ presubmits:
         command:
         - "/coverage"
         args:
-        - "--postsubmit-gcs-bucket=knative-prow"
         - "--postsubmit-job-name=post-knative-docs-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--profile-name=coverage_profile.txt"
@@ -1255,7 +1248,6 @@ presubmits:
         command:
         - "/coverage"
         args:
-        - "--postsubmit-gcs-bucket=knative-prow"
         - "--postsubmit-job-name=post-knative-pkg-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--profile-name=coverage_profile.txt"
@@ -1498,7 +1490,6 @@ presubmits:
         command:
         - "/coverage"
         args:
-        - "--postsubmit-gcs-bucket=knative-prow"
         - "--postsubmit-job-name=post-knative-caching-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--profile-name=coverage_profile.txt"

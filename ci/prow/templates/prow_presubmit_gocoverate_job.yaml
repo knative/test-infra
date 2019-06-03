@@ -14,7 +14,6 @@
         command:
         - "/coverage"
         args:
-        - "--postsubmit-gcs-bucket=[[.Base.GcsBucket]]"
         - "--postsubmit-job-name=[[.PresubmitPostJobName]]"
         - "--artifacts=$(ARTIFACTS)"
         - "--profile-name=coverage_profile.txt"
