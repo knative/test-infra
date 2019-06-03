@@ -1,0 +1,26 @@
+  - name: [[.PresubmitPullJobName]]
+    agent: kubernetes
+    context: [[.PresubmitPullJobName]]
+    always_run: [[.Base.AlwaysRun]]
+    rerun_command: "/test [[.PresubmitPullJobName]]"
+    trigger: "(?m)^/test (all|[[.PresubmitPullJobName]]),?(\\s+|$)"
+    optional: true
+    decorate: true
+    clone_uri: [[.Base.CloneURI]]
+    spec:
+      containers:
+      - image: [[.Base.Image]]
+        imagePullPolicy: Always
+        command:
+        - "/coverage"
+        args:
+        - "--postsubmit-gcs-bucket=[[.Base.GcsBucket]]"
+        - "--postsubmit-job-name=[[.PresubmitPostJobName]]"
+        - "--artifacts=$(ARTIFACTS)"
+        - "--profile-name=coverage_profile.txt"
+        - "--cov-target=."
+        - "--cov-threshold-percentage=[[.Base.GoCoverageThreshold]]"
+        - "--github-token=/etc/covbot-token/token"
+        [[indent_section 8 "volumeMounts" .Base.VolumeMounts]]
+        [[indent_section 8 "env" .Base.Env]]
+      [[indent_section 6 "volumes" .Base.Volumes]]

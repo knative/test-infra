@@ -1,0 +1,23 @@
+- cron: "[[.CronString]]"
+  name: [[.PeriodicJobName]]
+  agent: kubernetes
+  spec:
+    containers:
+    - image: [[.Base.Image]]
+      imagePullPolicy: Always
+      args:
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=[[repo .Base]]"
+      - "--root=/go/src"
+      - "--service-account=[[.Base.ServiceAccount]]"
+      - "--upload=[[.Base.GcsLogDir]]"
+      - "--timeout=[[.Base.Timeout]]" # Avoid overrun
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      [[indent_array 6 .PeriodicCommand]]
+      [[indent_section 8 "securityContext" .Base.SecurityContext]]
+      [[indent_section 6 "volumeMounts" .Base.VolumeMounts]]
+      [[indent_section 6 "env" .Base.Env]]
+    [[indent_section 4 "volumes" .Base.Volumes]]
