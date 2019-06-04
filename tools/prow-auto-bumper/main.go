@@ -65,9 +65,9 @@ var (
 	targetTime = time.Now().Add(-time.Hour * 7 * 24) // 7 days
 )
 
-// Client handles methods for github issues
-type Client struct {
-	client ghutil.GithubOperations
+// GHClientWrapper handles methods for github issues
+type GHClientWrapper struct {
+	ghutil.GithubOperations
 }
 
 // versions holds the version change for an image
@@ -82,9 +82,9 @@ type versions struct {
 type PRVersions struct {
 	images map[string][]versions // map of image name: versions struct
 	// The way k8s updates versions doesn't guarantee the same version tag across all images,
-	// dominantVs is the version that appears most times
-	dominantVs *versions
-	PR         *github.PullRequest
+	// dominantVersions is the version that appears most times
+	dominantVersions *versions
+	PR               *github.PullRequest
 }
 
 // Helper method for adding a newly discovered tag into pv
@@ -134,8 +134,8 @@ func getDominantKey(m map[string]int) string {
 }
 
 func (pv *PRVersions) getDominantVersions() versions {
-	if nil != pv.dominantVs {
-		return *pv.dominantVs
+	if nil != pv.dominantVersions {
+		return *pv.dominantVersions
 	}
 
 	cOld := make(map[string]int)
@@ -149,17 +149,17 @@ func (pv *PRVersions) getDominantVersions() versions {
 		}
 	}
 
-	pv.dominantVs = &versions{
+	pv.dominantVersions = &versions{
 		oldVersion: getDominantKey(cOld),
 		newVersion: getDominantKey(cNew),
 	}
 
-	return *pv.dominantVs
+	return *pv.dominantVersions
 }
 
 // parse changelist, find all version changes, and store them in image name: versions map
-func (pv *PRVersions) parseChangelist(client *Client) error {
-	fs, err := client.client.ListFiles(org, repo, *pv.PR.Number)
+func (pv *PRVersions) parseChangelist(gcw *GHClientWrapper) error {
+	fs, err := gcw.ListFiles(org, repo, *pv.PR.Number)
 	if nil != err {
 		return err
 	}
@@ -185,12 +185,12 @@ func (pv *PRVersions) parseChangelist(client *Client) error {
 
 // Query all PRs from "k8s-ci-robot:autobump", find PR roughly 7 days old and was not reverted later.
 // Only return error if it's github related
-func getBestVersion(client *Client, org, repo, head, base string) (*PRVersions, error) {
+func getBestVersion(gcw *GHClientWrapper, org, repo, head, base string) (*PRVersions, error) {
 	visited := make(map[string]PRVersions)
 	var bestPv *PRVersions
 	var overallErr error
 	var bestDelta float64 = maxDelta + 1
-	PRs, err := client.client.ListPullRequests(org, repo, head, base)
+	PRs, err := gcw.ListPullRequests(org, repo, head, base)
 	if nil != err {
 		return bestPv, fmt.Errorf("failed list pull request: '%v'", err)
 	}
@@ -207,7 +207,7 @@ func getBestVersion(client *Client, org, repo, head, base string) (*PRVersions, 
 			images: make(map[string][]versions),
 			PR:     PR,
 		}
-		if err := pv.parseChangelist(client); nil != err {
+		if err := pv.parseChangelist(gcw); nil != err {
 			overallErr = fmt.Errorf("failed listing files from PR '%d': '%v'", *PR.Number, err)
 			break
 		}
@@ -238,12 +238,12 @@ func getBestVersion(client *Client, org, repo, head, base string) (*PRVersions, 
 	return bestPv, overallErr
 }
 
-func retryGetBestVersion(client *Client, org, repo, head, base string) (*PRVersions, error) {
+func retryGetBestVersion(gcw *GHClientWrapper, org, repo, head, base string) (*PRVersions, error) {
 	var bestPv *PRVersions
 	var overallErr error
 	// retry if there is github related error
 	for retryCount := 0; nil == overallErr && retryCount < maxRetry; retryCount++ {
-		bestPv, overallErr = getBestVersion(client, org, repo, head, base)
+		bestPv, overallErr = getBestVersion(gcw, org, repo, head, base)
 		if nil != overallErr {
 			log.Println(overallErr)
 			if maxRetry-1 != retryCount {
@@ -258,17 +258,17 @@ func main() {
 	githubAccount := flag.String("github-account", "", "Token file for Github authentication")
 	flag.Parse()
 
-	GHClient, err := ghutil.NewGithubClient(*githubAccount)
+	gc, err := ghutil.NewGithubClient(*githubAccount)
 	if nil != err {
 		log.Fatalf("cannot authenticate to github: %v", err)
 	}
-	client := &Client{GHClient}
+	gcw := &GHClientWrapper{gc}
 
-	bestVersion, err := retryGetBestVersion(client, org, repo, PRHead, PRBase)
+	bestVersion, err := retryGetBestVersion(gcw, org, repo, PRHead, PRBase)
 	if nil != err {
 		log.Fatalf("cannot get best version from %s/%s: '%v'", org, repo, err)
 	}
 
 	log.Println(bestVersion.images)
-	log.Println(bestVersion.dominantVs)
+	log.Println(bestVersion.dominantVersions)
 }

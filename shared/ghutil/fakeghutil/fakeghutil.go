@@ -208,6 +208,7 @@ func (fgc *FakeGithubClient) ListPullRequests(org, repo, head, base string) ([]*
 			res = append(res, PR)
 		}
 	}
+	// Sort by createdate is default in List
 	sort.Slice(res, func(i, j int) bool {
 		return nil != res[i].CreatedAt && res[i].CreatedAt.After(*res[j].CreatedAt)
 	})

@@ -14,9 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// prow-auto-bumper finds stable Prow components version used by k8s,
-// and creates PRs updating them in knative/test-infra
-
 package main
 
 import (
@@ -28,6 +25,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/go-github/github"
 	"github.com/knative/test-infra/shared/ghutil"
 	"github.com/knative/test-infra/shared/ghutil/fakeghutil"
 )
@@ -37,6 +35,14 @@ var (
 	fakeRepo = "fakerepo"
 )
 
+func createPullRequest(t *testing.T, fgc *fakeghutil.FakeGithubClient) *github.PullRequest {
+	PR, err := fgc.CreatePullRequest(fakeOrg, fakeRepo, "user:head", "base", "title", "body")
+	if nil != err {
+		t.Fatalf("Create PR in %s/%s, want: no error, got: '%v'", fakeOrg, fakeRepo, err)
+	}
+	return PR
+}
+
 func TestGetIndex(t *testing.T) {
 	datas := []struct {
 		images map[string][]versions
@@ -45,14 +51,12 @@ func TestGetIndex(t *testing.T) {
 		i      int
 	}{
 		{
-
 			map[string][]versions{},
 			"o",
 			"a-b-c",
 			0,
 		},
 		{
-
 			map[string][]versions{
 				"o": []versions{{"", "", ""}},
 			},
@@ -61,7 +65,6 @@ func TestGetIndex(t *testing.T) {
 			1,
 		},
 		{
-
 			map[string][]versions{
 				"o": []versions{{"", "", "b"}},
 			},
@@ -70,7 +73,6 @@ func TestGetIndex(t *testing.T) {
 			1,
 		},
 		{
-
 			map[string][]versions{
 				"o": []versions{{"", "", "c"}},
 			},
@@ -79,7 +81,6 @@ func TestGetIndex(t *testing.T) {
 			0,
 		},
 		{
-
 			map[string][]versions{
 				"p": []versions{{"", "", "c"}},
 			},
@@ -92,9 +93,8 @@ func TestGetIndex(t *testing.T) {
 	for _, data := range datas {
 		msg := fmt.Sprintf("getIndex with PRInfo '%v', image '%s', tag '%s'",
 			data.images, data.image, data.tag)
-		images := data.images
 		pv := PRVersions{
-			images: images,
+			images: data.images,
 		}
 
 		if got := pv.getIndex(data.image, data.tag); got != data.i {
@@ -141,8 +141,8 @@ func TestDeconstructTag(t *testing.T) {
 
 func TestGetDominantVersion(t *testing.T) {
 	datas := []struct {
-		images map[string][]versions
-		vs     versions
+		images           map[string][]versions
+		dominantVersions versions
 	}{
 		{
 			map[string][]versions{},
@@ -171,12 +171,11 @@ func TestGetDominantVersion(t *testing.T) {
 	}
 
 	for _, data := range datas {
-		images := data.images
 		pv := PRVersions{
-			images: images,
+			images: data.images,
 		}
-		if vs := pv.getDominantVersions(); vs != data.vs {
-			log.Fatalf("get dominant versions for '%v', want: '%v', got: '%v'", images, data.vs, vs)
+		if dominantVersions := pv.getDominantVersions(); dominantVersions != data.dominantVersions {
+			log.Fatalf("get dominant versions for '%v', want: '%v', got: '%v'", data.images, data.dominantVersions, dominantVersions)
 		}
 	}
 }
@@ -249,11 +248,8 @@ func TestParseChangelist(t *testing.T) {
 
 	for _, data := range datas {
 		fgc := fakeghutil.NewFakeGithubClient()
-		fc := &Client{fgc}
-		PR, err := fgc.CreatePullRequest(fakeOrg, fakeRepo, "user:head", "base", "title", "body")
-		if nil != err {
-			t.Fatalf("Create PR in %s/%s, want: no error, got: '%v'", fakeOrg, fakeRepo, err)
-		}
+		fcw := &GHClientWrapper{fgc}
+		PR := createPullRequest(t, fgc)
 		pv := PRVersions{
 			images: make(map[string][]versions),
 			PR:     PR,
@@ -265,7 +261,7 @@ func TestParseChangelist(t *testing.T) {
 			fgc.AddFileToCommit(fakeOrg, fakeRepo, SHA, filename, patch)
 		}
 
-		pv.parseChangelist(fc)
+		pv.parseChangelist(fcw)
 		if eq := reflect.DeepEqual(pv.images, data.images); !eq {
 			t.Fatalf("parsing PR with changes '%v', want: '%v', got: '%v'",
 				data.patches, data.images, pv.images)
@@ -281,8 +277,8 @@ func TestGetBestVersion(t *testing.T) {
 		newVersion string
 	}
 	datas := []struct {
-		PIs        []PRInfo
-		dominantVs *versions
+		PRInfos          []PRInfo
+		dominantVersions *versions
 	}{
 		{
 			[]PRInfo{
@@ -322,14 +318,11 @@ func TestGetBestVersion(t *testing.T) {
 
 	for _, data := range datas {
 		fgc := fakeghutil.NewFakeGithubClient()
-		fc := &Client{fgc}
-		dataNow := time.Now()
-		for i, PI := range data.PIs {
-			PR, err := fgc.CreatePullRequest(fakeOrg, fakeRepo, "user:head", "base", "title", "body")
-			if nil != err {
-				t.Fatalf("Create PR in %s/%s, want: no error, got: '%v'", fakeOrg, fakeRepo, err)
-			}
-			timeCreated := dataNow.Add(-time.Hour * time.Duration(PI.delta))
+		fcw := &GHClientWrapper{fgc}
+		dateNow := time.Now()
+		for i, PI := range data.PRInfos {
+			PR := createPullRequest(t, fgc)
+			timeCreated := dateNow.Add(-time.Hour * time.Duration(PI.delta))
 			stateStr := string(PI.state)
 			PR.State = &stateStr
 			PR.CreatedAt = &timeCreated
@@ -343,25 +336,26 @@ func TestGetBestVersion(t *testing.T) {
 			fgc.AddFileToCommit(fakeOrg, fakeRepo, SHA, filename, patch)
 		}
 
-		pv, err := getBestVersion(fc, fakeOrg, fakeRepo, "user:head", "base")
+		pv, err := getBestVersion(fcw, fakeOrg, fakeRepo, "user:head", "base")
 		if nil != err {
-			t.Fatalf("get best versions with PRs '%v', want: no error, got: '%v'", data.PIs, err)
+			t.Fatalf("get best versions with PRs '%v', want: no error, got: '%v'", data.PRInfos, err)
 		}
-		if nil == data.dominantVs {
-			if nil != pv && nil != pv.dominantVs {
-				t.Fatalf("get best versions with PRs '%v', want: nil, got: '%v'", data.PIs, pv.getDominantVersions())
+		if nil == data.dominantVersions {
+			if nil != pv && nil != pv.dominantVersions {
+				t.Fatalf("get best versions with PRs '%v', want: nil, got: '%v'", data.PRInfos, pv.getDominantVersions())
 			}
-		} else if eq := reflect.DeepEqual(*data.dominantVs, pv.getDominantVersions()); !eq {
-			t.Fatalf("get best versions with PRs '%v', want: '%v', got: '%v'", data.PIs, data.dominantVs, pv.getDominantVersions())
+		} else if eq := reflect.DeepEqual(*data.dominantVersions, pv.getDominantVersions()); !eq {
+			t.Fatalf("get best versions with PRs '%v', want: '%v', got: '%v'", data.PRInfos, data.dominantVersions, pv.getDominantVersions())
 		}
 	}
 }
 
 func TestRetryGetBestVersion(t *testing.T) {
 	fgc := fakeghutil.NewFakeGithubClient()
-	fc := &Client{fgc}
+	fcw := &GHClientWrapper{fgc}
 
-	_, err := retryGetBestVersion(fc, fakeOrg, fakeRepo, "user:head", "base")
+	// only the error case exercises all the code in the function
+	_, err := retryGetBestVersion(fcw, fakeOrg, fakeRepo, "user:head", "base")
 	if nil == err || !strings.Contains(err.Error(), "failed list pull request") {
 		t.Fatalf("retry get best version with no PRs, want error: 'failed list pull request', got: '%v'", err)
 	}
