@@ -98,7 +98,7 @@ presubmits:
     - unit-tests: true
     - integration-tests: true
 
-  GoogleCloudPlatform/cloud-run-events:
+  googlecloudplatform/cloud-run-events:
     - build-tests: true
     - unit-tests: true
     - integration-tests: true
@@ -261,7 +261,7 @@ periodics:
     - continuous: true
       cron: "30 * * * *" # Run every hour and 30 minutes
 
-  GoogleCloudPlatform/cloud-run-events:
+  googlecloudplatform/cloud-run-events:
     - continuous: true
       cron: "45 * * * *" # Run every hour on :45 minutes
     - nightly: true

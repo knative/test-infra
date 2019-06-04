@@ -1592,13 +1592,13 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  GoogleCloudPlatform/cloud-run-events:
-  - name: pull-GoogleCloudPlatform-cloud-run-events-build-tests
+  googlecloudplatform/cloud-run-events:
+  - name: pull-googlecloudplatform-cloud-run-events-build-tests
     agent: kubernetes
-    context: pull-GoogleCloudPlatform-cloud-run-events-build-tests
+    context: pull-googlecloudplatform-cloud-run-events-build-tests
     always_run: true
-    rerun_command: "/test pull-GoogleCloudPlatform-cloud-run-events-build-tests"
-    trigger: "(?m)^/test (all|pull-GoogleCloudPlatform-cloud-run-events-build-tests),?(\\s+|$)"
+    rerun_command: "/test pull-googlecloudplatform-cloud-run-events-build-tests"
+    trigger: "(?m)^/test (all|pull-googlecloudplatform-cloud-run-events-build-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1628,12 +1628,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-GoogleCloudPlatform-cloud-run-events-unit-tests
+  - name: pull-googlecloudplatform-cloud-run-events-unit-tests
     agent: kubernetes
-    context: pull-GoogleCloudPlatform-cloud-run-events-unit-tests
+    context: pull-googlecloudplatform-cloud-run-events-unit-tests
     always_run: true
-    rerun_command: "/test pull-GoogleCloudPlatform-cloud-run-events-unit-tests"
-    trigger: "(?m)^/test (all|pull-GoogleCloudPlatform-cloud-run-events-unit-tests),?(\\s+|$)"
+    rerun_command: "/test pull-googlecloudplatform-cloud-run-events-unit-tests"
+    trigger: "(?m)^/test (all|pull-googlecloudplatform-cloud-run-events-unit-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1663,12 +1663,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-GoogleCloudPlatform-cloud-run-events-integration-tests
+  - name: pull-googlecloudplatform-cloud-run-events-integration-tests
     agent: kubernetes
-    context: pull-GoogleCloudPlatform-cloud-run-events-integration-tests
+    context: pull-googlecloudplatform-cloud-run-events-integration-tests
     always_run: true
-    rerun_command: "/test pull-GoogleCloudPlatform-cloud-run-events-integration-tests"
-    trigger: "(?m)^/test (all|pull-GoogleCloudPlatform-cloud-run-events-integration-tests),?(\\s+|$)"
+    rerun_command: "/test pull-googlecloudplatform-cloud-run-events-integration-tests"
+    trigger: "(?m)^/test (all|pull-googlecloudplatform-cloud-run-events-integration-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1698,15 +1698,15 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-GoogleCloudPlatform-cloud-run-events-go-coverage
+  - name: pull-googlecloudplatform-cloud-run-events-go-coverage
     agent: kubernetes
-    context: pull-GoogleCloudPlatform-cloud-run-events-go-coverage
+    context: pull-googlecloudplatform-cloud-run-events-go-coverage
     always_run: true
-    rerun_command: "/test pull-GoogleCloudPlatform-cloud-run-events-go-coverage"
-    trigger: "(?m)^/test (all|pull-GoogleCloudPlatform-cloud-run-events-go-coverage),?(\\s+|$)"
+    rerun_command: "/test pull-googlecloudplatform-cloud-run-events-go-coverage"
+    trigger: "(?m)^/test (all|pull-googlecloudplatform-cloud-run-events-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "https://github.com/GoogleCloudPlatform/cloud-run-events.git"
+    clone_uri: "https://github.com/googlecloudplatform/cloud-run-events.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -1714,7 +1714,7 @@ presubmits:
         command:
         - "/coverage"
         args:
-        - "--postsubmit-job-name=post-GoogleCloudPlatform-cloud-run-events-go-coverage"
+        - "--postsubmit-job-name=post-googlecloudplatform-cloud-run-events-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
         - "--github-token=/etc/covbot-token/token"
@@ -3566,7 +3566,7 @@ periodics:
       secret:
         secretName: test-account
 - cron: "45 * * * *"
-  name: ci-GoogleCloudPlatform-cloud-run-events-continuous
+  name: ci-googlecloudplatform-cloud-run-events-continuous
   agent: kubernetes
   spec:
     containers:
@@ -3576,7 +3576,7 @@ periodics:
       - "--scenario=kubernetes_execute_bazel"
       - "--clean"
       - "--job=$(JOB_NAME)"
-      - "--repo=github.com/GoogleCloudPlatform/cloud-run-events"
+      - "--repo=github.com/googlecloudplatform/cloud-run-events"
       - "--root=/go/src"
       - "--service-account=/etc/test-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
@@ -3600,7 +3600,7 @@ periodics:
       secret:
         secretName: test-account
 - cron: "16 9 * * *"
-  name: ci-GoogleCloudPlatform-cloud-run-events-nightly-release
+  name: ci-googlecloudplatform-cloud-run-events-nightly-release
   agent: kubernetes
   spec:
     containers:
@@ -3610,7 +3610,7 @@ periodics:
       - "--scenario=kubernetes_execute_bazel"
       - "--clean"
       - "--job=$(JOB_NAME)"
-      - "--repo=github.com/GoogleCloudPlatform/cloud-run-events"
+      - "--repo=github.com/googlecloudplatform/cloud-run-events"
       - "--root=/go/src"
       - "--service-account=/etc/nightly-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
@@ -3634,7 +3634,7 @@ periodics:
       secret:
         secretName: nightly-account
 - cron: "45 9 * * 2"
-  name: ci-GoogleCloudPlatform-cloud-run-events-dot-release
+  name: ci-googlecloudplatform-cloud-run-events-dot-release
   agent: kubernetes
   spec:
     containers:
@@ -3644,7 +3644,7 @@ periodics:
       - "--scenario=kubernetes_execute_bazel"
       - "--clean"
       - "--job=$(JOB_NAME)"
-      - "--repo=github.com/GoogleCloudPlatform/cloud-run-events"
+      - "--repo=github.com/googlecloudplatform/cloud-run-events"
       - "--root=/go/src"
       - "--service-account=/etc/release-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
@@ -3653,7 +3653,7 @@ periodics:
       - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--dot-release"
-      - "--release-gcs GoogleCloudPlatform/cloud-run-events"
+      - "--release-gcs googlecloudplatform/cloud-run-events"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
       volumeMounts:
@@ -3676,7 +3676,7 @@ periodics:
       secret:
         secretName: release-account
 - cron: "35 */2 * * *"
-  name: ci-GoogleCloudPlatform-cloud-run-events-auto-release
+  name: ci-googlecloudplatform-cloud-run-events-auto-release
   agent: kubernetes
   spec:
     containers:
@@ -3686,7 +3686,7 @@ periodics:
       - "--scenario=kubernetes_execute_bazel"
       - "--clean"
       - "--job=$(JOB_NAME)"
-      - "--repo=github.com/GoogleCloudPlatform/cloud-run-events"
+      - "--repo=github.com/googlecloudplatform/cloud-run-events"
       - "--root=/go/src"
       - "--service-account=/etc/release-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
@@ -3695,7 +3695,7 @@ periodics:
       - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--auto-release"
-      - "--release-gcs GoogleCloudPlatform/cloud-run-events"
+      - "--release-gcs googlecloudplatform/cloud-run-events"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
       volumeMounts:
@@ -3718,14 +3718,14 @@ periodics:
       secret:
         secretName: release-account
 - cron: "0 1 * * *"
-  name: ci-GoogleCloudPlatform-cloud-run-events-go-coverage
+  name: ci-googlecloudplatform-cloud-run-events-go-coverage
   agent: kubernetes
   decorate: true
   extra_refs:
   - org: knative
-    repo: GoogleCloudPlatform/cloud-run-events
+    repo: googlecloudplatform/cloud-run-events
     base_ref: master
-    clone_uri: "https://github.com/GoogleCloudPlatform/cloud-run-events.git"
+    clone_uri: "https://github.com/googlecloudplatform/cloud-run-events.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -3969,13 +3969,13 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
-  GoogleCloudPlatform/cloud-run-events:
-  - name: post-GoogleCloudPlatform-cloud-run-events-go-coverage
+  googlecloudplatform/cloud-run-events:
+  - name: post-googlecloudplatform-cloud-run-events-go-coverage
     branches:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "https://github.com/GoogleCloudPlatform/cloud-run-events.git"
+    clone_uri: "https://github.com/googlecloudplatform/cloud-run-events.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
