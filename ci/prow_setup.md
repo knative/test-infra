@@ -32,7 +32,7 @@
 
 1. Make sure that *Knative Robots* is an Admin of the repo.
 
-1. Add the repo to the [tide section](https://github.com/knative/test-infra/blob/6c1fc9978de156385ddbe431c3a5920d321d4382/ci/prow/make_config.go#L222)
+1. Add the repo to the [tide section](https://github.com/knative/test-infra/blob/2f046b32301e50242b2723c13f6f37588993e89e/ci/prow/templates/prow_config_header.yaml#L56)
    in the Prow config file generator and run `make config`. Create a PR with the
    changes to the generator and to the [config.yaml](./prow/config.yaml) file. Once
    the PR is merged, ask one of the owners of knative/test-infra to deploy the new
