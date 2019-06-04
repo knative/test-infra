@@ -64,6 +64,7 @@ tide:
     - knative/caching
     - knative/website
     - knative/community
+    - GoogleCloudPlatform/cloud-run-events
     labels:
     - lgtm
     - approved
