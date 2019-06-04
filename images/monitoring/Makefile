@@ -21,10 +21,6 @@ build:
 	docker build -t $(IMG):$(TAG) -f Dockerfile ../..
 	docker tag $(IMG):$(TAG) $(IMG):latest
 
-clean_build:
-	docker build --no-cache -t $(IMG):$(TAG) -f Dockerfile ../..
-	docker tag $(IMG):$(TAG) $(IMG):latest
-
 push_versioned: build
 	docker push $(IMG):$(TAG)
 

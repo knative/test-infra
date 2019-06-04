@@ -37,9 +37,7 @@ func main() {
 
 	ctx := context.Background()
 	client, err := cloudmail.NewMailClient(ctx)
-	if err != nil {
-		failIfError("Failed to create Cloud Mail client: %s", err)
-	}
+	failIfError("Failed to create Cloud Mail client: %s", err)
 
 	if *actionCreateDomain {
 		createDomain(client, ctx)

@@ -25,9 +25,6 @@ cd ${REPO_ROOT_DIR}
 # Ensure we have everything we need under vendor/
 dep ensure
 
-rm -rf $(find vendor/ -name 'OWNERS')
-rm -rf $(find vendor/ -name '*_test.go')
-
 # TODO(yt3liu): Remove the mail dependencies from here once it is available through `go get`
 # https://github.com/knative/test-infra/issues/841
 curl https://storage.googleapis.com/knative-monitoring/cloudmail-v1alpha3-go.zip  \
@@ -39,3 +36,6 @@ cp -r /tmp/cloudmail-v1alpha3-go/cloud.google.com/go/mail vendor/cloud.google.co
 cp -r /tmp/cloudmail-v1alpha3-go/google.golang.org/genproto/googleapis/cloud/mail \
   vendor/google.golang.org/genproto/googleapis/cloud
 rm -rf /tmp/cloudmail-v1alpha3-go.zip /tmp/cloudmail-v1alpha3-go
+
+rm -rf $(find vendor/ -name 'OWNERS')
+rm -rf $(find vendor/ -name '*_test.go')

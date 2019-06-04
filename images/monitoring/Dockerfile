@@ -40,8 +40,6 @@ RUN cp -r cloudmail-v1alpha3-go/cloud.google.com/go/mail /go/src/cloud.google.co
 RUN make -C $TEMP_TOOLS_REPO_DIR/$TOOL_NAME/
 RUN cp $TEMP_TOOLS_REPO_DIR/$TOOL_NAME/$TOOL_NAME /$TOOL_NAME
 
-RUN go build -v ./...
-
 # Remove test-infra from the container
 RUN rm -fr $TEMP_TOOLS_REPO_DIR
 
