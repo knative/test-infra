@@ -60,14 +60,14 @@ func main() {
 
 func createDomain(client *cloudmail.MailClient, ctx context.Context) {
 	fmt.Println("Creating the email domain")
-	if err := client.CreateDomain(ctx); err != nil {
+	if err := client.CreateMailDomain(ctx); err != nil {
 		log.Fatalf("Failed to create domain %v", err)
 	}
 }
 
 func setupSender(client *cloudmail.MailClient, ctx context.Context) {
 	fmt.Println("Setting up the sender")
-	failIfError("Failed to create address set %v", client.CreateAddressSet(ctx))
+	failIfError("Failed to create address set %v", client.CreateMailAddressSet(ctx))
 	failIfError("Failed to create sender domain %v", client.CreateSenderDomain(ctx))
 	failIfError("Failed to setup receipt rule %v", client.CreateAndApplyReceiptRuleDrop(ctx))
 }

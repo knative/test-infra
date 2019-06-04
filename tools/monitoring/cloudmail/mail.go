@@ -34,13 +34,14 @@ const (
 	addressPattern = "monitoring-alert"
 	senderID       = "monitoring-alert-sender"
 	receiptRuleID  = "monitoring-receipt-drop-rule"
+	matchMode      = "PREFIX"
 )
 
 // MailClient holds instance of CloudMailClient for making mail-related requests
 type MailClient struct {
-	CloudMailClient *mail.CloudMailClient
-	DomainName      string
-	DomainID        string
+	*mail.CloudMailClient
+	DomainName string
+	DomainID   string
 }
 
 // NewMailClient creates a new MailClient to handle all the mail interaction
@@ -54,8 +55,8 @@ func NewMailClient(ctx context.Context) (*MailClient, error) {
 	}, err
 }
 
-// CreateDomain creates a new project domain for cloud main
-func (c *MailClient) CreateDomain(ctx context.Context) error {
+// CreateDomain creates a new project domain for cloud mail
+func (c *MailClient) CreateMailDomain(ctx context.Context) error {
 	domain := &mailpb.Domain{
 		ProjectDomain: true,
 		DomainName:    "",
@@ -65,7 +66,7 @@ func (c *MailClient) CreateDomain(ctx context.Context) error {
 		Region: region,
 		Domain: domain,
 	}
-	resp, err := c.CloudMailClient.CreateDomain(ctx, req)
+	resp, err := c.CreateDomain(ctx, req)
 	if err != nil {
 		return err
 	}
@@ -82,7 +83,7 @@ func (c *MailClient) CreateDomain(ctx context.Context) error {
 }
 
 // CreateAddressSet enables email addresses under the domain
-func (c *MailClient) CreateAddressSet(ctx context.Context) error {
+func (c *MailClient) CreateMailAddressSet(ctx context.Context) error {
 	addressSet := &mailpb.AddressSet{
 		AddressPatterns: []string{addressPattern},
 	}
@@ -92,7 +93,7 @@ func (c *MailClient) CreateAddressSet(ctx context.Context) error {
 		AddressSet:   addressSet,
 	}
 
-	if _, err := c.CloudMailClient.CreateAddressSet(ctx, req); err != nil {
+	if _, err := c.CreateAddressSet(ctx, req); err != nil {
 		return err
 	}
 	fmt.Printf("Address set created.\nAddress set ID: %s\n", addressSetID)
@@ -113,7 +114,7 @@ func (c *MailClient) CreateSenderDomain(ctx context.Context) error {
 		Sender:   sender,
 	}
 
-	if _, err := c.CloudMailClient.CreateSender(ctx, req); err != nil {
+	if _, err := c.CreateSender(ctx, req); err != nil {
 		return err
 	}
 	fmt.Printf("Sender created.\nSender ID: %s\n", senderID)
@@ -122,10 +123,6 @@ func (c *MailClient) CreateSenderDomain(ctx context.Context) error {
 
 // CreateAndApplyReceiptRuleDrop configures the bounce message behaviour to do nothing when an email cannot be delivered
 func (c *MailClient) CreateAndApplyReceiptRuleDrop(ctx context.Context) error {
-	const matchMode = "PREFIX"
-
-	cloudMailClient := c.CloudMailClient
-
 	envelopeToPattern := &mailpb.ReceiptRule_Pattern{
 		Pattern:   addressPattern,
 		MatchMode: mailpb.ReceiptRule_Pattern_MatchMode(mailpb.ReceiptRule_Pattern_MatchMode_value[matchMode]),
@@ -146,7 +143,7 @@ func (c *MailClient) CreateAndApplyReceiptRuleDrop(ctx context.Context) error {
 		ReceiptRule: receiptRule,
 	}
 
-	if _, err := cloudMailClient.CreateReceiptRule(ctx, createReceiptRuleReq); err != nil {
+	if _, err := c.CreateReceiptRule(ctx, createReceiptRuleReq); err != nil {
 		return err
 	}
 	fmt.Printf("Receipt rule %s created.\n", receiptRuleID)
@@ -167,8 +164,8 @@ func (c *MailClient) CreateAndApplyReceiptRuleDrop(ctx context.Context) error {
 		UpdateMask: mask,
 	}
 
-	if _, updateDomainErr := cloudMailClient.UpdateDomain(ctx, updateDomainReq); updateDomainErr != nil {
-		return updateDomainErr
+	if _, err := c.UpdateDomain(ctx, updateDomainReq); err != nil {
+		return err
 	}
 	fmt.Printf("New receipt rule %s applied to domain %s.\n", receiptRuleID, c.DomainID)
 	return nil
@@ -213,7 +210,7 @@ func (c *MailClient) SendEmailMessage(ctx context.Context, toAddress string, sub
 		Message:               message,
 	}
 
-	resp, err := c.CloudMailClient.SendMessage(ctx, req)
+	resp, err := c.SendMessage(ctx, req)
 	if err != nil {
 		return err
 	}

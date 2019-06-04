@@ -13,10 +13,10 @@ Here are the actions in `setup.go`:
     go run setup.go -setup-domain
     ```
 
-1. `setup-sender`: Sets up a sender mail address. It requires the `-domainID` to be set and create all the resources under the specified domain.
+1. `setup-sender`: Sets up a sender mail address in the project domain.
 
    ```level x 4 spaces
-   go run setup.go -setup-sender -domain-id "<DomainID generated in (1)"
+   go run setup.go -setup-sender
    ```
 
 1. `setup-all`: Does both `-setup-domain` and `setup-sender`. It uses the domain created to setup the sender.
@@ -28,7 +28,7 @@ Here are the actions in `setup.go`:
 1. `send-test-mail`: Send a test mail from the resources created in the previous setup steps
 
    ```level x 4 spaces`
-   go run setup.go -send-test-mail -domain-name "<Domain Name generated in (1)>" -to-address "<recipient email>"
+   go run setup.go -send-test-mail -to-address "<recipient email>"
    ```
 
 ## Set up Go Client Library
