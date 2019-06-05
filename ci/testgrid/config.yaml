@@ -225,7 +225,7 @@ dashboards:
     base_options: "sort-by-name="
   - name: conformance-tests
     test_group_name: ci-knative-serving-continuous
-    base_options: "include-filter-by-regex=test/conformance\\.&sort-by-name="
+    base_options: "include-filter-by-regex=test/conformance/&sort-by-name="
   - name: istio-1.0.7-mesh
     test_group_name: ci-knative-serving-istio-1.0.7-mesh
     base_options: "sort-by-name="
