@@ -38,11 +38,6 @@ var (
 
 const (
 	yamlURL = "https://raw.githubusercontent.com/knative/test-infra/master/tools/monitoring/sample.yaml"
-
-	dbUserSecretFile        = "/secrets/cloudsql/monitoringdb/username"
-	dbPasswordSecretFile    = "/secrets/cloudsql/monitoringdb/password"
-	emailAddrSecretFile     = "/secrets/email/mail"
-	emailPasswordSecretFile = "/secrets/email/password"
 )
 
 func main() {
@@ -50,14 +45,20 @@ func main() {
 
 	dbName := flag.String("database-name", "", "The monitoring database name")
 	dbInst := flag.String("database-instance", "", "The monitoring CloudSQL instance connection name")
+
+	dbUserSecretFile := flag.String("database-user", "/secrets/cloudsql/monitoringdb/username", "Database user secret file")
+	dbPasswordSecretFile := flag.String("database-password", "/secrets/cloudsql/monitoringdb/password", "Database password secret file")
+	emailAddrSecretFile := flag.String("sender-email", "/secrets/sender-email/mail", "Alert sender email address file")
+	emailPasswordSecretFile := flag.String("sender-password", "/secrets/sender-email/password", "Alert sender email password file")
+
 	flag.Parse()
 
-	dbConfig, err = configureMonitoringDatabase(*dbName, *dbInst)
+	dbConfig, err = configureMonitoringDatabase(*dbName, *dbInst, *dbUserSecretFile, *dbPasswordSecretFile)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	mailConfig, err = mail.NewMailConfig(emailAddrSecretFile, emailPasswordSecretFile)
+	mailConfig, err = mail.NewMailConfig(*emailAddrSecretFile, *emailPasswordSecretFile)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -126,7 +127,7 @@ func sendTestEmail(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Sent the Email")
 }
 
-func configureMonitoringDatabase(dbName string, dbInst string) (mysql.DBConfig, error) {
+func configureMonitoringDatabase(dbName string, dbInst string, dbUserSecretFile string, dbPasswordSecretFile string) (mysql.DBConfig, error) {
 	var config mysql.DBConfig
 
 	user, err := ioutil.ReadFile(dbUserSecretFile)

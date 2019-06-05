@@ -31,8 +31,8 @@ const (
 
 // Config stores the sender information for mail
 type Config struct {
-	senderEmail    string
-	senderPassword string
+	email    string
+	password string
 }
 
 // NewMailConfig creates a config with a valid sender info
@@ -48,19 +48,17 @@ func NewMailConfig(mailAddrFile string, mailPassFile string) (*Config, error) {
 	}
 
 	return &Config{
-		senderEmail:    string(mail),
-		senderPassword: string(pass),
+		email:    string(mail),
+		password: string(pass),
 	}, nil
 }
 
 // Send sends an email
 func (c *Config) Send(recipients []string, subject string, body string) error {
-	msg := buildMessage(c.senderEmail, recipients, subject, body)
+	msg := buildMessage(c.email, recipients, subject, body)
 
-	err := smtp.SendMail(buildServerName(smtpHost, smtpPort),
-		smtp.PlainAuth("", c.senderEmail, c.senderPassword, smtpHost),
-		c.senderEmail, recipients, []byte(msg))
-	if err != nil {
+	auth := smtp.PlainAuth("", c.email, c.password, smtpHost)
+	if err := smtp.SendMail(buildServerName(smtpHost, smtpPort), auth, c.email, recipients, []byte(msg)); err != nil {
 		return err
 	}
 
@@ -72,15 +70,13 @@ func buildServerName(host string, port string) string {
 	return host + ":" + port
 }
 
-func buildMessage(sender string, recipients []string, subject string, body string) string {
-	message := ""
-	message += fmt.Sprintf("From: %s\n", sender)
+func buildMessage(sender string, recipients []string, subject string, body string) []byte {
+	message := fmt.Sprintf("From: %s\n", sender)
 	if len(recipients) > 0 {
 		message += fmt.Sprintf("To: %s\n", strings.Join(recipients, ";"))
 	}
 
-	message += fmt.Sprintf("Subject: %s\n", subject) + "\n"
-	message += body
+	message += fmt.Sprintf("Subject: %s\n", subject) + "\n" + body
 
-	return message
+	return []byte(message)
 }

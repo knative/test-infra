@@ -56,13 +56,13 @@ spec:
         - name: monitoring-db-credentials
           mountPath: /secrets/cloudsql/monitoringdb
           readOnly: true
-        - name: email-credentials
-          mountPath: /secrets/email
+        - name: sender-email-credentials
+          mountPath: /secrets/sender-email
           readOnly: true
       volumes:
       - name: monitoring-db-credentials
         secret:
           secretName: monitoring-db-credentials
-      - name: email-credentials
+      - name: sender-email-credentials
         secret:
-          secretName: email-credentials
+          secretName: sender-email-credentials
