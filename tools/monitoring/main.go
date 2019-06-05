@@ -25,15 +25,24 @@ import (
 	"os"
 
 	"github.com/knative/test-infra/tools/monitoring/config"
+	"github.com/knative/test-infra/tools/monitoring/mail"
 	"github.com/knative/test-infra/tools/monitoring/mysql"
 )
 
-var dbConfig mysql.DBConfig
+var (
+	dbConfig   mysql.DBConfig
+	mailConfig *mail.Config
+
+	alertEmailRecipients = []string{"knative-productivity-oncall@googlegroups.com"}
+)
 
 const (
-	yamlURL              = "https://raw.githubusercontent.com/knative/test-infra/master/tools/monitoring/sample.yaml"
-	dbUserSecretFile     = "/secrets/cloudsql/monitoringdb/username"
-	dbPasswordSecretFile = "/secrets/cloudsql/monitoringdb/password"
+	yamlURL = "https://raw.githubusercontent.com/knative/test-infra/master/tools/monitoring/sample.yaml"
+
+	dbUserSecretFile        = "/secrets/cloudsql/monitoringdb/username"
+	dbPasswordSecretFile    = "/secrets/cloudsql/monitoringdb/password"
+	emailAddrSecretFile     = "/secrets/email/mail"
+	emailPasswordSecretFile = "/secrets/email/password"
 )
 
 func main() {
@@ -48,6 +57,11 @@ func main() {
 		log.Fatal(err)
 	}
 
+	mailConfig, err = mail.NewMailConfig(emailAddrSecretFile, emailPasswordSecretFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// use PORT environment variable, or default to 8080
 	port := "8080"
 	if fromEnv := os.Getenv("PORT"); fromEnv != "" {
@@ -58,6 +72,7 @@ func main() {
 	server := http.NewServeMux()
 	server.HandleFunc("/hello", hello)
 	server.HandleFunc("/test-conn", testCloudSQLConn)
+	server.HandleFunc("/send-mail", sendTestEmail)
 
 	// start the web server on port and accept requests
 	log.Printf("Server listening on port %s", port)
@@ -92,6 +107,23 @@ func testCloudSQLConn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Fprintf(w, "Success\n")
+}
+
+func sendTestEmail(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Serving request: %s", r.URL.Path)
+	log.Println("Sending test email")
+
+	err := mailConfig.Send(
+		alertEmailRecipients,
+		"Test Subject",
+		"Test Content",
+	)
+	if err != nil {
+		fmt.Fprintf(w, "Failed to send email %v", err)
+		return
+	}
+
+	fmt.Fprintln(w, "Sent the Email")
 }
 
 func configureMonitoringDatabase(dbName string, dbInst string) (mysql.DBConfig, error) {
