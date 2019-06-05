@@ -50,14 +50,14 @@ func main() {
 	coverageProfileName := flag.String("profile-name", defaultCoverageProfileName, "file name for coverage profile")
 	githubTokenPath := flag.String("github-token", "", "path to token to access github repo")
 	covThresholdFlag := flag.Int("cov-threshold-percentage", defaultCovThreshold, "token to access github repo")
-	covbotUserName := flag.String("covbot-username", "covbot", "github user name for coverage robot")
+	postingBotUserName := flag.String("posting-robot", "knative-metrics-robot", "github user name for coverage robot")
 	flag.Parse()
 
 	log.Printf("container flag list: postsubmit-gcs-bucket=%s; postSubmitJobName=%s; "+
 		"artifacts=%s; cov-target=%s; profile-name=%s; github-token=%s; "+
-		"cov-threshold-percentage=%d; covbot-username=%s;",
+		"cov-threshold-percentage=%d; posting-robot=%s;",
 		*gcsBucketName, *postSubmitJobName, *artifactsDir, *coverageTargetDir, *coverageProfileName,
-		*githubTokenPath, *covThresholdFlag, *covbotUserName)
+		*githubTokenPath, *covThresholdFlag, *postingBotUserName)
 
 	log.Println("Getting env values")
 	pr := os.Getenv("PULL_NUMBER")
@@ -88,7 +88,7 @@ func main() {
 				buildStr, err)
 		}
 
-		prData := githubPr.New(*githubTokenPath, repoOwner, repoName, pr, *covbotUserName)
+		prData := githubPr.New(*githubTokenPath, repoOwner, repoName, pr, *postingBotUserName)
 		gcsData := &gcs.PresubmitBuild{GcsBuild: gcs.GcsBuild{
 			StorageClient: gcs.NewStorageClient(prData.Ctx),
 			Bucket:        *gcsBucketName,
