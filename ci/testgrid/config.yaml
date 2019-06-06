@@ -159,20 +159,20 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-eventing-go-coverage
   num_failures_to_alert: 9999
   short_text_metric: "coverage"
-- name: ci-knative-eventing-sources-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-continuous
+- name: ci-knative-eventing-contrib-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-continuous
   alert_stale_results_hours: 3
   num_failures_to_alert: 3
-- name: ci-knative-eventing-sources-nightly-release
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-nightly-release
-- name: ci-knative-eventing-sources-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-dot-release
+- name: ci-knative-eventing-contrib-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-nightly-release
+- name: ci-knative-eventing-contrib-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-dot-release
   alert_stale_results_hours: 170
-- name: ci-knative-eventing-sources-auto-release
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-auto-release
+- name: ci-knative-eventing-contrib-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-auto-release
   alert_stale_results_hours: 3
-- name: pull-knative-eventing-sources-test-coverage
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-go-coverage
+- name: pull-knative-eventing-contrib-test-coverage
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-go-coverage
   num_failures_to_alert: 9999
   short_text_metric: "coverage"
 - name: ci-knative-build-templates-continuous
@@ -207,16 +207,16 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-build-0.5-continuous
 - name: ci-knative-eventing-0.5-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-0.5-continuous
-- name: ci-knative-eventing-sources-0.5-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-0.5-continuous
+- name: ci-knative-eventing-contrib-0.5-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-0.5-continuous
 - name: ci-knative-serving-0.6-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.6-continuous
 - name: ci-knative-build-0.6-continuous
   gcs_prefix: knative-prow/logs/ci-knative-build-0.6-continuous
 - name: ci-knative-eventing-0.6-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-0.6-continuous
-- name: ci-knative-eventing-sources-0.6-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-0.6-continuous
+- name: ci-knative-eventing-contrib-0.6-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-0.6-continuous
 dashboards:
 - name: knative-serving
   dashboard_tab:
@@ -326,22 +326,22 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-eventing-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-eventing-sources
+- name: knative-eventing-contrib
   dashboard_tab:
   - name: continuous
-    test_group_name: ci-knative-eventing-sources-continuous
+    test_group_name: ci-knative-eventing-contrib-continuous
     base_options: "sort-by-name="
   - name: nightly
-    test_group_name: ci-knative-eventing-sources-nightly-release
+    test_group_name: ci-knative-eventing-contrib-nightly-release
     base_options: "sort-by-name="
   - name: dot-release
-    test_group_name: ci-knative-eventing-sources-dot-release
+    test_group_name: ci-knative-eventing-contrib-dot-release
     base_options: "sort-by-name="
   - name: auto-release
-    test_group_name: ci-knative-eventing-sources-auto-release
+    test_group_name: ci-knative-eventing-contrib-auto-release
     base_options: "sort-by-name="
   - name: coverage
-    test_group_name: pull-knative-eventing-sources-test-coverage
+    test_group_name: pull-knative-eventing-contrib-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: knative-build-templates
   dashboard_tab:
@@ -385,8 +385,8 @@ dashboards:
   - name: eventing
     test_group_name: ci-knative-eventing-0.5-continuous
     base_options: "sort-by-name="
-  - name: eventing-sources
-    test_group_name: ci-knative-eventing-sources-0.5-continuous
+  - name: eventing-contrib
+    test_group_name: ci-knative-eventing-contrib-0.5-continuous
     base_options: "sort-by-name="
 - name: knative-0.6
   dashboard_tab:
@@ -399,8 +399,8 @@ dashboards:
   - name: eventing
     test_group_name: ci-knative-eventing-0.6-continuous
     base_options: "sort-by-name="
-  - name: eventing-sources
-    test_group_name: ci-knative-eventing-sources-0.6-continuous
+  - name: eventing-contrib
+    test_group_name: ci-knative-eventing-contrib-0.6-continuous
     base_options: "sort-by-name="
 dashboard_groups:
 - name: knative
@@ -410,7 +410,7 @@ dashboard_groups:
   - "knative-client"
   - "knative-docs"
   - "knative-eventing"
-  - "knative-eventing-sources"
+  - "knative-eventing-contrib"
   - "knative-build-templates"
   - "knative-pkg"
   - "knative-caching"

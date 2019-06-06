@@ -62,7 +62,7 @@ tide:
     - knative/observability
     - knative/serving
     - knative/eventing
-    - knative/eventing-sources
+    - knative/eventing-contrib
     - knative/docs
     - knative/test-infra
     - knative/pkg
