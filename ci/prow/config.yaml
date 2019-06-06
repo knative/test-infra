@@ -64,6 +64,7 @@ tide:
     - knative/caching
     - knative/website
     - knative/community
+    - GoogleCloudPlatform/cloud-run-events
     labels:
     - lgtm
     - approved
@@ -1592,6 +1593,140 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+  googlecloudplatform/cloud-run-events:
+  - name: pull-googlecloudplatform-cloud-run-events-build-tests
+    agent: kubernetes
+    context: pull-googlecloudplatform-cloud-run-events-build-tests
+    always_run: true
+    rerun_command: "/test pull-googlecloudplatform-cloud-run-events-build-tests"
+    trigger: "(?m)^/test (all|pull-googlecloudplatform-cloud-run-events-build-tests),?(\\s+|$)"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        args:
+        - "--scenario=kubernetes_execute_bazel"
+        - "--clean"
+        - "--job=$(JOB_NAME)"
+        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
+        - "--root=/go/src"
+        - "--service-account=/etc/test-account/service-account.json"
+        - "--upload=gs://knative-prow/pr-logs"
+        - "--" # end bootstrap args, scenario args below
+        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+        - "./test/presubmit-tests.sh"
+        - "--build-tests"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-googlecloudplatform-cloud-run-events-unit-tests
+    agent: kubernetes
+    context: pull-googlecloudplatform-cloud-run-events-unit-tests
+    always_run: true
+    rerun_command: "/test pull-googlecloudplatform-cloud-run-events-unit-tests"
+    trigger: "(?m)^/test (all|pull-googlecloudplatform-cloud-run-events-unit-tests),?(\\s+|$)"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        args:
+        - "--scenario=kubernetes_execute_bazel"
+        - "--clean"
+        - "--job=$(JOB_NAME)"
+        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
+        - "--root=/go/src"
+        - "--service-account=/etc/test-account/service-account.json"
+        - "--upload=gs://knative-prow/pr-logs"
+        - "--" # end bootstrap args, scenario args below
+        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+        - "./test/presubmit-tests.sh"
+        - "--unit-tests"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-googlecloudplatform-cloud-run-events-integration-tests
+    agent: kubernetes
+    context: pull-googlecloudplatform-cloud-run-events-integration-tests
+    always_run: true
+    rerun_command: "/test pull-googlecloudplatform-cloud-run-events-integration-tests"
+    trigger: "(?m)^/test (all|pull-googlecloudplatform-cloud-run-events-integration-tests),?(\\s+|$)"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        args:
+        - "--scenario=kubernetes_execute_bazel"
+        - "--clean"
+        - "--job=$(JOB_NAME)"
+        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
+        - "--root=/go/src"
+        - "--service-account=/etc/test-account/service-account.json"
+        - "--upload=gs://knative-prow/pr-logs"
+        - "--" # end bootstrap args, scenario args below
+        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+        - "./test/presubmit-tests.sh"
+        - "--integration-tests"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-googlecloudplatform-cloud-run-events-go-coverage
+    agent: kubernetes
+    context: pull-googlecloudplatform-cloud-run-events-go-coverage
+    always_run: true
+    rerun_command: "/test pull-googlecloudplatform-cloud-run-events-go-coverage"
+    trigger: "(?m)^/test (all|pull-googlecloudplatform-cloud-run-events-go-coverage),?(\\s+|$)"
+    optional: true
+    decorate: true
+    clone_uri: "https://github.com/googlecloudplatform/cloud-run-events.git"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
+        imagePullPolicy: Always
+        command:
+        - "/coverage"
+        args:
+        - "--postsubmit-job-name=post-googlecloudplatform-cloud-run-events-go-coverage"
+        - "--artifacts=$(ARTIFACTS)"
+        - "--cov-threshold-percentage=50"
+        - "--github-token=/etc/covbot-token/token"
+        volumeMounts:
+        - name: covbot-token
+          mountPath: /etc/covbot-token
+          readOnly: true
+      volumes:
+      - name: covbot-token
+        secret:
+          secretName: covbot-token
 periodics:
 - cron: "1 */2 * * *"
   name: ci-knative-serving-continuous
@@ -1830,7 +1965,7 @@ periodics:
       secret:
         secretName: test-account
 - cron: "37 */2 * * *"
-  name: ci-knative-serving-istio-1.1.2-mesh
+  name: ci-knative-serving-istio-1.1.7-mesh
   agent: kubernetes
   spec:
     containers:
@@ -1849,7 +1984,7 @@ periodics:
       - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/e2e-tests.sh"
       - "--istio-version"
-      - "1.1.2"
+      - "1.1.7"
       - "--mesh"
       volumeMounts:
       - name: test-account
@@ -1865,7 +2000,7 @@ periodics:
       secret:
         secretName: test-account
 - cron: "52 */2 * * *"
-  name: ci-knative-serving-istio-1.1.2-no-mesh
+  name: ci-knative-serving-istio-1.1.7-no-mesh
   agent: kubernetes
   spec:
     containers:
@@ -1884,7 +2019,7 @@ periodics:
       - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/e2e-tests.sh"
       - "--istio-version"
-      - "1.1.2"
+      - "1.1.7"
       - "--no-mesh"
       volumeMounts:
       - name: test-account
@@ -3431,6 +3566,176 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+- cron: "45 * * * *"
+  name: ci-googlecloudplatform-cloud-run-events-continuous
+  agent: kubernetes
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      args:
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=github.com/googlecloudplatform/cloud-run-events"
+      - "--root=/go/src"
+      - "--service-account=/etc/test-account/service-account.json"
+      - "--upload=gs://knative-prow/logs"
+      - "--timeout=50" # Avoid overrun
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./test/presubmit-tests.sh"
+      - "--all-tests"
+      - "--emit-metrics"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "16 9 * * *"
+  name: ci-googlecloudplatform-cloud-run-events-nightly-release
+  agent: kubernetes
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      args:
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=github.com/googlecloudplatform/cloud-run-events"
+      - "--root=/go/src"
+      - "--service-account=/etc/nightly-account/service-account.json"
+      - "--upload=gs://knative-prow/logs"
+      - "--timeout=90" # Avoid overrun
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./hack/release.sh"
+      - "--publish"
+      - "--tag-release"
+      volumeMounts:
+      - name: nightly-account
+        mountPath: /etc/nightly-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/nightly-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: nightly-account
+      secret:
+        secretName: nightly-account
+- cron: "45 9 * * 2"
+  name: ci-googlecloudplatform-cloud-run-events-dot-release
+  agent: kubernetes
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      args:
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=github.com/googlecloudplatform/cloud-run-events"
+      - "--root=/go/src"
+      - "--service-account=/etc/release-account/service-account.json"
+      - "--upload=gs://knative-prow/logs"
+      - "--timeout=90" # Avoid overrun
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./hack/release.sh"
+      - "--dot-release"
+      - "--release-gcs googlecloudplatform/cloud-run-events"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
+- cron: "35 */2 * * *"
+  name: ci-googlecloudplatform-cloud-run-events-auto-release
+  agent: kubernetes
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      args:
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=github.com/googlecloudplatform/cloud-run-events"
+      - "--root=/go/src"
+      - "--service-account=/etc/release-account/service-account.json"
+      - "--upload=gs://knative-prow/logs"
+      - "--timeout=90" # Avoid overrun
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./hack/release.sh"
+      - "--auto-release"
+      - "--release-gcs googlecloudplatform/cloud-run-events"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
+- cron: "0 1 * * *"
+  name: ci-googlecloudplatform-cloud-run-events-go-coverage
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: googlecloudplatform/cloud-run-events
+    base_ref: master
+    clone_uri: "https://github.com/googlecloudplatform/cloud-run-events.git"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/coverage:latest
+      imagePullPolicy: Always
+      command:
+      - "/coverage"
+      args:
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=50"
 - cron: "0 19 * * 1"
   name: ci-knative-cleanup
   agent: kubernetes
@@ -3656,6 +3961,22 @@ postsubmits:
     agent: kubernetes
     decorate: true
     clone_uri: "https://github.com/knative/caching.git"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
+        imagePullPolicy: Always
+        command:
+        - "/coverage"
+        args:
+        - "--artifacts=$(ARTIFACTS)"
+        - "--cov-threshold-percentage=0"
+  googlecloudplatform/cloud-run-events:
+  - name: post-googlecloudplatform-cloud-run-events-go-coverage
+    branches:
+    - master
+    agent: kubernetes
+    decorate: true
+    clone_uri: "https://github.com/googlecloudplatform/cloud-run-events.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
