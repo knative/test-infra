@@ -98,6 +98,12 @@ presubmits:
     - unit-tests: true
     - integration-tests: true
 
+  googlecloudplatform/cloud-run-events:
+    - build-tests: true
+    - unit-tests: true
+    - integration-tests: true
+    - go-coverage: true
+
 periodics:
   knative/serving:
     - continuous: true
@@ -254,3 +260,13 @@ periodics:
   knative/observability:
     - continuous: true
       cron: "30 * * * *" # Run every hour and 30 minutes
+
+  googlecloudplatform/cloud-run-events:
+    - continuous: true
+      cron: "45 * * * *" # Run every hour on :45 minutes
+    - nightly: true
+      cron: "16 9 * * *" # Run at 02:16PST every day (09:16 UTC)
+    - dot-release: true
+      cron: "45 9 * * 2" # Run at 02:17PST every Tuesday (09:45 UTC)
+    - auto-release: true
+      cron: "35 */2 * * *" # Run every two hours on :35

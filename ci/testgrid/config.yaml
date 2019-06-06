@@ -217,6 +217,22 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-eventing-0.6-continuous
 - name: ci-knative-eventing-sources-0.6-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-0.6-continuous
+- name: ci-googlecloudplatform-cloud-run-events-continuous
+  gcs_prefix: knative-prow/logs/ci-googlecloudplatform-cloud-run-events-continuous
+  alert_stale_results_hours: 3
+  num_failures_to_alert: 3
+- name: ci-googlecloudplatform-cloud-run-events-nightly-release
+  gcs_prefix: knative-prow/logs/ci-googlecloudplatform-cloud-run-events-nightly-release
+- name: ci-googlecloudplatform-cloud-run-events-dot-release
+  gcs_prefix: knative-prow/logs/ci-googlecloudplatform-cloud-run-events-dot-release
+  alert_stale_results_hours: 170
+- name: ci-googlecloudplatform-cloud-run-events-auto-release
+  gcs_prefix: knative-prow/logs/ci-googlecloudplatform-cloud-run-events-auto-release
+  alert_stale_results_hours: 3
+- name: pull-googlecloudplatform-cloud-run-events-test-coverage
+  gcs_prefix: knative-prow/logs/ci-googlecloudplatform-cloud-run-events-go-coverage
+  num_failures_to_alert: 9999
+  short_text_metric: "coverage"
 dashboards:
 - name: knative-serving
   dashboard_tab:
@@ -369,6 +385,23 @@ dashboards:
   - name: continuous
     test_group_name: ci-knative-observability-continuous
     base_options: "sort-by-name="
+- name: googlecloudplatform-cloud-run-events
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-googlecloudplatform-cloud-run-events-continuous
+    base_options: "sort-by-name="
+  - name: nightly
+    test_group_name: ci-googlecloudplatform-cloud-run-events-nightly-release
+    base_options: "sort-by-name="
+  - name: dot-release
+    test_group_name: ci-googlecloudplatform-cloud-run-events-dot-release
+    base_options: "sort-by-name="
+  - name: auto-release
+    test_group_name: ci-googlecloudplatform-cloud-run-events-auto-release
+    base_options: "sort-by-name="
+  - name: coverage
+    test_group_name: pull-googlecloudplatform-cloud-run-events-test-coverage
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: knative-0.4
   dashboard_tab:
   - name: serving
@@ -415,3 +448,6 @@ dashboard_groups:
   - "knative-pkg"
   - "knative-caching"
   - "knative-observability"
+- name: googlecloudplatform
+  dashboard_names:
+  - "googlecloudplatform-cloud-run-events"
