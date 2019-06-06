@@ -46,19 +46,19 @@ func main() {
 	dbName := flag.String("database-name", "", "The monitoring database name")
 	dbInst := flag.String("database-instance", "", "The monitoring CloudSQL instance connection name")
 
-	dbUserSecretFile := flag.String("database-user", "/secrets/cloudsql/monitoringdb/username", "Database user secret file")
-	dbPasswordSecretFile := flag.String("database-password", "/secrets/cloudsql/monitoringdb/password", "Database password secret file")
-	emailAddrSecretFile := flag.String("sender-email", "/secrets/sender-email/mail", "Alert sender email address file")
-	emailPasswordSecretFile := flag.String("sender-password", "/secrets/sender-email/password", "Alert sender email password file")
+	dbUserSF := flag.String("database-user", "/secrets/cloudsql/monitoringdb/username", "Database user secret file")
+	dbPassSF := flag.String("database-password", "/secrets/cloudsql/monitoringdb/password", "Database password secret file")
+	mailAddrSF := flag.String("sender-email", "/secrets/sender-email/mail", "Alert sender email address file")
+	mailPassSF := flag.String("sender-password", "/secrets/sender-email/password", "Alert sender email password file")
 
 	flag.Parse()
 
-	dbConfig, err = configureMonitoringDatabase(*dbName, *dbInst, *dbUserSecretFile, *dbPasswordSecretFile)
+	dbConfig, err = configureMonitoringDatabase(*dbName, *dbInst, *dbUserSF, *dbPassSF)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	mailConfig, err = mail.NewMailConfig(*emailAddrSecretFile, *emailPasswordSecretFile)
+	mailConfig, err = mail.NewMailConfig(*mailAddrSF, *mailPassSF)
 	if err != nil {
 		log.Fatal(err)
 	}
