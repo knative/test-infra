@@ -15,12 +15,12 @@
 approve:
 - repos:
   - knative
+  - GoogleCloudPlatform/cloud-run-events
   implicit_self_approve: true
   review_acts_as_approve: true
 
 repo_milestone:
-  # Default maintainer
-  '':
+  knative:
     # You can curl the following endpoint in order to determine the github ID of
     # your team responsible for maintaining the milestones:
     # curl -H "Authorization: token <token>" https://api.github.com/orgs/<org-name>/teams
@@ -51,3 +51,27 @@ plugins:
   - verify-owners
   - wip
   - yuks
+  GoogleCloudPlatform/cloud-run-events:
+  - approve
+  - assign
+  - blunderbuss
+  - buildifier
+  - cat
+  - dog
+  - golint
+  - heart
+  - help
+  - hold
+  - label
+  - lgtm
+  - lifecycle
+  - milestone
+  - owners-label
+  - shrug
+  - size
+  - skip
+  - trigger
+  - verify-owners
+  - wip
+  - yuks
+
