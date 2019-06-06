@@ -1141,7 +1141,7 @@ func generateTestGroup(repoName string, jobNames []string) {
 			extras["short_text_metric"] = "coverage"
 			// Do not alert on coverage failures (i.e., coverage below threshold)
 			extras["num_failures_to_alert"] = "9999"
-		case "istio-1.0.7-mesh", "istio-1.0.7-no-mesh", "istio-1.1.2-mesh", "istio-1.1.2-no-mesh":
+		case "istio-1.0.7-mesh", "istio-1.0.7-no-mesh", "istio-1.1.7-mesh", "istio-1.1.7-no-mesh":
 			extras["alert_stale_results_hours"] = "3"
 			extras["num_failures_to_alert"] = "3"
 		default:
@@ -1188,7 +1188,7 @@ func generateDashboard(repoName string, jobNames []string) {
 			executeDashboardTabTemplate("nightly", testGroupName, testgridTabSortByName, noExtras)
 		case "test-coverage":
 			executeDashboardTabTemplate("coverage", testGroupName, testgridTabGroupByDir, noExtras)
-		case "istio-1.0.7-mesh", "istio-1.0.7-no-mesh", "istio-1.1.2-mesh", "istio-1.1.2-no-mesh":
+		case "istio-1.0.7-mesh", "istio-1.0.7-no-mesh", "istio-1.1.7-mesh", "istio-1.1.7-no-mesh":
 			executeDashboardTabTemplate(jobName, testGroupName, testgridTabSortByName, noExtras)
 		default:
 			log.Fatalf("Unknown job name %q", jobName)
@@ -1215,7 +1215,7 @@ func getTestGroupName(repoName string, jobName string) string {
 		return fmt.Sprintf("ci-%s-%s-release", repoName, jobName)
 	case "test-coverage":
 		return fmt.Sprintf("pull-%s-%s", repoName, jobName)
-	case "istio-1.0.7-mesh", "istio-1.0.7-no-mesh", "istio-1.1.2-mesh", "istio-1.1.2-no-mesh":
+	case "istio-1.0.7-mesh", "istio-1.0.7-no-mesh", "istio-1.1.7-mesh", "istio-1.1.7-no-mesh":
 		return fmt.Sprintf("ci-%s-%s", repoName, jobName)
 	}
 	log.Fatalf("Unknown jobName for getTestGroupName: %s", jobName)

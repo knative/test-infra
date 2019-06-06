@@ -130,22 +130,22 @@ periodics:
       - "1.0.7"
       - "--no-mesh"
       timeout: 100
-    - custom-job: istio-1.1.2-mesh
+    - custom-job: istio-1.1.7-mesh
       cron: "37 */2 * * *" # Run every other hour and thirty-seven minute
       command:
       - "./test/e2e-tests.sh"
       args:
       - "--istio-version"
-      - "1.1.2"
+      - "1.1.7"
       - "--mesh"
       timeout: 100
-    - custom-job: istio-1.1.2-no-mesh
+    - custom-job: istio-1.1.7-no-mesh
       cron: "52 */2 * * *" # Run every other hour and fifty-two minute
       command:
       - "./test/e2e-tests.sh"
       args:
       - "--istio-version"
-      - "1.1.2"
+      - "1.1.7"
       - "--no-mesh"
       timeout: 100
     - nightly: true
