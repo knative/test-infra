@@ -40,6 +40,10 @@
    to also add [knative-prow-releaser-robot](https://github.com/knative-prow-releaser-robot) and
    [knative-metrics-robot](https://github.com/knative-metrics-robot).
 
+1. Add the org (and/or repo) to the [plugins.yaml](./prow/plugins.yaml) file, at least to the `approve` and
+   `plugins` section. Create a PR with the changes and once it's merged ask one of the owners of
+   knative/test-infra to deploy the new config.
+
 ## Setting up Prow for a new repo (reviewers assignment and auto merge)
 
 1. Create the appropriate `OWNERS` files (at least one for the root dir).
