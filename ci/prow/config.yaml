@@ -1831,7 +1831,7 @@ periodics:
       secret:
         secretName: test-account
 - cron: "37 */2 * * *"
-  name: ci-knative-serving-istio-1.1.2-mesh
+  name: ci-knative-serving-istio-1.1.7-mesh
   agent: kubernetes
   spec:
     containers:
@@ -1850,7 +1850,7 @@ periodics:
       - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/e2e-tests.sh"
       - "--istio-version"
-      - "1.1.2"
+      - "1.1.7"
       - "--mesh"
       volumeMounts:
       - name: test-account
@@ -1866,7 +1866,7 @@ periodics:
       secret:
         secretName: test-account
 - cron: "52 */2 * * *"
-  name: ci-knative-serving-istio-1.1.2-no-mesh
+  name: ci-knative-serving-istio-1.1.7-no-mesh
   agent: kubernetes
   spec:
     containers:
@@ -1885,7 +1885,7 @@ periodics:
       - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/e2e-tests.sh"
       - "--istio-version"
-      - "1.1.2"
+      - "1.1.7"
       - "--no-mesh"
       volumeMounts:
       - name: test-account
