@@ -24,9 +24,9 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/knative/test-infra/shared/mysql"
 	"github.com/knative/test-infra/tools/monitoring/config"
 	"github.com/knative/test-infra/tools/monitoring/mail"
-	"github.com/knative/test-infra/tools/monitoring/mysql"
 )
 
 var (
