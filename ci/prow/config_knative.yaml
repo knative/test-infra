@@ -58,7 +58,7 @@ presubmits:
     - integration-tests: true
     - go-coverage: true
 
-  knative/eventing-sources:
+  knative/eventing-contrib:
     - build-tests: true
     - unit-tests: true
     - integration-tests: true
@@ -229,7 +229,7 @@ periodics:
     - auto-release: true
       cron: "5 */2 * * *" # Run every two hours and five minutes
 
-  knative/eventing-sources:
+  knative/eventing-contrib:
     - continuous: true
       cron: "30 * * * *" # Run every hour and 30 minutes
     - branch-ci: true
