@@ -118,3 +118,45 @@ func PubsubMsgHandler(db *sql.DB, configURL, buildLogURL, jobname string, prNumb
 
 	return tx.Commit()
 }
+
+// CheckAlertCondition checks whether the given error pattern meets
+// the alert condition specified in config
+func CheckAlertCondition(errorPattern string, config *config.SelectedConfig, db *sql.DB) (bool, error) {
+	// the timestamp we want to start collecting logs
+	startTime := time.Now().Add(time.Minute * time.Duration(config.Period))
+
+	_, err := db.Query(
+		"CREATE VIEW Matched AS\nSELECT Jobname, PrNumber FROM ErrorLogs\nWHERE\n    ErrorPattern=? and\n    TimeStamp > ?",
+		errorPattern, startTime)
+
+	if err != nil {
+		return false, err
+	}
+
+	var count int
+	if err = db.QueryRow("SELECT COUNT(*) FROM Matched;").Scan(&count); err != nil {
+		return false, err
+	}
+
+	if count < config.Occurrences {
+		return false, nil
+	}
+
+	if err = db.QueryRow("SELECT COUNT (DISTINCT Jobname) FROM Matched;").Scan(&count); err != nil {
+		return false, err
+	}
+
+	if count < config.JobsAffected {
+		return false, nil
+	}
+
+	if err = db.QueryRow("SELECT COUNT (DISTINCT PrNumber) FROM Matched;").Scan(&count); err != nil {
+		return false, err
+	}
+
+	if count < config.PrsAffected {
+		return false, nil
+	}
+
+	return true, nil
+}
