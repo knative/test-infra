@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package criersub
+package subscriber
 
 import (
 	"context"
@@ -32,12 +32,12 @@ const (
 )
 
 type fakeSubscriber struct {
-	SubscriberOperation
+	Operation
 	name string
 }
 
-func getFakeSubscriber(n string) *SubscriberClient {
-	return &SubscriberClient{&fakeSubscriber{name: n}}
+func getFakeSubscriber(n string) *Client {
+	return &Client{&fakeSubscriber{name: n}}
 }
 
 func (fs *fakeSubscriber) Receive(ctx context.Context, f func(context.Context, *pubsub.Message)) error {
@@ -68,7 +68,7 @@ func TestSubscriberClient_ReceiveMessageAckAll(t *testing.T) {
 			args: arguments{
 				ctx: context.Background(),
 				f: func(message *ReportMessage) {
-					receivedMsgs = append(receivedMsgs, message)
+					receivedMsgs[0] = message
 				},
 			},
 			want: nil,
@@ -78,7 +78,7 @@ func TestSubscriberClient_ReceiveMessageAckAll(t *testing.T) {
 			args: arguments{
 				ctx: context.WithValue(context.Background(), keyError, errors.New("code = NotFound desc = Resource not found")),
 				f: func(message *ReportMessage) {
-					receivedMsgs = append(receivedMsgs, message)
+					receivedMsgs[0] = message
 				},
 			},
 			want: errors.New("code = NotFound desc = Resource not found"),
@@ -132,8 +132,11 @@ func TestToReportMessage(t *testing.T) {
 func isSameError(err1 error, err2 error) bool {
 	if err1 == nil && err2 == nil {
 		return true
-	} else if err1 == nil || err2 == nil {
+	}
+
+	if err1 == nil || err2 == nil {
 		return false
 	}
+
 	return err1.Error() == err2.Error()
 }

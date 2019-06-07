@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package criersub
+package subscriber
 
 import (
 	"context"
@@ -37,29 +37,29 @@ type ReportMessage struct {
 
 // SubscriberClient provide methods to run SubscriptionOperation
 // It implements all methods in SubscriberOperation
-type SubscriberClient struct {
-	SubscriberOperation
+type Client struct {
+	Operation
 }
 
 // SubscriberOperation defines a list of methods for subscribing messages
-type SubscriberOperation interface {
+type Operation interface {
 	Receive(ctx context.Context, f func(context.Context, *pubsub.Message)) error
 	String() string
 }
 
 // NewSubscriberClient returns a new SubscriberClient used to read crier pubsub messages
-func NewSubscriberClient(ctx context.Context, projectID string, subName string) (*SubscriberClient, error) {
+func NewSubscriberClient(ctx context.Context, projectID string, subName string) (*Client, error) {
 	c, err := pubsub.NewClient(ctx, projectID)
 	if err != nil {
 		return nil, err
 	}
 
-	return &SubscriberClient{c.Subscription(subName)}, err
+	return &Client{c.Subscription(subName)}, err
 }
 
 // ReceiveMessageAckAll acknowledges all incoming pusub messages and convert the pubsub message to crier ReportMessage.
 // It executes `f` only if the pubsub message can be converted to ReportMessage. Otherwise, ignore the message.
-func (c *SubscriberClient) ReceiveMessageAckAll(ctx context.Context, f func(*ReportMessage)) error {
+func (c *Client) ReceiveMessageAckAll(ctx context.Context, f func(*ReportMessage)) error {
 	return c.Receive(ctx, func(ctx context.Context, msg *pubsub.Message) {
 		if rmsg := toReportMessage(msg); rmsg != nil {
 			f(rmsg)

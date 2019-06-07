@@ -27,14 +27,14 @@ import (
 
 	"github.com/knative/test-infra/shared/mysql"
 	"github.com/knative/test-infra/tools/monitoring/config"
-	"github.com/knative/test-infra/tools/monitoring/criersub"
 	"github.com/knative/test-infra/tools/monitoring/mail"
+	"github.com/knative/test-infra/tools/monitoring/subscriber"
 )
 
 var (
 	dbConfig   mysql.DBConfig
 	mailConfig *mail.Config
-	subClient  *criersub.SubscriberClient
+	subClient  *subscriber.Client
 
 	alertEmailRecipients = []string{"knative-productivity-oncall@googlegroups.com"}
 )
@@ -70,12 +70,12 @@ func main() {
 	}
 
 	ctx := context.Background()
-	subClient, err = criersub.NewSubscriberClient(ctx, projectID, crierSubName)
+	subClient, err = subscriber.NewSubscriberClient(ctx, projectID, crierSubName)
 	if err != nil {
 		log.Fatalf("Failed to initialize the subscriber %+v", err)
 	}
 	go func() {
-		err := subClient.ReceiveMessageAckAll(ctx, func(rmsg *criersub.ReportMessage) {
+		err := subClient.ReceiveMessageAckAll(ctx, func(rmsg *subscriber.ReportMessage) {
 			log.Printf("Report Message: %+v\n", rmsg)
 		})
 		if err != nil {
