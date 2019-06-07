@@ -43,8 +43,8 @@ const (
 func main() {
 	var err error
 
-	dbName := flag.String("database-name", "", "The monitoring database name")
-	dbInst := flag.String("database-instance", "", "The monitoring CloudSQL instance connection name")
+	dbName := flag.String("database-name", "monitoring", "The monitoring database name")
+	dbInst := flag.String("database-instance", "knative-tests:us-central1:knative-monitoring", "The monitoring CloudSQL instance connection name")
 
 	dbUserSF := flag.String("database-user", "/secrets/cloudsql/monitoringdb/username", "Database user secret file")
 	dbPassSF := flag.String("database-password", "/secrets/cloudsql/monitoringdb/password", "Database password secret file")
