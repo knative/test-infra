@@ -234,7 +234,7 @@ test_groups:
   num_failures_to_alert: 9999
   short_text_metric: "coverage"
 dashboards:
-- name: knative-serving
+- name: serving
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-serving-continuous
@@ -279,7 +279,7 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-serving-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-build
+- name: build
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-build-continuous
@@ -300,7 +300,7 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-build-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-client
+- name: client
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-client-continuous
@@ -317,7 +317,7 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-client-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-docs
+- name: docs
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-docs-continuous
@@ -325,7 +325,7 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-docs-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-eventing
+- name: eventing
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-eventing-continuous
@@ -342,7 +342,7 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-eventing-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-eventing-sources
+- name: eventing-sources
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-eventing-sources-continuous
@@ -359,12 +359,12 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-eventing-sources-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-build-templates
+- name: build-templates
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-build-templates-continuous
     base_options: "sort-by-name="
-- name: knative-pkg
+- name: pkg
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-pkg-continuous
@@ -372,7 +372,7 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-pkg-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-caching
+- name: caching
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-caching-continuous
@@ -380,12 +380,12 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-caching-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-observability
+- name: observability
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-observability-continuous
     base_options: "sort-by-name="
-- name: googlecloudplatform-cloud-run-events
+- name: cloud-run-events
   dashboard_tab:
   - name: continuous
     test_group_name: ci-googlecloudplatform-cloud-run-events-continuous
@@ -438,16 +438,16 @@ dashboards:
 dashboard_groups:
 - name: knative
   dashboard_names:
-  - "knative-serving"
-  - "knative-build"
-  - "knative-client"
-  - "knative-docs"
-  - "knative-eventing"
-  - "knative-eventing-sources"
-  - "knative-build-templates"
-  - "knative-pkg"
-  - "knative-caching"
-  - "knative-observability"
+  - "serving"
+  - "build"
+  - "client"
+  - "docs"
+  - "eventing"
+  - "eventing-sources"
+  - "build-templates"
+  - "pkg"
+  - "caching"
+  - "observability"
 - name: googlecloudplatform
   dashboard_names:
-  - "googlecloudplatform-cloud-run-events"
+  - "cloud-run-events"
