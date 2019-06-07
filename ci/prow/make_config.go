@@ -62,6 +62,7 @@ type repositoryData struct {
 
 // baseProwJobTemplateData contains basic data about a Prow job.
 type baseProwJobTemplateData struct {
+        OrgName             string
 	RepoName            string
 	RepoNameForJob      string
 	GcsBucket           string
@@ -345,8 +346,9 @@ func getMapSlice(m interface{}) yaml.MapSlice {
 func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	var data baseProwJobTemplateData
 	data.Timeout = 50
-	data.RepoName = strings.Replace(repo, "knative/", "", 1)
-	data.RepoNameForJob = strings.Replace(repo, "/", "-", -1)
+        data.OrgName = strings.Split(repo, "/")[0]
+	data.RepoName = strings.Replace(repo, data.OrgName + "/", "", 1)
+	data.RepoNameForJob = strings.ToLower(strings.Replace(repo, "/", "-", -1))
 	data.GcsBucket = gcsBucket
 	data.RepoURI = "github.com/" + repo
 	data.CloneURI = fmt.Sprintf("\"https://%s.git\"", data.RepoURI)
@@ -355,7 +357,7 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.Year = time.Now().Year()
 	data.PresubmitLogsDir = presubmitLogsDir
 	data.LogsDir = logsDir
-	data.ReleaseGcs = strings.Replace(repo, "knative/", "knative-releases/", 1)
+	data.ReleaseGcs = strings.Replace(repo, data.OrgName + "/", "knative-releases/", 1)
 	data.AlwaysRun = true
 	data.Image = prowTestsDockerImage
 	data.ServiceAccount = testAccount
@@ -364,7 +366,7 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.Volumes = make([]string, 0)
 	data.VolumeMounts = make([]string, 0)
 	data.Env = make([]string, 0)
-	data.ExtraRefs = []string{"- org: knative", "  repo: " + data.RepoName, "  base_ref: master", "  clone_uri: " + data.CloneURI}
+	data.ExtraRefs = []string{"- org: " + data.OrgName, "  repo: " + data.RepoName, "  base_ref: master", "  clone_uri: " + data.CloneURI}
 	return data
 }
 
@@ -1136,7 +1138,7 @@ func generateTestGroup(projName string, repoName string, jobNames []string) {
 				extras["short_text_metric"] = "perf_latency"
 			}
 		case "test-coverage":
-			gcsLogDir = fmt.Sprintf("%s/%s/ci-%s-%s", gcsBucket, logsDir, projRepoStr, "go-coverage")
+			gcsLogDir = strings.ToLower(fmt.Sprintf("%s/%s/ci-%s-%s", gcsBucket, logsDir, projRepoStr, "go-coverage"))
 			extras["short_text_metric"] = "coverage"
 			// Do not alert on coverage failures (i.e., coverage below threshold)
 			extras["num_failures_to_alert"] = "9999"
@@ -1162,7 +1164,7 @@ func executeTestGroupTemplate(testGroupName string, gcsLogDir string, extras map
 // generateDashboard generates the dashboard configuration
 func generateDashboard(projName string, repoName string, jobNames []string) {
 	projRepoStr := buildProjRepoStr(projName, repoName)
-	outputConfig("- name: " + repoName + "\n" + baseIndent + "dashboard_tab:")
+	outputConfig("- name: " + strings.ToLower(repoName) + "\n" + baseIndent + "dashboard_tab:")
 	noExtras := make(map[string]string)
 	for _, jobName := range jobNames {
 		testGroupName := getTestGroupName(projRepoStr, jobName)
@@ -1210,13 +1212,13 @@ func executeDashboardTabTemplate(dashboardTabName string, testGroupName string, 
 func getTestGroupName(repoName string, jobName string) string {
 	switch jobName {
 	case "continuous", "dot-release", "auto-release", "performance", "performance-mesh", "latency", "playground":
-		return fmt.Sprintf("ci-%s-%s", repoName, jobName)
+		return strings.ToLower(fmt.Sprintf("ci-%s-%s", repoName, jobName))
 	case "nightly":
-		return fmt.Sprintf("ci-%s-%s-release", repoName, jobName)
+		return strings.ToLower(fmt.Sprintf("ci-%s-%s-release", repoName, jobName))
 	case "test-coverage":
-		return fmt.Sprintf("pull-%s-%s", repoName, jobName)
+		return strings.ToLower(fmt.Sprintf("pull-%s-%s", repoName, jobName))
 	case "istio-1.0.7-mesh", "istio-1.0.7-no-mesh", "istio-1.1.7-mesh", "istio-1.1.7-no-mesh":
-		return fmt.Sprintf("ci-%s-%s", repoName, jobName)
+		return strings.ToLower(fmt.Sprintf("ci-%s-%s", repoName, jobName))
 	}
 	log.Fatalf("Unknown jobName for getTestGroupName: %s", jobName)
 	return ""
@@ -1235,8 +1237,7 @@ func buildProjRepoStr(projName string, repoName string) string {
 		projRepoStr += ("-" + projVersion)
 	}
 	projRepoStr = projName + "-" + projRepoStr
-
-	return projRepoStr
+	return strings.ToLower(projRepoStr)
 }
 
 func generateDashboardsForReleases() {
