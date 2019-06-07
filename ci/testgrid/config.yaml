@@ -443,7 +443,7 @@ dashboard_groups:
   - "client"
   - "docs"
   - "eventing"
-  - "eventing-sources"
+  - "eventing-contrib"
   - "build-templates"
   - "pkg"
   - "caching"
