@@ -11,10 +11,6 @@ failures.
 gcloud container clusters create monitoring --enable-ip-alias
 ```
 
-### Secrets
-
-* `monitoring-db-credentials`: monitoring database user name and password
-
 ## Build and Deploy Changes
 
 * `images/monitoring/Makefile` Commands to build and deploy the monitoring images
