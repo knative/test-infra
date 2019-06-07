@@ -21,101 +21,10 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
-	"regexp"
-	"time"
 
-	"github.com/google/go-github/github"
 	"github.com/knative/test-infra/shared/ghutil"
 )
-
-const (
-	// Git info for k8s Prow auto bumper PRs
-	srcOrg  = "kubernetes"
-	srcRepo = "test-infra"
-	// srcPRHead is the head branch of k8s auto version bump PRs
-	// TODO(chaodaiG): using head branch querying is less ideal than using
-	// label `area/prow/bump`, which is not supported by Github API yet. Move
-	// to filter using this label once it's supported
-	srcPRHead = "autobump"
-	// srcPRBase is the base branch of k8s auto version bump PRs
-	srcPRBase = "master"
-	// srcPRUserID is the user from which PR was created
-	srcPRUserID = "k8s-ci-robot"
-
-	// Git info for target repo that Prow version bump PR targets
-	org  = "knative"
-	repo = "test-infra"
-	// PRHead is branch name where the changes occur
-	PRHead = "autobump"
-	// PRBase is the branch name where PR targets
-	PRBase = "master"
-
-	// Index for regex matching groups
-	imageImagePart = 1 // first group is image part
-	imageTagPart   = 2 // second group is tag part
-	// Max delta away from target date
-	maxDelta = 2 * 24 // 2 days
-	// K8s updates Prow versions everyday, which should be ~24 hours,
-	// if a version is updated within 12 hours, it's considered not safe
-	safeDuration = 12 // 12 hours
-	maxRetry     = 3
-
-	oncallAddress = "https://storage.googleapis.com/knative-infra-oncall/oncall.json"
-)
-
-var (
-	// Whitelist of files to be scanned by this tool
-	fileFilters = []*regexp.Regexp{regexp.MustCompile(`\.yaml$`)}
-	// matching            gcr.io /k8s-(prow|testimage)/(tide|kubekin-e2e|.*)    :vYYYYMMDD-HASH-VARIANT
-	imagePattern     = `\b(gcr\.io/k8s[a-z0-9-]{5,29}/[a-zA-Z0-9][a-zA-Z0-9_.-]+):(v[a-zA-Z0-9_.-]+)\b`
-	imageRegexp      = regexp.MustCompile(imagePattern)
-	imageLinePattern = fmt.Sprintf(`\s+[a-z]+:\s+"?'?%s"?'?`, imagePattern)
-	// matching   "-    image: gcr.io /k8s-(prow|testimage)/(tide|kubekin-e2e|.*)    :vYYYYMMDD-HASH-VARIANT"
-	imageMinusRegexp = regexp.MustCompile(fmt.Sprintf(`\-%s`, imageLinePattern))
-	// matching   "+    image: gcr.io /k8s-(prow|testimage)/(tide|kubekin-e2e|.*)    :vYYYYMMDD-HASH-VARIANT"
-	imagePlusRegexp = regexp.MustCompile(fmt.Sprintf(`\+%s`, imageLinePattern))
-	// Preferred time for candidate PR creation date
-	targetTime = time.Now().Add(-time.Hour * 7 * 24) // 7 days
-)
-
-// GHClientWrapper handles methods for github issues
-type GHClientWrapper struct {
-	ghutil.GithubOperations
-}
-
-type gitInfo struct {
-	org      string
-	repo     string
-	head     string // PR head branch
-	base     string // PR base branch
-	userID   string // Github User ID of PR creator
-	userName string // User display name for Git commit
-	email    string // User email address for Git commit
-}
-
-// HeadRef is in the form of "user:head", i.e. "github_user:branch_foo"
-func (gi *gitInfo) getHeadRef() string {
-	return fmt.Sprintf("%s:%s", gi.userID, gi.head)
-}
-
-// versions holds the version change for an image
-// oldVersion and newVersion are both in the format of "vYYYYMMDD-HASH-VARIANT"
-type versions struct {
-	oldVersion string
-	newVersion string
-	variant    string
-}
-
-// PRVersions contains PR and version changes in it
-type PRVersions struct {
-	images map[string][]versions // map of image name: versions struct
-	// The way k8s updates versions doesn't guarantee the same version tag across all images,
-	// dominantVersions is the version that appears most times
-	dominantVersions *versions
-	PR               *github.PullRequest
-}
 
 func main() {
 	githubAccount := flag.String("github-account", "", "Token file for Github authentication")
@@ -126,7 +35,7 @@ func main() {
 	flag.Parse()
 
 	if nil != dryrun && true == *dryrun {
-		log.Println("running in [dry run mode]")
+		log.Println("Running in [dry run mode]")
 	}
 
 	gc, err := ghutil.NewGithubClient(*githubAccount)
@@ -160,7 +69,7 @@ func main() {
 	log.Printf("Found version to update. Old Version: '%s', New Version: '%s'",
 		bestVersion.dominantVersions.oldVersion, bestVersion.dominantVersions.newVersion)
 
-	errMsgs, err := updateAllFiles(bestVersion, fileFilters, imageRegexp, *dryrun)
+	errMsgs, err := bestVersion.updateAllFiles(fileFilters, imageRegexp, *dryrun)
 	if nil != err {
 		log.Fatalf("failed updating files: '%v'", err)
 	}

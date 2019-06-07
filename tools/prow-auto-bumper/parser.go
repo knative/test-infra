@@ -29,26 +29,6 @@ import (
 	"github.com/knative/test-infra/shared/ghutil"
 )
 
-// Helper method for adding a newly discovered tag into pv
-func (pv *PRVersions) getIndex(image, tag string) int {
-	if _, ok := pv.images[image]; !ok {
-		pv.images[image] = make([]versions, 0, 0)
-	}
-	_, variant := deconstructTag(tag)
-	iv := -1
-	for i, vs := range pv.images[image] {
-		if vs.variant == variant {
-			iv = i
-			break
-		}
-	}
-	if -1 == iv {
-		pv.images[image] = append(pv.images[image], versions{variant: variant})
-		iv = len(pv.images[image]) - 1
-	}
-	return iv
-}
-
 // Tags could be in the form of: v[YYYYMMDD]-[GIT_HASH](-[VARIANT_PART]),
 // separate it to `v[YYYYMMDD]-[GIT_HASH]` and `[VARIANT_PART]`
 func deconstructTag(in string) (string, string) {
@@ -64,7 +44,7 @@ func deconstructTag(in string) (string, string) {
 	return dateCommit, variant
 }
 
-// get key with highest value
+// Get key with highest value
 func getDominantKey(m map[string]int) string {
 	var res string
 	for key, v := range m {
@@ -75,6 +55,8 @@ func getDominantKey(m map[string]int) string {
 	return res
 }
 
+// The way k8s updates versions doesn't guarantee the same version tag across all images,
+// dominantVersions is the version that appears most times
 func (pv *PRVersions) getDominantVersions() versions {
 	if nil != pv.dominantVersions {
 		return *pv.dominantVersions
@@ -99,7 +81,7 @@ func (pv *PRVersions) getDominantVersions() versions {
 	return *pv.dominantVersions
 }
 
-// parse changelist, find all version changes, and store them in image name: versions map
+// Parse changelist, find all version changes, and store them in image name: versions map
 func (pv *PRVersions) parseChangelist(gcw *GHClientWrapper, gi gitInfo) error {
 	fs, err := gcw.ListFiles(gi.org, gi.repo, *pv.PR.Number)
 	if nil != err {
@@ -159,10 +141,12 @@ func getBestVersion(gcw *GHClientWrapper, gi gitInfo) (*PRVersions, error) {
 			continue
 		}
 		visited[vs.oldVersion] = pv
-		// check if too fresh here as need the data in visited
+		// Check if too fresh here as need the data in visited
 		if delta < -maxDelta { // In past 5 days, too fresh
 			continue
 		}
+		// Check if newVersion in this PR was updated in a newer PR, aka the oldVersion
+		// in a newer PR is the same as newVersion in this PR
 		if updatePR, ok := visited[vs.newVersion]; ok {
 			if updatePR.getDominantVersions().newVersion == vs.oldVersion { // The updatePR is reverting this PR
 				continue
@@ -184,13 +168,14 @@ func retryGetBestVersion(gcw *GHClientWrapper, gi gitInfo) (*PRVersions, error) 
 	var bestPv *PRVersions
 	var overallErr error
 	// retry if there is github related error
-	for retryCount := 0; nil == overallErr && retryCount < maxRetry; retryCount++ {
+	for retryCount := 0; retryCount < maxRetry; retryCount++ {
 		bestPv, overallErr = getBestVersion(gcw, gi)
-		if nil != overallErr {
-			log.Println(overallErr)
-			if maxRetry-1 != retryCount {
-				log.Printf("Retry #%d", retryCount+1)
-			}
+		if nil == overallErr {
+			break
+		}
+		log.Println(overallErr)
+		if maxRetry-1 != retryCount {
+			log.Printf("Retry #%d", retryCount+1)
 		}
 	}
 	return bestPv, overallErr

@@ -21,11 +21,20 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"os/exec"
 	"strings"
 
 	"github.com/google/go-github/github"
 	"github.com/knative/test-infra/shared/ghutil"
 )
+
+func call(cmd string, args ...string) error {
+	c := exec.Command(cmd, args...)
+	c.Stdout = os.Stdout
+	c.Stderr = os.Stderr
+	return c.Run()
+}
 
 func makeCommitSummary(vs versions) string {
 	return fmt.Sprintf("Update prow from %s to %s, and other images as necessary.", vs.oldVersion, vs.newVersion)
@@ -87,7 +96,8 @@ func makeGitCommit(gi gitInfo, message string, dryrun bool) error {
 	if err := run(
 		"Running 'git add -A'",
 		func() error { return call("git", "add", "-A") },
-		dryrun); err != nil {
+		dryrun,
+	); err != nil {
 		return fmt.Errorf("failed to git add: %v", err)
 	}
 	commitArgs := []string{"commit", "-m", message}
@@ -97,7 +107,8 @@ func makeGitCommit(gi gitInfo, message string, dryrun bool) error {
 	if err := run(
 		fmt.Sprintf("Running 'git %s'", strings.Join(commitArgs, " ")),
 		func() error { return call("git", commitArgs...) },
-		dryrun); err != nil {
+		dryrun,
+	); err != nil {
 		return fmt.Errorf("failed to git commit: %v", err)
 	}
 	pushArgs := []string{"push", "-f", fmt.Sprintf("git@github.com:%s/%s.git", gi.userID, gi.repo),
@@ -105,7 +116,8 @@ func makeGitCommit(gi gitInfo, message string, dryrun bool) error {
 	if err := run(
 		fmt.Sprintf("Running 'git %s'", strings.Join(pushArgs, " ")),
 		func() error { return call("git", pushArgs...) },
-		dryrun); err != nil {
+		dryrun,
+	); err != nil {
 		return fmt.Errorf("failed to git push: %v", err)
 	}
 	return nil
@@ -138,7 +150,7 @@ func createOrUpdatePR(gcw *GHClientWrapper, pv *PRVersions, gi gitInfo, extraMsg
 		return fmt.Errorf("failed querying existing pullrequests: '%v'", err)
 	}
 	if nil != existPR {
-		log.Printf("found open PR '%d'", *existPR.Number)
+		log.Printf("Found open PR '%d'", *existPR.Number)
 		return run(
 			fmt.Sprintf("Updating PR '%d', title: '%s', body: '%s'", *existPR.Number, title, body),
 			func() error {
@@ -147,7 +159,8 @@ func createOrUpdatePR(gcw *GHClientWrapper, pv *PRVersions, gi gitInfo, extraMsg
 				}
 				return nil
 			},
-			dryrun)
+			dryrun,
+		)
 	}
 	return run(
 		fmt.Sprintf("Creating PR, title: '%s', body: '%s'", title, body),
@@ -157,5 +170,6 @@ func createOrUpdatePR(gcw *GHClientWrapper, pv *PRVersions, gi gitInfo, extraMsg
 			}
 			return nil
 		},
-		dryrun)
+		dryrun,
+	)
 }

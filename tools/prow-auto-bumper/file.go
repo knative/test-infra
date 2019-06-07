@@ -38,15 +38,8 @@ func cdToRootDir() error {
 	return os.Chdir(d)
 }
 
-func call(cmd string, args ...string) error {
-	c := exec.Command(cmd, args...)
-	c.Stdout = os.Stdout
-	c.Stderr = os.Stderr
-	return c.Run()
-}
-
 // update all tags in a byte slice
-func updateAllTags(pv *PRVersions, content []byte, imageFilter *regexp.Regexp) ([]byte, string, []string) {
+func (pv *PRVersions) updateAllTags(content []byte, imageFilter *regexp.Regexp) ([]byte, string, []string) {
 	var msg string
 	var errMsgs []string
 	indexes := imageFilter.FindAllSubmatchIndex(content, -1)
@@ -58,9 +51,13 @@ func updateAllTags(pv *PRVersions, content []byte, imageFilter *regexp.Regexp) (
 	var res string
 	lastIndex := 0
 	for _, m := range indexes {
+		// append from end of last match to end of image part, including ":"
 		res += string(content[lastIndex : m[imageImagePart*2+1]+1])
+		// image part of a version, i.e. the portion before ":"
 		image := string(content[m[imageImagePart*2]:m[imageImagePart*2+1]])
+		// tag part of a version, i.e. the portion after ":"
 		tag := string(content[m[imageTagPart*2]:m[imageTagPart*2+1]])
+		// m[1] is the end index of current match
 		lastIndex = m[1]
 
 		iv := pv.getIndex(image, tag)
@@ -80,26 +77,27 @@ func updateAllTags(pv *PRVersions, content []byte, imageFilter *regexp.Regexp) (
 }
 
 // updateFile updates a file in place.
-func updateFile(pv *PRVersions, filename string, imageFilter *regexp.Regexp, dryrun bool) ([]string, error) {
+func (pv *PRVersions) updateFile(filename string, imageFilter *regexp.Regexp, dryrun bool) ([]string, error) {
 	var errMsgs []string
 	content, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return errMsgs, fmt.Errorf("failed to read %s: %v", filename, err)
 	}
 
-	newContent, msg, errMsgs := updateAllTags(pv, content, imageFilter)
+	newContent, msg, errMsgs := pv.updateAllTags(content, imageFilter)
 	if err := run(
 		fmt.Sprintf("Update file '%s':%s", filename, msg),
 		func() error {
 			return ioutil.WriteFile(filename, newContent, 0644)
 		},
-		dryrun); err != nil {
+		dryrun,
+	); err != nil {
 		return errMsgs, fmt.Errorf("failed to write %s: %v", filename, err)
 	}
 	return errMsgs, nil
 }
 
-func updateAllFiles(pv *PRVersions, fileFilters []*regexp.Regexp, imageFilter *regexp.Regexp,
+func (pv *PRVersions) updateAllFiles(fileFilters []*regexp.Regexp, imageFilter *regexp.Regexp,
 	dryrun bool) ([]string, error) {
 	var errMsgs []string
 	if err := cdToRootDir(); err != nil {
@@ -109,7 +107,7 @@ func updateAllFiles(pv *PRVersions, fileFilters []*regexp.Regexp, imageFilter *r
 	err := filepath.Walk(".", func(filename string, info os.FileInfo, err error) error {
 		for _, ff := range fileFilters {
 			if ff.Match([]byte(filename)) {
-				msgs, err := updateFile(pv, filename, imageFilter, dryrun)
+				msgs, err := pv.updateFile(filename, imageFilter, dryrun)
 				errMsgs = append(errMsgs, msgs...)
 				if err != nil {
 					return fmt.Errorf("Failed to update path %s '%v'", filename, err)
