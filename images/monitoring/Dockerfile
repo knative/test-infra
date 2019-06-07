@@ -15,16 +15,16 @@
 FROM golang:1.10.2
 RUN apt-get update
 
-ENV TEMP_TOOLS_REPO_DIR /go/src/github.com/knative/test-infra/tools
+ENV TEMP_REPO_DIR /go/src/github.com/knative/test-infra
 ENV TOOL_NAME monitoring
 
 # Temporarily add test-infra to the image to build custom tools
-ADD ./tools $TEMP_TOOLS_REPO_DIR
+ADD ./ $TEMP_REPO_DIR
 
-RUN make -C $TEMP_TOOLS_REPO_DIR/$TOOL_NAME/
-RUN cp $TEMP_TOOLS_REPO_DIR/$TOOL_NAME/$TOOL_NAME /$TOOL_NAME
+RUN make -C $TEMP_REPO_DIR/tools/$TOOL_NAME/
+RUN cp $TEMP_REPO_DIR/tools/$TOOL_NAME/$TOOL_NAME /$TOOL_NAME
 
 # Remove test-infra from the container
-RUN rm -fr $TEMP_TOOLS_REPO_DIR
+RUN rm -fr $TEMP_REPO_DIR
 
 ENTRYPOINT ["/monitoring"]
