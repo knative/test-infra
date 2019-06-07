@@ -448,6 +448,6 @@ dashboard_groups:
   - "knative-pkg"
   - "knative-caching"
   - "knative-observability"
-- name: googlecloudplatform
+- name: GoogleCloudPlatform
   dashboard_names:
   - "googlecloudplatform-cloud-run-events"
