@@ -27,17 +27,17 @@ import (
 )
 
 type Parser struct {
-	StartDate time.Time           // Earliest date to be analyzed, i.e. "2019-02-22"
-	logParser func(s string) bool // logParser function
-	jobFilter []string            // Jobs to be parsed. If not provided will parse all jobs
-	PrChan    chan prInfo         // For PR use only, make it here so it's easier to cleanup
+	StartDate time.Time             // Earliest date to be analyzed, i.e. "2019-02-22"
+	logParser func(s string) string // logParser function
+	jobFilter []string              // Jobs to be parsed. If not provided will parse all jobs
+	PrChan    chan prInfo           // For PR use only, make it here so it's easier to cleanup
 	jobChan   chan prow.Job
 	buildChan chan buildInfo
 	wgPR      sync.WaitGroup
 	wgJob     sync.WaitGroup
 	wgBuild   sync.WaitGroup
 
-	found     []string
+	found     [][]string
 	processed []string
 
 	mutex *sync.Mutex
@@ -111,8 +111,8 @@ func (c *Parser) buildListener() {
 				found := c.logParser(string(content))
 				c.mutex.Lock()
 				c.processed = append(c.processed, build.StoragePath)
-				if found {
-					c.found = append(c.found, build.StoragePath)
+				if "" != found {
+					c.found = append(c.found, []string{found, time.Unix(*build.StartTime, 0).String(), build.StoragePath})
 				}
 				c.mutex.Unlock()
 			}
