@@ -35,13 +35,12 @@ type ReportMessage struct {
 	GCSPath string `json:"gcs_path"`
 }
 
-// SubscriberClient provide methods to run SubscriptionOperation
-// It implements all methods in SubscriberOperation
+// Client is a wrapper on the subscriber Operation
 type Client struct {
 	Operation
 }
 
-// SubscriberOperation defines a list of methods for subscribing messages
+// Operation defines a list of methods for subscribing messages
 type Operation interface {
 	Receive(ctx context.Context, f func(context.Context, *pubsub.Message)) error
 	String() string
