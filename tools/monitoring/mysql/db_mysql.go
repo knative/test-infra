@@ -126,37 +126,27 @@ func CheckAlertCondition(errorPattern string, config *config.SelectedConfig, db 
 	startTime := time.Now().Add(time.Minute * time.Duration(config.Period))
 
 	_, err := db.Query(
-		"CREATE VIEW Matched AS\nSELECT Jobname, PrNumber FROM ErrorLogs\nWHERE\n    ErrorPattern=? and\n    TimeStamp > ?",
+		`CREATE VIEW Matched AS
+  SELECT Jobname, PrNumber FROM ErrorLogs
+  WHERE
+        ErrorPattern=? and TimeStamp > ?`,
 		errorPattern, startTime)
 
 	if err != nil {
 		return false, err
 	}
 
-	var count int
-	if err = db.QueryRow("SELECT COUNT(*) FROM Matched;").Scan(&count); err != nil {
+	var nMatches int
+	var nJobs int
+	var nPRs int
+
+	if err = db.QueryRow(`SELECT 
+       COUNT(*),
+       COUNT (DISTINCT Jobname),
+       COUNT (DISTINCT PrNumber)
+FROM Matched;`).Scan(&nMatches, nJobs, nPRs); err != nil {
 		return false, err
 	}
 
-	if count < config.Occurrences {
-		return false, nil
-	}
-
-	if err = db.QueryRow("SELECT COUNT (DISTINCT Jobname) FROM Matched;").Scan(&count); err != nil {
-		return false, err
-	}
-
-	if count < config.JobsAffected {
-		return false, nil
-	}
-
-	if err = db.QueryRow("SELECT COUNT (DISTINCT PrNumber) FROM Matched;").Scan(&count); err != nil {
-		return false, err
-	}
-
-	if count < config.PrsAffected {
-		return false, nil
-	}
-
-	return true, nil
+	return nMatches > config.Occurrences && nJobs > config.JobsAffected && nPRs > config.PrsAffected, nil
 }
