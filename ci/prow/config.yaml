@@ -57,7 +57,7 @@ tide:
     - knative/observability
     - knative/serving
     - knative/eventing
-    - knative/eventing-sources
+    - knative/eventing-contrib
     - knative/docs
     - knative/test-infra
     - knative/pkg
@@ -731,13 +731,13 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
-  knative/eventing-sources:
-  - name: pull-knative-eventing-sources-build-tests
+  knative/eventing-contrib:
+  - name: pull-knative-eventing-contrib-build-tests
     agent: kubernetes
-    context: pull-knative-eventing-sources-build-tests
+    context: pull-knative-eventing-contrib-build-tests
     always_run: true
-    rerun_command: "/test pull-knative-eventing-sources-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-eventing-sources-build-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-eventing-contrib-build-tests"
+    trigger: "(?m)^/test (all|pull-knative-eventing-contrib-build-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -767,12 +767,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-eventing-sources-unit-tests
+  - name: pull-knative-eventing-contrib-unit-tests
     agent: kubernetes
-    context: pull-knative-eventing-sources-unit-tests
+    context: pull-knative-eventing-contrib-unit-tests
     always_run: true
-    rerun_command: "/test pull-knative-eventing-sources-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-eventing-sources-unit-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-eventing-contrib-unit-tests"
+    trigger: "(?m)^/test (all|pull-knative-eventing-contrib-unit-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -802,12 +802,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-eventing-sources-integration-tests
+  - name: pull-knative-eventing-contrib-integration-tests
     agent: kubernetes
-    context: pull-knative-eventing-sources-integration-tests
+    context: pull-knative-eventing-contrib-integration-tests
     always_run: true
-    rerun_command: "/test pull-knative-eventing-sources-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-eventing-sources-integration-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-eventing-contrib-integration-tests"
+    trigger: "(?m)^/test (all|pull-knative-eventing-contrib-integration-tests),?(\\s+|$)"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -837,15 +837,15 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-eventing-sources-go-coverage
+  - name: pull-knative-eventing-contrib-go-coverage
     agent: kubernetes
-    context: pull-knative-eventing-sources-go-coverage
+    context: pull-knative-eventing-contrib-go-coverage
     always_run: true
-    rerun_command: "/test pull-knative-eventing-sources-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-eventing-sources-go-coverage),?(\\s+|$)"
+    rerun_command: "/test pull-knative-eventing-contrib-go-coverage"
+    trigger: "(?m)^/test (all|pull-knative-eventing-contrib-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "https://github.com/knative/eventing-sources.git"
+    clone_uri: "https://github.com/knative/eventing-contrib.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -853,7 +853,7 @@ presubmits:
         command:
         - "/coverage"
         args:
-        - "--postsubmit-job-name=post-knative-eventing-sources-go-coverage"
+        - "--postsubmit-job-name=post-knative-eventing-contrib-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
         - "--github-token=/etc/covbot-token/token"
@@ -3137,7 +3137,7 @@ periodics:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
 - cron: "30 * * * *"
-  name: ci-knative-eventing-sources-continuous
+  name: ci-knative-eventing-contrib-continuous
   agent: kubernetes
   spec:
     containers:
@@ -3147,7 +3147,7 @@ periodics:
       - "--scenario=kubernetes_execute_bazel"
       - "--clean"
       - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/eventing-sources"
+      - "--repo=github.com/knative/eventing-contrib"
       - "--root=/go/src"
       - "--service-account=/etc/test-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
@@ -3171,7 +3171,7 @@ periodics:
       secret:
         secretName: test-account
 - cron: "50 8 * * *"
-  name: ci-knative-eventing-sources-0.5-continuous
+  name: ci-knative-eventing-contrib-0.5-continuous
   agent: kubernetes
   spec:
     containers:
@@ -3181,7 +3181,7 @@ periodics:
       - "--scenario=kubernetes_execute_bazel"
       - "--clean"
       - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/eventing-sources=release-0.5"
+      - "--repo=github.com/knative/eventing-contrib=release-0.5"
       - "--root=/go/src"
       - "--service-account=/etc/test-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
@@ -3215,7 +3215,7 @@ periodics:
       secret:
         secretName: test-account
 - cron: "0 9 * * *"
-  name: ci-knative-eventing-sources-0.6-continuous
+  name: ci-knative-eventing-contrib-0.6-continuous
   agent: kubernetes
   spec:
     containers:
@@ -3225,7 +3225,7 @@ periodics:
       - "--scenario=kubernetes_execute_bazel"
       - "--clean"
       - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/eventing-sources=release-0.6"
+      - "--repo=github.com/knative/eventing-contrib=release-0.6"
       - "--root=/go/src"
       - "--service-account=/etc/test-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
@@ -3259,7 +3259,7 @@ periodics:
       secret:
         secretName: test-account
 - cron: "16 9 * * *"
-  name: ci-knative-eventing-sources-nightly-release
+  name: ci-knative-eventing-contrib-nightly-release
   agent: kubernetes
   spec:
     containers:
@@ -3269,7 +3269,7 @@ periodics:
       - "--scenario=kubernetes_execute_bazel"
       - "--clean"
       - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/eventing-sources"
+      - "--repo=github.com/knative/eventing-contrib"
       - "--root=/go/src"
       - "--service-account=/etc/nightly-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
@@ -3293,7 +3293,7 @@ periodics:
       secret:
         secretName: nightly-account
 - cron: "17 9 * * 2"
-  name: ci-knative-eventing-sources-dot-release
+  name: ci-knative-eventing-contrib-dot-release
   agent: kubernetes
   spec:
     containers:
@@ -3303,7 +3303,7 @@ periodics:
       - "--scenario=kubernetes_execute_bazel"
       - "--clean"
       - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/eventing-sources"
+      - "--repo=github.com/knative/eventing-contrib"
       - "--root=/go/src"
       - "--service-account=/etc/release-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
@@ -3312,7 +3312,7 @@ periodics:
       - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--dot-release"
-      - "--release-gcs knative-releases/eventing-sources"
+      - "--release-gcs knative-releases/eventing-contrib"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
       volumeMounts:
@@ -3335,7 +3335,7 @@ periodics:
       secret:
         secretName: release-account
 - cron: "5 */2 * * *"
-  name: ci-knative-eventing-sources-auto-release
+  name: ci-knative-eventing-contrib-auto-release
   agent: kubernetes
   spec:
     containers:
@@ -3345,7 +3345,7 @@ periodics:
       - "--scenario=kubernetes_execute_bazel"
       - "--clean"
       - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/eventing-sources"
+      - "--repo=github.com/knative/eventing-contrib"
       - "--root=/go/src"
       - "--service-account=/etc/release-account/service-account.json"
       - "--upload=gs://knative-prow/logs"
@@ -3354,7 +3354,7 @@ periodics:
       - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--auto-release"
-      - "--release-gcs knative-releases/eventing-sources"
+      - "--release-gcs knative-releases/eventing-contrib"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
       volumeMounts:
@@ -3377,14 +3377,14 @@ periodics:
       secret:
         secretName: release-account
 - cron: "0 1 * * *"
-  name: ci-knative-eventing-sources-go-coverage
+  name: ci-knative-eventing-contrib-go-coverage
   agent: kubernetes
   decorate: true
   extra_refs:
   - org: knative
-    repo: eventing-sources
+    repo: eventing-contrib
     base_ref: master
-    clone_uri: "https://github.com/knative/eventing-sources.git"
+    clone_uri: "https://github.com/knative/eventing-contrib.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -3906,13 +3906,13 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
-  knative/eventing-sources:
-  - name: post-knative-eventing-sources-go-coverage
+  knative/eventing-contrib:
+  - name: post-knative-eventing-contrib-go-coverage
     branches:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "https://github.com/knative/eventing-sources.git"
+    clone_uri: "https://github.com/knative/eventing-contrib.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
