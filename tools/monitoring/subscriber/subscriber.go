@@ -54,10 +54,10 @@ func NewSubscriberClient(ctx context.Context, projectID string, subName string) 
 		return nil, err
 	}
 
-	return &Client{c.Subscription(subName)}, err
+	return &Client{c.Subscription(subName)}, nil
 }
 
-// ReceiveMessageAckAll acknowledges all incoming pusub messages and convert the pubsub message to crier ReportMessage.
+// ReceiveMessageAckAll acknowledges all incoming pusub messages and convert the pubsub message to ReportMessage.
 // It executes `f` only if the pubsub message can be converted to ReportMessage. Otherwise, ignore the message.
 func (c *Client) ReceiveMessageAckAll(ctx context.Context, f func(*ReportMessage)) error {
 	return c.Receive(ctx, func(ctx context.Context, msg *pubsub.Message) {
