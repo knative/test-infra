@@ -76,9 +76,9 @@ func CheckAlertCondition(errorPattern string, config *config.SelectedConfig, db 
 
 	_, err := db.Query(`
 		CREATE VIEW Matched AS
-  	SELECT Jobname, PrNumber 
-  	FROM ErrorLogs
-  	WHERE ErrorPattern=? and TimeStamp > ?`,
+		SELECT Jobname, PrNumber 
+		FROM ErrorLogs
+		WHERE ErrorPattern=? and TimeStamp > ?`,
 		errorPattern, startTime)
 
 	if err != nil {
@@ -89,15 +89,14 @@ func CheckAlertCondition(errorPattern string, config *config.SelectedConfig, db 
 
 	row := db.QueryRow(`
 		SELECT 
-    	COUNT(*),
-    	COUNT (DISTINCT Jobname),
-    	COUNT (DISTINCT PrNumber)
+			COUNT(*),
+			COUNT (DISTINCT Jobname),
+			COUNT (DISTINCT PrNumber)
 		FROM Matched;`)
 
-	if err = row.Scan(&nMatches, nJobs, nPRs); err != nil {
+	if err = row.Scan(&nMatches, &nJobs, &nPRs); err != nil {
 		return false, err
 	}
 
 	return nMatches >= config.Occurrences && nJobs >= config.JobsAffected && nPRs >= config.PrsAffected, nil
 }
-
