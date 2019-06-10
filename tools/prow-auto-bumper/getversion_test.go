@@ -30,15 +30,21 @@ import (
 	"github.com/knative/test-infra/shared/ghutil/fakeghutil"
 )
 
-var (
-	fakeOrg  = "fakeorg"
-	fakeRepo = "fakerepo"
-)
+func getFakeGitInfo() gitInfo {
+	return gitInfo{
+		org:   "fakeorg",
+		repo:  "fakerepo",
+		userID:  "fakeuserID",
+		head:  "fakehead",
+		base:  "fakebase",
+		email: "fake@email",
+	}
+}
 
-func createPullRequest(t *testing.T, fgc *fakeghutil.FakeGithubClient) *github.PullRequest {
-	PR, err := fgc.CreatePullRequest(fakeOrg, fakeRepo, "user:head", "base", "title", "body")
+func createPullRequest(t *testing.T, fgc *fakeghutil.FakeGithubClient, fakeGi gitInfo) *github.PullRequest {
+	PR, err := fgc.CreatePullRequest(fakeGi.org, fakeGi.repo, fakeGi.getHeadRef(), fakeGi.base, "title", "body")
 	if nil != err {
-		t.Fatalf("Create PR in %s/%s, want: no error, got: '%v'", fakeOrg, fakeRepo, err)
+		t.Fatalf("Create PR in %s/%s, want: no error, got: '%v'", fakeGi.org, fakeGi.org, err)
 	}
 	return PR
 }
@@ -249,7 +255,8 @@ func TestParseChangelist(t *testing.T) {
 	for _, data := range datas {
 		fgc := fakeghutil.NewFakeGithubClient()
 		fcw := &GHClientWrapper{fgc}
-		PR := createPullRequest(t, fgc)
+		fakeGi := getFakeGitInfo()
+		PR := createPullRequest(t, fgc, fakeGi)
 		pv := PRVersions{
 			images: make(map[string][]versions),
 			PR:     PR,
@@ -257,11 +264,11 @@ func TestParseChangelist(t *testing.T) {
 		for i, patch := range data.patches {
 			SHA := strconv.Itoa(i)
 			filename := fmt.Sprintf("file_%d", i)
-			fgc.AddCommitToPullRequest(fakeOrg, fakeRepo, *pv.PR.Number, SHA)
-			fgc.AddFileToCommit(fakeOrg, fakeRepo, SHA, filename, patch)
+			fgc.AddCommitToPullRequest(fakeGi.org, fakeGi.repo, *pv.PR.Number, SHA)
+			fgc.AddFileToCommit(fakeGi.org, fakeGi.repo, SHA, filename, patch)
 		}
 
-		pv.parseChangelist(fcw)
+		pv.parseChangelist(fcw, fakeGi)
 		if eq := reflect.DeepEqual(pv.images, data.images); !eq {
 			t.Fatalf("parsing PR with changes '%v', want: '%v', got: '%v'",
 				data.patches, data.images, pv.images)
@@ -316,12 +323,13 @@ func TestGetBestVersion(t *testing.T) {
 		},
 	}
 
+	fakeGi := getFakeGitInfo()
 	for _, data := range datas {
 		fgc := fakeghutil.NewFakeGithubClient()
 		fcw := &GHClientWrapper{fgc}
 		dateNow := time.Now()
 		for i, PI := range data.PRInfos {
-			PR := createPullRequest(t, fgc)
+			PR := createPullRequest(t, fgc, fakeGi)
 			timeCreated := dateNow.Add(-time.Hour * time.Duration(PI.delta))
 			stateStr := string(PI.state)
 			PR.State = &stateStr
@@ -332,11 +340,11 @@ func TestGetBestVersion(t *testing.T) {
 				- image: gcr.io/k8s-foofoo/bar:%s
 				+ image: gcr.io/k8s-foofoo/bar:%s
 			`, PI.oldVersion, PI.newVersion)
-			fgc.AddCommitToPullRequest(fakeOrg, fakeRepo, *PR.Number, SHA)
-			fgc.AddFileToCommit(fakeOrg, fakeRepo, SHA, filename, patch)
+			fgc.AddCommitToPullRequest(fakeGi.org, fakeGi.repo, *PR.Number, SHA)
+			fgc.AddFileToCommit(fakeGi.org, fakeGi.repo, SHA, filename, patch)
 		}
 
-		pv, err := getBestVersion(fcw, fakeOrg, fakeRepo, "user:head", "base")
+		pv, err := getBestVersion(fcw, fakeGi)
 		if nil != err {
 			t.Fatalf("get best versions with PRs '%v', want: no error, got: '%v'", data.PRInfos, err)
 		}
@@ -353,9 +361,10 @@ func TestGetBestVersion(t *testing.T) {
 func TestRetryGetBestVersion(t *testing.T) {
 	fgc := fakeghutil.NewFakeGithubClient()
 	fcw := &GHClientWrapper{fgc}
+	fakeGi := getFakeGitInfo()
 
 	// only the error case exercises all the code in the function
-	_, err := retryGetBestVersion(fcw, fakeOrg, fakeRepo, "user:head", "base")
+	_, err := retryGetBestVersion(fcw, fakeGi)
 	if nil == err || !strings.Contains(err.Error(), "failed list pull request") {
 		t.Fatalf("retry get best version with no PRs, want error: 'failed list pull request', got: '%v'", err)
 	}

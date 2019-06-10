@@ -242,6 +242,27 @@ func (fgc *FakeGithubClient) ListFiles(org, repo string, ID int) ([]*github.Comm
 	return res, nil
 }
 
+// GetPullRequest gets PullRequest by ID
+func (fgc *FakeGithubClient) GetPullRequest(org, repo string, ID int) (*github.PullRequest, error) {
+	if PRs, ok := fgc.PullRequests[repo]; ok {
+		if PR, ok := PRs[ID]; ok {
+			return PR, nil
+		}
+	}
+	return nil, fmt.Errorf("PR not exist: '%d'", ID)
+}
+
+// EditPullRequest updates PullRequest
+func (fgc *FakeGithubClient) EditPullRequest(org, repo string, ID int, title, body string) (*github.PullRequest, error) {
+	PR, err := fgc.GetPullRequest(org, repo, ID)
+	if nil != err {
+		return nil, err
+	}
+	PR.Title = &title
+	PR.Body = &body
+	return PR, nil
+}
+
 // CreatePullRequest creates PullRequest, passing head user and branch name "user:ref-name", and base branch name like "master"
 func (fgc *FakeGithubClient) CreatePullRequest(org, repo, head, base, title, body string) (*github.PullRequest, error) {
 	PRNumber := fgc.getNextNumber()
