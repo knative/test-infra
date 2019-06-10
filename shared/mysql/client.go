@@ -35,7 +35,7 @@ type DBConfig struct {
 }
 
 func (c DBConfig) TestConn() error {
-	conn, err := c.getConn()
+	conn, err := c.Connect()
 	if err != nil {
 		return err
 	}
@@ -44,7 +44,7 @@ func (c DBConfig) TestConn() error {
 	return nil
 }
 
-func (c DBConfig) getConn() (*sql.DB, error) {
+func (c DBConfig) Connect() (*sql.DB, error) {
 	conn, err := sql.Open(driverName, c.dataStoreName(c.DatabaseName))
 	if err != nil {
 		return nil, fmt.Errorf("could not get a connection: %v", err)
@@ -70,4 +70,13 @@ func (c DBConfig) dataStoreName(dbName string) string {
 	}
 
 	return fmt.Sprintf("%sunix(%s)/%s", cred, "/cloudsql/"+c.Instance, dbName)
+}
+
+// RollbackTx will try to rollback the transaction and return an error message accordingly
+func RollbackTx(tx *sql.Tx, err error) error {
+	rollbackErr := tx.Rollback()
+	if rollbackErr == nil {
+		return fmt.Errorf("Statement execution failed: %v; rolled back", err)
+	}
+	return fmt.Errorf("Statement execution failed: %v; rollback failed: %v", err, rollbackErr)
 }
