@@ -74,17 +74,6 @@ func CheckAlertCondition(errorPattern string, config *config.SelectedConfig, db 
 	// the timestamp we want to start collecting logs
 	startTime := time.Now().Add(time.Minute * time.Duration(config.Period))
 
-	_, err := db.Query(`
-		CREATE VIEW Matched AS
-		SELECT Jobname, PrNumber 
-		FROM ErrorLogs
-		WHERE ErrorPattern=? and TimeStamp > ?`,
-		errorPattern, startTime)
-
-	if err != nil {
-		return false, err
-	}
-
 	var nMatches, nJobs, nPRs int
 
 	row := db.QueryRow(`
@@ -92,9 +81,11 @@ func CheckAlertCondition(errorPattern string, config *config.SelectedConfig, db 
 			COUNT(*),
 			COUNT (DISTINCT Jobname),
 			COUNT (DISTINCT PrNumber)
-		FROM Matched;`)
+		FROM ErrorLogs
+		WHERE ErrorPattern=? and TimeStamp > ?`,
+		errorPattern, startTime)
 
-	if err = row.Scan(&nMatches, &nJobs, &nPRs); err != nil {
+	if err := row.Scan(&nMatches, &nJobs, &nPRs); err != nil {
 		return false, err
 	}
 
