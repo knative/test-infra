@@ -58,7 +58,7 @@ presubmits:
     - integration-tests: true
     - go-coverage: true
 
-  knative/eventing-sources:
+  knative/eventing-contrib:
     - build-tests: true
     - unit-tests: true
     - integration-tests: true
@@ -98,6 +98,12 @@ presubmits:
     - unit-tests: true
     - integration-tests: true
 
+  GoogleCloudPlatform/cloud-run-events:
+    - build-tests: true
+    - unit-tests: true
+    - integration-tests: true
+    - go-coverage: true
+
 periodics:
   knative/serving:
     - continuous: true
@@ -130,22 +136,22 @@ periodics:
       - "1.0.7"
       - "--no-mesh"
       timeout: 100
-    - custom-job: istio-1.1.2-mesh
+    - custom-job: istio-1.1.7-mesh
       cron: "37 */2 * * *" # Run every other hour and thirty-seven minute
       command:
       - "./test/e2e-tests.sh"
       args:
       - "--istio-version"
-      - "1.1.2"
+      - "1.1.7"
       - "--mesh"
       timeout: 100
-    - custom-job: istio-1.1.2-no-mesh
+    - custom-job: istio-1.1.7-no-mesh
       cron: "52 */2 * * *" # Run every other hour and fifty-two minute
       command:
       - "./test/e2e-tests.sh"
       args:
       - "--istio-version"
-      - "1.1.2"
+      - "1.1.7"
       - "--no-mesh"
       timeout: 100
     - nightly: true
@@ -223,7 +229,7 @@ periodics:
     - auto-release: true
       cron: "5 */2 * * *" # Run every two hours and five minutes
 
-  knative/eventing-sources:
+  knative/eventing-contrib:
     - continuous: true
       cron: "30 * * * *" # Run every hour and 30 minutes
     - branch-ci: true
@@ -254,3 +260,13 @@ periodics:
   knative/observability:
     - continuous: true
       cron: "30 * * * *" # Run every hour and 30 minutes
+
+  GoogleCloudPlatform/cloud-run-events:
+    - continuous: true
+      cron: "45 * * * *" # Run every hour on :45 minutes
+    - nightly: true
+      cron: "16 9 * * *" # Run at 02:16PST every day (09:16 UTC)
+    - dot-release: true
+      cron: "45 9 * * 2" # Run at 02:17PST every Tuesday (09:45 UTC)
+    - auto-release: true
+      cron: "35 */2 * * *" # Run every two hours on :35

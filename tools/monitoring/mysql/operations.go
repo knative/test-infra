@@ -18,63 +18,12 @@ package mysql
 
 import (
 	"database/sql"
-	"database/sql/driver"
 	"fmt"
 	"time"
 
 	"github.com/knative/test-infra/tools/monitoring/config"
 	"github.com/knative/test-infra/tools/monitoring/log_parser"
-
-	_ "github.com/go-sql-driver/mysql"
 )
-
-const driverName = "mysql"
-
-// DBConfig is the configuration used to connection to database
-type DBConfig struct {
-	Username     string
-	Password     string
-	Instance     string
-	DatabaseName string
-}
-
-func (c DBConfig) TestConn() error {
-	conn, err := c.getConn()
-	if err != nil {
-		return err
-	}
-	defer conn.Close()
-
-	return nil
-}
-
-func (c DBConfig) getConn() (*sql.DB, error) {
-	conn, err := sql.Open(driverName, c.dataStoreName(c.DatabaseName))
-	if err != nil {
-		return nil, fmt.Errorf("could not get a connection: %v", err)
-	}
-
-	if conn.Ping() == driver.ErrBadConn {
-		return nil, fmt.Errorf("could not connect to the datastore. " +
-			"could be bad address, or this address is inaccessible from your host.\n")
-	}
-
-	return conn, nil
-}
-
-func (c DBConfig) dataStoreName(dbName string) string {
-	var cred string
-	// [username[:password]@]
-	if len(c.Username) > 0 {
-		cred = c.Username
-		if len(c.Password) > 0 {
-			cred = cred + ":" + c.Password
-		}
-		cred = cred + "@"
-	}
-
-	return fmt.Sprintf("%sunix(%s)/%s", cred, "/cloudsql/"+c.Instance, dbName)
-}
 
 // PubsubMsgHandler adds record(s) to ErrorLogs table in database,
 // after parsing build log and compares the result with config yaml
@@ -93,30 +42,30 @@ func PubsubMsgHandler(db *sql.DB, configURL, buildLogURL, jobname string, prNumb
 	if err != nil {
 		return err
 	}
+
 	stmt, err := tx.Prepare("INSERT INTO ErrorLogs('ErrorPattern', 'ErrorMsg', 'JobName', 'PRNumber', 'BuildLogURL', 'TimeStamp') VALUES(?,?,?,?,?,?)")
-	if err != nil {
-		rollbackErr := tx.Rollback()
-		if rollbackErr == nil {
-			return fmt.Errorf("SQL Statement preparation failed: %v; rolled back", err)
-
-		}
-		return fmt.Errorf("SQL Statement preparation failed: %v; rollback failed: %v", err, rollbackErr)
-	}
-
 	defer stmt.Close()
 
+	if err != nil {
+		return rollbackTx(tx, err)
+	}
+
 	for _, errorLog := range errorLogs {
-		_, err := stmt.Exec(errorLog.Pattern, errorLog.Msg, jobname, prNumber, buildLogURL, time.Now())
-		if err != nil {
-			rollbackErr := tx.Rollback()
-			if rollbackErr == nil {
-				return fmt.Errorf("SQL Statement execution failed: %v; rolled back", err)
-			}
-			return fmt.Errorf("SQL Statement execution failed: %v; rollback failed: %v", err, rollbackErr)
+		if _, err := stmt.Exec(errorLog.Pattern, errorLog.Msg, jobname, prNumber, buildLogURL, time.Now()); err != nil {
+			return rollbackTx(tx, err)
 		}
 	}
 
 	return tx.Commit()
+}
+
+// rollbackTx will try to rollback the transaction and return an error message accordingly
+func rollbackTx(tx *sql.Tx, err error) error {
+	rollbackErr := tx.Rollback()
+	if rollbackErr == nil {
+		return fmt.Errorf("Statement execution failed: %v; rolled back", err)
+	}
+	return fmt.Errorf("Statement execution failed: %v; rollback failed: %v", err, rollbackErr)
 }
 
 // CheckAlertCondition checks whether the given error pattern meets
@@ -151,3 +100,4 @@ func CheckAlertCondition(errorPattern string, config *config.SelectedConfig, db 
 
 	return nMatches >= config.Occurrences && nJobs >= config.JobsAffected && nPRs >= config.PrsAffected, nil
 }
+
