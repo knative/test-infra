@@ -27,6 +27,7 @@ import (
 	"github.com/knative/test-infra/shared/mysql"
 	"github.com/knative/test-infra/tools/monitoring/config"
 	"github.com/knative/test-infra/tools/monitoring/mail"
+	mysql2 "github.com/knative/test-infra/tools/monitoring/mysql"
 )
 
 var (
@@ -107,7 +108,14 @@ func testCloudSQLConn(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Failed to ping the database %v", err)
 		return
 	}
-	fmt.Fprintf(w, "Success\n")
+	fmt.Fprintf(w, "DB Connection Succeeds\n")
+
+	selectedConfig := config.SelectedConfig{}
+
+	db, _ := dbConfig.GetConn()
+
+	toAlert, err := mysql2.CheckAlertCondition("none", &selectedConfig, db)
+	fmt.Fprintf(w, "tested CheckAlertCondition, alert bool=%v, err:=%v", toAlert, err)
 }
 
 func sendTestEmail(w http.ResponseWriter, r *http.Request) {
