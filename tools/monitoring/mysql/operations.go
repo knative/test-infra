@@ -25,6 +25,13 @@ import (
 	"github.com/knative/test-infra/tools/monitoring/log_parser"
 )
 
+const (
+	insertStmt = `
+	INSERT INTO ErrorLogs (
+		ErrorPattern, ErrorMsg, JobName, PRNumber, BuildLogURL, TimeStamp
+		) VALUES (?,?,?,?,?,?)`
+)
+
 // PubsubMsgHandler adds record(s) to ErrorLogs table in database,
 // after parsing build log and compares the result with config yaml
 func PubsubMsgHandler(db *sql.DB, configURL, buildLogURL, jobname string, prNumber int) error {
@@ -43,7 +50,7 @@ func PubsubMsgHandler(db *sql.DB, configURL, buildLogURL, jobname string, prNumb
 		return err
 	}
 
-	stmt, err := tx.Prepare("INSERT INTO ErrorLogs('ErrorPattern', 'ErrorMsg', 'JobName', 'PRNumber', 'BuildLogURL', 'TimeStamp') VALUES(?,?,?,?,?,?)")
+	stmt, err := tx.Prepare(insertStmt)
 	defer stmt.Close()
 
 	if err != nil {

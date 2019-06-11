@@ -19,14 +19,22 @@ package performance
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
+	"os"
+	"strings"
 
 	"github.com/knative/test-infra/shared/junit"
 	"github.com/knative/test-infra/shared/mysql"
 )
 
 const (
+	presubmit  = "presubmit"
 	dbName     = "knative_performance"
 	dbInstance = "knative-tests:us-central1:knative-monitoring"
+	insertStmt = `
+	INSERT INTO METRICS (
+		RunId, JobType, TestName, MetricName, MetricValue
+		) VALUES (?, ?, ?, ?, ?)`
 
 	// Path to secrets for username and password
 	userSecret = "/secrets/cloudsql/monitoringdb/username"
@@ -73,11 +81,39 @@ func ConfigureDB() (*DBConfig, error) {
 	return &DBConfig{config}, nil
 }
 
-func (c *DBConfig) StoreMetrics(name string, value float64) error {
-	conn, err := c.Connect()
+func (c *DBConfig) StoreMetrics(tName, metricName string, metricValue float64) error {
+	// Get values of env vars set up by Prow. Ignore storage for local runs
+	runId := os.Getenv("BUILD_ID")
+	jobType := os.Getenv("JOB_TYPE")
+	if len(runId) == 0 || len(jobType) == 0 {
+		log.Printf("Build id or job type not set. Not storing metric %s", metricName)
+		return nil
+	}
+
+	if strings.ToLower(jobType) == presubmit {
+		log.Printf("Ignoring metric %s storage as this is a pre-submit job", metricName)
+		return nil
+	}
+
+	// Store the metrics if the perf tests are run by prow(ci/cd) and if its periodic runs
+	db, err := c.Connect()
 	if err != nil {
 		return err
 	}
-	defer conn.Close()
+	defer db.Close()
+
+	// Execute the insert statement to add metric information
+	res, err := db.Exec(insertStmt, runId, jobType, tName, metricName, metricValue)
+	if err != nil {
+		return err
+	}
+	rows, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rows != 1 {
+		return fmt.Errorf("expected to affect 1 row, affected %d", rows)
+	}
+
 	return nil
 }
