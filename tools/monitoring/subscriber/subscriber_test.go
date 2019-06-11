@@ -122,7 +122,8 @@ func TestToReportMessage(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := toReportMessage(tt.arg); !reflect.DeepEqual(got, tt.want) {
+			fs := getFakeSubscriber("fake subscriber")
+			if got, _ := fs.toReportMessage(tt.arg); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("toReportMessage(%v), got: %v, want: %v", tt.arg, got, tt.want)
 			}
 		})

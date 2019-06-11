@@ -60,18 +60,19 @@ func NewSubscriberClient(ctx context.Context, projectID string, subName string) 
 // It executes `f` only if the pubsub message can be converted to ReportMessage. Otherwise, ignore the message.
 func (c *Client) ReceiveMessageAckAll(ctx context.Context, f func(*ReportMessage)) error {
 	return c.Receive(ctx, func(ctx context.Context, msg *pubsub.Message) {
-		if rmsg := toReportMessage(msg); rmsg != nil {
+		if rmsg, err := c.toReportMessage(msg); err != nil {
+			log.Printf("Cannot convert pubsub message (%v) to Report message %v", msg, err)
+		} else if rmsg != nil {
 			f(rmsg)
 		}
 		msg.Ack()
 	})
 }
 
-func toReportMessage(msg *pubsub.Message) *ReportMessage {
+func (c *Client) toReportMessage(msg *pubsub.Message) (*ReportMessage, error) {
 	rmsg := &ReportMessage{}
 	if err := json.Unmarshal(msg.Data, rmsg); err != nil {
-		log.Printf("Failed to convert message (%v) to ReportMessage\nError %v", msg, err)
-		return nil
+		return nil, err
 	}
-	return rmsg
+	return rmsg, nil
 }
