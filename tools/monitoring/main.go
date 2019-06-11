@@ -74,14 +74,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to initialize the subscriber %+v", err)
 	}
-	go func() {
-		err := client.ReceiveMessageAckAll(ctx, func(rmsg *subscriber.ReportMessage) {
-			log.Printf("Report Message: %+v\n", rmsg)
-		})
-		if err != nil {
-			log.Fatalf("Failed to retrieve messages due to %v", err)
-		}
-	}()
 
 	// use PORT environment variable, or default to 8080
 	port := "8080"
@@ -94,6 +86,7 @@ func main() {
 	server.HandleFunc("/hello", hello)
 	server.HandleFunc("/test-conn", testCloudSQLConn)
 	server.HandleFunc("/send-mail", sendTestEmail)
+	server.HandleFunc("/test-sub", testSubscriber)
 
 	// start the web server on port and accept requests
 	log.Printf("Server listening on port %s", port)
@@ -145,6 +138,20 @@ func sendTestEmail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Fprintln(w, "Sent the Email")
+}
+
+func testSubscriber(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Serving request: %s", r.URL.Path)
+	log.Println("Start listening to messages")
+
+	go func() {
+		err := client.ReceiveMessageAckAll(context.Background(), func(rmsg *subscriber.ReportMessage) {
+			log.Printf("Report Message: %+v\n", rmsg)
+		})
+		if err != nil {
+			log.Printf("Failed to retrieve messages due to %v", err)
+		}
+	}()
 }
 
 func configureMonitoringDatabase(dbName string, dbInst string, dbUserSecretFile string, dbPasswordSecretFile string) (mysql.DBConfig, error) {
