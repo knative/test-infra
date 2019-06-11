@@ -38,14 +38,6 @@ func call(cmd string, args ...string) error {
 	return c.Run()
 }
 
-func makeCommitSummary(vs versions) string {
-	return fmt.Sprintf("Update prow from %s to %s, and other images as necessary.", vs.oldVersion, vs.newVersion)
-}
-
-func getMatchTitle() string {
-	return "Update prow from"
-}
-
 func generatePRBody(extraMsgs []string) string {
 	var body string
 	if len(extraMsgs) > 0 {
@@ -62,10 +54,10 @@ func generatePRBody(extraMsgs []string) string {
 		if oncaller != "" {
 			assignment = "/cc @" + oncaller
 		} else {
-			assignment = "Nobody is currently oncall, so falling back to Blunderbuss."
+			assignment = "Nobody is currently oncall."
 		}
 	} else {
-		assignment = fmt.Sprintf("An error occurred while finding an assignee: `%s`.\nFalling back to Blunderbuss.", err)
+		assignment = fmt.Sprintf("An error occurred while finding an assignee: `%v`.", err)
 	}
 
 	return body + assignment
@@ -141,10 +133,12 @@ func getExistingPR(gcw *GHClientWrapper, gi gitInfo, matchTitle string) (*github
 }
 
 func createOrUpdatePR(gcw *GHClientWrapper, pv *PRVersions, gi gitInfo, extraMsgs []string, dryrun bool) error {
-	title := makeCommitSummary(pv.getDominantVersions())
-	matchTitle := getMatchTitle()
+	vs := pv.getDominantVersions()
+	commitMsg := fmt.Sprintf("Update prow from %s to %s, and other images as necessary.", vs.oldVersion, vs.newVersion)
+	matchTitle := "Update prow to"
+	title := fmt.Sprintf("%s %s", matchTitle, vs.newVersion)
 	body := generatePRBody(extraMsgs)
-	if err := makeGitCommit(gi, title, dryrun); nil != err {
+	if err := makeGitCommit(gi, commitMsg, dryrun); nil != err {
 		return fmt.Errorf("failed git commit: '%v'", err)
 	}
 	existPR, err := getExistingPR(gcw, gi, matchTitle)
