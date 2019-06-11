@@ -111,7 +111,7 @@ func testCloudSQLConn(w http.ResponseWriter, r *http.Request) {
 
 	selectedConfig := config.SelectedConfig{}
 
-	db, _ := dbConfig.GetConn()
+	db, _ := dbConfig.Connect()
 
 	toAlert, err := mysql2.CheckAlertCondition("none", &selectedConfig, db)
 	fmt.Fprintf(w, "tested CheckAlertCondition, alert bool=%v, err:=%v", toAlert, err)
