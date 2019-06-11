@@ -160,13 +160,6 @@ periodics:
       cron: "1 9 * * 2" # Run at 02:01PST every Tuesday (09:01 UTC)
     - auto-release: true
       cron: "3 */2 * * *" # Run every two hours and three minutes
-    - custom-job: playground
-      cron: "1 9 * * 6" # Run at 02:01PST every Saturday (09:01 UTC)
-      command:
-      - "./hack/deploy.sh"
-      args:
-      - "knative-playground"
-      timeout: 90
     - latency: true
       cron: "5 8 * * *" # Run at 01:05PST every day (08:05 UTC)
     - performance: true

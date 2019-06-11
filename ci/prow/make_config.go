@@ -62,7 +62,7 @@ type repositoryData struct {
 
 // baseProwJobTemplateData contains basic data about a Prow job.
 type baseProwJobTemplateData struct {
-        OrgName             string
+	OrgName             string
 	RepoName            string
 	RepoNameForJob      string
 	GcsBucket           string
@@ -346,8 +346,8 @@ func getMapSlice(m interface{}) yaml.MapSlice {
 func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	var data baseProwJobTemplateData
 	data.Timeout = 50
-        data.OrgName = strings.Split(repo, "/")[0]
-	data.RepoName = strings.Replace(repo, data.OrgName + "/", "", 1)
+	data.OrgName = strings.Split(repo, "/")[0]
+	data.RepoName = strings.Replace(repo, data.OrgName+"/", "", 1)
 	data.RepoNameForJob = strings.ToLower(strings.Replace(repo, "/", "-", -1))
 	data.GcsBucket = gcsBucket
 	data.RepoURI = "github.com/" + repo
@@ -357,7 +357,7 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.Year = time.Now().Year()
 	data.PresubmitLogsDir = presubmitLogsDir
 	data.LogsDir = logsDir
-	data.ReleaseGcs = strings.Replace(repo, data.OrgName + "/", "knative-releases/", 1)
+	data.ReleaseGcs = strings.Replace(repo, data.OrgName+"/", "knative-releases/", 1)
 	data.AlwaysRun = true
 	data.Image = prowTestsDockerImage
 	data.ServiceAccount = testAccount
@@ -614,6 +614,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			// We need a larger cluster of at least 16 nodes for perf tests
 			addEnvToJob(&data.Base, "E2E_MIN_CLUSTER_NODES", "16")
 			addEnvToJob(&data.Base, "E2E_MAX_CLUSTER_NODES", "16")
+			addVolumeToJob(&data.Base, "/secrets/cloudsql/monitoringdb", "monitoring-db-credentials", true)
 			data.Base.Timeout = 120
 		case "latency":
 			if !getBool(item.Value) {
@@ -1117,7 +1118,7 @@ func generateTestGroup(projName string, repoName string, jobNames []string) {
 		gcsLogDir := fmt.Sprintf("%s/%s/%s", gcsBucket, logsDir, testGroupName)
 		extras := make(map[string]string)
 		switch jobName {
-		case "continuous", "dot-release", "auto-release", "performance", "performance-mesh", "latency", "playground", "nightly":
+		case "continuous", "dot-release", "auto-release", "performance", "performance-mesh", "latency", "nightly":
 			isDailyBranch := regexp.MustCompile(`-[0-9\.]+-continuous`).FindString(testGroupName) != ""
 			if !isDailyBranch && (jobName == "continuous" || jobName == "auto-release") {
 				// TODO(Fredy-Z): this value should be derived from the cron string
@@ -1127,7 +1128,7 @@ func generateTestGroup(projName string, repoName string, jobNames []string) {
 					extras["num_failures_to_alert"] = "3"
 				}
 			}
-			if jobName == "playground" || jobName == "dot-release" {
+			if jobName == "dot-release" {
 				// TODO(Fredy-Z): this value should be derived from the cron string
 				extras["alert_stale_results_hours"] = "170" // 1 week + 2h
 			}
@@ -1175,7 +1176,7 @@ func generateDashboard(projName string, repoName string, jobNames []string) {
 			if projRepoStr == "knative-serving" {
 				executeDashboardTabTemplate("conformance-tests", testGroupName, "include-filter-by-regex=test/conformance/&sort-by-name=", noExtras)
 			}
-		case "dot-release", "auto-release", "performance", "performance-mesh", "latency", "playground":
+		case "dot-release", "auto-release", "performance", "performance-mesh", "latency":
 			extras := make(map[string]string)
 			baseOptions := testgridTabSortByName
 			if jobName == "performance" || jobName == "performance-mesh" {
@@ -1211,7 +1212,7 @@ func executeDashboardTabTemplate(dashboardTabName string, testGroupName string, 
 // getTestGroupName get the testGroupName from the given repoName and jobName
 func getTestGroupName(repoName string, jobName string) string {
 	switch jobName {
-	case "continuous", "dot-release", "auto-release", "performance", "performance-mesh", "latency", "playground":
+	case "continuous", "dot-release", "auto-release", "performance", "performance-mesh", "latency":
 		return strings.ToLower(fmt.Sprintf("ci-%s-%s", repoName, jobName))
 	case "nightly":
 		return strings.ToLower(fmt.Sprintf("ci-%s-%s-release", repoName, jobName))

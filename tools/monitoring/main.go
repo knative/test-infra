@@ -19,7 +19,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -30,7 +29,7 @@ import (
 )
 
 var (
-	dbConfig   mysql.DBConfig
+	dbConfig   *mysql.DBConfig
 	mailConfig *mail.Config
 
 	alertEmailRecipients = []string{"knative-productivity-oncall@googlegroups.com"}
@@ -53,7 +52,7 @@ func main() {
 
 	flag.Parse()
 
-	dbConfig, err = configureMonitoringDatabase(*dbName, *dbInst, *dbUserSF, *dbPassSF)
+	dbConfig, err = mysql.ConfigureDB(*dbUserSF, *dbPassSF, *dbName, *dbInst)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -125,27 +124,4 @@ func sendTestEmail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Fprintln(w, "Sent the Email")
-}
-
-func configureMonitoringDatabase(dbName string, dbInst string, dbUserSecretFile string, dbPasswordSecretFile string) (mysql.DBConfig, error) {
-	var config mysql.DBConfig
-
-	user, err := ioutil.ReadFile(dbUserSecretFile)
-	if err != nil {
-		return config, err
-	}
-
-	pass, err := ioutil.ReadFile(dbPasswordSecretFile)
-	if err != nil {
-		return config, err
-	}
-
-	config = mysql.DBConfig{
-		Username:     string(user),
-		Password:     string(pass),
-		DatabaseName: dbName,
-		Instance:     dbInst,
-	}
-
-	return config, nil
 }
