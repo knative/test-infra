@@ -60,8 +60,8 @@ type DBConfig struct {
 // Configure the db instance to store metrics information.
 // This will be later used to show the trending metrics on our grafana dashboard.
 func ConfigureDB() (*DBConfig, error) {
-	config := mysql.ConfigureDB(userSecret, passSecret, dbName, dbInstance)
-	return &DBConfig{config}, nil
+	config, err := mysql.ConfigureDB(userSecret, passSecret, dbName, dbInstance)
+	return &DBConfig{config}, err
 }
 
 func (c *DBConfig) StoreMetrics(tName, metricName string, metricValue float64) error {
