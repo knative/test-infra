@@ -160,7 +160,7 @@ type dashboardGroupTemplateData struct {
 }
 
 // testgridEntityGenerator is a function that generates the entity given the repo name and job names
-type testgridEntityGenerator func(string, []string)
+type testgridEntityGenerator func(string, string, []string)
 
 var (
 	// Values used in the jobs that can be changed through command-line flags.
@@ -1092,8 +1092,8 @@ func addRemainingTestCoverageJobs() {
 	}
 }
 
-// generateSection generates the configs for the section with the given generator
-func generateSection(sectionName string, generator testgridEntityGenerator, skipReleasedProj bool) {
+// generateTestGridSection generates the configs for a TestGrid section using the given generator
+func generateTestGridSection(sectionName string, generator testgridEntityGenerator, skipReleasedProj bool) {
 	outputConfig(sectionName + ":")
 	for _, projName := range projNames {
 		// Do not handle the project if it is released and we want to skip it.
@@ -1102,19 +1102,18 @@ func generateSection(sectionName string, generator testgridEntityGenerator, skip
 		}
 		repos := metaData[projName]
 		for _, repoName := range repoNames {
-			if _, exists := repos[repoName]; exists {
-				jobNames := repos[repoName]
-				repoName = buildProjRepoStr(projName, repoName)
-				generator(repoName, jobNames)
+			if jobNames, exists := repos[repoName]; exists {
+				generator(projName, repoName, jobNames)
 			}
 		}
 	}
 }
 
 // generateTestGroup generates the test group configuration
-func generateTestGroup(repoName string, jobNames []string) {
+func generateTestGroup(projName string, repoName string, jobNames []string) {
+	projRepoStr := buildProjRepoStr(projName, repoName)
 	for _, jobName := range jobNames {
-		testGroupName := getTestGroupName(repoName, jobName)
+		testGroupName := getTestGroupName(projRepoStr, jobName)
 		gcsLogDir := fmt.Sprintf("%s/%s/%s", gcsBucket, logsDir, testGroupName)
 		extras := make(map[string]string)
 		switch jobName {
@@ -1139,7 +1138,7 @@ func generateTestGroup(repoName string, jobNames []string) {
 				extras["short_text_metric"] = "perf_latency"
 			}
 		case "test-coverage":
-			gcsLogDir = strings.ToLower(fmt.Sprintf("%s/%s/ci-%s-%s", gcsBucket, logsDir, repoName, "go-coverage"))
+			gcsLogDir = strings.ToLower(fmt.Sprintf("%s/%s/ci-%s-%s", gcsBucket, logsDir, projRepoStr, "go-coverage"))
 			extras["short_text_metric"] = "coverage"
 			// Do not alert on coverage failures (i.e., coverage below threshold)
 			extras["num_failures_to_alert"] = "9999"
@@ -1163,16 +1162,17 @@ func executeTestGroupTemplate(testGroupName string, gcsLogDir string, extras map
 }
 
 // generateDashboard generates the dashboard configuration
-func generateDashboard(repoName string, jobNames []string) {
+func generateDashboard(projName string, repoName string, jobNames []string) {
+	projRepoStr := buildProjRepoStr(projName, repoName)
 	outputConfig("- name: " + strings.ToLower(repoName) + "\n" + baseIndent + "dashboard_tab:")
 	noExtras := make(map[string]string)
 	for _, jobName := range jobNames {
-		testGroupName := getTestGroupName(repoName, jobName)
+		testGroupName := getTestGroupName(projRepoStr, jobName)
 		switch jobName {
 		case "continuous":
 			executeDashboardTabTemplate("continuous", testGroupName, testgridTabSortByName, noExtras)
 			// This is a special case for knative/serving, as conformance-tests tab is just a filtered view of the continuous tab.
-			if repoName == "knative-serving" {
+			if projRepoStr == "knative-serving" {
 				executeDashboardTabTemplate("conformance-tests", testGroupName, "include-filter-by-regex=test/conformance/&sort-by-name=", noExtras)
 			}
 		case "dot-release", "auto-release", "performance", "performance-mesh", "latency", "playground":
@@ -1271,7 +1271,7 @@ func generateDashboardGroups() {
 		repos := metaData[projName]
 		for _, repoName := range repoNames {
 			if _, exists := repos[repoName]; exists {
-				dashboardRepoNames = append(dashboardRepoNames, buildProjRepoStr(projName, repoName))
+				dashboardRepoNames = append(dashboardRepoNames, repoName)
 			}
 		}
 		executeDashboardGroupTemplate(projName, dashboardRepoNames)
@@ -1394,8 +1394,8 @@ func main() {
 		periodicJobData := parseJob(config, "periodics")
 		collectMetaData(periodicJobData)
 
-		generateSection("test_groups", generateTestGroup, false)
-		generateSection("dashboards", generateDashboard, true)
+		generateTestGridSection("test_groups", generateTestGroup, false)
+		generateTestGridSection("dashboards", generateDashboard, true)
 		generateDashboardsForReleases()
 		generateDashboardGroups()
 	}

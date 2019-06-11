@@ -20,7 +20,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -32,7 +31,7 @@ import (
 )
 
 var (
-	dbConfig   mysql.DBConfig
+	dbConfig   *mysql.DBConfig
 	mailConfig *mail.Config
 	client     *subscriber.Client
 
@@ -59,7 +58,7 @@ func main() {
 
 	flag.Parse()
 
-	dbConfig, err = configureMonitoringDatabase(*dbName, *dbInst, *dbUserSF, *dbPassSF)
+	dbConfig, err = mysql.ConfigureDB(*dbUserSF, *dbPassSF, *dbName, *dbInst)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -152,27 +151,4 @@ func testSubscriber(w http.ResponseWriter, r *http.Request) {
 			log.Printf("Failed to retrieve messages due to %v", err)
 		}
 	}()
-}
-
-func configureMonitoringDatabase(dbName string, dbInst string, dbUserSecretFile string, dbPasswordSecretFile string) (mysql.DBConfig, error) {
-	var config mysql.DBConfig
-
-	user, err := ioutil.ReadFile(dbUserSecretFile)
-	if err != nil {
-		return config, err
-	}
-
-	pass, err := ioutil.ReadFile(dbPasswordSecretFile)
-	if err != nil {
-		return config, err
-	}
-
-	config = mysql.DBConfig{
-		Username:     string(user),
-		Password:     string(pass),
-		DatabaseName: dbName,
-		Instance:     dbInst,
-	}
-
-	return config, nil
 }
