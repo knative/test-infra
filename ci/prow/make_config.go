@@ -62,7 +62,7 @@ type repositoryData struct {
 
 // baseProwJobTemplateData contains basic data about a Prow job.
 type baseProwJobTemplateData struct {
-        OrgName             string
+	OrgName             string
 	RepoName            string
 	RepoNameForJob      string
 	GcsBucket           string
@@ -346,8 +346,8 @@ func getMapSlice(m interface{}) yaml.MapSlice {
 func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	var data baseProwJobTemplateData
 	data.Timeout = 50
-        data.OrgName = strings.Split(repo, "/")[0]
-	data.RepoName = strings.Replace(repo, data.OrgName + "/", "", 1)
+	data.OrgName = strings.Split(repo, "/")[0]
+	data.RepoName = strings.Replace(repo, data.OrgName+"/", "", 1)
 	data.RepoNameForJob = strings.ToLower(strings.Replace(repo, "/", "-", -1))
 	data.GcsBucket = gcsBucket
 	data.RepoURI = "github.com/" + repo
@@ -357,7 +357,7 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.Year = time.Now().Year()
 	data.PresubmitLogsDir = presubmitLogsDir
 	data.LogsDir = logsDir
-	data.ReleaseGcs = strings.Replace(repo, data.OrgName + "/", "knative-releases/", 1)
+	data.ReleaseGcs = strings.Replace(repo, data.OrgName+"/", "knative-releases/", 1)
 	data.AlwaysRun = true
 	data.Image = prowTestsDockerImage
 	data.ServiceAccount = testAccount
@@ -614,6 +614,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			// We need a larger cluster of at least 16 nodes for perf tests
 			addEnvToJob(&data.Base, "E2E_MIN_CLUSTER_NODES", "16")
 			addEnvToJob(&data.Base, "E2E_MAX_CLUSTER_NODES", "16")
+			addVolumeToJob(&data.Base, "/secrets/cloudsql/monitoringdb", "monitoring-db-credentials", true)
 			data.Base.Timeout = 120
 		case "latency":
 			if !getBool(item.Value) {
