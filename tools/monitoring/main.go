@@ -113,8 +113,13 @@ func testCloudSQLConn(w http.ResponseWriter, r *http.Request) {
 
 	db, _ := dbConfig.Connect()
 
+	fmt.Fprintf(w, "testing alert condition check...")
 	toAlert, err := mysql2.CheckAlertCondition("none", &selectedConfig, db)
-	fmt.Fprintf(w, "tested CheckAlertCondition, alert bool=%v, err:=%v", toAlert, err)
+	if err != nil {
+		fmt.Fprintf(w, "error running alert condition check in no-match senario: %v", err)
+	} else if toAlert == true {
+		fmt.Fprintf(w, "alert condition check returned false positive in no-match senario: %v", err)
+	}
 }
 
 func sendTestEmail(w http.ResponseWriter, r *http.Request) {
