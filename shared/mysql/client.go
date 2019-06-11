@@ -74,9 +74,8 @@ func (c DBConfig) dataStoreName(dbName string) string {
 
 // RollbackTx will try to rollback the transaction and return an error message accordingly
 func RollbackTx(tx *sql.Tx, err error) error {
-	rollbackErr := tx.Rollback()
-	if rollbackErr == nil {
-		return fmt.Errorf("Statement execution failed: %v; rolled back", err)
+	if rbErr := tx.Rollback(); rbErr != nil {
+		return fmt.Errorf("Statement execution failed: %v; rollback failed: %v", err, rbErr)
 	}
-	return fmt.Errorf("Statement execution failed: %v; rollback failed: %v", err, rollbackErr)
+	return fmt.Errorf("Statement execution failed: %v; rolled back.", err)
 }
