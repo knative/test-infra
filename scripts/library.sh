@@ -502,6 +502,22 @@ function get_latest_knative_yaml_source() {
   fi
 }
 
+# Returns the latest gke version in [major].[minor].[patch] with provided prefix
+# Parameters: $1 - prefix of gke versions
+#             $2 - gcp zone
+function get_latest_gke_version() {
+  local version_prefix="$1"
+  local re_version_match="${version_prefix/./\\.}"
+  re_version_match="${version_prefix/-/\\-}"
+  local gcp_zone="$2"
+  #local full_gke_version=
+  echo "$(gcloud container get-server-config --zone=${gcp_zone} --format="yaml(validMasterVersions)" \
+      | grep -E "${re_version_match}" \
+      | grep -Eo "[0-9]+\.[0-9]+\.[0-9]+" \
+      | sort \
+      | tail -n 1)"
+}
+
 # Initializations that depend on previous functions.
 # These MUST come last.
 

@@ -204,7 +204,6 @@ function create_test_cluster() {
   (( ! IS_BOSKOS )) && extra_flags+=(--down)
   create_test_cluster_with_retries "${CLUSTER_CREATION_ARGS[@]}" \
     --up \
-    --extract "${E2E_CLUSTER_VERSION}" \
     --gcp-node-image "${SERVING_GKE_IMAGE}" \
     --test-cmd "${E2E_SCRIPT}" \
     --test-cmd-args "${test_cmd_args}" \
@@ -246,15 +245,22 @@ function create_test_cluster_with_retries() {
       E2E_CLUSTER_ZONE=${e2e_cluster_zone}
       [[ "${E2E_CLUSTER_ZONE}" == "${zone_not_provided}" ]] && E2E_CLUSTER_ZONE=""
 
-      local geoflag="--gcp-region=${E2E_CLUSTER_REGION}"
-      [[ -n "${E2E_CLUSTER_ZONE}" ]] && geoflag="--gcp-zone=${E2E_CLUSTER_REGION}-${E2E_CLUSTER_ZONE}"
+      local cluster_creation_zone="${E2E_CLUSTER_REGION}"
+      [[ -n "${E2E_CLUSTER_ZONE}" ]] && cluster_creation_zone="${E2E_CLUSTER_REGION}-${E2E_CLUSTER_ZONE}"
+      local geoflag="--gcp-region=${cluster_creation_zone}"
+      # Kubetest --extract expects version string in the format of v[major].[minor].[patch], get latest and convert to this format
+      # if E2E_CLUSTER_VERSION is in the form of [major] or [major].[minor]
+      if [[ "${E2E_CLUSTER_VERSION}" =~ ^[0-9]+$ || "${E2E_CLUSTER_VERSION}" =~ ^[0-9]+\.[0-9]+$ ]]; then
+        E2E_CLUSTER_VERSION="v$(get_latest_gke_version ${E2E_CLUSTER_VERSION} ${cluster_creation_zone})"
+        [[ -z "${E2E_CLUSTER_VERSION}" ]] && fail_test "Unsupported cluster version provided"
+      fi
 
-      header "Creating test cluster in $E2E_CLUSTER_REGION $E2E_CLUSTER_ZONE"
+      header "Creating test cluster in $E2E_CLUSTER_REGION $E2E_CLUSTER_ZONE with version $E2E_CLUSTER_VERSION"
       # Don't fail test for kubetest, as it might incorrectly report test failure
       # if teardown fails (for details, see success() below)
       set +o errexit
       { run_go_tool k8s.io/test-infra/kubetest \
-        kubetest "$@" ${geoflag}; } 2>&1 | tee ${cluster_creation_log}
+        kubetest --extract ${E2E_CLUSTER_VERSION} "$@" ${geoflag}; } 2>&1 | tee ${cluster_creation_log}
 
       # Exit if test succeeded
       [[ "$(get_test_return_code)" == "0" ]] && return 0
