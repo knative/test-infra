@@ -20,6 +20,7 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"fmt"
+	"io/ioutil"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -32,6 +33,27 @@ type DBConfig struct {
 	Password     string
 	Instance     string
 	DatabaseName string
+}
+
+func ConfigureDB(userSecret, passSecret, dbName, dbInstance string) (*DBConfig, error) {
+	user, err := ioutil.ReadFile(userSecret)
+	if err != nil {
+		return nil, err
+	}
+
+	pass, err := ioutil.ReadFile(passSecret)
+	if err != nil {
+		return nil, err
+	}
+
+	config := DBConfig{
+		Username:     string(user),
+		Password:     string(pass),
+		DatabaseName: dbName,
+		Instance:     dbInstance,
+	}
+
+	return &config, nil
 }
 
 func (c DBConfig) TestConn() error {

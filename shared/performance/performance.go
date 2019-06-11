@@ -18,7 +18,6 @@ package performance
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -55,29 +54,13 @@ func CreatePerfTestCase(metricValue float32, metricName, testName string) junit.
 }
 
 type DBConfig struct {
-	mysql.DBConfig
+	*mysql.DBConfig
 }
 
 // Configure the db instance to store metrics information.
 // This will be later used to show the trending metrics on our grafana dashboard.
 func ConfigureDB() (*DBConfig, error) {
-	user, err := ioutil.ReadFile(userSecret)
-	if err != nil {
-		return nil, err
-	}
-
-	pass, err := ioutil.ReadFile(passSecret)
-	if err != nil {
-		return nil, err
-	}
-
-	config := mysql.DBConfig{
-		Username:     string(user),
-		Password:     string(pass),
-		DatabaseName: dbName,
-		Instance:     dbInstance,
-	}
-
+	config := mysql.ConfigureDB(userSecret, passSecret, dbName, dbInstance)
 	return &DBConfig{config}, nil
 }
 
