@@ -14,8 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// prow-auto-bumper finds stable Prow components version used by k8s,
-// and creates PRs updating them in knative/test-infra
+// parser.go parses PullRequests in k8s/test-infra, searching for recent stable versions
 
 package main
 

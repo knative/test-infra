@@ -63,13 +63,13 @@ const (
 var (
 	// Whitelist of files to be scanned by this tool
 	fileFilters = []*regexp.Regexp{regexp.MustCompile(`\.yaml$`)}
-	// matching            gcr.io /k8s-(prow|testimage)/(tide|kubekin-e2e|.*)    :vYYYYMMDD-HASH-VARIANT
+	// Matching            gcr.io /k8s-(prow|testimage)/(tide|kubekin-e2e|.*)    :vYYYYMMDD-HASH-VARIANT
 	imagePattern     = `\b(gcr\.io/k8s[a-z0-9-]{5,29}/[a-zA-Z0-9][a-zA-Z0-9_.-]+):(v[a-zA-Z0-9_.-]+)\b`
 	imageRegexp      = regexp.MustCompile(imagePattern)
 	imageLinePattern = fmt.Sprintf(`\s+[a-z]+:\s+"?'?%s"?'?`, imagePattern)
-	// matching   "-    image: gcr.io /k8s-(prow|testimage)/(tide|kubekin-e2e|.*)    :vYYYYMMDD-HASH-VARIANT"
+	// Matching   "-    image: gcr.io /k8s-(prow|testimage)/(tide|kubekin-e2e|.*)    :vYYYYMMDD-HASH-VARIANT"
 	imageMinusRegexp = regexp.MustCompile(fmt.Sprintf(`\-%s`, imageLinePattern))
-	// matching   "+    image: gcr.io /k8s-(prow|testimage)/(tide|kubekin-e2e|.*)    :vYYYYMMDD-HASH-VARIANT"
+	// Matching   "+    image: gcr.io /k8s-(prow|testimage)/(tide|kubekin-e2e|.*)    :vYYYYMMDD-HASH-VARIANT"
 	imagePlusRegexp = regexp.MustCompile(fmt.Sprintf(`\+%s`, imageLinePattern))
 	// Preferred time for candidate PR creation date
 	targetTime = time.Now().Add(-time.Hour * 7 * 24) // 7 days
@@ -95,7 +95,7 @@ func (gi *gitInfo) getHeadRef() string {
 	return fmt.Sprintf("%s:%s", gi.userID, gi.head)
 }
 
-// versions holds the version change for an image
+// Versions holds the version change for an image
 // oldVersion and newVersion are both in the format of "vYYYYMMDD-HASH-VARIANT"
 type versions struct {
 	oldVersion string
