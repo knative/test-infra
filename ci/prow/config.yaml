@@ -2152,39 +2152,6 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "1 9 * * 6"
-  name: ci-knative-serving-playground
-  agent: kubernetes
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/serving"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=90" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
-      - "./hack/deploy.sh"
-      - "knative-playground"
-      volumeMounts:
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
-      env:
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-    volumes:
-    - name: test-account
-      secret:
-        secretName: test-account
 - cron: "5 8 * * *"
   name: ci-knative-serving-latency
   agent: kubernetes

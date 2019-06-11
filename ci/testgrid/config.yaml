@@ -84,9 +84,6 @@ test_groups:
 - name: ci-knative-serving-auto-release
   gcs_prefix: knative-prow/logs/ci-knative-serving-auto-release
   alert_stale_results_hours: 3
-- name: ci-knative-serving-playground
-  gcs_prefix: knative-prow/logs/ci-knative-serving-playground
-  alert_stale_results_hours: 170
 - name: ci-knative-serving-latency
   gcs_prefix: knative-prow/logs/ci-knative-serving-latency
   short_text_metric: "latency"
@@ -262,9 +259,6 @@ dashboards:
     base_options: "sort-by-name="
   - name: auto-release
     test_group_name: ci-knative-serving-auto-release
-    base_options: "sort-by-name="
-  - name: playground
-    test_group_name: ci-knative-serving-playground
     base_options: "sort-by-name="
   - name: latency
     test_group_name: ci-knative-serving-latency

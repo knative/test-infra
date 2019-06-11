@@ -56,7 +56,6 @@ jobs:
   - ci-knative-serving-continuous
   - ci-knative-serving-0.2-continuous
   - ci-knative-serving-nightly-release
-  - ci-knative-serving-playground
   - ci-knative-build-continuous
   - ci-knative-build-nightly-release
   - ci-knative-eventing-continuous

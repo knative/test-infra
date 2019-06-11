@@ -1118,7 +1118,7 @@ func generateTestGroup(projName string, repoName string, jobNames []string) {
 		gcsLogDir := fmt.Sprintf("%s/%s/%s", gcsBucket, logsDir, testGroupName)
 		extras := make(map[string]string)
 		switch jobName {
-		case "continuous", "dot-release", "auto-release", "performance", "performance-mesh", "latency", "playground", "nightly":
+		case "continuous", "dot-release", "auto-release", "performance", "performance-mesh", "latency", "nightly":
 			isDailyBranch := regexp.MustCompile(`-[0-9\.]+-continuous`).FindString(testGroupName) != ""
 			if !isDailyBranch && (jobName == "continuous" || jobName == "auto-release") {
 				// TODO(Fredy-Z): this value should be derived from the cron string
@@ -1128,7 +1128,7 @@ func generateTestGroup(projName string, repoName string, jobNames []string) {
 					extras["num_failures_to_alert"] = "3"
 				}
 			}
-			if jobName == "playground" || jobName == "dot-release" {
+			if jobName == "dot-release" {
 				// TODO(Fredy-Z): this value should be derived from the cron string
 				extras["alert_stale_results_hours"] = "170" // 1 week + 2h
 			}
@@ -1176,7 +1176,7 @@ func generateDashboard(projName string, repoName string, jobNames []string) {
 			if projRepoStr == "knative-serving" {
 				executeDashboardTabTemplate("conformance-tests", testGroupName, "include-filter-by-regex=test/conformance/&sort-by-name=", noExtras)
 			}
-		case "dot-release", "auto-release", "performance", "performance-mesh", "latency", "playground":
+		case "dot-release", "auto-release", "performance", "performance-mesh", "latency":
 			extras := make(map[string]string)
 			baseOptions := testgridTabSortByName
 			if jobName == "performance" || jobName == "performance-mesh" {
@@ -1212,7 +1212,7 @@ func executeDashboardTabTemplate(dashboardTabName string, testGroupName string, 
 // getTestGroupName get the testGroupName from the given repoName and jobName
 func getTestGroupName(repoName string, jobName string) string {
 	switch jobName {
-	case "continuous", "dot-release", "auto-release", "performance", "performance-mesh", "latency", "playground":
+	case "continuous", "dot-release", "auto-release", "performance", "performance-mesh", "latency":
 		return strings.ToLower(fmt.Sprintf("ci-%s-%s", repoName, jobName))
 	case "nightly":
 		return strings.ToLower(fmt.Sprintf("ci-%s-%s-release", repoName, jobName))
