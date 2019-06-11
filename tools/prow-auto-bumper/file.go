@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+// file.go contains help functions for updating files locally with provided versions struct
+
 package main
 
 import (
@@ -38,7 +40,7 @@ func cdToRootDir() error {
 	return os.Chdir(d)
 }
 
-// update all tags in a byte slice
+// Update all tags in a byte slice
 func (pv *PRVersions) updateAllTags(content []byte, imageFilter *regexp.Regexp) ([]byte, string, []string) {
 	var msg string
 	var errMsgs []string
@@ -51,11 +53,11 @@ func (pv *PRVersions) updateAllTags(content []byte, imageFilter *regexp.Regexp) 
 	var res string
 	lastIndex := 0
 	for _, m := range indexes {
-		// append from end of last match to end of image part, including ":"
+		// Append from end of last match to end of image part, including ":"
 		res += string(content[lastIndex : m[imageImagePart*2+1]+1])
-		// image part of a version, i.e. the portion before ":"
+		// Image part of a version, i.e. the portion before ":"
 		image := string(content[m[imageImagePart*2]:m[imageImagePart*2+1]])
-		// tag part of a version, i.e. the portion after ":"
+		// Tag part of a version, i.e. the portion after ":"
 		tag := string(content[m[imageTagPart*2]:m[imageTagPart*2+1]])
 		// m[1] is the end index of current match
 		lastIndex = m[1]
@@ -76,7 +78,7 @@ func (pv *PRVersions) updateAllTags(content []byte, imageFilter *regexp.Regexp) 
 	return []byte(res), msg, errMsgs
 }
 
-// updateFile updates a file in place.
+// UpdateFile updates a file in place.
 func (pv *PRVersions) updateFile(filename string, imageFilter *regexp.Regexp, dryrun bool) ([]string, error) {
 	var errMsgs []string
 	content, err := ioutil.ReadFile(filename)
@@ -97,6 +99,7 @@ func (pv *PRVersions) updateFile(filename string, imageFilter *regexp.Regexp, dr
 	return errMsgs, nil
 }
 
+// Walk through all files, and update all tags
 func (pv *PRVersions) updateAllFiles(fileFilters []*regexp.Regexp, imageFilter *regexp.Regexp,
 	dryrun bool) ([]string, error) {
 	var errMsgs []string

@@ -18,11 +18,18 @@ package mysql
 
 import (
 	"database/sql"
-	"fmt"
 	"time"
 
+	"github.com/knative/test-infra/shared/mysql"
 	"github.com/knative/test-infra/tools/monitoring/config"
 	"github.com/knative/test-infra/tools/monitoring/log_parser"
+)
+
+const (
+	insertStmt = `
+	INSERT INTO ErrorLogs (
+		ErrorPattern, ErrorMsg, JobName, PRNumber, BuildLogURL, TimeStamp
+		) VALUES (?,?,?,?,?,?)`
 )
 
 // PubsubMsgHandler adds record(s) to ErrorLogs table in database,
@@ -43,27 +50,42 @@ func PubsubMsgHandler(db *sql.DB, configURL, buildLogURL, jobname string, prNumb
 		return err
 	}
 
-	stmt, err := tx.Prepare("INSERT INTO ErrorLogs('ErrorPattern', 'ErrorMsg', 'JobName', 'PRNumber', 'BuildLogURL', 'TimeStamp') VALUES(?,?,?,?,?,?)")
+	stmt, err := tx.Prepare(insertStmt)
 	defer stmt.Close()
 
 	if err != nil {
-		return rollbackTx(tx, err)
+		return mysql.RollbackTx(tx, err)
 	}
 
 	for _, errorLog := range errorLogs {
 		if _, err := stmt.Exec(errorLog.Pattern, errorLog.Msg, jobname, prNumber, buildLogURL, time.Now()); err != nil {
-			return rollbackTx(tx, err)
+			return mysql.RollbackTx(tx, err)
 		}
 	}
 
 	return tx.Commit()
 }
 
-// rollbackTx will try to rollback the transaction and return an error message accordingly
-func rollbackTx(tx *sql.Tx, err error) error {
-	rollbackErr := tx.Rollback()
-	if rollbackErr == nil {
-		return fmt.Errorf("Statement execution failed: %v; rolled back", err)
+// CheckAlertCondition checks whether the given error pattern meets
+// the alert condition specified in config
+func CheckAlertCondition(errorPattern string, config *config.SelectedConfig, db *sql.DB) (bool, error) {
+	// the timestamp we want to start collecting logs
+	startTime := time.Now().Add(time.Minute * time.Duration(config.Period))
+
+	var nMatches, nJobs, nPRs int
+
+	row := db.QueryRow(`
+		SELECT 
+			COUNT(*),
+			COUNT (DISTINCT Jobname),
+			COUNT (DISTINCT PrNumber)
+		FROM ErrorLogs
+		WHERE ErrorPattern=? and TimeStamp > ?`,
+		errorPattern, startTime)
+
+	if err := row.Scan(&nMatches, &nJobs, &nPRs); err != nil {
+		return false, err
 	}
-	return fmt.Errorf("Statement execution failed: %v; rollback failed: %v", err, rollbackErr)
+
+	return nMatches >= config.Occurrences && nJobs >= config.JobsAffected && nPRs >= config.PrsAffected, nil
 }
