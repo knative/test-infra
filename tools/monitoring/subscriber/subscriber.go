@@ -26,6 +26,7 @@ import (
 
 // ReportMessage is a message structure used to pass a prowjob status to Pub/Sub topic.
 // TODO(yt3liu): Use the ReportMessage structure in "k8s.io/test-infra/prow/pubsub/reporter"
+// https://github.com/knative/test-infra/issues/912
 type ReportMessage struct {
 	Project string `json:"project"`
 	Topic   string `json:"topic"`
