@@ -427,7 +427,7 @@ function initialize() {
     echo "\$PROJECT_ID is set to '${PROJECT_ID}', using it to run the tests"
     GCP_PROJECT="${PROJECT_ID}"
   fi
-  if (( ! IS_PROW )) && [[ -z "${GCP_PROJECT}" ]]; then
+  if (( ! IS_PROW )) && (( ! RUN_TESTS )) && [[ -z "${GCP_PROJECT}" ]]; then
     abort "set \$PROJECT_ID or use --gcp-project to select the GCP project where the tests are run"
   fi
 
