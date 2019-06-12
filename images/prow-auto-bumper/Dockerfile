@@ -12,19 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-IMG = gcr.io/knative-tests/test-infra/monitoring
-TAG := $(shell date +v%Y%m%d)-$(shell git describe --always --dirty --match '^$$')
+FROM golang:1.10.2
+LABEL maintainer "Chao Dai <chaodai@google.com>"
+RUN apt-get update
 
-all: build
+ENV TEMP_REPO_DIR /go/src/github.com/knative/test-infra
+ENV TOOL_NAME prow-auto-bumper
 
-build:
-	docker build -t $(IMG):$(TAG) -f Dockerfile ../..
-	docker tag $(IMG):$(TAG) $(IMG):latest
+# Temporarily add test-infra to the image to build custom tools
+ADD . $TEMP_REPO_DIR
 
-push_versioned: build
-	docker push $(IMG):$(TAG)
+# Build flaky test reporter tool in the container
+RUN make -C $TEMP_REPO_DIR/tools/$TOOL_NAME/
+RUN cp $TEMP_REPO_DIR/tools/$TOOL_NAME/$TOOL_NAME /$TOOL_NAME
 
-push_latest: build
-	docker push $(IMG):latest
+# Remove test-infra from the container
+RUN rm -fr $TEMP_REPO_DIR
 
-push: push_versioned push_latest
+ENTRYPOINT ["/prow-auto-bumper"]

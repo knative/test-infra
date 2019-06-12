@@ -19,31 +19,45 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 
+	"github.com/knative/test-infra/shared/mysql"
 	"github.com/knative/test-infra/tools/monitoring/config"
-	"github.com/knative/test-infra/tools/monitoring/mysql"
+	"github.com/knative/test-infra/tools/monitoring/mail"
 )
 
-var dbConfig mysql.DBConfig
+var (
+	dbConfig   *mysql.DBConfig
+	mailConfig *mail.Config
+
+	alertEmailRecipients = []string{"knative-productivity-oncall@googlegroups.com"}
+)
 
 const (
-	yamlURL              = "https://raw.githubusercontent.com/knative/test-infra/master/tools/monitoring/sample.yaml"
-	dbUserSecretFile     = "/secrets/cloudsql/monitoringdb/username"
-	dbPasswordSecretFile = "/secrets/cloudsql/monitoringdb/password"
+	yamlURL = "https://raw.githubusercontent.com/knative/test-infra/master/tools/monitoring/sample.yaml"
 )
 
 func main() {
 	var err error
 
-	dbName := flag.String("database-name", "", "The monitoring database name")
-	dbInst := flag.String("database-instance", "", "The monitoring CloudSQL instance connection name")
+	dbName := flag.String("database-name", "monitoring", "The monitoring database name")
+	dbInst := flag.String("database-instance", "knative-tests:us-central1:knative-monitoring", "The monitoring CloudSQL instance connection name")
+
+	dbUserSF := flag.String("database-user", "/secrets/cloudsql/monitoringdb/username", "Database user secret file")
+	dbPassSF := flag.String("database-password", "/secrets/cloudsql/monitoringdb/password", "Database password secret file")
+	mailAddrSF := flag.String("sender-email", "/secrets/sender-email/mail", "Alert sender email address file")
+	mailPassSF := flag.String("sender-password", "/secrets/sender-email/password", "Alert sender email password file")
+
 	flag.Parse()
 
-	dbConfig, err = configureMonitoringDatabase(*dbName, *dbInst)
+	dbConfig, err = mysql.ConfigureDB(*dbUserSF, *dbPassSF, *dbName, *dbInst)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	mailConfig, err = mail.NewMailConfig(*mailAddrSF, *mailPassSF)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -58,6 +72,7 @@ func main() {
 	server := http.NewServeMux()
 	server.HandleFunc("/hello", hello)
 	server.HandleFunc("/test-conn", testCloudSQLConn)
+	server.HandleFunc("/send-mail", sendTestEmail)
 
 	// start the web server on port and accept requests
 	log.Printf("Server listening on port %s", port)
@@ -94,25 +109,19 @@ func testCloudSQLConn(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Success\n")
 }
 
-func configureMonitoringDatabase(dbName string, dbInst string) (mysql.DBConfig, error) {
-	var config mysql.DBConfig
+func sendTestEmail(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Serving request: %s", r.URL.Path)
+	log.Println("Sending test email")
 
-	user, err := ioutil.ReadFile(dbUserSecretFile)
+	err := mailConfig.Send(
+		alertEmailRecipients,
+		"Test Subject",
+		"Test Content",
+	)
 	if err != nil {
-		return config, err
+		fmt.Fprintf(w, "Failed to send email %v", err)
+		return
 	}
 
-	pass, err := ioutil.ReadFile(dbPasswordSecretFile)
-	if err != nil {
-		return config, err
-	}
-
-	config = mysql.DBConfig{
-		Username:     string(user),
-		Password:     string(pass),
-		DatabaseName: dbName,
-		Instance:     dbInst,
-	}
-
-	return config, nil
+	fmt.Fprintln(w, "Sent the Email")
 }

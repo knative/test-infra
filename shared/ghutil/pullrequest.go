@@ -117,6 +117,45 @@ func (gc *GithubClient) ListFiles(org, repo string, ID int) ([]*github.CommitFil
 	return res, err
 }
 
+// GetPullRequest gets PullRequest by ID
+func (gc *GithubClient) GetPullRequest(org, repo string, ID int) (*github.PullRequest, error) {
+	var res *github.PullRequest
+	_, err := gc.retry(
+		fmt.Sprintf("Get PullRequest '%d'", ID),
+		maxRetryCount,
+		func() (*github.Response, error) {
+			var resp *github.Response
+			var err error
+			res, resp, err = gc.Client.PullRequests.Get(ctx, org, repo, ID)
+			return resp, err
+		},
+	)
+	return res, err
+}
+
+// EditPullRequest updates PullRequest
+func (gc *GithubClient) EditPullRequest(org, repo string, ID int, title, body string) (*github.PullRequest, error) {
+	PR, err := gc.GetPullRequest(org, repo, ID)
+	if nil != err || nil == PR {
+		return nil, err
+	}
+
+	PR.Title = &title
+	PR.Body = &body
+	var res *github.PullRequest
+	_, err = gc.retry(
+		fmt.Sprintf("Update PullRequest '%d', title: '%s'. body: '%s'", ID, title, body),
+		maxRetryCount,
+		func() (*github.Response, error) {
+			var resp *github.Response
+			var err error
+			res, resp, err = gc.Client.PullRequests.Edit(ctx, org, repo, ID, PR)
+			return resp, err
+		},
+	)
+	return res, err
+}
+
 // CreatePullRequest creates PullRequest, passing head user and branch name "user:ref-name", and base branch name like "master"
 func (gc *GithubClient) CreatePullRequest(org, repo, head, base, title, body string) (*github.PullRequest, error) {
 	b := true

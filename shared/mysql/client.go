@@ -20,10 +20,7 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"fmt"
-	"time"
-
-	"github.com/knative/test-infra/tools/monitoring/config"
-	"github.com/knative/test-infra/tools/monitoring/log_parser"
+	"io/ioutil"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -38,8 +35,29 @@ type DBConfig struct {
 	DatabaseName string
 }
 
+func ConfigureDB(userSecret, passSecret, dbName, dbInstance string) (*DBConfig, error) {
+	user, err := ioutil.ReadFile(userSecret)
+	if err != nil {
+		return nil, err
+	}
+
+	pass, err := ioutil.ReadFile(passSecret)
+	if err != nil {
+		return nil, err
+	}
+
+	config := DBConfig{
+		Username:     string(user),
+		Password:     string(pass),
+		DatabaseName: dbName,
+		Instance:     dbInstance,
+	}
+
+	return &config, nil
+}
+
 func (c DBConfig) TestConn() error {
-	conn, err := c.getConn()
+	conn, err := c.Connect()
 	if err != nil {
 		return err
 	}
@@ -48,7 +66,7 @@ func (c DBConfig) TestConn() error {
 	return nil
 }
 
-func (c DBConfig) getConn() (*sql.DB, error) {
+func (c DBConfig) Connect() (*sql.DB, error) {
 	conn, err := sql.Open(driverName, c.dataStoreName(c.DatabaseName))
 	if err != nil {
 		return nil, fmt.Errorf("could not get a connection: %v", err)
@@ -76,45 +94,10 @@ func (c DBConfig) dataStoreName(dbName string) string {
 	return fmt.Sprintf("%sunix(%s)/%s", cred, "/cloudsql/"+c.Instance, dbName)
 }
 
-// PubsubMsgHandler adds record(s) to ErrorLogs table in database,
-// after parsing build log and compares the result with config yaml
-func PubsubMsgHandler(db *sql.DB, configURL, buildLogURL, jobname string, prNumber int) error {
-	config, err := config.ParseYaml(configURL)
-	if err != nil {
-		return err
+// RollbackTx will try to rollback the transaction and return an error message accordingly
+func RollbackTx(tx *sql.Tx, err error) error {
+	if rbErr := tx.Rollback(); rbErr != nil {
+		return fmt.Errorf("Statement execution failed: %v; rollback failed: %v", err, rbErr)
 	}
-
-	errorLogs, err := log_parser.ParseLog(buildLogURL, config.CollectErrorPatterns())
-	if err != nil {
-		return err
-	}
-
-	tx, err := db.Begin()
-	if err != nil {
-		return err
-	}
-	stmt, err := tx.Prepare("INSERT INTO ErrorLogs('ErrorPattern', 'ErrorMsg', 'JobName', 'PRNumber', 'BuildLogURL', 'TimeStamp') VALUES(?,?,?,?,?,?)")
-	if err != nil {
-		rollbackErr := tx.Rollback()
-		if rollbackErr == nil {
-			return fmt.Errorf("SQL Statement preparation failed: %v; rolled back", err)
-
-		}
-		return fmt.Errorf("SQL Statement preparation failed: %v; rollback failed: %v", err, rollbackErr)
-	}
-
-	defer stmt.Close()
-
-	for _, errorLog := range errorLogs {
-		_, err := stmt.Exec(errorLog.Pattern, errorLog.Msg, jobname, prNumber, buildLogURL, time.Now())
-		if err != nil {
-			rollbackErr := tx.Rollback()
-			if rollbackErr == nil {
-				return fmt.Errorf("SQL Statement execution failed: %v; rolled back", err)
-			}
-			return fmt.Errorf("SQL Statement execution failed: %v; rollback failed: %v", err, rollbackErr)
-		}
-	}
-
-	return tx.Commit()
+	return fmt.Errorf("Statement execution failed: %v; rolled back.", err)
 }

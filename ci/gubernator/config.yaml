@@ -31,9 +31,9 @@ jobs:
   - pull-knative-eventing-build-tests
   - pull-knative-eventing-integration-tests
   - pull-knative-eventing-unit-tests
-  - pull-knative-eventing-sources-build-tests
-  - pull-knative-eventing-sources-integration-tests
-  - pull-knative-eventing-sources-unit-tests
+  - pull-knative-eventing-contrib-build-tests
+  - pull-knative-eventing-contrib-integration-tests
+  - pull-knative-eventing-contrib-unit-tests
   - pull-knative-docs-build-tests
   - pull-knative-docs-unit-tests
   - pull-knative-docs-integration-tests
@@ -56,13 +56,12 @@ jobs:
   - ci-knative-serving-continuous
   - ci-knative-serving-0.2-continuous
   - ci-knative-serving-nightly-release
-  - ci-knative-serving-playground
   - ci-knative-build-continuous
   - ci-knative-build-nightly-release
   - ci-knative-eventing-continuous
   - ci-knative-eventing-nightly-release
-  - ci-knative-eventing-sources-continuous
-  - ci-knative-eventing-sources-nightly-release
+  - ci-knative-eventing-contrib-continuous
+  - ci-knative-eventing-contrib-nightly-release
   - ci-knative-build-templates-continuous
   - ci-knative-docs-continuous
   - ci-knative-pkg-continuous

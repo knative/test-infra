@@ -1,3 +1,4 @@
+
 # Copyright 2019 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-IMG = gcr.io/knative-tests/test-infra/monitoring
+IMG = gcr.io/knative-tests/test-infra/prow-auto-bumper
 TAG := $(shell date +v%Y%m%d)-$(shell git describe --always --dirty --match '^$$')
 
 all: build
@@ -27,4 +28,4 @@ push_versioned: build
 push_latest: build
 	docker push $(IMG):latest
 
-push: push_versioned push_latest
+push: push_versioned push_latest clean

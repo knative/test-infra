@@ -62,13 +62,14 @@ tide:
     - knative/observability
     - knative/serving
     - knative/eventing
-    - knative/eventing-sources
+    - knative/eventing-contrib
     - knative/docs
     - knative/test-infra
     - knative/pkg
     - knative/caching
     - knative/website
     - knative/community
+    - GoogleCloudPlatform/cloud-run-events
     labels:
     - lgtm
     - approved

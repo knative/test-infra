@@ -68,12 +68,12 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-serving-istio-1.0.7-no-mesh
   alert_stale_results_hours: 3
   num_failures_to_alert: 3
-- name: ci-knative-serving-istio-1.1.2-mesh
-  gcs_prefix: knative-prow/logs/ci-knative-serving-istio-1.1.2-mesh
+- name: ci-knative-serving-istio-1.1.7-mesh
+  gcs_prefix: knative-prow/logs/ci-knative-serving-istio-1.1.7-mesh
   alert_stale_results_hours: 3
   num_failures_to_alert: 3
-- name: ci-knative-serving-istio-1.1.2-no-mesh
-  gcs_prefix: knative-prow/logs/ci-knative-serving-istio-1.1.2-no-mesh
+- name: ci-knative-serving-istio-1.1.7-no-mesh
+  gcs_prefix: knative-prow/logs/ci-knative-serving-istio-1.1.7-no-mesh
   alert_stale_results_hours: 3
   num_failures_to_alert: 3
 - name: ci-knative-serving-nightly-release
@@ -84,9 +84,6 @@ test_groups:
 - name: ci-knative-serving-auto-release
   gcs_prefix: knative-prow/logs/ci-knative-serving-auto-release
   alert_stale_results_hours: 3
-- name: ci-knative-serving-playground
-  gcs_prefix: knative-prow/logs/ci-knative-serving-playground
-  alert_stale_results_hours: 170
 - name: ci-knative-serving-latency
   gcs_prefix: knative-prow/logs/ci-knative-serving-latency
   short_text_metric: "latency"
@@ -159,20 +156,20 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-eventing-go-coverage
   num_failures_to_alert: 9999
   short_text_metric: "coverage"
-- name: ci-knative-eventing-sources-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-continuous
+- name: ci-knative-eventing-contrib-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-continuous
   alert_stale_results_hours: 3
   num_failures_to_alert: 3
-- name: ci-knative-eventing-sources-nightly-release
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-nightly-release
-- name: ci-knative-eventing-sources-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-dot-release
+- name: ci-knative-eventing-contrib-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-nightly-release
+- name: ci-knative-eventing-contrib-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-dot-release
   alert_stale_results_hours: 170
-- name: ci-knative-eventing-sources-auto-release
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-auto-release
+- name: ci-knative-eventing-contrib-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-auto-release
   alert_stale_results_hours: 3
-- name: pull-knative-eventing-sources-test-coverage
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-go-coverage
+- name: pull-knative-eventing-contrib-test-coverage
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-go-coverage
   num_failures_to_alert: 9999
   short_text_metric: "coverage"
 - name: ci-knative-build-templates-continuous
@@ -207,36 +204,52 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-build-0.5-continuous
 - name: ci-knative-eventing-0.5-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-0.5-continuous
-- name: ci-knative-eventing-sources-0.5-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-0.5-continuous
+- name: ci-knative-eventing-contrib-0.5-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-0.5-continuous
 - name: ci-knative-serving-0.6-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.6-continuous
 - name: ci-knative-build-0.6-continuous
   gcs_prefix: knative-prow/logs/ci-knative-build-0.6-continuous
 - name: ci-knative-eventing-0.6-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-0.6-continuous
-- name: ci-knative-eventing-sources-0.6-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-sources-0.6-continuous
+- name: ci-knative-eventing-contrib-0.6-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-0.6-continuous
+- name: ci-googlecloudplatform-cloud-run-events-continuous
+  gcs_prefix: knative-prow/logs/ci-googlecloudplatform-cloud-run-events-continuous
+  alert_stale_results_hours: 3
+  num_failures_to_alert: 3
+- name: ci-googlecloudplatform-cloud-run-events-nightly-release
+  gcs_prefix: knative-prow/logs/ci-googlecloudplatform-cloud-run-events-nightly-release
+- name: ci-googlecloudplatform-cloud-run-events-dot-release
+  gcs_prefix: knative-prow/logs/ci-googlecloudplatform-cloud-run-events-dot-release
+  alert_stale_results_hours: 170
+- name: ci-googlecloudplatform-cloud-run-events-auto-release
+  gcs_prefix: knative-prow/logs/ci-googlecloudplatform-cloud-run-events-auto-release
+  alert_stale_results_hours: 3
+- name: pull-googlecloudplatform-cloud-run-events-test-coverage
+  gcs_prefix: knative-prow/logs/ci-googlecloudplatform-cloud-run-events-go-coverage
+  num_failures_to_alert: 9999
+  short_text_metric: "coverage"
 dashboards:
-- name: knative-serving
+- name: serving
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-serving-continuous
     base_options: "sort-by-name="
   - name: conformance-tests
     test_group_name: ci-knative-serving-continuous
-    base_options: "include-filter-by-regex=test/conformance\\.&sort-by-name="
+    base_options: "include-filter-by-regex=test/conformance/&sort-by-name="
   - name: istio-1.0.7-mesh
     test_group_name: ci-knative-serving-istio-1.0.7-mesh
     base_options: "sort-by-name="
   - name: istio-1.0.7-no-mesh
     test_group_name: ci-knative-serving-istio-1.0.7-no-mesh
     base_options: "sort-by-name="
-  - name: istio-1.1.2-mesh
-    test_group_name: ci-knative-serving-istio-1.1.2-mesh
+  - name: istio-1.1.7-mesh
+    test_group_name: ci-knative-serving-istio-1.1.7-mesh
     base_options: "sort-by-name="
-  - name: istio-1.1.2-no-mesh
-    test_group_name: ci-knative-serving-istio-1.1.2-no-mesh
+  - name: istio-1.1.7-no-mesh
+    test_group_name: ci-knative-serving-istio-1.1.7-no-mesh
     base_options: "sort-by-name="
   - name: nightly
     test_group_name: ci-knative-serving-nightly-release
@@ -246,9 +259,6 @@ dashboards:
     base_options: "sort-by-name="
   - name: auto-release
     test_group_name: ci-knative-serving-auto-release
-    base_options: "sort-by-name="
-  - name: playground
-    test_group_name: ci-knative-serving-playground
     base_options: "sort-by-name="
   - name: latency
     test_group_name: ci-knative-serving-latency
@@ -263,7 +273,7 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-serving-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-build
+- name: build
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-build-continuous
@@ -284,7 +294,7 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-build-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-client
+- name: client
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-client-continuous
@@ -301,7 +311,7 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-client-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-docs
+- name: docs
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-docs-continuous
@@ -309,7 +319,7 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-docs-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-eventing
+- name: eventing
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-eventing-continuous
@@ -326,29 +336,29 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-eventing-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-eventing-sources
+- name: eventing-contrib
   dashboard_tab:
   - name: continuous
-    test_group_name: ci-knative-eventing-sources-continuous
+    test_group_name: ci-knative-eventing-contrib-continuous
     base_options: "sort-by-name="
   - name: nightly
-    test_group_name: ci-knative-eventing-sources-nightly-release
+    test_group_name: ci-knative-eventing-contrib-nightly-release
     base_options: "sort-by-name="
   - name: dot-release
-    test_group_name: ci-knative-eventing-sources-dot-release
+    test_group_name: ci-knative-eventing-contrib-dot-release
     base_options: "sort-by-name="
   - name: auto-release
-    test_group_name: ci-knative-eventing-sources-auto-release
+    test_group_name: ci-knative-eventing-contrib-auto-release
     base_options: "sort-by-name="
   - name: coverage
-    test_group_name: pull-knative-eventing-sources-test-coverage
+    test_group_name: pull-knative-eventing-contrib-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-build-templates
+- name: build-templates
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-build-templates-continuous
     base_options: "sort-by-name="
-- name: knative-pkg
+- name: pkg
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-pkg-continuous
@@ -356,7 +366,7 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-pkg-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-caching
+- name: caching
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-caching-continuous
@@ -364,11 +374,28 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-caching-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-observability
+- name: observability
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-observability-continuous
     base_options: "sort-by-name="
+- name: cloud-run-events
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-googlecloudplatform-cloud-run-events-continuous
+    base_options: "sort-by-name="
+  - name: nightly
+    test_group_name: ci-googlecloudplatform-cloud-run-events-nightly-release
+    base_options: "sort-by-name="
+  - name: dot-release
+    test_group_name: ci-googlecloudplatform-cloud-run-events-dot-release
+    base_options: "sort-by-name="
+  - name: auto-release
+    test_group_name: ci-googlecloudplatform-cloud-run-events-auto-release
+    base_options: "sort-by-name="
+  - name: coverage
+    test_group_name: pull-googlecloudplatform-cloud-run-events-test-coverage
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: knative-0.4
   dashboard_tab:
   - name: serving
@@ -385,8 +412,8 @@ dashboards:
   - name: eventing
     test_group_name: ci-knative-eventing-0.5-continuous
     base_options: "sort-by-name="
-  - name: eventing-sources
-    test_group_name: ci-knative-eventing-sources-0.5-continuous
+  - name: eventing-contrib
+    test_group_name: ci-knative-eventing-contrib-0.5-continuous
     base_options: "sort-by-name="
 - name: knative-0.6
   dashboard_tab:
@@ -399,19 +426,22 @@ dashboards:
   - name: eventing
     test_group_name: ci-knative-eventing-0.6-continuous
     base_options: "sort-by-name="
-  - name: eventing-sources
-    test_group_name: ci-knative-eventing-sources-0.6-continuous
+  - name: eventing-contrib
+    test_group_name: ci-knative-eventing-contrib-0.6-continuous
     base_options: "sort-by-name="
 dashboard_groups:
 - name: knative
   dashboard_names:
-  - "knative-serving"
-  - "knative-build"
-  - "knative-client"
-  - "knative-docs"
-  - "knative-eventing"
-  - "knative-eventing-sources"
-  - "knative-build-templates"
-  - "knative-pkg"
-  - "knative-caching"
-  - "knative-observability"
+  - "serving"
+  - "build"
+  - "client"
+  - "docs"
+  - "eventing"
+  - "eventing-contrib"
+  - "build-templates"
+  - "pkg"
+  - "caching"
+  - "observability"
+- name: GoogleCloudPlatform
+  dashboard_names:
+  - "cloud-run-events"

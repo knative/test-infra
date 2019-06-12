@@ -19,20 +19,20 @@ limitations under the License.
 
 CREATE TABLE ErrorLogs
 (
-  ID           int           NOT NULL AUTO_INCREMENT,
-  ErrorPattern varchar(4095) NOT NULL,
-  ErrorMsg     varchar(4095) NOT NULL,
-  JobName      varchar(1023) NOT NULL, /*e.g. pull-knative-serving-integration-tests*/
-  PRNumber     int, /*pull request number; null for non pull jobs*/
-  BuildLogURL  varchar(1023) NOT NULL, /*link to build-log.txt file*/
-  TimeStamp    timestamp, /* stamps the time the record is added*/
-  PRIMARY KEY (ID)
+	ID           int           NOT NULL AUTO_INCREMENT,
+	ErrorPattern varchar(4095) NOT NULL,
+	ErrorMsg     varchar(4095) NOT NULL,
+	JobName      varchar(1023) NOT NULL, /*e.g. pull-knative-serving-integration-tests*/
+	PRNumber     int, /*pull request number; null for non pull jobs*/
+	BuildLogURL  varchar(1023) NOT NULL, /*link to build-log.txt file*/
+	TimeStamp    timestamp, /* stamps the time the record is added*/
+	PRIMARY KEY (ID)
 );
 
 CREATE TABLE Alerts
 (
-  ID           int           NOT NULL AUTO_INCREMENT,
-  ErrorPattern varchar(4095) NOT NULL UNIQUE,
-  Sent         timestamp,
-  PRIMARY KEY (ID)
+	ID           int           NOT NULL AUTO_INCREMENT,
+	ErrorPattern varchar(4095) NOT NULL UNIQUE,
+	Sent         timestamp,
+	PRIMARY KEY (ID)
 )

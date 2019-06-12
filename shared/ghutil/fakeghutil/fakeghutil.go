@@ -20,6 +20,7 @@ package fakeghutil
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/google/go-github/github"
@@ -43,9 +44,12 @@ type FakeGithubClient struct {
 // NewFakeGithubClient creates a FakeGithubClient and initialize it's maps
 func NewFakeGithubClient() *FakeGithubClient {
 	return &FakeGithubClient{
-		Issues:   make(map[string]map[int]*github.Issue),
-		Comments: make(map[int]map[int64]*github.IssueComment),
-		BaseURL:  "fakeurl",
+		Issues:       make(map[string]map[int]*github.Issue),
+		Comments:     make(map[int]map[int64]*github.IssueComment),
+		PullRequests: make(map[string]map[int]*github.PullRequest),
+		PRCommits:    make(map[int][]*github.RepositoryCommit),
+		CommitFiles:  make(map[string][]*github.CommitFile),
+		BaseURL:      "fakeurl",
 	}
 }
 
@@ -204,6 +208,10 @@ func (fgc *FakeGithubClient) ListPullRequests(org, repo, head, base string) ([]*
 			res = append(res, PR)
 		}
 	}
+	// Sort by createdate is default in List
+	sort.Slice(res, func(i, j int) bool {
+		return nil != res[i].CreatedAt && res[i].CreatedAt.After(*res[j].CreatedAt)
+	})
 	return res, nil
 }
 
@@ -234,6 +242,27 @@ func (fgc *FakeGithubClient) ListFiles(org, repo string, ID int) ([]*github.Comm
 	return res, nil
 }
 
+// GetPullRequest gets PullRequest by ID
+func (fgc *FakeGithubClient) GetPullRequest(org, repo string, ID int) (*github.PullRequest, error) {
+	if PRs, ok := fgc.PullRequests[repo]; ok {
+		if PR, ok := PRs[ID]; ok {
+			return PR, nil
+		}
+	}
+	return nil, fmt.Errorf("PR not exist: '%d'", ID)
+}
+
+// EditPullRequest updates PullRequest
+func (fgc *FakeGithubClient) EditPullRequest(org, repo string, ID int, title, body string) (*github.PullRequest, error) {
+	PR, err := fgc.GetPullRequest(org, repo, ID)
+	if nil != err {
+		return nil, err
+	}
+	PR.Title = &title
+	PR.Body = &body
+	return PR, nil
+}
+
 // CreatePullRequest creates PullRequest, passing head user and branch name "user:ref-name", and base branch name like "master"
 func (fgc *FakeGithubClient) CreatePullRequest(org, repo, head, base, title, body string) (*github.PullRequest, error) {
 	PRNumber := fgc.getNextNumber()
@@ -244,6 +273,7 @@ func (fgc *FakeGithubClient) CreatePullRequest(org, repo, head, base, title, bod
 		Body:                &body,
 		MaintainerCanModify: &b,
 		State:               &stateStr,
+		Number:              &PRNumber,
 	}
 	if "" != head {
 		tokens := strings.Split(head, ":")
