@@ -26,7 +26,8 @@ import (
 )
 
 const (
-	insertStmt = `
+	sqlTimestampLayout = "2019-01-02 15:03:04"
+	insertStmt         = `
 	INSERT INTO ErrorLogs (
 		ErrorPattern, ErrorMsg, JobName, PRNumber, BuildLogURL, TimeStamp
 		) VALUES (?,?,?,?,?,?)`
@@ -81,7 +82,7 @@ func CheckAlertCondition(errorPattern string, config *config.SelectedConfig, db 
 			COUNT (DISTINCT PrNumber)
 		FROM ErrorLogs
 		WHERE ErrorPattern=? and TimeStamp > ?`,
-		errorPattern, startTime)
+		errorPattern, startTime.Format(sqlTimestampLayout))
 
 	if err := row.Scan(&nMatches, &nJobs, &nPRs); err != nil {
 		return false, err
