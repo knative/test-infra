@@ -50,6 +50,15 @@ func CreatePerfTestCase(metricValue float32, metricName, testName string) junit.
 		ClassName:  testName,
 		Name:       fmt.Sprintf("%s/%s", testName, metricName),
 		Properties: junit.TestProperties{Properties: tp}}
+
+	db, err := ConfigureDB()
+	if err == nil {
+		if err = db.StoreMetrics(testName, metricName, metricValue); err != nil {
+			log.Printf("Cannot store metrics %s for %s due to: %v", metricName, testName, err)
+		}
+	} else {
+		log.Printf("Cannot configure db: %v", err)
+	}
 	return tc
 }
 
@@ -64,7 +73,7 @@ func ConfigureDB() (*DBConfig, error) {
 	return &DBConfig{config}, err
 }
 
-func (c *DBConfig) StoreMetrics(tName, metricName string, metricValue float64) error {
+func (c *DBConfig) StoreMetrics(tName, metricName string, metricValue float32) error {
 	// Get values of env vars set up by Prow. Ignore storage for local runs
 	runId := os.Getenv("BUILD_ID")
 	jobType := os.Getenv("JOB_TYPE")
