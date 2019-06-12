@@ -8,6 +8,6 @@ Flags for this tool are:
 
 * `--github-account` [Required] specifies the path of file containing Github token for Github API calls.
 * `--git-userid` [Required] specifies the Github ID of user for hosting fork, i.e. Github ID of bot.
-* `--git-userid` [Optional] specifies the username to use on the git commit. Requires --git-email.
-* `--git-userid` [Optional] specifies the email to use on the git commit. Requires --git-username.
+* `--git-username` [Optional] specifies the username to use on the git commit. Requires --git-email.
+* `--git-email` [Optional] specifies the email to use on the git commit. Requires --git-username.
 * `--dry-run` [Optional] enables dry-run mode.
