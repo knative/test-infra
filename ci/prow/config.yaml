@@ -194,9 +194,6 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-serving-upgrade-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-upgrade-tests),?(\\s+|$)"
-    skip_branches:
-    - "release-0.1"
-    - "release-0.2"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -329,10 +326,6 @@ presubmits:
     always_run: false
     rerun_command: "/test pull-knative-serving-perf-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-perf-tests),?(\\s+|$)"
-    skip_branches:
-    - "release-0.1"
-    - "release-0.2"
-    - "release-0.3"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
