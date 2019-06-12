@@ -247,20 +247,19 @@ function create_test_cluster_with_retries() {
 
       local cluster_creation_zone="${E2E_CLUSTER_REGION}"
       [[ -n "${E2E_CLUSTER_ZONE}" ]] && cluster_creation_zone="${E2E_CLUSTER_REGION}-${E2E_CLUSTER_ZONE}"
-      local geoflag="--gcp-region=${cluster_creation_zone}"
-      # Kubetest --extract expects version string in the format of v[major].[minor].[patch], get latest and convert to this format
-      # if E2E_CLUSTER_VERSION is in the form of [major] or [major].[minor]
-      if [[ "${E2E_CLUSTER_VERSION}" =~ ^[0-9]+$ || "${E2E_CLUSTER_VERSION}" =~ ^[0-9]+\.[0-9]+$ ]]; then
-        E2E_CLUSTER_VERSION="v$(get_latest_gke_version ${E2E_CLUSTER_VERSION} ${cluster_creation_zone})"
-        [[ -z "${E2E_CLUSTER_VERSION}" ]] && fail_test "Unsupported cluster version provided"
+      # Convert cluster version to a full GKE version if we're not using latest
+      if [[ "${E2E_CLUSTER_VERSION}" =~ ^[0-9](\.[0-9]+)?$ ]]; then
+        E2E_CLUSTER_VERSION="v$(gcloud container get-server-config --zone=${cluster_creation_zone} --format="value(validMasterVersions)" 2> /dev/null \
+          | tr ';' '\n' | grep -E ^${E2E_CLUSTER_VERSION} | cut -f1 -d- | sort | tail -1)"
+        [[ "${E2E_CLUSTER_VERSION}" == "v" ]] && fail_test "Unsupported cluster version provided"
       fi
 
-      header "Creating test cluster in $E2E_CLUSTER_REGION $E2E_CLUSTER_ZONE with version $E2E_CLUSTER_VERSION"
+      header "Creating test cluster ${E2E_CLUSTER_VERSION} in ${cluster_creation_zone}"
       # Don't fail test for kubetest, as it might incorrectly report test failure
       # if teardown fails (for details, see success() below)
       set +o errexit
       { run_go_tool k8s.io/test-infra/kubetest \
-        kubetest --extract ${E2E_CLUSTER_VERSION} "$@" ${geoflag}; } 2>&1 | tee ${cluster_creation_log}
+        kubetest --extract ${E2E_CLUSTER_VERSION} "$@" --gcp-region=${cluster_creation_zone}; } 2>&1 | tee ${cluster_creation_log}
 
       # Exit if test succeeded
       [[ "$(get_test_return_code)" == "0" ]] && return 0
