@@ -25,6 +25,7 @@ import (
 	"log"
 	"net/http"
 	"regexp"
+	"time"
 
 	"gopkg.in/yaml.v2"
 )
@@ -72,6 +73,11 @@ func (selected SelectedConfig) applyDefaults() {
 	if selected.Period == 0 {
 		selected.Period = 24 * 60
 	}
+}
+
+// Duration converts the time period stored as minutes int to a Duration object
+func (selected SelectedConfig) Duration() time.Duration {
+	return time.Minute * time.Duration(selected.Period)
 }
 
 // Select gets the spec for a particular error pattern and a matching job name pattern

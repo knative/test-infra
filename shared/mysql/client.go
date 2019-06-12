@@ -67,7 +67,7 @@ func (c DBConfig) TestConn() error {
 }
 
 func (c DBConfig) Connect() (*sql.DB, error) {
-	conn, err := sql.Open(driverName, c.dataStoreName(c.DatabaseName))
+	conn, err := sql.Open(driverName, c.dataStoreName(c.DatabaseName)+"?parseTime=true")
 	if err != nil {
 		return nil, fmt.Errorf("could not get a connection: %v", err)
 	}
