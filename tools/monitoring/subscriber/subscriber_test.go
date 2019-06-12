@@ -111,6 +111,17 @@ func TestToReportMessage(t *testing.T) {
 				Status:  "triggered",
 				URL:     "",
 				GCSPath: "gs://",
+				Refs: []Refs{
+					{
+						Org:      "knative",
+						Repo:     "serving",
+						BaseRef:  "master",
+						BaseSHA:  "ce96dd74b1c85f024d63ce0991d4bf61aced582a",
+						CloneURI: "https://github.com/knative/serving.git",
+					},
+				},
+				JobType: "postsubmit",
+				JobName: "post-knative-serving-go-coverage-dev",
 			},
 		},
 		{
