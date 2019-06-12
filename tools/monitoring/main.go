@@ -17,6 +17,7 @@ limitations under the License.
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
@@ -26,17 +27,22 @@ import (
 	"github.com/knative/test-infra/shared/mysql"
 	"github.com/knative/test-infra/tools/monitoring/config"
 	"github.com/knative/test-infra/tools/monitoring/mail"
+	"github.com/knative/test-infra/tools/monitoring/subscriber"
 )
 
 var (
 	dbConfig   *mysql.DBConfig
 	mailConfig *mail.Config
+	client     *subscriber.Client
 
 	alertEmailRecipients = []string{"knative-productivity-oncall@googlegroups.com"}
 )
 
 const (
+	projectID = "knative-tests"
+
 	yamlURL = "https://raw.githubusercontent.com/knative/test-infra/master/tools/monitoring/sample.yaml"
+	subName = "test-infra-monitoring-sub"
 )
 
 func main() {
@@ -62,6 +68,12 @@ func main() {
 		log.Fatal(err)
 	}
 
+	ctx := context.Background()
+	client, err = subscriber.NewSubscriberClient(ctx, projectID, subName)
+	if err != nil {
+		log.Fatalf("Failed to initialize the subscriber %+v", err)
+	}
+
 	// use PORT environment variable, or default to 8080
 	port := "8080"
 	if fromEnv := os.Getenv("PORT"); fromEnv != "" {
@@ -73,6 +85,7 @@ func main() {
 	server.HandleFunc("/hello", hello)
 	server.HandleFunc("/test-conn", testCloudSQLConn)
 	server.HandleFunc("/send-mail", sendTestEmail)
+	server.HandleFunc("/test-sub", testSubscriber)
 
 	// start the web server on port and accept requests
 	log.Printf("Server listening on port %s", port)
@@ -124,4 +137,18 @@ func sendTestEmail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Fprintln(w, "Sent the Email")
+}
+
+func testSubscriber(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Serving request: %s", r.URL.Path)
+	log.Println("Start listening to messages")
+
+	go func() {
+		err := client.ReceiveMessageAckAll(context.Background(), func(rmsg *subscriber.ReportMessage) {
+			log.Printf("Report Message: %+v\n", rmsg)
+		})
+		if err != nil {
+			log.Printf("Failed to retrieve messages due to %v", err)
+		}
+	}()
 }
