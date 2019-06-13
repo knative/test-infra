@@ -575,9 +575,6 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			if len(data.Base.Args) == 0 {
 				data.Base.Args = allPresubmitTests
 			}
-			addLabelToJob(&data.Base, "prow.k8s.io/pubsub-project", "knative-tests")
-			addLabelToJob(&data.Base, "prow.k8s.io/pubsub-topic", "knative-monitoring")
-			addLabelToJob(&data.Base, "prow.k8s.io/pubsub-runID", fmt.Sprintf("ci-%s-%s", data.Base.RepoNameForJob, jobNameSuffix))
 		case "nightly":
 			if !getBool(item.Value) {
 				return
@@ -766,6 +763,9 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 			fmt.Sprintf("--cov-threshold-percentage=%d", data.Base.GoCoverageThreshold)}
 		data.Base.ServiceAccount = ""
 		addExtraEnvVarsToJob(&data.Base)
+		addLabelToJob(&data.Base, "prow.k8s.io/pubsub-project", "knative-tests")
+		addLabelToJob(&data.Base, "prow.k8s.io/pubsub-topic", "knative-monitoring")
+		addLabelToJob(&data.Base, "prow.k8s.io/pubsub-runID", data.PeriodicJobName)
 		configureServiceAccountForJob(&data.Base)
 		executeJobTemplate("periodic go coverage", readTemplate(periodicCustomJob), title, repoName, data.PeriodicJobName, false, data)
 		return
