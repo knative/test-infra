@@ -41,8 +41,8 @@ var jobNameTestgridURLMap = map[string]string{
 	"ci-knative-serving-continuous": 					"serving#continuous",
 	"ci-knative-serving-istio-1.0.7-mesh": 		"serving#istio-1.0.7-mesh",
 	"ci-knative-serving-istio-1.0.7-no-mesh": "serving#istio-1.0.7-no-mesh",
-	"ci-knative-serving-istio-1.1.2-mesh": 		"serving#istio-1.1.7-mesh",
-	"ci-knative-serving-istio-1.1.2-no-mesh": "serving#istio-1.1.7-no-mesh",
+	"ci-knative-serving-istio-1.1.7-mesh": 		"serving#istio-1.1.7-mesh",
+	"ci-knative-serving-istio-1.1.7-no-mesh": "serving#istio-1.1.7-no-mesh",
 }
 
 // GetTestgridTabURL gets Testgrid URL for giving job and filters for Testgrid
