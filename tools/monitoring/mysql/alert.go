@@ -123,9 +123,9 @@ func checkAlertsTable(errorPattern string, window time.Duration, db *sql.DB) (bo
 	if sent.Add(window).Before(time.Now()) {
 		log.Printf("previous alert timestamp=%v expired, alert window size=%v", sent, window)
 		return true, nil
-	} else {
-		log.Printf("previous alert not expired (timestamp=%v), "+
-			"alert window size=%v, no alert will be sent", sent, window)
-		return false, nil
 	}
+
+	log.Printf("previous alert not expired (timestamp=%v), "+
+		"alert window size=%v, no alert will be sent", sent, window)
+	return false, nil
 }
