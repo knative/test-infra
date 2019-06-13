@@ -31,7 +31,7 @@ function knative_setup() {
 
 # Script entry point.
 
-initialize $@
+initialize $@ --cluster-version 1.12
 
 go_test_e2e ./test/e2e || fail_test
 
