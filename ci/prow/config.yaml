@@ -2339,9 +2339,9 @@ periodics:
 - cron: "0 1 * * *"
   name: ci-knative-serving-go-coverage
   labels:
-      prow.k8s.io/pubsub-project: knative-tests
-      prow.k8s.io/pubsub-topic: knative-monitoring
-      prow.k8s.io/pubsub-runID: ci-knative-serving-go-coverage
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-serving-go-coverage
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -2649,9 +2649,9 @@ periodics:
 - cron: "0 1 * * *"
   name: ci-knative-build-go-coverage
   labels:
-      prow.k8s.io/pubsub-project: knative-tests
-      prow.k8s.io/pubsub-topic: knative-monitoring
-      prow.k8s.io/pubsub-runID: ci-knative-build-go-coverage
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-build-go-coverage
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -2823,9 +2823,9 @@ periodics:
 - cron: "0 1 * * *"
   name: ci-knative-client-go-coverage
   labels:
-      prow.k8s.io/pubsub-project: knative-tests
-      prow.k8s.io/pubsub-topic: knative-monitoring
-      prow.k8s.io/pubsub-runID: ci-knative-client-go-coverage
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-client-go-coverage
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -2887,9 +2887,9 @@ periodics:
 - cron: "0 1 * * *"
   name: ci-knative-docs-go-coverage
   labels:
-      prow.k8s.io/pubsub-project: knative-tests
-      prow.k8s.io/pubsub-topic: knative-monitoring
-      prow.k8s.io/pubsub-runID: ci-knative-docs-go-coverage
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-docs-go-coverage
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -3149,9 +3149,9 @@ periodics:
 - cron: "0 1 * * *"
   name: ci-knative-eventing-go-coverage
   labels:
-      prow.k8s.io/pubsub-project: knative-tests
-      prow.k8s.io/pubsub-topic: knative-monitoring
-      prow.k8s.io/pubsub-runID: ci-knative-eventing-go-coverage
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-eventing-go-coverage
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -3411,9 +3411,9 @@ periodics:
 - cron: "0 1 * * *"
   name: ci-knative-eventing-contrib-go-coverage
   labels:
-      prow.k8s.io/pubsub-project: knative-tests
-      prow.k8s.io/pubsub-topic: knative-monitoring
-      prow.k8s.io/pubsub-runID: ci-knative-eventing-contrib-go-coverage
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-eventing-contrib-go-coverage
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -3501,9 +3501,9 @@ periodics:
 - cron: "0 1 * * *"
   name: ci-knative-pkg-go-coverage
   labels:
-      prow.k8s.io/pubsub-project: knative-tests
-      prow.k8s.io/pubsub-topic: knative-monitoring
-      prow.k8s.io/pubsub-runID: ci-knative-pkg-go-coverage
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-pkg-go-coverage
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -3557,9 +3557,9 @@ periodics:
 - cron: "0 1 * * *"
   name: ci-knative-caching-go-coverage
   labels:
-      prow.k8s.io/pubsub-project: knative-tests
-      prow.k8s.io/pubsub-topic: knative-monitoring
-      prow.k8s.io/pubsub-runID: ci-knative-caching-go-coverage
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-caching-go-coverage
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -3765,9 +3765,9 @@ periodics:
 - cron: "0 1 * * *"
   name: ci-googlecloudplatform-cloud-run-events-go-coverage
   labels:
-      prow.k8s.io/pubsub-project: knative-tests
-      prow.k8s.io/pubsub-topic: knative-monitoring
-      prow.k8s.io/pubsub-runID: ci-googlecloudplatform-cloud-run-events-go-coverage
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-googlecloudplatform-cloud-run-events-go-coverage
   agent: kubernetes
   decorate: true
   extra_refs:
