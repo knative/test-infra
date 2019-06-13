@@ -56,10 +56,12 @@ func main() {
 	// Clean up local artifacts directory, this will be used later for artifacts uploads
 	err = os.RemoveAll(prow.GetLocalArtifactsDir()) // this function returns nil if path not found
 	if nil == err {
-		err = common.CreateDir(prow.GetLocalArtifactsDir())
-	}
-	if nil != err {
-		log.Fatalf("Failed preparing local artifacts directory: %v", err)
+		for repo := range jobConfigs {
+			err = common.CreateDir(prow.GetLocalArtifactsDir()+"/"+repo)
+			if nil != err {
+				log.Fatalf("Failed preparing local artifacts directory: %v", err)
+			}
+		}
 	}
 
 	for repoName, jobList := range jobConfigs {
