@@ -90,6 +90,7 @@ type baseProwJobTemplateData struct {
 	GoCoverageThreshold int
 	Image               string
 	Year                int
+	Labels              []string
 }
 
 // ####################################################################################################
@@ -367,6 +368,7 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.VolumeMounts = make([]string, 0)
 	data.Env = make([]string, 0)
 	data.ExtraRefs = []string{"- org: " + data.OrgName, "  repo: " + data.RepoName, "  base_ref: master", "  clone_uri: " + data.CloneURI}
+	data.Labels = make([]string, 0)
 	return data
 }
 
@@ -398,6 +400,11 @@ func addEnvToJob(data *baseProwJobTemplateData, key, value string) {
 	}
 
 	(*data).Env = append((*data).Env, []string{"- name: " + key, "  value: " + value}...)
+}
+
+// addLabelsToJob adds extra labels to a job
+func addLabelToJob(data *baseProwJobTemplateData, key, value string) {
+	(*data).Labels = append((*data).Labels, []string{key + ": " + value}...)
 }
 
 // addVolumeToJob adds the given mount path as volume for the job.
@@ -756,6 +763,9 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 			fmt.Sprintf("--cov-threshold-percentage=%d", data.Base.GoCoverageThreshold)}
 		data.Base.ServiceAccount = ""
 		addExtraEnvVarsToJob(&data.Base)
+		addLabelToJob(&data.Base, "prow.k8s.io/pubsub.project", "knative-tests")
+		addLabelToJob(&data.Base, "prow.k8s.io/pubsub.topic", "knative-monitoring")
+		addLabelToJob(&data.Base, "prow.k8s.io/pubsub.runID", data.PeriodicJobName)
 		configureServiceAccountForJob(&data.Base)
 		executeJobTemplate("periodic go coverage", readTemplate(periodicCustomJob), title, repoName, data.PeriodicJobName, false, data)
 		return

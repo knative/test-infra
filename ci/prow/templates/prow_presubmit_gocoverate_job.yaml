@@ -1,5 +1,6 @@
   - name: [[.PresubmitPullJobName]]
     agent: kubernetes
+    [[indent_section 6 "labels" .Base.Labels]]
     context: [[.PresubmitPullJobName]]
     always_run: [[.Base.AlwaysRun]]
     rerun_command: "/test [[.PresubmitPullJobName]]"
