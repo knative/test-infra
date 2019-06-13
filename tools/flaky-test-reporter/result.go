@@ -130,7 +130,7 @@ func flakyRateAboveThreshold(rd *RepoData) bool {
 // createArtifactForRepo marshals RepoData into json format and stores it in a json file,
 // under local artifacts directory
 func createArtifactForRepo(rd *RepoData) error {
-	outFilePath := path.Join(prow.GetLocalArtifactsDir(), rd.Config.Name+".json")
+	outFilePath := path.Join(prow.GetLocalArtifactsDir(), rd.Config.Repo, rd.Config.Name+".json")
 	contents, err := json.Marshal(*rd)
 	if nil != err {
 		return err

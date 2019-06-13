@@ -24,6 +24,7 @@ import (
 	"flag"
 	"log"
 	"os"
+	"path"
 
 	"github.com/knative/test-infra/shared/common"
 	"github.com/knative/test-infra/shared/prow"
@@ -57,7 +58,7 @@ func main() {
 	err = os.RemoveAll(prow.GetLocalArtifactsDir()) // this function returns nil if path not found
 	if nil == err {
 		for repo := range jobConfigs {
-			err = common.CreateDir(prow.GetLocalArtifactsDir()+"/"+repo)
+			err = common.CreateDir(path.Join(prow.GetLocalArtifactsDir(), repo))
 			if nil != err {
 				log.Fatalf("Failed preparing local artifacts directory: %v", err)
 			}
