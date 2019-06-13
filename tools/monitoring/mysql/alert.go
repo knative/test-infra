@@ -29,8 +29,13 @@ import (
 const (
 	alertInsertStmt = `
 		INSERT INTO Alerts (
-			ErrorPattern, Sent
+			Sent, ErrorPattern
 		) VALUES (?,?)`
+
+	alertUpdateStmt = `
+	UPDATE Alerts
+	SET Sent = (?)
+	WHERE ErrorPattern = (?)`
 
 	emailTemplate = `In the past %v, 
 The number of occurrences of the following error pattern reached threshold:
@@ -40,31 +45,42 @@ Hint for diagnose & recovery: %s
 `
 )
 
-func sendAlert(errorPattern string, config *config.SelectedConfig, mailConfig *mail.Config, recipients []string) error {
+type MailConfig struct {
+	mailConfig *mail.Config
+	recipients []string
+}
+
+func (m *MailConfig) sendAlert(errorPattern string, config *config.SelectedConfig) error {
 	log.Printf("sending alert...")
 	subject := fmt.Sprintf("Error pattern reached alerting threshold: %s", errorPattern)
 	body := fmt.Sprintf(emailTemplate, config.Duration(), errorPattern, config.Hint)
 
-	return mailConfig.Send(recipients, subject, body)
+	return m.mailConfig.Send(m.recipients, subject, body)
 }
 
 // Alert checks alert condition and alerts table and send alert mail conditionally
-func Alert(errorPattern string, config *config.SelectedConfig, db *sql.DB, mailConfig *mail.Config, recipients []string) (bool, error) {
+func (m *MailConfig) Alert(errorPattern string, config *config.SelectedConfig, db *sql.DB) (bool, error) {
 	if ok, err := config.CheckAlertCondition(errorPattern, db); err != nil || !ok {
 		return false, err
 	}
 
-	if ok, err := checkAlertsTable(errorPattern, config.Duration(), db); err != nil || !ok {
+	queryTemplate, err := checkAlertsTable(errorPattern, config.Duration(), db)
+	if err != nil || queryTemplate == "" {
 		return false, err
 	}
 
-	err := sendAlert(errorPattern, config, mailConfig, recipients)
+	if err := updateAlertsTable(queryTemplate, errorPattern, db); err != nil {
+		return false, err
+	}
+
+	err = m.sendAlert(errorPattern, config)
 	return err == nil, err
 }
 
 // checkAlertsTable checks alert table and see if it is necessary to send alert email
-// also updates the alerts table if email sent
-func checkAlertsTable(errorPattern string, window time.Duration, db *sql.DB) (bool, error) {
+// returns a sql statement that contains db update action to perform. An empty string indicates
+// no db operations to perform and no alert email needs to be sent
+func checkAlertsTable(errorPattern string, window time.Duration, db *sql.DB) (string, error) {
 	var id int
 	var sent time.Time
 
@@ -76,23 +92,28 @@ func checkAlertsTable(errorPattern string, window time.Duration, db *sql.DB) (bo
 
 	if err := row.Scan(&id, &sent); err != nil {
 		if err != sql.ErrNoRows {
-			return false, err
+			return "", err
 		}
 
-		_, err := db.Query(alertInsertStmt, errorPattern, time.Now())
-		if err != nil {
-			return false, err
-		}
-
-		return true, nil
+		// if no record found, instruct to add a record
+		return alertInsertStmt, nil
 	}
 
 	if sent.Add(window).Before(time.Now()) {
+		// if previous alert expires. Instruct to update the timestamp
 		log.Printf("previous alert timestamp=%v expired, alert window size=%v", sent, window)
-		return true, nil
+		return alertUpdateStmt, nil
 	}
 
 	log.Printf("previous alert not expired (timestamp=%v), "+
 		"alert window size=%v, no alert will be sent", sent, window)
-	return false, nil
+	return "", nil
+}
+
+func updateAlertsTable(queryTemplate, errorPattern string, db *sql.DB) error {
+	if queryTemplate == "" {
+		return nil
+	}
+	_, err := db.Query(queryTemplate, time.Now(), errorPattern)
+	return err
 }

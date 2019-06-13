@@ -91,7 +91,7 @@ func (s *SelectedConfig) CheckAlertCondition(errorPattern string, db *sql.DB) (b
 
 	row := db.QueryRow(`
 		SELECT 
-			COUNT(*),
+			COUNT (*),
 			COUNT (DISTINCT Jobname),
 			COUNT (DISTINCT PrNumber)
 		FROM ErrorLogs
