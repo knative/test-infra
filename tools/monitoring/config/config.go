@@ -20,6 +20,7 @@ limitations under the License.
 package config
 
 import (
+	"database/sql"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -60,24 +61,48 @@ type SelectedConfig struct {
 }
 
 // applyDefaults set fields to desired defaults values if they are missing from yaml
-func (selected SelectedConfig) applyDefaults() {
-	if selected.Occurrences == 0 {
-		selected.Occurrences = 1
+func (s SelectedConfig) applyDefaults() {
+	if s.Occurrences == 0 {
+		s.Occurrences = 1
 	}
-	if selected.JobsAffected == 0 {
-		selected.JobsAffected = 1
+	if s.JobsAffected == 0 {
+		s.JobsAffected = 1
 	}
-	if selected.PrsAffected == 0 {
-		selected.PrsAffected = 1
+	if s.PrsAffected == 0 {
+		s.PrsAffected = 1
 	}
-	if selected.Period == 0 {
-		selected.Period = 24 * 60
+	if s.Period == 0 {
+		s.Period = 24 * 60
 	}
 }
 
 // Duration converts the time period stored as minutes int to a Duration object
-func (selected SelectedConfig) Duration() time.Duration {
-	return time.Minute * time.Duration(selected.Period)
+func (s SelectedConfig) Duration() time.Duration {
+	return time.Minute * time.Duration(s.Period)
+}
+
+// CheckAlertCondition checks whether the given error pattern meets
+// the alert condition specified in config
+func (s *SelectedConfig) CheckAlertCondition(errorPattern string, db *sql.DB) (bool, error) {
+	// the timestamp we want to start collecting logs
+	startTime := time.Now().Add(s.Duration())
+
+	var nMatches, nJobs, nPRs int
+
+	row := db.QueryRow(`
+		SELECT 
+			COUNT(*),
+			COUNT (DISTINCT Jobname),
+			COUNT (DISTINCT PrNumber)
+		FROM ErrorLogs
+		WHERE ErrorPattern=? and TimeStamp > ?`,
+		errorPattern, startTime)
+
+	if err := row.Scan(&nMatches, &nJobs, &nPRs); err != nil {
+		return false, err
+	}
+
+	return nMatches >= s.Occurrences && nJobs >= s.JobsAffected && nPRs >= s.PrsAffected, nil
 }
 
 // Select gets the spec for a particular error pattern and a matching job name pattern

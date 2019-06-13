@@ -28,9 +28,9 @@ import (
 
 const (
 	alertInsertStmt = `
-	INSERT INTO Alerts (
-		ErrorPattern, Sent
-	) VALUES (?,?)`
+		INSERT INTO Alerts (
+			ErrorPattern, Sent
+		) VALUES (?,?)`
 
 	emailTemplate = `In the past %v, 
 The number of occurrences of the following error pattern reached threshold:
@@ -48,51 +48,18 @@ func sendAlert(errorPattern string, config *config.SelectedConfig, mailConfig *m
 	return mailConfig.Send(recipients, subject, body)
 }
 
-// CheckAlertCondition checks whether the given error pattern meets
-// the alert condition specified in config
-func CheckAlertCondition(errorPattern string, config *config.SelectedConfig, db *sql.DB) (bool, error) {
-	// the timestamp we want to start collecting logs
-	startTime := time.Now().Add(config.Duration())
-
-	var nMatches, nJobs, nPRs int
-
-	row := db.QueryRow(`
-		SELECT 
-			COUNT(*),
-			COUNT (DISTINCT Jobname),
-			COUNT (DISTINCT PrNumber)
-		FROM ErrorLogs
-		WHERE ErrorPattern=? and TimeStamp > ?`,
-		errorPattern, startTime)
-
-	if err := row.Scan(&nMatches, &nJobs, &nPRs); err != nil {
-		return false, err
-	}
-
-	return nMatches >= config.Occurrences && nJobs >= config.JobsAffected && nPRs >= config.PrsAffected, nil
-}
-
 // Alert checks alert condition and alerts table and send alert mail conditionally
 func Alert(errorPattern string, config *config.SelectedConfig, db *sql.DB, mailConfig *mail.Config, recipients []string) (bool, error) {
-	alertConditionMet, err := CheckAlertCondition(errorPattern, config, db)
-	if err != nil {
+	if ok, err := config.CheckAlertCondition(errorPattern, db); err != nil || !ok {
 		return false, err
-	}
-	if !alertConditionMet {
-		return false, nil
 	}
 
-	shouldSendMail, err := checkAlertsTable(errorPattern, config.Duration(), db)
-	if err != nil {
+	if ok, err := checkAlertsTable(errorPattern, config.Duration(), db); err != nil || !ok {
 		return false, err
 	}
-	if !shouldSendMail {
-		return false, nil
-	}
-	if err = sendAlert(errorPattern, config, mailConfig, recipients); err != nil {
-		return false, err
-	}
-	return true, nil
+
+	err := sendAlert(errorPattern, config, mailConfig, recipients)
+	return err == nil, err
 }
 
 // checkAlertsTable checks alert table and see if it is necessary to send alert email

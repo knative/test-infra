@@ -67,6 +67,7 @@ func (c DBConfig) TestConn() error {
 }
 
 func (c DBConfig) Connect() (*sql.DB, error) {
+	// adds "?parseTime=true" so that TimeStamp field can be scanned as time.Time
 	conn, err := sql.Open(driverName, c.dataStoreName(c.DatabaseName)+"?parseTime=true")
 	if err != nil {
 		return nil, fmt.Errorf("could not get a connection: %v", err)
