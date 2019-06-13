@@ -127,31 +127,6 @@ function save_metadata() {
 EOF
 }
 
-# Delete target pools and health checks that might have leaked.
-# See https://github.com/knative/serving/issues/959 for details.
-# TODO(adrcunha): Remove once the leak issue is resolved.
-function delete_leaked_network_resources() {
-  # On boskos, don't bother with leaks as the janitor will delete everything in the project.
-  (( IS_BOSKOS )) && return
-  # Ensure we're using the GCP project used by kubetest
-  local gcloud_project="$(gcloud config get-value project)"
-  local http_health_checks="$(gcloud compute target-pools list \
-    --project=${gcloud_project} --format='value(healthChecks)' --filter="instances~-${E2E_CLUSTER_NAME}-" | \
-    grep httpHealthChecks | tr '\n' ' ')"
-  local target_pools="$(gcloud compute target-pools list \
-    --project=${gcloud_project} --format='value(name)' --filter="instances~-${E2E_CLUSTER_NAME}-" | \
-    tr '\n' ' ')"
-  if [[ -n "${target_pools}" ]]; then
-    echo "Found leaked target pools, deleting"
-    gcloud compute forwarding-rules delete -q --project=${gcloud_project} --region=${E2E_CLUSTER_REGION} ${target_pools}
-    gcloud compute target-pools delete -q --project=${gcloud_project} --region=${E2E_CLUSTER_REGION} ${target_pools}
-  fi
-  if [[ -n "${http_health_checks}" ]]; then
-    echo "Found leaked health checks, deleting"
-    gcloud compute http-health-checks delete -q --project=${gcloud_project} ${http_health_checks}
-  fi
-}
-
 # Create a test cluster with kubetest and call the current script again.
 function create_test_cluster() {
   # Fail fast during setup.
@@ -213,7 +188,6 @@ function create_test_cluster() {
   # Ignore any errors below, this is a best-effort cleanup and shouldn't affect the test result.
   set +o errexit
   function_exists cluster_teardown && cluster_teardown
-  delete_leaked_network_resources
   local result=$(get_test_return_code)
   echo "Artifacts were written to ${ARTIFACTS}"
   echo "Test result code is ${result}"
