@@ -26,9 +26,9 @@ import (
 )
 
 func groupByJob(found [][]string) {
-	var msgs string
+	var msgs []string
 	for _, elems := range found {
-		msgs = append(msgs, strings.Join(elems, " "))
+		msgs = append(msgs, strings.Join(elems, ","))
 	}
 	log.Printf("\n\n%s", strings.Join(msgs, "\n"))
 }
@@ -47,7 +47,7 @@ func groupByMatch(found [][]string) {
 		})
 		var msgs []string
 		for _, elems := range sl {
-			msgs = append(msgs, strings.Join(elems, " "))
+			msgs = append(msgs, strings.Join(elems, ","))
 		}
 		log.Printf("\n\n%s", strings.Join(msgs, "\n"))
 	}
