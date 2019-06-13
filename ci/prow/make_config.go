@@ -1172,9 +1172,9 @@ func generateDashboard(projName string, repoName string, jobNames []string) {
 		switch jobName {
 		case "continuous":
 			executeDashboardTabTemplate("continuous", testGroupName, testgridTabSortByName, noExtras)
-			// This is a special case for knative/serving, as conformance-tests tab is just a filtered view of the continuous tab.
+			// This is a special case for knative/serving, as conformance tab is just a filtered view of the continuous tab.
 			if projRepoStr == "knative-serving" {
-				executeDashboardTabTemplate("conformance-tests", testGroupName, "include-filter-by-regex=test/conformance/&sort-by-name=", noExtras)
+				executeDashboardTabTemplate("conformance", testGroupName, "include-filter-by-regex=test/conformance/&sort-by-name=", noExtras)
 			}
 		case "dot-release", "auto-release", "performance", "performance-mesh", "latency":
 			extras := make(map[string]string)

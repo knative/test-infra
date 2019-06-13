@@ -339,6 +339,12 @@ function start_knative_serving() {
   wait_until_pods_running knative-serving || return 1
 }
 
+# Install the stable release Knative/serving in the current cluster.
+# Parameters: $1 - Knative Serving version number, e.g. 0.6.0.
+function start_release_knative_serving() {
+  start_knative_serving "https://storage.googleapis.com/knative-releases/serving/previous/v$1/serving.yaml"
+}
+
 # Install the latest stable Knative Serving in the current cluster.
 function start_latest_knative_serving() {
   start_knative_serving "${KNATIVE_SERVING_RELEASE}"

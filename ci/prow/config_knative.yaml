@@ -21,20 +21,21 @@ presubmits:
       - "--run-test"
       - "./test/e2e-tests.sh"
     - custom-test: upgrade-tests
-      skip_branches:  # Skip these branches, as test isn't available.
-      - release-0.1
-      - release-0.2
       args:
       - "--run-test"
       - "./test/e2e-upgrade-tests.sh"
+    - custom-test: smoke-tests
+      skip_branches:  # Skip these branches, as test isn't available.
+      - release-0.4
+      - release-0.5
+      - release-0.6
+      args:
+      - "--run-test"
+      - "./test/e2e-smoke-tests.sh"
     - go-coverage: true
       go-coverage-threshold: 80
     - custom-test: perf-tests
       always_run: false
-      skip_branches:  # Skip these branches, as test isn't available.
-      - release-0.1
-      - release-0.2
-      - release-0.3
       command:
       - "./test/performance-tests.sh"
 
