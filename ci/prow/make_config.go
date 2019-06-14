@@ -34,7 +34,7 @@ import (
 	"text/template"
 	"time"
 
-	"gopkg.in/yaml.v2"
+	yaml "gopkg.in/yaml.v2"
 )
 
 const (
