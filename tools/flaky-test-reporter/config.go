@@ -41,8 +41,8 @@ var (
 		"serving": {{Name: "ci-knative-serving-continuous", Type: prow.PostsubmitJob, SkipGithubIssue: false},
 			{Name: "ci-knative-serving-istio-1.0.7-mesh", Type: prow.PostsubmitJob, SkipGithubIssue: true},
 			{Name: "ci-knative-serving-istio-1.0.7-no-mesh", Type: prow.PostsubmitJob, SkipGithubIssue: true},
-			{Name: "ci-knative-serving-istio-1.1.2-mesh", Type: prow.PostsubmitJob, SkipGithubIssue: true},
-			{Name: "ci-knative-serving-istio-1.1.2-no-mesh", Type: prow.PostsubmitJob, SkipGithubIssue: true},
+			{Name: "ci-knative-serving-istio-1.1.7-mesh", Type: prow.PostsubmitJob, SkipGithubIssue: true},
+			{Name: "ci-knative-serving-istio-1.1.7-no-mesh", Type: prow.PostsubmitJob, SkipGithubIssue: true},
 		},
 	}
 	// slackChannelsMap lists which Slack channel to post results in for each job in repo
@@ -53,8 +53,8 @@ var (
 		"serving": {"ci-knative-serving-continuous": {{"api", "CA4DNJ9A4"}},
 			"ci-knative-serving-istio-1.0.7-mesh":    {{"networking", "CA9RHBGJX"}},
 			"ci-knative-serving-istio-1.0.7-no-mesh": {{"networking", "CA9RHBGJX"}},
-			"ci-knative-serving-istio-1.1.2-mesh":    {{"networking", "CA9RHBGJX"}},
-			"ci-knative-serving-istio-1.1.2-no-mesh": {{"networking", "CA9RHBGJX"}},
+			"ci-knative-serving-istio-1.1.7-mesh":    {{"networking", "CA9RHBGJX"}},
+			"ci-knative-serving-istio-1.1.7-no-mesh": {{"networking", "CA9RHBGJX"}},
 		},
 	}
 
