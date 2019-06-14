@@ -98,6 +98,10 @@ presubmits:
     - build-tests: true
     - unit-tests: true
     - integration-tests: true
+  
+  knative/sample-controller:
+    - build-tests: true
+    - unit-tests: true
 
   GoogleCloudPlatform/cloud-run-events:
     - build-tests: true
@@ -252,6 +256,10 @@ periodics:
       cron: "30 * * * *" # Run every hour and 30 minutes
   
   knative/observability:
+    - continuous: true
+      cron: "30 * * * *" # Run every hour and 30 minutes
+
+  knative/sample-controller:
     - continuous: true
       cron: "30 * * * *" # Run every hour and 30 minutes
 
