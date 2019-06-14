@@ -23,12 +23,6 @@ import (
 	"github.com/knative/test-infra/tools/monitoring/config"
 )
 
-// ErrorLog stores the error pattern and the corresponding error message found in the log
-type ErrorLog struct {
-	Pattern string
-	Msg     string
-}
-
 // collectMatches collects error messages that matches the patterns from text.
 func collectMatches(regexps []regexp.Regexp, text []byte) []ErrorLog {
 	var errorLogs []ErrorLog

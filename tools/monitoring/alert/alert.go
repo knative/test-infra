@@ -14,11 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package mysql
+package alert
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"time"
 
@@ -28,59 +27,51 @@ import (
 
 const (
 	alertInsertStmt = `
-		INSERT INTO Alerts (
-			Sent, ErrorPattern
-		) VALUES (?,?)`
-
-	alertUpdateStmt = `
-	UPDATE Alerts
-	SET Sent = (?)
-	WHERE ErrorPattern = (?)`
-
-	emailTemplate = `In the past %v, 
-The number of occurrences of the following error pattern reached threshold:
-%s
-
-Hint for diagnose & recovery: %s
-`
+		INSERT INTO Alerts (Sent, ErrorPattern) VALUES (?,?)
+		ON DUPLICATE KEY UPDATE Sent = (?)`
 )
 
 type MailConfig struct {
-	mailConfig *mail.Config
+	*mail.Config
 	recipients []string
 }
 
-func (m *MailConfig) sendAlert(errorPattern string, config *config.SelectedConfig) error {
+func (m *MailConfig) sendAlert(c *mailContent) error {
 	log.Printf("sending alert...")
-	subject := fmt.Sprintf("Error pattern reached alerting threshold: %s", errorPattern)
-	body := fmt.Sprintf(emailTemplate, config.Duration(), errorPattern, config.Hint)
-
-	return m.mailConfig.Send(m.recipients, subject, body)
+	return m.Send(m.recipients, c.subject(), c.body())
 }
 
 // Alert checks alert condition and alerts table and send alert mail conditionally
-func (m *MailConfig) Alert(errorPattern string, config *config.SelectedConfig, db *sql.DB) (bool, error) {
-	if ok, err := config.CheckAlertCondition(errorPattern, db); err != nil || !ok {
+func (m *MailConfig) Alert(errorPattern string, s *config.SelectedConfig, db *sql.DB) (bool, error) {
+
+	errorLogs, err := GetErrorLogs(s, errorPattern, db)
+	if err != nil {
 		return false, err
 	}
 
-	queryTemplate, err := checkAlertsTable(errorPattern, config.Duration(), db)
-	if err != nil || queryTemplate == "" {
+	report := newReport(errorLogs)
+	if !report.CheckAlertCondition(s) {
+		return false, nil
+	}
+
+	ok, err := checkAlertsTable(errorPattern, s.Duration(), db)
+	if err != nil || !ok {
 		return false, err
 	}
 
-	if err := updateAlertsTable(queryTemplate, errorPattern, db); err != nil {
+	if err := updateAlertsTable(errorPattern, db); err != nil {
 		return false, err
 	}
 
-	err = m.sendAlert(errorPattern, config)
+	content := mailContent{*report, errorPattern, s.Hint, s.Duration()}
+	err = m.sendAlert(&content)
 	return err == nil, err
 }
 
 // checkAlertsTable checks alert table and see if it is necessary to send alert email
 // returns a sql statement that contains db update action to perform. An empty string indicates
 // no db operations to perform and no alert email needs to be sent
-func checkAlertsTable(errorPattern string, window time.Duration, db *sql.DB) (string, error) {
+func checkAlertsTable(errorPattern string, window time.Duration, db *sql.DB) (bool, error) {
 	var id int
 	var sent time.Time
 
@@ -92,28 +83,26 @@ func checkAlertsTable(errorPattern string, window time.Duration, db *sql.DB) (st
 
 	if err := row.Scan(&id, &sent); err != nil {
 		if err != sql.ErrNoRows {
-			return "", err
+			return false, err
 		}
 
-		// if no record found, instruct to add a record
-		return alertInsertStmt, nil
+		// if no record found
+		return true, nil
 	}
 
 	if sent.Add(window).Before(time.Now()) {
-		// if previous alert expires. Instruct to update the timestamp
+		// if previous alert expires.
 		log.Printf("previous alert timestamp=%v expired, alert window size=%v", sent, window)
-		return alertUpdateStmt, nil
+		return true, nil
 	}
 
 	log.Printf("previous alert not expired (timestamp=%v), "+
 		"alert window size=%v, no alert will be sent", sent, window)
-	return "", nil
+	return false, nil
 }
 
-func updateAlertsTable(queryTemplate, errorPattern string, db *sql.DB) error {
-	if queryTemplate == "" {
-		return nil
-	}
-	_, err := db.Query(queryTemplate, time.Now(), errorPattern)
+func updateAlertsTable(errorPattern string, db *sql.DB) error {
+	now := time.Now()
+	_, err := db.Query(alertInsertStmt, now, errorPattern, now)
 	return err
 }

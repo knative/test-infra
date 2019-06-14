@@ -86,9 +86,7 @@ func (s SelectedConfig) Duration() time.Duration {
 func (s *SelectedConfig) CheckAlertCondition(errorPattern string, db *sql.DB) (bool, error) {
 	// the timestamp we want to start collecting logs
 	startTime := time.Now().Add(s.Duration())
-
 	var nMatches, nJobs, nPRs int
-
 	row := db.QueryRow(`
 		SELECT 
 			COUNT (*),
