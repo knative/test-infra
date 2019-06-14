@@ -196,6 +196,10 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-observability-continuous
   alert_stale_results_hours: 3
   num_failures_to_alert: 3
+- name: ci-knative-sample-controller-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-sample-controller-continuous
+  alert_stale_results_hours: 3
+  num_failures_to_alert: 3
 - name: ci-knative-serving-0.4-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.4-continuous
 - name: ci-knative-serving-0.5-continuous
@@ -379,6 +383,11 @@ dashboards:
   - name: continuous
     test_group_name: ci-knative-observability-continuous
     base_options: "sort-by-name="
+- name: sample-controller
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-sample-controller-continuous
+    base_options: "sort-by-name="
 - name: cloud-run-events
   dashboard_tab:
   - name: continuous
@@ -442,6 +451,7 @@ dashboard_groups:
   - "pkg"
   - "caching"
   - "observability"
+  - "sample-controller"
 - name: GoogleCloudPlatform
   dashboard_names:
   - "cloud-run-events"

@@ -52,6 +52,8 @@ jobs:
   - pull-knative-caching-build-tests
   - pull-knative-caching-unit-tests
   - pull-knative-caching-integration-tests
+  - pull-knative-sample-controller-build-tests
+  - pull-knative-sample-controller-unit-tests
   knative-prow/logs/:
   - ci-knative-serving-continuous
   - ci-knative-serving-0.2-continuous
@@ -66,4 +68,5 @@ jobs:
   - ci-knative-docs-continuous
   - ci-knative-pkg-continuous
   - ci-knative-caching-continuous
+  - ci-knative-sample-controller-continuous
 recursive_artifacts: false
