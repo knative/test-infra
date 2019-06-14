@@ -127,6 +127,14 @@ periodics:
       full-command: "./test/e2e-tests.sh --istio-version 1.1.7 --mesh"
     - custom-job: istio-1.1.7-no-mesh
       full-command: "./test/e2e-tests.sh --istio-version 1.1.7 --no-mesh"
+    - custom-job: k8s-1.12-istio-1.1
+      full-command: "./test/e2e-tests.sh --cluster-version \"1.12\" --istio-version 1.1-latest"
+    - custom-job: k8s-1.12-istio-1.0
+      full-command: "./test/e2e-tests.sh --cluster-version \"1.12\" --istio-version 1.0-latest"
+    - custom-job: k8s-1.11-istio-1.1
+      full-command: "./test/e2e-tests.sh --cluster-version \"1.11\" --istio-version 1.1-latest"
+    - custom-job: k8s-1.11-istio-1.0
+      full-command: "./test/e2e-tests.sh --cluster-version \"1.11\" --istio-version 1.0-latest"
     - nightly: true
     - dot-release: true
     - auto-release: true
