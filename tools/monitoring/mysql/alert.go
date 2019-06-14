@@ -58,12 +58,12 @@ func (m *MailConfig) Alert(errorPattern string, config *config.SelectedConfig, d
 		return false, err
 	}
 
-	queryTemplate, err := checkAlertsTable(errorPattern, config.Duration(), db)
-	if err != nil || queryTemplate == "" {
+	ok, err := checkAlertsTable(errorPattern, config.Duration(), db)
+	if err != nil || !ok {
 		return false, err
 	}
 
-	if err := updateAlertsTable(queryTemplate, errorPattern, db); err != nil {
+	if err := updateAlertsTable(errorPattern, db); err != nil {
 		return false, err
 	}
 
@@ -72,9 +72,7 @@ func (m *MailConfig) Alert(errorPattern string, config *config.SelectedConfig, d
 }
 
 // checkAlertsTable checks alert table and see if it is necessary to send alert email
-// returns a sql statement that contains db update action to perform. An empty string indicates
-// no db operations to perform and no alert email needs to be sent
-func checkAlertsTable(errorPattern string, window time.Duration, db *sql.DB) (string, error) {
+func checkAlertsTable(errorPattern string, window time.Duration, db *sql.DB) (bool, error) {
 	var id int
 	var sent time.Time
 
@@ -86,29 +84,26 @@ func checkAlertsTable(errorPattern string, window time.Duration, db *sql.DB) (st
 
 	if err := row.Scan(&id, &sent); err != nil {
 		if err != sql.ErrNoRows {
-			return "", err
+			return false, err
 		}
 
 		// if no record found, instruct to add a record
-		return alertInsertStmt, nil
+		return true, nil
 	}
 
 	if sent.Add(window).Before(time.Now()) {
 		// if previous alert expires. Instruct to update the timestamp
 		log.Printf("previous alert timestamp=%v expired, alert window size=%v", sent, window)
-		return alertUpdateStmt, nil
+		return true, nil
 	}
 
 	log.Printf("previous alert not expired (timestamp=%v), "+
 		"alert window size=%v, no alert will be sent", sent, window)
-	return "", nil
+	return false, nil
 }
 
-func updateAlertsTable(queryTemplate, errorPattern string, db *sql.DB) error {
-	if queryTemplate == "" {
-		return nil
-	}
+func updateAlertsTable(errorPattern string, db *sql.DB) error {
 	now := time.Now()
-	_, err := db.Query(queryTemplate, now, errorPattern, now)
+	_, err := db.Query(alertInsertStmt, now, errorPattern, now)
 	return err
 }
