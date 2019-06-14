@@ -54,7 +54,9 @@ func main() {
 	var repoDataAll []*RepoData
 	// Clean up local artifacts directory, this will be used later for artifacts uploads
 	err = os.RemoveAll(prow.GetLocalArtifactsDir()) // this function returns nil if path not found
-
+	if nil != err {
+		log.Fatalf("Failed removing local artifacts directory: %v", err)
+	}
 	for repoName, jobList := range jobConfigs {
 		for _, jc := range jobList {
 			jc.Repo = repoName
