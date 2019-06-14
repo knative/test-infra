@@ -55,7 +55,7 @@ func (m *MailConfig) sendAlert(errorPattern string, config *config.SelectedConfi
 	subject := fmt.Sprintf("Error pattern reached alerting threshold: %s", errorPattern)
 	body := fmt.Sprintf(emailTemplate, config.Duration(), errorPattern, config.Hint)
 
-	return m.mailConfig.Send(m.recipients, subject, body)
+	return m.Send(m.recipients, subject, body)
 }
 
 // Alert checks alert condition and alerts table and send alert mail conditionally
