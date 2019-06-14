@@ -467,6 +467,10 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 			(*data).Timeout = getInt(item.Value)
 		case "command":
 			(*data).Command = getString(item.Value)
+		case "full-command":
+			parts := strings.Split(getString(item.Value), " ")
+			(*data).Command = parts[0]
+			(*data).Args = parts[1:]
 		case "needs-dind":
 			if getBool(item.Value) {
 				setupDockerInDockerForJob(data)
@@ -639,6 +643,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		case "custom-job":
 			jobType = getString(item.Key)
 			jobNameSuffix = getString(item.Value)
+			data.Base.Timeout = 100
 		case "cron":
 			data.CronString = getString(item.Value)
 		case "release":
