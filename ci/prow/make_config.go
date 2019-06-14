@@ -25,6 +25,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math"
 	"os"
 	"path"
 	"regexp"
@@ -263,6 +264,51 @@ const (
 	// dashboardGroupTemplate is the template for the dashboard tab config
 	dashboardGroupTemplate = "testgrid_dashboardgroup.yaml"
 )
+
+// Generate cron string based on job type, offset generated from jobname
+// instead of assign random value to ensure consistency among runs
+func generateCron(jobType, jobName string) string {
+	getUTCtime := func(i int) int { return i + 7 }
+
+	// sums the ascii valus of all letters in a jobname,
+	// this value is used for deriving offset after hour
+	var sum float64
+	for _, c := range jobName + jobType {
+		sum += float64(c)
+	}
+	minutesOffset := int(math.Mod(sum, 60))
+	everyHourCron := fmt.Sprintf("%d * * * *", minutesOffset)
+	everyOtherHourCron := fmt.Sprintf("%d */2 * * *", minutesOffset)
+	everydayCron := fmt.Sprintf("%d %%d * * *", minutesOffset)    // hour
+	everyweekCron := fmt.Sprintf("%d %%d * * %%d", minutesOffset) // hour, weekday
+
+	var res string
+	switch jobType {
+	case "continuous": // Every hour
+		res = fmt.Sprintf(everyHourCron)
+	case "branch-ci": // Every day 1-2 PST
+		res = fmt.Sprintf(everydayCron, getUTCtime(1))
+	case "custom-job": // Every other hour
+		res = fmt.Sprintf(everyOtherHourCron)
+	case "nightly": // Every day 2-3 PST
+		res = fmt.Sprintf(everydayCron, getUTCtime(2))
+	case "dot-release": // Every Tuesday 2-3 PST
+		res = fmt.Sprintf(everyweekCron, getUTCtime(2), 2)
+	case "auto-release": // Every other hour
+		res = fmt.Sprintf(everyOtherHourCron)
+	case "latency": // Every day 1-2 PST
+		res = fmt.Sprintf(everydayCron, getUTCtime(1))
+	case "performance": // Every day 1-2 PST
+		res = fmt.Sprintf(everydayCron, getUTCtime(1))
+	case "performance-mesh": // Every day 3-4 PST
+		res = fmt.Sprintf(everydayCron, getUTCtime(3))
+	case "webhook-apicoverage": // Every day 2-3 PST
+		res = fmt.Sprintf(everydayCron, getUTCtime(2))
+	default:
+		log.Printf("job type not supported for cron generation '%s'", jobName)
+	}
+	return res
+}
 
 // Yaml parsing helpers.
 
@@ -654,6 +700,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			if !getBool(item.Value) {
 				return
 			}
+			jobType = getString(item.Key)
 			jobNameSuffix = "webhook-apicoverage"
 			data.Base.Command = webhookAPICoverageScript
 			addEnvToJob(&data.Base, "SYSTEM_NAMESPACE", data.Base.RepoNameForJob)
@@ -668,6 +715,9 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	data.PeriodicJobName = fmt.Sprintf("ci-%s", data.Base.RepoNameForJob)
 	if jobNameSuffix != "" {
 		data.PeriodicJobName += "-" + jobNameSuffix
+	}
+	if data.CronString == "" {
+		data.CronString = generateCron(jobType, data.PeriodicJobName)
 	}
 	// Ensure required data exist.
 	if data.CronString == "" {

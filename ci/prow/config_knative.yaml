@@ -116,136 +116,89 @@ periodics:
       timeout: 100
     - branch-ci: true
       release: "0.4"
-      cron: "25 8 * * *" # Run at 01:25PST every day (08:25 UTC)
     - branch-ci: true
       release: "0.5"
-      cron: "35 8 * * *" # Run at 01:35PST every day (08:35 UTC)
     - branch-ci: true
       release: "0.6"
-      cron: "45 8 * * *" # Run at 01:45 PST every day (08:45 UTC)
     - custom-job: istio-1.0.7-mesh
-      cron: "7 */2 * * *" # Run every other hour and seven minute
       full-command: "./test/e2e-tests.sh --istio-version 1.0.7 --mesh"
     - custom-job: istio-1.0.7-no-mesh
-      cron: "22 */2 * * *" # Run every other hour and twenty-two minute
       full-command: "./test/e2e-tests.sh --istio-version 1.0.7 --no-mesh"
     - custom-job: istio-1.1.7-mesh
-      cron: "37 */2 * * *" # Run every other hour and thirty-seven minute
       full-command: "./test/e2e-tests.sh --istio-version 1.1.7 --mesh"
     - custom-job: istio-1.1.7-no-mesh
-      cron: "52 */2 * * *" # Run every other hour and fifty-two minute
       full-command: "./test/e2e-tests.sh --istio-version 1.1.7 --no-mesh"
     - nightly: true
-      cron: "1 8 * * *" # Run at 01:01PST every day (08:01 UTC)
     - dot-release: true
-      cron: "1 9 * * 2" # Run at 02:01PST every Tuesday (09:01 UTC)
     - auto-release: true
-      cron: "3 */2 * * *" # Run every two hours and three minutes
     - latency: true
-      cron: "5 8 * * *" # Run at 01:05PST every day (08:05 UTC)
     - performance: true
-      cron: "0 1 * * *" # Run at 01:00 every day
     - performance-mesh: true
-      cron: "0 3 * * *" # Run at 03:00 every day
       args:
       - "--mesh"
     - webhook-apicoverage: true
-      cron: "5 9 * * *" # Run at 02:05PST every day (09:05 UTC)
 
   knative/build:
     - continuous: true
-      cron: "15 * * * *" # Run every hour and 15 minutes
     - branch-ci: true
       release: "0.5"
-      cron: "45 8 * * *" # Run at 01:45PST every day (08:45 UTC)
     - branch-ci: true
       release: "0.6"
-      cron: "55 8 * * *" # Run at 01:55PST every day (08:55 UTC)
     - nightly: true
-      cron: "31 8 * * *" # Run at 01:31PST every day (08:31 UTC)
       needs-dind: true
     - dot-release: true
-      cron: "11 9 * * 2" # Run at 02:11PST every Tuesday (09:11 UTC)
     - auto-release: true
-      cron: "7 */2 * * *" # Run every two hours and seven minutes
       needs-dind: true
     - latency: true
-      cron: "5 8 * * *" # Run at 01:05PST every day (08:05 UTC)
 
   knative/client:
     - continuous: true
-      cron: "45 * * * *" # Run every hour and 45 minutes
     - nightly: true
-      cron: "11 8 * * *" # Run at 01:11PST every day (08:11 UTC)
     - dot-release: true
-      cron: "11 9 * * 2" # Run at 02:11PST every Tuesday (09:11 UTC)
     - auto-release: true
-      cron: "13 */2 * * *" # Run every two hours and thirteen minutes
 
   knative/docs:
     - continuous: true
       needs-dind: true
-      cron: "50 * * * *" # Run every hour and 50 minutes
 
   knative/eventing:
     - continuous: true
-      cron: "30 * * * *" # Run every hour and 30 minutes
       timeout: 90
     - branch-ci: true
       release: "0.5"
-      cron: "40 8 * * *" # Run at 01:40PST every day (08:40 UTC)
     - branch-ci: true
       release: "0.6"
-      cron: "50 8 * * *" # Run at 01:50 PST every day (08:50 UTC)
     - nightly: true
-      cron: "16 9 * * *" # Run at 02:16PST every day (09:16 UTC)
     - dot-release: true
-      cron: "19 9 * * 2" # Run at 02:19PST every Tuesday (09:19 UTC)
     - auto-release: true
-      cron: "5 */2 * * *" # Run every two hours and five minutes
 
   knative/eventing-contrib:
     - continuous: true
-      cron: "30 * * * *" # Run every hour and 30 minutes
     - branch-ci: true
       release: "0.5"
-      cron: "50 8 * * *" # Run at 01:50PST every day (08:50 UTC)
     - branch-ci: true
       release: "0.6"
-      cron: "0 9 * * *" # Run at 02:00 PST every day (09:00 UTC)
     - nightly: true
-      cron: "16 9 * * *" # Run at 02:16PST every day (09:16 UTC)
     - dot-release: true
-      cron: "17 9 * * 2" # Run at 02:17PST every Tuesday (09:17 UTC)
     - auto-release: true
-      cron: "5 */2 * * *" # Run every two hours and five minutes
 
   knative/build-templates:
     - continuous: true
-      cron: "40 * * * *" # Run every hour and 40 minutes
 
   knative/pkg:
     - continuous: true
-      cron: "45 * * * *" # Run every hour and 45 minutes
 
   knative/caching:
     - continuous: true
-      cron: "30 * * * *" # Run every hour and 30 minutes
   
   knative/observability:
     - continuous: true
-      cron: "30 * * * *" # Run every hour and 30 minutes
 
   knative/sample-controller:
     - continuous: true
-      cron: "30 * * * *" # Run every hour and 30 minutes
 
   GoogleCloudPlatform/cloud-run-events:
     - continuous: true
-      cron: "45 * * * *" # Run every hour on :45 minutes
     - nightly: true
-      cron: "16 9 * * *" # Run at 02:16PST every day (09:16 UTC)
     - dot-release: true
-      cron: "45 9 * * 2" # Run at 02:17PST every Tuesday (09:45 UTC)
     - auto-release: true
-      cron: "35 */2 * * *" # Run every two hours on :35
