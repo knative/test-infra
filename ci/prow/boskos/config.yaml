@@ -104,7 +104,7 @@ metadata:
     app: boskos-janitor
   namespace: test-pods
 spec:
-  replicas: 20  # Number distributed janitor instances
+  replicas: 20  # Number of distributed janitor instances
   template:
     metadata:
       labels:
@@ -117,7 +117,6 @@ spec:
         image: gcr.io/k8s-testimages/janitor:v20190604-0afdebd
         args:
         - --resource-type=gke-project
-        - --pool-size=10
         - --
         - --service_account=/etc/test-account/service-account.json
         - --hours=0
