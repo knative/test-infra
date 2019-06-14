@@ -46,7 +46,7 @@ Hint for diagnose & recovery: %s
 )
 
 type MailConfig struct {
-	mailConfig *mail.Config
+	*mail.Config
 	recipients []string
 }
 
