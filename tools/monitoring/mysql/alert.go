@@ -28,14 +28,8 @@ import (
 
 const (
 	alertInsertStmt = `
-		INSERT INTO Alerts (
-			Sent, ErrorPattern
-		) VALUES (?,?)`
-
-	alertUpdateStmt = `
-	UPDATE Alerts
-	SET Sent = (?)
-	WHERE ErrorPattern = (?)`
+	INSERT INTO Alerts (Sent, ErrorPattern) VALUES (?,?)
+	ON DUPLICATE KEY UPDATE Sent = (?)`
 
 	emailTemplate = `In the past %v, 
 The number of occurrences of the following error pattern reached threshold:
@@ -114,6 +108,7 @@ func updateAlertsTable(queryTemplate, errorPattern string, db *sql.DB) error {
 	if queryTemplate == "" {
 		return nil
 	}
-	_, err := db.Query(queryTemplate, time.Now(), errorPattern)
+	now := time.Now()
+	_, err := db.Query(queryTemplate, now, errorPattern, now)
 	return err
 }
