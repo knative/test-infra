@@ -190,6 +190,7 @@ periodics:
   knative/eventing:
     - continuous: true
       cron: "30 * * * *" # Run every hour and 30 minutes
+      timeout: 90
     - branch-ci: true
       release: "0.5"
       cron: "40 8 * * *" # Run at 01:40PST every day (08:40 UTC)
