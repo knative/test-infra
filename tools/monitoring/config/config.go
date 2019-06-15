@@ -26,7 +26,7 @@ import (
 	"net/http"
 	"regexp"
 
-	"gopkg.in/yaml.v2"
+	yaml "gopkg.in/yaml.v2"
 )
 
 type alertCondition struct {

@@ -32,12 +32,12 @@ import (
 
 func getFakeGitInfo() gitInfo {
 	return gitInfo{
-		org:   "fakeorg",
-		repo:  "fakerepo",
-		userID:  "fakeuserID",
-		head:  "fakehead",
-		base:  "fakebase",
-		email: "fake@email",
+		org:    "fakeorg",
+		repo:   "fakerepo",
+		userID: "fakeuserID",
+		head:   "fakehead",
+		base:   "fakebase",
+		email:  "fake@email",
 	}
 }
 
@@ -64,7 +64,7 @@ func TestGetIndex(t *testing.T) {
 		},
 		{
 			map[string][]versions{
-				"o": []versions{{"", "", ""}},
+				"o": {{"", "", ""}},
 			},
 			"o",
 			"a-b-c",
@@ -72,7 +72,7 @@ func TestGetIndex(t *testing.T) {
 		},
 		{
 			map[string][]versions{
-				"o": []versions{{"", "", "b"}},
+				"o": {{"", "", "b"}},
 			},
 			"o",
 			"a-b-c",
@@ -80,7 +80,7 @@ func TestGetIndex(t *testing.T) {
 		},
 		{
 			map[string][]versions{
-				"o": []versions{{"", "", "c"}},
+				"o": {{"", "", "c"}},
 			},
 			"o",
 			"a-b-c",
@@ -88,7 +88,7 @@ func TestGetIndex(t *testing.T) {
 		},
 		{
 			map[string][]versions{
-				"p": []versions{{"", "", "c"}},
+				"p": {{"", "", "c"}},
 			},
 			"o",
 			"a-b-c",
@@ -156,7 +156,7 @@ func TestGetDominantVersion(t *testing.T) {
 		},
 		{
 			map[string][]versions{
-				"o": []versions{
+				"o": {
 					{"a-b", "h-i", ""},
 				},
 			},
@@ -164,11 +164,11 @@ func TestGetDominantVersion(t *testing.T) {
 		},
 		{
 			map[string][]versions{
-				"o": []versions{
+				"o": {
 					{"a-b", "h-i", ""},
 					{"c-d-x", "j-k-x", "x"},
 				},
-				"p": []versions{
+				"p": {
 					{"a-b-y", "h-i-y", "y"},
 				},
 			},
@@ -201,7 +201,7 @@ func TestParseChangelist(t *testing.T) {
 				"+ image: gcr.io/k8s-foofoo/bar:vh-i",
 			},
 			map[string][]versions{
-				"gcr.io/k8s-foofoo/bar": []versions{
+				"gcr.io/k8s-foofoo/bar": {
 					{"va-b", "vh-i", ""},
 				},
 			},
@@ -214,7 +214,7 @@ func TestParseChangelist(t *testing.T) {
 				"+ image: gcr.io/k8s-foofoo/bar:vh-i-x",
 			},
 			map[string][]versions{
-				"gcr.io/k8s-foofoo/bar": []versions{
+				"gcr.io/k8s-foofoo/bar": {
 					{"va-b", "vh-i", ""},
 					{"va-b-x", "vh-i-x", "x"},
 				},
@@ -228,7 +228,7 @@ func TestParseChangelist(t *testing.T) {
 				+ image: gcr.io/k8s-foofoo/bar:vh-i-x`,
 			},
 			map[string][]versions{
-				"gcr.io/k8s-foofoo/bar": []versions{
+				"gcr.io/k8s-foofoo/bar": {
 					{"va-b", "vh-i", ""},
 					{"va-b-x", "vh-i-x", "x"},
 				},
@@ -242,10 +242,10 @@ func TestParseChangelist(t *testing.T) {
 				"+ image: gcr.io/k8s-barbar/baz:vj-k",
 			},
 			map[string][]versions{
-				"gcr.io/k8s-foofoo/bar": []versions{
+				"gcr.io/k8s-foofoo/bar": {
 					{"va-b", "vh-i", ""},
 				},
-				"gcr.io/k8s-barbar/baz": []versions{
+				"gcr.io/k8s-barbar/baz": {
 					{"vc-d", "vj-k", ""},
 				},
 			},

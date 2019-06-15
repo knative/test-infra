@@ -41,5 +41,5 @@ expected to set:
    repo.
 1. `FieldRules`: [FieldRules](../resourcetree/rule.go) that are applicable for
    the repo.
-1. `DisplayRules`: [DisplayRules](../view/jsontype_display.go) to be used by
+1. `DisplayRules`: [DisplayRules](../view/rule.go) to be used by
    `GetResourceCoverage` method.
