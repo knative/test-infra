@@ -18,10 +18,11 @@ package mysql
 
 import (
 	"database/sql"
+	"time"
+
 	"github.com/knative/test-infra/shared/mysql"
 	"github.com/knative/test-infra/tools/monitoring/config"
 	"github.com/knative/test-infra/tools/monitoring/log_parser"
-	"time"
 )
 
 const (
