@@ -130,7 +130,7 @@ func Read(ctx context.Context, bucketName, filePath string) ([]byte, error) {
 }
 
 // ReadFromLink reads from a gsUrl and return a log structure
-func ReadFromLink(ctx context.Context, gsURL string) ([]byte, error) {
+func ReadURL(ctx context.Context, gcsURL string) ([]byte, error) {
 	var data []byte
 
 	bucket, obj, err := linkToBucketAndObject(gsURL)
