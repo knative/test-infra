@@ -265,38 +265,24 @@ const (
 	dashboardGroupTemplate = "testgrid_dashboardgroup.yaml"
 )
 
-// Struct used by generateCron, divide an hour into 6 buckets, each bucket
-// is 10 minutes, keeps counts of jobs in each bucket, the order is it's offset
-// within the bucket. This can help separate jobs with very similar names
-type cronOffsetGenerator struct {
-	counts [6]float64
-}
-
-// Returns an offset in minutes based on ascii valus of given string
-func (cog *cronOffsetGenerator) getOffset(s string) int {
-	// Sums the ascii valus of all letters in a jobname,
-	// this value is used for deriving offset after hour
-	var sum float64
-	for _, c := range s {
-		sum += float64(c)
-	}
-	// Divide 60 minutes into 6 buckets
-	bucket := int(math.Mod(sum, 6))
-	// rank in bucket determines how many minutes within bucket
-	rank := int(math.Mod(cog.counts[bucket], 10))
-	cog.counts[bucket]++
-	return bucket*10 + rank
-}
-
-// Initialize global instance to keep count of jobs in each bucket
-var cog cronOffsetGenerator
-
 // Generate cron string based on job type, offset generated from jobname
 // instead of assign random value to ensure consistency among runs,
 // timeout is used for determining how many hours apart
 func generateCron(jobType, jobName string, timeout int) string {
 	getUTCtime := func(i int) int { return i + 7 }
-	minutesOffset := cog.getOffset(jobName + jobType)
+	// Sums the ascii valus of all letters in a jobname,
+	// this value is used for deriving offset after hour
+	var sum float64
+	for _, c := range jobType + jobName {
+		sum += float64(c)
+	}
+	// Divide 60 minutes into 6 buckets
+	bucket := int(math.Mod(sum, 6))
+	// Offset in bucket, range from 0-9, first mod with 11(a random prime number)
+	// to ensure every digit has a chance (i.e., if bucket is 0, sum has to be multiply of 6,
+	// so mod by 10 can only return even number)
+	offsetInBucket := int(math.Mod(math.Mod(sum, 11), 10))
+	minutesOffset := bucket*10 + offsetInBucket
 	// Determines hourly job inteval based on timeout
 	hours := int((timeout+5)/60) + 1 // Allow at least 5 minutes between runs
 	hourCron := fmt.Sprintf("%d * * * *", minutesOffset)
