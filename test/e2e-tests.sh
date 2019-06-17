@@ -26,7 +26,11 @@
 source $(dirname $0)/../scripts/e2e-tests.sh
 
 function knative_setup() {
-  start_latest_knative_serving
+  if [ "$KNATIVE_VERSION" = "latest" ]; then
+    start_latest_knative_serving
+  else
+    start_release_knative_serving "${KNATIVE_VERSION}"
+  fi
 }
 
 # Script entry point.

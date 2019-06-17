@@ -393,6 +393,7 @@ EMIT_METRICS=0
 SKIP_KNATIVE_SETUP=0
 SKIP_ISTIO_ADDON=0
 GCP_PROJECT=""
+KNATIVE_VERSION="latest"
 E2E_SCRIPT=""
 E2E_CLUSTER_VERSION=""
 GKE_ADDONS=""
@@ -434,6 +435,7 @@ function initialize() {
         case ${parameter} in
           --gcp-project) GCP_PROJECT=$1 ;;
           --cluster-version) E2E_CLUSTER_VERSION=$1 ;;
+          --knative-version) KNATIVE_VERSION=$1 ;;
           --cluster-creation-flag) EXTRA_CLUSTER_CREATION_FLAGS+=($1) ;;
           --kubetest-flag) EXTRA_KUBETEST_FLAGS+=($1) ;;
           *) abort "unknown option ${parameter}" ;;
@@ -447,6 +449,11 @@ function initialize() {
     echo "\$PROJECT_ID is set to '${PROJECT_ID}', using it to run the tests"
     GCP_PROJECT="${PROJECT_ID}"
   fi
+  # Use KNATIVE_SERVING_VERSION if set, unless --knative-version was used.
+  if [[ -n "${KNATIVE_SERVING_VERSION:-}" && -z "${KNATIVE_VERSION}" ]]; then
+    echo "\$KNATIVE_SERVING_VERSION is set to '${KNATIVE_SERVING_VERSION}', using it as the Knative version"
+    KNATIVE_VERSION="${KNATIVE_SERVING_VERSION}"
+  fi
   if (( ! IS_PROW )) && (( ! RUN_TESTS )) && [[ -z "${GCP_PROJECT}" ]]; then
     abort "set \$PROJECT_ID or use --gcp-project to select the GCP project where the tests are run"
   fi
@@ -458,6 +465,7 @@ function initialize() {
   readonly RUN_TESTS
   readonly EMIT_METRICS
   readonly GCP_PROJECT
+  readonly KNATIVE_VERSION
   readonly IS_BOSKOS
   readonly EXTRA_CLUSTER_CREATION_FLAGS
   readonly EXTRA_KUBETEST_FLAGS
