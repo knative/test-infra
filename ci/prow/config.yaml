@@ -1833,7 +1833,7 @@ presubmits:
         secret:
           secretName: covbot-token
 periodics:
-- cron: "1 */2 * * *"
+- cron: "10 */2 * * *"
   name: ci-knative-serving-continuous
   agent: kubernetes
   spec:
@@ -1867,7 +1867,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "25 8 * * *"
+- cron: "0 8 * * *"
   name: ci-knative-serving-0.4-continuous
   agent: kubernetes
   spec:
@@ -1911,7 +1911,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "35 8 * * *"
+- cron: "11 8 * * *"
   name: ci-knative-serving-0.5-continuous
   agent: kubernetes
   spec:
@@ -1955,7 +1955,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "45 8 * * *"
+- cron: "20 8 * * *"
   name: ci-knative-serving-0.6-continuous
   agent: kubernetes
   spec:
@@ -1999,7 +1999,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "7 */2 * * *"
+- cron: "12 */2 * * *"
   name: ci-knative-serving-istio-1.0.7-mesh
   agent: kubernetes
   spec:
@@ -2034,7 +2034,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "22 */2 * * *"
+- cron: "30 */2 * * *"
   name: ci-knative-serving-istio-1.0.7-no-mesh
   agent: kubernetes
   spec:
@@ -2069,7 +2069,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "37 */2 * * *"
+- cron: "21 */2 * * *"
   name: ci-knative-serving-istio-1.1.7-mesh
   agent: kubernetes
   spec:
@@ -2104,7 +2104,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "52 */2 * * *"
+- cron: "40 */2 * * *"
   name: ci-knative-serving-istio-1.1.7-no-mesh
   agent: kubernetes
   spec:
@@ -2139,7 +2139,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "1 8 * * *"
+- cron: "50 9 * * *"
   name: ci-knative-serving-nightly-release
   agent: kubernetes
   spec:
@@ -2173,7 +2173,7 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "1 9 * * 2"
+- cron: "31 9 * * 2"
   name: ci-knative-serving-dot-release
   agent: kubernetes
   spec:
@@ -2215,7 +2215,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "3 */2 * * *"
+- cron: "32 */2 * * *"
   name: ci-knative-serving-auto-release
   agent: kubernetes
   spec:
@@ -2257,7 +2257,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "5 8 * * *"
+- cron: "33 8 * * *"
   name: ci-knative-serving-latency
   agent: kubernetes
   decorate: true
@@ -2289,7 +2289,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 1 * * *"
+- cron: "51 8 * * *"
   name: ci-knative-serving-performance
   agent: kubernetes
   spec:
@@ -2331,7 +2331,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 3 * * *"
+- cron: "52 10 * * *"
   name: ci-knative-serving-performance-mesh
   agent: kubernetes
   spec:
@@ -2374,7 +2374,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "5 9 * * *"
+- cron: "13 9 * * *"
   name: ci-knative-serving-webhook-apicoverage
   agent: kubernetes
   spec:
@@ -2430,7 +2430,7 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=80"
-- cron: "15 * * * *"
+- cron: "34 * * * *"
   name: ci-knative-build-continuous
   agent: kubernetes
   spec:
@@ -2464,7 +2464,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "45 8 * * *"
+- cron: "35 8 * * *"
   name: ci-knative-build-0.5-continuous
   agent: kubernetes
   spec:
@@ -2508,7 +2508,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "55 8 * * *"
+- cron: "41 8 * * *"
   name: ci-knative-build-0.6-continuous
   agent: kubernetes
   spec:
@@ -2552,7 +2552,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "31 8 * * *"
+- cron: "14 9 * * *"
   name: ci-knative-build-nightly-release
   agent: kubernetes
   spec:
@@ -2594,7 +2594,7 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "11 9 * * 2"
+- cron: "53 9 * * 2"
   name: ci-knative-build-dot-release
   agent: kubernetes
   spec:
@@ -2636,7 +2636,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "7 */2 * * *"
+- cron: "54 */2 * * *"
   name: ci-knative-build-auto-release
   agent: kubernetes
   spec:
@@ -2686,7 +2686,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "5 8 * * *"
+- cron: "55 8 * * *"
   name: ci-knative-build-latency
   agent: kubernetes
   decorate: true
@@ -2740,7 +2740,7 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=80"
-- cron: "45 * * * *"
+- cron: "1 * * * *"
   name: ci-knative-client-continuous
   agent: kubernetes
   spec:
@@ -2774,7 +2774,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "11 8 * * *"
+- cron: "42 9 * * *"
   name: ci-knative-client-nightly-release
   agent: kubernetes
   spec:
@@ -2808,7 +2808,7 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "11 9 * * 2"
+- cron: "22 9 * * 2"
   name: ci-knative-client-dot-release
   agent: kubernetes
   spec:
@@ -2850,7 +2850,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "13 */2 * * *"
+- cron: "23 */2 * * *"
   name: ci-knative-client-auto-release
   agent: kubernetes
   spec:
@@ -2914,7 +2914,7 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "50 * * * *"
+- cron: "24 * * * *"
   name: ci-knative-docs-continuous
   agent: kubernetes
   spec:
@@ -2978,7 +2978,7 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "30 * * * *"
+- cron: "36 */2 * * *"
   name: ci-knative-eventing-continuous
   agent: kubernetes
   spec:
@@ -3012,7 +3012,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "40 8 * * *"
+- cron: "37 8 * * *"
   name: ci-knative-eventing-0.5-continuous
   agent: kubernetes
   spec:
@@ -3056,7 +3056,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "50 8 * * *"
+- cron: "43 8 * * *"
   name: ci-knative-eventing-0.6-continuous
   agent: kubernetes
   spec:
@@ -3100,7 +3100,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "16 9 * * *"
+- cron: "15 9 * * *"
   name: ci-knative-eventing-nightly-release
   agent: kubernetes
   spec:
@@ -3134,7 +3134,7 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "19 9 * * 2"
+- cron: "56 9 * * 2"
   name: ci-knative-eventing-dot-release
   agent: kubernetes
   spec:
@@ -3176,7 +3176,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "5 */2 * * *"
+- cron: "57 */2 * * *"
   name: ci-knative-eventing-auto-release
   agent: kubernetes
   spec:
@@ -3240,7 +3240,7 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "30 * * * *"
+- cron: "38 * * * *"
   name: ci-knative-eventing-contrib-continuous
   agent: kubernetes
   spec:
@@ -3274,7 +3274,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "50 8 * * *"
+- cron: "39 8 * * *"
   name: ci-knative-eventing-contrib-0.5-continuous
   agent: kubernetes
   spec:
@@ -3318,7 +3318,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 9 * * *"
+- cron: "44 8 * * *"
   name: ci-knative-eventing-contrib-0.6-continuous
   agent: kubernetes
   spec:
@@ -3396,7 +3396,7 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "17 9 * * 2"
+- cron: "58 9 * * 2"
   name: ci-knative-eventing-contrib-dot-release
   agent: kubernetes
   spec:
@@ -3438,7 +3438,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "5 */2 * * *"
+- cron: "59 */2 * * *"
   name: ci-knative-eventing-contrib-auto-release
   agent: kubernetes
   spec:
@@ -3502,7 +3502,7 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "40 * * * *"
+- cron: "30 * * * *"
   name: ci-knative-build-templates-continuous
   agent: kubernetes
   spec:
@@ -3536,7 +3536,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "45 * * * *"
+- cron: "17 * * * *"
   name: ci-knative-pkg-continuous
   agent: kubernetes
   spec:
@@ -3592,7 +3592,7 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "30 * * * *"
+- cron: "2 * * * *"
   name: ci-knative-caching-continuous
   agent: kubernetes
   spec:
@@ -3648,7 +3648,7 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "30 * * * *"
+- cron: "3 * * * *"
   name: ci-knative-observability-continuous
   agent: kubernetes
   spec:
@@ -3682,7 +3682,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "30 * * * *"
+- cron: "4 * * * *"
   name: ci-knative-sample-controller-continuous
   agent: kubernetes
   spec:
@@ -3716,7 +3716,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "45 * * * *"
+- cron: "18 * * * *"
   name: ci-googlecloudplatform-cloud-run-events-continuous
   agent: kubernetes
   spec:
@@ -3750,7 +3750,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "16 9 * * *"
+- cron: "50 9 * * *"
   name: ci-googlecloudplatform-cloud-run-events-nightly-release
   agent: kubernetes
   spec:
@@ -3784,7 +3784,7 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "45 9 * * 2"
+- cron: "31 9 * * 2"
   name: ci-googlecloudplatform-cloud-run-events-dot-release
   agent: kubernetes
   spec:
@@ -3826,7 +3826,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "35 */2 * * *"
+- cron: "32 */2 * * *"
   name: ci-googlecloudplatform-cloud-run-events-auto-release
   agent: kubernetes
   spec:
