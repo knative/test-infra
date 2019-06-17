@@ -18,9 +18,10 @@ package log_parser
 
 import (
 	"database/sql"
+	"time"
+
 	"github.com/knative/test-infra/shared/mysql"
 	"github.com/knative/test-infra/tools/monitoring/config"
-	"time"
 )
 
 const (
