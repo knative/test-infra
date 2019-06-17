@@ -321,7 +321,7 @@ func createXml(dir string, metrics MetricsMap) {
 	writeXml(f, "</testsuite>")
 }
 
-// Regenerate creates and returns an aproximate snowflake ID based on a UNIX timestamp
+// Regenerate creates and returns an approximate snowflake ID based on a UNIX timestamp
 func regenerateSnowflakeID(unixTimestamp int64) int64 {
 	nodeTime := int64(unixTimestamp * 1000)
 	nodeNode := int64(0)

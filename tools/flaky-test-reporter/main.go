@@ -73,7 +73,7 @@ func main() {
 	}
 
 	// Errors that could result in inaccuracy reporting would be treated with fast fail by processGithubIssues,
-	// so any errors returned are github opeations error, which in most cases wouldn't happend, but in case it
+	// so any errors returned are github opeations error, which in most cases wouldn't happen, but in case it
 	// happens, it should fail the job after Slack notification
 	githubErr := ghi.processGithubIssues(repoDataAll, *dryrun)
 	slackErr := sendSlackNotifications(repoDataAll, slackClient, ghi, *dryrun)
