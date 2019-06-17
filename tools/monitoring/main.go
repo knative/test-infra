@@ -27,6 +27,7 @@ import (
 	"github.com/knative/test-infra/shared/mysql"
 	"github.com/knative/test-infra/tools/monitoring/config"
 	"github.com/knative/test-infra/tools/monitoring/mail"
+	"github.com/knative/test-infra/tools/monitoring/prowapi"
 	"github.com/knative/test-infra/tools/monitoring/subscriber"
 )
 
@@ -144,7 +145,7 @@ func testSubscriber(w http.ResponseWriter, r *http.Request) {
 	log.Println("Start listening to messages")
 
 	go func() {
-		err := client.ReceiveMessageAckAll(context.Background(), func(rmsg *subscriber.ReportMessage) {
+		err := client.ReceiveMessageAckAll(context.Background(), func(rmsg *prowapi.ReportMessage) {
 			log.Printf("Report Message: %+v\n", rmsg)
 		})
 		if err != nil {
