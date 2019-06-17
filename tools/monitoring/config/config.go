@@ -28,7 +28,7 @@ import (
 	"regexp"
 	"time"
 
-	"gopkg.in/yaml.v2"
+	yaml "gopkg.in/yaml.v2"
 )
 
 type alertCondition struct {
@@ -84,9 +84,10 @@ func (s SelectedConfig) Duration() time.Duration {
 // CheckAlertCondition checks whether the given error pattern meets
 // the alert condition specified in config
 func (s *SelectedConfig) CheckAlertCondition(errorPattern string, db *sql.DB) (bool, error) {
+	var nMatches, nJobs, nPRs int
 	// the timestamp we want to start collecting logs
 	startTime := time.Now().Add(s.Duration())
-	var nMatches, nJobs, nPRs int
+
 	row := db.QueryRow(`
 		SELECT 
 			COUNT (*),

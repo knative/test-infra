@@ -28,6 +28,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/knative/test-infra/shared/common"
 	"github.com/knative/test-infra/shared/junit"
 	"github.com/knative/test-infra/shared/prow"
 )
@@ -130,7 +131,12 @@ func flakyRateAboveThreshold(rd *RepoData) bool {
 // createArtifactForRepo marshals RepoData into json format and stores it in a json file,
 // under local artifacts directory
 func createArtifactForRepo(rd *RepoData) error {
-	outFilePath := path.Join(prow.GetLocalArtifactsDir(), rd.Config.Repo+".json")
+	artifactsDir := prow.GetLocalArtifactsDir()
+	err := common.CreateDir(path.Join(artifactsDir, rd.Config.Repo))
+	if nil != err {
+		return err
+	}
+	outFilePath := path.Join(artifactsDir, rd.Config.Repo, rd.Config.Name+".json")
 	contents, err := json.Marshal(*rd)
 	if nil != err {
 		return err
