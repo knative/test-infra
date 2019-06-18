@@ -3716,6 +3716,40 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+- cron: "42 * * * *"
+  name: ci-knative-test-infra-continuous
+  agent: kubernetes
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      args:
+      - "--scenario=kubernetes_execute_bazel"
+      - "--clean"
+      - "--job=$(JOB_NAME)"
+      - "--repo=github.com/knative/test-infra"
+      - "--root=/go/src"
+      - "--service-account=/etc/test-account/service-account.json"
+      - "--upload=gs://knative-prow/logs"
+      - "--timeout=50" # Avoid overrun
+      - "--" # end bootstrap args, scenario args below
+      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./test/presubmit-tests.sh"
+      - "--all-tests"
+      - "--emit-metrics"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
 - cron: "13 * * * *"
   name: ci-googlecloudplatform-cloud-run-events-continuous
   agent: kubernetes
