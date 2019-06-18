@@ -29,16 +29,16 @@ import (
 
 // NewTestCase constructs the TestCase struct
 func NewTestCase(targetName, coverage string, failure bool) junit.TestCase {
-	var f *string
-	if failure {
-		*f = strconv.FormatBool(failure)
-	}
-
 	tc := junit.TestCase{
 		ClassName: "go_coverage",
 		Name:      targetName,
-		Failure:   f,
 	}
+
+	if failure {
+		f := strconv.FormatBool(failure)
+		tc.Failure = &f
+	}
+
 	tc.AddProperty("coverage", coverage)
 
 	return tc
