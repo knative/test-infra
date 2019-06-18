@@ -1,0 +1,65 @@
+apiVersion: prow.k8s.io/v1
+kind: ProwJob
+metadata:
+  annotations:
+    prow.k8s.io/job: ci-knative-prow-auto-bumper
+  creationTimestamp: null
+  labels:
+    created-by-prow: "true"
+    prow.k8s.io/job: ci-knative-prow-auto-bumper
+    prow.k8s.io/type: periodic
+  name: e1ba86f1-9201-11e9-a8b5-f4939fee0b61
+spec:
+  agent: kubernetes
+  cluster: default
+  decoration_config:
+    gcs_configuration:
+      bucket: knative-prow
+      path_strategy: explicit
+    gcs_credentials_secret: test-account
+    grace_period: 15s
+    timeout: 2h0m0s
+    utility_images:
+      clonerefs: gcr.io/k8s-prow/clonerefs:v20190610-3be53b072
+      entrypoint: gcr.io/k8s-prow/entrypoint:v20190610-3be53b072
+      initupload: gcr.io/k8s-prow/initupload:v20190610-3be53b072
+      sidecar: gcr.io/k8s-prow/sidecar:v20190610-3be53b072
+  extra_refs:
+  - base_ref: master
+    clone_uri: https://github.com/knative/test-infra.git
+    org: knative
+    repo: test-infra
+  job: ci-knative-prow-auto-bumper
+  namespace: test-pods
+  pod_spec:
+    containers:
+    - args:
+      - --github-account=/etc/prow-auto-bumper-github-token/token
+      - --git-userid=knative-prow-updater-robot
+      - --git-username=Knative Prow Updater Robot
+      - --git-email=knative-prow-updater-robot@google.com
+      - --dry-run
+      command:
+      - /prow-auto-bumper
+      image: gcr.io/knative-tests/test-infra/prow-auto-bumper:latest
+      imagePullPolicy: Always
+      name: ""
+      resources: {}
+      volumeMounts:
+      - mountPath: /etc/test-account
+        name: test-account
+        readOnly: true
+      - mountPath: /etc/prow-auto-bumper-github-token
+        name: prow-auto-bumper-github-token
+        readOnly: true
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+    - name: prow-auto-bumper-github-token
+      secret:
+        secretName: prow-auto-bumper-github-token
+  type: periodic
+status:
+  startTime: "2019-06-18T19:47:19Z"
+  state: triggered

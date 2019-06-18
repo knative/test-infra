@@ -26,10 +26,10 @@ plank:
     grace_period: 15000000000 # 15s
     utility_images:
       # Update these versions when updating plank version in cluster.yaml
-      clonerefs: "gcr.io/k8s-prow/clonerefs:v20190517-bb7028b16"
-      initupload: "gcr.io/k8s-prow/initupload:v20190517-bb7028b16"
-      entrypoint: "gcr.io/k8s-prow/entrypoint:v20190517-bb7028b16"
-      sidecar: "gcr.io/k8s-prow/sidecar:v20190517-bb7028b16"
+      clonerefs: "gcr.io/k8s-prow/clonerefs:v20190610-3be53b072"
+      initupload: "gcr.io/k8s-prow/initupload:v20190610-3be53b072"
+      entrypoint: "gcr.io/k8s-prow/entrypoint:v20190610-3be53b072"
+      sidecar: "gcr.io/k8s-prow/sidecar:v20190610-3be53b072"
     gcs_configuration:
       bucket: "knative-prow"
       path_strategy: "explicit"
@@ -3980,6 +3980,7 @@ periodics:
       - "--git-userid=knative-prow-updater-robot"
       - "--git-username=Knative Prow Updater Robot"
       - "--git-email=knative-prow-updater-robot@google.com"
+      - "--dry-run"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
