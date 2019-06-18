@@ -38,6 +38,10 @@ function init_test_env() {
   function mdl() {
     return 0
   }
+
+  function check_links_in_markdown() {
+    return 0
+  }
 }
 
 # Helper functions.
