@@ -904,7 +904,7 @@ func quote(s string) string {
 	if isNum(s) {
 		return s
 	}
-	if strings.Contains(s, "\"") || strings.Contains(s, ": ") || strings.HasSuffix(s, ":") {
+	if strings.HasPrefix(s, "'") || strings.HasPrefix(s, "\"") || strings.Contains(s, ": ") || strings.HasSuffix(s, ":") {
 		return s
 	}
 	return "\"" + s + "\""

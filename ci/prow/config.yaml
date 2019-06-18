@@ -2159,7 +2159,7 @@ periodics:
       - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/e2e-tests.sh"
       - "--cluster-version"
-      - "1.12"
+      - '1.12'
       - "--istio-version"
       - "1.1-latest"
       volumeMounts:
@@ -2195,7 +2195,7 @@ periodics:
       - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/e2e-tests.sh"
       - "--cluster-version"
-      - "1.12"
+      - '1.12'
       - "--istio-version"
       - "1.0-latest"
       volumeMounts:
@@ -2231,7 +2231,7 @@ periodics:
       - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/e2e-tests.sh"
       - "--cluster-version"
-      - "1.11"
+      - '1.11'
       - "--istio-version"
       - "1.1-latest"
       volumeMounts:
@@ -2267,7 +2267,7 @@ periodics:
       - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/e2e-tests.sh"
       - "--cluster-version"
-      - "1.11"
+      - '1.11'
       - "--istio-version"
       - "1.0-latest"
       volumeMounts:
