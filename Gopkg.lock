@@ -538,7 +538,7 @@
   revision = "b5d43981345bdb2c233eb4bf3277847b48c6fdc6"
 
 [[projects]]
-  digest = "1:4be723a57bbd8ccac717030cef2ff821c498d3fb6eb4751986997f4bac454a1b"
+  digest = "1:e289f85ba02e2df4965a3e92f04c8266b09b8a41171bf33488865e3f94f1fa69"
   name = "google.golang.org/grpc"
   packages = [
     ".",
@@ -547,6 +547,7 @@
     "balancer/grpclb",
     "balancer/grpclb/grpc_lb_v1",
     "balancer/roundrobin",
+    "binarylog/grpc_binarylog_v1",
     "codes",
     "connectivity",
     "credentials",
@@ -558,15 +559,20 @@
     "credentials/alts/internal/handshaker/service",
     "credentials/alts/internal/proto/grpc_gcp",
     "credentials/google",
+    "credentials/internal",
     "credentials/oauth",
     "encoding",
     "encoding/proto",
     "grpclog",
     "internal",
     "internal/backoff",
+    "internal/balancerload",
+    "internal/binarylog",
     "internal/channelz",
     "internal/envconfig",
     "internal/grpcrand",
+    "internal/grpcsync",
+    "internal/syscall",
     "internal/transport",
     "keepalive",
     "metadata",
@@ -580,8 +586,8 @@
     "tap",
   ]
   pruneopts = "NUT"
-  revision = "2e463a05d100327ca47ac218281906921038fd95"
-  version = "v1.16.0"
+  revision = "501c41df7f472c740d0674ff27122f3f48c80ce7"
+  version = "v1.21.1"
 
 [[projects]]
   digest = "1:2d1fbdc6777e5408cabeb02bf336305e724b925ff4546ded0fa8715a7267922a"
