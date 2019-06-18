@@ -802,7 +802,7 @@ func generateVersionBumpertoolPeriodicJob() {
 	data.Base.Args = []string{
 		"--github-account=/etc/prow-auto-bumper-github-token/token",
 		"--git-userid=knative-prow-updater-robot",
-		"--git-username=Knative Prow Updater Robot",
+		"--git-username='Knative Prow Updater Robot'",
 		"--git-email=knative-prow-updater-robot@google.com"}
 	addExtraEnvVarsToJob(&data.Base)
 	configureServiceAccountForJob(&data.Base)
