@@ -98,18 +98,18 @@ func newReport(errorLogs []log_parser.ErrorLog) *report {
 	jobSet := make(map[string]bool)
 	prSet := make(map[int]bool)
 	for _, errorLog := range errorLogs {
-		jobSet[errorLog.JobName] = true
-		prSet[errorLog.PRNumber] = true
+		if !jobSet[errorLog.JobName] {
+			jobSet[errorLog.JobName] = true
+			report.jobs = append(report.jobs, errorLog.JobName)
+		}
+
+		if !prSet[errorLog.PRNumber] {
+			prSet[errorLog.PRNumber] = true
+			report.prs = append(report.prs, errorLog.PRNumber)
+		}
 	}
 
-	for job := range jobSet {
-		report.jobs = append(report.jobs, job)
-	}
 	sort.Strings(report.jobs)
-
-	for pr := range prSet {
-		report.prs = append(report.prs, pr)
-	}
 	sort.Ints(report.prs)
 
 	return &report
