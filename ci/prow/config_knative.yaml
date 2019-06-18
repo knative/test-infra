@@ -195,6 +195,9 @@ periodics:
 
   knative/sample-controller:
     - continuous: true
+  
+  knative/test-infra:
+    - continuous: true
 
   GoogleCloudPlatform/cloud-run-events:
     - continuous: true
