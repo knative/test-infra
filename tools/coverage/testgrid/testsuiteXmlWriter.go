@@ -34,6 +34,8 @@ func NewTestCase(targetName, coverage string, failure bool) junit.TestCase {
 		Name:      targetName,
 	}
 
+	// we want to add <failure> tag to only failed tests. Testgrid treats both
+	// "<failure> true </failure>" and "<failure> false </failure>" as failure
 	if failure {
 		f := strconv.FormatBool(failure)
 		tc.Failure = &f
