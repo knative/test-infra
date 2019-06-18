@@ -25,7 +25,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/knative/test-infra/shared/common"
 	"github.com/knative/test-infra/shared/prow"
 )
 
@@ -55,13 +54,9 @@ func main() {
 	var repoDataAll []*RepoData
 	// Clean up local artifacts directory, this will be used later for artifacts uploads
 	err = os.RemoveAll(prow.GetLocalArtifactsDir()) // this function returns nil if path not found
-	if nil == err {
-		err = common.CreateDir(prow.GetLocalArtifactsDir())
-	}
 	if nil != err {
-		log.Fatalf("Failed preparing local artifacts directory: %v", err)
+		log.Fatalf("Failed removing local artifacts directory: %v", err)
 	}
-
 	for repoName, jobList := range jobConfigs {
 		for _, jc := range jobList {
 			jc.Repo = repoName
@@ -78,7 +73,7 @@ func main() {
 	}
 
 	// Errors that could result in inaccuracy reporting would be treated with fast fail by processGithubIssues,
-	// so any errors returned are github opeations error, which in most cases wouldn't happend, but in case it
+	// so any errors returned are github opeations error, which in most cases wouldn't happen, but in case it
 	// happens, it should fail the job after Slack notification
 	githubErr := ghi.processGithubIssues(repoDataAll, *dryrun)
 	slackErr := sendSlackNotifications(repoDataAll, slackClient, ghi, *dryrun)

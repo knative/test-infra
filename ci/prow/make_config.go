@@ -25,6 +25,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math"
 	"os"
 	"path"
 	"regexp"
@@ -34,7 +35,7 @@ import (
 	"text/template"
 	"time"
 
-	"gopkg.in/yaml.v2"
+	yaml "gopkg.in/yaml.v2"
 )
 
 const (
@@ -90,6 +91,7 @@ type baseProwJobTemplateData struct {
 	GoCoverageThreshold int
 	Image               string
 	Year                int
+	Labels              []string
 }
 
 // ####################################################################################################
@@ -263,6 +265,57 @@ const (
 	dashboardGroupTemplate = "testgrid_dashboardgroup.yaml"
 )
 
+// Generate cron string based on job type, offset generated from jobname
+// instead of assign random value to ensure consistency among runs,
+// timeout is used for determining how many hours apart
+func generateCron(jobType, jobName string, timeout int) string {
+	getUTCtime := func(i int) int { return i + 7 }
+	// Sums the ascii valus of all letters in a jobname,
+	// this value is used for deriving offset after hour
+	var sum float64
+	for _, c := range jobType + jobName {
+		sum += float64(c)
+	}
+	// Divide 60 minutes into 6 buckets
+	bucket := int(math.Mod(sum, 6))
+	// Offset in bucket, range from 0-9, first mod with 11(a random prime number)
+	// to ensure every digit has a chance (i.e., if bucket is 0, sum has to be multiply of 6,
+	// so mod by 10 can only return even number)
+	offsetInBucket := int(math.Mod(math.Mod(sum, 11), 10))
+	minutesOffset := bucket*10 + offsetInBucket
+	// Determines hourly job inteval based on timeout
+	hours := int((timeout+5)/60) + 1 // Allow at least 5 minutes between runs
+	hourCron := fmt.Sprintf("%d * * * *", minutesOffset)
+	if hours > 1 {
+		hourCron = fmt.Sprintf("%d */%d * * *", minutesOffset, hours)
+	}
+	dayCron := fmt.Sprintf("%d %%d * * *", minutesOffset)    // hour
+	weekCron := fmt.Sprintf("%d %%d * * %%d", minutesOffset) // hour, weekday
+
+	var res string
+	switch jobType {
+	case "continuous", "custom-job", "auto-release": // Every hour
+		res = fmt.Sprintf(hourCron)
+	case "branch-ci": // Every day 1-2 PST
+		res = fmt.Sprintf(dayCron, getUTCtime(1))
+	case "nightly": // Every day 2-3 PST
+		res = fmt.Sprintf(dayCron, getUTCtime(2))
+	case "dot-release": // Every Tuesday 2-3 PST
+		res = fmt.Sprintf(weekCron, getUTCtime(2), 2)
+	case "latency": // Every day 1-2 PST
+		res = fmt.Sprintf(dayCron, getUTCtime(1))
+	case "performance": // Every day 1-2 PST
+		res = fmt.Sprintf(dayCron, getUTCtime(1))
+	case "performance-mesh": // Every day 3-4 PST
+		res = fmt.Sprintf(dayCron, getUTCtime(3))
+	case "webhook-apicoverage": // Every day 2-3 PST
+		res = fmt.Sprintf(dayCron, getUTCtime(2))
+	default:
+		log.Printf("job type not supported for cron generation '%s'", jobName)
+	}
+	return res
+}
+
 // Yaml parsing helpers.
 
 // read template yaml file content
@@ -367,6 +420,7 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.VolumeMounts = make([]string, 0)
 	data.Env = make([]string, 0)
 	data.ExtraRefs = []string{"- org: " + data.OrgName, "  repo: " + data.RepoName, "  base_ref: master", "  clone_uri: " + data.CloneURI}
+	data.Labels = make([]string, 0)
 	return data
 }
 
@@ -398,6 +452,11 @@ func addEnvToJob(data *baseProwJobTemplateData, key, value string) {
 	}
 
 	(*data).Env = append((*data).Env, []string{"- name: " + key, "  value: " + value}...)
+}
+
+// addLabelsToJob adds extra labels to a job
+func addLabelToJob(data *baseProwJobTemplateData, key, value string) {
+	(*data).Labels = append((*data).Labels, []string{key + ": " + value}...)
 }
 
 // addVolumeToJob adds the given mount path as volume for the job.
@@ -460,6 +519,10 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 			(*data).Timeout = getInt(item.Value)
 		case "command":
 			(*data).Command = getString(item.Value)
+		case "full-command":
+			parts := strings.Split(getString(item.Value), " ")
+			(*data).Command = parts[0]
+			(*data).Args = parts[1:]
 		case "needs-dind":
 			if getBool(item.Value) {
 				setupDockerInDockerForJob(data)
@@ -632,6 +695,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		case "custom-job":
 			jobType = getString(item.Key)
 			jobNameSuffix = getString(item.Value)
+			data.Base.Timeout = 100
 		case "cron":
 			data.CronString = getString(item.Value)
 		case "release":
@@ -642,6 +706,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			if !getBool(item.Value) {
 				return
 			}
+			jobType = getString(item.Key)
 			jobNameSuffix = "webhook-apicoverage"
 			data.Base.Command = webhookAPICoverageScript
 			addEnvToJob(&data.Base, "SYSTEM_NAMESPACE", data.Base.RepoNameForJob)
@@ -656,6 +721,9 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	data.PeriodicJobName = fmt.Sprintf("ci-%s", data.Base.RepoNameForJob)
 	if jobNameSuffix != "" {
 		data.PeriodicJobName += "-" + jobNameSuffix
+	}
+	if data.CronString == "" {
+		data.CronString = generateCron(jobType, data.PeriodicJobName, data.Base.Timeout)
 	}
 	// Ensure required data exist.
 	if data.CronString == "" {
@@ -756,6 +824,9 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 			fmt.Sprintf("--cov-threshold-percentage=%d", data.Base.GoCoverageThreshold)}
 		data.Base.ServiceAccount = ""
 		addExtraEnvVarsToJob(&data.Base)
+		addLabelToJob(&data.Base, "prow.k8s.io/pubsub.project", "knative-tests")
+		addLabelToJob(&data.Base, "prow.k8s.io/pubsub.topic", "knative-monitoring")
+		addLabelToJob(&data.Base, "prow.k8s.io/pubsub.runID", data.PeriodicJobName)
 		configureServiceAccountForJob(&data.Base)
 		executeJobTemplate("periodic go coverage", readTemplate(periodicCustomJob), title, repoName, data.PeriodicJobName, false, data)
 		return
@@ -1172,9 +1243,9 @@ func generateDashboard(projName string, repoName string, jobNames []string) {
 		switch jobName {
 		case "continuous":
 			executeDashboardTabTemplate("continuous", testGroupName, testgridTabSortByName, noExtras)
-			// This is a special case for knative/serving, as conformance-tests tab is just a filtered view of the continuous tab.
+			// This is a special case for knative/serving, as conformance tab is just a filtered view of the continuous tab.
 			if projRepoStr == "knative-serving" {
-				executeDashboardTabTemplate("conformance-tests", testGroupName, "include-filter-by-regex=test/conformance/&sort-by-name=", noExtras)
+				executeDashboardTabTemplate("conformance", testGroupName, "include-filter-by-regex=test/conformance/&sort-by-name=", noExtras)
 			}
 		case "dot-release", "auto-release", "performance", "performance-mesh", "latency":
 			extras := make(map[string]string)

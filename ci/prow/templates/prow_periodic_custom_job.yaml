@@ -1,5 +1,6 @@
 - cron: "[[.CronString]]"
   name: [[.PeriodicJobName]]
+  [[indent_section 6 "labels" .Base.Labels]]
   agent: kubernetes
   decorate: true
   [[indent_section 4 "decoration_config" .Base.DecorationConfig]]
