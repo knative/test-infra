@@ -32,13 +32,7 @@ const (
 )
 
 // ErrorLog stores a row in the "ErrorLogs" db table
-
-//	ErrorPattern varchar(4095) NOT NULL,
-//	ErrorMsg     varchar(4095) NOT NULL,
-//	JobName      varchar(1023) NOT NULL, /*e.g. pull-knative-serving-integration-tests*/
-//	PRNumber     int, /*pull request number; null for non pull jobs*/
-//	BuildLogURL  varchar(1023) NOT NULL, /*link to build-log.txt file*/
-//	TimeStamp    timestamp, /* stamps the time the record is added*/
+// Table schema: github.com/knative/test-infra/tools/monitoring/mysql/schema.sql
 type ErrorLog struct {
 	Pattern     string
 	Msg         string

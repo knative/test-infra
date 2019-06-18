@@ -85,6 +85,7 @@ func GetErrorLogs(s *config.SelectedConfig, errorPattern string, db *sql.DB) ([]
 		if err != nil {
 			return result, err
 		}
+		result = append(result, entry)
 	}
 
 	return result, nil
@@ -92,6 +93,8 @@ func GetErrorLogs(s *config.SelectedConfig, errorPattern string, db *sql.DB) ([]
 
 func newReport(errorLogs []log_parser.ErrorLog) *report {
 	report := report{logs: errorLogs}
+
+	// Use sets to store unique values only
 	jobSet := make(map[string]bool)
 	prSet := make(map[int]bool)
 	for _, errorLog := range errorLogs {

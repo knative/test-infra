@@ -69,8 +69,6 @@ func (m *MailConfig) Alert(errorPattern string, s *config.SelectedConfig, db *sq
 }
 
 // checkAlertsTable checks alert table and see if it is necessary to send alert email
-// returns a sql statement that contains db update action to perform. An empty string indicates
-// no db operations to perform and no alert email needs to be sent
 func checkAlertsTable(errorPattern string, window time.Duration, db *sql.DB) (bool, error) {
 	var id int
 	var sent time.Time
