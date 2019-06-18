@@ -2,7 +2,7 @@
 
 
 [[projects]]
-  digest = "1:c6bb2c92ada7b5509167a42186932ecd6680fa948a7f7bbea80566405183031a"
+  digest = "1:b12c010ad319108c4587cce98a166d50c5e0871c996e410020e63aaf914b8cb0"
   name = "cloud.google.com/go"
   packages = [
     "compute/metadata",
@@ -17,8 +17,8 @@
     "storage",
   ]
   pruneopts = "NUT"
-  revision = "74b12019e2aa53ec27882158f59192d7cd6d1998"
-  version = "v0.33.1"
+  revision = "775730d6e48254a2430366162cf6298e5368833c"
+  version = "v0.39.0"
 
 [[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
@@ -156,9 +156,9 @@
   revision = "3c8ad1f0b0644b6646210ee9cf2f34ff907e2e18"
 
 [[projects]]
-  digest = "1:fb9f5147a9d6fc69057d05b0739bcd79562c55db143c3bdacfe1c9c6129461f6"
+  digest = "1:0f5b7c22ec030b55dab3cd62dcec1ad8e79d38722b2c6339f059d85af914c231"
   name = "github.com/googleapis/gax-go"
-  packages = ["."]
+  packages = ["v2"]
   pruneopts = "NUT"
   revision = "b001040cd31805261cbd978842099e326dfa857b"
   version = "v2.0.2"

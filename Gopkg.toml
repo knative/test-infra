@@ -15,3 +15,7 @@ required = [
 [[prune.project]]
   name = "github.com/google/licenseclassifier"
   non-go = false
+
+[[constraint]]
+  name = "cloud.google.com/go"
+  version = "0.39.0"
