@@ -24,6 +24,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/knative/test-infra/shared/gcs"
 	"github.com/knative/test-infra/shared/mysql"
 	"github.com/knative/test-infra/tools/monitoring/config"
 	"github.com/knative/test-infra/tools/monitoring/mail"
@@ -42,7 +43,7 @@ var (
 const (
 	projectID = "knative-tests"
 
-	yamlURL = "https://raw.githubusercontent.com/knative/test-infra/master/tools/monitoring/sample.yaml"
+	yamlURL = "https://raw.githubusercontent.com/knative/test-infra/master/tools/monitoring/config/sample.yaml"
 	subName = "test-infra-monitoring-sub"
 )
 
@@ -57,6 +58,8 @@ func main() {
 	dbHost := flag.String("database-host", "/secrets/cloudsql/monitoringdb/host", "Database host secret file")
 	mailAddrSF := flag.String("sender-email", "/secrets/sender-email/mail", "Alert sender email address file")
 	mailPassSF := flag.String("sender-password", "/secrets/sender-email/password", "Alert sender email password file")
+
+	serviceAccount := flag.String("service-account", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"), "JSON key file for GCS service account")
 
 	flag.Parse()
 
@@ -74,6 +77,11 @@ func main() {
 	client, err = subscriber.NewSubscriberClient(ctx, projectID, subName)
 	if err != nil {
 		log.Fatalf("Failed to initialize the subscriber %+v", err)
+	}
+
+	err = gcs.Authenticate(context.Background(), *serviceAccount)
+	if err != nil {
+		log.Fatalf("Failed to authenticate gcs %+v", err)
 	}
 
 	// use PORT environment variable, or default to 8080

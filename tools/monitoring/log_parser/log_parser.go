@@ -38,13 +38,9 @@ func collectMatches(regexps []regexp.Regexp, text []byte) []ErrorLog {
 	return errorLogs
 }
 
-// ParseLog fetches build log from given url and checks it against given error patterns. Return
+// ParseLog checks content against given error patterns. Return
 // all found error patterns and error messages in pairs.
-func ParseLog(url string, patterns []string) ([]ErrorLog, error) {
-	content, err := config.GetFileBytes(url)
-	if err != nil {
-		return nil, err
-	}
+func ParseLog(content []byte, patterns []string) ([]ErrorLog, error) {
 	regexps, badPatterns := config.CompilePatterns(patterns)
 	if len(badPatterns) != 0 {
 		log.Printf("The following patterns cannot be compiled: %v", badPatterns)

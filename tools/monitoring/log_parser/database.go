@@ -22,15 +22,13 @@ import (
 	"time"
 
 	"github.com/knative/test-infra/shared/mysql"
-	"github.com/knative/test-infra/tools/monitoring/config"
 )
 
-const (
-	logInsertStmt = `
-	INSERT INTO ErrorLogs (
-		ErrorPattern, ErrorMsg, JobName, PRNumber, BuildLogURL, TimeStamp
-		) VALUES (?,?,?,?,?,?)`
-)
+// MonitoringDatabase holds an active database connection created in `config`
+type MonitoringDatabase struct {
+	*sql.DB
+	config mysql.DBConfig
+}
 
 // ErrorLog stores a row in the "ErrorLogs" db table
 // Table schema: github.com/knative/test-infra/tools/monitoring/mysql/schema.sql
@@ -49,36 +47,26 @@ func (e ErrorLog) String() string {
 		e.TimeStamp, e.Msg, e.JobName, e.PRNumber, e.BuildLogURL)
 }
 
-// PubsubMsgHandler adds record(s) to ErrorLogs table in database,
-// after parsing build log and compares the result with config yaml
-func PubsubMsgHandler(db *sql.DB, configURL, buildLogURL, jobname string, prNumber int) error {
-	config, err := config.ParseYaml(configURL)
-	if err != nil {
-		return err
-	}
-
-	errorLogs, err := ParseLog(buildLogURL, config.CollectErrorPatterns())
-	if err != nil {
-		return err
-	}
-
-	tx, err := db.Begin()
-	if err != nil {
-		return err
-	}
-
-	stmt, err := tx.Prepare(logInsertStmt)
+func (db *MonitoringDatabase) insertErrorLog(errPat string, errMsg string, jobName string, prNum int, blogURL string) error {
+	stmt, err := db.Prepare(`INSERT INTO ErrorLogs(ErrorPattern, ErrorMsg, JobName, PRNumber, BuildLogURL, TimeStamp)
+				VALUES (?, ?, ?, ?, ?, ?)`)
 	defer stmt.Close()
 
+	_, err = execAffectingOneRow(stmt, errPat, errMsg, jobName, prNum, blogURL, time.Now())
+	return err
+}
+
+// execAffectingOneRow executes a given statement, expecting one row to be affected.
+func execAffectingOneRow(stmt *sql.Stmt, args ...interface{}) (sql.Result, error) {
+	r, err := stmt.Exec(args...)
 	if err != nil {
-		return mysql.RollbackTx(tx, err)
+		return r, fmt.Errorf("mysql: could not execute statement: %v", err)
 	}
-
-	for _, errorLog := range errorLogs {
-		if _, err := stmt.Exec(errorLog.Pattern, errorLog.Msg, jobname, prNumber, buildLogURL, time.Now()); err != nil {
-			return mysql.RollbackTx(tx, err)
-		}
+	rowsAffected, err := r.RowsAffected()
+	if err != nil {
+		return r, fmt.Errorf("mysql: could not get rows affected: %v", err)
+	} else if rowsAffected != 1 {
+		return r, fmt.Errorf("mysql: expected 1 row affected, got %d", rowsAffected)
 	}
-
-	return tx.Commit()
+	return r, nil
 }
