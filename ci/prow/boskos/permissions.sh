@@ -20,12 +20,13 @@ readonly PROJECT=${1:?"First argument must be the new boskos project name."}
 readonly OWNERS=("prime-engprod-sea@google.com")
 readonly GROUPS=("knative-productivity-admins@googlegroups.com")
 readonly SAS=(
-    "knative-tests@appspot.gserviceaccount.com" \
-    "prow-job@knative-tests.iam.gserviceaccount.com" \
-    "prow-job@knative-nightly.iam.gserviceaccount.com" \
+    "knative-tests@appspot.gserviceaccount.com"
+    "prow-job@knative-tests.iam.gserviceaccount.com"
+    "prow-job@knative-nightly.iam.gserviceaccount.com"
     "prow-job@knative-releases.iam.gserviceaccount.com")
 readonly APIS=(
-    "compute.googleapis.com" \
+    "cloudresourcemanager.googleapis.com"
+    "compute.googleapis.com"
     "container.googleapis.com")
 
 # Add an owner to the PROJECT
