@@ -5,21 +5,16 @@
     always_run: [[.Base.AlwaysRun]]
     rerun_command: "/test [[.PresubmitPullJobName]]"
     trigger: "(?m)^/test (all|[[.PresubmitPullJobName]]),?(\\s+|$)"
+    decorate: true
+    [[.Base.PathAliasFull]]
     [[indent_array_section 4 "skip_branches" .Base.SkipBranches]]
     spec:
       containers:
       - image: [[.Base.Image]]
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=[[.Base.ServiceAccount]]"
-        - "--upload=[[.Base.GcsPresubmitLogDir]]"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         [[indent_array 8 .PresubmitCommand]]
         [[indent_section 10 "securityContext" .Base.SecurityContext]]
         [[indent_section 8 "volumeMounts" .Base.VolumeMounts]]

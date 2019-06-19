@@ -89,20 +89,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-serving-build-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-build-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
@@ -124,20 +118,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-serving-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-unit-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
@@ -159,20 +147,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-serving-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-integration-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-tests.sh"
@@ -195,20 +177,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-serving-upgrade-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-upgrade-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-upgrade-tests.sh"
@@ -231,6 +207,7 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-serving-smoke-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-smoke-tests),?(\\s+|$)"
+    decorate: true
     skip_branches:
     - "release-0.4"
     - "release-0.5"
@@ -239,16 +216,9 @@ presubmits:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-smoke-tests.sh"
@@ -273,7 +243,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-serving-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "https://github.com/knative/serving.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -301,7 +270,6 @@ presubmits:
     trigger: "(?m)^/test (pull-knative-serving-go-coverage-dev),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "https://github.com/knative/serving.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage-dev:latest-dev
@@ -327,20 +295,14 @@ presubmits:
     always_run: false
     rerun_command: "/test pull-knative-serving-perf-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-perf-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/performance-tests.sh"
         volumeMounts:
         - name: test-account
@@ -362,20 +324,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-build-build-tests"
     trigger: "(?m)^/test (all|pull-knative-build-build-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
@@ -397,20 +353,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-build-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-build-unit-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
@@ -432,20 +382,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-build-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-build-integration-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
         securityContext:
@@ -477,7 +421,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-build-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "https://github.com/knative/build.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -504,20 +447,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-client-build-tests"
     trigger: "(?m)^/test (all|pull-knative-client-build-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
@@ -539,20 +476,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-client-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-client-unit-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
@@ -574,20 +505,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-client-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-client-integration-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
         volumeMounts:
@@ -611,7 +536,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-client-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "https://github.com/knative/client.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -638,20 +562,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-eventing-build-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-build-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
@@ -673,20 +591,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-eventing-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-unit-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
@@ -708,20 +620,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-eventing-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-integration-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
         volumeMounts:
@@ -745,7 +651,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-eventing-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "https://github.com/knative/eventing.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -772,20 +677,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-eventing-contrib-build-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-contrib-build-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
@@ -807,20 +706,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-eventing-contrib-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-contrib-unit-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
@@ -842,20 +735,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-eventing-contrib-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-contrib-integration-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
         volumeMounts:
@@ -879,7 +766,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-eventing-contrib-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "https://github.com/knative/eventing-contrib.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -906,20 +792,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-docs-build-tests"
     trigger: "(?m)^/test (all|pull-knative-docs-build-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
@@ -941,20 +821,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-docs-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-docs-unit-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
@@ -976,20 +850,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-docs-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-docs-integration-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
         securityContext:
@@ -1021,7 +889,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-docs-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "https://github.com/knative/docs.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -1048,20 +915,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-build-templates-build-tests"
     trigger: "(?m)^/test (all|pull-knative-build-templates-build-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
@@ -1083,20 +944,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-build-templates-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-build-templates-unit-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
@@ -1118,20 +973,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-build-templates-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-build-templates-integration-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
         volumeMounts:
@@ -1154,20 +1003,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-pkg-build-tests"
     trigger: "(?m)^/test (all|pull-knative-pkg-build-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
@@ -1189,20 +1032,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-pkg-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-pkg-unit-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
@@ -1224,20 +1061,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-pkg-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-pkg-integration-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
         volumeMounts:
@@ -1261,7 +1092,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-pkg-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "https://github.com/knative/pkg.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -1288,20 +1118,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-test-infra-build-tests"
     trigger: "(?m)^/test (all|pull-knative-test-infra-build-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
@@ -1323,20 +1147,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-test-infra-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-test-infra-unit-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
@@ -1358,20 +1176,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-test-infra-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-test-infra-integration-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
         volumeMounts:
@@ -1394,20 +1206,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-caching-build-tests"
     trigger: "(?m)^/test (all|pull-knative-caching-build-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
@@ -1429,20 +1235,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-caching-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-caching-unit-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
@@ -1464,20 +1264,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-caching-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-caching-integration-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
         volumeMounts:
@@ -1501,7 +1295,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-caching-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "https://github.com/knative/caching.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -1528,20 +1321,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-observability-build-tests"
     trigger: "(?m)^/test (all|pull-knative-observability-build-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
@@ -1563,20 +1350,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-observability-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-observability-unit-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
@@ -1598,20 +1379,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-observability-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-observability-integration-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
         volumeMounts:
@@ -1634,20 +1409,15 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-sample-controller-build-tests"
     trigger: "(?m)^/test (all|pull-knative-sample-controller-build-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/sample-controller
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
@@ -1669,20 +1439,15 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-knative-sample-controller-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-sample-controller-unit-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/sample-controller
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
@@ -1705,20 +1470,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-googlecloudplatform-cloud-run-events-build-tests"
     trigger: "(?m)^/test (all|pull-googlecloudplatform-cloud-run-events-build-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
@@ -1740,20 +1499,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-googlecloudplatform-cloud-run-events-unit-tests"
     trigger: "(?m)^/test (all|pull-googlecloudplatform-cloud-run-events-unit-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
@@ -1775,20 +1528,14 @@ presubmits:
     always_run: true
     rerun_command: "/test pull-googlecloudplatform-cloud-run-events-integration-tests"
     trigger: "(?m)^/test (all|pull-googlecloudplatform-cloud-run-events-integration-tests),?(\\s+|$)"
+    decorate: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
+        command:
+        - runner.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
-        - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://knative-prow/pr-logs"
-        - "--" # end bootstrap args, scenario args below
-        - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
         volumeMounts:
@@ -1812,7 +1559,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-googlecloudplatform-cloud-run-events-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "https://github.com/GoogleCloudPlatform/cloud-run-events.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -1836,21 +1582,18 @@ periodics:
 - cron: "10 */2 * * *"
   name: ci-knative-serving-continuous
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/serving"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=100" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/presubmit-tests.sh"
       - "--all-tests"
       - "--emit-metrics"
@@ -1870,21 +1613,18 @@ periodics:
 - cron: "6 8 * * *"
   name: ci-knative-serving-0.4-continuous
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/serving=release-0.4"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=180" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--nopublish"
       - "--notag-release"
@@ -1914,21 +1654,18 @@ periodics:
 - cron: "17 8 * * *"
   name: ci-knative-serving-0.5-continuous
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/serving=release-0.5"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=180" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--nopublish"
       - "--notag-release"
@@ -1958,21 +1695,18 @@ periodics:
 - cron: "28 8 * * *"
   name: ci-knative-serving-0.6-continuous
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/serving=release-0.6"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=180" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--nopublish"
       - "--notag-release"
@@ -2002,21 +1736,18 @@ periodics:
 - cron: "10 */2 * * *"
   name: ci-knative-serving-istio-1.0.7-mesh
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/serving"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=100" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/e2e-tests.sh"
       - "--istio-version"
       - "1.0.7"
@@ -2037,21 +1768,18 @@ periodics:
 - cron: "31 */2 * * *"
   name: ci-knative-serving-istio-1.0.7-no-mesh
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/serving"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=100" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/e2e-tests.sh"
       - "--istio-version"
       - "1.0.7"
@@ -2072,21 +1800,18 @@ periodics:
 - cron: "20 */2 * * *"
   name: ci-knative-serving-istio-1.1.7-mesh
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/serving"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=100" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/e2e-tests.sh"
       - "--istio-version"
       - "1.1.7"
@@ -2107,21 +1832,18 @@ periodics:
 - cron: "42 */2 * * *"
   name: ci-knative-serving-istio-1.1.7-no-mesh
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/serving"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=100" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/e2e-tests.sh"
       - "--istio-version"
       - "1.1.7"
@@ -2139,24 +1861,153 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "56 9 * * *"
-  name: ci-knative-serving-nightly-release
+- cron: "19 */2 * * *"
+  name: ci-knative-serving-k8s-1.12-istio-1.1
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/serving"
-      - "--root=/go/src"
-      - "--service-account=/etc/nightly-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=90" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
+      - "./test/e2e-tests.sh"
+      - "--cluster-version"
+      - '1.12'
+      - "--istio-version"
+      - "1.1-latest"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "8 */2 * * *"
+  name: ci-knative-serving-k8s-1.12-istio-1.0
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/e2e-tests.sh"
+      - "--cluster-version"
+      - '1.12'
+      - "--istio-version"
+      - "1.0-latest"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "8 */2 * * *"
+  name: ci-knative-serving-k8s-1.11-istio-1.1
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/e2e-tests.sh"
+      - "--cluster-version"
+      - '1.11'
+      - "--istio-version"
+      - "1.1-latest"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "57 */2 * * *"
+  name: ci-knative-serving-k8s-1.11-istio-1.0
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/e2e-tests.sh"
+      - "--cluster-version"
+      - '1.11'
+      - "--istio-version"
+      - "1.0-latest"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "56 9 * * *"
+  name: ci-knative-serving-nightly-release
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
       - "./hack/release.sh"
       - "--publish"
       - "--tag-release"
@@ -2176,21 +2027,18 @@ periodics:
 - cron: "37 9 * * 2"
   name: ci-knative-serving-dot-release
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/serving"
-      - "--root=/go/src"
-      - "--service-account=/etc/release-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=90" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--dot-release"
       - "--release-gcs knative-releases/serving"
@@ -2218,21 +2066,18 @@ periodics:
 - cron: "34 */2 * * *"
   name: ci-knative-serving-auto-release
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/serving"
-      - "--root=/go/src"
-      - "--service-account=/etc/release-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=90" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--auto-release"
       - "--release-gcs knative-releases/serving"
@@ -2265,7 +2110,6 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
-    clone_uri: "https://github.com/knative/serving.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/metrics:latest
@@ -2292,21 +2136,18 @@ periodics:
 - cron: "58 8 * * *"
   name: ci-knative-serving-performance
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/serving"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=120" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/performance-tests.sh"
       volumeMounts:
       - name: monitoring-db-credentials
@@ -2334,21 +2175,18 @@ periodics:
 - cron: "50 10 * * *"
   name: ci-knative-serving-performance-mesh
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/serving"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=120" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/performance-tests.sh"
       - "--mesh"
       volumeMounts:
@@ -2377,21 +2215,18 @@ periodics:
 - cron: "13 9 * * *"
   name: ci-knative-serving-webhook-apicoverage
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/serving"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=50" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/apicoverage.sh"
       volumeMounts:
       - name: test-account
@@ -2420,7 +2255,6 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
-    clone_uri: "https://github.com/knative/serving.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -2433,21 +2267,18 @@ periodics:
 - cron: "34 * * * *"
   name: ci-knative-build-continuous
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: build
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/build"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=50" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/presubmit-tests.sh"
       - "--all-tests"
       - "--emit-metrics"
@@ -2467,21 +2298,18 @@ periodics:
 - cron: "30 8 * * *"
   name: ci-knative-build-0.5-continuous
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: build
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/build=release-0.5"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=180" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--nopublish"
       - "--notag-release"
@@ -2511,21 +2339,18 @@ periodics:
 - cron: "41 8 * * *"
   name: ci-knative-build-0.6-continuous
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: build
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/build=release-0.6"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=180" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--nopublish"
       - "--notag-release"
@@ -2555,21 +2380,18 @@ periodics:
 - cron: "10 9 * * *"
   name: ci-knative-build-nightly-release
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: build
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/build"
-      - "--root=/go/src"
-      - "--service-account=/etc/nightly-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=90" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--publish"
       - "--tag-release"
@@ -2597,21 +2419,18 @@ periodics:
 - cron: "50 9 * * 2"
   name: ci-knative-build-dot-release
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: build
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/build"
-      - "--root=/go/src"
-      - "--service-account=/etc/release-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=90" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--dot-release"
       - "--release-gcs knative-releases/build"
@@ -2639,21 +2458,18 @@ periodics:
 - cron: "58 */2 * * *"
   name: ci-knative-build-auto-release
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: build
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/build"
-      - "--root=/go/src"
-      - "--service-account=/etc/release-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=90" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--auto-release"
       - "--release-gcs knative-releases/build"
@@ -2694,7 +2510,6 @@ periodics:
   - org: knative
     repo: build
     base_ref: master
-    clone_uri: "https://github.com/knative/build.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/metrics:latest
@@ -2730,7 +2545,6 @@ periodics:
   - org: knative
     repo: build
     base_ref: master
-    clone_uri: "https://github.com/knative/build.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -2743,21 +2557,18 @@ periodics:
 - cron: "5 * * * *"
   name: ci-knative-client-continuous
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: client
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/client"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=50" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/presubmit-tests.sh"
       - "--all-tests"
       - "--emit-metrics"
@@ -2777,21 +2588,18 @@ periodics:
 - cron: "40 9 * * *"
   name: ci-knative-client-nightly-release
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: client
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/client"
-      - "--root=/go/src"
-      - "--service-account=/etc/nightly-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=90" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--publish"
       - "--tag-release"
@@ -2811,21 +2619,18 @@ periodics:
 - cron: "21 9 * * 2"
   name: ci-knative-client-dot-release
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: client
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/client"
-      - "--root=/go/src"
-      - "--service-account=/etc/release-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=90" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--dot-release"
       - "--release-gcs knative-releases/client"
@@ -2853,21 +2658,18 @@ periodics:
 - cron: "29 */2 * * *"
   name: ci-knative-client-auto-release
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: client
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/client"
-      - "--root=/go/src"
-      - "--service-account=/etc/release-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=90" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--auto-release"
       - "--release-gcs knative-releases/client"
@@ -2904,7 +2706,6 @@ periodics:
   - org: knative
     repo: client
     base_ref: master
-    clone_uri: "https://github.com/knative/client.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -2917,21 +2718,18 @@ periodics:
 - cron: "20 * * * *"
   name: ci-knative-docs-continuous
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: docs
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/docs"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=50" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/presubmit-tests.sh"
       - "--all-tests"
       - "--emit-metrics"
@@ -2968,7 +2766,6 @@ periodics:
   - org: knative
     repo: docs
     base_ref: master
-    clone_uri: "https://github.com/knative/docs.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -2981,21 +2778,18 @@ periodics:
 - cron: "30 */2 * * *"
   name: ci-knative-eventing-continuous
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: eventing
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/eventing"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=90" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/presubmit-tests.sh"
       - "--all-tests"
       - "--emit-metrics"
@@ -3015,21 +2809,18 @@ periodics:
 - cron: "36 8 * * *"
   name: ci-knative-eventing-0.5-continuous
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: eventing
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/eventing=release-0.5"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=180" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--nopublish"
       - "--notag-release"
@@ -3059,21 +2850,18 @@ periodics:
 - cron: "47 8 * * *"
   name: ci-knative-eventing-0.6-continuous
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: eventing
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/eventing=release-0.6"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=180" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--nopublish"
       - "--notag-release"
@@ -3103,21 +2891,18 @@ periodics:
 - cron: "15 9 * * *"
   name: ci-knative-eventing-nightly-release
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: eventing
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/eventing"
-      - "--root=/go/src"
-      - "--service-account=/etc/nightly-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=90" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--publish"
       - "--tag-release"
@@ -3137,21 +2922,18 @@ periodics:
 - cron: "56 9 * * 2"
   name: ci-knative-eventing-dot-release
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: eventing
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/eventing"
-      - "--root=/go/src"
-      - "--service-account=/etc/release-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=90" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--dot-release"
       - "--release-gcs knative-releases/eventing"
@@ -3179,21 +2961,18 @@ periodics:
 - cron: "53 */2 * * *"
   name: ci-knative-eventing-auto-release
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: eventing
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/eventing"
-      - "--root=/go/src"
-      - "--service-account=/etc/release-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=90" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--auto-release"
       - "--release-gcs knative-releases/eventing"
@@ -3230,7 +3009,6 @@ periodics:
   - org: knative
     repo: eventing
     base_ref: master
-    clone_uri: "https://github.com/knative/eventing.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -3243,21 +3021,18 @@ periodics:
 - cron: "35 * * * *"
   name: ci-knative-eventing-contrib-continuous
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: eventing-contrib
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/eventing-contrib"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=50" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/presubmit-tests.sh"
       - "--all-tests"
       - "--emit-metrics"
@@ -3277,21 +3052,18 @@ periodics:
 - cron: "31 8 * * *"
   name: ci-knative-eventing-contrib-0.5-continuous
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: eventing-contrib
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/eventing-contrib=release-0.5"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=180" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--nopublish"
       - "--notag-release"
@@ -3321,21 +3093,18 @@ periodics:
 - cron: "42 8 * * *"
   name: ci-knative-eventing-contrib-0.6-continuous
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: eventing-contrib
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/eventing-contrib=release-0.6"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=180" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--nopublish"
       - "--notag-release"
@@ -3365,21 +3134,18 @@ periodics:
 - cron: "10 9 * * *"
   name: ci-knative-eventing-contrib-nightly-release
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: eventing-contrib
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/eventing-contrib"
-      - "--root=/go/src"
-      - "--service-account=/etc/nightly-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=90" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--publish"
       - "--tag-release"
@@ -3399,21 +3165,18 @@ periodics:
 - cron: "51 9 * * 2"
   name: ci-knative-eventing-contrib-dot-release
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: eventing-contrib
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/eventing-contrib"
-      - "--root=/go/src"
-      - "--service-account=/etc/release-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=90" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--dot-release"
       - "--release-gcs knative-releases/eventing-contrib"
@@ -3441,21 +3204,18 @@ periodics:
 - cron: "59 */2 * * *"
   name: ci-knative-eventing-contrib-auto-release
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: eventing-contrib
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/eventing-contrib"
-      - "--root=/go/src"
-      - "--service-account=/etc/release-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=90" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--auto-release"
       - "--release-gcs knative-releases/eventing-contrib"
@@ -3492,7 +3252,6 @@ periodics:
   - org: knative
     repo: eventing-contrib
     base_ref: master
-    clone_uri: "https://github.com/knative/eventing-contrib.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -3505,21 +3264,18 @@ periodics:
 - cron: "31 * * * *"
   name: ci-knative-build-templates-continuous
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: build-templates
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/build-templates"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=50" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/presubmit-tests.sh"
       - "--all-tests"
       - "--emit-metrics"
@@ -3539,21 +3295,18 @@ periodics:
 - cron: "17 * * * *"
   name: ci-knative-pkg-continuous
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: pkg
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/pkg"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=50" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/presubmit-tests.sh"
       - "--all-tests"
       - "--emit-metrics"
@@ -3582,7 +3335,6 @@ periodics:
   - org: knative
     repo: pkg
     base_ref: master
-    clone_uri: "https://github.com/knative/pkg.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -3595,21 +3347,18 @@ periodics:
 - cron: "6 * * * *"
   name: ci-knative-caching-continuous
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: caching
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/caching"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=50" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/presubmit-tests.sh"
       - "--all-tests"
       - "--emit-metrics"
@@ -3638,7 +3387,6 @@ periodics:
   - org: knative
     repo: caching
     base_ref: master
-    clone_uri: "https://github.com/knative/caching.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -3651,21 +3399,18 @@ periodics:
 - cron: "3 * * * *"
   name: ci-knative-observability-continuous
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: observability
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/observability"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=50" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/presubmit-tests.sh"
       - "--all-tests"
       - "--emit-metrics"
@@ -3685,21 +3430,19 @@ periodics:
 - cron: "1 * * * *"
   name: ci-knative-sample-controller-continuous
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: sample-controller
+    base_ref: master
+    path_alias: knative.dev/sample-controller
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/sample-controller"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=50" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/presubmit-tests.sh"
       - "--all-tests"
       - "--emit-metrics"
@@ -3719,21 +3462,18 @@ periodics:
 - cron: "42 * * * *"
   name: ci-knative-test-infra-continuous
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/knative/test-infra"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=50" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/presubmit-tests.sh"
       - "--all-tests"
       - "--emit-metrics"
@@ -3753,21 +3493,18 @@ periodics:
 - cron: "13 * * * *"
   name: ci-googlecloudplatform-cloud-run-events-continuous
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: GoogleCloudPlatform
+    repo: cloud-run-events
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/GoogleCloudPlatform/cloud-run-events"
-      - "--root=/go/src"
-      - "--service-account=/etc/test-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=50" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./test/presubmit-tests.sh"
       - "--all-tests"
       - "--emit-metrics"
@@ -3787,21 +3524,18 @@ periodics:
 - cron: "59 9 * * *"
   name: ci-googlecloudplatform-cloud-run-events-nightly-release
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: GoogleCloudPlatform
+    repo: cloud-run-events
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/GoogleCloudPlatform/cloud-run-events"
-      - "--root=/go/src"
-      - "--service-account=/etc/nightly-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=90" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--publish"
       - "--tag-release"
@@ -3821,21 +3555,18 @@ periodics:
 - cron: "30 9 * * 2"
   name: ci-googlecloudplatform-cloud-run-events-dot-release
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: GoogleCloudPlatform
+    repo: cloud-run-events
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/GoogleCloudPlatform/cloud-run-events"
-      - "--root=/go/src"
-      - "--service-account=/etc/release-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=90" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--dot-release"
       - "--release-gcs knative-releases/cloud-run-events"
@@ -3863,21 +3594,18 @@ periodics:
 - cron: "37 */2 * * *"
   name: ci-googlecloudplatform-cloud-run-events-auto-release
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: GoogleCloudPlatform
+    repo: cloud-run-events
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
+      command:
+      - runner.sh
       args:
-      - "--scenario=kubernetes_execute_bazel"
-      - "--clean"
-      - "--job=$(JOB_NAME)"
-      - "--repo=github.com/GoogleCloudPlatform/cloud-run-events"
-      - "--root=/go/src"
-      - "--service-account=/etc/release-account/service-account.json"
-      - "--upload=gs://knative-prow/logs"
-      - "--timeout=90" # Avoid overrun
-      - "--" # end bootstrap args, scenario args below
-      - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
       - "./hack/release.sh"
       - "--auto-release"
       - "--release-gcs knative-releases/cloud-run-events"
@@ -3914,7 +3642,6 @@ periodics:
   - org: GoogleCloudPlatform
     repo: cloud-run-events
     base_ref: master
-    clone_uri: "https://github.com/GoogleCloudPlatform/cloud-run-events.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -3934,7 +3661,6 @@ periodics:
   - org: knative
     repo: test-infra
     base_ref: master
-    clone_uri: "https://github.com/knative/test-infra.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3963,7 +3689,6 @@ periodics:
   - org: knative
     repo: test-infra
     base_ref: master
-    clone_uri: "https://github.com/knative/test-infra.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/flaky-test-reporter:latest
@@ -4002,7 +3727,6 @@ periodics:
   - org: knative
     repo: test-infra
     base_ref: master
-    clone_uri: "https://github.com/knative/test-infra.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-auto-bumper:latest
@@ -4055,7 +3779,6 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "https://github.com/knative/serving.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -4070,7 +3793,6 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "https://github.com/knative/serving.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage-dev:latest-dev
@@ -4086,7 +3808,6 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "https://github.com/knative/build.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -4102,7 +3823,6 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "https://github.com/knative/client.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -4118,7 +3838,6 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "https://github.com/knative/eventing.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -4134,7 +3853,6 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "https://github.com/knative/eventing-contrib.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -4150,7 +3868,6 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "https://github.com/knative/docs.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -4166,7 +3883,6 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "https://github.com/knative/pkg.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -4182,7 +3898,6 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "https://github.com/knative/caching.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -4198,7 +3913,6 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "https://github.com/GoogleCloudPlatform/cloud-run-events.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest

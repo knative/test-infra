@@ -93,6 +93,8 @@ type baseProwJobTemplateData struct {
 	Image               string
 	Year                int
 	Labels              []string
+	PathAlias           string
+	PathAliasFull       string
 }
 
 // ####################################################################################################
@@ -421,7 +423,7 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.Volumes = make([]string, 0)
 	data.VolumeMounts = make([]string, 0)
 	data.Env = make([]string, 0)
-	data.ExtraRefs = []string{"- org: " + data.OrgName, "  repo: " + data.RepoName, "  base_ref: master", "  clone_uri: " + data.CloneURI}
+	data.ExtraRefs = []string{"- org: " + data.OrgName, "  repo: " + data.RepoName, "  base_ref: master"}
 	data.Labels = make([]string, 0)
 	return data
 }
@@ -531,6 +533,10 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 			}
 		case "always_run":
 			(*data).AlwaysRun = getBool(item.Value)
+		case "dot-dev":
+			(*data).PathAlias = "knative.dev/" + (*data).RepoName
+			(*data).PathAliasFull = "path_alias: " + (*data).PathAlias
+			(*data).ExtraRefs = append((*data).ExtraRefs, "  path_alias: "+(*data).PathAlias)
 		case nil: // already processed
 			continue
 		default:
@@ -907,6 +913,9 @@ func gitHubRepo(data baseProwJobTemplateData) string {
 	if repositoryOverride != "" {
 		return repositoryOverride
 	}
+	if data.PathAlias != "" {
+		return data.PathAlias
+	}
 	s := data.RepoURI
 	if data.RepoBranch != "" {
 		s += "=" + data.RepoBranch
@@ -925,7 +934,7 @@ func quote(s string) string {
 	if isNum(s) {
 		return s
 	}
-	if strings.Contains(s, "\"") || strings.Contains(s, ": ") || strings.HasSuffix(s, ":") {
+	if strings.HasPrefix(s, "'") || strings.HasPrefix(s, "\"") || strings.Contains(s, ": ") || strings.HasSuffix(s, ":") {
 		return s
 	}
 	return "\"" + s + "\""
@@ -1235,7 +1244,8 @@ func generateTestGroup(projName string, repoName string, jobNames []string) {
 			extras["short_text_metric"] = "coverage"
 			// Do not alert on coverage failures (i.e., coverage below threshold)
 			extras["num_failures_to_alert"] = "9999"
-		case "istio-1.0.7-mesh", "istio-1.0.7-no-mesh", "istio-1.1.7-mesh", "istio-1.1.7-no-mesh":
+		case "istio-1.0.7-mesh", "istio-1.0.7-no-mesh", "istio-1.1.7-mesh", "istio-1.1.7-no-mesh",
+			"k8s-1.12-istio-1.1", "k8s-1.12-istio-1.0", "k8s-1.11-istio-1.1", "k8s-1.11-istio-1.0":
 			extras["alert_stale_results_hours"] = "3"
 			extras["num_failures_to_alert"] = "3"
 		default:
@@ -1283,7 +1293,8 @@ func generateDashboard(projName string, repoName string, jobNames []string) {
 			executeDashboardTabTemplate("nightly", testGroupName, testgridTabSortByName, noExtras)
 		case "test-coverage":
 			executeDashboardTabTemplate("coverage", testGroupName, testgridTabGroupByDir, noExtras)
-		case "istio-1.0.7-mesh", "istio-1.0.7-no-mesh", "istio-1.1.7-mesh", "istio-1.1.7-no-mesh":
+		case "istio-1.0.7-mesh", "istio-1.0.7-no-mesh", "istio-1.1.7-mesh", "istio-1.1.7-no-mesh",
+			"k8s-1.12-istio-1.1", "k8s-1.12-istio-1.0", "k8s-1.11-istio-1.1", "k8s-1.11-istio-1.0":
 			executeDashboardTabTemplate(jobName, testGroupName, testgridTabSortByName, noExtras)
 		default:
 			log.Fatalf("Unknown job name %q", jobName)
@@ -1310,7 +1321,8 @@ func getTestGroupName(repoName string, jobName string) string {
 		return strings.ToLower(fmt.Sprintf("ci-%s-%s-release", repoName, jobName))
 	case "test-coverage":
 		return strings.ToLower(fmt.Sprintf("pull-%s-%s", repoName, jobName))
-	case "istio-1.0.7-mesh", "istio-1.0.7-no-mesh", "istio-1.1.7-mesh", "istio-1.1.7-no-mesh":
+	case "istio-1.0.7-mesh", "istio-1.0.7-no-mesh", "istio-1.1.7-mesh", "istio-1.1.7-no-mesh",
+		"k8s-1.12-istio-1.1", "k8s-1.12-istio-1.0", "k8s-1.11-istio-1.1", "k8s-1.11-istio-1.0":
 		return strings.ToLower(fmt.Sprintf("ci-%s-%s", repoName, jobName))
 	}
 	log.Fatalf("Unknown jobName for getTestGroupName: %s", jobName)
