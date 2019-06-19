@@ -31,8 +31,8 @@ The following error pattern reached alerting threshold:
 %s
 
 # occurrences: %v
-jobs affected: %v
-PRs affected: %v
+%d jobs affected: %v
+%d PRs affected: %v
 
 Hint for diagnose & recovery: %s
 
@@ -55,7 +55,19 @@ type mailContent struct {
 }
 
 func (c mailContent) body() string {
-	return fmt.Sprintf(emailTemplate, c.window, c.errorPattern, len(c.logs), c.jobs, c.prs, c.hint, c.logs)
+	return fmt.Sprintf(emailTemplate,
+		c.window, c.errorPattern, len(c.logs),
+		len(c.jobs), c.jobs, len(c.prs), c.prs,
+		c.hint, c.sprintLogs())
+}
+
+// sprintLogs represents list of ErrorLog(s) as string
+func (r report) sprintLogs() string {
+	result := ""
+	for i, e := range r.logs {
+		result += fmt.Sprintf("%d. %s", i, e.Str())
+	}
+	return result
 }
 
 func (c mailContent) subject() string {

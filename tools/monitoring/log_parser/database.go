@@ -18,6 +18,7 @@ package log_parser
 
 import (
 	"database/sql"
+	"fmt"
 	"time"
 
 	"github.com/knative/test-infra/shared/mysql"
@@ -40,6 +41,12 @@ type ErrorLog struct {
 	PRNumber    int
 	BuildLogURL string
 	TimeStamp   time.Time
+}
+
+// Str returns the string representation of the struct used in alert message
+func (e ErrorLog) Str() string {
+	return fmt.Sprintf("[%v] %s (Job: %s, PR: %v, BuildLog: %s)",
+		e.TimeStamp, e.Msg, e.JobName, e.PRNumber, e.BuildLogURL)
 }
 
 // PubsubMsgHandler adds record(s) to ErrorLogs table in database,
