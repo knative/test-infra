@@ -113,7 +113,7 @@ presubmits:
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
-          value: us-central1
+          value: us-west1
       volumes:
       - name: test-account
         secret:
@@ -148,7 +148,7 @@ presubmits:
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
-          value: us-central1
+          value: us-west1
       volumes:
       - name: test-account
         secret:
@@ -184,7 +184,7 @@ presubmits:
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
-          value: us-central1
+          value: us-west1
       volumes:
       - name: test-account
         secret:
@@ -220,7 +220,7 @@ presubmits:
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
-          value: us-central1
+          value: us-west1
       volumes:
       - name: test-account
         secret:
@@ -260,7 +260,7 @@ presubmits:
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
-          value: us-central1
+          value: us-west1
       volumes:
       - name: test-account
         secret:
@@ -350,7 +350,7 @@ presubmits:
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
-          value: us-central1
+          value: us-west1
       volumes:
       - name: test-account
         secret:
@@ -386,7 +386,7 @@ presubmits:
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
-          value: us-central1
+          value: us-west1
       volumes:
       - name: test-account
         secret:
@@ -421,7 +421,7 @@ presubmits:
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
-          value: us-central1
+          value: us-west1
       volumes:
       - name: test-account
         secret:
@@ -462,7 +462,7 @@ presubmits:
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
-          value: us-central1
+          value: us-west1
       volumes:
       - name: docker-graph
         emptyDir: {}
@@ -528,7 +528,7 @@ presubmits:
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
-          value: us-central1
+          value: us-west1
       volumes:
       - name: test-account
         secret:
@@ -563,7 +563,7 @@ presubmits:
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
-          value: us-central1
+          value: us-west1
       volumes:
       - name: test-account
         secret:
