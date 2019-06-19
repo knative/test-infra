@@ -44,6 +44,7 @@ function init_test_env() {
   }
 
   function default_build_test_runner() {
+    echo "EXECUTING default_build_test_runner"
     return 0
   }
 }
@@ -266,6 +267,7 @@ echo ">> Testing default test runners"
 
 init_test_env
 test_function ${SUCCESS} "BUILD TESTS PASSED" main --build-tests
+test_function ${SUCCESS} "EXECUTING default_build_test_runner" main --build-tests
 test_function ${SUCCESS} "BUILD TESTS PASSED" call_function_pre run_markdown_build_tests
 
 echo ">> All tests passed"
