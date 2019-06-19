@@ -31,11 +31,13 @@ import (
 
 const yamlURL = "https://raw.githubusercontent.com/knative/test-infra/master/tools/monitoring/config/sample.yaml"
 
+// Client holds all the resources required to run alerting
 type Client struct {
 	pubsubClient *subscriber.Client
 	db           *mysql.DB
 }
 
+// Setup sets up the client required to run alerting workflow
 func Setup(psClient *subscriber.Client, db *mysql.DB) *Client {
 	return &Client{
 		pubsubClient: psClient,

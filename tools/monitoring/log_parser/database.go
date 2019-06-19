@@ -47,11 +47,13 @@ func (e ErrorLog) String() string {
 		e.TimeStamp, e.Msg, e.JobName, e.PRNumber, e.BuildLogURL)
 }
 
+// NewDB returns the DB object with an active database connection
 func NewDB(c *mysql.DBConfig) (*DB, error) {
 	db, err := c.Connect()
 	return &DB{db, c}, err
 }
 
+// InsertErrorLog insert a new error to the ErrorLogs table
 func (db *DB) InsertErrorLog(errPat string, errMsg string, jobName string, prNum int, blogURL string) error {
 	stmt, err := db.Prepare(`INSERT INTO ErrorLogs(ErrorPattern, ErrorMsg, JobName, PRNumber, BuildLogURL, TimeStamp)
 				VALUES (?, ?, ?, ?, ?, ?)`)
