@@ -42,6 +42,10 @@ function init_test_env() {
   function check_links_in_markdown() {
     return 0
   }
+
+  function default_build_test_runner() {
+    return 0
+  }
 }
 
 # Helper functions.
