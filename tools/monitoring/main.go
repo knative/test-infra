@@ -50,7 +50,8 @@ func main() {
 	var err error
 
 	dbName := flag.String("database-name", "monitoring", "The monitoring database name")
-	dbInst := flag.String("database-instance", "knative-tests:us-central1:knative-monitoring", "The monitoring CloudSQL instance connection name")
+	dbHost := flag.String("database-host", "10.93.144.3", "The private IP address to connect to the CloudSQL monitoring instance")
+	dbPort := flag.String("database-port", "3306", "The monitoring database port")
 
 	dbUserSF := flag.String("database-user", "/secrets/cloudsql/monitoringdb/username", "Database user secret file")
 	dbPassSF := flag.String("database-password", "/secrets/cloudsql/monitoringdb/password", "Database password secret file")
@@ -59,7 +60,7 @@ func main() {
 
 	flag.Parse()
 
-	dbConfig, err = mysql.ConfigureDB(*dbUserSF, *dbPassSF, *dbName, *dbInst)
+	dbConfig, err = mysql.ConfigureDB(*dbUserSF, *dbPassSF, *dbHost, *dbPort, *dbName)
 	if err != nil {
 		log.Fatal(err)
 	}

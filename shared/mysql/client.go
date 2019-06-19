@@ -31,11 +31,14 @@ const driverName = "mysql"
 type DBConfig struct {
 	Username     string
 	Password     string
-	Instance     string
+	Host         string
+	Port         string
 	DatabaseName string
 }
 
-func ConfigureDB(userSecret, passSecret, dbName, dbInstance string) (*DBConfig, error) {
+// ConfigureDB reads the database user name and password from a file (secret) and creates a DBConfig
+// that can be used to connect to the database.
+func ConfigureDB(userSecret, passSecret, dbHost, dbPort, dbName string) (*DBConfig, error) {
 	user, err := ioutil.ReadFile(userSecret)
 	if err != nil {
 		return nil, err
@@ -49,8 +52,9 @@ func ConfigureDB(userSecret, passSecret, dbName, dbInstance string) (*DBConfig, 
 	config := DBConfig{
 		Username:     string(user),
 		Password:     string(pass),
+		Host:         dbHost,
+		Port:         dbPort,
 		DatabaseName: dbName,
-		Instance:     dbInstance,
 	}
 
 	return &config, nil
@@ -92,7 +96,7 @@ func (c DBConfig) dataStoreName(dbName string) string {
 		cred = cred + "@"
 	}
 
-	return fmt.Sprintf("%sunix(%s)/%s", cred, "/cloudsql/"+c.Instance, dbName)
+	return fmt.Sprintf("%stcp([%s]:%s)/%s", cred, c.Host, c.Port, dbName)
 }
 
 // RollbackTx will try to rollback the transaction and return an error message accordingly
