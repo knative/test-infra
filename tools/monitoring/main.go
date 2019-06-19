@@ -26,8 +26,10 @@ import (
 
 	"github.com/knative/test-infra/shared/gcs"
 	"github.com/knative/test-infra/shared/mysql"
+	"github.com/knative/test-infra/tools/monitoring/alert"
 	"github.com/knative/test-infra/tools/monitoring/config"
 	"github.com/knative/test-infra/tools/monitoring/mail"
+	msql "github.com/knative/test-infra/tools/monitoring/mysql"
 	"github.com/knative/test-infra/tools/monitoring/prowapi"
 	"github.com/knative/test-infra/tools/monitoring/subscriber"
 )
@@ -36,6 +38,8 @@ var (
 	dbConfig   *mysql.DBConfig
 	mailConfig *mail.Config
 	client     *subscriber.Client
+	wfClient   *alert.Client
+	db         *msql.DB
 
 	alertEmailRecipients = []string{"knative-productivity-oncall@googlegroups.com"}
 )
@@ -68,6 +72,11 @@ func main() {
 		log.Fatal(err)
 	}
 
+	db, err = msql.NewDB(dbConfig)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	mailConfig, err = mail.NewMailConfig(*mailAddrSF, *mailPassSF)
 	if err != nil {
 		log.Fatal(err)
@@ -84,6 +93,8 @@ func main() {
 		log.Fatalf("Failed to authenticate gcs %+v", err)
 	}
 
+	wfClient = alert.Setup(client, db)
+
 	// use PORT environment variable, or default to 8080
 	port := "8080"
 	if fromEnv := os.Getenv("PORT"); fromEnv != "" {
@@ -96,6 +107,8 @@ func main() {
 	server.HandleFunc("/test-conn", testCloudSQLConn)
 	server.HandleFunc("/send-mail", sendTestEmail)
 	server.HandleFunc("/test-sub", testSubscriber)
+	server.HandleFunc("/test-insert", testInsert)
+	server.HandleFunc("/start-alerting", testAlerting)
 
 	// start the web server on port and accept requests
 	log.Printf("Server listening on port %s", port)
@@ -155,6 +168,26 @@ func sendTestEmail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Fprintln(w, "Sent the Email")
+}
+
+func testInsert(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Serving request: %s", r.URL.Path)
+	log.Println("testing insert to database")
+
+	err := db.InsertErrorLog("test error pattern", "test err message", "test job", 1, "gs://")
+	if err != nil {
+		fmt.Fprintf(w, "Failed to insert to database: %+v\n", err)
+		return
+	}
+
+	fmt.Fprintln(w, "Success")
+}
+
+func testAlerting(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Serving request: %s", r.URL.Path)
+
+	wfClient.RunAlerting()
+	log.Println("alerting workflow started")
 }
 
 func testSubscriber(w http.ResponseWriter, r *http.Request) {

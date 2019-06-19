@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package workflow
+package alert
 
 import (
 	"context"
@@ -24,24 +24,37 @@ import (
 	"github.com/knative/test-infra/shared/gcs"
 	"github.com/knative/test-infra/tools/monitoring/config"
 	"github.com/knative/test-infra/tools/monitoring/log_parser"
+	"github.com/knative/test-infra/tools/monitoring/mysql"
 	"github.com/knative/test-infra/tools/monitoring/prowapi"
 	"github.com/knative/test-infra/tools/monitoring/subscriber"
 )
 
 const yamlURL = "https://raw.githubusercontent.com/knative/test-infra/master/tools/monitoring/config/sample.yaml"
 
+type Client struct {
+	pubsubClient *subscriber.Client
+	db           *mysql.DB
+}
+
+func Setup(psClient *subscriber.Client, db *mysql.DB) *Client {
+	return &Client{
+		pubsubClient: psClient,
+		db:           db,
+	}
+}
+
 // RunAlerting start the alerting workflow
-func RunAlerting(client *subscriber.Client) {
+func (c *Client) RunAlerting() {
 	log.Println("Starting alerting workflow")
 	go func() {
-		err := client.ReceiveMessageAckAll(context.Background(), handleReportMessage)
+		err := c.pubsubClient.ReceiveMessageAckAll(context.Background(), c.handleReportMessage)
 		if err != nil {
 			log.Printf("Failed to retrieve messages due to %v", err)
 		}
 	}()
 }
 
-func handleReportMessage(rmsg *prowapi.ReportMessage) {
+func (c *Client) handleReportMessage(rmsg *prowapi.ReportMessage) {
 	if rmsg.Status == prowapi.SuccessState || rmsg.Status == prowapi.FailureState {
 		config, err := config.ParseYaml(yamlURL)
 		if err != nil {
@@ -63,6 +76,17 @@ func handleReportMessage(rmsg *prowapi.ReportMessage) {
 		}
 
 		log.Printf("Parsed errorLogs: %v\n", errorLogs)
+
+		for _, el := range errorLogs {
+			if len(rmsg.Refs) <= 0 || len(rmsg.Refs[0].Pulls) <= 0 {
+				err = c.db.InsertErrorLog(el.Pattern, el.Msg, rmsg.JobName, 0, rmsg.GCSPath)
+			} else {
+				err = c.db.InsertErrorLog(el.Pattern, el.Msg, rmsg.JobName, rmsg.Refs[0].Pulls[0].Number, rmsg.GCSPath)
+			}
+			if err != nil {
+				log.Printf("Failed to insert error to db %+v\n", err)
+			}
+		}
 
 		// TODO(yt3liu): check sending alert
 	}

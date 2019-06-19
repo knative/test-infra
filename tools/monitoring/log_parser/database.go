@@ -24,10 +24,10 @@ import (
 	"github.com/knative/test-infra/shared/mysql"
 )
 
-// MonitoringDatabase holds an active database connection created in `config`
-type MonitoringDatabase struct {
+// DB holds an active database connection created in `config`
+type DB struct {
 	*sql.DB
-	config mysql.DBConfig
+	Config *mysql.DBConfig
 }
 
 // ErrorLog stores a row in the "ErrorLogs" db table
@@ -47,26 +47,20 @@ func (e ErrorLog) String() string {
 		e.TimeStamp, e.Msg, e.JobName, e.PRNumber, e.BuildLogURL)
 }
 
-func (db *MonitoringDatabase) insertErrorLog(errPat string, errMsg string, jobName string, prNum int, blogURL string) error {
+func NewDB(c *mysql.DBConfig) (*DB, error) {
+	db, err := c.Connect()
+	return &DB{db, c}, err
+}
+
+func (db *DB) InsertErrorLog(errPat string, errMsg string, jobName string, prNum int, blogURL string) error {
 	stmt, err := db.Prepare(`INSERT INTO ErrorLogs(ErrorPattern, ErrorMsg, JobName, PRNumber, BuildLogURL, TimeStamp)
 				VALUES (?, ?, ?, ?, ?, ?)`)
 	defer stmt.Close()
 
-	_, err = execAffectingOneRow(stmt, errPat, errMsg, jobName, prNum, blogURL, time.Now())
-	return err
-}
+	if err != nil {
+		return err
+	}
 
-// execAffectingOneRow executes a given statement, expecting one row to be affected.
-func execAffectingOneRow(stmt *sql.Stmt, args ...interface{}) (sql.Result, error) {
-	r, err := stmt.Exec(args...)
-	if err != nil {
-		return r, fmt.Errorf("mysql: could not execute statement: %v", err)
-	}
-	rowsAffected, err := r.RowsAffected()
-	if err != nil {
-		return r, fmt.Errorf("mysql: could not get rows affected: %v", err)
-	} else if rowsAffected != 1 {
-		return r, fmt.Errorf("mysql: expected 1 row affected, got %d", rowsAffected)
-	}
-	return r, nil
+	_, err = stmt.Exec(errPat, errMsg, jobName, prNum, blogURL, time.Now())
+	return err
 }
