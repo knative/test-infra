@@ -54,6 +54,9 @@ jobs:
   - pull-knative-caching-integration-tests
   - pull-knative-sample-controller-build-tests
   - pull-knative-sample-controller-unit-tests
+  - pull-knative-serving-operator-unit-tests
+  - pull-knative-serving-operator-build-tests
+  - pull-knative-serving-operator-integration-tests
   knative-prow/logs/:
   - ci-knative-serving-continuous
   - ci-knative-serving-0.4-continuous
