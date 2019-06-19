@@ -54,5 +54,15 @@ resources:
   - knative-boskos-38
   - knative-boskos-39
   - knative-boskos-40
+  - knative-boskos-41
+  - knative-boskos-42
+  - knative-boskos-43
+  - knative-boskos-44
+  - knative-boskos-45
+  - knative-boskos-46
+  - knative-boskos-47
+  - knative-boskos-48
+  - knative-boskos-49
+  - knative-boskos-50
   state: dirty
   type: gke-project

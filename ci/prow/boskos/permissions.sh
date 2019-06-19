@@ -31,17 +31,17 @@ readonly APIS=(
 
 # Add an owner to the PROJECT
 for owner in ${OWNERS[@]}; do
-  gcloud projects add-iam-policy-binding ${PROJECT} --member group:${owner} --role roles/OWNER
+  gcloud projects add-iam-policy-binding ${PROJECT} --member group:${owner} --role roles/owner
 done
 
 # Add all GROUPS as editors
 for group in ${GROUPS[@]}; do
-  gcloud projects add-iam-policy-binding ${PROJECT} --member group:${group} --role roles/EDITOR
+  gcloud projects add-iam-policy-binding ${PROJECT} --member group:${group} --role roles/editor
 done
 
 # Add all service accounts as editors
 for sa in ${SAS[@]}; do
-  gcloud projects add-iam-policy-binding ${PROJECT} --member serviceAccount:${sa} --role roles/EDITOR
+  gcloud projects add-iam-policy-binding ${PROJECT} --member serviceAccount:${sa} --role roles/editor
 done
 
 # Enable APIS
