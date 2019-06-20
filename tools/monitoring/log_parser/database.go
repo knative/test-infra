@@ -14,15 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package mysql
+package log_parser
 
 import (
 	"database/sql"
+	"fmt"
 	"time"
 
 	"github.com/knative/test-infra/shared/mysql"
 	"github.com/knative/test-infra/tools/monitoring/config"
-	"github.com/knative/test-infra/tools/monitoring/log_parser"
 )
 
 const (
@@ -32,6 +32,23 @@ const (
 		) VALUES (?,?,?,?,?,?)`
 )
 
+// ErrorLog stores a row in the "ErrorLogs" db table
+// Table schema: github.com/knative/test-infra/tools/monitoring/mysql/schema.sql
+type ErrorLog struct {
+	Pattern     string
+	Msg         string
+	JobName     string
+	PRNumber    int
+	BuildLogURL string
+	TimeStamp   time.Time
+}
+
+// String returns the string representation of the struct used in alert message
+func (e ErrorLog) String() string {
+	return fmt.Sprintf("[%v] %s (Job: %s, PR: %v, BuildLog: %s)",
+		e.TimeStamp, e.Msg, e.JobName, e.PRNumber, e.BuildLogURL)
+}
+
 // PubsubMsgHandler adds record(s) to ErrorLogs table in database,
 // after parsing build log and compares the result with config yaml
 func PubsubMsgHandler(db *sql.DB, configURL, buildLogURL, jobname string, prNumber int) error {
@@ -40,7 +57,7 @@ func PubsubMsgHandler(db *sql.DB, configURL, buildLogURL, jobname string, prNumb
 		return err
 	}
 
-	errorLogs, err := log_parser.ParseLog(buildLogURL, config.CollectErrorPatterns())
+	errorLogs, err := ParseLog(buildLogURL, config.CollectErrorPatterns())
 	if err != nil {
 		return err
 	}
