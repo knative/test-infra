@@ -219,6 +219,7 @@ spec:
         args:
         - --hook-url=http://hook:8888/plugin-help
         - --tide-url=http://tide/
+        - --spyglass
         ports:
           - name: http
             containerPort: 8080
