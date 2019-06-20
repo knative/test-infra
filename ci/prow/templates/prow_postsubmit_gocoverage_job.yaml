@@ -4,7 +4,7 @@
     agent: kubernetes
     [[indent_section 8 "labels" .Base.Labels]]
     decorate: true
-    clone_uri: [[.Base.CloneURI]]
+    [[.Base.PathAlias]]
     spec:
       containers:
       - image: [[.Base.Image]]

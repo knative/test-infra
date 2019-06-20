@@ -6,7 +6,7 @@
     rerun_command: "/test [[.PresubmitPullJobName]]"
     trigger: "(?m)^/test (all|[[.PresubmitPullJobName]]),?(\\s+|$)"
     decorate: true
-    clone_uri: [[.Base.CloneURI]]
+    [[.Base.PathAlias]]
     [[indent_array_section 4 "skip_branches" .Base.SkipBranches]]
     spec:
       containers:
