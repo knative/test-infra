@@ -65,7 +65,7 @@ func (c mailContent) body() string {
 func (r report) sprintLogs() string {
 	result := ""
 	for i, e := range r.logs {
-		result += fmt.Sprintf("%d. %s", i, e.Str())
+		result += fmt.Sprintf("%d. %s", i, e.String())
 	}
 	return result
 }

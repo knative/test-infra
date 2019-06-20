@@ -43,8 +43,8 @@ type ErrorLog struct {
 	TimeStamp   time.Time
 }
 
-// Str returns the string representation of the struct used in alert message
-func (e ErrorLog) Str() string {
+// String returns the string representation of the struct used in alert message
+func (e ErrorLog) String() string {
 	return fmt.Sprintf("[%v] %s (Job: %s, PR: %v, BuildLog: %s)",
 		e.TimeStamp, e.Msg, e.JobName, e.PRNumber, e.BuildLogURL)
 }
