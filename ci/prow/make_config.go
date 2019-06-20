@@ -676,9 +676,16 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			jobType = getString(item.Key)
 			jobNameSuffix = getString(item.Key)
 			data.Base.Command = performanceScript
-			// We need a larger cluster of at least 16 nodes for perf tests
-			addEnvToJob(&data.Base, "E2E_MIN_CLUSTER_NODES", "16")
-			addEnvToJob(&data.Base, "E2E_MAX_CLUSTER_NODES", "16")
+			// TODO(Fredy-Z): eventing is in the early stage of performance testing, so we use only one node to save
+			//                resource. Once it has more complex testing scenarios, this separate logic can be removed.
+			if repoName == "knative/eventing" {
+				addEnvToJob(&data.Base, "E2E_MIN_CLUSTER_NODES", "1")
+				addEnvToJob(&data.Base, "E2E_MAX_CLUSTER_NODES", "1")
+			} else {
+				// We need a larger cluster of at least 16 nodes for perf tests
+				addEnvToJob(&data.Base, "E2E_MIN_CLUSTER_NODES", "16")
+				addEnvToJob(&data.Base, "E2E_MAX_CLUSTER_NODES", "16")
+			}
 			addVolumeToJob(&data.Base, "/secrets/cloudsql/monitoringdb", "monitoring-db-credentials", true)
 			data.Base.Timeout = 120
 		case "latency":
