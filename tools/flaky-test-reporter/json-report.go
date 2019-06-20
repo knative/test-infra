@@ -26,11 +26,11 @@ import (
 	"github.com/knative/test-infra/shared/prow"
 )
 
-type JsonReport struct {
+type JSONReport struct {
 	Flaky []string `json:"flaky"`
 }
 
-func (jr *JsonReport) writeToArtifactsDir(repo string, dryrun bool) error {
+func (jr *JSONReport) writeToArtifactsDir(repo string, dryrun bool) error {
 	artifactsDir := prow.GetLocalArtifactsDir()
 	// no need to create the directory, it is guaranteed to exist since artifacts were generated earlier
 	outFilePath := path.Join(artifactsDir, repo, "all-flaky-tests.json")
@@ -65,9 +65,9 @@ func getFlakyTestSet(repo string, repoDataAll []*RepoData) []string {
 	return flakyTests
 }
 
-func writeFlakyTestsToJson(repoDataAll []*RepoData, dryrun bool) error {
-	for repo, _ := range jobConfigs {
-		output := JsonReport{Flaky: getFlakyTestSet(repo, repoDataAll)}
+func writeFlakyTestsToJSON(repoDataAll []*RepoData, dryrun bool) error {
+	for repo := range jobConfigs {
+		output := JSONReport{Flaky: getFlakyTestSet(repo, repoDataAll)}
 		err := output.writeToArtifactsDir(repo, dryrun)
 		if err != nil {
 			return err
