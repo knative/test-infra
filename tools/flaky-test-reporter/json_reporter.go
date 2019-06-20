@@ -21,7 +21,7 @@ import (
 	"log"
 	"sync"
 
-	"github.com/TrevorFarrelly/test-infra/shared/jsonreport"
+	"github.com/knative/test-infra/shared/jsonreport"
 )
 
 func getFlakyTestSet(repoDataAll []*RepoData) map[string]map[string]bool {
