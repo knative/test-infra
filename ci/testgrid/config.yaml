@@ -33,7 +33,7 @@ default_test_group:
   num_passes_to_disable_alert: 1 # Consider a failing test passing if it has 1 or more consecutive passes
 default_dashboard_tab:
   open_test_template:            # The URL template to visit after clicking on a cell
-    url: https://gubernator.knative.dev/build/<gcs_prefix>/<changelist>
+    url: https://prow.knative.dev/view/gcs/<gcs_prefix>/<changelist>
   file_bug_template:             # The URL template to visit when filing a bug
     url: https://github.com/knative/serving/issues/new
     options:
@@ -45,9 +45,9 @@ default_dashboard_tab:
     url:                         # Empty
     options:                     # Empty
   # Text to show in the about menu as a link to another view of the results
-  results_text: See these results in Gubernator
+  results_text: See these results on Prow
   results_url_template:          # The URL template to visit after clicking
-    url: https://gubernator.knative.dev/builds/<gcs_prefix>
+    url: https://prow.knative.dev/job-history/<gcs_prefix>
   # URL for regression search links.
   code_search_path: github.com/knative/serving/search
   num_columns_recent: 10

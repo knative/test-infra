@@ -37,6 +37,22 @@ plank:
       path_strategy: "explicit"
     gcs_credentials_secret: "test-account"
 
+deck:
+  spyglass:
+    size_limit: 500000000 # 500MB
+    gcs_browser_prefix: https://console.cloud.google.com/storage/browser/
+    testgrid_config: gs://knative-testgrid/config
+    testgrid_root: https://testgrid.knative.dev/
+    viewers:
+      "started.json|finished.json":
+      - "metadata"
+      "build-log.txt":
+      - "buildlog"
+      "artifacts/junit.*\\.xml":
+      - "junit"
+    announcement: "The old job viewer, Gubernator, has been deprecated in favour of this page, Spyglass.{{if .ArtifactPath}} For now, the old page is <a href='https://gubernator.knative.dev/build/{{.ArtifactPath}}'>still available</a>.{{end}} Please send feedback to Knative productivity."
+  tide_update_period: 1s
+
 prowjob_namespace: default
 pod_namespace: test-pods
 log_level: debug
