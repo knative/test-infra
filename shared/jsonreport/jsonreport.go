@@ -49,7 +49,9 @@ func (r *Report) WriteToArtifactsDir() error {
 }
 
 func GetReportForRepo(repo string) (*Report, error) {
-	var report Report
+	report := &Report{
+    Repo: repo,
+  }
 	artifactsDir := prow.GetLocalArtifactsDir()
 	content, err := ioutil.ReadFile(path.Join(artifactsDir, repo, filename))
 	if err != nil {
@@ -59,7 +61,7 @@ func GetReportForRepo(repo string) (*Report, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &report, nil
+	return report, nil
 }
 
 func NewReport(repo string, flaky []string) *Report {
