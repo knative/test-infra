@@ -44,7 +44,7 @@ export E2E_CLUSTER_REGION=${E2E_CLUSTER_REGION:-us-central1}
 export E2E_CLUSTER_ZONE=${E2E_CLUSTER_ZONE:-}
 
 # Default backup regions in case of stockouts; by default we don't fall back to a different zone in the same region
-readonly E2E_CLUSTER_BACKUP_REGIONS=${E2E_CLUSTER_BACKUP_REGIONS:-us-west1 us-east1}
+readonly E2E_CLUSTER_BACKUP_REGIONS=${E2E_CLUSTER_BACKUP_REGIONS:-us-east1 us-central1}
 readonly E2E_CLUSTER_BACKUP_ZONES=${E2E_CLUSTER_BACKUP_ZONES:-}
 
 readonly E2E_CLUSTER_MACHINE=${E2E_CLUSTER_MACHINE:-n1-standard-4}
