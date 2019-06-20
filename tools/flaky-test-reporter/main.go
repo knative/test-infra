@@ -77,13 +77,17 @@ func main() {
 	// happens, it should fail the job after Slack notification
 	githubErr := ghi.processGithubIssues(repoDataAll, *dryrun)
 	slackErr := sendSlackNotifications(repoDataAll, slackClient, ghi, *dryrun)
+	jsonErr := writeFlakyTestsToJson(repoDataAll, *dryrun)
 	if nil != githubErr {
 		log.Printf("Github step failures:\n%v", githubErr)
 	}
 	if nil != slackErr {
 		log.Printf("Slack step failures:\n%v", slackErr)
 	}
-	if nil != githubErr || nil != slackErr { // Fail this job if there is any error
+	if nil != jsonErr {
+		log.Printf("JSON step failures:\n%v", jsonErr)
+	}
+	if nil != githubErr || nil != slackErr || nil != jsonErr { // Fail this job if there is any error
 		os.Exit(1)
 	}
 }
