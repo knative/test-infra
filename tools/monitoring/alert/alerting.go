@@ -33,23 +33,20 @@ const yamlURL = "https://raw.githubusercontent.com/knative/test-infra/master/too
 
 // Client holds all the resources required to run alerting
 type Client struct {
-	pubsubClient *subscriber.Client
-	db           *mysql.DB
+	*subscriber.Client
+	*mysql.DB
 }
 
 // Setup sets up the client required to run alerting workflow
 func Setup(psClient *subscriber.Client, db *mysql.DB) *Client {
-	return &Client{
-		pubsubClient: psClient,
-		db:           db,
-	}
+	return &Client{psClient, db}
 }
 
 // RunAlerting start the alerting workflow
 func (c *Client) RunAlerting() {
 	log.Println("Starting alerting workflow")
 	go func() {
-		err := c.pubsubClient.ReceiveMessageAckAll(context.Background(), c.handleReportMessage)
+		err := c.ReceiveMessageAckAll(context.Background(), c.handleReportMessage)
 		if err != nil {
 			log.Printf("Failed to retrieve messages due to %v", err)
 		}
@@ -57,14 +54,14 @@ func (c *Client) RunAlerting() {
 }
 
 func (c *Client) handleReportMessage(rmsg *prowapi.ReportMessage) {
-	if rmsg.Status == prowapi.SuccessState || rmsg.Status == prowapi.FailureState {
+	if rmsg.Status == prowapi.SuccessState || rmsg.Status == prowapi.FailureState || rmsg.Status == prowapi.AbortedState {
 		config, err := config.ParseYaml(yamlURL)
 		if err != nil {
 			log.Printf("Failed to config yaml (%v): %v\n", config, err)
 			return
 		}
 
-		content, err := gcs.ReadURL(context.Background(), buildLogPath(gubernatortoGcsLink(rmsg.GCSPath)))
+		content, err := gcs.ReadURL(context.Background(), gcs.BuildLogPath(gubernatortoGcsLink(rmsg.GCSPath)))
 		if err != nil {
 			log.Printf("Failed to read from url %s. Error: %v\n", rmsg.GCSPath, err)
 			return
@@ -80,10 +77,11 @@ func (c *Client) handleReportMessage(rmsg *prowapi.ReportMessage) {
 		log.Printf("Parsed errorLogs: %v\n", errorLogs)
 
 		for _, el := range errorLogs {
+			// Add the PR number if it is a pull request job
 			if len(rmsg.Refs) <= 0 || len(rmsg.Refs[0].Pulls) <= 0 {
-				err = c.db.InsertErrorLog(el.Pattern, el.Msg, rmsg.JobName, 0, rmsg.GCSPath)
+				err = c.InsertErrorLog(el.Pattern, el.Msg, rmsg.JobName, 0, rmsg.GCSPath)
 			} else {
-				err = c.db.InsertErrorLog(el.Pattern, el.Msg, rmsg.JobName, rmsg.Refs[0].Pulls[0].Number, rmsg.GCSPath)
+				err = c.InsertErrorLog(el.Pattern, el.Msg, rmsg.JobName, rmsg.Refs[0].Pulls[0].Number, rmsg.GCSPath)
 			}
 			if err != nil {
 				log.Printf("Failed to insert error to db %+v\n", err)
@@ -97,8 +95,4 @@ func (c *Client) handleReportMessage(rmsg *prowapi.ReportMessage) {
 // TODO(yt3liu): Remove this hack after the gcs path does not contain the gubernator link
 func gubernatortoGcsLink(link string) string {
 	return strings.Replace(link, "https://gubernator.knative.dev/build/", "", 1)
-}
-
-func buildLogPath(gcsDir string) string {
-	return gcsDir + "build-log.txt"
 }
