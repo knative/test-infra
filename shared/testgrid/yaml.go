@@ -27,8 +27,8 @@ import (
 
 const configPath = "ci/testgrid/config.yaml"
 
-// AllConfig is entire testgrid config
-type AllConfig struct {
+// Config is entire testgrid config
+type Config struct {
 	Dashboards []Dashboard `yaml:"dashboards"`
 }
 
@@ -45,7 +45,7 @@ type Tab struct {
 }
 
 // NewConfig loads from default config
-func NewConfig() (*AllConfig, error) {
+func NewConfig() (*Config, error) {
 	root, err := common.GetRootDir()
 	if nil != err {
 		return nil, err
@@ -54,18 +54,21 @@ func NewConfig() (*AllConfig, error) {
 }
 
 // NewConfigFromFile loads config from file
-func NewConfigFromFile(fp string) (*AllConfig, error) {
-	ac := &AllConfig{}
+func NewConfigFromFile(fp string) (*Config, error) {
+	ac := &Config{}
 	contents, err := ioutil.ReadFile(fp)
 	if nil == err {
 		err = yaml.Unmarshal(contents, ac)
+	}
+	if nil != err {
+		return nil, err
 	}
 	return ac, err
 }
 
 // GetTabRelURL finds URL relative to testgrid home URL from testgroup name
 // (generally this is prow job name)
-func (ac *AllConfig) GetTabRelURL(tgName string) (string, error) {
+func (ac *Config) GetTabRelURL(tgName string) (string, error) {
 	for _, dashboard := range ac.Dashboards {
 		for _, tab := range dashboard.Tabs {
 			if tab.TestGroupName == tgName {
