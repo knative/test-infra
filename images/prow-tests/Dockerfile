@@ -37,6 +37,10 @@ RUN rm -rf /usr/local/go && \
     tar xzf "${GO_TARBALL}" -C /usr/local && \
     rm "${GO_TARBALL}"
 
+# Extract bazel version
+RUN bazel version > /bazel_version
+RUN bazel shutdown
+
 # Extra tools through go get
 RUN go get -u github.com/google/ko/cmd/ko
 RUN go get -u github.com/golang/dep/cmd/dep
