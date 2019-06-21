@@ -14,3 +14,7 @@
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m

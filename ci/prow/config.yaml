@@ -128,6 +128,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-serving-unit-tests
     agent: kubernetes
     context: pull-knative-serving-unit-tests
@@ -158,6 +162,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-serving-integration-tests
     agent: kubernetes
     context: pull-knative-serving-integration-tests
@@ -189,6 +197,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-serving-upgrade-tests
     agent: kubernetes
     context: pull-knative-serving-upgrade-tests
@@ -220,6 +232,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-serving-smoke-tests
     agent: kubernetes
     context: pull-knative-serving-smoke-tests
@@ -255,6 +271,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-serving-go-coverage
     agent: kubernetes
     context: pull-knative-serving-go-coverage
@@ -283,6 +303,10 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-serving-go-coverage-dev
     agent: kubernetes
     context: pull-knative-serving-go-coverage-dev
@@ -311,6 +335,10 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-serving-perf-tests
     agent: kubernetes
     context: pull-knative-serving-perf-tests
@@ -340,6 +368,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   knative/build:
   - name: pull-knative-build-build-tests
     agent: kubernetes
@@ -371,6 +403,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-build-unit-tests
     agent: kubernetes
     context: pull-knative-build-unit-tests
@@ -401,6 +437,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-build-integration-tests
     agent: kubernetes
     context: pull-knative-build-integration-tests
@@ -439,6 +479,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-build-go-coverage
     agent: kubernetes
     context: pull-knative-build-go-coverage
@@ -467,6 +511,10 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   knative/client:
   - name: pull-knative-client-build-tests
     agent: kubernetes
@@ -498,6 +546,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-client-unit-tests
     agent: kubernetes
     context: pull-knative-client-unit-tests
@@ -528,6 +580,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-client-integration-tests
     agent: kubernetes
     context: pull-knative-client-integration-tests
@@ -558,6 +614,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-client-go-coverage
     agent: kubernetes
     context: pull-knative-client-go-coverage
@@ -586,6 +646,10 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   knative/eventing:
   - name: pull-knative-eventing-build-tests
     agent: kubernetes
@@ -617,6 +681,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-eventing-unit-tests
     agent: kubernetes
     context: pull-knative-eventing-unit-tests
@@ -647,6 +715,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-eventing-integration-tests
     agent: kubernetes
     context: pull-knative-eventing-integration-tests
@@ -677,6 +749,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-eventing-go-coverage
     agent: kubernetes
     context: pull-knative-eventing-go-coverage
@@ -705,6 +781,10 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   knative/eventing-contrib:
   - name: pull-knative-eventing-contrib-build-tests
     agent: kubernetes
@@ -736,6 +816,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-eventing-contrib-unit-tests
     agent: kubernetes
     context: pull-knative-eventing-contrib-unit-tests
@@ -766,6 +850,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-eventing-contrib-integration-tests
     agent: kubernetes
     context: pull-knative-eventing-contrib-integration-tests
@@ -796,6 +884,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-eventing-contrib-go-coverage
     agent: kubernetes
     context: pull-knative-eventing-contrib-go-coverage
@@ -824,6 +916,10 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   knative/docs:
   - name: pull-knative-docs-build-tests
     agent: kubernetes
@@ -855,6 +951,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-docs-unit-tests
     agent: kubernetes
     context: pull-knative-docs-unit-tests
@@ -885,6 +985,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-docs-integration-tests
     agent: kubernetes
     context: pull-knative-docs-integration-tests
@@ -923,6 +1027,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-docs-go-coverage
     agent: kubernetes
     context: pull-knative-docs-go-coverage
@@ -951,6 +1059,10 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   knative/build-templates:
   - name: pull-knative-build-templates-build-tests
     agent: kubernetes
@@ -982,6 +1094,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-build-templates-unit-tests
     agent: kubernetes
     context: pull-knative-build-templates-unit-tests
@@ -1012,6 +1128,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-build-templates-integration-tests
     agent: kubernetes
     context: pull-knative-build-templates-integration-tests
@@ -1042,6 +1162,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   knative/pkg:
   - name: pull-knative-pkg-build-tests
     agent: kubernetes
@@ -1073,6 +1197,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-pkg-unit-tests
     agent: kubernetes
     context: pull-knative-pkg-unit-tests
@@ -1103,6 +1231,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-pkg-integration-tests
     agent: kubernetes
     context: pull-knative-pkg-integration-tests
@@ -1133,6 +1265,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-pkg-go-coverage
     agent: kubernetes
     context: pull-knative-pkg-go-coverage
@@ -1161,6 +1297,10 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   knative/test-infra:
   - name: pull-knative-test-infra-build-tests
     agent: kubernetes
@@ -1192,6 +1332,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-test-infra-unit-tests
     agent: kubernetes
     context: pull-knative-test-infra-unit-tests
@@ -1222,6 +1366,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-test-infra-integration-tests
     agent: kubernetes
     context: pull-knative-test-infra-integration-tests
@@ -1252,6 +1400,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   knative/caching:
   - name: pull-knative-caching-build-tests
     agent: kubernetes
@@ -1283,6 +1435,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-caching-unit-tests
     agent: kubernetes
     context: pull-knative-caching-unit-tests
@@ -1313,6 +1469,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-caching-integration-tests
     agent: kubernetes
     context: pull-knative-caching-integration-tests
@@ -1343,6 +1503,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-caching-go-coverage
     agent: kubernetes
     context: pull-knative-caching-go-coverage
@@ -1371,6 +1535,10 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   knative/observability:
   - name: pull-knative-observability-build-tests
     agent: kubernetes
@@ -1402,6 +1570,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-observability-unit-tests
     agent: kubernetes
     context: pull-knative-observability-unit-tests
@@ -1432,6 +1604,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-observability-integration-tests
     agent: kubernetes
     context: pull-knative-observability-integration-tests
@@ -1462,6 +1638,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   knative/sample-controller:
   - name: pull-knative-sample-controller-build-tests
     agent: kubernetes
@@ -1493,6 +1673,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-knative-sample-controller-unit-tests
     agent: kubernetes
     context: pull-knative-sample-controller-unit-tests
@@ -1523,6 +1707,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   GoogleCloudPlatform/cloud-run-events:
   - name: pull-googlecloudplatform-cloud-run-events-build-tests
     agent: kubernetes
@@ -1554,6 +1742,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-googlecloudplatform-cloud-run-events-unit-tests
     agent: kubernetes
     context: pull-googlecloudplatform-cloud-run-events-unit-tests
@@ -1584,6 +1776,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-googlecloudplatform-cloud-run-events-integration-tests
     agent: kubernetes
     context: pull-googlecloudplatform-cloud-run-events-integration-tests
@@ -1614,6 +1810,10 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: pull-googlecloudplatform-cloud-run-events-go-coverage
     agent: kubernetes
     context: pull-googlecloudplatform-cloud-run-events-go-coverage
@@ -1642,6 +1842,10 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
 periodics:
 - cron: "10 */2 * * *"
   name: ci-knative-serving-continuous
@@ -1675,6 +1879,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "6 8 * * *"
   name: ci-knative-serving-0.4-continuous
   agent: kubernetes
@@ -1717,6 +1925,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "17 8 * * *"
   name: ci-knative-serving-0.5-continuous
   agent: kubernetes
@@ -1759,6 +1971,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "28 8 * * *"
   name: ci-knative-serving-0.6-continuous
   agent: kubernetes
@@ -1801,6 +2017,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "10 */2 * * *"
   name: ci-knative-serving-istio-1.0.7-mesh
   agent: kubernetes
@@ -1834,6 +2054,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "31 */2 * * *"
   name: ci-knative-serving-istio-1.0.7-no-mesh
   agent: kubernetes
@@ -1867,6 +2091,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "20 */2 * * *"
   name: ci-knative-serving-istio-1.1.7-mesh
   agent: kubernetes
@@ -1900,6 +2128,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "42 */2 * * *"
   name: ci-knative-serving-istio-1.1.7-no-mesh
   agent: kubernetes
@@ -1933,6 +2165,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "19 */2 * * *"
   name: ci-knative-serving-k8s-1.12-istio-1.1
   agent: kubernetes
@@ -1967,6 +2203,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "8 */2 * * *"
   name: ci-knative-serving-k8s-1.12-istio-1.0
   agent: kubernetes
@@ -2001,6 +2241,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "8 */2 * * *"
   name: ci-knative-serving-k8s-1.11-istio-1.1
   agent: kubernetes
@@ -2035,6 +2279,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "57 */2 * * *"
   name: ci-knative-serving-k8s-1.11-istio-1.0
   agent: kubernetes
@@ -2069,6 +2317,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "56 9 * * *"
   name: ci-knative-serving-nightly-release
   agent: kubernetes
@@ -2101,6 +2353,10 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "37 9 * * 2"
   name: ci-knative-serving-dot-release
   agent: kubernetes
@@ -2141,6 +2397,10 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "34 */2 * * *"
   name: ci-knative-serving-auto-release
   agent: kubernetes
@@ -2181,6 +2441,10 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "38 8 * * *"
   name: ci-knative-serving-latency
   agent: kubernetes
@@ -2213,6 +2477,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "58 8 * * *"
   name: ci-knative-serving-performance
   agent: kubernetes
@@ -2253,6 +2521,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "50 10 * * *"
   name: ci-knative-serving-performance-mesh
   agent: kubernetes
@@ -2294,6 +2566,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "13 9 * * *"
   name: ci-knative-serving-webhook-apicoverage
   agent: kubernetes
@@ -2326,6 +2602,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "0 1 * * *"
   name: ci-knative-serving-go-coverage
   labels:
@@ -2348,6 +2628,10 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=80"
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "34 * * * *"
   name: ci-knative-build-continuous
   agent: kubernetes
@@ -2380,6 +2664,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "30 8 * * *"
   name: ci-knative-build-0.5-continuous
   agent: kubernetes
@@ -2422,6 +2710,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "41 8 * * *"
   name: ci-knative-build-0.6-continuous
   agent: kubernetes
@@ -2464,6 +2756,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "10 9 * * *"
   name: ci-knative-build-nightly-release
   agent: kubernetes
@@ -2504,6 +2800,10 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "50 9 * * 2"
   name: ci-knative-build-dot-release
   agent: kubernetes
@@ -2544,6 +2844,10 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "58 */2 * * *"
   name: ci-knative-build-auto-release
   agent: kubernetes
@@ -2592,6 +2896,10 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "51 8 * * *"
   name: ci-knative-build-latency
   agent: kubernetes
@@ -2624,6 +2932,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "0 1 * * *"
   name: ci-knative-build-go-coverage
   labels:
@@ -2646,6 +2958,10 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=80"
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "5 * * * *"
   name: ci-knative-client-continuous
   agent: kubernetes
@@ -2678,6 +2994,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "40 9 * * *"
   name: ci-knative-client-nightly-release
   agent: kubernetes
@@ -2710,6 +3030,10 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "21 9 * * 2"
   name: ci-knative-client-dot-release
   agent: kubernetes
@@ -2750,6 +3074,10 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "29 */2 * * *"
   name: ci-knative-client-auto-release
   agent: kubernetes
@@ -2790,6 +3118,10 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "0 1 * * *"
   name: ci-knative-client-go-coverage
   labels:
@@ -2812,6 +3144,10 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "20 * * * *"
   name: ci-knative-docs-continuous
   agent: kubernetes
@@ -2852,6 +3188,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "0 1 * * *"
   name: ci-knative-docs-go-coverage
   labels:
@@ -2874,6 +3214,10 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "30 */2 * * *"
   name: ci-knative-eventing-continuous
   agent: kubernetes
@@ -2906,6 +3250,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "36 8 * * *"
   name: ci-knative-eventing-0.5-continuous
   agent: kubernetes
@@ -2948,6 +3296,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "47 8 * * *"
   name: ci-knative-eventing-0.6-continuous
   agent: kubernetes
@@ -2990,6 +3342,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "15 9 * * *"
   name: ci-knative-eventing-nightly-release
   agent: kubernetes
@@ -3022,6 +3378,10 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "56 9 * * 2"
   name: ci-knative-eventing-dot-release
   agent: kubernetes
@@ -3062,6 +3422,10 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "53 */2 * * *"
   name: ci-knative-eventing-auto-release
   agent: kubernetes
@@ -3102,6 +3466,10 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "17 8 * * *"
   name: ci-knative-eventing-performance
   agent: kubernetes
@@ -3142,6 +3510,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "0 1 * * *"
   name: ci-knative-eventing-go-coverage
   labels:
@@ -3164,6 +3536,10 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "35 * * * *"
   name: ci-knative-eventing-contrib-continuous
   agent: kubernetes
@@ -3196,6 +3572,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "31 8 * * *"
   name: ci-knative-eventing-contrib-0.5-continuous
   agent: kubernetes
@@ -3238,6 +3618,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "42 8 * * *"
   name: ci-knative-eventing-contrib-0.6-continuous
   agent: kubernetes
@@ -3280,6 +3664,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "10 9 * * *"
   name: ci-knative-eventing-contrib-nightly-release
   agent: kubernetes
@@ -3312,6 +3700,10 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "51 9 * * 2"
   name: ci-knative-eventing-contrib-dot-release
   agent: kubernetes
@@ -3352,6 +3744,10 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "59 */2 * * *"
   name: ci-knative-eventing-contrib-auto-release
   agent: kubernetes
@@ -3392,6 +3788,10 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "0 1 * * *"
   name: ci-knative-eventing-contrib-go-coverage
   labels:
@@ -3414,6 +3814,10 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "31 * * * *"
   name: ci-knative-build-templates-continuous
   agent: kubernetes
@@ -3446,6 +3850,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "17 * * * *"
   name: ci-knative-pkg-continuous
   agent: kubernetes
@@ -3478,6 +3886,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "0 1 * * *"
   name: ci-knative-pkg-go-coverage
   labels:
@@ -3500,6 +3912,10 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "6 * * * *"
   name: ci-knative-caching-continuous
   agent: kubernetes
@@ -3532,6 +3948,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "0 1 * * *"
   name: ci-knative-caching-go-coverage
   labels:
@@ -3554,6 +3974,10 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "3 * * * *"
   name: ci-knative-observability-continuous
   agent: kubernetes
@@ -3586,6 +4010,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "1 * * * *"
   name: ci-knative-sample-controller-continuous
   agent: kubernetes
@@ -3618,6 +4046,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "42 * * * *"
   name: ci-knative-test-infra-continuous
   agent: kubernetes
@@ -3650,6 +4082,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "13 * * * *"
   name: ci-googlecloudplatform-cloud-run-events-continuous
   agent: kubernetes
@@ -3682,6 +4118,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "59 9 * * *"
   name: ci-googlecloudplatform-cloud-run-events-nightly-release
   agent: kubernetes
@@ -3714,6 +4154,10 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "30 9 * * 2"
   name: ci-googlecloudplatform-cloud-run-events-dot-release
   agent: kubernetes
@@ -3754,6 +4198,10 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "37 */2 * * *"
   name: ci-googlecloudplatform-cloud-run-events-auto-release
   agent: kubernetes
@@ -3794,6 +4242,10 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "0 1 * * *"
   name: ci-googlecloudplatform-cloud-run-events-go-coverage
   labels:
@@ -3816,6 +4268,10 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "0 19 * * 1"
   name: ci-knative-cleanup
   agent: kubernetes
@@ -3847,6 +4303,10 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "0 12 * * *"
   name: ci-knative-flakes-reporter
   agent: kubernetes
@@ -3886,6 +4346,10 @@ periodics:
     - name: flaky-test-reporter-slack-token
       secret:
         secretName: flaky-test-reporter-slack-token
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "0 20 * * 1"
   name: ci-knative-prow-auto-bumper
   agent: kubernetes
@@ -3920,6 +4384,10 @@ periodics:
     - name: prow-auto-bumper-github-token
       secret:
         secretName: prow-auto-bumper-github-token
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 - cron: "15 9 * * *"
   name: ci-knative-backup-artifacts
   agent: kubernetes
@@ -3940,6 +4408,10 @@ periodics:
     - name: backup-account
       secret:
         secretName: backup-account
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
 postsubmits:
   knative/serving:
   - name: post-knative-serving-go-coverage
@@ -3957,6 +4429,10 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   - name: post-knative-serving-go-coverage-dev
     branches:
     - master
@@ -3972,6 +4448,10 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   knative/build:
   - name: post-knative-build-go-coverage
     branches:
@@ -3988,6 +4468,10 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   knative/client:
   - name: post-knative-client-go-coverage
     branches:
@@ -4004,6 +4488,10 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   knative/eventing:
   - name: post-knative-eventing-go-coverage
     branches:
@@ -4020,6 +4508,10 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   knative/eventing-contrib:
   - name: post-knative-eventing-contrib-go-coverage
     branches:
@@ -4036,6 +4528,10 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   knative/docs:
   - name: post-knative-docs-go-coverage
     branches:
@@ -4052,6 +4548,10 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   knative/pkg:
   - name: post-knative-pkg-go-coverage
     branches:
@@ -4068,6 +4568,10 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   knative/caching:
   - name: post-knative-caching-go-coverage
     branches:
@@ -4084,6 +4588,10 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m
   GoogleCloudPlatform/cloud-run-events:
   - name: post-googlecloudplatform-cloud-run-events-go-coverage
     branches:
@@ -4100,3 +4608,7 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+      resources:
+        requests:
+          memory: "9000Mi"
+          cpu: 2000m

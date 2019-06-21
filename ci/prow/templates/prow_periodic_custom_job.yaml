@@ -15,3 +15,7 @@
       [[indent_section 6 "volumeMounts" .Base.VolumeMounts]]
       [[indent_section 6 "env" .Base.Env]]
     [[indent_section 4 "volumes" .Base.Volumes]]
+    resources:
+      requests:
+        memory: "9000Mi"
+        cpu: 2000m
