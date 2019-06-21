@@ -64,14 +64,14 @@ func getJSONForBuild(repo string, buildID int) ([]byte, error) {
 }
 
 // inexpensively sort and find the most recent JSON file. Assumes build IDs are in sequential order.
-func getLatestValidJSON(job *prow.Job, path string) ([]byte, error) {
+func getLatestValidJSON(job *prow.Job, relPath string) ([]byte, error) {
 	maxElapsedTime, _ := time.ParseDuration(fmt.Sprintf("%dh", maxAge*24))
 	buildIDs := job.GetBuildIDs()
 	sort.Sort(sort.Reverse(sort.IntSlice(buildIDs)))
 	for _, buildID := range buildIDs {
 		build := job.NewBuild(buildID)
 		// check for JSON
-		if contents, err := build.ReadFile(path); err != nil {
+		if contents, err := build.ReadFile(relPath); err != nil {
 			continue
 		} else {
 			// JSON exists, check timestamp
