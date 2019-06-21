@@ -168,6 +168,9 @@ test_groups:
 - name: ci-knative-eventing-auto-release
   gcs_prefix: knative-prow/logs/ci-knative-eventing-auto-release
   alert_stale_results_hours: 3
+- name: ci-knative-eventing-performance
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-performance
+  short_text_metric: "perf_latency"
 - name: pull-knative-eventing-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-eventing-go-coverage
   num_failures_to_alert: 9999
@@ -369,6 +372,9 @@ dashboards:
   - name: auto-release
     test_group_name: ci-knative-eventing-auto-release
     base_options: "sort-by-name="
+  - name: performance
+    test_group_name: ci-knative-eventing-performance
+    base_options: "exclude-filter-by-regex=Overall$&group-by-target=&expand-groups=&sort-by-name="
   - name: coverage
     test_group_name: pull-knative-eventing-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="

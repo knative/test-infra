@@ -179,6 +179,7 @@ periodics:
     - nightly: true
     - dot-release: true
     - auto-release: true
+    - performance: true
 
   knative/eventing-contrib:
     - continuous: true

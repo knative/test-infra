@@ -3087,6 +3087,46 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
+- cron: "17 8 * * *"
+  name: ci-knative-eventing-performance
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: eventing
+    base_ref: master
+    clone_uri: "https://github.com/knative/eventing.git"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/performance-tests.sh"
+      volumeMounts:
+      - name: monitoring-db-credentials
+        mountPath: /secrets/cloudsql/monitoringdb
+        readOnly: true
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: E2E_MIN_CLUSTER_NODES
+        value: "16"
+      - name: E2E_MAX_CLUSTER_NODES
+        value: "16"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: monitoring-db-credentials
+      secret:
+        secretName: monitoring-db-credentials
+    - name: test-account
+      secret:
+        secretName: test-account
 - cron: "0 1 * * *"
   name: ci-knative-eventing-go-coverage
   labels:
