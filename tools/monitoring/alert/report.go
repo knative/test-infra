@@ -22,8 +22,9 @@ import (
 	"sort"
 	"time"
 
+	"github.com/knative/test-infra/tools/monitoring/mysql"
+
 	"github.com/knative/test-infra/tools/monitoring/config"
-	"github.com/knative/test-infra/tools/monitoring/log_parser"
 )
 
 const emailTemplate = `In the past %v, 
@@ -42,7 +43,7 @@ Error Logs:
 
 // report stores list of error logs, together with sets of jobs/PRs in those logs
 type report struct {
-	logs []log_parser.ErrorLog
+	logs []mysql.ErrorLog
 	jobs []string
 	prs  []int
 }
@@ -75,8 +76,8 @@ func (c mailContent) subject() string {
 }
 
 // GetErrorLogs returns all jobs stored in ErrorLogs table within the time window
-func GetErrorLogs(s *config.SelectedConfig, errorPattern string, db *sql.DB) ([]log_parser.ErrorLog, error) {
-	var result []log_parser.ErrorLog
+func GetErrorLogs(s *config.SelectedConfig, errorPattern string, db *sql.DB) ([]mysql.ErrorLog, error) {
+	var result []mysql.ErrorLog
 
 	// the timestamp we want to start collecting logs
 	startTime := time.Now().Add(s.Duration())
@@ -92,7 +93,7 @@ func GetErrorLogs(s *config.SelectedConfig, errorPattern string, db *sql.DB) ([]
 	}
 
 	for rows.Next() {
-		entry := log_parser.ErrorLog{}
+		entry := mysql.ErrorLog{}
 		err = rows.Scan(&entry.Pattern, &entry.Msg, &entry.JobName, &entry.PRNumber, &entry.BuildLogURL, &entry.TimeStamp)
 		if err != nil {
 			return result, err
@@ -103,7 +104,7 @@ func GetErrorLogs(s *config.SelectedConfig, errorPattern string, db *sql.DB) ([]
 	return result, nil
 }
 
-func newReport(errorLogs []log_parser.ErrorLog) *report {
+func newReport(errorLogs []mysql.ErrorLog) *report {
 	report := report{logs: errorLogs}
 
 	// Use sets to store unique values only

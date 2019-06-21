@@ -20,6 +20,8 @@ import (
 	"reflect"
 	"regexp"
 	"testing"
+
+	"github.com/knative/test-infra/tools/monitoring/mysql"
 )
 
 const (
@@ -47,7 +49,7 @@ func TestFindMatches(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want []ErrorLog
+		want []mysql.ErrorLog
 	}{
 		{
 			name: "single match",
@@ -59,7 +61,7 @@ func TestFindMatches(t *testing.T) {
 				},
 				text: []byte(sampleLog),
 			},
-			want: []ErrorLog{
+			want: []mysql.ErrorLog{
 				{
 					Pattern: "Something went wrong:.*\n",
 					Msg:     "Something went wrong: encountered 1 errors: [error during /go/src/github.com/knative/docs/test/e2e-tests.sh --run-tests --emit-metrics: exit status 1]\n",
