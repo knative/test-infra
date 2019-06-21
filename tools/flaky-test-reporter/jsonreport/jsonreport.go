@@ -27,7 +27,7 @@ import (
 
 const (
 	filename = "flaky-tests.json"
-  jobName = "ci-knative-flakes-reporter" // flaky-test-reporter's Prow job name
+	jobName  = "ci-knative-flakes-reporter" // flaky-test-reporter's Prow job name
 )
 
 type Report struct {
@@ -50,27 +50,27 @@ func (r *Report) writeToArtifactsDir() error {
 }
 
 func getBuildForID(buildID int) (*prow.Build, error) {
-  job := prow.NewJob(jobName, prow.PeriodicJob, "", 0)
-  if buildID == 0 {
-      latest, err := job.GetLatestBuildNumber()
-      if err != nil {
-        return nil, err
-      }
-      return job.NewBuild(latest), nil
-  } else {
-    return job.NewBuild(buildID), nil
-  }
+	job := prow.NewJob(jobName, prow.PeriodicJob, "", 0)
+	if buildID == 0 {
+		latest, err := job.GetLatestBuildNumber()
+		if err != nil {
+			return nil, err
+		}
+		return job.NewBuild(latest), nil
+	} else {
+		return job.NewBuild(buildID), nil
+	}
 }
 
 func GetReportForRepo(repo string, buildID int) (*Report, error) {
 	report := &Report{
-    Repo: repo,
-  }
-  build, err := getBuildForID(buildID)
-  if err != nil {
-    return nil, err
-  }
-  content, err := build.ReadFile(path.Join(repo, filename))
+		Repo: repo,
+	}
+	build, err := getBuildForID(buildID)
+	if err != nil {
+		return nil, err
+	}
+	content, err := build.ReadFile(path.Join(repo, filename))
 	if err != nil {
 		return nil, err
 	}
@@ -81,14 +81,14 @@ func GetReportForRepo(repo string, buildID int) (*Report, error) {
 }
 
 func CreateReportForRepo(repo string, flaky []string, writeFile bool) (*Report, error) {
-  report := &Report{
-    Repo: repo,
-    Flaky: flaky,
-  }
-  if writeFile {
-    if err := report.writeToArtifactsDir(); err != nil {
-      return report, err
-    }
-  }
-  return report, nil
+	report := &Report{
+		Repo:  repo,
+		Flaky: flaky,
+	}
+	if writeFile {
+		if err := report.writeToArtifactsDir(); err != nil {
+			return report, err
+		}
+	}
+	return report, nil
 }
