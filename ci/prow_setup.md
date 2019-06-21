@@ -50,7 +50,7 @@
 
 1. Add the org (and/or repo) to the [plugins.yaml](./prow/plugins.yaml) file, at
    least to the `approve` and `plugins` sections. Create a PR with the changes
-   and once it's merged ask one of the owners of knative/test-infra to deploy
+   and once it's merged ask one of the owners of _knative/test-infra_ to deploy
    the new config.
 
 ## Setting up Prow for a new repo (reviewers assignment and auto merge)
@@ -60,10 +60,10 @@
 1. Make sure that _Knative Robots_ is an Admin of the repo.
 
 1. Add the repo to the
-   [tide section](https://github.com/knative/test-infra/blob/2f046b32301e50242b2723c13f6f37588993e89e/ci/prow/templates/prow_config_header.yaml#L56)
-   in the Prow config file generator and run `make config`. Create a PR with the
-   changes to the generator and to the [config.yaml](./prow/config.yaml) file.
-   Once the PR is merged, ask one of the owners of knative/test-infra to deploy
+   [tide section](https://github.com/knative/test-infra/blob/b2cd02e6836ea2744ad838522b9eaf46385990f7/ci/prow/templates/prow_config_header.yaml#L72)
+   in the [Prow config template](./prow/templates/prow_config_header.yaml) and run `make config`. Create a PR with the
+   changes to the template and generated [config.yaml](./prow/config.yaml) file.
+   Once the PR is merged, ask one of the owners of _knative/test-infra_ to deploy
    the new config.
 
 1. Wait a few minutes, check that Prow is working by entering `/woof` as a
