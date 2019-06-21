@@ -111,6 +111,12 @@ presubmits:
     - integration-tests: true
     - go-coverage: true
 
+  knative/serving-operator:
+    - build-tests: true
+    - unit-tests: true
+    - integration-tests: true
+    - go-coverage: true
+
 periodics:
   knative/serving:
     - continuous: true
@@ -211,6 +217,12 @@ periodics:
   
   knative/test-infra:
     - continuous: true
+
+  knative/serving-operator:
+    - continuous: true
+    - nightly: true
+    - dot-release: true
+    - auto-release: true
 
   GoogleCloudPlatform/cloud-run-events:
     - continuous: true

@@ -223,6 +223,22 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-test-infra-continuous
   alert_stale_results_hours: 3
   num_failures_to_alert: 3
+- name: ci-knative-serving-operator-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-serving-operator-continuous
+  alert_stale_results_hours: 3
+  num_failures_to_alert: 3
+- name: ci-knative-serving-operator-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-serving-operator-nightly-release
+- name: ci-knative-serving-operator-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-serving-operator-dot-release
+  alert_stale_results_hours: 170
+- name: ci-knative-serving-operator-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-serving-operator-auto-release
+  alert_stale_results_hours: 3
+- name: pull-knative-serving-operator-test-coverage
+  gcs_prefix: knative-prow/logs/ci-knative-serving-operator-go-coverage
+  num_failures_to_alert: 9999
+  short_text_metric: "coverage"
 - name: ci-knative-serving-0.4-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.4-continuous
 - name: ci-knative-serving-0.5-continuous
@@ -431,6 +447,23 @@ dashboards:
   - name: continuous
     test_group_name: ci-knative-test-infra-continuous
     base_options: "sort-by-name="
+- name: serving-operator
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-serving-operator-continuous
+    base_options: "sort-by-name="
+  - name: nightly
+    test_group_name: ci-knative-serving-operator-nightly-release
+    base_options: "sort-by-name="
+  - name: dot-release
+    test_group_name: ci-knative-serving-operator-dot-release
+    base_options: "sort-by-name="
+  - name: auto-release
+    test_group_name: ci-knative-serving-operator-auto-release
+    base_options: "sort-by-name="
+  - name: coverage
+    test_group_name: pull-knative-serving-operator-test-coverage
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: cloud-run-events
   dashboard_tab:
   - name: continuous
@@ -496,6 +529,7 @@ dashboard_groups:
   - "observability"
   - "sample-controller"
   - "test-infra"
+  - "serving-operator"
 - name: GoogleCloudPlatform
   dashboard_names:
   - "cloud-run-events"

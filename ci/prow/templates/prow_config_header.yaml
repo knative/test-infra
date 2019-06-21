@@ -86,6 +86,7 @@ tide:
     - knative/website
     - knative/community
     - knative/sample-controller
+    - knative/serving-operator
     - GoogleCloudPlatform/cloud-run-events
     labels:
     - lgtm
