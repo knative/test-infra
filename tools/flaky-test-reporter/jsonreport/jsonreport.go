@@ -21,15 +21,17 @@ import (
 	"fmt"
 	"io/ioutil"
 	"path"
+	"sort"
+	"time"
 
 	"github.com/knative/test-infra/shared/common"
 	"github.com/knative/test-infra/shared/prow"
 )
 
 const (
-	filename   = "flaky-tests.json"
-	jobName    = "ci-knative-flakes-reporter" // flaky-test-reporter's Prow job name
-	buildCount = 3
+	filename = "flaky-tests.json"
+	jobName  = "ci-knative-flakes-reporter" // flaky-test-reporter's Prow job name
+	maxAge   = 4                            // maximum age in days that JSON data is valid
 )
 
 // Report contains concise information about current flaky tests
@@ -55,15 +57,37 @@ func (r *Report) writeToArtifactsDir() error {
 func getJSONForBuild(repo string, buildID int) ([]byte, error) {
 	relPath := path.Join(prow.ArtifactsDir, repo, filename)
 	job := prow.NewJob(jobName, prow.PeriodicJob, "", 0)
-	if buildID != -1 { // if buildID is specified, use it regardless of if it exists
+	if buildID != -1 {
 		return job.NewBuild(buildID).ReadFile(relPath)
 	}
-	for build := range job.GetLatestBuilds(buildCount) { // otherwise find most recent build with a report
-		if contents, err := build.ReadFile(relPath); err == nil {
-			return contents, err
+	return getLatestValidJSON(job, relPath)
+}
+
+// inexpensively sort and find the most recent JSON file. Assumes build IDs are in sequential order.
+func getLatestValidJSON(job *prow.Job, path string) ([]byte, error) {
+	maxElapsedTime, _ := time.ParseDuration(fmt.Sprintf("%dh", maxAge*24))
+	buildIDs := job.GetBuildIDs()
+	sort.Sort(sort.Reverse(sort.IntSlice(buildIDs)))
+	for _, buildID := range buildIDs {
+		build := job.NewBuild(buildID)
+		// check for JSON
+		if contents, err := build.ReadFile(path); err != nil {
+			continue
+		} else {
+			// JSON exists, check timestamp
+			startTimeInt, err := build.GetStartTime()
+			if err != nil {
+				continue
+			}
+			startTime := time.Unix(startTimeInt, 0)
+			if time.Since(startTime) < maxElapsedTime {
+				return contents, nil
+			} else {
+				return nil, fmt.Errorf("latest JSON log is outdated: %.2f days old", time.Since(startTime).Hours()/24)
+			}
 		}
 	}
-	return nil, fmt.Errorf("no JSON file found in %d most recent builds", buildCount)
+	return nil, fmt.Errorf("no JSON logs found in recent builds")
 }
 
 // GetReportForRepo gets a Report struct from a specific build for a given repo
