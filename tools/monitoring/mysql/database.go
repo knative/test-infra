@@ -27,7 +27,6 @@ import (
 // DB holds an active database connection created in `config`
 type DB struct {
 	*sql.DB
-	Config *mysql.DBConfig
 }
 
 // ErrorLog stores a row in the "ErrorLogs" db table
@@ -50,7 +49,7 @@ func (e ErrorLog) String() string {
 // NewDB returns the DB object with an active database connection
 func NewDB(c *mysql.DBConfig) (*DB, error) {
 	db, err := c.Connect()
-	return &DB{db, c}, err
+	return &DB{db}, err
 }
 
 // InsertErrorLog insert a new error to the ErrorLogs table
