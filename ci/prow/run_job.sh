@@ -34,3 +34,4 @@ CONFIG_YAML=${REPO_ROOT_DIR}/ci/prow/config.yaml
 ${run_mkpj} --job=$1 --config-path=${CONFIG_YAML} > ${JOB_YAML}
 echo "Job YAML file saved to ${JOB_YAML}"
 kubectl apply -f ${JOB_YAML}
+
