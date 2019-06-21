@@ -101,7 +101,9 @@ presubmits:
   
   knative/sample-controller:
     - build-tests: true
+      dot-dev: true
     - unit-tests: true
+      dot-dev: true
 
   GoogleCloudPlatform/cloud-run-events:
     - build-tests: true
@@ -205,6 +207,7 @@ periodics:
 
   knative/sample-controller:
     - continuous: true
+      dot-dev: true
   
   knative/test-infra:
     - continuous: true

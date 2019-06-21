@@ -105,7 +105,6 @@ presubmits:
     rerun_command: "/test pull-knative-serving-build-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-build-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/serving.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -135,7 +134,6 @@ presubmits:
     rerun_command: "/test pull-knative-serving-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-unit-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/serving.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -165,7 +163,6 @@ presubmits:
     rerun_command: "/test pull-knative-serving-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-integration-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/serving.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -196,7 +193,6 @@ presubmits:
     rerun_command: "/test pull-knative-serving-upgrade-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-upgrade-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/serving.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -227,7 +223,6 @@ presubmits:
     rerun_command: "/test pull-knative-serving-smoke-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-smoke-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/serving.git"
     skip_branches:
     - "release-0.4"
     - "release-0.5"
@@ -263,7 +258,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-serving-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "https://github.com/knative/serving.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -291,7 +285,6 @@ presubmits:
     trigger: "(?m)^/test (pull-knative-serving-go-coverage-dev),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "https://github.com/knative/serving.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage-dev:latest-dev
@@ -318,7 +311,6 @@ presubmits:
     rerun_command: "/test pull-knative-serving-perf-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-perf-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/serving.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -348,7 +340,6 @@ presubmits:
     rerun_command: "/test pull-knative-build-build-tests"
     trigger: "(?m)^/test (all|pull-knative-build-build-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/build.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -378,7 +369,6 @@ presubmits:
     rerun_command: "/test pull-knative-build-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-build-unit-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/build.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -408,7 +398,6 @@ presubmits:
     rerun_command: "/test pull-knative-build-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-build-integration-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/build.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -447,7 +436,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-build-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "https://github.com/knative/build.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -475,7 +463,6 @@ presubmits:
     rerun_command: "/test pull-knative-client-build-tests"
     trigger: "(?m)^/test (all|pull-knative-client-build-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/client.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -505,7 +492,6 @@ presubmits:
     rerun_command: "/test pull-knative-client-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-client-unit-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/client.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -535,7 +521,6 @@ presubmits:
     rerun_command: "/test pull-knative-client-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-client-integration-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/client.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -566,7 +551,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-client-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "https://github.com/knative/client.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -594,7 +578,6 @@ presubmits:
     rerun_command: "/test pull-knative-eventing-build-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-build-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/eventing.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -624,7 +607,6 @@ presubmits:
     rerun_command: "/test pull-knative-eventing-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-unit-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/eventing.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -654,7 +636,6 @@ presubmits:
     rerun_command: "/test pull-knative-eventing-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-integration-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/eventing.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -685,7 +666,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-eventing-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "https://github.com/knative/eventing.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -713,7 +693,6 @@ presubmits:
     rerun_command: "/test pull-knative-eventing-contrib-build-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-contrib-build-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/eventing-contrib.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -743,7 +722,6 @@ presubmits:
     rerun_command: "/test pull-knative-eventing-contrib-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-contrib-unit-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/eventing-contrib.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -773,7 +751,6 @@ presubmits:
     rerun_command: "/test pull-knative-eventing-contrib-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-contrib-integration-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/eventing-contrib.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -804,7 +781,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-eventing-contrib-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "https://github.com/knative/eventing-contrib.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -832,7 +808,6 @@ presubmits:
     rerun_command: "/test pull-knative-docs-build-tests"
     trigger: "(?m)^/test (all|pull-knative-docs-build-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/docs.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -862,7 +837,6 @@ presubmits:
     rerun_command: "/test pull-knative-docs-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-docs-unit-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/docs.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -892,7 +866,6 @@ presubmits:
     rerun_command: "/test pull-knative-docs-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-docs-integration-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/docs.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -931,7 +904,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-docs-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "https://github.com/knative/docs.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -959,7 +931,6 @@ presubmits:
     rerun_command: "/test pull-knative-build-templates-build-tests"
     trigger: "(?m)^/test (all|pull-knative-build-templates-build-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/build-templates.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -989,7 +960,6 @@ presubmits:
     rerun_command: "/test pull-knative-build-templates-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-build-templates-unit-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/build-templates.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1019,7 +989,6 @@ presubmits:
     rerun_command: "/test pull-knative-build-templates-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-build-templates-integration-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/build-templates.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1050,7 +1019,6 @@ presubmits:
     rerun_command: "/test pull-knative-pkg-build-tests"
     trigger: "(?m)^/test (all|pull-knative-pkg-build-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/pkg.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1080,7 +1048,6 @@ presubmits:
     rerun_command: "/test pull-knative-pkg-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-pkg-unit-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/pkg.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1110,7 +1077,6 @@ presubmits:
     rerun_command: "/test pull-knative-pkg-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-pkg-integration-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/pkg.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1141,7 +1107,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-pkg-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "https://github.com/knative/pkg.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -1169,7 +1134,6 @@ presubmits:
     rerun_command: "/test pull-knative-test-infra-build-tests"
     trigger: "(?m)^/test (all|pull-knative-test-infra-build-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/test-infra.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1199,7 +1163,6 @@ presubmits:
     rerun_command: "/test pull-knative-test-infra-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-test-infra-unit-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/test-infra.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1229,7 +1192,6 @@ presubmits:
     rerun_command: "/test pull-knative-test-infra-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-test-infra-integration-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/test-infra.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1260,7 +1222,6 @@ presubmits:
     rerun_command: "/test pull-knative-caching-build-tests"
     trigger: "(?m)^/test (all|pull-knative-caching-build-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/caching.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1290,7 +1251,6 @@ presubmits:
     rerun_command: "/test pull-knative-caching-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-caching-unit-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/caching.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1320,7 +1280,6 @@ presubmits:
     rerun_command: "/test pull-knative-caching-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-caching-integration-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/caching.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1351,7 +1310,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-caching-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "https://github.com/knative/caching.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -1379,7 +1337,6 @@ presubmits:
     rerun_command: "/test pull-knative-observability-build-tests"
     trigger: "(?m)^/test (all|pull-knative-observability-build-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/observability.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1409,7 +1366,6 @@ presubmits:
     rerun_command: "/test pull-knative-observability-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-observability-unit-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/observability.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1439,7 +1395,6 @@ presubmits:
     rerun_command: "/test pull-knative-observability-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-observability-integration-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/observability.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1470,7 +1425,7 @@ presubmits:
     rerun_command: "/test pull-knative-sample-controller-build-tests"
     trigger: "(?m)^/test (all|pull-knative-sample-controller-build-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/sample-controller.git"
+    path_alias: knative.dev/sample-controller
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1500,7 +1455,7 @@ presubmits:
     rerun_command: "/test pull-knative-sample-controller-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-sample-controller-unit-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/knative/sample-controller.git"
+    path_alias: knative.dev/sample-controller
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1531,7 +1486,6 @@ presubmits:
     rerun_command: "/test pull-googlecloudplatform-cloud-run-events-build-tests"
     trigger: "(?m)^/test (all|pull-googlecloudplatform-cloud-run-events-build-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/GoogleCloudPlatform/cloud-run-events.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1561,7 +1515,6 @@ presubmits:
     rerun_command: "/test pull-googlecloudplatform-cloud-run-events-unit-tests"
     trigger: "(?m)^/test (all|pull-googlecloudplatform-cloud-run-events-unit-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/GoogleCloudPlatform/cloud-run-events.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1591,7 +1544,6 @@ presubmits:
     rerun_command: "/test pull-googlecloudplatform-cloud-run-events-integration-tests"
     trigger: "(?m)^/test (all|pull-googlecloudplatform-cloud-run-events-integration-tests),?(\\s+|$)"
     decorate: true
-    clone_uri: "https://github.com/GoogleCloudPlatform/cloud-run-events.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1622,7 +1574,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-googlecloudplatform-cloud-run-events-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: "https://github.com/GoogleCloudPlatform/cloud-run-events.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -1651,7 +1602,6 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
-    clone_uri: "https://github.com/knative/serving.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1683,7 +1633,6 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
-    clone_uri: "https://github.com/knative/serving.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1725,7 +1674,6 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
-    clone_uri: "https://github.com/knative/serving.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1767,7 +1715,6 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
-    clone_uri: "https://github.com/knative/serving.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1809,7 +1756,6 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
-    clone_uri: "https://github.com/knative/serving.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1842,7 +1788,6 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
-    clone_uri: "https://github.com/knative/serving.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1875,7 +1820,6 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
-    clone_uri: "https://github.com/knative/serving.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1908,7 +1852,6 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
-    clone_uri: "https://github.com/knative/serving.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1941,7 +1884,6 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
-    clone_uri: "https://github.com/knative/serving.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1975,7 +1917,6 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
-    clone_uri: "https://github.com/knative/serving.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2009,7 +1950,6 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
-    clone_uri: "https://github.com/knative/serving.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2043,7 +1983,6 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
-    clone_uri: "https://github.com/knative/serving.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2077,7 +2016,6 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
-    clone_uri: "https://github.com/knative/serving.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2109,7 +2047,6 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
-    clone_uri: "https://github.com/knative/serving.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2149,7 +2086,6 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
-    clone_uri: "https://github.com/knative/serving.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2189,7 +2125,6 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
-    clone_uri: "https://github.com/knative/serving.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/metrics:latest
@@ -2221,7 +2156,6 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
-    clone_uri: "https://github.com/knative/serving.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2261,7 +2195,6 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
-    clone_uri: "https://github.com/knative/serving.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2302,7 +2235,6 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
-    clone_uri: "https://github.com/knative/serving.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2338,7 +2270,6 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
-    clone_uri: "https://github.com/knative/serving.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -2356,7 +2287,6 @@ periodics:
   - org: knative
     repo: build
     base_ref: master
-    clone_uri: "https://github.com/knative/build.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2388,7 +2318,6 @@ periodics:
   - org: knative
     repo: build
     base_ref: master
-    clone_uri: "https://github.com/knative/build.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2430,7 +2359,6 @@ periodics:
   - org: knative
     repo: build
     base_ref: master
-    clone_uri: "https://github.com/knative/build.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2472,7 +2400,6 @@ periodics:
   - org: knative
     repo: build
     base_ref: master
-    clone_uri: "https://github.com/knative/build.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2512,7 +2439,6 @@ periodics:
   - org: knative
     repo: build
     base_ref: master
-    clone_uri: "https://github.com/knative/build.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2552,7 +2478,6 @@ periodics:
   - org: knative
     repo: build
     base_ref: master
-    clone_uri: "https://github.com/knative/build.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2600,7 +2525,6 @@ periodics:
   - org: knative
     repo: build
     base_ref: master
-    clone_uri: "https://github.com/knative/build.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/metrics:latest
@@ -2636,7 +2560,6 @@ periodics:
   - org: knative
     repo: build
     base_ref: master
-    clone_uri: "https://github.com/knative/build.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -2654,7 +2577,6 @@ periodics:
   - org: knative
     repo: client
     base_ref: master
-    clone_uri: "https://github.com/knative/client.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2686,7 +2608,6 @@ periodics:
   - org: knative
     repo: client
     base_ref: master
-    clone_uri: "https://github.com/knative/client.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2718,7 +2639,6 @@ periodics:
   - org: knative
     repo: client
     base_ref: master
-    clone_uri: "https://github.com/knative/client.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2758,7 +2678,6 @@ periodics:
   - org: knative
     repo: client
     base_ref: master
-    clone_uri: "https://github.com/knative/client.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2802,7 +2721,6 @@ periodics:
   - org: knative
     repo: client
     base_ref: master
-    clone_uri: "https://github.com/knative/client.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -2820,7 +2738,6 @@ periodics:
   - org: knative
     repo: docs
     base_ref: master
-    clone_uri: "https://github.com/knative/docs.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2864,7 +2781,6 @@ periodics:
   - org: knative
     repo: docs
     base_ref: master
-    clone_uri: "https://github.com/knative/docs.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -2882,7 +2798,6 @@ periodics:
   - org: knative
     repo: eventing
     base_ref: master
-    clone_uri: "https://github.com/knative/eventing.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2914,7 +2829,6 @@ periodics:
   - org: knative
     repo: eventing
     base_ref: master
-    clone_uri: "https://github.com/knative/eventing.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2956,7 +2870,6 @@ periodics:
   - org: knative
     repo: eventing
     base_ref: master
-    clone_uri: "https://github.com/knative/eventing.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2998,7 +2911,6 @@ periodics:
   - org: knative
     repo: eventing
     base_ref: master
-    clone_uri: "https://github.com/knative/eventing.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3030,7 +2942,6 @@ periodics:
   - org: knative
     repo: eventing
     base_ref: master
-    clone_uri: "https://github.com/knative/eventing.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3070,7 +2981,6 @@ periodics:
   - org: knative
     repo: eventing
     base_ref: master
-    clone_uri: "https://github.com/knative/eventing.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3110,7 +3020,6 @@ periodics:
   - org: knative
     repo: eventing
     base_ref: master
-    clone_uri: "https://github.com/knative/eventing.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3154,7 +3063,6 @@ periodics:
   - org: knative
     repo: eventing
     base_ref: master
-    clone_uri: "https://github.com/knative/eventing.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -3172,7 +3080,6 @@ periodics:
   - org: knative
     repo: eventing-contrib
     base_ref: master
-    clone_uri: "https://github.com/knative/eventing-contrib.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3204,7 +3111,6 @@ periodics:
   - org: knative
     repo: eventing-contrib
     base_ref: master
-    clone_uri: "https://github.com/knative/eventing-contrib.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3246,7 +3152,6 @@ periodics:
   - org: knative
     repo: eventing-contrib
     base_ref: master
-    clone_uri: "https://github.com/knative/eventing-contrib.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3288,7 +3193,6 @@ periodics:
   - org: knative
     repo: eventing-contrib
     base_ref: master
-    clone_uri: "https://github.com/knative/eventing-contrib.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3320,7 +3224,6 @@ periodics:
   - org: knative
     repo: eventing-contrib
     base_ref: master
-    clone_uri: "https://github.com/knative/eventing-contrib.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3360,7 +3263,6 @@ periodics:
   - org: knative
     repo: eventing-contrib
     base_ref: master
-    clone_uri: "https://github.com/knative/eventing-contrib.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3404,7 +3306,6 @@ periodics:
   - org: knative
     repo: eventing-contrib
     base_ref: master
-    clone_uri: "https://github.com/knative/eventing-contrib.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -3422,7 +3323,6 @@ periodics:
   - org: knative
     repo: build-templates
     base_ref: master
-    clone_uri: "https://github.com/knative/build-templates.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3454,7 +3354,6 @@ periodics:
   - org: knative
     repo: pkg
     base_ref: master
-    clone_uri: "https://github.com/knative/pkg.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3490,7 +3389,6 @@ periodics:
   - org: knative
     repo: pkg
     base_ref: master
-    clone_uri: "https://github.com/knative/pkg.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -3508,7 +3406,6 @@ periodics:
   - org: knative
     repo: caching
     base_ref: master
-    clone_uri: "https://github.com/knative/caching.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3544,7 +3441,6 @@ periodics:
   - org: knative
     repo: caching
     base_ref: master
-    clone_uri: "https://github.com/knative/caching.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -3562,7 +3458,6 @@ periodics:
   - org: knative
     repo: observability
     base_ref: master
-    clone_uri: "https://github.com/knative/observability.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3594,7 +3489,7 @@ periodics:
   - org: knative
     repo: sample-controller
     base_ref: master
-    clone_uri: "https://github.com/knative/sample-controller.git"
+  path_alias: knative.dev/sample-controller
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3626,7 +3521,6 @@ periodics:
   - org: knative
     repo: test-infra
     base_ref: master
-    clone_uri: "https://github.com/knative/test-infra.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3658,7 +3552,6 @@ periodics:
   - org: GoogleCloudPlatform
     repo: cloud-run-events
     base_ref: master
-    clone_uri: "https://github.com/GoogleCloudPlatform/cloud-run-events.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3690,7 +3583,6 @@ periodics:
   - org: GoogleCloudPlatform
     repo: cloud-run-events
     base_ref: master
-    clone_uri: "https://github.com/GoogleCloudPlatform/cloud-run-events.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3722,7 +3614,6 @@ periodics:
   - org: GoogleCloudPlatform
     repo: cloud-run-events
     base_ref: master
-    clone_uri: "https://github.com/GoogleCloudPlatform/cloud-run-events.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3762,7 +3653,6 @@ periodics:
   - org: GoogleCloudPlatform
     repo: cloud-run-events
     base_ref: master
-    clone_uri: "https://github.com/GoogleCloudPlatform/cloud-run-events.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3806,7 +3696,6 @@ periodics:
   - org: GoogleCloudPlatform
     repo: cloud-run-events
     base_ref: master
-    clone_uri: "https://github.com/GoogleCloudPlatform/cloud-run-events.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -3826,7 +3715,6 @@ periodics:
   - org: knative
     repo: test-infra
     base_ref: master
-    clone_uri: "https://github.com/knative/test-infra.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3855,7 +3743,6 @@ periodics:
   - org: knative
     repo: test-infra
     base_ref: master
-    clone_uri: "https://github.com/knative/test-infra.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/flaky-test-reporter:latest
@@ -3894,7 +3781,6 @@ periodics:
   - org: knative
     repo: test-infra
     base_ref: master
-    clone_uri: "https://github.com/knative/test-infra.git"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-auto-bumper:latest
@@ -3947,7 +3833,6 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "https://github.com/knative/serving.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -3962,7 +3847,6 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "https://github.com/knative/serving.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage-dev:latest-dev
@@ -3978,7 +3862,6 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "https://github.com/knative/build.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -3994,7 +3877,6 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "https://github.com/knative/client.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -4010,7 +3892,6 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "https://github.com/knative/eventing.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -4026,7 +3907,6 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "https://github.com/knative/eventing-contrib.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -4042,7 +3922,6 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "https://github.com/knative/docs.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -4058,7 +3937,6 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "https://github.com/knative/pkg.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -4074,7 +3952,6 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "https://github.com/knative/caching.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -4090,7 +3967,6 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    clone_uri: "https://github.com/GoogleCloudPlatform/cloud-run-events.git"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest

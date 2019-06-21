@@ -93,6 +93,7 @@ type baseProwJobTemplateData struct {
 	Image               string
 	Year                int
 	Labels              []string
+	PathAlias           string
 }
 
 // ####################################################################################################
@@ -421,7 +422,7 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.Volumes = make([]string, 0)
 	data.VolumeMounts = make([]string, 0)
 	data.Env = make([]string, 0)
-	data.ExtraRefs = []string{"- org: " + data.OrgName, "  repo: " + data.RepoName, "  base_ref: master", "  clone_uri: " + data.CloneURI}
+	data.ExtraRefs = []string{"- org: " + data.OrgName, "  repo: " + data.RepoName, "  base_ref: master"}
 	data.Labels = make([]string, 0)
 	return data
 }
@@ -531,6 +532,9 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 			}
 		case "always_run":
 			(*data).AlwaysRun = getBool(item.Value)
+		case "dot-dev":
+			(*data).PathAlias = "path_alias: knative.dev/" + (*data).RepoName
+			(*data).ExtraRefs = append((*data).ExtraRefs, (*data).PathAlias)
 		case nil: // already processed
 			continue
 		default:
