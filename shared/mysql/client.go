@@ -38,7 +38,7 @@ type DBConfig struct {
 
 // ConfigureDB reads the database user name and password from a file (secret) and creates a DBConfig
 // that can be used to connect to the database.
-func ConfigureDB(userSecret, passSecret, dbHost, dbPort, dbName string) (*DBConfig, error) {
+func ConfigureDB(userSecret, passSecret, hostSecret, dbPort, dbName string) (*DBConfig, error) {
 	user, err := ioutil.ReadFile(userSecret)
 	if err != nil {
 		return nil, err
@@ -49,10 +49,15 @@ func ConfigureDB(userSecret, passSecret, dbHost, dbPort, dbName string) (*DBConf
 		return nil, err
 	}
 
+	host, err := ioutil.ReadFile(hostSecret)
+	if err != nil {
+		return nil, err
+	}
+
 	config := DBConfig{
 		Username:     string(user),
 		Password:     string(pass),
-		Host:         dbHost,
+		Host:         string(host),
 		Port:         dbPort,
 		DatabaseName: dbName,
 	}

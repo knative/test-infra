@@ -50,11 +50,11 @@ func main() {
 	var err error
 
 	dbName := flag.String("database-name", "monitoring", "The monitoring database name")
-	dbHost := flag.String("database-host", "10.93.144.3", "The private IP address to connect to the CloudSQL monitoring instance")
 	dbPort := flag.String("database-port", "3306", "The monitoring database port")
 
 	dbUserSF := flag.String("database-user", "/secrets/cloudsql/monitoringdb/username", "Database user secret file")
 	dbPassSF := flag.String("database-password", "/secrets/cloudsql/monitoringdb/password", "Database password secret file")
+	dbHost := flag.String("database-host", "/secrets/cloudsql/monitoringdb/host", "Database host secret file")
 	mailAddrSF := flag.String("sender-email", "/secrets/sender-email/mail", "Alert sender email address file")
 	mailPassSF := flag.String("sender-password", "/secrets/sender-email/password", "Alert sender email password file")
 
