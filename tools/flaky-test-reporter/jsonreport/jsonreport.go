@@ -27,6 +27,7 @@ import (
 
 const (
 	filename = "flaky-tests.json"
+  jobName = "ci-knative-flakes-reporter" // flaky-test-reporter's Prow job name
 )
 
 type Report struct {
@@ -48,17 +49,32 @@ func (r *Report) writeToArtifactsDir() error {
 	return ioutil.WriteFile(outFilePath, contents, 0644)
 }
 
+func getBuildForID(buildID int) (*prow.Build, error) {
+  job := prow.NewJob(jobName, prow.PeriodicJob, "", 0)
+  if buildID == 0 {
+      latest, err := job.GetLatestBuildNumber()
+      if err != nil {
+        return nil, err
+      }
+      return job.NewBuild(latest), nil
+  } else {
+    return job.NewBuild(buildID), nil
+  }
+}
+
 func GetReportForRepo(repo string, buildID int) (*Report, error) {
 	report := &Report{
     Repo: repo,
   }
-	artifactsDir := prow.GetLocalArtifactsDir()
-	content, err := ioutil.ReadFile(path.Join(artifactsDir, repo, filename))
+  build, err := getBuildForID(buildID)
+  if err != nil {
+    return nil, err
+  }
+  content, err := build.ReadFile(path.Join(repo, filename))
 	if err != nil {
 		return nil, err
 	}
-	err = json.Unmarshal(content, &report)
-	if err != nil {
+	if err = json.Unmarshal(content, &report); err != nil {
 		return nil, err
 	}
 	return report, nil
