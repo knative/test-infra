@@ -18,7 +18,7 @@ package jsonreport
 
 import (
 	"encoding/json"
-  "fmt"
+	"fmt"
 	"io/ioutil"
 	"path"
 
@@ -27,9 +27,9 @@ import (
 )
 
 const (
-	filename = "flaky-tests.json"
-	jobName  = "ci-knative-flakes-reporter" // flaky-test-reporter's Prow job name
-  buildCount = 3
+	filename   = "flaky-tests.json"
+	jobName    = "ci-knative-flakes-reporter" // flaky-test-reporter's Prow job name
+	buildCount = 3
 )
 
 // Report contains concise information about current flaky tests
@@ -53,17 +53,17 @@ func (r *Report) writeToArtifactsDir() error {
 }
 
 func getJSONForBuild(repo string, buildID int) ([]byte, error) {
-  relPath := path.Join(prow.ArtifactsDir, repo, filename)
-  job := prow.NewJob(jobName, prow.PeriodicJob, "", 0)
-  if buildID != -1 { // if buildID is specified, use it regardless of if it exists
-    return job.NewBuild(buildID).ReadFile(relPath)
-  }
-  for build := range job.GetLatestBuilds(buildCount) { // otherwise find most recent build with a report
-    if contents, err := build.ReadFile(relPath); err == nil {
-      return contents, err
-    }
-  }
-  return nil, fmt.Errorf("no JSON file found in %d most recent builds", buildCount)
+	relPath := path.Join(prow.ArtifactsDir, repo, filename)
+	job := prow.NewJob(jobName, prow.PeriodicJob, "", 0)
+	if buildID != -1 { // if buildID is specified, use it regardless of if it exists
+		return job.NewBuild(buildID).ReadFile(relPath)
+	}
+	for build := range job.GetLatestBuilds(buildCount) { // otherwise find most recent build with a report
+		if contents, err := build.ReadFile(relPath); err == nil {
+			return contents, err
+		}
+	}
+	return nil, fmt.Errorf("no JSON file found in %d most recent builds", buildCount)
 }
 
 // GetReportForRepo gets a Report struct from a specific build for a given repo
@@ -89,7 +89,7 @@ func CreateReportForRepo(repo string, flaky []string, writeFile bool) (*Report, 
 		Flaky: flaky,
 	}
 	if writeFile {
-	   return report, report.writeToArtifactsDir()
+		return report, report.writeToArtifactsDir()
 	}
 	return report, nil
 }
