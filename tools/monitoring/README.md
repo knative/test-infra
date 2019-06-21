@@ -8,8 +8,10 @@ failure logs to catch test infrastructure failures.
 ### Create the cluster
 
 ```bash
-gcloud container clusters create monitoring --enable-ip-alias
+gcloud container clusters create monitoring --enable-ip-alias --zone=us-central1-a
 ```
+
+Note: The cluster connects to the CloudSQL instance via private IP. Thus, it is required that the cluster is in the same zone as the CloudSQL instance.
 
 ## Build and Deploy Changes
 
