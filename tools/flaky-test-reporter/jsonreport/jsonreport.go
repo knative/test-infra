@@ -34,7 +34,7 @@ type Report struct {
 	Flaky []string `json:"flaky"`
 }
 
-func (r *Report) WriteToArtifactsDir() error {
+func (r *Report) writeToArtifactsDir() error {
 	artifactsDir := prow.GetLocalArtifactsDir()
 	err := common.CreateDir(path.Join(artifactsDir, r.Repo))
 	if nil != err {
@@ -48,7 +48,7 @@ func (r *Report) WriteToArtifactsDir() error {
 	return ioutil.WriteFile(outFilePath, contents, 0644)
 }
 
-func GetReportForRepo(repo string) (*Report, error) {
+func GetReportForRepo(repo string, buildID int) (*Report, error) {
 	report := &Report{
     Repo: repo,
   }
@@ -64,9 +64,15 @@ func GetReportForRepo(repo string) (*Report, error) {
 	return report, nil
 }
 
-func NewReport(repo string, flaky []string) *Report {
-	return &Report{
-		Repo:  repo,
-		Flaky: flaky,
-	}
+func CreateReportForRepo(repo string, flaky []string, writeFile bool) (*Report, error) {
+  report := &Report{
+    Repo: repo,
+    Flaky: flaky,
+  }
+  if writeFile {
+    if err := report.writeToArtifactsDir(); err != nil {
+      return report, err
+    }
+  }
+  return report, nil
 }

@@ -21,12 +21,12 @@ import (
 	"log"
 	"sync"
 
-	"github.com/knative/test-infra/shared/jsonreport"
+	"github.com/knative/test-infra/tools/flaky-test-reporter/jsonreport"
 )
 
 func getFlakyTestSet(repoDataAll []*RepoData) map[string]map[string]bool {
 	// use a map for each repo as a "set", to eliminate duplicates
-	flakyTestSets := map[string]map[string]bool{}
+	flakyTestSet := map[string]map[string]bool{}
 	for _, rd := range repoDataAll {
 		if flakyTestSet[rd.Config.Repo] == nil {
 			flakyTestSet[rd.Config.Repo] = map[string]bool{}
@@ -43,24 +43,25 @@ func writeFlakyTestsToJSON(repoDataAll []*RepoData, dryrun bool) error {
 	flakyTestSets := getFlakyTestSet(repoDataAll)
 	ch := make(chan bool, len(flakyTestSets))
 	wg := sync.WaitGroup{}
-	for repo, tests := range flakyTestSets {
+	for repo, testSet := range flakyTestSets {
 		wg.Add(1)
 		go func(wg *sync.WaitGroup) {
-			report := jsonreport.NewReport(repo, nil)
-			for test := range tests {
-				report.Flaky = append(report.Flaky, test)
+			var testList []string
+			for test := range testSet {
+				testList = append(testList, test)
 			}
 			if err := run(
 				fmt.Sprintf("writing JSON report for repo '%s'", repo),
 				func() error {
-					return report.WriteToArtifactsDir()
+					_, err := jsonreport.CreateReportForRepo(repo, testList, true)
+					return err
 				},
 				dryrun); nil != err {
 				allErrs = append(allErrs, err)
 				log.Printf("failed writing JSON report for repo '%s': '%v'", err)
 			}
 			if dryrun {
-				log.Printf("[dry run] JSON report not written. See it below:\n%s\n\n", report)
+				log.Printf("[dry run] JSON report not written to bucket\n")
 			}
 			ch <- true
 			wg.Done()
