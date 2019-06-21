@@ -372,3 +372,29 @@ subjects:
 - kind: ServiceAccount
   name: "crier"
   namespace: default
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: mem-limit-range
+  namespace: test-pods
+spec:
+  limits:
+    - default:
+        memory: 4Gi
+      defaultRequest:
+        memory: 2Gi
+      type: Container
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: cpu-limit-range
+  namespace: test-pods
+spec:
+  limits:
+    - default:
+        cpu: 4000m
+      defaultRequest:
+        cpu: 2000m
+      type: Container
