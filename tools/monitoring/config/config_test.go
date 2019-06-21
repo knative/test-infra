@@ -245,8 +245,7 @@ func validate(text []byte) error {
 	return nil
 }
 
-// TODO: after actual config yaml created, replace the path to point to that file
-const yamlPath = "sample.yaml"
+const yamlPath = "config.yaml"
 
 func getConfigYaml() []byte {
 	text, err := ioutil.ReadFile(yamlPath)

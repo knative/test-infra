@@ -24,7 +24,7 @@ spec:
       - job-name-regex: '.*'
         occurrences: 1
         jobs-affected: 1
-        prs-affected: 1
+        prs-affected: 0
         period: 1440
 
   - error-pattern: 'Something went wrong: failed to prepare test environment: --provider=.* boskos failed to acquire project: resources not found'
@@ -38,7 +38,7 @@ spec:
       - job-name-regex: '.*'
         occurrences: 1
         jobs-affected: 1
-        prs-affected: 1
+        prs-affected: 0
         period: 1440
 
   - error-pattern: 'Knative setup failed'
@@ -52,7 +52,7 @@ spec:
       - job-name-regex: '.*'
         occurrences: 1
         jobs-affected: 1
-        prs-affected: 1
+        prs-affected: 0
         period: 1440
 
   - error-pattern: 'test setup failed'
@@ -66,7 +66,7 @@ spec:
       - job-name-regex: '.*'
         occurrences: 1
         jobs-affected: 1
-        prs-affected: 1
+        prs-affected: 0
         period: 1440
 
   - error-pattern: 'cannot obtain release tags for the repository'
@@ -80,7 +80,7 @@ spec:
       - job-name-regex: '.*'
         occurrences: 1
         jobs-affected: 1
-        prs-affected: 1
+        prs-affected: 0
         period: 1440
 
   - error-pattern: 'cannot list releases'
@@ -94,7 +94,7 @@ spec:
       - job-name-regex: '.*'
         occurrences: 1
         jobs-affected: 1
-        prs-affected: 1
+        prs-affected: 0
         period: 1440
 
   - error-pattern: 'Missing argument to --custom-yamls'
@@ -108,7 +108,7 @@ spec:
       - job-name-regex: '.*'
         occurrences: 1
         jobs-affected: 1
-        prs-affected: 1
+        prs-affected: 0
         period: 1440
 
   - error-pattern: 'Flag parse failed:'
@@ -122,7 +122,7 @@ spec:
       - job-name-regex: '.*'
         occurrences: 1
         jobs-affected: 1
-        prs-affected: 1
+        prs-affected: 0
         period: 1440
 
   - error-pattern: 'Flags validation failed. err:'
@@ -136,5 +136,5 @@ spec:
       - job-name-regex: '.*'
         occurrences: 1
         jobs-affected: 1
-        prs-affected: 1
+        prs-affected: 0
         period: 1440
