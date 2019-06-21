@@ -296,6 +296,8 @@ function main() {
     kubectl version --client
     echo ">> go version"
     go version
+    echo ">> ko version"
+    ko version
     echo ">> git version"
     git version
     echo ">> bazel version"
