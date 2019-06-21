@@ -23,22 +23,11 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
-	"strings"
-)
 
-func cdToRootDir() error {
-	cmd := exec.Command("git", "rev-parse", "--show-toplevel")
-	output, err := cmd.Output()
-	if err != nil {
-		return err
-	}
-	d := strings.TrimSpace(string(output))
-	log.Printf("Changing working directory to %s...", d)
-	return os.Chdir(d)
-}
+	"github.com/knative/test-infra/shared/common"
+)
 
 // Update all tags in a byte slice
 func (pv *PRVersions) updateAllTags(content []byte, imageFilter *regexp.Regexp) ([]byte, string, []string) {
@@ -103,7 +92,7 @@ func (pv *PRVersions) updateFile(filename string, imageFilter *regexp.Regexp, dr
 func (pv *PRVersions) updateAllFiles(fileFilters []*regexp.Regexp, imageFilter *regexp.Regexp,
 	dryrun bool) ([]string, error) {
 	var errMsgs []string
-	if err := cdToRootDir(); err != nil {
+	if err := common.CDToRootDir(); err != nil {
 		return errMsgs, fmt.Errorf("failed to change to root dir")
 	}
 
