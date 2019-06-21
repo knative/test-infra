@@ -61,10 +61,10 @@
 
 1. Add the repo to the
    [tide section](https://github.com/knative/test-infra/blob/b2cd02e6836ea2744ad838522b9eaf46385990f7/ci/prow/templates/prow_config_header.yaml#L72)
-   in the [Prow config template](./prow/templates/prow_config_header.yaml) and run `make config`. Create a PR with the
-   changes to the template and generated [config.yaml](./prow/config.yaml) file.
-   Once the PR is merged, ask one of the owners of _knative/test-infra_ to deploy
-   the new config.
+   in the [Prow config template](./prow/templates/prow_config_header.yaml) and
+   run `make config`. Create a PR with the changes to the template and generated
+   [config.yaml](./prow/config.yaml) file. Once the PR is merged, ask one of the
+   owners of _knative/test-infra_ to deploy the new config.
 
 1. Wait a few minutes, check that Prow is working by entering `/woof` as a
    comment in any PR in the new repo.
