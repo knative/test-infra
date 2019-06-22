@@ -41,6 +41,9 @@ update-boskos-config: get-cluster-credentials
 update-cluster: get-cluster-credentials
 	kubectl apply -f cluster.yaml
 
+update-start-config: get-cluster-credentials
+	kubectl apply -f config_start.yaml
+
 test:
 	@echo "*** Checking config generator for prow and testgrid"
 	$(eval TMP_YAML_PROW := $(shell mktemp))
