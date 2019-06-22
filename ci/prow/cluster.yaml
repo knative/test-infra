@@ -87,7 +87,7 @@ spec:
       terminationGracePeriodSeconds: 180
       containers:
       - name: hook
-        image: gcr.io/k8s-prow/hook:v20190517-bb7028b16
+        image: gcr.io/k8s-prow/hook:v20190614-1bd5c9911
         imagePullPolicy: Always
         args:
         - --dry-run=false
@@ -149,7 +149,7 @@ spec:
       containers:
       - name: plank
         # Update plank utility_images versions in config.yaml when updating this version
-        image: gcr.io/k8s-prow/plank:v20190517-bb7028b16
+        image: gcr.io/k8s-prow/plank:v20190614-1bd5c9911
         args:
         - --dry-run=false
         volumeMounts:
@@ -183,7 +183,7 @@ spec:
       serviceAccountName: "sinker"
       containers:
       - name: sinker
-        image: gcr.io/k8s-prow/sinker:v20190517-bb7028b16
+        image: gcr.io/k8s-prow/sinker:v20190614-1bd5c9911
         volumeMounts:
         - name: config
           mountPath: /etc/config
@@ -215,7 +215,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
       - name: deck
-        image: gcr.io/k8s-prow/deck:v20190517-bb7028b16
+        image: gcr.io/k8s-prow/deck:v20190614-1bd5c9911
         args:
         - --hook-url=http://hook:8888/plugin-help
         - --tide-url=http://tide/
@@ -261,7 +261,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
       - name: horologium
-        image: gcr.io/k8s-prow/horologium:v20190517-bb7028b16
+        image: gcr.io/k8s-prow/horologium:v20190614-1bd5c9911
         volumeMounts:
         - name: config
           mountPath: /etc/config
@@ -329,7 +329,7 @@ spec:
       serviceAccountName: "tide"
       containers:
       - name: tide
-        image: gcr.io/k8s-prow/tide:v20190517-bb7028b16
+        image: gcr.io/k8s-prow/tide:v20190614-1bd5c9911
         args:
         - --dry-run=false
         ports:
@@ -367,7 +367,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
       - name: crier
-        image: gcr.io/k8s-prow/crier:v20190517-bb7028b16
+        image: gcr.io/k8s-prow/crier:v20190614-1bd5c9911
         args:
         - --pubsub-workers=1
         - --report-agent=knative-build
