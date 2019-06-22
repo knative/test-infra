@@ -27,4 +27,4 @@ push_versioned: build
 push_latest: build
 	docker push $(IMG):latest
 
-push: push_versioned push_latest clean
+push: push_versioned push_latest
