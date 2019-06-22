@@ -86,15 +86,11 @@
       repository). Run `make config` to regenerate
       [config.yaml](./prow/config.yaml), otherwise the presubmit test will fail.
 
-   1. Updates the Gubernator config with the new log dirs.
-
    1. Updates the Testgrid config with the new buckets, tabs and dashboard.
 
 1. Ask one of the owners of _knative/test-infra_ to:
 
    1. Run `make update-config` in `ci/prow`.
-
-   1. Run `make deploy` in `ci/gubernator`.
 
    1. Run `make update-config` in `ci/testgrid`.
 
