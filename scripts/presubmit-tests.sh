@@ -297,9 +297,11 @@ function main() {
     echo ">> go version"
     go version
     echo ">> ko version"
-    set +x
-    ko version
     set -x
+    ko help
+    ko
+    ko version
+    set +x
     echo ">> git version"
     git version
     echo ">> bazel version"
