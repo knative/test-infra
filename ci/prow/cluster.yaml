@@ -398,7 +398,7 @@ spec:
     - default:
         memory: 8Gi
       defaultRequest:
-        memory: 8Gi
+        memory: 4Gi
       type: Container
 ---
 apiVersion: v1
