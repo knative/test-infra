@@ -50,6 +50,8 @@ update-cluster: get-cluster-credentials
 	kubectl apply -f cluster.yaml
 	$(UNSET_CONTEXT)
 
+update-full: get-cluster-credentials update-cluster update-config update-boskos
+
 test:
 	@echo "*** Checking config generator for prow and testgrid"
 	$(eval TMP_YAML_PROW := $(shell mktemp))
