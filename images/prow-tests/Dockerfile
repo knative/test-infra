@@ -44,7 +44,6 @@ RUN bazel shutdown
 # Extra tools through go get
 RUN go get -u github.com/google/ko/cmd/ko
 RUN go get -u github.com/golang/dep/cmd/dep
-RUN go get -u github.com/google/licenseclassifier
 RUN go get -u github.com/jstemmer/go-junit-report
 RUN go get -u github.com/raviqqe/liche
 
@@ -58,7 +57,6 @@ ADD . /go/src/github.com/knative/test-infra
 # Build custom tools in the container
 RUN make -C /go/src/github.com/knative/test-infra/tools/githubhelper
 RUN cp /go/src/github.com/knative/test-infra/tools/githubhelper/githubhelper .
-RUN go install github.com/knative/test-infra/tools/dep-collector
 
 # Remove test-infra from the container
 RUN rm -fr /go/src/github.com/knative/test-infra
