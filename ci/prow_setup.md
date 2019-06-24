@@ -34,10 +34,13 @@
 
 ## Setting up Prow for a new organization
 
-1. In GitHub, add a [webhook](https://developer.github.com/webhooks/) to the org
-   (or repo) that points to <http://prow.knative.dev/hook> and sends all events
-   in `application/json` format. Ask one of the owners of knative/test-infra for
-   the webhook secret.
+1. In GitHub, add the following [webhooks](https://developer.github.com/webhooks/)
+   to the org (or repo), in `application/json` format and for all events. Ask one
+   of the owners of knative/test-infra for the webhook secrets.
+
+   1. <http://prow.knative.dev/hook> (for Prow)
+   1. <https://github-dot-knative-tests.appspot.com/webhook> (for Gubernator PR
+      Dashboard)
 
 1. Create a team called _Knative Prow Robots_, and make it an Admin of the org
    (or repo).
