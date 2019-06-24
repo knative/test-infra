@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Initial configuration of prow cluster
+# Initial configuration of prow cluster.
+# Intended to be used when (re)creating the cluster.
 
 # Configs
 
@@ -372,29 +373,3 @@ subjects:
 - kind: ServiceAccount
   name: "crier"
   namespace: default
----
-apiVersion: v1
-kind: LimitRange
-metadata:
-  name: mem-limit-range
-  namespace: test-pods
-spec:
-  limits:
-    - default:
-        memory: 8Gi
-      defaultRequest:
-        memory: 2Gi
-      type: Container
----
-apiVersion: v1
-kind: LimitRange
-metadata:
-  name: cpu-limit-range
-  namespace: test-pods
-spec:
-  limits:
-    - default:
-        cpu: 4000m
-      defaultRequest:
-        cpu: 1000m
-      type: Container
