@@ -27,7 +27,7 @@ spec:
         imagePullPolicy: Always
         workingDir: "/mount/data/src/test-infra/devstats"
         command: ["/bin/bash", "-c"]
-        args: ["./gha2db 2019-03-29 0 `date +%Y-%m-%d` 23 knative"]
+        args: ["./gha2db 2018-01-20 0 `date +%Y-%m-%d` 23 knative"]
         envFrom:
         - configMapRef:
             name: devstats-env

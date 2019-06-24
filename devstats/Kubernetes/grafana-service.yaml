@@ -41,7 +41,7 @@ spec:
         app: grafana
     spec:
       containers:
-      - image: grafana/grafana:master
+      - image: grafana/grafana:6.2.0
         imagePullPolicy: Always
         name: grafana
         ports:
