@@ -14,7 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-rm -fr /go/src/github.com/google/licenseclassifier
+rm -fr ${GOPATH}/src/github.com/google/licenseclassifier
+rm -fr ${GOPATH}/bin/dep-collector
 go get -u github.com/google/licenseclassifier
-go get -u github.com/knative/test-infra/tools/dep-collector
-dep-collector $@
+if [[ -d "${GOPATH}/src/github.com/knative/test-infra/tools/dep-collector" ]]; then
+  go install ${GOPATH}/src/github.com/knative/test-infra/tools/dep-collector
+else
+  go get -u github.com/knative/test-infra/tools/dep-collector
+fi
+${GOPATH}/bin/dep-collector $@
+err=$?
+exit ${err}
