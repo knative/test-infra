@@ -1,4 +1,4 @@
-# Copyright 2018 The Knative Authors
+# Copyright 2019 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -57,6 +57,11 @@ ADD . /go/src/github.com/knative/test-infra
 # Build custom tools in the container
 RUN make -C /go/src/github.com/knative/test-infra/tools/githubhelper
 RUN cp /go/src/github.com/knative/test-infra/tools/githubhelper/githubhelper .
+
+# Use a local dep-collector that's a wrapper for building the tool
+# on-the-fly.
+# TODO(adrcunha): Remove once https://github.com/knative/test-infra/pull/1019 is in all repos.
+RUN cp /go/src/github.com/knative/test-infra/images/prow-tests/dep-collector /usr/bin/dep-collector
 
 # Remove test-infra from the container
 RUN rm -fr /go/src/github.com/knative/test-infra
