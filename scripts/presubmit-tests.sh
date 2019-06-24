@@ -298,6 +298,8 @@ function main() {
     go version
     echo ">> git version"
     git version
+    echo ">> ko built from commit"
+    [[ -f /ko_version ]] && cat /ko_version || echo "unknown"
     echo ">> bazel version"
     [[ -f /bazel_version ]] && cat /bazel_version || echo "unknown"
     if [[ "${DOCKER_IN_DOCKER_ENABLED}" == "true" ]]; then

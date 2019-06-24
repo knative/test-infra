@@ -37,15 +37,18 @@ RUN rm -rf /usr/local/go && \
     tar xzf "${GO_TARBALL}" -C /usr/local && \
     rm "${GO_TARBALL}"
 
-# Extract bazel version
-RUN bazel version > /bazel_version
-RUN bazel shutdown
-
 # Extra tools through go get
 RUN go get -u github.com/google/ko/cmd/ko
 RUN go get -u github.com/golang/dep/cmd/dep
 RUN go get -u github.com/jstemmer/go-junit-report
 RUN go get -u github.com/raviqqe/liche
+
+# Extract bazel version
+RUN bazel version > /bazel_version
+RUN bazel shutdown
+
+# Extract ko version
+git ls-remote https://github.com/google/ko HEAD | cut -f1 > /ko_version
 
 # Extra tools through gem
 RUN gem install mixlib-config -v 2.2.4  # required because ruby is 2.1
