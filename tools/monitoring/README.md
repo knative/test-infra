@@ -11,7 +11,8 @@ failure logs to catch test infrastructure failures.
 gcloud container clusters create monitoring --enable-ip-alias --zone=us-central1-a
 ```
 
-Note: The cluster connects to the CloudSQL instance via private IP. Thus, it is required that the cluster is in the same zone as the CloudSQL instance.
+Note: The cluster connects to the CloudSQL instance via private IP. Thus, it is
+required that the cluster is in the same zone as the CloudSQL instance.
 
 ## Build and Deploy Changes
 
