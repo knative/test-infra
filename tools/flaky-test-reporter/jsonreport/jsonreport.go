@@ -42,8 +42,7 @@ type Report struct {
 
 func (r *Report) writeToArtifactsDir() error {
 	artifactsDir := prow.GetLocalArtifactsDir()
-	err := common.CreateDir(path.Join(artifactsDir, r.Repo))
-	if nil != err {
+	if err := common.CreateDir(path.Join(artifactsDir, r.Repo)); nil != err {
 		return err
 	}
 	outFilePath := path.Join(artifactsDir, r.Repo, filename)

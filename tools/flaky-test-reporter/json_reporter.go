@@ -61,7 +61,7 @@ func writeFlakyTestsToJSON(repoDataAll []*RepoData, dryrun bool) error {
 				},
 				dryrun); nil != err {
 				allErrs = append(allErrs, err)
-				log.Printf("failed writing JSON report for repo '%s': '%v'", err)
+				log.Printf("failed writing JSON report for repo '%s': '%v'", repo, err)
 			}
 			if dryrun {
 				log.Printf("[dry run] JSON report not written to bucket\n")
