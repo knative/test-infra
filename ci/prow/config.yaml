@@ -109,6 +109,46 @@ presubmits:
     rerun_command: "/test pull-knative-serving-build-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-build-tests),?(\\s+|$)"
     decorate: true
+    branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--build-tests"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-build-tests
+    agent: kubernetes
+    context: pull-knative-serving-build-tests
+    always_run: true
+    rerun_command: "/test pull-knative-serving-build-tests"
+    trigger: "(?m)^/test (all|pull-knative-serving-build-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/serving
+    skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -138,6 +178,46 @@ presubmits:
     rerun_command: "/test pull-knative-serving-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-unit-tests),?(\\s+|$)"
     decorate: true
+    branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--unit-tests"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-unit-tests
+    agent: kubernetes
+    context: pull-knative-serving-unit-tests
+    always_run: true
+    rerun_command: "/test pull-knative-serving-unit-tests"
+    trigger: "(?m)^/test (all|pull-knative-serving-unit-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/serving
+    skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -171,6 +251,47 @@ presubmits:
     rerun_command: "/test pull-knative-serving-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-integration-tests),?(\\s+|$)"
     decorate: true
+    branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-integration-tests
+    agent: kubernetes
+    context: pull-knative-serving-integration-tests
+    always_run: true
+    rerun_command: "/test pull-knative-serving-integration-tests"
+    trigger: "(?m)^/test (all|pull-knative-serving-integration-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/serving
+    skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -201,6 +322,47 @@ presubmits:
     rerun_command: "/test pull-knative-serving-upgrade-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-upgrade-tests),?(\\s+|$)"
     decorate: true
+    branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-upgrade-tests.sh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-upgrade-tests
+    agent: kubernetes
+    context: pull-knative-serving-upgrade-tests
+    always_run: true
+    rerun_command: "/test pull-knative-serving-upgrade-tests"
+    trigger: "(?m)^/test (all|pull-knative-serving-upgrade-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/serving
+    skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -231,10 +393,44 @@ presubmits:
     rerun_command: "/test pull-knative-serving-smoke-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-smoke-tests),?(\\s+|$)"
     decorate: true
+    branches:
+    - "release-0.7"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-smoke-tests.sh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-smoke-tests
+    agent: kubernetes
+    context: pull-knative-serving-smoke-tests
+    always_run: true
+    rerun_command: "/test pull-knative-serving-smoke-tests"
+    trigger: "(?m)^/test (all|pull-knative-serving-smoke-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/serving
     skip_branches:
     - "release-0.4"
     - "release-0.5"
     - "release-0.6"
+    - "release-0.7"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -266,6 +462,44 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-serving-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
+    branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
+        imagePullPolicy: Always
+        command:
+        - "/coverage"
+        args:
+        - "--postsubmit-job-name=post-knative-serving-go-coverage"
+        - "--artifacts=$(ARTIFACTS)"
+        - "--cov-threshold-percentage=80"
+        - "--github-token=/etc/covbot-token/token"
+        volumeMounts:
+        - name: covbot-token
+          mountPath: /etc/covbot-token
+          readOnly: true
+      volumes:
+      - name: covbot-token
+        secret:
+          secretName: covbot-token
+  - name: pull-knative-serving-go-coverage
+    agent: kubernetes
+    context: pull-knative-serving-go-coverage
+    always_run: true
+    rerun_command: "/test pull-knative-serving-go-coverage"
+    trigger: "(?m)^/test (all|pull-knative-serving-go-coverage),?(\\s+|$)"
+    optional: true
+    decorate: true
+    path_alias: knative.dev/serving
+    skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -293,6 +527,7 @@ presubmits:
     trigger: "(?m)^/test (pull-knative-serving-go-coverage-dev),?(\\s+|$)"
     optional: true
     decorate: true
+    path_alias: knative.dev/serving
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage-dev:latest-dev
@@ -319,6 +554,45 @@ presubmits:
     rerun_command: "/test pull-knative-serving-perf-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-perf-tests),?(\\s+|$)"
     decorate: true
+    branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/performance-tests.sh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-perf-tests
+    agent: kubernetes
+    context: pull-knative-serving-perf-tests
+    always_run: false
+    rerun_command: "/test pull-knative-serving-perf-tests"
+    trigger: "(?m)^/test (all|pull-knative-serving-perf-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/serving
+    skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1813,6 +2087,48 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
+  branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/presubmit-tests.sh"
+      - "--all-tests"
+      - "--emit-metrics"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "10 */2 * * *"
+  name: ci-knative-serving-continuous
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+    path_alias: knative.dev/serving
+  skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1839,6 +2155,52 @@ periodics:
 - cron: "6 8 * * *"
   name: ci-knative-serving-0.4-continuous
   agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: release-0.4
+  branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.4
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "6 8 * * *"
+  name: ci-knative-serving-0.4-continuous
+  agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
@@ -1848,6 +2210,12 @@ periodics:
   - org: knative
     repo: serving
     base_ref: release-0.4
+    path_alias: knative.dev/serving
+  skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1893,6 +2261,58 @@ periodics:
   - org: knative
     repo: serving
     base_ref: release-0.5
+  branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.5
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "17 8 * * *"
+  name: ci-knative-serving-0.5-continuous
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: release-0.5
+    path_alias: knative.dev/serving
+  skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1938,6 +2358,58 @@ periodics:
   - org: knative
     repo: serving
     base_ref: release-0.6
+  branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.6
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "28 8 * * *"
+  name: ci-knative-serving-0.6-continuous
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: release-0.6
+    path_alias: knative.dev/serving
+  skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1983,6 +2455,58 @@ periodics:
   - org: knative
     repo: serving
     base_ref: release-0.7
+  branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.7
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "39 8 * * *"
+  name: ci-knative-serving-0.7-continuous
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: release-0.7
+    path_alias: knative.dev/serving
+  skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2024,6 +2548,49 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
+  branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/e2e-tests.sh"
+      - "--istio-version"
+      - "1.0-latest"
+      - "--mesh"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "28 */2 * * *"
+  name: ci-knative-serving-istio-1.0-mesh
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+    path_alias: knative.dev/serving
+  skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2056,6 +2623,49 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
+  branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/e2e-tests.sh"
+      - "--istio-version"
+      - "1.0-latest"
+      - "--no-mesh"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "40 */2 * * *"
+  name: ci-knative-serving-istio-1.0-no-mesh
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+    path_alias: knative.dev/serving
+  skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2088,6 +2698,49 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
+  branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/e2e-tests.sh"
+      - "--istio-version"
+      - "1.1-latest"
+      - "--mesh"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "39 */2 * * *"
+  name: ci-knative-serving-istio-1.1-mesh
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+    path_alias: knative.dev/serving
+  skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2120,6 +2773,49 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
+  branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/e2e-tests.sh"
+      - "--istio-version"
+      - "1.1-latest"
+      - "--no-mesh"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "50 */2 * * *"
+  name: ci-knative-serving-istio-1.1-no-mesh
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+    path_alias: knative.dev/serving
+  skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2152,6 +2848,49 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
+  branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/e2e-tests.sh"
+      - "--istio-version"
+      - "1.2-latest"
+      - "--mesh"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "40 */2 * * *"
+  name: ci-knative-serving-istio-1.2-mesh
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+    path_alias: knative.dev/serving
+  skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2184,6 +2923,49 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
+  branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/e2e-tests.sh"
+      - "--istio-version"
+      - "1.2-latest"
+      - "--no-mesh"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "1 */2 * * *"
+  name: ci-knative-serving-istio-1.2-no-mesh
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+    path_alias: knative.dev/serving
+  skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2211,15 +2993,53 @@ periodics:
 - cron: "56 9 * * *"
   name: ci-knative-serving-nightly-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-serving-nightly-release
   decorate: true
   extra_refs:
   - org: knative
     repo: serving
     base_ref: master
+  branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--publish"
+      - "--tag-release"
+      volumeMounts:
+      - name: nightly-account
+        mountPath: /etc/nightly-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/nightly-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: nightly-account
+      secret:
+        secretName: nightly-account
+- cron: "56 9 * * *"
+  name: ci-knative-serving-nightly-release
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+    path_alias: knative.dev/serving
+  skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2246,15 +3066,65 @@ periodics:
 - cron: "37 9 * * 2"
   name: ci-knative-serving-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-serving-dot-release
   decorate: true
   extra_refs:
   - org: knative
     repo: serving
     base_ref: master
+  branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--dot-release"
+      - "--release-gcs knative-releases/serving"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
+- cron: "37 9 * * 2"
+  name: ci-knative-serving-dot-release
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-serving-nightly-release
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+    path_alias: knative.dev/serving
+  skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2292,12 +3162,66 @@ periodics:
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-serving-dot-release
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+  branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--auto-release"
+      - "--release-gcs knative-releases/serving"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
+- cron: "34 */2 * * *"
+  name: ci-knative-serving-auto-release
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-serving-auto-release
   decorate: true
   extra_refs:
   - org: knative
     repo: serving
     base_ref: master
+    path_alias: knative.dev/serving
+  skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2337,10 +3261,52 @@ periodics:
       prow.k8s.io/pubsub.runID: ci-knative-serving-latency
   agent: kubernetes
   decorate: true
+  branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
   extra_refs:
   - org: knative
     repo: serving
     base_ref: master
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/metrics:latest
+      imagePullPolicy: Always
+      command:
+      - "/metrics"
+      args:
+      - "--source-directory=ci-knative-serving-continuous"
+      - "--artifacts-dir=$(ARTIFACTS)"
+      - "--service-account=/etc/test-account/service-account.json"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "38 8 * * *"
+  name: ci-knative-serving-latency
+  agent: kubernetes
+  decorate: true
+  skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+    path_alias: knative.dev/serving
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/metrics:latest
@@ -2376,6 +3342,11 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
+  branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2384,6 +3355,84 @@ periodics:
       - runner.sh
       args:
       - "./test/performance-tests.sh"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: E2E_MIN_CLUSTER_NODES
+        value: "16"
+      - name: E2E_MAX_CLUSTER_NODES
+        value: "16"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "0 */3 * * *"
+  name: ci-knative-serving-performance
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+    path_alias: knative.dev/serving
+  skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/performance-tests.sh"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: E2E_MIN_CLUSTER_NODES
+        value: "16"
+      - name: E2E_MAX_CLUSTER_NODES
+        value: "16"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "0 */3 * * *"
+  name: ci-knative-serving-performance-mesh
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+  branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/performance-tests.sh"
+      - "--mesh"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -2413,6 +3462,12 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
+    path_alias: knative.dev/serving
+  skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2447,6 +3502,48 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
+  branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/apicoverage.sh"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: SYSTEM_NAMESPACE
+        value: knative-serving
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "13 9 * * *"
+  name: ci-knative-serving-webhook-apicoverage
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+    path_alias: knative.dev/serving
+  skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2478,10 +3575,42 @@ periodics:
       prow.k8s.io/pubsub.runID: ci-knative-serving-go-coverage
   agent: kubernetes
   decorate: true
+  branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
   extra_refs:
   - org: knative
     repo: serving
     base_ref: master
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/coverage:latest
+      imagePullPolicy: Always
+      command:
+      - "/coverage"
+      args:
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=80"
+- cron: "0 1 * * *"
+  name: ci-knative-serving-go-coverage
+  labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-serving-go-coverage
+  agent: kubernetes
+  decorate: true
+  skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+    path_alias: knative.dev/serving
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -4524,6 +5653,31 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
+    branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
+        imagePullPolicy: Always
+        command:
+        - "/coverage"
+        args:
+        - "--artifacts=$(ARTIFACTS)"
+        - "--cov-threshold-percentage=0"
+  - name: post-knative-serving-go-coverage
+    branches:
+    - master
+    agent: kubernetes
+    decorate: true
+    path_alias: knative.dev/serving
+    skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -4538,6 +5692,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
+    path_alias: knative.dev/serving
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage-dev:latest-dev

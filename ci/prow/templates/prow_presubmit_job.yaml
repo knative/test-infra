@@ -7,6 +7,7 @@
     trigger: "(?m)^/test (all|[[.PresubmitPullJobName]]),?(\\s+|$)"
     decorate: true
     [[.Base.PathAlias]]
+    [[indent_array_section 4 "branches" .Base.Branches]]
     [[indent_array_section 4 "skip_branches" .Base.SkipBranches]]
     spec:
       containers:
