@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package log_parser
+package mysql
 
 import (
 	"database/sql"
@@ -22,15 +22,12 @@ import (
 	"time"
 
 	"github.com/knative/test-infra/shared/mysql"
-	"github.com/knative/test-infra/tools/monitoring/config"
 )
 
-const (
-	logInsertStmt = `
-	INSERT INTO ErrorLogs (
-		ErrorPattern, ErrorMsg, JobName, PRNumber, BuildLogURL, TimeStamp
-		) VALUES (?,?,?,?,?,?)`
-)
+// DB holds an active database connection created in `config`
+type DB struct {
+	*sql.DB
+}
 
 // ErrorLog stores a row in the "ErrorLogs" db table
 // Table schema: github.com/knative/test-infra/tools/monitoring/mysql/schema.sql
@@ -49,36 +46,22 @@ func (e ErrorLog) String() string {
 		e.TimeStamp, e.Msg, e.JobName, e.PRNumber, e.BuildLogURL)
 }
 
-// PubsubMsgHandler adds record(s) to ErrorLogs table in database,
-// after parsing build log and compares the result with config yaml
-func PubsubMsgHandler(db *sql.DB, configURL, buildLogURL, jobname string, prNumber int) error {
-	config, err := config.ParseYaml(configURL)
-	if err != nil {
-		return err
-	}
+// NewDB returns the DB object with an active database connection
+func NewDB(c *mysql.DBConfig) (*DB, error) {
+	db, err := c.Connect()
+	return &DB{db}, err
+}
 
-	errorLogs, err := ParseLog(buildLogURL, config.CollectErrorPatterns())
-	if err != nil {
-		return err
-	}
-
-	tx, err := db.Begin()
-	if err != nil {
-		return err
-	}
-
-	stmt, err := tx.Prepare(logInsertStmt)
+// InsertErrorLog insert a new error to the ErrorLogs table
+func (db *DB) InsertErrorLog(errPat string, errMsg string, jobName string, prNum int, blogURL string) error {
+	stmt, err := db.Prepare(`INSERT INTO ErrorLogs(ErrorPattern, ErrorMsg, JobName, PRNumber, BuildLogURL, TimeStamp)
+				VALUES (?, ?, ?, ?, ?, ?)`)
 	defer stmt.Close()
 
 	if err != nil {
-		return mysql.RollbackTx(tx, err)
+		return err
 	}
 
-	for _, errorLog := range errorLogs {
-		if _, err := stmt.Exec(errorLog.Pattern, errorLog.Msg, jobname, prNumber, buildLogURL, time.Now()); err != nil {
-			return mysql.RollbackTx(tx, err)
-		}
-	}
-
-	return tx.Commit()
+	_, err = stmt.Exec(errPat, errMsg, jobName, prNum, blogURL, time.Now())
+	return err
 }
