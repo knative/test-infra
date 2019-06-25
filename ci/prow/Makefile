@@ -28,7 +28,7 @@ unset-cluster-credentials:
 	$(UNSET_CONTEXT)
 
 config:
-	go run make_config.go --prow-config-output="$(PROW_DIR)/config.yaml" --testgrid-config-output="$(TESTGRID_DIR)/config.yaml" config_knative.yaml
+	go run *_config.go --prow-config-output="$(PROW_DIR)/config.yaml" --testgrid-config-output="$(TESTGRID_DIR)/config.yaml" config_knative.yaml
 
 update-config: get-cluster-credentials
 	kubectl create configmap config --from-file=config.yaml=config.yaml --dry-run -o yaml | kubectl replace configmap config -f -
