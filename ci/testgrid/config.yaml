@@ -257,6 +257,8 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-eventing-0.6-continuous
 - name: ci-knative-eventing-contrib-0.6-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-0.6-continuous
+- name: ci-knative-serving-0.7-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-serving-0.7-continuous
 - name: ci-googlecloudplatform-cloud-run-events-continuous
   gcs_prefix: knative-prow/logs/ci-googlecloudplatform-cloud-run-events-continuous
   alert_stale_results_hours: 3
@@ -513,6 +515,11 @@ dashboards:
     base_options: "sort-by-name="
   - name: eventing-contrib
     test_group_name: ci-knative-eventing-contrib-0.6-continuous
+    base_options: "sort-by-name="
+- name: knative-0.7
+  dashboard_tab:
+  - name: serving
+    test_group_name: ci-knative-serving-0.7-continuous
     base_options: "sort-by-name="
 dashboard_groups:
 - name: knative
