@@ -56,7 +56,7 @@ test:
 	@echo "*** Checking config generator for prow and testgrid"
 	$(eval TMP_YAML_PROW := $(shell mktemp))
 	$(eval TMP_YAML_TESTGRID := $(shell mktemp))
-	go run make_config.go --prow-config-output="$(TMP_YAML_PROW)" --testgrid-config-output="$(TMP_YAML_TESTGRID)" config_knative.yaml
+	go run *_config.go --prow-config-output="$(TMP_YAML_PROW)" --testgrid-config-output="$(TMP_YAML_TESTGRID)" config_knative.yaml
 	diff config.yaml $(TMP_YAML_PROW)
 	diff $(TESTGRID_DIR)/config.yaml $(TMP_YAML_TESTGRID)
 	@echo "*** Checking configs validity"

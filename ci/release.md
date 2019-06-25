@@ -34,7 +34,7 @@ This is the preferred method of manually building a new release.
 
    ```
    cd ci/prow
-   go run make_config.go \
+   go run *_config.go \
      --job-filter=ci-knative-MODULE-auto-release \
      --generate-testgrid-config=false \
      --prow-config-output=/tmp/release_config.yaml \
