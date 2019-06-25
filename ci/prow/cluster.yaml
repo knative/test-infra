@@ -221,6 +221,7 @@ spec:
         - --hook-url=http://hook:8888/plugin-help
         - --tide-url=http://tide/
         - --spyglass
+        - --oauth-url=/github-login
         ports:
           - name: http
             containerPort: 8080
@@ -228,10 +229,22 @@ spec:
         - name: config
           mountPath: /etc/config
           readOnly: true
+        - name: oauth-config
+          mountPath: /etc/github
+          readOnly: true
+        - name: cookie-secret
+          mountPath: /etc/cookie
+          readOnly: true
       volumes:
       - name: config
         configMap:
           name: config
+      - name: oauth-config
+        secret:
+          secretName: github-oauth-config-secret
+      - name: cookie-secret
+        secret:
+          secretName: cookie-secret
 ---
 apiVersion: v1
 kind: Service
