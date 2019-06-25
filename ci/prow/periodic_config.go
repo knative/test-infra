@@ -33,12 +33,16 @@ const (
 	periodicCustomJob = "prow_periodic_custom_job.yaml"
 
 	// Cron strings for key jobs
-	goCoveragePeriodicJobCron        = "0 1 * * *"  // Run at 01:00 every day
-	cleanupPeriodicJobCron           = "0 19 * * 1" // Run at 11:00PST/12:00PST every Monday (19:00 UTC)
-	flakesReporterPeriodicJobCron    = "0 12 * * *" // Run at 4:00PST/5:00PST every day (12:00 UTC)
-	prowversionbumperPeriodicJobCron = "0 20 * * 1" // Run at 12:00PST/13:00PST every Monday (20:00 UTC)
-	backupPeriodicJobCron            = "15 9 * * *" // Run at 02:15PST every day (09:15 UTC)
+	goCoveragePeriodicJobCron        = "0 1 * * *"   // Run at 01:00 every day
+	cleanupPeriodicJobCron           = "0 19 * * 1"  // Run at 11:00PST/12:00PST every Monday (19:00 UTC)
+	flakesReporterPeriodicJobCron    = "0 12 * * *"  // Run at 4:00PST/5:00PST every day (12:00 UTC)
+	prowversionbumperPeriodicJobCron = "0 20 * * 1"  // Run at 12:00PST/13:00PST every Monday (20:00 UTC)
+	backupPeriodicJobCron            = "15 9 * * *"  // Run at 02:15PST every day (09:15 UTC)
+	perfPeriodicJobCron              = "0 */3 * * *" // Run every 3 hours
 
+	// Perf job constants
+	perfTimeout = 120  // Job timeout in minutes
+	perfNodes   = "16" // Number of nodes needed to run perf tests. Needs to be string
 )
 
 // periodicJobTemplateData contains data about a periodic Prow job.
@@ -115,11 +119,11 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			jobType = getString(item.Key)
 			jobNameSuffix = getString(item.Key)
 			data.Base.Command = performanceScript
+			data.CronString = perfPeriodicJobCron
 			// We need a larger cluster of at least 16 nodes for perf tests
-			addEnvToJob(&data.Base, "E2E_MIN_CLUSTER_NODES", "16")
-			addEnvToJob(&data.Base, "E2E_MAX_CLUSTER_NODES", "16")
-			addVolumeToJob(&data.Base, "/secrets/cloudsql/monitoringdb", "monitoring-db-credentials", true)
-			data.Base.Timeout = 120
+			addEnvToJob(&data.Base, "E2E_MIN_CLUSTER_NODES", perfNodes)
+			addEnvToJob(&data.Base, "E2E_MAX_CLUSTER_NODES", perfNodes)
+			data.Base.Timeout = perfTimeout
 		case "latency":
 			if !getBool(item.Value) {
 				return
