@@ -2264,7 +2264,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "58 8 * * *"
+- cron: "0 */3 * * *"
   name: ci-knative-serving-performance
   agent: kubernetes
   decorate: true
@@ -2281,9 +2281,6 @@ periodics:
       args:
       - "./test/performance-tests.sh"
       volumeMounts:
-      - name: monitoring-db-credentials
-        mountPath: /secrets/cloudsql/monitoringdb
-        readOnly: true
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -2297,13 +2294,10 @@ periodics:
       - name: E2E_CLUSTER_REGION
         value: us-central1
     volumes:
-    - name: monitoring-db-credentials
-      secret:
-        secretName: monitoring-db-credentials
     - name: test-account
       secret:
         secretName: test-account
-- cron: "50 10 * * *"
+- cron: "0 */3 * * *"
   name: ci-knative-serving-performance-mesh
   agent: kubernetes
   decorate: true
@@ -2321,9 +2315,6 @@ periodics:
       - "./test/performance-tests.sh"
       - "--mesh"
       volumeMounts:
-      - name: monitoring-db-credentials
-        mountPath: /secrets/cloudsql/monitoringdb
-        readOnly: true
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -2337,9 +2328,6 @@ periodics:
       - name: E2E_CLUSTER_REGION
         value: us-central1
     volumes:
-    - name: monitoring-db-credentials
-      secret:
-        secretName: monitoring-db-credentials
     - name: test-account
       secret:
         secretName: test-account
@@ -3128,7 +3116,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "17 8 * * *"
+- cron: "0 */3 * * *"
   name: ci-knative-eventing-performance
   agent: kubernetes
   decorate: true
@@ -3145,9 +3133,6 @@ periodics:
       args:
       - "./test/performance-tests.sh"
       volumeMounts:
-      - name: monitoring-db-credentials
-        mountPath: /secrets/cloudsql/monitoringdb
-        readOnly: true
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -3161,9 +3146,6 @@ periodics:
       - name: E2E_CLUSTER_REGION
         value: us-central1
     volumes:
-    - name: monitoring-db-credentials
-      secret:
-        secretName: monitoring-db-credentials
     - name: test-account
       secret:
         secretName: test-account
