@@ -162,6 +162,8 @@ periodics:
       release: "0.5"
     - branch-ci: true
       release: "0.6"
+    - branch-ci: true
+      release: "0.7"
     - nightly: true
       needs-dind: true
     - dot-release: true
@@ -186,6 +188,8 @@ periodics:
       release: "0.5"
     - branch-ci: true
       release: "0.6"
+    - branch-ci: true
+      release: "0.7"
     - nightly: true
     - dot-release: true
     - auto-release: true
@@ -197,6 +201,8 @@ periodics:
       release: "0.5"
     - branch-ci: true
       release: "0.6"
+    - branch-ci: true
+      release: "0.7"
     - nightly: true
     - dot-release: true
     - auto-release: true
