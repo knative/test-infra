@@ -1020,6 +1020,7 @@ presubmits:
     rerun_command: "/test pull-knative-pkg-build-tests"
     trigger: "(?m)^/test (all|pull-knative-pkg-build-tests),?(\\s+|$)"
     decorate: true
+    path_alias: knative.dev/pkg
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1049,6 +1050,7 @@ presubmits:
     rerun_command: "/test pull-knative-pkg-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-pkg-unit-tests),?(\\s+|$)"
     decorate: true
+    path_alias: knative.dev/pkg
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1078,6 +1080,7 @@ presubmits:
     rerun_command: "/test pull-knative-pkg-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-pkg-integration-tests),?(\\s+|$)"
     decorate: true
+    path_alias: knative.dev/pkg
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1108,6 +1111,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-pkg-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
+    path_alias: knative.dev/pkg
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -3493,6 +3497,7 @@ periodics:
   - org: knative
     repo: pkg
     base_ref: master
+    path_alias: knative.dev/pkg
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3628,7 +3633,7 @@ periodics:
   - org: knative
     repo: sample-controller
     base_ref: master
-  path_alias: knative.dev/sample-controller
+    path_alias: knative.dev/sample-controller
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable

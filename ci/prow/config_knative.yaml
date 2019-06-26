@@ -79,9 +79,13 @@ presubmits:
 
   knative/pkg:
     - build-tests: true
+      dot-dev: true
     - unit-tests: true
+      dot-dev: true
     - integration-tests: true
+      dot-dev: true
     - go-coverage: true
+      dot-dev: true
 
   knative/test-infra:
     - build-tests: true
@@ -206,6 +210,7 @@ periodics:
 
   knative/pkg:
     - continuous: true
+      dot-dev: true
 
   knative/caching:
     - continuous: true
