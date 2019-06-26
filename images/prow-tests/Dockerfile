@@ -48,7 +48,7 @@ RUN bazel version > /bazel_version
 RUN bazel shutdown
 
 # Extract ko version
-git ls-remote https://github.com/google/ko HEAD | cut -f1 > /ko_version
+RUN git ls-remote https://github.com/google/ko HEAD | cut -f1 > /ko_version
 
 # Extra tools through gem
 RUN gem install mixlib-config -v 2.2.4  # required because ruby is 2.1
