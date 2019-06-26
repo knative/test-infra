@@ -94,10 +94,14 @@ presubmits:
 
   knative/caching:
     - build-tests: true
+      dot-dev: true
     - unit-tests: true
+      dot-dev: true
     - integration-tests: true
+      dot-dev: true
     - go-coverage: true
-  
+      dot-dev: true
+
   knative/observability:
     - build-tests: true
     - unit-tests: true
@@ -220,7 +224,8 @@ periodics:
 
   knative/caching:
     - continuous: true
-  
+      dot-dev: true
+
   knative/observability:
     - continuous: true
 
