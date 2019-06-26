@@ -29,17 +29,18 @@ import (
 	"github.com/knative/test-infra/tools/monitoring/subscriber"
 )
 
-const yamlURL = "https://raw.githubusercontent.com/knative/test-infra/master/tools/monitoring/config/sample.yaml"
+const yamlURL = "https://raw.githubusercontent.com/knative/test-infra/master/tools/monitoring/config/config.yaml"
 
 // Client holds all the resources required to run alerting
 type Client struct {
 	*subscriber.Client
-	*mysql.DB
+	*MailConfig
+	db *mysql.DB
 }
 
 // Setup sets up the client required to run alerting workflow
-func Setup(psClient *subscriber.Client, db *mysql.DB) *Client {
-	return &Client{psClient, db}
+func Setup(psClient *subscriber.Client, db *mysql.DB, mc *MailConfig) *Client {
+	return &Client{psClient, mc, db}
 }
 
 // RunAlerting start the alerting workflow
@@ -61,34 +62,56 @@ func (c *Client) handleReportMessage(rmsg *prowapi.ReportMessage) {
 			return
 		}
 
-		content, err := gcs.ReadURL(context.Background(), gcs.BuildLogPath(gubernatortoGcsLink(rmsg.GCSPath)))
+		rmsg.GCSPath = gubernatortoGcsLink(rmsg.GCSPath)
+		blPath := gcs.BuildLogPath(rmsg.GCSPath)
+		buildLog, err := gcs.ReadURL(context.Background(), blPath)
 		if err != nil {
-			log.Printf("Failed to read from url %s. Error: %v\n", rmsg.GCSPath, err)
+			log.Printf("Failed to read from url %s. Error: %v\n", blPath, err)
 			return
 		}
-		log.Printf("Read content: %s\n", content)
+		log.Printf("Build Log Content: %s\n", buildLog)
 
-		errorLogs, err := log_parser.ParseLog(content, config.CollectErrorPatterns())
+		errorLogs, err := log_parser.ParseLog(buildLog, config.CollectErrorPatterns())
 		if err != nil {
-			log.Printf("Failed to parse content %v. Error: %v\n", string(content), err)
+			log.Printf("Failed to parse content %v. Error: %v\n", string(buildLog), err)
 			return
 		}
 
 		log.Printf("Parsed errorLogs: %v\n", errorLogs)
 
 		for _, el := range errorLogs {
-			// Add the PR number if it is a pull request job
-			if len(rmsg.Refs) <= 0 || len(rmsg.Refs[0].Pulls) <= 0 {
-				err = c.InsertErrorLog(el.Pattern, el.Msg, rmsg.JobName, 0, rmsg.GCSPath)
-			} else {
-				err = c.InsertErrorLog(el.Pattern, el.Msg, rmsg.JobName, rmsg.Refs[0].Pulls[0].Number, rmsg.GCSPath)
-			}
-			if err != nil {
-				log.Printf("Failed to insert error to db %+v\n", err)
-			}
+			c.handleSingleError(config, rmsg, &el)
 		}
+	}
+}
 
-		// TODO(yt3liu): check sending alert
+func (c *Client) handleSingleError(config *config.Config, rmsg *prowapi.ReportMessage, el *mysql.ErrorLog) {
+	log.Println("Handling single error")
+	var err error
+
+	// Add the PR number if it is a pull request job
+	log.Println("Adding Error Log to the table")
+	if len(rmsg.Refs) <= 0 || len(rmsg.Refs[0].Pulls) <= 0 {
+		err = c.db.AddErrorLog(el.Pattern, el.Msg, rmsg.JobName, 0, rmsg.GCSPath)
+	} else {
+		err = c.db.AddErrorLog(el.Pattern, el.Msg, rmsg.JobName, rmsg.Refs[0].Pulls[0].Number, rmsg.GCSPath)
+	}
+	if err != nil {
+		log.Printf("Failed to insert error to db %+v\n", err)
+		return
+	}
+
+	log.Println("Selecting the config")
+	sc, noMatchErr := config.Select(el.Pattern, rmsg.JobName)
+	if noMatchErr != nil {
+		log.Printf("No matching config found for pattern (%v) job(%v): %v", el.Pattern, rmsg.JobName, noMatchErr)
+		return
+	}
+
+	log.Println("Sending the alert")
+	_, err = c.Alert(el.Pattern, sc, c.db)
+	if err != nil {
+		log.Printf("Failed to Alert %v", err)
 	}
 }
 

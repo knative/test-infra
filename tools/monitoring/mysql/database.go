@@ -19,10 +19,17 @@ package mysql
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"time"
+
+	"github.com/knative/test-infra/tools/monitoring/config"
 
 	"github.com/knative/test-infra/shared/mysql"
 )
+
+const alertInsertStmt = `
+		INSERT INTO Alerts (Sent, ErrorPattern) VALUES (?,?)
+		ON DUPLICATE KEY UPDATE Sent = (?)`
 
 // DB holds an active database connection created in `config`
 type DB struct {
@@ -52,8 +59,8 @@ func NewDB(c *mysql.DBConfig) (*DB, error) {
 	return &DB{db}, err
 }
 
-// InsertErrorLog insert a new error to the ErrorLogs table
-func (db *DB) InsertErrorLog(errPat string, errMsg string, jobName string, prNum int, blogURL string) error {
+// AddErrorLog insert a new error to the ErrorLogs table
+func (db *DB) AddErrorLog(errPat string, errMsg string, jobName string, prNum int, blogURL string) error {
 	stmt, err := db.Prepare(`INSERT INTO ErrorLogs(ErrorPattern, ErrorMsg, JobName, PRNumber, BuildLogURL, TimeStamp)
 				VALUES (?, ?, ?, ?, ?, ?)`)
 	defer stmt.Close()
@@ -64,4 +71,73 @@ func (db *DB) InsertErrorLog(errPat string, errMsg string, jobName string, prNum
 
 	_, err = stmt.Exec(errPat, errMsg, jobName, prNum, blogURL, time.Now())
 	return err
+}
+
+// GetErrorLogs returns all jobs stored in ErrorLogs table within the time window
+func (db *DB) GetErrorLogs(s *config.SelectedConfig, errorPattern string) ([]ErrorLog, error) {
+	var result []ErrorLog
+
+	// the timestamp we want to start collecting logs
+	//startTime := time.Now().Add(s.Duration())
+	startTime := time.Now()
+
+	rows, err := db.Query(`
+		SELECT ErrorPattern, ErrorMsg, JobName, PRNumber, BuildLogURL, TimeStamp
+		FROM ErrorLogs
+		WHERE ErrorPattern=? and TimeStamp > ?`,
+		errorPattern, startTime)
+
+	if err != nil {
+		return result, err
+	}
+
+	for rows.Next() {
+		entry := ErrorLog{}
+		err = rows.Scan(&entry.Pattern, &entry.Msg, &entry.JobName, &entry.PRNumber, &entry.BuildLogURL, &entry.TimeStamp)
+		if err != nil {
+			return result, err
+		}
+		result = append(result, entry)
+	}
+
+	return result, nil
+}
+
+// AddAlert inserts a new error pattern and alert time (now) to Alerts table
+// If the pattern already exists, update the alert time
+func (db *DB) AddAlert(errorPattern string) error {
+	now := time.Now()
+	_, err := db.Query(alertInsertStmt, now, errorPattern, now)
+	return err
+}
+
+// IsFreshAlertPattern checks the Alerts table to see if the error pattern hasn't been alerted within the time window
+func (db *DB) IsFreshAlertPattern(errorPattern string, window time.Duration) (bool, error) {
+	var id int
+	var sent time.Time
+
+	row := db.QueryRow(`
+		SELECT ID, Sent
+		FROM Alerts
+		WHERE ErrorPattern = ?`,
+		errorPattern)
+
+	if err := row.Scan(&id, &sent); err != nil {
+		if err != sql.ErrNoRows {
+			return false, err
+		}
+
+		// if no record found
+		return true, nil
+	}
+
+	if sent.Add(window).Before(time.Now()) {
+		// if previous alert expires.
+		log.Printf("previous alert timestamp=%v expired, alert window size=%v", sent, window)
+		return true, nil
+	}
+
+	log.Printf("previous alert not expired (timestamp=%v), "+
+		"alert window size=%v, no alert will be sent", sent, window)
+	return false, nil
 }

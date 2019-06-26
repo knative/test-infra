@@ -93,7 +93,7 @@ func main() {
 		log.Fatalf("Failed to authenticate gcs %+v", err)
 	}
 
-	wfClient = alert.Setup(client, db)
+	wfClient = alert.Setup(client, db, &alert.MailConfig{mailConfig, alertEmailRecipients})
 
 	// use PORT environment variable, or default to 8080
 	port := "8080"
@@ -174,7 +174,7 @@ func testInsert(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Serving request: %s", r.URL.Path)
 	log.Println("testing insert to database")
 
-	err := db.InsertErrorLog("test error pattern", "test err message", "test job", 1, "gs://")
+	err := db.AddErrorLog("test error pattern", "test err message", "test job", 1, "gs://")
 	if err != nil {
 		fmt.Fprintf(w, "Failed to insert to database: %+v\n", err)
 		return

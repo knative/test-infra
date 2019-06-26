@@ -17,14 +17,12 @@ limitations under the License.
 package alert
 
 import (
-	"database/sql"
 	"fmt"
 	"sort"
 	"time"
 
-	"github.com/knative/test-infra/tools/monitoring/mysql"
-
 	"github.com/knative/test-infra/tools/monitoring/config"
+	"github.com/knative/test-infra/tools/monitoring/mysql"
 )
 
 const emailTemplate = `In the past %v, 
@@ -73,35 +71,6 @@ func (r report) sprintLogs() string {
 
 func (c mailContent) subject() string {
 	return fmt.Sprintf("Error pattern reached alerting threshold: %s", c.errorPattern)
-}
-
-// GetErrorLogs returns all jobs stored in ErrorLogs table within the time window
-func GetErrorLogs(s *config.SelectedConfig, errorPattern string, db *sql.DB) ([]mysql.ErrorLog, error) {
-	var result []mysql.ErrorLog
-
-	// the timestamp we want to start collecting logs
-	startTime := time.Now().Add(s.Duration())
-
-	rows, err := db.Query(`
-		SELECT ErrorPattern, ErrorMsg, JobName, PRNumber, BuildLogURL, TimeStamp
-		FROM ErrorLogs
-		WHERE ErrorPattern=? and TimeStamp > ?`,
-		errorPattern, startTime)
-
-	if err != nil {
-		return result, err
-	}
-
-	for rows.Next() {
-		entry := mysql.ErrorLog{}
-		err = rows.Scan(&entry.Pattern, &entry.Msg, &entry.JobName, &entry.PRNumber, &entry.BuildLogURL, &entry.TimeStamp)
-		if err != nil {
-			return result, err
-		}
-		result = append(result, entry)
-	}
-
-	return result, nil
 }
 
 func newReport(errorLogs []mysql.ErrorLog) *report {
