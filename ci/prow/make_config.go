@@ -427,7 +427,7 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 			(*data).AlwaysRun = getBool(item.Value)
 		case "dot-dev":
 			(*data).PathAlias = "path_alias: knative.dev/" + (*data).RepoName
-			(*data).ExtraRefs = append((*data).ExtraRefs, (*data).PathAlias)
+			(*data).ExtraRefs = append((*data).ExtraRefs, "  "+(*data).PathAlias)
 		case nil: // already processed
 			continue
 		default:
