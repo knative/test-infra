@@ -11,6 +11,7 @@ This directory contains the config for our
 - `config_knative.yaml` Input configuration for `make_config.go` to generate
   `config.yaml`.
 - `config_start.yaml` Initial, empty configuration for Prow.
-- `make_config.go` `periodic_config.go` `testgrid_config.go` Tool that generates `config.yaml` from `config_knative.yaml`.
+- `make_config.go` `periodic_config.go` `testgrid_config.go` Tool that generates
+  `config.yaml` from `config_knative.yaml`.
 - `plugins.yaml` Configuration of the Prow plugins.
 - `run_job.sh` Convenience script to start a Prow job from command-line.
