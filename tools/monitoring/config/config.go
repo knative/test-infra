@@ -105,8 +105,8 @@ func (s *SelectedConfig) CheckAlertCondition(errorPattern string, db *sql.DB) (b
 }
 
 // Select gets the spec for a particular error pattern and a matching job name pattern
-func (config Config) Select(pattern, jobName string) (SelectedConfig, error) {
-	output := SelectedConfig{}
+func (config Config) Select(pattern, jobName string) (*SelectedConfig, error) {
+	output := &SelectedConfig{}
 	noMatchError := fmt.Errorf("no spec found for pattern[%s] and jobName[%s]",
 		pattern, jobName)
 	for _, patternSpec := range config.Spec {

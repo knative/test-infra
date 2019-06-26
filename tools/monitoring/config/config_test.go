@@ -191,7 +191,7 @@ func TestConfig_Select(t *testing.T) {
 				t.Errorf("Config Selector returned error.")
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
+			if !reflect.DeepEqual(*got, tt.want) {
 				t.Errorf("Config selected, got : %v, want: %v", got, tt.want)
 			}
 		})
