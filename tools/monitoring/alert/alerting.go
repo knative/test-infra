@@ -62,7 +62,7 @@ func (c *Client) handleReportMessage(rmsg *prowapi.ReportMessage) {
 			return
 		}
 
-		rmsg.GCSPath = gubernatortoGcsLink(rmsg.GCSPath)
+		rmsg.GCSPath = toGcsLink(rmsg.GCSPath)
 		blPath := gcs.BuildLogPath(rmsg.GCSPath)
 		buildLog, err := gcs.ReadURL(context.Background(), blPath)
 		if err != nil {
@@ -115,7 +115,8 @@ func (c *Client) handleSingleError(config *config.Config, rmsg *prowapi.ReportMe
 	}
 }
 
-// TODO(yt3liu): Remove this hack after the gcs path does not contain the gubernator link
-func gubernatortoGcsLink(link string) string {
-	return strings.Replace(link, "https://gubernator.knative.dev/build/", "", 1)
+// TODO(yt3liu): Remove this hack after the gcs path does not contain extra link prefix
+func toGcsLink(link string) string {
+	return strings.Replace(strings.Replace(link, "https://gubernator.knative.dev/build/", "", 1),
+		"https://prow.knative.dev/view/gcs/", "", 1)
 }
