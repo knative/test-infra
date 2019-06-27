@@ -54,7 +54,6 @@ This is the preferred method of manually building a new release.
 1. Start the job on Prow. Make sure you get the credentials first.
 
    ```
-   cd ci/prow
    make get-cluster-credentials
    kubectl apply -f /tmp/release_job.yaml
    ```
