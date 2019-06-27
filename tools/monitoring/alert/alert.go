@@ -37,7 +37,7 @@ func (m *MailConfig) sendAlert(c *mailContent) error {
 // Alert checks alert condition and alerts table and send alert mail conditionally
 func (m *MailConfig) Alert(errorPattern string, s *config.SelectedConfig, db *mysql.DB) (bool, error) {
 	log.Println("Fetcing error logs")
-	errorLogs, err := db.GetErrorLogs(s, errorPattern)
+	errorLogs, err := db.ListErrorLogs(errorPattern, s.Duration())
 	if err != nil {
 		return false, err
 	}
