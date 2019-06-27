@@ -22,8 +22,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/knative/test-infra/tools/monitoring/config"
-
 	"github.com/knative/test-infra/shared/mysql"
 )
 
@@ -45,6 +43,13 @@ type ErrorLog struct {
 	PRNumber    int
 	BuildLogURL string
 	TimeStamp   time.Time
+}
+
+// Alert maps to the Alerts table
+// Table schema: github.com/knative/test-infra/tools/monitoring/mysql/schema.sql
+type Alert struct {
+	ErrorPattern string
+	Sent         time.Time
 }
 
 // String returns the string representation of the struct used in alert message
@@ -73,13 +78,12 @@ func (db *DB) AddErrorLog(errPat string, errMsg string, jobName string, prNum in
 	return err
 }
 
-// GetErrorLogs returns all jobs stored in ErrorLogs table within the time window
-func (db *DB) GetErrorLogs(s *config.SelectedConfig, errorPattern string) ([]ErrorLog, error) {
+// ListErrorLogs returns all jobs stored in ErrorLogs table within the time window
+func (db *DB) ListErrorLogs(errorPattern string, window time.Duration) ([]ErrorLog, error) {
 	var result []ErrorLog
 
 	// the timestamp we want to start collecting logs
-	//startTime := time.Now().Add(s.Duration())
-	startTime := time.Now()
+	startTime := time.Now().Add(-1 * window)
 
 	rows, err := db.Query(`
 		SELECT ErrorPattern, ErrorMsg, JobName, PRNumber, BuildLogURL, TimeStamp
@@ -101,6 +105,30 @@ func (db *DB) GetErrorLogs(s *config.SelectedConfig, errorPattern string) ([]Err
 	}
 
 	return result, nil
+}
+
+// ListAlerts returns all error pattern and timestamps in the Alerts table
+func (db *DB) ListAlerts() ([]*Alert, error) {
+	rows, err := db.Query(`
+        SELECT ErrorPattern, Sent
+        FROM Alerts`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var alerts []*Alert
+	for rows.Next() {
+		a := &Alert{}
+		err = rows.Scan(&a.ErrorPattern, &a.Sent)
+		if err != nil {
+			return nil, fmt.Errorf("mysql: could not read row: %v", err)
+		}
+
+		alerts = append(alerts, a)
+	}
+
+	return alerts, nil
 }
 
 // AddAlert inserts a new error pattern and alert time (now) to Alerts table
