@@ -64,6 +64,7 @@ func main() {
 	if nil != err {
 		log.Fatalf("Failed removing local artifacts directory: %v", err)
 	}
+	var jobErrs []error
 	for _, jc := range cfg.JobConfigs {
 		log.Printf("collecting results for job '%s' in repo '%s'\n", jc.Name, jc.Repo)
 		rd, err := collectTestResultsForRepo(jc)
@@ -79,9 +80,13 @@ func main() {
 	// Errors that could result in inaccuracy reporting would be treated with fast fail by processGithubIssues,
 	// so any errors returned are github opeations error, which in most cases wouldn't happen, but in case it
 	// happens, it should fail the job after Slack notification
+	jobErr := combineErrors(jobErrs)
 	githubErr := ghi.processGithubIssues(repoDataAll, *dryrun)
 	slackErr := sendSlackNotifications(repoDataAll, slackClient, ghi, *dryrun)
 	jsonErr := writeFlakyTestsToJSON(repoDataAll, *dryrun)
+	if nil != jobErr {
+		log.Printf("Job step failures:\n%v", jobErr)
+	}
 	if nil != githubErr {
 		log.Printf("Github step failures:\n%v", githubErr)
 	}
@@ -91,7 +96,7 @@ func main() {
 	if nil != jsonErr {
 		log.Printf("JSON step failures:\n%v", jsonErr)
 	}
-	if nil != githubErr || nil != slackErr || nil != jsonErr { // Fail this job if there is any error
+	if nil != jobErr || nil != githubErr || nil != slackErr || nil != jsonErr { // Fail this job if there is any error
 		os.Exit(1)
 	}
 }
