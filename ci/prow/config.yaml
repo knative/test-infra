@@ -1913,8 +1913,8 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "10 */2 * * *"
-  name: ci-knative-serving-istio-1.0.7-mesh
+- cron: "28 */2 * * *"
+  name: ci-knative-serving-istio-1.0-mesh
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -1930,7 +1930,7 @@ periodics:
       args:
       - "./test/e2e-tests.sh"
       - "--istio-version"
-      - "1.0.7"
+      - "1.0-latest"
       - "--mesh"
       volumeMounts:
       - name: test-account
@@ -1945,8 +1945,8 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "31 */2 * * *"
-  name: ci-knative-serving-istio-1.0.7-no-mesh
+- cron: "40 */2 * * *"
+  name: ci-knative-serving-istio-1.0-no-mesh
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -1962,7 +1962,7 @@ periodics:
       args:
       - "./test/e2e-tests.sh"
       - "--istio-version"
-      - "1.0.7"
+      - "1.0-latest"
       - "--no-mesh"
       volumeMounts:
       - name: test-account
@@ -1977,8 +1977,8 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "20 */2 * * *"
-  name: ci-knative-serving-istio-1.1.7-mesh
+- cron: "39 */2 * * *"
+  name: ci-knative-serving-istio-1.1-mesh
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -1994,7 +1994,7 @@ periodics:
       args:
       - "./test/e2e-tests.sh"
       - "--istio-version"
-      - "1.1.7"
+      - "1.1-latest"
       - "--mesh"
       volumeMounts:
       - name: test-account
@@ -2009,8 +2009,8 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "42 */2 * * *"
-  name: ci-knative-serving-istio-1.1.7-no-mesh
+- cron: "50 */2 * * *"
+  name: ci-knative-serving-istio-1.1-no-mesh
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -2026,7 +2026,71 @@ periodics:
       args:
       - "./test/e2e-tests.sh"
       - "--istio-version"
-      - "1.1.7"
+      - "1.1-latest"
+      - "--no-mesh"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "40 */2 * * *"
+  name: ci-knative-serving-istio-1.2-mesh
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/e2e-tests.sh"
+      - "--istio-version"
+      - "1.2-latest"
+      - "--mesh"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "1 */2 * * *"
+  name: ci-knative-serving-istio-1.2-no-mesh
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/e2e-tests.sh"
+      - "--istio-version"
+      - "1.2-latest"
       - "--no-mesh"
       volumeMounts:
       - name: test-account
