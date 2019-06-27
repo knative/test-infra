@@ -4164,6 +4164,9 @@ periodics:
       - name: prow-auto-bumper-github-token
         mountPath: /etc/prow-auto-bumper-github-token
         readOnly: true
+      - name: prow-updater-robot-ssh-key
+        mountPath: /root/.ssh
+        readOnly: true
     volumes:
     - name: test-account
       secret:
@@ -4171,6 +4174,9 @@ periodics:
     - name: prow-auto-bumper-github-token
       secret:
         secretName: prow-auto-bumper-github-token
+    - name: prow-updater-robot-ssh-key
+      secret:
+        secretName: prow-updater-robot-ssh-key
 - cron: "15 9 * * *"
   name: ci-knative-backup-artifacts
   agent: kubernetes

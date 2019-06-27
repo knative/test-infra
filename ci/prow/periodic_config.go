@@ -250,6 +250,7 @@ func generateVersionBumpertoolPeriodicJob() {
 	addExtraEnvVarsToJob(&data.Base)
 	configureServiceAccountForJob(&data.Base)
 	addVolumeToJob(&data.Base, "/etc/prow-auto-bumper-github-token", "prow-auto-bumper-github-token", true)
+	addVolumeToJob(&data.Base, "/root/.ssh", "prow-updater-robot-ssh-key", true)
 	executeJobTemplate("periodic versionbumper", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
 }
 
