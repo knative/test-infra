@@ -1,0 +1,44 @@
+jobConfigs:
+  - name: ci-knative-serving-continuous
+    repo: serving
+    type: postsubmit
+    githubIssueRepo: serving
+    slackChannels:
+      - name: api
+        identity: CA4DNJ9A4
+  - name: ci-knative-serving-istio-1.0-mesh
+    repo: serving
+    type: postsubmit
+    slackChannels:
+      - name: networking
+        identity: CA9RHBGJX
+  - name: ci-knative-serving-istio-1.0-no-mesh
+    repo: serving
+    type: postsubmit
+    slackChannels:
+      - name: networking
+        identity: CA9RHBGJX
+  - name: ci-knative-serving-istio-1.1-mesh
+    repo: serving
+    type: postsubmit
+    slackChannels:
+      - name: networking
+        identity: CA9RHBGJX
+  - name: ci-knative-serving-istio-1.1-no-mesh
+    repo: serving
+    type: postsubmit
+    slackChannels:
+      - name: networking
+        identity: CA9RHBGJX
+  - name: ci-knative-serving-istio-1.2-mesh
+    repo: serving
+    type: postsubmit
+    slackChannels:
+      - name: networking
+        identity: CA9RHBGJX
+  - name: ci-knative-serving-istio-1.2-no-mesh
+    repo: serving
+    type: postsubmit
+    slackChannels:
+      - name: networking
+        identity: CA9RHBGJX

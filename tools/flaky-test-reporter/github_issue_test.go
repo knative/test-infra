@@ -23,6 +23,7 @@ import (
 
 	"github.com/google/go-github/github"
 	"github.com/knative/test-infra/shared/ghutil/fakeghutil"
+	ftrConfig "github.com/knative/test-infra/tools/flaky-test-reporter/config"
 )
 
 var testStatsMapForTest = map[string]TestStat{
@@ -79,10 +80,10 @@ func createNewIssue(fgi *GithubIssue, title, body, testStat string) (*github.Iss
 	return issue, comment
 }
 
-func createRepoData(passed, flaky, failed, notenoughdata int, createissue bool, startTime int64) *RepoData {
-	config := JobConfig{
+func createRepoData(passed, flaky, failed, notenoughdata int, issueRepo string, startTime int64) *RepoData {
+	config := ftrConfig.JobConfig{
 		Repo:            fakeRepo,
-		SkipGithubIssue: createissue,
+		GithubIssueRepo: issueRepo,
 	}
 	tss := map[string]*TestStat{}
 	for status, count := range map[string]int{
@@ -106,21 +107,21 @@ func createRepoData(passed, flaky, failed, notenoughdata int, createissue bool, 
 func TestCreateIssue(t *testing.T) {
 	datas := []struct {
 		passed, flaky, failed, notenoughdata int
-		createissue                          bool
+		issueRepo                            string
 		wantIssues                           int
 	}{
-		{197, 6, 0, 0, false, 1}, // flaky rate > 1% and > 5 flaky tests, create only 1 issue
-		{197, 2, 0, 0, false, 2}, // flaky rate > 1% and < 5 flaky tests, create issue for each
-		{200, 2, 0, 0, false, 2}, // flaky rate < 1%, create issue for each
-		{197, 2, 0, 0, true, 0},  // flaky rate > 1%, flag is set to not create issue
-		{200, 2, 0, 0, true, 0},  // flaky rate < 1%, flag is set to not create issue
+		{197, 6, 0, 0, fakeRepo, 1}, // flaky rate > 1% and > 5 flaky tests, create only 1 issue
+		{197, 2, 0, 0, fakeRepo, 2}, // flaky rate > 1% and < 5 flaky tests, create issue for each
+		{200, 2, 0, 0, fakeRepo, 2}, // flaky rate < 1%, create issue for each
+		{197, 2, 0, 0, "", 0},       // flaky rate > 1%, flag is set to not create issue
+		{200, 2, 0, 0, "", 0},       // flaky rate < 1%, flag is set to not create issue
 
 	}
 
 	for _, d := range datas {
 		fgi := getFakeGithubIssue()
-		repoData := createRepoData(d.passed, d.flaky, d.failed, d.notenoughdata, d.createissue, int64(0))
-		fgi.processGithubIssueForRepo(repoData, make(map[string][]*flakyIssue), fakeRepo, dryrun)
+		repoData := createRepoData(d.passed, d.flaky, d.failed, d.notenoughdata, d.issueRepo, int64(0))
+		fgi.processGithubIssueForRepo(repoData, make(map[string][]*flakyIssue), dryrun)
 		issues, _ := fgi.client.ListIssuesByRepo(fakeOrg, fakeRepo, []string{})
 		if len(issues) != d.wantIssues {
 			t.Fatalf("2%% tests failed, got %d issues, want %d issue", len(issues), d.wantIssues)
@@ -130,14 +131,14 @@ func TestCreateIssue(t *testing.T) {
 
 func TestExistingIssue(t *testing.T) {
 	fgi := getFakeGithubIssue()
-	repoData := createRepoData(200, 2, 0, 0, false, int64(0))
+	repoData := createRepoData(200, 2, 0, 0, fakeRepo, int64(0))
 	flakyIssuesMap, _ := fgi.getFlakyIssues()
-	fgi.processGithubIssueForRepo(repoData, flakyIssuesMap, fakeRepo, dryrun)
+	fgi.processGithubIssueForRepo(repoData, flakyIssuesMap, dryrun)
 	existIssues, _ := fgi.client.ListIssuesByRepo(fakeOrg, fakeRepo, []string{})
 	flakyIssuesMap, _ = fgi.getFlakyIssues()
 
 	*repoData.LastBuildStartTime++
-	fgi.processGithubIssueForRepo(repoData, flakyIssuesMap, fakeRepo, dryrun)
+	fgi.processGithubIssueForRepo(repoData, flakyIssuesMap, dryrun)
 	issues, _ := fgi.client.ListIssuesByRepo(fakeOrg, fakeRepo, []string{})
 	if len(existIssues) != len(issues) {
 		t.Fatalf("issues already exists, got %d new issues, want 0 new issues", len(issues)-len(existIssues))

@@ -26,14 +26,21 @@ import (
 	"os"
 
 	"github.com/knative/test-infra/shared/prow"
+	ftrConfig "github.com/knative/test-infra/tools/flaky-test-reporter/config"
 )
 
 func main() {
 	serviceAccount := flag.String("service-account", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"), "JSON key file for GCS service account")
 	githubAccount := flag.String("github-account", "", "Token file for Github authentication")
 	slackAccount := flag.String("slack-account", "", "slack secret file for authenticating with Slack")
+	configPath := flag.String("configfile", "", "Config file for overriding default config file")
 	dryrun := flag.Bool("dry-run", false, "dry run switch")
 	flag.Parse()
+
+	config, err := ftrConfig.NewConfig(*configPath)
+	if nil != err {
+		log.Fatalf("config file '%s' not found '%v'", *configPath, err)
+	}
 
 	if nil != dryrun && true == *dryrun {
 		log.Printf("running in [dry run mode]")
@@ -57,19 +64,16 @@ func main() {
 	if nil != err {
 		log.Fatalf("Failed removing local artifacts directory: %v", err)
 	}
-	for repoName, jobList := range jobConfigs {
-		for _, jc := range jobList {
-			jc.Repo = repoName
-			log.Printf("collecting results for job '%s' in repo '%s'\n", jc.Name, jc.Repo)
-			rd, err := collectTestResultsForRepo(jc)
-			if nil != err {
-				log.Fatalf("Error collecting results for job '%s' in repo '%s': %v", jc.Name, jc.Repo, err)
-			}
-			if err = createArtifactForRepo(rd); nil != err {
-				log.Fatalf("Error creating artifacts for job '%s' in repo '%s': %v", jc.Name, jc.Repo, err)
-			}
-			repoDataAll = append(repoDataAll, rd)
+	for _, jc := range config.JobConfigs {
+		log.Printf("collecting results for job '%s' in repo '%s'\n", jc.Name, jc.Repo)
+		rd, err := collectTestResultsForRepo(jc)
+		if nil != err {
+			log.Fatalf("Error collecting results for job '%s' in repo '%s': %v", jc.Name, jc.Repo, err)
 		}
+		if err = createArtifactForRepo(rd); nil != err {
+			log.Fatalf("Error creating artifacts for job '%s' in repo '%s': %v", jc.Name, jc.Repo, err)
+		}
+		repoDataAll = append(repoDataAll, rd)
 	}
 
 	// Errors that could result in inaccuracy reporting would be treated with fast fail by processGithubIssues,

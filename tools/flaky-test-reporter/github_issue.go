@@ -423,12 +423,12 @@ func (gi *GithubIssue) getFlakyIssues() (map[string][]*flakyIssue, error) {
 // processGithubIssueForRepo reads RepoData and existing issues, and create/close/reopen/comment on issues.
 // The function returns a slice of messages containing performed actions, and a slice of error messages,
 // these can later on be printed as summary at the end of run
-func (gi *GithubIssue) processGithubIssueForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyIssue, repoForIssue string, dryrun bool) ([]string, error) {
+func (gi *GithubIssue) processGithubIssueForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyIssue, dryrun bool) ([]string, error) {
 	var messages []string
 	var errs []error
 
-	// if flag is not set, do not create an issue at all
-	if rd.Config.SkipGithubIssue {
+	repoForIssue := rd.Config.GithubIssueRepo
+	if "" == repoForIssue {
 		messages = append(messages, "skip creating/updating issues, job is marked to not create GitHub issues\n")
 		return messages, combineErrors(errs)
 	}
@@ -507,7 +507,7 @@ func (gi *GithubIssue) processGithubIssues(repoDataAll []*RepoData, dryrun bool)
 	}
 
 	for _, rd := range repoDataAll {
-		messages, err := gi.processGithubIssueForRepo(rd, flakyGHIssuesMap, githubIssueMap[rd.Config.Repo], dryrun)
+		messages, err := gi.processGithubIssueForRepo(rd, flakyGHIssuesMap, dryrun)
 		if _, ok := messagesMap[rd.Config.Repo]; !ok {
 			messagesMap[rd.Config.Repo] = make(map[string][]string)
 		}
