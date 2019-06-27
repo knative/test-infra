@@ -25,7 +25,7 @@ This is the preferred method of manually building a new release.
          - "--release-gcr gcr.io/knative-releases"
          - "--release-gcs knative-releases/MODULE"
          - "--version VERSION"
-         - "--branch BRANCH"
+         - "--branch release-BRANCH"
    ```
 
 1. Generate the full config from the file above. For the rest of this doc, it's
@@ -54,7 +54,6 @@ This is the preferred method of manually building a new release.
 1. Start the job on Prow. Make sure you get the credentials first.
 
    ```
-   cd ci/prow
    make get-cluster-credentials
    kubectl apply -f /tmp/release_job.yaml
    ```
