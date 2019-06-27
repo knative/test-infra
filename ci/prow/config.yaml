@@ -1227,6 +1227,7 @@ presubmits:
     rerun_command: "/test pull-knative-caching-build-tests"
     trigger: "(?m)^/test (all|pull-knative-caching-build-tests),?(\\s+|$)"
     decorate: true
+    path_alias: knative.dev/caching
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1256,6 +1257,7 @@ presubmits:
     rerun_command: "/test pull-knative-caching-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-caching-unit-tests),?(\\s+|$)"
     decorate: true
+    path_alias: knative.dev/caching
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1285,6 +1287,7 @@ presubmits:
     rerun_command: "/test pull-knative-caching-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-caching-integration-tests),?(\\s+|$)"
     decorate: true
+    path_alias: knative.dev/caching
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1315,6 +1318,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-caching-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
+    path_alias: knative.dev/caching
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -3673,6 +3677,7 @@ periodics:
   - org: knative
     repo: caching
     base_ref: master
+    path_alias: knative.dev/caching
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
