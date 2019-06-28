@@ -26,20 +26,20 @@ import (
 	"os"
 
 	"github.com/knative/test-infra/shared/prow"
-	ftrConfig "github.com/knative/test-infra/tools/flaky-test-reporter/config"
+	"github.com/knative/test-infra/tools/flaky-test-reporter/config"
 )
 
 func main() {
 	serviceAccount := flag.String("service-account", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"), "JSON key file for GCS service account")
 	githubAccount := flag.String("github-account", "", "Token file for Github authentication")
 	slackAccount := flag.String("slack-account", "", "slack secret file for authenticating with Slack")
-	configPath := flag.String("configfile", "", "Config file for overriding default config file")
+	configPath := flag.String("configfile", "config.yaml", "Config file for overriding default config file")
 	dryrun := flag.Bool("dry-run", false, "dry run switch")
 	flag.Parse()
 
-	config, err := ftrConfig.NewConfig(*configPath)
+	cfg, err := config.NewConfig(*configPath)
 	if nil != err {
-		log.Fatalf("config file '%s' not found '%v'", *configPath, err)
+		log.Fatalf("config cannot be created: '%v'", err)
 	}
 
 	if nil != dryrun && true == *dryrun {
@@ -64,7 +64,7 @@ func main() {
 	if nil != err {
 		log.Fatalf("Failed removing local artifacts directory: %v", err)
 	}
-	for _, jc := range config.JobConfigs {
+	for _, jc := range cfg.JobConfigs {
 		log.Printf("collecting results for job '%s' in repo '%s'\n", jc.Name, jc.Repo)
 		rd, err := collectTestResultsForRepo(jc)
 		if nil != err {

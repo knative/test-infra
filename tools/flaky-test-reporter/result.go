@@ -31,7 +31,7 @@ import (
 	"github.com/knative/test-infra/shared/common"
 	"github.com/knative/test-infra/shared/junit"
 	"github.com/knative/test-infra/shared/prow"
-	ftrConfig "github.com/knative/test-infra/tools/flaky-test-reporter/config"
+	"github.com/knative/test-infra/tools/flaky-test-reporter/config"
 )
 
 const (
@@ -43,7 +43,7 @@ const (
 
 // RepoData struct contains all configurations and test results for a repo
 type RepoData struct {
-	Config             ftrConfig.JobConfig
+	Config             config.JobConfig
 	TestStats          map[string]*TestStat // key is test full name
 	BuildIDs           []int                // all build IDs scanned in this run
 	LastBuildStartTime *int64               // timestamp, determines how fresh the data is
@@ -183,7 +183,7 @@ func getCombinedResultsForBuild(build *prow.Build) ([]*junit.TestSuites, error) 
 
 // collectTestResultsForRepo collects test results, build IDs from all builds,
 // as well as LastBuildStartTime, and stores them in RepoData
-func collectTestResultsForRepo(jc ftrConfig.JobConfig) (*RepoData, error) {
+func collectTestResultsForRepo(jc config.JobConfig) (*RepoData, error) {
 	rd := &RepoData{Config: jc}
 	job := prow.NewJob(jc.Name, jc.Type, jc.Repo, 0)
 	if !job.PathExists() {

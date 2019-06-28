@@ -24,10 +24,6 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-const (
-	defaultConfig = "config.yaml"
-)
-
 // Config contains all job configs for flaky tests reporting
 type Config struct {
 	JobConfigs []JobConfig `yaml:"jobConfigs"`
@@ -35,11 +31,11 @@ type Config struct {
 
 // JobConfig is initial configuration for a given repo, defines which job to scan
 type JobConfig struct {
-	Name            string         `yaml:"name"` // name of job to analyze
-	Repo            string         `yaml:"repo"` // repository to test job on
-	Type            string         `yaml:"type"`
-	GithubIssueRepo string         `yaml:"githubIssueRepo,omitempty"`
-	SlackChannels   []SlackChannel `yaml:"slackChannels,omitempty"`
+	Name          string         `yaml:"name"` // name of job to analyze
+	Repo          string         `yaml:"repo"` // repository to test job on
+	Type          string         `yaml:"type"`
+	IssueRepo     string         `yaml:"issueRepo,omitempty"`
+	SlackChannels []SlackChannel `yaml:"slackChannels,omitempty"`
 }
 
 // SlackChannel contains Slack channels info
@@ -48,11 +44,8 @@ type SlackChannel struct {
 	Identity string `yaml:"identity"`
 }
 
-// NewConfig parses config from configFile, default to "config.yaml" if configFile is empty string
+// NewConfig parses config from configFile
 func NewConfig(configFile string) (*Config, error) {
-	if "" == configFile {
-		configFile = defaultConfig
-	}
 	contents, err := ioutil.ReadFile(configFile)
 	if nil != err {
 		return nil, err

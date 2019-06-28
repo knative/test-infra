@@ -23,7 +23,7 @@ import (
 
 	"github.com/google/go-github/github"
 	"github.com/knative/test-infra/shared/ghutil/fakeghutil"
-	ftrConfig "github.com/knative/test-infra/tools/flaky-test-reporter/config"
+	"github.com/knative/test-infra/tools/flaky-test-reporter/config"
 )
 
 var testStatsMapForTest = map[string]TestStat{
@@ -81,9 +81,9 @@ func createNewIssue(fgi *GithubIssue, title, body, testStat string) (*github.Iss
 }
 
 func createRepoData(passed, flaky, failed, notenoughdata int, issueRepo string, startTime int64) *RepoData {
-	config := ftrConfig.JobConfig{
-		Repo:            fakeRepo,
-		GithubIssueRepo: issueRepo,
+	cfg := config.JobConfig{
+		Repo:      fakeRepo,
+		IssueRepo: issueRepo,
 	}
 	tss := map[string]*TestStat{}
 	for status, count := range map[string]int{
@@ -98,7 +98,7 @@ func createRepoData(passed, flaky, failed, notenoughdata int, issueRepo string, 
 		}
 	}
 	return &RepoData{
-		Config:             config,
+		Config:             cfg,
 		TestStats:          tss,
 		LastBuildStartTime: &startTime,
 	}

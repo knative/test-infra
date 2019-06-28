@@ -427,8 +427,8 @@ func (gi *GithubIssue) processGithubIssueForRepo(rd *RepoData, flakyIssuesMap ma
 	var messages []string
 	var errs []error
 
-	repoForIssue := rd.Config.GithubIssueRepo
-	if "" == repoForIssue {
+	repoForIssue := rd.Config.IssueRepo
+	if len(repoForIssue) == 0 {
 		messages = append(messages, "skip creating/updating issues, job is marked to not create GitHub issues\n")
 		return messages, combineErrors(errs)
 	}
