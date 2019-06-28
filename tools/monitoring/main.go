@@ -24,9 +24,13 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/knative/test-infra/shared/gcs"
 	"github.com/knative/test-infra/shared/mysql"
+	"github.com/knative/test-infra/tools/monitoring/alert"
 	"github.com/knative/test-infra/tools/monitoring/config"
 	"github.com/knative/test-infra/tools/monitoring/mail"
+	msql "github.com/knative/test-infra/tools/monitoring/mysql"
+	"github.com/knative/test-infra/tools/monitoring/prowapi"
 	"github.com/knative/test-infra/tools/monitoring/subscriber"
 )
 
@@ -34,6 +38,8 @@ var (
 	dbConfig   *mysql.DBConfig
 	mailConfig *mail.Config
 	client     *subscriber.Client
+	wfClient   *alert.Client
+	db         *msql.DB
 
 	alertEmailRecipients = []string{"knative-productivity-oncall@googlegroups.com"}
 )
@@ -41,7 +47,7 @@ var (
 const (
 	projectID = "knative-tests"
 
-	yamlURL = "https://raw.githubusercontent.com/knative/test-infra/master/tools/monitoring/sample.yaml"
+	yamlURL = "https://raw.githubusercontent.com/knative/test-infra/master/tools/monitoring/config/sample.yaml"
 	subName = "test-infra-monitoring-sub"
 )
 
@@ -49,16 +55,24 @@ func main() {
 	var err error
 
 	dbName := flag.String("database-name", "monitoring", "The monitoring database name")
-	dbInst := flag.String("database-instance", "knative-tests:us-central1:knative-monitoring", "The monitoring CloudSQL instance connection name")
+	dbPort := flag.String("database-port", "3306", "The monitoring database port")
 
 	dbUserSF := flag.String("database-user", "/secrets/cloudsql/monitoringdb/username", "Database user secret file")
 	dbPassSF := flag.String("database-password", "/secrets/cloudsql/monitoringdb/password", "Database password secret file")
+	dbHost := flag.String("database-host", "/secrets/cloudsql/monitoringdb/host", "Database host secret file")
 	mailAddrSF := flag.String("sender-email", "/secrets/sender-email/mail", "Alert sender email address file")
 	mailPassSF := flag.String("sender-password", "/secrets/sender-email/password", "Alert sender email password file")
 
+	serviceAccount := flag.String("service-account", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"), "JSON key file for GCS service account")
+
 	flag.Parse()
 
-	dbConfig, err = mysql.ConfigureDB(*dbUserSF, *dbPassSF, *dbName, *dbInst)
+	dbConfig, err = mysql.ConfigureDB(*dbUserSF, *dbPassSF, *dbHost, *dbPort, *dbName)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	db, err = msql.NewDB(dbConfig)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -74,6 +88,13 @@ func main() {
 		log.Fatalf("Failed to initialize the subscriber %+v", err)
 	}
 
+	err = gcs.Authenticate(context.Background(), *serviceAccount)
+	if err != nil {
+		log.Fatalf("Failed to authenticate gcs %+v", err)
+	}
+
+	wfClient = alert.Setup(client, db, &alert.MailConfig{mailConfig, alertEmailRecipients})
+
 	// use PORT environment variable, or default to 8080
 	port := "8080"
 	if fromEnv := os.Getenv("PORT"); fromEnv != "" {
@@ -86,6 +107,8 @@ func main() {
 	server.HandleFunc("/test-conn", testCloudSQLConn)
 	server.HandleFunc("/send-mail", sendTestEmail)
 	server.HandleFunc("/test-sub", testSubscriber)
+	server.HandleFunc("/test-insert", testInsert)
+	server.HandleFunc("/start-alerting", testAlerting)
 
 	// start the web server on port and accept requests
 	log.Printf("Server listening on port %s", port)
@@ -112,14 +135,22 @@ func hello(w http.ResponseWriter, r *http.Request) {
 
 func testCloudSQLConn(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Serving request: %s", r.URL.Path)
-	log.Println("Testing mysql database connection.")
+	fmt.Fprintf(w, "Testing mysql database connection...")
 
-	err := dbConfig.TestConn()
+	db, err := dbConfig.Connect()
 	if err != nil {
 		fmt.Fprintf(w, "Failed to ping the database %v", err)
 		return
 	}
-	fmt.Fprintf(w, "Success\n")
+
+	fmt.Fprintf(w, "testing alert condition check...")
+	s := config.SelectedConfig{}
+	toAlert, err := s.CheckAlertCondition("none", db)
+	if err != nil {
+		fmt.Fprintf(w, "error running alert condition check in no-match senario: %v", err)
+	} else if toAlert {
+		fmt.Fprintf(w, "alert condition check returned false positive in no-match senario: %v", err)
+	}
 }
 
 func sendTestEmail(w http.ResponseWriter, r *http.Request) {
@@ -139,12 +170,32 @@ func sendTestEmail(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Sent the Email")
 }
 
+func testInsert(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Serving request: %s", r.URL.Path)
+	log.Println("testing insert to database")
+
+	err := db.AddErrorLog("test error pattern", "test err message", "test job", 1, "gs://")
+	if err != nil {
+		fmt.Fprintf(w, "Failed to insert to database: %+v\n", err)
+		return
+	}
+
+	fmt.Fprintln(w, "Success")
+}
+
+func testAlerting(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Serving request: %s", r.URL.Path)
+
+	wfClient.RunAlerting()
+	log.Println("alerting workflow started")
+}
+
 func testSubscriber(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Serving request: %s", r.URL.Path)
 	log.Println("Start listening to messages")
 
 	go func() {
-		err := client.ReceiveMessageAckAll(context.Background(), func(rmsg *subscriber.ReportMessage) {
+		err := client.ReceiveMessageAckAll(context.Background(), func(rmsg *prowapi.ReportMessage) {
 			log.Printf("Report Message: %+v\n", rmsg)
 		})
 		if err != nil {

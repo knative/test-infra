@@ -19,11 +19,11 @@ metadata:
   namespace: default
 spec:
   ports:
-  - protocol: "TCP"
-    port: 3000
+  - port: 80
+    targetPort: 3000
   selector:
     app: grafana
-  type: LoadBalancer
+  type: NodePort
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -41,7 +41,7 @@ spec:
         app: grafana
     spec:
       containers:
-      - image: grafana/grafana:master
+      - image: grafana/grafana:6.2.0
         imagePullPolicy: Always
         name: grafana
         ports:
@@ -74,3 +74,24 @@ spec:
       - name: "nfs"
         persistentVolumeClaim:
           claimName: "devstats-claim"
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: stats-ing
+  annotations:
+    kubernetes.io/ingress.class: "gce"
+    kubernetes.io/ingress.global-static-ip-name: stats-ingress
+spec:
+  tls:
+  - secretName: tls-secret
+    hosts:
+    - stats.knative.dev
+  rules:
+  - host: stats.knative.dev
+    http:
+      paths:
+      - path: /*
+        backend:
+          serviceName: grafana-service
+          servicePort: 80

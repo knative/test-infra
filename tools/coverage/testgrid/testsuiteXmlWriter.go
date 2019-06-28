@@ -29,12 +29,18 @@ import (
 
 // NewTestCase constructs the TestCase struct
 func NewTestCase(targetName, coverage string, failure bool) junit.TestCase {
-	f := strconv.FormatBool(failure)
 	tc := junit.TestCase{
 		ClassName: "go_coverage",
 		Name:      targetName,
-		Failure:   &f,
 	}
+
+	// we want to add <failure> tag to only failed tests. Testgrid treats both
+	// "<failure> true </failure>" and "<failure> false </failure>" as failure
+	if failure {
+		f := strconv.FormatBool(failure)
+		tc.Failure = &f
+	}
+
 	tc.AddProperty("coverage", coverage)
 
 	return tc

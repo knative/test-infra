@@ -20,7 +20,7 @@
 # ############################################################
 
 plank:
-  job_url_template: 'https://gubernator.knative.dev/build/[[.GcsBucket]]/{{if or (eq .Spec.Type "presubmit") (eq .Spec.Type "batch")}}[[.PresubmitLogsDir]]/pull{{with .Spec.Refs}}/{{.Org}}_{{.Repo}}{{end}}{{else}}[[.LogsDir]]{{end}}{{if eq .Spec.Type "presubmit"}}/{{with index .Spec.Refs.Pulls 0}}{{.Number}}{{end}}{{else if eq .Spec.Type "batch"}}/batch{{end}}/{{.Spec.Job}}/{{.Status.BuildID}}/'
+  job_url_template: 'https://prow.knative.dev/view/gcs/[[.GcsBucket]]/{{if or (eq .Spec.Type "presubmit") (eq .Spec.Type "batch")}}[[.PresubmitLogsDir]]/pull{{with .Spec.Refs}}/{{.Org}}_{{.Repo}}{{end}}{{else}}[[.LogsDir]]{{end}}{{if eq .Spec.Type "presubmit"}}/{{with index .Spec.Refs.Pulls 0}}{{.Number}}{{end}}{{else if eq .Spec.Type "batch"}}/batch{{end}}/{{.Spec.Job}}/{{.Status.BuildID}}/'
   report_template: '[Full PR test history](https://gubernator.knative.dev/pr/{{.Spec.Refs.Org}}_{{.Spec.Refs.Repo}}/{{with index .Spec.Refs.Pulls 0}}{{.Number}}{{end}}). [Your PR dashboard](https://gubernator.knative.dev/pr/{{with index .Spec.Refs.Pulls 0}}{{.Author}}{{end}}).'
   pod_pending_timeout: 60m
   default_decoration_config:
@@ -28,14 +28,30 @@ plank:
     grace_period: 15000000000 # 15s
     utility_images:
       # Update these versions when updating plank version in cluster.yaml
-      clonerefs: "gcr.io/k8s-prow/clonerefs:v20190517-bb7028b16"
-      initupload: "gcr.io/k8s-prow/initupload:v20190517-bb7028b16"
-      entrypoint: "gcr.io/k8s-prow/entrypoint:v20190517-bb7028b16"
-      sidecar: "gcr.io/k8s-prow/sidecar:v20190517-bb7028b16"
+      clonerefs: "gcr.io/k8s-prow/clonerefs:v20190614-1bd5c9911"
+      initupload: "gcr.io/k8s-prow/initupload:v20190614-1bd5c9911"
+      entrypoint: "gcr.io/k8s-prow/entrypoint:v20190614-1bd5c9911"
+      sidecar: "gcr.io/k8s-prow/sidecar:v20190614-1bd5c9911"
     gcs_configuration:
       bucket: "[[.GcsBucket]]"
       path_strategy: "explicit"
     gcs_credentials_secret: "test-account"
+
+deck:
+  spyglass:
+    size_limit: 500000000 # 500MB
+    gcs_browser_prefix: https://console.cloud.google.com/storage/browser/
+    testgrid_config: gs://knative-testgrid/config
+    testgrid_root: https://testgrid.knative.dev/
+    viewers:
+      "started.json|finished.json":
+      - "metadata"
+      "build-log.txt":
+      - "buildlog"
+      "artifacts/junit.*\\.xml":
+      - "junit"
+    announcement: "The old job viewer, Gubernator, has been deprecated in favour of this page, Spyglass.{{if .ArtifactPath}} For now, the old page is <a href='https://gubernator.knative.dev/build/{{.ArtifactPath}}'>still available</a>.{{end}} Please send feedback to Knative productivity."
+  tide_update_period: 1s
 
 prowjob_namespace: default
 pod_namespace: test-pods
@@ -70,6 +86,7 @@ tide:
     - knative/website
     - knative/community
     - knative/sample-controller
+    - knative/serving-operator
     - GoogleCloudPlatform/cloud-run-events
     labels:
     - lgtm

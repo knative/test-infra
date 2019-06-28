@@ -191,7 +191,7 @@ func TestConfig_Select(t *testing.T) {
 				t.Errorf("Config Selector returned error.")
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
+			if !reflect.DeepEqual(*got, tt.want) {
 				t.Errorf("Config selected, got : %v, want: %v", got, tt.want)
 			}
 		})
@@ -245,8 +245,7 @@ func validate(text []byte) error {
 	return nil
 }
 
-// TODO: after actual config yaml created, replace the path to point to that file
-const yamlPath = "sample.yaml"
+const yamlPath = "config.yaml"
 
 func getConfigYaml() []byte {
 	text, err := ioutil.ReadFile(yamlPath)

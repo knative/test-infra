@@ -20,27 +20,28 @@ readonly PROJECT=${1:?"First argument must be the new boskos project name."}
 readonly OWNERS=("prime-engprod-sea@google.com")
 readonly GROUPS=("knative-productivity-admins@googlegroups.com")
 readonly SAS=(
-    "knative-tests@appspot.gserviceaccount.com" \
-    "prow-job@knative-tests.iam.gserviceaccount.com" \
-    "prow-job@knative-nightly.iam.gserviceaccount.com" \
+    "knative-tests@appspot.gserviceaccount.com"
+    "prow-job@knative-tests.iam.gserviceaccount.com"
+    "prow-job@knative-nightly.iam.gserviceaccount.com"
     "prow-job@knative-releases.iam.gserviceaccount.com")
 readonly APIS=(
-    "compute.googleapis.com" \
+    "cloudresourcemanager.googleapis.com"
+    "compute.googleapis.com"
     "container.googleapis.com")
 
 # Add an owner to the PROJECT
 for owner in ${OWNERS[@]}; do
-  gcloud projects add-iam-policy-binding ${PROJECT} --member group:${owner} --role roles/OWNER
+  gcloud projects add-iam-policy-binding ${PROJECT} --member group:${owner} --role roles/owner
 done
 
 # Add all GROUPS as editors
 for group in ${GROUPS[@]}; do
-  gcloud projects add-iam-policy-binding ${PROJECT} --member group:${group} --role roles/EDITOR
+  gcloud projects add-iam-policy-binding ${PROJECT} --member group:${group} --role roles/editor
 done
 
 # Add all service accounts as editors
 for sa in ${SAS[@]}; do
-  gcloud projects add-iam-policy-binding ${PROJECT} --member serviceAccount:${sa} --role roles/EDITOR
+  gcloud projects add-iam-policy-binding ${PROJECT} --member serviceAccount:${sa} --role roles/editor
 done
 
 # Enable APIS

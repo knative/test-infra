@@ -36,7 +36,8 @@ fi
 # Useful environment variables
 [[ -n "${PROW_JOB_ID:-}" ]] && IS_PROW=1 || IS_PROW=0
 readonly IS_PROW
-readonly REPO_ROOT_DIR="$(git rev-parse --show-toplevel)"
+[[ -z "${REPO_ROOT_DIR:-}" ]] && REPO_ROOT_DIR="$(git rev-parse --show-toplevel)"
+readonly REPO_ROOT_DIR
 readonly REPO_NAME="$(basename ${REPO_ROOT_DIR})"
 
 # Useful flags about the current OS
@@ -75,6 +76,9 @@ function make_banner() {
     local msg="$1$1$1$1 $2 $1$1$1$1"
     local border="${msg//[-0-9A-Za-z _.,\/()\']/$1}"
     echo -e "${border}\n${msg}\n${border}"
+    # TODO(adrcunha): Remove once logs have timestamps on Prow
+    # For details, see https://github.com/kubernetes/test-infra/issues/10100
+    echo -e "$1$1$1$1 $(TZ='America/Los_Angeles' date)\n${border}"
 }
 
 # Simple header for logging purposes.
@@ -372,16 +376,17 @@ function update_licenses() {
   cd ${REPO_ROOT_DIR} || return 1
   local dst=$1
   shift
-  run_go_tool ./vendor/github.com/knative/test-infra/tools/dep-collector dep-collector $@ > ./${dst}
+  run_go_tool github.com/knative/test-infra/tools/dep-collector dep-collector $@ > ./${dst}
 }
 
 # Run dep-collector to check for forbidden liceses.
 # Parameters: $1...$n - directories and files to inspect.
 function check_licenses() {
   # Fetch the google/licenseclassifier for its license db
+  rm -fr ${GOPATH}/src/github.com/google/licenseclassifier
   go get -u github.com/google/licenseclassifier
   # Check that we don't have any forbidden licenses in our images.
-  run_go_tool ./vendor/github.com/knative/test-infra/tools/dep-collector dep-collector -check $@
+  run_go_tool github.com/knative/test-infra/tools/dep-collector dep-collector -check $@
 }
 
 # Run the given linter on the given files, checking it exists first.

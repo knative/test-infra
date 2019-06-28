@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package testgrid_test
+package testgrid
 
 import (
 	"io/ioutil"
@@ -24,7 +24,6 @@ import (
 
 	"github.com/knative/test-infra/shared/junit"
 	"github.com/knative/test-infra/shared/prow"
-	"github.com/knative/test-infra/shared/testgrid"
 )
 
 const (
@@ -57,8 +56,23 @@ func TestXMLOutput(t *testing.T) {
 `
 
 	// Create a test file
-	if err := testgrid.CreateXMLOutput(tc, name); err != nil {
+	if err := CreateXMLOutput(tc, name); err != nil {
 		t.Fatalf("Error when creating xml output file: %v", err)
 	}
 	checkFileText(resultFile, want, t)
+}
+
+func TestConfigPath(t *testing.T) {
+	if _, err := NewConfig(); nil != err {
+		t.Fatalf("Testing default config file, want: no err, got: %v", err)
+	}
+}
+
+func TestTabName(t *testing.T) {
+	ac, _ := NewConfig()
+	for tgName, URL := range jobNameTestgridURLMap {
+		if got, _ := ac.GetTabRelURL(tgName); got != URL {
+			t.Fatalf("Testing testgroup/tab mapping for '%s', want: '%s', got: '%s'", tgName, URL, got)
+		}
+	}
 }

@@ -21,6 +21,21 @@
   version = "v0.33.1"
 
 [[projects]]
+  digest = "1:689c8d24888f03cab536bfa11076e914c58e4d033d2b70f7abef304aa3583c09"
+  name = "fortio.org/fortio"
+  packages = [
+    "fhttp",
+    "fnet",
+    "log",
+    "periodic",
+    "stats",
+    "version",
+  ]
+  pruneopts = "NUT"
+  revision = "fd8f4a7177e9ea509f27105ae4e55e6c68ece6f7"
+  version = "v1.3.1"
+
+[[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
@@ -104,17 +119,17 @@
   revision = "4030bb1f1f0c35b30ca7009e9ebd06849dd45306"
 
 [[projects]]
-  digest = "1:2e3c336fc7fde5c984d2841455a658a6d626450b1754a854b3b32e7a8f49a07a"
+  digest = "1:bf40199583e5143d1472fc34d10d6f4b69d97572142acf343b3e43136da40823"
   name = "github.com/google/go-cmp"
   packages = [
     "cmp",
     "cmp/internal/diff",
+    "cmp/internal/flags",
     "cmp/internal/function",
     "cmp/internal/value",
   ]
   pruneopts = "NUT"
-  revision = "3af367b6b30c263d47e8895973edcca9a49cf029"
-  version = "v0.2.0"
+  revision = "6f77996f0c42f7b84e5a2b252227263f93432e9b"
 
 [[projects]]
   digest = "1:f4f203acd8b11b8747bdcd91696a01dbc95ccb9e2ca2db6abf81c3a4f5e950ce"
@@ -222,25 +237,6 @@
   version = "v1.1.5"
 
 [[projects]]
-  branch = "master"
-  digest = "1:80b91de397269dae1dc54e3cea73316da6d22091c58cd59ea8195c60f70aedd5"
-  name = "github.com/knative/pkg"
-  packages = [
-    "apis",
-    "apis/duck",
-    "changeset",
-    "configmap",
-    "kmp",
-    "logging",
-    "logging/logkey",
-    "test/logging",
-    "test/monitoring",
-    "webhook",
-  ]
-  pruneopts = "NUT"
-  revision = "684620ff81ae137be5cda634a03831b373adc4eb"
-
-[[projects]]
   digest = "1:56dbf15e091bf7926cb33a57cb6bdfc658fc6d3498d2f76f10a97ce7856f1fde"
   name = "github.com/markbates/inflect"
   packages = ["."]
@@ -287,14 +283,6 @@
   pruneopts = "NUT"
   revision = "5f041e8faa004a95c88a202771f4cc3e991971e6"
   version = "v2.0.1"
-
-[[projects]]
-  digest = "1:14715f705ff5dfe0ffd6571d7d201dd8e921030f8070321a79380d8ca4ec1a24"
-  name = "github.com/pkg/errors"
-  packages = ["."]
-  pruneopts = "NUT"
-  revision = "ba968bfe8b2f7e042a574c888954fccecfa385b4"
-  version = "v0.8.1"
 
 [[projects]]
   digest = "1:d9e5e9ed96c4ec77b57c3f151d366f7013cc27f0ea72d121086f78c252c4da40"
@@ -590,21 +578,7 @@
   version = "v2.2.1"
 
 [[projects]]
-  digest = "1:ebecaaec2e2f0ae0bdac3ce5697ae8a8e5bb2107ae00fd6acbd8c70b9d8698c2"
-  name = "istio.io/fortio"
-  packages = [
-    "fhttp",
-    "fnet",
-    "log",
-    "periodic",
-    "stats",
-  ]
-  pruneopts = "NUT"
-  revision = "abaacfd56859479cd712c45e70c8f1362be15e5b"
-  version = "v0.6.8"
-
-[[projects]]
-  digest = "1:6dd53537a34d9b612e66acd39859953cf7ad70e5b5953937bed5ea998355e7b8"
+  digest = "1:1d34342a53d8f8c625260d6c4c2e5c99442b1635bbf4208f426bd12aa210b870"
   name = "k8s.io/api"
   packages = [
     "admission/v1beta1",
@@ -619,10 +593,12 @@
     "authorization/v1beta1",
     "autoscaling/v1",
     "autoscaling/v2beta1",
+    "autoscaling/v2beta2",
     "batch/v1",
     "batch/v1beta1",
     "batch/v2alpha1",
     "certificates/v1beta1",
+    "coordination/v1beta1",
     "core/v1",
     "events/v1beta1",
     "extensions/v1beta1",
@@ -639,20 +615,22 @@
     "storage/v1beta1",
   ]
   pruneopts = "NUT"
-  revision = "4e7be11eab3ffcfc1876898b8272df53785a9504"
-  version = "kubernetes-1.11.3"
+  revision = "145d52631d00cbfe68490d19ae4f0f501fd31a95"
+  version = "kubernetes-1.12.6"
 
 [[projects]]
-  digest = "1:1ff9a5a6c4082aa0b3b2f915bb126267c6cd98b469915dc9b00c6fbdb660c62c"
+  digest = "1:a72cc6f216d1f40d60807680daa5d180b9cbb371789e525130cc34b3d4c5119d"
   name = "k8s.io/apimachinery"
   packages = [
     "pkg/api/equality",
     "pkg/api/errors",
     "pkg/api/meta",
     "pkg/api/resource",
+    "pkg/api/validation",
     "pkg/apis/meta/internalversion",
     "pkg/apis/meta/v1",
     "pkg/apis/meta/v1/unstructured",
+    "pkg/apis/meta/v1/validation",
     "pkg/apis/meta/v1beta1",
     "pkg/conversion",
     "pkg/conversion/queryparams",
@@ -675,6 +653,7 @@
     "pkg/util/framer",
     "pkg/util/intstr",
     "pkg/util/json",
+    "pkg/util/naming",
     "pkg/util/net",
     "pkg/util/runtime",
     "pkg/util/sets",
@@ -687,11 +666,11 @@
     "third_party/forked/golang/reflect",
   ]
   pruneopts = "NUT"
-  revision = "def12e63c512da17043b4f0293f52d1006603d9f"
-  version = "kubernetes-1.11.3"
+  revision = "01f179d85dbce0f2e0e4351a92394b38694b7cae"
+  version = "kubernetes-1.12.6"
 
 [[projects]]
-  digest = "1:6e25734727e2f5ea4041e50812f5d2b054d8f08d96f784355dd4da787d1089c0"
+  digest = "1:b3b811c4a3ab65054b93e76cd7baf81678bdfbcc29f1e543b75d13c319a4e25d"
   name = "k8s.io/client-go"
   packages = [
     "discovery",
@@ -707,12 +686,15 @@
     "informers/autoscaling",
     "informers/autoscaling/v1",
     "informers/autoscaling/v2beta1",
+    "informers/autoscaling/v2beta2",
     "informers/batch",
     "informers/batch/v1",
     "informers/batch/v1beta1",
     "informers/batch/v2alpha1",
     "informers/certificates",
     "informers/certificates/v1beta1",
+    "informers/coordination",
+    "informers/coordination/v1beta1",
     "informers/core",
     "informers/core/v1",
     "informers/events",
@@ -750,10 +732,12 @@
     "kubernetes/typed/authorization/v1beta1",
     "kubernetes/typed/autoscaling/v1",
     "kubernetes/typed/autoscaling/v2beta1",
+    "kubernetes/typed/autoscaling/v2beta2",
     "kubernetes/typed/batch/v1",
     "kubernetes/typed/batch/v1beta1",
     "kubernetes/typed/batch/v2alpha1",
     "kubernetes/typed/certificates/v1beta1",
+    "kubernetes/typed/coordination/v1beta1",
     "kubernetes/typed/core/v1",
     "kubernetes/typed/events/v1beta1",
     "kubernetes/typed/extensions/v1beta1",
@@ -775,10 +759,12 @@
     "listers/apps/v1beta2",
     "listers/autoscaling/v1",
     "listers/autoscaling/v2beta1",
+    "listers/autoscaling/v2beta2",
     "listers/batch/v1",
     "listers/batch/v1beta1",
     "listers/batch/v2alpha1",
     "listers/certificates/v1beta1",
+    "listers/coordination/v1beta1",
     "listers/core/v1",
     "listers/events/v1beta1",
     "listers/extensions/v1beta1",
@@ -822,8 +808,27 @@
     "util/retry",
   ]
   pruneopts = "NUT"
-  revision = "2cefa64ff137e128daeddbd1775cd775708a05bf"
-  version = "kubernetes-1.11.3"
+  revision = "78295b709ec6fa5be12e35892477a326dea2b5d3"
+  version = "kubernetes-1.12.6"
+
+[[projects]]
+  branch = "master"
+  digest = "1:5b6252d22729712e593c7a867cdc6b32c1f783501bb7a59d5c76f2fbf974d882"
+  name = "knative.dev/pkg"
+  packages = [
+    "apis",
+    "apis/duck",
+    "changeset",
+    "configmap",
+    "kmp",
+    "logging",
+    "logging/logkey",
+    "test/logging",
+    "test/monitoring",
+    "webhook",
+  ]
+  pruneopts = "NUT"
+  revision = "3c6bc12e7897bf8c0d1eb1411fbd3d80537420f9"
 
 [solve-meta]
   analyzer-name = "dep"
@@ -831,14 +836,11 @@
   input-imports = [
     "cloud.google.com/go/pubsub",
     "cloud.google.com/go/storage",
+    "fortio.org/fortio/fhttp",
+    "fortio.org/fortio/periodic",
     "github.com/go-sql-driver/mysql",
     "github.com/google/go-github/github",
     "github.com/google/licenseclassifier",
-    "github.com/knative/pkg/configmap",
-    "github.com/knative/pkg/logging",
-    "github.com/knative/pkg/test/logging",
-    "github.com/knative/pkg/test/monitoring",
-    "github.com/knative/pkg/webhook",
     "github.com/markbates/inflect",
     "github.com/prometheus/client_golang/api",
     "github.com/prometheus/client_golang/api/prometheus/v1",
@@ -849,8 +851,6 @@
     "google.golang.org/api/iterator",
     "google.golang.org/api/option",
     "gopkg.in/yaml.v2",
-    "istio.io/fortio/fhttp",
-    "istio.io/fortio/periodic",
     "k8s.io/api/admission/v1beta1",
     "k8s.io/api/admissionregistration/v1beta1",
     "k8s.io/api/extensions/v1beta1",
@@ -862,6 +862,11 @@
     "k8s.io/client-go/plugin/pkg/client/auth/gcp",
     "k8s.io/client-go/rest",
     "k8s.io/client-go/tools/clientcmd",
+    "knative.dev/pkg/configmap",
+    "knative.dev/pkg/logging",
+    "knative.dev/pkg/test/logging",
+    "knative.dev/pkg/test/monitoring",
+    "knative.dev/pkg/webhook",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

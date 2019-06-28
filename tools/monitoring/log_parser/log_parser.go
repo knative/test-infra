@@ -20,22 +20,18 @@ import (
 	"log"
 	"regexp"
 
+	"github.com/knative/test-infra/tools/monitoring/mysql"
+
 	"github.com/knative/test-infra/tools/monitoring/config"
 )
 
-// ErrorLog stores the error pattern and the corresponding error message found in the log
-type ErrorLog struct {
-	Pattern string
-	Msg     string
-}
-
 // collectMatches collects error messages that matches the patterns from text.
-func collectMatches(regexps []regexp.Regexp, text []byte) []ErrorLog {
-	var errorLogs []ErrorLog
+func collectMatches(regexps []regexp.Regexp, text []byte) []mysql.ErrorLog {
+	var errorLogs []mysql.ErrorLog
 	for _, r := range regexps {
 		found := r.Find(text)
 		if found != nil {
-			errorLogs = append(errorLogs, ErrorLog{
+			errorLogs = append(errorLogs, mysql.ErrorLog{
 				Pattern: r.String(),
 				Msg:     string(found),
 			})
@@ -44,13 +40,9 @@ func collectMatches(regexps []regexp.Regexp, text []byte) []ErrorLog {
 	return errorLogs
 }
 
-// ParseLog fetches build log from given url and checks it against given error patterns. Return
+// ParseLog checks content against given error patterns. Return
 // all found error patterns and error messages in pairs.
-func ParseLog(url string, patterns []string) ([]ErrorLog, error) {
-	content, err := config.GetFileBytes(url)
-	if err != nil {
-		return nil, err
-	}
+func ParseLog(content []byte, patterns []string) ([]mysql.ErrorLog, error) {
 	regexps, badPatterns := config.CompilePatterns(patterns)
 	if len(badPatterns) != 0 {
 		log.Printf("The following patterns cannot be compiled: %v", badPatterns)

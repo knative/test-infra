@@ -31,11 +31,14 @@ const driverName = "mysql"
 type DBConfig struct {
 	Username     string
 	Password     string
-	Instance     string
+	Host         string
+	Port         string
 	DatabaseName string
 }
 
-func ConfigureDB(userSecret, passSecret, dbName, dbInstance string) (*DBConfig, error) {
+// ConfigureDB reads the database user name and password from a file (secret) and creates a DBConfig
+// that can be used to connect to the database.
+func ConfigureDB(userSecret, passSecret, hostSecret, dbPort, dbName string) (*DBConfig, error) {
 	user, err := ioutil.ReadFile(userSecret)
 	if err != nil {
 		return nil, err
@@ -46,11 +49,17 @@ func ConfigureDB(userSecret, passSecret, dbName, dbInstance string) (*DBConfig, 
 		return nil, err
 	}
 
+	host, err := ioutil.ReadFile(hostSecret)
+	if err != nil {
+		return nil, err
+	}
+
 	config := DBConfig{
 		Username:     string(user),
 		Password:     string(pass),
+		Host:         string(host),
+		Port:         dbPort,
 		DatabaseName: dbName,
-		Instance:     dbInstance,
 	}
 
 	return &config, nil
@@ -67,7 +76,8 @@ func (c DBConfig) TestConn() error {
 }
 
 func (c DBConfig) Connect() (*sql.DB, error) {
-	conn, err := sql.Open(driverName, c.dataStoreName(c.DatabaseName))
+	// adds "?parseTime=true" so that TimeStamp field can be scanned as time.Time
+	conn, err := sql.Open(driverName, c.dataStoreName(c.DatabaseName)+"?parseTime=true")
 	if err != nil {
 		return nil, fmt.Errorf("could not get a connection: %v", err)
 	}
@@ -91,7 +101,7 @@ func (c DBConfig) dataStoreName(dbName string) string {
 		cred = cred + "@"
 	}
 
-	return fmt.Sprintf("%sunix(%s)/%s", cred, "/cloudsql/"+c.Instance, dbName)
+	return fmt.Sprintf("%stcp([%s]:%s)/%s", cred, c.Host, c.Port, dbName)
 }
 
 // RollbackTx will try to rollback the transaction and return an error message accordingly

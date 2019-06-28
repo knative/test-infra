@@ -23,6 +23,7 @@ import (
 	"testing"
 
 	"cloud.google.com/go/pubsub"
+	"github.com/knative/test-infra/tools/monitoring/prowapi"
 )
 
 type contextKey int
@@ -52,11 +53,11 @@ func (fs *fakeSubscriber) String() string {
 }
 
 func TestSubscriberClient_ReceiveMessageAckAll(t *testing.T) {
-	receivedMsgs := make([]*ReportMessage, 3)
+	receivedMsgs := make([]*prowapi.ReportMessage, 3)
 
 	type arguments struct {
 		ctx context.Context
-		f   func(*ReportMessage)
+		f   func(*prowapi.ReportMessage)
 	}
 	tests := []struct {
 		name string
@@ -67,7 +68,7 @@ func TestSubscriberClient_ReceiveMessageAckAll(t *testing.T) {
 			name: "Message Received",
 			args: arguments{
 				ctx: context.Background(),
-				f: func(message *ReportMessage) {
+				f: func(message *prowapi.ReportMessage) {
 					receivedMsgs[0] = message
 				},
 			},
@@ -77,7 +78,7 @@ func TestSubscriberClient_ReceiveMessageAckAll(t *testing.T) {
 			name: "ReceiveError",
 			args: arguments{
 				ctx: context.WithValue(context.Background(), keyError, errors.New("code = NotFound desc = Resource not found")),
-				f: func(message *ReportMessage) {
+				f: func(message *prowapi.ReportMessage) {
 					receivedMsgs[0] = message
 				},
 			},
@@ -98,20 +99,20 @@ func TestToReportMessage(t *testing.T) {
 	tests := []struct {
 		name string
 		arg  *pubsub.Message
-		want *ReportMessage
+		want *prowapi.ReportMessage
 	}{
 		{
 			name: "Valid report",
 			arg: &pubsub.Message{
 				Data: []byte(`{"project":"knative-tests","topic":"knative-monitoring","runid":"post-knative-serving-go-coverage-dev","status":"triggered","url":"","gcs_path":"gs://","refs":[{"org":"knative","repo":"serving","base_ref":"master","base_sha":"ce96dd74b1c85f024d63ce0991d4bf61aced582a","clone_uri":"https://github.com/knative/serving.git"}],"job_type":"postsubmit","job_name":"post-knative-serving-go-coverage-dev"}`)},
-			want: &ReportMessage{
+			want: &prowapi.ReportMessage{
 				Project: "knative-tests",
 				Topic:   "knative-monitoring",
 				RunID:   "post-knative-serving-go-coverage-dev",
 				Status:  "triggered",
 				URL:     "",
 				GCSPath: "gs://",
-				Refs: []Refs{
+				Refs: []prowapi.Refs{
 					{
 						Org:      "knative",
 						Repo:     "serving",

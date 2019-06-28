@@ -7,7 +7,7 @@
     trigger: "(?m)^/test (all|[[.PresubmitPullJobName]]),?(\\s+|$)"
     optional: true
     decorate: true
-    clone_uri: [[.Base.CloneURI]]
+    [[.Base.PathAlias]]
     spec:
       containers:
       - image: [[.Base.Image]]

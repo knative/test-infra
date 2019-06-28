@@ -1,4 +1,4 @@
-# Copyright 2018 The Knative Authors
+# Copyright 2019 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -40,9 +40,15 @@ RUN rm -rf /usr/local/go && \
 # Extra tools through go get
 RUN go get -u github.com/google/ko/cmd/ko
 RUN go get -u github.com/golang/dep/cmd/dep
-RUN go get -u github.com/google/licenseclassifier
 RUN go get -u github.com/jstemmer/go-junit-report
 RUN go get -u github.com/raviqqe/liche
+
+# Extract bazel version
+RUN bazel version > /bazel_version
+RUN bazel shutdown
+
+# Extract ko version
+RUN git ls-remote https://github.com/google/ko HEAD | cut -f1 > /ko_version
 
 # Extra tools through gem
 RUN gem install mixlib-config -v 2.2.4  # required because ruby is 2.1
@@ -54,7 +60,11 @@ ADD . /go/src/github.com/knative/test-infra
 # Build custom tools in the container
 RUN make -C /go/src/github.com/knative/test-infra/tools/githubhelper
 RUN cp /go/src/github.com/knative/test-infra/tools/githubhelper/githubhelper .
-RUN go install github.com/knative/test-infra/tools/dep-collector
+
+# Use a local dep-collector that's a wrapper for building the tool
+# on-the-fly.
+# TODO(adrcunha): Remove once https://github.com/knative/test-infra/pull/1019 is in all repos.
+RUN cp /go/src/github.com/knative/test-infra/images/prow-tests/dep-collector /usr/bin/dep-collector
 
 # Remove test-infra from the container
 RUN rm -fr /go/src/github.com/knative/test-infra
