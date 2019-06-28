@@ -137,19 +137,10 @@ func testCloudSQLConn(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Serving request: %s", r.URL.Path)
 	fmt.Fprintf(w, "Testing mysql database connection...")
 
-	db, err := dbConfig.Connect()
+	_, err := dbConfig.Connect()
 	if err != nil {
 		fmt.Fprintf(w, "Failed to ping the database %v", err)
 		return
-	}
-
-	fmt.Fprintf(w, "testing alert condition check...")
-	s := config.SelectedConfig{}
-	toAlert, err := s.CheckAlertCondition("none", db)
-	if err != nil {
-		fmt.Fprintf(w, "error running alert condition check in no-match senario: %v", err)
-	} else if toAlert {
-		fmt.Fprintf(w, "alert condition check returned false positive in no-match senario: %v", err)
 	}
 }
 
