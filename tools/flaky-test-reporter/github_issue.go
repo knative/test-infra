@@ -38,7 +38,7 @@ const (
 	latestStatusToken   = "Latest result for this test: "
 	beforeHistoryToken  = "<!------Latest History of Up To 10 runs------>"
 	afterHistoryToken   = "<!------End of History------>"
-	gubernatorURL       = "https://gubernator.knative.dev/build/knative-prow/logs/"
+	jobLogsURL          = "https://prow.knative.dev/view/gcs/knative-prow/logs/"
 	daysConsiderOld     = 30 // arbitrary number of days for an issue to be considered old
 	maxHistoryEntries   = 10 // max count of history runs to show in unicode graph
 
@@ -149,7 +149,7 @@ func (gi *GithubIssue) createCommentForTest(rd *RepoData, testFullName string) s
 		var buildIDContents []string
 		for _, buildID := range ts.Failed {
 			buildIDContents = append(buildIDContents,
-				fmt.Sprintf("[%d](%s%s/%d)", buildID, gubernatorURL, rd.Config.Name, buildID))
+				fmt.Sprintf("[%d](%s%s/%d)", buildID, jobLogsURL, rd.Config.Name, buildID))
 		}
 		content += strings.Join(buildIDContents, ", ")
 	}
@@ -161,7 +161,7 @@ func (gi *GithubIssue) createHistoryUnicode(rd *RepoData, comment, testFullName 
 	currentUnicode := fmt.Sprintf("%s: ", time.Unix(*rd.LastBuildStartTime, 0).String())
 	resultSlice := rd.getResultSliceForTest(testFullName)
 	for i, buildID := range rd.BuildIDs {
-		url := fmt.Sprintf("%s%s/%d", gubernatorURL, rd.Config.Name, buildID)
+		url := fmt.Sprintf("%s%s/%d", jobLogsURL, rd.Config.Name, buildID)
 		var statusUnicode string
 		switch resultSlice[i] {
 		case junit.Passed:
