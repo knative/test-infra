@@ -120,6 +120,7 @@ spec:
         - --
         - --service_account=/etc/test-account/service-account.json
         - --hours=0
+        - --verbose
         volumeMounts:
         - mountPath: /etc/test-account
           name: service
