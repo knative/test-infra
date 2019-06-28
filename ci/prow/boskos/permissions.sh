@@ -17,34 +17,34 @@
 set -e
 
 readonly PROJECT=${1:?"First argument must be the new boskos project name."}
-readonly OWNERS=("prime-engprod-sea@google.com")
-readonly GROUPS=("knative-productivity-admins@googlegroups.com")
-readonly SAS=(
+readonly PROJECT_OWNERS=("prime-engprod-sea@google.com")
+readonly PROJECT_GROUPS=("knative-productivity-admins@googlegroups.com")
+readonly PROJECT_SAS=(
     "knative-tests@appspot.gserviceaccount.com"
     "prow-job@knative-tests.iam.gserviceaccount.com"
     "prow-job@knative-nightly.iam.gserviceaccount.com"
     "prow-job@knative-releases.iam.gserviceaccount.com")
-readonly APIS=(
+readonly PROJECT_APIS=(
     "cloudresourcemanager.googleapis.com"
     "compute.googleapis.com"
     "container.googleapis.com")
 
 # Add an owner to the PROJECT
-for owner in ${OWNERS[@]}; do
+for owner in ${PROJECT_OWNERS[@]}; do
   gcloud projects add-iam-policy-binding ${PROJECT} --member group:${owner} --role roles/owner
 done
 
 # Add all GROUPS as editors
-for group in ${GROUPS[@]}; do
+for group in ${PROJECT_GROUPS[@]}; do
   gcloud projects add-iam-policy-binding ${PROJECT} --member group:${group} --role roles/editor
 done
 
 # Add all service accounts as editors
-for sa in ${SAS[@]}; do
+for sa in ${PROJECT_SAS[@]}; do
   gcloud projects add-iam-policy-binding ${PROJECT} --member serviceAccount:${sa} --role roles/editor
 done
 
 # Enable APIS
-for api in ${APIS[@]}; do
+for api in ${PROJECT_APIS[@]}; do
   gcloud services enable ${api} --project=${PROJECT}
 done
