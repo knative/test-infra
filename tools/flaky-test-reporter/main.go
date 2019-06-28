@@ -22,6 +22,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
 
@@ -69,7 +70,13 @@ func main() {
 		log.Printf("collecting results for job '%s' in repo '%s'\n", jc.Name, jc.Repo)
 		rd, err := collectTestResultsForRepo(jc)
 		if nil != err {
-			log.Fatalf("Error collecting results for job '%s' in repo '%s': %v", jc.Name, jc.Repo, err)
+			err = fmt.Errorf("WARNING: error collecting results for job '%s' in repo '%s': %v", jc.Name, jc.Repo, err)
+			log.Printf("%v", err)
+			jobErrs = append(jobErrs, err)
+		}
+		if nil == rd.LastBuildStartTime {
+			log.Printf("WARNING: no build found, skipping '%s' in repo '%s'", jc.Name, jc.Repo)
+			continue
 		}
 		if err = createArtifactForRepo(rd); nil != err {
 			log.Fatalf("Error creating artifacts for job '%s' in repo '%s': %v", jc.Name, jc.Repo, err)
