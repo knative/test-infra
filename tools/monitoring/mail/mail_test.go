@@ -56,7 +56,8 @@ func TestBuildMessage(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := buildMessage(tt.args.sender, tt.args.recipients, tt.args.subject, tt.args.body); !reflect.DeepEqual(got, tt.want) {
+			c := Config{}
+			if got := c.buildMessage(tt.args.sender, tt.args.recipients, tt.args.subject, tt.args.body); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Unexpected email message: got %v, want %v", got, tt.want)
 			}
 		})
