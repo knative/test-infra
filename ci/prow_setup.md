@@ -23,14 +23,24 @@
 
 ## Expanding Boskos pool
 
-1. Create a new GCP project and add it to
-   [resources.yaml](./prow/boskos/resources.yaml). Please follow the current
-   naming scheme.
+1. All projects and permissions can be created by running `./ci/prow/boskos/create_projects`.
+   For example, to create 10 projects named knative-boskos-51,
+   knative-boskos-52, ... knative-boskos-60, run:
+   `./ci/prow/boskos/create_projects 51 60 0X0X0X-0X0X0X-0X0X0X /tmp/successful.out`.
+   You will need to substitute the actual billing ID for the third argument.
 
-1. Run `./ci/prow/boskos/permissions.sh <project_name>` to setup the IAM
-   permissions and APIs needed.
+1. Edit [resources.yaml](./prow/boskos/resources.yaml) with the new projects.
+   Conveniently ready for cut-and-paste from the output file in the previous
+   step.
+
+1. Get the commit reviewed.
 
 1. Run `make update-boskos-config` to update the Boskos config.
+
+In the event the create_projects fails, it is a script you should easily be
+follow along with in the GUI or run on the CLI. The gcloud billing command is
+still in alpha/beta, so it's probably the section most likely to give you
+trouble.
 
 ## Setting up Prow for a new organization
 
