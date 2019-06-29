@@ -38,7 +38,7 @@ const (
 	latestStatusToken   = "Latest result for this test: "
 	beforeHistoryToken  = "<!------Latest History of Up To 10 runs------>"
 	afterHistoryToken   = "<!------End of History------>"
-	gubernatorURL       = "https://gubernator.knative.dev/build/knative-prow/logs/"
+	jobLogsURL          = "https://prow.knative.dev/view/gcs/knative-prow/logs/"
 	daysConsiderOld     = 30 // arbitrary number of days for an issue to be considered old
 	maxHistoryEntries   = 10 // max count of history runs to show in unicode graph
 
@@ -149,7 +149,7 @@ func (gi *GithubIssue) createCommentForTest(rd *RepoData, testFullName string) s
 		var buildIDContents []string
 		for _, buildID := range ts.Failed {
 			buildIDContents = append(buildIDContents,
-				fmt.Sprintf("[%d](%s%s/%d)", buildID, gubernatorURL, rd.Config.Name, buildID))
+				fmt.Sprintf("[%d](%s%s/%d)", buildID, jobLogsURL, rd.Config.Name, buildID))
 		}
 		content += strings.Join(buildIDContents, ", ")
 	}
@@ -161,7 +161,7 @@ func (gi *GithubIssue) createHistoryUnicode(rd *RepoData, comment, testFullName 
 	currentUnicode := fmt.Sprintf("%s: ", time.Unix(*rd.LastBuildStartTime, 0).String())
 	resultSlice := rd.getResultSliceForTest(testFullName)
 	for i, buildID := range rd.BuildIDs {
-		url := fmt.Sprintf("%s%s/%d", gubernatorURL, rd.Config.Name, buildID)
+		url := fmt.Sprintf("%s%s/%d", jobLogsURL, rd.Config.Name, buildID)
 		var statusUnicode string
 		switch resultSlice[i] {
 		case junit.Passed:
@@ -423,12 +423,12 @@ func (gi *GithubIssue) getFlakyIssues() (map[string][]*flakyIssue, error) {
 // processGithubIssueForRepo reads RepoData and existing issues, and create/close/reopen/comment on issues.
 // The function returns a slice of messages containing performed actions, and a slice of error messages,
 // these can later on be printed as summary at the end of run
-func (gi *GithubIssue) processGithubIssueForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyIssue, repoForIssue string, dryrun bool) ([]string, error) {
+func (gi *GithubIssue) processGithubIssueForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyIssue, dryrun bool) ([]string, error) {
 	var messages []string
 	var errs []error
 
-	// if flag is not set, do not create an issue at all
-	if rd.Config.SkipGithubIssue {
+	repoForIssue := rd.Config.IssueRepo
+	if len(repoForIssue) == 0 {
 		messages = append(messages, "skip creating/updating issues, job is marked to not create GitHub issues\n")
 		return messages, combineErrors(errs)
 	}
@@ -507,7 +507,7 @@ func (gi *GithubIssue) processGithubIssues(repoDataAll []*RepoData, dryrun bool)
 	}
 
 	for _, rd := range repoDataAll {
-		messages, err := gi.processGithubIssueForRepo(rd, flakyGHIssuesMap, githubIssueMap[rd.Config.Repo], dryrun)
+		messages, err := gi.processGithubIssueForRepo(rd, flakyGHIssuesMap, dryrun)
 		if _, ok := messagesMap[rd.Config.Repo]; !ok {
 			messagesMap[rd.Config.Repo] = make(map[string][]string)
 		}

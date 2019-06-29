@@ -104,13 +104,13 @@ func createSlackMessageForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyI
 	flakyTests := getFlakyTests(rd)
 	message := fmt.Sprintf("As of %s, there are %d flaky tests in '%s' from repo '%s'",
 		time.Unix(*rd.LastBuildStartTime, 0).String(), len(flakyTests), rd.Config.Name, rd.Config.Repo)
-	if rd.Config.SkipGithubIssue {
+	if "" == rd.Config.IssueRepo {
 		message += fmt.Sprintf("\n(Job is marked to not create GitHub issues)")
 	}
 	if flakyRateAboveThreshold(rd) { // Don't list each test as this can be huge
 		flakyRate := getFlakyRate(rd)
 		message += fmt.Sprintf("\n>- skip displaying all tests as flaky rate above threshold")
-		if flakyIssues, ok := flakyIssuesMap[getBulkIssueIdentity(rd, flakyRate)]; ok && !rd.Config.SkipGithubIssue {
+		if flakyIssues, ok := flakyIssuesMap[getBulkIssueIdentity(rd, flakyRate)]; ok && "" != rd.Config.IssueRepo {
 			// When flaky rate is above threshold, there is only one issue created,
 			// so there is only one element in flakyIssues
 			for _, fi := range flakyIssues {
@@ -120,7 +120,7 @@ func createSlackMessageForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyI
 	} else {
 		for _, testFullName := range flakyTests {
 			message += fmt.Sprintf("\n>- %s", testFullName)
-			if flakyIssues, ok := flakyIssuesMap[getIdentityForTest(testFullName, rd.Config.Repo)]; ok && !rd.Config.SkipGithubIssue {
+			if flakyIssues, ok := flakyIssuesMap[getIdentityForTest(testFullName, rd.Config.Repo)]; ok && "" != rd.Config.IssueRepo {
 				for _, fi := range flakyIssues {
 					message += fmt.Sprintf("\t%s", fi.issue.GetHTMLURL())
 				}
@@ -136,20 +136,6 @@ func createSlackMessageForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyI
 	return message
 }
 
-// getSlackChannel gets the channel(s) to send messages to for a given job configuration
-func getSlackChannel(repo string, name string) []slackChannel {
-	jobMap, ok := slackChannelsMap[repo]
-	if !ok {
-		log.Printf("cannot find Slack channel mapping for repo '%s', skipping Slack notification", repo)
-		return nil
-	}
-	channels, ok := jobMap[name]
-	if !ok {
-		log.Printf("cannot find Slack channel for job '%s' in repo '%s', skipping Slack notification", name, repo)
-	}
-	return channels
-}
-
 func sendSlackNotifications(repoDataAll []*RepoData, c *SlackClient, ghi *GithubIssue, dryrun bool) error {
 	var allErrs []error
 	flakyIssuesMap, err := ghi.getFlakyIssues()
@@ -158,8 +144,9 @@ func sendSlackNotifications(repoDataAll []*RepoData, c *SlackClient, ghi *Github
 		log.Println("Warning: cannot get flaky Github issues: ", err)
 	}
 	for _, rd := range repoDataAll {
-		channels := getSlackChannel(rd.Config.Repo, rd.Config.Name)
-		if nil == channels {
+		channels := rd.Config.SlackChannels
+		if len(channels) == 0 {
+			log.Printf("cannot find Slack channel for job '%s' in repo '%s', skipping Slack notification", rd.Config.Name, rd.Config.Repo)
 			continue
 		}
 		ch := make(chan bool, len(channels))
@@ -169,13 +156,13 @@ func sendSlackNotifications(repoDataAll []*RepoData, c *SlackClient, ghi *Github
 			go func(wg *sync.WaitGroup) {
 				message := createSlackMessageForRepo(rd, flakyIssuesMap)
 				if err := run(
-					fmt.Sprintf("post Slack message for job '%s' from repo '%s' in channel '%s'", rd.Config.Name, rd.Config.Repo, channel.name),
+					fmt.Sprintf("post Slack message for job '%s' from repo '%s' in channel '%s'", rd.Config.Name, rd.Config.Repo, channel.Name),
 					func() error {
-						return c.writeSlackMessage(message, channel.identity)
+						return c.writeSlackMessage(message, channel.Identity)
 					},
 					dryrun); nil != err {
 					allErrs = append(allErrs, err)
-					log.Printf("failed sending notification to Slack channel '%s': '%v'", channel.name, err)
+					log.Printf("failed sending notification to Slack channel '%s': '%v'", channel.Name, err)
 				}
 				if dryrun {
 					log.Printf("[dry run] Slack message not sent. See it below:\n%s\n\n", message)

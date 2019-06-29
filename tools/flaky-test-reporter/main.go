@@ -22,18 +22,26 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
 
 	"github.com/knative/test-infra/shared/prow"
+	"github.com/knative/test-infra/tools/flaky-test-reporter/config"
 )
 
 func main() {
 	serviceAccount := flag.String("service-account", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"), "JSON key file for GCS service account")
 	githubAccount := flag.String("github-account", "", "Token file for Github authentication")
 	slackAccount := flag.String("slack-account", "", "slack secret file for authenticating with Slack")
+	configPath := flag.String("configfile", "config.yaml", "Config file for overriding default config file")
 	dryrun := flag.Bool("dry-run", false, "dry run switch")
 	flag.Parse()
+
+	cfg, err := config.NewConfig(*configPath)
+	if nil != err {
+		log.Fatalf("config cannot be created: '%v'", err)
+	}
 
 	if nil != dryrun && true == *dryrun {
 		log.Printf("running in [dry run mode]")
@@ -57,27 +65,35 @@ func main() {
 	if nil != err {
 		log.Fatalf("Failed removing local artifacts directory: %v", err)
 	}
-	for repoName, jobList := range jobConfigs {
-		for _, jc := range jobList {
-			jc.Repo = repoName
-			log.Printf("collecting results for job '%s' in repo '%s'\n", jc.Name, jc.Repo)
-			rd, err := collectTestResultsForRepo(jc)
-			if nil != err {
-				log.Fatalf("Error collecting results for job '%s' in repo '%s': %v", jc.Name, jc.Repo, err)
-			}
-			if err = createArtifactForRepo(rd); nil != err {
-				log.Fatalf("Error creating artifacts for job '%s' in repo '%s': %v", jc.Name, jc.Repo, err)
-			}
-			repoDataAll = append(repoDataAll, rd)
+	var jobErrs []error
+	for _, jc := range cfg.JobConfigs {
+		log.Printf("collecting results for job '%s' in repo '%s'\n", jc.Name, jc.Repo)
+		rd, err := collectTestResultsForRepo(jc)
+		if nil != err {
+			err = fmt.Errorf("WARNING: error collecting results for job '%s' in repo '%s': %v", jc.Name, jc.Repo, err)
+			log.Printf("%v", err)
+			jobErrs = append(jobErrs, err)
 		}
+		if nil == rd.LastBuildStartTime {
+			log.Printf("WARNING: no build found, skipping '%s' in repo '%s'", jc.Name, jc.Repo)
+			continue
+		}
+		if err = createArtifactForRepo(rd); nil != err {
+			log.Fatalf("Error creating artifacts for job '%s' in repo '%s': %v", jc.Name, jc.Repo, err)
+		}
+		repoDataAll = append(repoDataAll, rd)
 	}
 
 	// Errors that could result in inaccuracy reporting would be treated with fast fail by processGithubIssues,
 	// so any errors returned are github opeations error, which in most cases wouldn't happen, but in case it
 	// happens, it should fail the job after Slack notification
+	jobErr := combineErrors(jobErrs)
 	githubErr := ghi.processGithubIssues(repoDataAll, *dryrun)
 	slackErr := sendSlackNotifications(repoDataAll, slackClient, ghi, *dryrun)
 	jsonErr := writeFlakyTestsToJSON(repoDataAll, *dryrun)
+	if nil != jobErr {
+		log.Printf("Job step failures:\n%v", jobErr)
+	}
 	if nil != githubErr {
 		log.Printf("Github step failures:\n%v", githubErr)
 	}
@@ -87,7 +103,7 @@ func main() {
 	if nil != jsonErr {
 		log.Printf("JSON step failures:\n%v", jsonErr)
 	}
-	if nil != githubErr || nil != slackErr || nil != jsonErr { // Fail this job if there is any error
+	if nil != jobErr || nil != githubErr || nil != slackErr || nil != jsonErr { // Fail this job if there is any error
 		os.Exit(1)
 	}
 }

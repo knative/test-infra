@@ -55,9 +55,9 @@ func NewMailConfig(mailAddrFile string, mailPassFile string) (*Config, error) {
 
 // Send sends an email
 func (c *Config) Send(recipients []string, subject string, body string) error {
-	msg := buildMessage(c.email, recipients, subject, body)
+	msg := c.buildMessage(c.email, recipients, subject, body)
 	auth := smtp.PlainAuth("", c.email, c.password, smtpHost)
-	if err := smtp.SendMail(buildServerName(smtpHost, smtpPort), auth, c.email, recipients, msg); err != nil {
+	if err := smtp.SendMail(c.buildServerName(smtpHost, smtpPort), auth, c.email, recipients, msg); err != nil {
 		return err
 	}
 
@@ -65,11 +65,11 @@ func (c *Config) Send(recipients []string, subject string, body string) error {
 	return nil
 }
 
-func buildServerName(host string, port string) string {
+func (c *Config) buildServerName(host string, port string) string {
 	return host + ":" + port
 }
 
-func buildMessage(sender string, recipients []string, subject string, body string) []byte {
+func (c *Config) buildMessage(sender string, recipients []string, subject string, body string) []byte {
 	message := fmt.Sprintf("From: %s\n", sender)
 	if len(recipients) > 0 {
 		message += fmt.Sprintf("To: %s\n", strings.Join(recipients, ";"))

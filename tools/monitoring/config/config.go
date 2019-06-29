@@ -20,7 +20,6 @@ limitations under the License.
 package config
 
 import (
-	"database/sql"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -28,7 +27,7 @@ import (
 	"regexp"
 	"time"
 
-	yaml "gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
 )
 
 type alertCondition struct {
@@ -79,29 +78,6 @@ func (s SelectedConfig) applyDefaults() {
 // Duration converts the time period stored as minutes int to a Duration object
 func (s SelectedConfig) Duration() time.Duration {
 	return time.Minute * time.Duration(s.Period)
-}
-
-// CheckAlertCondition checks whether the given error pattern meets
-// the alert condition specified in config
-func (s *SelectedConfig) CheckAlertCondition(errorPattern string, db *sql.DB) (bool, error) {
-	var nMatches, nJobs, nPRs int
-	// the timestamp we want to start collecting logs
-	startTime := time.Now().Add(s.Duration())
-
-	row := db.QueryRow(`
-		SELECT 
-			COUNT (*),
-			COUNT (DISTINCT Jobname),
-			COUNT (DISTINCT PrNumber)
-		FROM ErrorLogs
-		WHERE ErrorPattern=? and TimeStamp > ?`,
-		errorPattern, startTime)
-
-	if err := row.Scan(&nMatches, &nJobs, &nPRs); err != nil {
-		return false, err
-	}
-
-	return nMatches >= s.Occurrences && nJobs >= s.JobsAffected && nPRs >= s.PrsAffected, nil
 }
 
 // Select gets the spec for a particular error pattern and a matching job name pattern
