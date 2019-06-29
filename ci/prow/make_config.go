@@ -141,6 +141,7 @@ var (
 	flakesreporterDockerImage    string
 	prowversionbumperDockerImage string
 	coverageDockerImage          string
+	clearalertsDockerImage       string
 	prowTestsDockerImage         string
 	presubmitScript              string
 	releaseScript                string
@@ -912,6 +913,7 @@ func main() {
 	flag.StringVar(&flakesreporterDockerImage, "flaky-test-reporter-docker", "gcr.io/knative-tests/test-infra/flaky-test-reporter:latest", "Docker image for flaky test reporting tool")
 	flag.StringVar(&prowversionbumperDockerImage, "prow-auto-bumper", "gcr.io/knative-tests/test-infra/prow-auto-bumper:latest", "Docker image for Prow version bumping tool")
 	flag.StringVar(&coverageDockerImage, "coverage-docker", "gcr.io/knative-tests/test-infra/coverage:latest", "Docker image for coverage tool")
+	flag.StringVar(&clearalertsDockerImage, "clear-alerts", "gcr.io/knative-tests/test-infra/monitoring/clear-alerts:latest", "Docker image for clearing alerts in test-infra monitoring")
 	flag.StringVar(&prowTestsDockerImage, "prow-tests-docker", "gcr.io/knative-tests/test-infra/prow-tests:stable", "prow-tests docker image")
 	flag.StringVar(&presubmitScript, "presubmit-script", "./test/presubmit-tests.sh", "Executable for running presubmit tests")
 	flag.StringVar(&releaseScript, "release-script", "./hack/release.sh", "Executable for creating releases")
@@ -957,6 +959,7 @@ func main() {
 			return !repo.Processed && repo.EnableGoCoverage
 		}, generateGoCoveragePeriodic)
 		generateCleanupPeriodicJob()
+		generateClearAlertsPeriodicJob()
 		generateFlakytoolPeriodicJob()
 		generateVersionBumpertoolPeriodicJob()
 		generateBackupPeriodicJob()
