@@ -573,6 +573,34 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
+  - name: pull-knative-client-integration-tests-latest-release
+    agent: kubernetes
+    context: pull-knative-client-integration-tests-latest-release
+    always_run: true
+    rerun_command: "/test pull-knative-client-integration-tests-latest-release"
+    trigger: "(?m)^/test (all|pull-knative-client-integration-tests-latest-release),?(\\s+|$)"
+    decorate: true
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-integration-tests-latest-release.sh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
   knative/eventing:
   - name: pull-knative-eventing-build-tests
     agent: kubernetes

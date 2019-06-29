@@ -52,6 +52,10 @@ presubmits:
     - unit-tests: true
     - integration-tests: true
     - go-coverage: true
+    - custom-test: integration-tests-latest-release
+      always_run: true
+      command:
+        - "./test/presubmit-integration-tests-latest-release.sh"
 
   knative/eventing:
     - build-tests: true
