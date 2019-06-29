@@ -111,6 +111,27 @@ func (config Config) Select(pattern, jobName string) (*SelectedConfig, error) {
 	return output, noMatchError
 }
 
+// GetPatternAlertConditions takes an error pattern and returns a map with job regex to the alerting condition
+func (config Config) GetPatternAlertConditions(pattern string) map[string]*SelectedConfig {
+	sconfigs := make(map[string]*SelectedConfig)
+	for _, patternSpec := range config.Spec {
+		if pattern == patternSpec.ErrorPattern {
+			for _, alertCondition := range patternSpec.Alerts {
+				sconfigs[alertCondition.JobNameRegex] = &SelectedConfig{
+					Hint:         patternSpec.Hint,
+					Occurrences:  alertCondition.Occurrences,
+					JobsAffected: alertCondition.JobsAffected,
+					PrsAffected:  alertCondition.PrsAffected,
+					Period:       alertCondition.Period,
+				}
+			}
+			break
+		}
+	}
+
+	return sconfigs
+}
+
 // CollectErrorPatterns collects and returns all error patterns in the yaml file
 func (config Config) CollectErrorPatterns() []string {
 	var patterns []string

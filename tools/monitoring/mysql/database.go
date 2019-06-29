@@ -139,6 +139,21 @@ func (db *DB) AddAlert(errorPattern string) error {
 	return err
 }
 
+// DeleteAlert deletes a row (alert) from the Alerts table
+func (db *DB) DeleteAlert(errorPattern string) error {
+	stmt, err := db.Prepare(`
+				DELETE FROM Alerts
+				WHERE ErrorPattern = ?`)
+	defer stmt.Close()
+
+	if err != nil {
+		return err
+	}
+
+	_, err = stmt.Exec(errorPattern)
+	return err
+}
+
 // IsFreshAlertPattern checks the Alerts table to see if the error pattern hasn't been alerted within the time window
 func (db *DB) IsFreshAlertPattern(errorPattern string, window time.Duration) (bool, error) {
 	var id int
@@ -168,4 +183,26 @@ func (db *DB) IsFreshAlertPattern(errorPattern string, window time.Duration) (bo
 	log.Printf("previous alert not expired (timestamp=%v), "+
 		"alert window size=%v, no alert will be sent", sent, window)
 	return false, nil
+}
+
+// IsPatternAlerting checks whether the given error pattern meets the alert condition
+func (db *DB) IsPatternAlerting(errorPattern, jobPattern string, window time.Duration, aTotal, aJobs, aPRs int) (bool, error) {
+	var nMatches, nJobs, nPRs int
+	// the timestamp we want to start collecting logs
+	startTime := time.Now().Add(-1 * window)
+
+	row := db.QueryRow(`
+		SELECT
+			COUNT(*),
+			COUNT(DISTINCT JobName),
+			COUNT(DISTINCT PrNumber)
+		FROM ErrorLogs
+		WHERE ErrorPattern = ?
+		AND JobName REGEXP ?
+		AND TimeStamp > ?`, errorPattern, jobPattern, startTime)
+	if err := row.Scan(&nMatches, &nJobs, &nPRs); err != nil {
+		return false, err
+	}
+
+	return nMatches >= aTotal && nJobs >= aJobs && nPRs >= aPRs, nil
 }
