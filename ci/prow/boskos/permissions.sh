@@ -16,7 +16,7 @@
 
 set -e
 
-readonly PROJECT=${1:?"First argument must be the new boskos project name."}
+readonly PROJECT=${1:?"First argument must be the boskos project name."}
 readonly PROJECT_OWNERS=("prime-engprod-sea@google.com")
 readonly PROJECT_GROUPS=("knative-productivity-admins@googlegroups.com")
 readonly PROJECT_SAS=(
@@ -31,20 +31,24 @@ readonly PROJECT_APIS=(
 
 # Add an owner to the PROJECT
 for owner in ${PROJECT_OWNERS[@]}; do
+  echo "NOTE: Adding owner ${owner}"
   gcloud projects add-iam-policy-binding ${PROJECT} --member group:${owner} --role roles/owner
 done
 
 # Add all GROUPS as editors
 for group in ${PROJECT_GROUPS[@]}; do
+  echo "NOTE: Adding group ${group}"
   gcloud projects add-iam-policy-binding ${PROJECT} --member group:${group} --role roles/editor
 done
 
 # Add all service accounts as editors
 for sa in ${PROJECT_SAS[@]}; do
+  echo "NOTE: Adding service account ${sa}"
   gcloud projects add-iam-policy-binding ${PROJECT} --member serviceAccount:${sa} --role roles/editor
 done
 
 # Enable APIS
 for api in ${PROJECT_APIS[@]}; do
+  echo "NOTE: Enabling API ${api}"
   gcloud services enable ${api} --project=${PROJECT}
 done
