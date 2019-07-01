@@ -41,8 +41,8 @@ type Report struct {
 }
 
 // Initialize wraps prow's init, which must be called before any other prow functions are used.
-func Initialize(credentials string) error {
-	return prow.Initialize(credentials)
+func Initialize(serviceAccount string) error {
+	return prow.Initialize(serviceAccount)
 }
 
 func (r *Report) writeToArtifactsDir() error {
