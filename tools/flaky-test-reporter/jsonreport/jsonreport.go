@@ -40,6 +40,10 @@ type Report struct {
 	Flaky []string `json:"flaky"`
 }
 
+func Initialize(credentials string) error {
+	return prow.Initialize(credentials)
+}
+
 func (r *Report) writeToArtifactsDir() error {
 	artifactsDir := prow.GetLocalArtifactsDir()
 	if err := common.CreateDir(path.Join(artifactsDir, r.Repo)); nil != err {
@@ -99,7 +103,7 @@ func GetReportForRepo(repo string, buildID int) (*Report, error) {
 	if err != nil {
 		return nil, err
 	}
-	if err = json.Unmarshal(contents, &report); err != nil {
+	if err = json.Unmarshal(contents, report); err != nil {
 		return nil, err
 	}
 	return report, nil
