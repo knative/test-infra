@@ -4135,7 +4135,7 @@ periodics:
         secretName: test-account
 periodic:
 - cron: "0,30 * * * *"
-  name: ci-knative-monitoring-clear-alerts
+  name: ci-knative-test-infra-monitoring-clear-alerts
   agent: kubernetes
   decorate: true
   extra_refs:

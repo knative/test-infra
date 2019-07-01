@@ -311,7 +311,7 @@ func generateClearAlertsPeriodicJob() {
 	var data periodicJobTemplateData
 	data.Base = newbaseProwJobTemplateData("knative/test-infra")
 	data.Base.Image = clearalertsDockerImage
-	data.PeriodicJobName = "ci-knative-monitoring-clear-alerts"
+	data.PeriodicJobName = "ci-knative-test-infra-monitoring-clear-alerts"
 	data.CronString = clearAlertsPeriodicJobCron
 	data.Base.Command = "/clearalerts"
 	addVolumeToJob(&data.Base, "/secrets/cloudsql/monitoringdb", "monitoring-db-credentials", true)
