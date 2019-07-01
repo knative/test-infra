@@ -63,9 +63,9 @@ identifiers associated with each flaky issue:
 When there are too many tests found to be flaky, most likely something abnormal
 is going on, and we don't want to create Github issues for all of them, or list
 all of them in Slack notifications. There are thresholds defined in
-[`constants.go`](constants.go), if the flaky rate went over a threshold there will be
-only 1 Github issue created, and Slack notification will not list all flaky
-tests.
+[`constants.go`](constants.go), if the flaky rate went over a threshold there
+will be only 1 Github issue created, and Slack notification will not list all
+flaky tests.
 
 #### Github issue updates
 
