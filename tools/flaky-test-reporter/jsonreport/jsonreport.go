@@ -40,6 +40,7 @@ type Report struct {
 	Flaky []string `json:"flaky"`
 }
 
+// Initialize wraps prow's init, which must be called before any other prow functions are used.
 func Initialize(credentials string) error {
 	return prow.Initialize(credentials)
 }
