@@ -69,7 +69,11 @@ func (c *Client) handleReportMessage(rmsg *prowapi.ReportMessage) {
 		}
 
 		rmsg.GCSPath = toGcsLink(rmsg.GCSPath)
-		blPath := gcs.BuildLogPath(rmsg.GCSPath)
+		blPath, err := gcs.BuildLogPath(rmsg.GCSPath)
+		if err != nil {
+			log.Printf("Failed to construct build log url from gcs path %s. Error: %v\n", rmsg.GCSPath, err)
+			return
+		}
 		buildLog, err := gcs.ReadURL(context.Background(), blPath)
 		if err != nil {
 			log.Printf("Failed to read from url %s. Error: %v\n", blPath, err)
