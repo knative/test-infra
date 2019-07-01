@@ -32,10 +32,12 @@
 
 1. Run `make update-boskos-config` to update the Boskos config.
 
-1. Increase the compute CPU quota for the project to 200. Go to 
-   `https://pantheon.corp.google.com/iam-admin/quotas?project=<project_name>&service=compute.googleapis.com&metric=CPUs` 
-   and click `Edit Quota`. This needs to be done manually and should be automatically approved once the request is submitted. 
-   The request asks for a phone number and a reason. You can add any number and some reason like _Need more resources for running tests_
+1. Increase the compute CPU quota for the project to 200. Go to
+   `https://pantheon.corp.google.com/iam-admin/quotas?project=<project_name>&service=compute.googleapis.com&metric=CPUs`
+   and click `Edit Quota`. This needs to be done manually and should be
+   automatically approved once the request is submitted. The request asks for
+   a phone number and a reason. You can add any number and some reason
+   like _Need more resources for running tests_
 
 ## Setting up Prow for a new organization
 
