@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.10.2
+FROM golang:1.12.5
 RUN apt-get update
 
 ENV TEMP_REPO_DIR /go/src/github.com/knative/test-infra

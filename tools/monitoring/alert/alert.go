@@ -30,7 +30,7 @@ import (
 	"github.com/knative/test-infra/tools/monitoring/subscriber"
 )
 
-const yamlURL = "https://raw.githubusercontent.com/knative/test-infra/master/tools/monitoring/config/config.yaml"
+const YamlURL = "https://raw.githubusercontent.com/knative/test-infra/master/tools/monitoring/config/config.yaml"
 
 // Client holds all the resources required to run alerting
 type Client struct {
@@ -62,7 +62,7 @@ func (c *Client) RunAlerting() {
 
 func (c *Client) handleReportMessage(rmsg *prowapi.ReportMessage) {
 	if rmsg.Status == prowapi.SuccessState || rmsg.Status == prowapi.FailureState || rmsg.Status == prowapi.AbortedState {
-		config, err := config.ParseYaml(yamlURL)
+		config, err := config.ParseYaml(YamlURL)
 		if err != nil {
 			log.Printf("Failed to config yaml (%v): %v\n", config, err)
 			return

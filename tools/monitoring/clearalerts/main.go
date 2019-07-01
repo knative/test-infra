@@ -22,11 +22,10 @@ import (
 	"time"
 
 	"github.com/knative/test-infra/shared/mysql"
+	"github.com/knative/test-infra/tools/monitoring/alert"
 	"github.com/knative/test-infra/tools/monitoring/config"
 	msql "github.com/knative/test-infra/tools/monitoring/mysql"
 )
-
-const yamlURL = "https://raw.githubusercontent.com/knative/test-infra/master/tools/monitoring/config/config.yaml"
 
 func main() {
 	dbName := flag.String("database-name", "monitoring", "The monitoring database name")
@@ -46,7 +45,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	c, err := config.ParseYaml(yamlURL)
+	c, err := config.ParseYaml(alert.YamlURL)
 	if err != nil {
 		log.Fatalf("Failed to parse the config yaml: %v", err)
 	}
