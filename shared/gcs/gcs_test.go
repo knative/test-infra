@@ -22,6 +22,32 @@ import (
 	"testing"
 )
 
+func TestBuildLogPath(t *testing.T) {
+	tests := []struct {
+		name string
+		arg  string
+		want string
+	}{
+		{
+			name: "Trailing slash",
+			arg:  "gs://knative-prow/logs/ci-knative-client-go-coverage/1139250680293232640/",
+			want: "gs://knative-prow/logs/ci-knative-client-go-coverage/1139250680293232640/build-log.txt",
+		},
+		{
+			name: "No Trailing slash",
+			arg:  "gs://knative-prow/logs/ci-knative-client-go-coverage/1139250680293232640",
+			want: "gs://knative-prow/logs/ci-knative-client-go-coverage/1139250680293232640/build-log.txt",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got, _ := BuildLogPath(tt.arg); got != tt.want {
+				t.Errorf("BuildLogPath(%v), got: %v, want: %v", tt.arg, got, tt.want)
+			}
+		})
+	}
+}
+
 func TestLinkToBucketAndObject(t *testing.T) {
 	type result struct {
 		bucket string
