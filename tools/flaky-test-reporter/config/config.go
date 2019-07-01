@@ -21,7 +21,7 @@ package config
 import (
 	"io/ioutil"
 
-	"gopkg.in/yaml.v2"
+	yaml "gopkg.in/yaml.v2"
 )
 
 // Config contains all job configs for flaky tests reporting
