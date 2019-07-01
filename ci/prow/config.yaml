@@ -4207,6 +4207,7 @@ periodics:
     - name: prow-updater-robot-ssh-key
       secret:
         secretName: prow-updater-robot-ssh-key
+        defaultMode: 0400
 - cron: "15 9 * * *"
   name: ci-knative-backup-artifacts
   agent: kubernetes

@@ -356,14 +356,18 @@ func addLabelToJob(data *baseProwJobTemplateData, key, value string) {
 }
 
 // addVolumeToJob adds the given mount path as volume for the job.
-func addVolumeToJob(data *baseProwJobTemplateData, mountPath, name string, isSecret bool) {
+func addVolumeToJob(data *baseProwJobTemplateData, mountPath, name string, isSecret bool, defaultMode string) {
 	(*data).VolumeMounts = append((*data).VolumeMounts, []string{"- name: " + name, "  mountPath: " + mountPath}...)
 	if isSecret {
 		(*data).VolumeMounts = append((*data).VolumeMounts, "  readOnly: true")
 	}
 	s := []string{"- name: " + name}
 	if isSecret {
-		s = append(s, []string{"  secret:", "    secretName: " + name}...)
+		arr := []string{"  secret:", "    secretName: " + name}
+		if len(defaultMode) > 0 {
+			arr = append(arr, "    defaultMode: "+defaultMode)
+		}
+		s = append(s, arr...)
 	} else {
 		s = append(s, "  emptyDir: {}")
 	}
@@ -380,7 +384,7 @@ func configureServiceAccountForJob(data *baseProwJobTemplateData) {
 		log.Fatalf("Service account path %q is expected to be \"/etc/<name>/service-account.json\"", data.ServiceAccount)
 	}
 	name := p[2]
-	addVolumeToJob(data, "/etc/"+name, name, true)
+	addVolumeToJob(data, "/etc/"+name, name, true, "")
 }
 
 // addExtraEnvVarsToJob adds any extra environment variables (defined on command-line) to a job.
@@ -396,7 +400,7 @@ func addExtraEnvVarsToJob(data *baseProwJobTemplateData) {
 
 // setupDockerInDockerForJob enables docker-in-docker for the given job.
 func setupDockerInDockerForJob(data *baseProwJobTemplateData) {
-	addVolumeToJob(data, "/docker-graph", "docker-graph", false)
+	addVolumeToJob(data, "/docker-graph", "docker-graph", false, "")
 	addEnvToJob(data, "DOCKER_IN_DOCKER_ENABLED", "\"true\"")
 	(*data).SecurityContext = []string{"privileged: true"}
 }
@@ -472,7 +476,7 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 			data.Base.Image = coverageDockerImage
 			data.Base.ServiceAccount = ""
 			repoData.EnableGoCoverage = true
-			addVolumeToJob(&data.Base, "/etc/covbot-token", "covbot-token", true)
+			addVolumeToJob(&data.Base, "/etc/covbot-token", "covbot-token", true, "")
 		case "custom-test":
 			data.PresubmitJobName = data.Base.RepoNameForJob + "-" + getString(item.Value)
 		case "go-coverage-threshold":

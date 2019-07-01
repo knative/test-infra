@@ -110,7 +110,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 				"--release-gcs " + data.Base.ReleaseGcs,
 				"--release-gcr gcr.io/knative-releases",
 				"--github-token /etc/hub-token/token"}
-			addVolumeToJob(&data.Base, "/etc/hub-token", "hub-token", true)
+			addVolumeToJob(&data.Base, "/etc/hub-token", "hub-token", true, "")
 			data.Base.Timeout = 90
 		case "performance", "performance-mesh":
 			if !getBool(item.Value) {
@@ -229,8 +229,8 @@ func generateFlakytoolPeriodicJob() {
 		"--slack-account=/etc/flaky-test-reporter-slack-token/token"}
 	addExtraEnvVarsToJob(&data.Base)
 	configureServiceAccountForJob(&data.Base)
-	addVolumeToJob(&data.Base, "/etc/flaky-test-reporter-github-token", "flaky-test-reporter-github-token", true)
-	addVolumeToJob(&data.Base, "/etc/flaky-test-reporter-slack-token", "flaky-test-reporter-slack-token", true)
+	addVolumeToJob(&data.Base, "/etc/flaky-test-reporter-github-token", "flaky-test-reporter-github-token", true, "")
+	addVolumeToJob(&data.Base, "/etc/flaky-test-reporter-slack-token", "flaky-test-reporter-slack-token", true, "")
 	executeJobTemplate("periodic flakesreporter", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
 }
 
@@ -249,8 +249,8 @@ func generateVersionBumpertoolPeriodicJob() {
 		"--git-email=knative-prow-updater-robot@google.com"}
 	addExtraEnvVarsToJob(&data.Base)
 	configureServiceAccountForJob(&data.Base)
-	addVolumeToJob(&data.Base, "/etc/prow-auto-bumper-github-token", "prow-auto-bumper-github-token", true)
-	addVolumeToJob(&data.Base, "/root/.ssh", "prow-updater-robot-ssh-key", true)
+	addVolumeToJob(&data.Base, "/etc/prow-auto-bumper-github-token", "prow-auto-bumper-github-token", true, "")
+	addVolumeToJob(&data.Base, "/root/.ssh", "prow-updater-robot-ssh-key", true, "0400")
 	executeJobTemplate("periodic versionbumper", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
 }
 
