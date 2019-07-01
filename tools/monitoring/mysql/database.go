@@ -147,7 +147,7 @@ func (db *DB) DeleteAlert(errorPattern string) error {
 	defer stmt.Close()
 
 	if err == nil {
-		_, err = execAffectingOneRow(stmt, errorPattern)
+		err = execAffectingOneRow(stmt, errorPattern)
 	}
 
 	return err
@@ -205,16 +205,15 @@ func (db *DB) IsPatternAlerting(errorPattern, jobPattern string, window time.Dur
 }
 
 // execAffectingOneRow executes a given statement, expecting one row to be affected.
-func execAffectingOneRow(stmt *sql.Stmt, args ...interface{}) (sql.Result, error) {
+func execAffectingOneRow(stmt *sql.Stmt, args ...interface{}) error {
 	r, err := stmt.Exec(args...)
 	if err != nil {
-		return r, fmt.Errorf("mysql: could not execute statement: %v", err)
+		return fmt.Errorf("could not execute statement: %v", err)
 	}
-	rowsAffected, err := r.RowsAffected()
-	if err != nil {
-		return r, fmt.Errorf("mysql: could not get rows affected: %v", err)
+	if rowsAffected, err := r.RowsAffected(); err != nil {
+		return fmt.Errorf("could not get rows affected: %v", err)
 	} else if rowsAffected != 1 {
-		return r, fmt.Errorf("mysql: expected 1 row affected, got %d", rowsAffected)
+		return fmt.Errorf("expected 1 row affected, got %d", rowsAffected)
 	}
-	return r, nil
+	return nil
 }
