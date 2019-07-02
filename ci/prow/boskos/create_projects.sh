@@ -16,16 +16,16 @@
 
 set -e
 
-readonly FIRST=${1:?"First argument is the first number of the new projects."}
-readonly LAST=${2:?"Second argument is the last number of the new projects."}
+readonly FIRST=${1:?"First argument is the first number of the new project(s)."}
+readonly NUMBER=${2:?"Second argument is the number of new projects."}
 readonly BILLING_ACCOUNT=${3:?"Third argument must be the billing account."}
 readonly OUTPUT_FILE=${4:?"Fourth argument should be a file name all project names will be appended to in a resources.yaml format."}
 
-cd "${BASH_SOURCE%/*}/"
-
-i=$FIRST
-while [ $i -le $LAST ]; do
-  PROJECT=knative-boskos-$i
-  ./project_create ${PROJECT} ${BILLING_ACCOUNT} && ./permissions.sh ${PROJECT} && echo "  - ${PROJECT}" >> ${OUTPUT_FILE}
-  i=$(($i+1))
+for (( i=0; i<${NUMBER}; i++ )); do
+  PROJECT="knative-boskos-$(( i + ${FIRST} ))"
+  # This Folder ID is google.com/google-default
+  gcloud projects create ${PROJECT} --folder=396521612403
+  gcloud beta billing projects link ${PROJECT} --billing-account=${BILLING_ACCOUNT}
+  "$(dirname $0)/set_permissions.sh" ${PROJECT}
+  echo "  - ${PROJECT}" >> ${OUTPUT_FILE}
 done

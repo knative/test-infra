@@ -5,5 +5,6 @@ This directory contains the config for our
 
 - `config_start.yaml` Initial Boskos configuration.
 - `config.yaml` Boskos configuration.
-- `permissions.sh` Script to set up permissions for a new Boskos project.
+- `create_projects.sh` Script to create new Boskos projects.
+- `set_permissions.sh` Script to set up permissions for a Boskos project.
 - `resources.yaml` Pool of projects used by Boskos.

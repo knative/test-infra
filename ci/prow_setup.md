@@ -23,10 +23,10 @@
 
 ## Expanding Boskos pool
 
-1. All projects and permissions can be created by running `./ci/prow/boskos/create_projects`.
-   For example, to create 10 projects named knative-boskos-51,
-   knative-boskos-52, ... knative-boskos-60, run:
-   `./ci/prow/boskos/create_projects 51 60 0X0X0X-0X0X0X-0X0X0X /tmp/successful.out`.
+1. All projects and permissions can be created by running `./ci/prow/boskos/create_projects.sh`.
+   For example, to create 10 projects named `knative-boskos-51`,
+   `knative-boskos-52`, ... `knative-boskos-60`, run:
+   `./ci/prow/boskos/create_projects 51 10 0X0X0X-0X0X0X-0X0X0X /tmp/successful.out`.
    You will need to substitute the actual billing ID for the third argument.
 
 1. Edit [resources.yaml](./prow/boskos/resources.yaml) with the new projects.
