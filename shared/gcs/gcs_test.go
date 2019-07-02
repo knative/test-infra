@@ -22,6 +22,32 @@ import (
 	"testing"
 )
 
+func TestGetConsoleURL(t *testing.T) {
+	tests := []struct {
+		name string
+		arg  string
+		want string
+	}{
+		{
+			name: "Missing protocol",
+			arg:  "knative-prow/logs/ci-knative-docs-continuous/1132539579983728640/",
+			want: "https://console.cloud.google.com/storage/browser/knative-prow/logs/ci-knative-docs-continuous/1132539579983728640",
+		},
+		{
+			name: "gs protocol",
+			arg:  "gs://knative-prow/logs/ci-knative-client-go-coverage/1139250680293232640",
+			want: "https://console.cloud.google.com/storage/browser/knative-prow/logs/ci-knative-client-go-coverage/1139250680293232640",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got, _ := GetConsoleURL(tt.arg); got != tt.want {
+				t.Errorf("GetConsoleURL(%v), got: %v, want: %v", tt.arg, got, tt.want)
+			}
+		})
+	}
+}
+
 func TestBuildLogPath(t *testing.T) {
 	tests := []struct {
 		name string
