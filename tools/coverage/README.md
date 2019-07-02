@@ -2,12 +2,13 @@
 
 Code coverage tool has two major features.
 
-1. As a pre-submit tool, it runs code coverage on every single commit to Github and reports coverage change back to the PR as a comment by a robot account. It also has the ability to block a PR from merging if coverage falls below threshold
-1. As a periodical running job, it reports on TestGrid to show users how coverage changes over time.
+1. As a pre-submit tool, it runs code coverage on every single commit to Github and reports coverage changes back to the PR as a comment by a robot account. If made an required job on repo, it can be used to block a PR from merging if coverage falls below threshold
+1. As a periodical running job, It outputs a junit xml that can be read from other tools like [testgrid](http://testgrid.knative.dev/serving#coverage) to get overall coverage metrics
+
 
 ## Design
 
-See design.md
+See [design.md](https://github.com/knative/test-infra/tree/master/tools/coverage/design.md)
 
 ## Build & Release
 
@@ -15,8 +16,10 @@ run `make coverage-dev-image` to build and upload dev version.
 Dev version can be triggered on PR through command
 `/test pull-knative-$REPONAME-go-coverage-dev`.
 
-If dev version is running as expected,
-use the command to upload to production version `make coverage-image`
+Verify if the dev version is working as expected
+- To verify pre-submit workflow, run `/test pull-knative-$REPONAME-go-coverage-dev` on a PR and see if it produces the same result as `/test pull-knative-$REPONAME-go-coverage`
+- To verity periodic workflow, rerun a `post-knative-serving-go-coverage-dev` job and see if the junit xml produced is correct.
 
-
-
+After verification, use this command to upload to production version
+ 
+`make coverage-image`

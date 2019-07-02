@@ -1,6 +1,6 @@
 # Design of Test Coverage Tool
 
-See design.svg for the design diagram.
+See [design.svg](https://github.com/knative/test-infra/tree/master/tools/coverage/design.svg) for the design diagram.
 
 We pack the test coverage tool in a container, that is triggered by prow. It runs test coverage profiling on target repository. Prow clones the target repository as the current working directory for the container.
 
@@ -33,5 +33,5 @@ Produces periodical coverage result as input for TestGrid
 
 1. Periodical prow job starts periodically based on the specification in prow job config
 1. Test coverage profile & metadata generated
-1. Generate / store per-file coverage data
+1. Generate and store per-file coverage data
   - Stores in the XML format that is used by TestGrid
