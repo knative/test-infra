@@ -22,6 +22,7 @@ import (
 	"io/ioutil"
 	"path"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/knative/test-infra/shared/common"
@@ -108,6 +109,23 @@ func GetReportForRepo(repo string, buildID int) (*Report, error) {
 		return nil, err
 	}
 	return report, nil
+}
+
+//GetReposWithReports gets all the repositories that are currently being reported on
+func GetReposWithReports() ([]string, error) {
+	job := prow.NewJob(jobName, prow.PeriodicJob, "", 0)
+	buildNum, err := job.GetLatestBuildNumber()
+	if err != nil {
+		return nil, err
+	}
+	build := job.NewBuild(buildNum)
+	artifactPaths := build.GetArtifacts()
+	var repos []string
+	for _, path := range artifactPaths {
+		splitPath := strings.Split(path, "/")
+		repos = append(repos, splitPath[len(splitPath)-1])
+	}
+	return repos, nil
 }
 
 // CreateReportForRepo generates a Report struct and optionally writes it to disk
