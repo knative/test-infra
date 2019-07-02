@@ -25,17 +25,18 @@ function build_table(req) {
 	var oncall = JSON.parse(data).Oncall;
 	var keys = Object.keys(oncall).sort();
 
-	var html = ''
+	var html = '';
 	for (var i = 0; i < keys.length; i++) {
-		var key = keys[i];
-		var person = oncall[key];
-		html += '<h2>' + key + ': ';
-        //construct HTML content
+		var rotation = keys[i];
+		var person = oncall[rotation];
+		// currently we have just one rotation (tools-infra), no need to display it
+		html += '<h2>';
+		// construct HTML content
 		if (person) {
 			html += '<a href="https://github.com/' + person + '">';
-			html += person + '<img src="https://github.com/' + person + '.png?size=125"></a>';
+			html += person + '<img src="https://github.com/' + person + '.png?size=125" align="middle"></a>';
 		} else {
-			html += 'None'
+			html += 'nobody'
 		}
 		html += '</h2>';
 	}
@@ -49,13 +50,12 @@ get('oncall.json', build_table);
 </script>
 <title>Knative Tools/Infra Oncall Rotation</title>
 <style>
-body { background-color: #eee; padding-left: 30%; }
-img { padding-left: 10px; max-width: 125px; }
+body { color: black; background-color: #f2f2f2; font-family: arial }
+img { padding-left: 10px; max-width:125px }
 </style>
 <body>
-<h1>Knative Tools/Infra Oncall Rotation</h1>
-<p>Updated: <span id="updated">Never</span></a>
 <div id="oncall">Loading...</div>
-<sub><a href="https://storage.googleapis.com/knative-infra-oncall/oncall.json">data source</a></sub>
+<p>Updated: <span id="updated">Never</span></a>
+<p><sub><a href="https://storage.googleapis.com/knative-infra-oncall/oncall.json">[data source]</a></sub></p>
 </body>
 </html>
