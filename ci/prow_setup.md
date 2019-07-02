@@ -23,9 +23,9 @@
 
 ## Expanding Boskos pool
 
-1. All projects and permissions can be created by running `./ci/prow/boskos/create_projects.sh`.
-   For example, to create 10 projects named `knative-boskos-51`,
-   `knative-boskos-52`, ... `knative-boskos-60`, run:
+1. All projects and permissions can be created by running
+   `./ci/prow/boskos/create_projects.sh`. For example, to create 10 projects
+   named `knative-boskos-51`, `knative-boskos-52`, ... `knative-boskos-60`, run:
    `./ci/prow/boskos/create_projects 51 10 0X0X0X-0X0X0X-0X0X0X /tmp/successful.out`.
    You will need to substitute the actual billing ID for the third argument.
 
@@ -40,10 +40,10 @@
 1. Increase the compute CPU quota for the project to 200. Go to
    `https://console.cloud.google.com/iam-admin/quotas?project=<project_name>&service=compute.googleapis.com&metric=CPUs`
    and click `Edit Quota`. Select at least five regions to increase the quota
-   (`us-central1, us-west1, us-east1, europe-west1, asia-east1`). This needs
-   to be done manually and should get automatically approved once the request
-   is submitted. The request asks for a phone number and a reason. You can
-   add any number and a reason _Need more resources for running tests_
+   (`us-central1, us-west1, us-east1, europe-west1, asia-east1`). This needs to
+   be done manually and should get automatically approved once the request is
+   submitted. The request asks for a phone number and a reason. You can add any
+   number and a reason _Need more resources for running tests_
 
 In the event the create_projects fails, it is a script you should easily be
 follow along with in the GUI or run on the CLI. The gcloud billing command is
