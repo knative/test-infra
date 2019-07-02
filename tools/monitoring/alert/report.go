@@ -68,10 +68,10 @@ func (r report) sprintLogs() string {
 	for i, e := range r.logs {
 		if logURL, err := gcs.GetConsoleURL(e.BuildLogURL); err != nil {
 			log.Printf("Failed to getConsoleURL(%s): %v\n", e.String(), err)
-			result += fmt.Sprintf("%d. %s\n", i, e.String())
+			result += fmt.Sprintf("%d. %s\n", i+1, e.String())
 		} else {
 			result += fmt.Sprintf("%d. [%v] %s (Job: %s, PR: %v, BuildLog: %s)\n",
-				i, e.TimeStamp, e.Msg, e.JobName, e.PRNumber, logURL)
+				i+1, e.TimeStamp, e.Msg, e.JobName, e.PRNumber, logURL)
 		}
 	}
 	return result
