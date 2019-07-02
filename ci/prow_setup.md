@@ -28,16 +28,9 @@
    `knative-boskos-52`, ... `knative-boskos-60`, run:
    `./ci/prow/boskos/create_projects 51 10 0X0X0X-0X0X0X-0X0X0X /tmp/successful.out`.
    You will need to substitute the actual billing ID for the third argument.
-   In the event the create_projects fails, it is a script you should easily be
-   follow along with in the GUI or run on the CLI. The gcloud billing command is
-   still in alpha/beta, so it's probably the section most likely to give you
-   trouble.
-
-1. Edit [resources.yaml](./prow/boskos/resources.yaml) with the new projects.
-   Conveniently ready for cut-and-paste from the output file in the previous
-   step.
-
-1. Get the commit reviewed.
+   In the event the script fails, it should be easy to follow along with in the GUI
+   or run on the CLI. The gcloud billing command is still in alpha/beta, so it's
+   probably the section most likely to give you trouble.
 
 1. Increase the compute CPU quota for the project to 200. Go to
    <https://console.cloud.google.com/iam-admin/quotas?service=compute.googleapis.com&metric=CPUs&project=PROJECT_NAME>
@@ -46,6 +39,12 @@
    (`us-central1, us-west1, us-east1, europe-west1, asia-east1`). This needs
    to be done manually and should get automatically approved once the request
    is submitted. For the reason, enter _Need more resources for running tests_.
+
+1. Edit [resources.yaml](./prow/boskos/resources.yaml) with the new projects.
+   Conveniently ready for cut-and-paste from the output file in the previous
+   step.
+
+1. Get the commit reviewed.
 
 1. Run `make update-boskos-config` to update the Boskos config.
 
