@@ -38,7 +38,7 @@
 1. Run `make update-boskos-config` to update the Boskos config.
 
 1. Increase the compute CPU quota for the project to 200. Go to
-   https://console.cloud.google.com/iam-admin/quotas?service=compute.googleapis.com&metric=CPUs&project=PROJECT_NAME
+   <https://console.cloud.google.com/iam-admin/quotas?service=compute.googleapis.com&metric=CPUs&project=PROJECT_NAME>
    (replace `PROJECT_NAME` with the real project name) and click `Edit Quota`.
    Select at least five regions to increase the quota
    (`us-central1, us-west1, us-east1, europe-west1, asia-east1`). This needs
