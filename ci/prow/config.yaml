@@ -1786,7 +1786,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: master
+    base_ref: release-0.4
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1827,7 +1827,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: master
+    base_ref: release-0.5
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1868,7 +1868,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: master
+    base_ref: release-0.6
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1909,7 +1909,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: master
+    base_ref: release-0.7
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2432,7 +2432,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: build
-    base_ref: master
+    base_ref: release-0.5
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2473,7 +2473,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: build
-    base_ref: master
+    base_ref: release-0.6
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2514,7 +2514,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: build
-    base_ref: master
+    base_ref: release-0.7
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2984,7 +2984,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing
-    base_ref: master
+    base_ref: release-0.5
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3025,7 +3025,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing
-    base_ref: master
+    base_ref: release-0.6
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3066,7 +3066,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing
-    base_ref: master
+    base_ref: release-0.7
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3301,7 +3301,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing-contrib
-    base_ref: master
+    base_ref: release-0.5
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3342,7 +3342,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing-contrib
-    base_ref: master
+    base_ref: release-0.6
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3383,7 +3383,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing-contrib
-    base_ref: master
+    base_ref: release-0.7
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable

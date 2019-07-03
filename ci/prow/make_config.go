@@ -306,6 +306,7 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.OrgName = strings.Split(repo, "/")[0]
 	data.RepoName = strings.Replace(repo, data.OrgName+"/", "", 1)
 	data.RepoNameForJob = strings.ToLower(strings.Replace(repo, "/", "-", -1))
+	data.RepoBranch = "master" // Default to be master, will override later for other branches
 	data.GcsBucket = gcsBucket
 	data.RepoURI = "github.com/" + repo
 	data.CloneURI = fmt.Sprintf("\"https://%s.git\"", data.RepoURI)
@@ -323,7 +324,7 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.Volumes = make([]string, 0)
 	data.VolumeMounts = make([]string, 0)
 	data.Env = make([]string, 0)
-	data.ExtraRefs = []string{"- org: " + data.OrgName, "  repo: " + data.RepoName, "  base_ref: master"}
+	data.ExtraRefs = []string{"- org: " + data.OrgName, "  repo: " + data.RepoName}
 	data.Labels = make([]string, 0)
 	return data
 }
@@ -409,6 +410,7 @@ func setupDockerInDockerForJob(data *baseProwJobTemplateData) {
 
 // parseBasicJobConfigOverrides updates the given baseProwJobTemplateData with any base option present in the given config.
 func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.MapSlice) {
+	(*data).ExtraRefs = append((*data).ExtraRefs, "  base_ref: "+(*data).RepoBranch)
 	for i, item := range config {
 		switch item.Key {
 		case "skip_branches":
