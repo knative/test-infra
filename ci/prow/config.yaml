@@ -3623,6 +3623,7 @@ periodics:
   - org: knative
     repo: pkg
     base_ref: master
+    path_alias: knative.dev/pkg
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -3676,6 +3677,7 @@ periodics:
   - org: knative
     repo: caching
     base_ref: master
+    path_alias: knative.dev/caching
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -4340,6 +4342,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
+    path_alias: knative.dev/pkg
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -4355,6 +4358,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
+    path_alias: knative.dev/caching
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
