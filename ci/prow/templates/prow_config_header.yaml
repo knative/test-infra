@@ -18,6 +18,7 @@
 # ####     USE "make config" TO REGENERATE THIS FILE.     ####
 # ####                                                    ####
 # ############################################################
+# FROM COMMIT: ((COMMIT_HASH_TOKEN))
 
 plank:
   job_url_template: 'https://prow.knative.dev/view/gcs/[[.GcsBucket]]/{{if or (eq .Spec.Type "presubmit") (eq .Spec.Type "batch")}}[[.PresubmitLogsDir]]/pull{{with .Spec.Refs}}/{{.Org}}_{{.Repo}}{{end}}{{else}}[[.LogsDir]]{{end}}{{if eq .Spec.Type "presubmit"}}/{{with index .Spec.Refs.Pulls 0}}{{.Number}}{{end}}{{else if eq .Spec.Type "batch"}}/batch{{end}}/{{.Spec.Job}}/{{.Status.BuildID}}/'
