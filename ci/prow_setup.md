@@ -27,8 +27,8 @@
    `./ci/prow/boskos/create_projects.sh`. For example, to create 10 projects
    named `knative-boskos-51`, `knative-boskos-52`, ... `knative-boskos-60`, run:
    `./ci/prow/boskos/create_projects 51 10 0X0X0X-0X0X0X-0X0X0X /tmp/successful.out`.
-   You will need to substitute the actual billing ID for the third argument.
-   In the event the script fails, it should be easy to follow along with in the GUI
+   You will need to substitute the actual billing ID for the third argument. In
+   the event the script fails, it should be easy to follow along with in the GUI
    or run on the CLI. The gcloud billing command is still in alpha/beta, so it's
    probably the section most likely to give you trouble.
 
@@ -36,9 +36,9 @@
    <https://console.cloud.google.com/iam-admin/quotas?service=compute.googleapis.com&metric=CPUs&project=PROJECT_NAME>
    (replace `PROJECT_NAME` with the real project name) and click `Edit Quota`.
    Select at least five regions to increase the quota
-   (`us-central1, us-west1, us-east1, europe-west1, asia-east1`). This needs
-   to be done manually and should get automatically approved once the request
-   is submitted. For the reason, enter _Need more resources for running tests_.
+   (`us-central1, us-west1, us-east1, europe-west1, asia-east1`). This needs to
+   be done manually and should get automatically approved once the request is
+   submitted. For the reason, enter _Need more resources for running tests_.
 
 1. Edit [resources.yaml](./prow/boskos/resources.yaml) with the new projects.
    Conveniently ready for cut-and-paste from the output file in the previous
