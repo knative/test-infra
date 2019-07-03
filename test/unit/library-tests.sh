@@ -37,18 +37,13 @@ function test_report() {
   grepit "XML report written"
 }
 
-# Cleanup bazel stuff to avoid confusing Prow
-function cleanup_bazel() {
-  bazel clean
-}
-
-trap cleanup_bazel EXIT
-
 echo ">> Testing helper functions"
+
+test_function ${SUCCESS} "Knative Test Infra" echo "${REPO_NAME_FORMATTED}"
 
 test_function ${SUCCESS} "${REPO_ROOT_DIR}/test/unit/library-tests.sh" get_canonical_path test/unit/library-tests.sh
 test_function ${SUCCESS} "Foo Bar" capitalize "foo bar"
-test_function ${SUCCESS} ">>> Knative Testinfra controller logs:" mock_kubectl_function dump_app_logs "controller" "test-infra"
+test_function ${SUCCESS} ">>> Knative Test Infra controller logs:" mock_kubectl_function dump_app_logs "controller" "test-infra"
 
 test_function ${SUCCESS} "" is_protected_gcr "gcr.io/knative-releases"
 test_function ${SUCCESS} "" is_protected_gcr "gcr.io/knative-nightly"
