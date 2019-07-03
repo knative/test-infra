@@ -21,6 +21,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"path"
 
 	yaml "gopkg.in/yaml.v2"
 )
@@ -291,6 +292,9 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 			fmt.Sprintf("--cov-threshold-percentage=%d", data.Base.GoCoverageThreshold)}
 		data.Base.ServiceAccount = ""
 		data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
+		if repositories[i].DotDev {
+			data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  path_alias: knative.dev/"+path.Base(repoName))
+		}
 		addExtraEnvVarsToJob(&data.Base)
 		addLabelToJob(&data.Base, "prow.k8s.io/pubsub.project", "knative-tests")
 		addLabelToJob(&data.Base, "prow.k8s.io/pubsub.topic", "knative-monitoring")

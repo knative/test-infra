@@ -65,6 +65,7 @@ type repositoryData struct {
 	EnableGoCoverage    bool
 	GoCoverageThreshold int
 	Processed           bool
+	DotDev              bool
 }
 
 // baseProwJobTemplateData contains basic data about a Prow job.
@@ -432,8 +433,11 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 		case "always_run":
 			(*data).AlwaysRun = getBool(item.Value)
 		case "dot-dev":
-			(*data).PathAlias = "path_alias: knative.dev/" + (*data).RepoName
-			(*data).ExtraRefs = append((*data).ExtraRefs, "  "+(*data).PathAlias)
+			for i, repo := range repositories {
+				if path.Base(repo.Name) == (*data).RepoName {
+					repositories[i].DotDev = true
+				}
+			}
 		case nil: // already processed
 			continue
 		default:
@@ -442,6 +446,13 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 		}
 		// Knock-out the item, signalling it was already parsed.
 		config[i] = yaml.MapItem{}
+	}
+	for _, repo := range repositories {
+		if path.Base(repo.Name) == (*data).RepoName && repo.DotDev {
+			(*data).PathAlias = "path_alias: knative.dev/" + (*data).RepoName
+			(*data).ExtraRefs = append((*data).ExtraRefs, "  "+(*data).PathAlias)
+			break
+		}
 	}
 	// Override any values if provided by command-line flags.
 	if timeoutOverride > 0 {
@@ -490,8 +501,8 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 		// Knock-out the item, signalling it was already parsed.
 		presubmitConfig[i] = yaml.MapItem{}
 	}
-	parseBasicJobConfigOverrides(&data.Base, presubmitConfig)
 	repositories = append(repositories, repoData)
+	parseBasicJobConfigOverrides(&data.Base, presubmitConfig)
 	data.PresubmitCommand = createCommand(data.Base)
 	data.PresubmitPullJobName = "pull-" + data.PresubmitJobName
 	data.PresubmitPostJobName = "post-" + data.PresubmitJobName
@@ -519,6 +530,11 @@ func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
 	data.Base = newbaseProwJobTemplateData(repoName)
 	data.Base.Image = coverageDockerImage
 	data.PostsubmitJobName = fmt.Sprintf("post-%s-go-coverage", data.Base.RepoNameForJob)
+	for _, repo := range repositories {
+		if repo.Name == repoName && repo.DotDev {
+			data.Base.PathAlias = "path_alias: knative.dev/" + path.Base(repoName)
+		}
+	}
 	addExtraEnvVarsToJob(&data.Base)
 	configureServiceAccountForJob(&data.Base)
 	executeJobTemplate("postsubmit go coverage", readTemplate(goCoveragePostsubmitJob), "postsubmits", repoName, data.PostsubmitJobName, true, data)
