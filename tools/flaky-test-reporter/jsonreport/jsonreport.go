@@ -37,7 +37,7 @@ const (
 
 // Report contains concise information about current flaky tests
 type Report struct {
-	AllReports []RepoReport
+	Reports []RepoReport
 }
 
 type RepoReport struct {
@@ -82,14 +82,22 @@ func (r *Report) GetFlakyTestReport(repo string, buildID int) error {
 		if err != nil {
 			return err
 		}
-		r.AllReports = append(r.AllReports, *report)
+		r.Reports = append(r.Reports, *report)
 	}
 	return nil
 }
 
 // getLatestValidBuild inexpensively sorts and finds the most recent JSON report.
-// Assumes build IDs are in sequential order.
+// Assumes sequential build IDs are sequential in time.
 func getLatestValidBuild(job *prow.Job, repo string) (int, error) {
+	// check latest build first, before looking to older builds
+	if buildID, err := job.GetLatestBuildNumber(); err == nil {
+		build := job.NewBuild(buildID)
+		if reports := getReportPaths(build, repo); len(reports) != 0 {
+			return buildID, nil
+		}
+	}
+	// look at older builds
 	maxElapsedTime, _ := time.ParseDuration(fmt.Sprintf("%dh", maxAge*24))
 	buildIDs := job.GetBuildIDs()
 	sort.Sort(sort.Reverse(sort.IntSlice(buildIDs)))
