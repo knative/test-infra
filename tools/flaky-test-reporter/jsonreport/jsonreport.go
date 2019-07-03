@@ -69,12 +69,12 @@ func (r *RepoReport) writeToArtifactsDir() error {
 // most recent report
 func (r *Report) GetFlakyTestReport(repo string, buildID int) error {
 	job := prow.NewJob(jobName, prow.PeriodicJob, "", 0)
+	var err error
 	if buildID == -1 {
-		latestBuild, err := getLatestValidBuild(job, repo)
+		buildID, err = getLatestValidBuild(job, repo)
 		if err != nil {
 			return err
 		}
-		return r.GetFlakyTestReport(repo, latestBuild)
 	}
 	build := job.NewBuild(buildID)
 	for _, filepath := range getReportPaths(build, repo) {
