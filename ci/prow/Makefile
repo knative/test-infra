@@ -36,11 +36,12 @@ update-config:
 	$(eval OLD_YAML_CONFIG := $(shell mktemp))
 	$(eval NEW_YAML_CONFIG := $(shell mktemp))
 	$(eval GCS_DEST := gs://knative-prow/configs/config-$(shell date '+%Y_%m_%d_%H:%M:%S').yaml)
-	@kubectl get configmap config -o jsonpath="{.data}" 2>/dev/null > "${OLD_YAML_CONFIG}"
+	@kubectl get configmap config -o jsonpath="{.data['config\.yaml']}" 2>/dev/null > "${OLD_YAML_CONFIG}"
 	@gsutil cp "${OLD_YAML_CONFIG}" "${GCS_DEST}" > /dev/null
 	@sed -e "s/((COMMIT_HASH_TOKEN))/$(shell git rev-parse HEAD)/" "config.yaml" > "${NEW_YAML_CONFIG}"
 	kubectl create configmap config --from-file=config.yaml=${NEW_YAML_CONFIG} --dry-run -o yaml | kubectl replace configmap config -f -
 	$(UNSET_CONTEXT)
+	diff "${OLD_YAML_CONFIG}" "${NEW_YAML_CONFIG}" --color=auto || true
 	@echo "Inspect uploaded config file at: ${NEW_YAML_CONFIG}"
 	@echo "Old config file saved at: ${GCS_DEST}"
 
