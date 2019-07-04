@@ -1,3 +1,32 @@
-# Current Oncall
+# Prow: <https://prow.knative.dev>
 
-<iframe src="https://storage.googleapis.com/knative-infra-oncall/oncall.html" width="100%" height="384"></iframe>
+# TestGrid: <https://testgrid.knative.dev>
+
+# Current Oncall: Loading...
+
+<p id="updated">Updated: Never</p>
+<p><sub id="data-source">[...]</sub></p>
+
+<script>
+var oncallSource = 'https://storage.googleapis.com/knative-infra-oncall/oncall.json';
+var req = new XMLHttpRequest();
+req.open('GET', oncallSource);
+req.onload = function(resp) {
+        var data = req.response;
+        var oncall = JSON.parse(data).Oncall;
+        var keys = Object.keys(oncall).sort();
+        // currently we have just one rotation (tools-infra)
+        var rotation = keys[0];
+        var person = oncall[rotation];
+        var html = 'nobody';
+        if (person) {
+                html = 'Current Oncall: <a target="_parent" href="https://github.com/' + person + '">';
+                html += '<img style="vertical-align:middle;margin:0px;padding:0" width="32" height="32" src="https://github.com/' + person + '.png?size=32" align="middle">';
+                html += '  ' + person + '</a>';
+        }
+        document.getElementById('current-oncall-loading').innerHTML = html;
+        document.getElementById('updated').innerHTML = 'Updated: ' + req.getResponseHeader('date');
+        document.getElementById('data-source').innerHTML = '<a href="' + oncallSource + '">[data source]</a>';
+}
+req.send();
+</script>
