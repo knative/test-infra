@@ -1,6 +1,0 @@
-# For help, see
-# https://github.com/markdownlint/markdownlint/blob/master/docs/configuration.md 
-
-# MD013: Ignore long lines
-# MD033: Ignore inline HTML because we use it in docs/
-rules "~MD013", "~MD033"
