@@ -57,9 +57,6 @@ func NewHandlerClient(githubClient *GithubClient) (*HandlerClient, error) {
 
 // expectedMsg checks that the message we received is one we want to process.
 func expectedMsg(msg *prowapi.ReportMessage) bool {
-	expStatus := msg.Status == prowapi.FailureState
-	expType := msg.JobType == prowapi.PresubmitJob
-
 	repos, err := getReportRepos()
 	if err != nil {
 		log.Printf("Failed getting reporter's repos: %v")
@@ -74,7 +71,7 @@ func expectedMsg(msg *prowapi.ReportMessage) bool {
 		}
 	}
 
-	return expStatus && expType && expRepo
+	return expRepo && msg.Status == prowapi.FailureState && msg.JobType == prowapi.PresubmitJob
 }
 
 // Listen scans for incoming Pubsub messages, spawning a new goroutine for each
