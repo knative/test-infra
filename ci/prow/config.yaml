@@ -4141,7 +4141,6 @@ periodic:
   extra_refs:
   - org: knative
     repo: test-infra
-    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/monitoring/clear-alerts:latest
