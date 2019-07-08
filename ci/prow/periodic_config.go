@@ -316,5 +316,5 @@ func generateClearAlertsPeriodicJob() {
 	data.Base.Command = "/clearalerts"
 	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
 	addVolumeToJob(&data.Base, "/secrets/cloudsql/monitoringdb", "monitoring-db-credentials", true, "")
-	executeJobTemplate("periodic clearalert", readTemplate(periodicCustomJob), "periodic", "", data.PeriodicJobName, false, data)
+	executeJobTemplate("periodic clearalert", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
 }
