@@ -34,12 +34,13 @@ const (
 	periodicCustomJob = "prow_periodic_custom_job.yaml"
 
 	// Cron strings for key jobs
-	goCoveragePeriodicJobCron        = "0 1 * * *"   // Run at 01:00 every day
-	cleanupPeriodicJobCron           = "0 19 * * 1"  // Run at 11:00PST/12:00PST every Monday (19:00 UTC)
-	flakesReporterPeriodicJobCron    = "0 12 * * *"  // Run at 4:00PST/5:00PST every day (12:00 UTC)
-	prowversionbumperPeriodicJobCron = "0 20 * * 1"  // Run at 12:00PST/13:00PST every Monday (20:00 UTC)
-	backupPeriodicJobCron            = "15 9 * * *"  // Run at 02:15PST every day (09:15 UTC)
-	perfPeriodicJobCron              = "0 */3 * * *" // Run every 3 hours
+	goCoveragePeriodicJobCron        = "0 1 * * *"    // Run at 01:00 every day
+	cleanupPeriodicJobCron           = "0 19 * * 1"   // Run at 11:00PST/12:00PST every Monday (19:00 UTC)
+	flakesReporterPeriodicJobCron    = "0 12 * * *"   // Run at 4:00PST/5:00PST every day (12:00 UTC)
+	prowversionbumperPeriodicJobCron = "0 20 * * 1"   // Run at 12:00PST/13:00PST every Monday (20:00 UTC)
+	backupPeriodicJobCron            = "15 9 * * *"   // Run at 02:15PST every day (09:15 UTC)
+	perfPeriodicJobCron              = "0 */3 * * *"  // Run every 3 hours
+	clearAlertsPeriodicJobCron       = "0,30 * * * *" // Run every 30 minutes
 
 	// Perf job constants
 	perfTimeout = 120  // Job timeout in minutes
@@ -303,4 +304,17 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 		executeJobTemplate("periodic go coverage", readTemplate(periodicCustomJob), title, repoName, data.PeriodicJobName, false, data)
 		return
 	}
+}
+
+// generateClearAlertsPeriodicJob generates the monitoring clear alerts job config.
+func generateClearAlertsPeriodicJob() {
+	var data periodicJobTemplateData
+	data.Base = newbaseProwJobTemplateData("knative/test-infra")
+	data.Base.Image = clearalertsDockerImage
+	data.PeriodicJobName = "ci-knative-test-infra-monitoring-clear-alerts"
+	data.CronString = clearAlertsPeriodicJobCron
+	data.Base.Command = "/clearalerts"
+	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
+	addVolumeToJob(&data.Base, "/secrets/cloudsql/monitoringdb", "monitoring-db-credentials", true, "")
+	executeJobTemplate("periodic clearalert", readTemplate(periodicCustomJob), "periodic", "", data.PeriodicJobName, false, data)
 }

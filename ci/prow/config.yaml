@@ -4133,6 +4133,29 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+periodic:
+- cron: "0,30 * * * *"
+  name: ci-knative-test-infra-monitoring-clear-alerts
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: master
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/monitoring/clear-alerts:latest
+      imagePullPolicy: Always
+      command:
+      - "/clearalerts"
+      volumeMounts:
+      - name: monitoring-db-credentials
+        mountPath: /secrets/cloudsql/monitoringdb
+        readOnly: true
+    volumes:
+    - name: monitoring-db-credentials
+      secret:
+        secretName: monitoring-db-credentials
 - cron: "0 12 * * *"
   name: ci-knative-flakes-reporter
   agent: kubernetes
