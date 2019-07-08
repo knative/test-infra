@@ -35,12 +35,8 @@ const (
 	maxAge   = 4                            // maximum age in days that JSON data is valid
 )
 
-// Report contains concise information about current flaky tests
+// Report contains concise information about current flaky tests in a given repo
 type Report struct {
-	Reports []RepoReport
-}
-
-type RepoReport struct {
 	Repo  string   `json:"repo"`
 	Flaky []string `json:"flaky"`
 }
@@ -51,7 +47,7 @@ func Initialize(serviceAccount string) error {
 }
 
 // writeToArtifactsDir writes the flaky test data for this repo to disk.
-func (r *RepoReport) writeToArtifactsDir() error {
+func (r *Report) writeToArtifactsDir() error {
 	artifactsDir := prow.GetLocalArtifactsDir()
 	if err := common.CreateDir(path.Join(artifactsDir, r.Repo)); nil != err {
 		return err
@@ -65,26 +61,27 @@ func (r *RepoReport) writeToArtifactsDir() error {
 }
 
 // GetFlakyTestReport collects flaky test reports from the given buildID and repo.
-//Use repo = "" to get reports from all repositories, and buildID = -1 to get the
+// Use repo = "" to get reports from all repositories, and buildID = -1 to get the
 // most recent report
-func (r *Report) GetFlakyTestReport(repo string, buildID int) error {
+func GetFlakyTestReport(repo string, buildID int) ([]Report, error) {
 	job := prow.NewJob(jobName, prow.PeriodicJob, "", 0)
 	var err error
 	if buildID == -1 {
 		buildID, err = getLatestValidBuild(job, repo)
 		if err != nil {
-			return err
+			return nil, err
 		}
 	}
 	build := job.NewBuild(buildID)
+	var reports []Report
 	for _, filepath := range getReportPaths(build, repo) {
 		report, err := readJSONReport(build, filepath)
 		if err != nil {
-			return err
+			return nil, err
 		}
-		r.Reports = append(r.Reports, *report)
+		reports = append(reports, *report)
 	}
-	return nil
+	return reports, nil
 }
 
 // getLatestValidBuild inexpensively sorts and finds the most recent JSON report.
@@ -115,9 +112,8 @@ func getLatestValidBuild(job *prow.Job, repo string) (int, error) {
 		startTime := time.Unix(startTimeInt, 0)
 		if time.Since(startTime) < maxElapsedTime {
 			return buildID, nil
-		} else {
-			return 0, fmt.Errorf("latest JSON log is outdated: %.2f days old", time.Since(startTime).Hours()/24)
 		}
+		return 0, fmt.Errorf("latest JSON log is outdated: %.2f days old", time.Since(startTime).Hours()/24)
 	}
 	return 0, fmt.Errorf("no JSON logs found in recent builds")
 }
@@ -136,13 +132,13 @@ func getReportPaths(build *prow.Build, repo string) []string {
 }
 
 // readJSONReport builds a repo-specific report object from a given json file path.
-func readJSONReport(build *prow.Build, filename string) (*RepoReport, error) {
-	report := &RepoReport{}
+func readJSONReport(build *prow.Build, filename string) (*Report, error) {
+	report := &Report{}
 	contents, err := build.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
-	if err := json.Unmarshal(contents, report); err != nil {
+	if err = json.Unmarshal(contents, report); err != nil {
 		return nil, err
 	}
 	return report, nil
@@ -150,8 +146,8 @@ func readJSONReport(build *prow.Build, filename string) (*RepoReport, error) {
 
 // CreateReportForRepo generates a flaky report for a given repository, and optionally
 // writes it to disk.
-func CreateReportForRepo(repo string, flaky []string, writeFile bool) (*RepoReport, error) {
-	report := &RepoReport{
+func CreateReportForRepo(repo string, flaky []string, writeFile bool) (*Report, error) {
+	report := &Report{
 		Repo:  repo,
 		Flaky: flaky,
 	}
