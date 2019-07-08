@@ -46,9 +46,7 @@ var (
 
 const (
 	projectID = "knative-tests"
-
-	yamlURL = "https://raw.githubusercontent.com/knative/test-infra/master/tools/monitoring/config/sample.yaml"
-	subName = "test-infra-monitoring-sub"
+	subName   = "test-infra-monitoring-sub"
 )
 
 func main() {
@@ -93,7 +91,7 @@ func main() {
 		log.Fatalf("Failed to authenticate gcs %+v", err)
 	}
 
-	wfClient = alert.Setup(client, db, &alert.MailConfig{mailConfig, alertEmailRecipients})
+	wfClient = alert.Setup(client, db, &alert.MailConfig{Config: mailConfig, Recipients: alertEmailRecipients})
 
 	// use PORT environment variable, or default to 8080
 	port := "8080"
@@ -124,12 +122,12 @@ func hello(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Version: 1.0.0\n")
 	fmt.Fprintf(w, "Hostname: %s\n", host)
 
-	yamlFile, err := config.ParseYaml(yamlURL)
+	config, err := config.ParseDefaultConfig()
 	if err != nil {
 		log.Fatalf("Cannot parse yaml: %v", err)
 	}
 
-	errorPatterns := yamlFile.CollectErrorPatterns()
+	errorPatterns := config.CollectErrorPatterns()
 	fmt.Fprintf(w, "error patterns collected from yaml:%s", errorPatterns)
 }
 
