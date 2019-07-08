@@ -30,6 +30,8 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
+const yamlURL = "https://raw.githubusercontent.com/knative/test-infra/master/tools/monitoring/config/config.yaml"
+
 type alertCondition struct {
 	JobNameRegex string `yaml:"job-name-regex"`
 	Occurrences  int
@@ -60,7 +62,7 @@ type SelectedConfig struct {
 }
 
 // applyDefaults set fields to desired defaults values if they are missing from yaml
-func (s SelectedConfig) applyDefaults() {
+func (s *SelectedConfig) applyDefaults() {
 	if s.Occurrences == 0 {
 		s.Occurrences = 1
 	}
@@ -81,48 +83,48 @@ func (s SelectedConfig) Duration() time.Duration {
 }
 
 // Select gets the spec for a particular error pattern and a matching job name pattern
-func (config Config) Select(pattern, jobName string) (*SelectedConfig, error) {
-	output := &SelectedConfig{}
-	noMatchError := fmt.Errorf("no spec found for pattern[%s] and jobName[%s]",
+func (c Config) Select(pattern, jobName string) (*SelectedConfig, error) {
+	sc := &SelectedConfig{}
+	noMatchErr := fmt.Errorf("no spec found for pattern[%s] and jobName[%s]",
 		pattern, jobName)
-	for _, patternSpec := range config.Spec {
+	for _, patternSpec := range c.Spec {
 		if pattern == patternSpec.ErrorPattern {
-			noMatchError = fmt.Errorf("spec found for pattern[%s], but no match for job name[%s]", pattern, jobName)
-			output.Hint = patternSpec.Hint
-			for _, alertCondition := range patternSpec.Alerts {
-				matched, err := regexp.MatchString(alertCondition.JobNameRegex, jobName)
+			noMatchErr = fmt.Errorf("spec found for pattern[%s], but no match for job name[%s]", pattern, jobName)
+			sc.Hint = patternSpec.Hint
+			for _, ac := range patternSpec.Alerts {
+				matched, err := regexp.MatchString(ac.JobNameRegex, jobName)
 				if err != nil {
 					log.Printf("Error matching pattern '%s' on string '%s': %v",
-						alertCondition.JobNameRegex, jobName, err)
+						ac.JobNameRegex, jobName, err)
 					continue
 				}
 				if matched {
-					noMatchError = nil
-					output.JobsAffected = alertCondition.JobsAffected
-					output.Occurrences = alertCondition.Occurrences
-					output.PrsAffected = alertCondition.PrsAffected
-					output.Period = alertCondition.Period
+					noMatchErr = nil
+					sc.JobsAffected = ac.JobsAffected
+					sc.Occurrences = ac.Occurrences
+					sc.PrsAffected = ac.PrsAffected
+					sc.Period = ac.Period
 					break
 				}
 			}
 			break
 		}
 	}
-	return output, noMatchError
+	return sc, noMatchErr
 }
 
 // GetPatternAlertConditions takes an error pattern and returns a map with job regex to the alerting condition
-func (config Config) GetPatternAlertConditions(pattern string) map[string]*SelectedConfig {
+func (c Config) GetPatternAlertConditions(pattern string) map[string]*SelectedConfig {
 	sconfigs := make(map[string]*SelectedConfig)
-	for _, patternSpec := range config.Spec {
-		if pattern == patternSpec.ErrorPattern {
-			for _, alertCondition := range patternSpec.Alerts {
-				sconfigs[alertCondition.JobNameRegex] = &SelectedConfig{
-					Hint:         patternSpec.Hint,
-					Occurrences:  alertCondition.Occurrences,
-					JobsAffected: alertCondition.JobsAffected,
-					PrsAffected:  alertCondition.PrsAffected,
-					Period:       alertCondition.Period,
+	for _, ps := range c.Spec {
+		if pattern == ps.ErrorPattern {
+			for _, ac := range ps.Alerts {
+				sconfigs[ac.JobNameRegex] = &SelectedConfig{
+					Hint:         ps.Hint,
+					Occurrences:  ac.Occurrences,
+					JobsAffected: ac.JobsAffected,
+					PrsAffected:  ac.PrsAffected,
+					Period:       ac.Period,
 				}
 			}
 			break
@@ -133,10 +135,10 @@ func (config Config) GetPatternAlertConditions(pattern string) map[string]*Selec
 }
 
 // CollectErrorPatterns collects and returns all error patterns in the yaml file
-func (config Config) CollectErrorPatterns() []string {
+func (c Config) CollectErrorPatterns() []string {
 	var patterns []string
-	for _, patternSpec := range config.Spec {
-		patterns = append(patterns, patternSpec.ErrorPattern)
+	for _, ps := range c.Spec {
+		patterns = append(patterns, ps.ErrorPattern)
 	}
 	return patterns
 }
@@ -169,13 +171,18 @@ func CompilePatterns(patterns []string) ([]regexp.Regexp, []string) {
 	return regexps, badPatterns
 }
 
-// ParseYaml reads the yaml text and converts it to the Config struct defined
+// ParseYaml reads the yaml text and converts it to the Config struct
 func ParseYaml(url string) (*Config, error) {
 	content, err := GetFileBytes(url)
 	if err != nil {
 		return nil, err
 	}
 	return newConfig(content)
+}
+
+// ParseYaml reads the default config and returns the Config struct
+func ParseDefaultConfig() (*Config, error) {
+	return ParseYaml(yamlURL)
 }
 
 func newConfig(text []byte) (*Config, error) {
@@ -190,10 +197,10 @@ func newConfig(text []byte) (*Config, error) {
 // and job name patterns
 func (config *Config) GetAllPatterns() []string {
 	var patterns []string
-	for _, patternSpec := range config.Spec {
-		patterns = append(patterns, patternSpec.ErrorPattern)
-		for _, alertCondition := range patternSpec.Alerts {
-			patterns = append(patterns, alertCondition.JobNameRegex)
+	for _, ps := range config.Spec {
+		patterns = append(patterns, ps.ErrorPattern)
+		for _, ac := range ps.Alerts {
+			patterns = append(patterns, ac.JobNameRegex)
 		}
 	}
 
