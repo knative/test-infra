@@ -194,12 +194,29 @@ func (gr *GeneratorResults) SaveJSON() error {
 }
 
 // ErrorsPercentage returns the error percentage of the result[idx] based on response codes.
-// Any non 200 response will provide a value > 0.0
+// Any non 200 response will be counted as errors.
 func (gr *GeneratorResults) ErrorsPercentage(idx int) float64 {
 	if idx < 0 || idx > len(gr.Result) {
 		return 0
 	}
 
+	successes, errors := gr.errorSuccessCounts(idx)
+	return float64(errors*100) / float64(errors+successes)
+}
+
+// ErrorsPercentageOverall returns the error percentage of the result based on response codes.
+// Any non 200 response will be counted as errors.
+func (gr *GeneratorResults) ErrorsPercentageOverall() float64 {
+	var successes, errors int64
+	for i := 0; i < len(gr.Result); i++ {
+		subSuccesses, subErrors := gr.errorSuccessCounts(i)
+		successes += subSuccesses
+		errors += subErrors
+	}
+	return float64(errors*100) / float64(errors+successes)
+}
+
+func (gr *GeneratorResults) errorSuccessCounts(idx int) (int64, int64) {
 	var successes, errors int64
 	for retCode, count := range gr.Result[idx].RetCodes {
 		if retCode == http.StatusOK {
@@ -208,5 +225,5 @@ func (gr *GeneratorResults) ErrorsPercentage(idx int) float64 {
 			errors = errors + count
 		}
 	}
-	return float64(errors*100) / float64(errors+successes)
+	return successes, errors
 }
