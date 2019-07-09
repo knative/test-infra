@@ -1,3 +1,8 @@
+<style>
+/* Increase content width from 640px to 800px for systems with larger font to avoid line break. */
+.inner {max-width: 800px;}
+</style>
+
 # Prow: <https://prow.knative.dev>
 
 # TestGrid: <https://testgrid.knative.dev>
