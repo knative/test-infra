@@ -33,16 +33,8 @@ import (
 // HandlerClient wraps the other clients we need when processing failed jobs.
 type HandlerClient struct {
 	context.Context
-	*subscriber.Client
-	*GithubClient
-}
-
-// JobData contains the relevant fields from a failed ReportMessage struct
-type JobData struct {
-	Name string
-	Type string
-	Repo string
-	Pull int
+	pubsub *subscriber.Client
+	github *GithubClient
 }
 
 func NewHandlerClient(githubClient *GithubClient) (*HandlerClient, error) {
@@ -71,7 +63,6 @@ func expectedMsg(msg *prowapi.ReportMessage) bool {
 			}
 		}
 	}
-
 	return expRepo && msg.Status == prowapi.FailureState && msg.JobType == prowapi.PresubmitJob
 }
 
@@ -80,14 +71,9 @@ func expectedMsg(msg *prowapi.ReportMessage) bool {
 func (hc *HandlerClient) Listen() {
 	log.Printf("Listening for failed jobs...\n")
 	for {
-		hc.ReceiveMessageAckAll(hc, func(msg *prowapi.ReportMessage) {
+		hc.pubsub.ReceiveMessageAckAll(hc, func(msg *prowapi.ReportMessage) {
 			if expectedMsg(msg) {
-				go hc.HandleMessage(&JobData{
-					Name: msg.JobName,
-					Type: string(msg.JobType),
-					Repo: msg.Refs[0].Repo,
-					Pull: msg.Refs[0].Pulls[0].Number,
-				})
+				go hc.HandleMessage(msg)
 			} else {
 				log.Println("Job did not fit criteria - skipping")
 			}
@@ -97,7 +83,7 @@ func (hc *HandlerClient) Listen() {
 
 // HandleMessage gets the job's failed tests and the current flaky tests,
 // compares them, and triggers a retest if all the failed tests are flaky.
-func (hc *HandlerClient) HandleMessage(job *JobData) {
+func (hc *HandlerClient) HandleMessage(msg *prowapi.ReportMessage) {
 	log.Println("Job fit all criteria - Starting analysis")
 	// TODO: ensure job failed due to tests, get job's failed tests, get current
 	//       flaky tests, cross-reference failed tests and flaky tests, retry tests
