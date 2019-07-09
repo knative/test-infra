@@ -67,6 +67,7 @@ func expectedMsg(msg *prowapi.ReportMessage) bool {
 		for _, repo := range repos {
 			if msg.Refs[0].Repo == repo {
 				expRepo = true
+				break
 			}
 		}
 	}

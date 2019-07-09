@@ -32,13 +32,11 @@ func InitLogParser(serviceAccount string) error {
 // TODO: combine this with the function for getting flaky tests, as they will be
 //       almost exactly the same thing.
 func getReportRepos() ([]string, error) {
-	reports, err := jsonreport.GetFlakyTestReport("", -1)
-	if err != nil {
-		return nil, err
-	}
 	var repos []string
-	for _, r := range reports {
-		repos = append(repos, r.Repo)
+	if reports, err := jsonreport.GetFlakyTestReport("", -1); err == nil && len(reports) > 0 {
+		for _, r := range reports {
+			repos = append(repos, r.Repo)
+		}
 	}
-	return repos, nil
+	return repos, err
 }
