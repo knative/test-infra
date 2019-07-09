@@ -33,8 +33,8 @@ func InitLogParser(serviceAccount string) error {
 //       almost exactly the same thing.
 func getReportRepos() ([]string, error) {
 	var repos []string
-	var err error
-	if reports, err := jsonreport.GetFlakyTestReport("", -1); err == nil && len(reports) > 0 {
+	reports, err := jsonreport.GetFlakyTestReport("", -1)
+	if err == nil && len(reports) > 0 {
 		for _, r := range reports {
 			repos = append(repos, r.Repo)
 		}

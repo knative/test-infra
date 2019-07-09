@@ -37,8 +37,12 @@ type HandlerClient struct {
 	github *GithubClient
 }
 
-func NewHandlerClient(githubClient *GithubClient) (*HandlerClient, error) {
+func NewHandlerClient(githubAccount string) (*HandlerClient, error) {
 	ctx := context.Background()
+	githubClient, err := NewGithubClient(githubAccount)
+	if err != nil {
+		return nil, err
+	}
 	pubsubClient, err := subscriber.NewSubscriberClient(ctx, projectName, pubsubTopic)
 	return &HandlerClient{
 		ctx,

@@ -40,12 +40,7 @@ func main() {
 		log.Fatalf("Failed authenticating GCS: '%v'", err)
 	}
 
-	githubClient, err := NewGithubClient(*githubAccount)
-	if nil != err {
-		log.Fatalf("Cannot setup GitHub client: '%v'", err)
-	}
-
-	handler, err := NewHandlerClient(githubClient)
+	handler, err := NewHandlerClient(*githubAccount)
 	if err != nil {
 		log.Fatalf("Coud not create Pub/Sub client: '%v'", err)
 	}
