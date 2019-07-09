@@ -51,7 +51,7 @@ func NewHandlerClient(githubClient *GithubClient) (*HandlerClient, error) {
 func expectedMsg(msg *prowapi.ReportMessage) bool {
 	repos, err := getReportRepos()
 	if err != nil {
-		log.Printf("Failed getting reporter's repos: %v")
+		log.Printf("Failed getting reporter's repos: %v", err)
 		return false
 	}
 	expRepo := false

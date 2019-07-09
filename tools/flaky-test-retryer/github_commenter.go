@@ -33,6 +33,6 @@ type GithubClient struct {
 
 func NewGithubClient(githubAccount string) (*GithubClient, error) {
 	ghc, err := ghutil.NewGithubClient(githubAccount)
-	log.Printf("temporary - otherwise compiler will yell about ghc being an unused var: %s\n", ghc)
+	log.Printf("temporary - otherwise compiler will yell about ghc being an unused var: %v\n", ghc)
 	return &GithubClient{ghc}, err
 }
