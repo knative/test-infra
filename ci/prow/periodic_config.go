@@ -55,15 +55,6 @@ type periodicJobTemplateData struct {
 	PeriodicCommand []string
 }
 
-// generatePeriodicJobName generate the job name from the suffix
-func generatePeriodicJobName(repoName, jobNameSuffix string) string {
-	jn := fmt.Sprintf("ci-%s", repoName)
-	if jobNameSuffix != "" {
-		jn += "-" + jobNameSuffix
-	}
-	return jn
-}
-
 // generatePeriodic generates all periodic job configs for the given repo and configuration.
 func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlice) {
 	var data periodicJobTemplateData

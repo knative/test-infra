@@ -489,7 +489,6 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 			if len(data.Base.Args) == 0 {
 				data.Base.Args = []string{"--" + jobName}
 			}
-
 			if item.Key == "integration-tests" {
 				isMonitoredJob = true
 			}
