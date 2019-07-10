@@ -55,6 +55,15 @@ type periodicJobTemplateData struct {
 	PeriodicCommand []string
 }
 
+// generatePeriodicJobName generate the job name from the suffix
+func generatePeriodicJobName(repoName, jobNameSuffix string) string {
+	jn := fmt.Sprintf("ci-%s", repoName)
+	if jobNameSuffix != "" {
+		jn += "-" + jobNameSuffix
+	}
+	return jn
+}
+
 // generatePeriodic generates all periodic job configs for the given repo and configuration.
 func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlice) {
 	var data periodicJobTemplateData
@@ -62,6 +71,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	jobNameSuffix := ""
 	jobTemplate := readTemplate(periodicTestJob)
 	jobType := ""
+	isMonitoredJob := false
 
 	for i, item := range periodicConfig {
 		switch item.Key {
@@ -71,6 +81,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			}
 			jobType = getString(item.Key)
 			jobNameSuffix = "continuous"
+			isMonitoredJob = true
 			// Use default command and arguments if none given.
 			if data.Base.Command == "" {
 				data.Base.Command = presubmitScript
@@ -88,6 +99,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			data.Base.Command = releaseScript
 			data.Base.Args = releaseNightly
 			data.Base.Timeout = 90
+			isMonitoredJob = true
 		case "branch-ci":
 			if !getBool(item.Value) {
 				return
@@ -99,6 +111,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			setupDockerInDockerForJob(&data.Base)
 			// TODO(adrcunha): Consider reducing the timeout in the future.
 			data.Base.Timeout = 180
+			isMonitoredJob = true
 		case "dot-release", "auto-release":
 			if !getBool(item.Value) {
 				return
@@ -114,6 +127,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 				"--github-token /etc/hub-token/token"}
 			addVolumeToJob(&data.Base, "/etc/hub-token", "hub-token", true, "")
 			data.Base.Timeout = 90
+			isMonitoredJob = true
 		case "performance", "performance-mesh":
 			if !getBool(item.Value) {
 				return
@@ -126,6 +140,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			addEnvToJob(&data.Base, "E2E_MIN_CLUSTER_NODES", perfNodes)
 			addEnvToJob(&data.Base, "E2E_MAX_CLUSTER_NODES", perfNodes)
 			data.Base.Timeout = perfTimeout
+			isMonitoredJob = true
 		case "latency":
 			if !getBool(item.Value) {
 				return
@@ -139,6 +154,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 				fmt.Sprintf("--source-directory=ci-%s-continuous", data.Base.RepoNameForJob),
 				"--artifacts-dir=$(ARTIFACTS)",
 				"--service-account=" + data.Base.ServiceAccount}
+			isMonitoredJob = true
 		case "custom-job":
 			jobType = getString(item.Key)
 			jobNameSuffix = getString(item.Value)
@@ -149,6 +165,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			version := getString(item.Value)
 			jobNameSuffix = version + "-" + jobNameSuffix
 			data.Base.RepoBranch = "release-" + version
+			isMonitoredJob = true
 		case "webhook-apicoverage":
 			if !getBool(item.Value) {
 				return
@@ -167,6 +184,9 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	data.PeriodicJobName = fmt.Sprintf("ci-%s", data.Base.RepoNameForJob)
 	if jobNameSuffix != "" {
 		data.PeriodicJobName += "-" + jobNameSuffix
+	}
+	if isMonitoredJob {
+		addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
 	}
 	if data.CronString == "" {
 		data.CronString = generateCron(jobType, data.PeriodicJobName, data.Base.Timeout)
@@ -297,9 +317,7 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 			data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  path_alias: knative.dev/"+path.Base(repoName))
 		}
 		addExtraEnvVarsToJob(&data.Base)
-		addLabelToJob(&data.Base, "prow.k8s.io/pubsub.project", "knative-tests")
-		addLabelToJob(&data.Base, "prow.k8s.io/pubsub.topic", "knative-monitoring")
-		addLabelToJob(&data.Base, "prow.k8s.io/pubsub.runID", data.PeriodicJobName)
+		addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
 		configureServiceAccountForJob(&data.Base)
 		executeJobTemplate("periodic go coverage", readTemplate(periodicCustomJob), title, repoName, data.PeriodicJobName, false, data)
 		return

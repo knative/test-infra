@@ -353,9 +353,16 @@ func addEnvToJob(data *baseProwJobTemplateData, key, value string) {
 	(*data).Env = append((*data).Env, []string{"- name: " + key, "  value: " + value}...)
 }
 
-// addLabelsToJob adds extra labels to a job
+// addLabelToJob adds extra labels to a job
 func addLabelToJob(data *baseProwJobTemplateData, key, value string) {
 	(*data).Labels = append((*data).Labels, []string{key + ": " + value}...)
+}
+
+// addPubsubLabelsToJob adds the pubsub labels so the prow job message will be picked up by test-infra monitoring
+func addMonitoringPubsubLabelsToJob(data *baseProwJobTemplateData, runID string) {
+	addLabelToJob(data, "prow.k8s.io/pubsub.project", "knative-tests")
+	addLabelToJob(data, "prow.k8s.io/pubsub.topic", "knative-monitoring")
+	addLabelToJob(data, "prow.k8s.io/pubsub.runID", runID)
 }
 
 // addVolumeToJob adds the given mount path as volume for the job.
@@ -469,6 +476,7 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	data.Base.GoCoverageThreshold = 50
 	jobTemplate := readTemplate(presubmitJob)
 	repoData := repositoryData{Name: repoName, EnableGoCoverage: false, GoCoverageThreshold: data.Base.GoCoverageThreshold}
+	isMonitoredJob := false
 	for i, item := range presubmitConfig {
 		switch item.Key {
 		case "build-tests", "unit-tests", "integration-tests":
@@ -480,6 +488,10 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 			// Use default arguments if none given.
 			if len(data.Base.Args) == 0 {
 				data.Base.Args = []string{"--" + jobName}
+			}
+
+			if item.Key == "integration-tests" {
+				isMonitoredJob = true
 			}
 		case "go-coverage":
 			if !getBool(item.Value) {
@@ -510,6 +522,9 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	if data.Base.ServiceAccount != "" {
 		addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
 		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-central1")
+	}
+	if isMonitoredJob {
+		addMonitoringPubsubLabelsToJob(&data.Base, data.PresubmitPullJobName)
 	}
 	addExtraEnvVarsToJob(&data.Base)
 	configureServiceAccountForJob(&data.Base)
