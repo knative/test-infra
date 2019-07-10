@@ -23,29 +23,16 @@ import (
 )
 
 const (
-	// Latency of the performance test, it's a property name used by testgrid
-	perfLatency = "perf_latency"
-	// Error rate of the performance test
-	perfErrorRate = "perf_error_rate"
+	// Property name of the performance test, it's used by testgrid for visualization
+	perfPropertyName = "perf_latency"
 )
 
-// CreatePerfLatencyTestCase creates a perf latency test case with the provided name and value
-func CreatePerfLatencyTestCase(metricValue float32, metricName, testName string) junit.TestCase {
-	tp := []junit.TestProperty{{Name: perfLatency, Value: fmt.Sprintf("%f", metricValue)}}
+// CreatePerfTestCase creates a perf test case with the provided name and value
+func CreatePerfTestCase(metricValue float32, metricName, testName string) junit.TestCase {
+	tp := []junit.TestProperty{{Name: perfPropertyName, Value: fmt.Sprintf("%f", metricValue)}}
 	tc := junit.TestCase{
 		ClassName:  testName,
 		Name:       fmt.Sprintf("%s/%s", testName, metricName),
-		Properties: junit.TestProperties{Properties: tp}}
-
-	return tc
-}
-
-// CreatePerfErrorRateTestCase creates a perf error rate test case with the provided value
-func CreatePerfErrorRateTestCase(metricValue float32, testName string) junit.TestCase {
-	tp := []junit.TestProperty{{Name: perfErrorRate, Value: fmt.Sprintf("%f", metricValue)}}
-	tc := junit.TestCase{
-		ClassName:  testName,
-		Name:       fmt.Sprintf("%s/error_rate", testName),
 		Properties: junit.TestProperties{Properties: tp}}
 
 	return tc
