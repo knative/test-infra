@@ -513,8 +513,17 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 	// Add DotDev
 	for _, repo := range repositories {
 		if path.Base(repo.Name) == (*data).RepoName && repo.DotDev {
-			(*data).PathAlias = "path_alias: knative.dev/" + (*data).RepoName
-			(*data).ExtraRefs = append((*data).ExtraRefs, "  "+(*data).PathAlias)
+			needPathAlias := true
+			// log.Println((*data).RepoBranch)
+			for _, branchName := range repo.LegacyBranches {
+				if branchName == (*data).RepoBranch {
+					needPathAlias = false
+				}
+			}
+			if needPathAlias {
+				(*data).PathAlias = "path_alias: knative.dev/" + (*data).RepoName
+				(*data).ExtraRefs = append((*data).ExtraRefs, "  "+(*data).PathAlias)
+			}
 			break
 		}
 	}
@@ -599,6 +608,7 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	} else {
 		approvedBranches := data.Base.Branches
 		ignoredBranches := data.Base.SkipBranches
+		data.Base.PathAlias = ""
 		data.Base.Branches, data.Base.SkipBranches = consolidateBranches(data.Base.Branches, data.Base.SkipBranches, repoData.LegacyBranches, make([]string, 0))
 		executeJobTemplate("presubmit", jobTemplate, title, repoName, data.PresubmitPullJobName, true, data)
 		data.Base.Branches = approvedBranches
@@ -645,6 +655,7 @@ func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
 	} else {
 		approvedBranches := data.Base.Branches
 		ignoredBranches := data.Base.SkipBranches
+		data.Base.PathAlias = ""
 		data.Base.Branches, data.Base.SkipBranches = consolidateBranches(data.Base.Branches, data.Base.SkipBranches, legacyBranches, make([]string, 0))
 		executeJobTemplate("postsubmit go coverage", readTemplate(goCoveragePostsubmitJob), "postsubmits", repoName, data.PostsubmitJobName, true, data)
 		data.Base.Branches = approvedBranches
