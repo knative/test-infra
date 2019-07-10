@@ -205,31 +205,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	}
 	addExtraEnvVarsToJob(&data.Base)
 	configureServiceAccountForJob(&data.Base)
-
-	var legacyBranches []string
-	for _, repo := range repositories {
-		if repo.Name == repoName {
-			if len(repo.LegacyBranches) > 0 {
-				legacyBranches = repo.LegacyBranches
-			}
-		}
-	}
-	if len(legacyBranches) == 0 {
-		executeJobTemplate("periodic", jobTemplate, title, repoName, data.PeriodicJobName, false, data)
-	} else {
-		approvedBranches := data.Base.Branches
-		ignoredBranches := data.Base.SkipBranches
-		data.Base.Branches, data.Base.SkipBranches = consolidateBranches(data.Base.Branches, data.Base.SkipBranches, legacyBranches, make([]string, 0))
-		executeJobTemplate("periodic", jobTemplate, title, repoName, data.PeriodicJobName, false, data)
-		data.Base.Branches = approvedBranches
-		data.Base.SkipBranches = ignoredBranches
-		data.Base.Branches, data.Base.SkipBranches = consolidateBranches(data.Base.Branches, data.Base.SkipBranches, make([]string, 0), legacyBranches)
-		data.Base.PathAlias = "path_alias: knative.dev/" + data.Base.RepoName
-		data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  "+data.Base.PathAlias)
-		executeJobTemplate("periodic", jobTemplate, title, repoName, data.PeriodicJobName, false, data)
-		data.Base.Branches = approvedBranches
-		data.Base.SkipBranches = ignoredBranches
-	}
+	executeJobTemplate("periodic", jobTemplate, title, repoName, data.PeriodicJobName, false, data)
 }
 
 // generateCleanupPeriodicJob generates the cleanup job config.
@@ -334,31 +310,7 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 		addExtraEnvVarsToJob(&data.Base)
 		addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
 		configureServiceAccountForJob(&data.Base)
-		var legacyBranches []string
-		// Unfortunately this has to be handled twice, as there are multiple elements exist in repositories with same repo name
-		for _, repo := range repositories {
-			if repo.Name == repoName {
-				if len(repo.LegacyBranches) > 0 {
-					legacyBranches = repo.LegacyBranches
-				}
-			}
-		}
-		if len(legacyBranches) == 0 {
-			executeJobTemplate("periodic go coverage", readTemplate(periodicCustomJob), title, repoName, data.PeriodicJobName, false, data)
-		} else {
-			approvedBranches := data.Base.Branches
-			ignoredBranches := data.Base.SkipBranches
-			data.Base.Branches, data.Base.SkipBranches = consolidateBranches(data.Base.Branches, data.Base.SkipBranches, legacyBranches, make([]string, 0))
-			executeJobTemplate("periodic go coverage", readTemplate(periodicCustomJob), title, repoName, data.PeriodicJobName, false, data)
-			data.Base.Branches = approvedBranches
-			data.Base.SkipBranches = ignoredBranches
-			data.Base.Branches, data.Base.SkipBranches = consolidateBranches(data.Base.Branches, data.Base.SkipBranches, make([]string, 0), legacyBranches)
-			data.Base.PathAlias = "path_alias: knative.dev/" + data.Base.RepoName
-			data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  "+data.Base.PathAlias)
-			executeJobTemplate("periodic go coverage", readTemplate(periodicCustomJob), title, repoName, data.PeriodicJobName, false, data)
-			data.Base.Branches = approvedBranches
-			data.Base.SkipBranches = ignoredBranches
-		}
+		executeJobTemplate("periodic go coverage", readTemplate(periodicCustomJob), title, repoName, data.PeriodicJobName, false, data)
 		return
 	}
 }
