@@ -200,30 +200,29 @@ func (gr *GeneratorResults) ErrorsPercentage(idx int) float64 {
 		return 0
 	}
 
-	successes, errors := gr.errorSuccessCounts(idx)
-	return float64(errors*100) / float64(errors+successes)
+	errors, total := gr.errorAndTotalCounts(idx)
+	return float64(errors*100) / float64(total)
 }
 
 // ErrorsPercentageOverall returns the error percentage of the result based on response codes.
 // Any non 200 response will be counted as errors.
 func (gr *GeneratorResults) ErrorsPercentageOverall() float64 {
-	var successes, errors int64
+	var errors, total int64
 	for i := 0; i < len(gr.Result); i++ {
-		subSuccesses, subErrors := gr.errorSuccessCounts(i)
-		successes += subSuccesses
+		subErrors, subTotal := gr.errorAndTotalCounts(i)
 		errors += subErrors
+		total += subTotal
 	}
-	return float64(errors*100) / float64(errors+successes)
+	return float64(errors*100) / float64(total)
 }
 
-func (gr *GeneratorResults) errorSuccessCounts(idx int) (int64, int64) {
-	var successes, errors int64
+func (gr *GeneratorResults) errorAndTotalCounts(idx int) (int64, int64) {
+	var errors, total int64
 	for retCode, count := range gr.Result[idx].RetCodes {
-		if retCode == http.StatusOK {
-			successes = successes + count
-		} else {
-			errors = errors + count
+		if retCode != http.StatusOK {
+			errors += count
 		}
+		total += count
 	}
-	return successes, errors
+	return errors, total
 }
