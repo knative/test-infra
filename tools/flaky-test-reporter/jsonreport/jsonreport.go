@@ -125,7 +125,7 @@ func getReportPaths(build *prow.Build, repo string) []string {
 	suffix := path.Join(repo, filename)
 	for _, artifact := range build.GetArtifacts() {
 		if strings.HasSuffix(artifact, suffix) {
-			matches = append(matches, artifact)
+			matches = append(matches, strings.TrimPrefix(artifact, build.StoragePath))
 		}
 	}
 	return matches
