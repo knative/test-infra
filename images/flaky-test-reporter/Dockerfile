@@ -25,7 +25,7 @@ ADD . $TEMP_REPO_DIR
 # Build flaky test reporter tool in the container
 RUN make -C $TEMP_REPO_DIR/tools/$TOOL_NAME/
 RUN cp $TEMP_REPO_DIR/tools/$TOOL_NAME/$TOOL_NAME /$TOOL_NAME
-RUN cp $TEMP_REPO_DIR/tools/$TOOL_NAME/config.yaml config.yaml
+RUN cp $TEMP_REPO_DIR/tools/$TOOL_NAME/config.yaml /config.yaml
 
 # Remove test-infra from the container
 RUN rm -fr $TEMP_REPO_DIR

@@ -25,6 +25,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/knative/test-infra/shared/prow"
 	"github.com/knative/test-infra/tools/flaky-test-reporter/config"
@@ -34,10 +35,14 @@ func main() {
 	serviceAccount := flag.String("service-account", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"), "JSON key file for GCS service account")
 	githubAccount := flag.String("github-account", "", "Token file for Github authentication")
 	slackAccount := flag.String("slack-account", "", "slack secret file for authenticating with Slack")
-	configPath := flag.String("configfile", "config.yaml", "Config file for overriding default config file")
+	configPath := flag.String("configfile", "./config.yaml", "Config file for overriding default config file")
 	dryrun := flag.Bool("dry-run", false, "dry run switch")
 	flag.Parse()
 
+	if isAbs := filepath.IsAbs(*configPath); !isAbs {
+		// Relative path works strangely in docker, transform it to absolute path
+		*configPath = filepath.Join(filepath.Dir(os.Args[0]), *configPath)
+	}
 	cfg, err := config.NewConfig(*configPath)
 	if nil != err {
 		log.Fatalf("config cannot be created: '%v'", err)
