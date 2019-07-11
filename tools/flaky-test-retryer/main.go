@@ -27,8 +27,8 @@ import (
 )
 
 const (
-	projectName = "knative"
-	pubsubTopic = "test-infra-monitoring-sub"
+	projectName = "knative-tests"
+	pubsubTopic = "knative-monitoring"
 )
 
 func main() {

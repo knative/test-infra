@@ -20,24 +20,113 @@ limitations under the License.
 package main
 
 import (
+	"fmt"
+
+	"github.com/knative/test-infra/shared/junit"
+	"github.com/knative/test-infra/shared/prow"
 	"github.com/knative/test-infra/tools/flaky-test-reporter/jsonreport"
+	"github.com/knative/test-infra/tools/monitoring/prowapi"
 )
 
-// InitLogParser configures jsonreport's dependencies
+// InitLogParser configures jsonreport's dependencies.
 func InitLogParser(serviceAccount string) error {
 	return jsonreport.Initialize(serviceAccount)
 }
 
-// getReportRepos gets all of the repositories where we are reporting flaky tests
-// TODO: combine this with the function for getting flaky tests, as they will be
-//       almost exactly the same thing.
+// getFailedTests gets all the tests that failed in the given job.
+func getFailedTests(msg *prowapi.ReportMessage) ([]string, error) {
+	job := prow.NewJob(msg.JobName, string(msg.JobType), msg.Refs[0].Repo, msg.Refs[0].Pulls[0].Number)
+	buildID, err := job.GetLatestBuildNumber()
+	if err != nil {
+		return nil, err
+	}
+	build := job.NewBuild(buildID)
+	results, err := GetCombinedResultsForBuild(build)
+	if err != nil {
+		return nil, err
+	}
+	var tests []string
+	for _, suites := range results {
+		for _, suite := range suites.Suites {
+			for _, test := range suite.TestCases {
+				if test.GetTestStatus() == junit.Failed {
+					tests = append(tests, fmt.Sprintf("%s.%s", suite.Name, test.Name))
+				}
+			}
+		}
+	}
+	return tests, nil
+}
+
+// TODO: This function is a direct copy-paste of the function in
+// tools/flaky-test-reporter/result.go. Refactor it out into a shared library.
+
+// GetCombinedResultsForBuild gets all junit results from a build,
+// and converts each one into a junit TestSuites struct
+func GetCombinedResultsForBuild(build *prow.Build) ([]*junit.TestSuites, error) {
+	var allSuites []*junit.TestSuites
+	for _, artifact := range build.GetArtifacts() {
+		_, fileName := filepath.Split(artifact)
+		if !strings.HasPrefix(fileName, "junit_") || !strings.HasSuffix(fileName, ".xml") {
+			continue
+		}
+		relPath, _ := filepath.Rel(build.StoragePath, artifact)
+		contents, err := build.ReadFile(relPath)
+		if nil != err {
+			return nil, err
+		}
+		if suites, err := junit.UnMarshal(contents); nil != err {
+			return nil, err
+		}
+		allSuites = append(allSuites, suites)
+	}
+	return allSuites, nil
+}
+
+// getFlakyTests gets the latest flaky tests for the given repository.
+func getFlakyTests(repo string) ([]string, error) {
+	return parseFlakyLog(func(report jsonreport.Report, result *[]string) {
+		if report.Repo == repo {
+			*result = report.Flaky
+		}
+	})
+}
+
+// getReportRepos gets all of the repositories where we collect flaky tests.
 func getReportRepos() ([]string, error) {
-	var repos []string
+	return parseFlakyLog(func(report jsonreport.Report, result *[]string) {
+		*result = append(*result, report.Repo)
+	})
+}
+
+// parseFlakyLog reads the latest flaky test report and returns filtered results based
+// on the function the caller passes in.
+func parseFlakyLog(f func(report jsonreport.Report, result *[]string)) ([]string, error) {
+	var results []string
 	reports, err := jsonreport.GetFlakyTestReport("", -1)
 	if err == nil && len(reports) > 0 {
 		for _, r := range reports {
-			repos = append(repos, r.Repo)
+			f(r, &results)
 		}
 	}
-	return repos, err
+	return results, err
+}
+
+// compareTests compares lists of failed and flaky tests, and returns any outlying failed
+// tests, i.e. tests that failed that are NOT flaky.
+func compareTests(failedTests, flakyTests []string) []string {
+	var notFlaky []string
+	for _, failed := range failedTests {
+		var isFlaky bool
+		for _, flaky := range flakyTests {
+			if failed == flaky {
+				isFlaky = true
+				break
+			}
+		}
+		if !isFlaky {
+			notFlaky = append(notFlaky, failed)
+		}
+	}
+	return notFlaky
 }

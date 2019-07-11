@@ -22,6 +22,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/knative/test-infra/tools/monitoring/subscriber"
@@ -76,6 +77,7 @@ func (hc *HandlerClient) Listen() {
 	log.Printf("Listening for failed jobs...\n")
 	for {
 		hc.pubsub.ReceiveMessageAckAll(hc, func(msg *prowapi.ReportMessage) {
+			log.Println("Received a message")
 			if expectedMsg(msg) {
 				go hc.HandleMessage(msg)
 			} else {
@@ -88,8 +90,36 @@ func (hc *HandlerClient) Listen() {
 // HandleMessage gets the job's failed tests and the current flaky tests,
 // compares them, and triggers a retest if all the failed tests are flaky.
 func (hc *HandlerClient) HandleMessage(msg *prowapi.ReportMessage) {
-	log.Println("Job fit all criteria - Starting analysis")
-	// TODO: ensure job failed due to tests, get job's failed tests, get current
-	//       flaky tests, cross-reference failed tests and flaky tests, retry tests
-	//       if all failed tests are flaky.
+
+	prefix := fmt.Sprintf("%s/pull/%d: ", msg.Refs[0].Repo, msg.Refs[0].Pulls[0].Number)
+	log.Println(prefix + "Job fit all criteria - Starting analysis")
+
+	failedTests, err := getFailedTests(msg)
+	if err != nil {
+		log.Printf(prefix+"Could not get failed tests: %v", err)
+		return
+	}
+	if len(failedTests) == 0 {
+		log.Println(prefix + "No failed tests in job - skipping")
+		return
+	}
+	log.Printf(prefix+"Got %d failed tests in job\n", len(failedTests))
+
+	flakyTests, err := getFlakyTests(msg.Refs[0].Repo)
+	if err != nil {
+		log.Printf(prefix+"Could not get flaky tests: %v", err)
+		return
+	}
+	log.Printf(prefix+"Got %d flaky tests in report\n", len(flakyTests))
+
+	if outliers := compareTests(failedTests, flakyTests); len(outliers) > 0 {
+		log.Printf(prefix+"Found %d outlying failed tests - cannot automatically retry\n", len(outliers))
+		// TODO: Post GitHub comment describing why we cannot retry, listing the
+		// non-flaky failed tests that the developer needs to fix. Logic will be in
+		// github_commenter.go
+		return
+	}
+	log.Println(prefix + "All failed tests are flaky - triggering retry")
+	// TODO: Post GitHub comment stating as such, and trigger the job. Do not post
+	// comment if we are out of retries. Logic will be in github_commenter.go
 }
