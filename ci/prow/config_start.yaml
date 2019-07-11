@@ -44,6 +44,11 @@ kind: Namespace
 metadata:
   name: test-pods
 ---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: boskos-pods
+---
 
 # Service accounts, roles and bindings
 
