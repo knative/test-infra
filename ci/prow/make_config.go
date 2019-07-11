@@ -320,7 +320,7 @@ func combineSlices(a1 []string, a2 []string) []string {
 
 // Consolidate whitelisted and skipped branches with newly added whitelisted/skipped
 func consolidateBranches(whitelisted []string, skipped []string, newWhitelisted []string, newSkipped []string) ([]string, []string) {
-	// Merge the whitelisted and newwhitelisted arrays, ignoring any element present in skipped or newSkipped.
+	// Merge the whitelisted and newWhitelisted arrays, ignoring any element present in skipped or newSkipped.
 	var combinedWhitelisted []string
 	var combinedSkipped []string
 	combinedWhitelisted = combineSlices(whitelisted, newWhitelisted)
@@ -508,11 +508,10 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 		// Knock-out the item, signalling it was already parsed.
 		config[i] = yaml.MapItem{}
 	}
-	// Add DotDev
+	// Add repo path alias to job for vanity import URLs if dot-dev setting is true (and this is not a legacy branch)
 	for _, repo := range repositories {
 		if path.Base(repo.Name) == (*data).RepoName && repo.DotDev {
 			needPathAlias := true
-			// log.Println((*data).RepoBranch)
 			for _, branchName := range repo.LegacyBranches {
 				if branchName == (*data).RepoBranch {
 					needPathAlias = false
@@ -618,10 +617,8 @@ func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
 	data.Base.Image = coverageDockerImage
 	data.PostsubmitJobName = fmt.Sprintf("post-%s-go-coverage", data.Base.RepoNameForJob)
 	for _, repo := range repositories {
-		if repo.Name == repoName {
-			if repo.DotDev {
-				data.Base.PathAlias = "path_alias: knative.dev/" + path.Base(repoName)
-			}
+		if repo.Name == repoName && repo.DotDev {
+			data.Base.PathAlias = "path_alias: knative.dev/" + path.Base(repoName)
 		}
 	}
 	addExtraEnvVarsToJob(&data.Base)
@@ -630,6 +627,8 @@ func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
 	executeJobTemplateWrapper(repoName, &data, func(data interface{}) {
 		executeJobTemplate("postsubmit go coverage", readTemplate(goCoveragePostsubmitJob), "postsubmits", repoName, jobName, true, data)
 	})
+	// TODO(adrcunha): remove once the coverage-dev job isn't necessary anymore.
+	// Generate config for post-knative-serving-go-coverage-dev right after post-knative-serving-go-coverage
 	if data.PostsubmitJobName == "post-knative-serving-go-coverage" {
 		data.PostsubmitJobName += "-dev"
 		data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest-dev", -1)
@@ -798,21 +797,17 @@ func executeJobTemplateWrapper(repoName string, data interface{}, generateOneJob
 		case *postsubmitJobTemplateData:
 			base = &data.(*postsubmitJobTemplateData).Base
 		default:
-			log.Fatalf("unrecognized type: '%v'", v)
+			log.Fatalf("Unrecognized job template type: '%v'", v)
 		}
 		branches := base.Branches
-		ignoredBranches := base.SkipBranches
+		skipBranches := base.SkipBranches
 		base.PathAlias = ""
-		base.Branches, base.SkipBranches = consolidateBranches(base.Branches, base.SkipBranches, legacyBranches, make([]string, 0))
+		base.Branches, base.SkipBranches = consolidateBranches(branches, skipBranches, legacyBranches, make([]string, 0))
 		generateOneJob(data)
-		base.Branches = branches
-		base.SkipBranches = ignoredBranches
-		base.Branches, base.SkipBranches = consolidateBranches(base.Branches, base.SkipBranches, make([]string, 0), legacyBranches)
+		base.Branches, base.SkipBranches = consolidateBranches(branches, skipBranches, make([]string, 0), legacyBranches)
 		base.PathAlias = "path_alias: knative.dev/" + base.RepoName
 		base.ExtraRefs = append(base.ExtraRefs, "  "+base.PathAlias)
 		generateOneJob(data)
-		base.Branches = branches
-		base.SkipBranches = ignoredBranches
 	}
 }
 
