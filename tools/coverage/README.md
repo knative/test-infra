@@ -11,13 +11,13 @@ See [design.md](design.md)
 
 ## Build and Release
 
-run `make coverage-dev-image` to build and upload dev version.
-Dev version can be triggered on PR through command
-`/test pull-knative-$REPONAME-go-coverage-dev`.
+run `make coverage-dev-image` to build and upload staging version.
+Staging version can be triggered on PR through command
+`/test pull-knative-<repository name>-go-coverage-dev`.
 
-Verify if the dev version is working as expected
+Validate the staging version
 
-- To verify pre-submit workflow, add the comment `/test pull-knative-<repository name>-go-coverage-dev` on a PR and see if it produces the same result as `/test pull-knative-$REPONAME-go-coverage`.
+- To verify pre-submit workflow, add the comment `/test pull-knative-<repository name>-go-coverage-dev` on a PR and see if it produces the same result as `/test pull-knative-<repository name>-go-coverage`.
 - To verity periodic workflow, rerun a `post-knative-serving-go-coverage-dev` job and see if the junit xml produced is correct.
 
 After verification, use this command to upload to production version
