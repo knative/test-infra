@@ -21,11 +21,12 @@ package main
 
 import (
 	"fmt"
+	"path/filepath"
+	"strings"
 
 	"github.com/knative/test-infra/shared/junit"
 	"github.com/knative/test-infra/shared/prow"
 	"github.com/knative/test-infra/tools/flaky-test-reporter/jsonreport"
-	"github.com/knative/test-infra/tools/monitoring/prowapi"
 )
 
 // InitLogParser configures jsonreport's dependencies.
@@ -34,8 +35,8 @@ func InitLogParser(serviceAccount string) error {
 }
 
 // getFailedTests gets all the tests that failed in the given job.
-func getFailedTests(name, type, repo string, pull int) ([]string, error) {
-	job := prow.NewJob(name, type, repo, pull)
+func getFailedTests(jobName, jobType, repo string, pull int) ([]string, error) {
+	job := prow.NewJob(jobName, jobType, repo, pull)
 	buildID, err := job.GetLatestBuildNumber()
 	if err != nil {
 		return nil, err
@@ -77,8 +78,9 @@ func GetCombinedResultsForBuild(build *prow.Build) ([]*junit.TestSuites, error) 
 		}
 		if suites, err := junit.UnMarshal(contents); nil != err {
 			return nil, err
+		} else {
+			allSuites = append(allSuites, suites)
 		}
-		allSuites = append(allSuites, suites)
 	}
 	return allSuites, nil
 }
@@ -115,7 +117,7 @@ func parseFlakyLog(f func(report jsonreport.Report, result *[]string)) ([]string
 // compareTests compares lists of failed and flaky tests, and returns any outlying failed
 // tests, i.e. tests that failed that are NOT flaky.
 func getNonFlakyTests(failedTests, flakyTests []string) []string {
-	flakyMap := map[string]bool
+	flakyMap := map[string]bool{}
 	for _, flaky := range flakyTests {
 		flakyMap[flaky] = true
 	}
