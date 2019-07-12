@@ -34,8 +34,8 @@ func InitLogParser(serviceAccount string) error {
 }
 
 // getFailedTests gets all the tests that failed in the given job.
-func getFailedTests(msg *prowapi.ReportMessage) ([]string, error) {
-	job := prow.NewJob(msg.JobName, string(msg.JobType), msg.Refs[0].Repo, msg.Refs[0].Pulls[0].Number)
+func getFailedTests(name, type, repo string, pull int) ([]string, error) {
+	job := prow.NewJob(name, type, repo, pull)
 	buildID, err := job.GetLatestBuildNumber()
 	if err != nil {
 		return nil, err
@@ -114,17 +114,14 @@ func parseFlakyLog(f func(report jsonreport.Report, result *[]string)) ([]string
 
 // compareTests compares lists of failed and flaky tests, and returns any outlying failed
 // tests, i.e. tests that failed that are NOT flaky.
-func compareTests(failedTests, flakyTests []string) []string {
+func getNonFlakyTests(failedTests, flakyTests []string) []string {
+	flakyMap := map[string]bool
+	for _, flaky := range flakyTests {
+		flakyMap[flaky] = true
+	}
 	var notFlaky []string
 	for _, failed := range failedTests {
-		var isFlaky bool
-		for _, flaky := range flakyTests {
-			if failed == flaky {
-				isFlaky = true
-				break
-			}
-		}
-		if !isFlaky {
+		if _, ok := flakyMap[failed]; !ok {
 			notFlaky = append(notFlaky, failed)
 		}
 	}

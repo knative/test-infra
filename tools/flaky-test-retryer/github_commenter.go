@@ -31,6 +31,7 @@ type GithubClient struct {
 	*ghutil.GithubClient
 }
 
+// NewGithubClient builds us a GitHub client based on the token file passed in
 func NewGithubClient(githubAccount string) (*GithubClient, error) {
 	ghc, err := ghutil.NewGithubClient(githubAccount)
 	if err != nil {
