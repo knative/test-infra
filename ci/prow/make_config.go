@@ -66,6 +66,7 @@ type repositoryData struct {
 	GoCoverageThreshold int
 	Processed           bool
 	DotDev              bool
+	LegacyBranches      []string
 }
 
 // baseProwJobTemplateData contains basic data about a Prow job.
@@ -81,6 +82,7 @@ type baseProwJobTemplateData struct {
 	CloneURI            string
 	SecurityContext     []string
 	SkipBranches        []string
+	Branches            []string
 	DecorationConfig    []string
 	ExtraRefs           []string
 	Command             string
@@ -299,6 +301,49 @@ func getMapSlice(m interface{}) yaml.MapSlice {
 	return nil
 }
 
+func combineSlices(a1 []string, a2 []string) []string {
+	var res []string
+	res = append(res, a1...)
+	for _, e2 := range a2 {
+		add := true
+		for _, e1 := range a1 {
+			if e1 == e2 {
+				add = false
+			}
+		}
+		if add {
+			res = append(res, e2)
+		}
+	}
+	return res
+}
+
+// Consolidate whitelisted and skipped branches with newly added whitelisted/skipped
+func consolidateBranches(whitelisted []string, skipped []string, newWhitelisted []string, newSkipped []string) ([]string, []string) {
+	// Merge the whitelisted and newWhitelisted arrays, ignoring any element present in skipped or newSkipped.
+	var combinedWhitelisted []string
+	var combinedSkipped []string
+	combinedWhitelisted = combineSlices(whitelisted, newWhitelisted)
+	combinedSkipped = combineSlices(skipped, newSkipped)
+	if len(combinedWhitelisted) > 0 {
+		var tmp []string
+		for _, elem := range combinedWhitelisted {
+			add := true
+			for _, skip := range combinedSkipped {
+				if elem == skip {
+					add = false
+				}
+			}
+			if add {
+				tmp = append(tmp, elem)
+			}
+		}
+		combinedWhitelisted = tmp
+		combinedSkipped = make([]string, 0)
+	}
+	return combinedWhitelisted, combinedSkipped
+}
+
 // Config generation functions.
 
 // newbaseProwJobTemplateData returns a baseProwJobTemplateData type with its initial, default values.
@@ -424,6 +469,8 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 		switch item.Key {
 		case "skip_branches":
 			(*data).SkipBranches = getStringArray(item.Value)
+		case "branches":
+			(*data).Branches = getStringArray(item.Value)
 		case "args":
 			(*data).Args = getStringArray(item.Value)
 		case "timeout":
@@ -446,6 +493,12 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 					repositories[i].DotDev = true
 				}
 			}
+		case "legacy-branches":
+			for i, repo := range repositories {
+				if path.Base(repo.Name) == (*data).RepoName {
+					repositories[i].LegacyBranches = getStringArray(item.Value)
+				}
+			}
 		case nil: // already processed
 			continue
 		default:
@@ -455,10 +508,19 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 		// Knock-out the item, signalling it was already parsed.
 		config[i] = yaml.MapItem{}
 	}
+	// Add repo path alias to job for vanity import URLs if dot-dev setting is true (and this is not a legacy branch)
 	for _, repo := range repositories {
 		if path.Base(repo.Name) == (*data).RepoName && repo.DotDev {
-			(*data).PathAlias = "path_alias: knative.dev/" + (*data).RepoName
-			(*data).ExtraRefs = append((*data).ExtraRefs, "  "+(*data).PathAlias)
+			needPathAlias := true
+			for _, branchName := range repo.LegacyBranches {
+				if branchName == (*data).RepoBranch {
+					needPathAlias = false
+				}
+			}
+			if needPathAlias {
+				(*data).PathAlias = "path_alias: knative.dev/" + (*data).RepoName
+				(*data).ExtraRefs = append((*data).ExtraRefs, "  "+(*data).PathAlias)
+			}
 			break
 		}
 	}
@@ -477,6 +539,7 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	jobTemplate := readTemplate(presubmitJob)
 	repoData := repositoryData{Name: repoName, EnableGoCoverage: false, GoCoverageThreshold: data.Base.GoCoverageThreshold}
 	isMonitoredJob := false
+	generateJob := true
 	for i, item := range presubmitConfig {
 		switch item.Key {
 		case "build-tests", "unit-tests", "integration-tests":
@@ -507,6 +570,8 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 		case "go-coverage-threshold":
 			data.Base.GoCoverageThreshold = getInt(item.Value)
 			repoData.GoCoverageThreshold = data.Base.GoCoverageThreshold
+		case "repo-settings":
+			generateJob = false
 		default:
 			continue
 		}
@@ -515,6 +580,9 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	}
 	repositories = append(repositories, repoData)
 	parseBasicJobConfigOverrides(&data.Base, presubmitConfig)
+	if !generateJob {
+		return
+	}
 	data.PresubmitCommand = createCommand(data.Base)
 	data.PresubmitPullJobName = "pull-" + data.PresubmitJobName
 	data.PresubmitPostJobName = "post-" + data.PresubmitJobName
@@ -527,7 +595,10 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	}
 	addExtraEnvVarsToJob(&data.Base)
 	configureServiceAccountForJob(&data.Base)
-	executeJobTemplate("presubmit", jobTemplate, title, repoName, data.PresubmitPullJobName, true, data)
+	jobName := data.PresubmitPullJobName
+	executeJobTemplateWrapper(repoName, &data, func(data interface{}) {
+		executeJobTemplate("presubmit", jobTemplate, title, repoName, jobName, true, data)
+	})
 	// TODO(adrcunha): remove once the coverage-dev job isn't necessary anymore.
 	// Generate config for pull-knative-serving-go-coverage-dev right after pull-knative-serving-go-coverage
 	if data.PresubmitPullJobName == "pull-knative-serving-go-coverage" {
@@ -552,7 +623,10 @@ func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
 	}
 	addExtraEnvVarsToJob(&data.Base)
 	configureServiceAccountForJob(&data.Base)
-	executeJobTemplate("postsubmit go coverage", readTemplate(goCoveragePostsubmitJob), "postsubmits", repoName, data.PostsubmitJobName, true, data)
+	jobName := data.PostsubmitJobName
+	executeJobTemplateWrapper(repoName, &data, func(data interface{}) {
+		executeJobTemplate("postsubmit go coverage", readTemplate(goCoveragePostsubmitJob), "postsubmits", repoName, jobName, true, data)
+	})
 	// TODO(adrcunha): remove once the coverage-dev job isn't necessary anymore.
 	// Generate config for post-knative-serving-go-coverage-dev right after post-knative-serving-go-coverage
 	if data.PostsubmitJobName == "post-knative-serving-go-coverage" {
@@ -697,6 +771,44 @@ func strExists(arr []string, str string) bool {
 		}
 	}
 	return false
+}
+
+// executeJobTemplateWrapper takes in consideration of repo settings, decides how many varianats of the
+// same job needs to be generated and generates them.
+func executeJobTemplateWrapper(repoName string, data interface{}, generateOneJob func(data interface{})) {
+	var legacyBranches []string
+	// Find out if LegacyBranches is set in repo settings
+	for _, repo := range repositories {
+		if repo.Name == repoName {
+			if len(repo.LegacyBranches) > 0 {
+				legacyBranches = repo.LegacyBranches
+			}
+		}
+	}
+	if len(legacyBranches) == 0 { // Generate only one job as normal if LegacyBranches is not set
+		generateOneJob(data)
+	} else {
+		// Generate one job with 'knative.dev' path alias for branches other than legacy branches,
+		// and another job without path alias for legacy branches
+		var base *baseProwJobTemplateData
+		switch v := data.(type) {
+		case *presubmitJobTemplateData:
+			base = &data.(*presubmitJobTemplateData).Base
+		case *postsubmitJobTemplateData:
+			base = &data.(*postsubmitJobTemplateData).Base
+		default:
+			log.Fatalf("Unrecognized job template type: '%v'", v)
+		}
+		branches := base.Branches
+		skipBranches := base.SkipBranches
+		base.PathAlias = ""
+		base.Branches, base.SkipBranches = consolidateBranches(branches, skipBranches, legacyBranches, make([]string, 0))
+		generateOneJob(data)
+		base.Branches, base.SkipBranches = consolidateBranches(branches, skipBranches, make([]string, 0), legacyBranches)
+		base.PathAlias = "path_alias: knative.dev/" + base.RepoName
+		base.ExtraRefs = append(base.ExtraRefs, "  "+base.PathAlias)
+		generateOneJob(data)
+	}
 }
 
 // executeTemplate outputs the given job template with the given data, respecting any filtering.
