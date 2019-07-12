@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-CLUSTER       ?= prow
-PROJECT       ?= knative-tests
-ZONE          ?= us-central1-f
-JOB_NAMESPACE ?= test-pods
+CLUSTER          ?= prow
+PROJECT          ?= knative-tests
+ZONE             ?= us-central1-f
+JOB_NAMESPACE    ?= test-pods
+BOSKOS_NAMESPACE ?= boskos-pods
 
 PROW_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 TESTGRID_DIR := $(PROW_DIR)/../testgrid
@@ -57,7 +58,7 @@ update-boskos:
 
 update-boskos-config:
 	$(SET_CONTEXT)
-	kubectl create configmap resources --from-file=config=boskos/resources.yaml --dry-run -o yaml | kubectl --namespace="$(JOB_NAMESPACE)" replace configmap resources -f -
+	kubectl create configmap resources --from-file=config=boskos/resources.yaml --dry-run -o yaml | kubectl --namespace="$(BOSKOS_NAMESPACE)" replace configmap resources -f -
 	$(UNSET_CONTEXT)
 
 update-cluster:
