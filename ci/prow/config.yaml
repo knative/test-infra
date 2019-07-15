@@ -2410,6 +2410,7 @@ presubmits:
     rerun_command: "/test pull-knative-serving-operator-build-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-operator-build-tests),?(\\s+|$)"
     decorate: true
+    path_alias: knative.dev/serving-operator
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2439,6 +2440,7 @@ presubmits:
     rerun_command: "/test pull-knative-serving-operator-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-operator-unit-tests),?(\\s+|$)"
     decorate: true
+    path_alias: knative.dev/serving-operator
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2472,6 +2474,7 @@ presubmits:
     rerun_command: "/test pull-knative-serving-operator-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-operator-integration-tests),?(\\s+|$)"
     decorate: true
+    path_alias: knative.dev/serving-operator
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2502,6 +2505,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-serving-operator-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
+    path_alias: knative.dev/serving-operator
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -4761,6 +4765,7 @@ periodics:
   - org: knative
     repo: serving-operator
     base_ref: master
+    path_alias: knative.dev/serving-operator
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4796,6 +4801,7 @@ periodics:
   - org: knative
     repo: serving-operator
     base_ref: master
+    path_alias: knative.dev/serving-operator
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4831,6 +4837,7 @@ periodics:
   - org: knative
     repo: serving-operator
     base_ref: master
+    path_alias: knative.dev/serving-operator
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4874,6 +4881,7 @@ periodics:
   - org: knative
     repo: serving-operator
     base_ref: master
+    path_alias: knative.dev/serving-operator
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4917,6 +4925,7 @@ periodics:
   - org: knative
     repo: serving-operator
     base_ref: master
+    path_alias: knative.dev/serving-operator
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -5442,6 +5451,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
+    path_alias: knative.dev/serving-operator
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
