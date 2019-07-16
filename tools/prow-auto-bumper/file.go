@@ -56,7 +56,7 @@ func (pv *PRVersions) updateAllTags(content []byte, imageFilter *regexp.Regexp) 
 			res += pv.images[image][iv].newVersion
 			msg += fmt.Sprintf("\nImage: %s\nOld Tag: %s\nNew Tag: %s", image, tag, pv.images[image][iv].newVersion)
 		} else {
-			tmp := fmt.Sprintf("there's no new version for image %s, keeping version: '%s:%s'.\n", image, image, tag)
+			tmp := fmt.Sprintf("There's no new version for image %s, keeping version: '%s:%s'.\n", image, image, tag)
 			log.Println(tmp)
 			msgs = append(msgs, tmp)
 			res += tag
