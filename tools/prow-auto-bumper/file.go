@@ -32,11 +32,11 @@ import (
 // Update all tags in a byte slice
 func (pv *PRVersions) updateAllTags(content []byte, imageFilter *regexp.Regexp) ([]byte, string, []string) {
 	var msg string
-	var errMsgs []string
+	var msgs []string
 	indexes := imageFilter.FindAllSubmatchIndex(content, -1)
 	// Not finding any images is not an error.
 	if indexes == nil {
-		return content, msg, errMsgs
+		return content, msg, msgs
 	}
 
 	var res string
@@ -56,26 +56,26 @@ func (pv *PRVersions) updateAllTags(content []byte, imageFilter *regexp.Regexp) 
 			res += pv.images[image][iv].newVersion
 			msg += fmt.Sprintf("\nImage: %s\nOld Tag: %s\nNew Tag: %s", image, tag, pv.images[image][iv].newVersion)
 		} else {
-			errMsg := fmt.Sprintf("Cannot find version for image: '%s:%s'.\n", image, tag)
-			log.Println(errMsg)
-			errMsgs = append(errMsgs, errMsg)
+			tmp := fmt.Sprintf("There's no new version for image %s, keeping version: '%s:%s'.\n", image, image, tag)
+			log.Println(tmp)
+			msgs = append(msgs, tmp)
 			res += tag
 		}
 	}
 	res += string(content[lastIndex:])
 
-	return []byte(res), msg, errMsgs
+	return []byte(res), msg, msgs
 }
 
 // UpdateFile updates a file in place.
 func (pv *PRVersions) updateFile(filename string, imageFilter *regexp.Regexp, dryrun bool) ([]string, error) {
-	var errMsgs []string
+	var msgs []string
 	content, err := ioutil.ReadFile(filename)
 	if err != nil {
-		return errMsgs, fmt.Errorf("failed to read %s: %v", filename, err)
+		return msgs, fmt.Errorf("failed to read %s: %v", filename, err)
 	}
 
-	newContent, msg, errMsgs := pv.updateAllTags(content, imageFilter)
+	newContent, msg, msgs := pv.updateAllTags(content, imageFilter)
 	if err := run(
 		fmt.Sprintf("Update file '%s':%s", filename, msg),
 		func() error {
@@ -83,24 +83,24 @@ func (pv *PRVersions) updateFile(filename string, imageFilter *regexp.Regexp, dr
 		},
 		dryrun,
 	); err != nil {
-		return errMsgs, fmt.Errorf("failed to write %s: %v", filename, err)
+		return msgs, fmt.Errorf("failed to write %s: %v", filename, err)
 	}
-	return errMsgs, nil
+	return msgs, nil
 }
 
 // Walk through all files, and update all tags
 func (pv *PRVersions) updateAllFiles(fileFilters []*regexp.Regexp, imageFilter *regexp.Regexp,
 	dryrun bool) ([]string, error) {
-	var errMsgs []string
+	var msgs []string
 	if err := common.CDToRootDir(); err != nil {
-		return errMsgs, fmt.Errorf("failed to change to root dir")
+		return msgs, fmt.Errorf("failed to change to root dir")
 	}
 
 	err := filepath.Walk(".", func(filename string, info os.FileInfo, err error) error {
 		for _, ff := range fileFilters {
 			if ff.Match([]byte(filename)) {
-				msgs, err := pv.updateFile(filename, imageFilter, dryrun)
-				errMsgs = append(errMsgs, msgs...)
+				tmp, err := pv.updateFile(filename, imageFilter, dryrun)
+				msgs = append(msgs, tmp...)
 				if err != nil {
 					return fmt.Errorf("Failed to update path %s '%v'", filename, err)
 				}
@@ -108,5 +108,5 @@ func (pv *PRVersions) updateAllFiles(fileFilters []*regexp.Regexp, imageFilter *
 		}
 		return nil
 	})
-	return errMsgs, err
+	return msgs, err
 }

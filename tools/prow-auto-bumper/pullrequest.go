@@ -41,7 +41,7 @@ func call(cmd string, args ...string) error {
 func generatePRBody(extraMsgs []string) string {
 	var body string
 	if len(extraMsgs) > 0 {
-		body += "Warnings:\n"
+		body += "Info:\n"
 		for _, msg := range extraMsgs {
 			body += fmt.Sprintf("%s\n", msg)
 		}
