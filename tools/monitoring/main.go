@@ -41,7 +41,7 @@ var (
 	wfClient   *alert.Client
 	db         *msql.DB
 
-	alertEmailRecipients = []string{"knative-productivity-oncall@googlegroups.com"}
+	alertEmailRecipients = []string{"knative-productivity-dev@googlegroups.com"}
 )
 
 const (
