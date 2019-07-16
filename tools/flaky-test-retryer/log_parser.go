@@ -53,21 +53,21 @@ func NewJobData(msg *prowapi.ReportMessage) *JobData {
 
 // IsSupported checks to make sure the message can be processed with the current flaky
 // test information
-func (jd *JobData) IsSupported() error {
+func (jd *JobData) IsSupported() (bool, error) {
 	if jd.message.Status != prowapi.FailureState {
-		return fmt.Errorf("was not a failure: %v", jd.message.Status)
+		return false, fmt.Errorf("message does not signal a failure: %v", jd.message.Status)
 	}
 	// check type
 	if jd.message.JobType != prowapi.PresubmitJob {
-		return fmt.Errorf("was not presubmit: %v", jd.message.JobType)
+		return false, fmt.Errorf("message did not originate from presubmit: %v", jd.message.JobType)
 	}
 	// check repo
 	if len(jd.message.Refs) == 0 {
-		return fmt.Errorf("no ref in message")
+		return false, fmt.Errorf("message does not reference any repositories")
 	}
 	repos, err := jd.getReportRepos()
 	if err != nil {
-		return err
+		return false, err
 	}
 	expRepo := false
 	for _, repo := range repos {
@@ -77,13 +77,13 @@ func (jd *JobData) IsSupported() error {
 		}
 	}
 	if !expRepo {
-		return fmt.Errorf("repo unsupported: %v", jd.message.Refs[0].Repo)
+		return false, fmt.Errorf("message's repo is not being analyzed by flaky test reporter: %v", jd.message.Refs[0].Repo)
 	}
 	// make sure pull ID exists
 	if len(jd.message.Refs[0].Pulls) == 0 {
-		return fmt.Errorf("no pull ID in message")
+		return false, fmt.Errorf("message does not have any pull IDs")
 	}
-	return nil
+	return true, nil
 }
 
 func (jd *JobData) String() string {
