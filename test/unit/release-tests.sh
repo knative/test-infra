@@ -32,6 +32,20 @@ function mock_publish_to_github() {
   publish_to_github "$@" 2>&1
 }
 
+function mock_publish_to_github_fails() {
+  set -e
+  PUBLISH_TO_GITHUB=1
+  TAG=sometag
+  function git() {
+	echo $@
+  }
+  function hub() {
+	echo $@
+        return 1
+  }
+  publish_to_github "$@" 2>&1
+}
+
 function build_release() {
   return 0
 }
@@ -97,6 +111,7 @@ test_function ${SUCCESS} "" publish_to_github
 test_function 129 "usage: git tag" call_function_pre PUBLISH_TO_GITHUB=1 publish_to_github
 test_function ${FAILURE} "No such file" call_function_pre PUBLISH_TO_GITHUB=1 publish_to_github a.yaml b.yaml
 test_function ${SUCCESS} "release create" mock_publish_to_github $(mktemp) $(mktemp)
+test_function ${FAILURE} "Cannot publish release to GitHub" mock_publish_to_github_fails $(mktemp) $(mktemp)
 
 echo ">> Testing validation tests"
 
