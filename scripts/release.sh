@@ -555,10 +555,17 @@ function publish_to_github() {
   git_push tag ${TAG}
 
   [[ -n "${RELEASE_BRANCH}" ]] && commitish="--commitish=${RELEASE_BRANCH}"
-  hub_tool release create \
-      --prerelease \
-      ${attachments[@]} \
-      --file=${description} \
-      ${commitish} \
-      ${TAG}
+  for i in {2..0}; do
+    hub_tool release create \
+        --prerelease \
+        ${attachments[@]} \
+        --file=${description} \
+        ${commitish} \
+        ${TAG} && return 0
+    if [[ "${i}" -gt 0 ]]; then
+      echo "Error publishing the release, retrying in 15s..."
+      sleep 15
+    fi
+  done
+  abort "Cannot publish release to GitHub"
 }
