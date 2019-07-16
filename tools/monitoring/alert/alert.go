@@ -60,6 +60,8 @@ func (c *Client) RunAlerting() {
 
 func (c *Client) handleReportMessage(rmsg *prowapi.ReportMessage) {
 	if rmsg.Status == prowapi.SuccessState || rmsg.Status == prowapi.FailureState || rmsg.Status == prowapi.AbortedState {
+		log.Printf("Received Pubsub message %v\n", rmsg)
+
 		config, err := config.ParseDefaultConfig()
 		if err != nil {
 			log.Printf("Failed to config yaml (%v): %v\n", config, err)
@@ -77,14 +79,12 @@ func (c *Client) handleReportMessage(rmsg *prowapi.ReportMessage) {
 			log.Printf("Failed to read from url %s. Error: %v\n", blPath, err)
 			return
 		}
-		log.Printf("Build Log Content: %s\n", buildLog)
 
 		errorLogs, err := log_parser.ParseLog(buildLog, config.CollectErrorPatterns())
 		if err != nil {
 			log.Printf("Failed to parse content %v. Error: %v\n", string(buildLog), err)
 			return
 		}
-
 		log.Printf("Parsed errorLogs: %v\n", errorLogs)
 
 		for _, el := range errorLogs {
@@ -94,7 +94,6 @@ func (c *Client) handleReportMessage(rmsg *prowapi.ReportMessage) {
 }
 
 func (c *Client) handleSingleError(config *config.Config, rmsg *prowapi.ReportMessage, el *mysql.ErrorLog) {
-	log.Println("Handling single error")
 	var err error
 
 	// Add the PR number if it is a pull request job
@@ -136,7 +135,7 @@ func (m *MailConfig) sendAlert(c *mailContent) error {
 
 // Alert checks alert condition and alerts table and send alert mail conditionally
 func (m *MailConfig) Alert(errorPattern string, s *config.SelectedConfig, db *mysql.DB) (bool, error) {
-	log.Println("Fetcing error logs")
+	log.Println("Fetching error logs")
 	errorLogs, err := db.ListErrorLogs(errorPattern, s.Duration())
 	if err != nil {
 		return false, err
