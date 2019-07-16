@@ -21,8 +21,6 @@ limitations under the License.
 package main
 
 import (
-	"fmt"
-
 	"github.com/knative/test-infra/shared/ghutil"
 )
 
@@ -35,7 +33,7 @@ type GithubClient struct {
 func NewGithubClient(githubAccount string) (*GithubClient, error) {
 	ghc, err := ghutil.NewGithubClient(githubAccount)
 	if err != nil {
-		return nil, fmt.Errorf("Could not create GitHub client: %v", err)
+		return nil, err
 	}
 	return &GithubClient{ghc}, err
 }
