@@ -55,15 +55,15 @@ func NewJobData(msg *prowapi.ReportMessage) *JobData {
 // test information
 func (jd *JobData) IsSupported() error {
 	if jd.message.Status != prowapi.FailureState {
-		return fmt.Errorf("Was not a failure: %v\n", jd.message.Status)
+		return fmt.Errorf("was not a failure: %v", jd.message.Status)
 	}
 	// check type
 	if jd.message.JobType != prowapi.PresubmitJob {
-		return fmt.Errorf("Was not presubmit: %v\n", jd.message.JobType)
+		return fmt.Errorf("was not presubmit: %v", jd.message.JobType)
 	}
 	// check repo
 	if len(jd.message.Refs) == 0 {
-		return fmt.Errorf("No ref in message.\n")
+		return fmt.Errorf("no ref in message")
 	}
 	repos, err := jd.getReportRepos()
 	if err != nil {
@@ -77,11 +77,11 @@ func (jd *JobData) IsSupported() error {
 		}
 	}
 	if !expRepo {
-		return fmt.Errorf("Repo unsupported: %v\n", jd.message.Refs[0].Repo)
+		return fmt.Errorf("repo unsupported: %v", jd.message.Refs[0].Repo)
 	}
 	// make sure pull ID exists
 	if len(jd.message.Refs[0].Pulls) == 0 {
-		return fmt.Errorf("No pull ID in message\n")
+		return fmt.Errorf("no pull ID in message")
 	}
 	return nil
 }
