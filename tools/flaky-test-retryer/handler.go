@@ -22,6 +22,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/knative/test-infra/tools/monitoring/subscriber"
@@ -37,18 +38,23 @@ type HandlerClient struct {
 	github *GithubClient
 }
 
+// NewHandlerClient gives us a handler where we can listen for Pubsub messages and
+// post comments on GitHub.
 func NewHandlerClient(githubAccount string) (*HandlerClient, error) {
 	ctx := context.Background()
 	githubClient, err := NewGithubClient(githubAccount)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Github client: %v", err)
 	}
 	pubsubClient, err := subscriber.NewSubscriberClient(ctx, projectName, pubsubTopic)
+	if err != nil {
+		return nil, fmt.Errorf("Pubsub client: %v", err)
+	}
 	return &HandlerClient{
 		ctx,
 		pubsubClient,
 		githubClient,
-	}, err
+	}, nil
 }
 
 // expectedMsg checks that the message we received is one we want to process.
@@ -88,8 +94,35 @@ func (hc *HandlerClient) Listen() {
 // HandleMessage gets the job's failed tests and the current flaky tests,
 // compares them, and triggers a retest if all the failed tests are flaky.
 func (hc *HandlerClient) HandleMessage(msg *prowapi.ReportMessage) {
-	log.Println("Job fit all criteria - Starting analysis")
-	// TODO: ensure job failed due to tests, get job's failed tests, get current
-	//       flaky tests, cross-reference failed tests and flaky tests, retry tests
-	//       if all failed tests are flaky.
+	prefix := fmt.Sprintf("%s/pull/%d-%s", msg.Refs[0].Repo, msg.Refs[0].Pulls[0].Number, msg.JobName)
+	log.Printf("Job %s: fit all criteria - Starting analysis", prefix)
+
+	failedTests, err := getFailedTests(msg.JobName, string(msg.JobType), msg.Refs[0].Repo, msg.Refs[0].Pulls[0].Number)
+	if err != nil {
+		log.Printf("Job %s: could not get failed tests: %v", prefix, err)
+		return
+	}
+	if len(failedTests) == 0 {
+		log.Printf("Job %s: no failed tests, skipping\n", prefix)
+		return
+	}
+	log.Printf("Job %s: got %d failed tests\n", prefix, len(failedTests))
+
+	flakyTests, err := getFlakyTests(msg.Refs[0].Repo)
+	if err != nil {
+		log.Printf("Job %s: could not get flaky tests: %v", prefix, err)
+		return
+	}
+	log.Printf("Job %s: got %d flaky tests from today's report\n", prefix, len(flakyTests))
+
+	if outliers := getNonFlakyTests(failedTests, flakyTests); len(outliers) > 0 {
+		log.Printf("Job %s: found %d non-flaky tests, cannot retry\n", prefix, len(outliers))
+		// TODO: Post GitHub comment describing why we cannot retry, listing the
+		// possible non-flaky failed tests that the developer needs to fix. Logic
+		// will be in github_commenter.go
+		return
+	}
+	log.Printf("Job %s: all failed tests are flaky, triggering retry\n", prefix)
+	// TODO: Post GitHub comment stating as such, and trigger the job. Do not post
+	// comment if we are out of retries. Logic will be in github_commenter.go
 }

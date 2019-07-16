@@ -158,6 +158,9 @@ func addSuiteToRepoData(suite *junit.TestSuite, buildID int, rd *RepoData) {
 	}
 }
 
+// TODO: This function has been directly copy-pasted into tools/flaky-test-retryer/log_parser.go
+// Refactor it out into a shared library.
+
 // getCombinedResultsForBuild gets all junit results from a build,
 // and converts each one into a junit TestSuites struct
 func getCombinedResultsForBuild(build *prow.Build) ([]*junit.TestSuites, error) {

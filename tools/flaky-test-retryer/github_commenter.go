@@ -21,8 +21,6 @@ limitations under the License.
 package main
 
 import (
-	"log"
-
 	"github.com/knative/test-infra/shared/ghutil"
 )
 
@@ -31,8 +29,11 @@ type GithubClient struct {
 	*ghutil.GithubClient
 }
 
+// NewGithubClient builds us a GitHub client based on the token file passed in
 func NewGithubClient(githubAccount string) (*GithubClient, error) {
 	ghc, err := ghutil.NewGithubClient(githubAccount)
-	log.Printf("temporary - otherwise compiler will yell about ghc being an unused var: %v\n", ghc)
+	if err != nil {
+		return nil, err
+	}
 	return &GithubClient{ghc}, err
 }

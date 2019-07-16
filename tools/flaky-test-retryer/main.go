@@ -27,8 +27,8 @@ import (
 )
 
 const (
-	projectName = "knative"
-	pubsubTopic = "test-infra-monitoring-sub"
+	projectName = "knative-tests"
+	pubsubTopic = "knative-monitoring"
 )
 
 func main() {
@@ -42,7 +42,7 @@ func main() {
 
 	handler, err := NewHandlerClient(*githubAccount)
 	if err != nil {
-		log.Fatalf("Coud not create Pub/Sub client: '%v'", err)
+		log.Fatalf("Coud not create handler: '%v'", err)
 	}
 
 	handler.Listen()
