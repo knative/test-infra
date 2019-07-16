@@ -69,12 +69,12 @@ func main() {
 	log.Printf("Found version to update. Old Version: '%s', New Version: '%s'",
 		bestVersion.dominantVersions.oldVersion, bestVersion.dominantVersions.newVersion)
 
-	errMsgs, err := bestVersion.updateAllFiles(fileFilters, imageRegexp, *dryrun)
+	msgs, err := bestVersion.updateAllFiles(fileFilters, imageRegexp, *dryrun)
 	if nil != err {
 		log.Fatalf("failed updating files: '%v'", err)
 	}
 
-	if err = createOrUpdatePR(gcw, bestVersion, targetGI, errMsgs, *dryrun); nil != err {
+	if err = createOrUpdatePR(gcw, bestVersion, targetGI, msgs, *dryrun); nil != err {
 		log.Fatalf("failed creating pullrequest: '%v'", err)
 	}
 }
