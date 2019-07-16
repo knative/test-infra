@@ -64,11 +64,9 @@ func (hc *HandlerClient) Listen() {
 	for {
 		hc.pubsub.ReceiveMessageAckAll(hc, func(msg *prowapi.ReportMessage) {
 			data := NewJobData(msg)
-			if supported, err := data.IsSupported(); !supported {
-				log.Printf("Job did not fit criteria: %v", err)
-				return
+			if data.IsSupported() {
+				go hc.HandleJob(data)
 			}
-			go hc.HandleJob(data)
 		})
 	}
 }
