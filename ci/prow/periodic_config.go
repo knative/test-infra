@@ -203,7 +203,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		// TODO(Fredy-Z): this serves as a workaround, see https://github.com/knative/test-infra/issues/780.
 		addEnvToJob(&data.Base, "PULL_BASE_REF", data.Base.RepoBranch)
 	}
-	addExtraEnvVarsToJob(&data.Base)
+	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 	configureServiceAccountForJob(&data.Base)
 	executeJobTemplate("periodic", jobTemplate, title, repoName, data.PeriodicJobName, false, data)
 }
@@ -223,7 +223,7 @@ func generateCleanupPeriodicJob() {
 		"--service-account " + data.Base.ServiceAccount,
 		"--artifacts $(ARTIFACTS)"}
 	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
-	addExtraEnvVarsToJob(&data.Base)
+	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 	configureServiceAccountForJob(&data.Base)
 	executeJobTemplate("periodic cleanup", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
 }
@@ -241,7 +241,7 @@ func generateFlakytoolPeriodicJob() {
 		"--github-account=/etc/flaky-test-reporter-github-token/token",
 		"--slack-account=/etc/flaky-test-reporter-slack-token/token"}
 	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
-	addExtraEnvVarsToJob(&data.Base)
+	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 	configureServiceAccountForJob(&data.Base)
 	addVolumeToJob(&data.Base, "/etc/flaky-test-reporter-github-token", "flaky-test-reporter-github-token", true, "")
 	addVolumeToJob(&data.Base, "/etc/flaky-test-reporter-slack-token", "flaky-test-reporter-slack-token", true, "")
@@ -262,7 +262,7 @@ func generateVersionBumpertoolPeriodicJob() {
 		"--git-username='Knative Prow Updater Robot'",
 		"--git-email=knative-prow-updater-robot@google.com"}
 	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
-	addExtraEnvVarsToJob(&data.Base)
+	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 	configureServiceAccountForJob(&data.Base)
 	addVolumeToJob(&data.Base, "/etc/prow-auto-bumper-github-token", "prow-auto-bumper-github-token", true, "")
 	addVolumeToJob(&data.Base, "/root/.ssh", "prow-updater-robot-ssh-key", true, "0400")
@@ -280,7 +280,7 @@ func generateBackupPeriodicJob() {
 	data.Base.Command = "/backup.sh"
 	data.Base.Args = []string{data.Base.ServiceAccount}
 	data.Base.ExtraRefs = []string{} // no repo clone required
-	addExtraEnvVarsToJob(&data.Base)
+	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 	configureServiceAccountForJob(&data.Base)
 	executeJobTemplate("periodic backup", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
 }
@@ -307,7 +307,7 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 		if repositories[i].DotDev {
 			data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  path_alias: knative.dev/"+path.Base(repoName))
 		}
-		addExtraEnvVarsToJob(&data.Base)
+		addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 		addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
 		configureServiceAccountForJob(&data.Base)
 		executeJobTemplate("periodic go coverage", readTemplate(periodicCustomJob), title, repoName, data.PeriodicJobName, false, data)
