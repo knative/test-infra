@@ -40,7 +40,12 @@ func InitLogParser(serviceAccount string) error {
 // JobData contains stripped-down information about a failed job, and local caches
 // of its failed tests and the flaky report it is referencing.
 type JobData struct {
-	message      *prowapi.ReportMessage
+	Name         string
+	Type         prowapi.ProwJobType
+	Status       prowapi.ProwJobState
+	Org          string
+	Repo         string
+	Pull         int
 	failedTests  []string
 	flakyReports []jsonreport.Report
 }
@@ -48,46 +53,57 @@ type JobData struct {
 // NewJobData creates a JobData object for the given message, and returns an error
 // if it does not fit the criteria we have set for it.
 func NewJobData(msg *prowapi.ReportMessage) *JobData {
-	return &JobData{message: msg}
+	jd := &JobData{
+		Name:   msg.JobName,
+		Type:   msg.JobType,
+		Status: msg.Status,
+	}
+	// add repo data if it exists
+	if len(msg.Refs) > 0 {
+		jd.Org = msg.Refs[0].Org
+		jd.Repo = msg.Refs[0].Repo
+		// add pull ID if it exists
+		if len(msg.Refs[0].Pulls) > 0 {
+			jd.Pull = msg.Refs[0].Pulls[0].Number
+		}
+	}
+	return jd
 }
 
 // IsSupported checks to make sure the message can be processed with the current flaky
 // test information
 func (jd *JobData) IsSupported() (bool, error) {
-	if jd.message.Status != prowapi.FailureState {
-		return false, fmt.Errorf("message does not signal a failure: %v", jd.message.Status)
+	if jd.Status != prowapi.FailureState {
+		return false, fmt.Errorf("message does not signal a failure: %v", jd.Status)
 	}
 	// check type
-	if jd.message.JobType != prowapi.PresubmitJob {
-		return false, fmt.Errorf("message did not originate from presubmit: %v", jd.message.JobType)
+	if jd.Type != prowapi.PresubmitJob {
+		return false, fmt.Errorf("message did not originate from presubmit: %v", jd.Type)
 	}
 	// check repo
-	if len(jd.message.Refs) == 0 {
-		return false, fmt.Errorf("message does not reference any repositories")
-	}
 	repos, err := jd.getReportRepos()
 	if err != nil {
 		return false, err
 	}
 	expRepo := false
 	for _, repo := range repos {
-		if jd.message.Refs[0].Repo == repo {
+		if jd.Repo == repo {
 			expRepo = true
 			break
 		}
 	}
 	if !expRepo {
-		return false, fmt.Errorf("message's repo is not being analyzed by flaky test reporter: %v", jd.message.Refs[0].Repo)
+		return false, fmt.Errorf("message's repo is not being analyzed by flaky test reporter: '%v'", jd.Repo)
 	}
 	// make sure pull ID exists
-	if len(jd.message.Refs[0].Pulls) == 0 {
+	if jd.Pull == 0 {
 		return false, fmt.Errorf("message does not have any pull IDs")
 	}
 	return true, nil
 }
 
 func (jd *JobData) String() string {
-	return fmt.Sprintf("%s/pull/%d: %s", jd.message.Refs[0].Repo, jd.message.Refs[0].Pulls[0].Number, jd.message.JobName)
+	return fmt.Sprintf("%s/pull/%d: %s", jd.Repo, jd.Pull, jd.Name)
 }
 
 // getFailedTests gets all the tests that failed in the given job.
@@ -96,7 +112,7 @@ func (jd *JobData) getFailedTests() ([]string, error) {
 	if jd.failedTests != nil {
 		return jd.failedTests, nil
 	}
-	job := prow.NewJob(jd.message.JobName, string(jd.message.JobType), jd.message.Refs[0].Repo, jd.message.Refs[0].Pulls[0].Number)
+	job := prow.NewJob(jd.Name, string(jd.Type), jd.Repo, jd.Pull)
 	buildID, err := job.GetLatestBuildNumber()
 	if err != nil {
 		return nil, err
@@ -149,7 +165,7 @@ func GetCombinedResultsForBuild(build *prow.Build) ([]*junit.TestSuites, error) 
 // getFlakyTests gets the latest flaky tests that could affect this job
 func (jd *JobData) getFlakyTests() ([]string, error) {
 	return jd.parseFlakyLog(func(report jsonreport.Report, result *[]string) {
-		if report.Repo == jd.message.Refs[0].Repo {
+		if report.Repo == jd.Repo {
 			*result = report.Flaky
 		}
 	})
