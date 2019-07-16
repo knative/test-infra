@@ -59,9 +59,9 @@ func (c *Client) RunAlerting() {
 }
 
 func (c *Client) handleReportMessage(rmsg *prowapi.ReportMessage) {
-	log.Printf("Received Pubsub message %v\n", rmsg)
-
 	if rmsg.Status == prowapi.SuccessState || rmsg.Status == prowapi.FailureState || rmsg.Status == prowapi.AbortedState {
+		log.Printf("Received Pubsub message %v\n", rmsg)
+
 		config, err := config.ParseDefaultConfig()
 		if err != nil {
 			log.Printf("Failed to config yaml (%v): %v\n", config, err)
