@@ -291,4 +291,8 @@ periodics:
     - continuous: true
     - nightly: true
     - dot-release: true
+      env-vars:
+      - ORG_NAME=GoogleCloudPlatform
     - auto-release: true
+      env-vars:
+      - ORG_NAME=GoogleCloudPlatform

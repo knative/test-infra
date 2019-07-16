@@ -5037,6 +5037,8 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
+      - name: ORG_NAME
+        value: GoogleCloudPlatform
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -5080,6 +5082,8 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
+      - name: ORG_NAME
+        value: GoogleCloudPlatform
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION

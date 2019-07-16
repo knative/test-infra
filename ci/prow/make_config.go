@@ -442,10 +442,10 @@ func configureServiceAccountForJob(data *baseProwJobTemplateData) {
 	addVolumeToJob(data, "/etc/"+name, name, true, "")
 }
 
-// addExtraEnvVarsToJob adds any extra environment variables (defined on command-line) to a job.
-func addExtraEnvVarsToJob(data *baseProwJobTemplateData) {
-	for _, env := range extraEnvVars {
-		pair := strings.Split(env, "=")
+// addExtraEnvVarsToJob adds extra environment variables to a job.
+func addExtraEnvVarsToJob(envVars []string, data *baseProwJobTemplateData) {
+	for _, env := range envVars {
+		pair := strings.SplitN(env, "=", 2)
 		if len(pair) != 2 {
 			log.Fatalf("Environment variable %q is expected to be \"key=value\"", env)
 		}
@@ -499,6 +499,8 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 					repositories[i].LegacyBranches = getStringArray(item.Value)
 				}
 			}
+		case "env-vars":
+			addExtraEnvVarsToJob(getStringArray(item.Value), data)
 		case nil: // already processed
 			continue
 		default:
@@ -593,7 +595,7 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	if isMonitoredJob {
 		addMonitoringPubsubLabelsToJob(&data.Base, data.PresubmitPullJobName)
 	}
-	addExtraEnvVarsToJob(&data.Base)
+	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 	configureServiceAccountForJob(&data.Base)
 	jobName := data.PresubmitPullJobName
 	executeJobTemplateWrapper(repoName, &data, func(data interface{}) {
@@ -621,7 +623,7 @@ func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
 			data.Base.PathAlias = "path_alias: knative.dev/" + path.Base(repoName)
 		}
 	}
-	addExtraEnvVarsToJob(&data.Base)
+	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 	configureServiceAccountForJob(&data.Base)
 	jobName := data.PostsubmitJobName
 	executeJobTemplateWrapper(repoName, &data, func(data interface{}) {
