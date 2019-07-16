@@ -59,6 +59,8 @@ func NewJobData(msg *prowapi.ReportMessage) *JobData {
 		Status: msg.Status,
 	}
 	// add repo data if it exists
+	// msg.Refs' first element is always the repo that that triggered this job, later elements
+	// are other dependencies the job needed that were not already in the main repository.
 	if len(msg.Refs) > 0 {
 		jd.Org = msg.Refs[0].Org
 		jd.Repo = msg.Refs[0].Repo
