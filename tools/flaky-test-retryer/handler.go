@@ -57,35 +57,15 @@ func NewHandlerClient(githubAccount string) (*HandlerClient, error) {
 	}, nil
 }
 
-// expectedMsg checks that the message we received is one we want to process.
-func expectedMsg(msg *prowapi.ReportMessage) bool {
-	repos, err := getReportRepos()
-	if err != nil {
-		log.Printf("Failed getting reporter's repos: %v", err)
-		return false
-	}
-	expRepo := false
-	if len(msg.Refs) > 0 {
-		for _, repo := range repos {
-			if msg.Refs[0].Repo == repo {
-				expRepo = true
-				break
-			}
-		}
-	}
-	return expRepo && msg.Status == prowapi.FailureState && msg.JobType == prowapi.PresubmitJob
-}
-
 // Listen scans for incoming Pubsub messages, spawning a new goroutine for each
 // one that fits our criteria.
 func (hc *HandlerClient) Listen() {
 	log.Printf("Listening for failed jobs...\n")
 	for {
 		hc.pubsub.ReceiveMessageAckAll(hc, func(msg *prowapi.ReportMessage) {
-			if expectedMsg(msg) {
-				go hc.HandleMessage(msg)
-			} else {
-				log.Println("Job did not fit criteria - skipping")
+			data := NewJobData(msg)
+			if data.IsSupported() {
+				go hc.HandleJob(data)
 			}
 		})
 	}
@@ -93,36 +73,42 @@ func (hc *HandlerClient) Listen() {
 
 // HandleMessage gets the job's failed tests and the current flaky tests,
 // compares them, and triggers a retest if all the failed tests are flaky.
-func (hc *HandlerClient) HandleMessage(msg *prowapi.ReportMessage) {
-	prefix := fmt.Sprintf("%s/pull/%d-%s", msg.Refs[0].Repo, msg.Refs[0].Pulls[0].Number, msg.JobName)
-	log.Printf("Job %s: fit all criteria - Starting analysis", prefix)
+func (hc *HandlerClient) HandleJob(jd *JobData) {
+	logWithPrefix(jd, "fit all criteria - Starting analysis\n")
 
-	failedTests, err := getFailedTests(msg.JobName, string(msg.JobType), msg.Refs[0].Repo, msg.Refs[0].Pulls[0].Number)
+	failedTests, err := jd.getFailedTests()
 	if err != nil {
-		log.Printf("Job %s: could not get failed tests: %v", prefix, err)
+		logWithPrefix(jd, "could not get failed tests: %v", err)
 		return
 	}
 	if len(failedTests) == 0 {
-		log.Printf("Job %s: no failed tests, skipping\n", prefix)
+		logWithPrefix(jd, "no failed tests, skipping\n")
 		return
 	}
-	log.Printf("Job %s: got %d failed tests\n", prefix, len(failedTests))
+	logWithPrefix(jd, "got %d failed tests", len(failedTests))
 
-	flakyTests, err := getFlakyTests(msg.Refs[0].Repo)
+	flakyTests, err := jd.getFlakyTests()
 	if err != nil {
-		log.Printf("Job %s: could not get flaky tests: %v", prefix, err)
+		logWithPrefix(jd, "could not get flaky tests: %v", err)
 		return
 	}
-	log.Printf("Job %s: got %d flaky tests from today's report\n", prefix, len(flakyTests))
+	logWithPrefix(jd, "got %d flaky tests from today's report\n", len(flakyTests))
 
 	if outliers := getNonFlakyTests(failedTests, flakyTests); len(outliers) > 0 {
-		log.Printf("Job %s: found %d non-flaky tests, cannot retry\n", prefix, len(outliers))
+		logWithPrefix(jd, "%d of %d failed tests are not flaky, cannot retry\n", len(outliers), len(failedTests))
 		// TODO: Post GitHub comment describing why we cannot retry, listing the
-		// possible non-flaky failed tests that the developer needs to fix. Logic
-		// will be in github_commenter.go
+		// non-flaky failed tests that the developer needs to fix. Logic will be in
+		// github_commenter.go
 		return
 	}
-	log.Printf("Job %s: all failed tests are flaky, triggering retry\n", prefix)
+	logWithPrefix(jd, "all failed tests are flaky, triggering retry\n")
 	// TODO: Post GitHub comment stating as such, and trigger the job. Do not post
 	// comment if we are out of retries. Logic will be in github_commenter.go
+}
+
+// logWithPrefix wraps a call to log.Printf, prefixing the arguments with details
+// about the job passed in.
+func logWithPrefix(jd *JobData, format string, a ...interface{}) {
+	input := append([]interface{}{jd.Refs[0].Repo, jd.Refs[0].Pulls[0].Number, jd.JobName}, a...)
+	log.Printf("%s/pull/%d: %s: "+format, input...)
 }
