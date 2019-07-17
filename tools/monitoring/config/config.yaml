@@ -25,10 +25,24 @@ spec:
         occurrences: 1
         jobs-affected: 1
         prs-affected: 0
-        period: 1440
+        period: 1440  
 
   - error-pattern: 'Something went wrong: failed to prepare test environment: --provider=.* boskos failed to acquire project: resources not found'
     hint: 'boskos resource exhaustion. Check playbook'
+    alerts:
+      - job-name-regex: 'pull.*'
+        occurrences: 2
+        jobs-affected: 1
+        prs-affected: 2
+        period: 1440
+      - job-name-regex: '.*'
+        occurrences: 1
+        jobs-affected: 1
+        prs-affected: 0
+        period: 1440
+
+  - error-pattern: 'ERROR: timeout waiting for pods to come up'
+    hint: 'This may lead to Knative setup failure'
     alerts:
       - job-name-regex: 'pull.*'
         occurrences: 2
