@@ -25,7 +25,7 @@ spec:
         occurrences: 1
         jobs-affected: 1
         prs-affected: 0
-        period: 1440  
+        period: 1440
 
   - error-pattern: 'Something went wrong: failed to prepare test environment: --provider=.* boskos failed to acquire project: resources not found'
     hint: 'boskos resource exhaustion. Check playbook'
