@@ -299,6 +299,18 @@ function acquire_cluster_admin_role() {
       $2 ${geoflag} --project $(gcloud config get-value project)
 }
 
+# Run a command through tee and capture its output.
+# Parameters: $1 - file where the output will be stored.
+#             $2... - command to run.
+function capture_output() {
+  local report="$1"
+  shift
+  "$@" 2>&1 | tee "${report}"
+  local failed=( ${PIPESTATUS[@]} )
+  [[ ${failed[0]} -eq 0 ]] && failed=${failed[1]} || failed=${failed[0]}
+  return ${failed}
+}
+
 # Runs a go test and generate a junit summary.
 # Parameters: $1... - parameters to go test
 function report_go_test() {
@@ -308,17 +320,16 @@ function report_go_test() {
   local go_test="go test -race -v ${args/ -v / }"
   # Just run regular go tests if not on Prow.
   echo "Running tests with '${go_test}'"
-  local report=$(mktemp)
-  ${go_test} | tee ${report}
-  local failed=( ${PIPESTATUS[@]} )
-  [[ ${failed[0]} -eq 0 ]] && failed=${failed[1]} || failed=${failed[0]}
+  local report="$(mktemp)"
+  capture_output "${report}" ${go_test}
+  local failed=$?
   echo "Finished run, return code is ${failed}"
   # Install go-junit-report if necessary.
   run_go_tool github.com/jstemmer/go-junit-report go-junit-report --help > /dev/null 2>&1
   local xml=$(mktemp ${ARTIFACTS}/junit_XXXXXXXX.xml)
   cat ${report} \
       | go-junit-report \
-      | sed -e "s#\"github.com/knative/${REPO_NAME}/#\"#g" \
+      | sed -e "s#\"\(github\.com/knative\|knative\.dev\)/${REPO_NAME}/#\"#g" \
       > ${xml}
   echo "XML report written to ${xml}"
   if (( ! IS_PROW )); then
@@ -467,7 +478,7 @@ function remove_broken_symlinks() {
     target="${target##* -> }"
     [[ ${target} == /* ]] || target="./${target}"
     target="$(cd `dirname ${link}` && cd ${target%/*} && echo $PWD/${target##*/})"
-    if [[ ${target} != *github.com/knative/* ]]; then
+    if [[ ${target} != *github.com/knative/* && ${target} != *knative.dev/* ]]; then
       unlink ${link}
       continue
     fi
