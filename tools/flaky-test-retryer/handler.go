@@ -74,34 +74,41 @@ func (hc *HandlerClient) Listen() {
 // HandleMessage gets the job's failed tests and the current flaky tests,
 // compares them, and triggers a retest if all the failed tests are flaky.
 func (hc *HandlerClient) HandleJob(jd *JobData) {
-	jd.Logf("fit all criteria - Starting analysis\n")
+	logWithPrefix(jd, "fit all criteria - Starting analysis\n")
 
 	failedTests, err := jd.getFailedTests()
 	if err != nil {
-		jd.Logf("could not get failed tests: %v", err)
+		logWithPrefix(jd, "could not get failed tests: %v", err)
 		return
 	}
 	if len(failedTests) == 0 {
-		jd.Logf("no failed tests, skipping\n")
+		logWithPrefix(jd, "no failed tests, skipping\n")
 		return
 	}
-	jd.Logf("got %d failed tests", len(failedTests))
+	logWithPrefix(jd, "got %d failed tests", len(failedTests))
 
 	flakyTests, err := jd.getFlakyTests()
 	if err != nil {
-		jd.Logf("could not get flaky tests: %v", err)
+		logWithPrefix(jd, "could not get flaky tests: %v", err)
 		return
 	}
-	jd.Logf("got %d flaky tests from today's report\n", len(flakyTests))
+	logWithPrefix(jd, "got %d flaky tests from today's report\n", len(flakyTests))
 
 	if outliers := getNonFlakyTests(failedTests, flakyTests); len(outliers) > 0 {
-		jd.Logf("%d of %d failed tests are not flaky, cannot retry\n", len(outliers), len(failedTests))
+		logWithPrefix(jd, "%d of %d failed tests are not flaky, cannot retry\n", len(outliers), len(failedTests))
 		// TODO: Post GitHub comment describing why we cannot retry, listing the
 		// non-flaky failed tests that the developer needs to fix. Logic will be in
 		// github_commenter.go
 		return
 	}
-	jd.Logf("all failed tests are flaky, triggering retry\n")
+	logWithPrefix(jd, "all failed tests are flaky, triggering retry\n")
 	// TODO: Post GitHub comment stating as such, and trigger the job. Do not post
 	// comment if we are out of retries. Logic will be in github_commenter.go
+}
+
+// logWithPrefix wraps a call to log.Printf, prefixing the arguments with details
+// about the job passed in.
+func logWithPrefix(jd *JobData, format string, a ...interface{}) {
+	input := append([]interface{}{jd.Repo, jd.Pull, jd.Name}, a...)
+	log.Printf("%s/pull/%d: %s: "+format, input...)
 }
