@@ -111,8 +111,10 @@ func (jd *JobData) IsSupported() bool {
 	return true
 }
 
-func (jd *JobData) String() string {
-	return fmt.Sprintf("%s/pull/%d: %s", jd.Repo, jd.Pull, jd.Name)
+// Logf prefixes a call to log.Printf with information about the job it is being called on
+func (jd *JobData) Logf(format string, a ...interface{}) {
+	input := append([]interface{}{jd.Repo, jd.Pull, jd.Name}, a...)
+	log.Printf("%s/pull/%d: %s: "+format, input...)
 }
 
 // getFailedTests gets all the tests that failed in the given job.

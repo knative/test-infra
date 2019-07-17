@@ -74,34 +74,34 @@ func (hc *HandlerClient) Listen() {
 // HandleMessage gets the job's failed tests and the current flaky tests,
 // compares them, and triggers a retest if all the failed tests are flaky.
 func (hc *HandlerClient) HandleJob(jd *JobData) {
-	log.Printf("Job %s: fit all criteria - Starting analysis", jd.String())
+	jd.Logf("fit all criteria - Starting analysis\n")
 
 	failedTests, err := jd.getFailedTests()
 	if err != nil {
-		log.Printf("Job %s: could not get failed tests: %v", jd.String(), err)
+		jd.Logf("could not get failed tests: %v", err)
 		return
 	}
 	if len(failedTests) == 0 {
-		log.Printf("Job %s: no failed tests, skipping\n", jd.String())
+		jd.Logf("no failed tests, skipping\n")
 		return
 	}
-	log.Printf("Job %s: got %d failed tests\n", jd.String(), len(failedTests))
+	jd.Logf("got %d failed tests", len(failedTests))
 
 	flakyTests, err := jd.getFlakyTests()
 	if err != nil {
-		log.Printf("Job %s: could not get flaky tests: %v", jd.String(), err)
+		jd.Logf("could not get flaky tests: %v", err)
 		return
 	}
-	log.Printf("Job %s: got %d flaky tests from today's report\n", jd.String(), len(flakyTests))
+	jd.Logf("got %d flaky tests from today's report\n", len(flakyTests))
 
 	if outliers := getNonFlakyTests(failedTests, flakyTests); len(outliers) > 0 {
-		log.Printf("Job %s: %d of %d failed tests are not flaky, cannot retry\n", jd.String(), len(outliers), len(failedTests))
+		jd.Logf("%d of %d failed tests are not flaky, cannot retry\n", len(outliers), len(failedTests))
 		// TODO: Post GitHub comment describing why we cannot retry, listing the
 		// non-flaky failed tests that the developer needs to fix. Logic will be in
 		// github_commenter.go
 		return
 	}
-	log.Printf("Job %s: all failed tests are flaky, triggering retry\n", jd.String())
+	jd.Logf("all failed tests are flaky, triggering retry\n")
 	// TODO: Post GitHub comment stating as such, and trigger the job. Do not post
 	// comment if we are out of retries. Logic will be in github_commenter.go
 }
