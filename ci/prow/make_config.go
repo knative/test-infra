@@ -1089,7 +1089,6 @@ func main() {
 			return !repo.Processed && repo.EnableGoCoverage
 		}, generateGoCoveragePeriodic)
 		generateCleanupPeriodicJob()
-		generateClearAlertsPeriodicJob()
 		generateFlakytoolPeriodicJob()
 		generateVersionBumpertoolPeriodicJob()
 		generateBackupPeriodicJob()
