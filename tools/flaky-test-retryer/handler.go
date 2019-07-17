@@ -109,6 +109,6 @@ func (hc *HandlerClient) HandleJob(jd *JobData) {
 // logWithPrefix wraps a call to log.Printf, prefixing the arguments with details
 // about the job passed in.
 func logWithPrefix(jd *JobData, format string, a ...interface{}) {
-	input := append([]interface{}{jd.Repo, jd.Pull, jd.Name}, a...)
+	input := append([]interface{}{jd.Refs[0].Repo, jd.Refs[0].Pulls[0].Number, jd.JobName}, a...)
 	log.Printf("%s/pull/%d: %s: "+format, input...)
 }
