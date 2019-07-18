@@ -6,9 +6,9 @@ Instead, this is the source of the GitHub Pages for knative/test-infra. See http
 
 Documentation can be found in the several directories of the repository. For example:
 
-* [Main README](../)
-* [Documentation on the CI/CD system](../ci)
-* [Documentation on the helper scripts[(../scripts)
+* [Main README](../README.md)
+* [Documentation on the CI/CD system](../ci/README.md)
+* [Documentation on the helper scripts](../scripts/README.md)
 
 ## Updating the test-infra GitHub page
 
