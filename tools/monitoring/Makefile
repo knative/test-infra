@@ -13,7 +13,4 @@
 # limitations under the License.
 
 all:
-	go get -u cloud.google.com/go/pubsub
-	go get -u github.com/go-sql-driver/mysql
-	go get -u gopkg.in/yaml.v2
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build .
