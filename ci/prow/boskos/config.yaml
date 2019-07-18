@@ -20,11 +20,11 @@ metadata:
   labels:
     app: boskos
   name: boskos-storage
-  namespace: boskos-pods
+  namespace: test-pods
 spec:
   claimRef:
     name: boskos-volume-boskos-0
-    namespace: boskos-pods
+    namespace: test-pods
   capacity:
     storage: 1Gi
   accessModes:
@@ -39,7 +39,7 @@ apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
   name: boskos
-  namespace: boskos-pods
+  namespace: test-pods
 spec:
   serviceName: "boskos"
   replicas: 1  # one canonical source of resources
@@ -47,7 +47,7 @@ spec:
     metadata:
       labels:
         app: boskos
-      namespace: boskos-pods
+      namespace: test-pods
     spec:
       serviceAccountName: "boskos"
       terminationGracePeriodSeconds: 30
@@ -57,7 +57,7 @@ spec:
         args:
         - --storage=/store/boskos.json
         - --config=/etc/config/config
-        - --namespace=boskos-pods
+        - --namespace=test-pods
         ports:
           - containerPort: 8080
             protocol: TCP
@@ -85,7 +85,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: boskos
-  namespace: boskos-pods
+  namespace: test-pods
 spec:
   selector:
     app: boskos
@@ -102,7 +102,7 @@ metadata:
   name: boskos-janitor
   labels:
     app: boskos-janitor
-  namespace: boskos-pods
+  namespace: test-pods
 spec:
   replicas: 35  # Number of distributed janitor instances
   template:
@@ -137,7 +137,7 @@ metadata:
   name: boskos-reaper
   labels:
     app: boskos-reaper
-  namespace: boskos-pods
+  namespace: test-pods
 spec:
   replicas: 1  # one canonical source of resources
   template:
