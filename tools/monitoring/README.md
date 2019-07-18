@@ -41,4 +41,4 @@ required that the cluster is in the same zone as the CloudSQL instance.
 
 From `tools/monitoring/clearalerts` directory, run `run_clear_alerts.sh` script.
 
-Note: `run_clear_alerts.sh` only works on linux machine. It builds the binary on the local machine and copies it to the monitoring pod. On MacOS, the binary it built returns error `cannot execute binary file: Exec format error` when it's ran on the monitoring pod.
+Note: `run_clear_alerts.sh` only works on linux machine. It builds the binary on the local machine and copies it to the monitoring pod. On MacOS, the binary it built returns error `cannot execute binary file: Exec format error` when it runs on the monitoring pod.
