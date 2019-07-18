@@ -1,37 +1,23 @@
-<style>
-/* Increase content width from 640px to 800px for systems with larger font to avoid line break. */
-.inner {max-width: 800px;}
-</style>
+# This is not what you're looking for...
 
-# Prow: <https://prow.knative.dev>
+This directory doesn't host documentation for the knative/test-infra repository.
 
-# TestGrid: <https://testgrid.knative.dev>
+Instead, this is the source of the GitHub Pages for knative/test-infra. See https://pages.github.com/ for details.
 
-# Current Oncall: Loading...
+Documentation can be found in the several directories of the repository. For example:
 
-<p id="updated">Updated: Never</p>
-<p><sub id="data-source">[...]</sub></p>
+* [Main README](../README.md)
+* [Documentation on the CI/CD system](../ci/README.md)
+* [Documentation on the helper scripts](../scripts/README.md)
 
-<script>
-var oncallSource = 'https://storage.googleapis.com/knative-infra-oncall/oncall.json';
-var req = new XMLHttpRequest();
-req.open('GET', oncallSource);
-req.onload = function(resp) {
-        var data = req.response;
-        var oncall = JSON.parse(data).Oncall;
-        var keys = Object.keys(oncall).sort();
-        // currently we have just one rotation (tools-infra)
-        var rotation = keys[0];
-        var person = oncall[rotation];
-        var html = 'nobody';
-        if (person) {
-                html = 'Current Oncall: <a target="_parent" href="https://github.com/' + person + '">';
-                html += '<img style="vertical-align:middle;margin:0px;padding:0" width="32" height="32" src="https://github.com/' + person + '.png?size=32" align="middle">';
-                html += '  ' + person + '</a>';
-        }
-        document.getElementById('current-oncall-loading').innerHTML = html;
-        document.getElementById('updated').innerHTML = 'Updated: ' + req.getResponseHeader('date');
-        document.getElementById('data-source').innerHTML = '<a href="' + oncallSource + '">[data source]</a>';
-}
-req.send();
-</script>
+## Updating the test-infra GitHub page
+
+Main contents are rendered from [index.html](index.html).
+
+In order to allow [index.html](index.html) to read data from the oncall GCS bucket, proper permissions must be granted:
+
+```shell
+$ gsutil cors set cors-json-file.json gs://knative-infra-oncall
+```
+
+For more details, see https://cloud.google.com/storage/docs/configuring-cors
