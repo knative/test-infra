@@ -44,11 +44,6 @@ kind: Namespace
 metadata:
   name: test-pods
 ---
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: boskos-pods
----
 
 # Service accounts, roles and bindings
 
@@ -56,13 +51,13 @@ kind: ServiceAccount
 apiVersion: v1
 metadata:
   name: "boskos"
-  namespace: boskos-pods
+  namespace: test-pods
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: "boskos"
-  namespace: boskos-pods
+  namespace: test-pods
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -70,13 +65,13 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: "boskos"
-  namespace: boskos-pods
+  namespace: test-pods
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: "boskos"
-  namespace: boskos-pods
+  namespace: test-pods
 rules:
   - apiGroups:
       - apiextensions.k8s.io
