@@ -28,6 +28,7 @@ import (
 	"github.com/knative/test-infra/shared/junit"
 	"github.com/knative/test-infra/shared/prow"
 	"github.com/knative/test-infra/tools/flaky-test-reporter/jsonreport"
+
 	// TODO: remove this import once "k8s.io/test-infra" import problems are fixed
 	// https://github.com/test-infra/test-infra/issues/912
 	"github.com/knative/test-infra/tools/monitoring/prowapi"
