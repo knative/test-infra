@@ -54,6 +54,7 @@ func main() {
 		log.Fatalf("Failed to list the alerts: %v", err)
 	}
 
+	nDel := 0
 	for _, a := range alerts {
 		isAlerting := false
 		isExpired := false
@@ -69,7 +70,12 @@ func main() {
 		}
 
 		if !isAlerting || isExpired {
-			db.DeleteAlert(a.ErrorPattern)
+			log.Printf("Delete error pattern (%v) in Alerts\n", a.ErrorPattern)
+			if err = db.DeleteAlert(a.ErrorPattern); err != nil {
+				log.Printf("Failed to delete error pattern (%v). Error: %v\n", a.ErrorPattern, err)
+			}
+			nDel++
 		}
 	}
+	log.Printf("%v patterns deleted", nDel)
 }

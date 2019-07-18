@@ -27,10 +27,8 @@ import (
 	"github.com/knative/test-infra/shared/gcs"
 	"github.com/knative/test-infra/shared/mysql"
 	"github.com/knative/test-infra/tools/monitoring/alert"
-	"github.com/knative/test-infra/tools/monitoring/config"
 	"github.com/knative/test-infra/tools/monitoring/mail"
 	msql "github.com/knative/test-infra/tools/monitoring/mysql"
-	"github.com/knative/test-infra/tools/monitoring/prowapi"
 	"github.com/knative/test-infra/tools/monitoring/subscriber"
 )
 
@@ -93,6 +91,8 @@ func main() {
 
 	wfClient = alert.Setup(client, db, &alert.MailConfig{Config: mailConfig, Recipients: alertEmailRecipients})
 
+	wfClient.RunAlerting()
+
 	// use PORT environment variable, or default to 8080
 	port := "8080"
 	if fromEnv := os.Getenv("PORT"); fromEnv != "" {
@@ -101,34 +101,14 @@ func main() {
 
 	// register hello function to handle all requests
 	server := http.NewServeMux()
-	server.HandleFunc("/hello", hello)
 	server.HandleFunc("/test-conn", testCloudSQLConn)
 	server.HandleFunc("/send-mail", sendTestEmail)
-	server.HandleFunc("/test-sub", testSubscriber)
 	server.HandleFunc("/test-insert", testInsert)
-	server.HandleFunc("/start-alerting", testAlerting)
 
 	// start the web server on port and accept requests
 	log.Printf("Server listening on port %s", port)
 	err = http.ListenAndServe(":"+port, server)
 	log.Fatal(err)
-}
-
-// hello tests the as much completed steps in the entire monitoring workflow as possible
-func hello(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Serving request: %s", r.URL.Path)
-	host, _ := os.Hostname()
-	fmt.Fprintf(w, "Hello, world!\n")
-	fmt.Fprintf(w, "Version: 1.0.0\n")
-	fmt.Fprintf(w, "Hostname: %s\n", host)
-
-	config, err := config.ParseDefaultConfig()
-	if err != nil {
-		log.Fatalf("Cannot parse yaml: %v", err)
-	}
-
-	errorPatterns := config.CollectErrorPatterns()
-	fmt.Fprintf(w, "error patterns collected from yaml:%s", errorPatterns)
 }
 
 func testCloudSQLConn(w http.ResponseWriter, r *http.Request) {
@@ -170,25 +150,4 @@ func testInsert(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Fprintln(w, "Success")
-}
-
-func testAlerting(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Serving request: %s", r.URL.Path)
-
-	wfClient.RunAlerting()
-	log.Println("alerting workflow started")
-}
-
-func testSubscriber(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Serving request: %s", r.URL.Path)
-	log.Println("Start listening to messages")
-
-	go func() {
-		err := client.ReceiveMessageAckAll(context.Background(), func(rmsg *prowapi.ReportMessage) {
-			log.Printf("Report Message: %+v\n", rmsg)
-		})
-		if err != nil {
-			log.Printf("Failed to retrieve messages due to %v", err)
-		}
-	}()
 }
