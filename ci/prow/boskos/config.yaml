@@ -152,3 +152,46 @@ spec:
         image: gcr.io/k8s-testimages/reaper:v20190621-ff01381
         args:
         - --resource-type=gke-project
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: boskos-metrics
+  namespace: test-pods
+spec:
+  selector:
+    app: boskos-metrics
+  ports:
+  - name: default
+    protocol: TCP
+    port: 80
+    targetPort: 8080
+# Following two lines in Kubernetes config, but I don't think they are necessary or correct for Knative
+#  loadBalancerIP: 104.197.27.114
+#  type: LoadBalancer
+---
+# Metrics
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: boskos-metrics
+  labels:
+    app: boskos-metrics
+  namespace: test-pods
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: boskos-metrics
+      namespace: test-pods
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+      - name: metrics
+        image: gcr.io/k8s-testimages/metrics:v20190621-ff01381
+        args:
+        - --resource-type=gke-project
+        ports:
+          - containerPort: 8080
+            protocol: TCP
