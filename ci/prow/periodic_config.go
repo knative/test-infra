@@ -41,7 +41,6 @@ const (
 	issueTrackerPeriodicJobCron      = "0 */12 * * *" // Run every 12 hours
 	backupPeriodicJobCron            = "15 9 * * *"   // Run at 02:15PST every day (09:15 UTC)
 	perfPeriodicJobCron              = "0 */3 * * *"  // Run every 3 hours
-	clearAlertsPeriodicJobCron       = "0,30 * * * *" // Run every 30 minutes
 
 	// Perf job constants
 	perfTimeout = 120 // Job timeout in minutes
@@ -314,19 +313,6 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 		executeJobTemplate("periodic go coverage", readTemplate(periodicCustomJob), title, repoName, data.PeriodicJobName, false, data)
 		return
 	}
-}
-
-// generateClearAlertsPeriodicJob generates the monitoring clear alerts job config.
-func generateClearAlertsPeriodicJob() {
-	var data periodicJobTemplateData
-	data.Base = newbaseProwJobTemplateData("knative/test-infra")
-	data.Base.Image = clearalertsDockerImage
-	data.PeriodicJobName = "ci-knative-test-infra-monitoring-clear-alerts"
-	data.CronString = clearAlertsPeriodicJobCron
-	data.Base.Command = "/clearalerts"
-	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
-	addVolumeToJob(&data.Base, "/secrets/cloudsql/monitoringdb", "monitoring-db-credentials", true, "")
-	executeJobTemplate("periodic clearalert", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
 }
 
 func generateIssueTrackerPeriodicJobs() {
