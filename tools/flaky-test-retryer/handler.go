@@ -36,11 +36,12 @@ type HandlerClient struct {
 	context.Context
 	pubsub *subscriber.Client
 	github *GithubClient
+	dryrun bool
 }
 
 // NewHandlerClient gives us a handler where we can listen for Pubsub messages and
 // post comments on GitHub.
-func NewHandlerClient(githubAccount string) (*HandlerClient, error) {
+func NewHandlerClient(githubAccount string, dryrun bool) (*HandlerClient, error) {
 	ctx := context.Background()
 	githubClient, err := NewGithubClient(githubAccount)
 	if err != nil {
@@ -54,6 +55,7 @@ func NewHandlerClient(githubAccount string) (*HandlerClient, error) {
 		ctx,
 		pubsubClient,
 		githubClient,
+		dryrun,
 	}, nil
 }
 
@@ -94,16 +96,16 @@ func (hc *HandlerClient) HandleJob(jd *JobData) {
 	}
 	logWithPrefix(jd, "got %d flaky tests from today's report\n", len(flakyTests))
 
-	if outliers := getNonFlakyTests(failedTests, flakyTests); len(outliers) > 0 {
+	outliers := getNonFlakyTests(failedTests, flakyTests)
+	if len(outliers) > 0 {
 		logWithPrefix(jd, "%d of %d failed tests are not flaky, cannot retry\n", len(outliers), len(failedTests))
-		// TODO: Post GitHub comment describing why we cannot retry, listing the
-		// non-flaky failed tests that the developer needs to fix. Logic will be in
-		// github_commenter.go
-		return
+	} else {
+		logWithPrefix(jd, "all failed tests are flaky, triggering retry\n")
 	}
-	logWithPrefix(jd, "all failed tests are flaky, triggering retry\n")
-	// TODO: Post GitHub comment stating as such, and trigger the job. Do not post
-	// comment if we are out of retries. Logic will be in github_commenter.go
+
+	if err := hc.github.PostComment(jd, outliers, hc.dryrun); err != nil {
+		logWithPrefix(jd, "Could not post comment: %v", err)
+	}
 }
 
 // logWithPrefix wraps a call to log.Printf, prefixing the arguments with details

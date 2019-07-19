@@ -160,6 +160,17 @@ func (fgc *FakeGithubClient) EditComment(org, repo string, commentID int64, comm
 	return nil
 }
 
+// DeleteComment deletes comment from issue
+func (gc *GithubClient) DeleteComment(org, repo string, commentID int64) error {
+	for _, comments := range fgc.Comments {
+		if comment, ok := comments[commentID]; ok {
+			delete(comments, commentID)
+			return nil
+		}
+	}
+	return fmt.Errorf("cannot find comment")
+}
+
 // AddLabelsToIssue adds label on issue
 func (fgc *FakeGithubClient) AddLabelsToIssue(org, repo string, issueNumber int, labels []string) error {
 	targetIssue := fgc.Issues[repo][issueNumber]

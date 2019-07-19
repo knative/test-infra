@@ -34,13 +34,14 @@ const (
 func main() {
 	serviceAccount := flag.String("service-account", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"), "JSON key file for GCS service account")
 	githubAccount := flag.String("github-account", "", "Token file for Github authentication")
+	dryrun := flag.Bool("dry-run", false, "dry run switch")
 	flag.Parse()
 
 	if err := InitLogParser(*serviceAccount); nil != err {
 		log.Fatalf("Failed authenticating GCS: '%v'", err)
 	}
 
-	handler, err := NewHandlerClient(*githubAccount)
+	handler, err := NewHandlerClient(*githubAccount, *dryrun)
 	if err != nil {
 		log.Fatalf("Coud not create handler: '%v'", err)
 	}
