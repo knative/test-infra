@@ -311,6 +311,29 @@ function capture_output() {
   return ${failed}
 }
 
+# Create a JUnit XML for a test.
+# Parameters: $1 - check class name as an identifier (e.g. BuildTests)
+#             $2 - check name as an identifier (e.g., GoBuild)
+#             $3 - failure message (can contain newlines), optional (means success)
+function create_junit_xml() {
+  local xml="$(mktemp ${ARTIFACTS}/junit_XXXXXXXX.xml)"
+  local failure=""
+  if [[ "$3" != "" ]]; then
+    # Transform newlines into HTML code.
+    local msg="$(echo -n "$3" | sed 's/$/\&#xA;/g' | tr -d '\n')"
+    failure="<failure message=\"Failed\" type=\"\">${msg}</failure>"
+  fi
+  cat << EOF > "${xml}"
+<testsuites>
+	<testsuite tests="1" failures="1" time="0.000" name="$1">
+		<testcase classname="" name="$2" time="0.0">
+			${failure}
+		</testcase>
+	</testsuite>
+</testsuites>
+EOF
+}
+
 # Runs a go test and generate a junit summary.
 # Parameters: $1... - parameters to go test
 function report_go_test() {
@@ -332,6 +355,13 @@ function report_go_test() {
       | sed -e "s#\"\(github\.com/knative\|knative\.dev\)/${REPO_NAME}/#\"#g" \
       > ${xml}
   echo "XML report written to ${xml}"
+  if [[ -n "$(grep '<testsuites></testsuites>' ${xml})" ]]; then
+    # XML report is empty, something's wrong; use the output as failure reason
+    create_junit_xml _go_tests "GoTests" "$(cat ${report})"
+  fi
+  # Capture and report any race condition errors
+  local race_errors="$(sed -n '/^WARNING: DATA RACE$/,/^==================$/p' ${report})"
+  create_junit_xml _go_tests "DataRaceAnalysis" "${race_errors}"
   if (( ! IS_PROW )); then
     # Keep the suffix, so files are related.
     local logfile=${xml/junit_/go_test_}
