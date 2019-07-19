@@ -152,3 +152,12 @@ spec:
         jobs-affected: 1
         prs-affected: 0
         period: 1440
+
+  - error-pattern: 'Could not resolve host: github.com'
+    hint: 'Prow DNS flakiness, see https://github.com/knative/test-infra/issues/1082'
+    alerts:
+      - job-name-regex: '.*'
+        occurrences: 1
+        jobs-affected: 1
+        prs-affected: 0
+        period: 1440
