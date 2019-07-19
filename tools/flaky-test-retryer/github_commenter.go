@@ -136,7 +136,7 @@ func buildNewComment(jd *JobData, entries map[string]int, outliers []string) (st
 		cmd = buildRetryString(jd.JobName, entries)
 	}
 	for test, retry := range entries {
-		entryString = append(entryString, fmt.Sprintf("`%s` | %d/%d", test, retry, maxRetries))
+		entryString = append(entryString, fmt.Sprintf("%s | %d/%d", test, retry, maxRetries))
 	}
 	return fmt.Sprintf(commentTemplate, strings.Join(entryString, "\n"), cmd), entries[jd.JobName] <= maxRetries
 }
@@ -154,6 +154,6 @@ func buildRetryString(job string, entries map[string]int) string {
 // buildNoRetryString formats the tests that prevent us from retrying into a drop-down
 // menu underneath the table of retries.
 func buildNoRetryString(job string, outliers []string) string {
-	dropdownFmt := "<details>\n<summary>Non-flaky tests preventing automatic retry of %s</summary>\n<br>\n<code>%s</code>\n</details>"
-	return fmt.Sprintf(dropdownFmt, job, strings.Join(outliers, "</code>\n<code>"))
+	dropdownFmt := "<details>\n<summary>Non-flaky failing tests preventing automatic retry of %s:</summary>\n<br>\n<code>%s</code>\n</details>"
+	return fmt.Sprintf(dropdownFmt, job, strings.Join(outliers, "\n"))
 }
