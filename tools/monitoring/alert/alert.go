@@ -19,7 +19,6 @@ package alert
 import (
 	"context"
 	"log"
-	"strings"
 
 	"github.com/knative/test-infra/shared/gcs"
 	"github.com/knative/test-infra/tools/monitoring/config"
