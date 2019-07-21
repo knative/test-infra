@@ -68,7 +68,6 @@ func (c *Client) handleReportMessage(rmsg *prowapi.ReportMessage) {
 			return
 		}
 
-		rmsg.GCSPath = toGcsLink(rmsg.GCSPath)
 		blPath, err := gcs.BuildLogPath(rmsg.GCSPath)
 		if err != nil {
 			log.Printf("Failed to construct build log url from gcs path %s. Error: %v\n", rmsg.GCSPath, err)
@@ -120,12 +119,6 @@ func (c *Client) handleSingleError(config *config.Config, rmsg *prowapi.ReportMe
 	if err != nil {
 		log.Printf("Failed to Alert %v", err)
 	}
-}
-
-// TODO(yt3liu): Remove this hack after the gcs path does not contain extra link prefix
-func toGcsLink(link string) string {
-	return strings.Replace(strings.Replace(link, "https://gubernator.knative.dev/build/", "", 1),
-		"https://prow.knative.dev/view/gcs/", "", 1)
 }
 
 func (m *MailConfig) sendAlert(c *mailContent) error {
