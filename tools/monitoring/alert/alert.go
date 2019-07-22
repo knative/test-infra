@@ -97,9 +97,9 @@ func (c *Client) handleSingleError(config *config.Config, rmsg *prowapi.ReportMe
 	// Add the PR number if it is a pull request job
 	log.Println("Adding Error Log to the table")
 	if len(rmsg.Refs) <= 0 || len(rmsg.Refs[0].Pulls) <= 0 {
-		err = c.db.AddErrorLog(el.Pattern, el.Msg, rmsg.JobName, 0, rmsg.GCSPath)
+		err = c.db.AddErrorLog(el.Pattern, el.Msg, rmsg.JobName, 0, rmsg.URL)
 	} else {
-		err = c.db.AddErrorLog(el.Pattern, el.Msg, rmsg.JobName, rmsg.Refs[0].Pulls[0].Number, rmsg.GCSPath)
+		err = c.db.AddErrorLog(el.Pattern, el.Msg, rmsg.JobName, rmsg.Refs[0].Pulls[0].Number, rmsg.URL)
 	}
 	if err != nil {
 		log.Printf("Failed to insert error to db %+v\n", err)

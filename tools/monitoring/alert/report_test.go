@@ -39,7 +39,7 @@ func TestSprintLogs(t *testing.T) {
 						Msg:         "Knative test failed",
 						JobName:     "ci-knative-docs-continuous",
 						PRNumber:    0,
-						BuildLogURL: "gs://knative-prow/logs/ci-knative-docs-continuous/1132539579983728640/",
+						BuildLogURL: "https://prow.knative.dev/view/gcs/knative-prow/pr-logs/1153085516762058753",
 						TimeStamp:   testTime,
 					},
 					{
@@ -52,7 +52,7 @@ func TestSprintLogs(t *testing.T) {
 					},
 				},
 			},
-			want: "1. [2019-01-01 00:00:00 +0000 UTC] Knative test failed (Job: ci-knative-docs-continuous, PR: 0, BuildLog: https://console.cloud.google.com/storage/browser/knative-prow/logs/ci-knative-docs-continuous/1132539579983728640)\n" +
+			want: "1. [2019-01-01 00:00:00 +0000 UTC] Knative test failed (Job: ci-knative-docs-continuous, PR: 0, BuildLog: https://prow.knative.dev/view/gcs/knative-prow/pr-logs/1153085516762058753)\n" +
 				"2. [2019-01-01 00:00:00 +0000 UTC] Knative test failed (Job: ci-knative-docs-continuous, PR: 0, BuildLog: %zzzzz)\n",
 		},
 	}
