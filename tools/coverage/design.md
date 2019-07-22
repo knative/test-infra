@@ -27,7 +27,7 @@ The robot account will be referred to as "metrics-bot" in later text.
 
 ## Periodical workflow
 
-Produces periodical coverage result as input for TestGrid
+Produces periodic code coverage results as input for TestGrid.
 
 1. Periodical prow job starts periodically.
 The frequency and start time can be configured in [the config file](../../ci/prow/config.yaml)
