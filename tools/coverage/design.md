@@ -23,7 +23,7 @@ The robot account will be referred to as "metrics-bot" in later text.
 1. Test coverage profile generated.
 1. Calculate coverage change against master branch. Compare the coverage file generated in this cycle against the most recent successful master branch build.
 1. Use PR data from GitHub, git-attributes, as well as coverage change data calculated above, to produce a list of files that we care about in the line-by-line coverage report. produce line by line coverage html and add link to metrics-bot report.
-1. Let metrics-bot post presubmit coverage on GitHub, under that conversation of the PR.
+1. The robot account posts the code coverage report on GitHub, as a comment in the PR.
 
 ## Periodical workflow
 
