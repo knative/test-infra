@@ -11,7 +11,7 @@ See [design.md](design.md)
 
 ## Build and Release
 
-run `make coverage-dev-image` to build and upload staging version.
+Run `make coverage-dev-image` to build and upload a staging version, intended for testing and debugging.
 Staging version can be triggered on PR through command
 `/test pull-knative-<repository name>-go-coverage-dev`.
 
