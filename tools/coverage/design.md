@@ -1,7 +1,6 @@
 # Design of Test Coverage Tool
 
 ![design.svg](design.svg)
-
 We pack the test coverage tool in a container, that is triggered by prow. It runs test coverage profiling on target repository. Afterward, it calculates coverage change or summarizes coverage data, depends on workflow type, explained below.  
 
 ## Post-submit workflow
@@ -27,7 +26,7 @@ The robot account will be referred to as "metrics-bot" in later text.
 
 ## Periodical workflow
 
-Produces periodical coverage result as input for TestGrid
+Produces periodic coverage result as input for TestGrid
 
 1. Periodical prow job starts periodically.
 The frequency and start time can be configured in [the config file](../../ci/prow/config.yaml)

@@ -1,15 +1,17 @@
 # Overview
 
-Code coverage tool has two major features.
+The code coverage tool has two major features:
 
-1. As a pre-submit tool, it runs code coverage on every single commit to Github and reports coverage changes back to the PR as a comment by a robot account. If made an required job on repo, it can be used to block a PR from merging if coverage falls below threshold.
-1. As a periodical running job, it outputs a Junit XML that can be read from other tools like [testgrid](http://testgrid.knative.dev/serving#coverage) to get overall coverage metrics.
+1. As a pre-submit tool, it runs code coverage on every single commit to Github and reports coverage changes back to the PR as a comment by a robot account. If made a required job on the repository, it can be used to block a PR from merging if coverage falls below a certain threshold.
+1. As a periodic running job, it outputs a Junit XML that can be read from other tools like [testgrid](http://testgrid.knative.dev/serving#coverage) to get overall coverage metrics.
 
 ## Design
 
-See [design.md](design.md)
+See the [design document](design.md)
 
 ## Build and Release
+
+We use a staging version to verify the a new build works, before it goes into production.
 
 run `make coverage-dev-image` to build and upload staging version.
 Staging version can be triggered on PR through command
