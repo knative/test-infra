@@ -22,7 +22,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"regexp"
 	"strconv"
 	"strings"
@@ -33,16 +32,19 @@ import (
 
 const (
 	maxRetries = 3
+	maxFailedTestsToPrint = 8
 )
 
 var (
-	commentTemplate = "The following tests failed due to flakiness:\n\n" +
-		"Test name | Retries\n--- | ---\n%s\n\n%s"
+	identifier = "<!--AUTOMATED-FLAKY-RETRYER-->"
+	commentTemplate = "%s\nThe following tests are currently flaky. Running them again to verify..."+
+		"\n\nTest name | Retries\n--- | ---\n%s\n\n%s"
 )
 
 // GithubClient wraps the ghutil Github client
 type GithubClient struct {
 	*ghutil.GithubClient
+	Login string
 }
 
 // NewGithubClient builds us a GitHub client based on the token file passed in
@@ -51,7 +53,11 @@ func NewGithubClient(githubAccount string) (*GithubClient, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &GithubClient{ghc}, err
+	user, err := ghc.GetGithubUser()
+	if err != nil {
+		return nil, err
+	}
+	return &GithubClient{ghc, *user.Login}, nil
 }
 
 // PostComment posts a new comment on the PR specified in JobData, retrying the job that triggered it.
@@ -74,7 +80,7 @@ func (gc *GithubClient) PostComment(jd *JobData, outliers []string, dryrun bool)
 		return fmt.Errorf("expended all %d retries", maxRetries)
 	}
 	if dryrun {
-		log.Printf("[dry run] Comment not updated. See it here:\n%s\n", newComment)
+		logWithPrefix(jd, "[dry run] Comment not updated. See it here:\n%s\n", newComment)
 		return nil
 	}
 	if oldComment != nil {
@@ -93,12 +99,13 @@ func (gc *GithubClient) getOldComment(org, repo string, pull int) (*github.Issue
 	if err != nil {
 		return nil, err
 	}
-	user, err := gc.GetGithubUser()
-	if err != nil {
-		return nil, err
-	}
+	// this robot should only leave one comment in a PR. Get it by finding the comment with the identifier
 	for _, comment := range comments {
-		if *comment.GetUser().Login == *user.Login {
+		match, err := regexp.Match(identifier, []byte(comment.GetBody()))
+		if err != nil {
+			return nil, err
+		}
+		if match && *comment.GetUser().Login == gc.Login {
 			return comment, nil
 		}
 	}
@@ -132,13 +139,15 @@ func buildNewComment(jd *JobData, entries map[string]int, outliers []string) (st
 	var entryString []string
 	if len(outliers) > 0 {
 		cmd = buildNoRetryString(jd.JobName, outliers)
+		logWithPrefix(jd, "%d failed tests are not flaky, cannot retry\n", len(outliers))
 	} else {
 		cmd = buildRetryString(jd.JobName, entries)
+		logWithPrefix(jd, "all failed tests are flaky, triggering retry\n")
 	}
 	for test, retry := range entries {
 		entryString = append(entryString, fmt.Sprintf("%s | %d/%d", test, retry, maxRetries))
 	}
-	return fmt.Sprintf(commentTemplate, strings.Join(entryString, "\n"), cmd), entries[jd.JobName] <= maxRetries
+	return fmt.Sprintf(commentTemplate, identifier, strings.Join(entryString, "\n"), cmd), entries[jd.JobName] <= maxRetries
 }
 
 // buildRetryString increments the retry counter and generates a /test string if we have
@@ -151,9 +160,16 @@ func buildRetryString(job string, entries map[string]int) string {
 	return ""
 }
 
-// buildNoRetryString formats the tests that prevent us from retrying into a drop-down
-// menu underneath the table of retries.
+// buildNoRetryString formats the tests that prevent us from retrying into a list of 10
+// top entries and
 func buildNoRetryString(job string, outliers []string) string {
-	dropdownFmt := "<details>\n<summary>Non-flaky failing tests preventing automatic retry of %s:</summary>\n<br>\n<code>%s</code>\n</details>"
-	return fmt.Sprintf(dropdownFmt, job, strings.Join(outliers, "\n"))
+	noRetryFmt := "Failed non-flaky tests preventing automatic retry of %s:\n\n```\n%s\n```%s"
+	extraFailedTests := ""
+
+	lastIndex := len(outliers)
+	if len(outliers) > maxFailedTestsToPrint {
+		lastIndex = maxFailedTestsToPrint
+		extraFailedTests = fmt.Sprintf("\n\nand %d more.", len(outliers) - maxFailedTestsToPrint)
+	}
+	return fmt.Sprintf(noRetryFmt, job, strings.Join(outliers[:lastIndex], "\n"), extraFailedTests)
 }

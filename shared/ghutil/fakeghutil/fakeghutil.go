@@ -161,7 +161,7 @@ func (fgc *FakeGithubClient) EditComment(org, repo string, commentID int64, comm
 }
 
 // DeleteComment deletes comment from issue
-func (gc *GithubClient) DeleteComment(org, repo string, commentID int64) error {
+func (fgc *FakeGithubClient) DeleteComment(org, repo string, commentID int64) error {
 	for _, comments := range fgc.Comments {
 		if comment, ok := comments[commentID]; ok {
 			delete(comments, commentID)

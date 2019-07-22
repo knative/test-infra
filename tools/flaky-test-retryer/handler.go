@@ -97,12 +97,6 @@ func (hc *HandlerClient) HandleJob(jd *JobData) {
 	logWithPrefix(jd, "got %d flaky tests from today's report\n", len(flakyTests))
 
 	outliers := getNonFlakyTests(failedTests, flakyTests)
-	if len(outliers) > 0 {
-		logWithPrefix(jd, "%d of %d failed tests are not flaky, cannot retry\n", len(outliers), len(failedTests))
-	} else {
-		logWithPrefix(jd, "all failed tests are flaky, triggering retry\n")
-	}
-
 	if err := hc.github.PostComment(jd, outliers, hc.dryrun); err != nil {
 		logWithPrefix(jd, "Could not post comment: %v", err)
 	}
