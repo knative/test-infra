@@ -31,6 +31,7 @@ unset-cluster-credentials:
 config:
 	go run *_config.go --prow-config-output="$(PROW_DIR)/config.yaml" --testgrid-config-output="$(TESTGRID_DIR)/config.yaml" config_knative.yaml
 
+# Update all prow job configs
 update-config:
 	$(SET_CONTEXT)
 	$(eval OLD_YAML_CONFIG := $(shell mktemp))
@@ -45,27 +46,42 @@ update-config:
 	@echo "Inspect uploaded config file at: ${NEW_YAML_CONFIG}"
 	@echo "Old config file saved at: ${GCS_DEST}"
 
+# Update plugins
 update-plugins:
 	$(SET_CONTEXT)
 	kubectl create configmap plugins --from-file=plugins.yaml=plugins.yaml --dry-run -o yaml | kubectl replace configmap plugins -f -
 	$(UNSET_CONTEXT)
 
-update-boskos:
+# Update all deployments of boskos
+update-boskos-deployments:
 	$(SET_CONTEXT)
-	kubectl apply -f boskos/config.yaml
+	@for f in $(shell ls boskos/deployments/*.yaml); do kubectl apply -f $${f}; done
 	$(UNSET_CONTEXT)
 
-update-boskos-config:
+# Update single deployment of boskos, expect passing in ${NAME} like `make update-boskos-deployment NAME=janitor_deployment`
+update-boskos-deployment:
+	$(SET_CONTEXT)
+	kubectl apply -f boskos/deployments/$(NAME).yaml
+	$(UNSET_CONTEXT)
+
+update-boskos-resource:
 	$(SET_CONTEXT)
 	kubectl create configmap resources --from-file=config=boskos/resources.yaml --dry-run -o yaml | kubectl --namespace="$(JOB_NAMESPACE)" replace configmap resources -f -
 	$(UNSET_CONTEXT)
 
-update-cluster:
+# Update all deployment of cluster
+update-cluster-deployments:
 	$(SET_CONTEXT)
-	kubectl apply -f cluster.yaml
+	@for f in $(shell ls deployments/*.yaml); do kubectl apply -f $${f}; done
 	$(UNSET_CONTEXT)
 
-update-full: update-cluster update-config update-boskos
+# Update single deployment of cluster, expect passing in ${NAME} like `make update-cluster-deployment NAME=crier_deployment`
+update-cluster-deployment:
+	$(SET_CONTEXT)
+	kubectl apply -f deployments/$(NAME).yaml
+	$(UNSET_CONTEXT)
+
+update-full: update-cluster-deployments update-config update-boskos-deployments
 
 test:
 	@echo "*** Checking config generator for prow and testgrid"
