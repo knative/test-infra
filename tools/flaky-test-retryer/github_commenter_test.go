@@ -142,10 +142,10 @@ func TestGetOldComment(t *testing.T) {
 	for _, test := range cases {
 		actualComment, actualErr := test.client.getOldComment(test.org, test.repo, test.pull)
 		if !reflect.DeepEqual(actualComment, test.wantComment) {
-			t.Errorf("get old comment: got comment %v, want comment %v", actualComment, test.wantComment)
+			t.Errorf("get old comment: got comment '%v', want comment '%v'", actualComment, test.wantComment)
 		}
 		if !reflect.DeepEqual(actualErr, test.wantErr) {
-			t.Errorf("get old comment: got err %v, want err %v", actualErr, test.wantErr)
+			t.Errorf("get old comment: got err '%v', want err '%v'", actualErr, test.wantErr)
 		}
 		test.client.CreateComment(test.org, test.repo, test.pull, oldCommentBody)
 	}

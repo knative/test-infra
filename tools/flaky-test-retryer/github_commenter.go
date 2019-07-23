@@ -101,27 +101,22 @@ func (gc *GithubClient) getOldComment(org, repo string, pull int) (*github.Issue
 	if err != nil {
 		return nil, err
 	}
-	// this robot should only leave one comment in a given PR. Collect everything with our identifier,
-	// just in case.
-	var matches []*github.IssueComment
+	var match *github.IssueComment
 	for _, comment := range comments {
-		match, err := regexp.Match(identifier, []byte(comment.GetBody()))
+		found, err := regexp.Match(identifier, []byte(comment.GetBody()))
 		if err != nil {
 			return nil, err
 		}
-		if match && *comment.GetUser().Login == gc.Login {
-			matches = append(matches, comment)
+		if found && *comment.GetUser().Login == gc.Login {
+			if match == nil {
+				match = comment
+			} else {
+				return nil, fmt.Errorf("more than one comment on PR")
+			}
 		}
 	}
-
-	switch len(matches) {
-	case 0:
-		return nil, nil
-	case 1:
-		return matches[0], nil
-	default:
-		return nil, fmt.Errorf("more than one comment on PR")
-	}
+	
+	return match, nil
 }
 
 // parseEntries collects retry information from the given comment, so we can reuse it in
