@@ -23,6 +23,7 @@ package main
 import (
 	"fmt"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -31,13 +32,13 @@ import (
 )
 
 const (
-	maxRetries = 3
+	maxRetries            = 3
 	maxFailedTestsToPrint = 8
 )
 
 var (
-	identifier = "<!--AUTOMATED-FLAKY-RETRYER-->"
-	commentTemplate = "%s\nThe following tests are currently flaky. Running them again to verify..."+
+	identifier      = "<!--AUTOMATED-FLAKY-RETRYER-->"
+	commentTemplate = "%s\nThe following tests are currently flaky. Running them again to verify..." +
 		"\n\nTest name | Retries\n--- | ---\n%s\n\n%s"
 )
 
@@ -63,7 +64,7 @@ func NewGithubClient(githubAccount string) (*GithubClient, error) {
 // PostComment posts a new comment on the PR specified in JobData, retrying the job that triggered it.
 // The comment body is dynamically built based on previous retry comments on this PR, and any old
 // comments are removed before the new one is posted.
-func (gc *GithubClient) PostComment(jd *JobData, outliers []string, dryrun bool) error {
+func (gc *GithubClient) PostComment(jd *JobData, outliers []string) error {
 	oldComment, err := gc.getOldComment(jd.Refs[0].Org, jd.Refs[0].Repo, jd.Refs[0].Pulls[0].Number)
 	if err != nil {
 		return err
@@ -79,7 +80,7 @@ func (gc *GithubClient) PostComment(jd *JobData, outliers []string, dryrun bool)
 	if !canRetry {
 		return fmt.Errorf("expended all %d retries", maxRetries)
 	}
-	if dryrun {
+	if Flags.DryRun {
 		logWithPrefix(jd, "[dry run] Comment not updated. See it here:\n%s\n", newComment)
 		return nil
 	}
@@ -99,17 +100,46 @@ func (gc *GithubClient) getOldComment(org, repo string, pull int) (*github.Issue
 	if err != nil {
 		return nil, err
 	}
-	// this robot should only leave one comment in a PR. Get it by finding the comment with the identifier
+	// this robot should only leave one comment in a given PR. Collect everything with our identifier,
+	// just in case.
+	var matches []*github.IssueComment
 	for _, comment := range comments {
 		match, err := regexp.Match(identifier, []byte(comment.GetBody()))
 		if err != nil {
 			return nil, err
 		}
 		if match && *comment.GetUser().Login == gc.Login {
-			return comment, nil
+			matches = append(matches, comment)
 		}
 	}
-	return nil, nil
+	// sort comments in descending order
+	sort.Slice(comments, func(i, j int) bool {
+		return comments[i].GetCreatedAt().Unix() < comments[i].GetCreatedAt().Unix()
+	})
+
+	switch len(matches) {
+	case 0:
+		return nil, nil
+	case 1:
+		return matches[0], nil
+	default:
+		if Flags.DryRun {
+			return matches[len(matches)-1], nil
+		}
+		return gc.deleteOlderComments(org, repo, matches)
+	}
+}
+
+// deleteOlderComments deletes all but the most recent comment in the array, returning it after
+// all others have been deleted.
+func (gc *GithubClient) deleteOlderComments(org, repo string, comments []*github.IssueComment) (*github.IssueComment, error) {
+	for len(comments) > 1 {
+		if err := gc.DeleteComment(org, repo, comments[0].GetID()); err != nil {
+			return nil, err
+		}
+		comments = comments[1:]
+	}
+	return comments[0], nil
 }
 
 // parseEntries collects retry information from the given comment, so we can reuse it in
@@ -169,7 +199,7 @@ func buildNoRetryString(job string, outliers []string) string {
 	lastIndex := len(outliers)
 	if len(outliers) > maxFailedTestsToPrint {
 		lastIndex = maxFailedTestsToPrint
-		extraFailedTests = fmt.Sprintf("\n\nand %d more.", len(outliers) - maxFailedTestsToPrint)
+		extraFailedTests = fmt.Sprintf("\n\nand %d more.", len(outliers)-maxFailedTestsToPrint)
 	}
 	return fmt.Sprintf(noRetryFmt, job, strings.Join(outliers[:lastIndex], "\n"), extraFailedTests)
 }

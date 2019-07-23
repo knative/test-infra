@@ -31,17 +31,33 @@ const (
 	pubsubTopic = "knative-monitoring"
 )
 
+var Flags = initFlags()
+
+type EnvFlags struct {
+  ServiceAccount string // GCP service account file path
+  GithubAccount  string // github account file path
+  DryRun bool           // dry run toggle
+}
+
+func initFlags() *EnvFlags {
+  var f EnvFlags
+  defaultServiceAccount := os.Getenv("GOOGLE_APPLICATION_CREDENTIALS")
+  flag.StringVar(&f.ServiceAccount, "service-account", defaultServiceAccount, "JSON key file for GCS service account")
+	flag.StringVar(&f.GithubAccount, "github-account", "", "Token file for Github authentication")
+	flag.BoolVar(&f.DryRun, "dry-run", false, "dry run switch")
+
+  return &f
+}
+
 func main() {
-	serviceAccount := flag.String("service-account", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"), "JSON key file for GCS service account")
-	githubAccount := flag.String("github-account", "", "Token file for Github authentication")
-	dryrun := flag.Bool("dry-run", false, "dry run switch")
+
 	flag.Parse()
 
-	if err := InitLogParser(*serviceAccount); nil != err {
+	if err := InitLogParser(Flags.ServiceAccount); nil != err {
 		log.Fatalf("Failed authenticating GCS: '%v'", err)
 	}
 
-	handler, err := NewHandlerClient(*githubAccount, *dryrun)
+	handler, err := NewHandlerClient(Flags.GithubAccount)
 	if err != nil {
 		log.Fatalf("Coud not create handler: '%v'", err)
 	}

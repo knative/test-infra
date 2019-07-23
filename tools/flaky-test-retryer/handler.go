@@ -36,12 +36,11 @@ type HandlerClient struct {
 	context.Context
 	pubsub *subscriber.Client
 	github *GithubClient
-	dryrun bool
 }
 
 // NewHandlerClient gives us a handler where we can listen for Pubsub messages and
 // post comments on GitHub.
-func NewHandlerClient(githubAccount string, dryrun bool) (*HandlerClient, error) {
+func NewHandlerClient(githubAccount string) (*HandlerClient, error) {
 	ctx := context.Background()
 	githubClient, err := NewGithubClient(githubAccount)
 	if err != nil {
@@ -55,7 +54,6 @@ func NewHandlerClient(githubAccount string, dryrun bool) (*HandlerClient, error)
 		ctx,
 		pubsubClient,
 		githubClient,
-		dryrun,
 	}, nil
 }
 
@@ -97,7 +95,7 @@ func (hc *HandlerClient) HandleJob(jd *JobData) {
 	logWithPrefix(jd, "got %d flaky tests from today's report\n", len(flakyTests))
 
 	outliers := getNonFlakyTests(failedTests, flakyTests)
-	if err := hc.github.PostComment(jd, outliers, hc.dryrun); err != nil {
+	if err := hc.github.PostComment(jd, outliers); err != nil {
 		logWithPrefix(jd, "Could not post comment: %v", err)
 	}
 }
