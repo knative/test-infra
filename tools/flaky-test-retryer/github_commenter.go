@@ -27,8 +27,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/google/go-github/github"
 	"github.com/knative/test-infra/shared/ghutil"
+	"github.com/google/go-github/github"
 )
 
 const (
@@ -44,7 +44,7 @@ var (
 
 // GithubClient wraps the ghutil Github client
 type GithubClient struct {
-	*ghutil.GithubClient
+	ghutil.GithubOperations
 	Login  string
 	Dryrun bool
 }
@@ -156,18 +156,26 @@ func buildNewComment(jd *JobData, entries map[string]int, outliers []string) (st
 		cmd = buildRetryString(jd.JobName, entries)
 		logWithPrefix(jd, "all failed tests are flaky, triggering retry\n")
 	}
-	for test, retry := range entries {
-		entryString = append(entryString, fmt.Sprintf("%s | %d/%d", test, retry, maxRetries))
+	// print in sorted order so we can actually unit test the results
+	var keys []string
+	for test := range entries {
+		keys = append(keys, test)
 	}
-	return fmt.Sprintf(commentTemplate, identifier, strings.Join(entryString, "\n"), cmd), entries[jd.JobName] <= maxRetries
+	sort.Strings(keys)
+	for _, test := range keys {
+		entryString = append(entryString, fmt.Sprintf("%s | %d/%d", test, entries[test], maxRetries))
+	}
+	return fmt.Sprintf(commentTemplate, identifier, strings.Join(entryString, "\n"), cmd), entries[jd.JobName] < maxRetries
 }
 
 // buildRetryString increments the retry counter and generates a /test string if we have
 // more retries available.
 func buildRetryString(job string, entries map[string]int) string {
 	entries[job]++
-	if entries[job] <= maxRetries {
+	if entries[job] < maxRetries {
 		return fmt.Sprintf("Automatically retrying...\n/test %s", job)
+	} else {
+		entries[job]--
 	}
 	return ""
 }

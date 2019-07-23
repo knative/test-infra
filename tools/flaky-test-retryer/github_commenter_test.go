@@ -21,48 +21,57 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/TrevorFarrelly/test-infra/shared/ghutil/fakeghutil"
 	"github.com/google/go-github/github"
+	"github.com/knative/test-infra/shared/ghutil/fakeghutil"
 	"github.com/knative/test-infra/tools/monitoring/prowapi"
 )
 
 var (
-	fakeCommentBody = `<!--AUTOMATED-FLAKY-RETRYER-->
-  The following tests are currently flaky. Running them again to verify...
+	fakeCommentBodyTemplate = "<!--AUTOMATED-FLAKY-RETRYER-->\n" +
+		"The following tests are currently flaky. Running them again to verify...\n\n" +
+		"Test name | Retries\n" +
+		"--- | ---\n" +
+		"fakejob0 | %d/3\n" +
+		"fakejob1 | %d/3\n\n" +
+		"%s"
+	fakeFailedTestsShort = "Failed non-flaky tests preventing automatic retry of fakejob0:\n\n" +
+		"```\ntest0\ntest1\ntest2\ntest3\n```"
+	fakeFailedTestsLong = "Failed non-flaky tests preventing automatic retry of fakejob0:\n\n" +
+		"```\ntest0\ntest1\ntest2\ntest3\ntest4\ntest5\ntest6\ntest7\n```\n\nand 2 more."
 
-  Test name | Retries
-  --- | ---
-  fakejob | 0/3
-  fakejob2 | 1/3
+	fakeOldCommentBody = fmt.Sprintf(fakeCommentBodyTemplate, 0, 1, "Automatically retrying...\n/test fakejob1")
 
-  /test fakejob2`
-	fakeOrg        = "fakeorg"
-	fakeRepo       = "fakerepo"
-	fakePullNumber = 127
-	fakeUserID     = int64(99)
-	fakeUserLogin  = "fakelogin"
-	fakeUser       = &github.User{
+	fakeOrg       = "fakeorg"
+	fakeRepo      = "fakerepo"
+	fakeUserLogin = "fakelogin"
+	fakePullID    = 127
+	fakeCommentID = int64(1)
+	fakeUserID    = int64(99)
+	fakeUser      = &github.User{
 		ID:    &fakeUserID,
 		Login: &fakeUserLogin,
 	}
+	fakeOldComment = &github.IssueComment{
+		ID:   &fakeCommentID,
+		Body: &fakeOldCommentBody,
+		User: fakeUser,
+	}
 	fakeJob = JobData{
 		&prowapi.ReportMessage{
-			JobName: "test-job-2",
+			JobName: "fakejob0",
 			Refs: []prowapi.Refs{{
 				Org:  fakeOrg,
 				Repo: fakeRepo,
 				Pulls: []prowapi.Pull{{
-					Number: fakePullNumber,
+					Number: fakePullID,
 				}},
 			}},
 		},
 		nil,
 		nil,
 	}
-	fakeOldComment = &github.IssueComment{
-		Body: &fakeCommentBody,
-		User: fakeUser,
-	}
+
+	fakeFailedTests = []string{"test0", "test1", "test2", "test3", "test4", "test5", "test6", "test7", "test8", "test9"}
 )
 
 func getFakeGithubClient() *GithubClient {
@@ -85,21 +94,21 @@ func TestGetOldComment(t *testing.T) {
 		wantComment *github.IssueComment
 		wantErr     error
 	}{
-		{gc, fakeOrg, fakeRepo, fakePullNumber, nil, nil},
-		{gc, fakeOrg, fakeRepo, fakePullNumber, fakeOldComment, nil},
-		{gc, fakeOrg, fakeRepo, fakePullNumber, nil, fmt.Errorf("more than one comment on PR")},
+		{gc, fakeOrg, fakeRepo, fakePullID, nil, nil},
+		{gc, fakeOrg, fakeRepo, fakePullID, fakeOldComment, nil},
+		{gc, fakeOrg, fakeRepo, fakePullID, nil, fmt.Errorf("more than one comment on PR")},
 	}
 
 	for _, test := range cases {
 		actualComment, actualErr := test.client.getOldComment(test.org, test.repo, test.pull)
-		if actualComment != test.wantComment {
+		if !reflect.DeepEqual(actualComment, test.wantComment) {
 			t.Errorf("get old comment: got comment %v, want comment %v", actualComment, test.wantComment)
 		}
 		if !reflect.DeepEqual(actualErr, test.wantErr) {
 			t.Errorf("get old comment: got err %v, want err %v", actualErr, test.wantErr)
 		}
 		// add a comment so we test 0, 1, and 2 comments on the PR respectively
-		test.client.CreateComment(test.org, test.repo, test.pull, fakeCommentBody)
+		test.client.CreateComment(test.org, test.repo, test.pull, fakeOldCommentBody)
 	}
 }
 
@@ -108,11 +117,11 @@ func TestParseEntries(t *testing.T) {
 		input *github.IssueComment
 		want  map[string]int
 	}{
-		{fakeOldComment, map[string]int{"fakejob": 0, "fakejob2": 1}},
+		{fakeOldComment, map[string]int{"fakejob0": 0, "fakejob1": 1}},
 	}
 	for _, data := range cases {
 		actual, _ := parseEntries(data.input)
-		if !reflect.DeepEqual(data.want, actual) {
+		if !reflect.DeepEqual(actual, data.want) {
 			t.Fatalf("parse entries: got '%v', want '%v'", actual, data.want)
 		}
 	}
@@ -123,6 +132,22 @@ func TestBuildNewComment(t *testing.T) {
 		jd       *JobData
 		entries  map[string]int
 		outliers []string
-		want     string
-	}{}
+		wantBody string
+		wantBool bool
+	}{
+		{&fakeJob, map[string]int{"fakejob0": 0, "fakejob1": 1}, nil, fmt.Sprintf(fakeCommentBodyTemplate, 1, 1, "Automatically retrying...\n/test fakejob0"), true},
+		{&fakeJob, map[string]int{"fakejob0": 3, "fakejob1": 1}, nil, fmt.Sprintf(fakeCommentBodyTemplate, 3, 1, ""), false},
+		{&fakeJob, map[string]int{"fakejob0": 0, "fakejob1": 1}, fakeFailedTests[:4], fmt.Sprintf(fakeCommentBodyTemplate, 0, 1, fakeFailedTestsShort), true},
+		{&fakeJob, map[string]int{"fakejob0": 0, "fakejob1": 1}, fakeFailedTests, fmt.Sprintf(fakeCommentBodyTemplate, 0, 1, fakeFailedTestsLong), true},
+	}
+
+	for _, test := range cases {
+		gotBody, gotBool := buildNewComment(test.jd, test.entries, test.outliers)
+		if gotBody != test.wantBody {
+			t.Fatalf("build new comment: got body \n'%v'\n, want \n'%v'", gotBody, test.wantBody)
+		}
+		if gotBool != test.wantBool {
+			t.Fatalf("build new comment: got bool '%v', want '%v'", gotBool, test.wantBool)
+		}
+	}
 }
