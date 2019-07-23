@@ -27,19 +27,57 @@ import (
 )
 
 var (
-	fakeCommentBodyTemplate = "<!--AUTOMATED-FLAKY-RETRYER-->\n" +
-		"The following tests are currently flaky. Running them again to verify...\n\n" +
-		"Test name | Retries\n" +
-		"--- | ---\n" +
-		"fakejob0 | %d/3\n" +
-		"fakejob1 | %d/3\n\n" +
-		"%s"
-	fakeFailedTestsShort = "Failed non-flaky tests preventing automatic retry of fakejob0:\n\n" +
-		"```\ntest0\ntest1\ntest2\ntest3\n```"
-	fakeFailedTestsLong = "Failed non-flaky tests preventing automatic retry of fakejob0:\n\n" +
-		"```\ntest0\ntest1\ntest2\ntest3\ntest4\ntest5\ntest6\ntest7\n```\n\nand 2 more."
+	oldCommentBody = `<!--AUTOMATED-FLAKY-RETRYER-->
+The following tests are currently flaky. Running them again to verify...
 
-	fakeOldCommentBody = fmt.Sprintf(fakeCommentBodyTemplate, 0, 1, "Automatically retrying...\n/test fakejob1")
+Test name | Retries
+--- | ---
+fakejob0 | 0/3
+fakejob1 | 1/3
+
+Automatically retrying...
+/test fakejob1`
+	retryCommentBody = `<!--AUTOMATED-FLAKY-RETRYER-->
+The following tests are currently flaky. Running them again to verify...
+
+Test name | Retries
+--- | ---
+fakejob0 | 1/3
+fakejob1 | 1/3
+
+Automatically retrying...
+/test fakejob0`
+	noMoreRetriesCommentBody = `<!--AUTOMATED-FLAKY-RETRYER-->
+The following tests are currently flaky. Running them again to verify...
+
+Test name | Retries
+--- | ---
+fakejob0 | 3/3
+fakejob1 | 1/3
+
+`
+	failedShortCommentBody = `<!--AUTOMATED-FLAKY-RETRYER-->
+The following tests are currently flaky. Running them again to verify...
+
+Test name | Retries
+--- | ---
+fakejob0 | 0/3
+fakejob1 | 1/3
+
+Failed non-flaky tests preventing automatic retry of fakejob0:
+
+`+"```\ntest0\ntest1\ntest2\ntest3\n```"
+	failedLongCommentBody = `<!--AUTOMATED-FLAKY-RETRYER-->
+The following tests are currently flaky. Running them again to verify...
+
+Test name | Retries
+--- | ---
+fakejob0 | 0/3
+fakejob1 | 1/3
+
+Failed non-flaky tests preventing automatic retry of fakejob0:
+
+`+"```\ntest0\ntest1\ntest2\ntest3\ntest4\ntest5\ntest6\ntest7\n```\n\nand 2 more."
 
 	fakeOrg       = "fakeorg"
 	fakeRepo      = "fakerepo"
@@ -53,7 +91,7 @@ var (
 	}
 	fakeOldComment = &github.IssueComment{
 		ID:   &fakeCommentID,
-		Body: &fakeOldCommentBody,
+		Body: &oldCommentBody,
 		User: fakeUser,
 	}
 	fakeJob = JobData{
@@ -108,7 +146,7 @@ func TestGetOldComment(t *testing.T) {
 			t.Errorf("get old comment: got err %v, want err %v", actualErr, test.wantErr)
 		}
 		// add a comment so we test 0, 1, and 2 comments on the PR respectively
-		test.client.CreateComment(test.org, test.repo, test.pull, fakeOldCommentBody)
+		test.client.CreateComment(test.org, test.repo, test.pull, oldCommentBody)
 	}
 }
 
@@ -135,10 +173,10 @@ func TestBuildNewComment(t *testing.T) {
 		wantBody string
 		wantBool bool
 	}{
-		{&fakeJob, map[string]int{"fakejob0": 0, "fakejob1": 1}, nil, fmt.Sprintf(fakeCommentBodyTemplate, 1, 1, "Automatically retrying...\n/test fakejob0"), true},
-		{&fakeJob, map[string]int{"fakejob0": 3, "fakejob1": 1}, nil, fmt.Sprintf(fakeCommentBodyTemplate, 3, 1, ""), false},
-		{&fakeJob, map[string]int{"fakejob0": 0, "fakejob1": 1}, fakeFailedTests[:4], fmt.Sprintf(fakeCommentBodyTemplate, 0, 1, fakeFailedTestsShort), true},
-		{&fakeJob, map[string]int{"fakejob0": 0, "fakejob1": 1}, fakeFailedTests, fmt.Sprintf(fakeCommentBodyTemplate, 0, 1, fakeFailedTestsLong), true},
+		{&fakeJob, map[string]int{"fakejob0": 0, "fakejob1": 1}, nil, retryCommentBody, true},
+		{&fakeJob, map[string]int{"fakejob0": 3, "fakejob1": 1}, nil, noMoreRetriesCommentBody, false},
+		{&fakeJob, map[string]int{"fakejob0": 0, "fakejob1": 1}, fakeFailedTests[:4], failedShortCommentBody, true},
+		{&fakeJob, map[string]int{"fakejob0": 0, "fakejob1": 1}, fakeFailedTests, failedLongCommentBody, true},
 	}
 
 	for _, test := range cases {
