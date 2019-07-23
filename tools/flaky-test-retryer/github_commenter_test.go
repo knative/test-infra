@@ -123,6 +123,8 @@ func getFakeGithubClient() *GithubClient {
 	}
 }
 
+// note: this test is not a standard table-driven test, each case depends on the previous. We add a comment
+// to the PR each iteration so we can cover the 0 comments, 1 comment, and 2 comments cases.
 func TestGetOldComment(t *testing.T) {
 	gc := getFakeGithubClient()
 	cases := []struct {
@@ -145,7 +147,6 @@ func TestGetOldComment(t *testing.T) {
 		if !reflect.DeepEqual(actualErr, test.wantErr) {
 			t.Errorf("get old comment: got err %v, want err %v", actualErr, test.wantErr)
 		}
-		// add a comment so we test 0, 1, and 2 comments on the PR respectively
 		test.client.CreateComment(test.org, test.repo, test.pull, oldCommentBody)
 	}
 }
