@@ -2728,7 +2728,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "28 */2 * * *"
+- cron: "35 */2 * * *"
   name: ci-knative-serving-gloo-0.17.1
   agent: kubernetes
   decorate: true
@@ -2736,6 +2736,7 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
+    path_alias: knative.dev/serving
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
