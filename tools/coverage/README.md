@@ -11,13 +11,12 @@ See the [design document](design.md)
 
 ## Build and Release
 
-Run `make coverage-dev-image` to build and upload a staging version, intended for testing and debugging.
-The staging version can be triggered on a PR through the comment
-`/test pull-knative-<repository name>-go-coverage-dev`.
+Run `make coverage-dev-image` to build and upload a staging version, intended for testing and debugging. The staging version can be triggered on a PR through the comment
+`/test pull-knative-serving-go-coverage-dev`. Note that staging version can only be tested against the serving repository because the staging jobs only exist in the serving repository.
 
 ### Validating the staging version
 
-- To run the pre-submit workflow, add the comment `/test pull-knative-<repository name>-go-coverage-dev` to a PR.
+- To run the pre-submit workflow, add the comment `/test pull-knative-serving-go-coverage-dev` to a PR.
 - To run the periodic workflow, (re)run a `post-knative-serving-go-coverage-dev` job.
 
 To publish a new version of the code coverage tool, run `make coverage-image`.
