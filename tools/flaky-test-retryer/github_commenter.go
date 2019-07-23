@@ -46,10 +46,11 @@ var (
 type GithubClient struct {
 	*ghutil.GithubClient
 	Login string
+	Dryrun bool
 }
 
 // NewGithubClient builds us a GitHub client based on the token file passed in
-func NewGithubClient(githubAccount string) (*GithubClient, error) {
+func NewGithubClient(githubAccount string, dryrun bool) (*GithubClient, error) {
 	ghc, err := ghutil.NewGithubClient(githubAccount)
 	if err != nil {
 		return nil, err
@@ -58,7 +59,7 @@ func NewGithubClient(githubAccount string) (*GithubClient, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &GithubClient{ghc, *user.Login}, nil
+	return &GithubClient{ghc, *user.Login, dryrun}, nil
 }
 
 // PostComment posts a new comment on the PR specified in JobData, retrying the job that triggered it.
@@ -80,7 +81,7 @@ func (gc *GithubClient) PostComment(jd *JobData, outliers []string) error {
 	if !canRetry {
 		return fmt.Errorf("expended all %d retries", maxRetries)
 	}
-	if Flags.DryRun {
+	if gc.Dryrun {
 		logWithPrefix(jd, "[dry run] Comment not updated. See it here:\n%s\n", newComment)
 		return nil
 	}
@@ -112,10 +113,6 @@ func (gc *GithubClient) getOldComment(org, repo string, pull int) (*github.Issue
 			matches = append(matches, comment)
 		}
 	}
-	// sort comments in descending order
-	sort.Slice(comments, func(i, j int) bool {
-		return comments[i].GetCreatedAt().Unix() < comments[i].GetCreatedAt().Unix()
-	})
 
 	switch len(matches) {
 	case 0:
@@ -123,23 +120,8 @@ func (gc *GithubClient) getOldComment(org, repo string, pull int) (*github.Issue
 	case 1:
 		return matches[0], nil
 	default:
-		if Flags.DryRun {
-			return matches[len(matches)-1], nil
-		}
-		return gc.deleteOlderComments(org, repo, matches)
+		return nil, fmt.Errorf("more than one comment on PR")
 	}
-}
-
-// deleteOlderComments deletes all but the most recent comment in the array, returning it after
-// all others have been deleted.
-func (gc *GithubClient) deleteOlderComments(org, repo string, comments []*github.IssueComment) (*github.IssueComment, error) {
-	for len(comments) > 1 {
-		if err := gc.DeleteComment(org, repo, comments[0].GetID()); err != nil {
-			return nil, err
-		}
-		comments = comments[1:]
-	}
-	return comments[0], nil
 }
 
 // parseEntries collects retry information from the given comment, so we can reuse it in
@@ -153,11 +135,11 @@ func parseEntries(comment *github.IssueComment) (map[string]int, error) {
 	entryStrings := re.FindAll([]byte(comment.GetBody()), -1)
 	for _, e := range entryStrings {
 		fields := strings.Split(string(e), " | ")
-		retry, err := strconv.Atoi(strings.TrimSuffix(fields[1], "/3"))
+		retry, err := strconv.Atoi(strings.Split(fields[1], "/")[0])
 		if err != nil {
 			return nil, err
 		}
-		entries[strings.Trim(fields[0], "`")] = retry
+		entries[fields[0]] = retry
 	}
 	return entries, nil
 }

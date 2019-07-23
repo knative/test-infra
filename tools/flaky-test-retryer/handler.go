@@ -40,9 +40,9 @@ type HandlerClient struct {
 
 // NewHandlerClient gives us a handler where we can listen for Pubsub messages and
 // post comments on GitHub.
-func NewHandlerClient(githubAccount string) (*HandlerClient, error) {
+func NewHandlerClient(githubAccount string, dryrun bool) (*HandlerClient, error) {
 	ctx := context.Background()
-	githubClient, err := NewGithubClient(githubAccount)
+	githubClient, err := NewGithubClient(githubAccount, dryrun)
 	if err != nil {
 		return nil, fmt.Errorf("Github client: %v", err)
 	}
