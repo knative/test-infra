@@ -45,7 +45,7 @@ var (
 // GithubClient wraps the ghutil Github client
 type GithubClient struct {
 	*ghutil.GithubClient
-	Login string
+	Login  string
 	Dryrun bool
 }
 
