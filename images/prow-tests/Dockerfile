@@ -63,7 +63,7 @@ RUN cp /go/src/knative.dev/test-infra/tools/githubhelper/githubhelper .
 
 # Use a local dep-collector that's a wrapper for building the tool
 # on-the-fly.
-# TODO(adrcunha): Remove once https://knative.dev/test-infra/pull/1019 is in all repos.
+# TODO(adrcunha): Remove once https://github.com/knative/test-infra/pull/1019 is in all repos.
 RUN cp /go/src/knative.dev/test-infra/images/prow-tests/dep-collector /usr/bin/dep-collector
 
 # Remove test-infra from the container

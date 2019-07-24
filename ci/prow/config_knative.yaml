@@ -111,8 +111,11 @@ presubmits:
 
   knative/test-infra:
     - build-tests: true
+      dot-dev: true
     - unit-tests: true
+      dot-dev: true
     - integration-tests: true
+      dot-dev: true
 
   knative/caching:
     - build-tests: true
@@ -267,6 +270,7 @@ periodics:
 
   knative/test-infra:
     - continuous: true
+      dot-dev: true
 
   knative/serving-operator:
     - continuous: true

@@ -30,7 +30,7 @@ import (
 	"knative.dev/test-infra/tools/flaky-test-reporter/jsonreport"
 
 	// TODO: remove this import once "k8s.io/test-infra" import problems are fixed
-	// https://github.com/test-infra/test-infra/issues/912
+	// https://github.com/knative/test-infra/test-infra/issues/912
 	"knative.dev/test-infra/tools/monitoring/prowapi"
 )
 
