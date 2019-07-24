@@ -6,7 +6,7 @@ This directory contains the config for our
 - `Makefile` Commands to interact with the Prow instance regarding configs and
   updates.
 - `boskos` Configuration for the Boskos instance.
-- `cluster.yaml` Configuration of the Prow cluster.
+- `deployments/*.yaml` Deployments of the Prow cluster.
 - `config.yaml` Generated configuration of the Prow jobs.
 - `config_knative.yaml` Input configuration for `make_config.go` to generate
   `config.yaml`.

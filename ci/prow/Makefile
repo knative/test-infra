@@ -53,13 +53,13 @@ update-plugins:
 	$(UNSET_CONTEXT)
 
 # Update all deployments of boskos
-update-boskos-deployments:
+update-all-boskos-deployments:
 	$(SET_CONTEXT)
 	@for f in $(shell ls boskos/deployments/*.yaml); do kubectl apply -f $${f}; done
 	$(UNSET_CONTEXT)
 
-# Update single deployment of boskos, expect passing in ${NAME} like `make update-boskos-deployment NAME=janitor_deployment`
-update-boskos-deployment:
+# Update single deployment of boskos, expect passing in ${NAME} like `make update-single-boskos-deployment NAME=janitor_deployment`
+update-single-boskos-deployment:
 	$(SET_CONTEXT)
 	kubectl apply -f boskos/deployments/$(NAME).yaml
 	$(UNSET_CONTEXT)
@@ -70,13 +70,13 @@ update-boskos-resource:
 	$(UNSET_CONTEXT)
 
 # Update all deployment of cluster
-update-cluster-deployments:
+update-all-cluster-deployments:
 	$(SET_CONTEXT)
 	@for f in $(shell ls deployments/*.yaml); do kubectl apply -f $${f}; done
 	$(UNSET_CONTEXT)
 
-# Update single deployment of cluster, expect passing in ${NAME} like `make update-cluster-deployment NAME=crier_deployment`
-update-cluster-deployment:
+# Update single deployment of cluster, expect passing in ${NAME} like `make update-single-cluster-deployment NAME=crier_deployment`
+update-single-cluster-deployment:
 	$(SET_CONTEXT)
 	kubectl apply -f deployments/$(NAME).yaml
 	$(UNSET_CONTEXT)
