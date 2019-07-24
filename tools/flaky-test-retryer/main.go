@@ -31,18 +31,36 @@ const (
 	pubsubTopic = "knative-monitoring"
 )
 
-func main() {
-	serviceAccount := flag.String("service-account", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"), "JSON key file for GCS service account")
-	githubAccount := flag.String("github-account", "", "Token file for Github authentication")
-	flag.Parse()
+type EnvFlags struct {
+	ServiceAccount string // GCP service account file path
+	GithubAccount  string // github account file path
+	Dryrun         bool   // dry run toggle
+}
 
-	if err := InitLogParser(*serviceAccount); nil != err {
+func initFlags() *EnvFlags {
+	var f EnvFlags
+	defaultServiceAccount := os.Getenv("GOOGLE_APPLICATION_CREDENTIALS")
+	flag.StringVar(&f.ServiceAccount, "service-account", defaultServiceAccount, "JSON key file for GCS service account")
+	flag.StringVar(&f.GithubAccount, "github-account", "", "Token file for Github authentication")
+	flag.BoolVar(&f.Dryrun, "dry-run", false, "dry run switch")
+	flag.Parse()
+	return &f
+}
+
+func main() {
+	flags := initFlags()
+
+	if err := InitLogParser(flags.ServiceAccount); nil != err {
 		log.Fatalf("Failed authenticating GCS: '%v'", err)
 	}
 
-	handler, err := NewHandlerClient(*githubAccount)
+	handler, err := NewHandlerClient(flags.GithubAccount, flags.Dryrun)
 	if err != nil {
 		log.Fatalf("Coud not create handler: '%v'", err)
+	}
+
+	if flags.Dryrun {
+		log.Println("running in [dry run] mode")
 	}
 
 	handler.Listen()

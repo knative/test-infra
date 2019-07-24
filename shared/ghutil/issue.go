@@ -199,6 +199,19 @@ func (gc *GithubClient) EditComment(org, repo string, commentID int64, commentBo
 	return err
 }
 
+// DeleteComment deletes comment from issue
+func (gc *GithubClient) DeleteComment(org, repo string, commentID int64) error {
+	_, err := gc.retry(
+		fmt.Sprintf("deleting comment '%s %s %d'", org, repo, commentID),
+		maxRetryCount,
+		func() (*github.Response, error) {
+			resp, err := gc.Client.Issues.DeleteComment(ctx, org, repo, commentID)
+			return resp, err
+		},
+	)
+	return err
+}
+
 // AddLabelsToIssue adds label on issue
 func (gc *GithubClient) AddLabelsToIssue(org, repo string, issueNumber int, labels []string) error {
 	_, err := gc.retry(
