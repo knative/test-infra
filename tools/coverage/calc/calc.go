@@ -24,7 +24,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/knative/test-infra/tools/coverage/artifacts"
+	"knative.dev/test-infra/tools/coverage/artifacts"
 )
 
 // CovList read profiling information from reader and constructs CoverageList.

@@ -22,8 +22,8 @@ import (
 	"sort"
 	"strconv"
 
-	"github.com/knative/test-infra/tools/coverage/artifacts"
-	"github.com/knative/test-infra/tools/coverage/logUtil"
+	"knative.dev/test-infra/tools/coverage/artifacts"
+	"knative.dev/test-infra/tools/coverage/logUtil"
 )
 
 type PostSubmit struct {

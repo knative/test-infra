@@ -17,10 +17,10 @@
 rm -fr ${GOPATH}/src/github.com/google/licenseclassifier
 rm -fr ${GOPATH}/bin/dep-collector
 go get -u github.com/google/licenseclassifier
-if [[ -d "${GOPATH}/src/github.com/knative/test-infra/tools/dep-collector" ]]; then
-  go install ${GOPATH}/src/github.com/knative/test-infra/tools/dep-collector
+if [[ -d "${GOPATH}/src/knative.dev/test-infra/tools/dep-collector" ]]; then
+  go install ${GOPATH}/src/knative.dev/test-infra/tools/dep-collector
 else
-  go get -u github.com/knative/test-infra/tools/dep-collector
+  go get -u knative.dev/test-infra/tools/dep-collector
 fi
 ${GOPATH}/bin/dep-collector $@
 err=$?

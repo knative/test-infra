@@ -21,10 +21,10 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/knative/test-infra/shared/junit"
-	"github.com/knative/test-infra/tools/coverage/artifacts"
-	"github.com/knative/test-infra/tools/coverage/calc"
-	"github.com/knative/test-infra/tools/coverage/logUtil"
+	"knative.dev/test-infra/shared/junit"
+	"knative.dev/test-infra/tools/coverage/artifacts"
+	"knative.dev/test-infra/tools/coverage/calc"
+	"knative.dev/test-infra/tools/coverage/logUtil"
 )
 
 // NewTestCase constructs the TestCase struct

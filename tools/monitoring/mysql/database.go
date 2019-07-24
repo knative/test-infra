@@ -22,7 +22,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/knative/test-infra/shared/mysql"
+	"knative.dev/test-infra/shared/mysql"
 )
 
 const alertInsertStmt = `
@@ -35,7 +35,7 @@ type DB struct {
 }
 
 // ErrorLog stores a row in the "ErrorLogs" db table
-// Table schema: github.com/knative/test-infra/tools/monitoring/mysql/schema.sql
+// Table schema: knative.dev/test-infra/tools/monitoring/mysql/schema.sql
 type ErrorLog struct {
 	Pattern     string
 	Msg         string
@@ -46,7 +46,7 @@ type ErrorLog struct {
 }
 
 // Alert maps to the Alerts table
-// Table schema: github.com/knative/test-infra/tools/monitoring/mysql/schema.sql
+// Table schema: knative.dev/test-infra/tools/monitoring/mysql/schema.sql
 type Alert struct {
 	ErrorPattern string
 	Sent         time.Time

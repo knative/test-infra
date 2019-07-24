@@ -20,7 +20,7 @@ import (
 	"path"
 )
 
-const projectPathLessGoPath = "src/github.com/knative/test-infra/tools/coverage"
+const projectPathLessGoPath = "src/knative.dev/test-infra/tools/coverage"
 
 func ProjDir() string {
 	gopath := os.Getenv("GOPATH")

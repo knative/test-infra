@@ -5,8 +5,8 @@ import (
 	"log"
 
 	"cloud.google.com/go/storage"
-	"github.com/knative/test-infra/tools/coverage/artifacts"
-	"github.com/knative/test-infra/tools/coverage/artifacts/artsTest"
+	"knative.dev/test-infra/tools/coverage/artifacts"
+	"knative.dev/test-infra/tools/coverage/artifacts/artsTest"
 )
 
 type fakeStorageClient struct{}

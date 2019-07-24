@@ -27,8 +27,8 @@ import (
 
 	"github.com/google/go-github/github"
 
-	"github.com/knative/test-infra/shared/ghutil"
-	"github.com/knative/test-infra/shared/junit"
+	"knative.dev/test-infra/shared/ghutil"
+	"knative.dev/test-infra/shared/junit"
 )
 
 const (

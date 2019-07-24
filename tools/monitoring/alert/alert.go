@@ -20,13 +20,13 @@ import (
 	"context"
 	"log"
 
-	"github.com/knative/test-infra/shared/gcs"
-	"github.com/knative/test-infra/tools/monitoring/config"
-	"github.com/knative/test-infra/tools/monitoring/log_parser"
-	"github.com/knative/test-infra/tools/monitoring/mail"
-	"github.com/knative/test-infra/tools/monitoring/mysql"
-	"github.com/knative/test-infra/tools/monitoring/prowapi"
-	"github.com/knative/test-infra/tools/monitoring/subscriber"
+	"knative.dev/test-infra/shared/gcs"
+	"knative.dev/test-infra/tools/monitoring/config"
+	"knative.dev/test-infra/tools/monitoring/log_parser"
+	"knative.dev/test-infra/tools/monitoring/mail"
+	"knative.dev/test-infra/tools/monitoring/mysql"
+	"knative.dev/test-infra/tools/monitoring/prowapi"
+	"knative.dev/test-infra/tools/monitoring/subscriber"
 )
 
 // Client holds all the resources required to run alerting

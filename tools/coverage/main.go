@@ -22,11 +22,11 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/knative/test-infra/tools/coverage/artifacts"
-	"github.com/knative/test-infra/tools/coverage/gcs"
-	"github.com/knative/test-infra/tools/coverage/githubUtil/githubPr"
-	"github.com/knative/test-infra/tools/coverage/logUtil"
-	"github.com/knative/test-infra/tools/coverage/testgrid"
+	"knative.dev/test-infra/tools/coverage/artifacts"
+	"knative.dev/test-infra/tools/coverage/gcs"
+	"knative.dev/test-infra/tools/coverage/githubUtil/githubPr"
+	"knative.dev/test-infra/tools/coverage/logUtil"
+	"knative.dev/test-infra/tools/coverage/testgrid"
 )
 
 const (

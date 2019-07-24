@@ -26,7 +26,7 @@ import (
 	"path/filepath"
 	"regexp"
 
-	"github.com/knative/test-infra/shared/common"
+	"knative.dev/test-infra/shared/common"
 )
 
 // Update all tags in a byte slice

@@ -21,12 +21,12 @@ import (
 	"log"
 	"testing"
 
-	"github.com/knative/test-infra/tools/coverage/artifacts/artsTest"
-	"github.com/knative/test-infra/tools/coverage/gcs"
-	"github.com/knative/test-infra/tools/coverage/gcs/gcsFakes"
-	"github.com/knative/test-infra/tools/coverage/githubUtil/githubFakes"
-	"github.com/knative/test-infra/tools/coverage/githubUtil/githubPr"
-	"github.com/knative/test-infra/tools/coverage/test"
+	"knative.dev/test-infra/tools/coverage/artifacts/artsTest"
+	"knative.dev/test-infra/tools/coverage/gcs"
+	"knative.dev/test-infra/tools/coverage/gcs/gcsFakes"
+	"knative.dev/test-infra/tools/coverage/githubUtil/githubFakes"
+	"knative.dev/test-infra/tools/coverage/githubUtil/githubPr"
+	"knative.dev/test-infra/tools/coverage/test"
 )
 
 const (

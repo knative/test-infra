@@ -21,8 +21,8 @@ import (
 	"sort"
 	"time"
 
-	"github.com/knative/test-infra/tools/monitoring/config"
-	"github.com/knative/test-infra/tools/monitoring/mysql"
+	"knative.dev/test-infra/tools/monitoring/config"
+	"knative.dev/test-infra/tools/monitoring/mysql"
 )
 
 const emailTemplate = `In the past %v, 

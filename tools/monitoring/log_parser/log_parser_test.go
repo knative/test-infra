@@ -21,7 +21,7 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/knative/test-infra/tools/monitoring/mysql"
+	"knative.dev/test-infra/tools/monitoring/mysql"
 )
 
 const (

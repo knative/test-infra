@@ -21,9 +21,9 @@ import (
 	"log"
 	"time"
 
-	"github.com/knative/test-infra/shared/mysql"
-	"github.com/knative/test-infra/tools/monitoring/config"
-	msql "github.com/knative/test-infra/tools/monitoring/mysql"
+	"knative.dev/test-infra/shared/mysql"
+	"knative.dev/test-infra/tools/monitoring/config"
+	msql "knative.dev/test-infra/tools/monitoring/mysql"
 )
 
 func main() {

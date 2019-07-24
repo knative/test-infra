@@ -21,7 +21,7 @@ import (
 	"log"
 	"sync"
 
-	"github.com/knative/test-infra/tools/flaky-test-reporter/jsonreport"
+	"knative.dev/test-infra/tools/flaky-test-reporter/jsonreport"
 )
 
 // when reporting on all flaky tests in a repo, we want to eliminate the "job" layer, compressing all flaky

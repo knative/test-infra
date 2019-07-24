@@ -22,8 +22,8 @@ import (
 	"testing"
 
 	"github.com/google/go-github/github"
-	"github.com/knative/test-infra/shared/ghutil/fakeghutil"
-	"github.com/knative/test-infra/tools/flaky-test-reporter/config"
+	"knative.dev/test-infra/shared/ghutil/fakeghutil"
+	"knative.dev/test-infra/tools/flaky-test-reporter/config"
 )
 
 var testStatsMapForTest = map[string]TestStat{

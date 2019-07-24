@@ -18,7 +18,7 @@ package calc
 import (
 	"testing"
 
-	"github.com/knative/test-infra/tools/coverage/test"
+	"knative.dev/test-infra/tools/coverage/test"
 )
 
 func testCoverage() (c *Coverage) {

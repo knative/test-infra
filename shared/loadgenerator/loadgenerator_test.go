@@ -20,8 +20,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/knative/test-infra/shared/loadgenerator"
-	"github.com/knative/test-infra/shared/prow"
+	"knative.dev/test-infra/shared/loadgenerator"
+	"knative.dev/test-infra/shared/prow"
 )
 
 func TestSaveJSON(t *testing.T) {

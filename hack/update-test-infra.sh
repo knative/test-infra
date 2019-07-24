@@ -23,10 +23,10 @@ echo "This script updates the vendored test-infra in all Knative repos,"
 echo "creating commits for each one of them. The PRs must still be created"
 echo "through GitHub UI (just open the link given at the end of the process)."
 echo "This script expects the Knative repositories to be located under"
-echo "\$GOPATH/src/github.com/knative (as instructed by the development docs)."
+echo "\$GOPATH/src/knative.dev (as instructed by the development docs)."
 
 cd ${GOPATH}
-cd src/github.com/knative
+cd src/knative.dev
 
 for repo in *; do
   [[ "${repo}" == "test-infra" ]] && continue
@@ -40,11 +40,11 @@ for repo in *; do
   needs_update=0
   if [[ -f "Gopkg.lock" ]]; then
     needs_update=1
-    dep ensure -update github.com/knative/test-infra
+    dep ensure -update knative.dev knative.dev/test-infra
     ./hack/update-deps.sh
   elif [[ -f "go.mod" ]]; then
     needs_update=1
-    GO111MODULE=on go get -u github.com/knative/test-infra/scripts
+    GO111MODULE=on go get -u knative.dev/test-infra/scripts
     GO111MODULE=on go mod vendor
   fi
   if (( needs_update )); then

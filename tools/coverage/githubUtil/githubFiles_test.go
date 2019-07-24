@@ -19,8 +19,8 @@ import (
 	"path"
 	"testing"
 
-	"github.com/knative/test-infra/tools/coverage/githubUtil/githubFakes"
-	"github.com/knative/test-infra/tools/coverage/test"
+	"knative.dev/test-infra/tools/coverage/githubUtil/githubFakes"
+	"knative.dev/test-infra/tools/coverage/test"
 )
 
 func TestGetConcernedFiles(t *testing.T) {
