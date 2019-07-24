@@ -23,12 +23,12 @@ spec:
         app: flaky-test-retry-bot
     spec:
       containers:
-        image: gcr.io/trevorfarrelly-knative-2019/flaky-test-retryer:latest
-        imagePullPolicy
+        image: gcr.io/knative-tests/flaky-test-retryer:latest
+        imagePullPolicy: Always
         command: "/flaky-test-retryer"
         args:
         - "--service-account=/etc/test-account/service-account.json"
-        #- "--github-account=/etc/flaky-test-reporter-github-token/token"
+        - "--github-account=/etc/flaky-test-reporter-github-token/token"
         - "--dry-run=true"
         env:
         - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -37,13 +37,13 @@ spec:
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
-        #- name: flaky-test-reporter-github-token
-        #  mountPath: /etc/flaky-test-reporter-github-token
-        #  readOnly: true
+        - name: flaky-test-reporter-github-token
+          mountPath: /etc/flaky-test-reporter-github-token
+          readOnly: true
       volumes:
       - name: test-account
         secret:
           secretName: test-account
-      #- name: flaky-test-reporter-github-token
-      #  secret:
-      #    secretName: flaky-test-reporter-github-token
+      - name: flaky-test-reporter-github-token
+        secret:
+          secretName: flaky-test-reporter-github-token
