@@ -136,9 +136,9 @@ func createSlackMessageForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyI
 	return message
 }
 
-func sendSlackNotifications(repoDataAll []*RepoData, c *SlackClient, ghi *GithubIssue, dryrun bool) error {
+func sendSlackNotifications(repoDataAll []*RepoData, c *SlackClient, gih *GithubIssueHandler, dryrun bool) error {
 	var allErrs []error
-	flakyIssuesMap, err := ghi.getFlakyIssues()
+	flakyIssuesMap, err := gih.getFlakyIssues()
 	if nil != err { // failure here will make message missing Github issues link, which should not prevent notification
 		allErrs = append(allErrs, err)
 		log.Println("Warning: cannot get flaky Github issues: ", err)
@@ -151,8 +151,9 @@ func sendSlackNotifications(repoDataAll []*RepoData, c *SlackClient, ghi *Github
 		}
 		ch := make(chan bool, len(channels))
 		wg := sync.WaitGroup{}
-		for _, channel := range channels {
+		for i := range channels {
 			wg.Add(1)
+			channel := channels[i]
 			go func(wg *sync.WaitGroup) {
 				message := createSlackMessageForRepo(rd, flakyIssuesMap)
 				if err := run(
@@ -160,7 +161,8 @@ func sendSlackNotifications(repoDataAll []*RepoData, c *SlackClient, ghi *Github
 					func() error {
 						return c.writeSlackMessage(message, channel.Identity)
 					},
-					dryrun); nil != err {
+					dryrun,
+				); nil != err {
 					allErrs = append(allErrs, err)
 					log.Printf("failed sending notification to Slack channel '%s': '%v'", channel.Name, err)
 				}
