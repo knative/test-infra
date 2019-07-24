@@ -55,7 +55,7 @@ Test name | Retries
 fakejob0 | 3/3
 fakejob1 | 1/3
 
-`
+Job fakejob0 expended all 3 retries without success.`
 	failedShortCommentBody = `<!--AUTOMATED-FLAKY-RETRYER-->
 The following tests are currently flaky. Running them again to verify...
 
@@ -172,21 +172,17 @@ func TestBuildNewComment(t *testing.T) {
 		entries  map[string]int
 		outliers []string
 		wantBody string
-		wantBool bool
 	}{
-		{&fakeJob, map[string]int{"fakejob0": 0, "fakejob1": 1}, nil, retryCommentBody, true},
-		{&fakeJob, map[string]int{"fakejob0": 3, "fakejob1": 1}, nil, noMoreRetriesCommentBody, false},
-		{&fakeJob, map[string]int{"fakejob0": 0, "fakejob1": 1}, fakeFailedTests[:4], failedShortCommentBody, true},
-		{&fakeJob, map[string]int{"fakejob0": 0, "fakejob1": 1}, fakeFailedTests, failedLongCommentBody, true},
+		{&fakeJob, map[string]int{"fakejob0": 0, "fakejob1": 1}, nil, retryCommentBody},
+		{&fakeJob, map[string]int{"fakejob0": 3, "fakejob1": 1}, nil, noMoreRetriesCommentBody},
+		{&fakeJob, map[string]int{"fakejob0": 0, "fakejob1": 1}, fakeFailedTests[:4], failedShortCommentBody},
+		{&fakeJob, map[string]int{"fakejob0": 0, "fakejob1": 1}, fakeFailedTests, failedLongCommentBody},
 	}
 
 	for _, test := range cases {
-		gotBody, gotBool := buildNewComment(test.jd, test.entries, test.outliers)
+		gotBody := buildNewComment(test.jd, test.entries, test.outliers)
 		if gotBody != test.wantBody {
 			t.Fatalf("build new comment: got body \n'%v'\n, want \n'%v'", gotBody, test.wantBody)
-		}
-		if gotBool != test.wantBool {
-			t.Fatalf("build new comment: got bool '%v', want '%v'", gotBool, test.wantBool)
 		}
 	}
 }

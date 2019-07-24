@@ -77,10 +77,7 @@ func (gc *GithubClient) PostComment(jd *JobData, outliers []string) error {
 	if _, ok := oldEntries[jd.JobName]; !ok {
 		oldEntries[jd.JobName] = 0
 	}
-	newComment, canRetry := buildNewComment(jd, oldEntries, outliers)
-	if !canRetry {
-		return fmt.Errorf("expended all %d retries", maxRetries)
-	}
+	newComment := buildNewComment(jd, oldEntries, outliers)
 	if gc.Dryrun {
 		logWithPrefix(jd, "[dry run] Comment not updated. See it here:\n%s\n", newComment)
 		return nil
@@ -141,10 +138,13 @@ func parseEntries(comment *github.IssueComment) (map[string]int, error) {
 
 // buildNewComment takes the old entry data, the job we are processing, and any outlying
 // non-flaky tests, building a comment body based on these parameters.
-func buildNewComment(jd *JobData, entries map[string]int, outliers []string) (string, bool) {
+func buildNewComment(jd *JobData, entries map[string]int, outliers []string) string {
 	var cmd string
 	var entryString []string
-	if len(outliers) > 0 {
+	if entries[jd.JobName] >= maxRetries {
+		cmd = buildOutOfRetriesString(jd.JobName)
+		logWithPrefix(jd, "expended all %d retries\n", maxRetries)
+	} else if len(outliers) > 0 {
 		cmd = buildNoRetryString(jd.JobName, outliers)
 		logWithPrefix(jd, "%d failed tests are not flaky, cannot retry\n", len(outliers))
 	} else {
@@ -160,14 +160,14 @@ func buildNewComment(jd *JobData, entries map[string]int, outliers []string) (st
 	for _, test := range keys {
 		entryString = append(entryString, fmt.Sprintf("%s | %d/%d", test, entries[test], maxRetries))
 	}
-	return fmt.Sprintf(commentTemplate, identifier, strings.Join(entryString, "\n"), cmd), entries[jd.JobName] < maxRetries
+	return fmt.Sprintf(commentTemplate, identifier, strings.Join(entryString, "\n"), cmd)
 }
 
 // buildRetryString increments the retry counter and generates a /test string if we have
 // more retries available.
 func buildRetryString(job string, entries map[string]int) string {
 	entries[job]++
-	if entries[job] < maxRetries {
+	if entries[job] <= maxRetries {
 		return fmt.Sprintf("Automatically retrying...\n/test %s", job)
 	} else {
 		entries[job]--
@@ -175,8 +175,7 @@ func buildRetryString(job string, entries map[string]int) string {
 	return ""
 }
 
-// buildNoRetryString formats the tests that prevent us from retrying into a list of 10
-// top entries and
+// buildNoRetryString formats the tests that prevent us from retrying into a truncated list.
 func buildNoRetryString(job string, outliers []string) string {
 	noRetryFmt := "Failed non-flaky tests preventing automatic retry of %s:\n\n```\n%s\n```%s"
 	extraFailedTests := ""
@@ -187,4 +186,10 @@ func buildNoRetryString(job string, outliers []string) string {
 		extraFailedTests = fmt.Sprintf("\n\nand %d more.", len(outliers)-maxFailedTestsToPrint)
 	}
 	return fmt.Sprintf(noRetryFmt, job, strings.Join(outliers[:lastIndex], "\n"), extraFailedTests)
+}
+
+//buildOutOfRetriesString notifies the author that the job has been retriggered maxRetries times
+// while still failing.
+func buildOutOfRetriesString(job string) string {
+	return fmt.Sprintf("Job %s expended all %d retries without success.", job, maxRetries)
 }
