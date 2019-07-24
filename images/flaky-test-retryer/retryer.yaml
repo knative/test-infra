@@ -27,23 +27,23 @@ spec:
         imagePullPolicy: Always
         command: "/flaky-test-retryer"
         args:
-        - "--service-account=/etc/test-account/service-account.json"
+        - "--service-account=/etc/google-app-credential/knative-monitoring-credential.json"
         - "--github-account=/etc/flaky-test-reporter-github-token/token"
         - "--dry-run=true"
         env:
         - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: "/etc/test-account/service-account.json"
+          value: /etc/google-app-credential/knative-monitoring-credential.json
         volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
+        - name: google-app-credentials
+          mountPath: /etc/google-app-credential/
           readOnly: true
         - name: flaky-test-reporter-github-token
           mountPath: /etc/flaky-test-reporter-github-token
           readOnly: true
       volumes:
-      - name: test-account
+      - name: google-app-credentials
         secret:
-          secretName: test-account
+          secretName: google-app-credentials
       - name: flaky-test-reporter-github-token
         secret:
           secretName: flaky-test-reporter-github-token
