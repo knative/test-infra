@@ -10,4 +10,4 @@ A pre-submit check, to see how the coverage of your local repository compare to 
 
 ## Note
 
-This script is not intended to test the changes made to the tool here in knative/test-infra/tools/coverage. The external tool(k8s.io/test-infra/robots/coverage) was derived from this tool but may diverge as it was ported to Kubernetes repo. By design, both of them should produce the same result, but that cannot be ensured unless we converge them.
+This script is not intended to test the changes made to the tool here in `knative/test-infra/tools/coverage`. The [external tool](https://github.com/kubernetes/test-infra/tree/master/robots/coverage) was derived from this tool but may diverge as it was ported to the Kubernetes repository. By design, both of them should produce the same result, but that cannot be ensured unless we converge them.
