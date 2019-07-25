@@ -66,7 +66,7 @@ Versioned releases can be one of two kinds:
 
    1. Run `make update-config` in `ci/testgrid`.
 
-   Within two hours the new 3 jobs (nightly, auto-release and dot-relwase) will appear on TestGrid.
+   Within two hours the 3 new jobs (nightly, auto-release and dot-release) will appear on TestGrid.
 
    The jobs can also be found in the [Prow status page](https://prow.knative.dev) under the
    names `ci-knative-MODULE-nightly-release`, `ci-knative-MODULE-auto-release` and
