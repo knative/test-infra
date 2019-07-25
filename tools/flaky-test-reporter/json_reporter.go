@@ -46,9 +46,10 @@ func writeFlakyTestsToJSON(repoDataAll []*RepoData, dryrun bool) error {
 	flakyTestSets := getFlakyTestSet(repoDataAll)
 	ch := make(chan bool, len(flakyTestSets))
 	wg := sync.WaitGroup{}
-	for repo, testSet := range flakyTestSets {
+	for repo := range flakyTestSets {
 		wg.Add(1)
-		go func(wg *sync.WaitGroup) {
+		go func(wg *sync.WaitGroup, repo string) {
+			testSet := flakyTestSets[repo]
 			var testList []string
 			for test := range testSet {
 				testList = append(testList, test)
@@ -68,7 +69,7 @@ func writeFlakyTestsToJSON(repoDataAll []*RepoData, dryrun bool) error {
 			}
 			ch <- true
 			wg.Done()
-		}(&wg)
+		}(&wg, repo)
 	}
 	wg.Wait()
 	close(ch)

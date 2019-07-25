@@ -55,7 +55,7 @@ func main() {
 	if err := prow.Initialize(*serviceAccount); nil != err { // Explicit authenticate with gcs Client
 		log.Fatalf("Failed authenticating GCS: '%v'", err)
 	}
-	ghi, err := Setup(*githubAccount)
+	gih, err := Setup(*githubAccount)
 	if err != nil {
 		log.Fatalf("Cannot setup github: %v", err)
 	}
@@ -93,8 +93,8 @@ func main() {
 	// so any errors returned are github opeations error, which in most cases wouldn't happen, but in case it
 	// happens, it should fail the job after Slack notification
 	jobErr := combineErrors(jobErrs)
-	githubErr := ghi.processGithubIssues(repoDataAll, *dryrun)
-	slackErr := sendSlackNotifications(repoDataAll, slackClient, ghi, *dryrun)
+	githubErr := gih.processGithubIssues(repoDataAll, *dryrun)
+	slackErr := sendSlackNotifications(repoDataAll, slackClient, gih, *dryrun)
 	jsonErr := writeFlakyTestsToJSON(repoDataAll, *dryrun)
 	if nil != jobErr {
 		log.Printf("Job step failures:\n%v", jobErr)

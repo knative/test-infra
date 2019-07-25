@@ -63,20 +63,20 @@ var (
 	dryrun = false
 )
 
-func getFakeGithubIssue() *GithubIssue {
+func getFakeGithubIssueHandler() *GithubIssueHandler {
 	fg := fakeghutil.NewFakeGithubClient()
 	fg.Repos = []string{fakeRepo}
 	fg.User = fakeUser
-	return &GithubIssue{
+	return &GithubIssueHandler{
 		user:   fakeUser,
 		client: fg,
 	}
 }
 
-func createNewIssue(fgi *GithubIssue, title, body, testStat string) (*github.Issue, *github.IssueComment) {
-	issue, _ := fgi.client.CreateIssue(fakeOrg, fakeRepo, title, body)
+func createNewIssue(fgih *GithubIssueHandler, title, body, testStat string) (*github.Issue, *github.IssueComment) {
+	issue, _ := fgih.client.CreateIssue(fakeOrg, fakeRepo, title, body)
 	commentBody := fmt.Sprintf("Latest result for this test: %s", testStat)
-	comment, _ := fgi.client.CreateComment(fakeOrg, fakeRepo, *issue.Number, commentBody)
+	comment, _ := fgih.client.CreateComment(fakeOrg, fakeRepo, *issue.Number, commentBody)
 	return issue, comment
 }
 
@@ -119,10 +119,10 @@ func TestCreateIssue(t *testing.T) {
 	}
 
 	for _, d := range datas {
-		fgi := getFakeGithubIssue()
+		fgih := getFakeGithubIssueHandler()
 		repoData := createRepoData(d.passed, d.flaky, d.failed, d.notenoughdata, d.issueRepo, int64(0))
-		fgi.processGithubIssueForRepo(repoData, make(map[string][]*flakyIssue), dryrun)
-		issues, _ := fgi.client.ListIssuesByRepo(fakeOrg, fakeRepo, []string{})
+		fgih.processGithubIssueForRepo(repoData, make(map[string][]*flakyIssue), dryrun)
+		issues, _ := fgih.client.ListIssuesByRepo(fakeOrg, fakeRepo, []string{})
 		if len(issues) != d.wantIssues {
 			t.Fatalf("2%% tests failed, got %d issues, want %d issue", len(issues), d.wantIssues)
 		}
@@ -130,16 +130,16 @@ func TestCreateIssue(t *testing.T) {
 }
 
 func TestExistingIssue(t *testing.T) {
-	fgi := getFakeGithubIssue()
+	fgih := getFakeGithubIssueHandler()
 	repoData := createRepoData(200, 2, 0, 0, fakeRepo, int64(0))
-	flakyIssuesMap, _ := fgi.getFlakyIssues()
-	fgi.processGithubIssueForRepo(repoData, flakyIssuesMap, dryrun)
-	existIssues, _ := fgi.client.ListIssuesByRepo(fakeOrg, fakeRepo, []string{})
-	flakyIssuesMap, _ = fgi.getFlakyIssues()
+	flakyIssuesMap, _ := fgih.getFlakyIssues()
+	fgih.processGithubIssueForRepo(repoData, flakyIssuesMap, dryrun)
+	existIssues, _ := fgih.client.ListIssuesByRepo(fakeOrg, fakeRepo, []string{})
+	flakyIssuesMap, _ = fgih.getFlakyIssues()
 
 	*repoData.LastBuildStartTime++
-	fgi.processGithubIssueForRepo(repoData, flakyIssuesMap, dryrun)
-	issues, _ := fgi.client.ListIssuesByRepo(fakeOrg, fakeRepo, []string{})
+	fgih.processGithubIssueForRepo(repoData, flakyIssuesMap, dryrun)
+	issues, _ := fgih.client.ListIssuesByRepo(fakeOrg, fakeRepo, []string{})
 	if len(existIssues) != len(issues) {
 		t.Fatalf("issues already exists, got %d new issues, want 0 new issues", len(issues)-len(existIssues))
 	}
@@ -176,13 +176,13 @@ func TestUpdateIssue(t *testing.T) {
 	body := "fake body"
 
 	for _, data := range dataForTest {
-		fgi := getFakeGithubIssue()
+		fgih := getFakeGithubIssueHandler()
 		var issue *github.Issue
 		var comment *github.IssueComment
 		if data.passedLastTime {
-			issue, comment = createNewIssue(fgi, title, body, "Passed")
+			issue, comment = createNewIssue(fgih, title, body, "Passed")
 		} else {
-			issue, comment = createNewIssue(fgi, title, body, "Flaky")
+			issue, comment = createNewIssue(fgih, title, body, "Flaky")
 		}
 		commentBody := comment.GetBody()
 
@@ -191,7 +191,7 @@ func TestUpdateIssue(t *testing.T) {
 			comment: comment,
 		}
 
-		gotErr := fgi.updateIssue(&fi, "new", &data.ts, dryrun)
+		gotErr := fgih.updateIssue(&fi, "new", &data.ts, dryrun)
 		if nil == data.wantErr {
 			if nil != gotErr {
 				t.Fatalf("update %v, got err: '%v', want err: '%v'", data, gotErr, data.wantErr)
@@ -202,7 +202,7 @@ func TestUpdateIssue(t *testing.T) {
 			}
 		}
 
-		gotComment, _ := fgi.client.GetComment(fakeOrg, fakeRepo, *comment.ID)
+		gotComment, _ := fgih.client.GetComment(fakeOrg, fakeRepo, *comment.ID)
 		if data.appendComment && gotComment.GetBody() == commentBody {
 			t.Fatalf("update comment %v, got: '%s', want: 'new' on top of existing comment", data, gotComment.GetBody())
 		}
