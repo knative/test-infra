@@ -7,7 +7,7 @@ The code coverage tool has two major features:
 
 ## Design
 
-See the [design document](design.md)
+See the [design document](design.md).
 
 ## Build and Release
 
