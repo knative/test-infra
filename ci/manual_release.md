@@ -6,8 +6,8 @@ This is intended for debugging and testing purposes.
 
 ## The release.sh script
 
-The `release.sh` script automates the creation of Knative releases, either nightly
-or versioned ones.
+The `release.sh` script in the `hack` directory automates the creation of Knative
+releases, either nightly or versioned ones.
 
 By default, the script creates a nightly release but does not publish it
 anywhere.
@@ -22,7 +22,8 @@ release.
   built.
 - `--tag-release`, `--notag-release` Tag (or not) the generated images with
   either `vYYYYMMDD-<commit_short_hash>` (for nightly releases) or `vX.Y.Z` for
-  versioned releases. _For versioned releases, a tag is always added._
+  versioned releases. _For versioned releases, a tag is always added (i.e., these
+  flags are ignored)._
 - `--release-gcs` Defines the GCS bucket where the manifests will be stored. By
   default, this is `knative-nightly/MODULE` (MODULE is a Knative module name, e.g.
   `serving` or `eventing`). This flag is ignored if the release is not being published.
