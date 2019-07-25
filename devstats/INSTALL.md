@@ -3,10 +3,10 @@
 **See [devstats-example](https://github.com/cncf/devstats-example) for
 configuring devstats for the repo of your choice.**
 
-1. Create a Kubernetes cluster and an nfs. The NFS should be configured your
-   Kubernetes/volumes.yaml file.
+1. Create a Kubernetes cluster and a NFS. The NFS should be configured in the
+   `Kubernetes/volumes.yaml` file.
 
-1. After configuring your project settings, run `scripts/k8s_objects.sh` - this
+1. After configuring your project settings, run `scripts/k8s_objects.sh`. This
    will create the k8s objects required to build the devstats database.
 
 1. Run `kubectl exec -it devstats-cli-0 /bin/bash` to execute commands from the
