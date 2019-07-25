@@ -21,15 +21,15 @@ are monitored through [TestGrid](http://testgrid.knative.dev).
 
 Versioned releases can be one of two kinds:
 
-* **Major versioned releases** are those with changes to the `X` or `Y` values in
-  the version. They are cut only when a new release branch (which must be named
+* **Major or minor releases** are those with changes to the `X` or `Y` values
+  in the version. They are cut only when a new release branch (which must be named
   `release-X.Y`) is created from the master branch of a repository. Within about
   2 to 3 hours the new release will be built and published. The job status can be
   checked in the `auto-release` tab in the corresponding repository dashboard in
   TestGrid. The release notes published to GitHub are empty, so you must manually
   edit it and add the relevant markdown content.
 
-* **Minor versioned releases** are those with changes to the `Z` value in the version.
+* **Patch or dot releases** are those with changes to the `Z` value in the version.
   They are cut automatically, every Tuesday night between 2AM and 3 AM (PST). For
   example, if the latest release on release branch `release-0.2` is `v0.2.1`, the next
   minor release will be named `v0.2.2`. A minor release is only created if there are
