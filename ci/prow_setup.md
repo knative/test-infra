@@ -14,8 +14,8 @@
 1. Apply Boskos [config_start.yaml](./prow/boskos/config_start.yaml) to the
    cluster.
 
-1. Run `make update-cluster`, `make update-boskos`, `make update-config`,
-   `make update-plugins` and `make update-boskos-config`.
+1. Run `make update-all-cluster-deployments`, `make update-boskos-resource`, `make update-config`,
+   `make update-plugins` and `make update-all-boskos-deployments`.
 
 1. If SSL needs to be reconfigured, promote your ingress IP to static in Cloud
    Console, and
@@ -46,7 +46,7 @@
 
 1. Get the commit reviewed.
 
-1. Run `make update-boskos-config` to update the Boskos config.
+1. Run `make update-boskos-resource` to update the Boskos resource.
 
 ## Setting up Prow for a new organization
 

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM gcr.io/k8s-testimages/kubekins-e2e:v20190103-edc7696cc-master
+FROM gcr.io/k8s-testimages/kubekins-e2e:v20190716-41e2a9e-master
 LABEL maintainer "Adriano Cunha <adrcunha@google.com>"
 
 # Install extras on top of base image

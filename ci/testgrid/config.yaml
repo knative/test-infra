@@ -60,14 +60,6 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-serving-continuous
   alert_stale_results_hours: 3
   num_failures_to_alert: 3
-- name: ci-knative-serving-istio-1.0-mesh
-  gcs_prefix: knative-prow/logs/ci-knative-serving-istio-1.0-mesh
-  alert_stale_results_hours: 3
-  num_failures_to_alert: 3
-- name: ci-knative-serving-istio-1.0-no-mesh
-  gcs_prefix: knative-prow/logs/ci-knative-serving-istio-1.0-no-mesh
-  alert_stale_results_hours: 3
-  num_failures_to_alert: 3
 - name: ci-knative-serving-istio-1.1-mesh
   gcs_prefix: knative-prow/logs/ci-knative-serving-istio-1.1-mesh
   alert_stale_results_hours: 3
@@ -82,6 +74,10 @@ test_groups:
   num_failures_to_alert: 3
 - name: ci-knative-serving-istio-1.2-no-mesh
   gcs_prefix: knative-prow/logs/ci-knative-serving-istio-1.2-no-mesh
+  alert_stale_results_hours: 3
+  num_failures_to_alert: 3
+- name: ci-knative-serving-gloo-0.17.1
+  gcs_prefix: knative-prow/logs/ci-knative-serving-gloo-0.17.1
   alert_stale_results_hours: 3
   num_failures_to_alert: 3
 - name: ci-knative-serving-nightly-release
@@ -282,12 +278,6 @@ dashboards:
   - name: conformance
     test_group_name: ci-knative-serving-continuous
     base_options: "include-filter-by-regex=test/conformance/&sort-by-name="
-  - name: istio-1.0-mesh
-    test_group_name: ci-knative-serving-istio-1.0-mesh
-    base_options: "sort-by-name="
-  - name: istio-1.0-no-mesh
-    test_group_name: ci-knative-serving-istio-1.0-no-mesh
-    base_options: "sort-by-name="
   - name: istio-1.1-mesh
     test_group_name: ci-knative-serving-istio-1.1-mesh
     base_options: "sort-by-name="
@@ -299,6 +289,9 @@ dashboards:
     base_options: "sort-by-name="
   - name: istio-1.2-no-mesh
     test_group_name: ci-knative-serving-istio-1.2-no-mesh
+    base_options: "sort-by-name="
+  - name: gloo-0.17.1
+    test_group_name: ci-knative-serving-gloo-0.17.1
     base_options: "sort-by-name="
   - name: nightly
     test_group_name: ci-knative-serving-nightly-release

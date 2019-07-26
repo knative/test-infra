@@ -51,6 +51,7 @@ type GithubOperations interface {
 	GetComment(org, repo string, commentID int64) (*github.IssueComment, error)
 	CreateComment(org, repo string, issueNumber int, commentBody string) (*github.IssueComment, error)
 	EditComment(org, repo string, commentID int64, commentBody string) error
+	DeleteComment(org, repo string, commentID int64) error
 	AddLabelsToIssue(org, repo string, issueNumber int, labels []string) error
 	RemoveLabelForIssue(org, repo string, issueNumber int, label string) error
 	GetPullRequest(org, repo string, ID int) (*github.PullRequest, error)

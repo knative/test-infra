@@ -18,11 +18,9 @@ package alert
 
 import (
 	"fmt"
-	"log"
 	"sort"
 	"time"
 
-	"github.com/knative/test-infra/shared/gcs"
 	"github.com/knative/test-infra/tools/monitoring/config"
 	"github.com/knative/test-infra/tools/monitoring/mysql"
 )
@@ -66,13 +64,8 @@ func (c mailContent) body() string {
 func (r report) sprintLogs() string {
 	result := ""
 	for i, e := range r.logs {
-		if logURL, err := gcs.GetConsoleURL(e.BuildLogURL); err != nil {
-			log.Printf("Failed to getConsoleURL(%s): %v\n", e.String(), err)
-			result += fmt.Sprintf("%d. %s\n", i+1, e.String())
-		} else {
-			result += fmt.Sprintf("%d. [%v] %s (Job: %s, PR: %v, BuildLog: %s)\n",
-				i+1, e.TimeStamp, e.Msg, e.JobName, e.PRNumber, logURL)
-		}
+		result += fmt.Sprintf("%d. [%v] %s (Job: %s, PR: %v, BuildLog: %s)\n",
+			i+1, e.TimeStamp, e.Msg, e.JobName, e.PRNumber, e.BuildLogURL)
 	}
 	return result
 }
