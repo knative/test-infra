@@ -1,5 +1,7 @@
 # Design of the Test Coverage Tool
+
 ![design.svg](design.svg)
+
 We pack the test coverage tool in a container, that is triggered by Prow. It generates a test coverage profiling for the target repository. Afterward, it calculates the coverage change or summarizes the coverage data, depending on the workflow type, explained below.  
 
 ## Post-submit workflow
