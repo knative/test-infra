@@ -1,36 +1,4 @@
-# this file should contain all periodic jobs that use the fejta-bot token
-
-- name: periodic-test-infra-cla
-  interval: 1h
-  decorate: true
-  spec:
-    containers:
-    - image: gcr.io/k8s-prow/commenter:v20190724-1fcd9e27e
-      command:
-      - /app/robots/commenter/app.binary
-      args:
-      - |-
-        --query=org:knative
-        is:pr
-        is:open
-        -label:"cla: no"
-        -label:"cla: yes"
-      - --token=/etc/token/bot-github-token
-      - |-
-        --comment=Unknown CLA label state. Rechecking for CLA labels.
-
-        Send feedback to Knative Productivity Slack channel or knative/test-infra.
-        /check-cla
-      - --template
-      - --ceiling=10
-      - --confirm
-      volumeMounts:
-      - name: token
-        mountPath: /etc/token
-    volumes:
-    - name: token
-      secret:
-        secretName: fejta-bot-token
+# this file should contain all periodic jobs that use the hub-token
 
 - name: periodic-test-infra-close
   interval: 1h
@@ -46,7 +14,7 @@
         -label:lifecycle/frozen
         label:lifecycle/rotten
       - --updated=720h
-      - --token=/etc/token/bot-github-token
+      - --token=/etc/hub-token/token
       - |-
         --comment=Rotten issues close after 30d of inactivity.
         Reopen the issue with `/reopen`.
@@ -58,12 +26,12 @@
       - --ceiling=10
       - --confirm
       volumeMounts:
-      - name: token
-        mountPath: /etc/token
+      - name: hub-token
+        mountPath: /etc/hub-token
     volumes:
-    - name: token
+    - name: hub-token
       secret:
-        secretName: fejta-bot-token
+        secretName: hub-token
 
 - name: periodic-test-infra-rotten
   interval: 1h
@@ -80,7 +48,7 @@
         label:lifecycle/stale
         -label:lifecycle/rotten
       - --updated=720h
-      - --token=/etc/token/bot-github-token
+      - --token=/etc/hub-token/token
       - |-
         --comment=Stale issues rot after 30d of inactivity.
         Mark the issue as fresh with `/remove-lifecycle rotten`.
@@ -94,20 +62,16 @@
       - --ceiling=10
       - --confirm
       volumeMounts:
-      - name: token
-        mountPath: /etc/token
+      - name: hub-token
+        mountPath: /etc/hub-token
     volumes:
-    - name: token
+    - name: hub-token
       secret:
-        secretName: fejta-bot-token
+        secretName: hub-token
 
 - name: periodic-test-infra-stale
   interval: 1h
   decorate: true
-  annotations:
-    testgrid-dashboards: sig-testing-fejtabot
-    description: Adds lifecycle/stale to issues after 30d of inactivity
-    testgrid-tab-name: stale
   spec:
     containers:
     - image: gcr.io/k8s-prow/commenter:v20190724-1fcd9e27e
@@ -115,16 +79,12 @@
       - /app/robots/commenter/app.binary
       args:
       - |-
-        --query=org:kubernetes
-        org:kubernetes-sigs
-        org:kubernetes-incubator
-        org:kubernetes-client
-        org:kubernetes-csi
+        --query=org:knative
         -label:lifecycle/frozen
         -label:lifecycle/stale
         -label:lifecycle/rotten
       - --updated=2160h
-      - --token=/etc/token/bot-github-token
+      - --token=/etc/hub-token/token
       - |-
         --comment=Issues go stale after 90d of inactivity.
         Mark the issue as fresh with `/remove-lifecycle stale`.
@@ -132,15 +92,15 @@
 
         If this issue is safe to close now please do so with `/close`.
 
-        Send feedback to sig-testing, kubernetes/test-infra and/or [fejta](https://github.com/fejta).
+        Send feedback to Knative Productivity Slack channel or knative/test-infra.
         /lifecycle stale
       - --template
       - --ceiling=10
       - --confirm
       volumeMounts:
-      - name: token
-        mountPath: /etc/token
+      - name: hub-token
+        mountPath: /etc/hub-token
     volumes:
-    - name: token
+    - name: hub-token
       secret:
-        secretName: fejta-bot-token
+        secretName: hub-token
