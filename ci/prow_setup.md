@@ -14,8 +14,9 @@
 1. Apply Boskos [config_start.yaml](./prow/boskos/config_start.yaml) to the
    cluster.
 
-1. Run `make update-all-cluster-deployments`, `make update-boskos-resource`, `make update-config`,
-   `make update-plugins` and `make update-all-boskos-deployments`.
+1. Run `make update-all-cluster-deployments`, `make update-boskos-resource`,
+   `make update-config`, `make update-plugins` and
+   `make update-all-boskos-deployments`.
 
 1. If SSL needs to be reconfigured, promote your ingress IP to static in Cloud
    Console, and
