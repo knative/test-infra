@@ -66,7 +66,7 @@ fakejob1 | 1/3
 
 Failed non-flaky tests preventing automatic retry of fakejob0:
 
-`+"```\ntest0\ntest1\ntest2\ntest3\n```"
+` + "```\ntest0\ntest1\ntest2\ntest3\n```"
 	failedLongCommentBody = `<!--AUTOMATED-FLAKY-RETRYER-->
 The following tests are currently flaky. Running them again to verify...
 
@@ -77,7 +77,7 @@ fakejob1 | 1/3
 
 Failed non-flaky tests preventing automatic retry of fakejob0:
 
-`+"```\ntest0\ntest1\ntest2\ntest3\ntest4\ntest5\ntest6\ntest7\n```\n\nand 2 more."
+` + "```\ntest0\ntest1\ntest2\ntest3\ntest4\ntest5\ntest6\ntest7\n```\n\nand 2 more."
 
 	fakeOrg       = "fakeorg"
 	fakeRepo      = "fakerepo"

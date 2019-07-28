@@ -27,8 +27,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/knative/test-infra/shared/ghutil"
 	"github.com/google/go-github/github"
+	"github.com/knative/test-infra/shared/ghutil"
 )
 
 const (
@@ -112,7 +112,7 @@ func (gc *GithubClient) getOldComment(org, repo string, pull int) (*github.Issue
 			}
 		}
 	}
-	
+
 	return match, nil
 }
 
