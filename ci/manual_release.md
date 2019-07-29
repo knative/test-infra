@@ -6,8 +6,8 @@ This is intended for debugging and testing purposes.
 
 ## The release.sh script
 
-The `release.sh` script in the `hack` directory automates the creation of Knative
-releases, either nightly or versioned ones.
+The `release.sh` script in the `hack` directory automates the creation of
+Knative releases, either nightly or versioned ones.
 
 By default, the script creates a nightly release but does not publish it
 anywhere.
@@ -22,11 +22,12 @@ release.
   built.
 - `--tag-release`, `--notag-release` Tag (or not) the generated images with
   either `vYYYYMMDD-<commit_short_hash>` (for nightly releases) or `vX.Y.Z` for
-  versioned releases. _For versioned releases, a tag is always added (i.e., these
-  flags are ignored)._
+  versioned releases. _For versioned releases, a tag is always added (i.e.,
+  these flags are ignored)._
 - `--release-gcs` Defines the GCS bucket where the manifests will be stored. By
-  default, this is `knative-nightly/MODULE` (MODULE is a Knative module name, e.g.
-  `serving` or `eventing`). This flag is ignored if the release is not being published.
+  default, this is `knative-nightly/MODULE` (MODULE is a Knative module name,
+  e.g. `serving` or `eventing`). This flag is ignored if the release is not
+  being published.
 - `--release-gcr` Defines the GCR where the images will be stored. By default,
   this is `gcr.io/knative-nightly`. This flag is ignored if the release is not
   being published.
@@ -56,17 +57,17 @@ Examples:
 ## Creating versioned releases
 
 To specify a versioned release to be cut, you must use the `--version` flag.
-Versioned releases are usually built against a branch in the Knative
-repository, specified by the `--branch` flag.
+Versioned releases are usually built against a branch in the Knative repository,
+specified by the `--branch` flag.
 
 - `--version` Defines the version of the release, and must be in the form
   `X.Y.Z`, where X, Y and Z are numbers.
-- `--branch` Defines the branch in Knative repository from which the
-  release will be built. If not passed, the `master` branch at HEAD will be
-  used. This branch must be created before the script is executed, and must be
-  in the form `release-X.Y`, where X and Y must match the numbers used in the
-  version passed in the `--version` flag. This flag has no effect unless
-  `--version` is also passed.
+- `--branch` Defines the branch in Knative repository from which the release
+  will be built. If not passed, the `master` branch at HEAD will be used. This
+  branch must be created before the script is executed, and must be in the form
+  `release-X.Y`, where X and Y must match the numbers used in the version passed
+  in the `--version` flag. This flag has no effect unless `--version` is also
+  passed.
 - `--release-notes` Points to a markdown file containing a description of the
   release. This is optional but highly recommended. It has no effect unless
   `--version` is also passed.
@@ -77,10 +78,9 @@ repository, specified by the `--branch` flag.
   authentication challenge (you must be a Knative admin to have the required
   publishing permissions).
 
-The release will be published in the _Releases_ page of the Knative
-repository, with the title _Knative MODULE release vX.Y.Z_ and the given
-release notes. It will also be tagged _vX.Y.Z_ (both on GitHub and as a git
-annotated tag).
+The release will be published in the _Releases_ page of the Knative repository,
+with the title _Knative MODULE release vX.Y.Z_ and the given release notes. It
+will also be tagged _vX.Y.Z_ (both on GitHub and as a git annotated tag).
 
 Example:
 
