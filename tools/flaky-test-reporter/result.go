@@ -28,10 +28,10 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/knative/test-infra/shared/common"
-	"github.com/knative/test-infra/shared/junit"
-	"github.com/knative/test-infra/shared/prow"
-	"github.com/knative/test-infra/tools/flaky-test-reporter/config"
+	"knative.dev/test-infra/shared/common"
+	"knative.dev/test-infra/shared/junit"
+	"knative.dev/test-infra/shared/prow"
+	"knative.dev/test-infra/tools/flaky-test-reporter/config"
 )
 
 const (

@@ -55,16 +55,16 @@ RUN gem install mixlib-config -v 2.2.4  # required because ruby is 2.1
 RUN gem install mdl
 
 # Temporarily add test-infra to the image to build custom tools
-ADD . /go/src/github.com/knative/test-infra
+ADD . /go/src/knative.dev/test-infra
 
 # Build custom tools in the container
-RUN make -C /go/src/github.com/knative/test-infra/tools/githubhelper
-RUN cp /go/src/github.com/knative/test-infra/tools/githubhelper/githubhelper .
+RUN make -C /go/src/knative.dev/test-infra/tools/githubhelper
+RUN cp /go/src/knative.dev/test-infra/tools/githubhelper/githubhelper .
 
 # Use a local dep-collector that's a wrapper for building the tool
 # on-the-fly.
 # TODO(adrcunha): Remove once https://github.com/knative/test-infra/pull/1019 is in all repos.
-RUN cp /go/src/github.com/knative/test-infra/images/prow-tests/dep-collector /usr/bin/dep-collector
+RUN cp /go/src/knative.dev/test-infra/images/prow-tests/dep-collector /usr/bin/dep-collector
 
 # Remove test-infra from the container
-RUN rm -fr /go/src/github.com/knative/test-infra
+RUN rm -fr /go/src/knative.dev/test-infra

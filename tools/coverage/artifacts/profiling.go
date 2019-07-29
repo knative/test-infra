@@ -21,7 +21,7 @@ import (
 	"os"
 	"os/exec"
 
-	covIo "github.com/knative/test-infra/tools/coverage/io"
+	covIo "knative.dev/test-infra/tools/coverage/io"
 )
 
 type ProfileReader struct {

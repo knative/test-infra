@@ -22,7 +22,7 @@ import (
 	"log"
 
 	"cloud.google.com/go/pubsub"
-	"github.com/knative/test-infra/tools/monitoring/prowapi"
+	"knative.dev/test-infra/tools/monitoring/prowapi"
 )
 
 // Client is a wrapper on the subscriber Operation

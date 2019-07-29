@@ -21,7 +21,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/knative/test-infra/tools/coverage/logUtil"
+	"knative.dev/test-infra/tools/coverage/logUtil"
 )
 
 // CreateMarker produces empty file as marker

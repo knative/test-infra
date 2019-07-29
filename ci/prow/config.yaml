@@ -1777,6 +1777,7 @@ presubmits:
     rerun_command: "/test pull-knative-test-infra-build-tests"
     trigger: "(?m)^/test (all|pull-knative-test-infra-build-tests),?(\\s+|$)"
     decorate: true
+    path_alias: knative.dev/test-infra
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1806,6 +1807,7 @@ presubmits:
     rerun_command: "/test pull-knative-test-infra-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-test-infra-unit-tests),?(\\s+|$)"
     decorate: true
+    path_alias: knative.dev/test-infra
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1839,6 +1841,7 @@ presubmits:
     rerun_command: "/test pull-knative-test-infra-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-test-infra-integration-tests),?(\\s+|$)"
     decorate: true
+    path_alias: knative.dev/test-infra
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4550,6 +4553,7 @@ periodics:
   - org: knative
     repo: test-infra
     base_ref: master
+    path_alias: knative.dev/test-infra
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable

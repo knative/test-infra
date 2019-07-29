@@ -22,7 +22,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/knative/test-infra/tools/coverage/str"
+	"knative.dev/test-infra/tools/coverage/str"
 )
 
 // CoverageList is a collection and summary over multiple file Coverage objects

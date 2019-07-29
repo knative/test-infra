@@ -27,8 +27,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/knative/test-infra/shared/prow"
-	"github.com/knative/test-infra/tools/flaky-test-reporter/config"
+	"knative.dev/test-infra/shared/prow"
+	"knative.dev/test-infra/tools/flaky-test-reporter/config"
 )
 
 func main() {

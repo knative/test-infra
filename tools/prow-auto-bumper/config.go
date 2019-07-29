@@ -22,7 +22,7 @@ import (
 	"time"
 
 	"github.com/google/go-github/github"
-	"github.com/knative/test-infra/shared/ghutil"
+	"knative.dev/test-infra/shared/ghutil"
 )
 
 const (

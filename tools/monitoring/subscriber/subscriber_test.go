@@ -23,7 +23,7 @@ import (
 	"testing"
 
 	"cloud.google.com/go/pubsub"
-	"github.com/knative/test-infra/tools/monitoring/prowapi"
+	"knative.dev/test-infra/tools/monitoring/prowapi"
 )
 
 type contextKey int

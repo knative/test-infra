@@ -21,9 +21,9 @@ import (
 	"path"
 
 	"github.com/google/go-github/github"
-	"github.com/knative/test-infra/tools/coverage/githubUtil/githubClient"
-	"github.com/knative/test-infra/tools/coverage/githubUtil/githubPr"
-	"github.com/knative/test-infra/tools/coverage/test"
+	"knative.dev/test-infra/tools/coverage/githubUtil/githubClient"
+	"knative.dev/test-infra/tools/coverage/githubUtil/githubPr"
+	"knative.dev/test-infra/tools/coverage/test"
 )
 
 func FakeGithubClient() *githubClient.GithubClient {

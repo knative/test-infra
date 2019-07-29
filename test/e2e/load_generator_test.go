@@ -22,7 +22,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/knative/test-infra/shared/loadgenerator"
+	"knative.dev/test-infra/shared/loadgenerator"
 )
 
 func loadTest(t *testing.T, factors bool, profiler bool) {

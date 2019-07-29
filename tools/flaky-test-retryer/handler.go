@@ -25,10 +25,10 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/knative/test-infra/tools/monitoring/subscriber"
+	"knative.dev/test-infra/tools/monitoring/subscriber"
 	// TODO: remove this import once "k8s.io/test-infra" import problems are fixed
 	// https://github.com/test-infra/test-infra/issues/912
-	"github.com/knative/test-infra/tools/monitoring/prowapi"
+	"knative.dev/test-infra/tools/monitoring/prowapi"
 )
 
 // HandlerClient wraps the other clients we need when processing failed jobs.

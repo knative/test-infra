@@ -25,8 +25,8 @@ import (
 	"strconv"
 
 	"cloud.google.com/go/storage"
-	"github.com/knative/test-infra/tools/coverage/artifacts"
-	"github.com/knative/test-infra/tools/coverage/logUtil"
+	"knative.dev/test-infra/tools/coverage/artifacts"
+	"knative.dev/test-infra/tools/coverage/logUtil"
 	"google.golang.org/api/iterator"
 )
 

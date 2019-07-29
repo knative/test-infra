@@ -16,7 +16,7 @@ FROM golang:1.10.2
 LABEL maintainer "Chao Dai <chaodai@google.com>"
 RUN apt-get update
 
-ENV TEMP_REPO_DIR /go/src/github.com/knative/test-infra
+ENV TEMP_REPO_DIR /go/src/knative.dev/test-infra
 ENV TOOL_NAME flaky-test-reporter
 
 # Temporarily add test-infra to the image to build custom tools

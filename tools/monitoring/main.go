@@ -24,12 +24,12 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/knative/test-infra/shared/gcs"
-	"github.com/knative/test-infra/shared/mysql"
-	"github.com/knative/test-infra/tools/monitoring/alert"
-	"github.com/knative/test-infra/tools/monitoring/mail"
-	msql "github.com/knative/test-infra/tools/monitoring/mysql"
-	"github.com/knative/test-infra/tools/monitoring/subscriber"
+	"knative.dev/test-infra/shared/gcs"
+	"knative.dev/test-infra/shared/mysql"
+	"knative.dev/test-infra/tools/monitoring/alert"
+	"knative.dev/test-infra/tools/monitoring/mail"
+	msql "knative.dev/test-infra/tools/monitoring/mysql"
+	"knative.dev/test-infra/tools/monitoring/subscriber"
 )
 
 var (

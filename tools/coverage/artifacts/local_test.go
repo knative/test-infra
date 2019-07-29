@@ -21,8 +21,8 @@ import (
 	"log"
 	"testing"
 
-	"github.com/knative/test-infra/tools/coverage/logUtil"
-	"github.com/knative/test-infra/tools/coverage/test"
+	"knative.dev/test-infra/tools/coverage/logUtil"
+	"knative.dev/test-infra/tools/coverage/test"
 )
 
 // generates coverage profile by running go test on target package
@@ -41,7 +41,7 @@ func TestProfiling(t *testing.T) {
 
 	t.Logf("Verifying profile file...\n")
 	expectedFirstLine := "mode: count"
-	expectedLine := "github.com/knative/test-infra/tools/coverage/testTarget/subPkg1/common.go:19.19,21.2 0 2"
+	expectedLine := "knative.dev/test-infra/tools/coverage/testTarget/subPkg1/common.go:19.19,21.2 0 2"
 
 	scanner := bufio.NewScanner(arts.ProfileReader())
 	scanner.Scan()

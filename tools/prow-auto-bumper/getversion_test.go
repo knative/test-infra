@@ -26,8 +26,8 @@ import (
 	"time"
 
 	"github.com/google/go-github/github"
-	"github.com/knative/test-infra/shared/ghutil"
-	"github.com/knative/test-infra/shared/ghutil/fakeghutil"
+	"knative.dev/test-infra/shared/ghutil"
+	"knative.dev/test-infra/shared/ghutil/fakeghutil"
 )
 
 func getFakeGitInfo() gitInfo {

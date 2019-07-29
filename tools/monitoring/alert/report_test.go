@@ -20,7 +20,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/knative/test-infra/tools/monitoring/mysql"
+	"knative.dev/test-infra/tools/monitoring/mysql"
 )
 
 func TestSprintLogs(t *testing.T) {

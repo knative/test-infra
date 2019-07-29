@@ -25,13 +25,13 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/knative/test-infra/shared/junit"
-	"github.com/knative/test-infra/shared/prow"
-	"github.com/knative/test-infra/tools/flaky-test-reporter/jsonreport"
+	"knative.dev/test-infra/shared/junit"
+	"knative.dev/test-infra/shared/prow"
+	"knative.dev/test-infra/tools/flaky-test-reporter/jsonreport"
 
 	// TODO: remove this import once "k8s.io/test-infra" import problems are fixed
-	// https://github.com/test-infra/test-infra/issues/912
-	"github.com/knative/test-infra/tools/monitoring/prowapi"
+	// https://github.com/knative/test-infra/test-infra/issues/912
+	"knative.dev/test-infra/tools/monitoring/prowapi"
 )
 
 // InitLogParser configures jsonreport's dependencies.

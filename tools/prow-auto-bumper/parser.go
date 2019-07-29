@@ -25,7 +25,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/knative/test-infra/shared/ghutil"
+	"knative.dev/test-infra/shared/ghutil"
 )
 
 // Tags could be in the form of: v[YYYYMMDD]-[GIT_HASH](-[VARIANT_PART]),

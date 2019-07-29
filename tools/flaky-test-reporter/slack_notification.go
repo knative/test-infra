@@ -30,7 +30,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/knative/test-infra/shared/testgrid"
+	"knative.dev/test-infra/shared/testgrid"
 )
 
 const (

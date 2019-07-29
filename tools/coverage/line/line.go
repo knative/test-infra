@@ -21,9 +21,9 @@ import (
 	"log"
 	"os/exec"
 
-	"github.com/knative/test-infra/tools/coverage/artifacts"
-	"github.com/knative/test-infra/tools/coverage/calc"
-	"github.com/knative/test-infra/tools/coverage/gcs"
+	"knative.dev/test-infra/tools/coverage/artifacts"
+	"knative.dev/test-infra/tools/coverage/calc"
+	"knative.dev/test-infra/tools/coverage/gcs"
 )
 
 func CreateLineCovFile(arts *artifacts.LocalArtifacts) error {
