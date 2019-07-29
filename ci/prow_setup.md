@@ -6,6 +6,10 @@
    need to update [Makefile](./prow/Makefile). For details, see
    <https://github.com/kubernetes/test-infra/blob/master/prow/getting_started_deploy.md>.
 
+   **Note**: It's not advisable to turn on auto-scaling for the Prow cluster, as it can
+   cause temporary DNS errors when test jobs are scheduled to nodes that are not fully
+   initialized yet; for details see https://github.com/knative/test-infra/issues/1082.
+
 1. Ensure the GCP projects listed in
    [resources.yaml](./prow/boskos/resources.yaml) are created.
 
