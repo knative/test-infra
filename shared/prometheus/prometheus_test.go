@@ -21,9 +21,9 @@ import (
 	"testing"
 	"time"
 
-	"knative.dev/test-infra/shared/prometheus"
 	v1 "github.com/prometheus/client_golang/api/prometheus/v1"
 	"github.com/prometheus/common/model"
+	"knative.dev/test-infra/shared/prometheus"
 )
 
 const (

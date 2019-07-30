@@ -25,9 +25,9 @@ import (
 	"strconv"
 
 	"cloud.google.com/go/storage"
+	"google.golang.org/api/iterator"
 	"knative.dev/test-infra/tools/coverage/artifacts"
 	"knative.dev/test-infra/tools/coverage/logUtil"
-	"google.golang.org/api/iterator"
 )
 
 type StorageClientIntf interface {
