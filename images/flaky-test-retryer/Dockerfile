@@ -16,7 +16,7 @@ FROM golang:latest
 LABEL maintainer "Trevor Farrelly <trevorfarrelly@google.com>"
 RUN apt-get update
 
-ENV TEMP_REPO_DIR /go/src/github.com/TrevorFarrelly/test-infra
+ENV TEMP_REPO_DIR /go/src/knative.dev/test-infra
 ENV TOOL_NAME flaky-test-retryer
 
 # Temporarily add test-infra to the image to build custom tools
