@@ -12,6 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+apiVersion: v1
+kind: Service
+metadata:
+  name:  flaky-test-retry-service
+  labels:
+    app: flaky-test-retry-bot
+spec:
+  type: NodePort
+  ports:
+  - port: 8000
+  selector:
+    app: flaky-test-retry-bot
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -23,6 +36,7 @@ spec:
         app: flaky-test-retry-bot
     spec:
       containers:
+      - name: flaky-test-retry-bot
         image: gcr.io/knative-tests/flaky-test-retryer:latest
         imagePullPolicy: Always
         command: "/flaky-test-retryer"
