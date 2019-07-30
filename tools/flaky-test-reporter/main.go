@@ -78,6 +78,7 @@ func main() {
 			err = fmt.Errorf("WARNING: error collecting results for job '%s' in repo '%s': %v", jc.Name, jc.Repo, err)
 			log.Printf("%v", err)
 			jobErrs = append(jobErrs, err)
+			continue
 		}
 		if nil == rd.LastBuildStartTime {
 			log.Printf("WARNING: no build found, skipping '%s' in repo '%s'", jc.Name, jc.Repo)
