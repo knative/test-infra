@@ -28,7 +28,7 @@ import (
 
 const (
 	projectName = "knative-tests"
-	pubsubTopic = "knative-monitoring"
+	pubsubTopic = "test-infra-monitoring-sub"
 )
 
 type EnvFlags struct {
