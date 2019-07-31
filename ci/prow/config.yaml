@@ -915,6 +915,77 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+  - name: pull-knative-serving-gloo-0.17.1
+    agent: kubernetes
+    context: pull-knative-serving-gloo-0.17.1
+    always_run: false
+    rerun_command: "/test pull-knative-serving-gloo-0.17.1"
+    trigger: "(?m)^/test (all|pull-knative-serving-gloo-0.17.1),?(\\s+|$)"
+    decorate: true
+    branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/e2e-tests.sh"
+        - "--gloo-version"
+        - "0.17.1"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-gloo-0.17.1
+    agent: kubernetes
+    context: pull-knative-serving-gloo-0.17.1
+    always_run: false
+    rerun_command: "/test pull-knative-serving-gloo-0.17.1"
+    trigger: "(?m)^/test (all|pull-knative-serving-gloo-0.17.1),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/serving
+    skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/e2e-tests.sh"
+        - "--gloo-version"
+        - "0.17.1"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
   knative/build:
   - name: pull-knative-build-build-tests
     agent: kubernetes
