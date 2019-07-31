@@ -37,13 +37,13 @@ spec:
     spec:
       containers:
       - name: flaky-test-retry-bot
-        image: gcr.io/knative-tests/flaky-test-retryer:latest
+        image: gcr.io/knative-tests/test-infra/flaky-test-retryer:latest
         imagePullPolicy: Always
-        command: "/flaky-test-retryer"
+        command: ["/flaky-test-retryer"]
         args:
         - "--service-account=/etc/google-app-credential/knative-monitoring-credential.json"
         - "--github-account=/etc/flaky-test-reporter-github-token/token"
-        - "--dry-run=true"
+        - "--dry-run=false"
         env:
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/google-app-credential/knative-monitoring-credential.json
