@@ -31,6 +31,8 @@ import (
 	"knative.dev/test-infra/tools/monitoring/prowapi"
 )
 
+const pubsubTopic = "flaky-test-retryer"
+
 // HandlerClient wraps the other clients we need when processing failed jobs.
 type HandlerClient struct {
 	context.Context
