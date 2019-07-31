@@ -31,6 +31,8 @@ import (
 	"knative.dev/test-infra/tools/monitoring/prowapi"
 )
 
+const pubsubTopic = "flaky-test-retryer"
+
 // HandlerClient wraps the other clients we need when processing failed jobs.
 type HandlerClient struct {
 	context.Context
@@ -46,7 +48,7 @@ func NewHandlerClient(githubAccount string, dryrun bool) (*HandlerClient, error)
 	if err != nil {
 		return nil, fmt.Errorf("Github client: %v", err)
 	}
-	pubsubClient, err := subscriber.NewSubscriberClient(ctx, projectName, pubsubTopic)
+	pubsubClient, err := subscriber.NewSubscriberClient(pubsubTopic)
 	if err != nil {
 		return nil, fmt.Errorf("Pubsub client: %v", err)
 	}

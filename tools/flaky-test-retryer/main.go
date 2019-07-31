@@ -26,11 +26,6 @@ import (
 	"os"
 )
 
-const (
-	projectName = "knative-tests"
-	pubsubTopic = "test-infra-monitoring-sub"
-)
-
 type EnvFlags struct {
 	ServiceAccount string // GCP service account file path
 	GithubAccount  string // github account file path
