@@ -56,6 +56,9 @@ presubmits:
     - custom-test: istio-1.2-no-mesh
       always_run: false
       full-command: "./test/e2e-tests.sh --istio-version 1.2-latest --no-mesh"
+    - custom-test: gloo-0.17.1
+      always_run: false
+      full-command: "./test/e2e-tests.sh --gloo-version 0.17.1"
 
   knative/build:
     - build-tests: true
