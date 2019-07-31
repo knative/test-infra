@@ -29,21 +29,21 @@ import (
 	"knative.dev/test-infra/tools/monitoring/subscriber"
 )
 
+const subName = "test-infra-monitoring-sub"
+
+var alertEmailRecipients = []string{"knative-productivity-dev@googlegroups.com"}
+
 // Client holds all the resources required to run alerting
 type Client struct {
 	*subscriber.Client
-	*MailConfig
+	*mail.Config
 	db *mysql.DB
 }
 
-type MailConfig struct {
-	*mail.Config
-	Recipients []string
-}
-
 // Setup sets up the client required to run alerting workflow
-func Setup(psClient *subscriber.Client, db *mysql.DB, mc *MailConfig) *Client {
-	return &Client{psClient, mc, db}
+func Setup(db *mysql.DB, mc *mail.Config) (*Client, error) {
+	sub, err := subscriber.NewSubscriberClient(subName)
+	return &Client{sub, mc, db}, err
 }
 
 // RunAlerting start the alerting workflow
@@ -120,13 +120,8 @@ func (c *Client) handleSingleError(config *config.Config, rmsg *prowapi.ReportMe
 	}
 }
 
-func (m *MailConfig) sendAlert(c *mailContent) error {
-	log.Printf("sending alert...")
-	return m.Send(m.Recipients, c.subject(), c.body())
-}
-
 // Alert checks alert condition and alerts table and send alert mail conditionally
-func (m *MailConfig) Alert(errorPattern string, s *config.SelectedConfig, db *mysql.DB) (bool, error) {
+func (c *Client) Alert(errorPattern string, s *config.SelectedConfig, db *mysql.DB) (bool, error) {
 	log.Println("Fetching error logs")
 	errorLogs, err := db.ListErrorLogs(errorPattern, s.Duration())
 	if err != nil {
@@ -151,7 +146,7 @@ func (m *MailConfig) Alert(errorPattern string, s *config.SelectedConfig, db *my
 	}
 
 	log.Println("Generating and sending the alert email")
-	content := mailContent{*report, errorPattern, s.Hint, s.Duration()}
-	err = m.sendAlert(&content)
+	mcont := mailContent{*report, errorPattern, s.Hint, s.Duration()}
+	err = c.Send(alertEmailRecipients, mcont.subject(), mcont.body())
 	return err == nil, err
 }

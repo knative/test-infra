@@ -33,18 +33,11 @@ import (
 )
 
 var (
-	dbConfig   *mysql.DBConfig
-	mailConfig *mail.Config
-	client     *subscriber.Client
-	wfClient   *alert.Client
-	db         *msql.DB
-
-	alertEmailRecipients = []string{"knative-productivity-dev@googlegroups.com"}
-)
-
-const (
-	projectID = "knative-tests"
-	subName   = "test-infra-monitoring-sub"
+	dbConfig    *mysql.DBConfig
+	mailConfig  *mail.Config
+	client      *subscriber.Client
+	alertClient *alert.Client
+	db          *msql.DB
 )
 
 func main() {
@@ -78,20 +71,16 @@ func main() {
 		log.Fatal(err)
 	}
 
-	ctx := context.Background()
-	client, err = subscriber.NewSubscriberClient(ctx, projectID, subName)
-	if err != nil {
-		log.Fatalf("Failed to initialize the subscriber %+v", err)
-	}
-
 	err = gcs.Authenticate(context.Background(), *serviceAccount)
 	if err != nil {
 		log.Fatalf("Failed to authenticate gcs %+v", err)
 	}
 
-	wfClient = alert.Setup(client, db, &alert.MailConfig{Config: mailConfig, Recipients: alertEmailRecipients})
-
-	wfClient.RunAlerting()
+	alertClient, err = alert.Setup(db, mailConfig)
+	if err != nil {
+		log.Fatalf("Failed to setup test-infra monitoring: %v\n", err)
+	}
+	alertClient.RunAlerting()
 
 	// use PORT environment variable, or default to 8080
 	port := "8080"
@@ -126,8 +115,14 @@ func sendTestEmail(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Serving request: %s", r.URL.Path)
 	log.Println("Sending test email")
 
+	recipients, ok := r.URL.Query()["recipient"]
+	if !ok || len(recipients[0]) < 1 {
+		fmt.Fprintln(w, "Url Param 'recipient' is missing")
+		return
+	}
+
 	err := mailConfig.Send(
-		alertEmailRecipients,
+		recipients,
 		"Test Subject",
 		"Test Content",
 	)
