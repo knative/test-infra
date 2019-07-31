@@ -2950,9 +2950,9 @@ periodics:
         readOnly: true
       env:
       - name: E2E_MIN_CLUSTER_NODES
-        value: "16"
+        value: "4"
       - name: E2E_MAX_CLUSTER_NODES
-        value: "16"
+        value: "4"
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -2989,9 +2989,9 @@ periodics:
         readOnly: true
       env:
       - name: E2E_MIN_CLUSTER_NODES
-        value: "16"
+        value: "4"
       - name: E2E_MAX_CLUSTER_NODES
-        value: "16"
+        value: "4"
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -3975,9 +3975,9 @@ periodics:
         readOnly: true
       env:
       - name: E2E_MIN_CLUSTER_NODES
-        value: "16"
+        value: "4"
       - name: E2E_MAX_CLUSTER_NODES
-        value: "16"
+        value: "4"
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
