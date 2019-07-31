@@ -46,7 +46,7 @@ func NewHandlerClient(githubAccount string, dryrun bool) (*HandlerClient, error)
 	if err != nil {
 		return nil, fmt.Errorf("Github client: %v", err)
 	}
-	pubsubClient, err := subscriber.NewSubscriberClient(ctx, projectName, pubsubTopic)
+	pubsubClient, err := subscriber.NewSubscriberClient(pubsubTopic)
 	if err != nil {
 		return nil, fmt.Errorf("Pubsub client: %v", err)
 	}

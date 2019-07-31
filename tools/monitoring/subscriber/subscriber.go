@@ -25,6 +25,11 @@ import (
 	"knative.dev/test-infra/tools/monitoring/prowapi"
 )
 
+const projectID = "knative-tests"
+
+// pubsub.Client is scoped to a single GCP project. Reuse the pubsub.Client as needed.
+var pubsubClient *pubsub.Client
+
 // Client is a wrapper on the subscriber Operation
 type Client struct {
 	Operation
@@ -37,13 +42,15 @@ type Operation interface {
 }
 
 // NewSubscriberClient returns a new SubscriberClient used to read crier pubsub messages
-func NewSubscriberClient(ctx context.Context, projectID string, subName string) (*Client, error) {
-	c, err := pubsub.NewClient(ctx, projectID)
-	if err != nil {
-		return nil, err
+func NewSubscriberClient(subName string) (*Client, error) {
+	var err error
+	if pubsubClient == nil {
+		log.Println("pubsub.Client not created yet. Creating the client.")
+		if pubsubClient, err = pubsub.NewClient(context.Background(), projectID); err != nil {
+			return nil, err
+		}
 	}
-
-	return &Client{c.Subscription(subName)}, nil
+	return &Client{pubsubClient.Subscription(subName)}, nil
 }
 
 // ReceiveMessageAckAll acknowledges all incoming pusub messages and convert the pubsub message to ReportMessage.
