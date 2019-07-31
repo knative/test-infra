@@ -43,8 +43,8 @@ const (
 	clearAlertsPeriodicJobCron       = "0,30 * * * *" // Run every 30 minutes
 
 	// Perf job constants
-	perfTimeout = 120  // Job timeout in minutes
-	perfNodes   = "16" // Number of nodes needed to run perf tests. Needs to be string
+	perfTimeout = 120 // Job timeout in minutes
+	perfNodes   = "4" // Number of nodes needed to run perf tests. Needs to be string
 )
 
 // periodicJobTemplateData contains data about a periodic Prow job.
