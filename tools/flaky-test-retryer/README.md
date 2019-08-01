@@ -1,7 +1,7 @@
-# flaky-test-retryer
+# Flaky-test-retryer
 
 flaky-test-retryer is a tool that automatically detects when presubmit jobs fail
-due to test flakiness, and reruns them until success. Test flakiness and other
+due to test flakiness, and reruns them atmost 3 times. Test flakiness and other
 configuration details are determined by the [flaky-test-reporter](https://github.com/knative/test-infra/tree/master/tools/flaky-test-reporter).
 
 ## Basic Usage
@@ -22,8 +22,8 @@ always run with the `--dry-run` flag set.
 
 ## Architecture
 
-The retryer is always running in its own Kubernetes cluster, listening for incoming
-Pub/Sub messages. The deployment is described in [this YAML](gke_deployment/retryer_service.yaml),
+The retryer is a K8S service, listening for incoming
+Pub/Sub messages published by prow on job status changes. The deployment is described in [this YAML](gke_deployment/retryer_service.yaml),
 and the basic flow of execution is described below.
 
 1. Github PR or `/test` comment triggers presubmit job.
@@ -38,7 +38,7 @@ and the basic flow of execution is described below.
 
 The only explicit configuration the retryer requires is which Pub/Sub subscriber
 to use and how many retries are allowed. Supported repositories are inferred from
-the flaky-test-reporter's results;
+the flaky-test-reporter's results.
 
 ### Pub/Sub
 
