@@ -1,6 +1,6 @@
 # Flaky-test-retryer
 
-flaky-test-retryer is a tool that automatically detects when presubmit jobs fail
+Flaky-test-retryer is a tool that automatically detects when presubmit jobs fail
 due to test flakiness, and reruns them atmost 3 times. Test flakiness and other
 configuration details are determined by the [flaky-test-reporter](https://github.com/knative/test-infra/tree/master/tools/flaky-test-reporter).
 
@@ -94,4 +94,4 @@ automatic retry.
 if all retries are expended without a success.
 
 ## Troubleshooting
-For troubleshooting questions please contact @chaodaiG
+For troubleshooting questions please ping the oncall. Current oncall can be found [here](https://knative.github.io/test-infra/)
