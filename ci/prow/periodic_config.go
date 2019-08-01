@@ -38,6 +38,7 @@ const (
 	cleanupPeriodicJobCron           = "0 19 * * 1"   // Run at 11:00PST/12:00PST every Monday (19:00 UTC)
 	flakesReporterPeriodicJobCron    = "0 12 * * *"   // Run at 4:00PST/5:00PST every day (12:00 UTC)
 	prowversionbumperPeriodicJobCron = "0 20 * * 1"   // Run at 12:00PST/13:00PST every Monday (20:00 UTC)
+	issueTrackerPeriodicJobCron      = "0 */12 * * *" // Run every 12 hours
 	backupPeriodicJobCron            = "15 9 * * *"   // Run at 02:15PST every day (09:15 UTC)
 	perfPeriodicJobCron              = "0 */3 * * *"  // Run every 3 hours
 	clearAlertsPeriodicJobCron       = "0,30 * * * *" // Run every 30 minutes
@@ -326,4 +327,73 @@ func generateClearAlertsPeriodicJob() {
 	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
 	addVolumeToJob(&data.Base, "/secrets/cloudsql/monitoringdb", "monitoring-db-credentials", true, "")
 	executeJobTemplate("periodic clearalert", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
+}
+
+func generateIssueTrackerPeriodicJobs() {
+	staleJobName := "periodic-test-infra-stale"
+	staleLabelFilter := `
+        -label:lifecycle/frozen
+        -label:lifecycle/stale
+        -label:lifecycle/rotten`
+	staleUpdatedTime := "2160h"
+	staleComment := `|-
+        --comment=Issues go stale after 90d of inactivity.
+        Mark the issue as fresh with /remove-lifecycle stale.
+        Stale issues rot after an additional 30d of inactivity and eventually close.\n
+        If this issue is safe to close now please do so with /close.\n
+        Send feedback to Knative Productivity Slack channel or knative/test-infra.
+        /lifecycle stale`
+	generateIssueTrackerPeriodicJob(staleJobName, staleLabelFilter, staleUpdatedTime, staleComment)
+
+	rottenJobName := "periodic-test-infra-rotten"
+	rottenLabelFilter := `
+        -label:lifecycle/frozen
+        label:lifecycle/stale
+        -label:lifecycle/rotten`
+	rottenUpdatedTime := "720h"
+	rottenComment := `|-
+        --comment=Stale issues rot after 30d of inactivity.
+        Mark the issue as fresh with /remove-lifecycle rotten.
+        Rotten issues close after an additional 30d of inactivity.\n
+        If this issue is safe to close now please do so with /close.\n
+        Send feedback to Knative Productivity Slack channel or knative/test-infra.
+        /lifecycle rotten`
+	generateIssueTrackerPeriodicJob(rottenJobName, rottenLabelFilter, rottenUpdatedTime, rottenComment)
+
+	closeJobName := "periodic-test-infra-close"
+	closeLabelFilter := `
+        -label:lifecycle/frozen
+        label:lifecycle/rotten`
+	closeUpdatedTime := "720h"
+	closeComment := `|-
+        --comment=Rotten issues close after 30d of inactivity.
+        Reopen the issue with /reopen.
+        Mark the issue as fresh with /remove-lifecycle rotten.\n
+        Send feedback to Knative Productivity Slack channel or knative/test-infra.
+        /close`
+	generateIssueTrackerPeriodicJob(closeJobName, closeLabelFilter, closeUpdatedTime, closeComment)
+}
+
+func generateIssueTrackerPeriodicJob(jobName, labelFilter, updatedTime, comment string) {
+	var data periodicJobTemplateData
+	data.Base = newbaseProwJobTemplateData("knative/test-infra")
+	data.Base.Image = githubCommenterDockerImage
+	data.PeriodicJobName = jobName
+	data.CronString = issueTrackerPeriodicJobCron
+	data.Base.Command = "/app/robots/commenter/app.binary"
+
+	data.Base.Args = []string{
+		fmt.Sprintf(`|-
+        --query=org:knative
+        %s`, labelFilter),
+		fmt.Sprintf("--updated=%s", updatedTime),
+		// TODO: use a correct github token
+		"--token=/etc/hub-token/token",
+		comment,
+		"--template",
+		"--ceiling=10",
+		"--confirm",
+	}
+	addVolumeToJob(&data.Base, "/etc/hub-token", "hub-token", true, "")
+	executeJobTemplate(jobName, readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
 }
