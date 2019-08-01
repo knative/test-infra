@@ -30,15 +30,15 @@ and the basic flow of execution is described below.
 2. Presubmit job stores artifacts in GCS and publishes Pub/Sub message.
 3. flaky-test-retryer receives Pub/Sub message, determines if job can be processed.
 4. Compare job's failed test artifacts (if any) with flaky-test-reporter's daily results.
-5. a. If all failed tests are flaky, post a GitHub comment containing `/test`.
-5. b. If some failed tests are _not_ flaky, list the non-flaky tests preventing retry.
+5. If all failed tests are flaky, post a GitHub comment containing `/test`. If
+some failed tests are _not_ flaky, list the non-flaky tests preventing retry.
 6. Repeat up to 3 times.
 
 ### Configuration
 
-The only explicit configuration the retryer requires is which Pub/Sub subscriber
-to use and how many retries are allowed. Supported repositories are inferred from
-the flaky-test-reporter's results.
+All configuration options, such as supported repositories, are inferred from
+the flaky-test-reporter's results. If/when the reporter's updated to support new
+jobs or repos, the retryer will automatically support it as well.
 
 ### Pub/Sub
 
