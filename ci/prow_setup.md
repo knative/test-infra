@@ -27,6 +27,20 @@
    Console, and
    [create the TLS secret](https://kubernetes.io/docs/concepts/services-networking/ingress/#tls).
 
+## Adding new Kubernetes resources
+
+1. If it's Boskos related, check under [prow/boskos/deployments](./prow/boskos/deployments)
+   and add a new file there if not exist.
+
+1. If not Boskos related, check under [prow/deployments](./prow/deployments) and add a new file
+   there if not exist.
+
+1. If the change involves adding new namespace, add it in [prow/config_start.yaml](./prow/config_start.yaml).
+
+1. Create a PR with the changes and once it's merged ask one of the owners of _knative/test-infra_
+   to deploy the new resource by running `make get-cluster-credentials`, `kubectl apply -f ./config_start.yaml`, `make update-single-boskos-deployment [FILE_NAME_WITHOUT_EXTENSION]` (if Boskos related), and `make update-single-deployment [FILE_NAME_WITHOUT_EXTENSION]`
+   (if not Boskos related).
+
 ## Expanding Boskos pool
 
 1. All projects and permissions can be created by running
