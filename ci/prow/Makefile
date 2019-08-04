@@ -58,7 +58,7 @@ update-all-boskos-deployments:
 	@for f in $(shell ls boskos/deployments/*.yaml); do kubectl apply -f $${f}; done
 	$(UNSET_CONTEXT)
 
-# Update single deployment of boskos, expect passing in ${NAME} like `make update-single-boskos-deployment NAME=janitor_deployment`
+# Update single deployment of boskos, expect passing in ${NAME} like `make update-single-boskos-deployment NAME=janitor`
 update-single-boskos-deployment:
 	$(SET_CONTEXT)
 	kubectl apply -f boskos/deployments/$(NAME).yaml
