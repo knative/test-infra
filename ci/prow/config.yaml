@@ -5170,7 +5170,7 @@ periodics:
     repo: test-infra
   spec:
     containers:
-    - image: gcr.io/k8s-prow/commenter:latest
+    - image: gcr.io/k8s-prow/commenter:v20190731-e3f7b9853
       imagePullPolicy: Always
       command:
       - "/app/robots/commenter/app.binary"
@@ -5209,7 +5209,7 @@ periodics:
     repo: test-infra
   spec:
     containers:
-    - image: gcr.io/k8s-prow/commenter:latest
+    - image: gcr.io/k8s-prow/commenter:v20190731-e3f7b9853
       imagePullPolicy: Always
       command:
       - "/app/robots/commenter/app.binary"
@@ -5248,7 +5248,7 @@ periodics:
     repo: test-infra
   spec:
     containers:
-    - image: gcr.io/k8s-prow/commenter:latest
+    - image: gcr.io/k8s-prow/commenter:v20190731-e3f7b9853
       imagePullPolicy: Always
       command:
       - "/app/robots/commenter/app.binary"
