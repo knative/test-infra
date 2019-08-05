@@ -25,7 +25,7 @@ import (
 	"knative.dev/test-infra/tools/monitoring/prowapi"
 )
 
-const projectID = "knative-tests"
+const projectID = "trevorfarrelly-knative-2019"
 
 // pubsub.Client is scoped to a single GCP project. Reuse the pubsub.Client as needed.
 var pubsubClient *pubsub.Client

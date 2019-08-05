@@ -66,6 +66,9 @@ func NewGithubClient(githubAccount string, dryrun bool) (*GithubClient, error) {
 // The comment body is dynamically built based on previous retry comments on this PR, and any old
 // comments are removed before the new one is posted.
 func (gc *GithubClient) PostComment(jd *JobData, outliers []string) error {
+	jd.Refs[0].Org = "TrevorFarrelly"
+	jd.Refs[0].Repo = "test-infra"
+	jd.Refs[0].Pulls[0].Number = 2
 	oldComment, err := gc.getOldComment(jd.Refs[0].Org, jd.Refs[0].Repo, jd.Refs[0].Pulls[0].Number)
 	if err != nil {
 		return err

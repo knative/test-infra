@@ -174,7 +174,7 @@ func (jd *JobData) parseFlakyLog(f func(report jsonreport.Report, result *[]stri
 	var err error
 	// populate cache if it is empty
 	if jd.flakyReports == nil {
-		jd.flakyReports, err = jsonreport.GetFlakyTestReport("", -1)
+		jd.flakyReports, err = jsonreport.GetFlakyTestReport("", 1157260046506135552)
 	}
 	if err == nil && len(jd.flakyReports) > 0 {
 		for _, r := range jd.flakyReports {
