@@ -84,7 +84,7 @@ tide:
     - knative/community
     - knative/sample-controller
     - knative/serving-operator
-    - GoogleCloudPlatform/cloud-run-events
+    - google/knative-gcp
     labels:
     - lgtm
     - approved
@@ -2211,13 +2211,13 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  GoogleCloudPlatform/cloud-run-events:
-  - name: pull-googlecloudplatform-cloud-run-events-build-tests
+  google/knative-gcp:
+  - name: pull-google-knative-gcp-build-tests
     agent: kubernetes
-    context: pull-googlecloudplatform-cloud-run-events-build-tests
+    context: pull-google-knative-gcp-build-tests
     always_run: true
-    rerun_command: "/test pull-googlecloudplatform-cloud-run-events-build-tests"
-    trigger: "(?m)^/test (all|pull-googlecloudplatform-cloud-run-events-build-tests),?(\\s+|$)"
+    rerun_command: "/test pull-google-knative-gcp-build-tests"
+    trigger: "(?m)^/test (all|pull-google-knative-gcp-build-tests),?(\\s+|$)"
     decorate: true
     spec:
       containers:
@@ -2241,12 +2241,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-googlecloudplatform-cloud-run-events-unit-tests
+  - name: pull-google-knative-gcp-unit-tests
     agent: kubernetes
-    context: pull-googlecloudplatform-cloud-run-events-unit-tests
+    context: pull-google-knative-gcp-unit-tests
     always_run: true
-    rerun_command: "/test pull-googlecloudplatform-cloud-run-events-unit-tests"
-    trigger: "(?m)^/test (all|pull-googlecloudplatform-cloud-run-events-unit-tests),?(\\s+|$)"
+    rerun_command: "/test pull-google-knative-gcp-unit-tests"
+    trigger: "(?m)^/test (all|pull-google-knative-gcp-unit-tests),?(\\s+|$)"
     decorate: true
     spec:
       containers:
@@ -2270,16 +2270,16 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-googlecloudplatform-cloud-run-events-integration-tests
+  - name: pull-google-knative-gcp-integration-tests
     agent: kubernetes
     labels:
       prow.k8s.io/pubsub.project: knative-tests
       prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: pull-googlecloudplatform-cloud-run-events-integration-tests
-    context: pull-googlecloudplatform-cloud-run-events-integration-tests
+      prow.k8s.io/pubsub.runID: pull-google-knative-gcp-integration-tests
+    context: pull-google-knative-gcp-integration-tests
     always_run: true
-    rerun_command: "/test pull-googlecloudplatform-cloud-run-events-integration-tests"
-    trigger: "(?m)^/test (all|pull-googlecloudplatform-cloud-run-events-integration-tests),?(\\s+|$)"
+    rerun_command: "/test pull-google-knative-gcp-integration-tests"
+    trigger: "(?m)^/test (all|pull-google-knative-gcp-integration-tests),?(\\s+|$)"
     decorate: true
     spec:
       containers:
@@ -2303,12 +2303,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-googlecloudplatform-cloud-run-events-go-coverage
+  - name: pull-google-knative-gcp-go-coverage
     agent: kubernetes
-    context: pull-googlecloudplatform-cloud-run-events-go-coverage
+    context: pull-google-knative-gcp-go-coverage
     always_run: true
-    rerun_command: "/test pull-googlecloudplatform-cloud-run-events-go-coverage"
-    trigger: "(?m)^/test (all|pull-googlecloudplatform-cloud-run-events-go-coverage),?(\\s+|$)"
+    rerun_command: "/test pull-google-knative-gcp-go-coverage"
+    trigger: "(?m)^/test (all|pull-google-knative-gcp-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
     spec:
@@ -2318,7 +2318,7 @@ presubmits:
         command:
         - "/coverage"
         args:
-        - "--postsubmit-job-name=post-googlecloudplatform-cloud-run-events-go-coverage"
+        - "--postsubmit-job-name=post-google-knative-gcp-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
         - "--github-token=/etc/covbot-token/token"
@@ -4830,17 +4830,17 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "13 * * * *"
-  name: ci-googlecloudplatform-cloud-run-events-continuous
+- cron: "30 * * * *"
+  name: ci-google-knative-gcp-continuous
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-googlecloudplatform-cloud-run-events-continuous
+    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-continuous
   decorate: true
   extra_refs:
-  - org: GoogleCloudPlatform
-    repo: cloud-run-events
+  - org: google
+    repo: knative-gcp
     base_ref: master
   spec:
     containers:
@@ -4865,17 +4865,17 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "59 9 * * *"
-  name: ci-googlecloudplatform-cloud-run-events-nightly-release
+- cron: "15 9 * * *"
+  name: ci-google-knative-gcp-nightly-release
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-googlecloudplatform-cloud-run-events-nightly-release
+    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-nightly-release
   decorate: true
   extra_refs:
-  - org: GoogleCloudPlatform
-    repo: cloud-run-events
+  - org: google
+    repo: knative-gcp
     base_ref: master
   spec:
     containers:
@@ -4900,17 +4900,17 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "30 9 * * 2"
-  name: ci-googlecloudplatform-cloud-run-events-dot-release
+- cron: "56 9 * * 2"
+  name: ci-google-knative-gcp-dot-release
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-googlecloudplatform-cloud-run-events-dot-release
+    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-dot-release
   decorate: true
   extra_refs:
-  - org: GoogleCloudPlatform
-    repo: cloud-run-events
+  - org: google
+    repo: knative-gcp
     base_ref: master
   spec:
     containers:
@@ -4921,7 +4921,7 @@ periodics:
       args:
       - "./hack/release.sh"
       - "--dot-release"
-      - "--release-gcs knative-releases/cloud-run-events"
+      - "--release-gcs knative-releases/knative-gcp"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
       volumeMounts:
@@ -4933,7 +4933,7 @@ periodics:
         readOnly: true
       env:
       - name: ORG_NAME
-        value: GoogleCloudPlatform
+        value: google
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -4945,17 +4945,17 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "37 */2 * * *"
-  name: ci-googlecloudplatform-cloud-run-events-auto-release
+- cron: "53 */2 * * *"
+  name: ci-google-knative-gcp-auto-release
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-googlecloudplatform-cloud-run-events-auto-release
+    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-auto-release
   decorate: true
   extra_refs:
-  - org: GoogleCloudPlatform
-    repo: cloud-run-events
+  - org: google
+    repo: knative-gcp
     base_ref: master
   spec:
     containers:
@@ -4966,7 +4966,7 @@ periodics:
       args:
       - "./hack/release.sh"
       - "--auto-release"
-      - "--release-gcs knative-releases/cloud-run-events"
+      - "--release-gcs knative-releases/knative-gcp"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
       volumeMounts:
@@ -4978,7 +4978,7 @@ periodics:
         readOnly: true
       env:
       - name: ORG_NAME
-        value: GoogleCloudPlatform
+        value: google
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -4991,16 +4991,16 @@ periodics:
       secret:
         secretName: release-account
 - cron: "0 1 * * *"
-  name: ci-googlecloudplatform-cloud-run-events-go-coverage
+  name: ci-google-knative-gcp-go-coverage
   labels:
       prow.k8s.io/pubsub.project: knative-tests
       prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-googlecloudplatform-cloud-run-events-go-coverage
+      prow.k8s.io/pubsub.runID: ci-google-knative-gcp-go-coverage
   agent: kubernetes
   decorate: true
   extra_refs:
-  - org: GoogleCloudPlatform
-    repo: cloud-run-events
+  - org: google
+    repo: knative-gcp
     base_ref: master
   spec:
     containers:
@@ -5329,8 +5329,8 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
-  GoogleCloudPlatform/cloud-run-events:
-  - name: post-googlecloudplatform-cloud-run-events-go-coverage
+  google/knative-gcp:
+  - name: post-google-knative-gcp-go-coverage
     branches:
     - master
     agent: kubernetes
