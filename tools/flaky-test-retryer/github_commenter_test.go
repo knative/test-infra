@@ -118,7 +118,7 @@ func getFakeGithubClient() *GithubClient {
 	gc.User = fakeUser
 	return &GithubClient{
 		gc,
-		*gc.User.Login,
+		*gc.User.ID,
 		false,
 	}
 }
