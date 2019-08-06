@@ -15,7 +15,7 @@
 approve:
 - repos:
   - knative
-  - GoogleCloudPlatform/cloud-run-events
+  - google/knative-gcp
   require_self_approval: false
   ignore_review_state: false
 
@@ -52,7 +52,7 @@ plugins:
   - verify-owners
   - wip
   - yuks
-  GoogleCloudPlatform/cloud-run-events:
+  google/knative-gcp:
   - approve
   - assign
   - blunderbuss

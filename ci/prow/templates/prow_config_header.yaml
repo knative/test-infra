@@ -90,7 +90,7 @@ tide:
     - knative/community
     - knative/sample-controller
     - knative/serving-operator
-    - GoogleCloudPlatform/cloud-run-events
+    - google/knative-gcp
     labels:
     - lgtm
     - approved

@@ -141,7 +141,7 @@ presubmits:
     - unit-tests: true
       dot-dev: true
 
-  GoogleCloudPlatform/cloud-run-events:
+  google/knative-gcp:
     - build-tests: true
     - unit-tests: true
     - integration-tests: true
@@ -285,12 +285,12 @@ periodics:
     - auto-release: true
       dot-dev: true
 
-  GoogleCloudPlatform/cloud-run-events:
+  google/knative-gcp:
     - continuous: true
     - nightly: true
     - dot-release: true
       env-vars:
-      - ORG_NAME=GoogleCloudPlatform
+      - ORG_NAME=google
     - auto-release: true
       env-vars:
-      - ORG_NAME=GoogleCloudPlatform
+      - ORG_NAME=google

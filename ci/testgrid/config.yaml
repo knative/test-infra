@@ -253,20 +253,20 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-eventing-0.7-continuous
 - name: ci-knative-eventing-contrib-0.7-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-0.7-continuous
-- name: ci-googlecloudplatform-cloud-run-events-continuous
-  gcs_prefix: knative-prow/logs/ci-googlecloudplatform-cloud-run-events-continuous
+- name: ci-google-knative-gcp-continuous
+  gcs_prefix: knative-prow/logs/ci-google-knative-gcp-continuous
   alert_stale_results_hours: 3
   num_failures_to_alert: 3
-- name: ci-googlecloudplatform-cloud-run-events-nightly-release
-  gcs_prefix: knative-prow/logs/ci-googlecloudplatform-cloud-run-events-nightly-release
-- name: ci-googlecloudplatform-cloud-run-events-dot-release
-  gcs_prefix: knative-prow/logs/ci-googlecloudplatform-cloud-run-events-dot-release
+- name: ci-google-knative-gcp-nightly-release
+  gcs_prefix: knative-prow/logs/ci-google-knative-gcp-nightly-release
+- name: ci-google-knative-gcp-dot-release
+  gcs_prefix: knative-prow/logs/ci-google-knative-gcp-dot-release
   alert_stale_results_hours: 170
-- name: ci-googlecloudplatform-cloud-run-events-auto-release
-  gcs_prefix: knative-prow/logs/ci-googlecloudplatform-cloud-run-events-auto-release
+- name: ci-google-knative-gcp-auto-release
+  gcs_prefix: knative-prow/logs/ci-google-knative-gcp-auto-release
   alert_stale_results_hours: 3
-- name: pull-googlecloudplatform-cloud-run-events-test-coverage
-  gcs_prefix: knative-prow/logs/ci-googlecloudplatform-cloud-run-events-go-coverage
+- name: pull-google-knative-gcp-test-coverage
+  gcs_prefix: knative-prow/logs/ci-google-knative-gcp-go-coverage
   num_failures_to_alert: 9999
   short_text_metric: "coverage"
 dashboards:
@@ -451,22 +451,22 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-serving-operator-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: cloud-run-events
+- name: knative-gcp
   dashboard_tab:
   - name: continuous
-    test_group_name: ci-googlecloudplatform-cloud-run-events-continuous
+    test_group_name: ci-google-knative-gcp-continuous
     base_options: "sort-by-name="
   - name: nightly
-    test_group_name: ci-googlecloudplatform-cloud-run-events-nightly-release
+    test_group_name: ci-google-knative-gcp-nightly-release
     base_options: "sort-by-name="
   - name: dot-release
-    test_group_name: ci-googlecloudplatform-cloud-run-events-dot-release
+    test_group_name: ci-google-knative-gcp-dot-release
     base_options: "sort-by-name="
   - name: auto-release
-    test_group_name: ci-googlecloudplatform-cloud-run-events-auto-release
+    test_group_name: ci-google-knative-gcp-auto-release
     base_options: "sort-by-name="
   - name: coverage
-    test_group_name: pull-googlecloudplatform-cloud-run-events-test-coverage
+    test_group_name: pull-google-knative-gcp-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: knative-0.4
   dashboard_tab:
@@ -531,6 +531,6 @@ dashboard_groups:
   - "sample-controller"
   - "test-infra"
   - "serving-operator"
-- name: GoogleCloudPlatform
+- name: google
   dashboard_names:
-  - "cloud-run-events"
+  - "knative-gcp"
