@@ -472,6 +472,7 @@ function run_validation_tests() {
 # Parameters: $1..$n - files to add to the release.
 function publish_artifacts() {
   (( ! PUBLISH_RELEASE )) && return
+  awk '!seen[$0]++' ARTIFACTS_TO_PUBLISH > ARTIFACTS_TO_PUBLISH
   tag_images_in_yamls ${ARTIFACTS_TO_PUBLISH}
   publish_to_gcs ${ARTIFACTS_TO_PUBLISH}
   publish_to_github ${ARTIFACTS_TO_PUBLISH}
