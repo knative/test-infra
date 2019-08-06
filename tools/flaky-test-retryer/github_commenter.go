@@ -45,7 +45,7 @@ var (
 // GithubClient wraps the ghutil Github client
 type GithubClient struct {
 	ghutil.GithubOperations
-	Login  string
+	ID     int64
 	Dryrun bool
 }
 
@@ -59,7 +59,7 @@ func NewGithubClient(githubAccount string, dryrun bool) (*GithubClient, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &GithubClient{ghc, *user.Login, dryrun}, nil
+	return &GithubClient{ghc, user.GetID(), dryrun}, nil
 }
 
 // PostComment posts a new comment on the PR specified in JobData, retrying the job that triggered it.
@@ -104,7 +104,7 @@ func (gc *GithubClient) getOldComment(org, repo string, pull int) (*github.Issue
 		if err != nil {
 			return nil, err
 		}
-		if found && *comment.GetUser().Login == gc.Login {
+		if found && *comment.GetUser().ID == gc.ID {
 			if match == nil {
 				match = comment
 			} else {
