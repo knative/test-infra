@@ -387,13 +387,12 @@ func generateIssueTrackerPeriodicJob(jobName, labelFilter, updatedTime, comment 
         --query=org:knative
         %s`, labelFilter),
 		fmt.Sprintf("--updated=%s", updatedTime),
-		// TODO: use a correct github token
-		"--token=/etc/hub-token/token",
+		"--token=/etc/housekeeping-github-token/token",
 		comment,
 		"--template",
 		"--ceiling=10",
 		"--confirm",
 	}
-	addVolumeToJob(&data.Base, "/etc/hub-token", "hub-token", true, "")
+	addVolumeToJob(&data.Base, "/etc/housekeeping-github-token", "housekeeping-github-token", true, "")
 	executeJobTemplate(jobName, readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
 }
