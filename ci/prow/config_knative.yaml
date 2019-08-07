@@ -92,6 +92,13 @@ presubmits:
     - go-coverage: true
 
   knative/eventing-contrib:
+    - repo-settings:
+      legacy-branches:
+      - release-0.4
+      - release-0.5
+      - release-0.6
+      - release-0.7
+      - release-0.8
     - build-tests: true
     - unit-tests: true
     - integration-tests: true
@@ -255,6 +262,7 @@ periodics:
 
   knative/eventing-contrib:
     - continuous: true
+      dot-dev: true
     - branch-ci: true
       release: "0.5"
     - branch-ci: true
@@ -262,8 +270,11 @@ periodics:
     - branch-ci: true
       release: "0.7"
     - nightly: true
+      dot-dev: true
     - dot-release: true
+      dot-dev: true
     - auto-release: true
+      dot-dev: true
 
   knative/build-templates:
     - continuous: true
