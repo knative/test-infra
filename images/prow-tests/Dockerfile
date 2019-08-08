@@ -43,6 +43,9 @@ RUN go get -u github.com/golang/dep/cmd/dep
 RUN go get -u github.com/jstemmer/go-junit-report
 RUN go get -u github.com/raviqqe/liche
 
+# TODO(joyceyu): Remove once we move off of bash script and use boskos go client library
+RUN go get -u k8s.io/test-infra/boskos/cmd/cli
+
 # Extract bazel version
 RUN bazel version > /bazel_version
 RUN bazel shutdown
