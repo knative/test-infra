@@ -95,7 +95,8 @@ func (p *PostSubmit) dirOfCompletionMarker(build int) (result string) {
 
 func (p *PostSubmit) isBuildHealthy(build int) bool {
 	return p.StorageClient.DoesObjectExist(p.Ctx, p.Bucket,
-		p.dirOfCompletionMarker(build))
+		p.dirOfCompletionMarker(build)) &&
+		p.StorageClient.DoesObjectExist(p.Ctx, p.Bucket, path.Join(p.dirOfArtifacts(build), p.covProfileName))
 }
 
 func (p *PostSubmit) pathToGoodCoverageArtifacts() (result string) {
