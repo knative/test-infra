@@ -5528,6 +5528,7 @@ periodics:
       args:
       - "|-
         --query=org:knative
+        repo:test-infra
         -label:lifecycle/frozen
         -label:lifecycle/stale
         -label:lifecycle/rotten"
@@ -5567,6 +5568,7 @@ periodics:
       args:
       - "|-
         --query=org:knative
+        repo:test-infra
         -label:lifecycle/frozen
         label:lifecycle/stale
         -label:lifecycle/rotten"
@@ -5606,6 +5608,7 @@ periodics:
       args:
       - "|-
         --query=org:knative
+        repo:test-infra
         -label:lifecycle/frozen
         label:lifecycle/rotten"
       - "--updated=720h"

@@ -382,9 +382,11 @@ func generateIssueTrackerPeriodicJob(jobName, labelFilter, updatedTime, comment 
 	data.CronString = issueTrackerPeriodicJobCron
 	data.Base.Command = "/app/robots/commenter/app.binary"
 
+	// TODO(Fredy-Z): remove "repo:test-infra" after syncing up with the WGs.
 	data.Base.Args = []string{
 		`|-
         --query=org:knative
+        repo:test-infra
         ` + labelFilter,
 		"--updated=" + updatedTime,
 		"--token=/etc/housekeeping-github-token/token",
