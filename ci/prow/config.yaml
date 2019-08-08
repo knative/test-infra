@@ -5162,7 +5162,7 @@ periodics:
       secret:
         secretName: backup-account
 - cron: "0 */12 * * *"
-  name: periodic-test-infra-stale
+  name: ci-knative-issue-tracker-stale
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -5201,7 +5201,7 @@ periodics:
       secret:
         secretName: housekeeping-github-token
 - cron: "0 */12 * * *"
-  name: periodic-test-infra-rotten
+  name: ci-knative-issue-tracker-rotten
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -5240,7 +5240,7 @@ periodics:
       secret:
         secretName: housekeeping-github-token
 - cron: "0 */12 * * *"
-  name: periodic-test-infra-close
+  name: ci-knative-issue-tracker-close
   agent: kubernetes
   decorate: true
   extra_refs:

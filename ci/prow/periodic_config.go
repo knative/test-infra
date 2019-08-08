@@ -330,7 +330,7 @@ func generateClearAlertsPeriodicJob() {
 }
 
 func generateIssueTrackerPeriodicJobs() {
-	staleJobName := "periodic-test-infra-stale"
+	staleJobName := "ci-knative-issue-tracker-stale"
 	staleLabelFilter := `
         -label:lifecycle/frozen
         -label:lifecycle/stale
@@ -345,7 +345,7 @@ func generateIssueTrackerPeriodicJobs() {
         /lifecycle stale`
 	generateIssueTrackerPeriodicJob(staleJobName, staleLabelFilter, staleUpdatedTime, staleComment)
 
-	rottenJobName := "periodic-test-infra-rotten"
+	rottenJobName := "ci-knative-issue-tracker-rotten"
 	rottenLabelFilter := `
         -label:lifecycle/frozen
         label:lifecycle/stale
@@ -360,7 +360,7 @@ func generateIssueTrackerPeriodicJobs() {
         /lifecycle rotten`
 	generateIssueTrackerPeriodicJob(rottenJobName, rottenLabelFilter, rottenUpdatedTime, rottenComment)
 
-	closeJobName := "periodic-test-infra-close"
+	closeJobName := "ci-knative-issue-tracker-close"
 	closeLabelFilter := `
         -label:lifecycle/frozen
         label:lifecycle/rotten`
@@ -383,10 +383,10 @@ func generateIssueTrackerPeriodicJob(jobName, labelFilter, updatedTime, comment 
 	data.Base.Command = "/app/robots/commenter/app.binary"
 
 	data.Base.Args = []string{
-		fmt.Sprintf(`|-
+		`|-
         --query=org:knative
-        %s`, labelFilter),
-		fmt.Sprintf("--updated=%s", updatedTime),
+        ` + labelFilter,
+		"--updated=" + updatedTime,
 		"--token=/etc/housekeeping-github-token/token",
 		comment,
 		"--template",
