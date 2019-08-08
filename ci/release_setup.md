@@ -30,7 +30,7 @@ Versioned releases can be one of two kinds:
   manually edit it and add the relevant markdown content.
 
 - **Patch or dot releases** are those with changes to the `Z` value in the
-  version. They are cut automatically, every Tuesday night between 2AM and 3 AM
+  version. They are cut automatically, every Tuesday night between 2AM and 3AM
   (PST). For example, if the latest release on release branch `release-0.2` is
   `v0.2.1`, the next minor release will be named `v0.2.2`. A minor release is
   only created if there are new commits to the latest release branch of a
@@ -42,7 +42,7 @@ Versioned releases can be one of two kinds:
 ## Setting up automated releases
 
 1. Have the
-   [//test/presubmit-tests.sh](prow_setup.md#setting-up-jobs-for-a-new-repo)
+   [/test/presubmit-tests.sh](prow_setup.md#setting-up-jobs-for-a-new-repo)
    script added to your repo, as it's used as a release gateway. Alternatively,
    have some sort of validation and set `$VALIDATION_TESTS` in your release
    script (see below).
@@ -76,3 +76,88 @@ Versioned releases can be one of two kinds:
    [Prow status page](https://prow.knative.dev) under the names
    `ci-knative-MODULE-nightly-release`, `ci-knative-MODULE-auto-release` and
    `ci-knative-MODULE-dot-release`.
+
+## Creating a major version release
+
+### Starting the release from the GitHub UI
+
+1. Click the _Branch_ dropdown.
+1. Type the desired `release-X.Y` branch name into the search box.
+1. Click the `Create branch: release-X.Y from 'master'` button. _You must have write permissions to the repo to create a branch._
+
+### Starting the release from the Git CLI
+
+1.  Fetch the upstream remote.
+
+    ```sh
+    git fetch upstream
+    ```
+
+1.  Create a `release-X.Y` branch from `upstream/master`.
+
+    ```sh
+    git branch --no-track release-X.Y upstream/master
+    ```
+
+1.  Push the branch to upstream.
+
+    ```sh
+    git push upstream release-X.Y
+    ```
+
+    _You must have write permissions to the repo to create a branch._
+
+### Finishing the release
+
+Within 2 hours, Prow will detect the new release branch and run the
+`hack/release.sh` script. If the build succeeds, a new tag `vX.Y.0`
+will be created and a GitHub release published. If the build fails,
+logs can be retrieved from `https://testgrid.knative.dev/MODULE#auto-release`.
+
+Write release notes and add them to the release at
+`https://github.com/knative/MODULE/releases`.
+
+## Adding a commit to the next minor version release
+
+1.  Fetch the upstream remote.
+
+    ```sh
+    git fetch upstream
+    ```
+
+1.  Create a branch based on the desired (usually the latest) `release-X.Y` branch.
+
+    ```sh
+    git co -b my-backport-branch upstream/release-X.Y
+    ```
+
+1.  Cherry-pick desired commits from master into the new branch.
+
+    ```sh
+    git cherry-pick <commitid>
+    ```
+
+1.  Push the branch to your fork.
+
+    ```sh
+    git push origin
+    ```
+
+1.  Create a PR for your branch based on the `release-X.Y` branch.
+
+1.  Once the PR is merged, it will be included in the next minor release, which is
+    usually built Tuesday nights, between 2AM and 3AM.
+
+**Note**: If a minor release is required for a release branch that's not the latest,
+the job must be [started manually](https://github.com/knative/test-infra/blob/master/ci/manual_release.md#creating-a-dot-release-on-demand).
+
+### Finishing a minor release
+
+When the minor release job runs, it will detect the new commits in the
+latest release branch and run the `release.sh` script. If the build succeeds, a new tag
+`vX.Y.Z` will be created (where `Z` is the current minor version number + 1)
+and a GitHub release published at `https://github.com/knative/MODULE/releases`.
+If the build fails, logs can be retrieved from `https://testgrid.knative.dev/MODULE#dot-release`.
+
+Write release notes and add them to the release at
+`https://github.com/knative/MODULE/releases`.
