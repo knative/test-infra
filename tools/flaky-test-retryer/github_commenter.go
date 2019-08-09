@@ -50,8 +50,8 @@ type GithubClient struct {
 	Dryrun bool
 }
 
-// Entry holds all of the relevant information for a retried job
-type Entry struct {
+// entry holds all of the relevant information for a retried job
+type entry struct {
 	oldLinks string
 	retries  int
 }
@@ -82,7 +82,7 @@ func (gc *GithubClient) PostComment(jd *JobData, outliers []string) error {
 		return err
 	}
 	if _, ok := oldEntries[jd.JobName]; !ok {
-		oldEntries[jd.JobName] = &Entry{}
+		oldEntries[jd.JobName] = &entry{}
 	}
 	newComment := buildNewComment(jd, oldEntries, outliers)
 	if gc.Dryrun {
@@ -125,8 +125,8 @@ func (gc *GithubClient) getOldComment(org, repo string, pull int) (*github.Issue
 
 // parseEntries collects retry information from the given comment, so we can reuse it in
 // a new comment.
-func parseEntries(comment *github.IssueComment) (map[string]*Entry, error) {
-	entries := map[string]*Entry{}
+func parseEntries(comment *github.IssueComment) (map[string]*entry, error) {
+	entries := make(map[string]*entry)
 	if comment == nil {
 		return entries, nil
 	}
@@ -134,13 +134,18 @@ func parseEntries(comment *github.IssueComment) (map[string]*Entry, error) {
 	entryStrings := re.FindAll([]byte(comment.GetBody()), -1)
 	for _, e := range entryStrings {
 		fields := strings.Split(string(e), " | ")
-		job := fields[0]
-		links := fields[1]
-		retry, err := strconv.Atoi(strings.Split(fields[2], "/")[0])
+		// support old comments with 2 columns, before links were added
+		var links string
+		if len(fields) == 2 {
+			links = ""
+		} else {
+			links = fields[1]
+		}
+		retry, err := strconv.Atoi(strings.Split(fields[len(fields)-1], "/")[0])
 		if err != nil {
 			return nil, err
 		}
-		entries[job] = &Entry{
+		entries[fields[0]] = &entry{
 			oldLinks: links,
 			retries:  retry,
 		}
@@ -150,7 +155,7 @@ func parseEntries(comment *github.IssueComment) (map[string]*Entry, error) {
 
 // buildNewComment takes the old entry data, the job we are processing, and any outlying
 // non-flaky tests, building a comment body based on these parameters.
-func buildNewComment(jd *JobData, entries map[string]*Entry, outliers []string) string {
+func buildNewComment(jd *JobData, entries map[string]*entry, outliers []string) string {
 	var cmd string
 	var entryString []string
 	if entries[jd.JobName].retries >= maxRetries {
@@ -170,23 +175,22 @@ func buildNewComment(jd *JobData, entries map[string]*Entry, outliers []string) 
 	}
 	sort.Strings(keys)
 	for _, test := range keys {
-		entryString = append(entryString, fmt.Sprintf("%s | %s | %d/%d", test, buildLinks(entries[test].oldLinks, jd.GCSPath), entries[test].retries, maxRetries))
+		entryString = append(entryString, fmt.Sprintf("%s | %s | %d/%d", test, buildLinks(entries[test].oldLinks, jd.URL), entries[test].retries, maxRetries))
 	}
 	return fmt.Sprintf(commentTemplate, identifier, strings.Join(entryString, "\n"), cmd)
 }
 
-// buildLinks generates Markdown-formatted Spyglass links from GCS paths
-func buildLinks(oldLinks string, GCSPath string) string {
-	formattedLink := fmt.Sprintf("[link](%s)", strings.Replace(GCSPath, gcsPrefix, spyglassPrefix, -1))
+// buildLinks constructs a Markdown-formatted list of URLs
+func buildLinks(oldLinks string, newLink string) string {
 	if oldLinks == "" {
-		return formattedLink
+		return fmt.Sprintf("[link](%s)", newLink)
 	}
-	return fmt.Sprintf("%s<br>%s", oldLinks, formattedLink)
+	return fmt.Sprintf("%s<br>[link](%s)", oldLinks, newLink)
 }
 
 // buildRetryString increments the retry counter and generates a /test string if we have
 // more retries available.
-func buildRetryString(job string, entries map[string]*Entry) string {
+func buildRetryString(job string, entries map[string]*entry) string {
 	entries[job].retries++
 	if entries[job].retries <= maxRetries {
 		return fmt.Sprintf("Automatically retrying...\n/test %s", job)

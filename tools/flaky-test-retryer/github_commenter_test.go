@@ -28,52 +28,52 @@ import (
 
 var (
 	oldCommentBody = `<!--AUTOMATED-FLAKY-RETRYER-->
-The following tests are currently flaky. Running them again to verify...
+The following jobs failed due to test flakiness:
 
-Test name | Retries
---- | ---
-fakejob0 | 0/3
-fakejob1 | 1/3
+Test name | Triggers | Retries
+--- | --- | ---
+fakejob0 |  | 0/3
+fakejob1 | [link]() | 1/3
 
 Automatically retrying...
 /test fakejob1`
 	retryCommentBody = `<!--AUTOMATED-FLAKY-RETRYER-->
-The following tests are currently flaky. Running them again to verify...
+The following jobs failed due to test flakiness:
 
-Test name | Retries
---- | ---
-fakejob0 | 1/3
-fakejob1 | 1/3
+Test name | Triggers | Retries
+--- | --- | ---
+fakejob0 | [link]() | 1/3
+fakejob1 | [link]() | 1/3
 
 Automatically retrying...
 /test fakejob0`
 	noMoreRetriesCommentBody = `<!--AUTOMATED-FLAKY-RETRYER-->
-The following tests are currently flaky. Running them again to verify...
+The following jobs failed due to test flakiness:
 
-Test name | Retries
---- | ---
-fakejob0 | 3/3
-fakejob1 | 1/3
+Test name | Triggers | Retries
+--- | --- | ---
+fakejob0 | [link]()<br>[link]()<br>[link]()<br>[link]() | 3/3
+fakejob1 | [link]() | 1/3
 
 Job fakejob0 expended all 3 retries without success.`
 	failedShortCommentBody = `<!--AUTOMATED-FLAKY-RETRYER-->
-The following tests are currently flaky. Running them again to verify...
+The following jobs failed due to test flakiness:
 
-Test name | Retries
---- | ---
-fakejob0 | 0/3
-fakejob1 | 1/3
+Test name | Triggers | Retries
+--- | --- | ---
+fakejob0 | [link]() | 0/3
+fakejob1 | [link]() | 1/3
 
 Failed non-flaky tests preventing automatic retry of fakejob0:
 
 ` + "```\ntest0\ntest1\ntest2\ntest3\n```"
 	failedLongCommentBody = `<!--AUTOMATED-FLAKY-RETRYER-->
-The following tests are currently flaky. Running them again to verify...
+The following jobs failed due to test flakiness:
 
-Test name | Retries
---- | ---
-fakejob0 | 0/3
-fakejob1 | 1/3
+Test name | Triggers | Retries
+--- | --- | ---
+fakejob0 | [link]() | 0/3
+fakejob1 | [link]() | 1/3
 
 Failed non-flaky tests preventing automatic retry of fakejob0:
 
@@ -151,16 +151,26 @@ func TestGetOldComment(t *testing.T) {
 	}
 }
 
+func entryMapEqual(got, want map[string]*entry) bool {
+	for k, vWant := range want {
+		vGot, ok := got[k]
+		if !ok || vWant.oldLinks != vGot.oldLinks || vWant.retries != vGot.retries {
+			return false
+		}
+	}
+	return true
+}
+
 func TestParseEntries(t *testing.T) {
 	cases := []struct {
 		input *github.IssueComment
-		want  map[string]int
+		want  map[string]*entry
 	}{
-		{fakeOldComment, map[string]int{"fakejob0": 0, "fakejob1": 1}},
+		{fakeOldComment, map[string]*entry{"fakejob0": &entry{"", 0}, "fakejob1": &entry{"[link]()", 1}}},
 	}
 	for _, data := range cases {
 		actual, _ := parseEntries(data.input)
-		if !reflect.DeepEqual(actual, data.want) {
+		if !entryMapEqual(actual, data.want) {
 			t.Fatalf("parse entries: got '%v', want '%v'", actual, data.want)
 		}
 	}
@@ -169,14 +179,14 @@ func TestParseEntries(t *testing.T) {
 func TestBuildNewComment(t *testing.T) {
 	cases := []struct {
 		jd       *JobData
-		entries  map[string]int
+		entries  map[string]*entry
 		outliers []string
 		wantBody string
 	}{
-		{&fakeJob, map[string]int{"fakejob0": 0, "fakejob1": 1}, nil, retryCommentBody},
-		{&fakeJob, map[string]int{"fakejob0": 3, "fakejob1": 1}, nil, noMoreRetriesCommentBody},
-		{&fakeJob, map[string]int{"fakejob0": 0, "fakejob1": 1}, fakeFailedTests[:4], failedShortCommentBody},
-		{&fakeJob, map[string]int{"fakejob0": 0, "fakejob1": 1}, fakeFailedTests, failedLongCommentBody},
+		{&fakeJob, map[string]*entry{"fakejob0": &entry{"", 0}, "fakejob1": &entry{"", 1}}, nil, retryCommentBody},
+		{&fakeJob, map[string]*entry{"fakejob0": &entry{"[link]()<br>[link]()<br>[link]()", 3}, "fakejob1": &entry{"", 1}}, nil, noMoreRetriesCommentBody},
+		{&fakeJob, map[string]*entry{"fakejob0": &entry{"", 0}, "fakejob1": &entry{"", 1}}, fakeFailedTests[:4], failedShortCommentBody},
+		{&fakeJob, map[string]*entry{"fakejob0": &entry{"", 0}, "fakejob1": &entry{"", 1}}, fakeFailedTests, failedLongCommentBody},
 	}
 
 	for _, test := range cases {
