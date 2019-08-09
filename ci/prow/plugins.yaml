@@ -21,8 +21,8 @@ approve:
   
 heart:
   adorees:
-  - TrevorFarrelly
-  commentregexp: "fixed"
+  - knative-test-reporter-robot
+  commentregexp: "\/test"
 
 repo_milestone:
   # Default maintainer
