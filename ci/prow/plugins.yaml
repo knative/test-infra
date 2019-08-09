@@ -22,7 +22,7 @@ approve:
 heart:
   adorees:
   - knative-test-reporter-robot
-  commentregexp: "\/test"
+  commentregexp: ".*"
 
 repo_milestone:
   # Default maintainer
