@@ -37,8 +37,6 @@ const (
 )
 
 var (
-	gcsPrefix       = "gs://"
-	spyglassPrefix  = "https://prow.knative.dev/view/gcs/"
 	identifier      = "<!--AUTOMATED-FLAKY-RETRYER-->"
 	commentTemplate = "%s\nThe following jobs failed due to test flakiness:\n\nTest name | Triggers | Retries\n--- | --- | ---\n%s\n\n%s"
 )
