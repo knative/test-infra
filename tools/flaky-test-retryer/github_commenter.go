@@ -37,9 +37,10 @@ const (
 )
 
 var (
+	gcsPrefix       = "gs://"
+	spyglassPrefix  = "https://prow.knative.dev/view/gcs/"
 	identifier      = "<!--AUTOMATED-FLAKY-RETRYER-->"
-	commentTemplate = "%s\nThe following tests are currently flaky. Running them again to verify..." +
-		"\n\nTest name | Retries\n--- | ---\n%s\n\n%s"
+	commentTemplate = "%s\nThe following jobs failed due to test flakiness:\n\nTest name | Triggers | Retries\n--- | --- | ---\n%s\n\n%s"
 )
 
 // GithubClient wraps the ghutil Github client
@@ -47,6 +48,12 @@ type GithubClient struct {
 	ghutil.GithubOperations
 	ID     int64
 	Dryrun bool
+}
+
+// Entry holds all of the relevant information for a retried job
+type Entry struct {
+	oldLinks string
+	retries  int
 }
 
 // NewGithubClient builds us a GitHub client based on the token file passed in
@@ -75,7 +82,7 @@ func (gc *GithubClient) PostComment(jd *JobData, outliers []string) error {
 		return err
 	}
 	if _, ok := oldEntries[jd.JobName]; !ok {
-		oldEntries[jd.JobName] = 0
+		oldEntries[jd.JobName] = &Entry{}
 	}
 	newComment := buildNewComment(jd, oldEntries, outliers)
 	if gc.Dryrun {
@@ -118,8 +125,8 @@ func (gc *GithubClient) getOldComment(org, repo string, pull int) (*github.Issue
 
 // parseEntries collects retry information from the given comment, so we can reuse it in
 // a new comment.
-func parseEntries(comment *github.IssueComment) (map[string]int, error) {
-	entries := map[string]int{}
+func parseEntries(comment *github.IssueComment) (map[string]*Entry, error) {
+	entries := map[string]*Entry{}
 	if comment == nil {
 		return entries, nil
 	}
@@ -127,21 +134,26 @@ func parseEntries(comment *github.IssueComment) (map[string]int, error) {
 	entryStrings := re.FindAll([]byte(comment.GetBody()), -1)
 	for _, e := range entryStrings {
 		fields := strings.Split(string(e), " | ")
-		retry, err := strconv.Atoi(strings.Split(fields[1], "/")[0])
+		job := fields[0]
+		links := fields[1]
+		retry, err := strconv.Atoi(strings.Split(fields[2], "/")[0])
 		if err != nil {
 			return nil, err
 		}
-		entries[fields[0]] = retry
+		entries[job] = &Entry{
+			oldLinks: links,
+			retries:  retry,
+		}
 	}
 	return entries, nil
 }
 
 // buildNewComment takes the old entry data, the job we are processing, and any outlying
 // non-flaky tests, building a comment body based on these parameters.
-func buildNewComment(jd *JobData, entries map[string]int, outliers []string) string {
+func buildNewComment(jd *JobData, entries map[string]*Entry, outliers []string) string {
 	var cmd string
 	var entryString []string
-	if entries[jd.JobName] >= maxRetries {
+	if entries[jd.JobName].retries >= maxRetries {
 		cmd = buildOutOfRetriesString(jd.JobName)
 		logWithPrefix(jd, "expended all %d retries\n", maxRetries)
 	} else if len(outliers) > 0 {
@@ -158,19 +170,28 @@ func buildNewComment(jd *JobData, entries map[string]int, outliers []string) str
 	}
 	sort.Strings(keys)
 	for _, test := range keys {
-		entryString = append(entryString, fmt.Sprintf("%s | %d/%d", test, entries[test], maxRetries))
+		entryString = append(entryString, fmt.Sprintf("%s | %s | %d/%d", test, buildLinks(entries[test].oldLinks, jd.GCSPath), entries[test].retries, maxRetries))
 	}
 	return fmt.Sprintf(commentTemplate, identifier, strings.Join(entryString, "\n"), cmd)
 }
 
+// buildLinks generates Markdown-formatted Spyglass links from GCS paths
+func buildLinks(oldLinks string, GCSPath string) string {
+	formattedLink := fmt.Sprintf("[link](%s)", strings.Replace(GCSPath, gcsPrefix, spyglassPrefix, -1))
+	if oldLinks == "" {
+		return formattedLink
+	}
+	return fmt.Sprintf("%s<br>%s", oldLinks, formattedLink)
+}
+
 // buildRetryString increments the retry counter and generates a /test string if we have
 // more retries available.
-func buildRetryString(job string, entries map[string]int) string {
-	entries[job]++
-	if entries[job] <= maxRetries {
+func buildRetryString(job string, entries map[string]*Entry) string {
+	entries[job].retries++
+	if entries[job].retries <= maxRetries {
 		return fmt.Sprintf("Automatically retrying...\n/test %s", job)
 	} else {
-		entries[job]--
+		entries[job].retries--
 	}
 	return ""
 }
