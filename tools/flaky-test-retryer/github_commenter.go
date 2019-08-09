@@ -173,17 +173,17 @@ func buildNewComment(jd *JobData, entries map[string]*entry, outliers []string) 
 	}
 	sort.Strings(keys)
 	for _, test := range keys {
-		entryString = append(entryString, fmt.Sprintf("%s | %s | %d/%d", test, buildLinks(entries[test].oldLinks, jd.URL), entries[test].retries, maxRetries))
+		entryString = append(entryString, fmt.Sprintf("%s | %s | %d/%d", test, buildLinks(entries[test].oldLinks, jd.URL, jd.RunID), entries[test].retries, maxRetries))
 	}
 	return fmt.Sprintf(commentTemplate, identifier, strings.Join(entryString, "\n"), cmd)
 }
 
 // buildLinks constructs a Markdown-formatted list of URLs
-func buildLinks(oldLinks string, newLink string) string {
+func buildLinks(oldLinks, newLink, id string) string {
 	if oldLinks == "" {
-		return fmt.Sprintf("[link](%s)", newLink)
+		return fmt.Sprintf("[%s](%s)", id, newLink)
 	}
-	return fmt.Sprintf("%s<br>[link](%s)", oldLinks, newLink)
+	return fmt.Sprintf("%s<br>[%s](%s)", oldLinks, id, newLink)
 }
 
 // buildRetryString increments the retry counter and generates a /test string if we have

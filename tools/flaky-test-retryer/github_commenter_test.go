@@ -33,7 +33,7 @@ The following jobs failed due to test flakiness:
 Test name | Triggers | Retries
 --- | --- | ---
 fakejob0 |  | 0/3
-fakejob1 | [link]() | 1/3
+fakejob1 | []() | 1/3
 
 Automatically retrying...
 /test fakejob1`
@@ -42,8 +42,8 @@ The following jobs failed due to test flakiness:
 
 Test name | Triggers | Retries
 --- | --- | ---
-fakejob0 | [link]() | 1/3
-fakejob1 | [link]() | 1/3
+fakejob0 | []() | 1/3
+fakejob1 | []() | 1/3
 
 Automatically retrying...
 /test fakejob0`
@@ -52,8 +52,8 @@ The following jobs failed due to test flakiness:
 
 Test name | Triggers | Retries
 --- | --- | ---
-fakejob0 | [link]()<br>[link]()<br>[link]()<br>[link]() | 3/3
-fakejob1 | [link]() | 1/3
+fakejob0 | []()<br>[]()<br>[]()<br>[]() | 3/3
+fakejob1 | []() | 1/3
 
 Job fakejob0 expended all 3 retries without success.`
 	failedShortCommentBody = `<!--AUTOMATED-FLAKY-RETRYER-->
@@ -61,8 +61,8 @@ The following jobs failed due to test flakiness:
 
 Test name | Triggers | Retries
 --- | --- | ---
-fakejob0 | [link]() | 0/3
-fakejob1 | [link]() | 1/3
+fakejob0 | []() | 0/3
+fakejob1 | []() | 1/3
 
 Failed non-flaky tests preventing automatic retry of fakejob0:
 
@@ -72,8 +72,8 @@ The following jobs failed due to test flakiness:
 
 Test name | Triggers | Retries
 --- | --- | ---
-fakejob0 | [link]() | 0/3
-fakejob1 | [link]() | 1/3
+fakejob0 | []() | 0/3
+fakejob1 | []() | 1/3
 
 Failed non-flaky tests preventing automatic retry of fakejob0:
 
@@ -166,7 +166,7 @@ func TestParseEntries(t *testing.T) {
 		input *github.IssueComment
 		want  map[string]*entry
 	}{
-		{fakeOldComment, map[string]*entry{"fakejob0": &entry{"", 0}, "fakejob1": &entry{"[link]()", 1}}},
+		{fakeOldComment, map[string]*entry{"fakejob0": &entry{"", 0}, "fakejob1": &entry{"[]()", 1}}},
 	}
 	for _, data := range cases {
 		actual, _ := parseEntries(data.input)
@@ -184,7 +184,7 @@ func TestBuildNewComment(t *testing.T) {
 		wantBody string
 	}{
 		{&fakeJob, map[string]*entry{"fakejob0": &entry{"", 0}, "fakejob1": &entry{"", 1}}, nil, retryCommentBody},
-		{&fakeJob, map[string]*entry{"fakejob0": &entry{"[link]()<br>[link]()<br>[link]()", 3}, "fakejob1": &entry{"", 1}}, nil, noMoreRetriesCommentBody},
+		{&fakeJob, map[string]*entry{"fakejob0": &entry{"[]()<br>[]()<br>[]()", 3}, "fakejob1": &entry{"", 1}}, nil, noMoreRetriesCommentBody},
 		{&fakeJob, map[string]*entry{"fakejob0": &entry{"", 0}, "fakejob1": &entry{"", 1}}, fakeFailedTests[:4], failedShortCommentBody},
 		{&fakeJob, map[string]*entry{"fakejob0": &entry{"", 0}, "fakejob1": &entry{"", 1}}, fakeFailedTests, failedLongCommentBody},
 	}
