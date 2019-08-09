@@ -18,6 +18,11 @@ approve:
   - google/knative-gcp
   require_self_approval: false
   ignore_review_state: false
+  
+heart:
+  adorees:
+  - knative-test-reporter-robot
+  commentregexp: ".*"
 
 repo_milestone:
   # Default maintainer
