@@ -134,9 +134,10 @@ func parseEntries(comment *github.IssueComment) (map[string]*entry, error) {
 		fields := strings.Split(string(e), " | ")
 		// support old comments with 2 columns, before links were added
 		var links string
-		if len(fields) == 2 {
-			links = ""
-		} else {
+		if len(fields) < 2 || len(fields) > 3 {
+			return nil, fmt.Errorf("invalid number of table entries")
+		}
+		if len(fields) != 2 {
 			links = fields[1]
 		}
 		retry, err := strconv.Atoi(strings.Split(fields[len(fields)-1], "/")[0])
