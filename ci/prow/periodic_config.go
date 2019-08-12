@@ -200,7 +200,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	}
 	if data.Base.RepoBranch != "" && data.Base.RepoBranch != "master" {
 		// If it's a release version, add env var PULL_BASE_REF as ref name of the base branch.
-		// TODO(Fredy-Z): this serves as a workaround, see https://github.com/knative/test-infra/issues/780.
+		// The reason for having it is in https://github.com/knative/test-infra/issues/780.
 		addEnvToJob(&data.Base, "PULL_BASE_REF", data.Base.RepoBranch)
 	}
 	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
@@ -322,11 +322,10 @@ func generateIssueTrackerPeriodicJobs() {
         -label:lifecycle/stale
         -label:lifecycle/rotten`
 	staleUpdatedTime := "2160h"
-	staleComment := `|-
-        --comment=Issues go stale after 90d of inactivity.
+	staleComment := `--comment=Issues go stale after 90d of inactivity.
         Mark the issue as fresh with /remove-lifecycle stale.
-        Stale issues rot after an additional 30d of inactivity and eventually close.\n
-        If this issue is safe to close now please do so with /close.\n
+        Stale issues rot after an additional 30d of inactivity and eventually close.
+        If this issue is safe to close now please do so with /close.
         Send feedback to Knative Productivity Slack channel or knative/test-infra.
         /lifecycle stale`
 	generateIssueTrackerPeriodicJob(staleJobName, staleLabelFilter, staleUpdatedTime, staleComment)
@@ -337,12 +336,13 @@ func generateIssueTrackerPeriodicJobs() {
         label:lifecycle/stale
         -label:lifecycle/rotten`
 	rottenUpdatedTime := "720h"
-	rottenComment := `|-
-        --comment=Stale issues rot after 30d of inactivity.
+	rottenComment := `--comment=Stale issues rot after 30d of inactivity.
         Mark the issue as fresh with /remove-lifecycle rotten.
-        Rotten issues close after an additional 30d of inactivity.\n
-        If this issue is safe to close now please do so with /close.\n
-        Send feedback to Knative Productivity Slack channel or knative/test-infra.
+        Rotten issues close after an additional 30d of inactivity.
+		If this issue is safe to close now please do so with /close.
+		
+		Send feedback to Knative Productivity Slack channel or knative/test-infra.
+		
         /lifecycle rotten`
 	generateIssueTrackerPeriodicJob(rottenJobName, rottenLabelFilter, rottenUpdatedTime, rottenComment)
 
@@ -351,10 +351,9 @@ func generateIssueTrackerPeriodicJobs() {
         -label:lifecycle/frozen
         label:lifecycle/rotten`
 	closeUpdatedTime := "720h"
-	closeComment := `|-
-        --comment=Rotten issues close after 30d of inactivity.
+	closeComment := `--comment=Rotten issues close after 30d of inactivity.
         Reopen the issue with /reopen.
-        Mark the issue as fresh with /remove-lifecycle rotten.\n
+        Mark the issue as fresh with /remove-lifecycle rotten.
         Send feedback to Knative Productivity Slack channel or knative/test-infra.
         /close`
 	generateIssueTrackerPeriodicJob(closeJobName, closeLabelFilter, closeUpdatedTime, closeComment)
@@ -363,16 +362,17 @@ func generateIssueTrackerPeriodicJobs() {
 func generateIssueTrackerPeriodicJob(jobName, labelFilter, updatedTime, comment string) {
 	var data periodicJobTemplateData
 	data.Base = newbaseProwJobTemplateData("knative/test-infra")
+	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
 	data.Base.Image = githubCommenterDockerImage
 	data.PeriodicJobName = jobName
 	data.CronString = issueTrackerPeriodicJobCron
 	data.Base.Command = "/app/robots/commenter/app.binary"
 
-	// TODO(Fredy-Z): remove "repo:test-infra" after syncing up with the WGs.
+	// TODO(Fredy-Z): replace "repo:knative/test-infra" with "org:knative" after syncing up with the WGs.
 	data.Base.Args = []string{
-		`|-
-        --query=org:knative
-        repo:test-infra
+		`--query=repo:knative/test-infra
+        is:issue
+        is:open
         ` + labelFilter,
 		"--updated=" + updatedTime,
 		"--token=/etc/housekeeping-github-token/token",

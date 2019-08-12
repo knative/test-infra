@@ -1091,6 +1091,7 @@ func main() {
 		generateVersionBumpertoolPeriodicJob()
 		generateBackupPeriodicJob()
 		generateIssueTrackerPeriodicJobs()
+		generateServingClusterUpdatePeriodicJobs()
 		generateOtherJobConfigs("postsubmits", func(repo repositoryData) bool {
 			return repo.EnableGoCoverage
 		}, generateGoCoveragePostsubmit)
