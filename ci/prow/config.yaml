@@ -5513,11 +5513,11 @@ periodics:
         -label:lifecycle/rotten"
       - "--updated=2160h"
       - "--token=/etc/housekeeping-github-token/token"
-      - "--comment=Issues go stale after 90d of inactivity.
-        Mark the issue as fresh with /remove-lifecycle stale.
-        Stale issues rot after an additional 30d of inactivity and eventually close.
-        If this issue is safe to close now please do so with /close.
-        Send feedback to Knative Productivity Slack channel or knative/test-infra.
+      - "--comment=Issues go stale after 90d of inactivity.<br/>
+        Mark the issue as fresh with /remove-lifecycle stale.<br/>
+        Stale issues rot after an additional 30d of inactivity and eventually close.<br/>
+        If this issue is safe to close now please do so with /close.<br/><br/>
+        Send feedback to Knative Productivity Slack channel or knative/test-infra.<br/><br/>
         /lifecycle stale"
       - "--template"
       - "--ceiling=10"
@@ -5553,11 +5553,11 @@ periodics:
         -label:lifecycle/rotten"
       - "--updated=720h"
       - "--token=/etc/housekeeping-github-token/token"
-      - "--comment=Stale issues rot after 30d of inactivity.
-        Mark the issue as fresh with /remove-lifecycle rotten.
-        Rotten issues close after an additional 30d of inactivity.
-		If this issue is safe to close now please do so with /close.
-		Send feedback to Knative Productivity Slack channel or knative/test-infra.
+      - "--comment=Stale issues rot after 30d of inactivity.<br/>
+        Mark the issue as fresh with /remove-lifecycle rotten.<br/>
+        Rotten issues close after an additional 30d of inactivity.<br/>
+        If this issue is safe to close now please do so with /close.<br/><br/>
+        Send feedback to Knative Productivity Slack channel or knative/test-infra.<br/><br/>
         /lifecycle rotten"
       - "--template"
       - "--ceiling=10"
@@ -5592,10 +5592,10 @@ periodics:
         label:lifecycle/rotten"
       - "--updated=720h"
       - "--token=/etc/housekeeping-github-token/token"
-      - "--comment=Rotten issues close after 30d of inactivity.
-        Reopen the issue with /reopen.
-        Mark the issue as fresh with /remove-lifecycle rotten.
-        Send feedback to Knative Productivity Slack channel or knative/test-infra.
+      - "--comment=Rotten issues close after 30d of inactivity.<br/>
+        Reopen the issue with /reopen.<br/>
+        Mark the issue as fresh with /remove-lifecycle rotten.<br/><br/>
+        Send feedback to Knative Productivity Slack channel or knative/test-infra.<br/><br/>
         /close"
       - "--template"
       - "--ceiling=10"
@@ -5608,56 +5608,6 @@ periodics:
     - name: housekeeping-github-token
       secret:
         secretName: housekeeping-github-token
-- cron: "30 07 * * *"
-  name: ci-knative-serving-recreate-clusters
-  agent: kubernetes
-  decorate: true
-  extra_refs:
-  - org: knative
-    repo: serving
-    base_ref: master
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      command:
-      - "/test/performance/tools/recreate-serving/recreate.sh"
-      volumeMounts:
-      - name: performance-test
-        mountPath: /etc/performance-test
-        readOnly: true
-      env:
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/performance-test/service-account.json
-    volumes:
-    - name: performance-test
-      secret:
-        secretName: performance-test
-- cron: "0 * * * *"
-  name: ci-knative-serving-update-clusters
-  agent: kubernetes
-  decorate: true
-  extra_refs:
-  - org: knative
-    repo: serving
-    base_ref: master
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      command:
-      - "/test/performance/tools/update-serving/update.sh"
-      volumeMounts:
-      - name: performance-test
-        mountPath: /etc/performance-test
-        readOnly: true
-      env:
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/performance-test/service-account.json
-    volumes:
-    - name: performance-test
-      secret:
-        secretName: performance-test
 postsubmits:
   knative/serving:
   - name: post-knative-serving-go-coverage

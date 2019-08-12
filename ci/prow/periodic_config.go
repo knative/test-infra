@@ -322,11 +322,11 @@ func generateIssueTrackerPeriodicJobs() {
         -label:lifecycle/stale
         -label:lifecycle/rotten`
 	staleUpdatedTime := "2160h"
-	staleComment := `--comment=Issues go stale after 90d of inactivity.
-        Mark the issue as fresh with /remove-lifecycle stale.
-        Stale issues rot after an additional 30d of inactivity and eventually close.
-        If this issue is safe to close now please do so with /close.
-        Send feedback to Knative Productivity Slack channel or knative/test-infra.
+	staleComment := `--comment=Issues go stale after 90d of inactivity.<br/>
+        Mark the issue as fresh with /remove-lifecycle stale.<br/>
+        Stale issues rot after an additional 30d of inactivity and eventually close.<br/>
+        If this issue is safe to close now please do so with /close.<br/><br/>
+        Send feedback to Knative Productivity Slack channel or knative/test-infra.<br/><br/>
         /lifecycle stale`
 	generateIssueTrackerPeriodicJob(staleJobName, staleLabelFilter, staleUpdatedTime, staleComment)
 
@@ -336,13 +336,11 @@ func generateIssueTrackerPeriodicJobs() {
         label:lifecycle/stale
         -label:lifecycle/rotten`
 	rottenUpdatedTime := "720h"
-	rottenComment := `--comment=Stale issues rot after 30d of inactivity.
-        Mark the issue as fresh with /remove-lifecycle rotten.
-        Rotten issues close after an additional 30d of inactivity.
-		If this issue is safe to close now please do so with /close.
-		
-		Send feedback to Knative Productivity Slack channel or knative/test-infra.
-		
+	rottenComment := `--comment=Stale issues rot after 30d of inactivity.<br/>
+        Mark the issue as fresh with /remove-lifecycle rotten.<br/>
+        Rotten issues close after an additional 30d of inactivity.<br/>
+        If this issue is safe to close now please do so with /close.<br/><br/>
+        Send feedback to Knative Productivity Slack channel or knative/test-infra.<br/><br/>
         /lifecycle rotten`
 	generateIssueTrackerPeriodicJob(rottenJobName, rottenLabelFilter, rottenUpdatedTime, rottenComment)
 
@@ -351,10 +349,10 @@ func generateIssueTrackerPeriodicJobs() {
         -label:lifecycle/frozen
         label:lifecycle/rotten`
 	closeUpdatedTime := "720h"
-	closeComment := `--comment=Rotten issues close after 30d of inactivity.
-        Reopen the issue with /reopen.
-        Mark the issue as fresh with /remove-lifecycle rotten.
-        Send feedback to Knative Productivity Slack channel or knative/test-infra.
+	closeComment := `--comment=Rotten issues close after 30d of inactivity.<br/>
+        Reopen the issue with /reopen.<br/>
+        Mark the issue as fresh with /remove-lifecycle rotten.<br/><br/>
+        Send feedback to Knative Productivity Slack channel or knative/test-infra.<br/><br/>
         /close`
 	generateIssueTrackerPeriodicJob(closeJobName, closeLabelFilter, closeUpdatedTime, closeComment)
 }
