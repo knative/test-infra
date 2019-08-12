@@ -63,6 +63,7 @@ func main() {
 	if nil != err {
 		log.Fatalf("Failed authenticating Slack: '%v'", err)
 	}
+	jsonClient := newJSONClient()
 
 	var repoDataAll []*RepoData
 	// Clean up local artifacts directory, this will be used later for artifacts uploads
@@ -96,7 +97,7 @@ func main() {
 	jobErr := combineErrors(jobErrs)
 	githubErr := gih.processGithubIssues(repoDataAll, *dryrun)
 	slackErr := sendSlackNotifications(repoDataAll, slackClient, gih, *dryrun)
-	jsonErr := writeFlakyTestsToJSON(repoDataAll, *dryrun)
+	jsonErr := jsonClient.writeFlakyTestsToJSON(repoDataAll, *dryrun)
 	if nil != jobErr {
 		log.Printf("Job step failures:\n%v", jobErr)
 	}
