@@ -340,11 +340,10 @@ func generateIssueTrackerPeriodicJobs() {
         -label:lifecycle/stale
         -label:lifecycle/rotten`
 	staleUpdatedTime := "2160h"
-	staleComment := `|-
-        --comment=Issues go stale after 90d of inactivity.
+	staleComment := `--comment=Issues go stale after 90d of inactivity.
         Mark the issue as fresh with /remove-lifecycle stale.
-        Stale issues rot after an additional 30d of inactivity and eventually close.\n
-        If this issue is safe to close now please do so with /close.\n
+        Stale issues rot after an additional 30d of inactivity and eventually close.
+        If this issue is safe to close now please do so with /close.
         Send feedback to Knative Productivity Slack channel or knative/test-infra.
         /lifecycle stale`
 	generateIssueTrackerPeriodicJob(staleJobName, staleLabelFilter, staleUpdatedTime, staleComment)
@@ -355,12 +354,13 @@ func generateIssueTrackerPeriodicJobs() {
         label:lifecycle/stale
         -label:lifecycle/rotten`
 	rottenUpdatedTime := "720h"
-	rottenComment := `|-
-        --comment=Stale issues rot after 30d of inactivity.
+	rottenComment := `--comment=Stale issues rot after 30d of inactivity.
         Mark the issue as fresh with /remove-lifecycle rotten.
-        Rotten issues close after an additional 30d of inactivity.\n
-        If this issue is safe to close now please do so with /close.\n
-        Send feedback to Knative Productivity Slack channel or knative/test-infra.
+        Rotten issues close after an additional 30d of inactivity.
+		If this issue is safe to close now please do so with /close.
+		
+		Send feedback to Knative Productivity Slack channel or knative/test-infra.
+		
         /lifecycle rotten`
 	generateIssueTrackerPeriodicJob(rottenJobName, rottenLabelFilter, rottenUpdatedTime, rottenComment)
 
@@ -369,10 +369,9 @@ func generateIssueTrackerPeriodicJobs() {
         -label:lifecycle/frozen
         label:lifecycle/rotten`
 	closeUpdatedTime := "720h"
-	closeComment := `|-
-        --comment=Rotten issues close after 30d of inactivity.
+	closeComment := `--comment=Rotten issues close after 30d of inactivity.
         Reopen the issue with /reopen.
-        Mark the issue as fresh with /remove-lifecycle rotten.\n
+        Mark the issue as fresh with /remove-lifecycle rotten.
         Send feedback to Knative Productivity Slack channel or knative/test-infra.
         /close`
 	generateIssueTrackerPeriodicJob(closeJobName, closeLabelFilter, closeUpdatedTime, closeComment)
@@ -381,6 +380,7 @@ func generateIssueTrackerPeriodicJobs() {
 func generateIssueTrackerPeriodicJob(jobName, labelFilter, updatedTime, comment string) {
 	var data periodicJobTemplateData
 	data.Base = newbaseProwJobTemplateData("knative/test-infra")
+	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
 	data.Base.Image = githubCommenterDockerImage
 	data.PeriodicJobName = jobName
 	data.CronString = issueTrackerPeriodicJobCron
@@ -388,9 +388,9 @@ func generateIssueTrackerPeriodicJob(jobName, labelFilter, updatedTime, comment 
 
 	// TODO(Fredy-Z): remove "repo:test-infra" after syncing up with the WGs.
 	data.Base.Args = []string{
-		`|-
-        --query=org:knative
-        repo:test-infra
+		`--query=repo:knative/test-infra
+        is:issue
+        is:open
         ` + labelFilter,
 		"--updated=" + updatedTime,
 		"--token=/etc/housekeeping-github-token/token",
@@ -408,7 +408,7 @@ func generateIssueTrackerPeriodicJob(jobName, labelFilter, updatedTime, comment 
 func generateServingClusterUpdatePeriodicJobs() {
 	recreateServingClustersJobName := "ci-knative-serving-recreate-clusters"
 	recreateServingClustersCronString := recreateServingPerfClusterPeriodicJobCron
-	recreateServingClustersCommand := "/workspace/tools/recreate-serving/recreate.sh"
+	recreateServingClustersCommand := "/test/performance/tools/recreate-serving/recreate.sh"
 	generateServingClusterUpdatePeriodicJob(
 		recreateServingClustersJobName,
 		recreateServingClustersCronString,
@@ -417,7 +417,7 @@ func generateServingClusterUpdatePeriodicJobs() {
 
 	updateServingClustersJobName := "ci-knative-serving-update-clusters"
 	updateServingClustersCronString := updateServingPerfClusterPeriodicJobCron
-	updateServingClustersCommand := "/workspace/tools/update-serving/update.sh"
+	updateServingClustersCommand := "/test/performance/tools/update-serving/update.sh"
 	generateServingClusterUpdatePeriodicJob(
 		updateServingClustersJobName,
 		updateServingClustersCronString,
@@ -427,8 +427,8 @@ func generateServingClusterUpdatePeriodicJobs() {
 
 func generateServingClusterUpdatePeriodicJob(jobName, cronString, command string) {
 	var data periodicJobTemplateData
-	data.Base = newbaseProwJobTemplateData("knative/test-infra")
-	data.Base.Image = servingClusterUpdateDockerImage
+	data.Base = newbaseProwJobTemplateData("knative/serving")
+	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
 	data.PeriodicJobName = jobName
 	data.CronString = cronString
 	data.Base.Command = command

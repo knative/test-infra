@@ -5519,6 +5519,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: test-infra
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/k8s-prow/commenter:v20190731-e3f7b9853
@@ -5526,19 +5527,18 @@ periodics:
       command:
       - "/app/robots/commenter/app.binary"
       args:
-      - "|-
-        --query=org:knative
-        repo:test-infra
+      - "--query=repo:knative/test-infra
+        is:issue
+        is:open
         -label:lifecycle/frozen
         -label:lifecycle/stale
         -label:lifecycle/rotten"
       - "--updated=2160h"
       - "--token=/etc/housekeeping-github-token/token"
-      - "|-
-        --comment=Issues go stale after 90d of inactivity.
+      - "--comment=Issues go stale after 90d of inactivity.
         Mark the issue as fresh with /remove-lifecycle stale.
-        Stale issues rot after an additional 30d of inactivity and eventually close.\n
-        If this issue is safe to close now please do so with /close.\n
+        Stale issues rot after an additional 30d of inactivity and eventually close.
+        If this issue is safe to close now please do so with /close.
         Send feedback to Knative Productivity Slack channel or knative/test-infra.
         /lifecycle stale"
       - "--template"
@@ -5559,6 +5559,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: test-infra
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/k8s-prow/commenter:v20190731-e3f7b9853
@@ -5566,20 +5567,19 @@ periodics:
       command:
       - "/app/robots/commenter/app.binary"
       args:
-      - "|-
-        --query=org:knative
-        repo:test-infra
+      - "--query=repo:knative/test-infra
+        is:issue
+        is:open
         -label:lifecycle/frozen
         label:lifecycle/stale
         -label:lifecycle/rotten"
       - "--updated=720h"
       - "--token=/etc/housekeeping-github-token/token"
-      - "|-
-        --comment=Stale issues rot after 30d of inactivity.
+      - "--comment=Stale issues rot after 30d of inactivity.
         Mark the issue as fresh with /remove-lifecycle rotten.
-        Rotten issues close after an additional 30d of inactivity.\n
-        If this issue is safe to close now please do so with /close.\n
-        Send feedback to Knative Productivity Slack channel or knative/test-infra.
+        Rotten issues close after an additional 30d of inactivity.
+		If this issue is safe to close now please do so with /close.
+		Send feedback to Knative Productivity Slack channel or knative/test-infra.
         /lifecycle rotten"
       - "--template"
       - "--ceiling=10"
@@ -5599,6 +5599,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: test-infra
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/k8s-prow/commenter:v20190731-e3f7b9853
@@ -5606,17 +5607,16 @@ periodics:
       command:
       - "/app/robots/commenter/app.binary"
       args:
-      - "|-
-        --query=org:knative
-        repo:test-infra
+      - "--query=repo:knative/test-infra
+        is:issue
+        is:open
         -label:lifecycle/frozen
         label:lifecycle/rotten"
       - "--updated=720h"
       - "--token=/etc/housekeeping-github-token/token"
-      - "|-
-        --comment=Rotten issues close after 30d of inactivity.
+      - "--comment=Rotten issues close after 30d of inactivity.
         Reopen the issue with /reopen.
-        Mark the issue as fresh with /remove-lifecycle rotten.\n
+        Mark the issue as fresh with /remove-lifecycle rotten.
         Send feedback to Knative Productivity Slack channel or knative/test-infra.
         /close"
       - "--template"
@@ -5636,13 +5636,14 @@ periodics:
   decorate: true
   extra_refs:
   - org: knative
-    repo: test-infra
+    repo: serving
+    base_ref: master
   spec:
     containers:
-    - image: gcr.io/knative-performance/update-serving:v20190809-c290f606fc20
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
-      - "/workspace/tools/recreate-serving/recreate.sh"
+      - "/test/performance/tools/recreate-serving/recreate.sh"
       volumeMounts:
       - name: performance-test
         mountPath: /etc/performance-test
@@ -5660,13 +5661,14 @@ periodics:
   decorate: true
   extra_refs:
   - org: knative
-    repo: test-infra
+    repo: serving
+    base_ref: master
   spec:
     containers:
-    - image: gcr.io/knative-performance/update-serving:v20190809-c290f606fc20
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
-      - "/workspace/tools/update-serving/update.sh"
+      - "/test/performance/tools/update-serving/update.sh"
       volumeMounts:
       - name: performance-test
         mountPath: /etc/performance-test

@@ -133,25 +133,24 @@ type stringArrayFlag []string
 
 var (
 	// Values used in the jobs that can be changed through command-line flags.
-	output                          *os.File
-	gcsBucket                       string
-	logsDir                         string
-	presubmitLogsDir                string
-	testAccount                     string
-	nightlyAccount                  string
-	releaseAccount                  string
-	flakesreporterDockerImage       string
-	prowversionbumperDockerImage    string
-	githubCommenterDockerImage      string
-	servingClusterUpdateDockerImage string
-	coverageDockerImage             string
-	clearalertsDockerImage          string
-	prowTestsDockerImage            string
-	presubmitScript                 string
-	releaseScript                   string
-	performanceScript               string
-	webhookAPICoverageScript        string
-	cleanupScript                   string
+	output                       *os.File
+	gcsBucket                    string
+	logsDir                      string
+	presubmitLogsDir             string
+	testAccount                  string
+	nightlyAccount               string
+	releaseAccount               string
+	flakesreporterDockerImage    string
+	prowversionbumperDockerImage string
+	githubCommenterDockerImage   string
+	coverageDockerImage          string
+	clearalertsDockerImage       string
+	prowTestsDockerImage         string
+	presubmitScript              string
+	releaseScript                string
+	performanceScript            string
+	webhookAPICoverageScript     string
+	cleanupScript                string
 
 	// #########################################################################
 	// ############## data used for generating prow configuration ##############
@@ -761,8 +760,7 @@ func indentMap(indentation int, mp map[string]string) string {
 
 // outputConfig outputs the given line, if not empty, to stdout.
 func outputConfig(line string) {
-	s := strings.TrimSpace(line)
-	if s != "" {
+	if strings.TrimSpace(line) != "" {
 		fmt.Fprintln(output, line)
 	}
 }
@@ -1046,7 +1044,6 @@ func main() {
 	flag.StringVar(&clearalertsDockerImage, "clear-alerts", "gcr.io/knative-tests/test-infra/monitoring/clear-alerts:latest", "Docker image for clearing alerts in test-infra monitoring")
 	flag.StringVar(&prowTestsDockerImage, "prow-tests-docker", "gcr.io/knative-tests/test-infra/prow-tests:stable", "prow-tests docker image")
 	flag.StringVar(&githubCommenterDockerImage, "github-commenter-docker", "gcr.io/k8s-prow/commenter:v20190731-e3f7b9853", "github commenter docker image")
-	flag.StringVar(&servingClusterUpdateDockerImage, "serving-cluster-update-docker", "gcr.io/knative-performance/update-serving:v20190809-c290f606fc20", "serving cluster update docker image")
 	flag.StringVar(&presubmitScript, "presubmit-script", "./test/presubmit-tests.sh", "Executable for running presubmit tests")
 	flag.StringVar(&releaseScript, "release-script", "./hack/release.sh", "Executable for creating releases")
 	flag.StringVar(&performanceScript, "performance-script", "./test/performance-tests.sh", "Executable for running performance tests")
