@@ -144,7 +144,6 @@ var (
 	prowversionbumperDockerImage string
 	githubCommenterDockerImage   string
 	coverageDockerImage          string
-	clearalertsDockerImage       string
 	prowTestsDockerImage         string
 	presubmitScript              string
 	releaseScript                string
@@ -1041,7 +1040,6 @@ func main() {
 	flag.StringVar(&flakesreporterDockerImage, "flaky-test-reporter-docker", "gcr.io/knative-tests/test-infra/flaky-test-reporter:latest", "Docker image for flaky test reporting tool")
 	flag.StringVar(&prowversionbumperDockerImage, "prow-auto-bumper", "gcr.io/knative-tests/test-infra/prow-auto-bumper:latest", "Docker image for Prow version bumping tool")
 	flag.StringVar(&coverageDockerImage, "coverage-docker", "gcr.io/knative-tests/test-infra/coverage:latest", "Docker image for coverage tool")
-	flag.StringVar(&clearalertsDockerImage, "clear-alerts", "gcr.io/knative-tests/test-infra/monitoring/clear-alerts:latest", "Docker image for clearing alerts in test-infra monitoring")
 	flag.StringVar(&prowTestsDockerImage, "prow-tests-docker", "gcr.io/knative-tests/test-infra/prow-tests:stable", "prow-tests docker image")
 	flag.StringVar(&githubCommenterDockerImage, "github-commenter-docker", "gcr.io/k8s-prow/commenter:v20190731-e3f7b9853", "github commenter docker image")
 	flag.StringVar(&presubmitScript, "presubmit-script", "./test/presubmit-tests.sh", "Executable for running presubmit tests")
@@ -1088,7 +1086,6 @@ func main() {
 			return !repo.Processed && repo.EnableGoCoverage
 		}, generateGoCoveragePeriodic)
 		generateCleanupPeriodicJob()
-		generateClearAlertsPeriodicJob()
 		generateFlakytoolPeriodicJob()
 		generateVersionBumpertoolPeriodicJob()
 		generateBackupPeriodicJob()

@@ -318,19 +318,6 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 	}
 }
 
-// generateClearAlertsPeriodicJob generates the monitoring clear alerts job config.
-func generateClearAlertsPeriodicJob() {
-	var data periodicJobTemplateData
-	data.Base = newbaseProwJobTemplateData("knative/test-infra")
-	data.Base.Image = clearalertsDockerImage
-	data.PeriodicJobName = "ci-knative-test-infra-monitoring-clear-alerts"
-	data.CronString = clearAlertsPeriodicJobCron
-	data.Base.Command = "/clearalerts"
-	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
-	addVolumeToJob(&data.Base, "/secrets/cloudsql/monitoringdb", "monitoring-db-credentials", true, "")
-	executeJobTemplate("periodic clearalert", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
-}
-
 // generateIssueTrackerPeriodicJobs generates the periodic jobs to automatically manage issue lifecycles.
 // It's a mirror of fejta bot - https://github.com/kubernetes/test-infra/blob/master/config/jobs/kubernetes/test-infra/fejta-bot-periodics.yaml.
 func generateIssueTrackerPeriodicJobs() {
@@ -406,22 +393,15 @@ func generateIssueTrackerPeriodicJob(jobName, labelFilter, updatedTime, comment 
 // generateServingClusterUpdatePeriodicJobs generates periodic jobs to update serving clusters
 // that run performance testing benchmarks
 func generateServingClusterUpdatePeriodicJobs() {
-	recreateServingClustersJobName := "ci-knative-serving-recreate-clusters"
-	recreateServingClustersCronString := recreateServingPerfClusterPeriodicJobCron
-	recreateServingClustersCommand := "/test/performance/tools/recreate-serving/recreate.sh"
 	generateServingClusterUpdatePeriodicJob(
-		recreateServingClustersJobName,
-		recreateServingClustersCronString,
-		recreateServingClustersCommand,
+		"ci-knative-serving-recreate-clusters",
+		recreateServingPerfClusterPeriodicJobCron,
+		"/test/performance/tools/recreate-serving/recreate.sh",
 	)
-
-	updateServingClustersJobName := "ci-knative-serving-update-clusters"
-	updateServingClustersCronString := updateServingPerfClusterPeriodicJobCron
-	updateServingClustersCommand := "/test/performance/tools/update-serving/update.sh"
 	generateServingClusterUpdatePeriodicJob(
-		updateServingClustersJobName,
-		updateServingClustersCronString,
-		updateServingClustersCommand,
+		"ci-knative-serving-update-clusters",
+		updateServingPerfClusterPeriodicJobCron,
+		"/test/performance/tools/update-serving/update.sh",
 	)
 }
 
