@@ -102,6 +102,7 @@ type baseProwJobTemplateData struct {
 	Year                int
 	Labels              []string
 	PathAlias           string
+	Optional            string
 }
 
 // ####################################################################################################
@@ -373,6 +374,7 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.Env = make([]string, 0)
 	data.ExtraRefs = []string{"- org: " + data.OrgName, "  repo: " + data.RepoName}
 	data.Labels = make([]string, 0)
+	data.Optional = ""
 	return data
 }
 
@@ -501,6 +503,8 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 			}
 		case "env-vars":
 			addExtraEnvVarsToJob(getStringArray(item.Value), data)
+		case "optional":
+			(*data).Optional = "optional: true"
 		case nil: // already processed
 			continue
 		default:
