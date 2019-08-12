@@ -5497,6 +5497,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: test-infra
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/k8s-prow/commenter:v20190731-e3f7b9853
@@ -5504,20 +5505,19 @@ periodics:
       command:
       - "/app/robots/commenter/app.binary"
       args:
-      - "|-
-        --query=org:knative
-        repo:test-infra
+      - "--query=repo:knative/test-infra
+        is:issue
+        is:open
         -label:lifecycle/frozen
         -label:lifecycle/stale
         -label:lifecycle/rotten"
       - "--updated=2160h"
       - "--token=/etc/housekeeping-github-token/token"
-      - "|-
-        --comment=Issues go stale after 90d of inactivity.
-        Mark the issue as fresh with /remove-lifecycle stale.
-        Stale issues rot after an additional 30d of inactivity and eventually close.\n
-        If this issue is safe to close now please do so with /close.\n
-        Send feedback to Knative Productivity Slack channel or knative/test-infra.
+      - "--comment=Issues go stale after 90d of inactivity.<br/>
+        Mark the issue as fresh with /remove-lifecycle stale.<br/>
+        Stale issues rot after an additional 30d of inactivity and eventually close.<br/>
+        If this issue is safe to close now please do so with /close.<br/><br/>
+        Send feedback to Knative Productivity Slack channel or knative/test-infra.<br/><br/>
         /lifecycle stale"
       - "--template"
       - "--ceiling=10"
@@ -5537,6 +5537,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: test-infra
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/k8s-prow/commenter:v20190731-e3f7b9853
@@ -5544,20 +5545,19 @@ periodics:
       command:
       - "/app/robots/commenter/app.binary"
       args:
-      - "|-
-        --query=org:knative
-        repo:test-infra
+      - "--query=repo:knative/test-infra
+        is:issue
+        is:open
         -label:lifecycle/frozen
         label:lifecycle/stale
         -label:lifecycle/rotten"
       - "--updated=720h"
       - "--token=/etc/housekeeping-github-token/token"
-      - "|-
-        --comment=Stale issues rot after 30d of inactivity.
-        Mark the issue as fresh with /remove-lifecycle rotten.
-        Rotten issues close after an additional 30d of inactivity.\n
-        If this issue is safe to close now please do so with /close.\n
-        Send feedback to Knative Productivity Slack channel or knative/test-infra.
+      - "--comment=Stale issues rot after 30d of inactivity.<br/>
+        Mark the issue as fresh with /remove-lifecycle rotten.<br/>
+        Rotten issues close after an additional 30d of inactivity.<br/>
+        If this issue is safe to close now please do so with /close.<br/><br/>
+        Send feedback to Knative Productivity Slack channel or knative/test-infra.<br/><br/>
         /lifecycle rotten"
       - "--template"
       - "--ceiling=10"
@@ -5577,6 +5577,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: test-infra
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/k8s-prow/commenter:v20190731-e3f7b9853
@@ -5584,18 +5585,17 @@ periodics:
       command:
       - "/app/robots/commenter/app.binary"
       args:
-      - "|-
-        --query=org:knative
-        repo:test-infra
+      - "--query=repo:knative/test-infra
+        is:issue
+        is:open
         -label:lifecycle/frozen
         label:lifecycle/rotten"
       - "--updated=720h"
       - "--token=/etc/housekeeping-github-token/token"
-      - "|-
-        --comment=Rotten issues close after 30d of inactivity.
-        Reopen the issue with /reopen.
-        Mark the issue as fresh with /remove-lifecycle rotten.\n
-        Send feedback to Knative Productivity Slack channel or knative/test-infra.
+      - "--comment=Rotten issues close after 30d of inactivity.<br/>
+        Reopen the issue with /reopen.<br/>
+        Mark the issue as fresh with /remove-lifecycle rotten.<br/><br/>
+        Send feedback to Knative Productivity Slack channel or knative/test-infra.<br/><br/>
         /close"
       - "--template"
       - "--ceiling=10"
