@@ -5630,6 +5630,54 @@ periodics:
     - name: housekeeping-github-token
       secret:
         secretName: housekeeping-github-token
+- cron: "30 07 * * *"
+  name: ci-knative-serving-recreate-clusters
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: test-infra
+  spec:
+    containers:
+    - image: gcr.io/knative-performance/update-serving:v20190809-c290f606fc20
+      imagePullPolicy: Always
+      command:
+      - "/workspace/tools/recreate-serving/recreate.sh"
+      volumeMounts:
+      - name: performance-test
+        mountPath: /etc/performance-test
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/performance-test/service-account.json
+    volumes:
+    - name: performance-test
+      secret:
+        secretName: performance-test
+- cron: "0 * * * *"
+  name: ci-knative-serving-update-clusters
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: test-infra
+  spec:
+    containers:
+    - image: gcr.io/knative-performance/update-serving:v20190809-c290f606fc20
+      imagePullPolicy: Always
+      command:
+      - "/workspace/tools/update-serving/update.sh"
+      volumeMounts:
+      - name: performance-test
+        mountPath: /etc/performance-test
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/performance-test/service-account.json
+    volumes:
+    - name: performance-test
+      secret:
+        secretName: performance-test
 postsubmits:
   knative/serving:
   - name: post-knative-serving-go-coverage
