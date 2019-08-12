@@ -24,12 +24,12 @@ import (
 	"knative.dev/test-infra/tools/flaky-test-reporter/jsonreport"
 )
 
-type ReportClient struct {
+type reportClient struct {
 	jsonreport.JSONClient
 }
 
-func newJSONClient() *ReportClient {
-	return &ReportClient{jsonreport.NewClient()}
+func newJSONClient() *reportClient {
+	return &reportClient{jsonreport.NewClient()}
 }
 
 // when reporting on all flaky tests in a repo, we want to eliminate the "job" layer, compressing all flaky
@@ -49,7 +49,7 @@ func getFlakyTestSet(repoDataAll []*RepoData) map[string]map[string]bool {
 	return flakyTestSet
 }
 
-func (rc *ReportClient) writeFlakyTestsToJSON(repoDataAll []*RepoData, dryrun bool) error {
+func (rc *reportClient) writeFlakyTestsToJSON(repoDataAll []*RepoData, dryrun bool) error {
 	var allErrs []error
 	flakyTestSets := getFlakyTestSet(repoDataAll)
 	ch := make(chan bool, len(flakyTestSets))

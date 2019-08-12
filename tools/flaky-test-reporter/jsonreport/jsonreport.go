@@ -41,6 +41,7 @@ type Report struct {
 	Flaky []string `json:"flaky"`
 }
 
+// JSONClient contains the set of operations a JSON reporter needs
 type JSONClient interface {
 	CreateReportForRepo(repo string, flaky []string, writeFile bool) (*Report, error)
 	ParseFlakyLog(repo string, buildID int, f func(report Report, result *[]string)) ([]Report, []string, error)
@@ -55,7 +56,7 @@ func Initialize(serviceAccount string) (*Client, error) {
 	return NewClient(), prow.Initialize(serviceAccount)
 }
 
-// newClient gives us a new Client struct, without initializing Prow
+// NewClient gives us a new Client struct, without initializing Prow
 func NewClient() *Client {
 	return &Client{}
 }
@@ -74,7 +75,7 @@ func (c *Client) writeToArtifactsDir(r *Report) error {
 	return ioutil.WriteFile(outFilePath, contents, 0644)
 }
 
-// parseFlakyLog reads the latest flaky test report and returns filtered results based
+// ParseFlakyLog reads the latest flaky test report and returns filtered results based
 // on the function the caller passes in.
 func (c *Client) ParseFlakyLog(repo string, buildID int, f func(report Report, result *[]string)) ([]Report, []string, error) {
 	var parsedResults []string
