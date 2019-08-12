@@ -38,8 +38,7 @@ const (
 
 var (
 	identifier      = "<!--AUTOMATED-FLAKY-RETRYER-->"
-	commentTemplate = "%s\nThe following tests are currently flaky. Running them again to verify..." +
-		"\n\nTest name | Retries\n--- | ---\n%s\n\n%s"
+	commentTemplate = "%s\nThe following jobs failed due to test flakiness:\n\nTest name | Triggers | Retries\n--- | --- | ---\n%s\n\n%s"
 )
 
 // GithubClient wraps the ghutil Github client
@@ -47,6 +46,12 @@ type GithubClient struct {
 	ghutil.GithubOperations
 	ID     int64
 	Dryrun bool
+}
+
+// entry holds all of the relevant information for a retried job
+type entry struct {
+	oldLinks string
+	retries  int
 }
 
 // NewGithubClient builds us a GitHub client based on the token file passed in
@@ -75,7 +80,7 @@ func (gc *GithubClient) PostComment(jd *JobData, outliers []string) error {
 		return err
 	}
 	if _, ok := oldEntries[jd.JobName]; !ok {
-		oldEntries[jd.JobName] = 0
+		oldEntries[jd.JobName] = &entry{}
 	}
 	newComment := buildNewComment(jd, oldEntries, outliers)
 	if gc.Dryrun {
@@ -118,8 +123,8 @@ func (gc *GithubClient) getOldComment(org, repo string, pull int) (*github.Issue
 
 // parseEntries collects retry information from the given comment, so we can reuse it in
 // a new comment.
-func parseEntries(comment *github.IssueComment) (map[string]int, error) {
-	entries := map[string]int{}
+func parseEntries(comment *github.IssueComment) (map[string]*entry, error) {
+	entries := make(map[string]*entry)
 	if comment == nil {
 		return entries, nil
 	}
@@ -127,21 +132,27 @@ func parseEntries(comment *github.IssueComment) (map[string]int, error) {
 	entryStrings := re.FindAll([]byte(comment.GetBody()), -1)
 	for _, e := range entryStrings {
 		fields := strings.Split(string(e), " | ")
-		retry, err := strconv.Atoi(strings.Split(fields[1], "/")[0])
+		if len(fields) != 3 {
+			return nil, fmt.Errorf("invalid number of table entries")
+		}
+		retry, err := strconv.Atoi(strings.Split(fields[2], "/")[0])
 		if err != nil {
 			return nil, err
 		}
-		entries[fields[0]] = retry
+		entries[fields[0]] = &entry{
+			oldLinks: fields[1],
+			retries:  retry,
+		}
 	}
 	return entries, nil
 }
 
 // buildNewComment takes the old entry data, the job we are processing, and any outlying
 // non-flaky tests, building a comment body based on these parameters.
-func buildNewComment(jd *JobData, entries map[string]int, outliers []string) string {
+func buildNewComment(jd *JobData, entries map[string]*entry, outliers []string) string {
 	var cmd string
 	var entryString []string
-	if entries[jd.JobName] >= maxRetries {
+	if entries[jd.JobName].retries >= maxRetries {
 		cmd = buildOutOfRetriesString(jd.JobName)
 		logWithPrefix(jd, "expended all %d retries\n", maxRetries)
 	} else if len(outliers) > 0 {
@@ -158,19 +169,24 @@ func buildNewComment(jd *JobData, entries map[string]int, outliers []string) str
 	}
 	sort.Strings(keys)
 	for _, test := range keys {
-		entryString = append(entryString, fmt.Sprintf("%s | %d/%d", test, entries[test], maxRetries))
+		entryString = append(entryString, fmt.Sprintf("%s | %s | %d/%d", test, buildLinks(entries[test].oldLinks, jd.URL, jd.RunID), entries[test].retries, maxRetries))
 	}
 	return fmt.Sprintf(commentTemplate, identifier, strings.Join(entryString, "\n"), cmd)
 }
 
+// buildLinks constructs a Markdown-formatted list of URLs
+func buildLinks(oldLinks, newLink, id string) string {
+	if oldLinks == "" {
+		return fmt.Sprintf("[%s](%s)", id, newLink)
+	}
+	return fmt.Sprintf("%s<br>[%s](%s)", oldLinks, id, newLink)
+}
+
 // buildRetryString increments the retry counter and generates a /test string if we have
 // more retries available.
-func buildRetryString(job string, entries map[string]int) string {
-	entries[job]++
-	if entries[job] <= maxRetries {
+func buildRetryString(job string, entries map[string]*entry) string {
+	if entries[job].retries++; entries[job].retries <= maxRetries {
 		return fmt.Sprintf("Automatically retrying...\n/test %s", job)
-	} else {
-		entries[job]--
 	}
 	return ""
 }
