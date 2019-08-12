@@ -132,20 +132,15 @@ func parseEntries(comment *github.IssueComment) (map[string]*entry, error) {
 	entryStrings := re.FindAll([]byte(comment.GetBody()), -1)
 	for _, e := range entryStrings {
 		fields := strings.Split(string(e), " | ")
-		// support old comments with 2 columns, before links were added
-		var links string
-		if len(fields) < 2 || len(fields) > 3 {
+		if len(fields) != 3 {
 			return nil, fmt.Errorf("invalid number of table entries")
 		}
-		if len(fields) != 2 {
-			links = fields[1]
-		}
-		retry, err := strconv.Atoi(strings.Split(fields[len(fields)-1], "/")[0])
+		retry, err := strconv.Atoi(strings.Split(fields[2], "/")[0])
 		if err != nil {
 			return nil, err
 		}
 		entries[fields[0]] = &entry{
-			oldLinks: links,
+			oldLinks: fields[1],
 			retries:  retry,
 		}
 	}
@@ -190,11 +185,8 @@ func buildLinks(oldLinks, newLink, id string) string {
 // buildRetryString increments the retry counter and generates a /test string if we have
 // more retries available.
 func buildRetryString(job string, entries map[string]*entry) string {
-	entries[job].retries++
-	if entries[job].retries <= maxRetries {
+	if entries[job].retries++; entries[job].retries <= maxRetries {
 		return fmt.Sprintf("Automatically retrying...\n/test %s", job)
-	} else {
-		entries[job].retries--
 	}
 	return ""
 }
