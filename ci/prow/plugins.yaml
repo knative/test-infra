@@ -40,7 +40,7 @@ project_config:
       # TODO(Fredy-Z): Enable this plugin for other repos when needed.
       project_repo_configs:
         eventing:
-          repo_maintainers_team_id: 3058996 # eventing-admins
+          repo_maintainers_team_id: 3012514 # knative-milestone-maintainers
           repo_default_column_map:
             "Performance: Measurement":
               To do
@@ -51,7 +51,7 @@ project_config:
             Eventing Usability:
               To do
         eventing-contrib:
-          repo_maintainers_team_id: 2967132 # eventing-sources-admins
+          repo_maintainers_team_id: 3012514 # knative-milestone-maintainers
 
 plugins:
   knative:
