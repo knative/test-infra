@@ -44,8 +44,9 @@ type Report struct {
 // JSONClient contains the set of operations a JSON reporter needs
 type Client interface {
 	CreateReportForRepo(repo string, flaky []string, writeFile bool) (*Report, error)
-	ParseFlakyLog(repo string, buildID int, f func(report Report, result *[]string)) ([]Report, []string, error)
-	GetFlakyTestReport(repo string, buildID int) ([]Report, error)
+	GetFlakyTests(repo string) ([]string, error)
+	GetReportRepos() ([]string, error)
+	GetFlakyTestReport(repo string, buildID int) ([]*Report, error)
 }
 
 // Client is simply a way to call methods, it does not contain any data itself
@@ -59,6 +60,19 @@ func Initialize(serviceAccount string) (Client, error) {
 // NewClient gives us a new Client struct, without initializing Prow
 func NewClient() *JSONClient {
 	return &JSONClient{}
+}
+
+// CreateReportForRepo generates a flaky report for a given repository, and optionally
+// writes it to disk.
+func (c *JSONClient) CreateReportForRepo(repo string, flaky []string, writeFile bool) (*Report, error) {
+	report := &Report{
+		Repo:  repo,
+		Flaky: flaky,
+	}
+	if writeFile {
+		return report, c.writeToArtifactsDir(report)
+	}
+	return report, nil
 }
 
 // writeToArtifactsDir writes the flaky test data for this repo to disk.
@@ -75,24 +89,38 @@ func (c *JSONClient) writeToArtifactsDir(r *Report) error {
 	return ioutil.WriteFile(outFilePath, contents, 0644)
 }
 
+// getFlakyTests gets the latest flaky tests from the given repo
+func (c *JSONClient) GetFlakyTests(repo string) ([]string, error) {
+	return c.parseFlakyLog(repo, -1, func(report *Report, result *[]string) {
+		*result = report.Flaky
+	})
+}
+
+// getReportRepos gets all of the repositories where we collect flaky tests.
+func (c *JSONClient) GetReportRepos() ([]string, error) {
+	return c.parseFlakyLog("", -1, func(report *Report, result *[]string) {
+		*result = append(*result, report.Repo)
+	})
+}
+
 // ParseFlakyLog reads the latest flaky test report and returns filtered results based
 // on the function the caller passes in.
-func (c *JSONClient) ParseFlakyLog(repo string, buildID int, f func(report Report, result *[]string)) ([]Report, []string, error) {
-	var parsedResults []string
-	results, err := c.GetFlakyTestReport(repo, buildID)
-	if err != nil || len(results) == 0 {
-		return results, parsedResults, err
+func (c *JSONClient) parseFlakyLog(repo string, buildID int, f func(report *Report, result *[]string)) ([]string, error) {
+	var results []string
+	reports, err := c.GetFlakyTestReport(repo, buildID)
+	if err != nil || len(reports) == 0 {
+		return results, err
 	}
-	for _, r := range results {
-		f(r, &parsedResults)
+	for _, r := range reports {
+		f(r, &results)
 	}
-	return results, parsedResults, err
+	return results, err
 }
 
 // GetFlakyTestReport collects flaky test reports from the given buildID and repo.
 // Use repo = "" to get reports from all repositories, and buildID = -1 to get the
 // most recent report
-func (c *JSONClient) GetFlakyTestReport(repo string, buildID int) ([]Report, error) {
+func (c *JSONClient) GetFlakyTestReport(repo string, buildID int) ([]*Report, error) {
 	job := prow.NewJob(jobName, prow.PeriodicJob, "", 0)
 	var err error
 	if buildID == -1 {
@@ -102,13 +130,13 @@ func (c *JSONClient) GetFlakyTestReport(repo string, buildID int) ([]Report, err
 		}
 	}
 	build := job.NewBuild(buildID)
-	var reports []Report
+	var reports []*Report
 	for _, filepath := range c.getReportPaths(build, repo) {
 		report, err := c.readJSONReport(build, filepath)
 		if err != nil {
 			return nil, err
 		}
-		reports = append(reports, *report)
+		reports = append(reports, report)
 	}
 	return reports, nil
 }
@@ -169,19 +197,6 @@ func (c *JSONClient) readJSONReport(build *prow.Build, filename string) (*Report
 	}
 	if err = json.Unmarshal(contents, report); err != nil {
 		return nil, err
-	}
-	return report, nil
-}
-
-// CreateReportForRepo generates a flaky report for a given repository, and optionally
-// writes it to disk.
-func (c *JSONClient) CreateReportForRepo(repo string, flaky []string, writeFile bool) (*Report, error) {
-	report := &Report{
-		Repo:  repo,
-		Flaky: flaky,
-	}
-	if writeFile {
-		return report, c.writeToArtifactsDir(report)
 	}
 	return report, nil
 }

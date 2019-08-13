@@ -24,14 +24,6 @@ import (
 	"knative.dev/test-infra/tools/flaky-test-reporter/jsonreport"
 )
 
-type reportClient struct {
-	jsonreport.Client
-}
-
-func newJSONClient() *reportClient {
-	return &reportClient{jsonreport.NewClient()}
-}
-
 // when reporting on all flaky tests in a repo, we want to eliminate the "job" layer, compressing all flaky
 // tests in that repo into a single list. There can be duplicate tests across jobs, though, so we store tests
 // in a nested map first to eliminate those duplicates.
@@ -49,7 +41,8 @@ func getFlakyTestSet(repoDataAll []*RepoData) map[string]map[string]bool {
 	return flakyTestSet
 }
 
-func (rc *reportClient) writeFlakyTestsToJSON(repoDataAll []*RepoData, dryrun bool) error {
+func writeFlakyTestsToJSON(repoDataAll []*RepoData, dryrun bool) error {
+	client := jsonreport.NewClient()
 	var allErrs []error
 	flakyTestSets := getFlakyTestSet(repoDataAll)
 	ch := make(chan bool, len(flakyTestSets))
@@ -65,7 +58,7 @@ func (rc *reportClient) writeFlakyTestsToJSON(repoDataAll []*RepoData, dryrun bo
 			if err := run(
 				fmt.Sprintf("writing JSON report for repo '%s'", repo),
 				func() error {
-					_, err := rc.CreateReportForRepo(repo, testList, true)
+					_, err := client.CreateReportForRepo(repo, testList, true)
 					return err
 				},
 				dryrun); nil != err {

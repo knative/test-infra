@@ -36,7 +36,6 @@ const pubsubTopic = "flaky-test-retryer"
 // HandlerClient wraps the other clients we need when processing failed jobs.
 type HandlerClient struct {
 	context.Context
-	logs *reportClient
 	pubsub *subscriber.Client
 	github *GithubClient
 }
@@ -45,8 +44,7 @@ type HandlerClient struct {
 // post comments on GitHub.
 func NewHandlerClient(serviceAccount, githubAccount string, dryrun bool) (*HandlerClient, error) {
 	ctx := context.Background()
-	logClient, err := InitLogParser(serviceAccount)
-	if err != nil {
+	if err := InitLogParser(serviceAccount); err != nil {
 		log.Fatalf("Failed authenticating GCS: '%v'", err)
 	}
 	githubClient, err := NewGithubClient(githubAccount, dryrun)
@@ -59,7 +57,6 @@ func NewHandlerClient(serviceAccount, githubAccount string, dryrun bool) (*Handl
 	}
 	return &HandlerClient{
 		ctx,
-		logClient,
 		pubsubClient,
 		githubClient,
 	}, nil
@@ -71,8 +68,8 @@ func (hc *HandlerClient) Listen() {
 	log.Printf("Listening for failed jobs...\n")
 	for {
 		hc.pubsub.ReceiveMessageAckAll(hc, func(msg *prowapi.ReportMessage) {
-			data := NewJobData(msg)
-			if hc.logs.IsSupported(data) {
+			data := &JobData{msg, nil, nil}
+			if data.IsSupported() {
 				go hc.HandleJob(data)
 			}
 		})
@@ -95,7 +92,7 @@ func (hc *HandlerClient) HandleJob(jd *JobData) {
 	}
 	logWithPrefix(jd, "got %d failed tests", len(failedTests))
 
-	flakyTests, err := hc.logs.getFlakyTests(jd)
+	flakyTests, err := jd.getFlakyTests()
 	if err != nil {
 		logWithPrefix(jd, "could not get flaky tests: %v", err)
 		return
