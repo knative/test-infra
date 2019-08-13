@@ -46,7 +46,7 @@ GCS bucket the release will be pushed to, unless `--nopublish` is used.
 
 Examples:
 
-```bash
+```sh
 # Create and publish a nightly, tagged release.
 ./hack/release.sh --publish --tag-release
 
@@ -84,7 +84,7 @@ will also be tagged _vX.Y.Z_ (both on GitHub and as a git annotated tag).
 
 Example:
 
-```bash
+```sh
 # Create and publish a versioned release of Knative Serving.
 ./hack/release.sh --publish --tag-release \
   --release-gcr gcr.io/knative-releases \
@@ -132,7 +132,7 @@ the _Releases_ page of the Knative repository.
 
 Example:
 
-```bash
+```sh
 # Create and publish a new dot release for Knative Serving.
 ./hack/release.sh \
   --dot-release \
