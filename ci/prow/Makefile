@@ -81,7 +81,8 @@ update-single-cluster-deployment:
 	kubectl apply -f deployments/$(NAME).yaml
 	$(UNSET_CONTEXT)
 
-update-full: update-cluster-deployments update-config update-boskos-deployments
+# Update all resources on Prow cluster except boskos resource
+update-full: update-all-cluster-deployments update-all-boskos-deployments update-plugins update-config
 
 test:
 	@echo "*** Checking config generator for prow and testgrid"
