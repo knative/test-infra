@@ -68,7 +68,7 @@ func (jd *JobData) IsSupported() bool {
 	}
 	// check repo
 	if len(jd.Refs) == 0 {
-		log.Printf("%s: mesasge does not contain any repository references\n", prefix)
+		log.Printf("%s: message does not contain any repository references\n", prefix)
 		return false
 	}
 	repos, err := jd.getReportRepos()

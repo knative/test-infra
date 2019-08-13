@@ -6,6 +6,7 @@
     rerun_command: "/test [[.PresubmitPullJobName]]"
     trigger: "(?m)^/test (all|[[.PresubmitPullJobName]]),?(\\s+|$)"
     decorate: true
+    [[.Base.Optional]]
     [[.Base.PathAlias]]
     [[indent_array_section 4 "branches" .Base.Branches]]
     [[indent_array_section 4 "skip_branches" .Base.SkipBranches]]
