@@ -128,7 +128,7 @@ Write release notes and add them to the release at
 1.  Create a branch based on the desired (usually the latest) `release-X.Y` branch.
 
     ```sh
-    git co -b my-backport-branch upstream/release-X.Y
+    git checkout -b my-backport-branch upstream/release-X.Y
     ```
 
 1.  Cherry-pick desired commits from master into the new branch.
