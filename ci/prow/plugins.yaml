@@ -33,6 +33,28 @@ repo_milestone:
     maintainers_id: 3012514
     maintainers_team: knative-milestone-maintainers
 
+project_config:
+  project_org_configs:
+    knative:
+      org_maintainers_team_id: 2652083 # knative-admin
+      # TODO(Fredy-Z): Enable this plugin for other repos when needed.
+      project_repo_configs:
+        eventing:
+          # TODO(grantr): replace with a new team eventing-project-maintainers
+          repo_maintainers_team_id: 3012514 # knative-milestone-maintainers
+          repo_default_column_map:
+            "Performance: Measurement":
+              To do
+            Delivery Reliability:
+              To do
+            Delivery Efficiency:
+              To do
+            Eventing Usability:
+              To do
+        eventing-contrib:
+          # TODO(grantr): replace with a new team eventing-contrib-project-maintainers
+          repo_maintainers_team_id: 3012514 # knative-milestone-maintainers
+
 plugins:
   knative:
   - approve
