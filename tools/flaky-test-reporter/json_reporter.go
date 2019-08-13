@@ -25,7 +25,7 @@ import (
 )
 
 type reportClient struct {
-	jsonreport.JSONClient
+	jsonreport.Client
 }
 
 func newJSONClient() *reportClient {

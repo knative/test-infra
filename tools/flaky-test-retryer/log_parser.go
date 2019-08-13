@@ -35,14 +35,13 @@ import (
 )
 
 // InitLogParser configures jsonreport's dependencies.
-func InitLogParser(serviceAccount string) (*LogClient, error) {
+func InitLogParser(serviceAccount string) (*reportClient, error) {
 	client, err := jsonreport.Initialize(serviceAccount)
-	return &LogClient{client}, err
+	return &reportClient{client}, err
 }
 
-// LogClient wraps jsonreport's client, allowing us to unit test
-type LogClient struct {
-	jsonreport.JSONClient
+type reportClient struct {
+	jsonreport.Client
 }
 
 // JobData contains the message describing a job, a local cache of its failed tests,
@@ -61,7 +60,7 @@ func NewJobData(msg *prowapi.ReportMessage) *JobData {
 
 // IsSupported checks to make sure the message can be processed with the current flaky
 // test information
-func (lc *LogClient) IsSupported(jd *JobData) bool {
+func (rc *reportClient) IsSupported(jd *JobData) bool {
 	prefix := fmt.Sprintf("Job did not fit criteria")
 	if jd.Status != prowapi.FailureState {
 		log.Printf("%s: message did not signal a failure: %v\n", prefix, jd.Status)
@@ -77,7 +76,7 @@ func (lc *LogClient) IsSupported(jd *JobData) bool {
 		log.Printf("%s: mesasge does not contain any repository references\n", prefix)
 		return false
 	}
-	repos, err := lc.getReportRepos(jd)
+	repos, err := rc.getReportRepos(jd)
 	if err != nil {
 		log.Printf("%s: error getting reporter's repositories: %v\n", prefix, err)
 		return false
@@ -158,8 +157,8 @@ func GetCombinedResultsForBuild(build *prow.Build) ([]*junit.TestSuites, error) 
 }
 
 // getFlakyTests gets the latest flaky tests that could affect this job
-func (lc *LogClient) getFlakyTests(jd *JobData) ([]string, error) {
-	reports, results, err := lc.ParseFlakyLog(jd.Refs[0].Repo, -1, func(report jsonreport.Report, result *[]string) {
+func (rc *reportClient) getFlakyTests(jd *JobData) ([]string, error) {
+	reports, results, err := rc.ParseFlakyLog(jd.Refs[0].Repo, -1, func(report jsonreport.Report, result *[]string) {
 		*result = report.Flaky
 	})
 	if jd.flakyReports == nil {
@@ -169,8 +168,8 @@ func (lc *LogClient) getFlakyTests(jd *JobData) ([]string, error) {
 }
 
 // getReportRepos gets all of the repositories where we collect flaky tests.
-func (lc *LogClient) getReportRepos(jd *JobData) ([]string, error) {
-	reports, results, err := lc.ParseFlakyLog("", -1, func(report jsonreport.Report, result *[]string) {
+func (rc *reportClient) getReportRepos(jd *JobData) ([]string, error) {
+	reports, results, err := rc.ParseFlakyLog("", -1, func(report jsonreport.Report, result *[]string) {
 		*result = append(*result, report.Repo)
 	})
 	jd.flakyReports = reports

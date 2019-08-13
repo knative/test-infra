@@ -36,7 +36,7 @@ const pubsubTopic = "flaky-test-retryer"
 // HandlerClient wraps the other clients we need when processing failed jobs.
 type HandlerClient struct {
 	context.Context
-	logs   *LogClient
+	logs *reportClient
 	pubsub *subscriber.Client
 	github *GithubClient
 }
