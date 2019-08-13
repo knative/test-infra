@@ -58,7 +58,7 @@ func Initialize(serviceAccount string) (Client, error) {
 	return &JSONClient{}, prow.Initialize(serviceAccount)
 }
 
-// CreateReportForRepo generates a flaky report for a given repository, and optionally
+// CreateReport generates a flaky report for a given repository, and optionally
 // writes it to disk.
 func (c *JSONClient) CreateReport(repo string, flaky []string, writeFile bool) (*Report, error) {
 	report := &Report{
@@ -85,7 +85,7 @@ func (c *JSONClient) writeToArtifactsDir(r *Report) error {
 	return ioutil.WriteFile(outFilePath, contents, 0644)
 }
 
-// getFlakyTests gets the latest flaky tests from the given repo
+// GetFlakyTests gets the latest flaky tests from the given repo
 func (c *JSONClient) GetFlakyTests(repo string) ([]string, error) {
 	reports, err := c.GetFlakyTestReport(repo, -1)
 	if err != nil {
@@ -97,7 +97,7 @@ func (c *JSONClient) GetFlakyTests(repo string) ([]string, error) {
 	return reports[0].Flaky, nil
 }
 
-// getReportRepos gets all of the repositories where we collect flaky tests.
+// GetReportRepos gets all of the repositories where we collect flaky tests.
 func (c *JSONClient) GetReportRepos() ([]string, error) {
 	reports, err := c.GetFlakyTestReport("", -1)
 	if err != nil {
