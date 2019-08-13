@@ -42,8 +42,11 @@ type HandlerClient struct {
 
 // NewHandlerClient gives us a handler where we can listen for Pubsub messages and
 // post comments on GitHub.
-func NewHandlerClient(githubAccount string, dryrun bool) (*HandlerClient, error) {
+func NewHandlerClient(serviceAccount, githubAccount string, dryrun bool) (*HandlerClient, error) {
 	ctx := context.Background()
+	if err := InitLogParser(serviceAccount); err != nil {
+		log.Fatalf("Failed authenticating GCS: '%v'", err)
+	}
 	githubClient, err := NewGithubClient(githubAccount, dryrun)
 	if err != nil {
 		return nil, fmt.Errorf("Github client: %v", err)
@@ -65,7 +68,7 @@ func (hc *HandlerClient) Listen() {
 	log.Printf("Listening for failed jobs...\n")
 	for {
 		hc.pubsub.ReceiveMessageAckAll(hc, func(msg *prowapi.ReportMessage) {
-			data := NewJobData(msg)
+			data := &JobData{msg, nil, nil}
 			if data.IsSupported() {
 				go hc.HandleJob(data)
 			}

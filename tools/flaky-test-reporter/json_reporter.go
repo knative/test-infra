@@ -42,6 +42,7 @@ func getFlakyTestSet(repoDataAll []*RepoData) map[string]map[string]bool {
 }
 
 func writeFlakyTestsToJSON(repoDataAll []*RepoData, dryrun bool) error {
+	client := &jsonreport.JSONClient{}
 	var allErrs []error
 	flakyTestSets := getFlakyTestSet(repoDataAll)
 	ch := make(chan bool, len(flakyTestSets))
@@ -57,7 +58,7 @@ func writeFlakyTestsToJSON(repoDataAll []*RepoData, dryrun bool) error {
 			if err := run(
 				fmt.Sprintf("writing JSON report for repo '%s'", repo),
 				func() error {
-					_, err := jsonreport.CreateReportForRepo(repo, testList, true)
+					_, err := client.CreateReport(repo, testList, true)
 					return err
 				},
 				dryrun); nil != err {

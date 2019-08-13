@@ -41,13 +41,38 @@ type Report struct {
 	Flaky []string `json:"flaky"`
 }
 
+// JSONClient contains the set of operations a JSON reporter needs
+type Client interface {
+	CreateReport(repo string, flaky []string, writeFile bool) (*Report, error)
+	GetFlakyTests(repo string) ([]string, error)
+	GetReportRepos() ([]string, error)
+	GetFlakyTestReport(repo string, buildID int) ([]Report, error)
+}
+
+// Client is simply a way to call methods, it does not contain any data itself
+type JSONClient struct{}
+var _ Client = (*JSONClient)(nil)
+
 // Initialize wraps prow's init, which must be called before any other prow functions are used.
-func Initialize(serviceAccount string) error {
-	return prow.Initialize(serviceAccount)
+func Initialize(serviceAccount string) (Client, error) {
+	return &JSONClient{}, prow.Initialize(serviceAccount)
+}
+
+// CreateReport generates a flaky report for a given repository, and optionally
+// writes it to disk.
+func (c *JSONClient) CreateReport(repo string, flaky []string, writeFile bool) (*Report, error) {
+	report := &Report{
+		Repo:  repo,
+		Flaky: flaky,
+	}
+	if writeFile {
+		return report, c.writeToArtifactsDir(report)
+	}
+	return report, nil
 }
 
 // writeToArtifactsDir writes the flaky test data for this repo to disk.
-func (r *Report) writeToArtifactsDir() error {
+func (c *JSONClient) writeToArtifactsDir(r *Report) error {
 	artifactsDir := prow.GetLocalArtifactsDir()
 	if err := common.CreateDir(path.Join(artifactsDir, r.Repo)); nil != err {
 		return err
@@ -60,22 +85,47 @@ func (r *Report) writeToArtifactsDir() error {
 	return ioutil.WriteFile(outFilePath, contents, 0644)
 }
 
+// GetFlakyTests gets the latest flaky tests from the given repo
+func (c *JSONClient) GetFlakyTests(repo string) ([]string, error) {
+	reports, err := c.GetFlakyTestReport(repo, -1)
+	if err != nil {
+		return nil, err
+	}
+	if len(reports) != 1 {
+		return nil, fmt.Errorf("invalid entries for given repo: %d", len(reports))
+	}
+	return reports[0].Flaky, nil
+}
+
+// GetReportRepos gets all of the repositories where we collect flaky tests.
+func (c *JSONClient) GetReportRepos() ([]string, error) {
+	reports, err := c.GetFlakyTestReport("", -1)
+	if err != nil {
+		return nil, err
+	}
+	var results []string
+	for _, r := range reports {
+		results = append(results, r.Repo)
+	}
+	return results, nil
+}
+
 // GetFlakyTestReport collects flaky test reports from the given buildID and repo.
 // Use repo = "" to get reports from all repositories, and buildID = -1 to get the
 // most recent report
-func GetFlakyTestReport(repo string, buildID int) ([]Report, error) {
+func (c *JSONClient) GetFlakyTestReport(repo string, buildID int) ([]Report, error) {
 	job := prow.NewJob(jobName, prow.PeriodicJob, "", 0)
 	var err error
 	if buildID == -1 {
-		buildID, err = getLatestValidBuild(job, repo)
+		buildID, err = c.getLatestValidBuild(job, repo)
 		if err != nil {
 			return nil, err
 		}
 	}
 	build := job.NewBuild(buildID)
 	var reports []Report
-	for _, filepath := range getReportPaths(build, repo) {
-		report, err := readJSONReport(build, filepath)
+	for _, filepath := range c.getReportPaths(build, repo) {
+		report, err := c.readJSONReport(build, filepath)
 		if err != nil {
 			return nil, err
 		}
@@ -86,11 +136,11 @@ func GetFlakyTestReport(repo string, buildID int) ([]Report, error) {
 
 // getLatestValidBuild inexpensively sorts and finds the most recent JSON report.
 // Assumes sequential build IDs are sequential in time.
-func getLatestValidBuild(job *prow.Job, repo string) (int, error) {
+func (c *JSONClient) getLatestValidBuild(job *prow.Job, repo string) (int, error) {
 	// check latest build first, before looking to older builds
 	if buildID, err := job.GetLatestBuildNumber(); err == nil {
 		build := job.NewBuild(buildID)
-		if reports := getReportPaths(build, repo); len(reports) != 0 {
+		if reports := c.getReportPaths(build, repo); len(reports) != 0 {
 			return buildID, nil
 		}
 	}
@@ -101,7 +151,7 @@ func getLatestValidBuild(job *prow.Job, repo string) (int, error) {
 	for _, buildID := range buildIDs {
 		build := job.NewBuild(buildID)
 		// check if reports exist for this build
-		if reports := getReportPaths(build, repo); len(reports) == 0 {
+		if reports := c.getReportPaths(build, repo); len(reports) == 0 {
 			continue
 		}
 		// check if this report is too old
@@ -120,7 +170,7 @@ func getLatestValidBuild(job *prow.Job, repo string) (int, error) {
 
 // getReportPaths searches build artifacts for reports from the given repo, returning
 // the path to any matching files. Use repo = "" to get all reports from all repos.
-func getReportPaths(build *prow.Build, repo string) []string {
+func (c *JSONClient) getReportPaths(build *prow.Build, repo string) []string {
 	var matches []string
 	suffix := path.Join(repo, filename)
 	for _, artifact := range build.GetArtifacts() {
@@ -132,27 +182,14 @@ func getReportPaths(build *prow.Build, repo string) []string {
 }
 
 // readJSONReport builds a repo-specific report object from a given json file path.
-func readJSONReport(build *prow.Build, filename string) (*Report, error) {
-	report := &Report{}
+func (c *JSONClient) readJSONReport(build *prow.Build, filename string) (*Report, error) {
+	report := Report{}
 	contents, err := build.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
-	if err = json.Unmarshal(contents, report); err != nil {
+	if err = json.Unmarshal(contents, &report); err != nil {
 		return nil, err
 	}
-	return report, nil
-}
-
-// CreateReportForRepo generates a flaky report for a given repository, and optionally
-// writes it to disk.
-func CreateReportForRepo(repo string, flaky []string, writeFile bool) (*Report, error) {
-	report := &Report{
-		Repo:  repo,
-		Flaky: flaky,
-	}
-	if writeFile {
-		return report, report.writeToArtifactsDir()
-	}
-	return report, nil
+	return &report, nil
 }

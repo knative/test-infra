@@ -34,9 +34,13 @@ import (
 	"knative.dev/test-infra/tools/monitoring/prowapi"
 )
 
+var client jsonreport.Client
+
 // InitLogParser configures jsonreport's dependencies.
 func InitLogParser(serviceAccount string) error {
-	return jsonreport.Initialize(serviceAccount)
+	var err error
+	client, err = jsonreport.Initialize(serviceAccount)
+	return err
 }
 
 // JobData contains the message describing a job, a local cache of its failed tests,
@@ -45,12 +49,6 @@ type JobData struct {
 	*prowapi.ReportMessage
 	failedTests  []string
 	flakyReports []jsonreport.Report
-}
-
-// NewJobData creates a JobData object for the given message, and returns an error
-// if it does not fit the criteria we have set for it.
-func NewJobData(msg *prowapi.ReportMessage) *JobData {
-	return &JobData{msg, nil, nil}
 }
 
 // IsSupported checks to make sure the message can be processed with the current flaky
@@ -71,7 +69,7 @@ func (jd *JobData) IsSupported() bool {
 		log.Printf("%s: message does not contain any repository references\n", prefix)
 		return false
 	}
-	repos, err := jd.getReportRepos()
+	repos, err := client.GetReportRepos()
 	if err != nil {
 		log.Printf("%s: error getting reporter's repositories: %v\n", prefix, err)
 		return false
@@ -151,37 +149,9 @@ func GetCombinedResultsForBuild(build *prow.Build) ([]*junit.TestSuites, error) 
 	return allSuites, nil
 }
 
-// getFlakyTests gets the latest flaky tests that could affect this job
-func (jd *JobData) getFlakyTests() ([]string, error) {
-	return jd.parseFlakyLog(func(report jsonreport.Report, result *[]string) {
-		if report.Repo == jd.Refs[0].Repo {
-			*result = report.Flaky
-		}
-	})
-}
-
-// getReportRepos gets all of the repositories where we collect flaky tests.
-func (jd *JobData) getReportRepos() ([]string, error) {
-	return jd.parseFlakyLog(func(report jsonreport.Report, result *[]string) {
-		*result = append(*result, report.Repo)
-	})
-}
-
-// parseFlakyLog reads the latest flaky test report and returns filtered results based
-// on the function the caller passes in.
-func (jd *JobData) parseFlakyLog(f func(report jsonreport.Report, result *[]string)) ([]string, error) {
-	var results []string
-	var err error
-	// populate cache if it is empty
-	if jd.flakyReports == nil {
-		jd.flakyReports, err = jsonreport.GetFlakyTestReport("", -1)
-	}
-	if err == nil && len(jd.flakyReports) > 0 {
-		for _, r := range jd.flakyReports {
-			f(r, &results)
-		}
-	}
-	return results, err
+// getFlakyTests gets the current flaky tests from the repo JobData originated from
+func (jd *JobData) getFlakyTests() ([]string, error){
+	return client.GetFlakyTests(jd.Refs[0].Repo)
 }
 
 // compareTests compares lists of failed and flaky tests, and returns any outlying failed
