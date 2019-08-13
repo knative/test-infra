@@ -149,7 +149,7 @@ Write release notes and add them to the release at
     usually built Tuesday nights, between 2AM and 3AM.
 
 **Note**: If a minor release is required for a release branch that's not the latest,
-the job must be [started manually](https://github.com/knative/test-infra/blob/master/ci/manual_release.md#creating-a-dot-release-on-demand).
+the job must be [started manually](manual_release.md#creating-a-dot-release-on-demand).
 
 ### Finishing a minor release
 
