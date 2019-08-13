@@ -43,28 +43,24 @@ type Report struct {
 
 // JSONClient contains the set of operations a JSON reporter needs
 type Client interface {
-	CreateReportForRepo(repo string, flaky []string, writeFile bool) (*Report, error)
+	CreateReport(repo string, flaky []string, writeFile bool) (*Report, error)
 	GetFlakyTests(repo string) ([]string, error)
 	GetReportRepos() ([]string, error)
-	GetFlakyTestReport(repo string, buildID int) ([]*Report, error)
+	GetFlakyTestReport(repo string, buildID int) ([]Report, error)
 }
 
 // Client is simply a way to call methods, it does not contain any data itself
 type JSONClient struct{}
+var _ Client = (*JSONClient)(nil)
 
 // Initialize wraps prow's init, which must be called before any other prow functions are used.
 func Initialize(serviceAccount string) (Client, error) {
-	return NewClient(), prow.Initialize(serviceAccount)
-}
-
-// NewClient gives us a new Client struct, without initializing Prow
-func NewClient() *JSONClient {
-	return &JSONClient{}
+	return &JSONClient{}, prow.Initialize(serviceAccount)
 }
 
 // CreateReportForRepo generates a flaky report for a given repository, and optionally
 // writes it to disk.
-func (c *JSONClient) CreateReportForRepo(repo string, flaky []string, writeFile bool) (*Report, error) {
+func (c *JSONClient) CreateReport(repo string, flaky []string, writeFile bool) (*Report, error) {
 	report := &Report{
 		Repo:  repo,
 		Flaky: flaky,
@@ -91,36 +87,33 @@ func (c *JSONClient) writeToArtifactsDir(r *Report) error {
 
 // getFlakyTests gets the latest flaky tests from the given repo
 func (c *JSONClient) GetFlakyTests(repo string) ([]string, error) {
-	return c.parseFlakyLog(repo, -1, func(report *Report, result *[]string) {
-		*result = report.Flaky
-	})
+	reports, err := c.GetFlakyTestReport(repo, -1)
+	if err != nil {
+		return nil, err
+	}
+	if len(reports) != 1 {
+		return nil, fmt.Errorf("invalid entries for given repo: %d", len(reports))
+	}
+	return reports[0].Flaky, nil
 }
 
 // getReportRepos gets all of the repositories where we collect flaky tests.
 func (c *JSONClient) GetReportRepos() ([]string, error) {
-	return c.parseFlakyLog("", -1, func(report *Report, result *[]string) {
-		*result = append(*result, report.Repo)
-	})
-}
-
-// ParseFlakyLog reads the latest flaky test report and returns filtered results based
-// on the function the caller passes in.
-func (c *JSONClient) parseFlakyLog(repo string, buildID int, f func(report *Report, result *[]string)) ([]string, error) {
+	reports, err := c.GetFlakyTestReport("", -1)
+	if err != nil {
+		return nil, err
+	}
 	var results []string
-	reports, err := c.GetFlakyTestReport(repo, buildID)
-	if err != nil || len(reports) == 0 {
-		return results, err
-	}
 	for _, r := range reports {
-		f(r, &results)
+		results = append(results, r.Repo)
 	}
-	return results, err
+	return results, nil
 }
 
 // GetFlakyTestReport collects flaky test reports from the given buildID and repo.
 // Use repo = "" to get reports from all repositories, and buildID = -1 to get the
 // most recent report
-func (c *JSONClient) GetFlakyTestReport(repo string, buildID int) ([]*Report, error) {
+func (c *JSONClient) GetFlakyTestReport(repo string, buildID int) ([]Report, error) {
 	job := prow.NewJob(jobName, prow.PeriodicJob, "", 0)
 	var err error
 	if buildID == -1 {
@@ -130,13 +123,13 @@ func (c *JSONClient) GetFlakyTestReport(repo string, buildID int) ([]*Report, er
 		}
 	}
 	build := job.NewBuild(buildID)
-	var reports []*Report
+	var reports []Report
 	for _, filepath := range c.getReportPaths(build, repo) {
 		report, err := c.readJSONReport(build, filepath)
 		if err != nil {
 			return nil, err
 		}
-		reports = append(reports, report)
+		reports = append(reports, *report)
 	}
 	return reports, nil
 }
@@ -190,13 +183,13 @@ func (c *JSONClient) getReportPaths(build *prow.Build, repo string) []string {
 
 // readJSONReport builds a repo-specific report object from a given json file path.
 func (c *JSONClient) readJSONReport(build *prow.Build, filename string) (*Report, error) {
-	report := &Report{}
+	report := Report{}
 	contents, err := build.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
-	if err = json.Unmarshal(contents, report); err != nil {
+	if err = json.Unmarshal(contents, &report); err != nil {
 		return nil, err
 	}
-	return report, nil
+	return &report, nil
 }
