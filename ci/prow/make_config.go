@@ -801,6 +801,10 @@ func executeJobTemplateWrapper(repoName string, data interface{}, generateOneJob
 		case *presubmitJobTemplateData:
 			base = &data.(*presubmitJobTemplateData).Base
 		case *postsubmitJobTemplateData:
+			if strings.HasSuffix(data.(*postsubmitJobTemplateData).PostsubmitJobName, "go-coverage") {
+				generateOneJob(data)
+				return
+			}
 			base = &data.(*postsubmitJobTemplateData).Base
 		default:
 			log.Fatalf("Unrecognized job template type: '%v'", v)

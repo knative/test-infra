@@ -5625,31 +5625,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    branches:
-    - "release-0.4"
-    - "release-0.5"
-    - "release-0.6"
-    - "release-0.7"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=0"
-  - name: post-knative-serving-go-coverage
-    branches:
-    - master
-    agent: kubernetes
-    decorate: true
     path_alias: knative.dev/serving
-    skip_branches:
-    - "release-0.4"
-    - "release-0.5"
-    - "release-0.6"
-    - "release-0.7"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -5665,11 +5641,6 @@ postsubmits:
     agent: kubernetes
     decorate: true
     path_alias: knative.dev/serving
-    skip_branches:
-    - "release-0.4"
-    - "release-0.5"
-    - "release-0.6"
-    - "release-0.7"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage-dev:latest-dev
@@ -5715,33 +5686,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    branches:
-    - "release-0.4"
-    - "release-0.5"
-    - "release-0.6"
-    - "release-0.7"
-    - "release-0.8"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=0"
-  - name: post-knative-eventing-go-coverage
-    branches:
-    - master
-    agent: kubernetes
-    decorate: true
     path_alias: knative.dev/eventing
-    skip_branches:
-    - "release-0.4"
-    - "release-0.5"
-    - "release-0.6"
-    - "release-0.7"
-    - "release-0.8"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -5757,33 +5702,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
-    branches:
-    - "release-0.4"
-    - "release-0.5"
-    - "release-0.6"
-    - "release-0.7"
-    - "release-0.8"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=0"
-  - name: post-knative-eventing-contrib-go-coverage
-    branches:
-    - master
-    agent: kubernetes
-    decorate: true
     path_alias: knative.dev/eventing-contrib
-    skip_branches:
-    - "release-0.4"
-    - "release-0.5"
-    - "release-0.6"
-    - "release-0.7"
-    - "release-0.8"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
