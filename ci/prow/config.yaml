@@ -5513,11 +5513,11 @@ periodics:
         -label:lifecycle/rotten"
       - "--updated=2160h"
       - "--token=/etc/housekeeping-github-token/token"
-      - "--comment=Issues go stale after 90d of inactivity.
-        Mark the issue as fresh with /remove-lifecycle stale.
-        Stale issues rot after an additional 30d of inactivity and eventually close.
-        If this issue is safe to close now please do so with /close.
-        Send feedback to Knative Productivity Slack channel or knative/test-infra.
+      - "--comment=Issues go stale after 90d of inactivity.<br/>
+        Mark the issue as fresh with /remove-lifecycle stale.<br/>
+        Stale issues rot after an additional 30d of inactivity and eventually close.<br/>
+        If this issue is safe to close now please do so with /close.<br/><br/>
+        Send feedback to Knative Productivity Slack channel or knative/test-infra.<br/><br/>
         /lifecycle stale"
       - "--template"
       - "--ceiling=10"
@@ -5553,11 +5553,11 @@ periodics:
         -label:lifecycle/rotten"
       - "--updated=720h"
       - "--token=/etc/housekeeping-github-token/token"
-      - "--comment=Stale issues rot after 30d of inactivity.
-        Mark the issue as fresh with /remove-lifecycle rotten.
-        Rotten issues close after an additional 30d of inactivity.
-		If this issue is safe to close now please do so with /close.
-		Send feedback to Knative Productivity Slack channel or knative/test-infra.
+      - "--comment=Stale issues rot after 30d of inactivity.<br/>
+        Mark the issue as fresh with /remove-lifecycle rotten.<br/>
+        Rotten issues close after an additional 30d of inactivity.<br/>
+        If this issue is safe to close now please do so with /close.<br/><br/>
+        Send feedback to Knative Productivity Slack channel or knative/test-infra.<br/><br/>
         /lifecycle rotten"
       - "--template"
       - "--ceiling=10"
@@ -5592,10 +5592,10 @@ periodics:
         label:lifecycle/rotten"
       - "--updated=720h"
       - "--token=/etc/housekeeping-github-token/token"
-      - "--comment=Rotten issues close after 30d of inactivity.
-        Reopen the issue with /reopen.
-        Mark the issue as fresh with /remove-lifecycle rotten.
-        Send feedback to Knative Productivity Slack channel or knative/test-infra.
+      - "--comment=Rotten issues close after 30d of inactivity.<br/>
+        Reopen the issue with /reopen.<br/>
+        Mark the issue as fresh with /remove-lifecycle rotten.<br/><br/>
+        Send feedback to Knative Productivity Slack channel or knative/test-infra.<br/><br/>
         /close"
       - "--template"
       - "--ceiling=10"
@@ -5616,20 +5616,31 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
+    path_alias: knative.dev/serving
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
-      - "/test/performance/tools/recreate-serving/recreate.sh"
+      - runner.sh
+      args:
+      - "./test/performance/tools/recreate_clusters.sh"
       volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
       - name: performance-test
         mountPath: /etc/performance-test
         readOnly: true
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/performance-test/service-account.json
     volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
     - name: performance-test
       secret:
         secretName: performance-test
@@ -5641,20 +5652,31 @@ periodics:
   - org: knative
     repo: serving
     base_ref: master
+    path_alias: knative.dev/serving
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
-      - "/test/performance/tools/update-serving/update.sh"
+      - runner.sh
+      args:
+      - "./test/performance/tools/update_clusters.sh"
       volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
       - name: performance-test
         mountPath: /etc/performance-test
         readOnly: true
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/performance-test/service-account.json
     volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
     - name: performance-test
       secret:
         secretName: performance-test

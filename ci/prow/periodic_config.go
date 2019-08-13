@@ -327,11 +327,11 @@ func generateIssueTrackerPeriodicJobs() {
         -label:lifecycle/stale
         -label:lifecycle/rotten`
 	staleUpdatedTime := "2160h"
-	staleComment := `--comment=Issues go stale after 90d of inactivity.
-        Mark the issue as fresh with /remove-lifecycle stale.
-        Stale issues rot after an additional 30d of inactivity and eventually close.
-        If this issue is safe to close now please do so with /close.
-        Send feedback to Knative Productivity Slack channel or knative/test-infra.
+	staleComment := `--comment=Issues go stale after 90d of inactivity.<br/>
+        Mark the issue as fresh with /remove-lifecycle stale.<br/>
+        Stale issues rot after an additional 30d of inactivity and eventually close.<br/>
+        If this issue is safe to close now please do so with /close.<br/><br/>
+        Send feedback to Knative Productivity Slack channel or knative/test-infra.<br/><br/>
         /lifecycle stale`
 	generateIssueTrackerPeriodicJob(staleJobName, staleLabelFilter, staleUpdatedTime, staleComment)
 
@@ -341,13 +341,11 @@ func generateIssueTrackerPeriodicJobs() {
         label:lifecycle/stale
         -label:lifecycle/rotten`
 	rottenUpdatedTime := "720h"
-	rottenComment := `--comment=Stale issues rot after 30d of inactivity.
-        Mark the issue as fresh with /remove-lifecycle rotten.
-        Rotten issues close after an additional 30d of inactivity.
-		If this issue is safe to close now please do so with /close.
-		
-		Send feedback to Knative Productivity Slack channel or knative/test-infra.
-		
+	rottenComment := `--comment=Stale issues rot after 30d of inactivity.<br/>
+        Mark the issue as fresh with /remove-lifecycle rotten.<br/>
+        Rotten issues close after an additional 30d of inactivity.<br/>
+        If this issue is safe to close now please do so with /close.<br/><br/>
+        Send feedback to Knative Productivity Slack channel or knative/test-infra.<br/><br/>
         /lifecycle rotten`
 	generateIssueTrackerPeriodicJob(rottenJobName, rottenLabelFilter, rottenUpdatedTime, rottenComment)
 
@@ -356,10 +354,10 @@ func generateIssueTrackerPeriodicJobs() {
         -label:lifecycle/frozen
         label:lifecycle/rotten`
 	closeUpdatedTime := "720h"
-	closeComment := `--comment=Rotten issues close after 30d of inactivity.
-        Reopen the issue with /reopen.
-        Mark the issue as fresh with /remove-lifecycle rotten.
-        Send feedback to Knative Productivity Slack channel or knative/test-infra.
+	closeComment := `--comment=Rotten issues close after 30d of inactivity.<br/>
+        Reopen the issue with /reopen.<br/>
+        Mark the issue as fresh with /remove-lifecycle rotten.<br/><br/>
+        Send feedback to Knative Productivity Slack channel or knative/test-infra.<br/><br/>
         /close`
 	generateIssueTrackerPeriodicJob(closeJobName, closeLabelFilter, closeUpdatedTime, closeComment)
 }
@@ -373,7 +371,7 @@ func generateIssueTrackerPeriodicJob(jobName, labelFilter, updatedTime, comment 
 	data.CronString = issueTrackerPeriodicJobCron
 	data.Base.Command = "/app/robots/commenter/app.binary"
 
-	// TODO(Fredy-Z): remove "repo:test-infra" after syncing up with the WGs.
+	// TODO(Fredy-Z): replace "repo:knative/test-infra" with "org:knative" after syncing up with the WGs.
 	data.Base.Args = []string{
 		`--query=repo:knative/test-infra
         is:issue
@@ -396,12 +394,12 @@ func generateServingClusterUpdatePeriodicJobs() {
 	generateServingClusterUpdatePeriodicJob(
 		"ci-knative-serving-recreate-clusters",
 		recreateServingPerfClusterPeriodicJobCron,
-		"/test/performance/tools/recreate-serving/recreate.sh",
+		"./test/performance/tools/recreate_clusters.sh",
 	)
 	generateServingClusterUpdatePeriodicJob(
 		"ci-knative-serving-update-clusters",
 		updateServingPerfClusterPeriodicJobCron,
-		"/test/performance/tools/update-serving/update.sh",
+		"./test/performance/tools/update_clusters.sh",
 	)
 }
 
@@ -409,11 +407,14 @@ func generateServingClusterUpdatePeriodicJob(jobName, cronString, command string
 	var data periodicJobTemplateData
 	data.Base = newbaseProwJobTemplateData("knative/serving")
 	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
+	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  path_alias: knative.dev/serving")
+	data.Base.Command = command
 	data.PeriodicJobName = jobName
 	data.CronString = cronString
-	data.Base.Command = command
-	data.Base.ServiceAccount = "/etc/performance-test/service-account.json"
+	data.PeriodicCommand = createCommand(data.Base)
 	configureServiceAccountForJob(&data.Base)
 	addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
-	executeJobTemplate(jobName, readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
+	addVolumeToJob(&data.Base, "/etc/performance-test", "performance-test", true, "")
+	addEnvToJob(&data.Base, "PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS", "/etc/performance-test/service-account.json")
+	executeJobTemplate(jobName, readTemplate(periodicTestJob), "presubmits", "", data.PeriodicJobName, false, data)
 }
