@@ -26,36 +26,6 @@ import (
 
 var (
 	fakeFlakyTests = []string{"test0", "test1", "test2"}
-	fakeWrongState = &prowapi.ReportMessage{
-		JobName: "fakejob",
-		JobType: prowapi.PresubmitJob,
-		Status:  prowapi.SuccessState,
-		Refs: []prowapi.Refs{{
-			Org:  "fakeorg",
-			Repo: fakeRepo,
-			Pulls: []prowapi.Pull{{
-				Number: 111,
-			}},
-		}},
-	}
-	fakeWrongType = &prowapi.ReportMessage{
-		JobName: "fakejob",
-		JobType: prowapi.PeriodicJob,
-		Status:  prowapi.FailureState,
-		Refs: []prowapi.Refs{{
-			Org:  "fakeorg",
-			Repo: fakeRepo,
-			Pulls: []prowapi.Pull{{
-				Number: 111,
-			}},
-		}},
-	}
-	fakeNoRefs = &prowapi.ReportMessage{
-		JobName: "fakejob",
-		JobType: prowapi.PresubmitJob,
-		Status:  prowapi.FailureState,
-		Refs:    nil,
-	}
 	fakeInvalidRepo = &prowapi.ReportMessage{
 		JobName: "fakejob",
 		JobType: prowapi.PresubmitJob,
@@ -66,16 +36,6 @@ var (
 			Pulls: []prowapi.Pull{{
 				Number: 111,
 			}},
-		}},
-	}
-	fakeNoPulls = &prowapi.ReportMessage{
-		JobName: "fakejob",
-		JobType: prowapi.PresubmitJob,
-		Status:  prowapi.FailureState,
-		Refs: []prowapi.Refs{{
-			Org:   "fakeorg",
-			Repo:  fakeRepo,
-			Pulls: nil,
 		}},
 	}
 	fakeValidMessage = &prowapi.ReportMessage{
@@ -102,12 +62,48 @@ func testIsSupported(t *testing.T) {
 		job  *JobData
 		want bool
 	}{
-		{&JobData{fakeWrongState, nil, nil}, false},
-		{&JobData{fakeWrongType, nil, nil}, false},
-		{&JobData{fakeNoRefs, nil, nil}, false},
-		{&JobData{fakeInvalidRepo, nil, nil}, false},
-		{&JobData{fakeNoPulls, nil, nil}, false},
-		{&JobData{fakeValidMessage, nil, nil}, true},
+		{&JobData{&prowapi.ReportMessage{	// wrong state
+			JobName: "fakejob",
+			JobType: prowapi.PresubmitJob,
+			Status:  prowapi.SuccessState,
+			Refs: []prowapi.Refs{{
+				Org:  "fakeorg",
+				Repo: fakeRepo,
+				Pulls: []prowapi.Pull{{
+					Number: 111,
+				}},
+			}},
+		}, nil, nil}, false},
+		{&JobData{&prowapi.ReportMessage{	// wrong job type
+			JobName: "fakejob",
+			JobType: prowapi.PeriodicJob,
+			Status:  prowapi.FailureState,
+			Refs: []prowapi.Refs{{
+				Org:  "fakeorg",
+				Repo: fakeRepo,
+				Pulls: []prowapi.Pull{{
+					Number: 111,
+				}},
+			}},
+		}, nil, nil}, false},
+		{&JobData{&prowapi.ReportMessage{ // no refs
+			JobName: "fakejob",
+			JobType: prowapi.PresubmitJob,
+			Status:  prowapi.FailureState,
+			Refs:    nil,
+		}, nil, nil}, false},
+		{&JobData{&prowapi.ReportMessage{ // no pulls
+			JobName: "fakejob",
+			JobType: prowapi.PresubmitJob,
+			Status:  prowapi.FailureState,
+			Refs: []prowapi.Refs{{
+				Org:   "fakeorg",
+				Repo:  fakeRepo,
+				Pulls: nil,
+			}},
+		}, nil, nil}, false},
+		{&JobData{fakeInvalidRepo, nil, nil}, false}, // invalid repo
+		{&JobData{fakeValidMessage, nil, nil}, true}, // valid message
 	}
 	setup()
 	for _, test := range cases {
