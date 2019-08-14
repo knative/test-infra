@@ -43,13 +43,7 @@ project_config:
           # TODO(grantr): replace with a new team eventing-project-maintainers
           repo_maintainers_team_id: 3012514 # knative-milestone-maintainers
           repo_default_column_map:
-            "Performance: Measurement":
-              To do
-            Delivery Reliability:
-              To do
-            Delivery Efficiency:
-              To do
-            Eventing Usability:
+            perf/measurement:
               To do
         eventing-contrib:
           # TODO(grantr): replace with a new team eventing-contrib-project-maintainers
@@ -79,6 +73,7 @@ plugins:
   - verify-owners
   - wip
   - yuks
+  - project
   google/knative-gcp:
   - approve
   - assign
