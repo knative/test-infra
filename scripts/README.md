@@ -218,8 +218,7 @@ WAIT_FOR_KNATIVE=1
 
 initialize $@
 
-# TODO: use go_test_e2e to run the tests.
-kubectl get pods || fail_test
+go_test_e2e ./test/e2e || fail_test
 
 success
 ```
