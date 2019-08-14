@@ -79,6 +79,7 @@ plugins:
   - verify-owners
   - wip
   - yuks
+  - project
   google/knative-gcp:
   - approve
   - assign
