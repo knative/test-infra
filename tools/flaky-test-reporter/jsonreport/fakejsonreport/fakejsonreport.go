@@ -46,7 +46,6 @@ func (c *FakeClient) CreateReport(repo string, flaky []string, writeFile bool) (
 			return nil, err
 		}
 		c.data = data
-		return report, nil
 	}
 	return report, nil
 }
