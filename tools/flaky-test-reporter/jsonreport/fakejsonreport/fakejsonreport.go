@@ -18,6 +18,7 @@ package fakejsonreport
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"knative.dev/test-infra/tools/flaky-test-reporter/jsonreport"
 )
@@ -79,10 +80,9 @@ func (c *FakeClient) GetReportRepos() ([]string, error) {
 // Use repo = "" to get reports from all repositories, and buildID = -1 to get the
 // most recent report
 func (c *FakeClient) GetFlakyTestReport(repo string, buildID int) ([]jsonreport.Report, error) {
-	report := &jsonreport.Report{}
-	err := json.Unmarshal(c.data, report)
-	if err != nil {
+	report := jsonreport.Report{}
+	if err := json.Unmarshal(c.data, &report); err != nil {
 		return nil, err
 	}
-	return []jsonreport.Report{*report}, nil
+	return []jsonreport.Report{report}, nil
 }

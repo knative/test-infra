@@ -97,13 +97,34 @@ func setup() {
 	client.CreateReport(fakeRepo, fakeFlakyTests, true)
 }
 
+func testIsSupported(t *testing.T) {
+	cases := []struct {
+		job  *JobData
+		want bool
+	}{
+		{&JobData{fakeWrongState, nil, nil}, false},
+		{&JobData{fakeWrongType, nil, nil}, false},
+		{&JobData{fakeNoRefs, nil, nil}, false},
+		{&JobData{fakeInvalidRepo, nil, nil}, false},
+		{&JobData{fakeNoPulls, nil, nil}, false},
+		{&JobData{fakeValidMessage, nil, nil}, true},
+	}
+	setup()
+	for _, test := range cases {
+		got := test.job.IsSupported()
+		if got != test.want {
+			t.Fatalf("Is Supported: got %v, want %v", got, test.want)
+		}
+	}
+}
+
 func testGetFlakyTests(t *testing.T) {
 	data := []struct {
 		job       *JobData
 		wantArray []string
 		wantErr   error
 	}{
-		{&JobData{fakeValidMessage, nil, nil}, []string{"test0", "test1", "test2"}, nil},
+		{&JobData{fakeValidMessage, nil, nil}, fakeFlakyTests, nil},
 		{&JobData{fakeInvalidRepo, nil, nil}, []string{}, nil},
 	}
 	setup()
@@ -117,26 +138,6 @@ func testGetFlakyTests(t *testing.T) {
 		}
 		if test.job.flakyReports == nil {
 			t.Fatalf("Get Flaky Tests: did not populate job cache")
-		}
-	}
-}
-
-func testIsSupported(t *testing.T) {
-	cases := []struct {
-		job  *JobData
-		want bool
-	}{
-		{&JobData{fakeWrongState, nil, nil}, false},
-		{&JobData{fakeWrongType, nil, nil}, false},
-		{&JobData{fakeNoRefs, nil, nil}, false},
-		{&JobData{fakeInvalidRepo, nil, nil}, false},
-		{&JobData{fakeNoPulls, nil, nil}, false},
-	}
-	setup()
-	for _, test := range cases {
-		got := test.job.IsSupported()
-		if got != test.want {
-			t.Fatalf("Is Supported: got %v, want %v", got, test.want)
 		}
 	}
 }
