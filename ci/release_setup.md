@@ -83,7 +83,8 @@ Versioned releases can be one of two kinds:
 
 1. Click the _Branch_ dropdown.
 1. Type the desired `release-X.Y` branch name into the search box.
-1. Click the `Create branch: release-X.Y from 'master'` button. _You must have write permissions to the repo to create a branch._
+1. Click the `Create branch: release-X.Y from 'master'` button. _You must have
+   write permissions to the repo to create a branch._
 
 ### Starting the release from the Git CLI
 
@@ -110,9 +111,9 @@ Versioned releases can be one of two kinds:
 ### Finishing the release
 
 Within 2 hours, Prow will detect the new release branch and run the
-`hack/release.sh` script. If the build succeeds, a new tag `vX.Y.0`
-will be created and a GitHub release published. If the build fails,
-logs can be retrieved from `https://testgrid.knative.dev/MODULE#auto-release`.
+`hack/release.sh` script. If the build succeeds, a new tag `vX.Y.0` will be
+created and a GitHub release published. If the build fails, logs can be
+retrieved from `https://testgrid.knative.dev/MODULE#auto-release`.
 
 Write release notes and add them to the release at
 `https://github.com/knative/MODULE/releases`.
@@ -125,7 +126,8 @@ Write release notes and add them to the release at
     git fetch upstream
     ```
 
-1.  Create a branch based on the desired (usually the latest) `release-X.Y` branch.
+1.  Create a branch based on the desired (usually the latest) `release-X.Y`
+    branch.
 
     ```sh
     git checkout -b my-backport-branch upstream/release-X.Y
@@ -145,19 +147,21 @@ Write release notes and add them to the release at
 
 1.  Create a PR for your branch based on the `release-X.Y` branch.
 
-1.  Once the PR is merged, it will be included in the next minor release, which is
-    usually built Tuesday nights, between 2AM and 3AM.
+1.  Once the PR is merged, it will be included in the next minor release, which
+    is usually built Tuesday nights, between 2AM and 3AM.
 
-**Note**: If a minor release is required for a release branch that's not the latest,
-the job must be [started manually](manual_release.md#creating-a-dot-release-on-demand).
+**Note**: If a minor release is required for a release branch that's not the
+latest, the job must be
+[started manually](manual_release.md#creating-a-dot-release-on-demand).
 
 ### Finishing a minor release
 
-When the minor release job runs, it will detect the new commits in the
-latest release branch and run the `release.sh` script. If the build succeeds, a new tag
-`vX.Y.Z` will be created (where `Z` is the current minor version number + 1)
-and a GitHub release published at `https://github.com/knative/MODULE/releases`.
-If the build fails, logs can be retrieved from `https://testgrid.knative.dev/MODULE#dot-release`.
+When the minor release job runs, it will detect the new commits in the latest
+release branch and run the `release.sh` script. If the build succeeds, a new tag
+`vX.Y.Z` will be created (where `Z` is the current minor version number + 1) and
+a GitHub release published at `https://github.com/knative/MODULE/releases`. If
+the build fails, logs can be retrieved from
+`https://testgrid.knative.dev/MODULE#dot-release`.
 
 Write release notes and add them to the release at
 `https://github.com/knative/MODULE/releases`.
