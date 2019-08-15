@@ -54,7 +54,7 @@ type JobData struct {
 // IsSupported checks to make sure the message can be processed with the current flaky
 // test information
 func (jd *JobData) IsSupported() bool {
-	prefix := fmt.Sprintf("Job did not fit criteria")
+	prefix := fmt.Sprintf("Job %s/%s did not fit criteria", jd.JobName, jd.RunID)
 	if jd.Status != prowapi.FailureState {
 		log.Printf("%s: message did not signal a failure: %v\n", prefix, jd.Status)
 		return false
@@ -150,7 +150,7 @@ func GetCombinedResultsForBuild(build *prow.Build) ([]*junit.TestSuites, error) 
 }
 
 // getFlakyTests gets the current flaky tests from the repo JobData originated from
-func (jd *JobData) getFlakyTests() ([]string, error){
+func (jd *JobData) getFlakyTests() ([]string, error) {
 	return client.GetFlakyTests(jd.Refs[0].Repo)
 }
 
