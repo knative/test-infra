@@ -75,13 +75,18 @@ presubmits:
 
   knative/client:
     - build-tests: true
+      dot-dev: true
     - unit-tests: true
+      dot-dev: true
     - integration-tests: true
+      dot-dev: true
     - go-coverage: true
+      dot-dev: true
     - custom-test: integration-tests-latest-release
       always_run: true
       command:
         - "./test/presubmit-integration-tests-latest-release.sh"
+      dot-dev: true
 
   knative/eventing:
     - repo-settings:
@@ -240,9 +245,13 @@ periodics:
 
   knative/client:
     - continuous: true
+      dot-dev: true
     - nightly: true
+      dot-dev: true
     - dot-release: true
+      dot-dev: true
     - auto-release: true
+      dot-dev: true
 
   knative/docs:
     - continuous: true
