@@ -132,15 +132,23 @@ func parseEntries(comment *github.IssueComment) (map[string]*entry, error) {
 	entryStrings := re.FindAll([]byte(comment.GetBody()), -1)
 	for _, e := range entryStrings {
 		fields := strings.Split(string(e), " | ")
-		if len(fields) != 3 {
+		retryField := ""
+		oldLinksField := ""
+		if len(fields) == 3 {
+			oldLinksField = fields[1]
+			retryField = fields[2]
+		} else if len(fields) == 2 { // Backward compatible
+			retryField = fields[1]
+		} else {
 			return nil, fmt.Errorf("invalid number of table entries")
 		}
-		retry, err := strconv.Atoi(strings.Split(fields[2], "/")[0])
+
+		retry, err := strconv.Atoi(strings.Split(retryField, "/")[0])
 		if err != nil {
 			return nil, err
 		}
 		entries[fields[0]] = &entry{
-			oldLinks: fields[1],
+			oldLinks: oldLinksField,
 			retries:  retry,
 		}
 	}
