@@ -20,7 +20,6 @@ limitations under the License.
 package main
 
 import (
-	"bytes"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -29,13 +28,12 @@ import (
 	"os"
 	"path"
 	"regexp"
-	"sort"
-	"strconv"
 	"strings"
-	"text/template"
 	"time"
 
 	yaml "gopkg.in/yaml.v2"
+	"knative.dev/test-infra/ci/prow/configlib"
+	"knative.dev/test-infra/shared/common"
 )
 
 const (
@@ -69,59 +67,9 @@ type repositoryData struct {
 	LegacyBranches      []string
 }
 
-// baseProwJobTemplateData contains basic data about a Prow job.
-type baseProwJobTemplateData struct {
-	OrgName             string
-	RepoName            string
-	RepoNameForJob      string
-	GcsBucket           string
-	GcsLogDir           string
-	GcsPresubmitLogDir  string
-	RepoURI             string
-	RepoBranch          string
-	CloneURI            string
-	SecurityContext     []string
-	SkipBranches        []string
-	Branches            []string
-	DecorationConfig    []string
-	ExtraRefs           []string
-	Command             string
-	Args                []string
-	Env                 []string
-	Volumes             []string
-	VolumeMounts        []string
-	Timeout             int
-	AlwaysRun           bool
-	LogsDir             string
-	PresubmitLogsDir    string
-	TestAccount         string
-	ServiceAccount      string
-	ReleaseGcs          string
-	GoCoverageThreshold int
-	Image               string
-	Year                int
-	Labels              []string
-	PathAlias           string
-	Optional            string
-}
-
 // ####################################################################################################
 // ################ data definitions that are used for the prow config file generation ################
 // ####################################################################################################
-// presubmitJobTemplateData contains data about a presubmit Prow job.
-type presubmitJobTemplateData struct {
-	Base                 baseProwJobTemplateData
-	PresubmitJobName     string
-	PresubmitPullJobName string
-	PresubmitPostJobName string
-	PresubmitCommand     []string
-}
-
-// postsubmitJobTemplateData contains data about a postsubmit Prow job.
-type postsubmitJobTemplateData struct {
-	Base              baseProwJobTemplateData
-	PostsubmitJobName string
-}
 
 // sectionGenerator is a function that generates Prow job configs given a slice of a yaml file with configs.
 type sectionGenerator func(string, string, yaml.MapSlice)
@@ -172,6 +120,9 @@ var (
 
 	// Map which sections of the config.yaml were written to stdout.
 	sectionMap map[string]bool
+
+	// The template evaluator used to expand prow job config template variables
+	tmplEval = configlib.NewTemplateEvaluator(output, gitHubRepo)
 )
 
 // Generate cron string based on job type, offset generated from jobname
@@ -239,69 +190,6 @@ func readTemplate(fp string) string {
 	return templatesCache[fp]
 }
 
-// getString casts the given interface (expected string) as string.
-// An array of length 1 is also considered a single string.
-func getString(s interface{}) string {
-	if _, ok := s.([]interface{}); ok {
-		values := getStringArray(s)
-		if len(values) == 1 {
-			return values[0]
-		}
-		log.Fatalf("Entry %v is not a string or string array of size 1", s)
-	}
-	if str, ok := s.(string); ok {
-		return str
-	}
-	log.Fatalf("Entry %v is not a string", s)
-	return ""
-}
-
-// getInt casts the given interface (expected int) as int.
-func getInt(s interface{}) int {
-	if value, ok := s.(int); ok {
-		return value
-	}
-	log.Fatalf("Entry %v is not an integer", s)
-	return 0
-}
-
-// getBool casts the given interface (expected bool) as bool.
-func getBool(s interface{}) bool {
-	if value, ok := s.(bool); ok {
-		return value
-	}
-	log.Fatalf("Entry %v is not a boolean", s)
-	return false
-}
-
-// getInterfaceArray casts the given interface (expected interface array) as interface array.
-func getInterfaceArray(s interface{}) []interface{} {
-	if interfaceArray, ok := s.([]interface{}); ok {
-		return interfaceArray
-	}
-	log.Fatalf("Entry %v is not an interface array", s)
-	return nil
-}
-
-// getStringArray casts the given interface (expected string array) as string array.
-func getStringArray(s interface{}) []string {
-	interfaceArray := getInterfaceArray(s)
-	strArray := make([]string, len(interfaceArray))
-	for i := range interfaceArray {
-		strArray[i] = getString(interfaceArray[i])
-	}
-	return strArray
-}
-
-// getMapSlice casts the given interface (expected MapSlice) as MapSlice.
-func getMapSlice(m interface{}) yaml.MapSlice {
-	if mm, ok := m.(yaml.MapSlice); ok {
-		return mm
-	}
-	log.Fatalf("Entry %v is not a yaml.MapSlice", m)
-	return nil
-}
-
 func combineSlices(a1 []string, a2 []string) []string {
 	var res []string
 	res = append(res, a1...)
@@ -347,9 +235,9 @@ func consolidateBranches(whitelisted []string, skipped []string, newWhitelisted 
 
 // Config generation functions.
 
-// newbaseProwJobTemplateData returns a baseProwJobTemplateData type with its initial, default values.
-func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
-	var data baseProwJobTemplateData
+// newbaseProwJobTemplateData returns a BaseProwJobTemplateData type with its initial, default values.
+func newbaseProwJobTemplateData(repo string) configlib.BaseProwJobTemplateData {
+	var data configlib.BaseProwJobTemplateData
 	data.Timeout = 50
 	data.OrgName = strings.Split(repo, "/")[0]
 	data.RepoName = strings.Replace(repo, data.OrgName+"/", "", 1)
@@ -381,7 +269,7 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 // General helpers.
 
 // createCommand returns an array with the command to run and its arguments.
-func createCommand(data baseProwJobTemplateData) []string {
+func createCommand(data configlib.BaseProwJobTemplateData) []string {
 	c := []string{data.Command}
 	// Prefix the pre-command if present.
 	if preCommand != "" {
@@ -390,105 +278,47 @@ func createCommand(data baseProwJobTemplateData) []string {
 	return append(c, data.Args...)
 }
 
-// addEnvToJob adds the given key/pair environment variable to the job.
-func addEnvToJob(data *baseProwJobTemplateData, key, value string) {
-	// Value should always be string. Add quotes if we get a number
-	if isNum(value) {
-		value = "\"" + value + "\""
-	}
-
-	(*data).Env = append((*data).Env, []string{"- name: " + key, "  value: " + value}...)
-}
-
-// addLabelToJob adds extra labels to a job
-func addLabelToJob(data *baseProwJobTemplateData, key, value string) {
-	(*data).Labels = append((*data).Labels, []string{key + ": " + value}...)
-}
-
 // addPubsubLabelsToJob adds the pubsub labels so the prow job message will be picked up by test-infra monitoring
-func addMonitoringPubsubLabelsToJob(data *baseProwJobTemplateData, runID string) {
-	addLabelToJob(data, "prow.k8s.io/pubsub.project", "knative-tests")
-	addLabelToJob(data, "prow.k8s.io/pubsub.topic", "knative-monitoring")
-	addLabelToJob(data, "prow.k8s.io/pubsub.runID", runID)
-}
-
-// addVolumeToJob adds the given mount path as volume for the job.
-func addVolumeToJob(data *baseProwJobTemplateData, mountPath, name string, isSecret bool, defaultMode string) {
-	(*data).VolumeMounts = append((*data).VolumeMounts, []string{"- name: " + name, "  mountPath: " + mountPath}...)
-	if isSecret {
-		(*data).VolumeMounts = append((*data).VolumeMounts, "  readOnly: true")
-	}
-	s := []string{"- name: " + name}
-	if isSecret {
-		arr := []string{"  secret:", "    secretName: " + name}
-		if len(defaultMode) > 0 {
-			arr = append(arr, "    defaultMode: "+defaultMode)
-		}
-		s = append(s, arr...)
-	} else {
-		s = append(s, "  emptyDir: {}")
-	}
-	(*data).Volumes = append((*data).Volumes, s...)
-}
-
-// configureServiceAccountForJob adds the necessary volumes for the service account for the job.
-func configureServiceAccountForJob(data *baseProwJobTemplateData) {
-	if data.ServiceAccount == "" {
-		return
-	}
-	p := strings.Split(data.ServiceAccount, "/")
-	if len(p) != 4 || p[0] != "" || p[1] != "etc" || p[3] != "service-account.json" {
-		log.Fatalf("Service account path %q is expected to be \"/etc/<name>/service-account.json\"", data.ServiceAccount)
-	}
-	name := p[2]
-	addVolumeToJob(data, "/etc/"+name, name, true, "")
-}
-
-// addExtraEnvVarsToJob adds extra environment variables to a job.
-func addExtraEnvVarsToJob(envVars []string, data *baseProwJobTemplateData) {
-	for _, env := range envVars {
-		pair := strings.SplitN(env, "=", 2)
-		if len(pair) != 2 {
-			log.Fatalf("Environment variable %q is expected to be \"key=value\"", env)
-		}
-		addEnvToJob(data, pair[0], pair[1])
-	}
+func addMonitoringPubsubLabelsToJob(data *configlib.BaseProwJobTemplateData, runID string) {
+	configlib.AddLabelToJob(data, "prow.k8s.io/pubsub.project", "knative-tests")
+	configlib.AddLabelToJob(data, "prow.k8s.io/pubsub.topic", "knative-monitoring")
+	configlib.AddLabelToJob(data, "prow.k8s.io/pubsub.runID", runID)
 }
 
 // setupDockerInDockerForJob enables docker-in-docker for the given job.
-func setupDockerInDockerForJob(data *baseProwJobTemplateData) {
-	addVolumeToJob(data, "/docker-graph", "docker-graph", false, "")
-	addEnvToJob(data, "DOCKER_IN_DOCKER_ENABLED", "\"true\"")
+func setupDockerInDockerForJob(data *configlib.BaseProwJobTemplateData) {
+	configlib.AddVolumeToJob(data, "/docker-graph", "docker-graph", false, "")
+	configlib.AddEnvToJob(data, "DOCKER_IN_DOCKER_ENABLED", "\"true\"")
 	(*data).SecurityContext = []string{"privileged: true"}
 }
 
 // Config parsers.
 
-// parseBasicJobConfigOverrides updates the given baseProwJobTemplateData with any base option present in the given config.
-func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.MapSlice) {
+// parseBasicJobConfigOverrides updates the given BaseProwJobTemplateData with any base option present in the given config.
+func parseBasicJobConfigOverrides(data *configlib.BaseProwJobTemplateData, config yaml.MapSlice) {
 	(*data).ExtraRefs = append((*data).ExtraRefs, "  base_ref: "+(*data).RepoBranch)
 	for i, item := range config {
 		switch item.Key {
 		case "skip_branches":
-			(*data).SkipBranches = getStringArray(item.Value)
+			(*data).SkipBranches = common.GetStringArray(item.Value)
 		case "branches":
-			(*data).Branches = getStringArray(item.Value)
+			(*data).Branches = common.GetStringArray(item.Value)
 		case "args":
-			(*data).Args = getStringArray(item.Value)
+			(*data).Args = common.GetStringArray(item.Value)
 		case "timeout":
-			(*data).Timeout = getInt(item.Value)
+			(*data).Timeout = common.GetInt(item.Value)
 		case "command":
-			(*data).Command = getString(item.Value)
+			(*data).Command = common.GetString(item.Value)
 		case "full-command":
-			parts := strings.Split(getString(item.Value), " ")
+			parts := strings.Split(common.GetString(item.Value), " ")
 			(*data).Command = parts[0]
 			(*data).Args = parts[1:]
 		case "needs-dind":
-			if getBool(item.Value) {
+			if common.GetBool(item.Value) {
 				setupDockerInDockerForJob(data)
 			}
 		case "always_run":
-			(*data).AlwaysRun = getBool(item.Value)
+			(*data).AlwaysRun = common.GetBool(item.Value)
 		case "dot-dev":
 			for i, repo := range repositories {
 				if path.Base(repo.Name) == (*data).RepoName {
@@ -498,11 +328,11 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 		case "legacy-branches":
 			for i, repo := range repositories {
 				if path.Base(repo.Name) == (*data).RepoName {
-					repositories[i].LegacyBranches = getStringArray(item.Value)
+					repositories[i].LegacyBranches = common.GetStringArray(item.Value)
 				}
 			}
 		case "env-vars":
-			addExtraEnvVarsToJob(getStringArray(item.Value), data)
+			configlib.AddExtraEnvVarsToJob(data, common.GetStringArray(item.Value))
 		case "optional":
 			(*data).Optional = "optional: true"
 		case nil: // already processed
@@ -538,7 +368,7 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 
 // generatePresubmit generates all presubmit job configs for the given repo and configuration.
 func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSlice) {
-	var data presubmitJobTemplateData
+	var data configlib.PresubmitJobTemplateData
 	data.Base = newbaseProwJobTemplateData(repoName)
 	data.Base.Command = presubmitScript
 	data.Base.GoCoverageThreshold = 50
@@ -549,10 +379,10 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	for i, item := range presubmitConfig {
 		switch item.Key {
 		case "build-tests", "unit-tests", "integration-tests":
-			if !getBool(item.Value) {
+			if !common.GetBool(item.Value) {
 				return
 			}
-			jobName := getString(item.Key)
+			jobName := common.GetString(item.Key)
 			data.PresubmitJobName = data.Base.RepoNameForJob + "-" + jobName
 			// Use default arguments if none given.
 			if len(data.Base.Args) == 0 {
@@ -562,7 +392,7 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 				isMonitoredJob = true
 			}
 		case "go-coverage":
-			if !getBool(item.Value) {
+			if !common.GetBool(item.Value) {
 				return
 			}
 			jobTemplate = readTemplate(presubmitGoCoverageJob)
@@ -570,11 +400,11 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 			data.Base.Image = coverageDockerImage
 			data.Base.ServiceAccount = ""
 			repoData.EnableGoCoverage = true
-			addVolumeToJob(&data.Base, "/etc/covbot-token", "covbot-token", true, "")
+			configlib.AddVolumeToJob(&data.Base, "/etc/covbot-token", "covbot-token", true, "")
 		case "custom-test":
-			data.PresubmitJobName = data.Base.RepoNameForJob + "-" + getString(item.Value)
+			data.PresubmitJobName = data.Base.RepoNameForJob + "-" + common.GetString(item.Value)
 		case "go-coverage-threshold":
-			data.Base.GoCoverageThreshold = getInt(item.Value)
+			data.Base.GoCoverageThreshold = common.GetInt(item.Value)
 			repoData.GoCoverageThreshold = data.Base.GoCoverageThreshold
 		case "repo-settings":
 			generateJob = false
@@ -593,14 +423,14 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	data.PresubmitPullJobName = "pull-" + data.PresubmitJobName
 	data.PresubmitPostJobName = "post-" + data.PresubmitJobName
 	if data.Base.ServiceAccount != "" {
-		addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
-		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-central1")
+		configlib.AddEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
+		configlib.AddEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-central1")
 	}
 	if isMonitoredJob {
 		addMonitoringPubsubLabelsToJob(&data.Base, data.PresubmitPullJobName)
 	}
-	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
-	configureServiceAccountForJob(&data.Base)
+	configlib.AddExtraEnvVarsToJob(&data.Base, extraEnvVars)
+	configlib.ConfigureServiceAccountForJob(&data.Base)
 	jobName := data.PresubmitPullJobName
 	executeJobTemplateWrapper(repoName, &data, func(data interface{}) {
 		executeJobTemplate("presubmit", jobTemplate, title, repoName, jobName, true, data)
@@ -618,7 +448,7 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 
 // generateGoCoveragePostsubmit generates the go coverage postsubmit job config for the given repo.
 func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
-	var data postsubmitJobTemplateData
+	var data configlib.PostsubmitJobTemplateData
 	data.Base = newbaseProwJobTemplateData(repoName)
 	data.Base.Image = coverageDockerImage
 	data.PostsubmitJobName = fmt.Sprintf("post-%s-go-coverage", data.Base.RepoNameForJob)
@@ -627,8 +457,8 @@ func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
 			data.Base.PathAlias = "path_alias: knative.dev/" + path.Base(repoName)
 		}
 	}
-	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
-	configureServiceAccountForJob(&data.Base)
+	configlib.AddExtraEnvVarsToJob(&data.Base, extraEnvVars)
+	configlib.ConfigureServiceAccountForJob(&data.Base)
 	jobName := data.PostsubmitJobName
 	executeJobTemplateWrapper(repoName, &data, func(data interface{}) {
 		executeJobTemplate("postsubmit go coverage", readTemplate(goCoveragePostsubmitJob), "postsubmits", repoName, jobName, true, data)
@@ -648,10 +478,10 @@ func parseSection(config yaml.MapSlice, title string, generate sectionGenerator,
 		if section.Key != title {
 			continue
 		}
-		for _, repo := range getMapSlice(section.Value) {
-			repoName := getString(repo.Key)
-			for _, jobConfig := range getInterfaceArray(repo.Value) {
-				generate(title, repoName, getMapSlice(jobConfig))
+		for _, repo := range common.GetMapSlice(section.Value) {
+			repoName := common.GetString(repo.Key)
+			for _, jobConfig := range common.GetInterfaceArray(repo.Value) {
+				generate(title, repoName, common.GetMapSlice(jobConfig))
 			}
 			if finalize != nil {
 				finalize(title, repoName, nil)
@@ -673,7 +503,7 @@ func generateOtherJobConfigs(title string, newJobNeeded newJobNeeded, generate s
 // Template helpers.
 
 // gitHubRepo returns the correct reference for the GitHub repository.
-func gitHubRepo(data baseProwJobTemplateData) string {
+func gitHubRepo(data configlib.BaseProwJobTemplateData) string {
 	if repositoryOverride != "" {
 		return repositoryOverride
 	}
@@ -684,83 +514,6 @@ func gitHubRepo(data baseProwJobTemplateData) string {
 	return s
 }
 
-// isNum checks if the given string is a valid number
-func isNum(s string) bool {
-	_, err := strconv.ParseFloat(s, 64)
-	return err == nil
-}
-
-// quote returns the given string quoted if it's not a number, or not a key/value pair, or already quoted.
-func quote(s string) string {
-	if isNum(s) {
-		return s
-	}
-	if strings.HasPrefix(s, "'") || strings.HasPrefix(s, "\"") || strings.Contains(s, ": ") || strings.HasSuffix(s, ":") {
-		return s
-	}
-	return "\"" + s + "\""
-}
-
-// indentBase is a helper function which returns the given array indented.
-func indentBase(indentation int, prefix string, indentFirstLine bool, array []string) string {
-	s := ""
-	if len(array) == 0 {
-		return s
-	}
-	indent := strings.Repeat(" ", indentation)
-	for i := 0; i < len(array); i++ {
-		if i > 0 || indentFirstLine {
-			s += indent
-		}
-		s += prefix + quote(array[i]) + "\n"
-	}
-	return s
-}
-
-// indentArray returns the given array indented, prefixed by "-".
-func indentArray(indentation int, array []string) string {
-	return indentBase(indentation, "- ", false, array)
-}
-
-// indentKeys returns the given array of key/value pairs indented.
-func indentKeys(indentation int, array []string) string {
-	return indentBase(indentation, "", false, array)
-}
-
-// indentSectionBase is a helper function which returns the given array of key/value pairs indented inside a section.
-func indentSectionBase(indentation int, title string, prefix string, array []string) string {
-	keys := indentBase(indentation, prefix, true, array)
-	if keys == "" {
-		return keys
-	}
-	return title + ":\n" + keys
-}
-
-// indentArraySection returns the given array indented inside a section.
-func indentArraySection(indentation int, title string, array []string) string {
-	return indentSectionBase(indentation, title, "- ", array)
-}
-
-// indentSection returns the given array of key/value pairs indented inside a section.
-func indentSection(indentation int, title string, array []string) string {
-	return indentSectionBase(indentation, title, "", array)
-}
-
-// indentMap returns the given map indented, with each key/value separated by ": "
-func indentMap(indentation int, mp map[string]string) string {
-	// Extract map keys to keep order consistent.
-	keys := make([]string, 0, len(mp))
-	for key := range mp {
-		keys = append(keys, key)
-	}
-	sort.Strings(keys)
-	arr := make([]string, len(mp))
-	for i := 0; i < len(mp); i++ {
-		arr[i] = keys[i] + ": " + quote(mp[keys[i]])
-	}
-	return indentBase(indentation, "", false, arr)
-}
-
 // outputConfig outputs the given line, if not empty, to stdout.
 func outputConfig(line string) {
 	if strings.TrimSpace(line) != "" {
@@ -768,17 +521,7 @@ func outputConfig(line string) {
 	}
 }
 
-// strExists checks if the given string exists in the array
-func strExists(arr []string, str string) bool {
-	for _, s := range arr {
-		if str == s {
-			return true
-		}
-	}
-	return false
-}
-
-// executeJobTemplateWrapper takes in consideration of repo settings, decides how many varianats of the
+// executeJobTemplateWrapper takes in consideration of repo settings, decides how many variants of the
 // same job needs to be generated and generates them.
 func executeJobTemplateWrapper(repoName string, data interface{}, generateOneJob func(data interface{})) {
 	var legacyBranches []string
@@ -795,16 +538,16 @@ func executeJobTemplateWrapper(repoName string, data interface{}, generateOneJob
 	} else {
 		// Generate one job with 'knative.dev' path alias for branches other than legacy branches,
 		// and another job without path alias for legacy branches
-		var base *baseProwJobTemplateData
+		var base *configlib.BaseProwJobTemplateData
 		switch v := data.(type) {
-		case *presubmitJobTemplateData:
-			base = &data.(*presubmitJobTemplateData).Base
-		case *postsubmitJobTemplateData:
-			if strings.HasSuffix(data.(*postsubmitJobTemplateData).PostsubmitJobName, "go-coverage") {
+		case *configlib.PresubmitJobTemplateData:
+			base = &data.(*configlib.PresubmitJobTemplateData).Base
+		case *configlib.PostsubmitJobTemplateData:
+			if strings.HasSuffix(data.(*configlib.PostsubmitJobTemplateData).PostsubmitJobName, "go-coverage") {
 				generateOneJob(data)
 				return
 			}
-			base = &data.(*postsubmitJobTemplateData).Base
+			base = &data.(*configlib.PostsubmitJobTemplateData).Base
 		default:
 			log.Fatalf("Unrecognized job template type: '%v'", v)
 		}
@@ -835,27 +578,7 @@ func executeJobTemplate(name, templ, title, repoName, jobName string, groupByRep
 			sectionMap[title+repoName] = true
 		}
 	}
-	executeTemplate(name, templ, data)
-}
-
-// executeTemplate outputs the given template with the given data.
-func executeTemplate(name, templ string, data interface{}) {
-	var res bytes.Buffer
-	funcMap := template.FuncMap{
-		"indent_section":       indentSection,
-		"indent_array_section": indentArraySection,
-		"indent_array":         indentArray,
-		"indent_keys":          indentKeys,
-		"indent_map":           indentMap,
-		"repo":                 gitHubRepo,
-	}
-	t := template.Must(template.New(name).Funcs(funcMap).Delims("[[", "]]").Parse(templ))
-	if err := t.Execute(&res, data); err != nil {
-		log.Fatalf("Error in template %s: %v", name, err)
-	}
-	for _, line := range strings.Split(res.String(), "\n") {
-		outputConfig(line)
-	}
+	tmplEval.ExecuteTemplate(name, templ, data)
 }
 
 // Multi-value flag parser.
@@ -873,7 +596,7 @@ func (a *stringArrayFlag) Set(value string) error {
 func parseJob(config yaml.MapSlice, jobName string) yaml.MapSlice {
 	for _, section := range config {
 		if section.Key == jobName {
-			return getMapSlice(section.Value)
+			return common.GetMapSlice(section.Value)
 		}
 	}
 
@@ -885,12 +608,12 @@ func parseJob(config yaml.MapSlice, jobName string) yaml.MapSlice {
 func parseGoCoverageMap(presubmitJob yaml.MapSlice) map[string]bool {
 	goCoverageMap := make(map[string]bool)
 	for _, repo := range presubmitJob {
-		repoName := strings.Split(getString(repo.Key), "/")[1]
+		repoName := strings.Split(common.GetString(repo.Key), "/")[1]
 		goCoverageMap[repoName] = false
-		for _, jobConfig := range getInterfaceArray(repo.Value) {
-			for _, item := range getMapSlice(jobConfig) {
+		for _, jobConfig := range common.GetInterfaceArray(repo.Value) {
+			for _, item := range common.GetMapSlice(jobConfig) {
 				if item.Key == "go-coverage" {
-					goCoverageMap[repoName] = getBool(item.Value)
+					goCoverageMap[repoName] = common.GetBool(item.Value)
 					break
 				}
 			}
@@ -903,33 +626,33 @@ func parseGoCoverageMap(presubmitJob yaml.MapSlice) map[string]bool {
 // collectMetaData collects the meta data from the original yaml data, which can be then used for building the test groups and dashboards config
 func collectMetaData(periodicJob yaml.MapSlice) {
 	for _, repo := range periodicJob {
-		rawName := getString(repo.Key)
+		rawName := common.GetString(repo.Key)
 		projName := strings.Split(rawName, "/")[0]
 		repoName := strings.Split(rawName, "/")[1]
 		jobDetailMap := addProjAndRepoIfNeed(projName, repoName)
 
 		// parse job configs
-		for _, conf := range getInterfaceArray(repo.Value) {
+		for _, conf := range common.GetInterfaceArray(repo.Value) {
 			jobDetailMap = metaData[projName]
-			jobConfig := getMapSlice(conf)
+			jobConfig := common.GetMapSlice(conf)
 			enabled := false
 			jobName := ""
 			releaseVersion := ""
 			for _, item := range jobConfig {
 				switch item.Key {
 				case "continuous", "dot-release", "auto-release", "performance", "performance-mesh", "latency", "nightly":
-					if getBool(item.Value) {
+					if common.GetBool(item.Value) {
 						enabled = true
-						jobName = getString(item.Key)
+						jobName = common.GetString(item.Key)
 					}
 				case "branch-ci":
-					enabled = getBool(item.Value)
+					enabled = common.GetBool(item.Value)
 					jobName = "continuous"
 				case "release":
-					releaseVersion = getString(item.Value)
+					releaseVersion = common.GetString(item.Value)
 				case "custom-job":
 					enabled = true
-					jobName = getString(item.Value)
+					jobName = common.GetString(item.Value)
 				default:
 					// continue here since we do not need to care about other entries, like cron, command, etc.
 					continue
@@ -958,7 +681,7 @@ func addProjAndRepoIfNeed(projName string, repoName string) map[string][]string 
 	// add project in the metaData
 	if _, exists := metaData[projName]; !exists {
 		metaData[projName] = make(map[string][]string)
-		if !strExists(projNames, projName) {
+		if !common.StrExists(projNames, projName) {
 			projNames = append(projNames, projName)
 		}
 	}
@@ -966,7 +689,7 @@ func addProjAndRepoIfNeed(projName string, repoName string) map[string][]string 
 	// add repo in the project
 	jobDetailMap := metaData[projName]
 	if _, exists := jobDetailMap[repoName]; !exists {
-		if !strExists(repoNames, repoName) {
+		if !common.StrExists(repoNames, repoName) {
 			repoNames = append(repoNames, repoName)
 		}
 		jobDetailMap[repoName] = make([]string, 0)
@@ -1026,6 +749,7 @@ func setOutput(fileName string) {
 	configFile.Truncate(0)
 	configFile.Seek(0, 0)
 	output = configFile
+	tmplEval.OutFile = configFile
 }
 
 // main is the script entry point.
@@ -1086,7 +810,7 @@ func main() {
 		repositories = make([]repositoryData, 0)
 		sectionMap = make(map[string]bool)
 		if *includeConfig {
-			executeTemplate("general config", readTemplate(generalProwConfig), newbaseProwJobTemplateData(""))
+			tmplEval.ExecuteTemplate("general config", readTemplate(generalProwConfig), newbaseProwJobTemplateData(""))
 		}
 		parseSection(config, "presubmits", generatePresubmit, nil)
 		parseSection(config, "periodics", generatePeriodic, generateGoCoveragePeriodic)
@@ -1116,7 +840,7 @@ func main() {
 		}
 
 		if *includeConfig {
-			executeTemplate("general config", readTemplate(generalTestgridConfig), newBaseTestgridTemplateData(""))
+			tmplEval.ExecuteTemplate("general config", readTemplate(generalTestgridConfig), newBaseTestgridTemplateData(""))
 		}
 
 		presubmitJobData := parseJob(config, "presubmits")

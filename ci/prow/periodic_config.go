@@ -23,7 +23,10 @@ import (
 	"log"
 	"path"
 
+	"knative.dev/test-infra/shared/common"
+
 	yaml "gopkg.in/yaml.v2"
+	"knative.dev/test-infra/ci/prow/configlib"
 )
 
 const (
@@ -52,7 +55,7 @@ const (
 
 // periodicJobTemplateData contains data about a periodic Prow job.
 type periodicJobTemplateData struct {
-	Base            baseProwJobTemplateData
+	Base            configlib.BaseProwJobTemplateData
 	PeriodicJobName string
 	CronString      string
 	PeriodicCommand []string
@@ -70,10 +73,10 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	for i, item := range periodicConfig {
 		switch item.Key {
 		case "continuous":
-			if !getBool(item.Value) {
+			if !common.GetBool(item.Value) {
 				return
 			}
-			jobType = getString(item.Key)
+			jobType = common.GetString(item.Key)
 			jobNameSuffix = "continuous"
 			isMonitoredJob = true
 			// Use default command and arguments if none given.
@@ -84,10 +87,10 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 				data.Base.Args = allPresubmitTests
 			}
 		case "nightly":
-			if !getBool(item.Value) {
+			if !common.GetBool(item.Value) {
 				return
 			}
-			jobType = getString(item.Key)
+			jobType = common.GetString(item.Key)
 			jobNameSuffix = "nightly-release"
 			data.Base.ServiceAccount = nightlyAccount
 			data.Base.Command = releaseScript
@@ -95,10 +98,10 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			data.Base.Timeout = 90
 			isMonitoredJob = true
 		case "branch-ci":
-			if !getBool(item.Value) {
+			if !common.GetBool(item.Value) {
 				return
 			}
-			jobType = getString(item.Key)
+			jobType = common.GetString(item.Key)
 			jobNameSuffix = "continuous"
 			data.Base.Command = releaseScript
 			data.Base.Args = releaseLocal
@@ -107,11 +110,11 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			data.Base.Timeout = 180
 			isMonitoredJob = true
 		case "dot-release", "auto-release":
-			if !getBool(item.Value) {
+			if !common.GetBool(item.Value) {
 				return
 			}
-			jobType = getString(item.Key)
-			jobNameSuffix = getString(item.Key)
+			jobType = common.GetString(item.Key)
+			jobNameSuffix = common.GetString(item.Key)
 			data.Base.ServiceAccount = releaseAccount
 			data.Base.Command = releaseScript
 			data.Base.Args = []string{
@@ -119,27 +122,27 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 				"--release-gcs " + data.Base.ReleaseGcs,
 				"--release-gcr gcr.io/knative-releases",
 				"--github-token /etc/hub-token/token"}
-			addVolumeToJob(&data.Base, "/etc/hub-token", "hub-token", true, "")
+			configlib.AddVolumeToJob(&data.Base, "/etc/hub-token", "hub-token", true, "")
 			data.Base.Timeout = 90
 			isMonitoredJob = true
 		case "performance", "performance-mesh":
-			if !getBool(item.Value) {
+			if !common.GetBool(item.Value) {
 				return
 			}
-			jobType = getString(item.Key)
-			jobNameSuffix = getString(item.Key)
+			jobType = common.GetString(item.Key)
+			jobNameSuffix = common.GetString(item.Key)
 			data.Base.Command = performanceScript
 			data.CronString = perfPeriodicJobCron
 			// We need a larger cluster of at least 16 nodes for perf tests
-			addEnvToJob(&data.Base, "E2E_MIN_CLUSTER_NODES", perfNodes)
-			addEnvToJob(&data.Base, "E2E_MAX_CLUSTER_NODES", perfNodes)
+			configlib.AddEnvToJob(&data.Base, "E2E_MIN_CLUSTER_NODES", perfNodes)
+			configlib.AddEnvToJob(&data.Base, "E2E_MAX_CLUSTER_NODES", perfNodes)
 			data.Base.Timeout = perfTimeout
 			isMonitoredJob = true
 		case "latency":
-			if !getBool(item.Value) {
+			if !common.GetBool(item.Value) {
 				return
 			}
-			jobType = getString(item.Key)
+			jobType = common.GetString(item.Key)
 			jobTemplate = readTemplate(periodicCustomJob)
 			jobNameSuffix = "latency"
 			data.Base.Image = "gcr.io/knative-tests/test-infra/metrics:latest"
@@ -150,24 +153,24 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 				"--service-account=" + data.Base.ServiceAccount}
 			isMonitoredJob = true
 		case "custom-job":
-			jobType = getString(item.Key)
-			jobNameSuffix = getString(item.Value)
+			jobType = common.GetString(item.Key)
+			jobNameSuffix = common.GetString(item.Value)
 			data.Base.Timeout = 100
 		case "cron":
-			data.CronString = getString(item.Value)
+			data.CronString = common.GetString(item.Value)
 		case "release":
-			version := getString(item.Value)
+			version := common.GetString(item.Value)
 			jobNameSuffix = version + "-" + jobNameSuffix
 			data.Base.RepoBranch = "release-" + version
 			isMonitoredJob = true
 		case "webhook-apicoverage":
-			if !getBool(item.Value) {
+			if !common.GetBool(item.Value) {
 				return
 			}
-			jobType = getString(item.Key)
+			jobType = common.GetString(item.Key)
 			jobNameSuffix = "webhook-apicoverage"
 			data.Base.Command = webhookAPICoverageScript
-			addEnvToJob(&data.Base, "SYSTEM_NAMESPACE", data.Base.RepoNameForJob)
+			configlib.AddEnvToJob(&data.Base, "SYSTEM_NAMESPACE", data.Base.RepoNameForJob)
 		default:
 			continue
 		}
@@ -198,16 +201,16 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	// Generate config itself.
 	data.PeriodicCommand = createCommand(data.Base)
 	if data.Base.ServiceAccount != "" {
-		addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
-		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-central1")
+		configlib.AddEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
+		configlib.AddEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-central1")
 	}
 	if data.Base.RepoBranch != "" && data.Base.RepoBranch != "master" {
 		// If it's a release version, add env var PULL_BASE_REF as ref name of the base branch.
 		// The reason for having it is in https://github.com/knative/test-infra/issues/780.
-		addEnvToJob(&data.Base, "PULL_BASE_REF", data.Base.RepoBranch)
+		configlib.AddEnvToJob(&data.Base, "PULL_BASE_REF", data.Base.RepoBranch)
 	}
-	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
-	configureServiceAccountForJob(&data.Base)
+	configlib.AddExtraEnvVarsToJob(&data.Base, extraEnvVars)
+	configlib.ConfigureServiceAccountForJob(&data.Base)
 	executeJobTemplate("periodic", jobTemplate, title, repoName, data.PeriodicJobName, false, data)
 }
 
@@ -226,8 +229,8 @@ func generateCleanupPeriodicJob() {
 		"--service-account " + data.Base.ServiceAccount,
 		"--artifacts $(ARTIFACTS)"}
 	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
-	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
-	configureServiceAccountForJob(&data.Base)
+	configlib.AddExtraEnvVarsToJob(&data.Base, extraEnvVars)
+	configlib.ConfigureServiceAccountForJob(&data.Base)
 	executeJobTemplate("periodic cleanup", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
 }
 
@@ -244,10 +247,10 @@ func generateFlakytoolPeriodicJob() {
 		"--github-account=/etc/flaky-test-reporter-github-token/token",
 		"--slack-account=/etc/flaky-test-reporter-slack-token/token"}
 	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
-	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
-	configureServiceAccountForJob(&data.Base)
-	addVolumeToJob(&data.Base, "/etc/flaky-test-reporter-github-token", "flaky-test-reporter-github-token", true, "")
-	addVolumeToJob(&data.Base, "/etc/flaky-test-reporter-slack-token", "flaky-test-reporter-slack-token", true, "")
+	configlib.AddExtraEnvVarsToJob(&data.Base, extraEnvVars)
+	configlib.ConfigureServiceAccountForJob(&data.Base)
+	configlib.AddVolumeToJob(&data.Base, "/etc/flaky-test-reporter-github-token", "flaky-test-reporter-github-token", true, "")
+	configlib.AddVolumeToJob(&data.Base, "/etc/flaky-test-reporter-slack-token", "flaky-test-reporter-slack-token", true, "")
 	executeJobTemplate("periodic flakesreporter", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
 }
 
@@ -265,10 +268,10 @@ func generateVersionBumpertoolPeriodicJob() {
 		"--git-username='Knative Prow Updater Robot'",
 		"--git-email=knative-prow-updater-robot@google.com"}
 	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
-	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
-	configureServiceAccountForJob(&data.Base)
-	addVolumeToJob(&data.Base, "/etc/prow-auto-bumper-github-token", "prow-auto-bumper-github-token", true, "")
-	addVolumeToJob(&data.Base, "/root/.ssh", "prow-updater-robot-ssh-key", true, "0400")
+	configlib.AddExtraEnvVarsToJob(&data.Base, extraEnvVars)
+	configlib.ConfigureServiceAccountForJob(&data.Base)
+	configlib.AddVolumeToJob(&data.Base, "/etc/prow-auto-bumper-github-token", "prow-auto-bumper-github-token", true, "")
+	configlib.AddVolumeToJob(&data.Base, "/root/.ssh", "prow-updater-robot-ssh-key", true, "0400")
 	executeJobTemplate("periodic versionbumper", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
 }
 
@@ -283,8 +286,8 @@ func generateBackupPeriodicJob() {
 	data.Base.Command = "/backup.sh"
 	data.Base.Args = []string{data.Base.ServiceAccount}
 	data.Base.ExtraRefs = []string{} // no repo clone required
-	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
-	configureServiceAccountForJob(&data.Base)
+	configlib.AddExtraEnvVarsToJob(&data.Base, extraEnvVars)
+	configlib.ConfigureServiceAccountForJob(&data.Base)
 	executeJobTemplate("periodic backup", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
 }
 
@@ -310,9 +313,9 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 		if repositories[i].DotDev {
 			data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  path_alias: knative.dev/"+path.Base(repoName))
 		}
-		addExtraEnvVarsToJob(extraEnvVars, &data.Base)
+		configlib.AddExtraEnvVarsToJob(&data.Base, extraEnvVars)
 		addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
-		configureServiceAccountForJob(&data.Base)
+		configlib.ConfigureServiceAccountForJob(&data.Base)
 		executeJobTemplate("periodic go coverage", readTemplate(periodicCustomJob), title, repoName, data.PeriodicJobName, false, data)
 		return
 	}
@@ -384,7 +387,7 @@ func generateIssueTrackerPeriodicJob(jobName, labelFilter, updatedTime, comment 
 		"--ceiling=10",
 		"--confirm",
 	}
-	addVolumeToJob(&data.Base, "/etc/housekeeping-github-token", "housekeeping-github-token", true, "")
+	configlib.AddVolumeToJob(&data.Base, "/etc/housekeeping-github-token", "housekeeping-github-token", true, "")
 	executeJobTemplate(jobName, readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
 }
 
@@ -412,9 +415,9 @@ func generateServingClusterUpdatePeriodicJob(jobName, cronString, command string
 	data.PeriodicJobName = jobName
 	data.CronString = cronString
 	data.PeriodicCommand = createCommand(data.Base)
-	configureServiceAccountForJob(&data.Base)
-	addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
-	addVolumeToJob(&data.Base, "/etc/performance-test", "performance-test", true, "")
-	addEnvToJob(&data.Base, "PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS", "/etc/performance-test/service-account.json")
+	configlib.ConfigureServiceAccountForJob(&data.Base)
+	configlib.AddEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
+	configlib.AddVolumeToJob(&data.Base, "/etc/performance-test", "performance-test", true, "")
+	configlib.AddEnvToJob(&data.Base, "PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS", "/etc/performance-test/service-account.json")
 	executeJobTemplate(jobName, readTemplate(periodicTestJob), "presubmits", "", data.PeriodicJobName, false, data)
 }

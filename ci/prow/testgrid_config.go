@@ -168,7 +168,7 @@ func executeTestGroupTemplate(testGroupName string, gcsLogDir string, extras map
 	data.Base.TestGroupName = testGroupName
 	data.GcsLogDir = gcsLogDir
 	data.Extras = extras
-	executeTemplate("test group", readTemplate(testGroupTemplate), data)
+	tmplEval.ExecuteTemplate("test group", readTemplate(testGroupTemplate), data)
 }
 
 // generateDashboard generates the dashboard configuration
@@ -215,7 +215,7 @@ func executeDashboardTabTemplate(dashboardTabName string, testGroupName string, 
 	data.Base.TestGroupName = testGroupName
 	data.BaseOptions = baseOptions
 	data.Extras = extras
-	executeTemplate("dashboard tab", readTemplate(dashboardTabTemplate), data)
+	tmplEval.ExecuteTemplate("dashboard tab", readTemplate(dashboardTabTemplate), data)
 }
 
 // getTestGroupName get the testGroupName from the given repoName and jobName
@@ -277,5 +277,5 @@ func executeDashboardGroupTemplate(dashboardGroupName string, dashboardRepoNames
 	var data dashboardGroupTemplateData
 	data.Name = dashboardGroupName
 	data.RepoNames = dashboardRepoNames
-	executeTemplate("dashboard group", readTemplate(dashboardGroupTemplate), data)
+	tmplEval.ExecuteTemplate("dashboard group", readTemplate(dashboardGroupTemplate), data)
 }
