@@ -66,6 +66,9 @@ branch-protection:
       protect: true
       # Admins can overrule checks
       enforce_admins: false
+    google:
+      protect: true
+      enforce_admins: false
 tide:
   queries:
   - repos:
@@ -94,7 +97,7 @@ tide:
     - do-not-merge/invalid-owners-file
   merge_method:
     knative: squash
-    google: squash
+    google/knative-gcp: squash
   target_url: https://prow.knative.dev/tide
   pr_status_base_url: https://prow.knative.dev/pr
   blocker_label: tide/merge-blocker
