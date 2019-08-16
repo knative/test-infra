@@ -25,7 +25,7 @@ import (
 )
 
 var (
-	fakeFlakyTests = []string{"test0", "test1", "test2"}
+	fakeFlakyTests  = []string{"test0", "test1", "test2"}
 	fakeInvalidRepo = &prowapi.ReportMessage{
 		JobName: "fakejob",
 		JobType: prowapi.PresubmitJob,
@@ -62,7 +62,7 @@ func testIsSupported(t *testing.T) {
 		job  *JobData
 		want bool
 	}{
-		{&JobData{&prowapi.ReportMessage{	// wrong state
+		{&JobData{&prowapi.ReportMessage{ // wrong state
 			JobName: "fakejob",
 			JobType: prowapi.PresubmitJob,
 			Status:  prowapi.SuccessState,
@@ -74,7 +74,7 @@ func testIsSupported(t *testing.T) {
 				}},
 			}},
 		}, nil, nil}, false},
-		{&JobData{&prowapi.ReportMessage{	// wrong job type
+		{&JobData{&prowapi.ReportMessage{ // wrong job type
 			JobName: "fakejob",
 			JobType: prowapi.PeriodicJob,
 			Status:  prowapi.FailureState,
