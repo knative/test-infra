@@ -1131,6 +1131,7 @@ presubmits:
     rerun_command: "/test pull-knative-client-build-tests"
     trigger: "(?m)^/test (all|pull-knative-client-build-tests),?(\\s+|$)"
     decorate: true
+    path_alias: knative.dev/client
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1160,6 +1161,7 @@ presubmits:
     rerun_command: "/test pull-knative-client-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-client-unit-tests),?(\\s+|$)"
     decorate: true
+    path_alias: knative.dev/client
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1193,6 +1195,7 @@ presubmits:
     rerun_command: "/test pull-knative-client-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-client-integration-tests),?(\\s+|$)"
     decorate: true
+    path_alias: knative.dev/client
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1223,6 +1226,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-client-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
+    path_alias: knative.dev/client
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -1249,6 +1253,7 @@ presubmits:
     rerun_command: "/test pull-knative-client-integration-tests-latest-release"
     trigger: "(?m)^/test (all|pull-knative-client-integration-tests-latest-release),?(\\s+|$)"
     decorate: true
+    path_alias: knative.dev/client
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3896,6 +3901,7 @@ periodics:
   - org: knative
     repo: client
     base_ref: master
+    path_alias: knative.dev/client
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3931,6 +3937,7 @@ periodics:
   - org: knative
     repo: client
     base_ref: master
+    path_alias: knative.dev/client
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3966,6 +3973,7 @@ periodics:
   - org: knative
     repo: client
     base_ref: master
+    path_alias: knative.dev/client
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4009,6 +4017,7 @@ periodics:
   - org: knative
     repo: client
     base_ref: master
+    path_alias: knative.dev/client
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4052,6 +4061,7 @@ periodics:
   - org: knative
     repo: client
     base_ref: master
+    path_alias: knative.dev/client
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -5807,6 +5817,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
+    path_alias: knative.dev/client
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
