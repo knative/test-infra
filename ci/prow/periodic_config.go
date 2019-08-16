@@ -34,13 +34,16 @@ const (
 	periodicCustomJob = "prow_periodic_custom_job.yaml"
 
 	// Cron strings for key jobs
-	goCoveragePeriodicJobCron        = "0 1 * * *"    // Run at 01:00 every day
-	cleanupPeriodicJobCron           = "0 19 * * 1"   // Run at 11:00PST/12:00PST every Monday (19:00 UTC)
-	flakesReporterPeriodicJobCron    = "0 12 * * *"   // Run at 4:00PST/5:00PST every day (12:00 UTC)
-	prowversionbumperPeriodicJobCron = "0 20 * * 1"   // Run at 12:00PST/13:00PST every Monday (20:00 UTC)
-	issueTrackerPeriodicJobCron      = "0 */12 * * *" // Run every 12 hours
-	backupPeriodicJobCron            = "15 9 * * *"   // Run at 02:15PST every day (09:15 UTC)
-	perfPeriodicJobCron              = "0 */3 * * *"  // Run every 3 hours
+	goCoveragePeriodicJobCron                 = "0 1 * * *"    // Run at 01:00 every day
+	cleanupPeriodicJobCron                    = "0 19 * * 1"   // Run at 11:00PST/12:00PST every Monday (19:00 UTC)
+	flakesReporterPeriodicJobCron             = "0 12 * * *"   // Run at 4:00PST/5:00PST every day (12:00 UTC)
+	prowversionbumperPeriodicJobCron          = "0 20 * * 1"   // Run at 12:00PST/13:00PST every Monday (20:00 UTC)
+	issueTrackerPeriodicJobCron               = "0 */12 * * *" // Run every 12 hours
+	backupPeriodicJobCron                     = "15 9 * * *"   // Run at 02:15PST every day (09:15 UTC)
+	perfPeriodicJobCron                       = "0 */3 * * *"  // Run every 3 hours
+	clearAlertsPeriodicJobCron                = "0,30 * * * *" // Run every 30 minutes
+	recreateServingPerfClusterPeriodicJobCron = "30 07 * * *"  // Run at 00:30PST every day (07:30 UTC)
+	updateServingPerfClusterPeriodicJobCron   = "0 * * * *"    // Run every an hour
 
 	// Perf job constants
 	perfTimeout = 120 // Job timeout in minutes
@@ -315,6 +318,8 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 	}
 }
 
+// generateIssueTrackerPeriodicJobs generates the periodic jobs to automatically manage issue lifecycles.
+// It's a mirror of fejta bot - https://github.com/kubernetes/test-infra/blob/master/config/jobs/kubernetes/test-infra/fejta-bot-periodics.yaml.
 func generateIssueTrackerPeriodicJobs() {
 	staleJobName := "ci-knative-issue-tracker-stale"
 	staleLabelFilter := `
@@ -381,4 +386,35 @@ func generateIssueTrackerPeriodicJob(jobName, labelFilter, updatedTime, comment 
 	}
 	addVolumeToJob(&data.Base, "/etc/housekeeping-github-token", "housekeeping-github-token", true, "")
 	executeJobTemplate(jobName, readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
+}
+
+// generateServingClusterUpdatePeriodicJobs generates periodic jobs to update serving clusters
+// that run performance testing benchmarks
+func generateServingClusterUpdatePeriodicJobs() {
+	generateServingClusterUpdatePeriodicJob(
+		"ci-knative-serving-recreate-clusters",
+		recreateServingPerfClusterPeriodicJobCron,
+		"./test/performance/tools/recreate_clusters.sh",
+	)
+	generateServingClusterUpdatePeriodicJob(
+		"ci-knative-serving-update-clusters",
+		updateServingPerfClusterPeriodicJobCron,
+		"./test/performance/tools/update_clusters.sh",
+	)
+}
+
+func generateServingClusterUpdatePeriodicJob(jobName, cronString, command string) {
+	var data periodicJobTemplateData
+	data.Base = newbaseProwJobTemplateData("knative/serving")
+	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
+	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  path_alias: knative.dev/serving")
+	data.Base.Command = command
+	data.PeriodicJobName = jobName
+	data.CronString = cronString
+	data.PeriodicCommand = createCommand(data.Base)
+	configureServiceAccountForJob(&data.Base)
+	addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
+	addVolumeToJob(&data.Base, "/etc/performance-test", "performance-test", true, "")
+	addEnvToJob(&data.Base, "PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS", "/etc/performance-test/service-account.json")
+	executeJobTemplate(jobName, readTemplate(periodicTestJob), "presubmits", "", data.PeriodicJobName, false, data)
 }

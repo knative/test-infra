@@ -763,8 +763,7 @@ func indentMap(indentation int, mp map[string]string) string {
 
 // outputConfig outputs the given line, if not empty, to stdout.
 func outputConfig(line string) {
-	s := strings.TrimSpace(line)
-	if s != "" {
+	if strings.TrimSpace(line) != "" {
 		fmt.Fprintln(output, line)
 	}
 }
@@ -1099,6 +1098,7 @@ func main() {
 		generateVersionBumpertoolPeriodicJob()
 		generateBackupPeriodicJob()
 		generateIssueTrackerPeriodicJobs()
+		generateServingClusterUpdatePeriodicJobs()
 		generateOtherJobConfigs("postsubmits", func(repo repositoryData) bool {
 			return repo.EnableGoCoverage
 		}, generateGoCoveragePostsubmit)
