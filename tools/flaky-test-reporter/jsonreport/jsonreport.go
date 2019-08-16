@@ -51,6 +51,7 @@ type Client interface {
 
 // Client is simply a way to call methods, it does not contain any data itself
 type JSONClient struct{}
+
 var _ Client = (*JSONClient)(nil)
 
 // Initialize wraps prow's init, which must be called before any other prow functions are used.
