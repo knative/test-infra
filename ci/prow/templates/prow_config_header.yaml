@@ -100,6 +100,7 @@ tide:
     - do-not-merge/invalid-owners-file
   merge_method:
     knative: squash
+    google: squash
   target_url: https://prow.knative.dev/tide
   pr_status_base_url: https://prow.knative.dev/pr
   blocker_label: tide/merge-blocker
