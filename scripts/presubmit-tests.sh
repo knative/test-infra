@@ -151,6 +151,9 @@ function markdown_build_tests() {
 # * run `/hack/verify-codegen.sh` (if it exists)
 # * check licenses in all go packages
 function default_build_test_runner() {
+  echo "Set swappiness to 1"
+  sysctl -w vm.swappiness=1
+
   local failed=0
   # Perform markdown build checks first
   markdown_build_tests || failed=1
