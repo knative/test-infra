@@ -5587,7 +5587,7 @@ periodics:
       secret:
         secretName: flaky-test-reporter-slack-token
 - cron: "0 * * * *"
-  name: ci-knaitve-flakes-resultsrecorder
+  name: ci-knative-flakes-resultsrecorder
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -5839,7 +5839,7 @@ periodics:
     - name: performance-test
       secret:
         secretName: performance-test
-- cron: "0 * * * *"
+- cron: "5 * * * *"
   name: ci-knative-serving-update-clusters
   agent: kubernetes
   decorate: true

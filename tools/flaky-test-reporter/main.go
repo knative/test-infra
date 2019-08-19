@@ -52,20 +52,23 @@ func main() {
 	if true == *dryrun {
 		log.Printf("running in [dry run mode]")
 	}
-	if true == *skipReport {
-		log.Printf("--skip-report provided, skipping Github and Slack report")
-	}
-
-	if err := prow.Initialize(*serviceAccount); nil != err { // Explicit authenticate with gcs Client
+	if err = prow.Initialize(*serviceAccount); nil != err { // Explicit authenticate with gcs Client
 		log.Fatalf("Failed authenticating GCS: '%v'", err)
 	}
-	gih, err := Setup(*githubAccount)
-	if err != nil && !*skipReport {
-		log.Fatalf("Cannot setup github: %v", err)
-	}
-	slackClient, err := newSlackClient(*slackAccount)
-	if nil != err && !*skipReport {
-		log.Fatalf("Failed authenticating Slack: '%v'", err)
+
+	var gih *GithubIssueHandler
+	var slackClient *SlackClient
+	if true == *skipReport {
+		log.Printf("--skip-report provided, skipping Github and Slack report")
+	} else {
+		gih, err = Setup(*githubAccount)
+		if err != nil {
+			log.Fatalf("Cannot setup github: %v", err)
+		}
+		slackClient, err = newSlackClient(*slackAccount)
+		if nil != err {
+			log.Fatalf("Failed authenticating Slack: '%v'", err)
+		}
 	}
 
 	var repoDataAll []*RepoData

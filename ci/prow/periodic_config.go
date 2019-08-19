@@ -44,7 +44,7 @@ const (
 	perfPeriodicJobCron                       = "0 */3 * * *"  // Run every 3 hours
 	clearAlertsPeriodicJobCron                = "0,30 * * * *" // Run every 30 minutes
 	recreateServingPerfClusterPeriodicJobCron = "30 07 * * *"  // Run at 00:30PST every day (07:30 UTC)
-	updateServingPerfClusterPeriodicJobCron   = "0 * * * *"    // Run every an hour
+	updateServingPerfClusterPeriodicJobCron   = "5 * * * *"    // Run every an hour
 
 	// Perf job constants
 	perfTimeout = 120 // Job timeout in minutes
@@ -253,7 +253,7 @@ func generateFlakytoolPeriodicJob() {
 
 	// Generate another job that runs more frequently but not reporting to
 	// Github or Slack
-	data.PeriodicJobName = "ci-knaitve-flakes-resultsrecorder"
+	data.PeriodicJobName = "ci-knative-flakes-resultsrecorder"
 	data.CronString = flakesResultRecorderPeriodicJobCron
 	data.Base.Args = append(data.Base.Args, "--skip-report")
 	executeJobTemplate("periodic flakesresultrecorder", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
