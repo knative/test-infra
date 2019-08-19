@@ -36,6 +36,7 @@ func main() {
 	githubAccount := flag.String("github-account", "", "Token file for Github authentication")
 	slackAccount := flag.String("slack-account", "", "slack secret file for authenticating with Slack")
 	configPath := flag.String("configfile", "./config.yaml", "Config file for overriding default config file")
+	skipReport := flag.Bool("skip-report", false, "skip Github and Slack report")
 	dryrun := flag.Bool("dry-run", false, "dry run switch")
 	flag.Parse()
 
@@ -48,19 +49,22 @@ func main() {
 		log.Fatalf("config cannot be created: '%v'", err)
 	}
 
-	if nil != dryrun && true == *dryrun {
+	if true == *dryrun {
 		log.Printf("running in [dry run mode]")
+	}
+	if true == *skipReport {
+		log.Printf("--skip-report provided, skipping Github and Slack report")
 	}
 
 	if err := prow.Initialize(*serviceAccount); nil != err { // Explicit authenticate with gcs Client
 		log.Fatalf("Failed authenticating GCS: '%v'", err)
 	}
 	gih, err := Setup(*githubAccount)
-	if err != nil {
+	if err != nil && !*skipReport {
 		log.Fatalf("Cannot setup github: %v", err)
 	}
 	slackClient, err := newSlackClient(*slackAccount)
-	if nil != err {
+	if nil != err && !*skipReport {
 		log.Fatalf("Failed authenticating Slack: '%v'", err)
 	}
 
@@ -93,23 +97,27 @@ func main() {
 	// Errors that could result in inaccuracy reporting would be treated with fast fail by processGithubIssues,
 	// so any errors returned are github opeations error, which in most cases wouldn't happen, but in case it
 	// happens, it should fail the job after Slack notification
-	jobErr := combineErrors(jobErrs)
-	githubErr := gih.processGithubIssues(repoDataAll, *dryrun)
-	slackErr := sendSlackNotifications(repoDataAll, slackClient, gih, *dryrun)
-	jsonErr := writeFlakyTestsToJSON(repoDataAll, *dryrun)
+	var jobErr, githubErr, slackErr, jsonErr error
+	jobErr = combineErrors(jobErrs)
+	if !*skipReport {
+		githubErr = gih.processGithubIssues(repoDataAll, *dryrun)
+		slackErr = sendSlackNotifications(repoDataAll, slackClient, gih, *dryrun)
+	}
+	jsonErr = writeFlakyTestsToJSON(repoDataAll, *dryrun)
 	if nil != jobErr {
 		log.Printf("Job step failures:\n%v", jobErr)
 	}
-	if nil != githubErr {
+	if nil != githubErr && !*skipReport {
 		log.Printf("Github step failures:\n%v", githubErr)
 	}
-	if nil != slackErr {
+	if nil != slackErr && !*skipReport {
 		log.Printf("Slack step failures:\n%v", slackErr)
 	}
 	if nil != jsonErr {
 		log.Printf("JSON step failures:\n%v", jsonErr)
 	}
-	if nil != jobErr || nil != githubErr || nil != slackErr || nil != jsonErr { // Fail this job if there is any error
+	if nil != jobErr || nil != jsonErr ||
+		(!*skipReport && (nil != githubErr || nil != slackErr)) { // Fail this job if there is any error
 		os.Exit(1)
 	}
 }

@@ -37,6 +37,7 @@ const (
 	goCoveragePeriodicJobCron                 = "0 1 * * *"    // Run at 01:00 every day
 	cleanupPeriodicJobCron                    = "0 19 * * 1"   // Run at 11:00PST/12:00PST every Monday (19:00 UTC)
 	flakesReporterPeriodicJobCron             = "0 12 * * *"   // Run at 4:00PST/5:00PST every day (12:00 UTC)
+	flakesResultRecorderPeriodicJobCron       = "0 * * * *"    // Run every hour
 	prowversionbumperPeriodicJobCron          = "0 20 * * 1"   // Run at 12:00PST/13:00PST every Monday (20:00 UTC)
 	issueTrackerPeriodicJobCron               = "0 */12 * * *" // Run every 12 hours
 	backupPeriodicJobCron                     = "15 9 * * *"   // Run at 02:15PST every day (09:15 UTC)
@@ -231,7 +232,7 @@ func generateCleanupPeriodicJob() {
 	executeJobTemplate("periodic cleanup", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
 }
 
-// generateFlakytoolPeriodicJob generates the cleanup job config.
+// generateFlakytoolPeriodicJob generates the flaky tests reporting job config.
 func generateFlakytoolPeriodicJob() {
 	var data periodicJobTemplateData
 	data.Base = newbaseProwJobTemplateData("knative/test-infra")
@@ -249,6 +250,13 @@ func generateFlakytoolPeriodicJob() {
 	addVolumeToJob(&data.Base, "/etc/flaky-test-reporter-github-token", "flaky-test-reporter-github-token", true, "")
 	addVolumeToJob(&data.Base, "/etc/flaky-test-reporter-slack-token", "flaky-test-reporter-slack-token", true, "")
 	executeJobTemplate("periodic flakesreporter", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
+
+	// Generate another job that runs more frequently but not reporting to
+	// Github or Slack
+	data.PeriodicJobName = "ci-knaitve-flakes-resultsrecorder"
+	data.CronString = flakesResultRecorderPeriodicJobCron
+	data.Base.Args = append(data.Base.Args, "--skip-report")
+	executeJobTemplate("periodic flakesresultrecorder", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
 }
 
 // generateVersionBumpertoolPeriodicJob generates the Prow version bumper job config.

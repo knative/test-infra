@@ -5586,6 +5586,45 @@ periodics:
     - name: flaky-test-reporter-slack-token
       secret:
         secretName: flaky-test-reporter-slack-token
+- cron: "0 * * * *"
+  name: ci-knaitve-flakes-resultsrecorder
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: master
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/flaky-test-reporter:latest
+      imagePullPolicy: Always
+      command:
+      - "/flaky-test-reporter"
+      args:
+      - "--service-account=/etc/test-account/service-account.json"
+      - "--github-account=/etc/flaky-test-reporter-github-token/token"
+      - "--slack-account=/etc/flaky-test-reporter-slack-token/token"
+      - "--skip-report"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      - name: flaky-test-reporter-github-token
+        mountPath: /etc/flaky-test-reporter-github-token
+        readOnly: true
+      - name: flaky-test-reporter-slack-token
+        mountPath: /etc/flaky-test-reporter-slack-token
+        readOnly: true
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+    - name: flaky-test-reporter-github-token
+      secret:
+        secretName: flaky-test-reporter-github-token
+    - name: flaky-test-reporter-slack-token
+      secret:
+        secretName: flaky-test-reporter-slack-token
 - cron: "0 20 * * 1"
   name: ci-knative-prow-auto-bumper
   agent: kubernetes
