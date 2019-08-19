@@ -132,15 +132,23 @@ func parseEntries(comment *github.IssueComment) (map[string]*entry, error) {
 	entryStrings := re.FindAll([]byte(comment.GetBody()), -1)
 	for _, e := range entryStrings {
 		fields := strings.Split(string(e), " | ")
-		if len(fields) != 3 {
+		retryField := ""
+		oldLinksField := ""
+		if len(fields) >= 3 {
+			oldLinksField = fields[1]
+			retryField = fields[2]
+		} else if len(fields) == 2 { // Backward compatible
+			retryField = fields[1]
+		} else {
 			return nil, fmt.Errorf("invalid number of table entries")
 		}
-		retry, err := strconv.Atoi(strings.Split(fields[2], "/")[0])
+
+		retry, err := strconv.Atoi(strings.Split(retryField, "/")[0])
 		if err != nil {
 			return nil, err
 		}
 		entries[fields[0]] = &entry{
-			oldLinks: fields[1],
+			oldLinks: oldLinksField,
 			retries:  retry,
 		}
 	}
@@ -152,14 +160,17 @@ func parseEntries(comment *github.IssueComment) (map[string]*entry, error) {
 func buildNewComment(jd *JobData, entries map[string]*entry, outliers []string) string {
 	var cmd string
 	var entryString []string
+	var appendLog bool
 	if entries[jd.JobName].retries >= maxRetries {
 		cmd = buildOutOfRetriesString(jd.JobName)
+		appendLog = true
 		logWithPrefix(jd, "expended all %d retries\n", maxRetries)
 	} else if len(outliers) > 0 {
 		cmd = buildNoRetryString(jd.JobName, outliers)
 		logWithPrefix(jd, "%d failed tests are not flaky, cannot retry\n", len(outliers))
 	} else {
 		cmd = buildRetryString(jd.JobName, entries)
+		appendLog = true
 		logWithPrefix(jd, "all failed tests are flaky, triggering retry\n")
 	}
 	// print in sorted order so we can actually unit test the results
@@ -169,7 +180,11 @@ func buildNewComment(jd *JobData, entries map[string]*entry, outliers []string) 
 	}
 	sort.Strings(keys)
 	for _, test := range keys {
-		entryString = append(entryString, fmt.Sprintf("%s | %s | %d/%d", test, buildLinks(entries[test].oldLinks, jd.URL, jd.RunID), entries[test].retries, maxRetries))
+		links := entries[test].oldLinks
+		if test == jd.JobName && appendLog {
+			links = buildLinks(entries[test].oldLinks, jd.URL, jd.RunID)
+		}
+		entryString = append(entryString, fmt.Sprintf("%s | %s | %d/%d", test, links, entries[test].retries, maxRetries))
 	}
 	return fmt.Sprintf(commentTemplate, identifier, strings.Join(entryString, "\n"), cmd)
 }

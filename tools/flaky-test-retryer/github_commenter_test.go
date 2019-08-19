@@ -27,6 +27,26 @@ import (
 )
 
 var (
+	legacyCommentBody = `<!--AUTOMATED-FLAKY-RETRYER-->
+The following jobs failed due to test flakiness:
+
+Test name | Retries
+--- | ---
+fakejob0 | 0/3
+fakejob1 | 1/3
+
+Automatically retrying...
+/test fakejob1`
+	backwardCompatibleRetryCommentBody = `<!--AUTOMATED-FLAKY-RETRYER-->
+The following jobs failed due to test flakiness:
+
+Test name | Triggers | Retries
+--- | --- | ---
+fakejob0 | []() | 1/3
+fakejob1 |  | 1/3
+
+Automatically retrying...
+/test fakejob0`
 	oldCommentBody = `<!--AUTOMATED-FLAKY-RETRYER-->
 The following jobs failed due to test flakiness:
 
@@ -61,7 +81,7 @@ The following jobs failed due to test flakiness:
 
 Test name | Triggers | Retries
 --- | --- | ---
-fakejob0 | []() | 0/3
+fakejob0 |  | 0/3
 fakejob1 | []() | 1/3
 
 Failed non-flaky tests preventing automatic retry of fakejob0:
@@ -72,7 +92,7 @@ The following jobs failed due to test flakiness:
 
 Test name | Triggers | Retries
 --- | --- | ---
-fakejob0 | []() | 0/3
+fakejob0 |  | 0/3
 fakejob1 | []() | 1/3
 
 Failed non-flaky tests preventing automatic retry of fakejob0:
@@ -92,6 +112,11 @@ Failed non-flaky tests preventing automatic retry of fakejob0:
 	fakeOldComment = &github.IssueComment{
 		ID:   &fakeCommentID,
 		Body: &oldCommentBody,
+		User: fakeUser,
+	}
+	fakeLegacyOldComment = &github.IssueComment{
+		ID:   &fakeCommentID,
+		Body: &legacyCommentBody,
 		User: fakeUser,
 	}
 	fakeJob = JobData{
@@ -183,16 +208,47 @@ func TestBuildNewComment(t *testing.T) {
 		outliers []string
 		wantBody string
 	}{
-		{&fakeJob, map[string]*entry{"fakejob0": {"", 0}, "fakejob1": {"", 1}}, nil, retryCommentBody},
-		{&fakeJob, map[string]*entry{"fakejob0": {"[]()<br>[]()<br>[]()", 3}, "fakejob1": {"", 1}}, nil, noMoreRetriesCommentBody},
-		{&fakeJob, map[string]*entry{"fakejob0": {"", 0}, "fakejob1": {"", 1}}, fakeFailedTests[:4], failedShortCommentBody},
-		{&fakeJob, map[string]*entry{"fakejob0": {"", 0}, "fakejob1": {"", 1}}, fakeFailedTests, failedLongCommentBody},
+		{&fakeJob, map[string]*entry{"fakejob0": &entry{"", 0}, "fakejob1": &entry{"[]()", 1}}, nil, retryCommentBody},
+		{&fakeJob, map[string]*entry{"fakejob0": &entry{"[]()<br>[]()<br>[]()", 3}, "fakejob1": &entry{"[]()", 1}}, nil, noMoreRetriesCommentBody},
+		{&fakeJob, map[string]*entry{"fakejob0": &entry{"", 0}, "fakejob1": &entry{"[]()", 1}}, fakeFailedTests[:4], failedShortCommentBody},
+		{&fakeJob, map[string]*entry{"fakejob0": &entry{"", 0}, "fakejob1": &entry{"[]()", 1}}, fakeFailedTests, failedLongCommentBody},
 	}
 
 	for _, test := range cases {
 		gotBody := buildNewComment(test.jd, test.entries, test.outliers)
 		if gotBody != test.wantBody {
 			t.Fatalf("build new comment: got body \n'%v'\n, want \n'%v'", gotBody, test.wantBody)
+		}
+	}
+}
+
+// Test for making sure backward compatible
+func TestAppendComment(t *testing.T) {
+	cases := []struct {
+		oldCommentBody string
+		outliers       []string
+		expCommentBody string
+	}{
+		{
+			legacyCommentBody, nil, backwardCompatibleRetryCommentBody,
+		}, {
+			oldCommentBody, nil, retryCommentBody,
+		},
+	}
+
+	for _, test := range cases {
+		fgc := getFakeGithubClient()
+		fgc.DeleteComment(fakeOrg, fakeRepo, fakeCommentID)
+		fgc.CreateComment(fakeOrg, fakeRepo, fakePullID, test.oldCommentBody)
+		fgc.PostComment(&fakeJob, test.outliers)
+		actualComment, actualErr := fgc.getOldComment(fakeOrg, fakeRepo, fakePullID)
+		if nil != actualErr {
+			t.Fatalf("testing appending existing comment, with:\nold comment:\n%s\nfailed tests:'%v'\nwant: no error\ngot: %v",
+				test.oldCommentBody, test.outliers, actualErr)
+		}
+		if *actualComment.Body != test.expCommentBody {
+			t.Fatalf("testing appending existing comment, with:\nold comment:\n%s\nfailed tests:'%v'\nwant:\n%s\ngot:\n%s",
+				test.oldCommentBody, test.outliers, test.expCommentBody, *actualComment.Body)
 		}
 	}
 }
