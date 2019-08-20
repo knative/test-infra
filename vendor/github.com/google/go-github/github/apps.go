@@ -26,8 +26,8 @@ type App struct {
 	Description *string    `json:"description,omitempty"`
 	ExternalURL *string    `json:"external_url,omitempty"`
 	HTMLURL     *string    `json:"html_url,omitempty"`
-	CreatedAt   *time.Time `json:"created_at,omitempty"`
-	UpdatedAt   *time.Time `json:"updated_at,omitempty"`
+	CreatedAt   *Timestamp `json:"created_at,omitempty"`
+	UpdatedAt   *Timestamp `json:"updated_at,omitempty"`
 }
 
 // InstallationToken represents an installation token.
@@ -36,12 +36,36 @@ type InstallationToken struct {
 	ExpiresAt *time.Time `json:"expires_at,omitempty"`
 }
 
-// InstallationPermissions lists the permissions for metadata, contents, issues and single file for an installation.
+// InstallationPermissions lists the repository and organization permissions for an installation.
+//
+// Permission names taken from:
+//   https://developer.github.com/v3/apps/permissions/
+//   https://developer.github.com/enterprise/v3/apps/permissions/
 type InstallationPermissions struct {
-	Metadata   *string `json:"metadata,omitempty"`
-	Contents   *string `json:"contents,omitempty"`
-	Issues     *string `json:"issues,omitempty"`
-	SingleFile *string `json:"single_file,omitempty"`
+	Administration              *string `json:"administration,omitempty"`
+	Checks                      *string `json:"checks,omitempty"`
+	Contents                    *string `json:"contents,omitempty"`
+	ContentReferences           *string `json:"content_references,omitempty"`
+	Deployments                 *string `json:"deployments,omitempty"`
+	Issues                      *string `json:"issues,omitempty"`
+	Metadata                    *string `json:"metadata,omitempty"`
+	Members                     *string `json:"members,omitempty"`
+	OrganizationAdministration  *string `json:"organization_administration,omitempty"`
+	OrganizationHooks           *string `json:"organization_hooks,omitempty"`
+	OrganizationPlan            *string `json:"organization_plan,omitempty"`
+	OrganizationPreReceiveHooks *string `json:"organization_pre_receive_hooks,omitempty"`
+	OrganizationProjects        *string `json:"organization_projects,omitempty"`
+	OrganizationUserBlocking    *string `json:"organization_user_blocking,omitempty"`
+	Packages                    *string `json:"packages,omitempty"`
+	Pages                       *string `json:"pages,omitempty"`
+	PullRequests                *string `json:"pull_requests,omitempty"`
+	RepositoryHooks             *string `json:"repository_hooks,omitempty"`
+	RepositoryProjects          *string `json:"repository_projects,omitempty"`
+	RepositoryPreReceiveHooks   *string `json:"repository_pre_receive_hooks,omitempty"`
+	SingleFile                  *string `json:"single_file,omitempty"`
+	Statuses                    *string `json:"statuses,omitempty"`
+	TeamDiscussions             *string `json:"team_discussions,omitempty"`
+	VulnerabilityAlerts         *string `json:"vulnerability_alerts,omitempty"`
 }
 
 // Installation represents a GitHub Apps installation.
@@ -60,6 +84,13 @@ type Installation struct {
 	Permissions         *InstallationPermissions `json:"permissions,omitempty"`
 	CreatedAt           *Timestamp               `json:"created_at,omitempty"`
 	UpdatedAt           *Timestamp               `json:"updated_at,omitempty"`
+}
+
+// Attachment represents a GitHub Apps attachment.
+type Attachment struct {
+	ID    *int64  `json:"id,omitempty"`
+	Title *string `json:"title,omitempty"`
+	Body  *string `json:"body,omitempty"`
 }
 
 func (i Installation) String() string {
@@ -164,7 +195,7 @@ func (s *AppsService) ListUserInstallations(ctx context.Context, opt *ListOption
 //
 // GitHub API docs: https://developer.github.com/v3/apps/#create-a-new-installation-token
 func (s *AppsService) CreateInstallationToken(ctx context.Context, id int64) (*InstallationToken, *Response, error) {
-	u := fmt.Sprintf("installations/%v/access_tokens", id)
+	u := fmt.Sprintf("app/installations/%v/access_tokens", id)
 
 	req, err := s.client.NewRequest("POST", u, nil)
 	if err != nil {
@@ -181,6 +212,29 @@ func (s *AppsService) CreateInstallationToken(ctx context.Context, id int64) (*I
 	}
 
 	return t, resp, nil
+}
+
+// Create a new attachment on user comment containing a url.
+//
+// GitHub API docs: https://developer.github.com/v3/apps/#create-a-content-attachment
+func (s *AppsService) CreateAttachment(ctx context.Context, contentReferenceID int64, title, body string) (*Attachment, *Response, error) {
+	u := fmt.Sprintf("content_references/%v/attachments", contentReferenceID)
+	payload := &Attachment{Title: String(title), Body: String(body)}
+	req, err := s.client.NewRequest("POST", u, payload)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	// TODO: remove custom Accept headers when APIs fully launch.
+	req.Header.Set("Accept", mediaTypeReactionsPreview)
+
+	m := &Attachment{}
+	resp, err := s.client.Do(ctx, req, m)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return m, resp, nil
 }
 
 // FindOrganizationInstallation finds the organization's installation information.

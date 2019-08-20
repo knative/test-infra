@@ -133,6 +133,35 @@ func (gc *GithubClient) GetPullRequest(org, repo string, ID int) (*github.PullRe
 	return res, err
 }
 
+// GetPullRequestByCommitID gets PullRequest by commit ID
+func (gc *GithubClient) GetPullRequestByCommitID(org, repo string, commitID string) (*github.PullRequest, error) {
+	var res []*github.PullRequest
+	_, err := gc.retry(
+		fmt.Sprintf("Get PullRequest by commit ID '%s'", commitID),
+		maxRetryCount,
+		func() (*github.Response, error) {
+			var resp *github.Response
+			var err error
+			res, resp, err = gc.Client.PullRequests.ListPullRequestsWithCommit(
+				ctx,
+				org,
+				repo,
+				commitID,
+				&github.PullRequestListOptions{},
+			)
+			return resp, err
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(res) != 1 {
+		return nil, fmt.Errorf("GetPullRequestByCommitID is expected to return 1 PullRequest, got %d", len(res))
+	}
+	return res[0], nil
+}
+
 // EditPullRequest updates PullRequest
 func (gc *GithubClient) EditPullRequest(org, repo string, ID int, title, body string) (*github.PullRequest, error) {
 	PR, err := gc.GetPullRequest(org, repo, ID)
