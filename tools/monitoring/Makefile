@@ -12,5 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+CLUSTER       ?= monitoring
+PROJECT       ?= knative-tests
+ZONE          ?= us-central1-a
+
 all:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build .
+
+get-cluster-credentials:
+	gcloud container clusters get-credentials "$(CLUSTER)" --project="$(PROJECT)" --zone="$(ZONE)"
+
+unset-cluster-credentials:
+	kubectl config unset current-context
+
