@@ -31,15 +31,26 @@ import (
 	"knative.dev/test-infra/tools/flaky-test-reporter/config"
 )
 
+var (
+	// Builds to be analyzed, this is determined by flag
+	buildsCount int
+	// Minimal number of results to be counted as valid results for each
+	// testcase, this is derived from buildsCount and requiredRatio
+	requiredCount float32
+)
+
 func main() {
 	serviceAccount := flag.String("service-account", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"), "JSON key file for GCS service account")
 	githubAccount := flag.String("github-account", "", "Token file for Github authentication")
 	slackAccount := flag.String("slack-account", "", "slack secret file for authenticating with Slack")
 	configPath := flag.String("configfile", "./config.yaml", "Config file for overriding default config file")
+	buildsCountOverride := flag.Int("build-count", 10, "count of builds to scan")
 	skipReport := flag.Bool("skip-report", false, "skip Github and Slack report")
 	dryrun := flag.Bool("dry-run", false, "dry run switch")
 	flag.Parse()
 
+	buildsCount = *buildsCountOverride
+	requiredCount = requiredRatio * float32(buildsCount)
 	if isAbs := filepath.IsAbs(*configPath); !isAbs {
 		// Relative path works strangely in docker, transform it to absolute path
 		*configPath = filepath.Join(filepath.Dir(os.Args[0]), *configPath)

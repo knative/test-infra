@@ -73,7 +73,7 @@ func (ts *TestStat) isPassed() bool {
 }
 
 func (ts *TestStat) hasEnoughRuns() bool {
-	return len(ts.Passed)+len(ts.Failed) >= requiredCount
+	return float32(len(ts.Passed)+len(ts.Failed)) >= requiredCount
 }
 
 func (ts *TestStat) getTestStatus() string {
