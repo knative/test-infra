@@ -43,7 +43,6 @@ The following jobs failed due to test flakiness:
 Test name | Triggers | Retries
 --- | --- | ---
 fakejob0 | []() | 1/3
-fakejob1 |  | 1/3
 
 Automatically retrying...
 /test fakejob0`
