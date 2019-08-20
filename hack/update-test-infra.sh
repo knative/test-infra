@@ -29,6 +29,7 @@ cd ${GOPATH}
 cd src/knative.dev
 
 for repo in *; do
+  [[ -f "${repo}" ]] && continue
   [[ "${repo}" == "test-infra" ]] && continue
   cd ${repo}
   echo -e "\n\n**** Updating test-infra in knative/${repo} ***\n\n"
@@ -40,7 +41,7 @@ for repo in *; do
   needs_update=0
   if [[ -f "Gopkg.lock" ]]; then
     needs_update=1
-    dep ensure -update knative.dev knative.dev/test-infra
+    dep ensure -update knative.dev/test-infra
     ./hack/update-deps.sh
   elif [[ -f "go.mod" ]]; then
     needs_update=1
