@@ -134,7 +134,7 @@ func (gc *GithubClient) GetPullRequest(org, repo string, ID int) (*github.PullRe
 }
 
 // GetPullRequestByCommitID gets PullRequest by commit ID
-func (gc *GithubClient) GetPullRequestByCommitID(org, repo string, commitID string) (*github.PullRequest, error) {
+func (gc *GithubClient) GetPullRequestByCommitID(org, repo, commitID string) (*github.PullRequest, error) {
 	var res []*github.PullRequest
 	_, err := gc.retry(
 		fmt.Sprintf("Get PullRequest by commit ID '%s'", commitID),
