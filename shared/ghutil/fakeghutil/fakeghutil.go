@@ -263,6 +263,24 @@ func (fgc *FakeGithubClient) GetPullRequest(org, repo string, ID int) (*github.P
 	return nil, fmt.Errorf("PR not exist: '%d'", ID)
 }
 
+// GetPullRequestByCommitID gets PullRequest by commit ID
+func (fgc *FakeGithubClient) GetPullRequestByCommitID(org, repo string, commitID string) (*github.PullRequest, error) {
+	res := make([]*github.PullRequest, 0)
+	for prNum, commits := range fgc.PRCommits {
+		for _, commit := range commits {
+			if commit.GetSHA() == commitID {
+				if pullRequest, err := fgc.GetPullRequest(org, repo, prNum); err != nil {
+					res = append(res, pullRequest)
+				}
+			}
+		}
+	}
+	if len(res) != 1 {
+		return nil, fmt.Errorf("GetPullRequestByCommitID is expected to return 1 PullRequest, got %d", len(res))
+	}
+	return res[0], nil
+}
+
 // EditPullRequest updates PullRequest
 func (fgc *FakeGithubClient) EditPullRequest(org, repo string, ID int, title, body string) (*github.PullRequest, error) {
 	PR, err := fgc.GetPullRequest(org, repo, ID)

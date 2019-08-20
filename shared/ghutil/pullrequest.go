@@ -136,7 +136,7 @@ func (gc *GithubClient) GetPullRequest(org, repo string, ID int) (*github.PullRe
 // GetPullRequestByCommitID gets PullRequest by commit ID
 func (gc *GithubClient) GetPullRequestByCommitID(org, repo string, commitID string) (*github.PullRequest, error) {
 	var res []*github.PullRequest
-	_, err := gc.retry(
+	if _, err := gc.retry(
 		fmt.Sprintf("Get PullRequest by commit ID '%s'", commitID),
 		maxRetryCount,
 		func() (*github.Response, error) {
@@ -151,8 +151,7 @@ func (gc *GithubClient) GetPullRequestByCommitID(org, repo string, commitID stri
 			)
 			return resp, err
 		},
-	)
-	if err != nil {
+	); err != nil {
 		return nil, err
 	}
 
