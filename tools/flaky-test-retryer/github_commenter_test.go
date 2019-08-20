@@ -37,7 +37,7 @@ fakejob1 | 1/3
 
 Automatically retrying...
 /test fakejob1`
-	backwardCompatibleRetryCommentBody = `<!--AUTOMATED-FLAKY-RETRYER-->
+	backwardCompatibleRetryCommentBody = `<!--[AUTOMATED-FLAKY-RETRYER]fakeSha[AUTOMATED-FLAKY-RETRYER]-->
 The following jobs failed due to test flakiness:
 
 Test name | Triggers | Retries
@@ -47,7 +47,16 @@ fakejob1 |  | 1/3
 
 Automatically retrying...
 /test fakejob0`
-	oldCommentBody = `<!--AUTOMATED-FLAKY-RETRYER-->
+	resetCountRetryCommentBody = `<!--[AUTOMATED-FLAKY-RETRYER]fakeShafakeSha[AUTOMATED-FLAKY-RETRYER]-->
+The following jobs failed due to test flakiness:
+
+Test name | Triggers | Retries
+--- | --- | ---
+fakejob0 | []() | 1/3
+
+Automatically retrying...
+/test fakejob0`
+	oldCommentBody = `<!--[AUTOMATED-FLAKY-RETRYER]fakeSha[AUTOMATED-FLAKY-RETRYER]-->
 The following jobs failed due to test flakiness:
 
 Test name | Triggers | Retries
@@ -57,7 +66,7 @@ fakejob1 | []() | 1/3
 
 Automatically retrying...
 /test fakejob1`
-	retryCommentBody = `<!--AUTOMATED-FLAKY-RETRYER-->
+	retryCommentBody = `<!--[AUTOMATED-FLAKY-RETRYER]fakeSha[AUTOMATED-FLAKY-RETRYER]-->
 The following jobs failed due to test flakiness:
 
 Test name | Triggers | Retries
@@ -67,7 +76,7 @@ fakejob1 | []() | 1/3
 
 Automatically retrying...
 /test fakejob0`
-	noMoreRetriesCommentBody = `<!--AUTOMATED-FLAKY-RETRYER-->
+	noMoreRetriesCommentBody = `<!--[AUTOMATED-FLAKY-RETRYER]fakeSha[AUTOMATED-FLAKY-RETRYER]-->
 The following jobs failed due to test flakiness:
 
 Test name | Triggers | Retries
@@ -76,7 +85,7 @@ fakejob0 | []()<br>[]()<br>[]()<br>[]() | 3/3
 fakejob1 | []() | 1/3
 
 Job fakejob0 expended all 3 retries without success.`
-	failedShortCommentBody = `<!--AUTOMATED-FLAKY-RETRYER-->
+	failedShortCommentBody = `<!--[AUTOMATED-FLAKY-RETRYER]fakeSha[AUTOMATED-FLAKY-RETRYER]-->
 The following jobs failed due to test flakiness:
 
 Test name | Triggers | Retries
@@ -87,7 +96,7 @@ fakejob1 | []() | 1/3
 Failed non-flaky tests preventing automatic retry of fakejob0:
 
 ` + "```\ntest0\ntest1\ntest2\ntest3\n```"
-	failedLongCommentBody = `<!--AUTOMATED-FLAKY-RETRYER-->
+	failedLongCommentBody = `<!--[AUTOMATED-FLAKY-RETRYER]fakeSha[AUTOMATED-FLAKY-RETRYER]-->
 The following jobs failed due to test flakiness:
 
 Test name | Triggers | Retries
@@ -103,6 +112,7 @@ Failed non-flaky tests preventing automatic retry of fakejob0:
 	fakeRepo      = "fakerepo"
 	fakeUserLogin = "fakelogin"
 	fakePullID    = 127
+	fakeSHA       = "fakeSha"
 	fakeCommentID = int64(1)
 	fakeUserID    = int64(99)
 	fakeUser      = &github.User{
@@ -127,6 +137,7 @@ Failed non-flaky tests preventing automatic retry of fakejob0:
 				Repo: fakeRepo,
 				Pulls: []prowapi.Pull{{
 					Number: fakePullID,
+					SHA:    fakeSHA,
 				}},
 			}},
 		},
@@ -179,7 +190,7 @@ func TestGetOldComment(t *testing.T) {
 func entryMapEqual(got, want map[string]*entry) bool {
 	for k, vWant := range want {
 		vGot, ok := got[k]
-		if !ok || vWant.oldLinks != vGot.oldLinks || vWant.retries != vGot.retries {
+		if !ok || vWant.links != vGot.links || vWant.retries != vGot.retries {
 			return false
 		}
 	}
@@ -191,7 +202,7 @@ func TestParseEntries(t *testing.T) {
 		input *github.IssueComment
 		want  map[string]*entry
 	}{
-		{fakeOldComment, map[string]*entry{"fakejob0": {"", 0}, "fakejob1": {"[]()", 1}}},
+		{fakeOldComment, map[string]*entry{"fakejob0": {"", "", 0}, "fakejob1": {"", "[]()", 1}}},
 	}
 	for _, data := range cases {
 		actual, _ := parseEntries(data.input)
@@ -208,10 +219,35 @@ func TestBuildNewComment(t *testing.T) {
 		outliers []string
 		wantBody string
 	}{
-		{&fakeJob, map[string]*entry{"fakejob0": &entry{"", 0}, "fakejob1": &entry{"[]()", 1}}, nil, retryCommentBody},
-		{&fakeJob, map[string]*entry{"fakejob0": &entry{"[]()<br>[]()<br>[]()", 3}, "fakejob1": &entry{"[]()", 1}}, nil, noMoreRetriesCommentBody},
-		{&fakeJob, map[string]*entry{"fakejob0": &entry{"", 0}, "fakejob1": &entry{"[]()", 1}}, fakeFailedTests[:4], failedShortCommentBody},
-		{&fakeJob, map[string]*entry{"fakejob0": &entry{"", 0}, "fakejob1": &entry{"[]()", 1}}, fakeFailedTests, failedLongCommentBody},
+		{
+			&fakeJob,
+			map[string]*entry{
+				"fakejob0": &entry{"fakejob0", "", 0},
+				"fakejob1": &entry{"fakejob1", "[]()", 1}},
+			nil,
+			retryCommentBody,
+		}, {
+			&fakeJob,
+			map[string]*entry{
+				"fakejob0": &entry{"fakejob0", "[]()<br>[]()<br>[]()", 3},
+				"fakejob1": &entry{"fakejob1", "[]()", 1}},
+			nil,
+			noMoreRetriesCommentBody,
+		}, {
+			&fakeJob,
+			map[string]*entry{
+				"fakejob0": &entry{"fakejob0", "", 0},
+				"fakejob1": &entry{"fakejob1", "[]()", 1}},
+			fakeFailedTests[:4],
+			failedShortCommentBody,
+		}, {
+			&fakeJob,
+			map[string]*entry{
+				"fakejob0": &entry{"fakejob0", "", 0},
+				"fakejob1": &entry{"fakejob1", "[]()", 1}},
+			fakeFailedTests,
+			failedLongCommentBody,
+		},
 	}
 
 	for _, test := range cases {
@@ -227,12 +263,18 @@ func TestAppendComment(t *testing.T) {
 	cases := []struct {
 		oldCommentBody string
 		outliers       []string
+		commitSHA      string
 		expCommentBody string
 	}{
 		{
-			legacyCommentBody, nil, backwardCompatibleRetryCommentBody,
+			// parsing old format and post new format
+			legacyCommentBody, nil, fakeSHA, backwardCompatibleRetryCommentBody,
 		}, {
-			oldCommentBody, nil, retryCommentBody,
+			// parsing new format and post new format
+			oldCommentBody, nil, fakeSHA, retryCommentBody,
+		}, {
+			// reset counts when commit hash changes
+			oldCommentBody, nil, fakeSHA + fakeSHA, resetCountRetryCommentBody,
 		},
 	}
 
@@ -240,7 +282,9 @@ func TestAppendComment(t *testing.T) {
 		fgc := getFakeGithubClient()
 		fgc.DeleteComment(fakeOrg, fakeRepo, fakeCommentID)
 		fgc.CreateComment(fakeOrg, fakeRepo, fakePullID, test.oldCommentBody)
-		fgc.PostComment(&fakeJob, test.outliers)
+		fj := fakeJob
+		fj.Refs[0].Pulls[0].SHA = test.commitSHA
+		fgc.PostComment(&fj, test.outliers)
 		actualComment, actualErr := fgc.getOldComment(fakeOrg, fakeRepo, fakePullID)
 		if nil != actualErr {
 			t.Fatalf("testing appending existing comment, with:\nold comment:\n%s\nfailed tests:'%v'\nwant: no error\ngot: %v",
