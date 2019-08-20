@@ -55,7 +55,6 @@ type GithubOperations interface {
 	AddLabelsToIssue(org, repo string, issueNumber int, labels []string) error
 	RemoveLabelForIssue(org, repo string, issueNumber int, label string) error
 	GetPullRequest(org, repo string, ID int) (*github.PullRequest, error)
-	GetPullRequestByCommitID(org, repo string, commitID string) (*github.PullRequest, error)
 	EditPullRequest(org, repo string, ID int, title, body string) (*github.PullRequest, error)
 	ListPullRequests(org, repo, head, base string) ([]*github.PullRequest, error)
 	ListCommits(org, repo string, ID int) ([]*github.RepositoryCommit, error)
