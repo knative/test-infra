@@ -20,7 +20,7 @@ import (
 )
 
 func TestFilePathProfileToGithub(t *testing.T) {
-	input := "github.com/myRepoOwner/myRepoName/pkg/ab/cde"
+	input := "knative.dev/test-infra/pkg/ab/cde"
 	expectedOutput := "pkg/ab/cde"
 	actualOutput := FilePathProfileToGithub(input)
 	if actualOutput != expectedOutput {

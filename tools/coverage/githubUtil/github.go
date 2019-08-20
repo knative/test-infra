@@ -16,18 +16,45 @@ limitations under the License.
 package githubUtil
 
 import (
+	"errors"
+	"fmt"
 	"log"
+	"os"
+	"os/exec"
+	"path/filepath"
 	"strings"
 )
 
-// convert filepath from profile format to github format
-// (knative.dev/$REPO_NAME/pkg/... -> pkg/...)
-func FilePathProfileToGithub(filePath string) string {
-	slice := strings.SplitN(filePath, "/", 3)
-	if len(slice) < 3 {
-		log.Printf("FilePath string cannot be splitted into 3 parts: [sep=%s] %s; "+
-			"Original string is returned\n", "/", filePath)
-		return filePath
+// convert a file path from profile format to github format.
+// Equivalent to remove all path prefix up to and including the repo name
+// e.g.
+//   knative.dev/$REPO_NAME/pkg/... -> pkg/...
+//   github.com/$REPO_OWNER/$REPO_NAME/pkg/... -> pkg/...
+func FilePathProfileToGithub(file string) string {
+	repoPath, err := GetRepoPath()
+	if err != nil {
+		log.Fatalf("Cannot get relative repo path: %v", err)
 	}
-	return slice[2]
+	result := strings.TrimPrefix(file, repoPath+"/")
+	if result == file {
+		log.Fatalf("repo path (%s) is not a prefix of filepath (%s):", repoPath, file)
+	}
+	return result
+}
+
+// GetRepoPath gets repository path relative to GOPATH/src
+func GetRepoPath() (string, error) {
+	out, err := exec.Command("git", "rev-parse", "--show-toplevel").Output()
+	if nil != err {
+		return "", fmt.Errorf("failed git rev-parse --show-toplevel: '%v'", err)
+	}
+	gopath := os.Getenv("GOPATH")
+	if gopath == "" {
+		return "", errors.New("GOPATH is empty")
+	}
+	relPath, err := filepath.Rel(gopath+"/src", string(out))
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(relPath), nil
 }
