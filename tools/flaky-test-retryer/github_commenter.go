@@ -37,8 +37,14 @@ const (
 )
 
 var (
-	identifier      = "<!--AUTOMATED-FLAKY-RETRYER-->"
-	commentTemplate = "%s\nThe following jobs failed due to test flakiness:\n\nTest name | Triggers | Retries\n--- | --- | ---\n%s\n\n%s"
+	testIdentifierToken = "AUTOMATED-FLAKY-RETRYER"
+	reLegacyIdentifier  = regexp.MustCompile(fmt.Sprintf("<!--%s-->", testIdentifierToken))
+	// testIdentifierPattern is used for formatting test identifier,
+	// expect an argument of test identifier
+	testIdentifierPattern = fmt.Sprintf("<!--[%[1]s]%%s[%[1]s]-->", testIdentifierToken)
+	// reTestIdentifier is regex matching pattern for capturing testname
+	reTestIdentifier = regexp.MustCompile(fmt.Sprintf(`\[%[1]s\](.*?)\[%[1]s\]`, testIdentifierToken))
+	commentTemplate  = "%s\nThe following jobs failed due to test flakiness:\n\nTest name | Triggers | Retries\n--- | --- | ---\n%s\n\n%s"
 )
 
 // GithubClient wraps the ghutil Github client
@@ -50,8 +56,48 @@ type GithubClient struct {
 
 // entry holds all of the relevant information for a retried job
 type entry struct {
-	oldLinks string
-	retries  int
+	// name contains base commit hash as html tag
+	name    string
+	links   string
+	retries int
+}
+
+func (e *entry) toString() string {
+	return fmt.Sprintf("%s | %s | %d/%d", e.name, e.links, e.retries, maxRetries)
+}
+
+// only keep latest 3 links
+func (e *entry) addLink(newLink string) {
+	var oldLinks []string
+	if "" != e.links {
+		oldLinks = strings.Split(e.links, "<br>")
+	}
+	if len(oldLinks) >= maxRetries { // only keep last 2 if more than 2
+		e.links = strings.Join(oldLinks[len(oldLinks)-2:], "<br>")
+	}
+	e.links = strings.Join(append(oldLinks, newLink), "<br>")
+}
+
+func stringToEntry(s string) (*entry, error) {
+	var err error
+	e := entry{}
+	fields := strings.Split(s, " | ")
+	var retryField string
+	if len(fields) >= 3 {
+		e.links = fields[1]
+		retryField = fields[2]
+	} else if len(fields) == 2 { // Backward compatible
+		retryField = fields[1]
+	} else {
+		return nil, fmt.Errorf("invalid number of table entries")
+	}
+
+	e.name = fields[0]
+	e.retries, err = strconv.Atoi(strings.Split(retryField, "/")[0])
+	if err != nil {
+		return nil, err
+	}
+	return &e, nil
 }
 
 // NewGithubClient builds us a GitHub client based on the token file passed in
@@ -75,12 +121,20 @@ func (gc *GithubClient) PostComment(jd *JobData, outliers []string) error {
 	if err != nil {
 		return err
 	}
-	oldEntries, err := parseEntries(oldComment)
-	if err != nil {
-		return err
+	oldEntries := make(map[string]*entry)
+	if oldComment != nil {
+		// Only read old entries if it SHA matches with what's currently in this comment
+		if testNameFromComment := reTestIdentifier.FindStringSubmatch(*oldComment.Body); len(testNameFromComment) < 2 ||
+			testNameFromComment[1] == jd.Refs[0].Pulls[0].SHA {
+			oldEntries, err = parseEntries(oldComment.GetBody())
+			if err != nil {
+				return err
+			}
+		}
 	}
+
 	if _, ok := oldEntries[jd.JobName]; !ok {
-		oldEntries[jd.JobName] = &entry{}
+		oldEntries[jd.JobName] = &entry{name: jd.JobName}
 	}
 	newComment := buildNewComment(jd, oldEntries, outliers)
 	if gc.Dryrun {
@@ -105,9 +159,12 @@ func (gc *GithubClient) getOldComment(org, repo string, pull int) (*github.Issue
 	}
 	var match *github.IssueComment
 	for _, comment := range comments {
-		found, err := regexp.Match(identifier, []byte(comment.GetBody()))
-		if err != nil {
-			return nil, err
+		body := comment.GetBody()
+		found := reLegacyIdentifier.MatchString(body)
+		if !found {
+			if testNameFromComment := reTestIdentifier.FindStringSubmatch(body); len(testNameFromComment) >= 2 {
+				found = true
+			}
 		}
 		if found && *comment.GetUser().ID == gc.ID {
 			if match == nil {
@@ -123,34 +180,16 @@ func (gc *GithubClient) getOldComment(org, repo string, pull int) (*github.Issue
 
 // parseEntries collects retry information from the given comment, so we can reuse it in
 // a new comment.
-func parseEntries(comment *github.IssueComment) (map[string]*entry, error) {
+func parseEntries(body string) (map[string]*entry, error) {
 	entries := make(map[string]*entry)
-	if comment == nil {
-		return entries, nil
-	}
-	re := regexp.MustCompile(`.* \| \d`)
-	entryStrings := re.FindAll([]byte(comment.GetBody()), -1)
+	re := regexp.MustCompile(`.* \| \d/\d`)
+	entryStrings := re.FindAllString(body, -1)
 	for _, e := range entryStrings {
-		fields := strings.Split(string(e), " | ")
-		retryField := ""
-		oldLinksField := ""
-		if len(fields) >= 3 {
-			oldLinksField = fields[1]
-			retryField = fields[2]
-		} else if len(fields) == 2 { // Backward compatible
-			retryField = fields[1]
-		} else {
-			return nil, fmt.Errorf("invalid number of table entries")
-		}
-
-		retry, err := strconv.Atoi(strings.Split(retryField, "/")[0])
-		if err != nil {
+		en, err := stringToEntry(e)
+		if nil != err {
 			return nil, err
 		}
-		entries[fields[0]] = &entry{
-			oldLinks: oldLinksField,
-			retries:  retry,
-		}
+		entries[en.name] = en
 	}
 	return entries, nil
 }
@@ -180,21 +219,12 @@ func buildNewComment(jd *JobData, entries map[string]*entry, outliers []string) 
 	}
 	sort.Strings(keys)
 	for _, test := range keys {
-		links := entries[test].oldLinks
 		if test == jd.JobName && appendLog {
-			links = buildLinks(entries[test].oldLinks, jd.URL, jd.RunID)
+			entries[test].addLink(fmt.Sprintf("[%s](%s)", jd.URL, jd.RunID))
 		}
-		entryString = append(entryString, fmt.Sprintf("%s | %s | %d/%d", test, links, entries[test].retries, maxRetries))
+		entryString = append(entryString, entries[test].toString())
 	}
-	return fmt.Sprintf(commentTemplate, identifier, strings.Join(entryString, "\n"), cmd)
-}
-
-// buildLinks constructs a Markdown-formatted list of URLs
-func buildLinks(oldLinks, newLink, id string) string {
-	if oldLinks == "" {
-		return fmt.Sprintf("[%s](%s)", id, newLink)
-	}
-	return fmt.Sprintf("%s<br>[%s](%s)", oldLinks, id, newLink)
+	return fmt.Sprintf(commentTemplate, fmt.Sprintf(testIdentifierPattern, jd.Refs[0].Pulls[0].SHA), strings.Join(entryString, "\n"), cmd)
 }
 
 // buildRetryString increments the retry counter and generates a /test string if we have
