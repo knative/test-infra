@@ -44,3 +44,6 @@ jobConfigs:
     slackChannels:
       - name: networking
         identity: CA9RHBGJX
+  - name: ci-knative-test-infra-continuous
+    repo: test-infra
+    type: postsubmit
