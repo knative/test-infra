@@ -45,7 +45,7 @@ func FilePathProfileToGithub(file string) string {
 // GetRepoPath gets repository path relative to GOPATH/src
 func GetRepoPath() (string, error) {
 	out, err := exec.Command("git", "rev-parse", "--show-toplevel").Output()
-	if nil != err {
+	if err != nil {
 		return "", fmt.Errorf("failed git rev-parse --show-toplevel: '%v'", err)
 	}
 	gopath := os.Getenv("GOPATH")
