@@ -205,7 +205,7 @@ func TestParseEntries(t *testing.T) {
 		{fakeOldComment, map[string]*entry{"fakejob0": {"", "", 0}, "fakejob1": {"", "[]()", 1}}},
 	}
 	for _, data := range cases {
-		actual, _ := parseEntries(data.input)
+		actual, _ := parseEntries(data.input.GetBody())
 		if !entryMapEqual(actual, data.want) {
 			t.Fatalf("parse entries: got '%v', want '%v'", actual, data.want)
 		}

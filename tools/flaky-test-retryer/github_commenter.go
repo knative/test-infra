@@ -38,12 +38,12 @@ const (
 
 var (
 	testIdentifierToken = "AUTOMATED-FLAKY-RETRYER"
-	legacyIdentifier    = fmt.Sprintf("<!--%s-->", testIdentifierToken)
+	reLegacyIdentifier  = regexp.MustCompile(fmt.Sprintf("<!--%s-->", testIdentifierToken))
 	// testIdentifierPattern is used for formatting test identifier,
 	// expect an argument of test identifier
 	testIdentifierPattern = fmt.Sprintf("<!--[%[1]s]%%s[%[1]s]-->", testIdentifierToken)
 	// reTestIdentifier is regex matching pattern for capturing testname
-	reTestIdentifier = fmt.Sprintf(`\[%[1]s\](.*?)\[%[1]s\]`, testIdentifierToken)
+	reTestIdentifier = regexp.MustCompile(fmt.Sprintf(`\[%[1]s\](.*?)\[%[1]s\]`, testIdentifierToken))
 	commentTemplate  = "%s\nThe following jobs failed due to test flakiness:\n\nTest name | Triggers | Retries\n--- | --- | ---\n%s\n\n%s"
 )
 
@@ -73,14 +73,15 @@ func (e *entry) addLink(newLink string) {
 		oldLinks = strings.Split(e.links, "<br>")
 	}
 	if len(oldLinks) >= maxRetries { // only keep last 2 if more than 2
-		e.links = strings.Join(oldLinks[len(oldLinks)-2:len(oldLinks)], "<br>")
+		e.links = strings.Join(oldLinks[len(oldLinks)-2:], "<br>")
 	}
 	e.links = strings.Join(append(oldLinks, newLink), "<br>")
 }
 
 func stringToEntry(s string) (*entry, error) {
+	var err error
 	e := entry{}
-	fields := strings.Split(string(s), " | ")
+	fields := strings.Split(s, " | ")
 	var retryField string
 	if len(fields) >= 3 {
 		e.links = fields[1]
@@ -92,11 +93,10 @@ func stringToEntry(s string) (*entry, error) {
 	}
 
 	e.name = fields[0]
-	retries, err := strconv.Atoi(strings.Split(retryField, "/")[0])
+	e.retries, err = strconv.Atoi(strings.Split(retryField, "/")[0])
 	if err != nil {
 		return nil, err
 	}
-	e.retries = retries
 	return &e, nil
 }
 
@@ -124,8 +124,9 @@ func (gc *GithubClient) PostComment(jd *JobData, outliers []string) error {
 	oldEntries := make(map[string]*entry)
 	if oldComment != nil {
 		// Only read old entries if it SHA matches with what's currently in this comment
-		if testNameFromComment := regexp.MustCompile(reTestIdentifier).FindStringSubmatch(*oldComment.Body); len(testNameFromComment) < 2 || testNameFromComment[1] == jd.Refs[0].Pulls[0].SHA {
-			oldEntries, err = parseEntries(oldComment)
+		if testNameFromComment := reTestIdentifier.FindStringSubmatch(*oldComment.Body); len(testNameFromComment) < 2 ||
+			testNameFromComment[1] == jd.Refs[0].Pulls[0].SHA {
+			oldEntries, err = parseEntries(oldComment.GetBody())
 			if err != nil {
 				return err
 			}
@@ -158,16 +159,12 @@ func (gc *GithubClient) getOldComment(org, repo string, pull int) (*github.Issue
 	}
 	var match *github.IssueComment
 	for _, comment := range comments {
-		body := []byte(comment.GetBody())
-		found, err := regexp.Match(legacyIdentifier, body)
-		if err != nil || !found {
-			if testNameFromComment := regexp.MustCompile(reTestIdentifier).FindStringSubmatch(comment.GetBody()); len(testNameFromComment) >= 2 {
+		body := comment.GetBody()
+		found := reLegacyIdentifier.MatchString(body)
+		if !found {
+			if testNameFromComment := reTestIdentifier.FindStringSubmatch(body); len(testNameFromComment) >= 2 {
 				found = true
-				err = nil
 			}
-		}
-		if err != nil {
-			return nil, err
 		}
 		if found && *comment.GetUser().ID == gc.ID {
 			if match == nil {
@@ -183,13 +180,10 @@ func (gc *GithubClient) getOldComment(org, repo string, pull int) (*github.Issue
 
 // parseEntries collects retry information from the given comment, so we can reuse it in
 // a new comment.
-func parseEntries(comment *github.IssueComment) (map[string]*entry, error) {
+func parseEntries(body string) (map[string]*entry, error) {
 	entries := make(map[string]*entry)
-	if comment == nil {
-		return entries, nil
-	}
 	re := regexp.MustCompile(`.* \| \d/\d`)
-	entryStrings := re.FindAllString(comment.GetBody(), -1)
+	entryStrings := re.FindAllString(body, -1)
 	for _, e := range entryStrings {
 		en, err := stringToEntry(e)
 		if nil != err {
