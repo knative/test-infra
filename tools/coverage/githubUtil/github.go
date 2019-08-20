@@ -21,13 +21,13 @@ import (
 )
 
 // convert filepath from profile format to github format
-// (github.com/$REPO_OWNER/$REPO_NAME/pkg/... -> pkg/...)
+// (knative.dev/$REPO_NAME/pkg/... -> pkg/...)
 func FilePathProfileToGithub(filePath string) string {
-	slice := strings.SplitN(filePath, "/", 4)
-	if len(slice) < 4 {
-		log.Printf("FilePath string cannot be splitted into 4 parts: [sep=%s] %s; "+
+	slice := strings.SplitN(filePath, "/", 3)
+	if len(slice) < 3 {
+		log.Printf("FilePath string cannot be splitted into 3 parts: [sep=%s] %s; "+
 			"Original string is returned\n", "/", filePath)
 		return filePath
 	}
-	return slice[3]
+	return slice[2]
 }
