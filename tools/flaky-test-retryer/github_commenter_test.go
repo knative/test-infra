@@ -208,10 +208,10 @@ func TestBuildNewComment(t *testing.T) {
 		outliers []string
 		wantBody string
 	}{
-		{&fakeJob, map[string]*entry{"fakejob0": &entry{"", 0}, "fakejob1": &entry{"[]()", 1}}, nil, retryCommentBody},
-		{&fakeJob, map[string]*entry{"fakejob0": &entry{"[]()<br>[]()<br>[]()", 3}, "fakejob1": &entry{"[]()", 1}}, nil, noMoreRetriesCommentBody},
-		{&fakeJob, map[string]*entry{"fakejob0": &entry{"", 0}, "fakejob1": &entry{"[]()", 1}}, fakeFailedTests[:4], failedShortCommentBody},
-		{&fakeJob, map[string]*entry{"fakejob0": &entry{"", 0}, "fakejob1": &entry{"[]()", 1}}, fakeFailedTests, failedLongCommentBody},
+		{&fakeJob, map[string]*entry{"fakejob0": {"", 0}, "fakejob1": {"[]()", 1}}, nil, retryCommentBody},
+		{&fakeJob, map[string]*entry{"fakejob0": {"[]()<br>[]()<br>[]()", 3}, "fakejob1": {"[]()", 1}}, nil, noMoreRetriesCommentBody},
+		{&fakeJob, map[string]*entry{"fakejob0": {"", 0}, "fakejob1": {"[]()", 1}}, fakeFailedTests[:4], failedShortCommentBody},
+		{&fakeJob, map[string]*entry{"fakejob0": {"", 0}, "fakejob1": {"[]()", 1}}, fakeFailedTests, failedLongCommentBody},
 	}
 
 	for _, test := range cases {
