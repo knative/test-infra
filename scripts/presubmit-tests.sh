@@ -179,6 +179,8 @@ function default_build_test_runner() {
       failed=1
       # Consider an error message everything that's not a successful test result.
       errors_go2="$(grep -v '^\(ok\|\?\)\s\+\(github\.com\|knative\.dev\)/' "${report}")"
+    else 
+      rm e2e.test
     fi
   fi
   local errors_go="$(echo -e "${errors_go1}\n${errors_go2}" | uniq)"
