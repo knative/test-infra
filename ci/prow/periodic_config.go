@@ -255,8 +255,10 @@ func generateFlakytoolPeriodicJob() {
 	// Github or Slack
 	data.PeriodicJobName = "ci-knative-flakes-resultsrecorder"
 	data.CronString = flakesResultRecorderPeriodicJobCron
-	data.Base.Args = append(data.Base.Args, "--skip-report")
-	data.Base.Args = append(data.Base.Args, "--build-count=20")
+	data.Base.Args = []string{
+		"--service-account=" + data.Base.ServiceAccount,
+		"--skip-report",
+		"--build-count=20"}
 	executeJobTemplate("periodic flakesresultrecorder", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
 }
 

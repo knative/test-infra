@@ -5602,8 +5602,6 @@ periodics:
       - "/flaky-test-reporter"
       args:
       - "--service-account=/etc/test-account/service-account.json"
-      - "--github-account=/etc/flaky-test-reporter-github-token/token"
-      - "--slack-account=/etc/flaky-test-reporter-slack-token/token"
       - "--skip-report"
       - "--build-count=20"
       volumeMounts:
