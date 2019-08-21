@@ -51,8 +51,8 @@ func (c *FakeClient) CreateReport(repo string, flaky []string, writeFile bool) (
 }
 
 // GetFlakyTests gets the latest flaky tests from the given repo
-func (c *FakeClient) GetFlakyTests(repo string) ([]string, error) {
-	reports, err := c.GetFlakyTestReport(repo, -1)
+func (c *FakeClient) GetFlakyTests(jobName, repo string) ([]string, error) {
+	reports, err := c.GetFlakyTestReport("", repo, -1)
 	if err != nil {
 		return nil, err
 	}
@@ -63,8 +63,8 @@ func (c *FakeClient) GetFlakyTests(repo string) ([]string, error) {
 }
 
 // GetReportRepos gets all of the repositories where we collect flaky tests.
-func (c *FakeClient) GetReportRepos() ([]string, error) {
-	reports, err := c.GetFlakyTestReport("", -1)
+func (c *FakeClient) GetReportRepos(jobName string) ([]string, error) {
+	reports, err := c.GetFlakyTestReport("", "", -1)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +78,7 @@ func (c *FakeClient) GetReportRepos() ([]string, error) {
 // GetFlakyTestReport collects flaky test reports from the given buildID and repo.
 // Use repo = "" to get reports from all repositories, and buildID = -1 to get the
 // most recent report
-func (c *FakeClient) GetFlakyTestReport(repo string, buildID int) ([]jsonreport.Report, error) {
+func (c *FakeClient) GetFlakyTestReport(jobName, repo string, buildID int) ([]jsonreport.Report, error) {
 	report := jsonreport.Report{}
 	if err := json.Unmarshal(c.data, &report); err != nil {
 		return nil, err

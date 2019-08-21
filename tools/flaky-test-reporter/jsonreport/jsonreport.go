@@ -30,9 +30,9 @@ import (
 )
 
 const (
-	filename = "flaky-tests.json"
-	jobName  = "ci-knative-flakes-reporter" // flaky-test-reporter's Prow job name
-	maxAge   = 4                            // maximum age in days that JSON data is valid
+	filename       = "flaky-tests.json"
+	defaultJobName = "ci-knative-flakes-reporter" // flaky-test-reporter's Prow job name
+	maxAge         = 4                            // maximum age in days that JSON data is valid
 )
 
 // Report contains concise information about current flaky tests in a given repo
@@ -44,9 +44,9 @@ type Report struct {
 // JSONClient contains the set of operations a JSON reporter needs
 type Client interface {
 	CreateReport(repo string, flaky []string, writeFile bool) (*Report, error)
-	GetFlakyTests(repo string) ([]string, error)
-	GetReportRepos() ([]string, error)
-	GetFlakyTestReport(repo string, buildID int) ([]Report, error)
+	GetFlakyTests(jobName, repo string) ([]string, error)
+	GetReportRepos(jobName string) ([]string, error)
+	GetFlakyTestReport(jobName, repo string, buildID int) ([]Report, error)
 }
 
 // Client is simply a way to call methods, it does not contain any data itself
@@ -87,8 +87,8 @@ func (c *JSONClient) writeToArtifactsDir(r *Report) error {
 }
 
 // GetFlakyTests gets the latest flaky tests from the given repo
-func (c *JSONClient) GetFlakyTests(repo string) ([]string, error) {
-	reports, err := c.GetFlakyTestReport(repo, -1)
+func (c *JSONClient) GetFlakyTests(jobName, repo string) ([]string, error) {
+	reports, err := c.GetFlakyTestReport(jobName, repo, -1)
 	if err != nil {
 		return nil, err
 	}
@@ -99,8 +99,8 @@ func (c *JSONClient) GetFlakyTests(repo string) ([]string, error) {
 }
 
 // GetReportRepos gets all of the repositories where we collect flaky tests.
-func (c *JSONClient) GetReportRepos() ([]string, error) {
-	reports, err := c.GetFlakyTestReport("", -1)
+func (c *JSONClient) GetReportRepos(jobName string) ([]string, error) {
+	reports, err := c.GetFlakyTestReport(jobName, "", -1)
 	if err != nil {
 		return nil, err
 	}
@@ -114,7 +114,10 @@ func (c *JSONClient) GetReportRepos() ([]string, error) {
 // GetFlakyTestReport collects flaky test reports from the given buildID and repo.
 // Use repo = "" to get reports from all repositories, and buildID = -1 to get the
 // most recent report
-func (c *JSONClient) GetFlakyTestReport(repo string, buildID int) ([]Report, error) {
+func (c *JSONClient) GetFlakyTestReport(jobName, repo string, buildID int) ([]Report, error) {
+	if "" == jobName {
+		jobName = defaultJobName
+	}
 	job := prow.NewJob(jobName, prow.PeriodicJob, "", 0)
 	var err error
 	if buildID == -1 {

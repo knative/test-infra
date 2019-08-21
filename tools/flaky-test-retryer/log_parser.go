@@ -69,7 +69,7 @@ func (jd *JobData) IsSupported() bool {
 		log.Printf("%s: message does not contain any repository references\n", prefix)
 		return false
 	}
-	repos, err := client.GetReportRepos()
+	repos, err := client.GetReportRepos(flakesRecorderJobName)
 	if err != nil {
 		log.Printf("%s: error getting reporter's repositories: %v\n", prefix, err)
 		return false
@@ -151,7 +151,7 @@ func GetCombinedResultsForBuild(build *prow.Build) ([]*junit.TestSuites, error) 
 
 // getFlakyTests gets the current flaky tests from the repo JobData originated from
 func (jd *JobData) getFlakyTests() ([]string, error) {
-	return client.GetFlakyTests(jd.Refs[0].Repo)
+	return client.GetFlakyTests(flakesRecorderJobName, jd.Refs[0].Repo)
 }
 
 // compareTests compares lists of failed and flaky tests, and returns any outlying failed
