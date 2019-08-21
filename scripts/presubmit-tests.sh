@@ -171,7 +171,7 @@ function default_build_test_runner() {
   fi
   # Get all build tags in go code (ignore /vendor)
   local tags="$(grep -r '// +build' . \
-   | grep -v '^./vendor/' | cut -f3 -d' ' | sort | uniq | tr '\n' ' ')"
+      | grep -v '^./vendor/' | cut -f3 -d' ' | sort | uniq | tr '\n' ' ')"
   local tagged_pkgs="$(grep -r '// +build' . \
     | grep -v '^./vendor/' | grep ":// +build " | cut -f1 -d: | xargs dirname | sort | uniq | tr '\n' ' ')"
   for pkg in ${tagged_pkgs}; do
