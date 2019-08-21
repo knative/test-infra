@@ -26,6 +26,10 @@ import (
 	"os"
 )
 
+const (
+	flakesRecorderJobName = "ci-knative-flakes-resultsrecorder"
+)
+
 type EnvFlags struct {
 	ServiceAccount string // GCP service account file path
 	GithubAccount  string // github account file path
