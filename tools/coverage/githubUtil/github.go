@@ -21,6 +21,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path"
 	"path/filepath"
 	"strings"
 )
@@ -52,7 +53,7 @@ func GetRepoPath() (string, error) {
 	if gopath == "" {
 		return "", errors.New("GOPATH is empty")
 	}
-	relPath, err := filepath.Rel(gopath+"/src", string(out))
+	relPath, err := filepath.Rel(path.Join(gopath, "src"), string(out))
 	if err != nil {
 		return "", err
 	}
