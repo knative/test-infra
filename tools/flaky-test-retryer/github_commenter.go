@@ -124,7 +124,7 @@ func (gc *GithubClient) PostComment(jd *JobData, outliers []string) error {
 	oldEntries := make(map[string]*entry)
 	if oldComment != nil {
 		// Only read old entries if it SHA matches with what's currently in this comment
-		if testNameFromComment := reTestIdentifier.FindStringSubmatch(*oldComment.Body); len(testNameFromComment) < 2 ||
+		if testNameFromComment := reTestIdentifier.FindStringSubmatch(*oldComment.Body); len(testNameFromComment) >= 2 &&
 			testNameFromComment[1] == jd.Refs[0].Pulls[0].SHA {
 			oldEntries, err = parseEntries(oldComment.GetBody())
 			if err != nil {
@@ -220,7 +220,7 @@ func buildNewComment(jd *JobData, entries map[string]*entry, outliers []string) 
 	sort.Strings(keys)
 	for _, test := range keys {
 		if test == jd.JobName && appendLog {
-			entries[test].addLink(fmt.Sprintf("[%s](%s)", jd.URL, jd.RunID))
+			entries[test].addLink(fmt.Sprintf("[%s](%s)", jd.RunID, jd.URL))
 		}
 		entryString = append(entryString, entries[test].toString())
 	}
