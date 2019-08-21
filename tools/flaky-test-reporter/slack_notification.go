@@ -19,85 +19,20 @@ limitations under the License.
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"strings"
 	"sync"
 	"time"
 
-	"net/http"
-	"net/url"
-
+	"knative.dev/test-infra/shared/slackutil"
 	"knative.dev/test-infra/shared/testgrid"
 )
 
 const (
-	knativeBotName          = "Knative Testgrid Robot"
-	slackChatPostMessageURL = "https://slack.com/api/chat.postMessage"
+	knativeBotName = "Knative Testgrid Robot"
 	// default filter for testgrid link
 	testgridFilter = "exclude-non-failed-tests=20"
 )
-
-// SlackClient contains Slack bot related information
-type SlackClient struct {
-	userName  string
-	tokenStr  string
-	iconEmoji *string
-}
-
-// slackChannel contains channel logical name and Slack identity
-type slackChannel struct {
-	name, identity string
-}
-
-// newSlackClient reads token file and stores it for later authentication
-func newSlackClient(slackTokenPath string) (*SlackClient, error) {
-	b, err := ioutil.ReadFile(slackTokenPath)
-	if err != nil {
-		return nil, err
-	}
-	return &SlackClient{
-		userName: knativeBotName,
-		tokenStr: strings.TrimSpace(string(b)),
-	}, nil
-}
-
-// postMessage does http post
-func (c *SlackClient) postMessage(url string, uv *url.Values) error {
-	resp, err := http.PostForm(url, *uv)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-	t, _ := ioutil.ReadAll(resp.Body)
-	if resp.StatusCode != 200 {
-		return fmt.Errorf("http response code is not 200 '%s'", string(t))
-	}
-	// response code could also be 200 if channel doesn't exist, parse response body to find out
-	var b struct {
-		OK bool `json:"ok"`
-	}
-	if err = json.Unmarshal(t, &b); nil != err || !b.OK {
-		return fmt.Errorf("response not ok '%s'", string(t))
-	}
-	return nil
-}
-
-// writeSlackMessage posts text to channel
-func (c *SlackClient) writeSlackMessage(text, channel string) error {
-	uv := &url.Values{}
-	uv.Add("username", c.userName)
-	uv.Add("token", c.tokenStr)
-	if nil != c.iconEmoji {
-		uv.Add("icon_emoji", *c.iconEmoji)
-	}
-	uv.Add("channel", channel)
-	uv.Add("text", text)
-
-	return c.postMessage(slackChatPostMessageURL, uv)
-}
 
 // createSlackMessageForRepo creates slack message layout from RepoData
 func createSlackMessageForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyIssue) string {
@@ -136,7 +71,7 @@ func createSlackMessageForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyI
 	return message
 }
 
-func sendSlackNotifications(repoDataAll []*RepoData, c *SlackClient, gih *GithubIssueHandler, dryrun bool) error {
+func sendSlackNotifications(repoDataAll []*RepoData, c slackutil.SlackOperations, gih *GithubIssueHandler, dryrun bool) error {
 	var allErrs []error
 	flakyIssuesMap, err := gih.getFlakyIssues()
 	if nil != err { // failure here will make message missing Github issues link, which should not prevent notification
@@ -159,7 +94,7 @@ func sendSlackNotifications(repoDataAll []*RepoData, c *SlackClient, gih *Github
 				if err := run(
 					fmt.Sprintf("post Slack message for job '%s' from repo '%s' in channel '%s'", rd.Config.Name, rd.Config.Repo, channel.Name),
 					func() error {
-						return c.writeSlackMessage(message, channel.Identity)
+						return c.PostMessageToChannel(message, channel.Identity)
 					},
 					dryrun,
 				); nil != err {
