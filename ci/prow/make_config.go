@@ -90,6 +90,7 @@ type baseProwJobTemplateData struct {
 	Env                 []string
 	Volumes             []string
 	VolumeMounts        []string
+	Resources           []string
 	Timeout             int
 	AlwaysRun           bool
 	LogsDir             string
@@ -371,6 +372,7 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.Args = make([]string, 0)
 	data.Volumes = make([]string, 0)
 	data.VolumeMounts = make([]string, 0)
+	data.Resources = make([]string, 0)
 	data.Env = make([]string, 0)
 	data.ExtraRefs = []string{"- org: " + data.OrgName, "  repo: " + data.RepoName}
 	data.Labels = make([]string, 0)
@@ -462,6 +464,16 @@ func setupDockerInDockerForJob(data *baseProwJobTemplateData) {
 	(*data).SecurityContext = []string{"privileged: true"}
 }
 
+// setReourcesReqForJob sets resource requirement for job
+func setReourcesReqForJob(res yaml.MapSlice, data *baseProwJobTemplateData) {
+	for _, val := range res {
+		data.Resources = append(data.Resources, fmt.Sprintf("  %s:", getString(val.Key)))
+		for _, item := range getMapSlice(val.Value) {
+			data.Resources = append(data.Resources, fmt.Sprintf("    %s: %s", getString(item.Key), getString(item.Value)))
+		}
+	}
+}
+
 // Config parsers.
 
 // parseBasicJobConfigOverrides updates the given baseProwJobTemplateData with any base option present in the given config.
@@ -505,6 +517,8 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 			addExtraEnvVarsToJob(getStringArray(item.Value), data)
 		case "optional":
 			(*data).Optional = "optional: true"
+		case "resources":
+			setReourcesReqForJob(getMapSlice(item.Value), data)
 		case nil: // already processed
 			continue
 		default:
