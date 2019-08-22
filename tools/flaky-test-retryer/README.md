@@ -72,9 +72,9 @@ tests and existing retry comments. They all follow a similar format:
 
 > The following tests are currently flaky. Running them again to verify...
 >
-> | Test name        | Triggers | Retries |
-> | ---------------- | ------- | ------- |
-> | presubmitJobName | linkToFirstAttempt<br>linkToSecondAttempt     | x/3     |
+> | Test name        | Triggers                                  | Retries |
+> | ---------------- | ----------------------------------------- | ------- |
+> | presubmitJobName | linkToFirstAttempt<br>linkToSecondAttempt | x/3     |
 
 and have different footers, depending on the cross-reference result and the
 number of attempted retries:
