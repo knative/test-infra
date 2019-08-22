@@ -69,7 +69,7 @@ func main() {
 	}
 
 	var gih *GithubIssueHandler
-	var slackClient slackutil.SlackOperations
+	var slackClient slackutil.Operations
 	if true == *skipReport {
 		log.Printf("--skip-report provided, skipping Github and Slack report")
 	} else {
@@ -77,7 +77,7 @@ func main() {
 		if err != nil {
 			log.Fatalf("Cannot setup github: %v", err)
 		}
-		slackClient, err = slackutil.NewSlackClient(knativeBotName, *slackAccount)
+		slackClient, err = slackutil.NewClient(knativeBotName, *slackAccount)
 		if nil != err {
 			log.Fatalf("Failed authenticating Slack: '%v'", err)
 		}

@@ -71,7 +71,7 @@ func createSlackMessageForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyI
 	return message
 }
 
-func sendSlackNotifications(repoDataAll []*RepoData, c slackutil.SlackOperations, gih *GithubIssueHandler, dryrun bool) error {
+func sendSlackNotifications(repoDataAll []*RepoData, c slackutil.Operations, gih *GithubIssueHandler, dryrun bool) error {
 	var allErrs []error
 	flakyIssuesMap, err := gih.getFlakyIssues()
 	if nil != err { // failure here will make message missing Github issues link, which should not prevent notification
@@ -94,7 +94,7 @@ func sendSlackNotifications(repoDataAll []*RepoData, c slackutil.SlackOperations
 				if err := run(
 					fmt.Sprintf("post Slack message for job '%s' from repo '%s' in channel '%s'", rd.Config.Name, rd.Config.Repo, channel.Name),
 					func() error {
-						return c.PostMessageToChannel(message, channel.Identity)
+						return c.Post(message, channel.Identity)
 					},
 					dryrun,
 				); nil != err {

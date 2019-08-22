@@ -28,36 +28,34 @@ import (
 	"net/url"
 )
 
-const (
-	slackChatPostMessageURL = "https://slack.com/api/chat.postMessage"
-)
+const postMessageURL = "https://slack.com/api/chat.postMessage"
 
-// SlackOperations defines the operations that can be done to Slack
-type SlackOperations interface {
-	PostMessageToChannel(text, channel string) error
+// Operations defines the operations that can be done to Slack
+type Operations interface {
+	Post(text, channel string) error
 }
 
-// slackClient contains Slack bot related information
-type slackClient struct {
+// client contains Slack bot related information
+type client struct {
 	userName  string
 	tokenStr  string
 	iconEmoji *string
 }
 
-// NewSlackClient reads token file and stores it for later authentication
-func NewSlackClient(userName, slackTokenPath string) (SlackOperations, error) {
-	b, err := ioutil.ReadFile(slackTokenPath)
+// NewClient reads token file and stores it for later authentication
+func NewClient(userName, tokenPath string) (Operations, error) {
+	b, err := ioutil.ReadFile(tokenPath)
 	if err != nil {
 		return nil, err
 	}
-	return &slackClient{
+	return &client{
 		userName: userName,
 		tokenStr: strings.TrimSpace(string(b)),
 	}, nil
 }
 
-// PostMessageToChannel posts the given text to channel
-func (c *slackClient) PostMessageToChannel(text, channel string) error {
+// Post posts the given text to channel
+func (c *client) Post(text, channel string) error {
 	uv := url.Values{}
 	uv.Add("username", c.userName)
 	uv.Add("token", c.tokenStr)
@@ -71,8 +69,8 @@ func (c *slackClient) PostMessageToChannel(text, channel string) error {
 }
 
 // postMessage does http post
-func (c *slackClient) postMessage(uv url.Values) error {
-	resp, err := http.PostForm(slackChatPostMessageURL, uv)
+func (c *client) postMessage(uv url.Values) error {
+	resp, err := http.PostForm(postMessageURL, uv)
 	if err != nil {
 		return err
 	}
