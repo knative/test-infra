@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"log"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"knative.dev/test-infra/shared/junit"
@@ -96,13 +97,13 @@ func (jd *JobData) IsSupported() bool {
 // getFailedTests gets all the tests that failed in the given job.
 func (jd *JobData) getFailedTests() ([]string, error) {
 	// use cache if it is populated
-	if jd.failedTests != nil {
+	if len(jd.failedTests) > 0 {
 		return jd.failedTests, nil
 	}
 	job := prow.NewJob(jd.JobName, string(jd.JobType), jd.Refs[0].Repo, jd.Refs[0].Pulls[0].Number)
-	buildID, err := job.GetLatestBuildNumber()
+	buildID, err := strconv.Atoi(jd.RunID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("cannot convert RunID '%s' to int", jd.RunID)
 	}
 	build := job.NewBuild(buildID)
 	results, err := GetCombinedResultsForBuild(build)
