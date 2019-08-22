@@ -28,6 +28,7 @@ import (
 	"path/filepath"
 
 	"knative.dev/test-infra/shared/prow"
+	"knative.dev/test-infra/shared/slackutil"
 	"knative.dev/test-infra/tools/flaky-test-reporter/config"
 )
 
@@ -68,7 +69,7 @@ func main() {
 	}
 
 	var gih *GithubIssueHandler
-	var slackClient *SlackClient
+	var slackClient slackutil.Operations
 	if true == *skipReport {
 		log.Printf("--skip-report provided, skipping Github and Slack report")
 	} else {
@@ -76,7 +77,7 @@ func main() {
 		if err != nil {
 			log.Fatalf("Cannot setup github: %v", err)
 		}
-		slackClient, err = newSlackClient(*slackAccount)
+		slackClient, err = slackutil.NewClient(knativeBotName, *slackAccount)
 		if nil != err {
 			log.Fatalf("Failed authenticating Slack: '%v'", err)
 		}
