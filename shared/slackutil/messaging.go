@@ -58,7 +58,7 @@ func NewSlackClient(userName, slackTokenPath string) (SlackOperations, error) {
 
 // PostMessageToChannel posts the given text to channel
 func (c *slackClient) PostMessageToChannel(text, channel string) error {
-	uv := &url.Values{}
+	uv := url.Values{}
 	uv.Add("username", c.userName)
 	uv.Add("token", c.tokenStr)
 	if nil != c.iconEmoji {
@@ -71,15 +71,15 @@ func (c *slackClient) PostMessageToChannel(text, channel string) error {
 }
 
 // postMessage does http post
-func (c *slackClient) postMessage(uv *url.Values) error {
-	resp, err := http.PostForm(slackChatPostMessageURL, *uv)
+func (c *slackClient) postMessage(uv url.Values) error {
+	resp, err := http.PostForm(slackChatPostMessageURL, uv)
 	if err != nil {
 		return err
 	}
 	defer resp.Body.Close()
 	t, _ := ioutil.ReadAll(resp.Body)
-	if resp.StatusCode != 200 {
-		return fmt.Errorf("http response code is not 200 '%s'", string(t))
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("http response code is not '%d': '%s'", http.StatusOK, string(t))
 	}
 	// response code could also be 200 if channel doesn't exist, parse response body to find out
 	var b struct {
