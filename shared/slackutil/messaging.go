@@ -44,11 +44,6 @@ type slackClient struct {
 	iconEmoji *string
 }
 
-// slackChannel contains channel logical name and Slack identity
-type slackChannel struct {
-	name, identity string
-}
-
 // NewSlackClient reads token file and stores it for later authentication
 func NewSlackClient(userName, slackTokenPath string) (SlackOperations, error) {
 	b, err := ioutil.ReadFile(slackTokenPath)
