@@ -21,4 +21,5 @@
         [[indent_section 10 "securityContext" .Base.SecurityContext]]
         [[indent_section 8 "volumeMounts" .Base.VolumeMounts]]
         [[indent_section 8 "env" .Base.Env]]
+        [[indent_section 8 "resources" .Base.Resources]]
       [[indent_section 6 "volumes" .Base.Volumes]]

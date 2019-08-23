@@ -21,6 +21,11 @@ presubmits:
       - release-0.6
       - release-0.7
     - build-tests: true
+      resources:
+        requests:
+          memory: 12Gi # Real request for this pod is 16 as sidecar requests 4
+        limits:
+          memory: 16Gi
     - unit-tests: true
     - integration-tests: true
       args:
@@ -186,6 +191,11 @@ periodics:
     - continuous: true
       timeout: 100
       dot-dev: true
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     - branch-ci: true
       release: "0.4"
     - branch-ci: true
