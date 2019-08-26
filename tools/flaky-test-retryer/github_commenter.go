@@ -44,7 +44,7 @@ var (
 	testIdentifierPattern = fmt.Sprintf("<!--[%[1]s]%%s[%[1]s]-->", testIdentifierToken)
 	// reTestIdentifier is regex matching pattern for capturing testname
 	reTestIdentifier = regexp.MustCompile(fmt.Sprintf(`\[%[1]s\](.*?)\[%[1]s\]`, testIdentifierToken))
-	commentTemplate  = "%s\nThe following jobs failed due to test flakiness:\n\nTest name | Triggers | Retries\n--- | --- | ---\n%s\n\n%s"
+	commentTemplate  = "%s\nThe following jobs failed:\n\nTest name | Triggers | Retries\n--- | --- | ---\n%s\n\n%s"
 )
 
 // GithubClient wraps the ghutil Github client
@@ -231,7 +231,7 @@ func buildNewComment(jd *JobData, entries map[string]*entry, outliers []string) 
 // more retries available.
 func buildRetryString(job string, entries map[string]*entry) string {
 	if entries[job].retries++; entries[job].retries <= maxRetries {
-		return fmt.Sprintf("Automatically retrying...\n/test %s", job)
+		return fmt.Sprintf("Automatically retrying due to test flakiness...\n/test %s", job)
 	}
 	return ""
 }

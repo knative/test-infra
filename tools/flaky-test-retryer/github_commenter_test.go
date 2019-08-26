@@ -28,55 +28,55 @@ import (
 
 var (
 	legacyCommentBody = `<!--AUTOMATED-FLAKY-RETRYER-->
-The following jobs failed due to test flakiness:
+The following jobs failed:
 
 Test name | Retries
 --- | ---
 fakejob0 | 0/3
 fakejob1 | 1/3
 
-Automatically retrying...
+Automatically retrying due to test flakiness...
 /test fakejob1`
 	backwardCompatibleRetryCommentBody = `<!--[AUTOMATED-FLAKY-RETRYER]fakeSha[AUTOMATED-FLAKY-RETRYER]-->
-The following jobs failed due to test flakiness:
+The following jobs failed:
 
 Test name | Triggers | Retries
 --- | --- | ---
 fakejob0 | []() | 1/3
 
-Automatically retrying...
+Automatically retrying due to test flakiness...
 /test fakejob0`
 	resetCountRetryCommentBody = `<!--[AUTOMATED-FLAKY-RETRYER]fakeShafakeSha[AUTOMATED-FLAKY-RETRYER]-->
-The following jobs failed due to test flakiness:
+The following jobs failed:
 
 Test name | Triggers | Retries
 --- | --- | ---
 fakejob0 | []() | 1/3
 
-Automatically retrying...
+Automatically retrying due to test flakiness...
 /test fakejob0`
 	oldCommentBody = `<!--[AUTOMATED-FLAKY-RETRYER]fakeSha[AUTOMATED-FLAKY-RETRYER]-->
-The following jobs failed due to test flakiness:
+The following jobs failed:
 
 Test name | Triggers | Retries
 --- | --- | ---
 fakejob0 |  | 0/3
 fakejob1 | []() | 1/3
 
-Automatically retrying...
+Automatically retrying due to test flakiness...
 /test fakejob1`
 	retryCommentBody = `<!--[AUTOMATED-FLAKY-RETRYER]fakeSha[AUTOMATED-FLAKY-RETRYER]-->
-The following jobs failed due to test flakiness:
+The following jobs failed:
 
 Test name | Triggers | Retries
 --- | --- | ---
 fakejob0 | []() | 1/3
 fakejob1 | []() | 1/3
 
-Automatically retrying...
+Automatically retrying due to test flakiness...
 /test fakejob0`
 	noMoreRetriesCommentBody = `<!--[AUTOMATED-FLAKY-RETRYER]fakeSha[AUTOMATED-FLAKY-RETRYER]-->
-The following jobs failed due to test flakiness:
+The following jobs failed:
 
 Test name | Triggers | Retries
 --- | --- | ---
@@ -85,7 +85,7 @@ fakejob1 | []() | 1/3
 
 Job fakejob0 expended all 3 retries without success.`
 	failedShortCommentBody = `<!--[AUTOMATED-FLAKY-RETRYER]fakeSha[AUTOMATED-FLAKY-RETRYER]-->
-The following jobs failed due to test flakiness:
+The following jobs failed:
 
 Test name | Triggers | Retries
 --- | --- | ---
@@ -96,7 +96,7 @@ Failed non-flaky tests preventing automatic retry of fakejob0:
 
 ` + "```\ntest0\ntest1\ntest2\ntest3\n```"
 	failedLongCommentBody = `<!--[AUTOMATED-FLAKY-RETRYER]fakeSha[AUTOMATED-FLAKY-RETRYER]-->
-The following jobs failed due to test flakiness:
+The following jobs failed:
 
 Test name | Triggers | Retries
 --- | --- | ---
