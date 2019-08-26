@@ -21,21 +21,6 @@
   version = "v0.33.1"
 
 [[projects]]
-  digest = "1:689c8d24888f03cab536bfa11076e914c58e4d033d2b70f7abef304aa3583c09"
-  name = "fortio.org/fortio"
-  packages = [
-    "fhttp",
-    "fnet",
-    "log",
-    "periodic",
-    "stats",
-    "version",
-  ]
-  pruneopts = "NUT"
-  revision = "fd8f4a7177e9ea509f27105ae4e55e6c68ece6f7"
-  version = "v1.3.1"
-
-[[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
@@ -845,8 +830,6 @@
   input-imports = [
     "cloud.google.com/go/pubsub",
     "cloud.google.com/go/storage",
-    "fortio.org/fortio/fhttp",
-    "fortio.org/fortio/periodic",
     "github.com/go-sql-driver/mysql",
     "github.com/google/go-github/github",
     "github.com/google/licenseclassifier",
@@ -871,7 +854,6 @@
     "k8s.io/client-go/plugin/pkg/client/auth/gcp",
     "k8s.io/client-go/rest",
     "k8s.io/client-go/tools/clientcmd",
-    "k8s.io/client-go/util/retry",
     "knative.dev/pkg/configmap",
     "knative.dev/pkg/logging",
     "knative.dev/pkg/test/logging",
