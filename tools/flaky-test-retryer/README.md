@@ -79,7 +79,7 @@ tests and existing retry comments. They all follow a similar format:
 and have different footers, depending on the cross-reference result and the
 number of attempted retries:
 
-> Automatically retrying... /test presubmitJobName
+> Automatically retrying due to test flakiness... /test presubmitJobName
 
 if all tests that failed are currently flaky, triggering a retry.
 
