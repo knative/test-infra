@@ -163,7 +163,6 @@ presubmits:
     - build-tests: true
     - unit-tests: true
     - integration-tests: true
-  
   knative/sample-controller:
     - build-tests: true
       dot-dev: true
@@ -223,10 +222,25 @@ periodics:
       dot-dev: true
     - nightly: true
       dot-dev: true
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     - dot-release: true
       dot-dev: true
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     - auto-release: true
       dot-dev: true
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     - latency: true
       dot-dev: true
     - performance: true
