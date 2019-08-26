@@ -89,7 +89,7 @@ func (ts *TestStat) getTestStatus() string {
 	}
 }
 
-func getFlakyTests(rd *RepoData) []string {
+func getFlakyTests(rd RepoData) []string {
 	var flakyTests []string
 	for testName, ts := range rd.TestStats {
 		if ts.isFlaky() {
@@ -99,7 +99,7 @@ func getFlakyTests(rd *RepoData) []string {
 	return flakyTests
 }
 
-func getFlakyRate(rd *RepoData) float32 {
+func getFlakyRate(rd RepoData) float32 {
 	totalCount := len(rd.TestStats)
 	if 0 == totalCount {
 		return 0.0
@@ -107,7 +107,7 @@ func getFlakyRate(rd *RepoData) float32 {
 	return float32(len(getFlakyTests(rd))) / float32(totalCount)
 }
 
-func flakyRateAboveThreshold(rd *RepoData) bool {
+func flakyRateAboveThreshold(rd RepoData) bool {
 	// if the percent determined by the test count threshold is higher than
 	// the percent threshold, use that instead of the percent threshold
 	totalCount := len(rd.TestStats)
@@ -123,14 +123,14 @@ func flakyRateAboveThreshold(rd *RepoData) bool {
 
 // createArtifactForRepo marshals RepoData into json format and stores it in a json file,
 // under local artifacts directory
-func createArtifactForRepo(rd *RepoData) error {
+func createArtifactForRepo(rd RepoData) error {
 	artifactsDir := prow.GetLocalArtifactsDir()
 	err := common.CreateDir(path.Join(artifactsDir, rd.Config.Repo))
 	if nil != err {
 		return err
 	}
 	outFilePath := path.Join(artifactsDir, rd.Config.Repo, rd.Config.Name+".json")
-	contents, err := json.Marshal(*rd)
+	contents, err := json.Marshal(rd)
 	if nil != err {
 		return err
 	}

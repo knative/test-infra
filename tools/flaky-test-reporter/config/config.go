@@ -20,9 +20,15 @@ package config
 
 import (
 	"io/ioutil"
+	"log"
 
 	yaml "gopkg.in/yaml.v2"
 )
+
+// configFile saves all information we need.
+const configFile = "config.yaml"
+
+var JobConfigs []JobConfig
 
 // Config contains all job configs for flaky tests reporting
 type Config struct {
@@ -44,15 +50,15 @@ type SlackChannel struct {
 	Identity string `yaml:"identity"`
 }
 
-// NewConfig parses config from configFile
-func NewConfig(configFile string) (*Config, error) {
+func init() {
 	contents, err := ioutil.ReadFile(configFile)
 	if nil != err {
-		return nil, err
+		log.Printf("Failed to load the config file: %v", err)
 	}
 	config := &Config{}
 	if err = yaml.Unmarshal(contents, config); nil != err {
-		return nil, err
+		log.Printf("Failed to unmarshal %v", contents)
+	} else {
+		JobConfigs = config.JobConfigs
 	}
-	return config, nil
 }
