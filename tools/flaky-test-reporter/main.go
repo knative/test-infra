@@ -37,9 +37,6 @@ var (
 	// Minimal number of results to be counted as valid results for each
 	// testcase, this is derived from buildsCount and requiredRatio
 	requiredCount float32
-
-	// Map of repo -> List<FlakyIssues>
-	flakyIssues map[string][]*flakyIssue
 )
 
 func main() {
@@ -95,19 +92,19 @@ func main() {
 	jsonErr := writeFlakyTestsToJSON(repoDataAll, *dryrun)
 
 	var ghErr, slackErr error
+	var flakyIssues map[string][]*flakyIssue
+
 	if *skipReport {
 		log.Printf("--skip-report provided, skipping Github and Slack report")
 	} else {
-		ghErr = githubOperations(*githubAccount, repoDataAll, *dryrun)
-		slackErr = slackOperations(*slackAccount, repoDataAll, *dryrun)
+		flakyIssues, ghErr = githubOperations(*githubAccount, repoDataAll, *dryrun)
+		slackErr = slackOperations(*slackAccount, repoDataAll, flakyIssues, *dryrun)
 	}
 
 	if nil != jobErr {
 		log.Printf("Job step failures:\n%v", jobErr)
 	}
-	if nil != ghErr {
-		log.Printf("Github step failures:\n%v", ghErr)
-	}
+
 	if nil != slackErr {
 		log.Printf("Slack step failures:\n%v", slackErr)
 	}
@@ -120,22 +117,26 @@ func main() {
 	}
 }
 
-func githubOperations(ghToken string, repoData []RepoData, dryrun bool) error {
+func githubOperations(ghToken string, repoData []RepoData, dryrun bool) (map[string][]*flakyIssue, error) {
 	gih, err := Setup(ghToken)
 	if err != nil {
-		return err
+		return nil, err
+	}
+
+	if err = gih.processGithubIssues(repoData, dryrun); err != nil {
+		return nil, err
 	}
 
 	// Get all flaky issues
-	flakyIssues, err = gih.getFlakyIssues()
-	if err != nil {
-		return err
-	}
-
-	return gih.processGithubIssues(repoData, dryrun)
+	return gih.getFlakyIssues()
 }
 
-func slackOperations(slackToken string, repoData []RepoData, dryrun bool) error {
+func slackOperations(slackToken string, repoData []RepoData, flakyIssues map[string][]*flakyIssue, dryrun bool) error {
+	// Verify that there are issues to notify on.
+	if len(flakyIssues) == 0 {
+		return nil
+	}
+
 	client, err := slackutil.NewClient(knativeBotName, slackToken)
 	if nil != err {
 		return err
