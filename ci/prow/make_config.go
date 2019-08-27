@@ -624,7 +624,7 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	if data.PresubmitPullJobName == "pull-knative-serving-go-coverage" {
 		data.PresubmitPullJobName += "-dev"
 		data.Base.AlwaysRun = false
-		data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest-dev", -1)
+		data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest", -1)
 		template := strings.Replace(readTemplate(presubmitGoCoverageJob), "(all|", "(", 1)
 		executeJobTemplate("presubmit", template, title, repoName, data.PresubmitPullJobName, true, data)
 	}
@@ -651,7 +651,7 @@ func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
 	// Generate config for post-knative-serving-go-coverage-dev right after post-knative-serving-go-coverage
 	if data.PostsubmitJobName == "post-knative-serving-go-coverage" {
 		data.PostsubmitJobName += "-dev"
-		data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest-dev", -1)
+		data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest", -1)
 		executeJobTemplate("presubmit", readTemplate(goCoveragePostsubmitJob), "postsubmits", repoName, data.PostsubmitJobName, false, data)
 	}
 }

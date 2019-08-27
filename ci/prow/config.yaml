@@ -549,7 +549,7 @@ presubmits:
     - "release-0.7"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-dev:latest-dev
+      - image: gcr.io/knative-tests/test-infra/coverage-dev:latest
         imagePullPolicy: Always
         command:
         - "/coverage"
@@ -5929,7 +5929,7 @@ postsubmits:
     path_alias: knative.dev/serving
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-dev:latest-dev
+      - image: gcr.io/knative-tests/test-infra/coverage-dev:latest
         imagePullPolicy: Always
         command:
         - "/coverage"
