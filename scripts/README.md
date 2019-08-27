@@ -224,6 +224,43 @@ kubectl get pods || fail_test
 success
 ```
 
+## Using the `performance-tests.sh` helper script
+
+This is a helper script for Knative performance test scripts. To use it:
+
+1. Source the script.
+
+1. [optional] Write the `update_knative()` function, which will update your
+   system under test (e.g., Knative Serving).
+
+1. [optional] Write the `update_benchmark benchmark_name` function, which
+   will update the benchmark (usually Knative services + Kubernetes cronjobs).
+
+1. Call the `main()` function passing `$@` (without quotes).
+
+### Sample performance test script
+
+This script will update `Knative serving` and the given benchmark.
+
+```bash
+source vendor/knative.dev/test-infra/scripts/performance-tests.sh
+
+function update_knative() {
+  echo ">> Updating istio"
+  kubectl apply -f third_party/$istio_version/istio-crds.yaml || abort "failed to apply istio-crds"
+  kubectl apply -f third_party/$istio_version/istio-lean.yaml || abort "failed to apply istio-lean"
+  echo ">> Updating serving"
+  ko apply -f config/ -f config/v1beta1 || abort "failed to apply serving"
+}
+
+function update_benchmark() {
+  echo ">> Updating benchmark $1"
+  ko apply -f ${TEST_ROOT_PATH}/$1 || abort "failed to apply benchmark $1"
+}
+
+main $@
+```
+
 ## Using the `release.sh` helper script
 
 This is a helper script for Knative release scripts. To use it:

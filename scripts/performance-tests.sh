@@ -19,52 +19,59 @@
 
 source $(dirname ${BASH_SOURCE})/library.sh
 
-# Setup env vars
-export PROJECT_NAME="knative-performance"
-export USER_NAME="mako-job@knative-performance.iam.gserviceaccount.com"
-export TEST_ROOT_PATH="$GOPATH/src/knative.dev/${REPO_NAME}/test/performance"
-export KO_DOCKER_REPO="gcr.io/knative-performance"
-
-# Creates a new cluster.
-# $1 -> name, $2 -> zone/region, $3 -> num_nodes
-function create_cluster() {
-  header "Creating cluster $1 with $3 nodes in $2"
-  gcloud beta container clusters create ${1} \
-    --addons=HorizontalPodAutoscaling,HttpLoadBalancing \
-    --machine-type=n1-standard-4 \
-    --cluster-version=latest --region=${2} \
-    --enable-stackdriver-kubernetes --enable-ip-alias \
-    --num-nodes=${3} \
-    --enable-autorepair \
-    --scopes cloud-platform
-}
-
-# Create serice account secret on the cluster.
-# $1 -> cluster_name, $2 -> cluster_zone
-function create_secret() {
-  echo "Create service account on cluster $1 in zone $2"
-  gcloud container clusters get-credentials $1 --zone=$2 --project=${PROJECT_NAME} || abort "Failed to get cluster creds"
-  kubectl create secret generic service-account --from-file=robot.json=${PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS}
-}
+# Setup env vars.
+readonly PROJECT_NAME="knative-performance"
+readonly USER_NAME="mako-job@knative-performance.iam.gserviceaccount.com"
+readonly KO_DOCKER_REPO="gcr.io/${PROJECT_NAME}/${REPO_NAME}"
+readonly PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS="/etc/performance-test/service-account.json"
+readonly PERF_TEST_GITHUB_TOKEN="/etc/performance-test/github-token"
+readonly PERF_TEST_SLACK_TOKEN="/etc/performance-test/slack-token"
+export TEST_ROOT_PATH="${GOPATH}/src/knative.dev/${REPO_NAME}/test/performance"
 
 # Set up the user credentials for cluster operations.
 function setup_user() {
   header "Setup User"
 
+  echo "Using gcloud user ${USER_NAME}"
   gcloud config set core/account ${USER_NAME}
+  echo "Using secret defined in ${PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS}"
   gcloud auth activate-service-account ${USER_NAME} --key-file=${PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS}
   gcloud config set core/project ${PROJECT_NAME}
+}
 
-  echo "gcloud user is $(gcloud config get-value core/account)"
-  echo "Using secret defined in ${PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS}"
+# Creates a new cluster.
+# Parameters: $1 - cluster name
+#             $2 - cluster zone/region
+#             $3 - cluster node num
+function create_cluster() {
+  header "Creating cluster $1 with $3 nodes in $2"
+  gcloud beta container clusters create $1 \
+    --addons=HorizontalPodAutoscaling,HttpLoadBalancing \
+    --cluster-version=latest \
+    --enable-autorepair \
+    --enable-ip-alias \
+    --enable-stackdriver-kubernetes \
+    --machine-type=n1-standard-4 \
+    --num-nodes=$3 \
+    --region=$2 \
+    --scopes cloud-platform
+}
+
+# Create service account, github & slack token secrets on the cluster.
+# Parameters: $1 - cluster name
+#             $2 - cluster zone/region
+function create_secrets() {
+  echo "Creating service account on cluster $1 in zone $2"
+  gcloud container clusters get-credentials $1 --zone=$2 --project=${PROJECT_NAME} || abort "failed to get cluster creds"
+  kubectl create secret generic service-account --from-file=robot.json=${PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS}
+  kubectl create secret generic tokens --from-file=github-token=${PERF_TEST_GITHUB_TOKEN} --from-file=slack-token=${PERF_TEST_SLACK_TOKEN}
 }
 
 # Update resources installed on the cluster.
-# $1 -> cluster_name, $2 -> cluster_zone
+# Parameters: $1 - cluster name
+#             $2 - cluster zone/region
 function update_cluster() {
-  local cluster_name=$1
-  local cluster_zone=$2
-  gcloud container clusters get-credentials $cluster_name --zone=$cluster_zone --project=${PROJECT_NAME} || abort "Failed to get cluster creds"
+  gcloud container clusters get-credentials $1 --zone=$2 --project=${PROJECT_NAME} || abort "failed to get cluster creds"
   echo ">> Setting up 'prod' config-mako"
   cat | kubectl apply -f - <<EOF
 apiVersion: v1
@@ -76,119 +83,117 @@ data:
   environment: prod
 EOF
 
+  echo ">> Deleting all benchmark jobs to avoid noise"
+  kubectl delete cronjob --all
+  kubectl delete job --all
+  
   if function_exists update_knative; then
-    update_knative || fail_test "failed to update knative"
+    update_knative || abort "failed to update knative"
   fi
-  local benchmark_name=${cluster_name#$REPO_NAME"-"}
+  # get benchmark_name by removing the prefix from cluster name, e.g. get "load-test" from "serving-load-test"
+  local benchmark_name=${1#$REPO_NAME"-"}
   if function_exists update_benchmark; then
-    update_benchmark ${benchmark_name} || fail_test "failed to update benchmark"
+    update_benchmark ${TEST_ROOT_PATH}/${benchmark_name} || abort "failed to update benchmark"
   fi
 }
 
-# Create a new cluster and install serving components and apply benchmark yamls.
-# $1 -> cluster_name, $2 -> cluster_zone, $3 -> node_count
+# Create a new cluster and create required secrets on it.
+# Parameters: $1 - cluster name
+#             $2 - cluster zone/region
+#             $3 - cluster node num
 function create_new_cluster() {
   # create a new cluster
-  create_cluster $1 $2 $3 || abort "Failed to create the new cluster $1"
+  create_cluster $1 $2 $3 || abort "failed to create the new cluster $1"
   
-  # create the secret on the new cluster
-  create_secret $1 $2 || abort "Failed to create secrets on the new cluster"
+  # create the secrets on the new cluster
+  create_secrets $1 $2 || abort "failed to create secrets on the new cluster"
 
-  # update components on the cluster, e.g. serving and istio
-  update_cluster $1 $2 || abort "Failed to update the cluster"
+  # update resources on the cluster
+  update_cluster $1 $2 || abort "failed to update the cluster"
 }
 
+# Delete the old clusters related to the current repo, and recreate them with the same configuration.
 function recreate_clusters() {
-  # set up the user credentials for cluster operations
-  setup_user
-
   header "Recreating all clusters"
-  for cluster in $(gcloud container clusters list --project="${PROJECT_NAME}" --format="csv[no-heading](name,zone,currentNodeCount)"); do
-    [[ ! ${PROJECT_NAME} =~ ^${REPO_NAME} ]] && continue
-    name=$(echo $cluster | cut -f1 -d",")
-    zone=$(echo $cluster | cut -f2 -d",")
-    node_count=$(echo $cluster | cut -f3 -d",")
+  local all_clusters=$(gcloud container clusters list --project="${PROJECT_NAME}" --format="csv[no-heading](name,zone,currentNodeCount)")
+  echo "${all_clusters}"
+  for cluster in ${all_clusters}; do
+    local name=$(echo "${cluster}" | cut -f1 -d",")
+    # the cluster name is prefixed with repo name, here we should only handle clusters related to the current repo
+    [[ ! ${name} =~ ^${REPO_NAME} ]] && continue
+    local zone=$(echo "${cluster}" | cut -f2 -d",")
+    local node_count=$(echo "${cluster}" | cut -f3 -d",")
     (( node_count=node_count/3 ))
 
     # delete the old cluster
     gcloud container clusters delete ${name} --zone ${zone} --quiet
 
-    # create a new cluster and update all the components
+    # create a new cluster and install required resources
     create_new_cluster ${name} ${zone} ${node_count}
   done
 
   header "Done recreating all clusters"
 }
 
+# Update the clusters related to the current repo.
 function update_clusters() {
-  # set up the credential for cluster operations
-  setup_user
-
-  # Get all clusters to update and ko apply config. Use newline to split
   header "Update all clusters"
-  IFS=$'\n'
-  for cluster in $(gcloud container clusters list --project="${PROJECT_NAME}" --format="csv[no-heading](name,zone)"); do
-    [[ ! ${PROJECT_NAME} =~ ^${REPO_NAME} ]] && continue
-    name=$(echo $cluster | cut -f1 -d",")
-    zone=$(echo $cluster | cut -f2 -d",")
+  local all_clusters=$(gcloud container clusters list --project="${PROJECT_NAME}" --format="csv[no-heading](name,zone)")
+  echo "${all_clusters}"
+  for cluster in ${all_clusters}; do
+    local name=$(echo "${cluster}" | cut -f1 -d",")
+    # the cluster name is prefixed with repo name, here we should only handle clusters related to the current repo
+    [[ ! ${name} =~ ^${REPO_NAME} ]] && continue
+    local zone=$(echo "${cluster}" | cut -f2 -d",")
 
+    # update all resources installed on the cluster
     update_cluster ${name} ${zone}
   done
 
   header "Done updating all clusters"
 }
 
-NUM_NODES=1
-CLUSTER_NAME=""
-CLUSTER_REGION="us-central1"
-RECREATE_CLUSTERS=0
-UPDATE_CLUSTERS=0
 CREATE_CLUSTER_BENCHMARK=0
 
 # Parse flags and excute the command.
 function main() {
-  if (( ! IS_PROW )); then
-    abort "this script should only be run by Prow since it needs secrets created on Prow cluster"
-  fi
+  # set up the user credentials for cluster operations
+  setup_user || echo "failed to set up user"
+
+  local create_cluster_benchmark=0
 
   local command=$1
   # Try parsing the first flag as a command.  
   case ${command} in
-    --recreate_clusters) RECREATE_CLUSTERS=1 ;;
-    --update_clusters) UPDATE_CLUSTERS=1 ;;
-    --create_cluster_benchmark) CREATE_CLUSTER_BENCHMARK=1 ;;
+    --recreate_clusters) recreate_clusters ;;
+    --update_clusters) update_clusters ;;
+    --create_cluster_benchmark) create_cluster_benchmark=1 ;;
     *) abort "unknown command ${command}, must be --recreate_clusters / --update_clusters / --create_cluster_benchmark"
   esac
   shift
 
+  local num_nodes=1
+  local cluster_name="" 
+  local cluster_region="us-central1"
   while [[ $# -ne 0 ]]; do
     [[ $# -ge 2 ]] || abort "missing parameter after $1"
     local parameter=$1
     # Try parsing the options.
     case ${parameter} in
-      --num_nodes) NUM_NODES=$2 ;;
-      --name) CLUSTER_NAME=$2 ;;
-      --region) CLUSTER_REGION=$2 ;;
+      --name) cluster_name=$2 ;;
+      --region) cluster_region=$2 ;;
+      --num_nodes) num_nodes=$2 ;;
       *) abort "unknown option ${parameter}" ;;
     esac
     shift
     shift
   done
 
-  readonly NUM_NODES
-  readonly CLUSTER_NAME
-  readonly CLUSTER_REGION
-  readonly RECREATE_CLUSTERS
-  readonly UPDATE_CLUSTERS
-  readonly CREATE_CLUSTER_BENCHMARK
+  if (( create_cluster_benchmark )); then
+    [[ ! -z "$cluster_name" ]] || abort "cluster name must be set when creating a new cluster"
+    [[ ! -z "$cluster_region" ]] || abort "cluster region must be set when creating a new cluster"
+    [[ ! -z "$num_nodes" ]] || abort "number of nodes must be set when creating a new cluster"
 
-  if (( RECREATE_CLUSTERS )); then
-    create_test_cluster
-  elif (( UPDATE_CLUSTERS )); then
-    setup_test_cluster
-  else
-    create_cluster_benchmark
+    create_new_cluster "${REPO_NAME}-${cluster_name}" "${cluster_region}" "${num_nodes}"
   fi
 }
-
-main $@
