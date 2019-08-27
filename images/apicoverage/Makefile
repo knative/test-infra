@@ -1,5 +1,4 @@
-
-# Copyright 2018 The Knative Authors
+# Copyright 2019 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,10 +13,9 @@
 # limitations under the License.
 
 REGISTRY ?= gcr.io
-PROJECT  ?= knative-tests/test-infra
-PUSH     ?= docker push
+PROJECT  ?= knative-tests
 
 apicoverage-image:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build ../../tools/apicoverage
-	docker build -t "$(REGISTRY)/$(PROJECT)/apicoverage:latest" .
-	$(PUSH) "$(REGISTRY)/$(PROJECT)/apicoverage:latest"
+	docker build -t "$(REGISTRY)/$(PROJECT)/test-infra/apicoverage:latest" .
+	docker push "$(REGISTRY)/$(PROJECT)/test-infra/apicoverage:latest"

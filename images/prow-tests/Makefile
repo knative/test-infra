@@ -1,4 +1,4 @@
-# Copyright 2018 The Knative Authors
+# Copyright 2019 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-IMG = gcr.io/knative-tests/test-infra/prow-tests
+REGISTRY ?= gcr.io
+PROJECT  ?= knative-tests
+
+IMG = $(REGISTRY)/$(PROJECT)/test-infra/prow-tests
 TAG := $(shell date +v%Y%m%d)-$(shell git describe --always --dirty --match '^$$')
 
 all: build

@@ -13,10 +13,9 @@
 # limitations under the License.
 
 REGISTRY ?= gcr.io
-PROJECT  ?= knative-tests/test-infra
-PUSH     ?= docker push
+PROJECT  ?= knative-tests
 
 metrics-image:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o metrics
-	docker build -t "$(REGISTRY)/$(PROJECT)/metrics:latest" .
-	$(PUSH) "$(REGISTRY)/$(PROJECT)/metrics:latest"
+	docker build -t "$(REGISTRY)/$(PROJECT)/test-infra/metrics:latest" .
+	docker push "$(REGISTRY)/$(PROJECT)/test-infra/metrics:latest"
