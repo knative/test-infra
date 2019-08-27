@@ -12,10 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-REGISTRY ?= gcr.io
-PROJECT  ?= knative-tests
-
-metrics-image:
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o metrics
-	docker build -t "$(REGISTRY)/$(PROJECT)/test-infra/metrics:latest" .
-	docker push "$(REGISTRY)/$(PROJECT)/test-infra/metrics:latest"
+IMAGE_NAME = metrics
+BINARY_DIR = .
+include ../../shared/Makefile.simple-image

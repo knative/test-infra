@@ -12,22 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-REGISTRY ?= gcr.io
-PROJECT  ?= knative-tests
-
-IMG = $(REGISTRY)/$(PROJECT)/test-infra/monitoring/clear-alerts
-TAG := $(shell date +v%Y%m%d)-$(shell git describe --always --dirty --match '^$$')
-
-all: build
-
-build:
-	docker build -t $(IMG):$(TAG) -f Dockerfile ../..
-	docker tag $(IMG):$(TAG) $(IMG):latest
-
-push_versioned: build
-	docker push $(IMG):$(TAG)
-
-push_latest: build
-	docker push $(IMG):latest
-
-push: push_versioned push_latest
+IMAGE_NAME = monitoring/clear-alerts
+include ../../shared/Makefile.simple-image

@@ -18,7 +18,7 @@ LABEL maintainer="adrcunha@google.com"
 
 RUN apt-get update && apt-get install -y --no-install-recommends
 
-COPY metrics /metrics
+COPY tools/latency/latency /metrics
 
 ENTRYPOINT ["/metrics"]
 
