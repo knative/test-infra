@@ -123,12 +123,7 @@ func githubOperations(ghToken string, repoData []RepoData, dryrun bool) (map[str
 		return nil, err
 	}
 
-	if err = gih.processGithubIssues(repoData, dryrun); err != nil {
-		return nil, err
-	}
-
-	// Get all flaky issues
-	return gih.getFlakyIssues()
+	return gih.processGithubIssues(repoData, dryrun)
 }
 
 func slackOperations(slackToken string, repoData []RepoData, flakyIssues map[string][]*flakyIssue, dryrun bool) error {
