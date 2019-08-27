@@ -104,7 +104,7 @@ func getIdentityForTest(testFullName, repoName string) string {
 }
 
 // getBulkIssueIdentity creates a unique identity for a bulk issue when the flaky rate is above a threshold
-func getBulkIssueIdentity(rd *RepoData, flakyRate float32) string {
+func getBulkIssueIdentity(rd RepoData, flakyRate float32) string {
 	return fmt.Sprintf("%.2f%% tests failed in repo %s on %s",
 		flakyRate*100, rd.Config.Repo, time.Unix(*rd.LastBuildStartTime, 0).String())
 }
@@ -137,7 +137,7 @@ func getRepoFromIssue(issue *github.Issue) string {
 
 // createCommentForTest summarizes latest status of current test case,
 // and creates text to be added to issue comment
-func (gih *GithubIssueHandler) createCommentForTest(rd *RepoData, testFullName string) string {
+func (gih *GithubIssueHandler) createCommentForTest(rd RepoData, testFullName string) string {
 	ts := rd.TestStats[testFullName]
 	totalCount := len(ts.Passed) + len(ts.Skipped) + len(ts.Failed)
 	lastBuildStartTimeStr := time.Unix(*rd.LastBuildStartTime, 0).String()
@@ -156,7 +156,7 @@ func (gih *GithubIssueHandler) createCommentForTest(rd *RepoData, testFullName s
 	return content
 }
 
-func (gih *GithubIssueHandler) createHistoryUnicode(rd *RepoData, comment, testFullName string) string {
+func (gih *GithubIssueHandler) createHistoryUnicode(rd RepoData, comment, testFullName string) string {
 	res := ""
 	currentUnicode := fmt.Sprintf("%s: ", time.Unix(*rd.LastBuildStartTime, 0).String())
 	resultSlice := rd.getResultSliceForTest(testFullName)
@@ -426,7 +426,7 @@ func (gih *GithubIssueHandler) getFlakyIssues() (map[string][]*flakyIssue, error
 // processGithubIssueForRepo reads RepoData and existing issues, and create/close/reopen/comment on issues.
 // The function returns a slice of messages containing performed actions, and a slice of error messages,
 // these can later on be printed as summary at the end of run
-func (gih *GithubIssueHandler) processGithubIssueForRepo(rd *RepoData, flakyIssuesMap map[string][]*flakyIssue, dryrun bool) ([]string, error) {
+func (gih *GithubIssueHandler) processGithubIssueForRepo(rd RepoData, flakyIssuesMap map[string][]*flakyIssue, dryrun bool) ([]string, error) {
 	var messages []string
 	var errs []error
 
@@ -507,7 +507,7 @@ func (gih *GithubIssueHandler) processGithubIssueForRepo(rd *RepoData, flakyIssu
 }
 
 // analyze all results, figure out flaky tests and processing existing auto:flaky issues
-func (gih *GithubIssueHandler) processGithubIssues(repoDataAll []*RepoData, dryrun bool) error {
+func (gih *GithubIssueHandler) processGithubIssues(repoDataAll []RepoData, dryrun bool) error {
 	// map repo to jobs, and jobs to messages
 	messagesMap := make(map[string]map[string][]string)
 	// map repo to jobs, and jobs to errors

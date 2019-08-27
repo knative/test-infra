@@ -27,7 +27,7 @@ import (
 // when reporting on all flaky tests in a repo, we want to eliminate the "job" layer, compressing all flaky
 // tests in that repo into a single list. There can be duplicate tests across jobs, though, so we store tests
 // in a nested map first to eliminate those duplicates.
-func getFlakyTestSet(repoDataAll []*RepoData) map[string]map[string]bool {
+func getFlakyTestSet(repoDataAll []RepoData) map[string]map[string]bool {
 	// this map represents "repo: test: exists"
 	flakyTestSet := map[string]map[string]bool{}
 	for _, rd := range repoDataAll {
@@ -41,7 +41,7 @@ func getFlakyTestSet(repoDataAll []*RepoData) map[string]map[string]bool {
 	return flakyTestSet
 }
 
-func writeFlakyTestsToJSON(repoDataAll []*RepoData, dryrun bool) error {
+func writeFlakyTestsToJSON(repoDataAll []RepoData, dryrun bool) error {
 	client := &jsonreport.JSONClient{}
 	var allErrs []error
 	flakyTestSets := getFlakyTestSet(repoDataAll)

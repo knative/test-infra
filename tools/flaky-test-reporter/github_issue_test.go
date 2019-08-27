@@ -80,7 +80,7 @@ func createNewIssue(fgih *GithubIssueHandler, title, body, testStat string) (*gi
 	return issue, comment
 }
 
-func createRepoData(passed, flaky, failed, notenoughdata int, issueRepo string, startTime int64) *RepoData {
+func createRepoData(passed, flaky, failed, notenoughdata int, issueRepo string, startTime int64) RepoData {
 	cfg := config.JobConfig{
 		Repo:      fakeRepo,
 		IssueRepo: issueRepo,
@@ -97,7 +97,7 @@ func createRepoData(passed, flaky, failed, notenoughdata int, issueRepo string, 
 			tss[fmt.Sprintf("test%s_%d", status, i)] = &ts
 		}
 	}
-	return &RepoData{
+	return RepoData{
 		Config:             cfg,
 		TestStats:          tss,
 		LastBuildStartTime: &startTime,

@@ -25,7 +25,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"path/filepath"
 
 	"knative.dev/test-infra/shared/prow"
 	"knative.dev/test-infra/shared/slackutil"
@@ -44,7 +43,6 @@ func main() {
 	serviceAccount := flag.String("service-account", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"), "JSON key file for GCS service account")
 	githubAccount := flag.String("github-account", "", "Token file for Github authentication")
 	slackAccount := flag.String("slack-account", "", "slack secret file for authenticating with Slack")
-	configPath := flag.String("configfile", "./config.yaml", "Config file for overriding default config file")
 	buildsCountOverride := flag.Int("build-count", 10, "count of builds to scan")
 	skipReport := flag.Bool("skip-report", false, "skip Github and Slack report")
 	dryrun := flag.Bool("dry-run", false, "dry run switch")
@@ -52,45 +50,23 @@ func main() {
 
 	buildsCount = *buildsCountOverride
 	requiredCount = requiredRatio * float32(buildsCount)
-	if isAbs := filepath.IsAbs(*configPath); !isAbs {
-		// Relative path works strangely in docker, transform it to absolute path
-		*configPath = filepath.Join(filepath.Dir(os.Args[0]), *configPath)
-	}
-	cfg, err := config.NewConfig(*configPath)
-	if nil != err {
-		log.Fatalf("config cannot be created: '%v'", err)
-	}
 
-	if true == *dryrun {
+	if *dryrun {
 		log.Printf("running in [dry run mode]")
 	}
-	if err = prow.Initialize(*serviceAccount); nil != err { // Explicit authenticate with gcs Client
+
+	if err := prow.Initialize(*serviceAccount); nil != err { // Explicit authenticate with gcs Client
 		log.Fatalf("Failed authenticating GCS: '%v'", err)
 	}
 
-	var gih *GithubIssueHandler
-	var slackClient slackutil.Operations
-	if true == *skipReport {
-		log.Printf("--skip-report provided, skipping Github and Slack report")
-	} else {
-		gih, err = Setup(*githubAccount)
-		if err != nil {
-			log.Fatalf("Cannot setup github: %v", err)
-		}
-		slackClient, err = slackutil.NewClient(knativeBotName, *slackAccount)
-		if nil != err {
-			log.Fatalf("Failed authenticating Slack: '%v'", err)
-		}
-	}
-
-	var repoDataAll []*RepoData
+	var repoDataAll []RepoData
 	// Clean up local artifacts directory, this will be used later for artifacts uploads
-	err = os.RemoveAll(prow.GetLocalArtifactsDir()) // this function returns nil if path not found
+	err := os.RemoveAll(prow.GetLocalArtifactsDir()) // this function returns nil if path not found
 	if nil != err {
 		log.Fatalf("Failed removing local artifacts directory: %v", err)
 	}
 	var jobErrs []error
-	for _, jc := range cfg.JobConfigs {
+	for _, jc := range config.JobConfigs {
 		log.Printf("collecting results for job '%s' in repo '%s'\n", jc.Name, jc.Repo)
 		rd, err := collectTestResultsForRepo(jc)
 		if nil != err {
@@ -103,36 +79,72 @@ func main() {
 			log.Printf("WARNING: no build found, skipping '%s' in repo '%s'", jc.Name, jc.Repo)
 			continue
 		}
-		if err = createArtifactForRepo(rd); nil != err {
+		if err = createArtifactForRepo(*rd); nil != err {
 			log.Fatalf("Error creating artifacts for job '%s' in repo '%s': %v", jc.Name, jc.Repo, err)
 		}
-		repoDataAll = append(repoDataAll, rd)
+		repoDataAll = append(repoDataAll, *rd)
 	}
 
 	// Errors that could result in inaccuracy reporting would be treated with fast fail by processGithubIssues,
 	// so any errors returned are github opeations error, which in most cases wouldn't happen, but in case it
 	// happens, it should fail the job after Slack notification
-	var jobErr, githubErr, slackErr, jsonErr error
-	jobErr = combineErrors(jobErrs)
-	if !*skipReport {
-		githubErr = gih.processGithubIssues(repoDataAll, *dryrun)
-		slackErr = sendSlackNotifications(repoDataAll, slackClient, gih, *dryrun)
+	jobErr := combineErrors(jobErrs)
+	jsonErr := writeFlakyTestsToJSON(repoDataAll, *dryrun)
+
+	var ghErr, slackErr error
+	var flakyIssues map[string][]*flakyIssue
+
+	if *skipReport {
+		log.Printf("--skip-report provided, skipping Github and Slack report")
+	} else {
+		flakyIssues, ghErr = githubOperations(*githubAccount, repoDataAll, *dryrun)
+		slackErr = slackOperations(*slackAccount, repoDataAll, flakyIssues, *dryrun)
 	}
-	jsonErr = writeFlakyTestsToJSON(repoDataAll, *dryrun)
+
 	if nil != jobErr {
 		log.Printf("Job step failures:\n%v", jobErr)
 	}
-	if nil != githubErr && !*skipReport {
-		log.Printf("Github step failures:\n%v", githubErr)
-	}
-	if nil != slackErr && !*skipReport {
+
+	if nil != slackErr {
 		log.Printf("Slack step failures:\n%v", slackErr)
 	}
 	if nil != jsonErr {
 		log.Printf("JSON step failures:\n%v", jsonErr)
 	}
-	if nil != jobErr || nil != jsonErr ||
-		(!*skipReport && (nil != githubErr || nil != slackErr)) { // Fail this job if there is any error
+	// Fail this job if there is any error
+	if nil != jobErr || nil != jsonErr || nil != ghErr || nil != slackErr {
 		os.Exit(1)
 	}
+}
+
+func githubOperations(ghToken string, repoData []RepoData, dryrun bool) (map[string][]*flakyIssue, error) {
+	gih, err := Setup(ghToken)
+	if err != nil {
+		return nil, err
+	}
+
+	if err = gih.processGithubIssues(repoData, dryrun); err != nil {
+		return nil, err
+	}
+
+	// Get all flaky issues
+	return gih.getFlakyIssues()
+}
+
+func slackOperations(slackToken string, repoData []RepoData, flakyIssues map[string][]*flakyIssue, dryrun bool) error {
+	// Verify that there are issues to notify on.
+	if len(flakyIssues) == 0 {
+		return nil
+	}
+
+	client, err := slackutil.NewClient(knativeBotName, slackToken)
+	if nil != err {
+		return err
+	}
+
+	return sendSlackNotifications(repoData, client, flakyIssues, dryrun)
+}
+
+func jsonOperations(repoData []RepoData, dryrun bool) error {
+	return writeFlakyTestsToJSON(repoData, dryrun)
 }
