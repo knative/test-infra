@@ -230,11 +230,22 @@ This is a helper script for Knative performance test scripts. To use it:
 
 1. Source the script.
 
+1. [optional] Customize path of the benchmark folder. This folder should
+   contains and only contains all benchmarks controlled by Prow periodic jobs:
+
+   - `BENCHMARK_ROOT_PATH`: Benchmark root path, defaults to `"test/performance/benchmarks`.
+   - `CLUSTER_REGION`: Cluster region for a new benchmark if not specified
+   in its `cluster.properties` file, defaults to `us-central1`.
+   - `CLUSTER_NODES`: Number of nodes in the cluster for a new benchmark if
+   not specified in its `cluster.properties` file, defaults to `1`.
+
 1. [optional] Write the `update_knative()` function, which will update your
    system under test (e.g., Knative Serving).
 
-1. [optional] Write the `update_benchmark benchmark_name` function, which
-   will update the benchmark (usually Knative services + Kubernetes cronjobs).
+1. [optional] Write the `update_benchmark(benchmark_path)` function, which
+   will update the underlying resources for the benchmark (usually Knative
+   resources and Kubernetes cronjobs for benchmarking). This function accepts
+   a parameter, which is the benchmark path in the current repo.
 
 1. Call the `main()` function passing `$@` (without quotes).
 
@@ -246,9 +257,6 @@ This script will update `Knative serving` and the given benchmark.
 source vendor/knative.dev/test-infra/scripts/performance-tests.sh
 
 function update_knative() {
-  echo ">> Updating istio"
-  kubectl apply -f third_party/$istio_version/istio-crds.yaml || abort "failed to apply istio-crds"
-  kubectl apply -f third_party/$istio_version/istio-lean.yaml || abort "failed to apply istio-lean"
   echo ">> Updating serving"
   ko apply -f config/ -f config/v1beta1 || abort "failed to apply serving"
 }
