@@ -271,7 +271,6 @@ func (gih *GithubIssueHandler) updateIssue(fi *flakyIssue, newComment string, ts
 // createNewIssue creates an issue, adds flaky label and adds comment.
 func (gih *GithubIssueHandler) createNewIssue(org, repoForIssue, title, body, comment string, dryrun bool) (*github.Issue, error) {
 	var newIssue *github.Issue
-	title = fmt.Sprintf("[flaky] %s", title)
 	if err := run(
 		"creating issue",
 		func() error {
@@ -357,6 +356,7 @@ func (gih *GithubIssueHandler) findExistingComment(issue *github.Issue, issueIde
 	return targetComment, nil
 }
 
+// githubToFlakyIssue converts a github issue into a flakyIssue struct
 func (gih *GithubIssueHandler) githubToFlakyIssue(issue *github.Issue) (*flakyIssue, error) {
 	// Issue closed long time ago, it might fail with a different reason now.
 	if nil != issue.ClosedAt && issue.ClosedAt.Before(timeConsiderOld) {
@@ -437,7 +437,7 @@ func (gih *GithubIssueHandler) getFlakyIssues() (map[string][]*flakyIssue, error
 	return issuesMap, err
 }
 
-// processGithubIssueForRepo reads RepoData and existing issues, and create/close/reopen/comment on issues.
+// processGithubIssuesForRepo reads RepoData and existing issues, and create/close/reopen/comment on issues.
 // The function returns:
 // Slice of newly created Github issues, if any
 // Slice of messages containing performed actions,
@@ -456,13 +456,14 @@ func (gih *GithubIssueHandler) processGithubIssuesForRepo(rd RepoData, flakyIssu
 			log.Printf("issue already exist, skip creating")
 			return nil, nil, nil
 		}
+		title = fmt.Sprintf("[flaky] %s", identity)
 		testId := fmt.Sprintf(testIdentifierPattern, identity)
 		message := fmt.Sprintf("Creating issue '%s' in repo '%s'", identity, rd.Config.IssueRepo)
 		log.Println(message)
 		issue, err := gih.createNewIssue(
 			org,
 			rd.Config.IssueRepo,
-			identity,
+			title,
 			fmt.Sprintf(issueBodyTemplate, identity, rd.Config.Repo, testId),
 			fmt.Sprintf("Bulk issue tracking: %s\n<!--%s-->", identity, testId),
 			dryrun,
@@ -509,11 +510,12 @@ func (gih *GithubIssueHandler) processGithubIssuesForRepo(rd RepoData, flakyIssu
 				fmt.Sprintf(testIdentifierPattern, identity))
 			message := fmt.Sprintf("Creating issue '%s' in repo '%s'", testFullName, rd.Config.IssueRepo)
 			log.Println(message)
+			title = fmt.Sprintf("[flaky] %s", testFullName)
 			messages = append(messages, message)
 			issue, err := gih.createNewIssue(
 				org,
 				rd.Config.IssueRepo,
-				testFullName,
+				title,
 				fmt.Sprintf(issueBodyTemplate, testFullName, rd.Config.Repo, fmt.Sprintf(testIdentifierPattern, identity)),
 				comment,
 				dryrun,
