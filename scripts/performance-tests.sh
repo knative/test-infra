@@ -64,7 +64,7 @@ function create_cluster() {
     --scopes cloud-platform
 }
 
-# Create service account, github & slack token secrets on the cluster.
+# Create service account, Github and Slack token secrets on the cluster.
 # Parameters: $1 - cluster name
 #             $2 - cluster zone/region
 function create_secrets() {
@@ -123,7 +123,6 @@ function create_new_cluster() {
 function create_new_benchmark_cluster() {
   local benchmark_path="${BENCHMARK_ROOT_PATH}/$1"
   [ ! -d ${benchmark_path} ] && abort "benchmark $1 does not exist"
-  #   
   local cluster_name=$(get_cluster_name $1)
   local cluster_region="${CLUSTER_REGION}"
   local node_count="${CLUSTER_NODES}"
@@ -166,8 +165,7 @@ function get_cluster_name() {
 function recreate_clusters() {
   header "Recreating all clusters for ${REPO_NAME}"
   local all_clusters=$(gcloud container clusters list --project="${PROJECT_NAME}" --format="csv[no-heading](name,zone,currentNodeCount)")
-  echo ">> Listing all clusters:"
-  echo "${all_clusters}"
+  echo ">> Project contains clusters:" ${all_clusters}
   for cluster in ${all_clusters}; do
     local name=$(echo "${cluster}" | cut -f1 -d",")
     # the cluster name is prefixed with repo name, here we should only handle clusters related to the current repo
@@ -191,8 +189,7 @@ function recreate_clusters() {
 function update_clusters() {
   header "Updating all clusters for ${REPO_NAME}"
   local all_clusters=$(gcloud container clusters list --project="${PROJECT_NAME}" --format="csv[no-heading](name,zone)")
-  echo ">> Listing all clusters:"
-  echo "${all_clusters}"
+  echo ">> Project contains clusters:" ${all_clusters}
   for cluster in ${all_clusters}; do
     local name=$(echo "${cluster}" | cut -f1 -d",")
     # the cluster name is prefixed with repo name, here we should only handle clusters related to the current repo
@@ -206,15 +203,15 @@ function update_clusters() {
 }
 
 # Try to reset clusters for benchmarks in the current repo.
-# There can be three cases:
+# There can be 4 cases:
 # 1. If a new benchmark is added, create a new cluster for it;
 # 2. If a benchmark is deleted, delete its corresponding cluster;
 # 3. If a benchmark is renamed, delete the old cluster and create a new one.
+# 4. TODO(Fredy-Z): If the cluster.properties file is changed, delete the old cluster and create a new one.
 # This function will be run as postsubmit jobs.
 function reset_benchmark_clusters() {
   local all_clusters=$(gcloud container clusters list --project="${PROJECT_NAME}" --format="csv[no-heading](name,zone)")
-  echo ">> Listing all clusters:"
-  echo "${all_clusters}"
+  echo ">> Project contains clusters:" ${all_clusters}
   header "Trying to delete unused clusters for ${REPO_NAME}"
   for cluster in ${all_clusters}; do
     local name=$(echo "${cluster}" | cut -f1 -d",")

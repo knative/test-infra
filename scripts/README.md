@@ -226,7 +226,9 @@ success
 
 ## Using the `performance-tests.sh` helper script
 
-This is a helper script for Knative performance test scripts. To use it:
+This is a helper script for Knative performance test scripts. In combination
+with specific Prow jobs, it can automatically manage the environment for running
+benchmarks jobs for each repo. To use it:
 
 1. Source the script.
 
