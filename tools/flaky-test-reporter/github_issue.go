@@ -456,7 +456,7 @@ func (gih *GithubIssueHandler) processGithubIssuesForRepo(rd RepoData, flakyIssu
 			log.Printf("issue already exist, skip creating")
 			return nil, nil, nil
 		}
-		title = fmt.Sprintf("[flaky] %s", identity)
+		title := fmt.Sprintf("[flaky] %s", identity)
 		testId := fmt.Sprintf(testIdentifierPattern, identity)
 		message := fmt.Sprintf("Creating issue '%s' in repo '%s'", identity, rd.Config.IssueRepo)
 		log.Println(message)
@@ -510,7 +510,7 @@ func (gih *GithubIssueHandler) processGithubIssuesForRepo(rd RepoData, flakyIssu
 				fmt.Sprintf(testIdentifierPattern, identity))
 			message := fmt.Sprintf("Creating issue '%s' in repo '%s'", testFullName, rd.Config.IssueRepo)
 			log.Println(message)
-			title = fmt.Sprintf("[flaky] %s", testFullName)
+			title := fmt.Sprintf("[flaky] %s", testFullName)
 			messages = append(messages, message)
 			issue, err := gih.createNewIssue(
 				org,
@@ -548,18 +548,11 @@ func (gih *GithubIssueHandler) processGithubIssues(repoDataAll []RepoData, dryru
 	messagesMap := make(map[string]map[string][]string)
 	// map repo to jobs, and jobs to errors
 	errMap := make(map[string]map[string][]error)
-	// map repo to issues created
-	issuesMap := make(map[string][]*flakyIssue)
-
-	// Add all the current issues in the map
-	for k, v := range flakyGHIssuesMap {
-		issuesMap[k] = v
-	}
 
 	for _, rd := range repoDataAll {
 		issues, messages, err := gih.processGithubIssuesForRepo(rd, flakyGHIssuesMap, dryrun)
 		messagesMap[rd.Config.Repo][rd.Config.Name] = messages
-		issuesMap[rd.Config.Repo] = append(issuesMap[rd.Config.Repo], issues...)
+		flakyGHIssuesMap[rd.Config.Repo] = append(flakyGHIssuesMap[rd.Config.Repo], issues...)
 
 		if nil != err {
 			errMap[rd.Config.Repo][rd.Config.Name] = append(errMap[rd.Config.Repo][rd.Config.Name], err)
@@ -579,5 +572,5 @@ func (gih *GithubIssueHandler) processGithubIssues(repoDataAll []RepoData, dryru
 	}
 
 	log.Println(summary)
-	return issuesMap, nil
+	return flakyGHIssuesMap, nil
 }
