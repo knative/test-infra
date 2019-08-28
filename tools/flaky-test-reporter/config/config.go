@@ -26,7 +26,7 @@ import (
 )
 
 // configFile saves all information we need.
-const configFile = "config.yaml"
+const configFile = "config/config.yaml"
 
 var JobConfigs []JobConfig
 
