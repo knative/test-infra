@@ -123,15 +123,17 @@ function create_new_cluster() {
 function create_new_benchmark_cluster() {
   local benchmark_path="${BENCHMARK_ROOT_PATH}/$1"
   [ ! -d ${benchmark_path} ] && abort "benchmark $1 does not exist"
+  local prod_config_path="${benchmark_path}/prod.config"
+  [ ! -f ${prod_config_path} ] && echo "prod.config is not found, no cluster will be created" && return 0
   local cluster_name=$(get_cluster_name $1)
   local cluster_region="${CLUSTER_REGION}"
   local node_count="${CLUSTER_NODES}"
-  local config_file_path="${benchmark_path}/${CLUSTER_CONFIG_FILE}"
-  if [ ! -f ${config_file_path} ]; then
+  local cluster_config_path="${benchmark_path}/${CLUSTER_CONFIG_FILE}"
+  if [ ! -f ${cluster_config_path} ]; then
     echo "cluster.config is not found in benchmark $1, using the default config to create the cluster"
   else
-    cluster_region=$(get_config_value ${config_file_path} ${CLUSTER_REGION_CONFIG_NAME} ${CLUSTER_REGION})
-    node_count=$(get_config_value ${config_file_path} ${CLUSTER_NODES_CONFIG_NAME} ${CLUSTER_NODES})
+    cluster_region=$(get_config_value ${cluster_config_path} ${CLUSTER_REGION_CONFIG_NAME} ${CLUSTER_REGION})
+    node_count=$(get_config_value ${cluster_config_path} ${CLUSTER_NODES_CONFIG_NAME} ${CLUSTER_NODES})
   fi
 
   echo ">> Creating new cluster for benchmark $1 in ${REPO_NAME}"
