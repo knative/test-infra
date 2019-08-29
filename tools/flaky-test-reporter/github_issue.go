@@ -397,12 +397,16 @@ func (gih *GithubIssueHandler) getFlakyIssues() (map[string][]*flakyIssue, error
 			return nil, err
 		}
 		for _, issue := range issues {
-			flakyIssue, err := gih.githubToFlakyIssue(issue)
+			fi, err := gih.githubToFlakyIssue(issue)
 			if err != nil {
 				return nil, err
 			}
-
-			issuesMap[*flakyIssue.identity] = append(issuesMap[*flakyIssue.identity], flakyIssue)
+			if fi != nil {
+				if _, ok := issuesMap[*fi.identity]; !ok {
+					issuesMap[*fi.identity] = make([]*flakyIssue, 0)
+				}
+				issuesMap[*fi.identity] = append(issuesMap[*fi.identity], fi)
+			}
 		}
 	}
 	// Handle test with multiple issues associated
@@ -551,10 +555,19 @@ func (gih *GithubIssueHandler) processGithubIssues(repoDataAll []RepoData, dryru
 
 	for _, rd := range repoDataAll {
 		issues, messages, err := gih.processGithubIssuesForRepo(rd, flakyGHIssuesMap, dryrun)
+		if _, ok := messagesMap[rd.Config.Repo]; !ok {
+			messagesMap[rd.Config.Repo] = make(map[string][]string)
+		}
 		messagesMap[rd.Config.Repo][rd.Config.Name] = messages
+		if _, ok := messagesMap[rd.Config.Repo][rd.Config.Name]; !ok {
+			messagesMap[rd.Config.Repo][rd.Config.Name] = make([]string, 0)
+		}
 		flakyGHIssuesMap[rd.Config.Repo] = append(flakyGHIssuesMap[rd.Config.Repo], issues...)
 
 		if nil != err {
+			if _, ok := errMap[rd.Config.Repo]; !ok {
+				errMap[rd.Config.Repo] = make(map[string][]error)
+			}
 			errMap[rd.Config.Repo][rd.Config.Name] = append(errMap[rd.Config.Repo][rd.Config.Name], err)
 		}
 	}
