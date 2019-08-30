@@ -43,9 +43,14 @@ func FilePathProfileToGithub(file string) string {
 	return result
 }
 
+var getRepoRoot = func() (string, error) {
+	out, err := exec.Command("git", "rev-parse", "--show-toplevel").Output()
+	return string(out), err
+}
+
 // GetRepoPath gets repository path relative to GOPATH/src
 func GetRepoPath() (string, error) {
-	out, err := exec.Command("git", "rev-parse", "--show-toplevel").Output()
+	repoRoot, err := getRepoRoot()
 	if err != nil {
 		return "", fmt.Errorf("failed git rev-parse --show-toplevel: '%v'", err)
 	}
@@ -53,7 +58,7 @@ func GetRepoPath() (string, error) {
 	if gopath == "" {
 		return "", errors.New("GOPATH is empty")
 	}
-	relPath, err := filepath.Rel(path.Join(gopath, "src"), string(out))
+	relPath, err := filepath.Rel(path.Join(gopath, "src"), string(repoRoot))
 	if err != nil {
 		return "", err
 	}

@@ -16,15 +16,35 @@ limitations under the License.
 package githubUtil
 
 import (
+	"os"
 	"testing"
 )
 
 func TestFilePathProfileToGithub(t *testing.T) {
-	input := "knative.dev/test-infra/pkg/ab/cde"
-	expectedOutput := "pkg/ab/cde"
-	actualOutput := FilePathProfileToGithub(input)
-	if actualOutput != expectedOutput {
-		t.Fatalf("input=%s; expected output=%s; actual output=%s", input, expectedOutput,
-			actualOutput)
-	}
+	t.Run("repo=knative.dev", func(t *testing.T) {
+		input := "knative.dev/test-infra/pkg/ab/cde"
+		expectedOutput := "pkg/ab/cde"
+		actualOutput := FilePathProfileToGithub(input)
+		if actualOutput != expectedOutput {
+			t.Fatalf("input=%s; expected output=%s; actual output=%s", input, expectedOutput,
+				actualOutput)
+		}
+	})
+	t.Run("repo=github.com/{repo}", func(t *testing.T) {
+		input := "github.com/myRepoOwner/myRepoName/pkg/ab/cde"
+		expectedOutput := "pkg/ab/cde"
+		repoRoot := "/d1/d2/d3/gopath/src/github.com/myRepoOwner/myRepoName"
+		getRepoRoot = func() (string, error) {
+			return repoRoot, nil
+		}
+		gopath := os.Getenv("GOPATH")
+		os.Setenv("GOPATH", "/d1/d2/d3/gopath")
+		defer os.Setenv("GOPATH", gopath)
+		actualOutput := FilePathProfileToGithub(input)
+
+		if actualOutput != expectedOutput {
+			t.Fatalf("input=%s; expected output=%s; actual output=%s", input, expectedOutput,
+				actualOutput)
+		}
+	})
 }
