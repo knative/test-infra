@@ -20,31 +20,39 @@ import (
 	"testing"
 )
 
-func TestFilePathProfileToGithubUnmocked(t *testing.T) {
-	// this un-mocked version also verifies getRepoRoot
-	input := "knative.dev/test-infra/pkg/ab/cde"
-	expectedOutput := "pkg/ab/cde"
-	actualOutput := FilePathProfileToGithub(input)
-	if actualOutput != expectedOutput {
-		t.Errorf("FilePathProfileToGithub(%s) = %s; want %s", input, actualOutput,
-			expectedOutput)
-	}
-}
-
 func TestFilePathProfileToGithub(t *testing.T) {
-	input := "github.com/myRepoOwner/myRepoName/pkg/ab/cde"
-	expectedOutput := "pkg/ab/cde"
-	repoRoot := "/d1/d2/d3/gopath/src/github.com/myRepoOwner/myRepoName"
-	getRepoRoot = func() (string, error) {
-		return repoRoot, nil
+	type args struct {
+		file     string
+		gopath   string
+		repoRoot string
 	}
-	gopath := os.Getenv("GOPATH")
-	os.Setenv("GOPATH", "/d1/d2/d3/gopath")
-	defer os.Setenv("GOPATH", gopath)
-	actualOutput := FilePathProfileToGithub(input)
-
-	if actualOutput != expectedOutput {
-		t.Errorf("FilePathProfileToGithub(%s) = %s; want %s", input,
-			actualOutput, expectedOutput)
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{"repo on github.com",
+			args{"github.com/myRepoOwner/myRepoName/pkg/ab/cde",
+				"/d1/d2/d3/gopath",
+				"/d1/d2/d3/gopath/src/github.com/myRepoOwner/myRepoName"},
+			"pkg/ab/cde"},
+		{"repo on knative.dev",
+			args{"knative.dev/test-infra/pkg/ab/cde",
+				"/d1/d2/gopath",
+				"/d1/d2/gopath/src/knative.dev/test-infra"},
+			"pkg/ab/cde"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gopath := os.Getenv("GOPATH")
+			os.Setenv("GOPATH", tt.args.gopath)
+			getRepoRoot = func() (string, error) {
+				return tt.args.repoRoot, nil
+			}
+			defer os.Setenv("GOPATH", gopath)
+			if got := FilePathProfileToGithub(tt.args.file); got != tt.want {
+				t.Errorf("FilePathProfileToGithub(%v) = %v, want %v", tt.args.file, got, tt.want)
+			}
+		})
 	}
 }
