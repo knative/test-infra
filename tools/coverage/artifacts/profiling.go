@@ -16,6 +16,7 @@ limitations under the License.
 package artifacts
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -34,7 +35,7 @@ func NewProfileReader(reader io.ReadCloser) *ProfileReader {
 
 // runProfiling writes coverage profile (&its stdout) by running go test on
 // target package
-func runProfiling(covTargets []string, localArts *LocalArtifacts) {
+func runProfiling(covTargets []string, localArts *LocalArtifacts) (err error) {
 	log.Println("\nStarts calc.runProfiling(...)")
 
 	cmdArgs := []string{"test"}
@@ -49,8 +50,9 @@ func runProfiling(covTargets []string, localArts *LocalArtifacts) {
 	output, errCmdOutput := cmd.CombinedOutput()
 
 	if errCmdOutput != nil {
-		log.Printf("Error running 'go test -coverprofile ': error='%v'; combined output='%s'\n",
+		err = fmt.Errorf("Error running 'go test -coverprofile ': error='%v'; combined output='%s'\n",
 			errCmdOutput, output)
+		log.Printf(err.Error())
 	}
 
 	log.Printf("coverage profile created @ '%s'", localArts.ProfilePath())

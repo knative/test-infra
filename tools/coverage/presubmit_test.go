@@ -80,7 +80,9 @@ func preSubmitForTest() (data *gcs.PreSubmit) {
 func TestRunPresubmit(t *testing.T) {
 	log.Println("Starting TestRunPresubmit")
 	arts := artsTest.LocalArtsForTest("TestRunPresubmit")
-	arts.ProduceProfileFile("./" + test.CovTargetRelPath)
+	if err := arts.ProduceProfileFile("./" + test.CovTargetRelPath); err != nil {
+		t.Fatal(err)
+	}
 	p := preSubmitForTest()
 	RunPresubmit(p, arts)
 	if !test.FileOrDirExists(arts.LineCovFilePath()) {

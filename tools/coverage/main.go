@@ -77,7 +77,11 @@ func main() {
 		defaultStdoutRedirect,
 	)
 
-	localArtifacts.ProduceProfileFile(*coverageTargetDir)
+	if err := localArtifacts.ProduceProfileFile(*coverageTargetDir); err != nil {
+		if jobType == "postsubmit" {
+			defer log.Fatalf("Profile production failed: %v", err)
+		}
+	}
 
 	switch jobType {
 	case "presubmit":

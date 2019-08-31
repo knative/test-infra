@@ -68,7 +68,7 @@ func (arts *LocalArtifacts) KeyProfileCreator() *os.File {
 
 // ProduceProfileFile produce coverage profile (&its stdout) by running go test on target package
 // for periodic job, produce junit xml for testgrid in addition
-func (arts *LocalArtifacts) ProduceProfileFile(covTargetsStr string) {
+func (arts *LocalArtifacts) ProduceProfileFile(covTargetsStr string) error {
 	// creates artifacts directory
 	log.Printf("mkdir -p %s\n", arts.directory)
 	cmd := exec.Command("mkdir", "-p", arts.directory)
@@ -82,5 +82,5 @@ func (arts *LocalArtifacts) ProduceProfileFile(covTargetsStr string) {
 	}
 	log.Printf("covTargets = %v\n", covTargets)
 
-	runProfiling(covTargets, arts)
+	return runProfiling(covTargets, arts)
 }

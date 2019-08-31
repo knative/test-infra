@@ -36,8 +36,12 @@ func TestProfiling(t *testing.T) {
 			"key-cov-profile.txt",
 			"stdout.txt"),
 	}
-	arts.ProduceProfileFile(fmt.Sprintf("../%s/subPkg1/ "+
+	err := arts.ProduceProfileFile(fmt.Sprintf("../%s/subPkg1/ "+
 		"../%s/subPkg2/", test.CovTargetRootRel, test.CovTargetRootRel))
+
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	t.Logf("Verifying profile file...\n")
 	expectedFirstLine := "mode: count"
