@@ -162,7 +162,7 @@ spec:
         prs-affected: 0
         period: 1440
 
-  - error-pattern: "Error running 'go test -coverprofile '"
+  - error-pattern: "error running 'go test -coverprofile '"
     hint: 'Check build file and see why go test failed. Continuous failure of this test will cause
     outdated comparison base for pre-submit code coverage check.'
     alerts:

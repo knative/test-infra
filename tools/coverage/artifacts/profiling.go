@@ -50,7 +50,7 @@ func runProfiling(covTargets []string, localArts *LocalArtifacts) (err error) {
 	output, errCmdOutput := cmd.CombinedOutput()
 
 	if errCmdOutput != nil {
-		err = fmt.Errorf("Error running 'go test -coverprofile ': error='%v'; combined output='%s'\n",
+		err = fmt.Errorf("error running 'go test -coverprofile ': error='%v'; combined output='%s'\n",
 			errCmdOutput, output)
 		log.Printf(err.Error())
 	}
