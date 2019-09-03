@@ -402,9 +402,6 @@ func (gih *GithubIssueHandler) getFlakyIssues() (map[string][]*flakyIssue, error
 				return nil, err
 			}
 			if fi != nil {
-				if _, ok := issuesMap[*fi.identity]; !ok {
-					issuesMap[*fi.identity] = make([]*flakyIssue, 0)
-				}
 				issuesMap[*fi.identity] = append(issuesMap[*fi.identity], fi)
 			}
 		}
@@ -559,9 +556,6 @@ func (gih *GithubIssueHandler) processGithubIssues(repoDataAll []RepoData, dryru
 			messagesMap[rd.Config.Repo] = make(map[string][]string)
 		}
 		messagesMap[rd.Config.Repo][rd.Config.Name] = messages
-		if _, ok := messagesMap[rd.Config.Repo][rd.Config.Name]; !ok {
-			messagesMap[rd.Config.Repo][rd.Config.Name] = make([]string, 0)
-		}
 		flakyGHIssuesMap[rd.Config.Repo] = append(flakyGHIssuesMap[rd.Config.Repo], issues...)
 
 		if nil != err {
