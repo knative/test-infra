@@ -23,7 +23,7 @@ import (
 	"flag"
 	"log"
 
-	"knative.dev/test-infra/shared/ghutil"
+	"knative.dev/pkg/test/ghutil"
 )
 
 func main() {

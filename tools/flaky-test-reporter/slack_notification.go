@@ -24,7 +24,7 @@ import (
 	"sync"
 	"time"
 
-	"knative.dev/test-infra/shared/slackutil"
+	"knative.dev/pkg/test/slackutil"
 	"knative.dev/test-infra/shared/testgrid"
 )
 
