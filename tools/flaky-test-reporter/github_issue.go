@@ -192,10 +192,12 @@ func (gih *GithubIssueHandler) createHistoryUnicode(rd RepoData, comment, testFu
 	sort.Slice(records, func(i, j int) bool {
 		return records[i] > records[j]
 	})
-	// Truncate to keep only 100 records, as there is a 65535 characters limit,
-	// see https://github.com/knative/test-infra/issues/1326
-	if len(records) > 100 {
-		records = records[:100]
+	// There is a 65535 characters limit for Github comment. As tested
+	// (https://github.com/chaodaiG/test-github-api/issues/129#issuecomment-527972076),
+	// one comment can at least contain 120 records, keep only 60 records to be
+	// safe. See https://github.com/knative/test-infra/issues/1326
+	if len(records) > 60 {
+		records = records[:60]
 	}
 
 	if len(records) > maxHistoryEntries {
