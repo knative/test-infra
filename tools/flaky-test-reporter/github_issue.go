@@ -25,6 +25,8 @@ import (
 	"strings"
 	"time"
 
+	"k8s.io/apimachinery/pkg/util/sets"
+
 	"github.com/google/go-github/github"
 
 	"knative.dev/pkg/test/ghutil"
@@ -79,6 +81,8 @@ var (
 		beforeHistoryToken, afterHistoryToken, passedUnicode, failedUnicode, skippedUnicode)
 	// reHistory is for identifying history from comment
 	reHistory = fmt.Sprintf("(?s)%s(.*?)%s", beforeHistoryToken, afterHistoryToken)
+	// reSingleRecord is for identifying each single record
+	reSingleRecord = `[0-9]{4}\-[0-9]{2}\-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} [+\-][0-9]{4} [A-Z]{3}:.*`
 
 	// latestStatusPattern is for creating latest test result line in comment,
 	// expect an argument of test status as defined in result.go
@@ -156,8 +160,9 @@ func (gih *GithubIssueHandler) createCommentForTest(rd RepoData, testFullName st
 	return content
 }
 
+// create unicode graphs for current scan as well as all previous scans
 func (gih *GithubIssueHandler) createHistoryUnicode(rd RepoData, comment, testFullName string) string {
-	res := ""
+	var res string
 	currentUnicode := fmt.Sprintf("%s: ", time.Unix(*rd.LastBuildStartTime, 0).String())
 	resultSlice := rd.getResultSliceForTest(testFullName)
 	for i, buildID := range rd.BuildIDs {
@@ -174,28 +179,35 @@ func (gih *GithubIssueHandler) createHistoryUnicode(rd RepoData, comment, testFu
 		currentUnicode += fmt.Sprintf(" [%s](%s)", statusUnicode, url)
 	}
 
-	oldHistory := regexp.MustCompile(reHistory).FindStringSubmatch(comment)
-	res = fmt.Sprintf("\n%s", currentUnicode)
-	if len(oldHistory) >= 2 {
-		oldHistoryEntries := strings.Split(oldHistory[1], "\n")
-		if len(oldHistoryEntries) >= maxHistoryEntries {
-			oldHistoryEntries = oldHistoryEntries[:(maxHistoryEntries - 1)]
-		}
-		res += strings.Join(oldHistoryEntries, "\n")
+	// Make sure there is no dupe of records
+	uniqHistoryEntries := sets.String{}
+	oldHistory := regexp.MustCompile(reSingleRecord).FindAllStringSubmatch(comment, -1)
+	for _, hist := range oldHistory {
+		// Remove <!------End of History------>" that were introduced on some lines.
+		// TODO(chaodaiG): removing this logic once this is all cleared in
+		// existing bugs.
+		uniqHistoryEntries.Insert(strings.ReplaceAll(hist[0], afterHistoryToken, ""))
+	}
+	records := append([]string{currentUnicode}, uniqHistoryEntries.List()...)
+	sort.Slice(records, func(i, j int) bool {
+		return records[i] > records[j]
+	})
+	// There is a 65535 characters limit for Github comment. As tested
+	// (https://github.com/chaodaiG/test-github-api/issues/129#issuecomment-527972076),
+	// one comment can at least contain 120 records, keep only 60 records to be
+	// safe. See https://github.com/knative/test-infra/issues/1326
+	if len(records) > 60 {
+		records = records[:60]
+	}
+
+	if len(records) > maxHistoryEntries {
+		res = fmt.Sprintf("\n%s\n%s\n", strings.Join(records[:maxHistoryEntries], "\n"),
+			fmt.Sprintf(collapseTemplate, "Older builds", strings.Join(records[maxHistoryEntries:], "\n")))
 	} else {
-		res += "\n"
+		res = fmt.Sprintf("\n%s\n", strings.Join(records, "\n"))
 	}
 
 	return fmt.Sprintf(historyPattern, res)
-}
-
-// prependComment hides old comment into a collapsible, and prepend
-// new commment on top
-func (gih *GithubIssueHandler) prependComment(oldComment, newComment string) string {
-	if "" != oldComment {
-		oldComment = fmt.Sprintf(collapseTemplate, "Click to see older results", oldComment)
-	}
-	return fmt.Sprintf("%s\n\n%s", newComment, oldComment)
 }
 
 // updateIssue adds comments to an existing issue, close an issue if test passed both in previous day and today,
@@ -220,7 +232,7 @@ func (gih *GithubIssueHandler) updateIssue(fi *flakyIssue, newComment string, ts
 		if err := run(
 			"updating comment",
 			func() error {
-				return gih.client.EditComment(org, getRepoFromIssue(issue), *fi.comment.ID, gih.prependComment(*fi.comment.Body, newComment))
+				return gih.client.EditComment(org, getRepoFromIssue(issue), *fi.comment.ID, newComment)
 			},
 			dryrun,
 		); nil != err {
