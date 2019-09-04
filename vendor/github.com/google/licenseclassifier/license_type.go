@@ -22,9 +22,9 @@ package licenseclassifier
 import "github.com/google/licenseclassifier/internal/sets"
 
 // Canonical names of the licenses.
+// The names come from the https://spdx.org/licenses website, and are
+// also the filenames of the licenses in licenseclassifier/licenses.
 const (
-	// The names come from the https://spdx.org/licenses website, and are
-	// also the filenames of the licenses in licenseclassifier/licenses.
 	AFL11                       = "AFL-1.1"
 	AFL12                       = "AFL-1.2"
 	AFL20                       = "AFL-2.0"
@@ -89,6 +89,7 @@ const (
 	CCBYSA40                    = "CC-BY-SA-4.0"
 	CDDL10                      = "CDDL-1.0"
 	CDDL11                      = "CDDL-1.1"
+	CommonsClause               = "Commons-Clause"
 	CPAL10                      = "CPAL-1.0"
 	CPL10                       = "CPL-1.0"
 	eGenix                      = "eGenix"
@@ -110,6 +111,7 @@ const (
 	GPL30                       = "GPL-3.0"
 	GPL30withautoconfexception  = "GPL-3.0-with-autoconf-exception"
 	GPL30withGCCexception       = "GPL-3.0-with-GCC-exception"
+	GUSTFont                    = "GUST-Font-License"
 	ImageMagick                 = "ImageMagick"
 	IPL10                       = "IPL-1.0"
 	ISC                         = "ISC"
@@ -121,6 +123,7 @@ const (
 	Lil10                       = "Lil-1.0"
 	LPL102                      = "LPL-1.02"
 	LPL10                       = "LPL-1.0"
+	LPPL13c                     = "LPPL-1.3c"
 	MIT                         = "MIT"
 	MPL10                       = "MPL-1.0"
 	MPL11                       = "MPL-1.1"
@@ -129,6 +132,7 @@ const (
 	NCSA                        = "NCSA"
 	NPL10                       = "NPL-1.0"
 	NPL11                       = "NPL-1.1"
+	OFL                         = "OFL"
 	OpenSSL                     = "OpenSSL"
 	OSL10                       = "OSL-1.0"
 	OSL11                       = "OSL-1.1"
@@ -138,6 +142,7 @@ const (
 	PHP301                      = "PHP-3.01"
 	PHP30                       = "PHP-3.0"
 	PIL                         = "PIL"
+	Python20complete            = "Python-2.0-complete"
 	Python20                    = "Python-2.0"
 	QPL10                       = "QPL-1.0"
 	Ruby                        = "Ruby"
@@ -275,6 +280,7 @@ var (
 		PHP30,
 		PIL,
 		Python20,
+		Python20complete,
 		SGIB10,
 		SGIB11,
 		SGIB20,
@@ -310,6 +316,7 @@ var (
 	// fall into this category.
 	byExceptionOnlyType = sets.NewStringSet(
 		Beerware,
+		OFL,
 	)
 
 	// forbidden - Licenses that are forbidden to be used.
@@ -331,6 +338,7 @@ var (
 		CCBYNCSA25,
 		CCBYNCSA30,
 		CCBYNCSA40,
+		CommonsClause,
 		Facebook2Clause,
 		Facebook3Clause,
 		FacebookExamples,
