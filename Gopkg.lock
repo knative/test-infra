@@ -227,8 +227,7 @@
   version = "v1.0.0"
 
 [[projects]]
-  branch = "master"
-  digest = "1:0c9fcf2a5792c273622667ea6fb902d5d717a3158fc3fc953a9c47ac4a12c784"
+  digest = "1:37f2586574344d322ce61b3442e201764c01ff0bd842f3e15bc0197d2c819f87"
   name = "github.com/google/licenseclassifier"
   packages = [
     ".",
@@ -239,7 +238,7 @@
     "stringclassifier/searchset/tokenizer",
   ]
   pruneopts = "UT"
-  revision = "c3068f13fcc3961fd05f96f13c8250e350db4209"
+  revision = "3c8ad1f0b0644b6646210ee9cf2f34ff907e2e18"
 
 [[projects]]
   digest = "1:4b76f3e067eed897a45242383a2aa4d0a2fdbf73a8d00c03167dba80c43630b1"

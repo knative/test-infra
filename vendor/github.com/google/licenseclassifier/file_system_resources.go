@@ -15,12 +15,10 @@
 package licenseclassifier
 
 import (
-	"fmt"
+	"go/build"
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"runtime"
-	"strings"
 )
 
 const (
@@ -34,35 +32,34 @@ const (
 	ForbiddenLicenseArchive = "forbidden_licenses.db"
 )
 
-// lcRoot computes the location of the licenses data in the licenseclassifier source tree based on the location of this file.
-func lcRoot() (string, error) {
-	_, filename, _, ok := runtime.Caller(0)
-	if !ok {
-		return "", fmt.Errorf("unable to compute path of licenseclassifier source")
+func findInGOPATH(rel string) (fullPath string, err error) {
+	for _, path := range filepath.SplitList(build.Default.GOPATH) {
+		fullPath := filepath.Join(path, rel)
+		if _, err := os.Stat(fullPath); err != nil {
+			if os.IsNotExist(err) {
+				continue
+			}
+			return "", err
+		}
+		return fullPath, nil
 	}
-	// this file must be in the root of the package, or the relative paths will be wrong.
-	return filepath.Join(filepath.Dir(filename), "licenses"), nil
+	return "", nil
 }
 
-// ReadLicenseFile locates and reads the license archive file.  Absolute paths are used unmodified.  Relative paths are expected to be in the licenses directory of the licenseclassifier package.
+// ReadLicenseFile locates and reads the license file.
 func ReadLicenseFile(filename string) ([]byte, error) {
-	if strings.HasPrefix(filename, "/") {
-		return ioutil.ReadFile(filename)
+	archive, err := findInGOPATH(filepath.Join(LicenseDirectory, filename))
+	if err != nil || archive == "" {
+		return nil, err
 	}
-
-	root, err := lcRoot()
-	if err != nil {
-		return nil, fmt.Errorf("error locating licenses directory: %v", err)
-	}
-	return ioutil.ReadFile(filepath.Join(root, filename))
+	return ioutil.ReadFile(archive)
 }
 
 // ReadLicenseDir reads directory containing the license files.
 func ReadLicenseDir() ([]os.FileInfo, error) {
-	root, err := lcRoot()
-	if err != nil {
-		return nil, fmt.Errorf("error locating licenses directory: %v", err)
+	filename, err := findInGOPATH(filepath.Join(LicenseDirectory, LicenseArchive))
+	if err != nil || filename == "" {
+		return nil, err
 	}
-
-	return ioutil.ReadDir(root)
+	return ioutil.ReadDir(filepath.Dir(filename))
 }

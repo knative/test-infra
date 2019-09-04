@@ -143,10 +143,6 @@ func (m *MatchRange) in(start, end int) bool {
 	return start >= m.TargetStart && end <= m.TargetEnd
 }
 
-func (m *MatchRange) String() string {
-	return fmt.Sprintf("[%v, %v)->[%v, %v)", m.SrcStart, m.SrcEnd, m.TargetStart, m.TargetEnd)
-}
-
 // MatchRanges is a list of "MatchRange"s. The ranges are monotonically
 // increasing in value and indicate a single potential occurrence of the source
 // text in the target text.
@@ -166,6 +162,16 @@ func (m MatchRanges) TargetRange(target *SearchSet) (start, end int) {
 	start = target.Tokens[m[0].TargetStart].Offset
 	end = target.Tokens[m[len(m)-1].TargetEnd-1].Offset + len(target.Tokens[m[len(m)-1].TargetEnd-1].Text)
 	return start, end
+}
+
+// in returns true if the start and end are enclosed in one of the match ranges.
+func (m MatchRanges) in(start, end int) bool {
+	for _, val := range m {
+		if val.in(start, end) {
+			return true
+		}
+	}
+	return false
 }
 
 // Size is the number of source tokens that were matched.
@@ -206,116 +212,40 @@ func getMatchedRanges(src, target *SearchSet) []MatchRanges {
 	return mergeConsecutiveRanges(matchedRanges)
 }
 
-func extendsAny(tr tokenizer.TokenRanges, mr []MatchRanges) bool {
-	if len(mr) == 0 {
-		return false
-	}
-	for _, tv := range tr {
-		for _, mv := range mr {
-			if tv.Start >= mv[0].TargetStart && tv.Start <= mv[len(mv)-1].TargetEnd {
-				return true
-			}
-		}
-	}
-	return false
-}
-
-// targetMatchedRanges finds matching sequences in target and src ordered by target position
+// targetMatchedRanges goes through the source and finds all matches in the target.
 func targetMatchedRanges(src, target *SearchSet) MatchRanges {
 	if src.nodes == nil {
 		return nil
 	}
 
 	var matched MatchRanges
-	var previous *node
-	var possible []MatchRanges
-	for _, tgtNode := range target.nodes {
-		sr, ok := src.Hashes[tgtNode.checksum]
-		if !ok || (previous != nil && tgtNode.tokens.Start > previous.tokens.End) || !extendsAny(sr, possible) {
-			for _, r := range possible {
-				matched = append(matched, r...)
-			}
-			possible = possible[:0]
-			previous = nil
-		}
+	for _, srcNode := range src.nodes {
+		tr, ok := target.Hashes[srcNode.checksum]
 		if !ok {
-			// There isn't a match in the source.
+			// There isn't a match in the target.
 			continue
 		}
 
-		// Maps index within `possible` to the slice of ranges extended by a new range
-		extended := make(map[int]*MatchRanges)
-		// Go over the set of source ranges growing lists of `possible` match ranges.
-		tv := tgtNode.tokens
-		for _, sv := range sr {
-			r := &MatchRange{
-				SrcStart:    sv.Start,
-				SrcEnd:      sv.End,
-				TargetStart: tv.Start,
-				TargetEnd:   tv.End,
-			}
-			found := false
-			// Grow or extend each abutting `possible` match range.
-			for i, p := range possible {
-				last := p[len(p)-1]
-				if sv.Start >= last.SrcStart && sv.Start <= last.SrcEnd && tv.Start >= last.TargetStart && tv.Start <= last.TargetEnd {
-					found = true
-					possible[i] = append(possible[i], r)
-					extended[i] = &possible[i]
-				}
-			}
-			if !found {
-				// Did not abut any existing ranges, start a new `possible` match range.
-				mrs := make(MatchRanges, 0, 2)
-				mrs = append(mrs, r)
-				possible = append(possible, mrs)
-				extended[len(possible)-1] = &possible[len(possible)-1]
-			}
-		}
-		if len(extended) < len(possible) {
-			// Ranges not extended--add to `matched` if not included in other range.
-			for i := 0; i < len(possible); {
-				_, updated := extended[i]
-				if updated {
-					i++ // Keep in `possible` and advance to next index.
-					continue
-				}
-				p1 := possible[i]
-				found := false // whether found as subrange of another `possible` match.
-				for _, p2 := range extended {
-					if p1[0].SrcStart >= (*p2)[0].SrcStart && p1[0].TargetStart >= (*p2)[0].TargetStart {
-						found = true
-						break
-					}
-				}
-				if !found {
-					matched = append(matched, p1...)
-				} // else included in other match.
-				// Finished -- delete from `possible` and continue from same index.
-				possible = append(possible[:i], possible[i+1:]...)
-			}
-		}
-		previous = tgtNode
-	}
-	// At end of file, terminate all `possible` match ranges.
-	for i := 0; i < len(possible); i++ {
-		p1 := possible[i]
-		found := false // whether found as subrange of another `possible` match.
-		for j := i + 1; j < len(possible); {
-			p2 := possible[j]
-			if p1[0].SrcStart <= p2[0].SrcStart && p1[0].TargetStart <= p2[0].TargetStart {
-				// Delete later sub-ranges included in this range.
-				possible = append(possible[:j], possible[j+1:]...)
+		// Go over the set of target ranges that are potential matches.
+		for _, tv := range tr {
+			if matched.in(tv.Start, tv.End) {
+				// Matched within a larger range. Ignore.
 				continue
 			}
-			// Skip if subrange of a later range
-			if p1[0].SrcStart >= p2[0].SrcStart && p1[0].TargetStart >= p2[0].TargetStart {
-				found = true
+
+			// The matched sections from the source (S) should be
+			// in the same order as in the target (T). Thus if
+			// chunks A and C from S match in T at positions X and
+			// Z, then chunk B, which is between A and C in S,
+			// should be in a position between X and Z.
+			for _, sv := range src.Hashes[srcNode.checksum] {
+				matched = append(matched, &MatchRange{
+					SrcStart:    sv.Start,
+					SrcEnd:      sv.End,
+					TargetStart: tv.Start,
+					TargetEnd:   tv.End,
+				})
 			}
-			j++
-		}
-		if !found {
-			matched = append(matched, p1...)
 		}
 	}
 	return matched

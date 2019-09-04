@@ -17,7 +17,6 @@ package tokenizer
 
 import (
 	"bytes"
-	"fmt"
 	"hash/crc32"
 	"sort"
 	"unicode"
@@ -114,10 +113,6 @@ func (t Tokens) stringifyTokens(b *bytes.Buffer, offset, size int) {
 type TokenRange struct {
 	Start int
 	End   int
-}
-
-func (t *TokenRange) String() string {
-	return fmt.Sprintf("[%v, %v)", t.Start, t.End)
 }
 
 // TokenRanges is a list of TokenRange objects. The chance that two different
