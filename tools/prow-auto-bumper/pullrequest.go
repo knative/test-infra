@@ -28,7 +28,7 @@ import (
 	"strings"
 
 	"github.com/google/go-github/github"
-	"knative.dev/test-infra/shared/ghutil"
+	"knative.dev/pkg/test/ghutil"
 )
 
 func call(cmd string, args ...string) error {

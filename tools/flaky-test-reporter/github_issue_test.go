@@ -22,7 +22,7 @@ import (
 	"testing"
 
 	"github.com/google/go-github/github"
-	"knative.dev/test-infra/shared/ghutil/fakeghutil"
+	"knative.dev/pkg/test/ghutil/fakeghutil"
 	"knative.dev/test-infra/tools/flaky-test-reporter/config"
 )
 

@@ -27,7 +27,7 @@ import (
 
 	"github.com/google/go-github/github"
 
-	"knative.dev/test-infra/shared/ghutil"
+	"knative.dev/pkg/test/ghutil"
 	"knative.dev/test-infra/shared/junit"
 )
 
