@@ -12,13 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.10.2
-
-LABEL maintainer="adrcunha@google.com"
-
+FROM golang:1.12
+LABEL maintainer "Adriano Cunha <adrcunha@google.com>"
 RUN apt-get update && apt-get install -y --no-install-recommends
 
-COPY tools/latency/latency /metrics
+ENV TEMP_REPO_DIR /go/src/knative.dev/test-infra
+ENV TOOL_NAME latency
+
+# Temporarily add test-infra to the image to build custom tools
+ADD . $TEMP_REPO_DIR
+
+# Build tool in the container
+RUN make -C $TEMP_REPO_DIR/tools/$TOOL_NAME/
+RUN cp $TEMP_REPO_DIR/tools/$TOOL_NAME/$TOOL_NAME /metrics
+
+# Remove test-infra from the container
+RUN rm -fr $TEMP_REPO_DIR
 
 ENTRYPOINT ["/metrics"]
-
