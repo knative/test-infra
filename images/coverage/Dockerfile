@@ -32,4 +32,4 @@ RUN cp $TEMP_REPO_DIR/tools/$TOOL_NAME/$TOOL_NAME /$TOOL_NAME
 # Remove test-infra from the container
 RUN rm -fr $TEMP_REPO_DIR
 
-ENTRYPOINT ["/metrics"]
+ENTRYPOINT ["/coverage"]
