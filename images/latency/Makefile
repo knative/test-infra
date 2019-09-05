@@ -1,4 +1,4 @@
-# Copyright 2019 The OSS Authors.
+# Copyright 2019 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,13 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.12.1
-LABEL maintainer="kubernetes-test-infra-coverage-feature-owner@google.com"
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates \
-    git
-
-COPY coverage /coverage
-ENTRYPOINT ["/coverage"]
-
+IMAGE_NAME = metrics
+include ../../shared/Makefile.simple-image

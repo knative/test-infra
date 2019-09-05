@@ -15,8 +15,8 @@
 # Rules for creating simple docker images.
 
 # This is not a real Makefile. It should be included by another Makefile,
-# and IMAGE_NAME set appropriately. Set BINARY_DIR to `go build` a binary,
-# if desired. You must also provide a Dockerfile together with the Makefile.
+# and IMAGE_NAME set appropriately. You must also provide a Dockerfile
+# together with the Makefile.
 
 REGISTRY ?= gcr.io
 PROJECT  ?= knative-tests
@@ -27,9 +27,6 @@ TAG := $(shell date +v%Y%m%d)-$(shell git describe --always --dirty --match '^$$
 all: build
 
 build:
-ifdef BINARY_DIR
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build $(BINARY_DIR)
-endif
 	docker build -t $(IMG):$(TAG) -f Dockerfile ../..
 	docker tag $(IMG):$(TAG) $(IMG):latest
 
