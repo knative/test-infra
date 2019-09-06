@@ -357,7 +357,7 @@ func (gih *GithubIssueHandler) findExistingComment(issue *github.Issue, issueIde
 		if *comment.User.ID != *gih.user.ID {
 			continue
 		}
-		if testNameFromComment := regexp.MustCompile(reTestIdentifier).FindStringSubmatch(*comment.Body); len(testNameFromComment) >= 2 && issueIdentity == testNameFromComment[1] {
+		if strings.Contains(*comment.Body, beforeHistoryToken) {
 			targetComment = comments[i]
 			break
 		}
@@ -369,7 +369,11 @@ func (gih *GithubIssueHandler) findExistingComment(issue *github.Issue, issueIde
 }
 
 // githubToFlakyIssue converts a github issue into a flakyIssue struct
-func (gih *GithubIssueHandler) githubToFlakyIssue(issue *github.Issue) (*flakyIssue, error) {
+func (gih *GithubIssueHandler) githubToFlakyIssue(issue *github.Issue, dryrun bool) (*flakyIssue, error) {
+	// Issues are not created when using dryrun, so skip them
+	if dryrun {
+		return nil, nil
+	}
 	// Issue closed long time ago, it might fail with a different reason now.
 	if nil != issue.ClosedAt && issue.ClosedAt.Before(timeConsiderOld) {
 		return nil, nil
@@ -409,7 +413,7 @@ func (gih *GithubIssueHandler) getFlakyIssues() (map[string][]*flakyIssue, error
 			return nil, err
 		}
 		for _, issue := range issues {
-			fi, err := gih.githubToFlakyIssue(issue)
+			fi, err := gih.githubToFlakyIssue(issue, false)
 			if err != nil {
 				return nil, err
 			}
@@ -485,7 +489,7 @@ func (gih *GithubIssueHandler) processGithubIssuesForRepo(rd RepoData, flakyIssu
 			return nil, []string{message}, err
 		}
 
-		fi, err := gih.githubToFlakyIssue(issue)
+		fi, err := gih.githubToFlakyIssue(issue, dryrun)
 		return []*flakyIssue{fi}, []string{message}, err
 	}
 
@@ -537,7 +541,7 @@ func (gih *GithubIssueHandler) processGithubIssuesForRepo(rd RepoData, flakyIssu
 				log.Println(err)
 				errs = append(errs, err)
 			} else {
-				if fi, err := gih.githubToFlakyIssue(issue); err != nil {
+				if fi, err := gih.githubToFlakyIssue(issue, dryrun); err != nil {
 					errs = append(errs, err)
 				} else {
 					issues = append(issues, fi)
