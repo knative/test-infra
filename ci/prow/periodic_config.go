@@ -401,7 +401,7 @@ func generateIssueTrackerPeriodicJob(jobName, labelFilter, updatedTime, comment 
 
 // generatePerfClusterUpdatePeriodicJobs generates periodic jobs to update serving clusters
 // that run performance testing benchmarks
-func generatePerClusterUpdatePeriodicJobs() {
+func generatePerfClusterUpdatePeriodicJobs() {
 	// Generate periodic performance jobs for serving
 	perfClusterUpdatePeriodicJob(
 		"ci-knative-serving-recreate-clusters",
