@@ -24,6 +24,8 @@ readonly OUTPUT_FILE=${4:?"Fourth argument should be a file name all project nam
 for (( i=0; i<${NUMBER}; i++ )); do
   PROJECT="knative-boskos-$(( i + ${FIRST} ))"
   # This Folder ID is google.com/google-default
+  # If this needs to be changed for any reason, GCP project settings must be updated.
+  # Details are available in Google's internal issue 137963841.
   gcloud projects create ${PROJECT} --folder=396521612403
   gcloud beta billing projects link ${PROJECT} --billing-account=${BILLING_ACCOUNT}
   "$(dirname $0)/set_permissions.sh" ${PROJECT}
