@@ -71,7 +71,7 @@ func createSlackMessageForRepo(rd RepoData, flakyIssuesMap map[string][]*flakyIs
 	return message
 }
 
-func sendSlackNotifications(repoDataAll []RepoData, c slackutil.Operations, flakyIssues map[string][]*flakyIssue, dryrun bool) error {
+func sendSlackNotifications(repoDataAll []RepoData, c slackutil.WriteOperations, flakyIssues map[string][]*flakyIssue, dryrun bool) error {
 	var allErrs []error
 	for _, rd := range repoDataAll {
 		channels := rd.Config.SlackChannels

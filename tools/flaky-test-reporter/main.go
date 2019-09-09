@@ -132,7 +132,7 @@ func slackOperations(slackToken string, repoData []RepoData, flakyIssues map[str
 		return nil
 	}
 
-	client, err := slackutil.NewClient(knativeBotName, slackToken)
+	client, err := slackutil.NewWriteClient(knativeBotName, slackToken)
 	if nil != err {
 		return err
 	}
