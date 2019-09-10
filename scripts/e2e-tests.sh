@@ -335,9 +335,9 @@ function setup_test_cluster() {
   is_protected_gcr ${KO_DOCKER_REPO} && \
     abort "\$KO_DOCKER_REPO set to ${KO_DOCKER_REPO}, which is forbidden"
 
-  echo "- Project is ${E2E_PROJECT_ID}"
+  echo "- gcloud project is ${E2E_PROJECT_ID}"
+  echo "- gcloud user is ${k8s_user}"
   echo "- Cluster is ${k8s_cluster}"
-  echo "- User is ${k8s_user}"
   echo "- Docker is ${KO_DOCKER_REPO}"
 
   export KO_DATA_PATH="${REPO_ROOT_DIR}/.git"
