@@ -323,7 +323,7 @@ function setup_test_cluster() {
     abort "kubeconfig context set to ${k8s_cluster}, which is forbidden"
 
   # If cluster admin role isn't set, this is a brand new cluster
-  # Setup the admin role and also KO_DOCKER_REPO
+  # Setup the admin role and also KO_DOCKER_REPO if it is a GKE cluster
   if [[ -z "$(kubectl get clusterrolebinding cluster-admin-binding 2> /dev/null)" && "${k8s_cluster}" =~ ^gke_.* ]]; then
     acquire_cluster_admin_role ${k8s_user} ${E2E_CLUSTER_NAME} ${E2E_CLUSTER_REGION} ${E2E_CLUSTER_ZONE}
     kubectl config set-context ${k8s_cluster} --namespace=default
