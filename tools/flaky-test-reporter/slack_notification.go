@@ -84,7 +84,8 @@ func sendSlackNotifications(repoDataAll []RepoData, c slackutil.WriteOperations,
 		for i := range channels {
 			wg.Add(1)
 			channel := channels[i]
-			go func(wg *sync.WaitGroup) {
+			go func() {
+				defer wg.Done()
 				message := createSlackMessageForRepo(rd, flakyIssues)
 				if err := run(
 					fmt.Sprintf("post Slack message for job '%s' from repo '%s' in channel '%s'", rd.Config.Name, rd.Config.Repo, channel.Name),
@@ -100,8 +101,7 @@ func sendSlackNotifications(repoDataAll []RepoData, c slackutil.WriteOperations,
 					log.Printf("[dry run] Slack message not sent. See it below:\n%s\n\n", message)
 				}
 				ch <- true
-				wg.Done()
-			}(&wg)
+			}()
 		}
 		wg.Wait()
 		close(ch)
