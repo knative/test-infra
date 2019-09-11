@@ -984,7 +984,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:a01677188df495813272ea3e483ba9c4ff777673d196dbae8f03a7f32ff8181a"
+  digest = "1:d1fec5ef72902d6e2f36e70f6b16c33f99e87667e06b4a33c6b05657fc61507c"
   name = "knative.dev/pkg"
   packages = [
     "apis",
@@ -998,6 +998,7 @@
     "metrics/metricskey",
     "test/ghutil",
     "test/ghutil/fakeghutil",
+    "test/helpers",
     "test/slackutil",
     "webhook",
   ]
@@ -1036,6 +1037,7 @@
     "knative.dev/pkg/logging",
     "knative.dev/pkg/test/ghutil",
     "knative.dev/pkg/test/ghutil/fakeghutil",
+    "knative.dev/pkg/test/helpers",
     "knative.dev/pkg/test/slackutil",
     "knative.dev/pkg/webhook",
   ]

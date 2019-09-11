@@ -14,23 +14,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// error.go helps with error handling
-
-package main
+package helpers
 
 import (
-	"fmt"
 	"strings"
+	"testing"
 )
 
-// combineErrors combines slice of errors and return a single error
-func combineErrors(errs []error) error {
-	if len(errs) == 0 {
-		return nil
-	}
-	var errStrs []string
-	for _, err := range errs {
-		errStrs = append(errStrs, err.Error())
-	}
-	return fmt.Errorf(strings.Join(errStrs, "\n"))
+const (
+	testNamePrefix = "Test"
+)
+
+// ObjectPrefixForTest returns the name prefix for this test's random names.
+func ObjectPrefixForTest(t *testing.T) string {
+	return MakeK8sNamePrefix(strings.TrimPrefix(t.Name(), testNamePrefix))
+}
+
+// ObjectNameForTest generates a random object name based on the test name.
+func ObjectNameForTest(t *testing.T) string {
+	return AppendRandomString(ObjectPrefixForTest(t))
 }

@@ -21,6 +21,7 @@ import (
 	"log"
 	"sync"
 
+	"knative.dev/pkg/test/helpers"
 	"knative.dev/test-infra/tools/flaky-test-reporter/jsonreport"
 )
 
@@ -55,7 +56,7 @@ func writeFlakyTestsToJSON(repoDataAll []RepoData, dryrun bool) error {
 			for test := range testSet {
 				testList = append(testList, test)
 			}
-			if err := run(
+			if err := helpers.Run(
 				fmt.Sprintf("writing JSON report for repo '%s'", repo),
 				func() error {
 					_, err := client.CreateReport(repo, testList, true)
@@ -74,5 +75,5 @@ func writeFlakyTestsToJSON(repoDataAll []RepoData, dryrun bool) error {
 	}
 	wg.Wait()
 	close(ch)
-	return combineErrors(allErrs)
+	return helpers.CombineErrors(allErrs)
 }

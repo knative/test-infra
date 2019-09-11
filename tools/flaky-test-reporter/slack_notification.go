@@ -24,6 +24,7 @@ import (
 	"sync"
 	"time"
 
+	"knative.dev/pkg/test/helpers"
 	"knative.dev/pkg/test/slackutil"
 	"knative.dev/test-infra/shared/testgrid"
 )
@@ -87,7 +88,7 @@ func sendSlackNotifications(repoDataAll []RepoData, c slackutil.WriteOperations,
 			go func() {
 				defer wg.Done()
 				message := createSlackMessageForRepo(rd, flakyIssues)
-				if err := run(
+				if err := helpers.Run(
 					fmt.Sprintf("post Slack message for job '%s' from repo '%s' in channel '%s'", rd.Config.Name, rd.Config.Repo, channel.Name),
 					func() error {
 						return c.Post(message, channel.Identity)
@@ -106,5 +107,5 @@ func sendSlackNotifications(repoDataAll []RepoData, c slackutil.WriteOperations,
 		wg.Wait()
 		close(ch)
 	}
-	return combineErrors(allErrs)
+	return helpers.CombineErrors(allErrs)
 }
