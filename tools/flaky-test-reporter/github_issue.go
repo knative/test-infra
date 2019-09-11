@@ -98,7 +98,7 @@ var (
 // flakyIssue is a wrapper of github.Issue, used for storing pre-computed information
 type flakyIssue struct {
 	issue    *github.Issue
-	identity *string              // identity discovered by matching reTestIdentifier
+	identity string               // identity discovered by matching reTestIdentifier
 	comment  *github.IssueComment // The first auto comment, updated for every history
 }
 
@@ -391,7 +391,7 @@ func (gih *GithubIssueHandler) githubToFlakyIssue(issue *github.Issue, dryrun bo
 
 	return &flakyIssue{
 		issue:    issue,
-		identity: &issueID[1],
+		identity: issueID[1],
 		comment:  autoComment,
 	}, nil
 }
@@ -418,7 +418,7 @@ func (gih *GithubIssueHandler) getFlakyIssues() (map[string][]*flakyIssue, error
 				return nil, err
 			}
 			if fi != nil {
-				issuesMap[*fi.identity] = append(issuesMap[*fi.identity], fi)
+				issuesMap[fi.identity] = append(issuesMap[fi.identity], fi)
 			}
 		}
 	}
@@ -514,7 +514,7 @@ func (gih *GithubIssueHandler) processGithubIssuesForRepo(rd RepoData, flakyIssu
 					continue
 				}
 				comment += gih.createHistoryUnicode(rd, existIssue.comment.GetBody(), testFullName)
-				message := fmt.Sprintf("Updating issue '%s' for '%s'", *existIssue.issue.URL, *existIssue.identity)
+				message := fmt.Sprintf("Updating issue '%s' for '%s'", *existIssue.issue.URL, existIssue.identity)
 				log.Println(message)
 				messages = append(messages, message)
 				if err := gih.updateIssue(existIssue, comment, ts, dryrun); nil != err {
