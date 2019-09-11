@@ -12,18 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package valimage
+package main
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
 	"log"
+	"time"
 
 	"cloud.google.com/go/pubsub"
-
-	"github.com/knative/test-infra/tools/monitoring/mail"
-	"github.com/knative/test-infra/tools/monitoring/subscriber"
+	"knative.dev/test-infra/tools/monitoring/mail"
+	"knative.dev/test-infra/tools/monitoring/subscriber"
 )
 
 var (
@@ -32,7 +32,15 @@ var (
 		"sub-container-analysis-notes-v1beta1",
 		"sub-container-analysis-occurrences-v1beta1",
 	}
-	recipients = []string{"knative-productivity-dev@googlegroups.com"}
+	//recipients = []string{"knative-productivity-dev@googlegroups.com"}
+	recipients = []string{"joyceyu@google.com"}
+
+	// alertFreq is the minimum wait time before sending another image vulnerability alert
+	alertFreq = 24 * time.Hour
+
+	// Cache the last alert time in memory to prevent multiple image
+	// vulnerability alerts sent in a short duration of time.
+	lastSent = time.Time{}
 )
 
 // Client holds resources for monitoring image vulnerabilities
@@ -41,15 +49,18 @@ type Client struct {
 	mailClient *mail.Config
 }
 
-// Setup initialize all the resources for monitoring image vulnerabilities
-func Setup(mconfig *mail.Config) (*Client, error) {
-	var subClients []*subscriber.Client
+// NewValidateImageClient initialize all the resources for monitoring image vulnerabilities
+func NewValidateImageClient(mconfig *mail.Config) (*Client, error) {
+	var subClients = make([]*subscriber.Client, 0)
+
 	for _, sub := range monitoringSubs {
-		sub, err := subscriber.NewSubscriberClient(sub)
+		log.Printf("Appending sub: %v\n", sub)
+		subc, err := subscriber.NewSubscriberClient(sub)
 		if err != nil {
 			return nil, err
 		}
-		subClients = append(subClients, sub)
+		subClients = append(subClients, subc)
+		log.Printf("subclients: %v\n", subClients)
 	}
 
 	return &Client{
@@ -62,23 +73,32 @@ func Setup(mconfig *mail.Config) (*Client, error) {
 func (c *Client) Run() {
 	log.Println("Starting image vulnerabilities monitoring")
 	for _, sub := range c.subClients {
-		go func() {
-			err := sub.Receive(context.Background(), func(ctx context.Context, msg *pubsub.Message) {
-				c.sendMessage(msg)
-				msg.Ack()
-			})
-			if err != nil {
-				log.Printf("Failed to receive messages due to: %v\n", err)
-			}
-		}()
+		c.listen(sub)
 	}
 }
 
-func (c *Client) sendMessage(msg *pubsub.Message) {
-	err := c.mailClient.Send(recipients, "Image Vulnerabilities Detected", toMailContent(msg))
-	if err != nil {
-		log.Printf("Failed to send alert message %v\n", err)
-	}
+func (c *Client) listen(subClient *subscriber.Client) {
+	go func() {
+		err := subClient.Receive(context.Background(), func(ctx context.Context, msg *pubsub.Message) {
+			log.Printf("Message: %v\n", string(msg.Data))
+			log.Printf("Pubsub Message: %v\n", msg)
+
+			if time.Now().Sub(lastSent) > alertFreq {
+				err := c.mailClient.Send(recipients, "Image Vulnerabilities Detected", toMailContent(msg))
+				if err != nil {
+					log.Printf("Failed to send alert message %v\n", err)
+				} else {
+					lastSent = time.Now()
+				}
+			} else {
+				log.Println("Message not sent because an alert is sent recently.")
+			}
+			msg.Ack()
+		})
+		if err != nil {
+			log.Printf("Failed to receive messages due to: %v\n", err)
+		}
+	}()
 }
 
 func toMailContent(msg *pubsub.Message) string {

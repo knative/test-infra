@@ -30,7 +30,6 @@ import (
 	"knative.dev/test-infra/tools/monitoring/mail"
 	msql "knative.dev/test-infra/tools/monitoring/mysql"
 	"knative.dev/test-infra/tools/monitoring/subscriber"
-	"knative.dev/test-infra/tools/monitoring/valimage"
 )
 
 var (
@@ -82,12 +81,6 @@ func main() {
 		log.Fatalf("Failed to setup test-infra monitoring: %v\n", err)
 	}
 	alertClient.RunAlerting()
-
-	imageClient, err := valimage.Setup(mailConfig)
-	if err != nil {
-		log.Fatalf("Failed to set up image vulernabilties monitoring. Error: %v\n", err)
-	}
-	imageClient.Run()
 
 	// use PORT environment variable, or default to 8080
 	port := "8080"
