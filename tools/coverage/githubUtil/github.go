@@ -43,6 +43,7 @@ func FilePathProfileToGithub(file string) string {
 	return result
 }
 
+// use var for the following function so that it can be mocked in the unit test
 var getRepoRoot = func() (string, error) {
 	out, err := exec.Command("git", "rev-parse", "--show-toplevel").Output()
 	return string(out), err
