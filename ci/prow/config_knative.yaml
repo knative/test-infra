@@ -185,6 +185,16 @@ presubmits:
     - go-coverage: true
       dot-dev: true
 
+  knative/eventing-operator:
+    - build-tests: true
+      dot-dev: true
+    - unit-tests: true
+      dot-dev: true
+    - integration-tests: true
+      dot-dev: true
+    - go-coverage: true
+      dot-dev: true
+
 periodics:
   knative/serving:
     - continuous: true
@@ -343,6 +353,16 @@ periodics:
       dot-dev: true
 
   knative/serving-operator:
+    - continuous: true
+      dot-dev: true
+    - nightly: true
+      dot-dev: true
+    - dot-release: true
+      dot-dev: true
+    - auto-release: true
+      dot-dev: true
+
+  knative/eventing-operator:
     - continuous: true
       dot-dev: true
     - nightly: true
