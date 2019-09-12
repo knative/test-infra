@@ -5861,6 +5861,12 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/performance-test/service-account.json
+      - name: GITHUB_TOKEN
+        value: /etc/performance-test/github-token
+      - name: SLACK_READ_TOKEN
+        value: /etc/performance-test/slack-read-token
+      - name: SLACK_WRITE_TOKEN
+        value: /etc/performance-test/slack-write-token
     volumes:
     - name: test-account
       secret:
@@ -5897,6 +5903,12 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/performance-test/service-account.json
+      - name: GITHUB_TOKEN
+        value: /etc/performance-test/github-token
+      - name: SLACK_READ_TOKEN
+        value: /etc/performance-test/slack-read-token
+      - name: SLACK_WRITE_TOKEN
+        value: /etc/performance-test/slack-write-token
     volumes:
     - name: test-account
       secret:
@@ -5933,6 +5945,12 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/performance-test/service-account.json
+      - name: GITHUB_TOKEN
+        value: /etc/performance-test/github-token
+      - name: SLACK_READ_TOKEN
+        value: /etc/performance-test/slack-read-token
+      - name: SLACK_WRITE_TOKEN
+        value: /etc/performance-test/slack-write-token
     volumes:
     - name: test-account
       secret:
@@ -5969,6 +5987,12 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/performance-test/service-account.json
+      - name: GITHUB_TOKEN
+        value: /etc/performance-test/github-token
+      - name: SLACK_READ_TOKEN
+        value: /etc/performance-test/slack-read-token
+      - name: SLACK_WRITE_TOKEN
+        value: /etc/performance-test/slack-write-token
     volumes:
     - name: test-account
       secret:
