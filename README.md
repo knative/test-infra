@@ -10,9 +10,10 @@ to schedule testing and update issues.
 
 ### Gubernator
 
-Knative uses [gubernator](https://github.com/kubernetes/test-infra) to provide a
-[PR dashboard](https://gubernator.knative.dev/pr) for contributions in the
-Knative github organization.
+Knative uses [gubernator](https://github.com/kubernetes/test-infra/tree/master/gubernator)
+to provide a [PR dashboard](https://gubernator.knative.dev/pr) for contributions in the
+Knative github organization, and [Spyglass](https://github.com/kubernetes/test-infra/tree/master/prow/spyglass)
+to visualize test details.
 
 ### TestGrid
 
