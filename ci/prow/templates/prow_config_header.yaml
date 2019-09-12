@@ -90,6 +90,7 @@ tide:
     - knative/community
     - knative/sample-controller
     - knative/serving-operator
+    - knative/eventing-operator
     - google/knative-gcp
     labels:
     - lgtm
