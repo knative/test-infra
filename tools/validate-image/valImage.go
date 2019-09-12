@@ -32,8 +32,7 @@ var (
 		"sub-container-analysis-notes-v1beta1",
 		"sub-container-analysis-occurrences-v1beta1",
 	}
-	//recipients = []string{"knative-productivity-dev@googlegroups.com"}
-	recipients = []string{"joyceyu@google.com"}
+	recipients = []string{"knative-productivity-dev@googlegroups.com"}
 
 	// alertFreq is the minimum wait time before sending another image vulnerability alert
 	alertFreq = 24 * time.Hour

@@ -52,10 +52,7 @@ func main() {
 
 	// start the web server on port and accept requests
 	log.Printf("Server listening on port %s", port)
-	err = http.ListenAndServe(":"+port, server)
-	if err != nil {
-		log.Fatal(err)
-	}
+	log.Fatal(http.ListenAndServe(":"+port, server))
 }
 
 func validateImage(w http.ResponseWriter, r *http.Request) {
