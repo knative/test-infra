@@ -51,10 +51,10 @@ func TestFilePathProfileToGithub(t *testing.T) {
 				return tt.args.repoRoot, nil
 			}
 			defer os.Setenv("GOPATH", gopath)
-			defer getRepoRoot = getRepoRootSaved
 			if got := FilePathProfileToGithub(tt.args.file); got != tt.want {
 				t.Errorf("FilePathProfileToGithub(%v) = %v, want %v", tt.args.file, got, tt.want)
 			}
+			getRepoRoot = getRepoRootSaved
 		})
 	}
 }
