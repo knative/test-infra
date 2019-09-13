@@ -141,10 +141,10 @@ func GetCombinedResultsForBuild(build *prow.Build) ([]*junit.TestSuites, error) 
 		}
 		relPath, _ := filepath.Rel(build.StoragePath, artifact)
 		contents, err := build.ReadFile(relPath)
-		if nil != err {
+		if err != nil {
 			return nil, err
 		}
-		if suites, err := junit.UnMarshal(contents); nil != err {
+		if suites, err := junit.UnMarshal(contents); err != nil {
 			return nil, err
 		} else {
 			allSuites = append(allSuites, suites)

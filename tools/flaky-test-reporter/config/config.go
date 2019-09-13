@@ -54,19 +54,19 @@ type SlackChannel struct {
 
 func init() {
 	contents, err := ioutil.ReadFile(configFile)
-	if nil != err {
+	if err != nil {
 		// If running in container the relative path would not work,
 		// get current file dir and try to resolve it with Abs path
 		dir, _ := filepath.Abs(filepath.Dir(os.Args[0]))
 		contents, err = ioutil.ReadFile(filepath.Join(dir, configFile))
 	}
-	if nil != err {
+	if err != nil {
 		log.Printf("Failed to load the config file: %v", err)
 		return
 	}
 
 	config := &Config{}
-	if err = yaml.Unmarshal(contents, config); nil != err {
+	if err = yaml.Unmarshal(contents, config); err != nil {
 		log.Printf("Failed to unmarshal %v", contents)
 	} else {
 		JobConfigs = config.JobConfigs

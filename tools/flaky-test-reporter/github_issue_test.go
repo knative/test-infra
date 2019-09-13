@@ -192,8 +192,8 @@ func TestUpdateIssue(t *testing.T) {
 		}
 
 		gotErr := fgih.updateIssue(&fi, "new", &data.ts, dryrun)
-		if nil == data.wantErr {
-			if nil != gotErr {
+		if data.wantErr == nil {
+			if gotErr != nil {
 				t.Fatalf("update %v, got err: '%v', want err: '%v'", data, gotErr, data.wantErr)
 			}
 		} else {

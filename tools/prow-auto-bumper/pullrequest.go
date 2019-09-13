@@ -84,7 +84,7 @@ func getOncaller() (string, error) {
 }
 
 func makeGitCommit(gi gitInfo, message string, dryrun bool) error {
-	if "" == gi.head {
+	if gi.head == "" {
 		log.Fatal("pushing to empty branch ref is not allowed")
 	}
 	if err := run(
@@ -95,7 +95,7 @@ func makeGitCommit(gi gitInfo, message string, dryrun bool) error {
 		return fmt.Errorf("failed to git add: %v", err)
 	}
 	commitArgs := []string{"commit", "-m", message}
-	if "" != gi.userName && "" != gi.email {
+	if gi.userName != "" && gi.email != "" {
 		commitArgs = append(commitArgs, "--author", fmt.Sprintf("%s <%s>", gi.userName, gi.email))
 	}
 	if err := run(
@@ -121,7 +121,7 @@ func makeGitCommit(gi gitInfo, message string, dryrun bool) error {
 func getExistingPR(gcw *GHClientWrapper, gi gitInfo, matchTitle string) (*github.PullRequest, error) {
 	var res *github.PullRequest
 	PRs, err := gcw.ListPullRequests(gi.org, gi.repo, gi.getHeadRef(), gi.base)
-	if nil == err {
+	if err == nil {
 		for _, PR := range PRs {
 			if string(ghutil.PullRequestOpenState) == *PR.State && strings.Contains(*PR.Title, matchTitle) {
 				res = PR
@@ -138,19 +138,19 @@ func createOrUpdatePR(gcw *GHClientWrapper, pv *PRVersions, gi gitInfo, extraMsg
 	matchTitle := "Update prow to"
 	title := fmt.Sprintf("%s %s", matchTitle, vs.newVersion)
 	body := generatePRBody(extraMsgs)
-	if err := makeGitCommit(gi, commitMsg, dryrun); nil != err {
+	if err := makeGitCommit(gi, commitMsg, dryrun); err != nil {
 		return fmt.Errorf("failed git commit: '%v'", err)
 	}
 	existPR, err := getExistingPR(gcw, gi, matchTitle)
-	if nil != err {
+	if err != nil {
 		return fmt.Errorf("failed querying existing pullrequests: '%v'", err)
 	}
-	if nil != existPR {
+	if existPR != nil {
 		log.Printf("Found open PR '%d'", *existPR.Number)
 		return run(
 			fmt.Sprintf("Updating PR '%d', title: '%s', body: '%s'", *existPR.Number, title, body),
 			func() error {
-				if _, err := gcw.EditPullRequest(gi.org, gi.repo, *existPR.Number, title, body); nil != err {
+				if _, err := gcw.EditPullRequest(gi.org, gi.repo, *existPR.Number, title, body); err != nil {
 					return fmt.Errorf("failed updating pullrequest: '%v'", err)
 				}
 				return nil
@@ -161,7 +161,7 @@ func createOrUpdatePR(gcw *GHClientWrapper, pv *PRVersions, gi gitInfo, extraMsg
 	return run(
 		fmt.Sprintf("Creating PR, title: '%s', body: '%s'", title, body),
 		func() error {
-			if _, err := gcw.CreatePullRequest(gi.org, gi.repo, gi.getHeadRef(), gi.base, title, body); nil != err {
+			if _, err := gcw.CreatePullRequest(gi.org, gi.repo, gi.getHeadRef(), gi.base, title, body); err != nil {
 				return fmt.Errorf("failed creating pullrequest: '%v'", err)
 			}
 			return nil

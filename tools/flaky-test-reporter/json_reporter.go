@@ -62,7 +62,7 @@ func writeFlakyTestsToJSON(repoDataAll []RepoData, dryrun bool) error {
 					_, err := client.CreateReport(repo, testList, true)
 					return err
 				},
-				dryrun); nil != err {
+				dryrun); err != nil {
 				allErrs = append(allErrs, err)
 				log.Printf("failed writing JSON report for repo '%s': '%v'", repo, err)
 			}

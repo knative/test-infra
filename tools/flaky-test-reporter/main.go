@@ -56,31 +56,31 @@ func main() {
 		log.Printf("running in [dry run mode]")
 	}
 
-	if err := prow.Initialize(*serviceAccount); nil != err { // Explicit authenticate with gcs Client
+	if err := prow.Initialize(*serviceAccount); err != nil { // Explicit authenticate with gcs Client
 		log.Fatalf("Failed authenticating GCS: '%v'", err)
 	}
 
 	var repoDataAll []RepoData
 	// Clean up local artifacts directory, this will be used later for artifacts uploads
 	err := os.RemoveAll(prow.GetLocalArtifactsDir()) // this function returns nil if path not found
-	if nil != err {
+	if err != nil {
 		log.Fatalf("Failed removing local artifacts directory: %v", err)
 	}
 	var jobErrs []error
 	for _, jc := range config.JobConfigs {
 		log.Printf("collecting results for job '%s' in repo '%s'\n", jc.Name, jc.Repo)
 		rd, err := collectTestResultsForRepo(jc)
-		if nil != err {
+		if err != nil {
 			err = fmt.Errorf("WARNING: error collecting results for job '%s' in repo '%s': %v", jc.Name, jc.Repo, err)
 			log.Printf("%v", err)
 			jobErrs = append(jobErrs, err)
 			continue
 		}
-		if nil == rd.LastBuildStartTime {
+		if rd.LastBuildStartTime == nil {
 			log.Printf("WARNING: no build found, skipping '%s' in repo '%s'", jc.Name, jc.Repo)
 			continue
 		}
-		if err = createArtifactForRepo(*rd); nil != err {
+		if err = createArtifactForRepo(*rd); err != nil {
 			log.Fatalf("Error creating artifacts for job '%s' in repo '%s': %v", jc.Name, jc.Repo, err)
 		}
 		repoDataAll = append(repoDataAll, *rd)
@@ -102,18 +102,17 @@ func main() {
 		slackErr = slackOperations(*slackAccount, repoDataAll, flakyIssues, *dryrun)
 	}
 
-	if nil != jobErr {
+	if jobErr != nil {
 		log.Printf("Job step failures:\n%v", jobErr)
 	}
-
-	if nil != slackErr {
+	if slackErr != nil {
 		log.Printf("Slack step failures:\n%v", slackErr)
 	}
-	if nil != jsonErr {
+	if jsonErr != nil {
 		log.Printf("JSON step failures:\n%v", jsonErr)
 	}
 	// Fail this job if there is any error
-	if nil != jobErr || nil != jsonErr || nil != ghErr || nil != slackErr {
+	if jobErr != nil || jsonErr != nil || ghErr != nil || slackErr != nil {
 		os.Exit(1)
 	}
 }
@@ -134,7 +133,7 @@ func slackOperations(slackToken string, repoData []RepoData, flakyIssues map[str
 	}
 
 	client, err := slackutil.NewWriteClient(knativeBotName, slackToken)
-	if nil != err {
+	if err != nil {
 		return err
 	}
 

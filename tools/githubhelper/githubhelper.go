@@ -48,7 +48,7 @@ var (
 // otherwise it falls back to use an anonymous client
 func authenticate(githubTokenPath *string) {
 	client = github.NewClient(nil)
-	if nil == githubTokenPath || "" == *githubTokenPath {
+	if githubTokenPath == nil || *githubTokenPath == "" {
 		return
 	}
 

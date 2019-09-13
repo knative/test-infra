@@ -126,12 +126,12 @@ func flakyRateAboveThreshold(rd RepoData) bool {
 func createArtifactForRepo(rd RepoData) error {
 	artifactsDir := prow.GetLocalArtifactsDir()
 	err := common.CreateDir(path.Join(artifactsDir, rd.Config.Repo))
-	if nil != err {
+	if err != nil {
 		return err
 	}
 	outFilePath := path.Join(artifactsDir, rd.Config.Repo, rd.Config.Name+".json")
 	contents, err := json.Marshal(rd)
-	if nil != err {
+	if err != nil {
 		return err
 	}
 	return ioutil.WriteFile(outFilePath, contents, 0644)
@@ -139,7 +139,7 @@ func createArtifactForRepo(rd RepoData) error {
 
 // addSuiteToRepoData adds all testCase from suite into RepoData
 func addSuiteToRepoData(suite *junit.TestSuite, buildID int, rd *RepoData) {
-	if nil == rd.TestStats {
+	if rd.TestStats == nil {
 		rd.TestStats = make(map[string]*TestStat)
 	}
 	for _, testCase := range suite.TestCases {
@@ -172,10 +172,10 @@ func getCombinedResultsForBuild(build *prow.Build) ([]*junit.TestSuites, error) 
 		}
 		relPath, _ := filepath.Rel(build.StoragePath, artifact)
 		contents, err := build.ReadFile(relPath)
-		if nil != err {
+		if err != nil {
 			return nil, err
 		}
-		if suites, err := junit.UnMarshal(contents); nil != err {
+		if suites, err := junit.UnMarshal(contents); err != nil {
 			return nil, err
 		} else {
 			allSuites = append(allSuites, suites)
@@ -202,7 +202,7 @@ func collectTestResultsForRepo(jc config.JobConfig) (*RepoData, error) {
 			rd.LastBuildStartTime = build.StartTime
 		}
 		combinedResults, err := getCombinedResultsForBuild(&build)
-		if nil != err {
+		if err != nil {
 			return nil, err
 		}
 		for _, suites := range combinedResults {
@@ -219,9 +219,9 @@ func (rd *RepoData) getResultSliceForTest(testName string) []junit.TestStatusEnu
 	ts := rd.TestStats[testName]
 	for i, buildID := range rd.BuildIDs {
 		switch {
-		case true == intSliceContains(ts.Failed, buildID):
+		case intSliceContains(ts.Failed, buildID):
 			res[i] = junit.Failed
-		case true == intSliceContains(ts.Passed, buildID):
+		case intSliceContains(ts.Passed, buildID):
 			res[i] = junit.Passed
 		default:
 			res[i] = junit.Skipped
@@ -251,8 +251,8 @@ func getLatestFinishedBuilds(job *prow.Job, count int) []prow.Build {
 			break
 		}
 		build := job.NewBuild(buildID)
-		if nil != build.FinishTime {
-			if nil == build.StartTime {
+		if build.FinishTime != nil {
+			if build.StartTime == nil {
 				log.Fatalf("Failed parsing start time for finished build '%s'", build.StoragePath)
 			}
 			builds = append(builds, *build)
