@@ -984,7 +984,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:e9b1fbc1215b63fec62ab37561eb17d4dbe391459c037b7b7c7487435ed4c711"
+  digest = "1:d1fec5ef72902d6e2f36e70f6b16c33f99e87667e06b4a33c6b05657fc61507c"
   name = "knative.dev/pkg"
   packages = [
     "apis",
@@ -998,11 +998,12 @@
     "metrics/metricskey",
     "test/ghutil",
     "test/ghutil/fakeghutil",
+    "test/helpers",
     "test/slackutil",
     "webhook",
   ]
   pruneopts = "NUT"
-  revision = "5bd67436f64368eef87e48e164a4dfd8e66049c4"
+  revision = "d484d03f55d9ce79675699f3e74a6935b9ea5cd3"
 
 [solve-meta]
   analyzer-name = "dep"
@@ -1027,6 +1028,7 @@
     "k8s.io/apimachinery/pkg/runtime",
     "k8s.io/apimachinery/pkg/runtime/schema",
     "k8s.io/apimachinery/pkg/runtime/serializer",
+    "k8s.io/apimachinery/pkg/util/sets",
     "k8s.io/client-go/kubernetes",
     "k8s.io/client-go/plugin/pkg/client/auth/gcp",
     "k8s.io/client-go/rest",
@@ -1035,6 +1037,7 @@
     "knative.dev/pkg/logging",
     "knative.dev/pkg/test/ghutil",
     "knative.dev/pkg/test/ghutil/fakeghutil",
+    "knative.dev/pkg/test/helpers",
     "knative.dev/pkg/test/slackutil",
     "knative.dev/pkg/webhook",
   ]

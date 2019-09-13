@@ -30,6 +30,7 @@ import (
 	"github.com/google/go-github/github"
 
 	"knative.dev/pkg/test/ghutil"
+	"knative.dev/pkg/test/helpers"
 	"knative.dev/test-infra/shared/junit"
 )
 
@@ -229,7 +230,7 @@ func (gih *GithubIssueHandler) updateIssue(fi *flakyIssue, newComment string, ts
 
 	// Update comment unless test passed and issue closed
 	if !ts.isPassed() || issue.GetState() == string(ghutil.IssueOpenState) {
-		if err := run(
+		if err := helpers.Run(
 			"updating comment",
 			func() error {
 				return gih.client.EditComment(org, getRepoFromIssue(issue), *fi.comment.ID, newComment)
@@ -243,7 +244,7 @@ func (gih *GithubIssueHandler) updateIssue(fi *flakyIssue, newComment string, ts
 	if ts.isPassed() { // close open issue if the test passed twice consecutively
 		if issue.GetState() == string(ghutil.IssueOpenState) {
 			if passedLastTime {
-				if err := run(
+				if err := helpers.Run(
 					"closing issue",
 					func() error {
 						closeErr := gih.client.CloseIssue(org, getRepoFromIssue(issue), *issue.Number)
@@ -261,7 +262,7 @@ func (gih *GithubIssueHandler) updateIssue(fi *flakyIssue, newComment string, ts
 		}
 	} else if ts.isFlaky() { // reopen closed issue if test found flaky
 		if issue.GetState() == string(ghutil.IssueCloseState) {
-			if err := run(
+			if err := helpers.Run(
 				"reopening issue",
 				func() error {
 					openErr := gih.client.ReopenIssue(org, getRepoFromIssue(issue), *issue.Number)
@@ -283,7 +284,7 @@ func (gih *GithubIssueHandler) updateIssue(fi *flakyIssue, newComment string, ts
 // createNewIssue creates an issue, adds flaky label and adds comment.
 func (gih *GithubIssueHandler) createNewIssue(org, repoForIssue, title, body, comment string, dryrun bool) (*github.Issue, error) {
 	var newIssue *github.Issue
-	if err := run(
+	if err := helpers.Run(
 		"creating issue",
 		func() error {
 			var err error
@@ -295,7 +296,7 @@ func (gih *GithubIssueHandler) createNewIssue(org, repoForIssue, title, body, co
 		return nil, fmt.Errorf("failed creating issue '%s' in repo '%s'", title, repoForIssue)
 	}
 	var addIdentityErrs []error // clean up issue if any error occurred during adding identity, see below
-	if err := run(
+	if err := helpers.Run(
 		"adding comment",
 		func() error {
 			_, err := gih.client.CreateComment(org, repoForIssue, *newIssue.Number, comment)
@@ -305,8 +306,8 @@ func (gih *GithubIssueHandler) createNewIssue(org, repoForIssue, title, body, co
 	); nil != err {
 		addIdentityErrs = append(addIdentityErrs, fmt.Errorf("failed adding comment to issue '%s', '%v'", *newIssue.URL, err))
 	}
-	if nil == combineErrors(addIdentityErrs) {
-		if err := run(
+	if nil == helpers.CombineErrors(addIdentityErrs) {
+		if err := helpers.Run(
 			"adding flaky label",
 			func() error {
 				return gih.client.AddLabelsToIssue(org, repoForIssue, *newIssue.Number, []string{flakyLabel})
@@ -320,8 +321,8 @@ func (gih *GithubIssueHandler) createNewIssue(org, repoForIssue, title, body, co
 	// chances of duplicate issues. If for any reason the created issue failed to be labeled with correct identities,
 	// this issue will be invalid, and it's very likely that the same issue will be created the next time around.
 	// So cleanup issue if failed adding identity, by removing flaky label and closing issue
-	if nil != combineErrors(addIdentityErrs) {
-		if err := run(
+	if nil != helpers.CombineErrors(addIdentityErrs) {
+		if err := helpers.Run(
 			"cleaning up invalid issue",
 			func() error {
 				var gErr []error
@@ -331,14 +332,14 @@ func (gih *GithubIssueHandler) createNewIssue(org, repoForIssue, title, body, co
 				if cErr := gih.client.CloseIssue(org, repoForIssue, *newIssue.Number); nil != cErr {
 					gErr = append(gErr, cErr)
 				}
-				return combineErrors(gErr)
+				return helpers.CombineErrors(gErr)
 			},
 			dryrun,
 		); nil != err {
 			addIdentityErrs = append(addIdentityErrs, err)
 		}
 	}
-	return newIssue, combineErrors(addIdentityErrs)
+	return newIssue, helpers.CombineErrors(addIdentityErrs)
 }
 
 // findExistingComment identify existing comment by comment author and test identifier,
@@ -549,7 +550,7 @@ func (gih *GithubIssueHandler) processGithubIssuesForRepo(rd RepoData, flakyIssu
 			}
 		}
 	}
-	return issues, messages, combineErrors(errs)
+	return issues, messages, helpers.CombineErrors(errs)
 }
 
 // analyze all results, figure out flaky tests and processing existing auto:flaky issues
@@ -590,7 +591,7 @@ func (gih *GithubIssueHandler) processGithubIssues(repoDataAll []RepoData, dryru
 			summary += strings.Join(messages, "\n")
 		}
 		if errs, ok := errMap[rd.Config.Repo][rd.Config.Name]; ok {
-			summary += fmt.Sprintf("Errors in job '%s' in repo '%s':\n%v", rd.Config.Name, rd.Config.Repo, combineErrors(errs))
+			summary += fmt.Sprintf("Errors in job '%s' in repo '%s':\n%v", rd.Config.Name, rd.Config.Repo, helpers.CombineErrors(errs))
 		}
 	}
 

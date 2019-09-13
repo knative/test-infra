@@ -24,6 +24,7 @@ import (
 	"sync"
 	"time"
 
+	"knative.dev/pkg/test/helpers"
 	"knative.dev/pkg/test/slackutil"
 	"knative.dev/test-infra/shared/testgrid"
 )
@@ -71,7 +72,7 @@ func createSlackMessageForRepo(rd RepoData, flakyIssuesMap map[string][]*flakyIs
 	return message
 }
 
-func sendSlackNotifications(repoDataAll []RepoData, c slackutil.Operations, flakyIssues map[string][]*flakyIssue, dryrun bool) error {
+func sendSlackNotifications(repoDataAll []RepoData, c slackutil.WriteOperations, flakyIssues map[string][]*flakyIssue, dryrun bool) error {
 	var allErrs []error
 	for _, rd := range repoDataAll {
 		channels := rd.Config.SlackChannels
@@ -84,9 +85,10 @@ func sendSlackNotifications(repoDataAll []RepoData, c slackutil.Operations, flak
 		for i := range channels {
 			wg.Add(1)
 			channel := channels[i]
-			go func(wg *sync.WaitGroup) {
+			go func() {
+				defer wg.Done()
 				message := createSlackMessageForRepo(rd, flakyIssues)
-				if err := run(
+				if err := helpers.Run(
 					fmt.Sprintf("post Slack message for job '%s' from repo '%s' in channel '%s'", rd.Config.Name, rd.Config.Repo, channel.Name),
 					func() error {
 						return c.Post(message, channel.Identity)
@@ -100,11 +102,10 @@ func sendSlackNotifications(repoDataAll []RepoData, c slackutil.Operations, flak
 					log.Printf("[dry run] Slack message not sent. See it below:\n%s\n\n", message)
 				}
 				ch <- true
-				wg.Done()
-			}(&wg)
+			}()
 		}
 		wg.Wait()
 		close(ch)
 	}
-	return combineErrors(allErrs)
+	return helpers.CombineErrors(allErrs)
 }

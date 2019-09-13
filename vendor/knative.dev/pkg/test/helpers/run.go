@@ -14,19 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// run.go controls how to run functions that needs dryrun support
-
-package main
+package helpers
 
 import (
 	"log"
 )
 
-func run(message string, call func() error, dryrun bool) error {
+// Run can run functions that needs dryrun support.
+func Run(message string, call func() error, dryrun bool) error {
 	if dryrun {
 		log.Printf("[dry run] %s", message)
 		return nil
 	}
 	log.Printf(message)
+
 	return call()
 }
