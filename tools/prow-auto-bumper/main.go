@@ -34,12 +34,12 @@ func main() {
 	dryrun := flag.Bool("dry-run", false, "dry run switch")
 	flag.Parse()
 
-	if nil != dryrun && true == *dryrun {
+	if dryrun != nil && *dryrun {
 		log.Println("Running in [dry run mode]")
 	}
 
 	gc, err := ghutil.NewGithubClient(*githubAccount)
-	if nil != err {
+	if err != nil {
 		log.Fatalf("cannot authenticate to github: %v", err)
 	}
 
@@ -63,18 +63,18 @@ func main() {
 
 	gcw := &GHClientWrapper{gc}
 	bestVersion, err := retryGetBestVersion(gcw, srcGI)
-	if nil != err {
+	if err != nil {
 		log.Fatalf("cannot get best version from %s/%s: '%v'", srcGI.org, srcGI.repo, err)
 	}
 	log.Printf("Found version to update. Old Version: '%s', New Version: '%s'",
 		bestVersion.dominantVersions.oldVersion, bestVersion.dominantVersions.newVersion)
 
 	msgs, err := bestVersion.updateAllFiles(fileFilters, imageRegexp, *dryrun)
-	if nil != err {
+	if err != nil {
 		log.Fatalf("failed updating files: '%v'", err)
 	}
 
-	if err = createOrUpdatePR(gcw, bestVersion, targetGI, msgs, *dryrun); nil != err {
+	if err = createOrUpdatePR(gcw, bestVersion, targetGI, msgs, *dryrun); err != nil {
 		log.Fatalf("failed creating pullrequest: '%v'", err)
 	}
 }

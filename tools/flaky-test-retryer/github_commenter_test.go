@@ -285,7 +285,7 @@ func TestAppendComment(t *testing.T) {
 		fj.Refs[0].Pulls[0].SHA = test.commitSHA
 		fgc.PostComment(&fj, test.outliers)
 		actualComment, actualErr := fgc.getOldComment(fakeOrg, fakeRepo, fakePullID)
-		if nil != actualErr {
+		if actualErr != nil {
 			t.Fatalf("testing appending existing comment, with:\nold comment:\n%s\nfailed tests:'%v'\nwant: no error\ngot: %v",
 				test.oldCommentBody, test.outliers, actualErr)
 		}

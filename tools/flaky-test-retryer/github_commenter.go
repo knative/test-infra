@@ -69,7 +69,7 @@ func (e *entry) toString() string {
 // only keep latest 3 links
 func (e *entry) addLink(newLink string) {
 	var oldLinks []string
-	if "" != e.links {
+	if e.links != "" {
 		oldLinks = strings.Split(e.links, "<br>")
 	}
 	if len(oldLinks) >= maxRetries { // only keep last 2 if more than 2
@@ -186,7 +186,7 @@ func parseEntries(body string) (map[string]*entry, error) {
 	entryStrings := re.FindAllString(body, -1)
 	for _, e := range entryStrings {
 		en, err := stringToEntry(e)
-		if nil != err {
+		if err != nil {
 			return nil, err
 		}
 		entries[en.name] = en

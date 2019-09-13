@@ -232,7 +232,7 @@ func generateCron(jobType, jobName string, timeout int) string {
 func readTemplate(fp string) string {
 	if _, ok := templatesCache[fp]; !ok {
 		content, err := ioutil.ReadFile(path.Join(templateDir, fp))
-		if nil != err {
+		if err != nil {
 			log.Fatalf("Failed read file '%s': '%v'", fp, err)
 		}
 		templatesCache[fp] = string(content)

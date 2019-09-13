@@ -63,7 +63,7 @@ func TestXMLOutput(t *testing.T) {
 }
 
 func TestConfigPath(t *testing.T) {
-	if _, err := NewConfig(); nil != err {
+	if _, err := NewConfig(); err != nil {
 		t.Fatalf("Testing default config file, want: no err, got: %v", err)
 	}
 }
