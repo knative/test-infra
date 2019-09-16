@@ -28,7 +28,7 @@ spec:
       serviceAccountName: "sinker"
       containers:
       - name: sinker
-        image: gcr.io/k8s-prow/sinker:v20190903-599c89c3c
+        image: gcr.io/k8s-prow/sinker:v20190911-0708557a1
         volumeMounts:
         - name: config
           mountPath: /etc/config
