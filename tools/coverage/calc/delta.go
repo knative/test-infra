@@ -128,7 +128,7 @@ func (changes *GroupChanges) processChangedFiles(
 	for i, inc := range changes.Changed {
 		pathFromProfile := githubUtil.FilePathProfileToGithub(inc.base.Name())
 		fmt.Printf("checking if this file is in github change list: %s", pathFromProfile)
-		if (*githubFilePaths)[pathFromProfile] == true {
+		if githubFilePaths == nil || (*githubFilePaths)[pathFromProfile] == true {
 			fmt.Printf("\tYes!")
 			*rows = append(*rows, inc.githubBotRow(i, pathFromProfile))
 			*isEmpty = false
@@ -169,11 +169,13 @@ func (changes *GroupChanges) ContentForGithubPost(files *map[string]bool) (
 		"---- |:------------:|:------------:|:-----:",
 	}
 
-	fmt.Printf("\n%d files changed, reported by github:\n", len(*files))
-	for githubFilePath := range *files {
-		fmt.Printf("%s\t", githubFilePath)
+	if files != nil {
+		fmt.Printf("\n%d files changed, reported by github:\n", len(*files))
+		for githubFilePath := range *files {
+			fmt.Printf("%s\t", githubFilePath)
+		}
+		fmt.Printf("\n\n")
 	}
-	fmt.Printf("\n\n")
 
 	isEmpty = true
 	isCoverageLow = false

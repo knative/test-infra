@@ -82,7 +82,7 @@ func TestRunPresubmit(t *testing.T) {
 	arts := artsTest.LocalArtsForTest("TestRunPresubmit")
 	arts.ProduceProfileFile("./" + test.CovTargetRelPath)
 	p := preSubmitForTest()
-	RunPresubmit(p, arts)
+	RunPresubmit(p, arts, false)
 	if !test.FileOrDirExists(arts.LineCovFilePath()) {
 		t.Fatalf("No line cov file found in %s\n", arts.LineCovFilePath())
 	}

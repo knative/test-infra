@@ -16,6 +16,7 @@ limitations under the License.
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
@@ -48,16 +49,17 @@ func main() {
 	artifactsDir := flag.String("artifacts", defaultArtifactsDir, "directory for artifacts")
 	coverageTargetDir := flag.String("cov-target", defaultCoverageTargetDir, "target directory for test coverage")
 	coverageProfileName := flag.String("profile-name", defaultCoverageProfileName, "file name for coverage profile")
+	noRepoConn := flag.Bool("no-repo-connection", true, "enable it when connection to GibHub is not required")
 	githubTokenPath := flag.String("github-token", "", "path to token to access github repo")
-	covThresholdFlag := flag.Int("cov-threshold-percentage", defaultCovThreshold, "token to access github repo")
+	covThresholdFlag := flag.Int("cov-threshold-percentage", defaultCovThreshold, "token to access GibHub repo")
 	postingBotUserName := flag.String("posting-robot", "knative-metrics-robot", "github user name for coverage robot")
 	flag.Parse()
 
 	log.Printf("container flag list: postsubmit-gcs-bucket=%s; postSubmitJobName=%s; "+
-		"artifacts=%s; cov-target=%s; profile-name=%s; github-token=%s; "+
+		"artifacts=%s; cov-target=%s; profile-name=%s; noRepoConn=%s ;github-token=%s; "+
 		"cov-threshold-percentage=%d; posting-robot=%s;",
 		*gcsBucketName, *postSubmitJobName, *artifactsDir, *coverageTargetDir, *coverageProfileName,
-		*githubTokenPath, *covThresholdFlag, *postingBotUserName)
+		*noRepoConn, *githubTokenPath, *covThresholdFlag, *postingBotUserName)
 
 	log.Println("Getting env values")
 	pr := os.Getenv("PULL_NUMBER")
@@ -79,6 +81,7 @@ func main() {
 
 	localArtifacts.ProduceProfileFile(*coverageTargetDir)
 
+	log.Printf("Running workflow for %s\n", jobType)
 	switch jobType {
 	case "presubmit":
 		buildStr := os.Getenv("BUILD_NUMBER")
@@ -88,7 +91,12 @@ func main() {
 				buildStr, err)
 		}
 
-		prData := githubPr.New(*githubTokenPath, repoOwner, repoName, pr, *postingBotUserName)
+		var prData *githubPr.GithubPr
+		if *noRepoConn {
+			prData = &githubPr.GithubPr{Ctx: context.Background()}
+		} else {
+			prData = githubPr.New(*githubTokenPath, repoOwner, repoName, pr, *postingBotUserName)
+		}
 		gcsData := &gcs.PresubmitBuild{GcsBuild: gcs.GcsBuild{
 			StorageClient: gcs.NewStorageClient(prData.Ctx),
 			Bucket:        *gcsBucketName,
@@ -105,7 +113,7 @@ func main() {
 
 		presubmit.Artifacts = *presubmit.MakeGcsArtifacts(*localArtifacts)
 
-		isCoverageLow := RunPresubmit(presubmit, localArtifacts)
+		isCoverageLow := RunPresubmit(presubmit, localArtifacts, *noRepoConn)
 
 		if isCoverageLow {
 			logUtil.LogFatalf("Code coverage is below threshold (%d%%), "+

@@ -62,7 +62,7 @@ func (p *PostSubmit) listBuilds() (res []int) {
 	for _, buildStr := range lstBuildStrs {
 		num, err := strconv.Atoi(buildStr)
 		if err != nil {
-			log.Printf("None int build number found: '%s'", buildStr)
+			log.Printf("Non-int build number found: '%s'", buildStr)
 		} else {
 			res = append(res, num)
 		}
