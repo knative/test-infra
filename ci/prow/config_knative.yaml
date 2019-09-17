@@ -70,14 +70,6 @@ presubmits:
       optional: true
       full-command: "./test/e2e-tests.sh --gloo-version 0.17.1"
 
-  knative/build:
-    - build-tests: true
-    - unit-tests: true
-    - integration-tests: true
-      needs-dind: true
-    - go-coverage: true
-      go-coverage-threshold: 80
-
   knative/client:
     - build-tests: true
       dot-dev: true
@@ -126,11 +118,6 @@ presubmits:
       needs-dind: true
     - go-coverage: true
 
-  knative/build-templates:
-    - build-tests: true
-    - unit-tests: true
-    - integration-tests: true
-
   knative/pkg:
     - build-tests: true
       dot-dev: true
@@ -163,6 +150,7 @@ presubmits:
     - build-tests: true
     - unit-tests: true
     - integration-tests: true
+
   knative/sample-controller:
     - build-tests: true
       dot-dev: true
@@ -262,21 +250,6 @@ periodics:
     - webhook-apicoverage: true
       dot-dev: true
 
-  knative/build:
-    - continuous: true
-    - branch-ci: true
-      release: "0.5"
-    - branch-ci: true
-      release: "0.6"
-    - branch-ci: true
-      release: "0.7"
-    - nightly: true
-      needs-dind: true
-    - dot-release: true
-    - auto-release: true
-      needs-dind: true
-    - latency: true
-
   knative/client:
     - continuous: true
       dot-dev: true
@@ -329,9 +302,6 @@ periodics:
       dot-dev: true
     - auto-release: true
       dot-dev: true
-
-  knative/build-templates:
-    - continuous: true
 
   knative/pkg:
     - continuous: true
