@@ -572,7 +572,7 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 			if len(data.Base.Args) == 0 {
 				data.Base.Args = []string{"--" + jobName}
 			}
-			if item.Key == "integration-tests" {
+			if item.Key == "integration-tests" || item.Key == "unit-tests" {
 				isMonitoredJob = true
 			}
 		case "go-coverage":
