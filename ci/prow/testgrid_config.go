@@ -60,6 +60,8 @@ var (
 
 	// templatesCache caches templates in memory to avoid I/O
 	templatesCache = make(map[string]string)
+
+	contRegex = regexp.MustCompile(`-[0-9\.]+-continuous`)
 )
 
 // baseTestgridTemplateData contains basic data about the testgrid config file.
@@ -128,7 +130,7 @@ func generateTestGroup(projName string, repoName string, jobNames []string) {
 		extras := make(map[string]string)
 		switch jobName {
 		case "continuous", "dot-release", "auto-release", "performance", "performance-mesh", "latency", "nightly":
-			isDailyBranch := regexp.MustCompile(`-[0-9\.]+-continuous`).FindString(testGroupName) != ""
+			isDailyBranch := contRegex.FindString(testGroupName) != ""
 			if !isDailyBranch && (jobName == "continuous" || jobName == "auto-release") {
 				// TODO(Fredy-Z): this value should be derived from the cron string
 				extras["alert_stale_results_hours"] = "3"

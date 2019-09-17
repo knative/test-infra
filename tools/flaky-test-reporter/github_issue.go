@@ -73,8 +73,8 @@ var (
 	// testIdentifierPattern is used for formatting test identifier,
 	// expect an argument of test identifier
 	testIdentifierPattern = fmt.Sprintf("[%[1]s]%%s[%[1]s]", testIdentifierToken)
-	// reTestIdentifier is regex matching pattern for capturing testname
-	reTestIdentifier = fmt.Sprintf(`\[%[1]s\](.*?)\[%[1]s\]`, testIdentifierToken)
+	// regex matching pattern for capturing testname
+	reTestIdentifierRegex = regexp.MustCompile(fmt.Sprintf(`\[%[1]s\](.*?)\[%[1]s\]`, testIdentifierToken))
 
 	// historyPattern is for creating history section in commment,
 	// expect an argument of history Unicode from previous comment
@@ -82,15 +82,15 @@ var (
 		beforeHistoryToken, afterHistoryToken, passedUnicode, failedUnicode, skippedUnicode)
 	// reHistory is for identifying history from comment
 	reHistory = fmt.Sprintf("(?s)%s(.*?)%s", beforeHistoryToken, afterHistoryToken)
-	// reSingleRecord is for identifying each single record
-	reSingleRecord = `[0-9]{4}\-[0-9]{2}\-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} [+\-][0-9]{4} [A-Z]{3}:.*`
+	// regex for identifying each single record
+	reSingleRecordRegex = regexp.MustCompile(`[0-9]{4}\-[0-9]{2}\-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} [+\-][0-9]{4} [A-Z]{3}:.*`)
 
 	// latestStatusPattern is for creating latest test result line in comment,
 	// expect an argument of test status as defined in result.go
 	latestStatusPattern = fmt.Sprintf(`%s%%s`, latestStatusToken)
 
-	// reLastestStatus is for identifying latest test result from comment
-	reLastestStatus = fmt.Sprintf(`%s([a-zA-Z]*)`, latestStatusToken)
+	// regex for identifying latest test result from comment
+	reLatestStatusRegex = regexp.MustCompile(fmt.Sprintf(`%s([a-zA-Z]*)`, latestStatusToken))
 
 	// Precompute timeConsiderOld so that the same standard used everywhere
 	timeConsiderOld = time.Now().AddDate(0, 0, -daysConsiderOld)
@@ -182,7 +182,7 @@ func (gih *GithubIssueHandler) createHistoryUnicode(rd RepoData, comment, testFu
 
 	// Make sure there is no dupe of records
 	uniqHistoryEntries := sets.String{}
-	oldHistory := regexp.MustCompile(reSingleRecord).FindAllStringSubmatch(comment, -1)
+	oldHistory := reSingleRecordRegex.FindAllStringSubmatch(comment, -1)
 	for _, hist := range oldHistory {
 		// Remove <!------End of History------>" that were introduced on some lines.
 		// TODO(chaodaiG): removing this logic once this is all cleared in
@@ -216,7 +216,7 @@ func (gih *GithubIssueHandler) createHistoryUnicode(rd RepoData, comment, testFu
 func (gih *GithubIssueHandler) updateIssue(fi *flakyIssue, newComment string, ts *TestStat, dryrun bool) error {
 	issue := fi.issue
 	passedLastTime := false
-	latestStatus := regexp.MustCompile(reLastestStatus).FindStringSubmatch(fi.comment.GetBody())
+	latestStatus := reLatestStatusRegex.FindStringSubmatch(fi.comment.GetBody())
 	if len(latestStatus) >= 2 {
 		switch latestStatus[1] {
 		case passedStatus:
@@ -380,7 +380,7 @@ func (gih *GithubIssueHandler) githubToFlakyIssue(issue *github.Issue, dryrun bo
 		return nil, nil
 	}
 
-	issueID := regexp.MustCompile(reTestIdentifier).FindStringSubmatch(issue.GetBody())
+	issueID := reTestIdentifierRegex.FindStringSubmatch(issue.GetBody())
 	// Malformed issue, all auto flaky issues need to be identifiable.
 	if len(issueID) < 2 {
 		return nil, fmt.Errorf("test identifier '%s' is malformed", issueID)
