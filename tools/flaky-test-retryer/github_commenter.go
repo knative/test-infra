@@ -45,6 +45,7 @@ var (
 	// reTestIdentifier is regex matching pattern for capturing testname
 	reTestIdentifier = regexp.MustCompile(fmt.Sprintf(`\[%[1]s\](.*?)\[%[1]s\]`, testIdentifierToken))
 	commentTemplate  = "%s\nThe following jobs failed:\n\nTest name | Triggers | Retries\n--- | --- | ---\n%s\n\n%s"
+	entriesRegex     = regexp.MustCompile(`.* \| \d/\d`)
 )
 
 // GithubClient wraps the ghutil Github client
@@ -182,8 +183,7 @@ func (gc *GithubClient) getOldComment(org, repo string, pull int) (*github.Issue
 // a new comment.
 func parseEntries(body string) (map[string]*entry, error) {
 	entries := make(map[string]*entry)
-	re := regexp.MustCompile(`.* \| \d/\d`)
-	entryStrings := re.FindAllString(body, -1)
+	entryStrings := entriesRegex.FindAllString(body, -1)
 	for _, e := range entryStrings {
 		en, err := stringToEntry(e)
 		if err != nil {

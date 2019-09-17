@@ -173,6 +173,8 @@ var (
 
 	// Map which sections of the config.yaml were written to stdout.
 	sectionMap map[string]bool
+
+	projNameRegex = regexp.MustCompile(`.+-[0-9\.]+$`)
 )
 
 // Generate cron string based on job type, offset generated from jobname
@@ -1028,7 +1030,7 @@ func buildProjRepoStr(projName string, repoName string) string {
 
 // isReleased returns true for project name that has version
 func isReleased(projName string) bool {
-	return regexp.MustCompile(`.+-[0-9\.]+$`).FindString(projName) != ""
+	return projNameRegex.FindString(projName) != ""
 }
 
 // setOutput set the given file as the output target, then all the output will be written to this file
