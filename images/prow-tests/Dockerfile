@@ -61,6 +61,9 @@ ADD . /go/src/knative.dev/test-infra
 RUN make -C /go/src/knative.dev/test-infra/tools/githubhelper
 RUN cp /go/src/knative.dev/test-infra/tools/githubhelper/githubhelper .
 
+# We would prefer to install with go get -u github.com/boz/kail, but it is broken
+RUN /go/src/knative.dev/test-infra/images/prow-tests/install-kail.sh
+
 # Use a local dep-collector that's a wrapper for building the tool
 # on-the-fly.
 # TODO(adrcunha): Remove once https://github.com/knative/test-infra/pull/1019 is in all repos.
