@@ -28,17 +28,12 @@ import (
 
 type contextKey int
 
-const (
-	keyError contextKey = iota
-)
+const keyError contextKey = iota
 
-type fakeSubscriber struct {
-	Operation
-	name string
-}
+type fakeSubscriber struct{}
 
 func getFakeSubscriber(n string) *Client {
-	return &Client{&fakeSubscriber{name: n}}
+	return &Client{&fakeSubscriber{}}
 }
 
 func (fs *fakeSubscriber) Receive(ctx context.Context, f func(context.Context, *pubsub.Message)) error {
@@ -46,10 +41,6 @@ func (fs *fakeSubscriber) Receive(ctx context.Context, f func(context.Context, *
 		return err.(error)
 	}
 	return nil
-}
-
-func (fs *fakeSubscriber) String() string {
-	return fs.name
 }
 
 func TestSubscriberClient_ReceiveMessageAckAll(t *testing.T) {
