@@ -14,18 +14,46 @@ Flags for this tool are:
   Github API calls.
 - `--slack-account` specifies the path of file containing Slack token for Slack
   web API calls.
+- `skip-report` skips all Github/Slack activities. This is used for the
+  purpose of data collection.
 - `--dry-run` enables dry-run mode.
 
 ### IMPORTANT: This tool is _NOT_ intended to run locally, as this could interfere with real Github issues and potentially flood Knative Slack channels
 
+## How To Debug/Verify Changes
+
 For debugging purpose it's highly recommended to start with `--dry-run` flag, by
-passing this flag it will only collect information from GCS/Github/Slack, and
+passing this flag it will only collect information from GCS/Github, and
 all the manipulations of Github/Slack resources are omitted.
+
+### Requirement
+
+- `GCP token`: Create a service account by visiting
+  `https://pantheon.corp.google.com/iam-admin/serviceaccounts?project=[YOUR_PROJECT]`,
+  navigate to newly created service account, and click `CREATE KEY` button and
+  select `JSON`. Download generated json key file and save it securely on your
+  system.
+- `Github token`: Create a github token by visiting
+  `https://github.com/settings/tokens`, click `Generate new token` and select at
+  least `repo:status` and `public_repo` permissions before generate the token.
+  Save generated token in a file securely on your system.
+
+### Debug Command
+
+### IMPORTANT: Please DO pass in _--dry-run_ for debugging purpose, as it's good enough for debugging majority of the cases.
+
+Command for debugging:
+```
+go run [REPO_ROOT]/tools/flaky-test-reporter --service-account "[PATH_OF_GCP_TOKEN]" \
+ --github-account "[PATH_OF_GITHUB_TOKEN]" --dry-run
+``` 
 
 ## Prow Job
 
-There is a prow job that triggers this tool at 4:00/5:00AM(Day light saving)
-everyday.
+There is a prow job(ci-knative-flakes-reporter) that triggers this tool at 4:00/5:00AM(Day light saving)
+everyday, which does Github/Slack reporting. Another prow
+job(ci-knative-flakes-resultsrecorder) that runs every hour, which does only
+data collection part by passing `--skip-report` flag, the data it collected can be used like [this](https://github.com/knative/test-infra/blob/11c44d69473c167f76da249625d67431b6fe90df/tools/flaky-test-reporter/jsonreport/jsonreport.go#L117)
 
 ## Considerations
 

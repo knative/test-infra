@@ -133,7 +133,7 @@ func slackOperations(slackToken string, repoData []RepoData, flakyIssues map[str
 	}
 
 	client, err := slackutil.NewWriteClient(knativeBotName, slackToken)
-	if err != nil {
+	if err != nil && !dryrun { // Dryrun doesn't do any Slack operation
 		return err
 	}
 
