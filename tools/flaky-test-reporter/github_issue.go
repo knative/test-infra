@@ -361,7 +361,8 @@ func (gih *GithubIssueHandler) findExistingComment(issue *github.Issue, issueIde
 		// Double check to make sure the comment contains beforeHistoryToken as
 		// it's expected from auto-comment. Check reTestIdentifierRegex for bulk
 		// issue since it doesn't have beforeHistoryToken
-		if testNameFromComment := reTestIdentifierRegex.FindStringSubmatch(*comment.Body); (len(testNameFromComment) >= 2 && issueIdentity == testNameFromComment[1]) ||
+		testNameFromComment := reTestIdentifierRegex.FindStringSubmatch(*comment.Body)
+		if (len(testNameFromComment) >= 2 && issueIdentity == testNameFromComment[1]) ||
 			strings.Contains(*comment.Body, beforeHistoryToken) {
 			targetComment = comments[i]
 			break
