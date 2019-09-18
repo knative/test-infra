@@ -262,6 +262,10 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-google-knative-gcp-go-coverage
   num_failures_to_alert: 9999
   short_text_metric: "coverage"
+- name: ci-knative-serving-webhook-apicoverage
+  gcs_prefix: knative-prow/logs/ci-knative-serving-webhook-apicoverage
+  num_failures_to_alert: 3
+  alert_stale_results_hours: 48
 dashboards:
 - name: serving
   dashboard_tab:
@@ -308,6 +312,9 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-serving-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+  - name: apicoverage
+    test_group_name: ci-knative-serving-webhook-apicoverage
+    base_options: "sort-by-name="
 - name: client
   dashboard_tab:
   - name: continuous
