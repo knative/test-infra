@@ -37,7 +37,7 @@ spec:
     spec:
       containers:
       - name: flaky-test-retry-bot
-        image: gcr.io/knative-tests/test-infra/flaky-test-retryer:v20190821-43d32a3
+        image: gcr.io/knative-tests/test-infra/flaky-test-retryer:v20190918-11c44d6
         imagePullPolicy: Always
         command: ["/flaky-test-retryer"]
         args:
