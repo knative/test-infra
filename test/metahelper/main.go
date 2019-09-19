@@ -4,7 +4,7 @@ import (
 	"flag"
 	"log"
 
-	"knative.dev/eventing-operator/test/metahelper/util"
+	"knative.dev/test-infra/test/metahelper/util"
 )
 
 func main() {

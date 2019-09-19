@@ -6,7 +6,7 @@ import (
 	"log"
 	"strconv"
 
-	"knative.dev/eventing-operator/test/metahelper/util"
+	"knative.dev/test-infra/test/metahelper/util"
 
 	"knative.dev/pkg/testutils/clustermanager"
 )

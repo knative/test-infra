@@ -75,12 +75,36 @@
   revision = "3c8ad1f0b0644b6646210ee9cf2f34ff907e2e18"
 
 [[projects]]
+  digest = "1:ab3ec1fe3e39bac4b3ab63390767766622be35b7cab03f47f787f9ec60522a53"
+  name = "github.com/google/uuid"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "0cd6bf5da1e1c83f8b45653022c74f71af0538a4"
+  version = "v1.1.1"
+
+[[projects]]
   digest = "1:4b76f3e067eed897a45242383a2aa4d0a2fdbf73a8d00c03167dba80c43630b1"
   name = "github.com/googleapis/gax-go"
   packages = ["v2"]
   pruneopts = "NUT"
   revision = "bd5b16380fd03dc758d11cef74ba2e3bc8b0e8c2"
   version = "v2.0.5"
+
+[[projects]]
+  digest = "1:f0d9d74edbd40fdeada436d5ac9cb5197407899af3fef85ff0137077ffe8ae19"
+  name = "github.com/hashicorp/errwrap"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "8a6fb523712970c966eefc6b39ed2c5e74880354"
+  version = "v1.0.0"
+
+[[projects]]
+  digest = "1:2ed138049ab373f696db2081ca48f15c5abdf20893803612a284f2bdce2bf443"
+  name = "github.com/hashicorp/go-multierror"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "886a7fbe3eb1c874d46f623bfa70af45f425b3d1"
+  version = "v1.0.0"
 
 [[projects]]
   digest = "1:7fae9ec96d10b2afce0da23c378c8b3389319b7f92fa092f2621bba3078cfb4b"
@@ -91,12 +115,28 @@
   version = "v0.5.3"
 
 [[projects]]
+  digest = "1:58999a98719fddbac6303cb17e8d85b945f60b72f48e3a2df6b950b97fa926f1"
+  name = "github.com/konsorten/go-windows-terminal-sequences"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "f55edac94c9bbba5d6182a4be46d86a2c9b5b50e"
+  version = "v1.0.2"
+
+[[projects]]
   digest = "1:d917313f309bda80d27274d53985bc65651f81a5b66b820749ac7f8ef061fd04"
   name = "github.com/sergi/go-diff"
   packages = ["diffmatchpatch"]
   pruneopts = "NUT"
   revision = "1744e2970ca51c86172c8190fadad617561ed6e7"
   version = "v1.0.0"
+
+[[projects]]
+  digest = "1:f4aaa07a6c33f2b354726d0571acbc8ca118837c75709f6353203ae1a3f8eeab"
+  name = "github.com/sirupsen/logrus"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "839c75faf7f98a33d445d181f3018b5c3409a45e"
+  version = "v1.4.2"
 
 [[projects]]
   digest = "1:59a0bfab08de2de3bfe8d36dbeff8cd15c71ed83c08fe11f7545a436aa2a31cc"
@@ -217,9 +257,10 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:b414dd15b7b0f038c5a28e9049b6d521097f169dac97de5e3187ac1cea711b04"
+  digest = "1:c7938cdaa31dcd5d13cabdee93db0955e91968b9478a24669937b548f44053ea"
   name = "google.golang.org/api"
   packages = [
+    "container/v1beta1",
     "gensupport",
     "googleapi",
     "googleapi/internal/uritemplates",
@@ -337,25 +378,53 @@
   version = "v2.2.2"
 
 [[projects]]
-  digest = "1:f5fb6c4c9e14909a66efe7d3e49403234cd52523eb3997c5753a880635e8be2d"
+  digest = "1:2ee3cb5844e7dc7e2f094ec382b4b42ab09d4e0484bc622198272b85264bf0b6"
   name = "k8s.io/apimachinery"
-  packages = ["pkg/util/sets"]
+  packages = [
+    "pkg/util/errors",
+    "pkg/util/sets",
+    "pkg/util/validation",
+    "pkg/util/validation/field",
+  ]
   pruneopts = "NUT"
   revision = "01f179d85dbce0f2e0e4351a92394b38694b7cae"
   version = "kubernetes-1.12.6"
 
 [[projects]]
   branch = "master"
-  digest = "1:0da512e9f0141cbd51cb3adc21b57b5716ab4329fa75b546d1a8a1afdae6a07d"
+  digest = "1:df1c1cf6d2c9ca0781705ef095cb15e06f777cddb493775aad41b72f79867d7a"
+  name = "k8s.io/test-infra"
+  packages = [
+    "boskos/client",
+    "boskos/common",
+    "boskos/storage",
+  ]
+  pruneopts = "NUT"
+  revision = "5458503e8b07feacd8c3d38ab77e959326bda435"
+
+[[projects]]
+  branch = "master"
+  digest = "1:0e66b6af408f7217f720d4c5a6d0671faa0ddfde67b1a4d8549788c6333971a2"
   name = "knative.dev/pkg"
   packages = [
     "test/ghutil",
     "test/ghutil/fakeghutil",
     "test/helpers",
     "test/slackutil",
+    "testutils/clustermanager",
+    "testutils/clustermanager/boskos",
+    "testutils/common",
   ]
   pruneopts = "NUT"
-  revision = "d484d03f55d9ce79675699f3e74a6935b9ea5cd3"
+  revision = "9d08e921cc9180ef4599d1c09fcaf00d31a6cce2"
+
+[[projects]]
+  digest = "1:8730e0150dfb2b7e173890c8b9868e7a273082ef8e39f4940e3506a481cf895c"
+  name = "sigs.k8s.io/yaml"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "fd68e9863619f6ec2fdd8625fe1f02e7c877e480"
+  version = "v1.1.0"
 
 [solve-meta]
   analyzer-name = "dep"
@@ -376,6 +445,7 @@
     "knative.dev/pkg/test/ghutil/fakeghutil",
     "knative.dev/pkg/test/helpers",
     "knative.dev/pkg/test/slackutil",
+    "knative.dev/pkg/testutils/clustermanager",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
