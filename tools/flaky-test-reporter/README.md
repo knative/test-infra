@@ -14,8 +14,8 @@ Flags for this tool are:
   Github API calls.
 - `--slack-account` specifies the path of file containing Slack token for Slack
   web API calls.
-- `skip-report` skips all Github/Slack activities. This is used for the
-  purpose of data collection.
+- `skip-report` skips all Github/Slack activities. This is used for the purpose
+  of data collection.
 - `--dry-run` enables dry-run mode.
 
 ### IMPORTANT: This tool is _NOT_ intended to run locally, as this could interfere with real Github issues and potentially flood Knative Slack channels
@@ -23,8 +23,8 @@ Flags for this tool are:
 ## How To Debug/Verify Changes
 
 For debugging purpose it's highly recommended to start with `--dry-run` flag, by
-passing this flag it will only **read** information from GCS/Github, and
-all the **writes** of Github/Slack resources are omitted.
+passing this flag it will only **read** information from GCS/Github, and all the
+**writes** of Github/Slack resources are omitted.
 
 ### Requirement
 
@@ -41,15 +41,16 @@ all the **writes** of Github/Slack resources are omitted.
 ### IMPORTANT: Please DO pass in _--dry-run_ for debugging purpose, as it's good enough for debugging majority of the cases.
 
 Command for debugging:
+
 ```
 go run [REPO_ROOT]/tools/flaky-test-reporter --service-account "[PATH_OF_GCP_TOKEN]" \
  --github-account "[PATH_OF_GITHUB_TOKEN]" --dry-run
-``` 
+```
 
 ## Prow Jobs
 
-1. `ci-knative-flakes-reporter`: triggers this tool at 4:00/5:00AM(Day light saving)
-everyday, which does Github/Slack reporting.
+1. `ci-knative-flakes-reporter`: triggers this tool at 4:00/5:00AM(Day light
+   saving) everyday, which does Github/Slack reporting.
 1. `ci-knative-flakes-resultsrecorder`: runs every hour, does only data
    collection part by passing `--skip-report` flag, the data it collected can be
    used like
