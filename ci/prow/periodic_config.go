@@ -322,6 +322,9 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 		if repositories[i].DotDev {
 			data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  path_alias: knative.dev/"+path.Base(repoName))
 		}
+		if repositories[i].Go113 {
+			data.Base.Image = getGo113ImageName(data.Base.Image)
+		}
 		addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 		addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
 		configureServiceAccountForJob(&data.Base)
