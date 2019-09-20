@@ -38,7 +38,8 @@ RUN rm -rf /usr/local/go && \
     rm "${GO_TARBALL}"
 
 # Extra tools through go get
-RUN go get -u github.com/google/ko/cmd/ko
+RUN GO111MODULE=on go get github.com/google/ko/cmd/ko
+RUN GO111MODULE=on go get github.com/boz/kail/cmd/kail
 RUN go get -u github.com/golang/dep/cmd/dep
 RUN go get -u github.com/jstemmer/go-junit-report
 RUN go get -u github.com/raviqqe/liche
