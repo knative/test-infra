@@ -404,7 +404,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:0e66b6af408f7217f720d4c5a6d0671faa0ddfde67b1a4d8549788c6333971a2"
+  digest = "1:4d9c8785cf87de65a31b626091bb936227a4647c2d5480a69ede452ebcc77948"
   name = "knative.dev/pkg"
   packages = [
     "test/ghutil",
@@ -414,9 +414,10 @@
     "testutils/clustermanager",
     "testutils/clustermanager/boskos",
     "testutils/common",
+    "testutils/gke",
   ]
   pruneopts = "NUT"
-  revision = "9d08e921cc9180ef4599d1c09fcaf00d31a6cce2"
+  revision = "c119a8065cf96c7f9bb5cf27aa4f5ddb522c505b"
 
 [[projects]]
   digest = "1:8730e0150dfb2b7e173890c8b9868e7a273082ef8e39f4940e3506a481cf895c"
@@ -437,6 +438,7 @@
     "github.com/google/licenseclassifier",
     "golang.org/x/net/context",
     "golang.org/x/oauth2",
+    "google.golang.org/api/container/v1beta1",
     "google.golang.org/api/iterator",
     "google.golang.org/api/option",
     "gopkg.in/yaml.v2",
@@ -446,6 +448,7 @@
     "knative.dev/pkg/test/helpers",
     "knative.dev/pkg/test/slackutil",
     "knative.dev/pkg/testutils/clustermanager",
+    "knative.dev/pkg/testutils/common",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

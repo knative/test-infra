@@ -7,7 +7,7 @@ import (
 	"knative.dev/test-infra/test/metahelper/util"
 )
 
-func main() {
+func main() string {
 	getKeyOpt := flag.String("get", "", "get val for a key")
 	saveKeyOpt := flag.String("set", "", "save val for a key, must have --val supplied")
 	valOpt := flag.String("val", "", "val to be modified, only useful when --save is passed")
@@ -24,20 +24,20 @@ func main() {
 	case *getKeyOpt != "":
 		gotVal, err := c.Get(*getKeyOpt)
 		if err != nil {
-			log.Print("")
+			log.Fatalf(err)
 		} else {
-			log.Print(gotVal)
+			return gotVal
 		}
 	case *saveKeyOpt != "":
 		if *valOpt == "" {
 			log.Fatal("--val must be supplied when using --save")
 		}
+		log.Printf("Writing files to %1", c.getLocalArtifactsDir())
 		err := c.Set(*saveKeyOpt, *valOpt)
 		if err != nil {
-			log.Print(err)
+			log.Fatalf(err)
 		} else {
-			log.Print("")
+			return ""
 		}
 	}
-
 }
