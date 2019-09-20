@@ -93,7 +93,7 @@ func main() {
 	jsonErr := writeFlakyTestsToJSON(repoDataAll, *dryrun)
 
 	var ghErr, slackErr error
-	var flakyIssues map[string][]*flakyIssue
+	var flakyIssues map[string][]flakyIssue
 
 	if *skipReport {
 		log.Printf("--skip-report provided, skipping Github and Slack report")
@@ -117,7 +117,7 @@ func main() {
 	}
 }
 
-func githubOperations(ghToken string, repoData []RepoData, dryrun bool) (map[string][]*flakyIssue, error) {
+func githubOperations(ghToken string, repoData []RepoData, dryrun bool) (map[string][]flakyIssue, error) {
 	gih, err := Setup(ghToken)
 	if err != nil {
 		return nil, err
@@ -126,7 +126,7 @@ func githubOperations(ghToken string, repoData []RepoData, dryrun bool) (map[str
 	return gih.processGithubIssues(repoData, dryrun)
 }
 
-func slackOperations(slackToken string, repoData []RepoData, flakyIssues map[string][]*flakyIssue, dryrun bool) error {
+func slackOperations(slackToken string, repoData []RepoData, flakyIssues map[string][]flakyIssue, dryrun bool) error {
 	// Verify that there are issues to notify on.
 	if len(flakyIssues) == 0 {
 		return nil

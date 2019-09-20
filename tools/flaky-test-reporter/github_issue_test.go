@@ -121,7 +121,7 @@ func TestCreateIssue(t *testing.T) {
 	for _, d := range datas {
 		fgih := getFakeGithubIssueHandler()
 		repoData := createRepoData(d.passed, d.flaky, d.failed, d.notenoughdata, d.issueRepo, int64(0))
-		fgih.processGithubIssuesForRepo(repoData, make(map[string][]*flakyIssue), dryrun)
+		fgih.processGithubIssuesForRepo(repoData, make(map[string][]flakyIssue), dryrun)
 		issues, _ := fgih.client.ListIssuesByRepo(fakeOrg, fakeRepo, []string{})
 		if len(issues) != d.wantIssues {
 			t.Fatalf("2%% tests failed, got %d issues, want %d issue", len(issues), d.wantIssues)
@@ -191,7 +191,7 @@ func TestUpdateIssue(t *testing.T) {
 			comment: comment,
 		}
 
-		gotErr := fgih.updateIssue(&fi, "new", &data.ts, dryrun)
+		gotErr := fgih.updateIssue(fi, "new", &data.ts, dryrun)
 		if data.wantErr == nil {
 			if gotErr != nil {
 				t.Fatalf("update %v, got err: '%v', want err: '%v'", data, gotErr, data.wantErr)
