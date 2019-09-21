@@ -14,8 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -e
-
 readonly CUSTOM_ROLE_FILE="custom_role.yaml"
 readonly CUSTOM_ROLE_NAME="KnativeIntegrationTestsRunner"
 
@@ -23,12 +21,24 @@ project_count=$(grep -n "knative-boskos-" resources.yaml | wc -l)
 for i in $(seq -f "%02g" 1 ${project_count})
 do
   PROJECT="knative-boskos-$i"
-  # Create the role.
-  O=$(gcloud iam roles create ${CUSTOM_ROLE_NAME} -q --project ${PROJECT} --file ${CUSTOM_ROLE_FILE} 2>&1)
-  E=$(echo $O | grep "ERROR: (gcloud.iam.roles.create)" | grep "already exists.")
-  # If role already exists, update it.
-  if [ ! -z "$E" ]; then
-    gcloud iam roles describe ${CUSTOM_ROLE_NAME} --project ${PROJECT} | grep "^etag: " >> ${CUSTOM_ROLE_FILE}
-    gcloud iam roles update ${CUSTOM_ROLE_NAME} -q --project ${PROJECT} --file ${CUSTOM_ROLE_FILE} 2>&1
-  fi
+  while true; do
+    # Create the role.
+    O=$(gcloud iam roles create ${CUSTOM_ROLE_NAME} -q --project ${PROJECT} --file ${CUSTOM_ROLE_FILE} 2>&1)
+    E=$(echo $O | grep "ERROR: (gcloud.iam.roles.create)" | grep "already exists.")
+    echo $O
+    # If role already exists, update it.
+    if [ ! -z "$E" ]; then
+      gcloud iam roles describe ${CUSTOM_ROLE_NAME} --project ${PROJECT} | grep "^etag: " >> ${CUSTOM_ROLE_FILE}
+      O=$(gcloud iam roles update ${CUSTOM_ROLE_NAME} -q --project ${PROJECT} --file ${CUSTOM_ROLE_FILE} 2>&1)
+    fi
+    # If permission is invalid, remove it.
+    E=$(echo $O | grep -o "INVALID_ARGUMENT: Permission [a-zA-Z.]\+ is " | cut -f3 -d' ')
+    if [ -z "$E" ]; then
+      echo $O
+      break
+    fi
+    echo "Removing $E"
+    grep -v "^- ${E}$" ${CUSTOM_ROLE_FILE} > ${CUSTOM_ROLE_FILE}1
+    mv ${CUSTOM_ROLE_FILE}1 ${CUSTOM_ROLE_FILE}
+  done
 done
