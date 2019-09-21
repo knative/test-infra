@@ -16,10 +16,8 @@
 
 set -e
 
-readonly FIRST=${1:?"First argument is the first number of the new project(s)."}
-readonly NUMBER=${2:?"Second argument is the number of new projects."}
-readonly BILLING_ACCOUNT=${3:?"Third argument must be the billing account."}
-readonly OUTPUT_FILE=${4:?"Fourth argument should be a file name all project names will be appended to in a resources.yaml format."}
+readonly NUMBER=${1:?"First argument is the number of new projects to create."}
+readonly BILLING_ACCOUNT=${2:?"Second argument must be the billing account."}
 
 readonly CUSTOM_ROLE_NAME="KnativeIntegrationTestsRunner"
 readonly CUSTOM_ROLE_FILE="custom_role.yaml"
@@ -36,8 +34,10 @@ readonly PROJECT_APIS=(
     "compute.googleapis.com"
     "container.googleapis.com")
 
+start=$(grep -n "knative-boskos-" resources.yaml | wc -l)
+((start++))
 for (( i=0; i<${NUMBER}; i++ )); do
-  PROJECT="knative-boskos-$(( i + ${FIRST} ))"
+  PROJECT="knative-boskos-$(( ${start} + i ))"
   # This Folder ID is google.com/google-default
   # If this needs to be changed for any reason, GCP project settings must be updated.
   # Details are available in Google's internal issue 137963841.
@@ -72,5 +72,5 @@ for (( i=0; i<${NUMBER}; i++ )); do
   done
   last_project_line=$(grep -n "knative-boskos-" resources.yaml | tail -n 1 | cut -d: -f1)
   ((last_project_line++))
-  sed -e "${last_project_line}i\ \ - ${PROJECT}" -i ${OUTPUT_FILE}
+  sed -e "${last_project_line}i\ \ - ${PROJECT}" -i resources.yaml
 done

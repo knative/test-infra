@@ -8,5 +8,5 @@ This directory contains the config for our
 - `create_projects.sh` Script to create new Boskos projects and set permissions on them.
 - `resources.yaml` Pool of projects used by Boskos.
 - `custom_role.yaml` Configuration of the custom role, needs to be updated whenever we change its permissions.
-- `make_custom_role.sh`: Script to generate the custom role configuration file.
-- `update_custom_role.sh`: Script to update the custom role for all existing boskos projects.
+- `make_custom_role.sh` Script to generate the custom role configuration file.
+- `update_custom_role.sh` Script to update the custom role for all existing boskos projects.
