@@ -16,7 +16,6 @@
 
 set -e
 
-readonly CUSTOM_ROLE_NAME="KnativeTests"
 readonly PROJECT=${1:?"First argument must be the boskos project name."}
 readonly PROJECT_OWNERS=("prime-engprod-sea@google.com")
 readonly PROJECT_GROUPS=("knative-productivity-admins@googlegroups.com")
@@ -42,16 +41,10 @@ for group in ${PROJECT_GROUPS[@]}; do
   gcloud projects add-iam-policy-binding ${PROJECT} --member group:${group} --role roles/editor
 done
 
-# Copy the custom role to this new project
-gcloud iam roles copy --dest-project=${PROJECT} --destination=${CUSTOM_ROLE_NAME} --source=${CUSTOM_ROLE_NAME} --source-project=knative-boskos-01
+# Add all service accounts as editors
 for sa in ${PROJECT_SAS[@]}; do
   echo "NOTE: Adding service account ${sa}"
-  # Add all service accounts as editors
   gcloud projects add-iam-policy-binding ${PROJECT} --member serviceAccount:${sa} --role roles/editor
-  # Bind the custom role to the SAs.
-  # Then if we need special permissions for some Knative integration tests, we run update_knative_test_role.sh
-  # to assign these permissions to this role.
-  gcloud projects add-iam-policy-binding ${PROJECT} --member serviceAccount:${sa} --role projects/${PROJECT}/roles/${CUSTOM_ROLE_NAME}
 done
 
 # Enable APIS

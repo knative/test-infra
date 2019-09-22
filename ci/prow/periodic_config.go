@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"log"
 	"path"
+	"strings"
 
 	yaml "gopkg.in/yaml.v2"
 )
@@ -332,48 +333,55 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 // generateIssueTrackerPeriodicJobs generates the periodic jobs to automatically manage issue lifecycles.
 // It's a mirror of fejta bot - https://github.com/kubernetes/test-infra/blob/master/config/jobs/kubernetes/test-infra/fejta-bot-periodics.yaml.
 func generateIssueTrackerPeriodicJobs() {
-	staleJobName := "ci-knative-issue-tracker-stale"
+	generateIssueTrackerPeriodicJobsForRepo("knative/test-infra", 90, 30, 30)
+	generateIssueTrackerPeriodicJobsForRepo("knative/docs", 90, 30, 30)
+}
+
+func generateIssueTrackerPeriodicJobsForRepo(repo string, daysToStale, daysToRot, daysToClose int) {
+	repoForJob := strings.Replace(repo, "/", "-", -1)
+	feedbackNote := "Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra)."
+	staleJobName := fmt.Sprintf("ci-%s-issue-tracker-stale", repoForJob)
 	staleLabelFilter := `
         -label:lifecycle/frozen
         -label:lifecycle/stale
         -label:lifecycle/rotten`
-	staleUpdatedTime := "2160h"
-	staleComment := `--comment=Issues go stale after 90d of inactivity.<br/>
-        Mark the issue as fresh with /remove-lifecycle stale.<br/>
-        Stale issues rot after an additional 30d of inactivity and eventually close.<br/>
-        If this issue is safe to close now please do so with /close.<br/><br/>
-        Send feedback to Knative Productivity Slack channel or knative/test-infra.<br/><br/>
-        /lifecycle stale`
-	generateIssueTrackerPeriodicJob(staleJobName, staleLabelFilter, staleUpdatedTime, staleComment)
+	staleUpdatedTime := fmt.Sprintf("%dh", daysToStale*24)
+	staleComment := fmt.Sprintf(`--comment=Issues go stale after *%dd* of inactivity.<br/>
+        Mark the issue as fresh by adding the comment <code>/remove-lifecycle stale</code>.<br/>
+        Stale issues rot after an additional *%dd* of inactivity and eventually close.<br/>
+        If this issue is safe to close now please do so by adding the comment <code>/close</code>.<br/><br/>
+        %s<br/><br/>
+        /lifecycle stale`, daysToStale, daysToRot, feedbackNote)
+	generateIssueTrackerPeriodicJobForRepo(repo, staleJobName, staleLabelFilter, staleUpdatedTime, staleComment)
 
-	rottenJobName := "ci-knative-issue-tracker-rotten"
+	rottenJobName := fmt.Sprintf("ci-%s-issue-tracker-rotten", repoForJob)
 	rottenLabelFilter := `
         -label:lifecycle/frozen
         label:lifecycle/stale
         -label:lifecycle/rotten`
-	rottenUpdatedTime := "720h"
-	rottenComment := `--comment=Stale issues rot after 30d of inactivity.<br/>
-        Mark the issue as fresh with /remove-lifecycle rotten.<br/>
-        Rotten issues close after an additional 30d of inactivity.<br/>
-        If this issue is safe to close now please do so with /close.<br/><br/>
-        Send feedback to Knative Productivity Slack channel or knative/test-infra.<br/><br/>
-        /lifecycle rotten`
-	generateIssueTrackerPeriodicJob(rottenJobName, rottenLabelFilter, rottenUpdatedTime, rottenComment)
+	rottenUpdatedTime := fmt.Sprintf("%dh", daysToRot*24)
+	rottenComment := fmt.Sprintf(`--comment=Stale issues rot after *%dd* of inactivity.<br/>
+        Mark the issue as fresh by adding the comment <code>/remove-lifecycle rotten</code>.<br/>
+        Rotten issues close after an additional *%dd* of inactivity.<br/>
+        If this issue is safe to close now please do so by adding the comment <code>/close</code>.<br/><br/>
+        %s<br/><br/>
+        /lifecycle rotten`, daysToRot, daysToClose, feedbackNote)
+	generateIssueTrackerPeriodicJobForRepo(repo, rottenJobName, rottenLabelFilter, rottenUpdatedTime, rottenComment)
 
-	closeJobName := "ci-knative-issue-tracker-close"
+	closeJobName := fmt.Sprintf("ci-%s-issue-tracker-close", repoForJob)
 	closeLabelFilter := `
         -label:lifecycle/frozen
         label:lifecycle/rotten`
-	closeUpdatedTime := "720h"
-	closeComment := `--comment=Rotten issues close after 30d of inactivity.<br/>
-        Reopen the issue with /reopen.<br/>
-        Mark the issue as fresh with /remove-lifecycle rotten.<br/><br/>
-        Send feedback to Knative Productivity Slack channel or knative/test-infra.<br/><br/>
-        /close`
-	generateIssueTrackerPeriodicJob(closeJobName, closeLabelFilter, closeUpdatedTime, closeComment)
+	closeUpdatedTime := fmt.Sprintf("%dh", daysToClose*24)
+	closeComment := fmt.Sprintf(`--comment=Rotten issues close after *%dd* of inactivity.<br/>
+        Reopen the issue with <code>/reopen</code>.<br/>
+        Mark the issue as fresh by adding the comment <code>/remove-lifecycle rotten</code>.<br/><br/>
+        %s<br/><br/>
+        /close`, daysToClose, feedbackNote)
+	generateIssueTrackerPeriodicJobForRepo(repo, closeJobName, closeLabelFilter, closeUpdatedTime, closeComment)
 }
 
-func generateIssueTrackerPeriodicJob(jobName, labelFilter, updatedTime, comment string) {
+func generateIssueTrackerPeriodicJobForRepo(repo, jobName, labelFilter, updatedTime, comment string) {
 	var data periodicJobTemplateData
 	data.Base = newbaseProwJobTemplateData("knative/test-infra")
 	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
@@ -384,10 +392,10 @@ func generateIssueTrackerPeriodicJob(jobName, labelFilter, updatedTime, comment 
 
 	// TODO(Fredy-Z): replace "repo:knative/test-infra" with "org:knative" after syncing up with the WGs.
 	data.Base.Args = []string{
-		`--query=repo:knative/test-infra
+		fmt.Sprintf(`--query=repo:%s
         is:issue
         is:open
-        ` + labelFilter,
+        %s`, repo, labelFilter),
 		"--updated=" + updatedTime,
 		"--token=/etc/housekeeping-github-token/token",
 		comment,
