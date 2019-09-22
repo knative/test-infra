@@ -97,6 +97,10 @@ test_groups:
 - name: ci-knative-serving-performance-mesh
   gcs_prefix: knative-prow/logs/ci-knative-serving-performance-mesh
   short_text_metric: "perf_latency"
+- name: ci-knative-serving-webhook-apicoverage
+  gcs_prefix: knative-prow/logs/ci-knative-serving-webhook-apicoverage
+  alert_stale_results_hours: 48
+  num_failures_to_alert: 3
 - name: pull-knative-serving-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-serving-go-coverage
   num_failures_to_alert: 9999
@@ -305,6 +309,9 @@ dashboards:
   - name: performance-mesh
     test_group_name: ci-knative-serving-performance-mesh
     base_options: "exclude-filter-by-regex=Overall$&group-by-target=&expand-groups=&sort-by-name="
+  - name: webhook-apicoverage
+    test_group_name: ci-knative-serving-webhook-apicoverage
+    base_options: "sort-by-name="
   - name: coverage
     test_group_name: pull-knative-serving-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
