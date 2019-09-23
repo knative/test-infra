@@ -32,10 +32,8 @@ import (
 
 type StorageClientIntf interface {
 	Bucket(bucketName string) *storage.BucketHandle
-	ListGcsObjects(ctx context.Context, bucketName, prefix, delim string) (
-		objects []string)
+	ListGcsObjects(ctx context.Context, bucketName, prefix, delim string) []string
 	ProfileReader(ctx context.Context, bucket, object string) *artifacts.ProfileReader
-	////CovList(Ctx context.Context, bucket, object string, concernedFiles *map[string]bool) (g *CoverageList)
 	DoesObjectExist(ctx context.Context, bucket, object string) bool
 }
 

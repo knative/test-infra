@@ -104,9 +104,7 @@ func main() {
 		}
 
 		presubmit.Artifacts = *presubmit.MakeGcsArtifacts(*localArtifacts)
-
 		isCoverageLow := RunPresubmit(presubmit, localArtifacts)
-
 		if isCoverageLow {
 			logUtil.LogFatalf("Code coverage is below threshold (%d%%), "+
 				"fail presubmit workflow intentionally", *covThresholdFlag)

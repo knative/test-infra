@@ -33,7 +33,7 @@ func RunPresubmit(p *gcs.PreSubmit, arts *artifacts.LocalArtifacts) (isCoverageL
 
 	concernedFiles := githubUtil.GetConcernedFiles(&p.GithubPr, "")
 
-	if len(*concernedFiles) == 0 {
+	if len(concernedFiles) == 0 {
 		log.Printf("List of concerned committed files is empty, " +
 			"don't need to run coverage profile in presubmit\n")
 		return false

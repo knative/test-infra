@@ -49,26 +49,6 @@ func (blk *codeBlock) addToFileCov(coverage *Coverage) {
 }
 
 // add blk Coverage to file group Coverage; return true if the row is concerned
-func updateConcernedFiles(concernedFiles *map[string]bool, filePath string,
-	isPresubmit bool) (isConcerned bool) {
-	// get linguist generated attribute value for the file.
-	// If true => needs to be skipped for coverage.
-	isConcerned, exists := (*concernedFiles)[filePath]
-
-	if !exists {
-		if isPresubmit {
-			// presubmit already have concerned files defined,
-			// we don't need to check git attributes here
-			isConcerned = false
-			return
-		}
-		isConcerned = !git.IsCoverageSkipped(filePath)
-		(*concernedFiles)[filePath] = isConcerned
-	}
-	return
-}
-
-// add blk Coverage to file group Coverage; return true if the row is concerned
 func (blk *codeBlock) addToGroupCov(g *CoverageList) (isConcerned bool) {
 	if g.size() == 0 || g.lastElement().Name() != blk.fileName {
 		// when a new file name is processed
@@ -77,6 +57,26 @@ func (blk *codeBlock) addToGroupCov(g *CoverageList) (isConcerned bool) {
 	}
 	blk.addToFileCov(g.lastElement())
 	return true
+}
+
+// add blk Coverage to file group Coverage; return true if the row is concerned
+func updateConcernedFiles(concernedFiles map[string]bool, filePath string, isPresubmit bool) bool {
+	// presubmit already have concerned files defined.
+	// we don't need to check git attributes here
+	if isPresubmit {
+		return false
+	}
+
+	// get linguist generated attribute value for the file.
+	// If true => needs to be skipped for coverage.
+	isConcerned, ok := concernedFiles[filePath]
+	if ok {
+		return true
+	}
+
+	isConcerned = !git.IsCoverageSkipped(filePath)
+	concernedFiles[filePath] = isConcerned
+	return isConcerned
 }
 
 // convert a line in profile file to a codeBlock struct

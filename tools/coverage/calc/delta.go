@@ -38,10 +38,6 @@ func (inc Incremental) delta() float32 {
 	return newRatio - baseRatio
 }
 
-func (inc Incremental) Delta() string {
-	return str.PercentStr(inc.delta())
-}
-
 func (inc Incremental) deltaForCovbot() string {
 	if inc.base.nAllStmts == 0 {
 		return ""
@@ -113,29 +109,41 @@ func NewGroupChanges(baseList *CoverageList, newList *CoverageList) *GroupChange
 		}
 	}
 
-	return &GroupChanges{Added: added, Deleted: sorted(baseFilesMap), Unchanged: unchanged,
-		Changed: changed, BaseGroup: baseList, NewGroup: newList}
+	return &GroupChanges{
+		Added:     added,
+		Deleted:   sorted(baseFilesMap),
+		Unchanged: unchanged,
+		Changed:   changed,
+		BaseGroup: baseList,
+		NewGroup:  newList,
+	}
 }
 
 // processChangedFiles checks each entry in GroupChanges and see if it is
 // include in the github commit. If yes, then include that in the covbot report
-func (changes *GroupChanges) processChangedFiles(
-	githubFilePaths *map[string]bool, rows *[]string, isEmpty,
-	isCoverageLow *bool) {
-	log.Printf("\nFinding joining set of changed files from profile[count=%d"+
-		"] & github\n", len(changes.Changed))
-	covThres := changes.NewGroup.covThresholdInt
+func (changes *GroupChanges) processChangedFiles(githubFilePaths map[string]bool) (string, bool, bool) {
+	log.Printf("\nFinding joining set of changed files from profile[count=%d] & github\n", len(changes.Changed))
+	rows := []string{
+		"The following is the coverage report on pkg/.",
+		fmt.Sprintf("Say `/test %s` to re-run this coverage report", os.Getenv("JOB_NAME")),
+		"",
+		"File | Old Coverage | New Coverage | Delta",
+		"---- |:------------:|:------------:|:-----:",
+	}
+	isEmpty := true
+	isCoverageLow := false
+
 	for i, inc := range changes.Changed {
 		pathFromProfile := githubUtil.FilePathProfileToGithub(inc.base.Name())
 		fmt.Printf("checking if this file is in github change list: %s", pathFromProfile)
-		if (*githubFilePaths)[pathFromProfile] == true {
+		if githubFilePaths[pathFromProfile] {
 			fmt.Printf("\tYes!")
-			*rows = append(*rows, inc.githubBotRow(i, pathFromProfile))
-			*isEmpty = false
+			rows = append(rows, inc.githubBotRow(i, pathFromProfile))
+			isEmpty = false
 
-			if inc.new.IsCoverageLow(covThres) {
+			if inc.new.IsCoverageLow(changes.NewGroup.covThresholdInt) {
 				fmt.Printf("\t(Coverage low!)")
-				*isCoverageLow = true
+				isCoverageLow = true
 			}
 		} else {
 			fmt.Printf("\tNo")
@@ -143,44 +151,27 @@ func (changes *GroupChanges) processChangedFiles(
 		fmt.Printf("\n")
 	}
 	fmt.Println("End of Finding joining set of changed files from profile & github")
-	return
-}
+	rows = append(rows, "")
 
-func (inc Incremental) filePathWithHyperlink(filepath string) string {
-	return fmt.Sprintf("[%s](%s)", filepath, inc.new.lineCovLink)
+	return strings.Join(rows, "\n"), isEmpty, isCoverageLow
 }
 
 // githubBotRow returns a string as the content of a row covbot posts
 func (inc Incremental) githubBotRow(index int, filepath string) string {
 	return fmt.Sprintf("%s | %s | %s | %s",
-		inc.filePathWithHyperlink(filepath), inc.oldCovForCovbot(),
-		inc.new.Percentage(), inc.deltaForCovbot())
+		fmt.Sprintf("[%s](%s)", filepath, inc.new.lineCovLink),
+		inc.oldCovForCovbot(),
+		inc.new.Percentage(),
+		inc.deltaForCovbot())
 }
 
 // ContentForGithubPost constructs the message covbot posts
-func (changes *GroupChanges) ContentForGithubPost(files *map[string]bool) (
-	res string, isEmpty, isCoverageLow bool) {
-	jobName := os.Getenv("JOB_NAME")
-	rows := []string{
-		"The following is the coverage report on pkg/.",
-		fmt.Sprintf("Say `/test %s` to re-run this coverage report", jobName),
-		"",
-		"File | Old Coverage | New Coverage | Delta",
-		"---- |:------------:|:------------:|:-----:",
-	}
-
-	fmt.Printf("\n%d files changed, reported by github:\n", len(*files))
-	for githubFilePath := range *files {
+func (changes *GroupChanges) ContentForGithubPost(files map[string]bool) (string, bool, bool) {
+	fmt.Printf("\n%d files changed, reported by github:\n", len(files))
+	for githubFilePath := range files {
 		fmt.Printf("%s\t", githubFilePath)
 	}
+
 	fmt.Printf("\n\n")
-
-	isEmpty = true
-	isCoverageLow = false
-
-	changes.processChangedFiles(files, &rows, &isEmpty, &isCoverageLow)
-
-	rows = append(rows, "")
-
-	return strings.Join(rows, "\n"), isEmpty, isCoverageLow
+	return changes.processChangedFiles(files)
 }
