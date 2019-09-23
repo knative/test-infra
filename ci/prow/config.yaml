@@ -5772,11 +5772,11 @@ periodics:
         -label:lifecycle/rotten"
       - "--updated=2160h"
       - "--token=/etc/housekeeping-github-token/token"
-      - "--comment=Issues go stale after *90d* of inactivity.<br/>
+      - "--comment=Issues go stale after 90 days of inactivity.<br/>
         Mark the issue as fresh by adding the comment <code>/remove-lifecycle stale</code>.<br/>
-        Stale issues rot after an additional *30d* of inactivity and eventually close.<br/>
+        Stale issues rot after an additional 30 days of inactivity and eventually close.<br/>
         If this issue is safe to close now please do so by adding the comment <code>/close</code>.<br/><br/>
-        Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra).<br/><br/>
+        Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra/issues/new).<br/><br/>
         /lifecycle stale"
       - "--template"
       - "--ceiling=10"
@@ -5812,11 +5812,11 @@ periodics:
         -label:lifecycle/rotten"
       - "--updated=720h"
       - "--token=/etc/housekeeping-github-token/token"
-      - "--comment=Stale issues rot after *30d* of inactivity.<br/>
+      - "--comment=Stale issues rot after 30 days of inactivity.<br/>
         Mark the issue as fresh by adding the comment <code>/remove-lifecycle rotten</code>.<br/>
-        Rotten issues close after an additional *30d* of inactivity.<br/>
+        Rotten issues close after an additional 30 days of inactivity.<br/>
         If this issue is safe to close now please do so by adding the comment <code>/close</code>.<br/><br/>
-        Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra).<br/><br/>
+        Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra/issues/new).<br/><br/>
         /lifecycle rotten"
       - "--template"
       - "--ceiling=10"
@@ -5851,10 +5851,10 @@ periodics:
         label:lifecycle/rotten"
       - "--updated=720h"
       - "--token=/etc/housekeeping-github-token/token"
-      - "--comment=Rotten issues close after *30d* of inactivity.<br/>
+      - "--comment=Rotten issues close after 30 days of inactivity.<br/>
         Reopen the issue with <code>/reopen</code>.<br/>
         Mark the issue as fresh by adding the comment <code>/remove-lifecycle rotten</code>.<br/><br/>
-        Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra).<br/><br/>
+        Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra/issues/new).<br/><br/>
         /close"
       - "--template"
       - "--ceiling=10"
@@ -5890,11 +5890,11 @@ periodics:
         -label:lifecycle/rotten"
       - "--updated=2160h"
       - "--token=/etc/housekeeping-github-token/token"
-      - "--comment=Issues go stale after *90d* of inactivity.<br/>
+      - "--comment=Issues go stale after 90 days of inactivity.<br/>
         Mark the issue as fresh by adding the comment <code>/remove-lifecycle stale</code>.<br/>
-        Stale issues rot after an additional *30d* of inactivity and eventually close.<br/>
+        Stale issues rot after an additional 30 days of inactivity and eventually close.<br/>
         If this issue is safe to close now please do so by adding the comment <code>/close</code>.<br/><br/>
-        Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra).<br/><br/>
+        Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra/issues/new).<br/><br/>
         /lifecycle stale"
       - "--template"
       - "--ceiling=10"
@@ -5930,11 +5930,11 @@ periodics:
         -label:lifecycle/rotten"
       - "--updated=720h"
       - "--token=/etc/housekeeping-github-token/token"
-      - "--comment=Stale issues rot after *30d* of inactivity.<br/>
+      - "--comment=Stale issues rot after 30 days of inactivity.<br/>
         Mark the issue as fresh by adding the comment <code>/remove-lifecycle rotten</code>.<br/>
-        Rotten issues close after an additional *30d* of inactivity.<br/>
+        Rotten issues close after an additional 30 days of inactivity.<br/>
         If this issue is safe to close now please do so by adding the comment <code>/close</code>.<br/><br/>
-        Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra).<br/><br/>
+        Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra/issues/new).<br/><br/>
         /lifecycle rotten"
       - "--template"
       - "--ceiling=10"
@@ -5969,10 +5969,10 @@ periodics:
         label:lifecycle/rotten"
       - "--updated=720h"
       - "--token=/etc/housekeeping-github-token/token"
-      - "--comment=Rotten issues close after *30d* of inactivity.<br/>
+      - "--comment=Rotten issues close after 30 days of inactivity.<br/>
         Reopen the issue with <code>/reopen</code>.<br/>
         Mark the issue as fresh by adding the comment <code>/remove-lifecycle rotten</code>.<br/><br/>
-        Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra).<br/><br/>
+        Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra/issues/new).<br/><br/>
         /close"
       - "--template"
       - "--ceiling=10"

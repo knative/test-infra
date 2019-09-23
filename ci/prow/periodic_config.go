@@ -339,16 +339,16 @@ func generateIssueTrackerPeriodicJobs() {
 
 func generateIssueTrackerPeriodicJobsForRepo(repo string, daysToStale, daysToRot, daysToClose int) {
 	repoForJob := strings.Replace(repo, "/", "-", -1)
-	feedbackNote := "Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra)."
+	feedbackNote := "Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra/issues/new)."
 	staleJobName := fmt.Sprintf("ci-%s-issue-tracker-stale", repoForJob)
 	staleLabelFilter := `
         -label:lifecycle/frozen
         -label:lifecycle/stale
         -label:lifecycle/rotten`
 	staleUpdatedTime := fmt.Sprintf("%dh", daysToStale*24)
-	staleComment := fmt.Sprintf(`--comment=Issues go stale after *%dd* of inactivity.<br/>
+	staleComment := fmt.Sprintf(`--comment=Issues go stale after %d days of inactivity.<br/>
         Mark the issue as fresh by adding the comment <code>/remove-lifecycle stale</code>.<br/>
-        Stale issues rot after an additional *%dd* of inactivity and eventually close.<br/>
+        Stale issues rot after an additional %d days of inactivity and eventually close.<br/>
         If this issue is safe to close now please do so by adding the comment <code>/close</code>.<br/><br/>
         %s<br/><br/>
         /lifecycle stale`, daysToStale, daysToRot, feedbackNote)
@@ -360,9 +360,9 @@ func generateIssueTrackerPeriodicJobsForRepo(repo string, daysToStale, daysToRot
         label:lifecycle/stale
         -label:lifecycle/rotten`
 	rottenUpdatedTime := fmt.Sprintf("%dh", daysToRot*24)
-	rottenComment := fmt.Sprintf(`--comment=Stale issues rot after *%dd* of inactivity.<br/>
+	rottenComment := fmt.Sprintf(`--comment=Stale issues rot after %d days of inactivity.<br/>
         Mark the issue as fresh by adding the comment <code>/remove-lifecycle rotten</code>.<br/>
-        Rotten issues close after an additional *%dd* of inactivity.<br/>
+        Rotten issues close after an additional %d days of inactivity.<br/>
         If this issue is safe to close now please do so by adding the comment <code>/close</code>.<br/><br/>
         %s<br/><br/>
         /lifecycle rotten`, daysToRot, daysToClose, feedbackNote)
@@ -373,7 +373,7 @@ func generateIssueTrackerPeriodicJobsForRepo(repo string, daysToStale, daysToRot
         -label:lifecycle/frozen
         label:lifecycle/rotten`
 	closeUpdatedTime := fmt.Sprintf("%dh", daysToClose*24)
-	closeComment := fmt.Sprintf(`--comment=Rotten issues close after *%dd* of inactivity.<br/>
+	closeComment := fmt.Sprintf(`--comment=Rotten issues close after %d days of inactivity.<br/>
         Reopen the issue with <code>/reopen</code>.<br/>
         Mark the issue as fresh by adding the comment <code>/remove-lifecycle rotten</code>.<br/><br/>
         %s<br/><br/>
