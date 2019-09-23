@@ -67,7 +67,8 @@ func NewHandlerClient(serviceAccount, githubAccount string, dryrun bool) (*Handl
 func (hc *HandlerClient) Listen() {
 	log.Printf("Listening for failed jobs...\n")
 	for {
-		hc.pubsub.ReceiveMessageAckAll(hc, func(msg *prowapi.ReportMessage) {
+		hc.pubsub.ReceiveMessageAckAll(context.Background(), func(msg *prowapi.ReportMessage) {
+			log.Printf("Message received for %q", msg.URL)
 			data := &JobData{msg, nil, nil}
 			if data.IsSupported() {
 				go hc.HandleJob(data)
