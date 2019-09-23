@@ -61,17 +61,17 @@ func (blk *codeBlock) addToGroupCov(g *CoverageList) (isConcerned bool) {
 
 // add blk Coverage to file group Coverage; return true if the row is concerned
 func updateConcernedFiles(concernedFiles map[string]bool, filePath string, isPresubmit bool) bool {
-	// presubmit already have concerned files defined.
-	// we don't need to check git attributes here
-	if isPresubmit {
-		return false
-	}
-
 	// get linguist generated attribute value for the file.
 	// If true => needs to be skipped for coverage.
 	isConcerned, ok := concernedFiles[filePath]
 	if ok {
 		return true
+	}
+
+	// presubmit already have concerned files defined.
+	// we don't need to check git attributes here
+	if isPresubmit {
+		return false
 	}
 
 	isConcerned = !git.IsCoverageSkipped(filePath)
