@@ -63,6 +63,14 @@ for (( i=0; i<${NUMBER}; i++ )); do
     echo "NOTE: Adding service account ${sa}"
     # Bind the custom role to the SA
     gcloud projects add-iam-policy-binding ${PROJECT} --member serviceAccount:${sa} --role projects/${PROJECT}/roles/${CUSTOM_ROLE_NAME}
+    # As required by step 6 in https://github.com/google/knative-gcp/tree/master/docs/storage,
+    # grant the GCS service account the permissions to publish to GCP Pub/Sub
+    gcs_service_account="$(curl -s -X GET -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" "https://www.googleapis.com/storage/v1/projects/${PROJECT}/serviceAccount" \
+      | grep email_address \
+      | cut -d '"' -f 4)"
+    gcloud projects add-iam-policy-binding ${PROJECT} \
+      --member=serviceAccount:${gcs_service_account} \
+      --role roles/pubsub.publisher
   done
 
   # Enable APIS
