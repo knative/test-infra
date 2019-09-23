@@ -67,6 +67,7 @@ func NewHandlerClient(serviceAccount, githubAccount string, dryrun bool) (*Handl
 func (hc *HandlerClient) Listen() {
 	log.Printf("Listening for failed jobs...\n")
 	for {
+		log.Println("Starting ReceiveMessageAckAll")
 		hc.pubsub.ReceiveMessageAckAll(context.Background(), func(msg *prowapi.ReportMessage) {
 			log.Printf("Message received for %q", msg.URL)
 			data := &JobData{msg, nil, nil}
@@ -74,10 +75,11 @@ func (hc *HandlerClient) Listen() {
 				go hc.HandleJob(data)
 			}
 		})
+		log.Println("Done with previous ReceiveMessageAckAll call")
 	}
 }
 
-// HandleMessage gets the job's failed tests and the current flaky tests,
+// HandleJob gets the job's failed tests and the current flaky tests,
 // compares them, and triggers a retest if all the failed tests are flaky.
 func (hc *HandlerClient) HandleJob(jd *JobData) {
 	logWithPrefix(jd, "fit all criteria - Starting analysis\n")

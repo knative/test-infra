@@ -62,6 +62,7 @@ func (c *Client) ReceiveMessageAckAll(ctx context.Context, f func(*prowapi.Repor
 			f(rmsg)
 		}
 		msg.Ack()
+		log.Printf("Message acked: %q", msg.ID)
 	})
 }
 
