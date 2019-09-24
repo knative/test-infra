@@ -53,7 +53,7 @@ func (blk *codeBlock) addToGroupCov(g *CoverageList) {
 	}
 }
 
-// update concerned status for the coverage; return true if the row is concerned
+// Check if the given file is a concerned file. If it is, add it to the concerned files collection and return true
 func updateConcernedFiles(concernedFiles map[string]bool, filePath string, isPresubmit bool) bool {
 	// get linguist generated attribute value for the file.
 	// If true => needs to be skipped for coverage.
