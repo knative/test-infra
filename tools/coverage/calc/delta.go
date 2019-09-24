@@ -124,15 +124,14 @@ func NewGroupChanges(baseList *CoverageList, newList *CoverageList) *GroupChange
 func (changes *GroupChanges) processChangedFiles(githubFilePaths map[string]bool) (string, bool, bool) {
 	log.Printf("\nFinding joining set of changed files from profile[count=%d] & github\n", len(changes.Changed))
 	rows := []string{
-		"The following is the coverage report on pkg/.",
+		"The following is the coverage report on the affected files.",
 		fmt.Sprintf("Say `/test %s` to re-run this coverage report", os.Getenv("JOB_NAME")),
 		"",
 		"File | Old Coverage | New Coverage | Delta",
 		"---- |:------------:|:------------:|:-----:",
 	}
-	isEmpty := true
-	isCoverageLow := false
 
+	isEmpty, isCoverageLow := true, false
 	for i, inc := range changes.Changed {
 		pathFromProfile := githubUtil.FilePathProfileToGithub(inc.base.Name())
 		fmt.Printf("checking if this file is in github change list: %s", pathFromProfile)

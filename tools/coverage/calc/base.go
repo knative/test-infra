@@ -39,27 +39,21 @@ func (blk *codeBlock) filePathInGithub() string {
 	return githubUtil.FilePathProfileToGithub(blk.fileName)
 }
 
-// add blk Coverage to file Coverage
-func (blk *codeBlock) addToFileCov(coverage *Coverage) {
-
-	coverage.nAllStmts += blk.numStatements
-	if blk.coverageCount > 0 {
-		coverage.nCoveredStmts += blk.numStatements
-	}
-}
-
-// add blk Coverage to file group Coverage; return true if the row is concerned
-func (blk *codeBlock) addToGroupCov(g *CoverageList) (isConcerned bool) {
+// add blk Coverage to file group Coverage
+func (blk *codeBlock) addToGroupCov(g *CoverageList) {
 	if g.size() == 0 || g.lastElement().Name() != blk.fileName {
 		// when a new file name is processed
 		coverage := newCoverage(blk.fileName)
 		g.append(coverage)
 	}
-	blk.addToFileCov(g.lastElement())
-	return true
+	cov := g.lastElement()
+	cov.nAllStmts += blk.numStatements
+	if blk.coverageCount > 0 {
+		cov.nCoveredStmts += blk.numStatements
+	}
 }
 
-// add blk Coverage to file group Coverage; return true if the row is concerned
+// update concerned status for the coverage; return true if the row is concerned
 func updateConcernedFiles(concernedFiles map[string]bool, filePath string, isPresubmit bool) bool {
 	// get linguist generated attribute value for the file.
 	// If true => needs to be skipped for coverage.
