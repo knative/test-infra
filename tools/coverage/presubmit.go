@@ -27,6 +27,7 @@ import (
 	"knative.dev/test-infra/tools/coverage/line"
 )
 
+// RunPresubmit runs the pre-submit procedure
 func RunPresubmit(p *gcs.PreSubmit, arts *artifacts.LocalArtifacts, noRepoConn bool) (isCoverageLow bool) {
 	log.Println("starting PreSubmit.RunPresubmit(...)")
 	coverageThresholdInt := p.CovThreshold

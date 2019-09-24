@@ -56,7 +56,7 @@ func main() {
 	flag.Parse()
 
 	log.Printf("container flag list: postsubmit-gcs-bucket=%s; postSubmitJobName=%s; "+
-		"artifacts=%s; cov-target=%s; profile-name=%s; noRepoConn=%s ;github-token=%s; "+
+		"artifacts=%s; cov-target=%s; profile-name=%s; noRepoConn=%v ;github-token=%s; "+
 		"cov-threshold-percentage=%d; posting-robot=%s;",
 		*gcsBucketName, *postSubmitJobName, *artifactsDir, *coverageTargetDir, *coverageProfileName,
 		*noRepoConn, *githubTokenPath, *covThresholdFlag, *postingBotUserName)
