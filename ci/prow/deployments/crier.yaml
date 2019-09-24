@@ -31,7 +31,7 @@ spec:
       - name: crier
         image: gcr.io/k8s-prow/crier:v20190911-0708557a1
         args:
-        - --pubsub-workers=1
+        - --pubsub-workers=5 # Arbitrary number of multiplier
         - --report-agent=knative-build
         - --config-path=/etc/config/config.yaml
         volumeMounts:
