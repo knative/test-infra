@@ -29,13 +29,12 @@ import (
 type CoverageList struct {
 	*Coverage
 	group           []Coverage
-	concernedFiles  *map[string]bool
+	concernedFiles  map[string]bool
 	covThresholdInt int
 }
 
 // NewCoverageList constructs new (file) group Coverage
-func NewCoverageList(name string, concernedFiles *map[string]bool,
-	covThresholdInt int) *CoverageList {
+func NewCoverageList(name string, concernedFiles map[string]bool, covThresholdInt int) *CoverageList {
 	return &CoverageList{
 		Coverage:        newCoverage(name),
 		group:           []Coverage{},

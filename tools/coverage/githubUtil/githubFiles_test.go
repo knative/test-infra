@@ -40,7 +40,7 @@ func TestGetConcernedFiles(t *testing.T) {
 
 	t.Logf("expected concerns=%v", expectedConcerns.AllMembers())
 
-	for fileName, actual := range *actualConcernMap {
+	for fileName, actual := range actualConcernMap {
 		expected := expectedConcerns.Has(fileName)
 		if actual != expected {
 			t.Fatalf("filename=%s, isConcerned: expected=%v; actual=%v\n", fileName, expected, actual)
