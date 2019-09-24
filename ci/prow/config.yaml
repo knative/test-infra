@@ -5773,9 +5773,9 @@ periodics:
       - "--updated=2160h"
       - "--token=/etc/housekeeping-github-token/token"
       - "--comment=Issues go stale after 90 days of inactivity.\n
-        Mark the issue as fresh by adding the comment \"/remove-lifecycle stale\".\n
+        Mark the issue as fresh by adding the comment `/remove-lifecycle stale`.\n
         Stale issues rot after an additional 30 days of inactivity and eventually close.\n
-        If this issue is safe to close now please do so by adding the comment \"/close\".\n\n
+        If this issue is safe to close now please do so by adding the comment `/close`.\n\n
         Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra/issues/new).\n\n
         /lifecycle stale"
       - "--template"
@@ -5813,9 +5813,9 @@ periodics:
       - "--updated=720h"
       - "--token=/etc/housekeeping-github-token/token"
       - "--comment=Stale issues rot after 30 days of inactivity.\n
-        Mark the issue as fresh by adding the comment \"/remove-lifecycle rotten\".\n
+        Mark the issue as fresh by adding the comment `/remove-lifecycle rotten`.\n
         Rotten issues close after an additional 30 days of inactivity.\n
-        If this issue is safe to close now please do so by adding the comment \"/close\".\n\n
+        If this issue is safe to close now please do so by adding the comment `/close`.\n\n
         Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra/issues/new).\n\n
         /lifecycle rotten"
       - "--template"
@@ -5852,8 +5852,8 @@ periodics:
       - "--updated=720h"
       - "--token=/etc/housekeeping-github-token/token"
       - "--comment=Rotten issues close after 30 days of inactivity.\n
-        Reopen the issue with \"/reopen\".\n
-        Mark the issue as fresh by adding the comment \"/remove-lifecycle rotten\".\n\n
+        Reopen the issue with `/reopen`.\n
+        Mark the issue as fresh by adding the comment `/remove-lifecycle rotten`.\n\n
         Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra/issues/new).\n\n
         /close"
       - "--template"
@@ -5891,9 +5891,9 @@ periodics:
       - "--updated=2160h"
       - "--token=/etc/housekeeping-github-token/token"
       - "--comment=Issues go stale after 90 days of inactivity.\n
-        Mark the issue as fresh by adding the comment \"/remove-lifecycle stale\".\n
+        Mark the issue as fresh by adding the comment `/remove-lifecycle stale`.\n
         Stale issues rot after an additional 30 days of inactivity and eventually close.\n
-        If this issue is safe to close now please do so by adding the comment \"/close\".\n\n
+        If this issue is safe to close now please do so by adding the comment `/close`.\n\n
         Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra/issues/new).\n\n
         /lifecycle stale"
       - "--template"
@@ -5931,9 +5931,9 @@ periodics:
       - "--updated=720h"
       - "--token=/etc/housekeeping-github-token/token"
       - "--comment=Stale issues rot after 30 days of inactivity.\n
-        Mark the issue as fresh by adding the comment \"/remove-lifecycle rotten\".\n
+        Mark the issue as fresh by adding the comment `/remove-lifecycle rotten`.\n
         Rotten issues close after an additional 30 days of inactivity.\n
-        If this issue is safe to close now please do so by adding the comment \"/close\".\n\n
+        If this issue is safe to close now please do so by adding the comment `/close`.\n\n
         Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra/issues/new).\n\n
         /lifecycle rotten"
       - "--template"
@@ -5970,8 +5970,8 @@ periodics:
       - "--updated=720h"
       - "--token=/etc/housekeeping-github-token/token"
       - "--comment=Rotten issues close after 30 days of inactivity.\n
-        Reopen the issue with \"/reopen\".\n
-        Mark the issue as fresh by adding the comment \"/remove-lifecycle rotten\".\n\n
+        Reopen the issue with `/reopen`.\n
+        Mark the issue as fresh by adding the comment `/remove-lifecycle rotten`.\n\n
         Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra/issues/new).\n\n
         /close"
       - "--template"

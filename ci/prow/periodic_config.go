@@ -346,12 +346,12 @@ func generateIssueTrackerPeriodicJobsForRepo(repo string, daysToStale, daysToRot
         -label:lifecycle/stale
         -label:lifecycle/rotten`
 	staleUpdatedTime := fmt.Sprintf("%dh", daysToStale*24)
-	staleComment := fmt.Sprintf(`--comment=Issues go stale after %d days of inactivity.\n
-        Mark the issue as fresh by adding the comment \"/remove-lifecycle stale\".\n
-        Stale issues rot after an additional %d days of inactivity and eventually close.\n
-        If this issue is safe to close now please do so by adding the comment \"/close\".\n\n
-        %s\n\n
-        /lifecycle stale`, daysToStale, daysToRot, feedbackNote)
+	staleComment := fmt.Sprintf("--comment=Issues go stale after %d days of inactivity.\\n\n"+
+		"        Mark the issue as fresh by adding the comment `/remove-lifecycle stale`.\\n\n"+
+		"        Stale issues rot after an additional %d days of inactivity and eventually close.\\n\n"+
+		"        If this issue is safe to close now please do so by adding the comment `/close`.\\n\\n\n"+
+		"        %s\\n\\n\n"+
+		"        /lifecycle stale", daysToStale, daysToRot, feedbackNote)
 	generateIssueTrackerPeriodicJobForRepo(repo, staleJobName, staleLabelFilter, staleUpdatedTime, staleComment)
 
 	rottenJobName := fmt.Sprintf("ci-%s-issue-tracker-rotten", repoForJob)
@@ -360,12 +360,12 @@ func generateIssueTrackerPeriodicJobsForRepo(repo string, daysToStale, daysToRot
         label:lifecycle/stale
         -label:lifecycle/rotten`
 	rottenUpdatedTime := fmt.Sprintf("%dh", daysToRot*24)
-	rottenComment := fmt.Sprintf(`--comment=Stale issues rot after %d days of inactivity.\n
-        Mark the issue as fresh by adding the comment \"/remove-lifecycle rotten\".\n
-        Rotten issues close after an additional %d days of inactivity.\n
-        If this issue is safe to close now please do so by adding the comment \"/close\".\n\n
-        %s\n\n
-        /lifecycle rotten`, daysToRot, daysToClose, feedbackNote)
+	rottenComment := fmt.Sprintf("--comment=Stale issues rot after %d days of inactivity.\\n\n"+
+		"        Mark the issue as fresh by adding the comment `/remove-lifecycle rotten`.\\n\n"+
+		"        Rotten issues close after an additional %d days of inactivity.\\n\n"+
+		"        If this issue is safe to close now please do so by adding the comment `/close`.\\n\\n\n"+
+		"        %s\\n\\n\n"+
+		"        /lifecycle rotten", daysToRot, daysToClose, feedbackNote)
 	generateIssueTrackerPeriodicJobForRepo(repo, rottenJobName, rottenLabelFilter, rottenUpdatedTime, rottenComment)
 
 	closeJobName := fmt.Sprintf("ci-%s-issue-tracker-close", repoForJob)
@@ -373,11 +373,11 @@ func generateIssueTrackerPeriodicJobsForRepo(repo string, daysToStale, daysToRot
         -label:lifecycle/frozen
         label:lifecycle/rotten`
 	closeUpdatedTime := fmt.Sprintf("%dh", daysToClose*24)
-	closeComment := fmt.Sprintf(`--comment=Rotten issues close after %d days of inactivity.\n
-        Reopen the issue with \"/reopen\".\n
-        Mark the issue as fresh by adding the comment \"/remove-lifecycle rotten\".\n\n
-        %s\n\n
-        /close`, daysToClose, feedbackNote)
+	closeComment := fmt.Sprintf("--comment=Rotten issues close after %d days of inactivity.\\n\n"+
+		"        Reopen the issue with `/reopen`.\\n\n"+
+		"        Mark the issue as fresh by adding the comment `/remove-lifecycle rotten`.\\n\\n\n"+
+		"        %s\\n\\n\n"+
+		"        /close", daysToClose, feedbackNote)
 	generateIssueTrackerPeriodicJobForRepo(repo, closeJobName, closeLabelFilter, closeUpdatedTime, closeComment)
 }
 
