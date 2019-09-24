@@ -10,7 +10,7 @@ To build and push a new image, just run `make push`.
 For testing purposes you can build an image but not push it; to do so, run
 `make build`.
 
-The Prow jobs are configured to use the `prow-tests` image tagged with `stable`.
+The Prow jobs are configured to use the `prow-tests-go113` image tagged with `stable`.
 This tag must be manually set in GCR using the Cloud Console.
 
 Note that you must have proper permission in the `knative-tests` project to push

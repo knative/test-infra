@@ -12,22 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM gcr.io/k8s-testimages/kubekins-e2e:v20190716-41e2a9e-master
-LABEL maintainer "Adriano Cunha <adrcunha@google.com>"
-
-# Install extras on top of base image
-
-ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update
-RUN gcloud components update
-
-# Docker
-RUN gcloud components install docker-credential-gcr
-RUN docker-credential-gcr configure-docker
-
-# Extra tools through apt-get
-RUN apt-get install -y uuid-runtime  # for uuidgen
-RUN apt-get install -y rubygems  # for mdl
+FROM gcr.io/knative-tests/test-infra/prow-tests-go113:stable
+LABEL maintainer "Chao Dai <chaodai@google.com>"
 
 # Install go at 1.12 same as how it's installed in kubekins-e2e image, reference code here:
 # https://github.com/kubernetes/test-infra/blob/1e9b5dc3de4b268aab57c9c48120aa3dcf096bc6/images/kubekins-e2e/Dockerfile#L64
@@ -36,31 +22,3 @@ RUN rm -rf /usr/local/go && \
     wget -q "https://storage.googleapis.com/golang/${GO_TARBALL}" && \
     tar xzf "${GO_TARBALL}" -C /usr/local && \
     rm "${GO_TARBALL}"
-
-# Extra tools through go get
-RUN GO111MODULE=on go get github.com/google/ko/cmd/ko
-RUN GO111MODULE=on go get github.com/boz/kail/cmd/kail
-RUN go get -u github.com/golang/dep/cmd/dep
-RUN go get -u github.com/jstemmer/go-junit-report
-RUN go get -u github.com/raviqqe/liche
-
-# Extract bazel version
-RUN bazel version > /bazel_version
-RUN bazel shutdown
-
-# Extract ko version
-RUN ko version > /ko_version
-
-# Extra tools through gem
-RUN gem install mixlib-config -v 2.2.4  # required because ruby is 2.1
-RUN gem install mdl
-
-# Temporarily add test-infra to the image to build custom tools
-ADD . /go/src/knative.dev/test-infra
-
-# Build custom tools in the container
-RUN make -C /go/src/knative.dev/test-infra/tools/githubhelper
-RUN cp /go/src/knative.dev/test-infra/tools/githubhelper/githubhelper .
-
-# Remove test-infra from the container
-RUN rm -fr /go/src/knative.dev/test-infra

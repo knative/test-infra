@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# This is the base Dockerfile for knative-tests images, please remember to also
+# do `make push` in `../prow-tests` directory to make sure these 2 images are in
+# sync
+
 FROM gcr.io/k8s-testimages/kubekins-e2e:v20190716-41e2a9e-master
 LABEL maintainer "Adriano Cunha <adrcunha@google.com>"
 

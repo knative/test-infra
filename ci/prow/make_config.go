@@ -344,7 +344,7 @@ func combineSlices(a1 []string, a2 []string) []string {
 }
 
 // intersectSlices returns intersect of 2 slices
-func intersectSlices(a1 []string, a2 []string) []string {
+func intersectSlices(a1, a2 []string) []string {
 	var res []string
 	s1 := sets.NewString(a1...)
 	for _, e2 := range a2 {
@@ -356,7 +356,7 @@ func intersectSlices(a1 []string, a2 []string) []string {
 }
 
 // exclusiveSlices returns elements in a1 but not in a2
-func exclusiveSlices(a1 []string, a2 []string) []string {
+func exclusiveSlices(a1, a2 []string) []string {
 	var res []string
 	s2 := sets.NewString(a2...)
 	for _, e1 := range a1 {
@@ -367,10 +367,15 @@ func exclusiveSlices(a1 []string, a2 []string) []string {
 	return res
 }
 
+// getGo113ID returns image identifier for go113 images
+func getGo113ID() string {
+	return "-go113"
+}
+
 // Get go113 image name from base image name, following the contract of
 // [IMAGE]:[DIGEST]-> [IMAGE]-go113:[DIGEST]
 func getGo113ImageName(name string) string {
-	go113ID := "-go113"
+	go113ID := getGo113ID()
 	parts := strings.SplitN(name, ":", 2)
 	if len(parts) != 2 {
 		log.Fatalf("image name should contain ':': %q", name)
@@ -383,7 +388,7 @@ func getGo113ImageName(name string) string {
 
 // Remove go113 image name suffix
 func restoreGo113ImageName(name string) string {
-	go113ID := "-go113"
+	go113ID := getGo113ID()
 	parts := strings.SplitN(name, ":", 2)
 	if len(parts) != 2 {
 		log.Fatalf("image name should contain ':': %q", name)
@@ -427,8 +432,7 @@ func restoreGo113ImageName(name string) string {
 // This function takes the logic above, and determines whether generate
 // whitelisted or skipped as output.
 func consolidateBranches(whitelisted []string, skipped []string, newWhitelisted []string, newSkipped []string) ([]string, []string) {
-	combinedWhitelisted := make([]string, 0)
-	combinedSkipped := make([]string, 0)
+	var combinedWhitelisted, combinedSkipped []string
 
 	// Do the legacy part(old branches):
 	if len(newWhitelisted) > 0 {
@@ -441,7 +445,7 @@ func consolidateBranches(whitelisted []string, skipped []string, newWhitelisted 
 			// real supported branches
 			combinedWhitelisted = intersectSlices(newWhitelisted, whitelisted)
 		} else {
-			combinedWhitelisted = combineSlices(whitelisted, newWhitelisted)
+			combinedWhitelisted = newWhitelisted
 		}
 	} else if len(newSkipped) > 0 { // Then do the pos part(latest)
 		if len(skipped) > 0 {
@@ -452,7 +456,7 @@ func consolidateBranches(whitelisted []string, skipped []string, newWhitelisted 
 			// - if previous is include, then minus current branches from included
 			combinedWhitelisted = exclusiveSlices(whitelisted, newSkipped)
 		} else {
-			combinedSkipped = combineSlices(skipped, newSkipped)
+			combinedSkipped = newSkipped
 		}
 	}
 	return combinedWhitelisted, combinedSkipped
@@ -982,8 +986,9 @@ func getBase(data interface{}) *baseProwJobTemplateData {
 	return base
 }
 
-// recursiveSBL recursively going through specialBranchLogic, and generate job at last
-func recursiveSBL(repoName string, data interface{}, generateOneJob func(data interface{}), sbs []specialBranchLogic, i, posCount int) {
+// recursiveSBL recursively going through specialBranchLogic, and generate job
+// at last. Use `i` to keeps track of current index in sbs to be used
+func recursiveSBL(repoName string, data interface{}, generateOneJob func(data interface{}), sbs []specialBranchLogic, i int) {
 	// Base case, all special branch logics have been applied
 	if i == len(sbs) {
 		// If there is no branch left, this job shouldn't be generated at all
@@ -999,11 +1004,11 @@ func recursiveSBL(repoName string, data interface{}, generateOneJob func(data in
 	origBranches, origSkipBranches := base.Branches, base.SkipBranches
 	// Do legacy branches first
 	base.Branches, base.SkipBranches = consolidateBranches(origBranches, origSkipBranches, sb.branches, []string{})
-	recursiveSBL(repoName, data, generateOneJob, sbs, i+1, posCount)
+	recursiveSBL(repoName, data, generateOneJob, sbs, i+1)
 	// Then do latest branches
 	base.Branches, base.SkipBranches = consolidateBranches(origBranches, origSkipBranches, []string{}, sb.branches)
 	sb.opsNew(base)
-	recursiveSBL(repoName, data, generateOneJob, sbs, i+1, posCount+1)
+	recursiveSBL(repoName, data, generateOneJob, sbs, i+1)
 	sb.restore(base)
 }
 
@@ -1067,7 +1072,7 @@ func executeJobTemplateWrapper(repoName string, data interface{}, generateOneJob
 	if len(sbs) == 0 { // Generate single job if there is no special branch logic
 		generateOneJob(data)
 	} else {
-		recursiveSBL(repoName, data, generateOneJob, sbs, 0, 0)
+		recursiveSBL(repoName, data, generateOneJob, sbs, 0)
 	}
 }
 
