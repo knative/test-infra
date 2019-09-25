@@ -5763,10 +5763,6 @@ periodics:
         secretName: backup-account
 - cron: "0 */12 * * *"
   name: ci-knative-test-infra-issue-tracker-stale
-  labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-test-infra-issue-tracker-stale
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -5807,10 +5803,6 @@ periodics:
         secretName: housekeeping-github-token
 - cron: "0 */12 * * *"
   name: ci-knative-test-infra-issue-tracker-rotten
-  labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-test-infra-issue-tracker-rotten
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -5851,10 +5843,6 @@ periodics:
         secretName: housekeeping-github-token
 - cron: "0 */12 * * *"
   name: ci-knative-test-infra-issue-tracker-close
-  labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-test-infra-issue-tracker-close
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -5872,6 +5860,7 @@ periodics:
         is:issue
         is:open
         -label:lifecycle/frozen
+        -label:lifecycle/stale
         label:lifecycle/rotten"
       - "--updated=720h"
       - "--token=/etc/housekeeping-github-token/token"
@@ -5893,10 +5882,6 @@ periodics:
         secretName: housekeeping-github-token
 - cron: "0 */12 * * *"
   name: ci-knative-docs-issue-tracker-stale
-  labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-docs-issue-tracker-stale
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -5937,10 +5922,6 @@ periodics:
         secretName: housekeeping-github-token
 - cron: "0 */12 * * *"
   name: ci-knative-docs-issue-tracker-rotten
-  labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-docs-issue-tracker-rotten
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -5981,10 +5962,6 @@ periodics:
         secretName: housekeeping-github-token
 - cron: "0 */12 * * *"
   name: ci-knative-docs-issue-tracker-close
-  labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-docs-issue-tracker-close
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -6002,6 +5979,7 @@ periodics:
         is:issue
         is:open
         -label:lifecycle/frozen
+        -label:lifecycle/stale
         label:lifecycle/rotten"
       - "--updated=720h"
       - "--token=/etc/housekeeping-github-token/token"

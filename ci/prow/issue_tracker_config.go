@@ -101,8 +101,8 @@ func (r repoIssue) generateJobs() {
 	jobName = fmt.Sprintf("ci-%s-issue-tracker-close", repoForJob)
 	// Do not look at issues that has frozen label. Only look at rotten labels
 	filter = `
-		-label:lifecycle/frozen
-		-label:lifecycle/stale
+        -label:lifecycle/frozen
+        -label:lifecycle/stale
         label:lifecycle/rotten`
 	updatedTime = fmt.Sprintf("%dh", r.daysToClose*24)
 	comment = fmt.Sprintf("--comment=Rotten issues close after %d days of inactivity.\\n\n"+
@@ -122,8 +122,6 @@ func (r repoIssue) generateJob(jobName, labelFilter, updatedTime, comment string
 	data.PeriodicJobName = jobName
 	data.CronString = periodicCron
 	data.Base.Command = jobCmd
-
-	// TODO(Fredy-Z): replace "r.name:knative/test-infra" with "org:knative" after syncing up with the WGs.
 	data.Base.Args = []string{
 		fmt.Sprintf(`--query=repo:%s
         is:issue
@@ -137,6 +135,5 @@ func (r repoIssue) generateJob(jobName, labelFilter, updatedTime, comment string
 		"--confirm",
 	}
 	addVolumeToJob(&data.Base, "/etc/housekeeping-github-token", "housekeeping-github-token", true, "")
-	addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
 	executeJobTemplate(jobName, readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
 }
