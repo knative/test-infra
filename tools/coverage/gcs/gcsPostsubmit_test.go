@@ -80,7 +80,7 @@ func TestPathToGoodCoverageProfile(t *testing.T) {
 	p := testPostSubmit()
 	profilePath := p.pathToGoodCoverageProfile()
 	fmt.Printf("path to latest healthy build = %s\n", profilePath)
-	if !p.StorageClient.DoesObjectExist(p.Ctx, p.Bucket, profilePath) {
+	if !p.Client.DoesObjectExist(p.Ctx, p.Bucket, profilePath) {
 		t.Fatalf("path point to no object: %s", profilePath)
 	}
 }

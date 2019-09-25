@@ -45,32 +45,19 @@ type PreSubmit struct {
 	PresubmitBuild
 }
 
-func (p *PreSubmit) relDirOfJob() (result string) {
-	return path.Join("pr-logs", "pull", p.RepoOwner+"_"+p.RepoName,
-		p.PrStr(),
-		p.Job)
-}
-
-func (p *PreSubmit) relDirOfBuild() (result string) {
-	return path.Join(p.relDirOfJob(), p.BuildStr())
-}
-
 func (p *PreSubmit) relDirOfArtifacts() (result string) {
-	return path.Join(p.relDirOfBuild(), ArtifactsDirNameOnGcs)
-}
-
-func (p *PreSubmit) urlArtifactsDir() (result string) {
-	return path.Join(gcsUrlHost, p.Bucket, p.relDirOfArtifacts())
+	dir := path.Join("pr-logs", "pull", p.RepoOwner+"_"+p.RepoName, p.PrStr(), p.Job)
+	return path.Join(path.Join(dir, strconv.Itoa(p.Build)), ArtifactsDirNameOnGcs)
 }
 
 func (p *PreSubmit) MakeGcsArtifacts(localArts artifacts.LocalArtifacts) *GcsArtifacts {
 	localArts.SetDirectory(p.relDirOfArtifacts())
-	res := NewGcsArtifacts(p.Ctx, p.StorageClient, p.Bucket, localArts.Artifacts)
-	return res
+	return NewGcsArtifacts(p.Ctx, p.Client, p.Bucket, localArts.Artifacts)
 }
 
 func (p *PreSubmit) urlLineCov() (result string) {
-	return path.Join(p.urlArtifactsDir(), artifacts.LineCovFileName)
+	dir := path.Join(gcsUrlHost, p.Bucket, p.relDirOfArtifacts())
+	return path.Join(dir, artifacts.LineCovFileName)
 }
 
 func (p *PreSubmit) UrlGcsLineCovLinkWithMarker(section int) (result string) {

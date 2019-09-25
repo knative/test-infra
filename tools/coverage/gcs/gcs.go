@@ -22,7 +22,6 @@ import (
 	"context"
 	"log"
 	"path"
-	"strconv"
 
 	"cloud.google.com/go/storage"
 	"google.golang.org/api/iterator"
@@ -30,29 +29,31 @@ import (
 	"knative.dev/test-infra/tools/coverage/logUtil"
 )
 
-type StorageClientIntf interface {
-	Bucket(bucketName string) *storage.BucketHandle
+type StorageClient interface {
 	ListGcsObjects(ctx context.Context, bucketName, prefix, delim string) []string
 	ProfileReader(ctx context.Context, bucket, object string) *artifacts.ProfileReader
 	DoesObjectExist(ctx context.Context, bucket, object string) bool
 }
 
-type StorageClient struct {
-	storage.Client
+type Client struct {
+	*storage.Client
 }
 
-func NewStorageClient(ctx context.Context) *StorageClient {
+// Verify that client implements the interface
+var _ StorageClient = (*Client)(nil)
+
+func NewClient(ctx context.Context) *Client {
 	client, err := storage.NewClient(ctx)
 
 	if err != nil {
 		logUtil.LogFatalf("Failed to create client: %v", err)
 	}
-	return &StorageClient{*client}
+	return &Client{client}
 }
 
-func (client *StorageClient) ListGcsObjects(ctx context.Context, bucketName,
-	prefix, delim string) (objects []string) {
-	it := client.Bucket(bucketName).Objects(ctx, &storage.Query{
+func (c *Client) ListGcsObjects(ctx context.Context, bucketName, prefix, delim string) []string {
+	var objects []string
+	it := c.Bucket(bucketName).Objects(ctx, &storage.Query{
 		Prefix:    prefix,
 		Delimiter: delim,
 	})
@@ -71,15 +72,14 @@ func (client *StorageClient) ListGcsObjects(ctx context.Context, bucketName,
 		}
 	}
 	log.Println("end of ListGcsObjects(...)")
-	return
+	return objects
 }
 
-func (client StorageClient) ProfileReader(ctx context.Context, bucket,
+func (c *Client) ProfileReader(ctx context.Context, bucket,
 	object string) *artifacts.ProfileReader {
-	log.Printf("Running ProfileReader on bucket '%s', object='%s'\n",
-		bucket, object)
+	log.Printf("Running ProfileReader on bucket '%s', object='%s'\n", bucket, object)
 
-	o := client.Bucket(bucket).Object(object)
+	o := c.Bucket(bucket).Object(object)
 	reader, err := o.NewReader(ctx)
 	if err != nil {
 		logUtil.LogFatalf("o.NewReader(Ctx) error: %v", err)
@@ -88,9 +88,8 @@ func (client StorageClient) ProfileReader(ctx context.Context, bucket,
 }
 
 // DoesObjectExist checks whether an object exists in GCS bucket
-func (client StorageClient) DoesObjectExist(ctx context.Context, bucket, object string) bool {
-	_, err := client.Bucket(bucket).Object(object).Attrs(ctx)
-	if err != nil {
+func (c *Client) DoesObjectExist(ctx context.Context, bucket, object string) bool {
+	if _, err := c.Bucket(bucket).Object(object).Attrs(ctx); err != nil {
 		log.Printf("Error getting attrs from object '%s': %v", object, err)
 		return false
 	}
@@ -98,25 +97,21 @@ func (client StorageClient) DoesObjectExist(ctx context.Context, bucket, object 
 }
 
 type GcsBuild struct {
-	StorageClient StorageClientIntf
-	Bucket        string
-	Job           string
-	Build         int
-	CovThreshold  int
-}
-
-func (b *GcsBuild) BuildStr() string {
-	return strconv.Itoa(b.Build)
+	Client       StorageClient
+	Bucket       string
+	Job          string
+	Build        int
+	CovThreshold int
 }
 
 type GcsArtifacts struct {
 	artifacts.Artifacts
 	Ctx    context.Context
-	Client StorageClientIntf
+	Client StorageClient
 	Bucket string
 }
 
-func NewGcsArtifacts(ctx context.Context, client StorageClientIntf,
+func NewGcsArtifacts(ctx context.Context, client StorageClient,
 	bucket string, baseArtifacts artifacts.Artifacts) *GcsArtifacts {
 	return &GcsArtifacts{baseArtifacts, ctx, client, bucket}
 }
