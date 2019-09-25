@@ -69,6 +69,7 @@ func generateIssueTrackerPeriodicJobs() {
 func (r repoIssue) generateJobs() {
 	repoForJob := strings.Replace(r.name, "/", "-", -1)
 	jobName := fmt.Sprintf("ci-%s-issue-tracker-stale", repoForJob)
+	// Do not look at issues that has frozen, stale or rotten label
 	filter := `
         -label:lifecycle/frozen
         -label:lifecycle/stale
@@ -83,6 +84,7 @@ func (r repoIssue) generateJobs() {
 	r.generateJob(jobName, filter, updatedTime, comment)
 
 	jobName = fmt.Sprintf("ci-%s-issue-tracker-rotten", repoForJob)
+	// Do not look at issues that has frozen or rotten label. Only look at stale labelled issues
 	filter = `
         -label:lifecycle/frozen
         label:lifecycle/stale
@@ -97,8 +99,10 @@ func (r repoIssue) generateJobs() {
 	r.generateJob(jobName, filter, updatedTime, comment)
 
 	jobName = fmt.Sprintf("ci-%s-issue-tracker-close", repoForJob)
+	// Do not look at issues that has frozen label. Only look at rotten labels
 	filter = `
-        -label:lifecycle/frozen
+		-label:lifecycle/frozen
+		-label:lifecycle/stale
         label:lifecycle/rotten`
 	updatedTime = fmt.Sprintf("%dh", r.daysToClose*24)
 	comment = fmt.Sprintf("--comment=Rotten issues close after %d days of inactivity.\\n\n"+
