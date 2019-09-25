@@ -537,7 +537,7 @@ func (gih *GithubIssueHandler) processGithubIssuesForRepo(rd RepoData, flakyIssu
 			} else {
 				if fi, err := gih.githubToFlakyIssue(issue, dryrun); err != nil {
 					errs = append(errs, err)
-				} else {
+				} else if !dryrun { // fi is nil as issue is not created in dryrun mode
 					issues = append(issues, *fi)
 				}
 			}
