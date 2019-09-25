@@ -230,6 +230,7 @@ func generateCleanupPeriodicJob() {
 	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
 	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 	configureServiceAccountForJob(&data.Base)
+	addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
 	executeJobTemplate("periodic cleanup", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
 }
 
@@ -250,6 +251,7 @@ func generateFlakytoolPeriodicJob() {
 	configureServiceAccountForJob(&data.Base)
 	addVolumeToJob(&data.Base, "/etc/flaky-test-reporter-github-token", "flaky-test-reporter-github-token", true, "")
 	addVolumeToJob(&data.Base, "/etc/flaky-test-reporter-slack-token", "flaky-test-reporter-slack-token", true, "")
+	addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
 	executeJobTemplate("periodic flakesreporter", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
 
 	// Generate another job that runs more frequently but not reporting to
