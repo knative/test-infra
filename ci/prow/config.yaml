@@ -5585,6 +5585,10 @@ periodics:
       - "--cov-threshold-percentage=50"
 - cron: "0 19 * * 1"
   name: ci-knative-cleanup
+  labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-cleanup
   agent: kubernetes
   decorate: true
   decoration_config:
@@ -5615,6 +5619,10 @@ periodics:
         secretName: test-account
 - cron: "0 12 * * *"
   name: ci-knative-flakes-reporter
+  labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-flakes-reporter
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -5653,6 +5661,10 @@ periodics:
         secretName: flaky-test-reporter-slack-token
 - cron: "0 * * * *"
   name: ci-knative-flakes-resultsrecorder
+  labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-flakes-reporter
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -5848,6 +5860,7 @@ periodics:
         is:issue
         is:open
         -label:lifecycle/frozen
+        -label:lifecycle/stale
         label:lifecycle/rotten"
       - "--updated=720h"
       - "--token=/etc/housekeeping-github-token/token"
@@ -5966,6 +5979,7 @@ periodics:
         is:issue
         is:open
         -label:lifecycle/frozen
+        -label:lifecycle/stale
         label:lifecycle/rotten"
       - "--updated=720h"
       - "--token=/etc/housekeeping-github-token/token"
@@ -5988,6 +6002,10 @@ periodics:
 - cron: "30 07 * * *"
   name: ci-knative-serving-recreate-clusters
   agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-serving-recreate-clusters
   decorate: true
   extra_refs:
   - org: knative
@@ -6030,6 +6048,10 @@ periodics:
 - cron: "5 * * * *"
   name: ci-knative-serving-update-clusters
   agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-serving-update-clusters
   decorate: true
   extra_refs:
   - org: knative
@@ -6072,6 +6094,10 @@ periodics:
 - cron: "30 07 * * *"
   name: ci-knative-eventing-recreate-clusters
   agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-eventing-recreate-clusters
   decorate: true
   extra_refs:
   - org: knative
@@ -6114,6 +6140,10 @@ periodics:
 - cron: "5 * * * *"
   name: ci-knative-eventing-update-clusters
   agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-eventing-update-clusters
   decorate: true
   extra_refs:
   - org: knative
