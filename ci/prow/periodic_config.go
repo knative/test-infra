@@ -219,7 +219,7 @@ func generateCleanupPeriodicJob() {
 	data.Base = newbaseProwJobTemplateData("knative/test-infra")
 	data.PeriodicJobName = "ci-knative-cleanup"
 	data.CronString = cleanupPeriodicJobCron
-	data.Base.DecorationConfig = []string{"timeout: 86400000000000"} // 24 hours
+	data.Base.DecorationConfig = []string{"timeout: 432000000000000"} // 120 hours
 	data.Base.Command = cleanupScript
 	data.Base.Args = []string{
 		"--project-resource-yaml ci/prow/boskos/resources.yaml",
