@@ -27,12 +27,10 @@ import (
 	"knative.dev/test-infra/tools/coverage/line"
 )
 
-func RunPresubmit(p *gcs.PreSubmit, arts *artifacts.LocalArtifacts) (isCoverageLow bool) {
+func RunPresubmit(p *gcs.PreSubmit, arts *artifacts.LocalArtifacts) bool {
 	log.Println("starting PreSubmit.RunPresubmit(...)")
-	coverageThresholdInt := p.CovThreshold
 
 	concernedFiles := githubUtil.GetConcernedFiles(&p.GithubPr, "")
-
 	if len(concernedFiles) == 0 {
 		log.Printf("List of concerned committed files is empty, " +
 			"don't need to run coverage profile in presubmit\n")
@@ -40,11 +38,11 @@ func RunPresubmit(p *gcs.PreSubmit, arts *artifacts.LocalArtifacts) (isCoverageL
 	}
 
 	gNew := calc.CovList(arts.ProfileReader(), arts.KeyProfileCreator(),
-		concernedFiles, coverageThresholdInt)
+		concernedFiles, p.CovThreshold)
 	line.CreateLineCovFile(arts)
 	line.GenerateLineCovLinks(p, gNew)
 
-	base := gcs.NewPostSubmit(p.Ctx, p.StorageClient, p.Bucket,
+	base := gcs.NewPostSubmit(p.Ctx, p.Client, p.Bucket,
 		p.PostSubmitJob, gcs.ArtifactsDirNameOnGcs, arts.ProfileName())
 	gBase := calc.CovList(base.ProfileReader(), nil, concernedFiles, p.CovThreshold)
 	changes := calc.NewGroupChanges(gBase, gNew)
@@ -58,5 +56,5 @@ func RunPresubmit(p *gcs.PreSubmit, arts *artifacts.LocalArtifacts) (isCoverageL
 	}
 
 	log.Println("completed PreSubmit.RunPresubmit(...)")
-	return
+	return isCoverageLow
 }
