@@ -17,38 +17,51 @@
 set -e
 
 readonly PROJECT=${1:?"First argument must be the boskos project name."}
-readonly PROJECT_OWNERS=("prime-engprod-sea@google.com")
-readonly PROJECT_GROUPS=("knative-productivity-admins@googlegroups.com")
-readonly PROJECT_SAS=(
+
+# APIs, Permissions and accounts to be set.
+# * Resources with API names will be enabled.
+# * Resources starting with "role/" indicates that the next accounts will be added with such role.
+# * Resources named as emails are added to the project using the last role defined.
+#   - @google.com addresses are assumed to be groups.
+#   - @googlegroups.com addresses are assumed to be groups.
+#   - @...gserviceaccount.com addresses are assumed to be service accounts.
+readonly RESOURCES=(
+    "roles/owner"
+    "prime-engprod-sea@google.com"
+
+    "roles/editor"
+    "knative-productivity-admins@googlegroups.com"
     "knative-tests@appspot.gserviceaccount.com"
     "prow-job@knative-tests.iam.gserviceaccount.com"
     "prow-job@knative-nightly.iam.gserviceaccount.com"
-    "prow-job@knative-releases.iam.gserviceaccount.com")
-readonly PROJECT_APIS=(
+    "prow-job@knative-releases.iam.gserviceaccount.com"
+
+    "roles/viewer"
+    "knative-dev@googlegroups.com"
+
+    # APIs to enable
     "cloudresourcemanager.googleapis.com"
     "compute.googleapis.com"
-    "container.googleapis.com")
+    "container.googleapis.com"
+)
 
-# Add an owner to the PROJECT
-for owner in ${PROJECT_OWNERS[@]}; do
-  echo "NOTE: Adding owner ${owner}"
-  gcloud projects add-iam-policy-binding ${PROJECT} --member group:${owner} --role roles/owner
-done
+# Loop through the list of resources and add them.
 
-# Add all GROUPS as editors
-for group in ${PROJECT_GROUPS[@]}; do
-  echo "NOTE: Adding group ${group}"
-  gcloud projects add-iam-policy-binding ${PROJECT} --member group:${group} --role roles/editor
-done
-
-# Add all service accounts as editors
-for sa in ${PROJECT_SAS[@]}; do
-  echo "NOTE: Adding service account ${sa}"
-  gcloud projects add-iam-policy-binding ${PROJECT} --member serviceAccount:${sa} --role roles/editor
-done
-
-# Enable APIS
-for api in ${PROJECT_APIS[@]}; do
-  echo "NOTE: Enabling API ${api}"
-  gcloud services enable ${api} --project=${PROJECT}
+# Start with a non-existing role, so gcloud clearly fails if resources are set incorrectly.
+role="unknown"
+for res in ${RESOURCES[@]}; do
+  if [[ ${res} == roles/* ]]; then
+    role=${res}
+    continue
+  fi
+  if [[ ${res} == *.googleapis.com ]]; then
+    echo "NOTE: Enabling API ${res}"
+    gcloud services enable ${res} --project=${PROJECT}
+    continue
+  fi
+  type="user"
+  [[ ${res} == *@googlegroups.com || ${res} == *@google.com ]] && type="group"
+  [[ ${res} == *.gserviceaccount.com ]] && type="serviceAccount"
+  echo "NOTE: Adding ${res} as ${role}"
+  gcloud projects add-iam-policy-binding ${PROJECT} --member ${type}:${res} --role ${role}
 done
