@@ -22,7 +22,8 @@ readonly BILLING_ACCOUNT=${2:?"Second argument must be the billing account."}
 readonly RESOURCE_FILE="resources.yaml"
 
 if [[ ! -f ${RESOURCE_FILE} || ! -w ${RESOURCE_FILE} ]]; then
-  echo "${RESOURCE_FILE} does not exist or is not writable" && exit 1
+  echo "${RESOURCE_FILE} does not exist or is not writable"
+  exit 1
 fi
 
 # Get the index of the last boskos project from the resources file
