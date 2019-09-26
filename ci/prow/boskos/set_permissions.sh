@@ -19,6 +19,12 @@ set -e
 readonly PROJECT=${1:?"First argument must be the boskos project name."}
 
 # APIs, Permissions and accounts to be set.
+# * Resources with API names will be enabled.
+# * Resources starting with "role/" indicates that the next accounts will be added with such role.
+# * Resources named as emails are added to the project using the last role defined.
+#   - @google.com addresses are assumed to be groups.
+#   - @googlegroups.com addresses are assumed to be groups.
+#   - @...gserviceaccount.com addresses are assumed to be service accounts.
 readonly RESOURCES=(
     "roles/owner"
     "prime-engprod-sea@google.com"
@@ -41,6 +47,7 @@ readonly RESOURCES=(
 
 # Loop through the list of resources and add them.
 
+# Hold the current role used to add accounts.
 role="unknown"
 for res in ${RESOURCES[@]}; do
   if [[ ${res} == roles/* ]]; then
