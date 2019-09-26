@@ -27,7 +27,7 @@ if [[ ! -f ${RESOURCE_FILE} || ! -w ${RESOURCE_FILE} ]]; then
 fi
 
 # Get the index of the last boskos project from the resources file
-LAST_INDEX=$(grep -n "knative-boskos-" ${RESOURCE_FILE} | wc -l)
+LAST_INDEX=$(grep "knative-boskos-" ${RESOURCE_FILE} | grep -o "[0-9]\+" | sort -nr | head -1)
 for (( i=1; i<=${NUMBER}; i++ )); do
   PROJECT="knative-boskos-$(( ${LAST_INDEX} + i ))"
   # This Folder ID is google.com/google-default
@@ -39,6 +39,6 @@ for (( i=1; i<=${NUMBER}; i++ )); do
   # Set permissions for this project
   "$(dirname $0)/set_permissions.sh" ${PROJECT}
 
-  LAST_PROJECT=$(grep "knative-boskos-" resources.yaml | tail -1)
+  LAST_PROJECT=$(grep "knative-boskos-" ${RESOURCE_FILE} | tail -1)
   sed "/${LAST_PROJECT}/a\ \ -\ ${PROJECT}" -i ${RESOURCE_FILE}
 done
