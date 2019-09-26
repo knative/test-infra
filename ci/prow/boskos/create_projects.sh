@@ -16,29 +16,18 @@
 
 set -e
 
-readonly NUMBER=${1:?"First argument is the number of new projects to create."}
-readonly BILLING_ACCOUNT=${2:?"Second argument must be the billing account."}
+readonly FIRST=${1:?"First argument is the first number of the new project(s)."}
+readonly NUMBER=${2:?"Second argument is the number of new projects."}
+readonly BILLING_ACCOUNT=${3:?"Third argument must be the billing account."}
+readonly OUTPUT_FILE=${4:?"Fourth argument should be a file name all project names will be appended to in a resources.yaml format."}
 
-readonly RESOURCE_FILE="resources.yaml"
-
-if [[ ! -f ${RESOURCE_FILE} || ! -w ${RESOURCE_FILE} ]]; then
-  echo "${RESOURCE_FILE} does not exist or is not writable"
-fi
-
-# Get the index of the last boskos project from the resources file
-START=$(grep -n "knative-boskos-" ${RESOURCE_FILE} | wc -l)
-((START++))
 for (( i=0; i<${NUMBER}; i++ )); do
-  PROJECT="knative-boskos-$(( ${START} + i ))"
+  PROJECT="knative-boskos-$(( i + ${FIRST} ))"
   # This Folder ID is google.com/google-default
   # If this needs to be changed for any reason, GCP project settings must be updated.
   # Details are available in Google's internal issue 137963841.
   gcloud projects create ${PROJECT} --folder=396521612403
   gcloud beta billing projects link ${PROJECT} --billing-account=${BILLING_ACCOUNT}
-
-  # Set permissions for this project
   "$(dirname $0)/set_permissions.sh" ${PROJECT}
-
-  last_project=$(grep "knative-boskos-" resources.yaml | tail -1)
-  sed "/${last_project}/a\ \ -\ ${PROJECT}" -i ${RESOURCE_FILE}
+  echo "  - ${PROJECT}" >> ${OUTPUT_FILE}
 done
