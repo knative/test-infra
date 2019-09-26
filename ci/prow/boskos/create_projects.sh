@@ -21,10 +21,15 @@ readonly BILLING_ACCOUNT=${2:?"Second argument must be the billing account."}
 
 readonly RESOURCE_FILE="resources.yaml"
 
-start=$(grep -n "knative-boskos-" ${RESOURCE_FILE} | wc -l)
-((start++))
+if [[ ! -f ${RESOURCE_FILE} || ! -w ${RESOURCE_FILE} ]]; then
+  echo "${RESOURCE_FILE} does not exist or is not writable"
+fi
+
+# Get the index of the last boskos project from the resources file
+START=$(grep -n "knative-boskos-" ${RESOURCE_FILE} | wc -l)
+((START++))
 for (( i=0; i<${NUMBER}; i++ )); do
-  PROJECT="knative-boskos-$(( ${start} + i ))"
+  PROJECT="knative-boskos-$(( ${START} + i ))"
   # This Folder ID is google.com/google-default
   # If this needs to be changed for any reason, GCP project settings must be updated.
   # Details are available in Google's internal issue 137963841.
@@ -34,7 +39,6 @@ for (( i=0; i<${NUMBER}; i++ )); do
   # Set permissions for this project
   "$(dirname $0)/set_permissions.sh" ${PROJECT}
 
-  last_project_line=$(grep -n "knative-boskos-" ${RESOURCE_FILE} | tail -n 1 | cut -d: -f1)
-  ((last_project_line++))
-  sed -e "${last_project_line}i\ \ - ${PROJECT}" -i ${RESOURCE_FILE}
+  last_project=$(grep "knative-boskos-" resources.yaml | tail -1)
+  sed "/${last_project}/a\ \ -\ ${PROJECT}" -i ${RESOURCE_FILE}
 done

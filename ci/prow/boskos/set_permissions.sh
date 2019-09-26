@@ -43,7 +43,7 @@ for group in ${PROJECT_GROUPS[@]}; do
 done
 
 for sa in ${PROJECT_SAS[@]}; do
-  # Add all service accounts as editors and storageAdmins
+  # Add all service accounts with roles "editor" and "storage admin"
   echo "NOTE: Adding service account ${sa}"
   gcloud projects add-iam-policy-binding ${PROJECT} --member serviceAccount:${sa} --role roles/editor
   gcloud projects add-iam-policy-binding ${PROJECT} --member serviceAccount:${sa} --role roles/storage.admin
