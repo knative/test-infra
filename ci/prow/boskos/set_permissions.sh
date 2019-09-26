@@ -47,7 +47,7 @@ readonly RESOURCES=(
 
 # Loop through the list of resources and add them.
 
-# Hold the current role used to add accounts.
+# Start with a non-existing role, so gcloud clearly fails if resources are set incorrectly.
 role="unknown"
 for res in ${RESOURCES[@]}; do
   if [[ ${res} == roles/* ]]; then
