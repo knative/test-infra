@@ -18,6 +18,10 @@ set -e
 
 readonly PROJECT=${1:?"First argument must be the boskos project name."}
 
+# Get data that can be used in the following operations.
+readonly ACCESS_TOKEN="$(gcloud auth application-default print-access-token)"
+readonly PROJECT_NUMBER="$(gcloud projects describe ${PROJECT} --format="value(projectNumber)")"
+
 # APIs, Permissions and accounts to be set.
 # * Resources with API names will be enabled.
 # * Resources starting with "role/" indicates that the next accounts will be added with such role.
@@ -35,6 +39,9 @@ readonly RESOURCES=(
     "prow-job@knative-tests.iam.gserviceaccount.com"
     "prow-job@knative-nightly.iam.gserviceaccount.com"
     "prow-job@knative-releases.iam.gserviceaccount.com"
+
+    "roles/storage.admin"
+    "prow-job@knative-tests.iam.gserviceaccount.com"
 
     "roles/viewer"
     "knative-dev@googlegroups.com"
@@ -65,3 +72,13 @@ for res in ${RESOURCES[@]}; do
   echo "NOTE: Adding ${res} as ${role}"
   gcloud projects add-iam-policy-binding ${PROJECT} --member ${type}:${res} --role ${role}
 done
+
+# As required by step 6 in https://github.com/google/knative-gcp/tree/master/docs/storage,
+# grant the GCS service account the permissions to publish to GCP Pub/Sub.
+echo "Activating GCS service account"
+curl -s -X GET -H "Authorization: Bearer ${ACCESS_TOKEN}" "https://www.googleapis.com/storage/v1/projects/${PROJECT}/serviceAccount"
+GCS_SERVICE_ACCOUNT="service-${PROJECT_NUMBER}@gs-project-accounts.iam.gserviceaccount.com"
+echo "GCS service account is ${GCS_SERVICE_ACCOUNT}"
+gcloud projects add-iam-policy-binding ${PROJECT} \
+  --member=serviceAccount:${GCS_SERVICE_ACCOUNT} \
+  --role roles/pubsub.publisher
