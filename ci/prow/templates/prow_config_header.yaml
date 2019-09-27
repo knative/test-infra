@@ -78,23 +78,7 @@ branch-protection:
 tide:
   queries:
   - repos:
-    - knative/build
-    - knative/build-templates
-    - knative/client
-    - knative/observability
-    - knative/serving
-    - knative/eventing
-    - knative/eventing-contrib
-    - knative/docs
-    - knative/test-infra
-    - knative/pkg
-    - knative/caching
-    - knative/website
-    - knative/community
-    - knative/sample-controller
-    - knative/serving-operator
-    - knative/eventing-operator
-    - google/knative-gcp
+    [[indent_array 4 .TideRepos]]
     labels:
     - lgtm
     - approved
