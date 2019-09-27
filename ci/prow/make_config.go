@@ -367,34 +367,34 @@ func exclusiveSlices(a1, a2 []string) []string {
 	return res
 }
 
-// getGo113ID returns image identifier for go113 images
-func getGo113ID() string {
-	return "-go113"
+// getGo112ID returns image identifier for go113 images
+func getGo112ID() string {
+	return "-go112"
 }
 
 // Get go113 image name from base image name, following the contract of
-// [IMAGE]:[DIGEST]-> [IMAGE]-go113:[DIGEST]
+// [IMAGE]:[DIGEST]-> [IMAGE]-go112:[DIGEST]
 func getGo113ImageName(name string) string {
-	go113ID := getGo113ID()
+	go112ID := getGo112ID()
 	parts := strings.SplitN(name, ":", 2)
 	if len(parts) != 2 {
 		log.Fatalf("image name should contain ':': %q", name)
 	}
-	if !strings.HasSuffix(parts[0], go113ID) {
-		parts[0] = fmt.Sprintf("%s%s", parts[0], go113ID)
+	if strings.HasSuffix(parts[0], go112ID) {
+		parts[0] = strings.TrimSuffix(parts[0], go112ID)
 	}
 	return strings.Join(parts, ":")
 }
 
 // Remove go113 image name suffix
 func restoreGo113ImageName(name string) string {
-	go113ID := getGo113ID()
+	go112ID := getGo112ID()
 	parts := strings.SplitN(name, ":", 2)
 	if len(parts) != 2 {
 		log.Fatalf("image name should contain ':': %q", name)
 	}
-	if strings.HasSuffix(parts[0], go113ID) {
-		parts[0] = strings.TrimSuffix(parts[0], go113ID)
+	if !strings.HasSuffix(parts[0], go112ID) {
+		parts[0] = fmt.Sprintf("%s%s", parts[0], go112ID)
 	}
 	return strings.Join(parts, ":")
 }
@@ -797,8 +797,8 @@ func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
 	// Generate config for post-knative-serving-go-coverage-dev right after post-knative-serving-go-coverage
 	if data.PostsubmitJobName == "post-knative-serving-go-coverage" {
 		data.PostsubmitJobName += "-dev"
+		data.Base.Image = strings.Replace(data.Base.Image, "coverage-go112:latest", "coverage-dev:latest", -1)
 		data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest", -1)
-		data.Base.Image = strings.Replace(data.Base.Image, "coverage-go113:latest", "coverage-dev-go113:latest", -1)
 		executeJobTemplate("presubmit", readTemplate(goCoveragePostsubmitJob), "postsubmits", repoName, data.PostsubmitJobName, false, data)
 	}
 }
@@ -1312,8 +1312,8 @@ func main() {
 	flag.StringVar(&releaseAccount, "release-account", "/etc/release-account/service-account.json", "Path to the service account JSON for release jobs")
 	flag.StringVar(&flakesreporterDockerImage, "flaky-test-reporter-docker", "gcr.io/knative-tests/test-infra/flaky-test-reporter:latest", "Docker image for flaky test reporting tool")
 	flag.StringVar(&prowversionbumperDockerImage, "prow-auto-bumper", "gcr.io/knative-tests/test-infra/prow-auto-bumper:latest", "Docker image for Prow version bumping tool")
-	flag.StringVar(&coverageDockerImage, "coverage-docker", "gcr.io/knative-tests/test-infra/coverage:latest", "Docker image for coverage tool")
-	flag.StringVar(&prowTestsDockerImage, "prow-tests-docker", "gcr.io/knative-tests/test-infra/prow-tests:stable", "prow-tests docker image")
+	flag.StringVar(&coverageDockerImage, "coverage-docker", "gcr.io/knative-tests/test-infra/coverage-go112:latest", "Docker image for coverage tool")
+	flag.StringVar(&prowTestsDockerImage, "prow-tests-docker", "gcr.io/knative-tests/test-infra/prow-tests-go112:stable", "prow-tests docker image")
 	flag.StringVar(&githubCommenterDockerImage, "github-commenter-docker", "gcr.io/k8s-prow/commenter:v20190731-e3f7b9853", "github commenter docker image")
 	flag.StringVar(&presubmitScript, "presubmit-script", "./test/presubmit-tests.sh", "Executable for running presubmit tests")
 	flag.StringVar(&releaseScript, "release-script", "./hack/release.sh", "Executable for creating releases")
