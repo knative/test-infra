@@ -161,3 +161,24 @@ spec:
         jobs-affected: 1
         prs-affected: 0
         period: 1440
+  - error-pattern: 'step failures'
+    hint: 'Verify that these are not from dry-runs'
+    alerts:
+      - job-name-regex: 'ci-knative-flakes-.*' # Flaky reporter jobs
+        occurrences: 2
+        jobs-affected: 1
+        period: 2880
+  - error-pattern: '.*' # We need to check for all errors
+    hint: 'Look at the errors in the log'
+    alerts:
+      - job-name-regex: 'ci-knative-cleanup' # Cleanup test images for all knative
+        occurrences: 1
+        jobs-affected: 1
+        period: 1440
+  - error-pattern: '.*' # Check all errors
+    hint: 'Look at the errors in build log'
+    alerts:
+      - job-name-regex: 'ci-knative-.*-clusters' # Performance recycle clusters jobs
+        occurrences: 3
+        jobs-affected: 1
+        period: 180
