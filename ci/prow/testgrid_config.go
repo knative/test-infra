@@ -129,7 +129,8 @@ func generateTestGroup(projName string, repoName string, jobNames []string) {
 		gcsLogDir := fmt.Sprintf("%s/%s/%s", gcsBucket, logsDir, testGroupName)
 		extras := make(map[string]string)
 		switch jobName {
-		case "continuous", "dot-release", "auto-release", "performance", "performance-mesh", "latency", "nightly":
+		case "continuous", "dot-release", "auto-release", "performance", "performance-mesh",
+			"latency", "nightly", "webhook-apicoverage":
 			isDailyBranch := contRegex.FindString(testGroupName) != ""
 			if !isDailyBranch && (jobName == "continuous" || jobName == "auto-release") {
 				// TODO(Fredy-Z): this value should be derived from the cron string
@@ -149,12 +150,16 @@ func generateTestGroup(projName string, repoName string, jobNames []string) {
 			if jobName == "performance" || jobName == "performance-mesh" {
 				extras["short_text_metric"] = "perf_latency"
 			}
+			if jobName == "webhook-apicoverage" {
+				extras["alert_stale_results_hours"] = "48" // 2 days
+				extras["num_failures_to_alert"] = "3"
+			}
 		case "test-coverage":
 			gcsLogDir = strings.ToLower(fmt.Sprintf("%s/%s/ci-%s-%s", gcsBucket, logsDir, projRepoStr, "go-coverage"))
 			extras["short_text_metric"] = "coverage"
 			// Do not alert on coverage failures (i.e., coverage below threshold)
 			extras["num_failures_to_alert"] = "9999"
-		case "istio-1.1-mesh", "istio-1.1-no-mesh", "istio-1.2-mesh", "istio-1.2-no-mesh", "gloo-0.17.1":
+		case "istio-1.2-mesh", "istio-1.2-no-mesh", "istio-1.3-mesh", "istio-1.3-no-mesh", "gloo-0.17.1":
 			extras["alert_stale_results_hours"] = "3"
 			extras["num_failures_to_alert"] = "3"
 		default:
@@ -187,7 +192,8 @@ func generateDashboard(projName string, repoName string, jobNames []string) {
 			if projRepoStr == "knative-serving" {
 				executeDashboardTabTemplate("conformance", testGroupName, "include-filter-by-regex=test/conformance/&sort-by-name=", noExtras)
 			}
-		case "dot-release", "auto-release", "performance", "performance-mesh", "latency":
+		case "dot-release", "auto-release", "performance", "performance-mesh",
+			"latency", "webhook-apicoverage":
 			extras := make(map[string]string)
 			baseOptions := testgridTabSortByName
 			if jobName == "performance" || jobName == "performance-mesh" {
@@ -202,7 +208,7 @@ func generateDashboard(projName string, repoName string, jobNames []string) {
 			executeDashboardTabTemplate("nightly", testGroupName, testgridTabSortByName, noExtras)
 		case "test-coverage":
 			executeDashboardTabTemplate("coverage", testGroupName, testgridTabGroupByDir, noExtras)
-		case "istio-1.1-mesh", "istio-1.1-no-mesh", "istio-1.2-mesh", "istio-1.2-no-mesh", "gloo-0.17.1":
+		case "istio-1.2-mesh", "istio-1.2-no-mesh", "istio-1.3-mesh", "istio-1.3-no-mesh", "gloo-0.17.1":
 			executeDashboardTabTemplate(jobName, testGroupName, testgridTabSortByName, noExtras)
 		default:
 			log.Fatalf("Unknown job name %q", jobName)
@@ -223,13 +229,14 @@ func executeDashboardTabTemplate(dashboardTabName string, testGroupName string, 
 // getTestGroupName get the testGroupName from the given repoName and jobName
 func getTestGroupName(repoName string, jobName string) string {
 	switch jobName {
-	case "continuous", "dot-release", "auto-release", "performance", "performance-mesh", "latency":
+	case "continuous", "dot-release", "auto-release", "performance", "performance-mesh",
+		"latency", "webhook-apicoverage":
 		return strings.ToLower(fmt.Sprintf("ci-%s-%s", repoName, jobName))
 	case "nightly":
 		return strings.ToLower(fmt.Sprintf("ci-%s-%s-release", repoName, jobName))
 	case "test-coverage":
 		return strings.ToLower(fmt.Sprintf("pull-%s-%s", repoName, jobName))
-	case "istio-1.1-mesh", "istio-1.1-no-mesh", "istio-1.2-mesh", "istio-1.2-no-mesh", "gloo-0.17.1":
+	case "istio-1.2-mesh", "istio-1.2-no-mesh", "istio-1.3-mesh", "istio-1.3-no-mesh", "gloo-0.17.1":
 		return strings.ToLower(fmt.Sprintf("ci-%s-%s", repoName, jobName))
 	}
 	log.Fatalf("Unknown jobName for getTestGroupName: %s", jobName)

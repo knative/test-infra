@@ -36,7 +36,7 @@ const (
 )
 
 // createSlackMessageForRepo creates slack message layout from RepoData
-func createSlackMessageForRepo(rd RepoData, flakyIssuesMap map[string][]*flakyIssue) string {
+func createSlackMessageForRepo(rd RepoData, flakyIssuesMap map[string][]flakyIssue) string {
 	flakyTests := getFlakyTests(rd)
 	message := fmt.Sprintf("As of %s, there are %d flaky tests in '%s' from repo '%s'",
 		time.Unix(*rd.LastBuildStartTime, 0).String(), len(flakyTests), rd.Config.Name, rd.Config.Repo)
@@ -72,7 +72,7 @@ func createSlackMessageForRepo(rd RepoData, flakyIssuesMap map[string][]*flakyIs
 	return message
 }
 
-func sendSlackNotifications(repoDataAll []RepoData, c slackutil.WriteOperations, flakyIssues map[string][]*flakyIssue, dryrun bool) error {
+func sendSlackNotifications(repoDataAll []RepoData, c slackutil.WriteOperations, flakyIssues map[string][]flakyIssue, dryrun bool) error {
 	var allErrs []error
 	for _, rd := range repoDataAll {
 		channels := rd.Config.SlackChannels

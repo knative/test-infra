@@ -90,11 +90,11 @@ func main() {
 
 		prData := githubPr.New(*githubTokenPath, repoOwner, repoName, pr, *postingBotUserName)
 		gcsData := &gcs.PresubmitBuild{GcsBuild: gcs.GcsBuild{
-			StorageClient: gcs.NewStorageClient(prData.Ctx),
-			Bucket:        *gcsBucketName,
-			Job:           jobName,
-			Build:         build,
-			CovThreshold:  *covThresholdFlag,
+			Client:       gcs.NewClient(prData.Ctx),
+			Bucket:       *gcsBucketName,
+			Job:          jobName,
+			Build:        build,
+			CovThreshold: *covThresholdFlag,
 		},
 			PostSubmitJob: *postSubmitJobName,
 		}
@@ -104,9 +104,7 @@ func main() {
 		}
 
 		presubmit.Artifacts = *presubmit.MakeGcsArtifacts(*localArtifacts)
-
 		isCoverageLow := RunPresubmit(presubmit, localArtifacts)
-
 		if isCoverageLow {
 			logUtil.LogFatalf("Code coverage is below threshold (%d%%), "+
 				"fail presubmit workflow intentionally", *covThresholdFlag)

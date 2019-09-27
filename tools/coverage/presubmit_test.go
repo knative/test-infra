@@ -59,10 +59,10 @@ func gcsArtifactsForTest() *gcs.GcsArtifacts {
 func preSubmitForTest() (data *gcs.PreSubmit) {
 	repoData := repoDataForTest()
 	build := gcs.GcsBuild{
-		StorageClient: gcsFakes.NewFakeStorageClient(),
-		Bucket:        gcsFakes.FakeGcsBucketName,
-		Job:           gcsFakes.FakePreSubmitProwJobName,
-		Build:         testPresubmitBuild,
+		Client: gcsFakes.NewFakeStorageClient(),
+		Bucket: gcsFakes.FakeGcsBucketName,
+		Job:    gcsFakes.FakePreSubmitProwJobName,
+		Build:  testPresubmitBuild,
 	}
 	pbuild := gcs.PresubmitBuild{
 		GcsBuild:      build,
@@ -92,13 +92,13 @@ func TestRunPresubmit(t *testing.T) {
 func TestK8sGcsAddress(t *testing.T) {
 	data := preSubmitForTest()
 	data.Build = 1286
-	actual := data.UrlGcsLineCovLinkWithMarker(3)
+	got := data.UrlGcsLineCovLinkWithMarker(3)
 
-	expected := fmt.Sprintf("https://storage.cloud.google.com/%s/pr-logs/pull/"+
+	want := fmt.Sprintf("https://storage.cloud.google.com/%s/pr-logs/pull/"+
 		"%s_%s/%s/%s/%s/artifacts/line-cov.html#file3",
-		gcsFakes.FakeGcsBucketName, data.RepoOwner, data.RepoName, data.PrStr(), gcsFakes.FakePreSubmitProwJobName, data.BuildStr())
-	if actual != expected {
-		t.Fatal(test.StrFailure("", expected, actual))
+		gcsFakes.FakeGcsBucketName, data.RepoOwner, data.RepoName, data.PrStr(), gcsFakes.FakePreSubmitProwJobName, "1286")
+	if got != want {
+		t.Fatal(test.StrFailure("", want, got))
 	}
-	fmt.Printf("line cov link=%s", actual)
+	fmt.Printf("line cov link=%s", got)
 }

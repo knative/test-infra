@@ -60,12 +60,12 @@ spec:
     alerts:
       - job-name-regex: 'pull.*'
         occurrences: 2
-        jobs-affected: 1
+        jobs-affected: 10
         prs-affected: 2
         period: 1440
       - job-name-regex: '.*'
         occurrences: 1
-        jobs-affected: 1
+        jobs-affected: 5
         prs-affected: 0
         period: 1440
 
@@ -74,12 +74,12 @@ spec:
     alerts:
       - job-name-regex: 'pull.*'
         occurrences: 2
-        jobs-affected: 1
+        jobs-affected: 10
         prs-affected: 2
         period: 1440
       - job-name-regex: '.*'
         occurrences: 1
-        jobs-affected: 1
+        jobs-affected: 5
         prs-affected: 0
         period: 1440
 

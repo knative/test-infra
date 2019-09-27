@@ -163,7 +163,6 @@ func (gih *GithubIssueHandler) createCommentForTest(rd RepoData, testFullName st
 
 // create unicode graphs for current scan as well as all previous scans
 func (gih *GithubIssueHandler) createHistoryUnicode(rd RepoData, comment, testFullName string) string {
-	var res string
 	currentUnicode := fmt.Sprintf("%s: ", time.Unix(*rd.LastBuildStartTime, 0).String())
 	resultSlice := rd.getResultSliceForTest(testFullName)
 	for i, buildID := range rd.BuildIDs {
@@ -201,11 +200,10 @@ func (gih *GithubIssueHandler) createHistoryUnicode(rd RepoData, comment, testFu
 		records = records[:60]
 	}
 
+	res := fmt.Sprintf("\n%s\n", strings.Join(records, "\n"))
 	if len(records) > maxHistoryEntries {
 		res = fmt.Sprintf("\n%s\n%s\n", strings.Join(records[:maxHistoryEntries], "\n"),
 			fmt.Sprintf(collapseTemplate, "Older builds", strings.Join(records[maxHistoryEntries:], "\n")))
-	} else {
-		res = fmt.Sprintf("\n%s\n", strings.Join(records, "\n"))
 	}
 
 	return fmt.Sprintf(historyPattern, res)
@@ -213,7 +211,7 @@ func (gih *GithubIssueHandler) createHistoryUnicode(rd RepoData, comment, testFu
 
 // updateIssue adds comments to an existing issue, close an issue if test passed both in previous day and today,
 // reopens the issue if test becomes flaky while issue is closed.
-func (gih *GithubIssueHandler) updateIssue(fi *flakyIssue, newComment string, ts *TestStat, dryrun bool) error {
+func (gih *GithubIssueHandler) updateIssue(fi flakyIssue, newComment string, ts *TestStat, dryrun bool) error {
 	issue := fi.issue
 	passedLastTime := false
 	latestStatus := reLatestStatusRegex.FindStringSubmatch(fi.comment.GetBody())
@@ -235,29 +233,25 @@ func (gih *GithubIssueHandler) updateIssue(fi *flakyIssue, newComment string, ts
 			func() error {
 				return gih.client.EditComment(org, getRepoFromIssue(issue), *fi.comment.ID, newComment)
 			},
-			dryrun,
-		); err != nil {
+			dryrun); err != nil {
 			return fmt.Errorf("failed updating comments for issue '%s': '%v'", *issue.URL, err)
 		}
 	}
 
 	if ts.isPassed() { // close open issue if the test passed twice consecutively
-		if issue.GetState() == string(ghutil.IssueOpenState) {
-			if passedLastTime {
-				if err := helpers.Run(
-					"closing issue",
-					func() error {
-						closeErr := gih.client.CloseIssue(org, getRepoFromIssue(issue), *issue.Number)
-						if closeErr == nil {
-							closeComment := "Closing issue: this test has passed in latest 2 scans"
-							_, closeErr = gih.client.CreateComment(org, getRepoFromIssue(issue), *issue.Number, closeComment)
-						}
-						return closeErr
-					},
-					dryrun,
-				); err != nil {
-					return fmt.Errorf("failed closing issue '%s': '%v'", *issue.URL, err)
-				}
+		if issue.GetState() == string(ghutil.IssueOpenState) && passedLastTime {
+			if err := helpers.Run(
+				"closing issue",
+				func() error {
+					closeErr := gih.client.CloseIssue(org, getRepoFromIssue(issue), *issue.Number)
+					if closeErr == nil {
+						closeComment := "Closing issue: this test has passed in latest 2 scans"
+						_, closeErr = gih.client.CreateComment(org, getRepoFromIssue(issue), *issue.Number, closeComment)
+					}
+					return closeErr
+				},
+				dryrun); err != nil {
+				return fmt.Errorf("failed closing issue '%s': '%v'", *issue.URL, err)
 			}
 		}
 	} else if ts.isFlaky() { // reopen closed issue if test found flaky
@@ -272,8 +266,7 @@ func (gih *GithubIssueHandler) updateIssue(fi *flakyIssue, newComment string, ts
 					}
 					return openErr
 				},
-				dryrun,
-			); err != nil {
+				dryrun); err != nil {
 				return fmt.Errorf("failed reopen issue: '%s'", *issue.URL)
 			}
 		}
@@ -291,8 +284,7 @@ func (gih *GithubIssueHandler) createNewIssue(org, repoForIssue, title, body, co
 			newIssue, err = gih.client.CreateIssue(org, repoForIssue, title, body)
 			return err
 		},
-		dryrun,
-	); err != nil {
+		dryrun); err != nil {
 		return nil, fmt.Errorf("failed creating issue '%s' in repo '%s'", title, repoForIssue)
 	}
 	var addIdentityErrs []error // clean up issue if any error occurred during adding identity, see below
@@ -302,8 +294,7 @@ func (gih *GithubIssueHandler) createNewIssue(org, repoForIssue, title, body, co
 			_, err := gih.client.CreateComment(org, repoForIssue, *newIssue.Number, comment)
 			return err
 		},
-		dryrun,
-	); err != nil {
+		dryrun); err != nil {
 		addIdentityErrs = append(addIdentityErrs, fmt.Errorf("failed adding comment to issue '%s', '%v'", *newIssue.URL, err))
 	}
 	if helpers.CombineErrors(addIdentityErrs) == nil {
@@ -312,8 +303,7 @@ func (gih *GithubIssueHandler) createNewIssue(org, repoForIssue, title, body, co
 			func() error {
 				return gih.client.AddLabelsToIssue(org, repoForIssue, *newIssue.Number, []string{flakyLabel})
 			},
-			dryrun,
-		); err != nil {
+			dryrun); err != nil {
 			addIdentityErrs = append(addIdentityErrs, fmt.Errorf("failed adding '%s' label to issue '%s', '%v'", flakyLabel, *newIssue.URL, err))
 		}
 	}
@@ -334,8 +324,7 @@ func (gih *GithubIssueHandler) createNewIssue(org, repoForIssue, title, body, co
 				}
 				return helpers.CombineErrors(gErr)
 			},
-			dryrun,
-		); err != nil {
+			dryrun); err != nil {
 			addIdentityErrs = append(addIdentityErrs, err)
 		}
 	}
@@ -407,8 +396,8 @@ func (gih *GithubIssueHandler) githubToFlakyIssue(issue *github.Issue, dryrun bo
 // also fail if auto comment not found.
 // In most cases there is only 1 issue for each testName, if multiple issues found open for same test,
 // most likely it's caused by old issues being reopened manually, in this case update both issues.
-func (gih *GithubIssueHandler) getFlakyIssues() (map[string][]*flakyIssue, error) {
-	issuesMap := make(map[string][]*flakyIssue)
+func (gih *GithubIssueHandler) getFlakyIssues() (map[string][]flakyIssue, error) {
+	issuesMap := make(map[string][]flakyIssue)
 	reposForIssue, err := gih.client.ListRepos(org)
 	if err != nil {
 		return nil, err
@@ -424,7 +413,7 @@ func (gih *GithubIssueHandler) getFlakyIssues() (map[string][]*flakyIssue, error
 				return nil, err
 			}
 			if fi != nil {
-				issuesMap[fi.identity] = append(issuesMap[fi.identity], fi)
+				issuesMap[fi.identity] = append(issuesMap[fi.identity], *fi)
 			}
 		}
 	}
@@ -433,8 +422,7 @@ func (gih *GithubIssueHandler) getFlakyIssues() (map[string][]*flakyIssue, error
 	// if all closed: only keep latest one
 	// otherwise(these may have been closed manually): remove closed ones from map
 	for k, v := range issuesMap {
-		hasOpen := false
-		hasClosed := false
+		var hasOpen, hasClosed bool
 		for _, fi := range v {
 			switch fi.issue.GetState() {
 			case string(ghutil.IssueOpenState):
@@ -454,7 +442,7 @@ func (gih *GithubIssueHandler) getFlakyIssues() (map[string][]*flakyIssue, error
 				return issuesMap[k][i].issue.CreatedAt != nil &&
 					(issuesMap[k][j].issue.CreatedAt == nil || issuesMap[k][i].issue.CreatedAt.Before(*issuesMap[k][j].issue.CreatedAt))
 			})
-			issuesMap[k] = []*flakyIssue{issuesMap[k][0]}
+			issuesMap[k] = []flakyIssue{issuesMap[k][0]}
 		}
 	}
 	return issuesMap, err
@@ -465,7 +453,7 @@ func (gih *GithubIssueHandler) getFlakyIssues() (map[string][]*flakyIssue, error
 // Slice of newly created Github issues, if any
 // Slice of messages containing performed actions,
 // Slice of error messages.
-func (gih *GithubIssueHandler) processGithubIssuesForRepo(rd RepoData, flakyIssuesMap map[string][]*flakyIssue, dryrun bool) ([]*flakyIssue, []string, error) {
+func (gih *GithubIssueHandler) processGithubIssuesForRepo(rd RepoData, flakyIssuesMap map[string][]flakyIssue, dryrun bool) ([]flakyIssue, []string, error) {
 	if len(rd.Config.IssueRepo) == 0 {
 		return nil, []string{"skip creating/updating issues, job is marked to not create GitHub issues\n"}, nil
 	}
@@ -479,14 +467,14 @@ func (gih *GithubIssueHandler) processGithubIssuesForRepo(rd RepoData, flakyIssu
 			log.Printf("issue already exist, skip creating")
 			return nil, nil, nil
 		}
-		title := fmt.Sprintf("[flaky] %s", identity)
+
 		testId := fmt.Sprintf(testIdentifierPattern, identity)
 		message := fmt.Sprintf("Creating issue '%s' in repo '%s'", identity, rd.Config.IssueRepo)
 		log.Println(message)
 		issue, err := gih.createNewIssue(
 			org,
 			rd.Config.IssueRepo,
-			title,
+			fmt.Sprintf("[flaky] %s", identity),
 			fmt.Sprintf(issueBodyTemplate, identity, rd.Config.Repo, testId),
 			fmt.Sprintf("Bulk issue tracking: %s\n<!--%s-->", identity, testId),
 			dryrun,
@@ -496,13 +484,16 @@ func (gih *GithubIssueHandler) processGithubIssuesForRepo(rd RepoData, flakyIssu
 		}
 
 		fi, err := gih.githubToFlakyIssue(issue, dryrun)
-		return []*flakyIssue{fi}, []string{message}, err
+		if err != nil || fi == nil {
+			return []flakyIssue{}, []string{message}, err
+		}
+		return []flakyIssue{*fi}, []string{message}, nil
 	}
 
 	var (
 		messages []string
 		errs     []error
-		issues   []*flakyIssue
+		issues   []flakyIssue
 	)
 
 	// Update/Create issues for flaky/used-to-be-flaky tests
@@ -533,24 +524,21 @@ func (gih *GithubIssueHandler) processGithubIssuesForRepo(rd RepoData, flakyIssu
 				fmt.Sprintf(testIdentifierPattern, identity))
 			message := fmt.Sprintf("Creating issue '%s' in repo '%s'", testFullName, rd.Config.IssueRepo)
 			log.Println(message)
-			title := fmt.Sprintf("[flaky] %s", testFullName)
 			messages = append(messages, message)
-			issue, err := gih.createNewIssue(
+			if issue, err := gih.createNewIssue(
 				org,
 				rd.Config.IssueRepo,
-				title,
+				fmt.Sprintf("[flaky] %s", testFullName),
 				fmt.Sprintf(issueBodyTemplate, testFullName, rd.Config.Repo, fmt.Sprintf(testIdentifierPattern, identity)),
 				comment,
-				dryrun,
-			)
-			if err != nil {
+				dryrun); err != nil {
 				log.Println(err)
 				errs = append(errs, err)
 			} else {
 				if fi, err := gih.githubToFlakyIssue(issue, dryrun); err != nil {
 					errs = append(errs, err)
-				} else {
-					issues = append(issues, fi)
+				} else if !dryrun { // fi is nil as issue is not created in dryrun mode
+					issues = append(issues, *fi)
 				}
 			}
 		}
@@ -559,7 +547,7 @@ func (gih *GithubIssueHandler) processGithubIssuesForRepo(rd RepoData, flakyIssu
 }
 
 // analyze all results, figure out flaky tests and processing existing auto:flaky issues
-func (gih *GithubIssueHandler) processGithubIssues(repoDataAll []RepoData, dryrun bool) (map[string][]*flakyIssue, error) {
+func (gih *GithubIssueHandler) processGithubIssues(repoDataAll []RepoData, dryrun bool) (map[string][]flakyIssue, error) {
 	// Collect all flaky test issues from all knative repos, in case issues are moved around
 	// Fail this job if data collection failed
 	flakyGHIssuesMap, err := gih.getFlakyIssues()
@@ -588,7 +576,16 @@ func (gih *GithubIssueHandler) processGithubIssues(repoDataAll []RepoData, dryru
 		}
 	}
 
-	// Print summaries
+	gih.logSummary(repoDataAll, messagesMap, errMap)
+
+	return flakyGHIssuesMap, nil
+}
+
+// logSummary will log the overall summary for all repos and all jobs
+// repoDataAll => Information about all the repos and jobs
+// messagesMap => { RepoName -> { JobName -> []Message }}
+// errMap => { RepoName -> { JobName -> []errors }}
+func (gih *GithubIssueHandler) logSummary(repoDataAll []RepoData, messagesMap map[string]map[string][]string, errMap map[string]map[string][]error) {
 	summary := "Summary:\n"
 	for _, rd := range repoDataAll {
 		if messages, ok := messagesMap[rd.Config.Repo][rd.Config.Name]; ok {
@@ -601,5 +598,4 @@ func (gih *GithubIssueHandler) processGithubIssues(repoDataAll []RepoData, dryru
 	}
 
 	log.Println(summary)
-	return flakyGHIssuesMap, nil
 }

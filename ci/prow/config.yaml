@@ -29,10 +29,10 @@ plank:
     grace_period: 15000000000 # 15s
     utility_images:
       # Update these versions when updating plank version in cluster.yaml
-      clonerefs: "gcr.io/k8s-prow/clonerefs:v20190911-0708557a1"
-      initupload: "gcr.io/k8s-prow/initupload:v20190911-0708557a1"
-      entrypoint: "gcr.io/k8s-prow/entrypoint:v20190911-0708557a1"
-      sidecar: "gcr.io/k8s-prow/sidecar:v20190911-0708557a1"
+      clonerefs: "gcr.io/k8s-prow/clonerefs:v20190917-395658c48"
+      initupload: "gcr.io/k8s-prow/initupload:v20190917-395658c48"
+      entrypoint: "gcr.io/k8s-prow/entrypoint:v20190917-395658c48"
+      sidecar: "gcr.io/k8s-prow/sidecar:v20190917-395658c48"
     gcs_configuration:
       bucket: "knative-prow"
       path_strategy: "explicit"
@@ -125,6 +125,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -139,6 +142,9 @@ presubmits:
           limits:
             memory: 16Gi
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -165,6 +171,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -179,6 +188,9 @@ presubmits:
           limits:
             memory: 16Gi
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -208,6 +220,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -217,6 +232,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -247,6 +265,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -256,6 +277,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -286,6 +310,9 @@ presubmits:
         - "--run-test"
         - "./test/e2e-tests.sh"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -295,6 +322,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -326,6 +356,9 @@ presubmits:
         - "--run-test"
         - "./test/e2e-tests.sh"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -335,6 +368,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -642,156 +678,6 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-serving-istio-1.1-mesh
-    agent: kubernetes
-    context: pull-knative-serving-istio-1.1-mesh
-    always_run: false
-    rerun_command: "/test pull-knative-serving-istio-1.1-mesh"
-    trigger: "(?m)^/test (all|pull-knative-serving-istio-1.1-mesh),?(\\s+|$)"
-    decorate: true
-    optional: true
-    branches:
-    - "release-0.4"
-    - "release-0.5"
-    - "release-0.6"
-    - "release-0.7"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/e2e-tests.sh"
-        - "--istio-version"
-        - "1.1-latest"
-        - "--mesh"
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-serving-istio-1.1-mesh
-    agent: kubernetes
-    context: pull-knative-serving-istio-1.1-mesh
-    always_run: false
-    rerun_command: "/test pull-knative-serving-istio-1.1-mesh"
-    trigger: "(?m)^/test (all|pull-knative-serving-istio-1.1-mesh),?(\\s+|$)"
-    decorate: true
-    optional: true
-    path_alias: knative.dev/serving
-    skip_branches:
-    - "release-0.4"
-    - "release-0.5"
-    - "release-0.6"
-    - "release-0.7"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/e2e-tests.sh"
-        - "--istio-version"
-        - "1.1-latest"
-        - "--mesh"
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-serving-istio-1.1-no-mesh
-    agent: kubernetes
-    context: pull-knative-serving-istio-1.1-no-mesh
-    always_run: false
-    rerun_command: "/test pull-knative-serving-istio-1.1-no-mesh"
-    trigger: "(?m)^/test (all|pull-knative-serving-istio-1.1-no-mesh),?(\\s+|$)"
-    decorate: true
-    optional: true
-    branches:
-    - "release-0.4"
-    - "release-0.5"
-    - "release-0.6"
-    - "release-0.7"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/e2e-tests.sh"
-        - "--istio-version"
-        - "1.1-latest"
-        - "--no-mesh"
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-serving-istio-1.1-no-mesh
-    agent: kubernetes
-    context: pull-knative-serving-istio-1.1-no-mesh
-    always_run: false
-    rerun_command: "/test pull-knative-serving-istio-1.1-no-mesh"
-    trigger: "(?m)^/test (all|pull-knative-serving-istio-1.1-no-mesh),?(\\s+|$)"
-    decorate: true
-    optional: true
-    path_alias: knative.dev/serving
-    skip_branches:
-    - "release-0.4"
-    - "release-0.5"
-    - "release-0.6"
-    - "release-0.7"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/e2e-tests.sh"
-        - "--istio-version"
-        - "1.1-latest"
-        - "--no-mesh"
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: test-account
-        secret:
-          secretName: test-account
   - name: pull-knative-serving-istio-1.2-mesh
     agent: kubernetes
     context: pull-knative-serving-istio-1.2-mesh
@@ -928,6 +814,156 @@ presubmits:
         - "./test/e2e-tests.sh"
         - "--istio-version"
         - "1.2-latest"
+        - "--no-mesh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-istio-1.3-mesh
+    agent: kubernetes
+    context: pull-knative-serving-istio-1.3-mesh
+    always_run: false
+    rerun_command: "/test pull-knative-serving-istio-1.3-mesh"
+    trigger: "(?m)^/test (all|pull-knative-serving-istio-1.3-mesh),?(\\s+|$)"
+    decorate: true
+    optional: true
+    branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/e2e-tests.sh"
+        - "--istio-version"
+        - "1.3-latest"
+        - "--mesh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-istio-1.3-mesh
+    agent: kubernetes
+    context: pull-knative-serving-istio-1.3-mesh
+    always_run: false
+    rerun_command: "/test pull-knative-serving-istio-1.3-mesh"
+    trigger: "(?m)^/test (all|pull-knative-serving-istio-1.3-mesh),?(\\s+|$)"
+    decorate: true
+    optional: true
+    path_alias: knative.dev/serving
+    skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/e2e-tests.sh"
+        - "--istio-version"
+        - "1.3-latest"
+        - "--mesh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-istio-1.3-no-mesh
+    agent: kubernetes
+    context: pull-knative-serving-istio-1.3-no-mesh
+    always_run: false
+    rerun_command: "/test pull-knative-serving-istio-1.3-no-mesh"
+    trigger: "(?m)^/test (all|pull-knative-serving-istio-1.3-no-mesh),?(\\s+|$)"
+    decorate: true
+    optional: true
+    branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/e2e-tests.sh"
+        - "--istio-version"
+        - "1.3-latest"
+        - "--no-mesh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-istio-1.3-no-mesh
+    agent: kubernetes
+    context: pull-knative-serving-istio-1.3-no-mesh
+    always_run: false
+    rerun_command: "/test pull-knative-serving-istio-1.3-no-mesh"
+    trigger: "(?m)^/test (all|pull-knative-serving-istio-1.3-no-mesh),?(\\s+|$)"
+    decorate: true
+    optional: true
+    path_alias: knative.dev/serving
+    skip_branches:
+    - "release-0.4"
+    - "release-0.5"
+    - "release-0.6"
+    - "release-0.7"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/e2e-tests.sh"
+        - "--istio-version"
+        - "1.3-latest"
         - "--no-mesh"
         volumeMounts:
         - name: test-account
@@ -1034,6 +1070,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -1043,6 +1082,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -1068,6 +1110,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -1077,6 +1122,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -1102,6 +1150,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -1111,6 +1162,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -1195,6 +1249,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -1204,6 +1261,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -1231,6 +1291,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -1240,6 +1303,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -1270,6 +1336,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -1279,6 +1348,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -1310,6 +1382,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -1319,6 +1394,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -1349,6 +1427,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -1358,6 +1439,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -1389,6 +1473,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -1398,6 +1485,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -1492,6 +1582,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -1501,6 +1594,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -1528,6 +1624,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -1537,6 +1636,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -1567,6 +1669,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -1576,6 +1681,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -1607,6 +1715,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -1616,6 +1727,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -1646,6 +1760,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -1655,6 +1772,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -1686,6 +1806,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -1695,6 +1818,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -1783,6 +1909,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -1792,6 +1921,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -1816,6 +1948,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -1825,6 +1960,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -1851,6 +1989,9 @@ presubmits:
         securityContext:
           privileged: true
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: docker-graph
           mountPath: /docker-graph
         - name: test-account
@@ -1864,6 +2005,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: docker-graph
         emptyDir: {}
       - name: test-account
@@ -1915,6 +2059,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -1924,6 +2071,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -1949,6 +2099,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -1958,6 +2111,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -1983,6 +2139,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -1992,6 +2151,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -2042,6 +2204,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -2051,6 +2216,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -2076,6 +2244,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -2085,6 +2256,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -2110,6 +2284,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -2119,6 +2296,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -2141,6 +2321,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -2150,6 +2333,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -2175,6 +2361,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -2184,6 +2373,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -2209,6 +2401,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -2218,6 +2413,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -2267,6 +2465,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -2276,6 +2477,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -2300,6 +2504,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -2309,6 +2516,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -2333,6 +2543,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -2342,6 +2555,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -2364,6 +2580,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -2373,6 +2592,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -2398,6 +2620,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -2407,6 +2632,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -2428,6 +2656,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -2437,6 +2668,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -2461,6 +2695,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -2470,6 +2707,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -2494,6 +2734,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -2503,6 +2746,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -2552,6 +2798,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -2561,6 +2810,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -2586,6 +2838,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -2595,6 +2850,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -2620,6 +2878,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -2629,6 +2890,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -2679,6 +2943,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--build-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -2688,6 +2955,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -2713,6 +2983,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -2722,6 +2995,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -2747,6 +3023,9 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
         volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -2756,6 +3035,9 @@ presubmits:
         - name: E2E_CLUSTER_REGION
           value: us-central1
       volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
       - name: test-account
         secret:
           secretName: test-account
@@ -3055,72 +3337,6 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "39 */2 * * *"
-  name: ci-knative-serving-istio-1.1-mesh
-  agent: kubernetes
-  decorate: true
-  extra_refs:
-  - org: knative
-    repo: serving
-    base_ref: master
-    path_alias: knative.dev/serving
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      command:
-      - runner.sh
-      args:
-      - "./test/e2e-tests.sh"
-      - "--istio-version"
-      - "1.1-latest"
-      - "--mesh"
-      volumeMounts:
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
-      env:
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-    volumes:
-    - name: test-account
-      secret:
-        secretName: test-account
-- cron: "50 */2 * * *"
-  name: ci-knative-serving-istio-1.1-no-mesh
-  agent: kubernetes
-  decorate: true
-  extra_refs:
-  - org: knative
-    repo: serving
-    base_ref: master
-    path_alias: knative.dev/serving
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      command:
-      - runner.sh
-      args:
-      - "./test/e2e-tests.sh"
-      - "--istio-version"
-      - "1.1-latest"
-      - "--no-mesh"
-      volumeMounts:
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
-      env:
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-    volumes:
-    - name: test-account
-      secret:
-        secretName: test-account
 - cron: "40 */2 * * *"
   name: ci-knative-serving-istio-1.2-mesh
   agent: kubernetes
@@ -3173,6 +3389,72 @@ periodics:
       - "./test/e2e-tests.sh"
       - "--istio-version"
       - "1.2-latest"
+      - "--no-mesh"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "50 */2 * * *"
+  name: ci-knative-serving-istio-1.3-mesh
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+    path_alias: knative.dev/serving
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/e2e-tests.sh"
+      - "--istio-version"
+      - "1.3-latest"
+      - "--mesh"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "12 */2 * * *"
+  name: ci-knative-serving-istio-1.3-no-mesh
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+    path_alias: knative.dev/serving
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/e2e-tests.sh"
+      - "--istio-version"
+      - "1.3-latest"
       - "--no-mesh"
       volumeMounts:
       - name: test-account
@@ -5303,10 +5585,14 @@ periodics:
       - "--cov-threshold-percentage=50"
 - cron: "0 19 * * 1"
   name: ci-knative-cleanup
+  labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-cleanup
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 86400000000000
+    timeout: 432000000000000
   extra_refs:
   - org: knative
     repo: test-infra
@@ -5333,6 +5619,10 @@ periodics:
         secretName: test-account
 - cron: "0 12 * * *"
   name: ci-knative-flakes-reporter
+  labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-flakes-reporter
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -5371,6 +5661,10 @@ periodics:
         secretName: flaky-test-reporter-slack-token
 - cron: "0 * * * *"
   name: ci-knative-flakes-resultsrecorder
+  labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-flakes-reporter
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -5468,7 +5762,7 @@ periodics:
       secret:
         secretName: backup-account
 - cron: "0 */12 * * *"
-  name: ci-knative-issue-tracker-stale
+  name: ci-knative-test-infra-issue-tracker-stale
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -5490,11 +5784,11 @@ periodics:
         -label:lifecycle/rotten"
       - "--updated=2160h"
       - "--token=/etc/housekeeping-github-token/token"
-      - "--comment=Issues go stale after 90d of inactivity.<br/>
-        Mark the issue as fresh with /remove-lifecycle stale.<br/>
-        Stale issues rot after an additional 30d of inactivity and eventually close.<br/>
-        If this issue is safe to close now please do so with /close.<br/><br/>
-        Send feedback to Knative Productivity Slack channel or knative/test-infra.<br/><br/>
+      - "--comment=Issues go stale after 90 days of inactivity.\n
+        Mark the issue as fresh by adding the comment `/remove-lifecycle stale`.\n
+        Stale issues rot after an additional 30 days of inactivity and eventually close.\n
+        If this issue is safe to close now please do so by adding the comment `/close`.\n\n
+        Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra/issues/new).\n\n
         /lifecycle stale"
       - "--template"
       - "--ceiling=10"
@@ -5508,7 +5802,7 @@ periodics:
       secret:
         secretName: housekeeping-github-token
 - cron: "0 */12 * * *"
-  name: ci-knative-issue-tracker-rotten
+  name: ci-knative-test-infra-issue-tracker-rotten
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -5530,11 +5824,11 @@ periodics:
         -label:lifecycle/rotten"
       - "--updated=720h"
       - "--token=/etc/housekeeping-github-token/token"
-      - "--comment=Stale issues rot after 30d of inactivity.<br/>
-        Mark the issue as fresh with /remove-lifecycle rotten.<br/>
-        Rotten issues close after an additional 30d of inactivity.<br/>
-        If this issue is safe to close now please do so with /close.<br/><br/>
-        Send feedback to Knative Productivity Slack channel or knative/test-infra.<br/><br/>
+      - "--comment=Stale issues rot after 30 days of inactivity.\n
+        Mark the issue as fresh by adding the comment `/remove-lifecycle rotten`.\n
+        Rotten issues close after an additional 30 days of inactivity.\n
+        If this issue is safe to close now please do so by adding the comment `/close`.\n\n
+        Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra/issues/new).\n\n
         /lifecycle rotten"
       - "--template"
       - "--ceiling=10"
@@ -5548,7 +5842,7 @@ periodics:
       secret:
         secretName: housekeeping-github-token
 - cron: "0 */12 * * *"
-  name: ci-knative-issue-tracker-close
+  name: ci-knative-test-infra-issue-tracker-close
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -5566,13 +5860,133 @@ periodics:
         is:issue
         is:open
         -label:lifecycle/frozen
+        -label:lifecycle/stale
         label:lifecycle/rotten"
       - "--updated=720h"
       - "--token=/etc/housekeeping-github-token/token"
-      - "--comment=Rotten issues close after 30d of inactivity.<br/>
-        Reopen the issue with /reopen.<br/>
-        Mark the issue as fresh with /remove-lifecycle rotten.<br/><br/>
-        Send feedback to Knative Productivity Slack channel or knative/test-infra.<br/><br/>
+      - "--comment=Rotten issues close after 30 days of inactivity.\n
+        Reopen the issue with `/reopen`.\n
+        Mark the issue as fresh by adding the comment `/remove-lifecycle rotten`.\n\n
+        Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra/issues/new).\n\n
+        /close"
+      - "--template"
+      - "--ceiling=10"
+      - "--confirm"
+      volumeMounts:
+      - name: housekeeping-github-token
+        mountPath: /etc/housekeeping-github-token
+        readOnly: true
+    volumes:
+    - name: housekeeping-github-token
+      secret:
+        secretName: housekeeping-github-token
+- cron: "0 */12 * * *"
+  name: ci-knative-docs-issue-tracker-stale
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: master
+  spec:
+    containers:
+    - image: gcr.io/k8s-prow/commenter:v20190731-e3f7b9853
+      imagePullPolicy: Always
+      command:
+      - "/app/robots/commenter/app.binary"
+      args:
+      - "--query=repo:knative/docs
+        is:issue
+        is:open
+        -label:lifecycle/frozen
+        -label:lifecycle/stale
+        -label:lifecycle/rotten"
+      - "--updated=2160h"
+      - "--token=/etc/housekeeping-github-token/token"
+      - "--comment=Issues go stale after 90 days of inactivity.\n
+        Mark the issue as fresh by adding the comment `/remove-lifecycle stale`.\n
+        Stale issues rot after an additional 30 days of inactivity and eventually close.\n
+        If this issue is safe to close now please do so by adding the comment `/close`.\n\n
+        Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra/issues/new).\n\n
+        /lifecycle stale"
+      - "--template"
+      - "--ceiling=10"
+      - "--confirm"
+      volumeMounts:
+      - name: housekeeping-github-token
+        mountPath: /etc/housekeeping-github-token
+        readOnly: true
+    volumes:
+    - name: housekeeping-github-token
+      secret:
+        secretName: housekeeping-github-token
+- cron: "0 */12 * * *"
+  name: ci-knative-docs-issue-tracker-rotten
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: master
+  spec:
+    containers:
+    - image: gcr.io/k8s-prow/commenter:v20190731-e3f7b9853
+      imagePullPolicy: Always
+      command:
+      - "/app/robots/commenter/app.binary"
+      args:
+      - "--query=repo:knative/docs
+        is:issue
+        is:open
+        -label:lifecycle/frozen
+        label:lifecycle/stale
+        -label:lifecycle/rotten"
+      - "--updated=720h"
+      - "--token=/etc/housekeeping-github-token/token"
+      - "--comment=Stale issues rot after 30 days of inactivity.\n
+        Mark the issue as fresh by adding the comment `/remove-lifecycle rotten`.\n
+        Rotten issues close after an additional 30 days of inactivity.\n
+        If this issue is safe to close now please do so by adding the comment `/close`.\n\n
+        Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra/issues/new).\n\n
+        /lifecycle rotten"
+      - "--template"
+      - "--ceiling=10"
+      - "--confirm"
+      volumeMounts:
+      - name: housekeeping-github-token
+        mountPath: /etc/housekeeping-github-token
+        readOnly: true
+    volumes:
+    - name: housekeeping-github-token
+      secret:
+        secretName: housekeeping-github-token
+- cron: "0 */12 * * *"
+  name: ci-knative-docs-issue-tracker-close
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: master
+  spec:
+    containers:
+    - image: gcr.io/k8s-prow/commenter:v20190731-e3f7b9853
+      imagePullPolicy: Always
+      command:
+      - "/app/robots/commenter/app.binary"
+      args:
+      - "--query=repo:knative/docs
+        is:issue
+        is:open
+        -label:lifecycle/frozen
+        -label:lifecycle/stale
+        label:lifecycle/rotten"
+      - "--updated=720h"
+      - "--token=/etc/housekeeping-github-token/token"
+      - "--comment=Rotten issues close after 30 days of inactivity.\n
+        Reopen the issue with `/reopen`.\n
+        Mark the issue as fresh by adding the comment `/remove-lifecycle rotten`.\n\n
+        Send feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra/issues/new).\n\n
         /close"
       - "--template"
       - "--ceiling=10"
@@ -5588,6 +6002,10 @@ periodics:
 - cron: "30 07 * * *"
   name: ci-knative-serving-recreate-clusters
   agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-serving-recreate-clusters
   decorate: true
   extra_refs:
   - org: knative
@@ -5630,6 +6048,10 @@ periodics:
 - cron: "5 * * * *"
   name: ci-knative-serving-update-clusters
   agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-serving-update-clusters
   decorate: true
   extra_refs:
   - org: knative
@@ -5672,6 +6094,10 @@ periodics:
 - cron: "30 07 * * *"
   name: ci-knative-eventing-recreate-clusters
   agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-eventing-recreate-clusters
   decorate: true
   extra_refs:
   - org: knative
@@ -5714,6 +6140,10 @@ periodics:
 - cron: "5 * * * *"
   name: ci-knative-eventing-update-clusters
   agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-eventing-update-clusters
   decorate: true
   extra_refs:
   - org: knative
