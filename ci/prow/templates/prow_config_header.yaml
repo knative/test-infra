@@ -21,10 +21,10 @@
 # FROM COMMIT: ((COMMIT_HASH_TOKEN))
 
 plank:
-  job_url_template: 'https://prow.knative.dev/view/gcs/[[.GcsBucket]]/{{if or (eq .Spec.Type "presubmit") (eq .Spec.Type "batch")}}[[.PresubmitLogsDir]]/pull{{with .Spec.Refs}}/{{.Org}}_{{.Repo}}{{end}}{{else}}[[.LogsDir]]{{end}}{{if eq .Spec.Type "presubmit"}}/{{with index .Spec.Refs.Pulls 0}}{{.Number}}{{end}}{{else if eq .Spec.Type "batch"}}/batch{{end}}/{{.Spec.Job}}/{{.Status.BuildID}}/'
-  report_template: '[Full PR test history](https://gubernator.knative.dev/pr/{{.Spec.Refs.Org}}_{{.Spec.Refs.Repo}}/{{with index .Spec.Refs.Pulls 0}}{{.Number}}{{end}}). [Your PR dashboard](https://gubernator.knative.dev/pr/{{with index .Spec.Refs.Pulls 0}}{{.Author}}{{end}}).'
+  job_url_template: '[[.ProwHost]]/view/gcs/[[.GcsBucket]]/{{if or (eq .Spec.Type "presubmit") (eq .Spec.Type "batch")}}[[.PresubmitLogsDir]]/pull{{with .Spec.Refs}}/{{.Org}}_{{.Repo}}{{end}}{{else}}[[.LogsDir]]{{end}}{{if eq .Spec.Type "presubmit"}}/{{with index .Spec.Refs.Pulls 0}}{{.Number}}{{end}}{{else if eq .Spec.Type "batch"}}/batch{{end}}/{{.Spec.Job}}/{{.Status.BuildID}}/'
+  report_template: '[Full PR test history]([[.GubernatorHost]]/pr/{{.Spec.Refs.Org}}_{{.Spec.Refs.Repo}}/{{with index .Spec.Refs.Pulls 0}}{{.Number}}{{end}}). [Your PR dashboard]([[.GubernatorHost]]/pr/{{with index .Spec.Refs.Pulls 0}}{{.Author}}{{end}}).'
   job_url_prefix_config: 
-    "*": "https://prow.knative.dev/view/gcs/"
+    "*": "[[.ProwHost]]/view/gcs/"
   pod_pending_timeout: 60m
   default_decoration_config:
     timeout: 7200000000000 # 2h
@@ -44,8 +44,8 @@ deck:
   spyglass:
     size_limit: 500000000 # 500MB
     gcs_browser_prefix: https://console.cloud.google.com/storage/browser/
-    testgrid_config: gs://knative-testgrid/config
-    testgrid_root: https://testgrid.knative.dev/
+    testgrid_config: gs://[[.TestGridGcsBucket]]/config
+    testgrid_root: [[.TestGridHost]]/
     viewers:
       "started.json|finished.json":
       - "metadata"
@@ -53,7 +53,7 @@ deck:
       - "buildlog"
       "artifacts/junit.*\\.xml":
       - "junit"
-    announcement: "The old job viewer, Gubernator, has been deprecated in favour of this page, Spyglass.{{if .ArtifactPath}} For now, the old page is <a href='https://gubernator.knative.dev/build/{{.ArtifactPath}}'>still available</a>.{{end}} Please send feedback to Knative productivity."
+    announcement: "The old job viewer, Gubernator, has been deprecated in favour of this page, Spyglass.{{if .ArtifactPath}} For now, the old page is <a href='[[.GubernatorHost]]/build/{{.ArtifactPath}}'>still available</a>.{{end}} Please send feedback to Knative productivity."
   tide_update_period: 1s
 
 prowjob_namespace: default
@@ -105,8 +105,8 @@ tide:
   merge_method:
     knative: squash
     google/knative-gcp: squash
-  target_url: https://prow.knative.dev/tide
-  pr_status_base_url: https://prow.knative.dev/pr
+  target_url: [[.ProwHost]]/tide
+  pr_status_base_url: [[.ProwHost]]/pr
   blocker_label: tide/merge-blocker
   squash_label: tide/merge-method-squash
   rebase_label: tide/merge-method-rebase

@@ -67,8 +67,12 @@ var (
 // baseTestgridTemplateData contains basic data about the testgrid config file.
 // TODO(Fredy-Z): remove this structure and use baseProwJobTemplateData instead
 type baseTestgridTemplateData struct {
-	TestGroupName string
-	Year          int
+	ProwHost          string
+	TestGridHost      string
+	GubernatorHost    string
+	TestGridGcsBucket string
+	TestGroupName     string
+	Year              int
 }
 
 // testGroupTemplateData contains data about a test group
@@ -100,6 +104,10 @@ type testgridEntityGenerator func(string, string, []string)
 func newBaseTestgridTemplateData(testGroupName string) baseTestgridTemplateData {
 	var data baseTestgridTemplateData
 	data.Year = time.Now().Year()
+	data.ProwHost = prowHost
+	data.TestGridHost = testGridHost
+	data.GubernatorHost = gubernatorHost
+	data.TestGridGcsBucket = testGridGcsBucket
 	data.TestGroupName = testGroupName
 	return data
 }
