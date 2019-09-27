@@ -48,12 +48,14 @@ for sa in ${PROJECT_SAS[@]}; do
   gcloud projects add-iam-policy-binding ${PROJECT} --member serviceAccount:${sa} --role roles/editor
   gcloud projects add-iam-policy-binding ${PROJECT} --member serviceAccount:${sa} --role roles/storage.admin
   # As required by step 6 in https://github.com/google/knative-gcp/tree/master/docs/storage,
-  # grant the GCS service account the permissions to publish to GCP Pub/Sub
-  gcs_service_account="$(curl -s -X GET -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" "https://www.googleapis.com/storage/v1/projects/${PROJECT}/serviceAccount" \
-    | grep email_address \
-    | cut -d '"' -f 4)"
+  # grant the GCS service account the permissions to publish to GCP Pub/Sub.
+  echo "Activating GCS service account"
+  curl -s -X GET -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" "https://www.googleapis.com/storage/v1/projects/${PROJECT}/serviceAccount"
+  PROJECT_NUMBER="$(gcloud projects describe ${PROJECT} | grep "^projectNumber" | cut -d':' -f2 | xargs)"
+  GCS_SERVICE_ACCOUNT="service-${PROJECT_NUMBER}@gs-project-accounts.iam.gserviceaccount.com"
+  echo "GCS service account is ${GCS_SERVICE_ACCOUNT}"
   gcloud projects add-iam-policy-binding ${PROJECT} \
-    --member=serviceAccount:${gcs_service_account} \
+    --member=serviceAccount:${GCS_SERVICE_ACCOUNT} \
     --role roles/pubsub.publisher
 done
 
