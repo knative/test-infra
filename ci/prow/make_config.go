@@ -74,6 +74,10 @@ type baseProwJobTemplateData struct {
 	OrgName             string
 	RepoName            string
 	RepoNameForJob      string
+	ProwHost            string
+	TestGridHost        string
+	GubernatorHost      string
+	TestGridGcsBucket   string
 	GcsBucket           string
 	GcsLogDir           string
 	GcsPresubmitLogDir  string
@@ -136,7 +140,11 @@ type stringArrayFlag []string
 var (
 	// Values used in the jobs that can be changed through command-line flags.
 	output                       *os.File
+	prowHost                     string
+	testGridHost                 string
+	gubernatorHost               string
 	gcsBucket                    string
+	testGridGcsBucket            string
 	logsDir                      string
 	presubmitLogsDir             string
 	testAccount                  string
@@ -358,7 +366,11 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.RepoName = strings.Replace(repo, data.OrgName+"/", "", 1)
 	data.RepoNameForJob = strings.ToLower(strings.Replace(repo, "/", "-", -1))
 	data.RepoBranch = "master" // Default to be master, will override later for other branches
+	data.ProwHost = prowHost
+	data.TestGridHost = testGridHost
+	data.GubernatorHost = gubernatorHost
 	data.GcsBucket = gcsBucket
+	data.TestGridGcsBucket = testGridGcsBucket
 	data.RepoURI = "github.com/" + repo
 	data.CloneURI = fmt.Sprintf("\"https://%s.git\"", data.RepoURI)
 	data.GcsLogDir = fmt.Sprintf("gs://%s/%s", gcsBucket, logsDir)
@@ -1057,7 +1069,11 @@ func main() {
 	flag.StringVar(&testgridConfigOutput, "testgrid-config-output", "", "The destination for the testgrid config output, default to be stdout")
 
 	var includeConfig = flag.Bool("include-config", true, "Whether to include general configuration (e.g., plank) in the generated config")
+	flag.StringVar(&prowHost, "prow-host", "https://prow.knative.dev", "Prow host, including HTTP protocol")
+	flag.StringVar(&testGridHost, "testgrid-host", "https://testgrid.knative.dev", "TestGrid host, including HTTP protocol")
+	flag.StringVar(&gubernatorHost, "gubernator-host", "https://gubernator.knative.dev", "Gubernator host, including HTTP protocol")
 	flag.StringVar(&gcsBucket, "gcs-bucket", "knative-prow", "GCS bucket to upload the logs to")
+	flag.StringVar(&testGridGcsBucket, "testgrid-gcs-bucket", "knative-testgrid", "TestGrid GCS bucket")
 	flag.StringVar(&logsDir, "logs-dir", "logs", "Path in the GCS bucket to upload logs of periodic and post-submit jobs")
 	flag.StringVar(&presubmitLogsDir, "presubmit-logs-dir", "pr-logs", "Path in the GCS bucket to upload logs of pre-submit jobs")
 	flag.StringVar(&testAccount, "test-account", "/etc/test-account/service-account.json", "Path to the service account JSON for test jobs")
