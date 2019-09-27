@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # This is the base Dockerfile for knative-tests images, please remember to also
-# do `make push` in `../prow-tests` directory to make sure these 2 images are in
+# do `make push` in `../prow-tests-go112` directory to make sure these 2 images are in
 # sync
 
 FROM gcr.io/k8s-testimages/kubekins-e2e:v20190716-41e2a9e-master
@@ -42,7 +42,8 @@ RUN rm -rf /usr/local/go && \
     rm "${GO_TARBALL}"
 
 # Extra tools through go get
-RUN go get -u github.com/google/ko/cmd/ko
+RUN GO111MODULE=on go get github.com/google/ko/cmd/ko
+RUN GO111MODULE=on go get github.com/boz/kail/cmd/kail
 RUN go get -u github.com/golang/dep/cmd/dep
 RUN go get -u github.com/jstemmer/go-junit-report
 RUN go get -u github.com/raviqqe/liche
@@ -52,7 +53,7 @@ RUN bazel version > /bazel_version
 RUN bazel shutdown
 
 # Extract ko version
-RUN git ls-remote https://github.com/google/ko HEAD | cut -f1 > /ko_version
+RUN ko version > /ko_version
 
 # Extra tools through gem
 RUN gem install mixlib-config -v 2.2.4  # required because ruby is 2.1

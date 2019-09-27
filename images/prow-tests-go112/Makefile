@@ -14,4 +14,3 @@
 
 IMAGE_NAME = prow-tests-go112
 include ../../shared/Makefile.simple-image
-

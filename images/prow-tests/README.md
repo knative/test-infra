@@ -1,7 +1,7 @@
 # Prow Test Job Image
 
-This directory contains the custom Docker image used by our Prow test jobs, with
-go1.13 installed.
+This directory contains the custom Docker image used by our Prow test jobs. A
+fork of this image with go1.12 installed is defined in [`prow-tests-go112`](../prow-tests-go112)
 
 ## Building and publishing a new image
 
