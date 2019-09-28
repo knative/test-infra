@@ -69,15 +69,24 @@ type repositoryData struct {
 	LegacyBranches      []string
 }
 
+// prowConfigTemplateData contains basic data about Prow.
+type prowConfigTemplateData struct {
+	Year                int
+	GcsBucket           string
+	PresubmitLogsDir    string
+	LogsDir             string
+	ProwHost            string
+	TestGridHost        string
+	GubernatorHost      string
+	TestGridGcsBucket   string
+	TideRepos           []string
+}
+
 // baseProwJobTemplateData contains basic data about a Prow job.
 type baseProwJobTemplateData struct {
 	OrgName             string
 	RepoName            string
 	RepoNameForJob      string
-	ProwHost            string
-	TestGridHost        string
-	GubernatorHost      string
-	TestGridGcsBucket   string
 	GcsBucket           string
 	GcsLogDir           string
 	GcsPresubmitLogDir  string
@@ -97,14 +106,11 @@ type baseProwJobTemplateData struct {
 	Resources           []string
 	Timeout             int
 	AlwaysRun           bool
-	LogsDir             string
-	PresubmitLogsDir    string
 	TestAccount         string
 	ServiceAccount      string
 	ReleaseGcs          string
 	GoCoverageThreshold int
 	Image               string
-	Year                int
 	Labels              []string
 	PathAlias           string
 	Optional            string
@@ -313,19 +319,23 @@ func getMapSlice(m interface{}) yaml.MapSlice {
 	return nil
 }
 
+// appendIfUnique appends an element to an array of strings, unless it's already present.
+func appendIfUnique(a1 []string, e2 string) []string {
+	var res []string
+	res = append(res, a1...)
+	for _, e1 := range a1 {
+		if e1 == e2 {
+			return res
+		}
+	}
+	return append(res, e2)
+}
+
 func combineSlices(a1 []string, a2 []string) []string {
 	var res []string
 	res = append(res, a1...)
 	for _, e2 := range a2 {
-		add := true
-		for _, e1 := range a1 {
-			if e1 == e2 {
-				add = false
-			}
-		}
-		if add {
-			res = append(res, e2)
-		}
+		res = appendIfUnique(res, e2)
 	}
 	return res
 }
@@ -366,18 +376,11 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.RepoName = strings.Replace(repo, data.OrgName+"/", "", 1)
 	data.RepoNameForJob = strings.ToLower(strings.Replace(repo, "/", "-", -1))
 	data.RepoBranch = "master" // Default to be master, will override later for other branches
-	data.ProwHost = prowHost
-	data.TestGridHost = testGridHost
-	data.GubernatorHost = gubernatorHost
 	data.GcsBucket = gcsBucket
-	data.TestGridGcsBucket = testGridGcsBucket
 	data.RepoURI = "github.com/" + repo
 	data.CloneURI = fmt.Sprintf("\"https://%s.git\"", data.RepoURI)
 	data.GcsLogDir = fmt.Sprintf("gs://%s/%s", gcsBucket, logsDir)
 	data.GcsPresubmitLogDir = fmt.Sprintf("gs://%s/%s", gcsBucket, presubmitLogsDir)
-	data.Year = time.Now().Year()
-	data.PresubmitLogsDir = presubmitLogsDir
-	data.LogsDir = logsDir
 	data.ReleaseGcs = strings.Replace(repo, data.OrgName+"/", "knative-releases/", 1)
 	data.AlwaysRun = true
 	data.Image = prowTestsDockerImage
@@ -669,6 +672,32 @@ func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
 		data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest", -1)
 		executeJobTemplate("presubmit", readTemplate(goCoveragePostsubmitJob), "postsubmits", repoName, data.PostsubmitJobName, false, data)
 	}
+}
+
+// getProwConfigData gets some basic, general data for the Prow config.
+func getProwConfigData(config yaml.MapSlice) prowConfigTemplateData {
+	var data prowConfigTemplateData
+	data.Year = time.Now().Year()
+	data.ProwHost = prowHost
+	data.TestGridHost = testGridHost
+	data.GubernatorHost = gubernatorHost
+	data.GcsBucket = gcsBucket
+	data.TestGridGcsBucket = testGridGcsBucket
+	data.PresubmitLogsDir = presubmitLogsDir
+	data.LogsDir = logsDir
+	data.TideRepos = make([]string, 0)
+	// Repos enabled for tide are all those that have presubmit jobs.
+	for _, section := range config {
+		if section.Key != "presubmits" {
+			continue
+		}
+		for _, repo := range getMapSlice(section.Value) {
+			data.TideRepos = appendIfUnique(data.TideRepos, getString(repo.Key))
+		}
+	}
+	// Sort repos to make output stable.
+	sort.Strings(data.TideRepos)
+	return data
 }
 
 // parseSection generate the configs from a given section of the input yaml file.
@@ -1049,6 +1078,10 @@ func isReleased(projName string) bool {
 
 // setOutput set the given file as the output target, then all the output will be written to this file
 func setOutput(fileName string) {
+	output = os.Stdout
+	if fileName == "" {
+		return
+	}
 	configFile, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE, 0666)
 	if err != nil {
 		log.Fatalf("Cannot create the configuration file %q: %v", fileName, err)
@@ -1113,14 +1146,11 @@ func main() {
 
 	// Generate Prow config.
 	if *generateProwConfig {
-		output = os.Stdout
-		if prowConfigOutput != "" {
-			setOutput(prowConfigOutput)
-		}
+		setOutput(prowConfigOutput)
 		repositories = make([]repositoryData, 0)
 		sectionMap = make(map[string]bool)
 		if *includeConfig {
-			executeTemplate("general config", readTemplate(generalProwConfig), newbaseProwJobTemplateData(""))
+			executeTemplate("general config", readTemplate(generalProwConfig), getProwConfigData(config))
 		}
 		parseSection(config, "presubmits", generatePresubmit, nil)
 		parseSection(config, "periodics", generatePeriodic, generateGoCoveragePeriodic)
@@ -1144,10 +1174,7 @@ func main() {
 	}
 	// Generate Testgrid config.
 	if *generateTestgridConfig {
-		output = os.Stdout
-		if testgridConfigOutput != "" {
-			setOutput(testgridConfigOutput)
-		}
+		setOutput(testgridConfigOutput)
 
 		if *includeConfig {
 			executeTemplate("general config", readTemplate(generalTestgridConfig), newBaseTestgridTemplateData(""))
