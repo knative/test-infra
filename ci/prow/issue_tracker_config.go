@@ -75,12 +75,12 @@ func (r repoIssue) generateJobs() {
         -label:lifecycle/stale
         -label:lifecycle/rotten`
 	updatedTime := fmt.Sprintf("%dh", r.daysToStale*24)
-	comment := fmt.Sprintf("--comment=Issues go stale after %d days of inactivity.\\n\n"+
-		"        Mark the issue as fresh by adding the comment `/remove-lifecycle stale`.\\n\n"+
-		"        Stale issues rot after an additional %d days of inactivity and eventually close.\\n\n"+
-		"        If this issue is safe to close now please do so by adding the comment `/close`.\\n\\n\n"+
-		"        %s\\n\\n\n"+
-		"        /lifecycle stale", r.daysToStale, r.daysToRot, feedbackNote)
+	comment := fmt.Sprintf("--comment=Issues go stale after %d days of inactivity.\\n"+
+		"Mark the issue as fresh by adding the comment `/remove-lifecycle stale`.\\n"+
+		"Stale issues rot after an additional %d days of inactivity and eventually close.\\n"+
+		"If this issue is safe to close now please do so by adding the comment `/close`.\\n\\n"+
+		"%s\\n\\n"+
+		"/lifecycle stale", r.daysToStale, r.daysToRot, feedbackNote)
 	r.generateJob(jobName, filter, updatedTime, comment)
 
 	jobName = fmt.Sprintf("ci-%s-issue-tracker-rotten", repoForJob)
@@ -90,12 +90,12 @@ func (r repoIssue) generateJobs() {
         label:lifecycle/stale
         -label:lifecycle/rotten`
 	updatedTime = fmt.Sprintf("%dh", r.daysToRot*24)
-	comment = fmt.Sprintf("--comment=Stale issues rot after %d days of inactivity.\\n\n"+
-		"        Mark the issue as fresh by adding the comment `/remove-lifecycle rotten`.\\n\n"+
-		"        Rotten issues close after an additional %d days of inactivity.\\n\n"+
-		"        If this issue is safe to close now please do so by adding the comment `/close`.\\n\\n\n"+
-		"        %s\\n\\n\n"+
-		"        /lifecycle rotten", r.daysToRot, r.daysToClose, feedbackNote)
+	comment = fmt.Sprintf("--comment=Stale issues rot after %d days of inactivity.\\n"+
+		"Mark the issue as fresh by adding the comment `/remove-lifecycle rotten`.\\n"+
+		"Rotten issues close after an additional %d days of inactivity.\\n"+
+		"If this issue is safe to close now please do so by adding the comment `/close`.\\n\\n"+
+		"%s\\n\\n"+
+		"/lifecycle rotten", r.daysToRot, r.daysToClose, feedbackNote)
 	r.generateJob(jobName, filter, updatedTime, comment)
 
 	jobName = fmt.Sprintf("ci-%s-issue-tracker-close", repoForJob)
@@ -105,11 +105,11 @@ func (r repoIssue) generateJobs() {
         -label:lifecycle/stale
         label:lifecycle/rotten`
 	updatedTime = fmt.Sprintf("%dh", r.daysToClose*24)
-	comment = fmt.Sprintf("--comment=Rotten issues close after %d days of inactivity.\\n\n"+
-		"        Reopen the issue with `/reopen`.\\n\n"+
-		"        Mark the issue as fresh by adding the comment `/remove-lifecycle rotten`.\\n\\n\n"+
-		"        %s\\n\\n\n"+
-		"        /close", r.daysToClose, feedbackNote)
+	comment = fmt.Sprintf("--comment=Rotten issues close after %d days of inactivity.\\n"+
+		"Reopen the issue with `/reopen`.\\n"+
+		"Mark the issue as fresh by adding the comment `/remove-lifecycle rotten`.\\n\\n"+
+		"%s\\n\\n"+
+		"/close", r.daysToClose, feedbackNote)
 	r.generateJob(jobName, filter, updatedTime, comment)
 }
 
