@@ -142,7 +142,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			jobType = getString(item.Key)
 			jobTemplate = readTemplate(periodicCustomJob)
 			jobNameSuffix = "latency"
-			data.Base.Image = "gcr.io/knative-tests/test-infra/metrics:latest"
+			data.Base.Image = metricsDockerImage
 			data.Base.Command = "/metrics"
 			data.Base.Args = []string{
 				fmt.Sprintf("--source-directory=ci-%s-continuous", data.Base.RepoNameForJob),
@@ -289,7 +289,7 @@ func generateBackupPeriodicJob() {
 	var data periodicJobTemplateData
 	data.Base = newbaseProwJobTemplateData("none/unused")
 	data.Base.ServiceAccount = "/etc/backup-account/service-account.json"
-	data.Base.Image = "gcr.io/knative-tests/test-infra/backups:latest"
+	data.Base.Image = backupsDockerImage
 	data.PeriodicJobName = "ci-knative-backup-artifacts"
 	data.CronString = backupPeriodicJobCron
 	data.Base.Command = "/backup.sh"

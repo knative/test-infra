@@ -164,6 +164,8 @@ var (
 	githubCommenterDockerImage   string
 	coverageDockerImage          string
 	prowTestsDockerImage         string
+	metricsDockerImage           string
+	backupsDockerImage           string
 	presubmitScript              string
 	releaseScript                string
 	performanceScript            string
@@ -1277,6 +1279,7 @@ func main() {
 	var generateTestgridConfig = flag.Bool("generate-testgrid-config", true, "Whether to generate the testgrid config from the template file")
 	var generateMaintenanceJobs = flag.Bool("generate-maintenance-jobs", true, "Whether to generate the maintenance periodic jobs (e.g. backup)")
 	var includeConfig = flag.Bool("include-config", true, "Whether to include general configuration (e.g., plank) in the generated config")
+	var dockerImagesBase = flag.String("image-docker", "gcr.io/knative-tests/test-infra", "Default registry for the docker images used by the jobs")
 	flag.StringVar(&prowConfigOutput, "prow-config-output", "", "The destination for the prow config output, default to be stdout")
 	flag.StringVar(&testgridConfigOutput, "testgrid-config-output", "", "The destination for the testgrid config output, default to be stdout")
 	flag.StringVar(&prowHost, "prow-host", "https://prow.knative.dev", "Prow host, including HTTP protocol")
@@ -1289,10 +1292,12 @@ func main() {
 	flag.StringVar(&testAccount, "test-account", "/etc/test-account/service-account.json", "Path to the service account JSON for test jobs")
 	flag.StringVar(&nightlyAccount, "nightly-account", "/etc/nightly-account/service-account.json", "Path to the service account JSON for nightly release jobs")
 	flag.StringVar(&releaseAccount, "release-account", "/etc/release-account/service-account.json", "Path to the service account JSON for release jobs")
-	flag.StringVar(&flakesreporterDockerImage, "flaky-test-reporter-docker", "gcr.io/knative-tests/test-infra/flaky-test-reporter:latest", "Docker image for flaky test reporting tool")
-	flag.StringVar(&prowversionbumperDockerImage, "prow-auto-bumper", "gcr.io/knative-tests/test-infra/prow-auto-bumper:latest", "Docker image for Prow version bumping tool")
-	flag.StringVar(&coverageDockerImage, "coverage-docker", "gcr.io/knative-tests/test-infra/coverage-go112:latest", "Docker image for coverage tool")
-	flag.StringVar(&prowTestsDockerImage, "prow-tests-docker", "gcr.io/knative-tests/test-infra/prow-tests-go112:stable", "prow-tests docker image")
+	var flakesreporterDockerImageName = flag.String("flaky-test-reporter-docker", "flaky-test-reporter:latest", "Docker image for flaky test reporting tool")
+	var prowversionbumperDockerImageName = flag.String("prow-auto-bumper", "prow-auto-bumper:latest", "Docker image for Prow version bumping tool")
+	var coverageDockerImageName = flag.String("coverage-docker", "coverage-go112:latest", "Docker image for coverage tool")
+	var prowTestsDockerImageName = flag.String("prow-tests-docker", "prow-tests-go112:stable", "prow-tests docker image")
+	var metricsDockerImageName = flag.String("metrics-docker", "metrics:latest", "Docker image for the metrics reporting tool")
+	var backupsDockerImageName = flag.String("backups-docker", "backups:latest", "Docker image for the backups job")
 	flag.StringVar(&githubCommenterDockerImage, "github-commenter-docker", "gcr.io/k8s-prow/commenter:v20190731-e3f7b9853", "github commenter docker image")
 	flag.StringVar(&presubmitScript, "presubmit-script", "./test/presubmit-tests.sh", "Executable for running presubmit tests")
 	flag.StringVar(&releaseScript, "release-script", "./hack/release.sh", "Executable for creating releases")
@@ -1308,6 +1313,14 @@ func main() {
 	if len(flag.Args()) != 1 {
 		log.Fatal("Pass the config file as parameter")
 	}
+
+	flakesreporterDockerImage = path.Join(*dockerImagesBase, *flakesreporterDockerImageName)
+	prowversionbumperDockerImage = path.Join(*dockerImagesBase, *prowversionbumperDockerImageName)
+	coverageDockerImage = path.Join(*dockerImagesBase, *coverageDockerImageName)
+	prowTestsDockerImage = path.Join(*dockerImagesBase, *prowTestsDockerImageName)
+	metricsDockerImage = path.Join(*dockerImagesBase, *metricsDockerImageName)
+	backupsDockerImage = path.Join(*dockerImagesBase, *backupsDockerImageName)
+
 	// We use MapSlice instead of maps to keep key order and create predictable output.
 	config := yaml.MapSlice{}
 
