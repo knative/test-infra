@@ -23,7 +23,8 @@ PROW_DIR         ?= $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 PROW_PLUGINS     ?= $(PROW_DIR)/plugins.yaml
 PROW_CONFIG      ?= $(PROW_DIR)/config.yaml
 PROW_DEPLOYS     ?= $(PROW_DIR)/deployments
-PROW_CONFIG_GCS  ?= gs://knative-prow/configs
+PROW_GCS         ?= knative-prow
+PROW_CONFIG_GCS  ?= gs://$(PROW_GCS)/configs
 
 TESTGRID_CONFIG  ?= $(PROW_DIR)/../testgrid/config.yaml
 
@@ -34,6 +35,9 @@ BOSKOS_RESOURCES ?= $(BOSKOS_DIR)/resources.yaml
 SET_CONTEXT   := gcloud container clusters get-credentials "$(CLUSTER)" --project="$(PROJECT)" --zone="$(ZONE)"
 UNSET_CONTEXT := kubectl config unset current-context
 
+default:
+	@echo "You must specify a target"
+
 get-cluster-credentials:
 	$(SET_CONTEXT)
 
@@ -41,7 +45,7 @@ unset-cluster-credentials:
 	$(UNSET_CONTEXT)
 
 config:
-	go run *_config.go --prow-config-output=$(PROW_CONFIG) --testgrid-config-output=$(TESTGRID_CONFIG) $(KNATIVE_CONFIG)
+	go run *_config.go --prow-config-output=$(PROW_CONFIG) --testgrid-config-output=$(TESTGRID_CONFIG) --gcs-bucket=$(PROW_GCS) $(KNATIVE_CONFIG)
 
 # Update all prow job configs
 update-config:
