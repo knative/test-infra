@@ -592,6 +592,7 @@ func setReourcesReqForJob(res yaml.MapSlice, data *baseProwJobTemplateData) {
 // parseBasicJobConfigOverrides updates the given baseProwJobTemplateData with any base option present in the given config.
 func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.MapSlice) {
 	(*data).ExtraRefs = append((*data).ExtraRefs, "  base_ref: "+(*data).RepoBranch)
+	var needDotdev, needGo113 bool
 	for i, item := range config {
 		switch item.Key {
 		case "skip_branches":
@@ -615,12 +616,14 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 		case "always_run":
 			(*data).AlwaysRun = getBool(item.Value)
 		case "dot-dev":
+			needDotdev = true
 			for i, repo := range repositories {
 				if path.Base(repo.Name) == (*data).RepoName {
 					repositories[i].DotDev = true
 				}
 			}
 		case "go113":
+			needGo113 = true
 			for i, repo := range repositories {
 				if path.Base(repo.Name) == (*data).RepoName {
 					repositories[i].Go113 = true
@@ -653,38 +656,13 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 		// Knock-out the item, signalling it was already parsed.
 		config[i] = yaml.MapItem{}
 	}
-	// Add repo path alias to job for vanity import URLs if dot-dev setting is
-	// true (and this is not a legacy branch). There are multiple registries of
-	// same repo, we only want to check the first occurance of the repo
-	var pathAliasChecked, go113Checked bool
-	for _, repo := range repositories {
-		if path.Base(repo.Name) == (*data).RepoName {
-			if repo.DotDev && !pathAliasChecked {
-				needPathAlias := true
-				for _, branchName := range repo.LegacyBranches {
-					if branchName == (*data).RepoBranch {
-						needPathAlias = false
-					}
-				}
-				if needPathAlias {
-					(*data).PathAlias = "path_alias: knative.dev/" + (*data).RepoName
-					(*data).ExtraRefs = append((*data).ExtraRefs, "  "+(*data).PathAlias)
-				}
-				pathAliasChecked = true
-			}
-			if repo.Go113 && !go113Checked {
-				needGo113 := true
-				for _, branchName := range repo.Go112Branches {
-					if branchName == (*data).RepoBranch {
-						needGo113 = false
-					}
-				}
-				if needGo113 {
-					(*data).Image = getGo113ImageName((*data).Image)
-				}
-				go113Checked = true
-			}
-		}
+
+	if needDotdev {
+		(*data).PathAlias = "path_alias: knative.dev/" + (*data).RepoName
+		(*data).ExtraRefs = append((*data).ExtraRefs, "  "+(*data).PathAlias)
+	}
+	if needGo113 {
+		(*data).Image = getGo113ImageName((*data).Image)
 	}
 	// Override any values if provided by command-line flags.
 	if timeoutOverride > 0 {
