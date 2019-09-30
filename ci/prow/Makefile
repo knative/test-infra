@@ -41,7 +41,7 @@ unset-cluster-credentials:
 	$(UNSET_CONTEXT)
 
 config:
-	go run *_config.go --prow-config-output=$(PROW_CONFIG) --testgrid-config-output=$(TESTGRID_CONFIG) $(KNATIVE_CONFIG)
+	go run *_config.go --prow-config-output=$(PROW_CONFIG) --testgrid-config-output=$(TESTGRID_CONFIG) --image-docker=gcr.io/$(PROJECT)/test-infra $(KNATIVE_CONFIG)
 
 # Update all prow job configs
 update-config:
