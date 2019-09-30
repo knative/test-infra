@@ -71,15 +71,15 @@ type repositoryData struct {
 
 // prowConfigTemplateData contains basic data about Prow.
 type prowConfigTemplateData struct {
-	Year                int
-	GcsBucket           string
-	PresubmitLogsDir    string
-	LogsDir             string
-	ProwHost            string
-	TestGridHost        string
-	GubernatorHost      string
-	TestGridGcsBucket   string
-	TideRepos           []string
+	Year              int
+	GcsBucket         string
+	PresubmitLogsDir  string
+	LogsDir           string
+	ProwHost          string
+	TestGridHost      string
+	GubernatorHost    string
+	TestGridGcsBucket string
+	TideRepos         []string
 }
 
 // baseProwJobTemplateData contains basic data about a Prow job.
