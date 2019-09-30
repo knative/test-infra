@@ -82,7 +82,6 @@ done
 # grant the GCS service account the permissions to publish to GCP Pub/Sub.
 echo "Activating GCS service account"
 curl -s -X GET -H "Authorization: Bearer ${ACCESS_TOKEN}" "https://www.googleapis.com/storage/v1/projects/${PROJECT}/serviceAccount"
-GCS_SERVICE_ACCOUNT="service-${PROJECT_NUMBER}@gs-project-accounts.iam.gserviceaccount.com"
 gcloud projects add-iam-policy-binding ${PROJECT} \
   --member="serviceAccount:service-${PROJECT_NUMBER}@gs-project-accounts.iam.gserviceaccount.com" \
   --role roles/pubsub.publisher
