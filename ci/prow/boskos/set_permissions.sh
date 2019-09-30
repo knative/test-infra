@@ -18,6 +18,11 @@ set -e
 
 readonly PROJECT=${1:?"First argument must be the boskos project name."}
 
+if [[ ! -f $HOME/.config/gcloud/application_default_credentials.json ]]; then
+  echo "ERROR: Application default credentials not available, please run 'gcloud auth application-default login'"
+  exit 1
+fi
+
 # Get data that can be used in the following operations.
 readonly ACCESS_TOKEN="$(gcloud auth application-default print-access-token)"
 readonly PROJECT_NUMBER="$(gcloud projects describe ${PROJECT} --format="value(projectNumber)")"
@@ -78,7 +83,6 @@ done
 echo "Activating GCS service account"
 curl -s -X GET -H "Authorization: Bearer ${ACCESS_TOKEN}" "https://www.googleapis.com/storage/v1/projects/${PROJECT}/serviceAccount"
 GCS_SERVICE_ACCOUNT="service-${PROJECT_NUMBER}@gs-project-accounts.iam.gserviceaccount.com"
-echo "GCS service account is ${GCS_SERVICE_ACCOUNT}"
 gcloud projects add-iam-policy-binding ${PROJECT} \
-  --member=serviceAccount:${GCS_SERVICE_ACCOUNT} \
+  --member="serviceAccount:service-${PROJECT_NUMBER}@gs-project-accounts.iam.gserviceaccount.com" \
   --role roles/pubsub.publisher
