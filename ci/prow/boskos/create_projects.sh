@@ -41,5 +41,6 @@ for (( i=1; i<=${NUMBER}; i++ )); do
   "$(dirname $0)/set_permissions.sh" ${PROJECT}
 
   LAST_PROJECT=$(grep "knative-boskos-" ${RESOURCE_FILE} | tail -1)
-  sed "/${LAST_PROJECT}/a\ \ -\ ${PROJECT}" -i ${RESOURCE_FILE}
+  [[ -z "${LAST_PROJECT}" ]] && LAST_PROJECT="- names:"
+  sed "/^${LAST_PROJECT}$/a\ \ -\ ${PROJECT}" -i ${RESOURCE_FILE}
 done
