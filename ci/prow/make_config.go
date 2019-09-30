@@ -1314,12 +1314,12 @@ func main() {
 		log.Fatal("Pass the config file as parameter")
 	}
 
-	flakesreporterDockerImage = *dockerImagesBase + "/" + *flakesreporterDockerImageName
-	prowversionbumperDockerImage = *dockerImagesBase + "/" + *prowversionbumperDockerImageName
-	coverageDockerImage = *dockerImagesBase + "/" + *coverageDockerImageName
-	prowTestsDockerImage = *dockerImagesBase + "/" + *prowTestsDockerImageName
-	metricsDockerImage = *dockerImagesBase + "/" + *metricsDockerImageName
-	backupsDockerImage = *dockerImagesBase + "/" + *backupsDockerImageName
+	flakesreporterDockerImage = path.Join(*dockerImagesBase, *flakesreporterDockerImageName)
+	prowversionbumperDockerImage = path.Join(*dockerImagesBase, *prowversionbumperDockerImageName)
+	coverageDockerImage = path.Join(*dockerImagesBase, *coverageDockerImageName)
+	prowTestsDockerImage = path.Join(*dockerImagesBase, *prowTestsDockerImageName)
+	metricsDockerImage = path.Join(*dockerImagesBase, *metricsDockerImageName)
+	backupsDockerImage = path.Join(*dockerImagesBase, *backupsDockerImageName)
 
 	// We use MapSlice instead of maps to keep key order and create predictable output.
 	config := yaml.MapSlice{}
