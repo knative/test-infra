@@ -12,24 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.13
-LABEL maintainer "Stephen Lu <syzf@google.com>"
+FROM gcr.io/knative-tests/test-infra/prow-tests:stable
+LABEL maintainer "Chao Dai <chaodai@google.com>"
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates \
-    git
-
-ENV TEMP_REPO_DIR /go/src/knative.dev/test-infra
-ENV TOOL_NAME coverage
-
-# Temporarily add test-infra to the image to build custom tools
-ADD . $TEMP_REPO_DIR
-
-# Build tool in the container
-RUN make -C $TEMP_REPO_DIR/tools/$TOOL_NAME/
-RUN cp $TEMP_REPO_DIR/tools/$TOOL_NAME/$TOOL_NAME /$TOOL_NAME
-
-# Remove test-infra from the container
-RUN rm -fr $TEMP_REPO_DIR
-
-ENTRYPOINT ["/coverage"]
+# Install go at 1.12 same as how it's installed in kubekins-e2e image, reference code here:
+# https://github.com/kubernetes/test-infra/blob/1e9b5dc3de4b268aab57c9c48120aa3dcf096bc6/images/kubekins-e2e/Dockerfile#L64
+ENV GO_TARBALL "go1.12.linux-amd64.tar.gz"
+RUN rm -rf /usr/local/go && \
+    wget -q "https://storage.googleapis.com/golang/${GO_TARBALL}" && \
+    tar xzf "${GO_TARBALL}" -C /usr/local && \
+    rm "${GO_TARBALL}"
