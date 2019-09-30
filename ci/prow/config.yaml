@@ -837,7 +837,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      - image: gcr.io/knative-tests/test-infra/coverage-dev:latest
         imagePullPolicy: Always
         command:
         - "/coverage"
