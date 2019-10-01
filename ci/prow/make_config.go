@@ -36,6 +36,7 @@ import (
 	"time"
 
 	yaml "gopkg.in/yaml.v2"
+	"k8s.io/apimachinery/pkg/util/sets"
 )
 
 const (
@@ -66,7 +67,22 @@ type repositoryData struct {
 	GoCoverageThreshold int
 	Processed           bool
 	DotDev              bool
+	Go113               bool
 	LegacyBranches      []string
+	Go112Branches       []string
+}
+
+// prowConfigTemplateData contains basic data about Prow.
+type prowConfigTemplateData struct {
+	Year              int
+	GcsBucket         string
+	PresubmitLogsDir  string
+	LogsDir           string
+	ProwHost          string
+	TestGridHost      string
+	GubernatorHost    string
+	TestGridGcsBucket string
+	TideRepos         []string
 }
 
 // baseProwJobTemplateData contains basic data about a Prow job.
@@ -93,14 +109,11 @@ type baseProwJobTemplateData struct {
 	Resources           []string
 	Timeout             int
 	AlwaysRun           bool
-	LogsDir             string
-	PresubmitLogsDir    string
 	TestAccount         string
 	ServiceAccount      string
 	ReleaseGcs          string
 	GoCoverageThreshold int
 	Image               string
-	Year                int
 	Labels              []string
 	PathAlias           string
 	Optional            string
@@ -136,7 +149,11 @@ type stringArrayFlag []string
 var (
 	// Values used in the jobs that can be changed through command-line flags.
 	output                       *os.File
+	prowHost                     string
+	testGridHost                 string
+	gubernatorHost               string
 	gcsBucket                    string
+	testGridGcsBucket            string
 	logsDir                      string
 	presubmitLogsDir             string
 	testAccount                  string
@@ -147,6 +164,8 @@ var (
 	githubCommenterDockerImage   string
 	coverageDockerImage          string
 	prowTestsDockerImage         string
+	metricsDockerImage           string
+	backupsDockerImage           string
 	presubmitScript              string
 	releaseScript                string
 	performanceScript            string
@@ -173,6 +192,8 @@ var (
 
 	// Map which sections of the config.yaml were written to stdout.
 	sectionMap map[string]bool
+
+	projNameRegex = regexp.MustCompile(`.+-[0-9\.]+$`)
 )
 
 // Generate cron string based on job type, offset generated from jobname
@@ -232,7 +253,7 @@ func generateCron(jobType, jobName string, timeout int) string {
 func readTemplate(fp string) string {
 	if _, ok := templatesCache[fp]; !ok {
 		content, err := ioutil.ReadFile(path.Join(templateDir, fp))
-		if nil != err {
+		if err != nil {
 			log.Fatalf("Failed read file '%s': '%v'", fp, err)
 		}
 		templatesCache[fp] = string(content)
@@ -303,45 +324,142 @@ func getMapSlice(m interface{}) yaml.MapSlice {
 	return nil
 }
 
+// appendIfUnique appends an element to an array of strings, unless it's already present.
+func appendIfUnique(a1 []string, e2 string) []string {
+	var res []string
+	res = append(res, a1...)
+	for _, e1 := range a1 {
+		if e1 == e2 {
+			return res
+		}
+	}
+	return append(res, e2)
+}
+
 func combineSlices(a1 []string, a2 []string) []string {
 	var res []string
 	res = append(res, a1...)
 	for _, e2 := range a2 {
-		add := true
-		for _, e1 := range a1 {
-			if e1 == e2 {
-				add = false
-			}
-		}
-		if add {
+		res = appendIfUnique(res, e2)
+	}
+	return res
+}
+
+// intersectSlices returns intersect of 2 slices
+func intersectSlices(a1, a2 []string) []string {
+	var res []string
+	s1 := sets.NewString(a1...)
+	for _, e2 := range a2 {
+		if s1.Has(e2) {
 			res = append(res, e2)
 		}
 	}
 	return res
 }
 
-// Consolidate whitelisted and skipped branches with newly added whitelisted/skipped
-func consolidateBranches(whitelisted []string, skipped []string, newWhitelisted []string, newSkipped []string) ([]string, []string) {
-	// Merge the whitelisted and newWhitelisted arrays, ignoring any element present in skipped or newSkipped.
-	var combinedWhitelisted []string
-	var combinedSkipped []string
-	combinedWhitelisted = combineSlices(whitelisted, newWhitelisted)
-	combinedSkipped = combineSlices(skipped, newSkipped)
-	if len(combinedWhitelisted) > 0 {
-		var tmp []string
-		for _, elem := range combinedWhitelisted {
-			add := true
-			for _, skip := range combinedSkipped {
-				if elem == skip {
-					add = false
-				}
-			}
-			if add {
-				tmp = append(tmp, elem)
-			}
+// exclusiveSlices returns elements in a1 but not in a2
+func exclusiveSlices(a1, a2 []string) []string {
+	var res []string
+	s2 := sets.NewString(a2...)
+	for _, e1 := range a1 {
+		if !s2.Has(e1) {
+			res = append(res, e1)
 		}
-		combinedWhitelisted = tmp
-		combinedSkipped = make([]string, 0)
+	}
+	return res
+}
+
+// getGo112ID returns image identifier for go113 images
+func getGo112ID() string {
+	return "-go112"
+}
+
+// Get go113 image name from base image name, following the contract of
+// [IMAGE]:[DIGEST]-> [IMAGE]-go112:[DIGEST]
+func getGo113ImageName(name string) string {
+	go112ID := getGo112ID()
+	parts := strings.SplitN(name, ":", 2)
+	if len(parts) != 2 {
+		log.Fatalf("image name should contain ':': %q", name)
+	}
+	if strings.HasSuffix(parts[0], go112ID) {
+		parts[0] = strings.TrimSuffix(parts[0], go112ID)
+	}
+	return strings.Join(parts, ":")
+}
+
+// Remove go113 image name suffix
+func restoreGo113ImageName(name string) string {
+	go112ID := getGo112ID()
+	parts := strings.SplitN(name, ":", 2)
+	if len(parts) != 2 {
+		log.Fatalf("image name should contain ':': %q", name)
+	}
+	if !strings.HasSuffix(parts[0], go112ID) {
+		parts[0] = fmt.Sprintf("%s%s", parts[0], go112ID)
+	}
+	return strings.Join(parts, ":")
+}
+
+// Consolidate whitelisted and skipped branches with newly added
+// whitelisted/skipped. To make the logic easier to maintain, this function
+// makes the assumption that the outcome follows these rules:
+//   - Special branch logics always apply on master and future branches
+// Based on the previous rule, if there is a special branch logic, the 2 Prow
+// jobs that serves different branches become:
+//   - Standard job definition:
+//		- whitelisted: [release-0.1]
+//		- skipped: []
+//   - Standard job definition + branch special logic #1:
+//		- whitelisted: []
+//		- skipped: [release-0.1]
+// And when there is a new special logic comes up with different list of release
+// branches to exclude, for example [release-0.1, release-0.2], then the desired
+// outcome becomes:
+//   - Standard job definition:
+//		- whitelisted: [release-0.1]
+//		- skipped: []
+//   - Standard job definition + branch special logic #1: (This will never run)
+//		- whitelisted: []
+//		- skipped: []
+//   - Standard job definition + branch special logic #2:
+//		- whitelisted: [release-0.2]
+//		- skipped: []
+//   - Standard job definition + branch special logic #1 + branch special logic #2:
+//		- whitelisted: []
+//		- skipped: [release-0.1, release-0.2]
+// Noted that only jobs with all special branch logics have something in
+// skipped, while all other jobs only have whitelisted. This rule also applies
+// when there is a third branch specific logic and so on.
+// This function takes the logic above, and determines whether generate
+// whitelisted or skipped as output.
+func consolidateBranches(whitelisted []string, skipped []string, newWhitelisted []string, newSkipped []string) ([]string, []string) {
+	var combinedWhitelisted, combinedSkipped []string
+
+	// Do the legacy part(old branches):
+	if len(newWhitelisted) > 0 {
+		if len(skipped) > 0 {
+			// - if previous is skipped(latest), then minus the skipped from current
+			// branches, as we want to run exclusive on branches supported currently
+			combinedWhitelisted = exclusiveSlices(newWhitelisted, skipped)
+		} else if len(whitelisted) > 0 {
+			// - if previous is include, then find their intersections, as these are the
+			// real supported branches
+			combinedWhitelisted = intersectSlices(newWhitelisted, whitelisted)
+		} else {
+			combinedWhitelisted = newWhitelisted
+		}
+	} else if len(newSkipped) > 0 { // Then do the pos part(latest)
+		if len(skipped) > 0 {
+			// - if previous is skipped(latest), then find the combination, as we want to
+			// skip all non-supported
+			combinedSkipped = combineSlices(newSkipped, skipped)
+		} else if len(whitelisted) > 0 {
+			// - if previous is include, then minus current branches from included
+			combinedWhitelisted = exclusiveSlices(whitelisted, newSkipped)
+		} else {
+			combinedSkipped = newSkipped
+		}
 	}
 	return combinedWhitelisted, combinedSkipped
 }
@@ -361,9 +479,6 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.CloneURI = fmt.Sprintf("\"https://%s.git\"", data.RepoURI)
 	data.GcsLogDir = fmt.Sprintf("gs://%s/%s", gcsBucket, logsDir)
 	data.GcsPresubmitLogDir = fmt.Sprintf("gs://%s/%s", gcsBucket, presubmitLogsDir)
-	data.Year = time.Now().Year()
-	data.PresubmitLogsDir = presubmitLogsDir
-	data.LogsDir = logsDir
 	data.ReleaseGcs = strings.Replace(repo, data.OrgName+"/", "knative-releases/", 1)
 	data.AlwaysRun = true
 	data.Image = prowTestsDockerImage
@@ -479,6 +594,7 @@ func setReourcesReqForJob(res yaml.MapSlice, data *baseProwJobTemplateData) {
 // parseBasicJobConfigOverrides updates the given baseProwJobTemplateData with any base option present in the given config.
 func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.MapSlice) {
 	(*data).ExtraRefs = append((*data).ExtraRefs, "  base_ref: "+(*data).RepoBranch)
+	var needDotdev, needGo113 bool
 	for i, item := range config {
 		switch item.Key {
 		case "skip_branches":
@@ -502,15 +618,29 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 		case "always_run":
 			(*data).AlwaysRun = getBool(item.Value)
 		case "dot-dev":
+			needDotdev = true
 			for i, repo := range repositories {
 				if path.Base(repo.Name) == (*data).RepoName {
 					repositories[i].DotDev = true
+				}
+			}
+		case "go113":
+			needGo113 = true
+			for i, repo := range repositories {
+				if path.Base(repo.Name) == (*data).RepoName {
+					repositories[i].Go113 = true
 				}
 			}
 		case "legacy-branches":
 			for i, repo := range repositories {
 				if path.Base(repo.Name) == (*data).RepoName {
 					repositories[i].LegacyBranches = getStringArray(item.Value)
+				}
+			}
+		case "go112-branches":
+			for i, repo := range repositories {
+				if path.Base(repo.Name) == (*data).RepoName {
+					repositories[i].Go112Branches = getStringArray(item.Value)
 				}
 			}
 		case "env-vars":
@@ -528,21 +658,13 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 		// Knock-out the item, signalling it was already parsed.
 		config[i] = yaml.MapItem{}
 	}
-	// Add repo path alias to job for vanity import URLs if dot-dev setting is true (and this is not a legacy branch)
-	for _, repo := range repositories {
-		if path.Base(repo.Name) == (*data).RepoName && repo.DotDev {
-			needPathAlias := true
-			for _, branchName := range repo.LegacyBranches {
-				if branchName == (*data).RepoBranch {
-					needPathAlias = false
-				}
-			}
-			if needPathAlias {
-				(*data).PathAlias = "path_alias: knative.dev/" + (*data).RepoName
-				(*data).ExtraRefs = append((*data).ExtraRefs, "  "+(*data).PathAlias)
-			}
-			break
-		}
+
+	if needDotdev {
+		(*data).PathAlias = "path_alias: knative.dev/" + (*data).RepoName
+		(*data).ExtraRefs = append((*data).ExtraRefs, "  "+(*data).PathAlias)
+	}
+	if needGo113 {
+		(*data).Image = getGo113ImageName((*data).Image)
 	}
 	// Override any values if provided by command-line flags.
 	if timeoutOverride > 0 {
@@ -572,9 +694,10 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 			if len(data.Base.Args) == 0 {
 				data.Base.Args = []string{"--" + jobName}
 			}
-			if item.Key == "integration-tests" {
+			if item.Key == "integration-tests" || item.Key == "unit-tests" {
 				isMonitoredJob = true
 			}
+			addVolumeToJob(&data.Base, "/etc/repoview-token", "repoview-token", true, "")
 		case "go-coverage":
 			if !getBool(item.Value) {
 				return
@@ -625,6 +748,7 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 		data.PresubmitPullJobName += "-dev"
 		data.Base.AlwaysRun = false
 		data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest", -1)
+		data.Base.Image = strings.Replace(data.Base.Image, "coverage-go112:latest", "coverage-dev:latest", -1)
 		template := strings.Replace(readTemplate(presubmitGoCoverageJob), "(all|", "(", 1)
 		executeJobTemplate("presubmit", template, title, repoName, data.PresubmitPullJobName, true, data)
 	}
@@ -640,6 +764,9 @@ func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
 		if repo.Name == repoName && repo.DotDev {
 			data.Base.PathAlias = "path_alias: knative.dev/" + path.Base(repoName)
 		}
+		if repo.Name == repoName && repo.Go113 {
+			data.Base.Image = getGo113ImageName(data.Base.Image)
+		}
 	}
 	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 	configureServiceAccountForJob(&data.Base)
@@ -651,9 +778,36 @@ func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
 	// Generate config for post-knative-serving-go-coverage-dev right after post-knative-serving-go-coverage
 	if data.PostsubmitJobName == "post-knative-serving-go-coverage" {
 		data.PostsubmitJobName += "-dev"
+		data.Base.Image = strings.Replace(data.Base.Image, "coverage-go112:latest", "coverage-dev:latest", -1)
 		data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest", -1)
 		executeJobTemplate("presubmit", readTemplate(goCoveragePostsubmitJob), "postsubmits", repoName, data.PostsubmitJobName, false, data)
 	}
+}
+
+// getProwConfigData gets some basic, general data for the Prow config.
+func getProwConfigData(config yaml.MapSlice) prowConfigTemplateData {
+	var data prowConfigTemplateData
+	data.Year = time.Now().Year()
+	data.ProwHost = prowHost
+	data.TestGridHost = testGridHost
+	data.GubernatorHost = gubernatorHost
+	data.GcsBucket = gcsBucket
+	data.TestGridGcsBucket = testGridGcsBucket
+	data.PresubmitLogsDir = presubmitLogsDir
+	data.LogsDir = logsDir
+	data.TideRepos = make([]string, 0)
+	// Repos enabled for tide are all those that have presubmit jobs.
+	for _, section := range config {
+		if section.Key != "presubmits" {
+			continue
+		}
+		for _, repo := range getMapSlice(section.Value) {
+			data.TideRepos = appendIfUnique(data.TideRepos, getString(repo.Key))
+		}
+	}
+	// Sort repos to make output stable.
+	sort.Strings(data.TideRepos)
+	return data
 }
 
 // parseSection generate the configs from a given section of the input yaml file.
@@ -792,9 +946,66 @@ func strExists(arr []string, str string) bool {
 	return false
 }
 
+type specialBranchLogic struct {
+	branches []string
+	// create new job data based on branches
+	opsNew  func(*baseProwJobTemplateData)
+	restore func(*baseProwJobTemplateData)
+}
+
+// getBase casts data into baseProwJobTemplateData and returns it
+func getBase(data interface{}) *baseProwJobTemplateData {
+	var base *baseProwJobTemplateData
+	switch v := data.(type) {
+	case *presubmitJobTemplateData:
+		base = &data.(*presubmitJobTemplateData).Base
+	case *postsubmitJobTemplateData:
+		base = &data.(*postsubmitJobTemplateData).Base
+	default:
+		log.Fatalf("Unrecognized job template type: '%v'", v)
+	}
+	return base
+}
+
+// recursiveSBL recursively going through specialBranchLogic, and generate job
+// at last. Use `i` to keeps track of current index in sbs to be used
+func recursiveSBL(repoName string, data interface{}, generateOneJob func(data interface{}), sbs []specialBranchLogic, i int) {
+	// Base case, all special branch logics have been applied
+	if i == len(sbs) {
+		// If there is no branch left, this job shouldn't be generated at all
+		if len(getBase(data).Branches) > 0 || len(getBase(data).SkipBranches) > 0 {
+			generateOneJob(data)
+		}
+		return
+	}
+
+	sb := sbs[i]
+	base := getBase(data)
+
+	origBranches, origSkipBranches := base.Branches, base.SkipBranches
+	// Do legacy branches first
+	base.Branches, base.SkipBranches = consolidateBranches(origBranches, origSkipBranches, sb.branches, []string{})
+	recursiveSBL(repoName, data, generateOneJob, sbs, i+1)
+	// Then do latest branches
+	base.Branches, base.SkipBranches = consolidateBranches(origBranches, origSkipBranches, []string{}, sb.branches)
+	sb.opsNew(base)
+	recursiveSBL(repoName, data, generateOneJob, sbs, i+1)
+	sb.restore(base)
+}
+
 // executeJobTemplateWrapper takes in consideration of repo settings, decides how many varianats of the
 // same job needs to be generated and generates them.
 func executeJobTemplateWrapper(repoName string, data interface{}, generateOneJob func(data interface{})) {
+	var sbs []specialBranchLogic
+
+	switch data.(type) {
+	case *postsubmitJobTemplateData:
+		if strings.HasSuffix(data.(*postsubmitJobTemplateData).PostsubmitJobName, "go-coverage") {
+			generateOneJob(data)
+			return
+		}
+	}
+
 	var legacyBranches []string
 	// Find out if LegacyBranches is set in repo settings
 	for _, repo := range repositories {
@@ -804,33 +1015,45 @@ func executeJobTemplateWrapper(repoName string, data interface{}, generateOneJob
 			}
 		}
 	}
-	if len(legacyBranches) == 0 { // Generate only one job as normal if LegacyBranches is not set
+	if len(legacyBranches) > 0 {
+		sbs = append(sbs, specialBranchLogic{
+			branches: legacyBranches,
+			opsNew: func(base *baseProwJobTemplateData) {
+				base.PathAlias = "path_alias: knative.dev/" + base.RepoName
+				base.ExtraRefs = append(base.ExtraRefs, "  "+base.PathAlias)
+			},
+			restore: func(base *baseProwJobTemplateData) {
+				base.PathAlias = ""
+				base.ExtraRefs = base.ExtraRefs[:len(base.ExtraRefs)-1]
+			},
+		})
+	}
+
+	var go112Branches []string
+	// Find out if Go112Branches is set in repo settings
+	for _, repo := range repositories {
+		if repo.Name == repoName {
+			if len(repo.Go112Branches) > 0 {
+				go112Branches = repo.Go112Branches
+			}
+		}
+	}
+	if len(go112Branches) > 0 {
+		sbs = append(sbs, specialBranchLogic{
+			branches: go112Branches,
+			opsNew: func(base *baseProwJobTemplateData) {
+				base.Image = getGo113ImageName(base.Image)
+			},
+			restore: func(base *baseProwJobTemplateData) {
+				base.Image = restoreGo113ImageName(base.Image)
+			},
+		})
+	}
+
+	if len(sbs) == 0 { // Generate single job if there is no special branch logic
 		generateOneJob(data)
 	} else {
-		// Generate one job with 'knative.dev' path alias for branches other than legacy branches,
-		// and another job without path alias for legacy branches
-		var base *baseProwJobTemplateData
-		switch v := data.(type) {
-		case *presubmitJobTemplateData:
-			base = &data.(*presubmitJobTemplateData).Base
-		case *postsubmitJobTemplateData:
-			if strings.HasSuffix(data.(*postsubmitJobTemplateData).PostsubmitJobName, "go-coverage") {
-				generateOneJob(data)
-				return
-			}
-			base = &data.(*postsubmitJobTemplateData).Base
-		default:
-			log.Fatalf("Unrecognized job template type: '%v'", v)
-		}
-		branches := base.Branches
-		skipBranches := base.SkipBranches
-		base.PathAlias = ""
-		base.Branches, base.SkipBranches = consolidateBranches(branches, skipBranches, legacyBranches, make([]string, 0))
-		generateOneJob(data)
-		base.Branches, base.SkipBranches = consolidateBranches(branches, skipBranches, make([]string, 0), legacyBranches)
-		base.PathAlias = "path_alias: knative.dev/" + base.RepoName
-		base.ExtraRefs = append(base.ExtraRefs, "  "+base.PathAlias)
-		generateOneJob(data)
+		recursiveSBL(repoName, data, generateOneJob, sbs, 0)
 	}
 }
 
@@ -931,7 +1154,8 @@ func collectMetaData(periodicJob yaml.MapSlice) {
 			releaseVersion := ""
 			for _, item := range jobConfig {
 				switch item.Key {
-				case "continuous", "dot-release", "auto-release", "performance", "performance-mesh", "latency", "nightly":
+				case "continuous", "dot-release", "auto-release", "performance", "performance-mesh",
+					"latency", "nightly", "webhook-apicoverage":
 					if getBool(item.Value) {
 						enabled = true
 						jobName = getString(item.Key)
@@ -1028,11 +1252,15 @@ func buildProjRepoStr(projName string, repoName string) string {
 
 // isReleased returns true for project name that has version
 func isReleased(projName string) bool {
-	return regexp.MustCompile(`.+-[0-9\.]+$`).FindString(projName) != ""
+	return projNameRegex.FindString(projName) != ""
 }
 
 // setOutput set the given file as the output target, then all the output will be written to this file
 func setOutput(fileName string) {
+	output = os.Stdout
+	if fileName == "" {
+		return
+	}
 	configFile, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE, 0666)
 	if err != nil {
 		log.Fatalf("Cannot create the configuration file %q: %v", fileName, err)
@@ -1048,26 +1276,33 @@ func main() {
 	prowConfigOutput := ""
 	testgridConfigOutput := ""
 	var generateProwConfig = flag.Bool("generate-prow-config", true, "Whether to generate the prow configuration file from the template")
-	flag.StringVar(&prowConfigOutput, "prow-config-output", "", "The destination for the prow config output, default to be stdout")
 	var generateTestgridConfig = flag.Bool("generate-testgrid-config", true, "Whether to generate the testgrid config from the template file")
-	flag.StringVar(&testgridConfigOutput, "testgrid-config-output", "", "The destination for the testgrid config output, default to be stdout")
-
+	var generateMaintenanceJobs = flag.Bool("generate-maintenance-jobs", true, "Whether to generate the maintenance periodic jobs (e.g. backup)")
 	var includeConfig = flag.Bool("include-config", true, "Whether to include general configuration (e.g., plank) in the generated config")
+	var dockerImagesBase = flag.String("image-docker", "gcr.io/knative-tests/test-infra", "Default registry for the docker images used by the jobs")
+	flag.StringVar(&prowConfigOutput, "prow-config-output", "", "The destination for the prow config output, default to be stdout")
+	flag.StringVar(&testgridConfigOutput, "testgrid-config-output", "", "The destination for the testgrid config output, default to be stdout")
+	flag.StringVar(&prowHost, "prow-host", "https://prow.knative.dev", "Prow host, including HTTP protocol")
+	flag.StringVar(&testGridHost, "testgrid-host", "https://testgrid.knative.dev", "TestGrid host, including HTTP protocol")
+	flag.StringVar(&gubernatorHost, "gubernator-host", "https://gubernator.knative.dev", "Gubernator host, including HTTP protocol")
 	flag.StringVar(&gcsBucket, "gcs-bucket", "knative-prow", "GCS bucket to upload the logs to")
+	flag.StringVar(&testGridGcsBucket, "testgrid-gcs-bucket", "knative-testgrid", "TestGrid GCS bucket")
 	flag.StringVar(&logsDir, "logs-dir", "logs", "Path in the GCS bucket to upload logs of periodic and post-submit jobs")
 	flag.StringVar(&presubmitLogsDir, "presubmit-logs-dir", "pr-logs", "Path in the GCS bucket to upload logs of pre-submit jobs")
 	flag.StringVar(&testAccount, "test-account", "/etc/test-account/service-account.json", "Path to the service account JSON for test jobs")
 	flag.StringVar(&nightlyAccount, "nightly-account", "/etc/nightly-account/service-account.json", "Path to the service account JSON for nightly release jobs")
 	flag.StringVar(&releaseAccount, "release-account", "/etc/release-account/service-account.json", "Path to the service account JSON for release jobs")
-	flag.StringVar(&flakesreporterDockerImage, "flaky-test-reporter-docker", "gcr.io/knative-tests/test-infra/flaky-test-reporter:latest", "Docker image for flaky test reporting tool")
-	flag.StringVar(&prowversionbumperDockerImage, "prow-auto-bumper", "gcr.io/knative-tests/test-infra/prow-auto-bumper:latest", "Docker image for Prow version bumping tool")
-	flag.StringVar(&coverageDockerImage, "coverage-docker", "gcr.io/knative-tests/test-infra/coverage:latest", "Docker image for coverage tool")
-	flag.StringVar(&prowTestsDockerImage, "prow-tests-docker", "gcr.io/knative-tests/test-infra/prow-tests:stable", "prow-tests docker image")
+	var flakesreporterDockerImageName = flag.String("flaky-test-reporter-docker", "flaky-test-reporter:latest", "Docker image for flaky test reporting tool")
+	var prowversionbumperDockerImageName = flag.String("prow-auto-bumper", "prow-auto-bumper:latest", "Docker image for Prow version bumping tool")
+	var coverageDockerImageName = flag.String("coverage-docker", "coverage-go112:latest", "Docker image for coverage tool")
+	var prowTestsDockerImageName = flag.String("prow-tests-docker", "prow-tests-go112:stable", "prow-tests docker image")
+	var metricsDockerImageName = flag.String("metrics-docker", "metrics:latest", "Docker image for the metrics reporting tool")
+	var backupsDockerImageName = flag.String("backups-docker", "backups:latest", "Docker image for the backups job")
 	flag.StringVar(&githubCommenterDockerImage, "github-commenter-docker", "gcr.io/k8s-prow/commenter:v20190731-e3f7b9853", "github commenter docker image")
 	flag.StringVar(&presubmitScript, "presubmit-script", "./test/presubmit-tests.sh", "Executable for running presubmit tests")
 	flag.StringVar(&releaseScript, "release-script", "./hack/release.sh", "Executable for creating releases")
 	flag.StringVar(&performanceScript, "performance-script", "./test/performance-tests.sh", "Executable for running performance tests")
-	flag.StringVar(&webhookAPICoverageScript, "webhookAPICoverageScript", "./test/apicoverage.sh", "Executable for running webhook apicoverage tool")
+	flag.StringVar(&webhookAPICoverageScript, "webhook-api-coverage-script", "./test/apicoverage.sh", "Executable for running webhook apicoverage tool")
 	flag.StringVar(&cleanupScript, "cleanup-script", "./tools/cleanup/cleanup.sh", "Executable for running the cleanup tasks")
 	flag.StringVar(&repositoryOverride, "repo-override", "", "Repository path (github.com/foo/bar[=branch]) to use instead for a job")
 	flag.IntVar(&timeoutOverride, "timeout-override", 0, "Timeout (in minutes) to use instead for a job")
@@ -1078,6 +1313,14 @@ func main() {
 	if len(flag.Args()) != 1 {
 		log.Fatal("Pass the config file as parameter")
 	}
+
+	flakesreporterDockerImage = path.Join(*dockerImagesBase, *flakesreporterDockerImageName)
+	prowversionbumperDockerImage = path.Join(*dockerImagesBase, *prowversionbumperDockerImageName)
+	coverageDockerImage = path.Join(*dockerImagesBase, *coverageDockerImageName)
+	prowTestsDockerImage = path.Join(*dockerImagesBase, *prowTestsDockerImageName)
+	metricsDockerImage = path.Join(*dockerImagesBase, *metricsDockerImageName)
+	backupsDockerImage = path.Join(*dockerImagesBase, *backupsDockerImageName)
+
 	// We use MapSlice instead of maps to keep key order and create predictable output.
 	config := yaml.MapSlice{}
 
@@ -1093,26 +1336,25 @@ func main() {
 
 	// Generate Prow config.
 	if *generateProwConfig {
-		output = os.Stdout
-		if prowConfigOutput != "" {
-			setOutput(prowConfigOutput)
-		}
+		setOutput(prowConfigOutput)
 		repositories = make([]repositoryData, 0)
 		sectionMap = make(map[string]bool)
 		if *includeConfig {
-			executeTemplate("general config", readTemplate(generalProwConfig), newbaseProwJobTemplateData(""))
+			executeTemplate("general config", readTemplate(generalProwConfig), getProwConfigData(config))
 		}
 		parseSection(config, "presubmits", generatePresubmit, nil)
 		parseSection(config, "periodics", generatePeriodic, generateGoCoveragePeriodic)
 		generateOtherJobConfigs("periodics", func(repo repositoryData) bool {
 			return !repo.Processed && repo.EnableGoCoverage
 		}, generateGoCoveragePeriodic)
-		generateCleanupPeriodicJob()
-		generateFlakytoolPeriodicJob()
-		generateVersionBumpertoolPeriodicJob()
-		generateBackupPeriodicJob()
-		generateIssueTrackerPeriodicJobs()
-		generateServingClusterUpdatePeriodicJobs()
+		if *generateMaintenanceJobs {
+			generateCleanupPeriodicJob()
+			generateFlakytoolPeriodicJob()
+			generateVersionBumpertoolPeriodicJob()
+			generateBackupPeriodicJob()
+			generateIssueTrackerPeriodicJobs()
+			generatePerfClusterUpdatePeriodicJobs()
+		}
 		generateOtherJobConfigs("postsubmits", func(repo repositoryData) bool {
 			return repo.EnableGoCoverage
 		}, generateGoCoveragePostsubmit)
@@ -1124,10 +1366,7 @@ func main() {
 	}
 	// Generate Testgrid config.
 	if *generateTestgridConfig {
-		output = os.Stdout
-		if testgridConfigOutput != "" {
-			setOutput(testgridConfigOutput)
-		}
+		setOutput(testgridConfigOutput)
 
 		if *includeConfig {
 			executeTemplate("general config", readTemplate(generalTestgridConfig), newBaseTestgridTemplateData(""))

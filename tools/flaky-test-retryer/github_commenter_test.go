@@ -22,7 +22,7 @@ import (
 	"testing"
 
 	"github.com/google/go-github/github"
-	"knative.dev/test-infra/shared/ghutil/fakeghutil"
+	"knative.dev/pkg/test/ghutil/fakeghutil"
 	"knative.dev/test-infra/tools/monitoring/prowapi"
 )
 
@@ -285,7 +285,7 @@ func TestAppendComment(t *testing.T) {
 		fj.Refs[0].Pulls[0].SHA = test.commitSHA
 		fgc.PostComment(&fj, test.outliers)
 		actualComment, actualErr := fgc.getOldComment(fakeOrg, fakeRepo, fakePullID)
-		if nil != actualErr {
+		if actualErr != nil {
 			t.Fatalf("testing appending existing comment, with:\nold comment:\n%s\nfailed tests:'%v'\nwant: no error\ngot: %v",
 				test.oldCommentBody, test.outliers, actualErr)
 		}

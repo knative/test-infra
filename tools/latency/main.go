@@ -38,10 +38,13 @@ import (
 	"google.golang.org/api/option"
 )
 
-var ctx = context.Background()
-var client *storage.Client
-var e2eDuration = regexp.MustCompile("\\((\\d+\\.\\d+)s\\)")
-var sourceDir string
+var (
+	ctx         = context.Background()
+	e2eDuration = regexp.MustCompile("\\((\\d+\\.\\d+)s\\)")
+
+	client    *storage.Client
+	sourceDir string
+)
 
 type Metric struct {
 	values        []int

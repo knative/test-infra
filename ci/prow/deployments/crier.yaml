@@ -29,9 +29,9 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
       - name: crier
-        image: gcr.io/k8s-prow/crier:v20190821-d4eea7f3f
+        image: gcr.io/k8s-prow/crier:v20190925-d7e1d9b17
         args:
-        - --pubsub-workers=1
+        - --pubsub-workers=5 # Arbitrary number of multiplier
         - --report-agent=knative-build
         - --config-path=/etc/config/config.yaml
         volumeMounts:

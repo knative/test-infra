@@ -48,16 +48,21 @@ var (
 // otherwise it falls back to use an anonymous client
 func authenticate(githubTokenPath *string) {
 	client = github.NewClient(nil)
-	if nil == githubTokenPath || "" == *githubTokenPath {
+	if githubTokenPath == nil || *githubTokenPath == "" {
+		infof("Using unauthenticated github client")
 		return
 	}
 
+	infof("Reading github token from file %q", *githubTokenPath)
 	if b, err := ioutil.ReadFile(*githubTokenPath); err == nil {
-		infof("Authenticate using provided github token '%s'", *githubTokenPath)
+		infof("Authenticating using provided github token")
 		ts := oauth2.StaticTokenSource(
 			&oauth2.Token{AccessToken: strings.TrimSpace(string(b))},
 		)
 		client = github.NewClient(oauth2.NewClient(ctx, ts))
+	} else {
+		infof("Error reading file %q: %v", *githubTokenPath, err)
+		infof("Proceeding unauthenticated")
 	}
 }
 

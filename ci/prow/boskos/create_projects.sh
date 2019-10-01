@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Copyright 2019 The Knative Authors
 #
@@ -16,16 +16,31 @@
 
 set -e
 
-readonly FIRST=${1:?"First argument is the first number of the new project(s)."}
-readonly NUMBER=${2:?"Second argument is the number of new projects."}
-readonly BILLING_ACCOUNT=${3:?"Third argument must be the billing account."}
-readonly OUTPUT_FILE=${4:?"Fourth argument should be a file name all project names will be appended to in a resources.yaml format."}
+readonly NUMBER=${1:?"First argument is the number of new projects to create."}
+readonly BILLING_ACCOUNT=${2:?"Second argument must be the billing account."}
 
-for (( i=0; i<${NUMBER}; i++ )); do
-  PROJECT="knative-boskos-$(( i + ${FIRST} ))"
+readonly RESOURCE_FILE="resources.yaml"
+
+if [[ ! -f ${RESOURCE_FILE} || ! -w ${RESOURCE_FILE} ]]; then
+  echo "${RESOURCE_FILE} does not exist or is not writable"
+  exit 1
+fi
+
+# Get the index of the last boskos project from the resources file
+LAST_INDEX=$(grep "knative-boskos-" ${RESOURCE_FILE} | grep -o "[0-9]\+" | sort -nr | head -1)
+[[ -z "${LAST_INDEX}" ]] && LAST_INDEX=0
+for (( i=1; i<=${NUMBER}; i++ )); do
+  PROJECT="$(printf 'knative-boskos-%02d' $(( ${LAST_INDEX} + i )))"
   # This Folder ID is google.com/google-default
+  # If this needs to be changed for any reason, GCP project settings must be updated.
+  # Details are available in Google's internal issue 137963841.
   gcloud projects create ${PROJECT} --folder=396521612403
   gcloud beta billing projects link ${PROJECT} --billing-account=${BILLING_ACCOUNT}
+
+  # Set permissions for this project
   "$(dirname $0)/set_permissions.sh" ${PROJECT}
-  echo "  - ${PROJECT}" >> ${OUTPUT_FILE}
+
+  LAST_PROJECT=$(grep "knative-boskos-" ${RESOURCE_FILE} | tail -1)
+  [[ -z "${LAST_PROJECT}" ]] && LAST_PROJECT="- names:"
+  sed "/^${LAST_PROJECT}$/a\ \ -\ ${PROJECT}" -i ${RESOURCE_FILE}
 done

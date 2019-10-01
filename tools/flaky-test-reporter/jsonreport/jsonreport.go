@@ -75,12 +75,12 @@ func (c *JSONClient) CreateReport(repo string, flaky []string, writeFile bool) (
 // writeToArtifactsDir writes the flaky test data for this repo to disk.
 func (c *JSONClient) writeToArtifactsDir(r *Report) error {
 	artifactsDir := prow.GetLocalArtifactsDir()
-	if err := common.CreateDir(path.Join(artifactsDir, r.Repo)); nil != err {
+	if err := common.CreateDir(path.Join(artifactsDir, r.Repo)); err != nil {
 		return err
 	}
 	outFilePath := path.Join(artifactsDir, r.Repo, filename)
 	contents, err := json.Marshal(r)
-	if nil != err {
+	if err != nil {
 		return err
 	}
 	return ioutil.WriteFile(outFilePath, contents, 0644)
@@ -115,7 +115,7 @@ func (c *JSONClient) GetReportRepos(jobName string) ([]string, error) {
 // Use repo = "" to get reports from all repositories, and buildID = -1 to get the
 // most recent report
 func (c *JSONClient) GetFlakyTestReport(jobName, repo string, buildID int) ([]Report, error) {
-	if "" == jobName {
+	if jobName == "" {
 		jobName = defaultJobName
 	}
 	job := prow.NewJob(jobName, prow.PeriodicJob, "", 0)

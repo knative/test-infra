@@ -34,17 +34,16 @@ const (
 	periodicCustomJob = "prow_periodic_custom_job.yaml"
 
 	// Cron strings for key jobs
-	goCoveragePeriodicJobCron                 = "0 1 * * *"    // Run at 01:00 every day
-	cleanupPeriodicJobCron                    = "0 19 * * 1"   // Run at 11:00PST/12:00PST every Monday (19:00 UTC)
-	flakesReporterPeriodicJobCron             = "0 12 * * *"   // Run at 4:00PST/5:00PST every day (12:00 UTC)
-	flakesResultRecorderPeriodicJobCron       = "0 * * * *"    // Run every hour
-	prowversionbumperPeriodicJobCron          = "0 20 * * 1"   // Run at 12:00PST/13:00PST every Monday (20:00 UTC)
-	issueTrackerPeriodicJobCron               = "0 */12 * * *" // Run every 12 hours
-	backupPeriodicJobCron                     = "15 9 * * *"   // Run at 02:15PST every day (09:15 UTC)
-	perfPeriodicJobCron                       = "0 */3 * * *"  // Run every 3 hours
-	clearAlertsPeriodicJobCron                = "0,30 * * * *" // Run every 30 minutes
-	recreateServingPerfClusterPeriodicJobCron = "30 07 * * *"  // Run at 00:30PST every day (07:30 UTC)
-	updateServingPerfClusterPeriodicJobCron   = "5 * * * *"    // Run every an hour
+	goCoveragePeriodicJobCron           = "0 1 * * *"    // Run at 01:00 every day
+	cleanupPeriodicJobCron              = "0 19 * * 1"   // Run at 11:00PST/12:00PST every Monday (19:00 UTC)
+	flakesReporterPeriodicJobCron       = "0 12 * * *"   // Run at 4:00PST/5:00PST every day (12:00 UTC)
+	flakesResultRecorderPeriodicJobCron = "0 * * * *"    // Run every hour
+	prowversionbumperPeriodicJobCron    = "0 20 * * 1"   // Run at 12:00PST/13:00PST every Monday (20:00 UTC)
+	backupPeriodicJobCron               = "15 9 * * *"   // Run at 02:15PST every day (09:15 UTC)
+	perfPeriodicJobCron                 = "0 */3 * * *"  // Run every 3 hours
+	clearAlertsPeriodicJobCron          = "0,30 * * * *" // Run every 30 minutes
+	recreatePerfClusterPeriodicJobCron  = "30 07 * * *"  // Run at 00:30PST every day (07:30 UTC)
+	updatePerfClusterPeriodicJobCron    = "5 * * * *"    // Run every an hour
 
 	// Perf job constants
 	perfTimeout = 120 // Job timeout in minutes
@@ -143,7 +142,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			jobType = getString(item.Key)
 			jobTemplate = readTemplate(periodicCustomJob)
 			jobNameSuffix = "latency"
-			data.Base.Image = "gcr.io/knative-tests/test-infra/metrics:latest"
+			data.Base.Image = metricsDockerImage
 			data.Base.Command = "/metrics"
 			data.Base.Args = []string{
 				fmt.Sprintf("--source-directory=ci-%s-continuous", data.Base.RepoNameForJob),
@@ -218,7 +217,7 @@ func generateCleanupPeriodicJob() {
 	data.Base = newbaseProwJobTemplateData("knative/test-infra")
 	data.PeriodicJobName = "ci-knative-cleanup"
 	data.CronString = cleanupPeriodicJobCron
-	data.Base.DecorationConfig = []string{"timeout: 86400000000000"} // 24 hours
+	data.Base.DecorationConfig = []string{"timeout: 432000000000000"} // 120 hours
 	data.Base.Command = cleanupScript
 	data.Base.Args = []string{
 		"--project-resource-yaml ci/prow/boskos/resources.yaml",
@@ -229,6 +228,7 @@ func generateCleanupPeriodicJob() {
 	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
 	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 	configureServiceAccountForJob(&data.Base)
+	addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
 	executeJobTemplate("periodic cleanup", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
 }
 
@@ -249,6 +249,7 @@ func generateFlakytoolPeriodicJob() {
 	configureServiceAccountForJob(&data.Base)
 	addVolumeToJob(&data.Base, "/etc/flaky-test-reporter-github-token", "flaky-test-reporter-github-token", true, "")
 	addVolumeToJob(&data.Base, "/etc/flaky-test-reporter-slack-token", "flaky-test-reporter-slack-token", true, "")
+	addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
 	executeJobTemplate("periodic flakesreporter", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
 
 	// Generate another job that runs more frequently but not reporting to
@@ -288,7 +289,7 @@ func generateBackupPeriodicJob() {
 	var data periodicJobTemplateData
 	data.Base = newbaseProwJobTemplateData("none/unused")
 	data.Base.ServiceAccount = "/etc/backup-account/service-account.json"
-	data.Base.Image = "gcr.io/knative-tests/test-infra/backups:latest"
+	data.Base.Image = backupsDockerImage
 	data.PeriodicJobName = "ci-knative-backup-artifacts"
 	data.CronString = backupPeriodicJobCron
 	data.Base.Command = "/backup.sh"
@@ -321,6 +322,9 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 		if repositories[i].DotDev {
 			data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  path_alias: knative.dev/"+path.Base(repoName))
 		}
+		if repositories[i].Go113 {
+			data.Base.Image = getGo113ImageName(data.Base.Image)
+		}
 		addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 		addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
 		configureServiceAccountForJob(&data.Base)
@@ -329,103 +333,58 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 	}
 }
 
-// generateIssueTrackerPeriodicJobs generates the periodic jobs to automatically manage issue lifecycles.
-// It's a mirror of fejta bot - https://github.com/kubernetes/test-infra/blob/master/config/jobs/kubernetes/test-infra/fejta-bot-periodics.yaml.
-func generateIssueTrackerPeriodicJobs() {
-	staleJobName := "ci-knative-issue-tracker-stale"
-	staleLabelFilter := `
-        -label:lifecycle/frozen
-        -label:lifecycle/stale
-        -label:lifecycle/rotten`
-	staleUpdatedTime := "2160h"
-	staleComment := `--comment=Issues go stale after 90d of inactivity.<br/>
-        Mark the issue as fresh with /remove-lifecycle stale.<br/>
-        Stale issues rot after an additional 30d of inactivity and eventually close.<br/>
-        If this issue is safe to close now please do so with /close.<br/><br/>
-        Send feedback to Knative Productivity Slack channel or knative/test-infra.<br/><br/>
-        /lifecycle stale`
-	generateIssueTrackerPeriodicJob(staleJobName, staleLabelFilter, staleUpdatedTime, staleComment)
-
-	rottenJobName := "ci-knative-issue-tracker-rotten"
-	rottenLabelFilter := `
-        -label:lifecycle/frozen
-        label:lifecycle/stale
-        -label:lifecycle/rotten`
-	rottenUpdatedTime := "720h"
-	rottenComment := `--comment=Stale issues rot after 30d of inactivity.<br/>
-        Mark the issue as fresh with /remove-lifecycle rotten.<br/>
-        Rotten issues close after an additional 30d of inactivity.<br/>
-        If this issue is safe to close now please do so with /close.<br/><br/>
-        Send feedback to Knative Productivity Slack channel or knative/test-infra.<br/><br/>
-        /lifecycle rotten`
-	generateIssueTrackerPeriodicJob(rottenJobName, rottenLabelFilter, rottenUpdatedTime, rottenComment)
-
-	closeJobName := "ci-knative-issue-tracker-close"
-	closeLabelFilter := `
-        -label:lifecycle/frozen
-        label:lifecycle/rotten`
-	closeUpdatedTime := "720h"
-	closeComment := `--comment=Rotten issues close after 30d of inactivity.<br/>
-        Reopen the issue with /reopen.<br/>
-        Mark the issue as fresh with /remove-lifecycle rotten.<br/><br/>
-        Send feedback to Knative Productivity Slack channel or knative/test-infra.<br/><br/>
-        /close`
-	generateIssueTrackerPeriodicJob(closeJobName, closeLabelFilter, closeUpdatedTime, closeComment)
-}
-
-func generateIssueTrackerPeriodicJob(jobName, labelFilter, updatedTime, comment string) {
-	var data periodicJobTemplateData
-	data.Base = newbaseProwJobTemplateData("knative/test-infra")
-	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
-	data.Base.Image = githubCommenterDockerImage
-	data.PeriodicJobName = jobName
-	data.CronString = issueTrackerPeriodicJobCron
-	data.Base.Command = "/app/robots/commenter/app.binary"
-
-	// TODO(Fredy-Z): replace "repo:knative/test-infra" with "org:knative" after syncing up with the WGs.
-	data.Base.Args = []string{
-		`--query=repo:knative/test-infra
-        is:issue
-        is:open
-        ` + labelFilter,
-		"--updated=" + updatedTime,
-		"--token=/etc/housekeeping-github-token/token",
-		comment,
-		"--template",
-		"--ceiling=10",
-		"--confirm",
-	}
-	addVolumeToJob(&data.Base, "/etc/housekeeping-github-token", "housekeeping-github-token", true, "")
-	executeJobTemplate(jobName, readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
-}
-
-// generateServingClusterUpdatePeriodicJobs generates periodic jobs to update serving clusters
+// generatePerfClusterUpdatePeriodicJobs generates periodic jobs to update serving clusters
 // that run performance testing benchmarks
-func generateServingClusterUpdatePeriodicJobs() {
-	generateServingClusterUpdatePeriodicJob(
+func generatePerfClusterUpdatePeriodicJobs() {
+	// Generate periodic performance jobs for serving
+	perfClusterUpdatePeriodicJob(
 		"ci-knative-serving-recreate-clusters",
-		recreateServingPerfClusterPeriodicJobCron,
+		recreatePerfClusterPeriodicJobCron,
 		"./test/performance/tools/recreate_clusters.sh",
+		"serving",
+		"performance-test",
 	)
-	generateServingClusterUpdatePeriodicJob(
+	perfClusterUpdatePeriodicJob(
 		"ci-knative-serving-update-clusters",
-		updateServingPerfClusterPeriodicJobCron,
+		updatePerfClusterPeriodicJobCron,
 		"./test/performance/tools/update_clusters.sh",
+		"serving",
+		"performance-test",
+	)
+
+	// Generate periodic performance jobs for eventing
+	perfClusterUpdatePeriodicJob(
+		"ci-knative-eventing-recreate-clusters",
+		recreatePerfClusterPeriodicJobCron,
+		"./test/performance/tools/recreate_clusters.sh",
+		"eventing",
+		"eventing-performance-test",
+	)
+	perfClusterUpdatePeriodicJob(
+		"ci-knative-eventing-update-clusters",
+		updatePerfClusterPeriodicJobCron,
+		"./test/performance/tools/update_clusters.sh",
+		"eventing",
+		"eventing-performance-test",
 	)
 }
 
-func generateServingClusterUpdatePeriodicJob(jobName, cronString, command string) {
+func perfClusterUpdatePeriodicJob(jobName, cronString, command, repo, sa string) {
 	var data periodicJobTemplateData
-	data.Base = newbaseProwJobTemplateData("knative/serving")
+	data.Base = newbaseProwJobTemplateData("knative/" + repo)
 	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
-	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  path_alias: knative.dev/serving")
+	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  path_alias: knative.dev/"+repo)
 	data.Base.Command = command
 	data.PeriodicJobName = jobName
 	data.CronString = cronString
 	data.PeriodicCommand = createCommand(data.Base)
 	configureServiceAccountForJob(&data.Base)
 	addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
-	addVolumeToJob(&data.Base, "/etc/performance-test", "performance-test", true, "")
+	addVolumeToJob(&data.Base, "/etc/performance-test", sa, true, "")
 	addEnvToJob(&data.Base, "PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS", "/etc/performance-test/service-account.json")
+	addEnvToJob(&data.Base, "GITHUB_TOKEN", "/etc/performance-test/github-token")
+	addEnvToJob(&data.Base, "SLACK_READ_TOKEN", "/etc/performance-test/slack-read-token")
+	addEnvToJob(&data.Base, "SLACK_WRITE_TOKEN", "/etc/performance-test/slack-write-token")
+	addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
 	executeJobTemplate(jobName, readTemplate(periodicTestJob), "presubmits", "", data.PeriodicJobName, false, data)
 }

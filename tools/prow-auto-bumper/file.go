@@ -52,7 +52,7 @@ func (pv *PRVersions) updateAllTags(content []byte, imageFilter *regexp.Regexp) 
 		lastIndex = m[1]
 
 		iv := pv.getIndex(image, tag)
-		if "" != pv.images[image][iv].newVersion {
+		if pv.images[image][iv].newVersion != "" {
 			res += pv.images[image][iv].newVersion
 			msg += fmt.Sprintf("\nImage: %s\nOld Tag: %s\nNew Tag: %s", image, tag, pv.images[image][iv].newVersion)
 		} else {

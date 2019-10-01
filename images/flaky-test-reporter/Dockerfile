@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.10.2
+FROM golang:1.12
 LABEL maintainer "Chao Dai <chaodai@google.com>"
 RUN apt-get update
 
@@ -25,7 +25,8 @@ ADD . $TEMP_REPO_DIR
 # Build flaky test reporter tool in the container
 RUN make -C $TEMP_REPO_DIR/tools/$TOOL_NAME/
 RUN cp $TEMP_REPO_DIR/tools/$TOOL_NAME/$TOOL_NAME /$TOOL_NAME
-RUN cp $TEMP_REPO_DIR/tools/$TOOL_NAME/config.yaml /config.yaml
+RUN mkdir -p /config
+RUN cp $TEMP_REPO_DIR/tools/$TOOL_NAME/config/config.yaml /config/config.yaml
 
 # Remove test-infra from the container
 RUN rm -fr $TEMP_REPO_DIR

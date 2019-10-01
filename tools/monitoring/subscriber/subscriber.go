@@ -38,7 +38,6 @@ type Client struct {
 // Operation defines a list of methods for subscribing messages
 type Operation interface {
 	Receive(ctx context.Context, f func(context.Context, *pubsub.Message)) error
-	String() string
 }
 
 // NewSubscriberClient returns a new SubscriberClient used to read crier pubsub messages
@@ -63,6 +62,7 @@ func (c *Client) ReceiveMessageAckAll(ctx context.Context, f func(*prowapi.Repor
 			f(rmsg)
 		}
 		msg.Ack()
+		log.Printf("Message acked: %q", msg.ID)
 	})
 }
 

@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# This is the base Dockerfile for knative-tests images, please remember to also
+# do `make push` in `../prow-tests-go112` directory to make sure these 2 images are in
+# sync
+
 FROM gcr.io/k8s-testimages/kubekins-e2e:v20190716-41e2a9e-master
 LABEL maintainer "Adriano Cunha <adrcunha@google.com>"
 
@@ -29,16 +33,17 @@ RUN docker-credential-gcr configure-docker
 RUN apt-get install -y uuid-runtime  # for uuidgen
 RUN apt-get install -y rubygems  # for mdl
 
-# Install go at 1.12 same as how it's installed in kubekins-e2e image, reference code here:
+# Install go at 1.13 same as how it's installed in kubekins-e2e image, reference code here:
 # https://github.com/kubernetes/test-infra/blob/1e9b5dc3de4b268aab57c9c48120aa3dcf096bc6/images/kubekins-e2e/Dockerfile#L64
-ENV GO_TARBALL "go1.12.linux-amd64.tar.gz"
+ENV GO_TARBALL "go1.13.linux-amd64.tar.gz"
 RUN rm -rf /usr/local/go && \
     wget -q "https://storage.googleapis.com/golang/${GO_TARBALL}" && \
     tar xzf "${GO_TARBALL}" -C /usr/local && \
     rm "${GO_TARBALL}"
 
 # Extra tools through go get
-RUN go get -u github.com/google/ko/cmd/ko
+RUN GO111MODULE=on go get github.com/google/ko/cmd/ko
+RUN GO111MODULE=on go get github.com/boz/kail/cmd/kail
 RUN go get -u github.com/golang/dep/cmd/dep
 RUN go get -u github.com/jstemmer/go-junit-report
 RUN go get -u github.com/raviqqe/liche
@@ -48,7 +53,7 @@ RUN bazel version > /bazel_version
 RUN bazel shutdown
 
 # Extract ko version
-RUN git ls-remote https://github.com/google/ko HEAD | cut -f1 > /ko_version
+RUN ko version > /ko_version
 
 # Extra tools through gem
 RUN gem install mixlib-config -v 2.2.4  # required because ruby is 2.1
@@ -60,11 +65,6 @@ ADD . /go/src/knative.dev/test-infra
 # Build custom tools in the container
 RUN make -C /go/src/knative.dev/test-infra/tools/githubhelper
 RUN cp /go/src/knative.dev/test-infra/tools/githubhelper/githubhelper .
-
-# Use a local dep-collector that's a wrapper for building the tool
-# on-the-fly.
-# TODO(adrcunha): Remove once https://github.com/knative/test-infra/pull/1019 is in all repos.
-RUN cp /go/src/knative.dev/test-infra/images/prow-tests/dep-collector /usr/bin/dep-collector
 
 # Remove test-infra from the container
 RUN rm -fr /go/src/knative.dev/test-infra

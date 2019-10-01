@@ -36,7 +36,7 @@ func sourceFilePath(path string) string {
 }
 
 // Get the list of files in a commit, excluding those to be ignored by coverage
-func GetConcernedFiles(data *githubPr.GithubPr, filePathPrefix string) *map[string]bool {
+func GetConcernedFiles(data *githubPr.GithubPr, filePathPrefix string) map[string]bool {
 	listOptions := &github.ListOptions{Page: 1}
 
 	fmt.Println()
@@ -68,5 +68,5 @@ func GetConcernedFiles(data *githubPr.GithubPr, filePathPrefix string) *map[stri
 	}
 
 	log.Printf("GetConcernedFiles(...) completed\n\n")
-	return &fileNames
+	return fileNames
 }

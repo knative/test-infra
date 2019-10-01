@@ -26,8 +26,8 @@ import (
 	"time"
 
 	"github.com/google/go-github/github"
-	"knative.dev/test-infra/shared/ghutil"
-	"knative.dev/test-infra/shared/ghutil/fakeghutil"
+	"knative.dev/pkg/test/ghutil"
+	"knative.dev/pkg/test/ghutil/fakeghutil"
 )
 
 func getFakeGitInfo() gitInfo {
@@ -43,7 +43,7 @@ func getFakeGitInfo() gitInfo {
 
 func createPullRequest(t *testing.T, fgc *fakeghutil.FakeGithubClient, fakeGi gitInfo) *github.PullRequest {
 	PR, err := fgc.CreatePullRequest(fakeGi.org, fakeGi.repo, fakeGi.getHeadRef(), fakeGi.base, "title", "body")
-	if nil != err {
+	if err != nil {
 		t.Fatalf("Create PR in %s/%s, want: no error, got: '%v'", fakeGi.org, fakeGi.org, err)
 	}
 	return PR
@@ -345,11 +345,11 @@ func TestGetBestVersion(t *testing.T) {
 		}
 
 		pv, err := getBestVersion(fcw, fakeGi)
-		if nil != err {
+		if err != nil {
 			t.Fatalf("get best versions with PRs '%v', want: no error, got: '%v'", data.PRInfos, err)
 		}
-		if nil == data.dominantVersions {
-			if nil != pv && nil != pv.dominantVersions {
+		if data.dominantVersions == nil {
+			if pv != nil && pv.dominantVersions != nil {
 				t.Fatalf("get best versions with PRs '%v', want: nil, got: '%v'", data.PRInfos, pv.getDominantVersions())
 			}
 		} else if eq := reflect.DeepEqual(*data.dominantVersions, pv.getDominantVersions()); !eq {
@@ -365,7 +365,7 @@ func TestRetryGetBestVersion(t *testing.T) {
 
 	// only the error case exercises all the code in the function
 	_, err := retryGetBestVersion(fcw, fakeGi)
-	if nil == err || !strings.Contains(err.Error(), "failed list pull request") {
+	if err == nil || !strings.Contains(err.Error(), "failed list pull request") {
 		t.Fatalf("retry get best version with no PRs, want error: 'failed list pull request', got: '%v'", err)
 	}
 }

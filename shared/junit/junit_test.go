@@ -91,25 +91,25 @@ func newTestCase(name string, status TestStatusEnum) *TestCase {
 }
 
 func TestUnmarshalEmptySuites(t *testing.T) {
-	if _, err := UnMarshal([]byte(emptySuites)); nil != err {
+	if _, err := UnMarshal([]byte(emptySuites)); err != nil {
 		t.Errorf("Expected 'succeed', actual: 'failed parsing empty suites, '%s'", err)
 	}
 }
 
 func TestUnmarshalMalFormed(t *testing.T) {
-	if _, err := UnMarshal([]byte(malSuitesString)); nil == err {
+	if _, err := UnMarshal([]byte(malSuitesString)); err == nil {
 		t.Errorf("Expected: failed, actual: succeeded parsing malformed xml, '%s'", err)
 	}
 }
 
 func TestUnmarshalSuites(t *testing.T) {
-	if _, err := UnMarshal([]byte(validSuitesString)); nil != err {
+	if _, err := UnMarshal([]byte(validSuitesString)); err != nil {
 		t.Errorf("Expected: succeed, actual: failed parsing suites result, '%s'", err)
 	}
 }
 
 func TestUnmarshalSuite(t *testing.T) {
-	if _, err := UnMarshal([]byte(validSuiteString)); nil != err {
+	if _, err := UnMarshal([]byte(validSuiteString)); err != nil {
 		t.Errorf("Expected: succeed, actual: failed parsing suite result, '%s'", err)
 	}
 }
@@ -136,7 +136,7 @@ func TestAddTestSuite(t *testing.T) {
 	}
 
 	expectedErrString := "Test suite 'suite_0' already exists"
-	if err := testSuites.AddTestSuite(&testSuite0); nil == err || err.Error() != expectedErrString {
+	if err := testSuites.AddTestSuite(&testSuite0); err == nil || err.Error() != expectedErrString {
 		t.Fatalf("Expected: '%s', actual: '%v'", expectedErrString, err)
 	}
 

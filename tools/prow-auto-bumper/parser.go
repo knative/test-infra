@@ -25,7 +25,7 @@ import (
 	"strings"
 	"time"
 
-	"knative.dev/test-infra/shared/ghutil"
+	"knative.dev/pkg/test/ghutil"
 )
 
 // Tags could be in the form of: v[YYYYMMDD]-[GIT_HASH](-[VARIANT_PART]),
@@ -47,7 +47,7 @@ func deconstructTag(in string) (string, string) {
 func getDominantKey(m map[string]int) string {
 	var res string
 	for key, v := range m {
-		if "" == res || v > m[res] {
+		if res == "" || v > m[res] {
 			res = key
 		}
 	}
@@ -57,7 +57,7 @@ func getDominantKey(m map[string]int) string {
 // The way k8s updates versions doesn't guarantee the same version tag across all images,
 // dominantVersions is the version that appears most times
 func (pv *PRVersions) getDominantVersions() versions {
-	if nil != pv.dominantVersions {
+	if pv.dominantVersions != nil {
 		return *pv.dominantVersions
 	}
 
@@ -83,11 +83,11 @@ func (pv *PRVersions) getDominantVersions() versions {
 // Parse changelist, find all version changes, and store them in image name: versions map
 func (pv *PRVersions) parseChangelist(gcw *GHClientWrapper, gi gitInfo) error {
 	fs, err := gcw.ListFiles(gi.org, gi.repo, *pv.PR.Number)
-	if nil != err {
+	if err != nil {
 		return err
 	}
 	for _, f := range fs {
-		if nil == f.Patch {
+		if f.Patch == nil {
 			continue
 		}
 		minuses := imageMinusRegexp.FindAllStringSubmatch(*f.Patch, -1)
@@ -114,12 +114,12 @@ func getBestVersion(gcw *GHClientWrapper, gi gitInfo) (*PRVersions, error) {
 	var overallErr error
 	var bestDelta float64 = maxDelta + 1
 	PRs, err := gcw.ListPullRequests(gi.org, gi.repo, gi.getHeadRef(), gi.base)
-	if nil != err {
+	if err != nil {
 		return bestPv, fmt.Errorf("failed list pull request: '%v'", err)
 	}
 
 	for _, PR := range PRs {
-		if nil == PR.State || string(ghutil.PullRequestCloseState) != *PR.State {
+		if PR.State == nil || string(ghutil.PullRequestCloseState) != *PR.State {
 			continue
 		}
 		delta := targetTime.Sub(*PR.CreatedAt).Hours()
@@ -130,12 +130,12 @@ func getBestVersion(gcw *GHClientWrapper, gi gitInfo) (*PRVersions, error) {
 			images: make(map[string][]versions),
 			PR:     PR,
 		}
-		if err := pv.parseChangelist(gcw, gi); nil != err {
+		if err := pv.parseChangelist(gcw, gi); err != nil {
 			overallErr = fmt.Errorf("failed listing files from PR '%d': '%v'", *PR.Number, err)
 			break
 		}
 		vs := pv.getDominantVersions()
-		if "" == vs.oldVersion || "" == vs.newVersion {
+		if vs.oldVersion == "" || vs.newVersion == "" {
 			log.Printf("Warning: found PR misses version change '%d'", *PR.Number)
 			continue
 		}
@@ -155,7 +155,7 @@ func getBestVersion(gcw *GHClientWrapper, gi gitInfo) (*PRVersions, error) {
 				continue
 			}
 		}
-		if nil == bestPv || math.Abs(delta) < math.Abs(bestDelta) {
+		if bestPv == nil || math.Abs(delta) < math.Abs(bestDelta) {
 			bestDelta = delta
 			bestPv = &pv
 		}
@@ -169,7 +169,7 @@ func retryGetBestVersion(gcw *GHClientWrapper, gi gitInfo) (*PRVersions, error) 
 	// retry if there is github related error
 	for retryCount := 0; retryCount < maxRetry; retryCount++ {
 		bestPv, overallErr = getBestVersion(gcw, gi)
-		if nil == overallErr {
+		if overallErr == nil {
 			break
 		}
 		log.Println(overallErr)
