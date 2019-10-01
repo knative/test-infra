@@ -30,6 +30,11 @@ source $(dirname $0)/../scripts/presubmit-tests.sh
 
 function post_build_tests() {
   local failed=0
+  subheader "Checking Makefiles"
+  for makefile in $(find . -name Makefile | grep -v /vendor/); do
+    echo "*** Checking ${makefile}"
+    make -n -C $(dirname ${makefile}) || failed=1
+  done
   subheader "Checking config files"
   for dir in ci/prow ci/testgrid; do
     make -C ${dir} test || failed=1

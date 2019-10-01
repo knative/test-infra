@@ -58,7 +58,7 @@ ifndef SKIP_CONFIG_BACKUP
 	@gsutil cp "${OLD_YAML_CONFIG}" "${GCS_DEST}" > /dev/null
 	@sed -e "s/((COMMIT_HASH_TOKEN))/$(shell git rev-parse HEAD)/" $(PROW_CONFIG) > "${NEW_YAML_CONFIG}"
 else
-        $(eval NEW_YAML_CONFIG := $(PROW_CONFIG))
+	$(eval NEW_YAML_CONFIG := $(PROW_CONFIG))
 endif
 	kubectl create configmap config --from-file=config.yaml=${NEW_YAML_CONFIG} --dry-run -o yaml | kubectl replace configmap config -f -
 	$(UNSET_CONTEXT)
