@@ -49,7 +49,7 @@ func main() {
 	coverageTargetDir := flag.String("cov-target", defaultCoverageTargetDir, "target directory for test coverage")
 	coverageProfileName := flag.String("profile-name", defaultCoverageProfileName, "file name for coverage profile")
 	githubTokenPath := flag.String("github-token", "", "path to token to access github repo")
-	covThresholdFlag := flag.Int("cov-threshold-percentage", defaultCovThreshold, "token to access github repo")
+	covThreshold := flag.Int("cov-threshold-percentage", defaultCovThreshold, "token to access GitHub repo")
 	postingBotUserName := flag.String("posting-robot", "knative-metrics-robot", "github user name for coverage robot")
 	flag.Parse()
 
@@ -57,7 +57,7 @@ func main() {
 		"artifacts=%s; cov-target=%s; profile-name=%s; github-token=%s; "+
 		"cov-threshold-percentage=%d; posting-robot=%s;",
 		*gcsBucketName, *postSubmitJobName, *artifactsDir, *coverageTargetDir, *coverageProfileName,
-		*githubTokenPath, *covThresholdFlag, *postingBotUserName)
+		*githubTokenPath, *covThreshold, *postingBotUserName)
 
 	log.Println("Getting env values")
 	pr := os.Getenv("PULL_NUMBER")
@@ -68,7 +68,7 @@ func main() {
 	jobType := os.Getenv("JOB_TYPE")
 	jobName := os.Getenv("JOB_NAME")
 
-	fmt.Printf("Running coverage for PR %s with PR commit SHA %s and base SHA %s", pr, pullSha, baseSha)
+	log.Printf("Running coverage for PR=%s; PR commit SHA = %s;base SHA = %s", pr, pullSha, baseSha)
 
 	localArtifacts := artifacts.NewLocalArtifacts(
 		*artifactsDir,
@@ -79,6 +79,7 @@ func main() {
 
 	localArtifacts.ProduceProfileFile(*coverageTargetDir)
 
+	log.Printf("Running workflow: %s\n", jobType)
 	switch jobType {
 	case "presubmit":
 		buildStr := os.Getenv("BUILD_NUMBER")
@@ -94,7 +95,7 @@ func main() {
 			Bucket:       *gcsBucketName,
 			Job:          jobName,
 			Build:        build,
-			CovThreshold: *covThresholdFlag,
+			CovThreshold: *covThreshold,
 		},
 			PostSubmitJob: *postSubmitJobName,
 		}
@@ -107,11 +108,11 @@ func main() {
 		isCoverageLow := RunPresubmit(presubmit, localArtifacts)
 		if isCoverageLow {
 			logUtil.LogFatalf("Code coverage is below threshold (%d%%), "+
-				"fail presubmit workflow intentionally", *covThresholdFlag)
+				"fail presubmit workflow intentionally", *covThreshold)
 		}
 	case "periodic":
 		log.Printf("job type is %v, producing testsuite xml...\n", jobType)
-		testgrid.ProfileToTestsuiteXML(localArtifacts, *covThresholdFlag)
+		testgrid.ProfileToTestsuiteXML(localArtifacts, *covThreshold)
 	}
 
 	fmt.Println("end of code coverage main")

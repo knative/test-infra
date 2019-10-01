@@ -135,7 +135,7 @@ func (changes *GroupChanges) processChangedFiles(githubFilePaths map[string]bool
 	for i, inc := range changes.Changed {
 		pathFromProfile := githubUtil.FilePathProfileToGithub(inc.base.Name())
 		fmt.Printf("checking if this file is in github change list: %s", pathFromProfile)
-		if githubFilePaths[pathFromProfile] {
+		if len(githubFilePaths) == 0 || githubFilePaths[pathFromProfile] {
 			fmt.Printf("\tYes!")
 			rows = append(rows, inc.githubBotRow(i, pathFromProfile))
 			isEmpty = false
