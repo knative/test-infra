@@ -134,8 +134,15 @@ func (changes *GroupChanges) processChangedFiles(githubFilePaths map[string]bool
 	isEmpty, isCoverageLow := true, false
 	for i, inc := range changes.Changed {
 		pathFromProfile := githubUtil.FilePathProfileToGithub(inc.base.Name())
-		fmt.Printf("checking if this file is in github change list: %s", pathFromProfile)
-		if len(githubFilePaths) == 0 || githubFilePaths[pathFromProfile] {
+
+		// empty githubFilePaths indicates the workflow is running without a github connection
+		noRepoConnection := len(githubFilePaths) == 0
+		if noRepoConnection {
+			log.Printf("No github connection. Listing each file with a coverage change.")
+		} else {
+			log.Printf("checking if this file is in github change list: %s", pathFromProfile)
+		}
+		if noRepoConnection || githubFilePaths[pathFromProfile] {
 			fmt.Printf("\tYes!")
 			rows = append(rows, inc.githubBotRow(i, pathFromProfile))
 			isEmpty = false

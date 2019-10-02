@@ -31,6 +31,7 @@ import (
 func RunPresubmit(p *gcs.PreSubmit, arts *artifacts.LocalArtifacts) bool {
 	log.Println("starting PreSubmit.RunPresubmit(...)")
 
+	// concerned files is a collection of all the files whose coverage change will be reported
 	var concernedFiles map[string]bool
 
 	if p.GithubClient != nil {
