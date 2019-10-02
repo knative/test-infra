@@ -21,34 +21,3 @@ metadata:
   namespace: test-pods
 data:
   resources: ""
----
-kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: boskos
-rules:
-- apiGroups: ["apiextensions.k8s.io"]
-  verbs: ["*"]
-  resources: ["customresourcedefinitions"]
-- apiGroups: ["boskos.k8s.io"]
-  verbs: ["*"]
-  resources: ["*"]
----
-kind: ServiceAccount
-apiVersion: v1
-metadata:
-  name: boskos
-  namespace: test-pods
----
-kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: crd-creator
-subjects:
-- kind: ServiceAccount
-  name: boskos
-  namespace: test-pods
-roleRef:
-  kind: ClusterRole
-  name: boskos
-  apiGroup: rbac.authorization.k8s.io
