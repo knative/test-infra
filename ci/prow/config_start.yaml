@@ -236,6 +236,39 @@ metadata:
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
+  namespace: default
+  name: "sinker"
+rules:
+  - apiGroups:
+      - "prow.k8s.io"
+    resources:
+      - prowjobs
+    verbs:
+      - delete
+      - list
+      - watch
+      - get
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    resourceNames:
+      - prow-sinker-leaderlock
+    verbs:
+      - get
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - events
+    verbs:
+      - create
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  namespace: test-pods
   name: "sinker"
 rules:
   - apiGroups:
@@ -245,17 +278,24 @@ rules:
     verbs:
       - delete
       - list
-  - apiGroups:
-      - "prow.k8s.io"
-    resources:
-      - prowjobs
-    verbs:
-      - delete
-      - list
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
+  namespace: default
+  name: "sinker"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: "sinker"
+subjects:
+- kind: ServiceAccount
+  name: "sinker"
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  namespace: test-pods
   name: "sinker"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
