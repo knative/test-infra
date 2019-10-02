@@ -31,6 +31,13 @@ metadata:
 data:
   config: ""
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: resources
+  namespace: test-pods
+data:
+  resources: ""
 
 # Namespaces
 
