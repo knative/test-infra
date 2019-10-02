@@ -26,6 +26,7 @@ PROW_DEPLOYS     ?= $(PROW_DIR)/deployments
 PROW_GCS         ?= knative-prow
 PROW_CONFIG_GCS  ?= gs://$(PROW_GCS)/configs
 
+TESTGRID_GCS     ?= knative-testgrid
 TESTGRID_CONFIG  ?= $(PROW_DIR)/../testgrid/config.yaml
 
 BOSKOS_DIR       ?= $(PROW_DIR)/boskos
@@ -45,7 +46,7 @@ unset-cluster-credentials:
 	$(UNSET_CONTEXT)
 
 config:
-	go run *_config.go --prow-config-output=$(PROW_CONFIG) --testgrid-config-output=$(TESTGRID_CONFIG) --gcs-bucket=$(PROW_GCS) --image-docker=gcr.io/$(PROJECT)/test-infra $(KNATIVE_CONFIG)
+	go run *_config.go --prow-config-output=$(PROW_CONFIG) --testgrid-config-output=$(TESTGRID_CONFIG) --gcs-bucket=$(PROW_GCS) --testgrid-gcs-bucket=$(TESTGRID_GCS) --image-docker=gcr.io/$(PROJECT)/test-infra $(KNATIVE_CONFIG)
 
 # Update all prow job configs
 update-config:
