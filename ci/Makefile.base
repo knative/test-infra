@@ -1,4 +1,4 @@
-# Copyright 2018 The Knative Authors
+# Copyright 2019 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ JOB_NAMESPACE      ?= test-pods
 KNATIVE_CONFIG     ?= config_knative.yaml
 SKIP_CONFIG_BACKUP ?=
 
+# This is the canonical path of this Makefile, aka /ci dir.
 CI_DIR           ?= $(realpath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 
 PROW_DIR         ?= $(CI_DIR)/prow
