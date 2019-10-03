@@ -35,9 +35,7 @@ TESTGRID_DIR     ?= $(CI_DIR)/testgrid
 TESTGRID_GCS     ?= knative-testgrid
 TESTGRID_CONFIG  ?= $(TESTGRID_DIR)/config.yaml
 
-BOSKOS_DIR       ?= $(PROW_DIR)/boskos
-BOSKOS_DEPLOYS   ?= $(BOSKOS_DIR)/deployments
-BOSKOS_RESOURCES ?= $(BOSKOS_DIR)/resources.yaml
+BOSKOS_RESOURCES ?= $(PROW_DIR)/boskos_resources.yaml
 
 # Useful shortcuts.
 

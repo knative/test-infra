@@ -5,7 +5,8 @@ This directory contains the config for our
 
 - `Makefile` Commands to interact with the Prow instance regarding configs and
   updates.
-- `boskos` Configuration for the Boskos instance.
+- `boskos_resources.yaml` Pool of projects used by Boskos.
+- `create_boskos_projects.sh` Script to create new Boskos projects.
 - `deployments/*.yaml` Deployments of the Prow cluster.
 - `config.yaml` Generated configuration of the Prow jobs.
 - `config_knative.yaml` Input configuration for `make_config.go` to generate
@@ -15,3 +16,5 @@ This directory contains the config for our
   `config.yaml` from `config_knative.yaml`.
 - `plugins.yaml` Configuration of the Prow plugins.
 - `run_job.sh` Convenience script to start a Prow job from command-line.
+- `set_boskos_permissions.sh` Script to set up permissions for a Boskos project.
+

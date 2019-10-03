@@ -48,13 +48,7 @@ update-plugins:
 # Update all deployments of boskos
 update-all-boskos-deployments:
 	$(SET_CONTEXT)
-	@for f in $(shell ls $(BOSKOS_DEPLOYS)/*.yaml); do kubectl apply -f $${f}; done
-	$(UNSET_CONTEXT)
-
-# Update single deployment of boskos, expect passing in ${NAME} like `make update-single-boskos-deployment NAME=janitor`
-update-single-boskos-deployment:
-	$(SET_CONTEXT)
-	kubectl apply -f $(BOSKOS_DEPLOYS)/$(NAME).yaml
+	@for f in $(shell ls $(PROW_DEPLOYS)/boskos*.yaml); do kubectl apply -f $${f}; done
 	$(UNSET_CONTEXT)
 
 # Update the list of resources for Boskos
