@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-TESTGRID_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-PROW_DIR := $(TESTGRID_DIR)/../prow
+include ../Makefile.base
 
 config:
 	make -C $(PROW_DIR) config
@@ -21,8 +20,13 @@ config:
 test:
 	make -C $(PROW_DIR) test
 
+# Update TestGrid config.
+# Application Default Credentials must be set, otherwise the upload will fail.
+# Either export $GOOGLE_APPLICATION_CREDENTIALS pointing to a valid service
+# account key, or temporarily use your own credentials by running
+# gcloud auth application-default login
 update-config:
 	bazel run @k8s//testgrid/cmd/configurator -- \
-		--yaml=$(TESTGRID_DIR)/config.yaml \
-		--output=gs://knative-testgrid/config \
+		--yaml=$(TESTGRID_CONFIG) \
+		--output=gs://$(TESTGRID_GCS)/config \
 		--oneshot
