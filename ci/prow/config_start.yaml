@@ -42,6 +42,7 @@ metadata:
   namespace: test-pods
 data:
   resources: ""
+---
 
 # Namespaces
 
