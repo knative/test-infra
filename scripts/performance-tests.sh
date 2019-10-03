@@ -23,17 +23,16 @@ source $(dirname ${BASH_SOURCE})/library.sh
 readonly CLUSTER_REGION=${CLUSTER_REGION:-us-central1}
 readonly CLUSTER_NODES=${CLUSTER_NODES:-1}
 readonly BENCHMARK_ROOT_PATH=${BENCHMARK_ROOT_PATH:-test/performance/benchmarks}
+readonly PROJECT_NAME=${PROJECT_NAME:-knative-performance}
+readonly USER_NAME=${USER_NAME:-mako-job@knative-performance.iam.gserviceaccount.com}
 
 # Setup env vars.
-readonly PROJECT_NAME="knative-performance"
-readonly USER_NAME="mako-job@knative-performance.iam.gserviceaccount.com"
-readonly KO_DOCKER_REPO="gcr.io/${PROJECT_NAME}/${REPO_NAME}"
+readonly KO_DOCKER_REPO="gcr.io/${PROJECT_NAME}"
 readonly PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS="/etc/performance-test/service-account.json"
-readonly PERF_TEST_GITHUB_TOKEN="/etc/performance-test/github-token"
-readonly PERF_TEST_SLACK_TOKEN="/etc/performance-test/slack-token"
-readonly CLUSTER_CONFIG_FILE="cluster.properties"
-readonly CLUSTER_REGION_CONFIG_NAME="cluster_region"
-readonly CLUSTER_NODES_CONFIG_NAME="cluster_nodes"
+readonly GITHUB_TOKEN="/etc/performance-test/github-token"
+readonly SLACK_READ_TOKEN="/etc/performance-test/slack-read-token"
+readonly SLACK_WRITE_TOKEN="/etc/performance-test/slack-write-token"
+readonly CLUSTER_CONFIG_FILE="cluster.yaml"
 
 # Set up the user credentials for cluster operations.
 function setup_user() {
@@ -68,10 +67,13 @@ function create_cluster() {
 # Parameters: $1 - cluster name
 #             $2 - cluster zone/region
 function create_secrets() {
-  echo ">> Creating service account on cluster $1 in zone $2"
+  echo ">> Creating secrets on cluster $1 in zone $2"
   gcloud container clusters get-credentials $1 --zone=$2 --project=${PROJECT_NAME} || abort "failed to get cluster creds"
-  kubectl create secret generic service-account --from-file=robot.json=${PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS}
-  kubectl create secret generic tokens --from-file=github=${PERF_TEST_GITHUB_TOKEN} --from-file=slack=${PERF_TEST_SLACK_TOKEN}
+  kubectl create secret generic mako-secrets \
+    --from-file=robot.json=${PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS} \
+    --from-file=github-token=${GITHUB_TOKEN} \
+    --from-file=slack-read-token=${SLACK_READ_TOKEN} \
+    --from-file=slack-write-token=${SLACK_WRITE_TOKEN}
 }
 
 # Update resources installed on the cluster.
@@ -79,16 +81,16 @@ function create_secrets() {
 #             $2 - cluster zone/region
 function update_cluster() {
   gcloud container clusters get-credentials $1 --zone=$2 --project=${PROJECT_NAME} || abort "failed to get cluster creds"
-  echo ">> Setting up 'prod' config-mako"
-  cat | kubectl apply -f - <<EOF
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: config-mako
-data:
-  # This should only be used by our performance automation.
-  environment: prod
-EOF
+#   echo ">> Setting up 'prod' config-mako"
+#   cat | kubectl apply -f - <<EOF
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: config-mako
+# data:
+#   # This should only be used by our performance automation.
+#   environment: prod
+# EOF
 
   echo ">> Deleting all benchmark jobs to avoid noise in the update process"
   kubectl delete cronjob --all
@@ -97,7 +99,8 @@ EOF
   if function_exists update_knative; then
     update_knative || abort "failed to update knative"
   fi
-  local benchmark_name=$(get_benchmark_name $1)
+  # benchmark name is the same as the cluster name
+  local benchmark_name=$1
   if function_exists update_benchmark; then
     update_benchmark ${BENCHMARK_ROOT_PATH}/${benchmark_name} || abort "failed to update benchmark"
   fi
