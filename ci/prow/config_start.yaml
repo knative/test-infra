@@ -17,6 +17,7 @@
 
 # Configs
 
+# Prow plugins
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -24,6 +25,7 @@ metadata:
 data:
   plugins: ""
 ---
+# Prow config
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -31,6 +33,7 @@ metadata:
 data:
   config: ""
 ---
+# Boskos resources
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -93,6 +96,7 @@ rules:
     verbs:
       - "*"
 ---
+
 kind: ServiceAccount
 apiVersion: v1
 metadata:
@@ -126,6 +130,7 @@ rules:
     verbs:
       - get
 ---
+
 kind: ServiceAccount
 apiVersion: v1
 metadata:
@@ -163,6 +168,7 @@ rules:
       - get
       - list
 ---
+
 kind: ServiceAccount
 apiVersion: v1
 metadata:
@@ -194,6 +200,7 @@ subjects:
   name: "horologium"
   namespace: default
 ---
+
 kind: ServiceAccount
 apiVersion: v1
 metadata:
@@ -235,6 +242,7 @@ subjects:
   name: "plank"
   namespace: default
 ---
+
 kind: ServiceAccount
 apiVersion: v1
 metadata:
@@ -273,6 +281,7 @@ subjects:
   name: "sinker"
   namespace: default
 ---
+
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -309,6 +318,7 @@ subjects:
 - kind: ServiceAccount
   name: "hook"
 ---
+
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -347,6 +357,7 @@ subjects:
   name: "tide"
   namespace: default
 ---
+
 kind: ServiceAccount
 apiVersion: v1
 metadata:
