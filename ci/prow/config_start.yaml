@@ -12,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Initial configuration of prow cluster.
-# Intended to be used when (re)creating the cluster.
+# Initial configuration of Prow cluster.
+# Most of the settings -- specially accounts and roles -- come from the Kubernetes
+# Prow cluster configs at https://github.com/kubernetes/test-infra/tree/master/prow/cluster
 
 # Configs
 
