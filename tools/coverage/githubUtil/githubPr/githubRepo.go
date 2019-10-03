@@ -50,13 +50,18 @@ func New(githubTokenLocation, repoOwner, repoName, prNumStr,
 			err)
 	}
 
-	githubToken, err := getGithubToken(githubTokenLocation)
+	var client *githubClient.GithubClient
+	if githubTokenLocation == "" {
+		log.Println("Github token location not provided. Running without github connection")
+	} else {
+		githubToken, err := getGithubToken(githubTokenLocation)
 
-	if err != nil {
-		logUtil.LogFatalf("Failed to get github token: %v\n", err)
+		if err != nil {
+			logUtil.LogFatalf("Failed to get github token: %v\n", err)
+		}
+
+		client = githubClient.Make(ctx, githubToken)
 	}
-
-	client := githubClient.Make(ctx, githubToken)
 
 	return &GithubPr{
 		RepoOwner:     repoOwner,
