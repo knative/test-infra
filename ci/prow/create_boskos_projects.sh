@@ -19,7 +19,7 @@ set -e
 readonly NUMBER=${1:?"First argument is the number of new projects to create."}
 readonly BILLING_ACCOUNT=${2:?"Second argument must be the billing account."}
 
-readonly RESOURCE_FILE="resources.yaml"
+readonly RESOURCE_FILE="boskos_resources.yaml"
 
 if [[ ! -f ${RESOURCE_FILE} || ! -w ${RESOURCE_FILE} ]]; then
   echo "${RESOURCE_FILE} does not exist or is not writable"
@@ -38,7 +38,7 @@ for (( i=1; i<=${NUMBER}; i++ )); do
   gcloud beta billing projects link ${PROJECT} --billing-account=${BILLING_ACCOUNT}
 
   # Set permissions for this project
-  "$(dirname $0)/set_permissions.sh" ${PROJECT}
+  "$(dirname $0)/set_boskos_permissions.sh" ${PROJECT}
 
   LAST_PROJECT=$(grep "knative-boskos-" ${RESOURCE_FILE} | tail -1)
   [[ -z "${LAST_PROJECT}" ]] && LAST_PROJECT="- names:"
