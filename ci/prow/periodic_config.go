@@ -378,10 +378,8 @@ func perfClusterUpdatePeriodicJob(jobName, cronString, command, repo, sa string)
 	data.PeriodicJobName = jobName
 	data.CronString = cronString
 	data.PeriodicCommand = createCommand(data.Base)
-	configureServiceAccountForJob(&data.Base)
-	addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
 	addVolumeToJob(&data.Base, "/etc/performance-test", sa, true, "")
-	addEnvToJob(&data.Base, "PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS", "/etc/performance-test/service-account.json")
+	addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", "/etc/performance-test/service-account.json")
 	addEnvToJob(&data.Base, "GITHUB_TOKEN", "/etc/performance-test/github-token")
 	addEnvToJob(&data.Base, "SLACK_READ_TOKEN", "/etc/performance-test/slack-read-token")
 	addEnvToJob(&data.Base, "SLACK_WRITE_TOKEN", "/etc/performance-test/slack-write-token")

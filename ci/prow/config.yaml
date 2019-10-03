@@ -6459,16 +6459,11 @@ periodics:
       args:
       - "./test/performance/tools/recreate_clusters.sh"
       volumeMounts:
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
       - name: performance-test
         mountPath: /etc/performance-test
         readOnly: true
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/performance-test/service-account.json
       - name: GITHUB_TOKEN
         value: /etc/performance-test/github-token
@@ -6477,9 +6472,6 @@ periodics:
       - name: SLACK_WRITE_TOKEN
         value: /etc/performance-test/slack-write-token
     volumes:
-    - name: test-account
-      secret:
-        secretName: test-account
     - name: performance-test
       secret:
         secretName: performance-test
@@ -6505,16 +6497,11 @@ periodics:
       args:
       - "./test/performance/tools/update_clusters.sh"
       volumeMounts:
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
       - name: performance-test
         mountPath: /etc/performance-test
         readOnly: true
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/performance-test/service-account.json
       - name: GITHUB_TOKEN
         value: /etc/performance-test/github-token
@@ -6523,9 +6510,6 @@ periodics:
       - name: SLACK_WRITE_TOKEN
         value: /etc/performance-test/slack-write-token
     volumes:
-    - name: test-account
-      secret:
-        secretName: test-account
     - name: performance-test
       secret:
         secretName: performance-test
@@ -6551,16 +6535,11 @@ periodics:
       args:
       - "./test/performance/tools/recreate_clusters.sh"
       volumeMounts:
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
       - name: eventing-performance-test
         mountPath: /etc/performance-test
         readOnly: true
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/performance-test/service-account.json
       - name: GITHUB_TOKEN
         value: /etc/performance-test/github-token
@@ -6569,9 +6548,6 @@ periodics:
       - name: SLACK_WRITE_TOKEN
         value: /etc/performance-test/slack-write-token
     volumes:
-    - name: test-account
-      secret:
-        secretName: test-account
     - name: eventing-performance-test
       secret:
         secretName: eventing-performance-test
@@ -6597,16 +6573,11 @@ periodics:
       args:
       - "./test/performance/tools/update_clusters.sh"
       volumeMounts:
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
       - name: eventing-performance-test
         mountPath: /etc/performance-test
         readOnly: true
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/performance-test/service-account.json
       - name: GITHUB_TOKEN
         value: /etc/performance-test/github-token
@@ -6615,9 +6586,6 @@ periodics:
       - name: SLACK_WRITE_TOKEN
         value: /etc/performance-test/slack-write-token
     volumes:
-    - name: test-account
-      secret:
-        secretName: test-account
     - name: eventing-performance-test
       secret:
         secretName: eventing-performance-test
