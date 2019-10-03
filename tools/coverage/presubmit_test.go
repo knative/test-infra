@@ -48,7 +48,7 @@ func TestRunPresubmit(t *testing.T) {
 		},
 		{
 			"RunPresubmitWithNoGithubClient",
-			githubFakes.FakeGithubClient(),
+			nil,
 			false,
 			false,
 		},
