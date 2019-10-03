@@ -28,7 +28,7 @@ import (
 )
 
 // RunPresubmit runs the pre-submit procedure
-func RunPresubmit(p *gcs.PreSubmit, arts *artifacts.LocalArtifacts) bool {
+func RunPresubmit(p *gcs.PreSubmit, arts *artifacts.LocalArtifacts) (bool, error) {
 	log.Println("starting PreSubmit.RunPresubmit(...)")
 
 	// concerned files is a collection of all the files whose coverage change will be reported
@@ -39,13 +39,13 @@ func RunPresubmit(p *gcs.PreSubmit, arts *artifacts.LocalArtifacts) bool {
 		if len(concernedFiles) == 0 {
 			log.Printf("List of concerned committed files is empty, " +
 				"don't need to run coverage profile in presubmit\n")
-			return false
+			return false, nil
 		}
 	}
 
 	gNew := calc.CovList(arts.ProfileReader(), arts.KeyProfileCreator(),
 		concernedFiles, p.CovThreshold)
-	line.CreateLineCovFile(arts)
+	err := line.CreateLineCovFile(arts)
 	line.GenerateLineCovLinks(p, gNew)
 
 	base := gcs.NewPostSubmit(p.Ctx, p.Client, p.Bucket,
@@ -58,9 +58,9 @@ func RunPresubmit(p *gcs.PreSubmit, arts *artifacts.LocalArtifacts) bool {
 	io.Write(&postContent, arts.Directory(), "bot-post")
 
 	if !isEmpty && p.GithubClient != nil {
-		p.GithubPr.CleanAndPostComment(postContent)
+		err = p.GithubPr.CleanAndPostComment(postContent)
 	}
 
 	log.Println("completed PreSubmit.RunPresubmit(...)")
-	return isCoverageLow
+	return isCoverageLow, err
 }

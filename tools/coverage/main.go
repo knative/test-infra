@@ -105,10 +105,13 @@ func main() {
 		}
 
 		presubmit.Artifacts = *presubmit.MakeGcsArtifacts(*localArtifacts)
-		isCoverageLow := RunPresubmit(presubmit, localArtifacts)
+		isCoverageLow, err := RunPresubmit(presubmit, localArtifacts)
 		if isCoverageLow {
 			logUtil.LogFatalf("Code coverage is below threshold (%d%%), "+
 				"fail presubmit workflow intentionally", *covThreshold)
+		}
+		if err != nil {
+			log.Fatal(err)
 		}
 	case "periodic":
 		log.Printf("job type is %v, producing testsuite xml...\n", jobType)
