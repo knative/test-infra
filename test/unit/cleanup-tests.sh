@@ -19,7 +19,7 @@ source $(dirname $0)/../../tools/cleanup/cleanup-functions.sh
 
 readonly _FAKE_NIGHTLY_PROJECT_NAME="gcr.io/knative-nightly"
 readonly _FAKE_BOSKOS_PROJECT_NAME="gcr.io/fake-boskos-project"
-readonly _PROJECT_RESOURCE_YAML="ci/prow/boskos/resources.yaml"
+readonly _PROJECT_RESOURCE_YAML="ci/prow/boskos_resources.yaml"
 readonly _RE_PROJECT_NAME="knative-boskos-[a-zA-Z0-9]+"
 
 # Call "cleanup.sh" function with given parameters
