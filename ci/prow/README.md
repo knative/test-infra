@@ -17,4 +17,3 @@ This directory contains the config for our
 - `plugins.yaml` Configuration of the Prow plugins.
 - `run_job.sh` Convenience script to start a Prow job from command-line.
 - `set_boskos_permissions.sh` Script to set up permissions for a Boskos project.
-
