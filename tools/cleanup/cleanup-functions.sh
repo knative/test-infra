@@ -55,19 +55,17 @@ function delete_old_gcr_images() {
   [[ -z $1 ]] && abort "missing project names"
   [[ -z $2 ]] && abort "missing days to keep images"
 
-  local projects=$1
-  local days=$2
-  export -f delete_old_images_from_gcr
-  export -f is_protected_gcr
-  echo $projects | xargs -n 1 -P 50 -I {} bash -c 'delete_old_images_from_gcr "$@"' _ "gcr.io/{}" ${days}
+  for project in $1; do
+    echo "Start deleting images from ${project}"
+    delete_old_images_from_gcr "gcr.io/${project}" $2 &
+  done
+  wait
 }
 
 # Delete old clusters in the given GCP project
 # Parameters: $1 - project name
 #             $2 - hours to keep clusters
 function delete_old_test_clusters_for_project() {
-  echo "Start deleting clusters from ${project}"
-
   is_protected_project $1 && \
     abort "Target project set to $project, which is forbidden"
 
@@ -100,9 +98,9 @@ function delete_old_test_clusters() {
   [[ -z $1 ]] && abort "missing project names"
   [[ -z $2 ]] && abort "missing hours to keep clusters"
 
-  local projects=$1
-  local hours=$2
-  export -f delete_old_test_clusters_for_project
-  export -f is_protected_project
-  echo $projects | xargs -n 1 -P 50 -I {} bash -c 'delete_old_test_clusters_for_project "$@"' _ {} ${hours}
+  for project in $1; do
+    echo "Start deleting clusters from ${project}"
+    delete_old_test_clusters_for_project $project $2 &
+  done
+  wait
 }
