@@ -111,7 +111,7 @@
 
 ## Setting up the issue tracker for a new repo
 
-1. Update [`generateIssueTrackerPeriodicJobs()`](https://github.com/knative/test-infra/blob/585becc692106854a4de992c4dda9106addddb8e/ci/prow/issue_tracker_config.go#L48)
+1. Update [`generateIssueTrackerPeriodicJobs()`](https://github.com/knative/test-infra/blob/51c37921d4a7722855fcbb020db3c3865db1cb8f/ci/prow/issue_tracker_config.go#L48)
    in [issue_tracker_config.go](./prow/issue_tracker_config.go), adding the call
    to generate the config for the new repo.
 
