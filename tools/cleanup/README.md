@@ -26,7 +26,7 @@ following flags:
 
 Example:
 
-`./cleanup.sh --project-resource-yaml "ci/prow/boskos/resources.yaml" --days-to-keep-images 90 --days-to-keep-clusters 24`
+`./cleanup.sh --project-resource-yaml "ci/prow/boskos_resources.yaml" --days-to-keep-images 90 --hours-to-keep-clusters 24`
 This command deletes test images older than 90 days and test clusters created
 more than 24 hours ago.
 

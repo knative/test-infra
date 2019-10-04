@@ -6070,7 +6070,7 @@ periodics:
       command:
       - "./tools/cleanup/cleanup.sh"
       args:
-      - "--project-resource-yaml ci/prow/boskos/resources.yaml"
+      - "--project-resource-yaml ci/prow/boskos_resources.yaml"
       - "--days-to-keep-images 30"
       - "--hours-to-keep-clusters 24"
       - "--service-account /etc/test-account/service-account.json"

@@ -55,11 +55,10 @@ function delete_old_gcr_images() {
   [[ -z $1 ]] && abort "missing project names"
   [[ -z $2 ]] && abort "missing days to keep images"
 
-  for project in $1; do
-    echo "Start deleting images from ${project}"
-    delete_old_images_from_gcr "gcr.io/${project}" $2 &
-  done
-  wait
+  local projects=$1
+  local days=$2
+  export -f delete_old_images_from_gcr
+  echo $projects | xargs -n 1 -P 50 -I {} bash -c 'delete_old_images_from_gcr "$@"' _ "gcr.io/{}" ${days}
 }
 
 # Delete old clusters in the given GCP project
@@ -100,8 +99,8 @@ function delete_old_test_clusters() {
   [[ -z $1 ]] && abort "missing project names"
   [[ -z $2 ]] && abort "missing hours to keep clusters"
 
-  for project in $1; do
-    delete_old_test_clusters_for_project $project $2 &
-  done
-  wait
+  local projects=$1
+  local hours=$2
+  export -f delete_old_test_clusters_for_project
+  echo $projects | xargs -n 1 -P 50 -I {} bash -c 'delete_old_test_clusters_for_project "$@"' _ {} ${hours}
 }
