@@ -57,42 +57,51 @@ function delete_old_gcr_images() {
 
   for project in $1; do
     echo "Start deleting images from ${project}"
-    delete_old_images_from_gcr "gcr.io/${project}" $2
+    delete_old_images_from_gcr "gcr.io/${project}" $2 &
+  done
+  wait
+}
+
+# Delete old clusters in the given GCP project
+# Parameters: $1 - project name
+#             $2 - hours to keep clusters
+function delete_old_test_clusters_for_project() {
+  echo "Start deleting clusters from ${project}"
+
+  is_protected_project $1 && \
+    abort "Target project set to $project, which is forbidden"
+
+  local current_time=$(date +%s)
+  local target_time=$(date -d "`date -d @${current_time}`-$2hours" +%s)
+  # Fail if the difference of current time and target time is not 3600 times hours to keep
+  if (( ! DRY_RUN )); then # Don't check on dry runs, as dry run is used for unit testing
+    [[ "$((3600*$2))" -eq "$(($current_time-$target_time))" ]] || abort "date operation failed"
+  fi
+
+  gcloud --format='get(name,createTime,zone)' container clusters list --project=$1 --limit=99999 | \
+  while read cluster_name cluster_createtime cluster_zone; do
+    [[ -n "${cluster_name}" ]]  && [[ -z "${cluster_zone}" ]] && abort "list cluster output missing cluster zone"
+    echo "Checking ${cluster_name} for removal"
+    local create_time=$(date -d "$cluster_createtime" +%s)
+    [[ $create_time -gt $current_time ]] && abort "cluster creation time shouldn't be newer than current time"
+    [[ $create_time -gt $target_time ]] && echo "skip deleting as it's created within $2 hours" && continue
+    if (( DRY_RUN )); then
+      echo "[DRY RUN] gcloud container clusters delete -q ${cluster_name} -zone ${cluster_zone}"
+    else
+      gcloud container clusters delete -q ${cluster_name} -zone ${cluster_zone}
+    fi
   done
 }
 
 # Delete old clusters in the given GCP projects
 # Parameters: $1 - array of projects names
-#             $2 - hours to keep images
+#             $2 - hours to keep clusters
 function delete_old_test_clusters() {
   [[ -z $1 ]] && abort "missing project names"
   [[ -z $2 ]] && abort "missing hours to keep clusters"
 
   for project in $1; do
-    echo "Start deleting clusters from ${project}"
-
-    is_protected_project $project && \
-      abort "Target project set to $project, which is forbidden"
-
-    local current_time=$(date +%s)
-    local target_time=$(date -d "`date -d @${current_time}`-$2hours" +%s)
-    # Fail if the difference of current time and target time is not 3600 times hours to keep
-    if (( ! DRY_RUN )); then # Don't check on dry runs, as dry run is used for unit testing
-      [[ "$((3600*$2))" -eq "$(($current_time-$target_time))" ]] || abort "date operation failed"
-    fi
-
-    gcloud --format='get(name,createTime,zone)' container clusters list --project=$project --limit=99999 | \
-    while read cluster_name cluster_createtime cluster_zone; do
-      [[ -n "${cluster_name}" ]]  && [[ -z "${cluster_zone}" ]] && abort "list cluster output missing cluster zone"
-      echo "Checking ${cluster_name} for removal"
-      local create_time=$(date -d "$cluster_createtime" +%s)
-      [[ $create_time -gt $current_time ]] && abort "cluster creation time shouldn't be newer than current time"
-      [[ $create_time -gt $target_time ]] && echo "skip deleting as it's created within $2 hours" && continue
-      if (( DRY_RUN )); then
-        echo "[DRY RUN] gcloud container clusters delete -q ${cluster_name} -zone ${cluster_zone}"
-      else
-        gcloud container clusters delete -q ${cluster_name} -zone ${cluster_zone}
-      fi
-    done
+    delete_old_test_clusters_for_project $project $2 &
   done
+  wait
 }
