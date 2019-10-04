@@ -25,7 +25,7 @@ source $(dirname $0)/../../scripts/library.sh
 function delete_old_images_from_gcr() {
   [[ -z $1 ]] && abort "missing gcr name"
   [[ -z $2 ]] && abort "missing days to keep images"
-
+  
   is_protected_gcr $1 && \
     abort "Target GCR set to $1, which is forbidden"
 
@@ -58,6 +58,7 @@ function delete_old_gcr_images() {
   local projects=$1
   local days=$2
   export -f delete_old_images_from_gcr
+  export -f is_protected_gcr
   echo $projects | xargs -n 1 -P 50 -I {} bash -c 'delete_old_images_from_gcr "$@"' _ "gcr.io/{}" ${days}
 }
 
@@ -102,5 +103,6 @@ function delete_old_test_clusters() {
   local projects=$1
   local hours=$2
   export -f delete_old_test_clusters_for_project
+  export -f is_protected_project
   echo $projects | xargs -n 1 -P 50 -I {} bash -c 'delete_old_test_clusters_for_project "$@"' _ {} ${hours}
 }
