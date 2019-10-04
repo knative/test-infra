@@ -58,7 +58,7 @@ function delete_old_gcr_images() {
   local projects=$1
   local days=$2
   export -f delete_old_images_from_gcr
-  echo $projects | xargs -n 1 -P 50 -I {} bash -c 'delete_old_images_from_gcr "$@"' _ "gcr.io/{}" ${days}
+  echo $projects | xargs -n 1 -P 50 -I {} bash -c 'delete_old_images_from_gcr "$@"' _ "gcr.io/{}" ${days}
 }
 
 # Delete old clusters in the given GCP project
