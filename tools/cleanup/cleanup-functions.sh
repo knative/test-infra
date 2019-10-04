@@ -25,7 +25,7 @@ source $(dirname $0)/../../scripts/library.sh
 function delete_old_images_from_gcr() {
   [[ -z $1 ]] && abort "missing gcr name"
   [[ -z $2 ]] && abort "missing days to keep images"
-  
+
   is_protected_gcr $1 && \
     abort "Target GCR set to $1, which is forbidden"
 
