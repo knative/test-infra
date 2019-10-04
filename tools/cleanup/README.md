@@ -34,5 +34,5 @@ more than 24 hours ago.
 
 There is a weekly prow job that triggers this tool runs at 11:00/12:00PM(Day
 light saving) PST every Monday. This tool scans all gcr projects defined in
-[ci/prow/boskos/resources.yaml](/ci/prow/boskos/resources.yaml) and deletes
+[ci/prow/boskos_resources.yaml](/ci/prow/boskos/resources.yaml) and deletes
 images older than 90 days and clusters older than 24 hours.
