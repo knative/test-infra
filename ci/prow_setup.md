@@ -112,7 +112,7 @@
 ## Setting up the issue tracker for a new repo
 
 1. Update [`generateIssueTrackerPeriodicJobs()`](https://github.com/knative/test-infra/blob/585becc692106854a4de992c4dda9106addddb8e/ci/prow/issue_tracker_config.go#L48)
-   in (issue_tracker_config.go)[./prow/issue_tracker_config.go), adding the call
+   in (issue_tracker_config.go)[./prow/issue_tracker_config.go], adding the call
    to generate the config for the new repo.
 
 1. Create the labels `lifecycle/stale`, `lifecycle/rotten` and `lifecycle/frozen` in the new repo.  
