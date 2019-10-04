@@ -80,9 +80,9 @@ echo "Removing images with following rules:"
 echo "- older than ${DAYS_TO_KEEP_IMAGES} days"
 delete_old_gcr_images "${target_projects}" "${DAYS_TO_KEEP_IMAGES}"
 # delete old clusters
-# echo "Removing clusters with following rules:"
-# echo "- older than ${HOURS_TO_KEEP_CLUSTERS} hours"
-# delete_old_test_clusters "${target_projects}" "${HOURS_TO_KEEP_CLUSTERS}"
+echo "Removing clusters with following rules:"
+echo "- older than ${HOURS_TO_KEEP_CLUSTERS} hours"
+delete_old_test_clusters "${target_projects}" "${HOURS_TO_KEEP_CLUSTERS}"
 
 # Gubernator considers job failure if "junit_*.xml" not found under artifact,
 #   create a placeholder file to make this job succeed
