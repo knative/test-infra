@@ -12,7 +12,7 @@
    https://github.com/knative/test-infra/issues/1082.
 
 1. Ensure the GCP projects listed in
-   [resources.yaml](./prow/boskos/resources.yaml) are created.
+   [resources.yaml](./prow/boskos_resources.yaml) are created.
 
 1. Apply [config_start.yaml](./prow/config_start.yaml) to the cluster.
 
@@ -66,7 +66,7 @@
    be done manually and should get automatically approved once the request is
    submitted. For the reason, enter _Need more resources for running tests_.
 
-1. Edit [resources.yaml](./prow/boskos/resources.yaml) with the new projects.
+1. Edit [resources.yaml](./prow/boskos_resources.yaml) with the new projects.
    Conveniently ready for cut-and-paste from the output file in the previous
    step.
 
