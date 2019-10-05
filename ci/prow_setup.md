@@ -16,9 +16,6 @@
 
 1. Apply [config_start.yaml](./prow/config_start.yaml) to the cluster.
 
-1. Apply Boskos [config_start.yaml](./prow/boskos/config_start.yaml) to the
-   cluster.
-
 1. Run `make update-all-cluster-deployments`, `make update-boskos-resource`,
    `make update-config`, `make update-plugins` and
    `make update-all-boskos-deployments`.
@@ -29,12 +26,8 @@
 
 ## Adding new Kubernetes resources
 
-1. If it's Boskos related, check under
-   [prow/boskos/deployments](./prow/boskos/deployments) and add a new file there
+1. Check under [prow/deployments](./prow/deployments) and add a new file there
    if not exist.
-
-1. If not Boskos related, check under [prow/deployments](./prow/deployments) and
-   add a new file there if not exist.
 
 1. If the change involves adding new namespace, add it in
    [prow/config_start.yaml](./prow/config_start.yaml).
