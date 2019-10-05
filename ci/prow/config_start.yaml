@@ -12,11 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Initial configuration of prow cluster.
-# Intended to be used when (re)creating the cluster.
+# Initial configuration of Prow cluster.
+# Most of the settings -- specially accounts and roles -- come from the Kubernetes
+# Prow cluster configs at https://github.com/kubernetes/test-infra/tree/master/prow/cluster
 
 # Configs
 
+# Prow plugins
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -24,12 +26,22 @@ metadata:
 data:
   plugins: ""
 ---
+# Prow config
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: config
 data:
   config: ""
+---
+# Boskos resources
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: resources
+  namespace: test-pods
+data:
+  resources: ""
 ---
 
 # Namespaces
@@ -54,38 +66,31 @@ metadata:
   namespace: test-pods
 ---
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: "boskos"
-  namespace: test-pods
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: boskos
+  name: crd-creator
 subjects:
 - kind: ServiceAccount
-  name: "boskos"
+  name: boskos
   namespace: test-pods
+roleRef:
+  kind: ClusterRole
+  name: boskos
+  apiGroup: rbac.authorization.k8s.io
 ---
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: "boskos"
-  namespace: test-pods
+  name: boskos
 rules:
-  - apiGroups:
-      - apiextensions.k8s.io
-    resources:
-      - customresourcedefinitions
-    verbs:
-      - create
-  - apiGroups:
-      - boskos.k8s.io
-    resources:
-      - resources
-    verbs:
-      - "*"
+- apiGroups: ["apiextensions.k8s.io"]
+  verbs: ["*"]
+  resources: ["customresourcedefinitions"]
+- apiGroups: ["boskos.k8s.io"]
+  verbs: ["*"]
+  resources: ["*"]
 ---
+
 kind: ServiceAccount
 apiVersion: v1
 metadata:
@@ -119,6 +124,7 @@ rules:
     verbs:
       - get
 ---
+
 kind: ServiceAccount
 apiVersion: v1
 metadata:
@@ -127,6 +133,20 @@ metadata:
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
+  namespace: default
+  name: "deck"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: "deck"
+subjects:
+- kind: ServiceAccount
+  name: "deck"
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  namespace: test-pods
   name: "deck"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -140,6 +160,25 @@ subjects:
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
+  namespace: default
+  name: "deck"
+rules:
+  - apiGroups:
+      - "prow.k8s.io"
+    resources:
+      - prowjobs
+    verbs:
+      - get
+      - list
+      # Required when deck runs with `--rerun-creates-job=true`
+      # **Warning:** Only use this for non-public deck instances, this allows
+      # anyone with access to your Deck instance to create new Prowjobs
+      # - create
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  namespace: test-pods
   name: "deck"
 rules:
   - apiGroups:
@@ -148,14 +187,8 @@ rules:
       - pods/log
     verbs:
       - get
-  - apiGroups:
-      - "prow.k8s.io"
-    resources:
-      - prowjobs
-    verbs:
-      - get
-      - list
 ---
+
 kind: ServiceAccount
 apiVersion: v1
 metadata:
@@ -187,6 +220,7 @@ subjects:
   name: "horologium"
   namespace: default
 ---
+
 kind: ServiceAccount
 apiVersion: v1
 metadata:
@@ -195,16 +229,9 @@ metadata:
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
+  namespace: default
   name: "plank"
 rules:
-  - apiGroups:
-      - ""
-    resources:
-      - pods
-    verbs:
-      - create
-      - delete
-      - list
   - apiGroups:
       - "prow.k8s.io"
     resources:
@@ -214,10 +241,40 @@ rules:
       - create
       - list
       - update
+      - patch
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  namespace: test-pods
+  name: "plank"
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - create
+      - delete
+      - list
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
+  namespace: default
+  name: "plank"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: "plank"
+subjects:
+- kind: ServiceAccount
+  name: "plank"
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  namespace: test-pods
   name: "plank"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -228,6 +285,7 @@ subjects:
   name: "plank"
   namespace: default
 ---
+
 kind: ServiceAccount
 apiVersion: v1
 metadata:
@@ -236,6 +294,39 @@ metadata:
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
+  namespace: default
+  name: "sinker"
+rules:
+  - apiGroups:
+      - "prow.k8s.io"
+    resources:
+      - prowjobs
+    verbs:
+      - delete
+      - list
+      - watch
+      - get
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    resourceNames:
+      - prow-sinker-leaderlock
+    verbs:
+      - get
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - events
+    verbs:
+      - create
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  namespace: test-pods
   name: "sinker"
 rules:
   - apiGroups:
@@ -245,17 +336,24 @@ rules:
     verbs:
       - delete
       - list
-  - apiGroups:
-      - "prow.k8s.io"
-    resources:
-      - prowjobs
-    verbs:
-      - delete
-      - list
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
+  namespace: default
+  name: "sinker"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: "sinker"
+subjects:
+- kind: ServiceAccount
+  name: "sinker"
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  namespace: test-pods
   name: "sinker"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -266,6 +364,7 @@ subjects:
   name: "sinker"
   namespace: default
 ---
+
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -302,6 +401,7 @@ subjects:
 - kind: ServiceAccount
   name: "hook"
 ---
+
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -340,6 +440,7 @@ subjects:
   name: "tide"
   namespace: default
 ---
+
 kind: ServiceAccount
 apiVersion: v1
 metadata:

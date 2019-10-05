@@ -12,40 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-CLUSTER            ?= prow
-PROJECT            ?= knative-tests
-ZONE               ?= us-central1-f
-JOB_NAMESPACE      ?= test-pods
-KNATIVE_CONFIG     ?= config_knative.yaml
-SKIP_CONFIG_BACKUP ?=
+include ../Makefile.base
 
-PROW_DIR         ?= $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-PROW_PLUGINS     ?= $(PROW_DIR)/plugins.yaml
-PROW_CONFIG      ?= $(PROW_DIR)/config.yaml
-PROW_DEPLOYS     ?= $(PROW_DIR)/deployments
-PROW_GCS         ?= knative-prow
-PROW_CONFIG_GCS  ?= gs://$(PROW_GCS)/configs
-
-TESTGRID_CONFIG  ?= $(PROW_DIR)/../testgrid/config.yaml
-
-BOSKOS_DIR       ?= $(PROW_DIR)/boskos
-BOSKOS_DEPLOYS   ?= $(BOSKOS_DIR)/deployments
-BOSKOS_RESOURCES ?= $(BOSKOS_DIR)/resources.yaml
-
-SET_CONTEXT   := gcloud container clusters get-credentials "$(CLUSTER)" --project="$(PROJECT)" --zone="$(ZONE)"
-UNSET_CONTEXT := kubectl config unset current-context
-
-default:
-	@echo "You must specify a target"
-
-get-cluster-credentials:
-	$(SET_CONTEXT)
-
-unset-cluster-credentials:
-	$(UNSET_CONTEXT)
-
+# Generate the Prow config file
 config:
-	go run *_config.go --prow-config-output=$(PROW_CONFIG) --testgrid-config-output=$(TESTGRID_CONFIG) --gcs-bucket=$(PROW_GCS) --image-docker=gcr.io/$(PROJECT)/test-infra $(KNATIVE_CONFIG)
+	go run *_config.go --prow-config-output=$(PROW_CONFIG) --testgrid-config-output=$(TESTGRID_CONFIG) --gcs-bucket=$(PROW_GCS) --testgrid-gcs-bucket=$(TESTGRID_GCS) --image-docker=gcr.io/$(PROJECT)/test-infra $(KNATIVE_CONFIG)
 
 # Update all prow job configs
 update-config:
@@ -77,15 +48,10 @@ update-plugins:
 # Update all deployments of boskos
 update-all-boskos-deployments:
 	$(SET_CONTEXT)
-	@for f in $(shell ls $(BOSKOS_DEPLOYS)/*.yaml); do kubectl apply -f $${f}; done
+	@for f in $(shell ls $(PROW_DEPLOYS)/boskos*.yaml); do kubectl apply -f $${f}; done
 	$(UNSET_CONTEXT)
 
-# Update single deployment of boskos, expect passing in ${NAME} like `make update-single-boskos-deployment NAME=janitor`
-update-single-boskos-deployment:
-	$(SET_CONTEXT)
-	kubectl apply -f $(BOSKOS_DEPLOYS)/$(NAME).yaml
-	$(UNSET_CONTEXT)
-
+# Update the list of resources for Boskos
 update-boskos-resource:
 	$(SET_CONTEXT)
 	kubectl create configmap resources --from-file=config=$(BOSKOS_RESOURCES) --dry-run -o yaml | kubectl --namespace="$(JOB_NAMESPACE)" replace configmap resources -f -
@@ -106,6 +72,7 @@ update-single-cluster-deployment:
 # Update all resources on Prow cluster except boskos resource
 update-full: update-all-cluster-deployments update-all-boskos-deployments update-plugins update-config
 
+# Ensure that configs are valid and up-to-date
 test:
 	@echo "*** Checking config generator for prow and testgrid"
 	$(eval TMP_YAML_PROW := $(shell mktemp))

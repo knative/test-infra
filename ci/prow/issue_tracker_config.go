@@ -46,23 +46,21 @@ type repoIssue struct {
 // generateIssueTrackerPeriodicJobs generates the periodic issue tracker jobs to automatically manage issue lifecycles.
 // It's a mirror of K8S fejta bot https://github.com/kubernetes/test-infra/blob/master/config/jobs/kubernetes/test-infra/fejta-bot-periodics.yaml.
 func generateIssueTrackerPeriodicJobs() {
-	// generate for test-infra r.name
-	r := repoIssue{
+	// generate for knative/test-infra
+	repoIssue{
 		name:        "knative/test-infra",
 		daysToStale: staleDefault,
 		daysToRot:   rotDefault,
 		daysToClose: closeDefault,
-	}
-	r.generateJobs()
+	}.generateJobs()
 
-	// generate for docs r.name
-	r = repoIssue{
+	// generate for knative/docs
+	repoIssue{
 		name:        "knative/docs",
 		daysToStale: staleDefault,
 		daysToRot:   rotDefault,
 		daysToClose: closeDefault,
-	}
-	r.generateJobs()
+	}.generateJobs()
 }
 
 // generateJobs generates all the issue tracker jobs per repoIssue
