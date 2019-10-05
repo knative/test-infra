@@ -304,8 +304,6 @@ periodics:
       dot-dev: true
     - auto-release: true
       dot-dev: true
-    - performance: true
-      dot-dev: true
 
   knative/eventing-contrib:
     - continuous: true
