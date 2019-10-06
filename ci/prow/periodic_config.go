@@ -220,7 +220,7 @@ func generateCleanupPeriodicJob() {
 	data.Base.DecorationConfig = []string{"timeout: 432000000000000"} // 120 hours
 	data.Base.Command = cleanupScript
 	data.Base.Args = []string{
-		"--project-resource-yaml ci/prow/boskos/resources.yaml",
+		"--project-resource-yaml ci/prow/boskos_resources.yaml",
 		"--days-to-keep-images 30",
 		"--hours-to-keep-clusters 24",
 		"--service-account " + data.Base.ServiceAccount,
