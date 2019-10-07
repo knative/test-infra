@@ -39,10 +39,10 @@ build:
 build_no_cache:
 	$(call build_helper,--no-cache)
 
-push_versioned: build
+push_versioned: build_no_cache
 	docker push $(IMG):$(TAG)
 
-push_latest: build
+push_latest: build_no_cache
 	docker push $(IMG):latest
 
 push: push_versioned push_latest
