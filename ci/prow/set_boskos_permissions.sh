@@ -17,6 +17,10 @@
 set -e
 
 readonly PROJECT=${1:?"First argument must be the boskos project name."}
+# Remaining arguments are resources to be added, just like the RESOURCES array below.
+# For example, this command add an extra editor to the project:
+# $ set_boskos_permissions.sh my-boskos roles/editor my@service-account.com
+shift
 
 if [[ ! -f $HOME/.config/gcloud/application_default_credentials.json ]]; then
   echo "ERROR: Application default credentials not available, please run 'gcloud auth application-default login'"
@@ -61,7 +65,7 @@ readonly RESOURCES=(
 
 # Start with a non-existing role, so gcloud clearly fails if resources are set incorrectly.
 role="unknown"
-for res in ${RESOURCES[@]}; do
+for res in ${RESOURCES[@]} $*; do
   if [[ ${res} == roles/* ]]; then
     role=${res}
     continue
