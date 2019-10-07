@@ -138,6 +138,8 @@ func (gs *GKEClient) Setup(r GKERequest) ClusterOperations {
 // existing cluster/project or creating new ones.
 func (gc *GKECluster) initialize() error {
 	// Try obtain project name via `kubectl`, `gcloud`
+	log.Printf("given cluster name is: %q", gc.Request.ClusterName)
+	log.Printf("given project is: %v", gc.Project)
 	if gc.Project == nil {
 		if err := gc.checkEnvironment(); err != nil {
 			return fmt.Errorf("failed checking existing cluster: '%v'", err)

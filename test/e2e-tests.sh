@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright 2018 The Knative Authors
+# Copyright 2019 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -36,6 +36,12 @@ function knative_setup() {
   start_latest_knative_serving
 }
 
+# Run a prow-cluster-operation tool, installing it first if necessary.
+#             $1..$n - parameters passed to the tool.
+function run_prow_cluster_tool() {
+  run_go_tool knative.dev/test-infra/test/prow-cluster-operation prow-cluster-operation $@
+}
+
 # Add function call to trap
 # Parameters: $1 - Function to call
 #             $2 - Signal for trap
@@ -59,7 +65,7 @@ function create_test_cluster() {
   (( SKIP_ISTIO_ADDON )) || creation_args+=" --addons istio"
   [[ -n "${GCP_PROJECT}" ]] && creation_args+=" --project ${GCP_PROJECT}"
   echo "creation args: ${creation_args}"
-  go run "${REPO_ROOT_DIR}/test/cluster-creator" ${creation_args} || fail_test "failed creating test cluster"
+  run_prow_cluster_tool create ${creation_args} || fail_test "failed creating test cluster"
   # Should have kubeconfig set already
   local k8s_cluster=$(kubectl config current-context)
   [[ -z "${k8s_cluster}" ]] && abort "kubectl must have been set at this point"
@@ -69,7 +75,8 @@ function create_test_cluster() {
 
   # Since this function is called assuming cluster creation, force removing
   # cluster afterwards, cluster-remover by default forces cleaning up everything
-  add_trap "(go run ${REPO_ROOT_DIR}/test/cluster-remover > /dev/null &)" EXIT
+  # TODO(chaodaiG) calling async method so that it doesn't wait
+  add_trap "(run_prow_cluster_tool delete > /dev/null &)" EXIT
 }
 
 # Override setup_test_cluster, this function is almost copy paste from original
@@ -86,7 +93,7 @@ function setup_test_cluster() {
 
   # Run cluster-creator for acquiring existing test cluster, will fail if
   # kubeconfig isn't set or cluster doesn't exist
-  go run "${REPO_ROOT_DIR}/test/cluster-creator" --skip-creation || fail_test "failed creating test cluster" # NA
+  run_prow_cluster_tool get || fail_test "failed getting test cluster" # NA
   # The step above collects cluster metadata and writes to
   # ${ARTIFACTS}/meta.json file, use this information
   echo "Cluster used for running tests: $(cat ${ARTIFACTS}/meta.json)"

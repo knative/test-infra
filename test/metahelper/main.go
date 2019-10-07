@@ -25,19 +25,16 @@ func main() string {
 		gotVal, err := c.Get(*getKeyOpt)
 		if err != nil {
 			log.Fatalf(err)
-		} else {
-			return gotVal
 		}
+		return gotVal
 	case *saveKeyOpt != "":
 		if *valOpt == "" {
 			log.Fatal("--val must be supplied when using --save")
 		}
-		log.Printf("Writing files to %1", c.getLocalArtifactsDir())
-		err := c.Set(*saveKeyOpt, *valOpt)
-		if err != nil {
+		log.Printf("Writing files to %s", c.Path)
+		if err := c.Set(*saveKeyOpt, *valOpt); err != nil {
 			log.Fatalf(err)
-		} else {
-			return ""
 		}
+		return ""
 	}
 }

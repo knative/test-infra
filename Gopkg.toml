@@ -35,3 +35,7 @@ required = [
 [[prune.project]]
   name = "github.com/google/licenseclassifier"
   non-go = false
+
+[[constraint]]
+  name = "github.com/spf13/cobra"
+  version = "0.0.5"

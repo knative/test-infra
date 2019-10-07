@@ -8,32 +8,21 @@ import (
 	"log"
 	"os"
 	"path"
+
+	// TODO(chaodaiG): use prow from pkg once
+	// https://github.com/knative/pkg/pull/750 is merged
+	"knative.dev/test-infra/shared/prow"
 )
 
 const (
-	// ArtifactsDir is the dir containing artifacts
-	ArtifactsDir = "artifacts"
-	Filename     = "meta.json"
+	Filename = "meta.json"
 )
 
 // client holds metadata as a string:string map, as well as path for storing
 // metadata
 type client struct {
 	MetaData map[string]string
-	path     string
-}
-
-// getLocalArtifactsDir gets the artifacts directory where prow looks for artifacts.
-// By default, it will look at the env var ARTIFACTS.
-// This is copy pasted from test-infra/shared/prow
-// TODO(chaodaiG): refactor this so that they can be shared
-func getLocalArtifactsDir() string {
-	dir := os.Getenv("ARTIFACTS")
-	if dir == "" {
-		log.Printf("Env variable ARTIFACTS not set. Using %s instead.", ArtifactsDir)
-		dir = ArtifactsDir
-	}
-	return dir
+	Path     string
 }
 
 // NewClient creates a client, takes custom directory for storing `metadata.json`.
@@ -44,9 +33,9 @@ func NewClient(dir string) (*client, error) {
 		MetaData: make(map[string]string),
 	}
 	if dir == "" {
-		dir = getLocalArtifactsDir()
+		dir = prow.GetLocalArtifactsDir()
 	}
-	c.path = path.Join(dir, Filename)
+	c.Path = path.Join(dir, Filename)
 	_, err := os.Stat(dir)
 	if err == nil || os.IsNotExist(err) {
 		if os.IsNotExist(err) {
@@ -67,14 +56,14 @@ func NewClient(dir string) (*client, error) {
 // Meta if file doesn't exist yet, and returns error if there is any i/o or
 // unmarshall error
 func (c *client) sync() error {
-	_, err := os.Stat(c.path)
+	_, err := os.Stat(c.Path)
 	if os.IsNotExist(err) {
 		log.Println("write file")
 		body, _ := json.Marshal(&c.MetaData)
-		err = ioutil.WriteFile(c.path, body, 0777)
+		err = ioutil.WriteFile(c.Path, body, 0777)
 	} else {
 		var body []byte
-		body, err = ioutil.ReadFile(c.path)
+		body, err = ioutil.ReadFile(c.Path)
 		if err == nil {
 			err = json.Unmarshal(body, &c.MetaData)
 		}
@@ -94,7 +83,7 @@ func (c *client) Set(key, val string) error {
 	}
 	c.MetaData[key] = val
 	body, _ := json.Marshal(c.MetaData)
-	return ioutil.WriteFile(c.path, body, 0777)
+	return ioutil.WriteFile(c.Path, body, 0777)
 }
 
 // Get gets val for key
