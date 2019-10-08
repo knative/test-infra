@@ -44,11 +44,15 @@ func generatePRBody(extraMsgs []string) string {
 	var body string
 	if len(extraMsgs) > 0 {
 		body += "Info:\n"
-		for _, msg := range sets.NewString(extraMsgs).List() {
+		for _, msg := range sets.NewString(extraMsgs...).List() {
 			body += fmt.Sprintf("%s\n", msg)
 		}
 		body += "\n"
 	}
+
+	body += "\nPlease check [Prow release notes]" +
+		"(https://github.com/kubernetes/test-infra/blob/master/prow/ANNOUNCEMENTS.md)" +
+		"to make sure there is no breaking changes\n"
 
 	oncaller, err := getOncaller()
 	var assignment string
