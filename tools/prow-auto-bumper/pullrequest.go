@@ -27,6 +27,8 @@ import (
 	"os/exec"
 	"strings"
 
+	"k8s.io/apimachinery/pkg/util/sets"
+
 	"github.com/google/go-github/github"
 	"knative.dev/pkg/test/ghutil"
 )
@@ -42,7 +44,7 @@ func generatePRBody(extraMsgs []string) string {
 	var body string
 	if len(extraMsgs) > 0 {
 		body += "Info:\n"
-		for _, msg := range extraMsgs {
+		for _, msg := range sets.NewString(extraMsgs).List() {
 			body += fmt.Sprintf("%s\n", msg)
 		}
 		body += "\n"
