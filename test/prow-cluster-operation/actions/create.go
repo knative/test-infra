@@ -34,6 +34,7 @@ func writeMetaData(cluster *container.Cluster, project string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.Printf("Writing metadata to: %q", c.Path)
 	// Get minNodes and maxNodes counts from default-pool, this is
 	// usually the case in tests in Prow
 	var minNodes, maxNodes string
@@ -76,7 +77,7 @@ func writeMetaData(cluster *container.Cluster, project string) {
 			log.Fatalf("failed saving metadata %q:%q. err: '%v'", key, val, err)
 		}
 	}
-	log.Println("done writing data to meta.json")
+	log.Println("Done writing metadata")
 }
 
 func Create(o *options.RequestWrapper) {
@@ -93,7 +94,6 @@ func Create(o *options.RequestWrapper) {
 	// metadata so that following flow can understand the context of cluster, as
 	// well as for Prow usage later
 	// TODO(chaodaiG): this logic may need to be part of clustermanager lib as well
-	log.Println("writing data to meta.json")
 	writeMetaData(gkeOps.Cluster, *gkeOps.Project)
 
 	// set up kube config points to cluster
@@ -101,5 +101,8 @@ func Create(o *options.RequestWrapper) {
 	if out, err := common.StandardExec("gcloud", "beta", "container", "clusters", "get-credentials",
 		gkeOps.Cluster.Name, "--region", gkeOps.Cluster.Location, "--project", *gkeOps.Project); err != nil {
 		log.Fatalf("failed connect to cluster: '%v', '%v'", string(out), err)
+	}
+	if out, err := common.StandardExec("gcloud", "config", "set", "project", *gkeOps.Project); err != nil {
+		log.Fatalf("failed set gcloud: '%v', '%v'", string(out), err)
 	}
 }

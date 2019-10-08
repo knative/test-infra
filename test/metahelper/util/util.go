@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	Filename = "meta.json"
+	Filename = "metadata.json"
 )
 
 // client holds metadata as a string:string map, as well as path for storing
@@ -26,13 +26,14 @@ type client struct {
 }
 
 // NewClient creates a client, takes custom directory for storing `metadata.json`.
-// It reads existing `meta.json` file if it exists, otherwise creates it.
+// It reads existing `metadata.json` file if it exists, otherwise creates it.
 // Errors out if there is any file i/o problem other than file not exist error.
 func NewClient(dir string) (*client, error) {
 	c := &client{
 		MetaData: make(map[string]string),
 	}
 	if dir == "" {
+		log.Println("Getting artifacts dir from prow")
 		dir = prow.GetLocalArtifactsDir()
 	}
 	c.Path = path.Join(dir, Filename)

@@ -138,36 +138,12 @@ func (gs *GKEClient) Setup(r GKERequest) ClusterOperations {
 // existing cluster/project or creating new ones.
 func (gc *GKECluster) initialize() error {
 	// Try obtain project name via `kubectl`, `gcloud`
-	log.Printf("given cluster name is: %q", gc.Request.ClusterName)
-	log.Printf("given project is: %v", gc.Project)
-	if gc.Project == nil {
-		if err := gc.checkEnvironment(); err != nil {
-			return fmt.Errorf("failed checking existing cluster: '%v'", err)
-		} else if gc.Cluster != nil { // Return if Cluster was already set by kubeconfig
-			// If clustername provided and kubeconfig set, ignore kubeconfig
-			if gc.Request != nil && gc.Request.ClusterName != "" && gc.Cluster.Name != gc.Request.ClusterName {
-				gc.Cluster = nil
-			}
-			if gc.Cluster != nil {
-				return nil
-			}
-		}
-	}
-	// Get project name from boskos if running in Prow
-	if gc.Project == nil && common.IsProw() {
-		project, err := gc.boskosOps.AcquireGKEProject(nil)
-		if err != nil {
-			return fmt.Errorf("failed acquiring boskos project: '%v'", err)
-		}
-		gc.Project = &project.Name
-	}
-	if gc.Project == nil || *gc.Project == "" {
-		return errors.New("gcp project must be set")
+	if err := gc.checkEnvironment(); err != nil {
+		return fmt.Errorf("failed checking existing cluster: '%v'", err)
 	}
 	if !common.IsProw() && gc.Cluster == nil {
 		gc.NeedsCleanup = true
 	}
-	log.Printf("Using project %q for running test", *gc.Project)
 	return nil
 }
 
@@ -184,17 +160,30 @@ func (gc *GKECluster) Acquire() error {
 	if err := gc.initialize(); err != nil {
 		return fmt.Errorf("failed initializing with environment: '%v'", err)
 	}
-	gc.ensureProtected()
-	var err error
 	// Check if using existing cluster
 	if gc.Cluster != nil {
+		gc.ensureProtected()
 		return nil
 	}
-	if gc.Request.SkipCreation {
-		log.Println("Skipping cluster creation as SkipCreation is set")
-		return nil
+	if gc.Request.SkipCreation { // If comes here cluster isn't identified, should fail
+		return errors.New("failed acquiring existing cluster")
 	}
 
+	// Get project name from boskos if running in Prow
+	if gc.Request == nil || gc.Request.Project == "" {
+		if !common.IsProw() {
+			return errors.New("gcp project must be set")
+		}
+		project, err := gc.boskosOps.AcquireGKEProject(nil)
+		if err != nil {
+			return fmt.Errorf("failed acquiring boskos project: '%v'", err)
+		}
+		gc.Project = &project.Name
+	}
+	gc.ensureProtected()
+	log.Printf("Creating cluster in project: %v", *gc.Project)
+
+	var err error
 	// Make a deep copy of the request struct, since the original request is supposed to be immutable
 	request := gc.Request.DeepCopy()
 	// Perform GKE specific cluster creation logics
@@ -331,13 +320,21 @@ func (gc *GKECluster) checkEnvironment() error {
 			if len(parts) != 4 { // fall through with warning
 				log.Printf("WARNING: ignoring kubectl current-context since it's malformed: '%s'", currentContext)
 			} else {
-				log.Printf("kubeconfig isn't empty, uses this cluster for running tests: %s", currentContext)
-				gc.Project = &parts[1]
+				log.Printf("kubeconfig is: %q", currentContext)
+				project := parts[1]
 				location, clusterName := parts[2], parts[3]
 				region, zone := gke.RegionZoneFromLoc(location)
-				gc.Cluster, err = gc.operations.GetCluster(*gc.Project, region, zone, clusterName)
-				if err != nil {
-					return fmt.Errorf("couldn't find cluster %s in %s in %s, does it exist? %v", clusterName, *gc.Project, location, err)
+				// If project name is provided and doesn't match, don't use this one
+				if gc.Request == nil || gc.Request.Project == "" || gc.Request.Project == project {
+					cluster, err := gc.operations.GetCluster(project, region, zone, clusterName)
+					if err != nil {
+						return fmt.Errorf("couldn't find cluster %s in %s in %s, does it exist? %v", clusterName, *gc.Project, location, err)
+					}
+					// If clustername provided and kubeconfig set, ignore kubeconfig
+					if gc.Request == nil || gc.Request.ClusterName == "" || gc.Request.ClusterName == cluster.Name {
+						gc.Cluster = cluster
+						gc.Project = &project
+					}
 				}
 				return nil
 			}
@@ -346,6 +343,10 @@ func (gc *GKECluster) checkEnvironment() error {
 	if err != nil && len(output) > 0 {
 		// this is unexpected error, should shout out directly
 		return fmt.Errorf("failed running kubectl config current-context: '%s'", string(output))
+	}
+
+	if gc.Request != nil && gc.Request.Project != "" {
+		return nil
 	}
 
 	// if gcloud is pointing to a project, use it
@@ -357,6 +358,5 @@ func (gc *GKECluster) checkEnvironment() error {
 		project := strings.Trim(strings.TrimSpace(string(output)), "\n\r")
 		gc.Project = &project
 	}
-
 	return nil
 }

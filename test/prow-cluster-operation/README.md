@@ -39,7 +39,7 @@ This tool can be invoked from command line with following parameters:
 1. Get default cluster name if not provided as a parameter
 1. Delete cluster if cluster with same name and location already exists in GKE
 1. Create cluster
-1. Write cluster metadata to `${ARTIFACT}/meta.json`
+1. Write cluster metadata to `${ARTIFACT}/metadata.json`
 
 ### Delete
 

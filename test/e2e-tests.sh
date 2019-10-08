@@ -25,10 +25,10 @@
 
 source $(dirname $0)/../scripts/e2e-tests.sh
 
-# Read meta.json and get value for key
+# Read metadata.json and get value for key
 # Parameters: $1 - Key for metadata
 function get_meta_value() {
-  local metadata="${ARTIFACTS}/meta.json"
+  local metadata="${ARTIFACTS}/metadata.json"
   cat ${metadata} | grep -oEi "\"${1}\" ?: ?\".*\"" | cut -d "\"" -f 4
 }
 
@@ -44,16 +44,20 @@ function run_prow_cluster_tool() {
 
 # Add function call to trap
 # Parameters: $1 - Function to call
-#             $2 - Signal for trap
+#             $2...%n - Signals for trap
 function add_trap {
-  local current_trap="$(trap -p $2 | cut -d\' -f2)"
   local cmd=$1
-  [[ -n "${current_trap}" ]] && cmd="${current_trap};${cmd}"
-  trap -- "${cmd}" $2
+  shift 1
+  for trap_signal in "$@"; do
+    local current_trap="$(trap -p $trap_signal | cut -d\' -f2)"
+    local new_cmd=$cmd
+    [[ -n "${current_trap}" ]] && new_cmd="${current_trap};${new_cmd}"
+    trap -- "${new_cmd}" $trap_signal
+  done
 }
 
 # Override create_test_cluster in scripts/e2e-tests.sh
-# Create test cluster with cluster creation lib and write metadata in ${ARTIFACT}/meta.json
+# Create test cluster with cluster creation lib and write metadata in ${ARTIFACT}/metadata.json
 function create_test_cluster() {
   # Fail fast during setup.
   set -o errexit
@@ -76,12 +80,12 @@ function create_test_cluster() {
   # Since this function is called assuming cluster creation, force removing
   # cluster afterwards, cluster-remover by default forces cleaning up everything
   # TODO(chaodaiG) calling async method so that it doesn't wait
-  add_trap "(run_prow_cluster_tool delete > /dev/null &)" EXIT
+  add_trap "(run_prow_cluster_tool delete > /dev/null &)" EXIT SIGINT
 }
 
 # Override setup_test_cluster, this function is almost copy paste from original
 # setup_test_cluster function, other than reading metadata from
-# "${ARTIFACTS}/meta.json" instead of from global vars
+# "${ARTIFACTS}/metadata.json" instead of from global vars
 # Note: lines ending with "# NA" are "New Added", and lines ending with "# NC"
 # are "New Changes" based on current setup_test_cluster
 function setup_test_cluster() {
@@ -95,8 +99,8 @@ function setup_test_cluster() {
   # kubeconfig isn't set or cluster doesn't exist
   run_prow_cluster_tool get || fail_test "failed getting test cluster" # NA
   # The step above collects cluster metadata and writes to
-  # ${ARTIFACTS}/meta.json file, use this information
-  echo "Cluster used for running tests: $(cat ${ARTIFACTS}/meta.json)"
+  # ${ARTIFACTS}/metadata.json file, use this information
+  echo "Cluster used for running tests: $(cat ${ARTIFACTS}/metadata.json)"
   local e2e_cluster_name=$(get_meta_value "E2E:Machine")  # NA
   local e2e_cluster_region=$(get_meta_value "E2E:Region")  # NA
   local e2e_cluster_zone=$(get_meta_value "E2E:Zone")  # NA
