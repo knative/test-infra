@@ -87,14 +87,16 @@ test_function ${FAILURE} "error: cannot have both --branch and --auto-release se
 test_function ${FAILURE} "error: missing parameter" parse_flags --from-nightly
 test_function ${FAILURE} "error: nightly tag" parse_flags --from-nightly aaa
 
+test_function ${FAILURE} "error: missing parameter" parse_flags --test-args
+
 token_file=$(mktemp)
 echo -e "abc " > ${token_file}
 test_function ${SUCCESS} ":abc:" call_function_post "echo :\$GITHUB_TOKEN:" parse_flags --github-token ${token_file}
 
 echo ">> Testing GCR/GCS values"
 
-test_function ${SUCCESS} "GCR flag is ignored" parse_flags --release-gcr foo
-test_function ${SUCCESS} "GCS flag is ignored" parse_flags --release-gcs foo
+test_function ${SUCCESS} "Not publishing the release, GCR/ACR flags ignored" parse_flags --release-gcr foo
+test_function ${SUCCESS} "Not publishing the release, GCS/BLOB flags ignored" parse_flags --release-gcs foo
 
 test_function ${SUCCESS} ":ko.local:" call_function_post "echo :\$KO_DOCKER_REPO:" parse_flags
 test_function ${SUCCESS} "::" call_function_post "echo :\$RELEASE_GCS_BUCKET:" parse_flags
@@ -104,6 +106,11 @@ test_function ${SUCCESS} ":knative-nightly/test-infra:" call_function_post "echo
 
 test_function ${SUCCESS} ":foo:" call_function_post "echo :\$KO_DOCKER_REPO:" parse_flags --release-gcr foo --publish
 test_function ${SUCCESS} ":foo:" call_function_post "echo :\$RELEASE_GCS_BUCKET:" parse_flags --release-gcs foo --publish
+
+echo ">> Testing ACR/BLOB values"
+
+test_function ${SUCCESS} "Not publishing the release, GCR/ACR flags ignored" parse_flags --release-acr foo
+test_function ${SUCCESS} "Not publishing the release, GCS/BLOB flags ignored" parse_flags --release-azblob foo
 
 echo ">> Testing publishing to GitHub"
 
