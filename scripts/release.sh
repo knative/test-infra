@@ -42,6 +42,14 @@ function banner() {
 # $KO_DOCKER_REPO is the registry containing the images to tag with $TAG.
 # Parameters: $1..$n - files to parse for images (non .yaml files are ignored).
 function tag_images_in_yamls() {
+  if [[ -n ${AZ_ACR_NAME} ]]; then
+    tag_images_in_yamls_acr $@
+  else
+    tag_images_in_yamls_gcr $@
+  fi
+}
+
+function tag_images_in_yamls_gcr() {
   [[ -z ${TAG} ]] && return 0
   local SRC_DIR="${GOPATH}/src/"
   local DOCKER_BASE="${KO_DOCKER_REPO}/${REPO_ROOT_DIR/$SRC_DIR}"
@@ -58,9 +66,34 @@ function tag_images_in_yamls() {
   done
 }
 
+function tag_images_in_yamls_acr() {
+  [[ -z ${TAG} ]] && return 0
+  local SRC_DIR="${GOPATH}/src/"
+  echo "Tagging any images under '${KO_DOCKER_REPO}' with ${TAG}"
+  for file in $@; do
+    [[ "${file##*.}" != "yaml" ]] && continue
+    echo "Inspecting ${file}"
+    for image in $(grep -o "${KO_DOCKER_REPO}/[0-9a-z\./-]*@sha256:[0-9a-f]*" ${file}); do
+      local dest_image=$(echo ${image} | cut -d"/" -f2 | cut -d"@" -f1)
+      echo tagging ${dest_image}:${TAG}
+      az acr import -n ${AZ_ACR_NAME} --source ${image} -t ${dest_image}:${TAG}
+    done
+  done
+}
+
 # Copy the given files to the $RELEASE_GCS_BUCKET bucket's "latest" directory.
 # If $TAG is not empty, also copy them to $RELEASE_GCS_BUCKET bucket's "previous" directory.
 # Parameters: $1..$n - files to copy.
+function publish_to_storage() {
+  if [[ -n ${RELEASE_AZ_BLOB_URL} ]]; then
+    echo "- Using AZURE BLOB '${RELEASE_AZ_BLOB_URL}' as publish target"
+    publish_to_azblob $@
+  else
+    echo "- Using GCS bucket '${RELEASE_GCS_BUCKET}' as publish target"
+    publish_to_gcs $@
+  fi
+}
+
 function publish_to_gcs() {
   function verbose_gsutil_cp {
     local DEST="gs://${RELEASE_GCS_BUCKET}/$1/"
@@ -78,7 +111,29 @@ function publish_to_gcs() {
   [[ -n ${TAG} ]] && verbose_gsutil_cp previous/${TAG} $@
 }
 
+function publish_to_azblob() {
+  function verbose_az_cp {
+    local DEST="${RELEASE_AZ_BLOB_URL}/$1/"
+    shift
+    for f in $@
+    do
+      echo "Publishing [$f] to ${DEST}"
+      azcopy copy $f ${DEST}
+    done
+  }
+  # Before publishing the files, cleanup the `latest` dir if it exists.
+  local latest_dir="${RELEASE_AZ_BLOB_URL}/latest/"
+  if [[ -n "$(azcopy list ${RELEASE_AZ_BLOB_URL} | grep '^INFO: latest/' 2> /dev/null)" ]]; then
+    echo "Cleaning up '${latest_dir}' first (assumes flat structure)"
+    azcopy rm ${latest_dir} --recursive=false
+  fi
+  verbose_az_cp latest $@
+  [[ -n ${TAG} ]] && verbose_az_cp previous/${TAG} $@
+}
+
 # These are global environment variables.
+RELEASE_AZ_BLOB_URL=""
+AZ_ACR_NAME=""
 SKIP_TESTS=0
 PRESUBMIT_TEST_FAIL_FAST=1
 TAG_RELEASE=0
@@ -95,6 +150,7 @@ RELEASE_BRANCH=""
 RELEASE_GCS_BUCKET="knative-nightly/${REPO_NAME}"
 KO_FLAGS="-P"
 VALIDATION_TESTS="./test/presubmit-tests.sh"
+VALIDATION_TEST_ARGS=""
 YAMLS_TO_PUBLISH=""
 ARTIFACTS_TO_PUBLISH=""
 FROM_NIGHTLY_RELEASE=""
@@ -286,7 +342,7 @@ function build_from_nightly_release() {
 
 # Build a release from source.
 function build_from_source() {
-  run_validation_tests ${VALIDATION_TESTS}
+  run_validation_tests ${VALIDATION_TESTS} ${VALIDATION_TEST_ARGS}
   banner "Building the release"
   build_release
   # Do not use `||` above or any error will be swallowed.
@@ -332,8 +388,8 @@ function find_latest_nightly() {
 
 # Parses flags and sets environment variables accordingly.
 function parse_flags() {
-  local has_gcr_flag=0
-  local has_gcs_flag=0
+  local has_registry_flag=0
+  local has_storage_flag=0
   local is_dot_release=0
   local is_auto_release=0
 
@@ -361,11 +417,24 @@ function parse_flags() {
             ;;
           --release-gcr)
             KO_DOCKER_REPO=$1
-            has_gcr_flag=1
+            has_registry_flag=1
+            ;;
+          --release-acr)
+            AZ_ACR_NAME=$1
+            KO_DOCKER_REPO="${1}.azurecr.io"
+            has_registry_flag=1
+            ;;
+          --release-azblob)
+            RELEASE_AZ_BLOB_URL=$1
+            has_storage_flag=1
             ;;
           --release-gcs)
             RELEASE_GCS_BUCKET=$1
-            has_gcs_flag=1
+            has_storage_flag=1
+            ;;
+          --test-args)
+            # multiple args can be passed as a|b
+            VALIDATION_TEST_ARGS="$(tr '|' ' ' <<<$1)"
             ;;
           --version)
             [[ $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || abort "version format must be '[0-9].[0-9].[0-9]'"
@@ -419,11 +488,12 @@ function parse_flags() {
 
   # Update KO_DOCKER_REPO and KO_FLAGS if we're not publishing.
   if (( ! PUBLISH_RELEASE )); then
-    (( has_gcr_flag )) && echo "Not publishing the release, GCR flag is ignored"
-    (( has_gcs_flag )) && echo "Not publishing the release, GCS flag is ignored"
+    (( has_registry_flag )) && echo "Not publishing the release, GCR/ACR flags ignored"
+    (( has_storage_flag )) && echo "Not publishing the release, GCS/BLOB flags ignored"
     KO_DOCKER_REPO="ko.local"
     KO_FLAGS="-L ${KO_FLAGS}"
     RELEASE_GCS_BUCKET=""
+    RELEASE_AZ_BLOB_URL=""
   fi
 
   # Get the commit, excluding any tags but keeping the "dirty" flag
@@ -459,9 +529,13 @@ function parse_flags() {
 # Parameters: $1 - executable that runs the tests.
 function run_validation_tests() {
   if (( ! SKIP_TESTS )); then
+    _VALIDATION_COMMAND=$1
+    shift
+    _VALIDATION_ARGS=$@
     banner "Running release validation tests"
+    banner "${_VALIDATION_COMMAND} with args: ${_VALIDATION_ARGS}"
     # Run tests.
-    if ! $1; then
+    if ! ${_VALIDATION_COMMAND} ${_VALIDATION_ARGS}; then
       banner "Release validation tests failed, aborting"
       exit 1
     fi
@@ -473,7 +547,7 @@ function run_validation_tests() {
 function publish_artifacts() {
   (( ! PUBLISH_RELEASE )) && return
   tag_images_in_yamls ${ARTIFACTS_TO_PUBLISH}
-  publish_to_gcs ${ARTIFACTS_TO_PUBLISH}
+  publish_to_storage ${ARTIFACTS_TO_PUBLISH}
   publish_to_github ${ARTIFACTS_TO_PUBLISH}
   banner "New release published successfully"
 }
@@ -490,7 +564,7 @@ function main() {
   fi
   echo "- Go path: ${GOPATH}"
   echo "- Repository root: ${REPO_ROOT_DIR}"
-  echo "- Destination GCR: ${KO_DOCKER_REPO}"
+  echo "- Destination registry: ${KO_DOCKER_REPO}"
   (( SKIP_TESTS )) && echo "- Tests will NOT be run" || echo "- Tests will be run"
   if (( TAG_RELEASE )); then
     echo "- Artifacts will be tagged '${TAG}'"
