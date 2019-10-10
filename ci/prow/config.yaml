@@ -85,6 +85,7 @@ tide:
     - "knative/serving"
     - "knative/serving-operator"
     - "knative/test-infra"
+    - "knative/website"
     labels:
     - lgtm
     - approved
