@@ -35,27 +35,20 @@ presubmits:
           memory: 16Gi
     - unit-tests: true
     - integration-tests: true
-      args:
-      - "--run-test"
-      - "./test/e2e-tests.sh --istio-version 1.2-latest --no-mesh"
+      full-command: "./test/e2e-tests.sh --istio-version 1.2-latest --no-mesh"
     - custom-test: upgrade-tests
-      args:
-      - "--run-test"
-      - "./test/e2e-upgrade-tests.sh --istio-version 1.2-latest --no-mesh"
+      full-command: "./test/e2e-upgrade-tests.sh --istio-version 1.2-latest --no-mesh"
     - custom-test: smoke-tests
       skip_branches:  # Skip these branches, as test isn't available.
       - release-0.4
       - release-0.5
       - release-0.6
-      args:
-      - "--run-test"
-      - "./test/e2e-smoke-tests.sh"
+      full-command: "./test/e2e-smoke-tests.sh --istio-version 1.2-latest --no-mesh"
     - go-coverage: true
       go-coverage-threshold: 80
     - custom-test: perf-tests
       always_run: false
-      command:
-      - "./test/performance-tests.sh"
+      full-command: "./test/performance-tests.sh --istio-version 1.2-latest --no-mesh"
     - custom-test: istio-1.2-mesh
       always_run: false
       optional: true
