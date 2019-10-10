@@ -37,11 +37,11 @@ presubmits:
     - integration-tests: true
       args:
       - "--run-test"
-      - "./test/e2e-tests.sh"
+      - "./test/e2e-tests.sh --istio-version 1.2-latest --no-mesh"
     - custom-test: upgrade-tests
       args:
       - "--run-test"
-      - "./test/e2e-upgrade-tests.sh"
+      - "./test/e2e-upgrade-tests.sh --istio-version 1.2-latest --no-mesh"
     - custom-test: smoke-tests
       skip_branches:  # Skip these branches, as test isn't available.
       - release-0.4
