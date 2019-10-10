@@ -190,6 +190,13 @@ presubmits:
     - go-coverage: true
       dot-dev: true
 
+  knative/website:
+    # This repo only uses Tide
+    - build-tests: false
+    - unit-tests: false
+    - integration-tests: false
+    - go-coverage: false
+
 periodics:
   knative/serving:
     - continuous: true
