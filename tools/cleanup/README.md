@@ -31,7 +31,7 @@ The following flags are available for the [cleanup.sh](cleanup.sh) script:
 - `--hours-to-keep-clusters` Optional, defaults to 720 hours (aka 30 days).
 - `--gcr` Defines the GCR hostname to use (e.g., `us.gcr.io`). Optional, defaults
   to `gcr.io`.
-- `--dry-run" - Optional, performs dryrun for all gcloud functions, defaults to
+- `--dry-run` Optional, performs a dry run for all gcloud functions, defaults to
   false
 
 Examples:
