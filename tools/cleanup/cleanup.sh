@@ -22,8 +22,10 @@ source $(dirname $0)/cleanup-functions.sh
 DAYS_TO_KEEP_IMAGES=365 # Keep images up to 1 year by default
 HOURS_TO_KEEP_CLUSTERS=720 # keep clusters up to 30 days by default
 RE_PROJECT_NAME="knative-boskos-[a-zA-Z0-9]+"
+PROJECTS=""
 PROJECT_RESOURCE_YAML=""
 ARTIFACTS_DIR=""
+GCR="gcr.io"
 DRY_RUN=0
 
 function parse_args() {
@@ -40,6 +42,8 @@ function parse_args() {
           --days-to-keep-images) DAYS_TO_KEEP_IMAGES=$1 ;;
           --hours-to-keep-clusters) HOURS_TO_KEEP_CLUSTERS=$1 ;;
           --artifacts) ARTIFACTS_DIR=$1 ;;
+          --project) PROJECTS="${PROJECTS} $1" ;;
+          --gcr) GCR=$1 ;;
           --service-account)
             gcloud auth activate-service-account --key-file=$1 || exit 1
             ;;
@@ -58,6 +62,8 @@ function parse_args() {
   readonly RE_PROJECT_NAME
   readonly ARTIFACTS_DIR
   readonly DRY_RUN
+  readonly PROJECTS
+  readonly GCR
 }
 
 # Script entry point
@@ -70,22 +76,30 @@ fi
 
 parse_args $@
 
+[[ -z "${PROJECTS}" && -z "${PROJECT_RESOURCE_YAML}" ]] && abort "provide a project or resource file with projects"
+
 (( DRY_RUN )) && echo "-- Running in dry-run mode, no resource deletion --"
-echo "Iterating over projects defined in '${PROJECT_RESOURCE_YAML}', matching '${RE_PROJECT_NAME}"
-target_projects="$(grep -Eio "${RE_PROJECT_NAME}" "${PROJECT_RESOURCE_YAML}")"
-[[ $? -eq 0 ]] || abort "no project found in $PROJECT_RESOURCE_YAML"
+
+if [[ -n "${PROJECT_RESOURCE_YAML}" ]]; then
+  echo "Iterating over projects defined in '${PROJECT_RESOURCE_YAML}', matching '${RE_PROJECT_NAME}"
+  target_projects="$(grep -Eio "${RE_PROJECT_NAME}" "${PROJECT_RESOURCE_YAML}")"
+  [[ $? -eq 0 ]] || abort "no project found in ${PROJECT_RESOURCE_YAML}"
+else
+  target_projects="${PROJECTS}"
+  echo "Iterating over projects [${target_projects} ]"
+fi
 
 # delete old gcr images
 echo "Removing images with following rules:"
 echo "- older than ${DAYS_TO_KEEP_IMAGES} days"
-delete_old_gcr_images "${target_projects}" "${DAYS_TO_KEEP_IMAGES}"
+delete_old_gcr_images "${target_projects}" "${DAYS_TO_KEEP_IMAGES}" "${GCR}"
 # delete old clusters
 echo "Removing clusters with following rules:"
 echo "- older than ${HOURS_TO_KEEP_CLUSTERS} hours"
 delete_old_test_clusters "${target_projects}" "${HOURS_TO_KEEP_CLUSTERS}"
 
 # Gubernator considers job failure if "junit_*.xml" not found under artifact,
-#   create a placeholder file to make this job succeed
+# create a placeholder file to make this job succeed
 if [[ ! -z ${ARTIFACTS_DIR} ]]; then
   echo "<testsuite time='0'/>" > "${ARTIFACTS_DIR}/junit_knative.xml"
 fi
