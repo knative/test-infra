@@ -40,6 +40,7 @@ test_function ${FAILURE} "error: expecting value following" cleanup_script --art
 test_function ${FAILURE} "error: expecting value following" cleanup_script --project --dry-run
 test_function ${FAILURE} "error: expecting value following" cleanup_script --gcr --dry-run
 test_function ${FAILURE} "error: provide a project or resource" cleanup_script --dry-run
+test_function ${FAILURE} "error: provide a project or resource" cleanup_script --project a --project-resource-yaml b
 
 test_function ${FAILURE} "error: days to keep" cleanup_script --days-to-keep-images "a" --dry-run
 test_function ${FAILURE} "error: hours to keep" cleanup_script --hours-to-keep-clusters "a" --dry-run

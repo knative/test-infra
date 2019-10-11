@@ -77,6 +77,7 @@ fi
 parse_args $@
 
 [[ -z "${PROJECTS}" && -z "${PROJECT_RESOURCE_YAML}" ]] && abort "provide a project or resource file with projects"
+[[ -n "${PROJECTS}" && -n "${PROJECT_RESOURCE_YAML}" ]] && abort "provide a project or resource file with projects, not both"
 
 (( DRY_RUN )) && echo "-- Running in dry-run mode, no resource deletion --"
 
