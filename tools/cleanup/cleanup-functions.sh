@@ -51,13 +51,16 @@ function delete_old_images_from_gcr() {
 # Delete old images in the given GCP projects
 # Parameters: $1 - array of projects names
 #             $2 - days to keep images
+#             $3 - gcr hostname (optional, defaults to gcr.io)
 function delete_old_gcr_images() {
   [[ -z $1 ]] && abort "missing project names"
   [[ -z $2 ]] && abort "missing days to keep images"
+  local gcr=$3
+  [[ -z $3 ]] && gcr="gcr.io"
 
   for project in $1; do
     echo "Start deleting images from ${project}"
-    delete_old_images_from_gcr "gcr.io/${project}" $2
+    delete_old_images_from_gcr "${gcr}/${project}" $2
   done
 }
 
