@@ -32,7 +32,7 @@ The following flags are available for the [cleanup.sh](cleanup.sh) script:
 - `--gcr` Defines the GCR hostname to use (e.g., `us.gcr.io`). Optional, defaults
   to `gcr.io`.
 - `--dry-run` Optional, performs a dry run for all gcloud functions, defaults to
-  false
+  false.
 
 Examples:
 
