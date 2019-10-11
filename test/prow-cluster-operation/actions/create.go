@@ -94,15 +94,15 @@ func Create(o *options.RequestWrapper) {
 	// metadata so that following flow can understand the context of cluster, as
 	// well as for Prow usage later
 	// TODO(chaodaiG): this logic may need to be part of clustermanager lib as well
-	writeMetaData(gkeOps.Cluster, *gkeOps.Project)
+	writeMetaData(gkeOps.Cluster, gkeOps.Project)
 
 	// set up kube config points to cluster
 	// TODO(chaodaiG): this probably should also be part of clustermanager lib
 	if out, err := common.StandardExec("gcloud", "beta", "container", "clusters", "get-credentials",
-		gkeOps.Cluster.Name, "--region", gkeOps.Cluster.Location, "--project", *gkeOps.Project); err != nil {
+		gkeOps.Cluster.Name, "--region", gkeOps.Cluster.Location, "--project", gkeOps.Project); err != nil {
 		log.Fatalf("failed connect to cluster: '%v', '%v'", string(out), err)
 	}
-	if out, err := common.StandardExec("gcloud", "config", "set", "project", *gkeOps.Project); err != nil {
+	if out, err := common.StandardExec("gcloud", "config", "set", "project", gkeOps.Project); err != nil {
 		log.Fatalf("failed set gcloud: '%v', '%v'", string(out), err)
 	}
 }

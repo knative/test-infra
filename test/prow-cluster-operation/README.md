@@ -1,11 +1,7 @@
 ## prow-cluster-operation
 
-prow-cluster-operation tool is a CLI tool for creating, deleting, getting a GKE
+prow-cluster-operation is a tool for creating, deleting, getting a GKE
 cluster
-
-## Installation
-
-`go get knative.dev/test-infra/test/prow-cluster-operation`
 
 ## Prerequisite
 

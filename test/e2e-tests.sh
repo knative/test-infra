@@ -28,8 +28,9 @@ source $(dirname $0)/../scripts/e2e-tests.sh
 # Read metadata.json and get value for key
 # Parameters: $1 - Key for metadata
 function get_meta_value() {
-  local metadata="${ARTIFACTS}/metadata.json"
-  cat ${metadata} | grep -oEi "\"${1}\" ?: ?\".*\"" | cut -d "\"" -f 4
+  # local metadata="${ARTIFACTS}/metadata.json"
+  # cat ${metadata} | grep -oEi "\"${1}\" ?: ?\".*\"" | cut -d "\"" -f 4
+  go run knative.dev/test-infra/test/metahelper --get $@
 }
 
 function knative_setup() {
@@ -39,7 +40,7 @@ function knative_setup() {
 # Run a prow-cluster-operation tool, installing it first if necessary.
 #             $1..$n - parameters passed to the tool.
 function run_prow_cluster_tool() {
-  run_go_tool knative.dev/test-infra/test/prow-cluster-operation prow-cluster-operation $@
+  go run knative.dev/test-infra/test/prow-cluster-operation $@
 }
 
 # Add function call to trap
@@ -69,7 +70,7 @@ function create_test_cluster() {
   (( SKIP_ISTIO_ADDON )) || creation_args+=" --addons istio"
   [[ -n "${GCP_PROJECT}" ]] && creation_args+=" --project ${GCP_PROJECT}"
   echo "creation args: ${creation_args}"
-  run_prow_cluster_tool create ${creation_args} || fail_test "failed creating test cluster"
+  run_prow_cluster_tool --create ${creation_args} || fail_test "failed creating test cluster"
   # Should have kubeconfig set already
   local k8s_cluster=$(kubectl config current-context)
   [[ -z "${k8s_cluster}" ]] && abort "kubectl must have been set at this point"
@@ -80,7 +81,7 @@ function create_test_cluster() {
   # Since this function is called assuming cluster creation, force removing
   # cluster afterwards, cluster-remover by default forces cleaning up everything
   # TODO(chaodaiG) calling async method so that it doesn't wait
-  add_trap "(run_prow_cluster_tool delete > /dev/null &)" EXIT SIGINT
+  add_trap "(run_prow_cluster_tool --delete > /dev/null &)" EXIT SIGINT
 }
 
 # Override setup_test_cluster, this function is almost copy paste from original
@@ -97,7 +98,7 @@ function setup_test_cluster() {
 
   # Run cluster-creator for acquiring existing test cluster, will fail if
   # kubeconfig isn't set or cluster doesn't exist
-  run_prow_cluster_tool get || fail_test "failed getting test cluster" # NA
+  run_prow_cluster_tool --get || fail_test "failed getting test cluster" # NA
   # The step above collects cluster metadata and writes to
   # ${ARTIFACTS}/metadata.json file, use this information
   echo "Cluster used for running tests: $(cat ${ARTIFACTS}/metadata.json)"

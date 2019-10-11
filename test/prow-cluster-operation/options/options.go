@@ -30,8 +30,8 @@ type RequestWrapper struct {
 	NoWait           bool
 }
 
-func NewRequestWrapper() RequestWrapper {
-	return RequestWrapper{
+func NewRequestWrapper() *RequestWrapper {
+	return &RequestWrapper{
 		Request: clustermanager.GKERequest{},
 	}
 }

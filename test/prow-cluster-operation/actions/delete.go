@@ -32,9 +32,9 @@ func Delete(o *options.RequestWrapper) {
 	clusterOps := gkeClient.Setup(o.Request)
 	gkeOps := clusterOps.(*clustermanager.GKECluster)
 	if err := gkeOps.Acquire(); err != nil || gkeOps.Cluster == nil {
-		log.Fatal("Failed identifying cluster for cleanup: '%v'", err)
+		log.Fatalf("Failed identifying cluster for cleanup: '%v'", err)
 	}
-	log.Printf("Identified project %q and cluster %q for removal", *gkeOps.Project, gkeOps.Cluster.Name)
+	log.Printf("Identified project %q and cluster %q for removal", gkeOps.Project, gkeOps.Cluster.Name)
 	// Don't wait for delete
 	var err error
 	if err = gkeOps.Delete(); err != nil {

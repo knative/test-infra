@@ -29,7 +29,7 @@ func main() {
 	delete := flag.Bool("delete", false, "Delete cluster")
 	get := flag.Bool("get", false, "Get cluster")
 	o := options.NewRequestWrapper()
-	o.AddCommands()
+	o.AddOptions()
 	flag.Parse()
 
 	switch {

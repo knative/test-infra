@@ -38,19 +38,11 @@ func NewClient(dir string) (*client, error) {
 	}
 	c.Path = path.Join(dir, Filename)
 	_, err := os.Stat(dir)
-	if err == nil || os.IsNotExist(err) {
-		if os.IsNotExist(err) {
-			err = os.MkdirAll(dir, 0777)
-		}
-		if err == nil {
-			err = c.sync()
-		}
+	if err != nil && os.IsNotExist(err) {
+		err = os.MkdirAll(dir, 0777)
 	}
 
-	if err != nil {
-		return nil, err
-	}
-	return c, nil
+	return c, err
 }
 
 // sync reads from meta file and convert it to Meta, returns empty
@@ -89,6 +81,9 @@ func (c *client) Set(key, val string) error {
 
 // Get gets val for key
 func (c *client) Get(key string) (string, error) {
+	if _, err := os.Stat(c.Path); err != nil && os.IsNotExist(err) {
+		return "", fmt.Errorf("file not exist: %q", c.Path)
+	}
 	var res string
 	err := c.sync()
 	if err == nil {
