@@ -50,7 +50,7 @@ function setup_user() {
 function update_cluster() {
   gcloud container clusters get-credentials $1 --zone=$2 --project=${PROJECT_NAME} || abort "failed to get cluster creds"
   # Set up the configmap to run benchmarks in production
-  echo ">> Setting up 'prod' config-mako"
+  echo ">> Setting up 'prod' config-mako on cluster $1 in zone $2"
   cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: ConfigMap

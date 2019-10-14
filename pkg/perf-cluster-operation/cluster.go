@@ -104,6 +104,7 @@ func (gc *gkeClient) processClusters(
 
 	errCh := make(chan error)
 	wg := sync.WaitGroup{}
+	// handle all existing clusters
 	for i := range curtClusters {
 		wg.Add(1)
 		cluster := curtClusters[i]
@@ -113,9 +114,11 @@ func (gc *gkeClient) processClusters(
 				errCh <- fmt.Errorf("failed handling cluster %v: %v", cluster, err)
 			}
 		}()
+		// remove the cluster from clusterConfigs as it's already been handled
 		delete(clusterConfigs, cluster.Name)
 	}
 
+	// handle all other cluster configs
 	for name, config := range clusterConfigs {
 		wg.Add(1)
 		newName, newConfig := name, config
