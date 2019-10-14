@@ -44,25 +44,11 @@ function setup_user() {
   gcloud auth activate-service-account ${user_name} --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
 }
 
-# Create service account, Github and Slack token secrets on the cluster.
+# Update resources installed on the cluster.
 # Parameters: $1 - cluster name
 #             $2 - cluster zone/region
-function create_secrets() {
-  echo ">> Creating secrets on cluster $1 in zone $2"
-  gcloud container clusters get-credentials $1 --zone=$2 --project=${PROJECT_NAME} || abort "failed to get cluster creds"
-  kubectl create secret generic mako-secrets \
-    --from-file=robot.json=${GOOGLE_APPLICATION_CREDENTIALS} \
-    --from-file=github-token=${GITHUB_TOKEN} \
-    --from-file=slack-read-token=${SLACK_READ_TOKEN} \
-    --from-file=slack-write-token=${SLACK_WRITE_TOKEN}
-}
-
-# Update resources installed on the cluster.
-# Parameters: $1 - cluster is new or not
-#             $2 - cluster name
-#             $3 - cluster zone/region
 function update_cluster() {
-  gcloud container clusters get-credentials $2 --zone=$3 --project=${PROJECT_NAME} || abort "failed to get cluster creds"
+  gcloud container clusters get-credentials $1 --zone=$2 --project=${PROJECT_NAME} || abort "failed to get cluster creds"
   # Set up the configmap to run benchmarks in production
   echo ">> Setting up 'prod' config-mako"
   cat <<EOF | kubectl apply -f -
@@ -75,8 +61,14 @@ data:
   environment: prod
 EOF
   # Create secrets required for running benchmarks on the cluster
-  create_secrets $2 $3
-  echo ">> Deleting all benchmark jobs to avoid noise in the update process"
+  echo ">> Creating secrets on cluster $1 in zone $2"
+  kubectl create secret generic mako-secrets \
+    --from-file=robot.json=${GOOGLE_APPLICATION_CREDENTIALS} \
+    --from-file=github-token=${GITHUB_TOKEN} \
+    --from-file=slack-read-token=${SLACK_READ_TOKEN} \
+    --from-file=slack-write-token=${SLACK_WRITE_TOKEN}
+  # Delete all benchmark jobs to avoid noise in the update process
+  echo ">> Deleting all cronjobs and jobs on cluster $1 in zone $2"
   kubectl delete cronjob --all
   kubectl delete job --all
   
@@ -98,7 +90,6 @@ function get_benchmark_name() {
 }
 
 # Update the clusters related to the current repo.
-# Parameters: $1 - clusters are new or not
 function update_clusters() {
   header "Updating all clusters for ${REPO_NAME}"
   local all_clusters=$(gcloud container clusters list --project="${PROJECT_NAME}" --format="csv[no-heading](name,zone)")
@@ -135,7 +126,7 @@ function reconcile_benchmark_clusters() {
     reconcile
   header "Done reconciling clusters"
   # For now, do nothing after reconciling the clusters, and the next update_clusters job will automatically 
-  # update them. So there will be a period that the newly created clusters are idle, and the duration
+  # update them. So there will be a period that the newly created clusters are being idle, and the duration
   # can be as long as <update_clusters interval>.
 }
 

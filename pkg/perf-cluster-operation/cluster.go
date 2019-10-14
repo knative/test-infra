@@ -58,7 +58,7 @@ func newClient() (*gkeClient, error) {
 func (gc *gkeClient) recreateClusters(gcpProject, repo, benchmarkRoot string) error {
 	handleCluster := func(cluster container.Cluster, clusterConfigs map[string]ClusterConfig) error {
 		// always delete the cluster, even if the cluster config is unchanged
-		return gc.handleExistedCluster(gcpProject, cluster, clusterConfigs, false)
+		return gc.handleExistingCluster(gcpProject, cluster, clusterConfigs, false)
 	}
 	handleNewClusterConfig := func(clusterName string, clusterConfig ClusterConfig) error {
 		// for now, do nothing to the new cluster config
@@ -77,7 +77,7 @@ func (gc *gkeClient) recreateClusters(gcpProject, repo, benchmarkRoot string) er
 func (gc *gkeClient) reconcileClusters(gcpProject, repo, benchmarkRoot string) error {
 	handleCluster := func(cluster container.Cluster, clusterConfigs map[string]ClusterConfig) error {
 		// retain the cluster, if the cluster config is unchanged
-		return gc.handleExistedCluster(gcpProject, cluster, clusterConfigs, true)
+		return gc.handleExistingCluster(gcpProject, cluster, clusterConfigs, true)
 	}
 	handleNewClusterConfig := func(clusterName string, clusterConfig ClusterConfig) error {
 		// create a new cluster with the new cluster config
@@ -140,8 +140,8 @@ func (gc *gkeClient) processClusters(
 	return helpers.CombineErrors(errs)
 }
 
-// handleExistedCluster is a helper function for handling an existed cluster.
-func (gc *gkeClient) handleExistedCluster(
+// handleExistingCluster is a helper function for handling an existed cluster.
+func (gc *gkeClient) handleExistingCluster(
 	gcpProject string, cluster container.Cluster, clusterConfigs map[string]ClusterConfig,
 	retainIfUnchanged bool,
 ) error {
