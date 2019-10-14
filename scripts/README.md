@@ -228,26 +228,35 @@ success
 
 This is a helper script for Knative performance test scripts. In combination
 with specific Prow jobs, it can automatically manage the environment for running
-benchmarks jobs for each repo. To use it:
+benchmarking jobs for each repo. To use it:
 
 1. Source the script.
 
-1. [optional] Customize path of the benchmark folder. This folder should
-   contains and only contains all benchmarks controlled by Prow periodic jobs:
+1. [optional] Customize GCP project settings for the benchmarks. Set the
+   following environment variables if the default value doesn't fit your needs:
 
-   - `BENCHMARK_ROOT_PATH`: Benchmark root path, defaults to `"test/performance/benchmarks`.
-   - `CLUSTER_REGION`: Cluster region for a new benchmark if not specified
-   in its `cluster.properties` file, defaults to `us-central1`.
-   - `CLUSTER_NODES`: Number of nodes in the cluster for a new benchmark if
-   not specified in its `cluster.properties` file, defaults to `1`.
+   - `PROJECT_NAME`: GCP project name for keeping the clusters that run the 
+     benchmarks. Defaults to `knative-performance`.
+   - `SERVICE_ACCOUNT_NAME`: Service account name for controlling GKE clusters
+     and interacting with [Mako](github.com/google/mako) server. It MUST have
+     `Kubernetes Engine Admin` and `Storage Admin` role, and be 
+     [whitelisted](https://github.com/google/mako/blob/master/docs/ACCESS.md) by
+     Mako admin. Defaults to `mako-job`.
+
+1. [optional] Customize path of the benchmarks. This root folder should
+   contain and only contain all benchmarks you want to run continuously.
+   Set the following environment variable if the default value doesn't fit your
+   needs:
+
+   - `BENCHMARK_ROOT_PATH`: Benchmark root path, defaults to `test/performance/benchmarks`.
 
 1. [optional] Write the `update_knative()` function, which will update your
    system under test (e.g., Knative Serving).
 
-1. [optional] Write the `update_benchmark(benchmark_path)` function, which
+1. [optional] Write the `update_benchmark(benchmark_name)` function, which
    will update the underlying resources for the benchmark (usually Knative
    resources and Kubernetes cronjobs for benchmarking). This function accepts
-   a parameter, which is the benchmark path in the current repo.
+   a parameter, which is the benchmark name in the current repo.
 
 1. Call the `main()` function passing `$@` (without quotes).
 
@@ -260,12 +269,12 @@ source vendor/knative.dev/test-infra/scripts/performance-tests.sh
 
 function update_knative() {
   echo ">> Updating serving"
-  ko apply -f config/ -f config/v1beta1 || abort "failed to apply serving"
+  ko apply -f config/ || abort "failed to apply serving"
 }
 
 function update_benchmark() {
   echo ">> Updating benchmark $1"
-  ko apply -f ${TEST_ROOT_PATH}/$1 || abort "failed to apply benchmark $1"
+  ko apply -f ${BENCHMARK_ROOT_PATH}/$1 || abort "failed to apply benchmark $1"
 }
 
 main $@

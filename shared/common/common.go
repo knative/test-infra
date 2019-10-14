@@ -60,3 +60,12 @@ func CDToRootDir() error {
 	}
 	return os.Chdir(d)
 }
+
+// FileExists returns if the file exists or not
+func FileExists(fileName string) bool {
+	info, err := os.Stat(fileName)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
+}

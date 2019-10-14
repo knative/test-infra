@@ -217,9 +217,10 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:b414dd15b7b0f038c5a28e9049b6d521097f169dac97de5e3187ac1cea711b04"
+  digest = "1:c7938cdaa31dcd5d13cabdee93db0955e91968b9478a24669937b548f44053ea"
   name = "google.golang.org/api"
   packages = [
+    "container/v1beta1",
     "gensupport",
     "googleapi",
     "googleapi/internal/uritemplates",
@@ -346,16 +347,17 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:0da512e9f0141cbd51cb3adc21b57b5716ab4329fa75b546d1a8a1afdae6a07d"
+  digest = "1:21f3e8de2d723288341571b3c7fb60bd38389a26760192229cdf0fb4302cf9c6"
   name = "knative.dev/pkg"
   packages = [
     "test/ghutil",
     "test/ghutil/fakeghutil",
     "test/helpers",
     "test/slackutil",
+    "testutils/gke",
   ]
   pruneopts = "NUT"
-  revision = "d484d03f55d9ce79675699f3e74a6935b9ea5cd3"
+  revision = "9c320664c8c479daae224db1f8b5579235bbe567"
 
 [solve-meta]
   analyzer-name = "dep"
@@ -368,6 +370,7 @@
     "github.com/google/licenseclassifier",
     "golang.org/x/net/context",
     "golang.org/x/oauth2",
+    "google.golang.org/api/container/v1beta1",
     "google.golang.org/api/iterator",
     "google.golang.org/api/option",
     "gopkg.in/yaml.v2",
@@ -376,6 +379,7 @@
     "knative.dev/pkg/test/ghutil/fakeghutil",
     "knative.dev/pkg/test/helpers",
     "knative.dev/pkg/test/slackutil",
+    "knative.dev/pkg/testutils/gke",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
