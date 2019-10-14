@@ -45,14 +45,14 @@ var backupLocations = []string{"us-west1", "us-west2", "us-east1"}
 
 // GKECluster saves the config information for the GKE cluster
 type GKECluster struct {
-	Config ClusterConfig `yaml:"gke_cluster,omitempty"`
+	Config ClusterConfig `yaml:"GKECluster,omitempty"`
 }
 
 // ClusterConfig is config for the cluster
 type ClusterConfig struct {
 	Location  string `yaml:"location,omitempty"`
-	NodeCount int64  `yaml:"node_count,omitempty"`
-	NodeType  string `yaml:"node_type,omitempty"`
+	NodeCount int64  `yaml:"nodeCount,omitempty"`
+	NodeType  string `yaml:"nodeType,omitempty"`
 	Addons    string `yaml:"addons,omitempty"`
 }
 

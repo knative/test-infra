@@ -14,8 +14,4 @@
 
 # This is an example file for a corrupted cluster config of a benchmark.
 
-whatever_cluster:
-  location: "us-west1"
-  node_count: 1
-  node_type: "n1-standard-4"
-  addons: "istio"
+anything but not a yaml

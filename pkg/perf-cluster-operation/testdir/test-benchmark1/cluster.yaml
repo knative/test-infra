@@ -14,8 +14,8 @@
 
 # This is an example file for a correct cluster config of a benchmark.
 
-gke_cluster:
+GKECluster:
   location: "us-west1"
-  node_count: 4
-  node_type: "n1-standard-8"
+  nodeCount: 4
+  nodeType: "n1-standard-8"
   addons: "istio"
