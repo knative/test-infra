@@ -28,16 +28,14 @@ import (
 	container "google.golang.org/api/container/v1beta1"
 )
 
-// cluster status
-const (
-	StatusProvisioning = "PROVISIONING"
-	StatusRunning      = "RUNNING"
-	StatusStopping     = "STOPPING"
-)
-
 const (
 	// the maximum retry times if there is an error in cluster operation
 	retryTimes = 3
+
+	// cluster status
+	statusProvisioning = "PROVISIONING"
+	statusRunning      = "RUNNING"
+	statusStopping     = "STOPPING"
 )
 
 type gkeClient struct {
@@ -148,14 +146,15 @@ func (gc *gkeClient) handleExistedCluster(
 	retainIfUnchanged bool,
 ) error {
 	// if the cluster is currently being created or deleted, return directly as other jobs will handle it properly
-	if cluster.Status == StatusProvisioning || cluster.Status == StatusStopping {
+	if cluster.Status == statusProvisioning || cluster.Status == statusStopping {
 		log.Printf("cluster %q is being handled by other jobs, skip it", cluster.Name)
 		return nil
 	}
 	// if retainIfUnchanged is set to true, and the cluster config does not change, do nothing
 	// TODO(chizhg): also check the addons config
 	config, configExists := clusterConfigs[cluster.Name]
-	if retainIfUnchanged && configExists && cluster.CurrentNodeCount == config.NodeCount && cluster.Location == config.Location {
+	if retainIfUnchanged && configExists &&
+		cluster.CurrentNodeCount == config.NodeCount && cluster.Location == config.Location {
 		log.Printf("cluster config is unchanged for %q, skip it", cluster.Name)
 		return nil
 	}
