@@ -15,3 +15,115 @@ limitations under the License.
 */
 
 package main
+
+import (
+	"reflect"
+	"testing"
+)
+
+func TestBenchmarkNames(t *testing.T) {
+	testCases := []struct {
+		benchmarkRoot      string
+		expectedBenchmarks []string
+		expectedError      bool
+	}{{
+		benchmarkRoot:      "testdir",
+		expectedBenchmarks: []string{"test-benchmark1", "test-benchmark2", "test-benchmark3", "test-benchmark4"},
+		expectedError:      false,
+	}, {
+		benchmarkRoot:      "non-existed-dir",
+		expectedBenchmarks: []string{},
+		expectedError:      true,
+	}}
+
+	for _, tc := range testCases {
+		benchmarks, err := benchmarkNames(tc.benchmarkRoot)
+		if !reflect.DeepEqual(tc.expectedBenchmarks, benchmarks) {
+			t.Fatalf("expected to get benchmarks %v under %q, but got %v",
+				tc.expectedBenchmarks, tc.benchmarkRoot, benchmarks)
+		}
+		if tc.expectedError && err == nil {
+			t.Fatalf("expected to get error for getting benchmarks under %q, but got nil", tc.benchmarkRoot)
+		}
+		if !tc.expectedError && err != nil {
+			t.Fatalf("expected to get no error for getting benchmarks under %q, but got %v", tc.benchmarkRoot, err)
+		}
+	}
+}
+
+func TestClusterConfigForBenchmark(t *testing.T) {
+	testCases := []struct {
+		benchmarkRoot         string
+		benchmarkName         string
+		expectedClusterConfig ClusterConfig
+	}{{
+		benchmarkRoot: "testdir",
+		benchmarkName: "test-benchmark1",
+		expectedClusterConfig: ClusterConfig{
+			Location: "us-west1", NodeCount: 4, NodeType: "n1-standard-8", Addons: "istio"},
+	}, {
+		benchmarkRoot: "testdir",
+		benchmarkName: "test-benchmark2",
+		expectedClusterConfig: ClusterConfig{
+			Location: defaultLocation, NodeCount: defaultNodeCount, NodeType: defaultNodeType, Addons: defaultAddons},
+	}, {
+		benchmarkRoot: "testdir",
+		benchmarkName: "test-benchmark3",
+		expectedClusterConfig: ClusterConfig{
+			Location: defaultLocation, NodeCount: 1, NodeType: defaultNodeType, Addons: "istio"},
+	}, {
+		benchmarkRoot: "testdir",
+		benchmarkName: "test-benchmark4",
+		expectedClusterConfig: ClusterConfig{
+			Location: defaultLocation, NodeCount: defaultNodeCount, NodeType: defaultNodeType, Addons: defaultAddons},
+	}}
+
+	for _, tc := range testCases {
+		clusterConfig := clusterConfigForBenchmark(tc.benchmarkRoot, tc.benchmarkName)
+		if !reflect.DeepEqual(tc.expectedClusterConfig, clusterConfig) {
+			t.Fatalf("expected to get cluster config %v for benchmark %q under %q, but got %v",
+				tc.expectedClusterConfig, tc.benchmarkName, tc.benchmarkRoot, clusterConfig)
+		}
+	}
+}
+
+func TestClusterNameForBenchmark(t *testing.T) {
+	repo, benchmarkName, expectedName := "serving", "load-test", "serving-load-test"
+	gotName := clusterNameForBenchmark(benchmarkName, repo)
+	if gotName != expectedName {
+		t.Fatalf(
+			"expected to get cluster name %q for benchmark %q under repo %q, but got %q",
+			expectedName, benchmarkName, repo, gotName,
+		)
+	}
+}
+
+func TestBenchmarkNameForCluster(t *testing.T) {
+	testCases := []struct {
+		clusterName           string
+		repo                  string
+		expectedBenchmarkName string
+	}{{
+		clusterName:           "serving-load-test",
+		repo:                  "serving",
+		expectedBenchmarkName: "load-test",
+	}, {
+		clusterName:           "serving-load-test",
+		repo:                  "eventing",
+		expectedBenchmarkName: "",
+	}, {
+		clusterName:           "serving--load-test",
+		repo:                  "serving",
+		expectedBenchmarkName: "-load-test",
+	}}
+
+	for _, tc := range testCases {
+		benchmarkName := benchmarkNameForCluster(tc.clusterName, tc.repo)
+		if benchmarkName != tc.expectedBenchmarkName {
+			t.Fatalf(
+				"expected to get benchmark name %q for cluster %q in repo %q, but got %q",
+				tc.expectedBenchmarkName, tc.clusterName, tc.repo, benchmarkName,
+			)
+		}
+	}
+}

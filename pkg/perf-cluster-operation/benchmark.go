@@ -28,21 +28,32 @@ import (
 )
 
 const (
-	clusterConfigFile  = "cluster.yaml"
-	defaultLocation    = "us-central1"
-	defaultNodeCount   = 1
-	defaultMachineType = "n1-standard-4"
-	defaultAddons      = "HorizontalPodAutoscaling,HttpLoadBalancing"
+	// clusterConfigFile is the config file we need to put under the benchmark folder, if we want to config the cluster
+	// that runs the benchmark, it must follow the scheme defined as GKECluster here.
+	clusterConfigFile = "cluster.yaml"
+
+	// These default settings will be used for configuring the cluster, if not specified in cluster.yaml.
+	defaultLocation  = "us-central1"
+	defaultNodeCount = 1
+	defaultNodeType  = "n1-standard-4"
+	defaultAddons    = "HorizontalPodAutoscaling,HttpLoadBalancing"
 )
 
+// backupLocations are used in retrying cluster creation, if stockout happens in one location.
+// TODO(chizhg): it's currently not used, use it in the cluster creation retry logic.
 var backupLocations = []string{"us-west1", "us-west2", "us-east1"}
 
-// ClusterConfig is config for the GKE cluster
+// GKECluster saves the config information for the GKE cluster
+type GKECluster struct {
+	Config ClusterConfig `yaml:"gke_cluster,omitempty"`
+}
+
+// ClusterConfig is config for the cluster
 type ClusterConfig struct {
-	Location    string `yaml:"location,omitempty"`
-	NodeCount   int64  `yaml:"node_count,omitempty"`
-	MachineType string `yaml:"machine_type, omitempty"`
-	Addons      string `yaml:"addons,omitempty"`
+	Location  string `yaml:"location,omitempty"`
+	NodeCount int64  `yaml:"node_count,omitempty"`
+	NodeType  string `yaml:"node_type,omitempty"`
+	Addons    string `yaml:"addons,omitempty"`
 }
 
 // benchmarkNames returns names of the benchmarks.
@@ -63,12 +74,8 @@ func benchmarkNames(benchmarkRoot string) ([]string, error) {
 }
 
 // benchmarkClusters returns the cluster configs for all benchmarks.
-//
-// In each benchmark, we can put a cluster.yaml file that follows the scheme we define here,
-// in which we specify configuration of the cluster that we use to run the benchmark.
-// If there is no such config file, or the config file is malformed, default config will be used.
 func benchmarkClusters(repo, benchmarkRoot string) (map[string]ClusterConfig, error) {
-	// cluster is a map of cluster configs
+	// clusters is a map of cluster configs
 	// key is the cluster name, value is the cluster config
 	clusters := make(map[string]ClusterConfig)
 	benchmarkNames, err := benchmarkNames(benchmarkRoot)
@@ -77,30 +84,42 @@ func benchmarkClusters(repo, benchmarkRoot string) (map[string]ClusterConfig, er
 	}
 
 	for _, benchmarkName := range benchmarkNames {
-		clusterConfig := ClusterConfig{
-			Location:    defaultLocation,
-			NodeCount:   defaultNodeCount,
-			MachineType: defaultMachineType,
-			Addons:      defaultAddons,
-		}
-
-		configFile := filepath.Join(benchmarkRoot, benchmarkName, clusterConfigFile)
-		if common.FileExists(configFile) {
-			contents, err := ioutil.ReadFile(configFile)
-			if err == nil {
-				if err := yaml.Unmarshal(contents, &clusterConfig); err != nil {
-					log.Printf("Failed to parse the config file %q, default config will be used", configFile)
-				}
-			} else {
-				log.Printf("Failed to read the config file %q, default config will be used", configFile)
-			}
-		}
-
+		clusterConfig := clusterConfigForBenchmark(benchmarkRoot, benchmarkName)
 		clusterName := clusterNameForBenchmark(repo, benchmarkName)
 		clusters[clusterName] = clusterConfig
 	}
 
 	return clusters, nil
+}
+
+// clusterConfigForBenchmark returns the cluster config for the given benchmark.
+//
+// Under each benchmark folder, we can put a cluster.yaml file that follows the scheme we define
+// in ClusterConfig struct, in which we specify configuration of the cluster that we use to run the benchmark.
+// If there is no such config file, or the config file is malformed, default config will be used.
+func clusterConfigForBenchmark(benchmarkRoot, benchmarkName string) ClusterConfig {
+	gkeCluster := GKECluster{
+		Config: ClusterConfig{
+			Location:  defaultLocation,
+			NodeCount: defaultNodeCount,
+			NodeType:  defaultNodeType,
+			Addons:    defaultAddons,
+		},
+	}
+
+	configFile := filepath.Join(benchmarkRoot, benchmarkName, clusterConfigFile)
+	if common.FileExists(configFile) {
+		contents, err := ioutil.ReadFile(configFile)
+		if err == nil {
+			if err := yaml.Unmarshal(contents, &gkeCluster); err != nil {
+				log.Printf("Failed to parse the config file %q, default config will be used", configFile)
+			}
+		} else {
+			log.Printf("Failed to read the config file %q, default config will be used", configFile)
+		}
+	}
+
+	return gkeCluster.Config
 }
 
 // clusterNameForBenchmark prepends repo name to the benchmark name, and use it as the cluster name.
@@ -111,10 +130,10 @@ func clusterNameForBenchmark(benchmarkName, repo string) string {
 // benchmarkNameForCluster removes repo name prefix from the cluster name, to get the real benchmark name.
 // If the cluster does not belong to the given repo, return an empty string.
 func benchmarkNameForCluster(clusterName, repo string) string {
-	if !clusterBelongsToRepo(repo, clusterName) {
+	if !clusterBelongsToRepo(clusterName, repo) {
 		return ""
 	}
-	return strings.TrimLeft(clusterName, repo+"-")
+	return strings.TrimPrefix(clusterName, repo+"-")
 }
 
 // clusterBelongsToRepo determines if the cluster belongs to the repo, by checking if it has the repo prefix.
