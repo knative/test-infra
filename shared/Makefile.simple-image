@@ -34,7 +34,6 @@ all: build
 
 build:
 	$(call build_helper)
-	docker tag $(IMG):$(TAG) $(IMG):latest
 
 build_no_cache:
 	$(call build_helper,--no-cache)
@@ -43,6 +42,7 @@ push_versioned: build_no_cache
 	docker push $(IMG):$(TAG)
 
 push_latest: build_no_cache
+	docker tag $(IMG):$(TAG) $(IMG):latest
 	docker push $(IMG):latest
 
 push: push_versioned push_latest
