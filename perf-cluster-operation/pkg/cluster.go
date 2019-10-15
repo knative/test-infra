@@ -122,7 +122,7 @@ func (gc *gkeClient) processClusters(
 	// handle all other cluster configs
 	for name, config := range clusterConfigs {
 		wg.Add(1)
-		newName, newConfig := name, config
+		name, config := name, config
 		go func() {
 			defer wg.Done()
 			if err := handleNewClusterConfig(newName, newConfig); err != nil {
