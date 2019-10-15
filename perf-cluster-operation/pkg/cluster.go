@@ -203,7 +203,7 @@ func (gc *gkeClient) deleteClusterWithRetries(gcpProject string, cluster contain
 	if err != nil {
 		return fmt.Errorf(
 			"failed deleting cluster %q in %q after retrying %d times: %v",
-			cluster.Name, gke.GetClusterLocation(region, zone), retryTimes, err)
+			cluster.Name, cluster.Location, retryTimes, err)
 	}
 
 	return nil
