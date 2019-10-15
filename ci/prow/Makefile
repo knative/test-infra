@@ -16,7 +16,7 @@ include ../Makefile.base
 
 # Generate the Prow config file
 config:
-	go run *_config.go --prow-config-output=$(PROW_CONFIG) --testgrid-config-output=$(TESTGRID_CONFIG) --gcs-bucket=$(PROW_GCS) --testgrid-gcs-bucket=$(TESTGRID_GCS) --image-docker=gcr.io/$(PROJECT)/test-infra $(KNATIVE_CONFIG)
+	go run *_config.go --prow-config-output=$(PROW_CONFIG) --plugins-config-output=$(PROW_PLUGINS) --testgrid-config-output=$(TESTGRID_CONFIG) --gcs-bucket=$(PROW_GCS) --testgrid-gcs-bucket=$(TESTGRID_GCS) --image-docker=gcr.io/$(PROJECT)/test-infra $(KNATIVE_CONFIG)
 
 # Update all prow job configs
 update-config:
@@ -76,9 +76,11 @@ update-full: update-all-cluster-deployments update-all-boskos-deployments update
 test:
 	@echo "*** Checking config generator for prow and testgrid"
 	$(eval TMP_YAML_PROW := $(shell mktemp))
+	$(eval TMP_YAML_PLUGINS := $(shell mktemp))
 	$(eval TMP_YAML_TESTGRID := $(shell mktemp))
-	go run *_config.go --prow-config-output="$(TMP_YAML_PROW)" --testgrid-config-output="$(TMP_YAML_TESTGRID)" $(KNATIVE_CONFIG)
+	go run *_config.go --prow-config-output="$(TMP_YAML_PROW)" --plugins-config-output="$(TMP_YAML_PLUGINS)" --testgrid-config-output="$(TMP_YAML_TESTGRID)" $(KNATIVE_CONFIG)
 	diff $(PROW_CONFIG) $(TMP_YAML_PROW)
+	diff $(PROW_PLUGINS) $(TMP_YAML_PLUGINS)
 	diff $(TESTGRID_CONFIG) $(TMP_YAML_TESTGRID)
 	@echo "*** Checking configs validity"
 	bazel run @k8s//prow/cmd/checkconfig -- --plugin-config=$(PROW_PLUGINS) --config-path=$(PROW_CONFIG)
