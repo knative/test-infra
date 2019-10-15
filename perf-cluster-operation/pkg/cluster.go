@@ -154,9 +154,10 @@ func (gc *gkeClient) handleExistingClusterHelper(
 		log.Printf("cluster %q is being handled by other jobs, skip it", cluster.Name)
 		return nil
 	}
+
+	config, configExists := clusterConfigs[cluster.Name]
 	// if retainIfUnchanged is set to true, and the cluster config does not change, do nothing
 	// TODO(chizhg): also check the addons config
-	config, configExists := clusterConfigs[cluster.Name]
 	if retainIfUnchanged && configExists &&
 		cluster.CurrentNodeCount == config.NodeCount && cluster.Location == config.Location {
 		log.Printf("cluster config is unchanged for %q, skip it", cluster.Name)

@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	// clusterConfigFile is the config file we need to put under the benchmark folder, if we want to config
+	// clusterConfigFile is the config file needs to be put under the benchmark folder if we want to config
 	// the cluster that runs the benchmark, it must follow the scheme defined as GKECluster here.
 	clusterConfigFile = "cluster.yaml"
 
