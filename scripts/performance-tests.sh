@@ -32,7 +32,7 @@ readonly GITHUB_TOKEN="/etc/performance-test/github-token"
 readonly SLACK_READ_TOKEN="/etc/performance-test/slack-read-token"
 readonly SLACK_WRITE_TOKEN="/etc/performance-test/slack-write-token"
 
-# Set up the user credentials for cluster operations.
+# Set up the user for cluster operations.
 function setup_user() {
   echo ">> Setup User"
   echo "Using gcloud project ${PROJECT_NAME}"
@@ -40,8 +40,6 @@ function setup_user() {
   local user_name="${SERVICE_ACCOUNT_NAME}@${PROJECT_NAME}.iam.gserviceaccount.com"
   echo "Using gcloud user ${user_name}"
   gcloud config set core/account ${user_name}
-  echo "Using secret defined in ${GOOGLE_APPLICATION_CREDENTIALS}"
-  gcloud auth activate-service-account ${user_name} --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
 }
 
 # Update resources installed on the cluster.
@@ -109,7 +107,7 @@ function update_clusters() {
 # Delete the old clusters related to the current repo, and recreate them with the same configuration.
 function recreate_clusters() {
   header "Recreating clusters for ${REPO_NAME}"
-  go run $GOPATH/src/knative.dev/test-infra/pkg/perf-cluster-operation \
+  go run $GOPATH/src/knative.dev/test-infra/perf-cluster-operation \
     --gcp-project=${PROJECT_NAME} --repository=${REPO_NAME} --benchmark-root=${BENCHMARK_ROOT_PATH} \
     recreate
   header "Done recreating clusters"
@@ -121,8 +119,11 @@ function recreate_clusters() {
 # This function will be run as postsubmit jobs.
 function reconcile_benchmark_clusters() {
   header "Reconciling clusters for ${REPO_NAME}"
-  go run $GOPATH/src/knative.dev/test-infra/pkg/perf-cluster-operation \
+  go run $GOPATH/src/knative.dev/test-infra/perf-cluster-operation \
     --gcp-project=${PROJECT_NAME} --repository=${REPO_NAME} --benchmark-root=${BENCHMARK_ROOT_PATH} \
+    reconcile
+  go run $GOPATH/src/knative.dev/test-infra/perf-cluster-operation \
+    --gcp-project=test-project-chizhg --repository=test --benchmark-root=/Users/chizhg/go/src/knative.dev/test-infra/perf-cluster-operation/pkg/testdir \
     reconcile
   header "Done reconciling clusters"
   # For now, do nothing after reconciling the clusters, and the next update_clusters job will automatically 

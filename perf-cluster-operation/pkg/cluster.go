@@ -116,17 +116,19 @@ func (gc *gkeClient) processClusters(
 			}
 		}()
 		// remove the cluster from clusterConfigs as it's already been handled
+		// BUG!!!!!! Should not delete here.
 		delete(clusterConfigs, cluster.Name)
 	}
 
 	// handle all other cluster configs
 	for name, config := range clusterConfigs {
 		wg.Add(1)
-		newName, newConfig := name, config
+		// recreate them to avoid the issue with iterations of multiple Go routines
+		name, config := name, config
 		go func() {
 			defer wg.Done()
-			if err := handleNewClusterConfig(newName, newConfig); err != nil {
-				errCh <- fmt.Errorf("failed handling new cluster config %v: %v", newConfig, err)
+			if err := handleNewClusterConfig(name, config); err != nil {
+				errCh <- fmt.Errorf("failed handling new cluster config %v: %v", config, err)
 			}
 		}()
 	}
@@ -203,7 +205,7 @@ func (gc *gkeClient) deleteClusterWithRetries(gcpProject string, cluster contain
 	if err != nil {
 		return fmt.Errorf(
 			"failed deleting cluster %q in %q after retrying %d times: %v",
-			cluster.Name, gke.GetClusterLocation(region, zone), retryTimes, err)
+			cluster.Name, cluster.Location, retryTimes, err)
 	}
 
 	return nil
@@ -213,12 +215,16 @@ func (gc *gkeClient) deleteClusterWithRetries(gcpProject string, cluster contain
 // and retry for a maximum of retryTimes if there is an error.
 // TODO(chizhg): maybe move it to clustermanager library.
 func (gc *gkeClient) createClusterWithRetries(gcpProject, name string, config ClusterConfig) error {
+	var addons []string
+	if strings.TrimSpace(config.Addons) != "" {
+		addons = strings.Split(config.Addons, ",")
+	}
 	req := &gke.Request{
 		ClusterName: name,
 		MinNodes:    config.NodeCount,
 		MaxNodes:    config.NodeCount,
 		NodeType:    config.NodeType,
-		Addons:      strings.Split(config.Addons, ","),
+		Addons:      addons,
 	}
 	creq, err := gke.NewCreateClusterRequest(req)
 	if err != nil {

@@ -36,7 +36,8 @@ const (
 	defaultLocation  = "us-central1"
 	defaultNodeCount = 1
 	defaultNodeType  = "n1-standard-4"
-	defaultAddons    = "HorizontalPodAutoscaling,HttpLoadBalancing"
+	// defaultAddons    = "HorizontalPodAutoscaling,HttpLoadBalancing"
+	defaultAddons = ""
 )
 
 // backupLocations are used in retrying cluster creation, if stockout happens in one location.
