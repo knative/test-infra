@@ -21,7 +21,9 @@ readonly BILLING_ACCOUNT=${2:?"Second argument must be the billing account."}
 # All remaining arguments will be passed verbatim to set_boskos_permissions.sh
 shift 2
 
-readonly BOSKOS_RESOURCE_FILE=${RESOURCE_FILE:-boskos_resources.yaml}
+cd "$(dirname $0)"
+
+readonly BOSKOS_RESOURCE_FILE=${BOSKOS_RESOURCE_FILE:-boskos_resources.yaml}
 readonly BOSKOS_PROJECT_PREFIX=${BOSKOS_PROJECT_PREFIX:-knative-boskos-}
 
 if [[ ! -f ${BOSKOS_RESOURCE_FILE} || ! -w ${BOSKOS_RESOURCE_FILE} ]]; then
@@ -41,7 +43,7 @@ for (( i=1; i<=${NUMBER}; i++ )); do
   gcloud beta billing projects link ${PROJECT} --billing-account=${BILLING_ACCOUNT}
 
   # Set permissions for this project
-  "$(dirname $0)/set_boskos_permissions.sh" ${PROJECT} $@
+  "./set_boskos_permissions.sh" ${PROJECT} $@
 
   LAST_PROJECT=$(grep "${BOSKOS_PROJECT_PREFIX}" ${BOSKOS_RESOURCE_FILE} | tail -1)
   [[ -z "${LAST_PROJECT}" ]] && LAST_PROJECT="- names:"
