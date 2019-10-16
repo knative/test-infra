@@ -56,7 +56,7 @@ deck:
         name: build-log
         config:
           highlight_regexes:
-          - 'panic: test timed out after'
+          - 'panic: test timed out after.*$'
           - timed out
           - 'ERROR:'
           - (\s|^)(FAIL|Failure \[)\b
