@@ -40,14 +40,14 @@ This command deletes test images older than 90 days and test clusters created
 more than 24 hours ago in all Boskos projects.
 
 ```sh
-$ ./cleanup.sh --project-resource-yaml ci/prow/boskos_resources.yaml --days-to-keep-images 90 --days-to-keep-clusters 24`
+$ ./cleanup.sh --project-resource-yaml ci/prow/boskos_resources.yaml --days-to-keep-images 90 --hours-to-keep-clusters 24`
 ```
 
 This command deletes test images older than 1 day and test clusters created
 more than 24 hours ago in a personal project called `my-knative-project`.
 
 ```sh
-$ ./cleanup.sh --project my-knative-project --days-to-keep-images 1 --days-to-keep-clusters 24`
+$ ./cleanup.sh --project my-knative-project --days-to-keep-images 1 --hours-to-keep-clusters 24`
 ```
 
 ## Prow Job
