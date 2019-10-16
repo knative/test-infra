@@ -58,6 +58,9 @@ const (
 
 	// goCoveragePostsubmitJob is the template for the go postsubmit coverage job.
 	goCoveragePostsubmitJob = "prow_postsubmit_gocoverage_job.yaml"
+
+	// pluginsConfig is the template for the plugins YAML file.
+	pluginsConfig = "prow_plugins.yaml"
 )
 
 // repositoryData contains basic data about each Knative repository.
@@ -1276,11 +1279,13 @@ func main() {
 	prowConfigOutput := ""
 	testgridConfigOutput := ""
 	var generateProwConfig = flag.Bool("generate-prow-config", true, "Whether to generate the prow configuration file from the template")
+	var generatePluginsConfig = flag.Bool("generate-plugins-config", true, "Whether to generate the plugins configuration file from the template")
 	var generateTestgridConfig = flag.Bool("generate-testgrid-config", true, "Whether to generate the testgrid config from the template file")
 	var generateMaintenanceJobs = flag.Bool("generate-maintenance-jobs", true, "Whether to generate the maintenance periodic jobs (e.g. backup)")
 	var includeConfig = flag.Bool("include-config", true, "Whether to include general configuration (e.g., plank) in the generated config")
 	var dockerImagesBase = flag.String("image-docker", "gcr.io/knative-tests/test-infra", "Default registry for the docker images used by the jobs")
 	flag.StringVar(&prowConfigOutput, "prow-config-output", "", "The destination for the prow config output, default to be stdout")
+	var pluginsConfigOutput = flag.String("plugins-config-output", "", "The destination for the plugins config output, default to be stdout")
 	flag.StringVar(&testgridConfigOutput, "testgrid-config-output", "", "The destination for the testgrid config output, default to be stdout")
 	flag.StringVar(&prowHost, "prow-host", "https://prow.knative.dev", "Prow host, including HTTP protocol")
 	flag.StringVar(&testGridHost, "testgrid-host", "https://testgrid.knative.dev", "TestGrid host, including HTTP protocol")
@@ -1334,13 +1339,20 @@ func main() {
 		log.Fatalf("Cannot parse config %q: %v", name, err)
 	}
 
+	prowConfigData := getProwConfigData(config)
+
+	if *generatePluginsConfig {
+		setOutput(*pluginsConfigOutput)
+		executeTemplate("plugins config", readTemplate(pluginsConfig), prowConfigData)
+	}
+
 	// Generate Prow config.
 	if *generateProwConfig {
 		setOutput(prowConfigOutput)
 		repositories = make([]repositoryData, 0)
 		sectionMap = make(map[string]bool)
 		if *includeConfig {
-			executeTemplate("general config", readTemplate(generalProwConfig), getProwConfigData(config))
+			executeTemplate("general config", readTemplate(generalProwConfig), prowConfigData)
 		}
 		parseSection(config, "presubmits", generatePresubmit, nil)
 		parseSection(config, "periodics", generatePeriodic, generateGoCoveragePeriodic)
