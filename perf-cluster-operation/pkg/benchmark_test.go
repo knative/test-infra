@@ -17,8 +17,9 @@ limitations under the License.
 package pkg
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestBenchmarkNames(t *testing.T) {
@@ -38,10 +39,11 @@ func TestBenchmarkNames(t *testing.T) {
 
 	for _, tc := range testCases {
 		benchmarks, err := benchmarkNames(tc.benchmarkRoot)
-		if !reflect.DeepEqual(tc.expectedBenchmarks, benchmarks) {
-			t.Fatalf("expected to get benchmarks %v under %q, but got %v",
-				tc.expectedBenchmarks, tc.benchmarkRoot, benchmarks)
+		if diff := cmp.Diff(tc.expectedBenchmarks, benchmarks); diff != "" {
+			t.Fatalf("benchmarkNames(%q) returns wrong result (-want +got):\n%s",
+				tc.benchmarkRoot, diff)
 		}
+
 		if tc.expectedError && err == nil {
 			t.Fatalf("expected to get error for getting benchmarks under %q, but got nil", tc.benchmarkRoot)
 		}
@@ -80,17 +82,16 @@ func TestClusterConfigForBenchmark(t *testing.T) {
 
 	for _, tc := range testCases {
 		clusterConfig := clusterConfigForBenchmark(tc.benchmarkRoot, tc.benchmarkName)
-		if !reflect.DeepEqual(tc.expectedClusterConfig, clusterConfig) {
-			t.Fatalf("expected to get cluster config %v for benchmark %q under %q, but got %v",
-				tc.expectedClusterConfig, tc.benchmarkName, tc.benchmarkRoot, clusterConfig)
+		if diff := cmp.Diff(tc.expectedClusterConfig, clusterConfig); diff != "" {
+			t.Fatalf("clusterConfigForBenchmark(%q, %q) returns wrong result (-want +got):\n%s",
+				tc.benchmarkRoot, tc.benchmarkName, diff)
 		}
 	}
 }
 
 func TestClusterNameForBenchmark(t *testing.T) {
 	repo, benchmarkName, expectedName := "serving", "load-test", "serving-load-test"
-	gotName := clusterNameForBenchmark(benchmarkName, repo)
-	if gotName != expectedName {
+	if gotName := clusterNameForBenchmark(benchmarkName, repo); gotName != expectedName {
 		t.Fatalf(
 			"expected to get cluster name %q for benchmark %q under repo %q, but got %q",
 			expectedName, benchmarkName, repo, gotName,
@@ -115,11 +116,10 @@ func TestBenchmarkNameForCluster(t *testing.T) {
 		clusterName:           "serving--load-test",
 		repo:                  "serving",
 		expectedBenchmarkName: "-load-test",
-	}}
+	}, {}}
 
 	for _, tc := range testCases {
-		benchmarkName := benchmarkNameForCluster(tc.clusterName, tc.repo)
-		if benchmarkName != tc.expectedBenchmarkName {
+		if benchmarkName := benchmarkNameForCluster(tc.clusterName, tc.repo); benchmarkName != tc.expectedBenchmarkName {
 			t.Fatalf(
 				"expected to get benchmark name %q for cluster %q in repo %q, but got %q",
 				tc.expectedBenchmarkName, tc.clusterName, tc.repo, benchmarkName,

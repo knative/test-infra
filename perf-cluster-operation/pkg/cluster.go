@@ -33,6 +33,7 @@ const (
 	retryTimes = 3
 
 	// known cluster status
+	// TODO(chizhg): move these status constants to gke package
 	statusProvisioning = "PROVISIONING"
 	statusRunning      = "RUNNING"
 	statusStopping     = "STOPPING"
@@ -57,9 +58,9 @@ func NewClient() (*gkeClient, error) {
 
 // RecreateClusters will delete and recreate the existing clusters.
 func (gc *gkeClient) RecreateClusters(gcpProject, repo, benchmarkRoot string) error {
-	handleExistingCluster := func(cluster container.Cluster, clusterConfigs map[string]ClusterConfig) error {
+	handleExistingCluster := func(cluster container.Cluster, configExists bool, config ClusterConfig) error {
 		// always delete the cluster, even if the cluster config is unchanged
-		return gc.handleExistingClusterHelper(gcpProject, cluster, clusterConfigs, false)
+		return gc.handleExistingClusterHelper(gcpProject, cluster, configExists, config, false)
 	}
 	handleNewClusterConfig := func(clusterName string, clusterConfig ClusterConfig) error {
 		// for now, do nothing to the new cluster config
@@ -76,9 +77,9 @@ func (gc *gkeClient) RecreateClusters(gcpProject, repo, benchmarkRoot string) er
 // 3. If the benchmark is renamed, delete the old cluster and create a new one with the new name
 // 4. If the benchmark is deleted, delete the corresponding cluster
 func (gc *gkeClient) ReconcileClusters(gcpProject, repo, benchmarkRoot string) error {
-	handleExistingCluster := func(cluster container.Cluster, clusterConfigs map[string]ClusterConfig) error {
+	handleExistingCluster := func(cluster container.Cluster, configExists bool, config ClusterConfig) error {
 		// retain the cluster, if the cluster config is unchanged
-		return gc.handleExistingClusterHelper(gcpProject, cluster, clusterConfigs, true)
+		return gc.handleExistingClusterHelper(gcpProject, cluster, configExists, config, true)
 	}
 	handleNewClusterConfig := func(clusterName string, clusterConfig ClusterConfig) error {
 		// create a new cluster with the new cluster config
@@ -91,7 +92,7 @@ func (gc *gkeClient) ReconcileClusters(gcpProject, repo, benchmarkRoot string) e
 // with the corresponding functions provided by callers.
 func (gc *gkeClient) processClusters(
 	gcpProject, repo, benchmarkRoot string,
-	handleExistingCluster func(cluster container.Cluster, clusterConfigs map[string]ClusterConfig) error,
+	handleExistingCluster func(cluster container.Cluster, configExists bool, config ClusterConfig) error,
 	handleNewClusterConfig func(name string, config ClusterConfig) error,
 ) error {
 	curtClusters, err := gc.listClustersForRepo(gcpProject, repo)
@@ -109,14 +110,14 @@ func (gc *gkeClient) processClusters(
 	for i := range curtClusters {
 		wg.Add(1)
 		cluster := curtClusters[i]
+		config, configExists := clusterConfigs[cluster.Name]
 		go func() {
 			defer wg.Done()
-			if err := handleExistingCluster(cluster, clusterConfigs); err != nil {
+			if err := handleExistingCluster(cluster, configExists, config); err != nil {
 				errCh <- fmt.Errorf("failed handling cluster %v: %v", cluster, err)
 			}
 		}()
 		// remove the cluster from clusterConfigs as it's already been handled
-		// BUG!!!!!! Should not delete here.
 		delete(clusterConfigs, cluster.Name)
 	}
 
@@ -148,21 +149,21 @@ func (gc *gkeClient) processClusters(
 
 // handleExistingClusterHelper is a helper function for handling an existing cluster.
 func (gc *gkeClient) handleExistingClusterHelper(
-	gcpProject string, cluster container.Cluster, clusterConfigs map[string]ClusterConfig,
+	gcpProject string,
+	cluster container.Cluster, configExists bool, config ClusterConfig,
 	retainIfUnchanged bool,
 ) error {
 	// if the cluster is currently being created or deleted, return directly as other jobs will handle it properly
 	if cluster.Status == statusProvisioning || cluster.Status == statusStopping {
-		log.Printf("cluster %q is being handled by other jobs, skip it", cluster.Name)
+		log.Printf("Cluster %q is being handled by other jobs, skip it", cluster.Name)
 		return nil
 	}
 
-	config, configExists := clusterConfigs[cluster.Name]
 	// if retainIfUnchanged is set to true, and the cluster config does not change, do nothing
 	// TODO(chizhg): also check the addons config
-	if retainIfUnchanged && configExists &&
+	if configExists && retainIfUnchanged &&
 		cluster.CurrentNodeCount == config.NodeCount && cluster.Location == config.Location {
-		log.Printf("cluster config is unchanged for %q, skip it", cluster.Name)
+		log.Printf("Cluster config is unchanged for %q, skip it", cluster.Name)
 		return nil
 	}
 

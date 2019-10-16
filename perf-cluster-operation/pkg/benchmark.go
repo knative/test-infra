@@ -36,8 +36,7 @@ const (
 	defaultLocation  = "us-central1"
 	defaultNodeCount = 1
 	defaultNodeType  = "n1-standard-4"
-	// defaultAddons    = "HorizontalPodAutoscaling,HttpLoadBalancing"
-	defaultAddons = ""
+	defaultAddons    = "HorizontalPodAutoscaling,HttpLoadBalancing"
 )
 
 // backupLocations are used in retrying cluster creation, if stockout happens in one location.
@@ -113,10 +112,10 @@ func clusterConfigForBenchmark(benchmarkRoot, benchmarkName string) ClusterConfi
 		contents, err := ioutil.ReadFile(configFile)
 		if err == nil {
 			if err := yaml.Unmarshal(contents, &gkeCluster); err != nil {
-				log.Printf("Failed to parse the config file %q, default config will be used", configFile)
+				log.Printf("WARNING: cannot parse the config file %q, default config will be used", configFile)
 			}
 		} else {
-			log.Printf("Failed to read the config file %q, default config will be used", configFile)
+			log.Printf("WARNING: cannot read the config file %q, default config will be used", configFile)
 		}
 	}
 
