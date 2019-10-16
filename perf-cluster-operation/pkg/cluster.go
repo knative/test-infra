@@ -22,8 +22,8 @@ import (
 	"strings"
 	"sync"
 
+	"knative.dev/pkg/test/gke"
 	"knative.dev/pkg/test/helpers"
-	"knative.dev/pkg/testutils/gke"
 
 	container "google.golang.org/api/container/v1beta1"
 )
@@ -153,16 +153,22 @@ func (gc *gkeClient) handleExistingClusterHelper(
 	cluster container.Cluster, configExists bool, config ClusterConfig,
 	retainIfUnchanged bool,
 ) error {
-	// if the cluster is currently being created or deleted, return directly as other jobs will handle it properly
+	// if the cluster is currently being created or deleted, return directly as that job will handle it properly
 	if cluster.Status == statusProvisioning || cluster.Status == statusStopping {
-		log.Printf("Cluster %q is being handled by other jobs, skip it", cluster.Name)
+		log.Printf("Cluster %q is being handled by another job, skip it", cluster.Name)
 		return nil
 	}
 
+	curtNodeCount := cluster.CurrentNodeCount
+	// if it's a regional cluster, the nodes will be in 3 zones. The CurrentNodeCount we get here is
+	// the total node count, so we'll need to divide with 3 to get the actual regional node count
+	if _, zone := gke.RegionZoneFromLoc(cluster.Location); zone == "" {
+		curtNodeCount /= 3
+	}
 	// if retainIfUnchanged is set to true, and the cluster config does not change, do nothing
 	// TODO(chizhg): also check the addons config
 	if configExists && retainIfUnchanged &&
-		cluster.CurrentNodeCount == config.NodeCount && cluster.Location == config.Location {
+		curtNodeCount == config.NodeCount && cluster.Location == config.Location {
 		log.Printf("Cluster config is unchanged for %q, skip it", cluster.Name)
 		return nil
 	}
@@ -196,6 +202,7 @@ func (gc *gkeClient) listClustersForRepo(gcpProject, repo string) ([]container.C
 // and retry for a maximum of retryTimes if there is an error.
 // TODO(chizhg): maybe move it to clustermanager library.
 func (gc *gkeClient) deleteClusterWithRetries(gcpProject string, cluster container.Cluster) error {
+	log.Printf("Deleting cluster %q under project %q", cluster.Name, gcpProject)
 	region, zone := gke.RegionZoneFromLoc(cluster.Location)
 	var err error
 	for i := 0; i < retryTimes; i++ {
@@ -216,6 +223,7 @@ func (gc *gkeClient) deleteClusterWithRetries(gcpProject string, cluster contain
 // and retry for a maximum of retryTimes if there is an error.
 // TODO(chizhg): maybe move it to clustermanager library.
 func (gc *gkeClient) createClusterWithRetries(gcpProject, name string, config ClusterConfig) error {
+	log.Printf("Creating cluster %q under project %q with config %v", name, gcpProject, config)
 	var addons []string
 	if strings.TrimSpace(config.Addons) != "" {
 		addons = strings.Split(config.Addons, ",")
@@ -235,7 +243,14 @@ func (gc *gkeClient) createClusterWithRetries(gcpProject, name string, config Cl
 	region, zone := gke.RegionZoneFromLoc(config.Location)
 	for i := 0; i < retryTimes; i++ {
 		// TODO(chizhg): retry with different requests, based on the error type
-		if err = gc.ops.CreateCluster(gcpProject, region, zone, creq); err == nil {
+		if err = gc.ops.CreateCluster(gcpProject, region, zone, creq); err != nil {
+			// If the cluster is actually created in the end, recreating it with the same name will fail again for sure,
+			// so we need to delete the broken cluster before retry.
+			// It is a best-effort delete, and won't throw any errors if the deletion fails.
+			if cluster, _ := gc.ops.GetCluster(gcpProject, region, zone, name); cluster != nil {
+				gc.deleteClusterWithRetries(gcpProject, *cluster)
+			}
+		} else {
 			break
 		}
 	}

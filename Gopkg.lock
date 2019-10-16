@@ -361,17 +361,17 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:a09252e25c670f46611c7dc13b01b925e034b5b3aeb7e120ede02447c7b00b79"
+  digest = "1:4fc923e904e74a55e3bc3d6edae3200d192394158cc8cbbc706cca16327e4e01"
   name = "knative.dev/pkg"
   packages = [
     "test/ghutil",
     "test/ghutil/fakeghutil",
+    "test/gke",
     "test/helpers",
     "test/slackutil",
-    "testutils/gke",
   ]
   pruneopts = "NUT"
-  revision = "757d7e4c7706e3fc60d72627e8a7250e909a137e"
+  revision = "3f11504864ae6d2a4826d28fb487b6404b5829e1"
 
 [solve-meta]
   analyzer-name = "dep"
@@ -392,9 +392,9 @@
     "k8s.io/apimachinery/pkg/util/sets",
     "knative.dev/pkg/test/ghutil",
     "knative.dev/pkg/test/ghutil/fakeghutil",
+    "knative.dev/pkg/test/gke",
     "knative.dev/pkg/test/helpers",
     "knative.dev/pkg/test/slackutil",
-    "knative.dev/pkg/testutils/gke",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

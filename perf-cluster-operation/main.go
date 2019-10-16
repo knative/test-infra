@@ -23,13 +23,10 @@ import (
 	"knative.dev/test-infra/perf-cluster-operation/pkg"
 )
 
-// operations supported by this tool
-const (
-	recreateOperation  = "recreate"
-	reconcileOperation = "reconcile"
-)
-
+// flags supported by this tool
 var (
+	isRecreate          bool
+	isReconcile         bool
 	gcpProjectName      string
 	repoName            string
 	benchmarkRootFolder string
@@ -39,29 +36,30 @@ func main() {
 	flag.StringVar(&gcpProjectName, "gcp-project", "", "name of the GCP project for cluster operations")
 	flag.StringVar(&repoName, "repository", "", "name of the repository")
 	flag.StringVar(&benchmarkRootFolder, "benchmark-root", "", "root folder of the benchmarks")
+	flag.BoolVar(&isRecreate, "recreate", false, "is recreate operation or not")
+	flag.BoolVar(&isReconcile, "reconcile", false, "is reconcile operation or not")
 	flag.Parse()
-	args := flag.Args()
-	if len(args) != 1 {
-		log.Fatal("Only one operation name can be provided as the arg")
+
+	if isRecreate && isReconcile {
+		log.Fatal("Only one operation can be specified, either recreate or reconcile")
 	}
 
 	client, err := pkg.NewClient()
 	if err != nil {
 		log.Fatalf("Failed setting up GKE client, cannot proceed: %v", err)
 	}
-	operation := args[0]
-	switch operation {
-	case recreateOperation:
+	switch {
+	case isRecreate:
 		if err := client.RecreateClusters(gcpProjectName, repoName, benchmarkRootFolder); err != nil {
 			log.Fatalf("Failed recreating clusters for repo %q: %v", repoName, err)
 		}
 		log.Printf("Done with recreating clusters for repo %q", repoName)
-	case reconcileOperation:
+	case isReconcile:
 		if err := client.ReconcileClusters(gcpProjectName, repoName, benchmarkRootFolder); err != nil {
 			log.Fatalf("Failed reconciling clusters for repo %q: %v", repoName, err)
 		}
 		log.Printf("Done with reconciling clusters for repo %q", repoName)
 	default:
-		log.Fatalf("Operation %q is not supported", operation)
+		log.Fatal("One operation must be specified, either recreate or reconcile")
 	}
 }

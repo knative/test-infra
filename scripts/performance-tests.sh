@@ -108,8 +108,8 @@ function update_clusters() {
 function recreate_clusters() {
   header "Recreating clusters for ${REPO_NAME}"
   go run $GOPATH/src/knative.dev/test-infra/perf-cluster-operation \
-    --gcp-project=${PROJECT_NAME} --repository=${REPO_NAME} --benchmark-root=${BENCHMARK_ROOT_PATH} \
-    recreate
+    --recreate \
+    --gcp-project=${PROJECT_NAME} --repository=${REPO_NAME} --benchmark-root=${BENCHMARK_ROOT_PATH}
   header "Done recreating clusters"
   # Update all clusters after they are recreated
   update_clusters
@@ -120,11 +120,12 @@ function recreate_clusters() {
 function reconcile_benchmark_clusters() {
   header "Reconciling clusters for ${REPO_NAME}"
   go run $GOPATH/src/knative.dev/test-infra/perf-cluster-operation \
-    --gcp-project=${PROJECT_NAME} --repository=${REPO_NAME} --benchmark-root=${BENCHMARK_ROOT_PATH} \
-    reconcile
+    --reconcile \
+    --gcp-project=${PROJECT_NAME} --repository=${REPO_NAME} --benchmark-root=${BENCHMARK_ROOT_PATH}
+    
   go run $GOPATH/src/knative.dev/test-infra/perf-cluster-operation \
-    --gcp-project=test-project-chizhg --repository=test --benchmark-root=/Users/chizhg/go/src/knative.dev/test-infra/perf-cluster-operation/pkg/testdir \
-    reconcile
+    --reconcile \
+    --gcp-project=test-project-chizhg --repository=test --benchmark-root=/Users/chizhg/go/src/knative.dev/test-infra/perf-cluster-operation/pkg/testdir
   header "Done reconciling clusters"
   # For now, do nothing after reconciling the clusters, and the next update_clusters job will automatically 
   # update them. So there will be a period that the newly created clusters are being idle, and the duration
