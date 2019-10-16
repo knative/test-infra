@@ -19,18 +19,29 @@ package actions
 import (
 	"log"
 	"strconv"
-	"strings"
 
 	container "google.golang.org/api/container/v1beta1"
 	"knative.dev/pkg/testutils/clustermanager"
 	"knative.dev/pkg/testutils/common"
-	"knative.dev/test-infra/test/metahelper/util"
+	"knative.dev/pkg/testutils/gke"
+	"knative.dev/test-infra/test/metahelper/client"
 	"knative.dev/test-infra/test/prow-cluster-operation/options"
+)
+
+const (
+	// Keys to be written into metadata.json
+	e2eRegionKey      = "E2E:Region"
+	e2eZoneKey        = "E2E:Zone"
+	clusterNameKey    = "E2E:Machine"
+	clusterVersionKey = "E2E:Version"
+	minNodesKey       = "E2E:MinNodes"
+	maxNodesKey       = "E2E:MaxNodes"
+	projectKey        = "E2E:Project"
 )
 
 func writeMetaData(cluster *container.Cluster, project string) {
 	// Set up metadata client for saving metadata
-	c, err := util.NewClient("")
+	c, err := client.NewClient("")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -50,31 +61,18 @@ func writeMetaData(cluster *container.Cluster, project string) {
 		}
 	}
 
-	var e2eRegion, e2eZone string
-	geoKey := "E2E:REGION"
-	e2eRegion = cluster.Location
-	locParts := strings.Split(e2eRegion, "_")
-	if len(locParts) == 2 {
-		e2eRegion = locParts[0]
-		e2eZone = locParts[1]
-		geoKey = "E2E:ZONE"
-	} else if len(locParts) > 3 {
-		log.Fatalf("location %q shouldn't contain more than 1 '_'", cluster.Location)
-	}
-
+	e2eRegion, e2eZone := gke.RegionZoneFromLoc(cluster.Location)
 	for key, val := range map[string]string{
-		geoKey:         cluster.Location,
-		"E2E:Region":   e2eRegion,
-		"E2E:Zone":     e2eZone,
-		"E2E:Machine":  cluster.Name,
-		"E2E:Version":  cluster.InitialClusterVersion,
-		"E2E:MinNodes": minNodes,
-		"E2E:MaxNodes": maxNodes,
-		"E2E:Project":  project,
+		e2eRegionKey:      e2eRegion,
+		e2eZoneKey:        e2eZone,
+		clusterNameKey:    cluster.Name,
+		clusterVersionKey: cluster.InitialClusterVersion,
+		minNodesKey:       minNodes,
+		maxNodesKey:       maxNodes,
+		projectKey:        project,
 	} {
-		err = c.Set(key, val)
-		if err != nil {
-			log.Fatalf("failed saving metadata %q:%q. err: '%v'", key, val, err)
+		if err = c.Set(key, val); err != nil {
+			log.Fatalf("Failed saving metadata %q:%q: '%v'", key, val, err)
 		}
 	}
 	log.Println("Done writing metadata")
@@ -93,16 +91,15 @@ func Create(o *options.RequestWrapper) {
 	// At this point we should have a cluster ready to run test. Need to save
 	// metadata so that following flow can understand the context of cluster, as
 	// well as for Prow usage later
-	// TODO(chaodaiG): this logic may need to be part of clustermanager lib as well
 	writeMetaData(gkeOps.Cluster, gkeOps.Project)
 
 	// set up kube config points to cluster
 	// TODO(chaodaiG): this probably should also be part of clustermanager lib
 	if out, err := common.StandardExec("gcloud", "beta", "container", "clusters", "get-credentials",
 		gkeOps.Cluster.Name, "--region", gkeOps.Cluster.Location, "--project", gkeOps.Project); err != nil {
-		log.Fatalf("failed connect to cluster: '%v', '%v'", string(out), err)
+		log.Fatalf("Failed connecting to cluster: %q, '%v'", out, err)
 	}
 	if out, err := common.StandardExec("gcloud", "config", "set", "project", gkeOps.Project); err != nil {
-		log.Fatalf("failed set gcloud: '%v', '%v'", string(out), err)
+		log.Fatalf("Failed setting gcloud: %q, '%v'", out, err)
 	}
 }

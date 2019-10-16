@@ -23,5 +23,7 @@ import (
 func Get(o *options.RequestWrapper) {
 	o.Prep()
 	o.Request.SkipCreation = true
+	// Reuse `Create` for getting operation, so that we can reuse the same logic
+	// such as protected project/cluster etc.
 	Create(o)
 }

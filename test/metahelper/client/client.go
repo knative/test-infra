@@ -1,5 +1,21 @@
-// Package util supports various needs for running tests
-package util
+/*
+Copyright 2019 The Knative Authors
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+// Package client supports various needs for running tests
+package client
 
 import (
 	"encoding/json"
@@ -9,13 +25,15 @@ import (
 	"os"
 	"path"
 
+	"knative.dev/test-infra/shared/common"
+
 	// TODO(chaodaiG): use prow from pkg once
 	// https://github.com/knative/pkg/pull/750 is merged
 	"knative.dev/test-infra/shared/prow"
 )
 
 const (
-	Filename = "metadata.json"
+	filename = "metadata.json"
 )
 
 // client holds metadata as a string:string map, as well as path for storing
@@ -36,22 +54,15 @@ func NewClient(dir string) (*client, error) {
 		log.Println("Getting artifacts dir from prow")
 		dir = prow.GetLocalArtifactsDir()
 	}
-	c.Path = path.Join(dir, Filename)
-	_, err := os.Stat(dir)
-	if err != nil && os.IsNotExist(err) {
-		err = os.MkdirAll(dir, 0777)
-	}
-
-	return c, err
+	c.Path = path.Join(dir, filename)
+	return c, common.CreateDir(dir)
 }
 
-// sync reads from meta file and convert it to Meta, returns empty
-// Meta if file doesn't exist yet, and returns error if there is any i/o or
-// unmarshall error
+// sync is shared by Get and Set, invoked at the very beginning of each, makes
+// sure the file exists, and loads the content of file into c.MetaData
 func (c *client) sync() error {
 	_, err := os.Stat(c.Path)
 	if os.IsNotExist(err) {
-		log.Println("write file")
 		body, _ := json.Marshal(&c.MetaData)
 		err = ioutil.WriteFile(c.Path, body, 0777)
 	} else {
@@ -82,7 +93,7 @@ func (c *client) Set(key, val string) error {
 // Get gets val for key
 func (c *client) Get(key string) (string, error) {
 	if _, err := os.Stat(c.Path); err != nil && os.IsNotExist(err) {
-		return "", fmt.Errorf("file not exist: %q", c.Path)
+		return "", fmt.Errorf("file %q doesn't exist", c.Path)
 	}
 	var res string
 	err := c.sync()

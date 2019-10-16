@@ -20,7 +20,6 @@ import (
 	"log"
 
 	"knative.dev/pkg/testutils/clustermanager"
-	"knative.dev/pkg/testutils/common"
 	"knative.dev/test-infra/test/prow-cluster-operation/options"
 )
 
@@ -35,12 +34,17 @@ func Delete(o *options.RequestWrapper) {
 		log.Fatalf("Failed identifying cluster for cleanup: '%v'", err)
 	}
 	log.Printf("Identified project %q and cluster %q for removal", gkeOps.Project, gkeOps.Cluster.Name)
-	// Don't wait for delete
 	var err error
 	if err = gkeOps.Delete(); err != nil {
 		log.Fatalf("Failed deleting cluster: '%v'", err)
 	}
-	if out, err := common.StandardExec("kubectl", "config", "unset", "current-context"); err != nil {
-		common.StandardExec("kubectl", "config", "unset", "contexts."+string(out))
-	}
+	// TODO: uncomment the lines below when previous Delete command becomes
+	// async operation
+	// // Unset context with best effort. The first command only unsets current
+	// // context, but doesn't delete the entry from kubeconfig, and should return it's
+	// // context if succeeded, which can be used by the second command to
+	// // delete it from kubeconfig
+	// if out, err := common.StandardExec("kubectl", "config", "unset", "current-context"); err != nil {
+	// 	common.StandardExec("kubectl", "config", "unset", "contexts."+string(out))
+	// }
 }

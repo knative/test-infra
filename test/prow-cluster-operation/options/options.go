@@ -31,9 +31,11 @@ type RequestWrapper struct {
 }
 
 func NewRequestWrapper() *RequestWrapper {
-	return &RequestWrapper{
+	rw := &RequestWrapper{
 		Request: clustermanager.GKERequest{},
 	}
+	rw.addOptions()
+	return rw
 }
 
 func (rw *RequestWrapper) Prep() {
@@ -45,7 +47,7 @@ func (rw *RequestWrapper) Prep() {
 	}
 }
 
-func (rw *RequestWrapper) AddOptions() {
+func (rw *RequestWrapper) addOptions() {
 	flag.Int64Var(&rw.Request.MinNodes, "min-nodes", 0, "minimal number of nodes")
 	flag.Int64Var(&rw.Request.MaxNodes, "max-nodes", 0, "maximal number of nodes")
 	flag.StringVar(&rw.Request.NodeType, "node-type", "", "node type")

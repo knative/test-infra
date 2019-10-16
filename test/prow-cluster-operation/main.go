@@ -27,11 +27,13 @@ import (
 func main() {
 	create := flag.Bool("create", false, "Create cluster")
 	delete := flag.Bool("delete", false, "Delete cluster")
-	get := flag.Bool("get", false, "Get cluster")
+	get := flag.Bool("get", false, "Get existing cluster from kubeconfig or gcloud")
 	o := options.NewRequestWrapper()
-	o.AddOptions()
 	flag.Parse()
 
+	if (*create && *delete) || (*create && *get) || (*delete && *get) {
+		log.Fatal("--create, --delete, --get are mutually exclusive")
+	}
 	switch {
 	case *create:
 		actions.Create(o)
@@ -40,6 +42,6 @@ func main() {
 	case *get:
 		actions.Get(o)
 	default:
-		log.Fatal("Must passing one of: --create, --delete, --get")
+		log.Fatal("Must pass one of --create, --delete, --get")
 	}
 }

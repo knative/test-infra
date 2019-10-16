@@ -16,7 +16,7 @@ This tool can be invoked from command line with following parameters:
 - `--node-type`: GCE node type, default "n1-standard-4"
 - `--region`: GKE region, default "us-central1"
 - `--zone`: GKE zone, default empty
-- `--project`" GCP project, default empty
+- `--project`: GCP project, default empty
 - `--name`: cluster name, default empty
 - `--backup-regions`: backup regions to be used if cluster creation in primary
   region failed, comma separated list, default "us-west1,us-east1"
@@ -40,14 +40,14 @@ This tool can be invoked from command line with following parameters:
 ### Delete
 
 1. Acquiring cluster if kubeconfig already points to it
-1. If cluster name is defined then getting cluster by it's name
+1. If cluster name is defined then getting cluster by its name
 1. If no cluster is found from previous step then it fails
 1. Delete:
     - [In Prow] Release Boskos project
-    - [Not in Prow] No-op
+    - [Not in Prow] Delete cluster
 
 ### Get
 
 1. Acquiring cluster if kubeconfig already points to it
-1. If cluster name is defined then getting cluster by it's name
+1. If cluster name is defined then getting cluster by its name
 1. If no cluster is found from previous step then it fails

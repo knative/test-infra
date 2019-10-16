@@ -28,31 +28,40 @@ source $(dirname $0)/../scripts/e2e-tests.sh
 # Read metadata.json and get value for key
 # Parameters: $1 - Key for metadata
 function get_meta_value() {
-  # local metadata="${ARTIFACTS}/metadata.json"
-  # cat ${metadata} | grep -oEi "\"${1}\" ?: ?\".*\"" | cut -d "\"" -f 4
-  go run knative.dev/test-infra/test/metahelper --get $@
+  go run knative.dev/test-infra/test/metahelper --get $1
 }
 
 function knative_setup() {
   start_latest_knative_serving
 }
 
-# Run a prow-cluster-operation tool, installing it first if necessary.
-#             $1..$n - parameters passed to the tool.
+# Run a prow-cluster-operation tool
+# Parameters: $1..$n - parameters passed to the tool
 function run_prow_cluster_tool() {
   go run knative.dev/test-infra/test/prow-cluster-operation $@
 }
 
+# Get test cluster from kubeconfig, fail if it's protected
+function get_e2e_test_cluster() {
+
+  local k8s_cluster=$(kubectl config current-context)
+  [[ -z "${k8s_cluster}" ]] && abort "kubectl must have been set at this point"
+  # Add protection before trapping removal
+  is_protected_cluster ${k8s_cluster} && \
+    abort "kubeconfig context set to ${k8s_cluster}, which is forbidden"
+  echo $k8s_cluster
+}
+
 # Add function call to trap
 # Parameters: $1 - Function to call
-#             $2...%n - Signals for trap
+#             $2...$n - Signals for trap
 function add_trap {
   local cmd=$1
-  shift 1
-  for trap_signal in "$@"; do
+  shift
+  for trap_signal in $@; do
     local current_trap="$(trap -p $trap_signal | cut -d\' -f2)"
     local new_cmd=$cmd
-    [[ -n "${current_trap}" ]] && new_cmd="${current_trap};${new_cmd}"
+    [[ -n "${current_trap}" ]] && new_cmd="${current_trap};(${new_cmd})"
     trap -- "${new_cmd}" $trap_signal
   done
 }
@@ -69,19 +78,18 @@ function create_test_cluster() {
   local creation_args=""
   (( SKIP_ISTIO_ADDON )) || creation_args+=" --addons istio"
   [[ -n "${GCP_PROJECT}" ]] && creation_args+=" --project ${GCP_PROJECT}"
-  echo "creation args: ${creation_args}"
+  echo "Creating cluster with args ${creation_args}"
   run_prow_cluster_tool --create ${creation_args} || fail_test "failed creating test cluster"
   # Should have kubeconfig set already
-  local k8s_cluster=$(kubectl config current-context)
-  [[ -z "${k8s_cluster}" ]] && abort "kubectl must have been set at this point"
-  # Add protection before trapping removal
-  is_protected_cluster ${k8s_cluster} && \
-    abort "kubeconfig context set to ${k8s_cluster}, which is forbidden"
+  local k8s_cluster
+  k8s_cluster=$(get_e2e_test_cluster)
 
-  # Since this function is called assuming cluster creation, force removing
-  # cluster afterwards, cluster-remover by default forces cleaning up everything
+  # Since calling `create_test_cluster` assumes cluster creation, removing
+  # cluster afterwards.
   # TODO(chaodaiG) calling async method so that it doesn't wait
-  add_trap "(run_prow_cluster_tool --delete > /dev/null &)" EXIT SIGINT
+  add_trap "run_prow_cluster_tool --delete > /dev/null &" EXIT SIGINT
+  set +o errexit
+  set +o pipefail
 }
 
 # Override setup_test_cluster, this function is almost copy paste from original
@@ -114,18 +122,12 @@ function setup_test_cluster() {
   readonly E2E_PROJECT_ID  # NC
 
   local k8s_user=$(gcloud config get-value core/account)
-  local k8s_cluster=$(kubectl config current-context)
-
-  [[ -z "${k8s_cluster}" ]] && abort "kubectl must have been set at this point"
-
-  is_protected_cluster ${k8s_cluster} && \
-    abort "kubeconfig context set to ${k8s_cluster}, which is forbidden"
+  local k8s_cluster
+  k8s_cluster=$(get_e2e_test_cluster)
 
   # If cluster admin role isn't set, this is a brand new cluster
   # Setup the admin role and also KO_DOCKER_REPO if it is a GKE cluster
   if [[ -z "$(kubectl get clusterrolebinding cluster-admin-binding 2> /dev/null)" && "${k8s_cluster}" =~ ^gke_.* ]]; then
-    # gcloud beta container clusters get-credentials ${e2e_cluster_name} --region ${e2e_cluster_region} --project ${e2e_project_name} # NC
-    echo "${k8s_user} ${e2e_cluster_name} ${e2e_cluster_region} ${e2e_cluster_zone}"
     acquire_cluster_admin_role ${k8s_user} ${e2e_cluster_name} ${e2e_cluster_region} ${e2e_cluster_zone} # NC
     # Incorporate an element of randomness to ensure that each run properly publishes images.
     export KO_DOCKER_REPO=gcr.io/${E2E_PROJECT_ID}/${E2E_BASE_NAME}-e2e-img/${RANDOM}
@@ -141,7 +143,7 @@ function setup_test_cluster() {
   echo "- gcloud project is ${E2E_PROJECT_ID}"
   echo "- gcloud user is ${k8s_user}"
   echo "- Cluster is ${k8s_cluster}"
-  echo "- Docker is ${KO_DOCKER_REPO}"
+  echo "- Docker repository is ${KO_DOCKER_REPO}"
 
   export KO_DATA_PATH="${REPO_ROOT_DIR}/.git"
 
