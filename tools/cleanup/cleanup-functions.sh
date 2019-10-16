@@ -74,8 +74,8 @@ function delete_old_test_clusters() {
   for project in $1; do
     echo "Start deleting clusters from ${project}"
 
-    is_protected_project $project && \
-      abort "Target project set to $project, which is forbidden"
+    is_protected_project ${project} && \
+      abort "Target project set to ${project}, which is forbidden"
 
     local current_time=$(date +%s)
     local target_time=$(date -d "`date -d @${current_time}`-$2hours" +%s)
@@ -84,7 +84,7 @@ function delete_old_test_clusters() {
       [[ "$((3600*$2))" -eq "$(($current_time-$target_time))" ]] || abort "date operation failed"
     fi
 
-    gcloud --format='get(name,createTime,zone)' container clusters list --project=$project --limit=99999 | \
+    gcloud --format='get(name,createTime,zone)' container clusters list --project=${project} --limit=99999 | \
     while read cluster_name cluster_createtime cluster_zone; do
       [[ -n "${cluster_name}" ]]  && [[ -z "${cluster_zone}" ]] && abort "list cluster output missing cluster zone"
       echo "Checking ${cluster_name} for removal"
@@ -92,9 +92,9 @@ function delete_old_test_clusters() {
       [[ $create_time -gt $current_time ]] && abort "cluster creation time shouldn't be newer than current time"
       [[ $create_time -gt $target_time ]] && echo "skip deleting as it's created within $2 hours" && continue
       if (( DRY_RUN )); then
-        echo "[DRY RUN] gcloud container clusters delete -q ${cluster_name} -zone ${cluster_zone}"
+        echo "[DRY RUN] gcloud container clusters delete -q ${cluster_name} --project ${project} --zone ${cluster_zone}"
       else
-        gcloud container clusters delete -q ${cluster_name} -zone ${cluster_zone}
+        gcloud container clusters delete -q ${cluster_name} --project ${project} --zone ${cluster_zone}
       fi
     done
   done
