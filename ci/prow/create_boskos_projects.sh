@@ -35,7 +35,7 @@ fi
 LAST_INDEX=$(grep "${BOSKOS_PROJECT_PREFIX}" ${BOSKOS_RESOURCE_FILE} | grep -o "[0-9]\+" | sort -nr | head -1)
 [[ -z "${LAST_INDEX}" ]] && LAST_INDEX=0
 for (( i=1; i<=${NUMBER}; i++ )); do
-  PROJECT="$(printf '${BOSKOS_PROJECT_PREFIX}%02d' $(( ${LAST_INDEX} + i )))"
+  PROJECT="$(printf ${BOSKOS_PROJECT_PREFIX}%02d $(( ${LAST_INDEX} + i )))"
   # This Folder ID is google.com/google-default
   # If this needs to be changed for any reason, GCP project settings must be updated.
   # Details are available in Google's internal issue 137963841.
