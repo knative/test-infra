@@ -42,10 +42,10 @@ for (( i=1; i<=${NUMBER}; i++ )); do
   gcloud projects create ${PROJECT} --folder=396521612403
   gcloud beta billing projects link ${PROJECT} --billing-account=${BILLING_ACCOUNT}
 
-  # Set permissions for this project
-  "./set_boskos_permissions.sh" ${PROJECT} $@
-
   LAST_PROJECT=$(grep "${BOSKOS_PROJECT_PREFIX}" ${BOSKOS_RESOURCE_FILE} | tail -1)
   [[ -z "${LAST_PROJECT}" ]] && LAST_PROJECT="- names:"
   sed "/^${LAST_PROJECT}$/a\ \ -\ ${PROJECT}" -i ${BOSKOS_RESOURCE_FILE}
+
+  # Set permissions for this project
+  "./set_boskos_permissions.sh" ${PROJECT} $@
 done
