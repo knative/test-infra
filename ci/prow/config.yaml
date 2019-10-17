@@ -53,15 +53,15 @@ deck:
         name: buildlog
         config:
           highlight_regexes:
+          # regexes to match generic errors
           - timed out
-          - 'ERROR:'
-          - (\s|^)panic\b
+          # regexes to match specific errors we can have
+          # go test timeout
+          - 'panic: test timed out after.*$'
           # test case failure
           - 'FAIL:'
           # boskos error
           - 'boskos failed to acquire project'
-          # go test timeout
-          - 'panic: test timed out after.*$'
       required_files:
       - build-log.txt
     - lens:
