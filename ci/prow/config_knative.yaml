@@ -16,13 +16,9 @@ presubmits:
   knative/serving:
     - repo-settings:
       legacy-branches:
-      - release-0.4
-      - release-0.5
       - release-0.6
       - release-0.7
       go112-branches:
-      - release-0.4
-      - release-0.5
       - release-0.6
       - release-0.7
       - release-0.8
@@ -44,8 +40,6 @@ presubmits:
       - "./test/e2e-upgrade-tests.sh"
     - custom-test: smoke-tests
       skip_branches:  # Skip these branches, as test isn't available.
-      - release-0.4
-      - release-0.5
       - release-0.6
       args:
       - "--run-test"
@@ -95,8 +89,6 @@ presubmits:
   knative/eventing:
     - repo-settings:
       legacy-branches:
-      - release-0.4
-      - release-0.5
       - release-0.6
       - release-0.7
       - release-0.8
@@ -108,8 +100,6 @@ presubmits:
   knative/eventing-contrib:
     - repo-settings:
       legacy-branches:
-      - release-0.4
-      - release-0.5
       - release-0.6
       - release-0.7
       - release-0.8
@@ -209,10 +199,6 @@ periodics:
         limits:
           memory: 16Gi
     - branch-ci: true
-      release: "0.4"
-    - branch-ci: true
-      release: "0.5"
-    - branch-ci: true
       release: "0.6"
     - branch-ci: true
       release: "0.7"
@@ -301,8 +287,6 @@ periodics:
       timeout: 90
       dot-dev: true
     - branch-ci: true
-      release: "0.5"
-    - branch-ci: true
       release: "0.6"
     - branch-ci: true
       release: "0.7"
@@ -321,8 +305,6 @@ periodics:
   knative/eventing-contrib:
     - continuous: true
       dot-dev: true
-    - branch-ci: true
-      release: "0.5"
     - branch-ci: true
       release: "0.6"
     - branch-ci: true
