@@ -293,7 +293,7 @@ function build_release() {
 
 main $@
 ```
-### Using release.sh to publish to Azure
+### Publishing releases to Azure
 To run release.sh to publish to Azure Contianer Registery and Azure Blob, the following pre-requisites need to be configured/setup:
 1. Install Tools
     - Install `az` [command line tool](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
@@ -311,7 +311,7 @@ To run release.sh to publish to Azure Contianer Registery and Azure Blob, the fo
 #### Configure tests
 Automated azure support for running integration tests (ie AKS setup etc.) has not tested. The `--test-args` flag can be used to restrict presubmit testing to unit and build tests only.
 
-Example command to publish KNative Serving to Azure:
+Example command to publish Knative Serving to Azure:
 ```
 foo@trantor:~/go/src/knative.dev/serving
 $ ./hack/release.sh --test-args "--unit-tests" --release-acr MYACR --release-azblob https://MYBLOB.blob.core.windows.net/MYCONTAINER --publish --tag-release
