@@ -53,11 +53,15 @@ deck:
         name: buildlog
         config:
           highlight_regexes:
-          - 'panic: test timed out after.*$'
           - timed out
           - 'ERROR:'
-          - 'FAIL:'
           - (\s|^)panic\b
+          # test case failure
+          - 'FAIL:'
+          # boskos error
+          - 'boskos failed to acquire project'
+          # go test timeout
+          - 'panic: test timed out after.*$'
       required_files:
       - build-log.txt
     - lens:
