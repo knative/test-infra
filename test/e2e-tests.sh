@@ -60,8 +60,8 @@ function add_trap {
   shift
   for trap_signal in $@; do
     local current_trap="$(trap -p $trap_signal | cut -d\' -f2)"
-    local new_cmd=$cmd
-    [[ -n "${current_trap}" ]] && new_cmd="${current_trap};(${new_cmd})"
+    local new_cmd="($cmd)"
+    [[ -n "${current_trap}" ]] && new_cmd="${current_trap};${new_cmd}"
     trap -- "${new_cmd}" $trap_signal
   done
 }
