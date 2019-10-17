@@ -81,10 +81,10 @@ func TestClusterConfigForBenchmark(t *testing.T) {
 	}}
 
 	for _, tc := range testCases {
-		clusterConfig := clusterConfigForBenchmark(tc.benchmarkRoot, tc.benchmarkName)
+		clusterConfig := clusterConfigForBenchmark(tc.benchmarkName, tc.benchmarkRoot)
 		if diff := cmp.Diff(tc.expectedClusterConfig, clusterConfig); diff != "" {
 			t.Fatalf("clusterConfigForBenchmark(%q, %q) returns wrong result (-want +got):\n%s",
-				tc.benchmarkRoot, tc.benchmarkName, diff)
+				tc.benchmarkName, tc.benchmarkRoot, diff)
 		}
 	}
 }

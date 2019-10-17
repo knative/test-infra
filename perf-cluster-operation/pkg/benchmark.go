@@ -36,7 +36,7 @@ const (
 	defaultLocation  = "us-central1"
 	defaultNodeCount = 1
 	defaultNodeType  = "n1-standard-4"
-	defaultAddons    = "HorizontalPodAutoscaling,HttpLoadBalancing"
+	defaultAddons    = ""
 )
 
 // backupLocations are used in retrying cluster creation, if stockout happens in one location.
@@ -84,8 +84,8 @@ func benchmarkClusters(repo, benchmarkRoot string) (map[string]ClusterConfig, er
 	}
 
 	for _, benchmarkName := range benchmarkNames {
-		clusterConfig := clusterConfigForBenchmark(benchmarkRoot, benchmarkName)
-		clusterName := clusterNameForBenchmark(repo, benchmarkName)
+		clusterConfig := clusterConfigForBenchmark(benchmarkName, benchmarkRoot)
+		clusterName := clusterNameForBenchmark(benchmarkName, repo)
 		clusters[clusterName] = clusterConfig
 	}
 
@@ -97,7 +97,7 @@ func benchmarkClusters(repo, benchmarkRoot string) (map[string]ClusterConfig, er
 // Under each benchmark folder, we can put a cluster.yaml file that follows the scheme we define
 // in ClusterConfig struct, in which we specify configuration of the cluster that we use to run the benchmark.
 // If there is no such config file, or the config file is malformed, default config will be used.
-func clusterConfigForBenchmark(benchmarkRoot, benchmarkName string) ClusterConfig {
+func clusterConfigForBenchmark(benchmarkName, benchmarkRoot string) ClusterConfig {
 	gkeCluster := GKECluster{
 		Config: ClusterConfig{
 			Location:  defaultLocation,
