@@ -12,7 +12,44 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include ../Makefile.base
+# Default settings for the CI/CD system.
+
+CLUSTER            ?= prow
+PROJECT            ?= knative-tests
+ZONE               ?= us-central1-f
+JOB_NAMESPACE      ?= test-pods
+KNATIVE_CONFIG     ?= config_knative.yaml
+SKIP_CONFIG_BACKUP ?=
+
+# This is the canonical path of this Makefile, aka /ci/prow dir.
+PROW_DIR         ?= $(realpath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
+
+PROW_PLUGINS     ?= $(PROW_DIR)/plugins.yaml
+PROW_CONFIG      ?= $(PROW_DIR)/config.yaml
+PROW_DEPLOYS     ?= $(PROW_DIR)/deployments
+PROW_GCS         ?= knative-prow
+PROW_CONFIG_GCS  ?= gs://$(PROW_GCS)/configs
+
+TESTGRID_GCS     ?= knative-testgrid
+TESTGRID_CONFIG  ?= $(PROW_DIR)/testgrid.yaml
+
+BOSKOS_RESOURCES ?= $(PROW_DIR)/boskos_resources.yaml
+
+# Useful shortcuts.
+
+SET_CONTEXT   := gcloud container clusters get-credentials "$(CLUSTER)" --project="$(PROJECT)" --zone="$(ZONE)"
+UNSET_CONTEXT := kubectl config unset current-context
+
+# Avoid the default target being harmful.
+default:
+	@echo "You must specify a target"
+
+# Useful general targets.
+get-cluster-credentials:
+	$(SET_CONTEXT)
+
+unset-cluster-credentials:
+	$(UNSET_CONTEXT)
 
 # Generate the Prow config file
 config:
@@ -87,3 +124,14 @@ test:
 	bazel run @k8s//testgrid/cmd/configurator -- \
 		--yaml=$(TESTGRID_CONFIG) \
 		--validate-config-file
+
+# Update TestGrid config.
+# Application Default Credentials must be set, otherwise the upload will fail.
+# Either export $GOOGLE_APPLICATION_CREDENTIALS pointing to a valid service
+# account key, or temporarily use your own credentials by running
+# gcloud auth application-default login
+update-testgrid-config:
+	bazel run @k8s//testgrid/cmd/configurator -- \
+		--yaml=$(TESTGRID_CONFIG) \
+		--output=gs://$(TESTGRID_GCS)/config \
+		--oneshot
