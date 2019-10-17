@@ -21,9 +21,9 @@ import (
 	"strconv"
 
 	container "google.golang.org/api/container/v1beta1"
-	"knative.dev/pkg/testutils/clustermanager"
-	"knative.dev/pkg/testutils/common"
-	"knative.dev/pkg/testutils/gke"
+	"knative.dev/pkg/test/gke"
+	clm "knative.dev/pkg/testutils/clustermanager/e2e-tests"
+	"knative.dev/pkg/testutils/clustermanager/e2e-tests/common"
 	"knative.dev/test-infra/test/metahelper/client"
 	"knative.dev/test-infra/test/prow-cluster-operation/options"
 )
@@ -84,9 +84,9 @@ func writeMetaData(cluster *container.Cluster, project string) {
 func Create(o *options.RequestWrapper) {
 	o.Prep()
 
-	gkeClient := clustermanager.GKEClient{}
+	gkeClient := clm.GKEClient{}
 	clusterOps := gkeClient.Setup(o.Request)
-	gkeOps := clusterOps.(*clustermanager.GKECluster)
+	gkeOps := clusterOps.(*clm.GKECluster)
 	if err := gkeOps.Acquire(); err != nil || gkeOps.Cluster == nil {
 		log.Fatalf("failed acquiring GKE cluster: '%v'", err)
 	}

@@ -19,7 +19,7 @@ package actions
 import (
 	"log"
 
-	"knative.dev/pkg/testutils/clustermanager"
+	clm "knative.dev/pkg/testutils/clustermanager/e2e-tests"
 	"knative.dev/test-infra/test/prow-cluster-operation/options"
 )
 
@@ -27,9 +27,9 @@ func Delete(o *options.RequestWrapper) {
 	o.Request.NeedsCleanup = true
 	o.Request.SkipCreation = true
 
-	gkeClient := clustermanager.GKEClient{}
+	gkeClient := clm.GKEClient{}
 	clusterOps := gkeClient.Setup(o.Request)
-	gkeOps := clusterOps.(*clustermanager.GKECluster)
+	gkeOps := clusterOps.(*clm.GKECluster)
 	if err := gkeOps.Acquire(); err != nil || gkeOps.Cluster == nil {
 		log.Fatalf("Failed identifying cluster for cleanup: '%v'", err)
 	}

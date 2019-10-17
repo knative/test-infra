@@ -404,20 +404,20 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:4051935dc930eb7baa5d42bfdfefecab0555cc5129f0ee6e8d03c5fa34013fee"
+  digest = "1:7933e3e5cc57386eea6a337f17149307005a4c2a60595b710c4d8a685de2d21f"
   name = "knative.dev/pkg"
   packages = [
     "test/ghutil",
     "test/ghutil/fakeghutil",
+    "test/gke",
     "test/helpers",
     "test/slackutil",
-    "testutils/clustermanager",
-    "testutils/clustermanager/boskos",
-    "testutils/common",
-    "testutils/gke",
+    "testutils/clustermanager/e2e-tests",
+    "testutils/clustermanager/e2e-tests/boskos",
+    "testutils/clustermanager/e2e-tests/common",
   ]
   pruneopts = "NUT"
-  revision = "7a2cadb6ad55739be135be72d5cdfe08622421d7"
+  revision = "3f11504864ae6d2a4826d28fb487b6404b5829e1"
 
 [[projects]]
   digest = "1:8730e0150dfb2b7e173890c8b9868e7a273082ef8e39f4940e3506a481cf895c"
@@ -445,10 +445,11 @@
     "k8s.io/apimachinery/pkg/util/sets",
     "knative.dev/pkg/test/ghutil",
     "knative.dev/pkg/test/ghutil/fakeghutil",
+    "knative.dev/pkg/test/gke",
     "knative.dev/pkg/test/helpers",
     "knative.dev/pkg/test/slackutil",
-    "knative.dev/pkg/testutils/clustermanager",
-    "knative.dev/pkg/testutils/common",
+    "knative.dev/pkg/testutils/clustermanager/e2e-tests",
+    "knative.dev/pkg/testutils/clustermanager/e2e-tests/common",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

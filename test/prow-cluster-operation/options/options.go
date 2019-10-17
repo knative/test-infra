@@ -20,11 +20,11 @@ import (
 	"flag"
 	"strings"
 
-	"knative.dev/pkg/testutils/clustermanager"
+	clm "knative.dev/pkg/testutils/clustermanager/e2e-tests"
 )
 
 type RequestWrapper struct {
-	Request          clustermanager.GKERequest
+	Request          clm.GKERequest
 	BackupRegionsStr string
 	AddonsStr        string
 	NoWait           bool
@@ -32,7 +32,7 @@ type RequestWrapper struct {
 
 func NewRequestWrapper() *RequestWrapper {
 	rw := &RequestWrapper{
-		Request: clustermanager.GKERequest{},
+		Request: clm.GKERequest{},
 	}
 	rw.addOptions()
 	return rw
