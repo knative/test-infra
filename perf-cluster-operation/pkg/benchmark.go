@@ -124,7 +124,7 @@ func clusterConfigForBenchmark(benchmarkName, benchmarkRoot string) ClusterConfi
 
 // clusterNameForBenchmark prepends repo name to the benchmark name, and use it as the cluster name.
 func clusterNameForBenchmark(benchmarkName, repo string) string {
-	return fmt.Sprintf("%s--%s", repo, benchmarkName)
+	return repoPrefix(repo) + benchmarkName
 }
 
 // benchmarkNameForCluster removes repo name prefix from the cluster name, to get the real benchmark name.
@@ -133,10 +133,16 @@ func benchmarkNameForCluster(clusterName, repo string) string {
 	if !clusterBelongsToRepo(clusterName, repo) {
 		return ""
 	}
-	return strings.TrimPrefix(clusterName, repo+"--")
+	return strings.TrimPrefix(clusterName, repoPrefix(repo))
 }
 
 // clusterBelongsToRepo determines if the cluster belongs to the repo, by checking if it has the repo prefix.
 func clusterBelongsToRepo(clusterName, repo string) bool {
-	return strings.HasPrefix(clusterName, repo+"--")
+	return strings.HasPrefix(clusterName, repoPrefix(repo))
+}
+
+// repoPrefix returns the prefix we want to add to the benchmark name and use as the cluster name.
+// This is needed to distinguish between different repos if they are using a same GCP project.
+func repoPrefix(repo string) string {
+	return repo + "--"
 }
