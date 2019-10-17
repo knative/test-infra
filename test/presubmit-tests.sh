@@ -57,4 +57,4 @@ function post_unit_tests() {
 
 # We use the default integration test runner.
 
-main $@
+main "$@"
