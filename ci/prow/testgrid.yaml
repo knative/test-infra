@@ -221,14 +221,6 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-eventing-operator-go-coverage
   num_failures_to_alert: 9999
   short_text_metric: "coverage"
-- name: ci-knative-serving-0.4-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-serving-0.4-continuous
-- name: ci-knative-serving-0.5-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-serving-0.5-continuous
-- name: ci-knative-eventing-0.5-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-0.5-continuous
-- name: ci-knative-eventing-contrib-0.5-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-0.5-continuous
 - name: ci-knative-serving-0.6-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.6-continuous
 - name: ci-knative-eventing-0.6-continuous
@@ -459,22 +451,6 @@ dashboards:
   - name: coverage
     test_group_name: pull-google-knative-gcp-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-0.4
-  dashboard_tab:
-  - name: serving
-    test_group_name: ci-knative-serving-0.4-continuous
-    base_options: "sort-by-name="
-- name: knative-0.5
-  dashboard_tab:
-  - name: serving
-    test_group_name: ci-knative-serving-0.5-continuous
-    base_options: "sort-by-name="
-  - name: eventing
-    test_group_name: ci-knative-eventing-0.5-continuous
-    base_options: "sort-by-name="
-  - name: eventing-contrib
-    test_group_name: ci-knative-eventing-contrib-0.5-continuous
-    base_options: "sort-by-name="
 - name: knative-0.6
   dashboard_tab:
   - name: serving
