@@ -291,7 +291,7 @@ function build_release() {
 
 main $@
 ```
-### Using release.sh to publish to Azure
+### Publishing releases to Azure
 To run release.sh to publish to Azure Contianer Registery and Azure Blob, the following pre-requisites need to be configured/setup:
 #### A. Install Tools
 1. Install `az` command line tool, see [here] (https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
