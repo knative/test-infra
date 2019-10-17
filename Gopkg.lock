@@ -361,12 +361,13 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:4fc923e904e74a55e3bc3d6edae3200d192394158cc8cbbc706cca16327e4e01"
+  digest = "1:099edeb235988a03e5988100eb93868745a363ba8f80f9a388b6dc65cbfd0292"
   name = "knative.dev/pkg"
   packages = [
     "test/ghutil",
     "test/ghutil/fakeghutil",
     "test/gke",
+    "test/gke/fake",
     "test/helpers",
     "test/slackutil",
   ]
@@ -393,6 +394,7 @@
     "knative.dev/pkg/test/ghutil",
     "knative.dev/pkg/test/ghutil/fakeghutil",
     "knative.dev/pkg/test/gke",
+    "knative.dev/pkg/test/gke/fake",
     "knative.dev/pkg/test/helpers",
     "knative.dev/pkg/test/slackutil",
   ]

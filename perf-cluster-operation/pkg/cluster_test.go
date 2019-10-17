@@ -15,3 +15,21 @@ limitations under the License.
 */
 
 package pkg
+
+import (
+	"testing"
+
+	gkeFake "knative.dev/pkg/test/gke/fake"
+)
+
+var fakeProject = "p"
+
+func setupFakeGKEClient() gkeClient {
+	return gkeClient{
+		ops: gkeFake.NewGKESDKClient(),
+	}
+}
+
+func TestRecreateClusters(t *testing.T) {
+	setupFakeGKEClient()
+}
