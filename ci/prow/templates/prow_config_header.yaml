@@ -59,9 +59,8 @@ deck:
           - 'panic: test timed out after.*$'
           - timed out
           - 'ERROR:'
-          - (\s|^)(FAIL|Failure \[)\b
+          - 'FAIL:'
           - (\s|^)panic\b
-          - ^E\d{4} \d\d:\d\d:\d\d\.\d\d\d]
       required_files:
       - build-log.txt
     - lens:
