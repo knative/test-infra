@@ -75,7 +75,7 @@ function tag_images_in_yamls_acr() {
     echo "Inspecting ${file}"
     for image in $(grep -o "${KO_DOCKER_REPO}/[0-9a-z\./-]*@sha256:[0-9a-f]*" ${file}); do
       local dest_image=$(echo ${image} | cut -d"/" -f2 | cut -d"@" -f1)
-      echo tagging ${dest_image}:${TAG}
+      echo "Tagging ${dest_image}:${TAG}"
       az acr import -n ${AZ_ACR_NAME} --source ${image} -t ${dest_image}:${TAG}
     done
   done
