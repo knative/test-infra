@@ -90,7 +90,7 @@ func TestClusterConfigForBenchmark(t *testing.T) {
 }
 
 func TestClusterNameForBenchmark(t *testing.T) {
-	repo, benchmarkName, expectedName := "serving", "load-test", "serving-load-test"
+	repo, benchmarkName, expectedName := "serving", "load-test", "serving--load-test"
 	if gotName := clusterNameForBenchmark(benchmarkName, repo); gotName != expectedName {
 		t.Fatalf(
 			"expected to get cluster name %q for benchmark %q under repo %q, but got %q",
@@ -105,18 +105,30 @@ func TestBenchmarkNameForCluster(t *testing.T) {
 		repo                  string
 		expectedBenchmarkName string
 	}{{
-		clusterName:           "serving-load-test",
+		clusterName:           "serving--load-test",
 		repo:                  "serving",
 		expectedBenchmarkName: "load-test",
 	}, {
-		clusterName:           "serving-load-test",
+		clusterName:           "serving--load-test",
 		repo:                  "eventing",
 		expectedBenchmarkName: "",
 	}, {
-		clusterName:           "serving--load-test",
+		clusterName:           "serving---load-test",
 		repo:                  "serving",
 		expectedBenchmarkName: "-load-test",
-	}, {}}
+	}, {
+		clusterName:           "eventing--broker-imc",
+		repo:                  "eventing",
+		expectedBenchmarkName: "broker-imc",
+	}, {
+		clusterName:           "eventing-contrib--broker-natss",
+		repo:                  "eventing-contrib",
+		expectedBenchmarkName: "broker-natss",
+	}, {
+		clusterName:           "eventing-contrib--broker-kafka",
+		repo:                  "eventing",
+		expectedBenchmarkName: "",
+	}}
 
 	for _, tc := range testCases {
 		if benchmarkName := benchmarkNameForCluster(tc.clusterName, tc.repo); benchmarkName != tc.expectedBenchmarkName {

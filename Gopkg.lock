@@ -361,7 +361,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:099edeb235988a03e5988100eb93868745a363ba8f80f9a388b6dc65cbfd0292"
+  digest = "1:9e1ee1e7c6bcd44b584a5038ceb6b702c80efdf7d4e6b22e7812d0d511875deb"
   name = "knative.dev/pkg"
   packages = [
     "test/ghutil",
@@ -372,7 +372,7 @@
     "test/slackutil",
   ]
   pruneopts = "NUT"
-  revision = "3f11504864ae6d2a4826d28fb487b6404b5829e1"
+  revision = "b5a8deb92e5c8aa8ff8fb231b75ce5b6795f82ab"
 
 [solve-meta]
   analyzer-name = "dep"

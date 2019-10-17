@@ -83,8 +83,8 @@ EOF
 # Get benchmark name from the cluster name.
 # Parameters: $1 - cluster name
 function get_benchmark_name() {
-  # get benchmark_name by removing the prefix from cluster name, e.g. get "load-test" from "serving-load-test"
-  echo ${1#$REPO_NAME"-"}
+  # get benchmark_name by removing the prefix from cluster name, e.g. get "load-test" from "serving--load-test"
+  echo ${1#$REPO_NAME"--"}
 }
 
 # Update the clusters related to the current repo.
@@ -94,8 +94,8 @@ function update_clusters() {
   echo ">> Project contains clusters:" ${all_clusters}
   for cluster in ${all_clusters}; do
     local name=$(echo "${cluster}" | cut -f1 -d",")
-    # the cluster name is prefixed with repo name, here we should only handle clusters related to the current repo
-    [[ ! ${name} =~ ^${REPO_NAME} ]] && continue
+    # the cluster name is prefixed with "${REPO_NAME}--", here we should only handle clusters belonged to the current repo
+    [[ ! ${name} =~ ^${REPO_NAME}-- ]] && continue
     local zone=$(echo "${cluster}" | cut -f2 -d",")
 
     # Update all resources installed on the cluster
@@ -104,7 +104,7 @@ function update_clusters() {
   header "Done updating all clusters"
 }
 
-# Delete the old clusters related to the current repo, and recreate them with the same configuration.
+# Delete the old clusters belonged to the current repo, and recreate them with the same configuration.
 function recreate_clusters() {
   header "Recreating clusters for ${REPO_NAME}"
   go run $GOPATH/src/knative.dev/test-infra/perf-cluster-operation \
@@ -122,10 +122,6 @@ function reconcile_benchmark_clusters() {
   go run $GOPATH/src/knative.dev/test-infra/perf-cluster-operation \
     --reconcile \
     --gcp-project=${PROJECT_NAME} --repository=${REPO_NAME} --benchmark-root=${BENCHMARK_ROOT_PATH}
-    
-  go run $GOPATH/src/knative.dev/test-infra/perf-cluster-operation \
-    --reconcile \
-    --gcp-project=test-project-chizhg --repository=test --benchmark-root=/Users/chizhg/go/src/knative.dev/test-infra/perf-cluster-operation/pkg/testdir
   header "Done reconciling clusters"
   # For now, do nothing after reconciling the clusters, and the next update_clusters job will automatically 
   # update them. So there will be a period that the newly created clusters are being idle, and the duration
