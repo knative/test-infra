@@ -104,7 +104,7 @@ func (gc *gkeClient) processClusters(
 		return fmt.Errorf("failed getting cluster configs for benchmarks in repo %q: %v", repo, err)
 	}
 
-	errCh := make(chan error)
+	errCh := make(chan error, len(curtClusters)+len(clusterConfigs))
 	wg := sync.WaitGroup{}
 	// handle all existing clusters
 	for i := range curtClusters {
@@ -134,14 +134,14 @@ func (gc *gkeClient) processClusters(
 		}()
 	}
 
-	go func() {
-		wg.Wait()
-		close(errCh)
-	}()
+	wg.Wait()
+	close(errCh)
 
 	errs := make([]error, 0)
 	for err := range errCh {
-		errs = append(errs, err)
+		if err != nil {
+			errs = append(errs, err)
+		}
 	}
 
 	return helpers.CombineErrors(errs)
