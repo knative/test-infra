@@ -92,8 +92,8 @@
    otherwise the presubmit test will fail.
 
 1. Ask the [oncall](https://knative.github.io/test-infra/) to update the Prow cluster
-   and TestGrid with the new configs, by running `make update-config` in `ci/prow` and
-   `make update-config` in `ci/testgrid`.
+   and TestGrid with the new configs, by running `make update-config` and
+   `make update-testgrid-config` in `ci/prow`.
 
 1. Wait a few minutes, enter `/retest` as a comment in any PR in the repo and
    ensure the test jobs are executed.

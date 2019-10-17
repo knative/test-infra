@@ -62,15 +62,11 @@ Versioned releases can be one of two kinds:
    ```
 
 1. Run `make config` to regenerate [config.yaml](prow/config.yaml), otherwise
-   the presubmit test will fail. Merge such pull request and ask one of the
-   owners of _knative/test-infra_ to:
-
-   1. Run `make update-config` in `ci/prow`.
-
-   1. Run `make update-config` in `ci/testgrid`.
-
-   Within two hours the 3 new jobs (nightly, auto-release and dot-release) will
-   appear on TestGrid.
+   the presubmit test will fail. Merge such pull request and ask the
+   [oncall](https://knative.github.io/test-infra/) to update the Prow cluster
+   and TestGrid with the new configs, by running `make update-config` and
+   `make update-testgrid-config` in `ci/prow`. Within two hours the 3 new jobs
+   (nightly, auto-release and dot-release) will appear on TestGrid.
 
    The jobs can also be found in the
    [Prow status page](https://prow.knative.dev) under the names
