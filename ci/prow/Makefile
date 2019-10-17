@@ -21,10 +21,9 @@ JOB_NAMESPACE      ?= test-pods
 KNATIVE_CONFIG     ?= config_knative.yaml
 SKIP_CONFIG_BACKUP ?=
 
-# This is the canonical path of this Makefile, aka /ci dir.
-CI_DIR           ?= $(realpath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
+# This is the canonical path of this Makefile, aka /ci/prow dir.
+PROW_DIR         ?= $(realpath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 
-PROW_DIR         ?= $(CI_DIR)/prow
 PROW_PLUGINS     ?= $(PROW_DIR)/plugins.yaml
 PROW_CONFIG      ?= $(PROW_DIR)/config.yaml
 PROW_DEPLOYS     ?= $(PROW_DIR)/deployments
