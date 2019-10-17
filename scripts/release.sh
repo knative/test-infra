@@ -432,6 +432,9 @@ function parse_flags() {
             RELEASE_GCS_BUCKET=$1
             has_storage_flag=1
             ;;
+          --validation-tests)
+            VALIDATION_TEST=$1
+            ;;
           --test-args)
             # multiple args can be passed as a|b
             VALIDATION_TEST_ARGS="$(tr '|' ' ' <<<$1)"

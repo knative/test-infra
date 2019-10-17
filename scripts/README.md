@@ -262,6 +262,8 @@ This is a helper script for Knative release scripts. To use it:
      used. It is set to `ko.local` if `--publish` was not passed.
    - `SKIP_TESTS`: true if `--skip-tests` was passed. This is handled
      automatically.
+   - `VALIDATION_TESTS`: set to the test script file to run if `--validation-tests` was passed, otherwise the default value `./test/presubmit-tests.sh` will be used. 
+   - `VALIDATION_TEST_ARGS`: set if `--test-args` was passed. This is used to set command line arguments to `VALIDATION_TESTS`
    - `TAG_RELEASE`: true if `--tag-release` was passed. In this case, the
      environment variable `TAG` will contain the release tag in the form
      `v$BUILD_TAG`.
@@ -293,18 +295,18 @@ main $@
 ```
 ### Using release.sh to publish to Azure
 To run release.sh to publish to Azure Contianer Registery and Azure Blob, the following pre-requisites need to be configured/setup:
-#### A. Install Tools
-1. Install `az` command line tool, see [here] (https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
-2. Install `azcopy` tool, see [here](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azcopy-v10)
+1. Install Tools
+    - Install `az` [command line tool](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
+    - Install `azcopy` [command line tool](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azcopy-v10)
 
-#### B. Create ACR
-1. Create an Azure Container Registry.
-2. Get the and save the admin key locally, see [here](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-authentication).
+1. Create ACR
+    - Create an Azure Container Registry.
+    - Get the and save the admin key locally, see [here](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-authentication).
 
-#### C. Create Azure BLOB
-1. Create an Azure Storage account
-2. Create a "Container" in the blob, instructions [here](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-portal).
-3. Assign read/write permissions to the user/Service Principle that will be used, see [here](https://docs.microsoft.com/en-us/azure/storage/common/storage-auth). If you see 404s when you run the release script, you likely havent set permissions correctly.
+1. Create Azure BLOB
+    - Create an Azure Storage account
+    - Create a "Container" in the blob, instructions [here](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-portal).
+    - Assign read/write permissions to the user/Service Principle that will be used, see [here](https://docs.microsoft.com/en-us/azure/storage/common/storage-auth). If you see 404s when you run the release script, you likely havent set permissions correctly.
 
 #### Configure tests
 Automated azure support for running integration tests (ie AKS setup etc.) has not tested. The `--test-args` flag can be used to restrict presubmit testing to unit and build tests only.

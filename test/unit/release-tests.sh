@@ -87,6 +87,7 @@ test_function ${FAILURE} "error: cannot have both --branch and --auto-release se
 test_function ${FAILURE} "error: missing parameter" parse_flags --from-nightly
 test_function ${FAILURE} "error: nightly tag" parse_flags --from-nightly aaa
 
+test_function ${FAILURE} "error: missing parameter" parse_flags --validation-tests
 test_function ${FAILURE} "error: missing parameter" parse_flags --test-args
 
 token_file=$(mktemp)
