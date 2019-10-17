@@ -51,6 +51,9 @@ func writeMetaData(cluster *container.Cluster, project string) {
 	var minNodes, maxNodes string
 	for _, np := range cluster.NodePools {
 		if np.Name == "default-pool" {
+			minNodes = strconv.FormatInt(np.InitialNodeCount, 10)
+			// maxNodes is equal to minNodes if autoscaling isn't on
+			maxNodes = minNodes
 			if np.Autoscaling != nil {
 				minNodes = strconv.FormatInt(np.Autoscaling.MinNodeCount, 10)
 				maxNodes = strconv.FormatInt(np.Autoscaling.MaxNodeCount, 10)

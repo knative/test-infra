@@ -24,10 +24,16 @@ import (
 	"knative.dev/test-infra/test/metahelper/client"
 )
 
+var (
+	getKeyOpt  string
+	saveKeyOpt string
+	valOpt     string
+)
+
 func main() {
-	getKeyOpt := flag.String("get", "", "get val for a key")
-	saveKeyOpt := flag.String("set", "", "save val for a key, must have --val supplied")
-	valOpt := flag.String("val", "", "val to be modified, only useful when --save is passed")
+	flag.StringVar(&getKeyOpt, "get", "", "get val for a key")
+	flag.StringVar(&saveKeyOpt, "set", "", "save val for a key, must have --val supplied")
+	flag.StringVar(&valOpt, "val", "", "val to be modified, only useful when --save is passed")
 	flag.Parse()
 	// Create with default path of metahelper/client, so that the path is
 	// consistent with all other consumers of metahelper/client that run within
@@ -39,21 +45,21 @@ func main() {
 
 	var res string
 	switch {
-	case *getKeyOpt != "" && *saveKeyOpt != "":
+	case getKeyOpt != "" && saveKeyOpt != "":
 		log.Fatal("--get and --save can't be used at the same time")
-	case *getKeyOpt != "":
-		gotVal, err := c.Get(*getKeyOpt)
+	case getKeyOpt != "":
+		gotVal, err := c.Get(getKeyOpt)
 		if err != nil {
-			log.Fatalf("Failed getting value for %q from %q: '%v'", *getKeyOpt, c.Path, err)
+			log.Fatalf("Failed getting value for %q from %q: '%v'", getKeyOpt, c.Path, err)
 		}
 		res = gotVal
-	case *saveKeyOpt != "":
-		if *valOpt == "" {
+	case saveKeyOpt != "":
+		if valOpt == "" {
 			log.Fatal("--val must be supplied when using --save")
 		}
 		log.Printf("Writing files to %s", c.Path)
-		if err := c.Set(*saveKeyOpt, *valOpt); err != nil {
-			log.Fatalf("Failed saving %q:%q to %q: '%v'", *saveKeyOpt, *valOpt, c.Path, err)
+		if err := c.Set(saveKeyOpt, valOpt); err != nil {
+			log.Fatalf("Failed saving %q:%q to %q: '%v'", saveKeyOpt, valOpt, c.Path, err)
 		}
 	}
 	fmt.Print(res)

@@ -24,22 +24,28 @@ import (
 	"knative.dev/test-infra/test/prow-cluster-operation/options"
 )
 
+var (
+	create bool
+	delete bool
+	get    bool
+)
+
 func main() {
-	create := flag.Bool("create", false, "Create cluster")
-	delete := flag.Bool("delete", false, "Delete cluster")
-	get := flag.Bool("get", false, "Get existing cluster from kubeconfig or gcloud")
+	flag.BoolVar(&create, "create", false, "Create cluster")
+	flag.BoolVar(&delete, "delete", false, "Delete cluster")
+	flag.BoolVar(&get, "get", false, "Get existing cluster from kubeconfig or gcloud")
 	o := options.NewRequestWrapper()
 	flag.Parse()
 
-	if (*create && *delete) || (*create && *get) || (*delete && *get) {
+	if (create && delete) || (create && get) || (delete && get) {
 		log.Fatal("--create, --delete, --get are mutually exclusive")
 	}
 	switch {
-	case *create:
+	case create:
 		actions.Create(o)
-	case *delete:
+	case delete:
 		actions.Delete(o)
-	case *get:
+	case get:
 		actions.Get(o)
 	default:
 		log.Fatal("Must pass one of --create, --delete, --get")
