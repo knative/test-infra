@@ -196,6 +196,9 @@ var (
 	// Map which sections of the config.yaml were written to stdout.
 	sectionMap map[string]bool
 
+	// To be used to flag that outputConfig() emitted data.
+	emittedOutput bool
+
 	projNameRegex = regexp.MustCompile(`.+-[0-9\.]+$`)
 )
 
@@ -936,6 +939,7 @@ func indentMap(indentation int, mp map[string]string) string {
 func outputConfig(line string) {
 	if strings.TrimSpace(line) != "" {
 		fmt.Fprintln(output, line)
+		emittedOutput = true
 	}
 }
 

@@ -115,6 +115,7 @@ func newBaseTestgridTemplateData(testGroupName string) baseTestgridTemplateData 
 // generateTestGridSection generates the configs for a TestGrid section using the given generator
 func generateTestGridSection(sectionName string, generator testgridEntityGenerator, skipReleasedProj bool) {
 	outputConfig(sectionName + ":")
+	emittedOutput = false
 	for _, projName := range projNames {
 		// Do not handle the project if it is released and we want to skip it.
 		if skipReleasedProj && isReleased(projName) {
@@ -126,6 +127,11 @@ func generateTestGridSection(sectionName string, generator testgridEntityGenerat
 				generator(projName, repoName, jobNames)
 			}
 		}
+	}
+	// A TestGrid config cannot have an empty section, so add a bogus entry
+	// if nothing was generated, thus the config is semantically valid.
+	if !emittedOutput {
+		outputConfig(baseIndent + "- name: empty")
 	}
 }
 
