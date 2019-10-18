@@ -43,14 +43,31 @@ deck:
     gcs_browser_prefix: https://console.cloud.google.com/storage/browser/
     testgrid_config: gs://knative-testgrid-staging/config
     testgrid_root: https://testgrid.knative.dev/
-    viewers:
-      "started.json|finished.json":
-      - "metadata"
-      "build-log.txt":
-      - "buildlog"
-      "artifacts/junit.*\\.xml":
-      - "junit"
     announcement: "The old job viewer, Gubernator, has been deprecated in favour of this page, Spyglass.{{if .ArtifactPath}} For now, the old page is <a href='https://gubernator.knative.dev/build/{{.ArtifactPath}}'>still available</a>.{{end}} Please send feedback to Knative productivity."
+    lenses:
+    - lens:
+        name: metadata
+      required_files:
+      - started.json|finished.json
+    - lens:
+        name: buildlog
+        config:
+          highlight_regexes:
+          # regexes to match generic errors
+          - timed out
+          # regexes to match specific errors we can have
+          # go test timeout
+          - 'panic: test timed out after.*$'
+          # test case failure
+          - 'FAIL:'
+          # boskos error
+          - 'boskos failed to acquire project'
+      required_files:
+      - build-log.txt
+    - lens:
+        name: junit
+      required_files:
+      - artifacts/junit.*\.xml
   tide_update_period: 1s
 prowjob_namespace: default
 pod_namespace: test-pods
@@ -100,9 +117,49 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-prow-robot-serving-build-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/serving
+    branches:
+    - "legacy"
     spec:
       containers:
       - image: gcr.io/knative-tests-staging/test-infra/prow-tests-go112:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--build-tests"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-prow-robot-serving-build-tests
+    agent: kubernetes
+    context: pull-knative-prow-robot-serving-build-tests
+    always_run: true
+    rerun_command: "/test pull-knative-prow-robot-serving-build-tests"
+    trigger: "(?m)^/test (all|pull-knative-prow-robot-serving-build-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/serving
+    skip_branches:
+    - "legacy"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests-staging/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -140,9 +197,53 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-prow-robot-serving-unit-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/serving
+    branches:
+    - "legacy"
     spec:
       containers:
       - image: gcr.io/knative-tests-staging/test-infra/prow-tests-go112:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--unit-tests"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-prow-robot-serving-unit-tests
+    agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-knative-prow-robot-serving-unit-tests
+    context: pull-knative-prow-robot-serving-unit-tests
+    always_run: true
+    rerun_command: "/test pull-knative-prow-robot-serving-unit-tests"
+    trigger: "(?m)^/test (all|pull-knative-prow-robot-serving-unit-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/serving
+    skip_branches:
+    - "legacy"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests-staging/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -180,9 +281,53 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-prow-robot-serving-integration-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/serving
+    branches:
+    - "legacy"
     spec:
       containers:
       - image: gcr.io/knative-tests-staging/test-infra/prow-tests-go112:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--integration-tests"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-prow-robot-serving-integration-tests
+    agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-knative-prow-robot-serving-integration-tests
+    context: pull-knative-prow-robot-serving-integration-tests
+    always_run: true
+    rerun_command: "/test pull-knative-prow-robot-serving-integration-tests"
+    trigger: "(?m)^/test (all|pull-knative-prow-robot-serving-integration-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/serving
+    skip_branches:
+    - "legacy"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests-staging/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh

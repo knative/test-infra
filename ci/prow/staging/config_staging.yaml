@@ -14,6 +14,12 @@
 
 presubmits:
   knative-prow-robot/serving:
+   # repo-settings is required because serving is on Go 1.13
+    - repo-settings:
+      legacy-branches:
+      - legacy  # Doesn't exist, for compatibility purposes only
+      go112-branches:
+      - legacy  # Doesn't exist, for compatibility purposes only
     - build-tests: true
       dot-dev: true
     - unit-tests: true
