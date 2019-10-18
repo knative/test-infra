@@ -34,7 +34,7 @@ readonly SLACK_WRITE_TOKEN="/etc/performance-test/slack-write-token"
 
 # Set up the user for cluster operations.
 function setup_user() {
-  echo ">> Setup User"
+  echo ">> Setting up user"
   echo "Using gcloud project ${PROJECT_NAME}"
   gcloud config set core/project ${PROJECT_NAME}
   local user_name="${SERVICE_ACCOUNT_NAME}@${PROJECT_NAME}.iam.gserviceaccount.com"
@@ -107,7 +107,7 @@ function update_clusters() {
 # Delete the old clusters belonged to the current repo, and recreate them with the same configuration.
 function recreate_clusters() {
   header "Recreating clusters for ${REPO_NAME}"
-  go run $GOPATH/src/knative.dev/test-infra/perf-cluster-operation \
+  go run knative.dev/test-infra/tools/perf-ops \
     --recreate \
     --gcp-project=${PROJECT_NAME} --repository=${REPO_NAME} --benchmark-root=${BENCHMARK_ROOT_PATH}
   header "Done recreating clusters"
@@ -119,7 +119,7 @@ function recreate_clusters() {
 # This function will be run as postsubmit jobs.
 function reconcile_benchmark_clusters() {
   header "Reconciling clusters for ${REPO_NAME}"
-  go run $GOPATH/src/knative.dev/test-infra/perf-cluster-operation \
+  go run knative.dev/test-infra/tools/perf-ops \
     --reconcile \
     --gcp-project=${PROJECT_NAME} --repository=${REPO_NAME} --benchmark-root=${BENCHMARK_ROOT_PATH}
   header "Done reconciling clusters"
