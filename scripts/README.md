@@ -61,7 +61,7 @@ This is a helper script to run the presubmit tests. To use it:
    the integration tests (either your custom one or the default action) and will
    cause the test to fail if they don't return success.
 
-1. Call the `main()` function passing `$@` (without quotes).
+1. Call the `main()` function passing `"$@"` (with quotes).
 
 Running the script without parameters, or with the `--all-tests` flag causes all
 tests to be executed, in the right order (i.e., build, then unit, then
@@ -71,6 +71,11 @@ Use the flags `--build-tests`, `--unit-tests` and `--integration-tests` to run a
 specific set of tests. The flag `--emit-metrics` is used to emit metrics when
 running the tests, and is automatically handled by the default action for
 integration tests (see above).
+
+To run a specific program as a test, use the `--run-test` flag, and provide the
+program as the argument. If arguments are required for the program, pass everything
+as a single quotes argument. For example, `./presubmit-tests.sh --run-test
+"test/my/test data"`.
 
 The script will automatically skip all presubmit tests for PRs where all changed
 files are exempt of tests (e.g., a PR changing only the `OWNERS` file).
@@ -99,7 +104,7 @@ function pre_integration_tests() {
 
 # We use the default integration test runner.
 
-main $@
+main "$@"
 ```
 
 ## Using the `e2e-tests.sh` helper script
