@@ -229,6 +229,62 @@ kubectl get pods || fail_test
 success
 ```
 
+## Using the `performance-tests.sh` helper script
+
+This is a helper script for Knative performance test scripts. In combination
+with specific Prow jobs, it can automatically manage the environment for running
+benchmarking jobs for each repo. To use it:
+
+1. Source the script.
+
+1. [optional] Customize GCP project settings for the benchmarks. Set the
+   following environment variables if the default value doesn't fit your needs:
+
+   - `PROJECT_NAME`: GCP project name for keeping the clusters that run the
+     benchmarks. Defaults to `knative-performance`.
+   - `SERVICE_ACCOUNT_NAME`: Service account name for controlling GKE clusters
+     and interacting with [Mako](https://github.com/google/mako) server. It MUST have
+     `Kubernetes Engine Admin` and `Storage Admin` role, and be
+     [whitelisted](https://github.com/google/mako/blob/master/docs/ACCESS.md) by
+     Mako admin. Defaults to `mako-job`.
+
+1. [optional] Customize path of the benchmarks. This root folder should
+   contain and only contain all benchmarks you want to run continuously.
+   Set the following environment variable if the default value doesn't fit your
+   needs:
+
+   - `BENCHMARK_ROOT_PATH`: Benchmark root path, defaults to `test/performance/benchmarks`.
+
+1. [optional] Write the `update_knative()` function, which will update your
+   system under test (e.g., Knative Serving).
+
+1. [optional] Write the `update_benchmark(benchmark_name)` function, which
+   will update the underlying resources for the benchmark (usually Knative
+   resources and Kubernetes cronjobs for benchmarking). This function accepts
+   a parameter, which is the benchmark name in the current repo.
+
+1. Call the `main()` function passing `$@` (without quotes).
+
+### Sample performance test script
+
+This script will update `Knative serving` and the given benchmark.
+
+```bash
+source vendor/knative.dev/test-infra/scripts/performance-tests.sh
+
+function update_knative() {
+  echo ">> Updating serving"
+  ko apply -f config/ || abort "failed to apply serving"
+}
+
+function update_benchmark() {
+  echo ">> Updating benchmark $1"
+  ko apply -f ${BENCHMARK_ROOT_PATH}/$1 || abort "failed to apply benchmark $1"
+}
+
+main $@
+```
+
 ## Using the `release.sh` helper script
 
 This is a helper script for Knative release scripts. To use it:
