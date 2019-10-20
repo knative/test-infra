@@ -20,7 +20,7 @@ import (
 	"flag"
 	"log"
 
-	perfTestPkg "knative.dev/pkg/testutils/clustermanager/perf-tests/pkg"
+	testPkg "knative.dev/pkg/testutils/clustermanager/perf-tests/pkg"
 )
 
 // flags supported by this tool
@@ -44,7 +44,7 @@ func main() {
 		log.Fatal("Only one operation can be specified, either recreate or reconcile")
 	}
 
-	client, err := perfTestPkg.NewClient()
+	client, err := testPkg.NewClient()
 	if err != nil {
 		log.Fatalf("Failed setting up GKE client, cannot proceed: %v", err)
 	}

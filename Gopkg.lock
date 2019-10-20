@@ -347,7 +347,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:ed2301b5fe9ac4fec03306fb6b5ce231fa70784bd5dcb03fde1a1266996dccae"
+  digest = "1:92375795b0dc520c482d6e4e278c10455bf98a3a24662fa0f7455adb58435682"
   name = "knative.dev/pkg"
   packages = [
     "test/ghutil",
@@ -355,6 +355,7 @@
     "test/gke",
     "test/helpers",
     "test/slackutil",
+    "testutils/clustermanager/perf-tests",
     "testutils/clustermanager/perf-tests/pkg",
   ]
   pruneopts = "NUT"
@@ -379,6 +380,7 @@
     "knative.dev/pkg/test/ghutil/fakeghutil",
     "knative.dev/pkg/test/helpers",
     "knative.dev/pkg/test/slackutil",
+    "knative.dev/pkg/testutils/clustermanager/perf-tests",
     "knative.dev/pkg/testutils/clustermanager/perf-tests/pkg",
   ]
   solver-name = "gps-cdcl"

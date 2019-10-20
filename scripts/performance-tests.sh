@@ -107,7 +107,7 @@ function update_clusters() {
 # Delete the old clusters belonged to the current repo, and recreate them with the same configuration.
 function recreate_clusters() {
   header "Recreating clusters for ${REPO_NAME}"
-  go run knative.dev/test-infra/tools/perf-ops \
+  go run ${REPO_ROOT_DIR}/vendor/knative.dev/pkg/testutils/clustermanager/perf-tests \
     --recreate \
     --gcp-project=${PROJECT_NAME} --repository=${REPO_NAME} --benchmark-root=${BENCHMARK_ROOT_PATH}
   header "Done recreating clusters"
@@ -119,7 +119,7 @@ function recreate_clusters() {
 # This function will be run as postsubmit jobs.
 function reconcile_benchmark_clusters() {
   header "Reconciling clusters for ${REPO_NAME}"
-  go run knative.dev/test-infra/tools/perf-ops \
+  go run ${REPO_ROOT_DIR}/vendor/knative.dev/pkg/testutils/clustermanager/perf-tests \
     --reconcile \
     --gcp-project=${PROJECT_NAME} --repository=${REPO_NAME} --benchmark-root=${BENCHMARK_ROOT_PATH}
   header "Done reconciling clusters"
