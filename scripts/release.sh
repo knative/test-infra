@@ -436,7 +436,7 @@ function parse_flags() {
             VALIDATION_TEST=$1
             ;;
           --test-args)
-            VALIDATION_TEST_ARGS=$1
+            VALIDATION_TEST_ARGS="$1"
             ;;
           --version)
             [[ $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || abort "version format must be '[0-9].[0-9].[0-9]'"
