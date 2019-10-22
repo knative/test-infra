@@ -263,7 +263,7 @@ This is a helper script for Knative release scripts. To use it:
    - `SKIP_TESTS`: true if `--skip-tests` was passed. This is handled
      automatically.
    - `VALIDATION_TESTS`: set to the test script file to run if `--validation-tests` was passed, otherwise the default value `./test/presubmit-tests.sh` will be used. 
-   - `VALIDATION_TEST_ARGS`: set if `--test-args` was passed. This is used to set command line arguments to `VALIDATION_TESTS`
+   - `VALIDATION_TEST_ARGS`: set if `--test-args` was passed. This is used to set command line arguments to `VALIDATION_TESTS`. Defaults to no arguments.
    - `TAG_RELEASE`: true if `--tag-release` was passed. In this case, the
      environment variable `TAG` will contain the release tag in the form
      `v$BUILD_TAG`.
