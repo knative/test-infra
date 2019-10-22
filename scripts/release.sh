@@ -436,8 +436,7 @@ function parse_flags() {
             VALIDATION_TEST=$1
             ;;
           --test-args)
-            # multiple args can be passed as a|b
-            VALIDATION_TEST_ARGS="$(tr '|' ' ' <<<$1)"
+            VALIDATION_TEST_ARGS=$1
             ;;
           --version)
             [[ $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || abort "version format must be '[0-9].[0-9].[0-9]'"
