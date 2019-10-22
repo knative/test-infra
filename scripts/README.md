@@ -313,6 +313,5 @@ Automated azure support for running integration tests (ie AKS setup etc.) has no
 
 Example command to publish Knative Serving to Azure:
 ```sh
-foo@trantor:~/go/src/knative.dev/serving
 $ ./hack/release.sh --test-args "--unit-tests" --release-acr MYACR --release-azblob https://MYBLOB.blob.core.windows.net/MYCONTAINER --publish --tag-release
 ```
