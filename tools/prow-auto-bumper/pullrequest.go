@@ -51,8 +51,8 @@ func generatePRBody(extraMsgs []string) string {
 	}
 
 	body += "\nPlease check [Prow release notes]" +
-		"(https://github.com/kubernetes/test-infra/blob/master/prow/ANNOUNCEMENTS.md)" +
-		"to make sure there is no breaking changes\n"
+		"(https://github.com/kubernetes/test-infra/blob/master/prow/ANNOUNCEMENTS.md) " +
+		"to make sure there are no breaking changes.\n"
 
 	oncaller, err := getOncaller()
 	var assignment string
