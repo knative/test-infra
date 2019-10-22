@@ -248,22 +248,22 @@ benchmarking jobs for each repo. To use it:
      [whitelisted](https://github.com/google/mako/blob/master/docs/ACCESS.md) by
      Mako admin. Defaults to `mako-job`.
 
-1. [optional] Customize path of the benchmarks. This root folder should
+1. [optional] Customize root path of the benchmarks. This root folder should
    contain and only contain all benchmarks you want to run continuously.
    Set the following environment variable if the default value doesn't fit your
    needs:
 
    - `BENCHMARK_ROOT_PATH`: Benchmark root path, defaults to `test/performance/benchmarks`.
 
-1. [optional] Write the `update_knative()` function, which will update your
-   system under test (e.g., Knative Serving).
+1. [optional] Write the `update_knative` function, which will update your
+   system under test (e.g. Knative Serving).
 
-1. [optional] Write the `update_benchmark(benchmark_name)` function, which
-   will update the underlying resources for the benchmark (usually Knative
-   resources and Kubernetes cronjobs for benchmarking). This function accepts
-   a parameter, which is the benchmark name in the current repo.
+1. [optional] Write the `update_benchmark` function, which will update the
+   underlying resources for the benchmark (usually Knative resources and
+   Kubernetes cronjobs for benchmarking). This function accepts a parameter,
+   which is the benchmark name in the current repo.
 
-1. Call the `main()` function passing `$@` (without quotes).
+1. Call the `main()` function with all parameters (e.g. `$@`).
 
 ### Sample performance test script
 

@@ -135,7 +135,7 @@ function main() {
   fi
 
   # Set up the user credential for cluster operations
-  setup_user || echo "failed to set up user"
+  setup_user || abort "failed to set up user"
 
   # Try parsing the first flag as a command.  
   case $1 in
