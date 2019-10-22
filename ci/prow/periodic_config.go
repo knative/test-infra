@@ -369,11 +369,17 @@ func generatePerfClusterUpdatePeriodicJobs() {
 	)
 }
 
-func perfClusterUpdatePeriodicJob(jobName, cronString, command, repo, sa string) {
+func perfClusterUpdatePeriodicJob(jobName, cronString, command, repoName, sa string) {
 	var data periodicJobTemplateData
-	data.Base = newbaseProwJobTemplateData("knative/" + repo)
+	data.Base = newbaseProwJobTemplateData("knative/" + repoName)
+	for _, repo := range repositories {
+		if "knative/"+repoName == repo.Name && repo.Go113 {
+			data.Base.Image = getGo113ImageName(data.Base.Image)
+			break
+		}
+	}
 	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
-	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  path_alias: knative.dev/"+repo)
+	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  path_alias: knative.dev/"+repoName)
 	data.Base.Command = command
 	data.PeriodicJobName = jobName
 	data.CronString = cronString
