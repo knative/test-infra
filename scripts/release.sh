@@ -421,7 +421,7 @@ function parse_flags() {
             ;;
           --release-acr)
             AZ_ACR_NAME=$1
-            KO_DOCKER_REPO="${1}.azurecr.io"
+            KO_DOCKER_REPO="${AZ_ACR_NAME}.azurecr.io"
             has_registry_flag=1
             ;;
           --release-azblob)
