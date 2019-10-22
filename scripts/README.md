@@ -309,7 +309,7 @@ To run release.sh to publish to Azure Contianer Registery and Azure Blob, the fo
     - Assign read/write permissions to the user/Service Principle that will be used, see [here](https://docs.microsoft.com/en-us/azure/storage/common/storage-auth). If you see 404s when you run the release script, you likely havent set permissions correctly.
 
 #### Configure tests
-Automated azure support for running integration tests (ie AKS setup etc.) has not tested. The `--test-args` flag can be used to restrict presubmit testing to unit and build tests only.
+Automated azure support for running integration tests (ie AKS setup etc.) has not tested. The `--test-args` flag can be used to restrict presubmit testing to unit and build tests only. Or `--skip-test` can be used to skip all tests.
 
 Example command to publish Knative Serving to Azure:
 ```
