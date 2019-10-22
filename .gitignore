@@ -4,3 +4,5 @@ bazel-*
 .vscode/
 .DS_Store
 *.swp
+pj.yaml
+pod.yaml
