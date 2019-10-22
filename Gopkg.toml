@@ -2,6 +2,7 @@
 # for detailed Gopkg.toml documentation.
 
 required = [  
+  "knative.dev/pkg/testutils/clustermanager/perf-tests",
 ]
 
 [[override]]
