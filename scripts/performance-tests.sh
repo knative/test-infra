@@ -44,8 +44,10 @@ function setup_user() {
 
 # Update resources installed on the cluster.
 # Parameters: $1 - cluster name
-#             $2 - cluster zone/region
+#             $2 - cluster region/zone
 function update_cluster() {
+  # --zone option can work with both region and zone, (e.g. us-central1 and
+  # us-central1-a), so we don't need to add extra check here.
   gcloud container clusters get-credentials $1 --zone=$2 --project=${PROJECT_NAME} || abort "failed to get cluster creds"
   # Set up the configmap to run benchmarks in production
   echo ">> Setting up 'prod' config-mako on cluster $1 in zone $2"

@@ -253,7 +253,10 @@ benchmarking jobs for each repo. To use it:
    Set the following environment variable if the default value doesn't fit your
    needs:
 
-   - `BENCHMARK_ROOT_PATH`: Benchmark root path, defaults to `test/performance/benchmarks`.
+   - `BENCHMARK_ROOT_PATH`: Benchmark root path, defaults to
+     `test/performance/benchmarks`. Each repo can decide which folder to put its
+     benchmarks in, and override this environment variable to be the path of
+     that folder.
 
 1. [optional] Write the `update_knative` function, which will update your
    system under test (e.g. Knative Serving).
