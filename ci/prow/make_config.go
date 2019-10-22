@@ -59,6 +59,10 @@ const (
 	// goCoveragePostsubmitJob is the template for the go postsubmit coverage job.
 	goCoveragePostsubmitJob = "prow_postsubmit_gocoverage_job.yaml"
 
+	// perfOpsPostsubmitJob is the template for the perf cluster operations
+	// postsubmit job
+	perfOpsPostsubmitJob = "prow_postsubmit_perfops_job.yaml"
+
 	// pluginsConfig is the template for the plugins YAML file.
 	pluginsConfig = "prow_plugins.yaml"
 )
@@ -138,6 +142,7 @@ type presubmitJobTemplateData struct {
 type postsubmitJobTemplateData struct {
 	Base              baseProwJobTemplateData
 	PostsubmitJobName string
+	PostsubmitCommand []string
 }
 
 // sectionGenerator is a function that generates Prow job configs given a slice of a yaml file with configs.
@@ -774,11 +779,16 @@ func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
 			data.Base.Image = getGo113ImageName(data.Base.Image)
 		}
 	}
+	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
+	if data.Base.PathAlias != "" {
+		data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  "+data.Base.PathAlias)
+	}
+	
 	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 	configureServiceAccountForJob(&data.Base)
 	jobName := data.PostsubmitJobName
 	executeJobTemplateWrapper(repoName, &data, func(data interface{}) {
-		executeJobTemplate("postsubmit go coverage", readTemplate(goCoveragePostsubmitJob), "postsubmits", repoName, jobName, true, data)
+		executeJobTemplate("postsubmit go coverage", readTemplate(goCoveragePostsubmitJob), title, repoName, jobName, false, data)
 	})
 	// TODO(adrcunha): remove once the coverage-dev job isn't necessary anymore.
 	// Generate config for post-knative-serving-go-coverage-dev right after post-knative-serving-go-coverage
@@ -786,7 +796,7 @@ func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
 		data.PostsubmitJobName += "-dev"
 		data.Base.Image = strings.Replace(data.Base.Image, "coverage-go112:latest", "coverage-dev:latest", -1)
 		data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest", -1)
-		executeJobTemplate("presubmit", readTemplate(goCoveragePostsubmitJob), "postsubmits", repoName, data.PostsubmitJobName, false, data)
+		executeJobTemplate("presubmit", readTemplate(goCoveragePostsubmitJob), title, repoName, data.PostsubmitJobName, false, data)
 	}
 }
 
@@ -1000,7 +1010,7 @@ func recursiveSBL(repoName string, data interface{}, generateOneJob func(data in
 	sb.restore(base)
 }
 
-// executeJobTemplateWrapper takes in consideration of repo settings, decides how many varianats of the
+// executeJobTemplateWrapper takes in consideration of repo settings, decides how many variants of the
 // same job needs to be generated and generates them.
 func executeJobTemplateWrapper(repoName string, data interface{}, generateOneJob func(data interface{})) {
 	var sbs []specialBranchLogic
@@ -1374,6 +1384,7 @@ func main() {
 		generateOtherJobConfigs("postsubmits", func(repo repositoryData) bool {
 			return repo.EnableGoCoverage
 		}, generateGoCoveragePostsubmit)
+		generatePerfClusterReconcilePostsubmitJobs()
 	}
 
 	// config object is modified when we generate prow config, so we'll need to reload it here

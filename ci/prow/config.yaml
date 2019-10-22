@@ -6317,15 +6317,12 @@ periodics:
       args:
       - "./test/performance/tools/recreate_clusters.sh"
       volumeMounts:
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
       - name: performance-test
         mountPath: /etc/performance-test
         readOnly: true
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
+        value: /etc/performance-test/service-account.json
       - name: PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/performance-test/service-account.json
       - name: GITHUB_TOKEN
@@ -6335,9 +6332,6 @@ periodics:
       - name: SLACK_WRITE_TOKEN
         value: /etc/performance-test/slack-write-token
     volumes:
-    - name: test-account
-      secret:
-        secretName: test-account
     - name: performance-test
       secret:
         secretName: performance-test
@@ -6363,15 +6357,12 @@ periodics:
       args:
       - "./test/performance/tools/update_clusters.sh"
       volumeMounts:
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
       - name: performance-test
         mountPath: /etc/performance-test
         readOnly: true
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
+        value: /etc/performance-test/service-account.json
       - name: PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/performance-test/service-account.json
       - name: GITHUB_TOKEN
@@ -6381,9 +6372,6 @@ periodics:
       - name: SLACK_WRITE_TOKEN
         value: /etc/performance-test/slack-write-token
     volumes:
-    - name: test-account
-      secret:
-        secretName: test-account
     - name: performance-test
       secret:
         secretName: performance-test
@@ -6407,17 +6395,15 @@ periodics:
       command:
       - runner.sh
       args:
-      - "./test/performance/tools/recreate_clusters.sh"
+      - "./test/performance/performance-tests.sh"
+      - "--recreate-clusters"
       volumeMounts:
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
       - name: eventing-performance-test
         mountPath: /etc/performance-test
         readOnly: true
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
+        value: /etc/performance-test/service-account.json
       - name: PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/performance-test/service-account.json
       - name: GITHUB_TOKEN
@@ -6427,9 +6413,6 @@ periodics:
       - name: SLACK_WRITE_TOKEN
         value: /etc/performance-test/slack-write-token
     volumes:
-    - name: test-account
-      secret:
-        secretName: test-account
     - name: eventing-performance-test
       secret:
         secretName: eventing-performance-test
@@ -6453,17 +6436,15 @@ periodics:
       command:
       - runner.sh
       args:
-      - "./test/performance/tools/update_clusters.sh"
+      - "./test/performance/performance-tests.sh"
+      - "--update-clusters"
       volumeMounts:
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
       - name: eventing-performance-test
         mountPath: /etc/performance-test
         readOnly: true
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
+        value: /etc/performance-test/service-account.json
       - name: PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/performance-test/service-account.json
       - name: GITHUB_TOKEN
@@ -6473,183 +6454,286 @@ periodics:
       - name: SLACK_WRITE_TOKEN
         value: /etc/performance-test/slack-write-token
     volumes:
-    - name: test-account
-      secret:
-        secretName: test-account
     - name: eventing-performance-test
       secret:
         secretName: eventing-performance-test
 postsubmits:
-  knative/serving:
-  - name: post-knative-serving-go-coverage
-    branches:
-    - master
-    agent: kubernetes
-    decorate: true
+- name: post-knative-serving-go-coverage
+  branches:
+  - master
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
     path_alias: knative.dev/serving
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=0"
-  - name: post-knative-serving-go-coverage-dev
-    branches:
-    - master
-    agent: kubernetes
-    decorate: true
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/coverage:latest
+      imagePullPolicy: Always
+      command:
+      - "/coverage"
+      args:
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=0"
+- name: post-knative-serving-go-coverage-dev
+  branches:
+  - master
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
     path_alias: knative.dev/serving
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-dev:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=0"
-  knative/client:
-  - name: post-knative-client-go-coverage
-    branches:
-    - master
-    agent: kubernetes
-    decorate: true
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/coverage-dev:latest
+      imagePullPolicy: Always
+      command:
+      - "/coverage"
+      args:
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=0"
+- name: post-knative-client-go-coverage
+  branches:
+  - master
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: client
+    base_ref: master
     path_alias: knative.dev/client
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=0"
-  knative/eventing:
-  - name: post-knative-eventing-go-coverage
-    branches:
-    - master
-    agent: kubernetes
-    decorate: true
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      imagePullPolicy: Always
+      command:
+      - "/coverage"
+      args:
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=0"
+- name: post-knative-eventing-go-coverage
+  branches:
+  - master
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: eventing
+    base_ref: master
     path_alias: knative.dev/eventing
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=0"
-  knative/eventing-contrib:
-  - name: post-knative-eventing-contrib-go-coverage
-    branches:
-    - master
-    agent: kubernetes
-    decorate: true
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      imagePullPolicy: Always
+      command:
+      - "/coverage"
+      args:
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=0"
+- name: post-knative-eventing-contrib-go-coverage
+  branches:
+  - master
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: eventing-contrib
+    base_ref: master
     path_alias: knative.dev/eventing-contrib
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=0"
-  knative/docs:
-  - name: post-knative-docs-go-coverage
-    branches:
-    - master
-    agent: kubernetes
-    decorate: true
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=0"
-  knative/pkg:
-  - name: post-knative-pkg-go-coverage
-    branches:
-    - master
-    agent: kubernetes
-    decorate: true
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      imagePullPolicy: Always
+      command:
+      - "/coverage"
+      args:
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=0"
+- name: post-knative-docs-go-coverage
+  branches:
+  - master
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: docs
+    base_ref: master
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      imagePullPolicy: Always
+      command:
+      - "/coverage"
+      args:
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=0"
+- name: post-knative-pkg-go-coverage
+  branches:
+  - master
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: pkg
+    base_ref: master
     path_alias: knative.dev/pkg
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=0"
-  knative/caching:
-  - name: post-knative-caching-go-coverage
-    branches:
-    - master
-    agent: kubernetes
-    decorate: true
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      imagePullPolicy: Always
+      command:
+      - "/coverage"
+      args:
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=0"
+- name: post-knative-caching-go-coverage
+  branches:
+  - master
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: caching
+    base_ref: master
     path_alias: knative.dev/caching
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=0"
-  google/knative-gcp:
-  - name: post-google-knative-gcp-go-coverage
-    branches:
-    - master
-    agent: kubernetes
-    decorate: true
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=0"
-  knative/serving-operator:
-  - name: post-knative-serving-operator-go-coverage
-    branches:
-    - master
-    agent: kubernetes
-    decorate: true
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      imagePullPolicy: Always
+      command:
+      - "/coverage"
+      args:
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=0"
+- name: post-google-knative-gcp-go-coverage
+  branches:
+  - master
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: google
+    repo: knative-gcp
+    base_ref: master
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      imagePullPolicy: Always
+      command:
+      - "/coverage"
+      args:
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=0"
+- name: post-knative-serving-operator-go-coverage
+  branches:
+  - master
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving-operator
+    base_ref: master
     path_alias: knative.dev/serving-operator
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=0"
-  knative/eventing-operator:
-  - name: post-knative-eventing-operator-go-coverage
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      imagePullPolicy: Always
+      command:
+      - "/coverage"
+      args:
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=0"
+- name: post-knative-eventing-operator-go-coverage
+  branches:
+  - master
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: eventing-operator
+    base_ref: master
+    path_alias: knative.dev/eventing-operator
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      imagePullPolicy: Always
+      command:
+      - "/coverage"
+      args:
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=0"
+
+  spec:
+    containers:
+    - image: gcr.io/k8s-prow/commenter:v20190731-e3f7b9853
+      imagePullPolicy: Always
+      command:
+      - "/app/robots/commenter/app.binary"
+      args:
+      - "--query=repo:knative/docs
+        is:issue
+        is:open
+        -label:lifecycle/frozen
+        label:lifecycle/stale
+        -label:lifecycle/rotten"
+      - "--updated=720h"
+      - "--token=/etc/housekeeping-github-token/token"
+      - "--comment=Stale issues rot after 30 days of inactivity.\nMark the issue as fresh by adding the comment `/remove-lifecycle rotten`.\nRotten issues close after an additional 30 days of inactivity.\nIf this issue is safe to close now please do so by adding the comment `/close`.\n\nSend feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra/issues/new).\n\n/lifecycle rotten"
+      - "--template"
+      - "--ceiling=10"
+      - "--confirm"
+      volumeMounts:
+      - name: housekeeping-github-token
+        mountPath: /etc/housekeeping-github-token
+        readOnly: true
+    volumes:
+    - name: housekeeping-github-token
+      secret:
+        secretName: housekeeping-github-token
+
+  
+  - name: post-knative-eventing-reconcile-clusters
     branches:
     - master
     agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: post-knative-eventing-reconcile-clusters
     decorate: true
-    path_alias: knative.dev/eventing-operator
+    extra_refs:
+    - org: knative
+      repo: eventing
+      base_ref: master
+      path_alias: knative.dev/eventing
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=0"
+        - "./test/performance/performance-tests.sh"
+        - "--reconcile-clusters"
+        volumeMounts:
+        - name: eventing-performance-test
+          mountPath: /etc/performance-test
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/performance-test/service-account.json
+        - name: PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/performance-test/service-account.json
+        - name: GITHUB_TOKEN
+          value: /etc/performance-test/github-token
+        - name: SLACK_READ_TOKEN
+          value: /etc/performance-test/slack-read-token
+        - name: SLACK_WRITE_TOKEN
+          value: /etc/performance-test/slack-write-token
+      volumes:
+      - name: eventing-performance-test
+        secret:
+          secretName: eventing-performance-test
