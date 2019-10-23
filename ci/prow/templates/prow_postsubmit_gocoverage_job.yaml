@@ -1,16 +1,16 @@
-- name: [[.PostsubmitJobName]]
-  branches:
-  - master
-  agent: kubernetes
-  [[indent_section 8 "labels" .Base.Labels]]
-  decorate: true
-  [[indent_section 2 "extra_refs" .Base.ExtraRefs]]
-  spec:
-    containers:
-    - image: [[.Base.Image]]
-      imagePullPolicy: Always
-      command:
-      - "/coverage"
-      args:
-      - "--artifacts=$(ARTIFACTS)"
-      - "--cov-threshold-percentage=0"
+  - name: [[.PostsubmitJobName]]
+    branches:
+    - master
+    agent: kubernetes
+    [[indent_section 8 "labels" .Base.Labels]]
+    decorate: true
+    [[.Base.PathAlias]]
+    spec:
+      containers:
+      - image: [[.Base.Image]]
+        imagePullPolicy: Always
+        command:
+        - "/coverage"
+        args:
+        - "--artifacts=$(ARTIFACTS)"
+        - "--cov-threshold-percentage=0"

@@ -59,14 +59,16 @@ func generatePerfClusterUpdatePeriodicJobs() {
 	)
 }
 
-func generatePerfClusterReconcilePostsubmitJobs() {
-	perfClusterReconcilePostsubmitJob(
-		"post-knative-eventing-reconcile-clusters",
-		"./test/performance/performance-tests.sh",
-		[]string{"--reconcile-clusters"},
-		"eventing",
-		"eventing-performance-test",
-	)
+func generatePerfClusterReconcilePostsubmitJob(repo string) {
+	if repo == "eventing" {
+		perfClusterReconcilePostsubmitJob(
+			"post-knative-eventing-reconcile-clusters",
+			"./test/performance/performance-tests.sh",
+			[]string{"--reconcile-clusters"},
+			"eventing",
+			"eventing-performance-test",
+		)
+	}
 }
 
 func perfClusterUpdatePeriodicJob(jobName, cronString, command string, args []string, repo, sa string) {

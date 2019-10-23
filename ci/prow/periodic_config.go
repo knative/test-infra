@@ -21,6 +21,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"math"
 	"path"
 
 	yaml "gopkg.in/yaml.v2"
@@ -56,6 +57,57 @@ type periodicJobTemplateData struct {
 	PeriodicJobName string
 	CronString      string
 	PeriodicCommand []string
+}
+
+// Generate cron string based on job type, offset generated from jobname
+// instead of assign random value to ensure consistency among runs,
+// timeout is used for determining how many hours apart
+func generateCron(jobType, jobName string, timeout int) string {
+	getUTCtime := func(i int) int { return i + 7 }
+	// Sums the ascii valus of all letters in a jobname,
+	// this value is used for deriving offset after hour
+	var sum float64
+	for _, c := range jobType + jobName {
+		sum += float64(c)
+	}
+	// Divide 60 minutes into 6 buckets
+	bucket := int(math.Mod(sum, 6))
+	// Offset in bucket, range from 0-9, first mod with 11(a random prime number)
+	// to ensure every digit has a chance (i.e., if bucket is 0, sum has to be multiply of 6,
+	// so mod by 10 can only return even number)
+	offsetInBucket := int(math.Mod(math.Mod(sum, 11), 10))
+	minutesOffset := bucket*10 + offsetInBucket
+	// Determines hourly job inteval based on timeout
+	hours := int((timeout+5)/60) + 1 // Allow at least 5 minutes between runs
+	hourCron := fmt.Sprintf("%d * * * *", minutesOffset)
+	if hours > 1 {
+		hourCron = fmt.Sprintf("%d */%d * * *", minutesOffset, hours)
+	}
+	dayCron := fmt.Sprintf("%d %%d * * *", minutesOffset)    // hour
+	weekCron := fmt.Sprintf("%d %%d * * %%d", minutesOffset) // hour, weekday
+
+	var res string
+	switch jobType {
+	case "continuous", "custom-job", "auto-release": // Every hour
+		res = fmt.Sprintf(hourCron)
+	case "branch-ci": // Every day 1-2 PST
+		res = fmt.Sprintf(dayCron, getUTCtime(1))
+	case "nightly": // Every day 2-3 PST
+		res = fmt.Sprintf(dayCron, getUTCtime(2))
+	case "dot-release": // Every Tuesday 2-3 PST
+		res = fmt.Sprintf(weekCron, getUTCtime(2), 2)
+	case "latency": // Every day 1-2 PST
+		res = fmt.Sprintf(dayCron, getUTCtime(1))
+	case "performance": // Every day 1-2 PST
+		res = fmt.Sprintf(dayCron, getUTCtime(1))
+	case "performance-mesh": // Every day 3-4 PST
+		res = fmt.Sprintf(dayCron, getUTCtime(3))
+	case "webhook-apicoverage": // Every day 2-3 PST
+		res = fmt.Sprintf(dayCron, getUTCtime(2))
+	default:
+		log.Printf("job type not supported for cron generation '%s'", jobName)
+	}
+	return res
 }
 
 // generatePeriodic generates all periodic job configs for the given repo and configuration.
