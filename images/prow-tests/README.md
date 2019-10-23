@@ -11,9 +11,9 @@ To build and push a new image, just run `make push`.
 For testing purposes you can build an image but not push it; to do so, run
 `make build`.
 
-`make build_no_cache` is similar to `make build` except it does not use the cache
-when building images with docker. This ensures the image is built with the latest
-version of each tool.
+`make build_no_cache` is similar to `make build` except it does not use the
+cache when building images with docker. This ensures the image is built with the
+latest version of each tool.
 
 The Prow jobs are configured to use the `prow-tests` image tagged with `stable`.
 This tag must be manually set in GCR using the Cloud Console.

@@ -15,22 +15,21 @@ By default the current gcloud credentials are used to delete the images. If
 necessary, use the flag `--service-account _key-file.json_` to specify a service
 account that will be performing the access to the gcr.
 
-Project(s) to be cleaned up are expected to be either defined in a text
-file or passed (once or multiple times) using the `--project` flag.
+Project(s) to be cleaned up are expected to be either defined in a text file or
+passed (once or multiple times) using the `--project` flag.
 
 The following flags are available for the [cleanup.sh](cleanup.sh) script:
 
-- `--project-resource-yaml` Points to a resources file containing the names
-  of the projects to be cleaned up. Such file can be any form of text, as long
-  as the project names can be extracted, one per line, using a regular
-  expression.
+- `--project-resource-yaml` Points to a resources file containing the names of
+  the projects to be cleaned up. Such file can be any form of text, as long as
+  the project names can be extracted, one per line, using a regular expression.
 - `--project` Project to be cleaned up. Can be specified more than once.
 - `--re-project-name` Regular expression for filtering project names from the
   resources file. Optional, defaults to `knative-boskos-[a-zA-Z0-9]+`.
 - `--days-to-keep-images` Optional, defaults to 365 days (aka 1 year).
 - `--hours-to-keep-clusters` Optional, defaults to 720 hours (aka 30 days).
-- `--gcr` Defines the GCR hostname to use (e.g., `us.gcr.io`). Optional, defaults
-  to `gcr.io`.
+- `--gcr` Defines the GCR hostname to use (e.g., `us.gcr.io`). Optional,
+  defaults to `gcr.io`.
 - `--dry-run` Optional, performs a dry run for all gcloud functions, defaults to
   false.
 
@@ -43,8 +42,8 @@ more than 24 hours ago in all Boskos projects.
 $ ./cleanup.sh --project-resource-yaml ci/prow/boskos_resources.yaml --days-to-keep-images 90 --hours-to-keep-clusters 24`
 ```
 
-This command deletes test images older than 1 day and test clusters created
-more than 24 hours ago in a personal project called `my-knative-project`.
+This command deletes test images older than 1 day and test clusters created more
+than 24 hours ago in a personal project called `my-knative-project`.
 
 ```sh
 $ ./cleanup.sh --project my-knative-project --days-to-keep-images 1 --hours-to-keep-clusters 24`
