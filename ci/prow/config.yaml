@@ -6310,7 +6310,7 @@ periodics:
     path_alias: knative.dev/serving
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -6350,7 +6350,7 @@ periodics:
     path_alias: knative.dev/serving
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -6505,6 +6505,154 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+  - name: post-knative-eventing-reconcile-clusters
+    branches:
+    - master
+    agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: post-knative-eventing-reconcile-clusters
+    decorate: true
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/performance/performance-tests.sh"
+        - "--reconcile-clusters"
+        volumeMounts:
+        - name: eventing-performance-test
+          mountPath: /etc/performance-test
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/performance-test/service-account.json
+        - name: PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/performance-test/service-account.json
+        - name: GITHUB_TOKEN
+          value: /etc/performance-test/github-token
+        - name: SLACK_READ_TOKEN
+          value: /etc/performance-test/slack-read-token
+        - name: SLACK_WRITE_TOKEN
+          value: /etc/performance-test/slack-write-token
+      volumes:
+      - name: eventing-performance-test
+        secret:
+          secretName: eventing-performance-test
+  - name: post-knative-eventing-reconcile-clusters
+    branches:
+    - master
+    agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: post-knative-eventing-reconcile-clusters
+    decorate: true
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/performance/performance-tests.sh"
+        - "--reconcile-clusters"
+        volumeMounts:
+        - name: eventing-performance-test
+          mountPath: /etc/performance-test
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/performance-test/service-account.json
+        - name: PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/performance-test/service-account.json
+        - name: GITHUB_TOKEN
+          value: /etc/performance-test/github-token
+        - name: SLACK_READ_TOKEN
+          value: /etc/performance-test/slack-read-token
+        - name: SLACK_WRITE_TOKEN
+          value: /etc/performance-test/slack-write-token
+      volumes:
+      - name: eventing-performance-test
+        secret:
+          secretName: eventing-performance-test
+  - name: post-knative-eventing-reconcile-clusters
+    branches:
+    - master
+    agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: post-knative-eventing-reconcile-clusters
+    decorate: true
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/performance/performance-tests.sh"
+        - "--reconcile-clusters"
+        volumeMounts:
+        - name: eventing-performance-test
+          mountPath: /etc/performance-test
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/performance-test/service-account.json
+        - name: PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/performance-test/service-account.json
+        - name: GITHUB_TOKEN
+          value: /etc/performance-test/github-token
+        - name: SLACK_READ_TOKEN
+          value: /etc/performance-test/slack-read-token
+        - name: SLACK_WRITE_TOKEN
+          value: /etc/performance-test/slack-write-token
+      volumes:
+      - name: eventing-performance-test
+        secret:
+          secretName: eventing-performance-test
+  - name: post-knative-eventing-reconcile-clusters
+    branches:
+    - master
+    agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: post-knative-eventing-reconcile-clusters
+    decorate: true
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/performance/performance-tests.sh"
+        - "--reconcile-clusters"
+        volumeMounts:
+        - name: eventing-performance-test
+          mountPath: /etc/performance-test
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/performance-test/service-account.json
+        - name: PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/performance-test/service-account.json
+        - name: GITHUB_TOKEN
+          value: /etc/performance-test/github-token
+        - name: SLACK_READ_TOKEN
+          value: /etc/performance-test/slack-read-token
+        - name: SLACK_WRITE_TOKEN
+          value: /etc/performance-test/slack-write-token
+      volumes:
+      - name: eventing-performance-test
+        secret:
+          secretName: eventing-performance-test
   knative/eventing:
   - name: post-knative-eventing-go-coverage
     branches:
@@ -6521,6 +6669,43 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+  - name: post-knative-eventing-reconcile-clusters
+    branches:
+    - master
+    agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: post-knative-eventing-reconcile-clusters
+    decorate: true
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/performance/performance-tests.sh"
+        - "--reconcile-clusters"
+        volumeMounts:
+        - name: eventing-performance-test
+          mountPath: /etc/performance-test
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/performance-test/service-account.json
+        - name: PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/performance-test/service-account.json
+        - name: GITHUB_TOKEN
+          value: /etc/performance-test/github-token
+        - name: SLACK_READ_TOKEN
+          value: /etc/performance-test/slack-read-token
+        - name: SLACK_WRITE_TOKEN
+          value: /etc/performance-test/slack-write-token
+      volumes:
+      - name: eventing-performance-test
+        secret:
+          secretName: eventing-performance-test
   knative/eventing-contrib:
   - name: post-knative-eventing-contrib-go-coverage
     branches:

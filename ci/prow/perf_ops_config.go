@@ -59,8 +59,12 @@ func generatePerfClusterUpdatePeriodicJobs() {
 	)
 }
 
+// generatePerfClusterReconcilePostsubmitJob generates postsubmit job for the
+// repo to reconcile clusters that run performance testing benchmarks.
 func generatePerfClusterReconcilePostsubmitJob(repo string) {
-	if repo == "eventing" {
+	// TODO(chizhg): also add postsubmit jobs for other repos after they set up
+	// performance test infra.
+	if repo == "knative/eventing" {
 		perfClusterReconcilePostsubmitJob(
 			"post-knative-eventing-reconcile-clusters",
 			"./test/performance/performance-tests.sh",
@@ -90,9 +94,15 @@ func perfClusterReconcilePostsubmitJob(jobName, command string, args []string, r
 	executeJobTemplate(jobName, readTemplate(perfOpsPostsubmitJob), "postsubmits", repo, jobName, false, data)
 }
 
-func configPerfClusterBaseProwJob(base *baseProwJobTemplateData, jobName, command string, args []string, repo, sa string) {
+func configPerfClusterBaseProwJob(base *baseProwJobTemplateData, jobName, command string, args []string, repoName, sa string) {
+	for _, repo := range repositories {
+		if "knative/"+repoName == repo.Name && repo.Go113 {
+			base.Image = getGo113ImageName(base.Image)
+			break
+		}
+	}
 	base.ExtraRefs = append(base.ExtraRefs, "  base_ref: "+base.RepoBranch)
-	base.ExtraRefs = append(base.ExtraRefs, "  path_alias: knative.dev/"+repo)
+	base.ExtraRefs = append(base.ExtraRefs, "  path_alias: knative.dev/"+repoName)
 	base.Command = command
 	base.Args = args
 	addVolumeToJob(base, "/etc/performance-test", sa, true, "")

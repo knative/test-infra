@@ -4,8 +4,7 @@
     agent: kubernetes
     [[indent_section 6 "labels" .Base.Labels]]
     decorate: true
-    [[indent_section 4 "extra_refs" .Base.ExtraRefs]]
-    [[indent_array_section 6 "branches" .Base.Branches]]
+    [[.Base.PathAlias]]
     spec:
       containers:
       - image: [[.Base.Image]]
