@@ -161,6 +161,9 @@ presubmits:
     - go-coverage: true
 
   knative/serving-operator:
+    - repo-settings:
+      go112-branches:
+      - release-0.9
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -343,12 +346,17 @@ periodics:
   knative/serving-operator:
     - continuous: true
       dot-dev: true
+      go113: true
     - nightly: true
       dot-dev: true
+      go113: true
     - dot-release: true
+      # TODO(chaodaiG): dot-release will need to use go1.13 after branch
+      # release-0.10 is cut
       dot-dev: true
     - auto-release: true
       dot-dev: true
+      go113: true
 
   knative/eventing-operator:
     - continuous: true
