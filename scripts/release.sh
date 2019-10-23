@@ -528,16 +528,14 @@ function parse_flags() {
 }
 
 # Run tests (unless --skip-tests was passed). Conveniently displays a banner indicating so.
-# Parameters: $1 - executable that runs the tests.
+# Parameters: $1... - executable (and arguments) that runs the tests.
 function run_validation_tests() {
   if (( ! SKIP_TESTS )); then
-    _VALIDATION_COMMAND=$1
-    shift
-    _VALIDATION_ARGS=$@
     banner "Running release validation tests"
-    banner "${_VALIDATION_COMMAND} with args: ${_VALIDATION_ARGS}"
+    banner "Running release validation tests"
+    echo "Running '$@'"
     # Run tests.
-    if ! ${_VALIDATION_COMMAND} ${_VALIDATION_ARGS}; then
+    if ! $@; then
       banner "Release validation tests failed, aborting"
       exit 1
     fi
