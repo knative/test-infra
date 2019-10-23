@@ -77,41 +77,44 @@ func generatePerfClusterReconcilePostsubmitJob(repo string) {
 
 func perfClusterUpdatePeriodicJob(jobName, cronString, command string, args []string, repo, sa string) {
 	var data periodicJobTemplateData
-	data.Base = newbaseProwJobTemplateData("knative/" + repo)
-	configPerfClusterBaseProwJob(&data.Base, jobName, command, args, repo, sa)
+	data.Base = perfClusterBaseProwJob(jobName, command, args, repo, sa)
 	data.PeriodicJobName = jobName
 	data.CronString = cronString
 	data.PeriodicCommand = createCommand(data.Base)
-	executeJobTemplate(jobName, readTemplate(periodicTestJob), "presubmits", repo, jobName, false, data)
+	executeJobTemplate(jobName, readTemplate(periodicTestJob), "periodics", "knative/"+repo, jobName, false, data)
 }
 
 func perfClusterReconcilePostsubmitJob(jobName, command string, args []string, repo, sa string) {
 	var data postsubmitJobTemplateData
-	data.Base = newbaseProwJobTemplateData("knative/" + repo)
-	configPerfClusterBaseProwJob(&data.Base, jobName, command, args, repo, sa)
+	data.Base = perfClusterBaseProwJob(jobName, command, args, repo, sa)
 	data.PostsubmitJobName = jobName
 	data.PostsubmitCommand = createCommand(data.Base)
-	executeJobTemplate(jobName, readTemplate(perfOpsPostsubmitJob), "postsubmits", repo, jobName, false, data)
+	executeJobTemplate(jobName, readTemplate(perfOpsPostsubmitJob), "postsubmits", "knative/"+repo, jobName, true, data)
 }
 
-func configPerfClusterBaseProwJob(base *baseProwJobTemplateData, jobName, command string, args []string, repoName, sa string) {
+func perfClusterBaseProwJob(jobName, command string, args []string, repoName, sa string) baseProwJobTemplateData {
+	fullRepoName := "knative/" + repoName
+	base := newbaseProwJobTemplateData(fullRepoName)
 	for _, repo := range repositories {
-		if "knative/"+repoName == repo.Name && repo.Go113 {
+		if fullRepoName == repo.Name && repo.Go113 {
 			base.Image = getGo113ImageName(base.Image)
 			break
 		}
 	}
+	base.PathAlias = "path_alias: knative.dev/" + repoName
 	base.ExtraRefs = append(base.ExtraRefs, "  base_ref: "+base.RepoBranch)
 	base.ExtraRefs = append(base.ExtraRefs, "  path_alias: knative.dev/"+repoName)
+
 	base.Command = command
 	base.Args = args
-	addVolumeToJob(base, "/etc/performance-test", sa, true, "")
-	addEnvToJob(base, "GOOGLE_APPLICATION_CREDENTIALS", "/etc/performance-test/service-account.json")
+	addVolumeToJob(&base, "/etc/performance-test", sa, true, "")
+	addEnvToJob(&base, "GOOGLE_APPLICATION_CREDENTIALS", "/etc/performance-test/service-account.json")
 	// TODO(chizhg): remove PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS once
 	// serving is also using the new performance-tests.sh
-	addEnvToJob(base, "PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS", "/etc/performance-test/service-account.json")
-	addEnvToJob(base, "GITHUB_TOKEN", "/etc/performance-test/github-token")
-	addEnvToJob(base, "SLACK_READ_TOKEN", "/etc/performance-test/slack-read-token")
-	addEnvToJob(base, "SLACK_WRITE_TOKEN", "/etc/performance-test/slack-write-token")
-	addMonitoringPubsubLabelsToJob(base, jobName)
+	addEnvToJob(&base, "PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS", "/etc/performance-test/service-account.json")
+	addEnvToJob(&base, "GITHUB_TOKEN", "/etc/performance-test/github-token")
+	addEnvToJob(&base, "SLACK_READ_TOKEN", "/etc/performance-test/slack-read-token")
+	addEnvToJob(&base, "SLACK_WRITE_TOKEN", "/etc/performance-test/slack-write-token")
+	addMonitoringPubsubLabelsToJob(&base, jobName)
+	return base
 }

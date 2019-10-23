@@ -2,8 +2,8 @@
     branches:
     - master
     agent: kubernetes
-    [[indent_section 8 "labels" .Base.Labels]]
     decorate: true
+    [[indent_section 8 "labels" .Base.Labels]]
     [[.Base.PathAlias]]
     spec:
       containers:

@@ -1179,8 +1179,12 @@ func main() {
 		for _, repo := range repositories {
 			if repo.EnableGoCoverage {
 				generateGoCoveragePostsubmit("postsubmits", repo.Name, nil)
+				// generate post submit jobs to reconcile clusters for perf
+				// testing of the given repo. we need to run it in the "if" block, this is
+				// a bit hacky as we have to group the postsubmit jobs for each repo.
+				// TODO(chizhg): use a more generic way to generate the config.
+				generatePerfClusterReconcilePostsubmitJob(repo.Name)
 			}
-			generatePerfClusterReconcilePostsubmitJob(repo.Name)
 		}
 	}
 
