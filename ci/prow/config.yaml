@@ -3505,6 +3505,8 @@ presubmits:
         command:
         - runner.sh
         args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
         - "./test/e2e-tests-latest-serving.sh"
         volumeMounts:
         - name: test-account
@@ -3536,6 +3538,8 @@ presubmits:
         command:
         - runner.sh
         args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
         - "./test/e2e-tests-latest-serving.sh"
         volumeMounts:
         - name: test-account
@@ -5760,6 +5764,8 @@ periodics:
       command:
       - runner.sh
       args:
+      - ""
+      - "--run-test"
       - "./test/e2e-tests-latest-serving.sh"
       volumeMounts:
       - name: test-account
