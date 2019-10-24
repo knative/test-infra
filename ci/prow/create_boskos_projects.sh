@@ -21,7 +21,9 @@ readonly BILLING_ACCOUNT=${2:?"Second argument must be the billing account."}
 # All remaining arguments will be passed verbatim to set_boskos_permissions.sh
 shift 2
 
-readonly BOSKOS_RESOURCE_FILE=${RESOURCE_FILE:-boskos_resources.yaml}
+cd "$(dirname $0)"
+
+readonly BOSKOS_RESOURCE_FILE=${BOSKOS_RESOURCE_FILE:-boskos_resources.yaml}
 readonly BOSKOS_PROJECT_PREFIX=${BOSKOS_PROJECT_PREFIX:-knative-boskos-}
 
 if [[ ! -f ${BOSKOS_RESOURCE_FILE} || ! -w ${BOSKOS_RESOURCE_FILE} ]]; then
@@ -33,17 +35,17 @@ fi
 LAST_INDEX=$(grep "${BOSKOS_PROJECT_PREFIX}" ${BOSKOS_RESOURCE_FILE} | grep -o "[0-9]\+" | sort -nr | head -1)
 [[ -z "${LAST_INDEX}" ]] && LAST_INDEX=0
 for (( i=1; i<=${NUMBER}; i++ )); do
-  PROJECT="$(printf '${BOSKOS_PROJECT_PREFIX}%02d' $(( ${LAST_INDEX} + i )))"
+  PROJECT="$(printf ${BOSKOS_PROJECT_PREFIX}%02d $(( ${LAST_INDEX} + i )))"
   # This Folder ID is google.com/google-default
   # If this needs to be changed for any reason, GCP project settings must be updated.
   # Details are available in Google's internal issue 137963841.
   gcloud projects create ${PROJECT} --folder=396521612403
   gcloud beta billing projects link ${PROJECT} --billing-account=${BILLING_ACCOUNT}
 
-  # Set permissions for this project
-  "$(dirname $0)/set_boskos_permissions.sh" ${PROJECT} $@
-
   LAST_PROJECT=$(grep "${BOSKOS_PROJECT_PREFIX}" ${BOSKOS_RESOURCE_FILE} | tail -1)
   [[ -z "${LAST_PROJECT}" ]] && LAST_PROJECT="- names:"
   sed "/^${LAST_PROJECT}$/a\ \ -\ ${PROJECT}" -i ${BOSKOS_RESOURCE_FILE}
+
+  # Set permissions for this project
+  "./set_boskos_permissions.sh" ${PROJECT} $@
 done

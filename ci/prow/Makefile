@@ -12,11 +12,61 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include ../Makefile.base
+# Default settings for the CI/CD system.
+
+CLUSTER       ?= prow
+PROJECT       ?= knative-tests
+ZONE          ?= us-central1-f
+JOB_NAMESPACE ?= test-pods
+PROW_HOST     ?= https://prow.knative.dev
+
+SKIP_CONFIG_BACKUP        ?=
+GENERATE_MAINTENANCE_JOBS ?= true
+
+# This is the canonical path of this Makefile, aka /ci/prow dir.
+PROW_DIR ?= $(realpath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
+
+KNATIVE_CONFIG  ?= $(PROW_DIR)/config_knative.yaml
+PROW_PLUGINS    ?= $(PROW_DIR)/plugins.yaml
+PROW_CONFIG     ?= $(PROW_DIR)/config.yaml
+PROW_DEPLOYS    ?= $(PROW_DIR)/deployments
+PROW_GCS        ?= knative-prow
+PROW_CONFIG_GCS ?= gs://$(PROW_GCS)/configs
+
+TESTGRID_GCS    ?= knative-testgrid
+TESTGRID_CONFIG ?= $(PROW_DIR)/testgrid.yaml
+
+BOSKOS_RESOURCES ?= $(PROW_DIR)/boskos_resources.yaml
+
+# Useful shortcuts.
+
+SET_CONTEXT   := gcloud container clusters get-credentials "$(CLUSTER)" --project="$(PROJECT)" --zone="$(ZONE)"
+UNSET_CONTEXT := kubectl config unset current-context
+MAKE_CONFIG   := cd $(PROW_DIR) && go run *_config.go
+
+# Avoid the default target being harmful.
+default:
+	@echo "You must specify a target"
+
+# Useful general targets.
+get-cluster-credentials:
+	$(SET_CONTEXT)
+
+unset-cluster-credentials:
+	$(UNSET_CONTEXT)
 
 # Generate the Prow config file
 config:
-	go run *_config.go --prow-config-output=$(PROW_CONFIG) --testgrid-config-output=$(TESTGRID_CONFIG) --gcs-bucket=$(PROW_GCS) --testgrid-gcs-bucket=$(TESTGRID_GCS) --image-docker=gcr.io/$(PROJECT)/test-infra $(KNATIVE_CONFIG)
+	$(MAKE_CONFIG) \
+		--gcs-bucket=$(PROW_GCS) \
+		--generate-maintenance-jobs=$(GENERATE_MAINTENANCE_JOBS) \
+		--image-docker=gcr.io/$(PROJECT)/test-infra \
+		--plugins-config-output=$(PROW_PLUGINS) \
+		--prow-config-output=$(PROW_CONFIG) \
+		--prow-host=$(PROW_HOST) \
+		--testgrid-config-output=$(TESTGRID_CONFIG) \
+		--testgrid-gcs-bucket=$(TESTGRID_GCS) \
+		$(KNATIVE_CONFIG)
 
 # Update all prow job configs
 update-config:
@@ -46,9 +96,9 @@ update-plugins:
 	$(UNSET_CONTEXT)
 
 # Update all deployments of boskos
-update-all-boskos-deployments:
+update-all-boskos-deployments::
 	$(SET_CONTEXT)
-	@for f in $(shell ls $(PROW_DEPLOYS)/boskos*.yaml); do kubectl apply -f $${f}; done
+	@for f in $(wildcard $(PROW_DEPLOYS)/boskos*.yaml); do kubectl apply -f $${f}; done
 	$(UNSET_CONTEXT)
 
 # Update the list of resources for Boskos
@@ -58,9 +108,9 @@ update-boskos-resource:
 	$(UNSET_CONTEXT)
 
 # Update all deployment of cluster
-update-all-cluster-deployments:
+update-all-cluster-deployments::
 	$(SET_CONTEXT)
-	@for f in $(shell ls $(PROW_DEPLOYS)/*.yaml); do kubectl apply -f $${f}; done
+	@for f in $(filter-out $(wildcard $(PROW_DEPLOYS)/boskos*.yaml),$(wildcard $(PROW_DEPLOYS)/*.yaml)); do kubectl apply -f $${f}; done
 	$(UNSET_CONTEXT)
 
 # Update single deployment of cluster, expect passing in ${NAME} like `make update-single-cluster-deployment NAME=crier_deployment`
@@ -76,12 +126,41 @@ update-full: update-all-cluster-deployments update-all-boskos-deployments update
 test:
 	@echo "*** Checking config generator for prow and testgrid"
 	$(eval TMP_YAML_PROW := $(shell mktemp))
+	$(eval TMP_YAML_PLUGINS := $(shell mktemp))
 	$(eval TMP_YAML_TESTGRID := $(shell mktemp))
-	go run *_config.go --prow-config-output="$(TMP_YAML_PROW)" --testgrid-config-output="$(TMP_YAML_TESTGRID)" $(KNATIVE_CONFIG)
+	$(MAKE_CONFIG) \
+		--gcs-bucket=$(PROW_GCS) \
+		--generate-maintenance-jobs=$(GENERATE_MAINTENANCE_JOBS) \
+		--image-docker=gcr.io/$(PROJECT)/test-infra \
+		--plugins-config-output=$(TMP_YAML_PLUGINS) \
+		--prow-config-output=$(TMP_YAML_PROW) \
+		--prow-host=$(PROW_HOST) \
+		--testgrid-config-output=$(TMP_YAML_TESTGRID) \
+		--testgrid-gcs-bucket=$(TESTGRID_GCS) \
+		$(KNATIVE_CONFIG)
 	diff $(PROW_CONFIG) $(TMP_YAML_PROW)
+	diff $(PROW_PLUGINS) $(TMP_YAML_PLUGINS)
 	diff $(TESTGRID_CONFIG) $(TMP_YAML_TESTGRID)
 	@echo "*** Checking configs validity"
-	bazel run @k8s//prow/cmd/checkconfig -- --plugin-config=$(PROW_PLUGINS) --config-path=$(PROW_CONFIG)
+	bazel run @k8s//prow/cmd/checkconfig -- \
+		--config-path=$(PROW_CONFIG) \
+		--plugin-config=$(PROW_PLUGINS)
 	bazel run @k8s//testgrid/cmd/configurator -- \
+		--validate-config-file \
 		--yaml=$(TESTGRID_CONFIG) \
-		--validate-config-file
+	# Ensure TestGrid config can be converted to binary form.
+	bazel run @k8s//testgrid/cmd/configurator -- \
+		--oneshot \
+		--output=/dev/null \
+		--yaml=$(TESTGRID_CONFIG)
+
+# Update TestGrid config.
+# Application Default Credentials must be set, otherwise the upload will fail.
+# Either export $GOOGLE_APPLICATION_CREDENTIALS pointing to a valid service
+# account key, or temporarily use your own credentials by running
+# gcloud auth application-default login
+update-testgrid-config:
+	bazel run @k8s//testgrid/cmd/configurator -- \
+		--oneshot \
+		--output=gs://$(TESTGRID_GCS)/config \
+		--yaml=$(TESTGRID_CONFIG)

@@ -12,29 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: extensions/v1beta1
-kind: Deployment
-metadata:
-  name: horologium
-  labels:
-    app: horologium
-spec:
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: horologium
-    spec:
-      serviceAccountName: "horologium"
-      terminationGracePeriodSeconds: 30
-      containers:
-      - name: horologium
-        image: gcr.io/k8s-prow/horologium:v20191015-68dd384c9
-        volumeMounts:
-        - name: config
-          mountPath: /etc/config
-          readOnly: true
-      volumes:
-      - name: config
-        configMap:
-          name: config
+resources:
+- names:
+  - knative-boskos-staging-01
+  - knative-boskos-staging-02
+  - knative-boskos-staging-03
+  state: dirty
+  type: gke-project

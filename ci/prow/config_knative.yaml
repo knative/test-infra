@@ -16,13 +16,9 @@ presubmits:
   knative/serving:
     - repo-settings:
       legacy-branches:
-      - release-0.4
-      - release-0.5
       - release-0.6
       - release-0.7
       go112-branches:
-      - release-0.4
-      - release-0.5
       - release-0.6
       - release-0.7
       - release-0.8
@@ -44,8 +40,6 @@ presubmits:
       - "./test/e2e-upgrade-tests.sh"
     - custom-test: smoke-tests
       skip_branches:  # Skip these branches, as test isn't available.
-      - release-0.4
-      - release-0.5
       - release-0.6
       args:
       - "--run-test"
@@ -95,8 +89,6 @@ presubmits:
   knative/eventing:
     - repo-settings:
       legacy-branches:
-      - release-0.4
-      - release-0.5
       - release-0.6
       - release-0.7
       - release-0.8
@@ -108,8 +100,6 @@ presubmits:
   knative/eventing-contrib:
     - repo-settings:
       legacy-branches:
-      - release-0.4
-      - release-0.5
       - release-0.6
       - release-0.7
       - release-0.8
@@ -171,6 +161,9 @@ presubmits:
     - go-coverage: true
 
   knative/serving-operator:
+    - repo-settings:
+      go112-branches:
+      - release-0.9
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -190,6 +183,13 @@ presubmits:
     - go-coverage: true
       dot-dev: true
 
+  knative/website:
+    # This repo only uses Tide
+    - build-tests: false
+    - unit-tests: false
+    - integration-tests: false
+    - go-coverage: false
+
 periodics:
   knative/serving:
     - continuous: true
@@ -202,15 +202,14 @@ periodics:
         limits:
           memory: 16Gi
     - branch-ci: true
-      release: "0.4"
-    - branch-ci: true
-      release: "0.5"
-    - branch-ci: true
       release: "0.6"
     - branch-ci: true
       release: "0.7"
     - branch-ci: true
       release: "0.8"
+      dot-dev: true
+    - branch-ci: true
+      release: "0.9"
       dot-dev: true
     - custom-job: istio-1.2-mesh
       full-command: "./test/e2e-tests.sh --istio-version 1.2-latest --mesh"
@@ -291,13 +290,14 @@ periodics:
       timeout: 90
       dot-dev: true
     - branch-ci: true
-      release: "0.5"
-    - branch-ci: true
       release: "0.6"
     - branch-ci: true
       release: "0.7"
     - branch-ci: true
       release: "0.8"
+    - branch-ci: true
+      release: "0.9"
+      dot-dev: true
     - nightly: true
       dot-dev: true
     - dot-release: true
@@ -309,13 +309,14 @@ periodics:
     - continuous: true
       dot-dev: true
     - branch-ci: true
-      release: "0.5"
-    - branch-ci: true
       release: "0.6"
     - branch-ci: true
       release: "0.7"
     - branch-ci: true
       release: "0.8"
+    - branch-ci: true
+      release: "0.9"
+      dot-dev: true
     - nightly: true
       dot-dev: true
     - dot-release: true
@@ -345,12 +346,17 @@ periodics:
   knative/serving-operator:
     - continuous: true
       dot-dev: true
+      go113: true
     - nightly: true
       dot-dev: true
+      go113: true
     - dot-release: true
+      # TODO(chaodaiG): dot-release will need to use go1.13 after branch
+      # release-0.10 is cut
       dot-dev: true
     - auto-release: true
       dot-dev: true
+      go113: true
 
   knative/eventing-operator:
     - continuous: true

@@ -24,16 +24,25 @@ PROJECT  ?= knative-tests
 IMG = $(REGISTRY)/$(PROJECT)/test-infra/$(IMAGE_NAME)
 TAG := $(shell date +v%Y%m%d)-$(shell git describe --always --dirty --match '^$$')
 
+# build_helper: build the image with docker
+#	$1 = [optional] additional flags to be applied to the build
+define build_helper
+	docker build $(1) -t $(IMG):$(TAG) -f Dockerfile ../..
+endef
+
 all: build
 
 build:
-	docker build -t $(IMG):$(TAG) -f Dockerfile ../..
-	docker tag $(IMG):$(TAG) $(IMG):latest
+	$(call build_helper)
 
-push_versioned: build
+build_no_cache:
+	$(call build_helper,--no-cache)
+
+push_versioned: build_no_cache
 	docker push $(IMG):$(TAG)
 
-push_latest: build
+push_latest: build_no_cache
+	docker tag $(IMG):$(TAG) $(IMG):latest
 	docker push $(IMG):latest
 
 push: push_versioned push_latest

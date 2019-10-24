@@ -36,9 +36,7 @@ function post_build_tests() {
     make -n -C $(dirname ${makefile}) || failed=1
   done
   subheader "Checking config files"
-  for dir in ci/prow ci/testgrid; do
-    make -C ${dir} test || failed=1
-  done
+  make -C ci/prow test || failed=1
   for script in scripts/*.sh; do
     subheader "Checking integrity of ${script}"
     bash -c "source ${script}" || failed=1
@@ -59,4 +57,4 @@ function post_unit_tests() {
 
 # We use the default integration test runner.
 
-main $@
+main "$@"

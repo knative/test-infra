@@ -22,6 +22,7 @@ import (
 	"path"
 	"strings"
 
+	"k8s.io/apimachinery/pkg/util/sets"
 	"knative.dev/test-infra/tools/coverage/str"
 )
 
@@ -150,13 +151,9 @@ func (g *CoverageList) Report(itemized bool) {
 
 // GetDirs gets a list a sub-directories that contains source code. The list will be shown on Testgrid
 func (g *CoverageList) GetDirs() []string {
-	dirSet := map[string]bool{}
-	var result []string
+	dirSet := sets.String{}
 	for _, cov := range g.group {
-		if dirName := path.Dir(cov.name); !dirSet[dirName] {
-			result = append(result, dirName)
-			dirSet[dirName] = true
-		}
+		dirSet.Insert(path.Dir(cov.name))
 	}
-	return result
+	return dirSet.List()
 }

@@ -19,6 +19,8 @@ import (
 	"path"
 	"testing"
 
+	"k8s.io/apimachinery/pkg/util/sets"
+
 	"knative.dev/test-infra/tools/coverage/githubUtil/githubFakes"
 	"knative.dev/test-infra/tools/coverage/test"
 )
@@ -27,22 +29,20 @@ func TestGetConcernedFiles(t *testing.T) {
 	data := githubFakes.FakeRepoData()
 	actualConcernMap := GetConcernedFiles(data, test.ProjDir())
 	t.Logf("concerned files for PR %v:%v", data.Pr, actualConcernMap)
-	expectedConcerns := test.MakeStringSet()
 
+	expectedConcerns := sets.String{}
 	for _, fileName := range []string{
 		"common.go",
 		"onlySrcChange.go",
 		"onlyTestChange.go",
 		"newlyAddedFile.go",
 	} {
-		expectedConcerns.Add(path.Join(test.CovTargetDir, fileName))
+		expectedConcerns.Insert(path.Join(test.CovTargetDir, fileName))
 	}
 
-	t.Logf("expected concerns=%v", expectedConcerns.AllMembers())
-
+	t.Logf("expected concerns=%v", expectedConcerns.List())
 	for fileName, actual := range actualConcernMap {
-		expected := expectedConcerns.Has(fileName)
-		if actual != expected {
+		if expected := expectedConcerns.Has(fileName); actual != expected {
 			t.Fatalf("filename=%s, isConcerned: expected=%v; actual=%v\n", fileName, expected, actual)
 		}
 	}

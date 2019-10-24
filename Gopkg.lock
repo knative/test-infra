@@ -404,7 +404,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:304253938e06b9a9fafe0b2698b0b459b9b15c4159dc2af5e75d9561a4868708"
+  digest = "1:454368d3067a823b0242a89458c100683d17fc0e98eedecf9194f3bf68bb84ec"
   name = "knative.dev/pkg"
   packages = [
     "test/gcs",
@@ -417,6 +417,8 @@
     "testutils/clustermanager/e2e-tests",
     "testutils/clustermanager/e2e-tests/boskos",
     "testutils/clustermanager/e2e-tests/common",
+    "testutils/clustermanager/perf-tests",
+    "testutils/clustermanager/perf-tests/pkg",
     "testutils/clustermanager/prow-cluster-operation",
     "testutils/clustermanager/prow-cluster-operation/actions",
     "testutils/clustermanager/prow-cluster-operation/options",
@@ -452,6 +454,7 @@
     "knative.dev/pkg/test/ghutil/fakeghutil",
     "knative.dev/pkg/test/helpers",
     "knative.dev/pkg/test/slackutil",
+    "knative.dev/pkg/testutils/clustermanager/perf-tests",
     "knative.dev/pkg/testutils/clustermanager/prow-cluster-operation",
   ]
   solver-name = "gps-cdcl"
