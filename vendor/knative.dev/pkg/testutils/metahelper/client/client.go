@@ -25,11 +25,7 @@ import (
 	"os"
 	"path"
 
-	"knative.dev/test-infra/shared/common"
-
-	// TODO(chaodaiG): use prow from pkg once
-	// https://github.com/knative/pkg/pull/750 is merged
-	"knative.dev/test-infra/shared/prow"
+	"knative.dev/pkg/test/prow"
 )
 
 const (
@@ -55,7 +51,12 @@ func NewClient(dir string) (*client, error) {
 		dir = prow.GetLocalArtifactsDir()
 	}
 	c.Path = path.Join(dir, filename)
-	return c, common.CreateDir(dir)
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		if err = os.MkdirAll(dir, 0777); err != nil {
+			return nil, fmt.Errorf("Failed to create directory: %v", err)
+		}
+	}
+	return c, nil
 }
 
 // sync is shared by Get and Set, invoked at the very beginning of each, makes

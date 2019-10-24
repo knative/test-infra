@@ -404,20 +404,26 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:7933e3e5cc57386eea6a337f17149307005a4c2a60595b710c4d8a685de2d21f"
+  digest = "1:304253938e06b9a9fafe0b2698b0b459b9b15c4159dc2af5e75d9561a4868708"
   name = "knative.dev/pkg"
   packages = [
+    "test/gcs",
     "test/ghutil",
     "test/ghutil/fakeghutil",
     "test/gke",
     "test/helpers",
+    "test/prow",
     "test/slackutil",
     "testutils/clustermanager/e2e-tests",
     "testutils/clustermanager/e2e-tests/boskos",
     "testutils/clustermanager/e2e-tests/common",
+    "testutils/clustermanager/prow-cluster-operation",
+    "testutils/clustermanager/prow-cluster-operation/actions",
+    "testutils/clustermanager/prow-cluster-operation/options",
+    "testutils/metahelper/client",
   ]
   pruneopts = "NUT"
-  revision = "3f11504864ae6d2a4826d28fb487b6404b5829e1"
+  revision = "15e34cab9467bc3399a531a1e0dced02b3e89274"
 
 [[projects]]
   digest = "1:8730e0150dfb2b7e173890c8b9868e7a273082ef8e39f4940e3506a481cf895c"
@@ -438,18 +444,15 @@
     "github.com/google/licenseclassifier",
     "golang.org/x/net/context",
     "golang.org/x/oauth2",
-    "google.golang.org/api/container/v1beta1",
     "google.golang.org/api/iterator",
     "google.golang.org/api/option",
     "gopkg.in/yaml.v2",
     "k8s.io/apimachinery/pkg/util/sets",
     "knative.dev/pkg/test/ghutil",
     "knative.dev/pkg/test/ghutil/fakeghutil",
-    "knative.dev/pkg/test/gke",
     "knative.dev/pkg/test/helpers",
     "knative.dev/pkg/test/slackutil",
-    "knative.dev/pkg/testutils/clustermanager/e2e-tests",
-    "knative.dev/pkg/testutils/clustermanager/e2e-tests/common",
+    "knative.dev/pkg/testutils/clustermanager/prow-cluster-operation",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

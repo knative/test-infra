@@ -24,8 +24,8 @@ import (
 	"knative.dev/pkg/test/gke"
 	clm "knative.dev/pkg/testutils/clustermanager/e2e-tests"
 	"knative.dev/pkg/testutils/clustermanager/e2e-tests/common"
-	"knative.dev/test-infra/test/metahelper/client"
-	"knative.dev/test-infra/test/prow-cluster-operation/options"
+	"knative.dev/pkg/testutils/clustermanager/prow-cluster-operation/options"
+	"knative.dev/pkg/testutils/metahelper/client"
 )
 
 const (

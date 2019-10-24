@@ -20,7 +20,7 @@ import (
 	"log"
 
 	clm "knative.dev/pkg/testutils/clustermanager/e2e-tests"
-	"knative.dev/test-infra/test/prow-cluster-operation/options"
+	"knative.dev/pkg/testutils/clustermanager/prow-cluster-operation/options"
 )
 
 func Delete(o *options.RequestWrapper) {

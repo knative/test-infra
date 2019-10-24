@@ -20,8 +20,8 @@ import (
 	"flag"
 	"log"
 
-	"knative.dev/test-infra/test/prow-cluster-operation/actions"
-	"knative.dev/test-infra/test/prow-cluster-operation/options"
+	"knative.dev/pkg/testutils/clustermanager/prow-cluster-operation/actions"
+	"knative.dev/pkg/testutils/clustermanager/prow-cluster-operation/options"
 )
 
 var (

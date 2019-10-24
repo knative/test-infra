@@ -17,7 +17,7 @@ limitations under the License.
 package actions
 
 import (
-	"knative.dev/test-infra/test/prow-cluster-operation/options"
+	"knative.dev/pkg/testutils/clustermanager/prow-cluster-operation/options"
 )
 
 func Get(o *options.RequestWrapper) {
