@@ -365,6 +365,9 @@ periodics:
       go113: true
     - custom-job: integration-tests-on-latest-serving
       command:
+      - "./test/presubmit-tests.sh"
+      args:
+      - "--run-test"
       - "./test/e2e-tests-latest-serving.sh"
       dot-dev: true
       go113: true

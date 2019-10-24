@@ -5764,6 +5764,8 @@ periodics:
       command:
       - runner.sh
       args:
+      - "./test/presubmit-tests.sh"
+      - "--run-test"
       - "./test/e2e-tests-latest-serving.sh"
       volumeMounts:
       - name: test-account
