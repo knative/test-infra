@@ -357,6 +357,12 @@ periodics:
     - auto-release: true
       dot-dev: true
       go113: true
+    - auto-release: true
+      dot-dev: true
+    - custom-test: integration-tests-on-latest-knative-serving
+      command:
+        - "./test/e2e-tests-latest-serving.sh"
+      dot-dev: true
 
   knative/eventing-operator:
     - continuous: true
