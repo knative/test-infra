@@ -30,9 +30,9 @@ const (
 	// goCoveragePostsubmitJob is the template for the go postsubmit coverage job.
 	goCoveragePostsubmitJob = "prow_postsubmit_gocoverage_job.yaml"
 
-	// perfOpsPostsubmitJob is the template for the performance operations
+	// perfPostsubmitJob is the template for the performance operations
 	// postsubmit job.
-	perfOpsPostsubmitJob = "prow_postsubmit_perfops_job.yaml"
+	perfPostsubmitJob = "prow_postsubmit_perf_job.yaml"
 )
 
 // postsubmitJobTemplateData contains data about a postsubmit Prow job.

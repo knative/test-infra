@@ -55,14 +55,15 @@ const (
 
 // repositoryData contains basic data about each Knative repository.
 type repositoryData struct {
-	Name                string
-	EnableGoCoverage    bool
-	GoCoverageThreshold int
-	Processed           bool
-	DotDev              bool
-	Go113               bool
-	LegacyBranches      []string
-	Go112Branches       []string
+	Name                   string
+	EnablePerformanceTests bool
+	EnableGoCoverage       bool
+	GoCoverageThreshold    int
+	Processed              bool
+	DotDev                 bool
+	Go113                  bool
+	LegacyBranches         []string
+	Go112Branches          []string
 }
 
 // prowConfigTemplateData contains basic data about Prow.
@@ -147,7 +148,6 @@ var (
 	backupsDockerImage           string
 	presubmitScript              string
 	releaseScript                string
-	performanceScript            string
 	webhookAPICoverageScript     string
 	cleanupScript                string
 
@@ -562,6 +562,12 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 					repositories[i].Go113 = true
 				}
 			}
+		case "performance":
+			for i, repo := range repositories {
+				if path.Base(repo.Name) == (*data).RepoName {
+					repositories[i].EnablePerformanceTests = true
+				}
+			}
 		case "legacy-branches":
 			for i, repo := range repositories {
 				if path.Base(repo.Name) == (*data).RepoName {
@@ -964,7 +970,7 @@ func collectMetaData(periodicJob yaml.MapSlice) {
 			releaseVersion := ""
 			for _, item := range jobConfig {
 				switch item.Key {
-				case "continuous", "dot-release", "auto-release", "performance", "performance-mesh",
+				case "continuous", "dot-release", "auto-release", "performance",
 					"latency", "nightly", "webhook-apicoverage":
 					if getBool(item.Value) {
 						enabled = true
@@ -994,11 +1000,11 @@ func collectMetaData(periodicJob yaml.MapSlice) {
 				jobDetailMap[repoName] = newJobTypes
 			}
 		}
-		addTestCoverageJobDataIfNeeded(&jobDetailMap, repoName)
+		updateTestCoverageJobDataIfNeeded(&jobDetailMap, repoName)
 	}
 
 	// add test coverage jobs for the repos that haven't been handled
-	addRemainingTestCoverageJobsData()
+	addRemainingTestCoverageJobs()
 }
 
 // addProjAndRepoIfNeed adds the project and repo if they are new in the metaData map, then return the jobDetailMap
@@ -1022,8 +1028,8 @@ func addProjAndRepoIfNeed(projName string, repoName string) map[string][]string 
 	return jobDetailMap
 }
 
-// addTestCoverageJobDataIfNeeded adds test-coverage job data for the repo if it has go coverage check
-func addTestCoverageJobDataIfNeeded(jobDetailMap *map[string][]string, repoName string) {
+// updateTestCoverageJobDataIfNeeded adds test-coverage job data for the repo if it has go coverage check
+func updateTestCoverageJobDataIfNeeded(jobDetailMap *map[string][]string, repoName string) {
 	if goCoverageMap[repoName] {
 		newJobTypes := append((*jobDetailMap)[repoName], "test-coverage")
 		(*jobDetailMap)[repoName] = newJobTypes
@@ -1033,8 +1039,8 @@ func addTestCoverageJobDataIfNeeded(jobDetailMap *map[string][]string, repoName 
 	}
 }
 
-// addRemainingTestCoverageJobsData adds test-coverage jobs data for the repos that haven't been processed.
-func addRemainingTestCoverageJobsData() {
+// addRemainingTestCoverageJobs adds test-coverage jobs data for the repos that haven't been processed.
+func addRemainingTestCoverageJobs() {
 	// handle repos that only have go coverage
 	for repoName, hasGoCoverage := range goCoverageMap {
 		if hasGoCoverage {
@@ -1113,7 +1119,6 @@ func main() {
 	flag.StringVar(&githubCommenterDockerImage, "github-commenter-docker", "gcr.io/k8s-prow/commenter:v20190731-e3f7b9853", "github commenter docker image")
 	flag.StringVar(&presubmitScript, "presubmit-script", "./test/presubmit-tests.sh", "Executable for running presubmit tests")
 	flag.StringVar(&releaseScript, "release-script", "./hack/release.sh", "Executable for creating releases")
-	flag.StringVar(&performanceScript, "performance-script", "./test/performance-tests.sh", "Executable for running performance tests")
 	flag.StringVar(&webhookAPICoverageScript, "webhook-api-coverage-script", "./test/apicoverage.sh", "Executable for running webhook apicoverage tool")
 	flag.StringVar(&cleanupScript, "cleanup-script", "./tools/cleanup/cleanup.sh", "Executable for running the cleanup tasks")
 	flag.StringVar(&repositoryOverride, "repo-override", "", "Repository path (github.com/foo/bar[=branch]) to use instead for a job")
@@ -1179,11 +1184,9 @@ func main() {
 		for _, repo := range repositories {
 			if repo.EnableGoCoverage {
 				generateGoCoveragePostsubmit("postsubmits", repo.Name, nil)
-				// generate post submit jobs to reconcile clusters for perf
-				// testing of the given repo. we need to run it in the "if" block, this is
-				// a bit hacky as we have to group the postsubmit jobs for each repo.
-				// TODO(chizhg): use a more generic way to generate the config.
-				generatePerfClusterReconcilePostsubmitJob(repo.Name)
+			}
+			if repo.EnablePerformanceTests {
+				generatePerfClusterReconcilePostsubmitJob(repo)
 			}
 		}
 	}

@@ -41,7 +41,6 @@ const (
 	flakesResultRecorderPeriodicJobCron = "0 * * * *"    // Run every hour
 	prowversionbumperPeriodicJobCron    = "0 20 * * 1"   // Run at 12:00PST/13:00PST every Monday (20:00 UTC)
 	backupPeriodicJobCron               = "15 9 * * *"   // Run at 02:15PST every day (09:15 UTC)
-	perfPeriodicJobCron                 = "0 */3 * * *"  // Run every 3 hours
 	clearAlertsPeriodicJobCron          = "0,30 * * * *" // Run every 30 minutes
 	recreatePerfClusterPeriodicJobCron  = "30 07 * * *"  // Run at 00:30PST every day (07:30 UTC)
 	updatePerfClusterPeriodicJobCron    = "5 * * * *"    // Run every an hour
@@ -98,10 +97,6 @@ func generateCron(jobType, jobName string, timeout int) string {
 		res = fmt.Sprintf(weekCron, getUTCtime(2), 2)
 	case "latency": // Every day 1-2 PST
 		res = fmt.Sprintf(dayCron, getUTCtime(1))
-	case "performance": // Every day 1-2 PST
-		res = fmt.Sprintf(dayCron, getUTCtime(1))
-	case "performance-mesh": // Every day 3-4 PST
-		res = fmt.Sprintf(dayCron, getUTCtime(3))
 	case "webhook-apicoverage": // Every day 2-3 PST
 		res = fmt.Sprintf(dayCron, getUTCtime(2))
 	default:
@@ -173,19 +168,6 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 				"--github-token /etc/hub-token/token"}
 			addVolumeToJob(&data.Base, "/etc/hub-token", "hub-token", true, "")
 			data.Base.Timeout = 90
-			isMonitoredJob = true
-		case "performance", "performance-mesh":
-			if !getBool(item.Value) {
-				return
-			}
-			jobType = getString(item.Key)
-			jobNameSuffix = getString(item.Key)
-			data.Base.Command = performanceScript
-			data.CronString = perfPeriodicJobCron
-			// We need a larger cluster of at least 16 nodes for perf tests
-			addEnvToJob(&data.Base, "E2E_MIN_CLUSTER_NODES", perfNodes)
-			addEnvToJob(&data.Base, "E2E_MAX_CLUSTER_NODES", perfNodes)
-			data.Base.Timeout = perfTimeout
 			isMonitoredJob = true
 		case "latency":
 			if !getBool(item.Value) {
