@@ -404,7 +404,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:454368d3067a823b0242a89458c100683d17fc0e98eedecf9194f3bf68bb84ec"
+  digest = "1:663360c7438d6f16bc164ff6891ce45c74f601fa84dc9b87e9acddbbee818c9f"
   name = "knative.dev/pkg"
   packages = [
     "test/gcs",
@@ -422,6 +422,7 @@
     "testutils/clustermanager/prow-cluster-operation",
     "testutils/clustermanager/prow-cluster-operation/actions",
     "testutils/clustermanager/prow-cluster-operation/options",
+    "testutils/metahelper",
     "testutils/metahelper/client",
   ]
   pruneopts = "NUT"
@@ -456,6 +457,7 @@
     "knative.dev/pkg/test/slackutil",
     "knative.dev/pkg/testutils/clustermanager/perf-tests",
     "knative.dev/pkg/testutils/clustermanager/prow-cluster-operation",
+    "knative.dev/pkg/testutils/metahelper",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
