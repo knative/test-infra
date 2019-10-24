@@ -43,7 +43,6 @@ function run_prow_cluster_tool() {
 
 # Get test cluster from kubeconfig, fail if it's protected
 function get_e2e_test_cluster() {
-
   local k8s_cluster=$(kubectl config current-context)
   [[ -z "${k8s_cluster}" ]] && abort "kubectl must have been set at this point"
   # Add protection before trapping removal
