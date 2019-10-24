@@ -364,8 +364,7 @@ periodics:
       dot-dev: true
       go113: true
     - custom-job: integration-tests-on-latest-serving
-      args:
-      - "--run-test"
+      command:
       - "./test/e2e-tests-latest-serving.sh"
       dot-dev: true
       go113: true

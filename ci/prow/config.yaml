@@ -5764,8 +5764,6 @@ periodics:
       command:
       - runner.sh
       args:
-      - ""
-      - "--run-test"
       - "./test/e2e-tests-latest-serving.sh"
       volumeMounts:
       - name: test-account
