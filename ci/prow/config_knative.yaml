@@ -172,6 +172,10 @@ presubmits:
       dot-dev: true
     - go-coverage: true
       dot-dev: true
+    - custom-test: integration-tests-on-latest-serving
+      always_run: false
+      optional: true
+      full-command: "./test/e2e-tests-latest-serving.sh"
 
   knative/eventing-operator:
     - build-tests: true
@@ -355,6 +359,10 @@ periodics:
       # release-0.10 is cut
       dot-dev: true
     - auto-release: true
+      dot-dev: true
+      go113: true
+    - custom-job: integration-tests-on-latest-serving
+      full-command: "./test/e2e-tests-latest-serving.sh"
       dot-dev: true
       go113: true
 
