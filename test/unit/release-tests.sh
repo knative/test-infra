@@ -19,6 +19,27 @@ source $(dirname $0)/../../scripts/release.sh
 
 set -e
 
+function mock_tag_images_in_yamls_acr() {
+  set -e
+  AZ_ACR_NAME=foo
+  KO_DOCKER_REPO="${AZ_ACR_NAME}.azurecr.io"
+  TAG=sometag
+  function az() {
+	echo $@
+  }
+  tag_images_in_yamls_acr "$@" 2>&1
+}
+
+function mock_publish_to_azblob() {
+  set -e
+  RELEASE_AZ_BLOB_URL=https://foo.blob.core.windows.net
+  TAG=sometag
+  function azcopy() {
+	echo $@
+  }
+  publish_to_azblob "$@" 2>&1
+}
+
 function mock_publish_to_github() {
   set -e
   PUBLISH_TO_GITHUB=1
@@ -112,6 +133,8 @@ echo ">> Testing ACR/BLOB values"
 
 test_function ${SUCCESS} "Not publishing the release, GCR/ACR flags ignored" parse_flags --release-acr foo
 test_function ${SUCCESS} "Not publishing the release, GCS/BLOB flags ignored" parse_flags --release-azblob foo
+test_function ${SUCCESS} "copy somefile https://foo.blob.core.windows.net/previous/sometag/" mock_publish_to_azblob somefile
+test_function ${SUCCESS} "acr import -n foo --source foo.azurecr.io/queue-39be6f1d08a095bd076a71d288d295b6@sha256:13c56ba9592ee63d0c675008930b099d9cd1eb638ce747fa03ff52a74e1398da -t queue-39be6f1d08a095bd076a71d288d295b6:sometag" mock_tag_images_in_yamls_acr dummy.yaml
 
 echo ">> Testing publishing to GitHub"
 
