@@ -1186,7 +1186,7 @@ func main() {
 				generateGoCoveragePostsubmit("postsubmits", repo.Name, nil)
 			}
 			if repo.EnablePerformanceTests {
-				generatePerfClusterReconcilePostsubmitJob(repo)
+				generatePerfClusterPostsubmitJob(repo)
 			}
 		}
 	}

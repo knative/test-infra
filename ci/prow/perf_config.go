@@ -29,7 +29,7 @@ import (
 func generatePerfClusterUpdatePeriodicJobs() {
 	for _, repo := range repositories {
 		if repo.EnablePerformanceTests {
-			perfClusterUpdatePeriodicJob(
+			perfClusterPeriodicJob(
 				"recreate-clusters",
 				recreatePerfClusterPeriodicJobCron,
 				"./test/performance/performance-tests.sh",
@@ -37,7 +37,7 @@ func generatePerfClusterUpdatePeriodicJobs() {
 				repo.Name,
 				perfClusterJobSecret(repo.Name),
 			)
-			perfClusterUpdatePeriodicJob(
+			perfClusterPeriodicJob(
 				"update-clusters",
 				updatePerfClusterPeriodicJobCron,
 				"./test/performance/performance-tests.sh",
@@ -49,9 +49,9 @@ func generatePerfClusterUpdatePeriodicJobs() {
 	}
 }
 
-// generatePerfClusterReconcilePostsubmitJob generates postsubmit job for the
+// generatePerfClusterPostsubmitJob generates postsubmit job for the
 // repo to reconcile clusters that run performance testing benchmarks.
-func generatePerfClusterReconcilePostsubmitJob(repo repositoryData) {
+func generatePerfClusterPostsubmitJob(repo repositoryData) {
 	perfClusterReconcilePostsubmitJob(
 		"reconcile-clusters",
 		"./test/performance/performance-tests.sh",
@@ -76,7 +76,7 @@ func perfClusterJobSecret(fullRepoName string) string {
 	return secret
 }
 
-func perfClusterUpdatePeriodicJob(jobNamePostFix, cronString, command string, args []string, repo, sa string) {
+func perfClusterPeriodicJob(jobNamePostFix, cronString, command string, args []string, repo, sa string) {
 	var data periodicJobTemplateData
 	data.Base = perfClusterBaseProwJob(command, args, repo, sa)
 	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
