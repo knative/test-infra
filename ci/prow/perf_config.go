@@ -59,7 +59,7 @@ func generatePerfClusterPostsubmitJob(repo repositoryData) {
 	perfClusterReconcilePostsubmitJob(
 		"reconcile-clusters",
 		perfTestScriptPath,
-		[]string{"--reconcile-clusters"},
+		[]string{"--reconcile-benchmark-clusters"},
 		repo.Name,
 		perfTestSecretName,
 	)
