@@ -204,6 +204,13 @@ presubmits:
     - integration-tests: false
     - go-coverage: false
 
+  knative/community:
+    # This repo only uses Tide
+    - build-tests: false
+    - unit-tests: false
+    - integration-tests: false
+    - go-coverage: false
+
 periodics:
   knative/serving:
     - continuous: true

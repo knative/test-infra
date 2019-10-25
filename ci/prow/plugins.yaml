@@ -17,6 +17,7 @@ approve:
   - "google/knative-gcp"
   - "knative/caching"
   - "knative/client"
+  - "knative/community"
   - "knative/docs"
   - "knative/eventing"
   - "knative/eventing-contrib"
@@ -110,6 +111,30 @@ plugins:
   - yuks
   - project
   knative/client:
+  - approve
+  - assign
+  - blunderbuss
+  - buildifier
+  - cat
+  - dog
+  - golint
+  - heart
+  - help
+  - hold
+  - label
+  - lgtm
+  - lifecycle
+  - milestone
+  - owners-label
+  - shrug
+  - size
+  - skip
+  - trigger
+  - verify-owners
+  - wip
+  - yuks
+  - project
+  knative/community:
   - approve
   - assign
   - blunderbuss
