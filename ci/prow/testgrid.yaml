@@ -201,6 +201,10 @@ test_groups:
 - name: ci-knative-serving-operator-auto-release
   gcs_prefix: knative-prow/logs/ci-knative-serving-operator-auto-release
   alert_stale_results_hours: 3
+- name: ci-knative-serving-operator-integration-tests-on-latest-serving
+  gcs_prefix: knative-prow/logs/ci-knative-serving-operator-integration-tests-on-latest-serving
+  alert_stale_results_hours: 3
+  num_failures_to_alert: 3
 - name: pull-knative-serving-operator-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-serving-operator-go-coverage
   num_failures_to_alert: 9999
@@ -413,6 +417,9 @@ dashboards:
     base_options: "sort-by-name="
   - name: auto-release
     test_group_name: ci-knative-serving-operator-auto-release
+    base_options: "sort-by-name="
+  - name: integration-tests-on-latest-serving
+    test_group_name: ci-knative-serving-operator-integration-tests-on-latest-serving
     base_options: "sort-by-name="
   - name: coverage
     test_group_name: pull-knative-serving-operator-test-coverage
