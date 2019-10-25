@@ -20,7 +20,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"regexp"
 	"strings"
 	"time"
@@ -173,11 +172,9 @@ func generateTestGroup(projName string, repoName string, jobNames []string) {
 			extras["short_text_metric"] = "coverage"
 			// Do not alert on coverage failures (i.e., coverage below threshold)
 			extras["num_failures_to_alert"] = "9999"
-		case "istio-1.2-mesh", "istio-1.2-no-mesh", "istio-1.3-mesh", "istio-1.3-no-mesh", "gloo-0.17.1":
+		default:
 			extras["alert_stale_results_hours"] = "3"
 			extras["num_failures_to_alert"] = "3"
-		default:
-			log.Fatalf("Unknown jobName for generateTestGroup: %s", jobName)
 		}
 		executeTestGroupTemplate(testGroupName, gcsLogDir, extras)
 	}
@@ -222,10 +219,8 @@ func generateDashboard(projName string, repoName string, jobNames []string) {
 			executeDashboardTabTemplate("nightly", testGroupName, testgridTabSortByName, noExtras)
 		case "test-coverage":
 			executeDashboardTabTemplate("coverage", testGroupName, testgridTabGroupByDir, noExtras)
-		case "istio-1.2-mesh", "istio-1.2-no-mesh", "istio-1.3-mesh", "istio-1.3-no-mesh", "gloo-0.17.1":
-			executeDashboardTabTemplate(jobName, testGroupName, testgridTabSortByName, noExtras)
 		default:
-			log.Fatalf("Unknown job name %q", jobName)
+			executeDashboardTabTemplate(jobName, testGroupName, testgridTabSortByName, noExtras)
 		}
 	}
 }
@@ -243,18 +238,13 @@ func executeDashboardTabTemplate(dashboardTabName string, testGroupName string, 
 // getTestGroupName get the testGroupName from the given repoName and jobName
 func getTestGroupName(repoName string, jobName string) string {
 	switch jobName {
-	case "continuous", "dot-release", "auto-release", "performance", "performance-mesh",
-		"latency", "webhook-apicoverage":
-		return strings.ToLower(fmt.Sprintf("ci-%s-%s", repoName, jobName))
 	case "nightly":
 		return strings.ToLower(fmt.Sprintf("ci-%s-%s-release", repoName, jobName))
 	case "test-coverage":
 		return strings.ToLower(fmt.Sprintf("pull-%s-%s", repoName, jobName))
-	case "istio-1.2-mesh", "istio-1.2-no-mesh", "istio-1.3-mesh", "istio-1.3-no-mesh", "gloo-0.17.1":
+	default:
 		return strings.ToLower(fmt.Sprintf("ci-%s-%s", repoName, jobName))
 	}
-	log.Fatalf("Unknown jobName for getTestGroupName: %s", jobName)
-	return ""
 }
 
 func generateDashboardsForReleases() {

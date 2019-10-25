@@ -1,8 +1,12 @@
 # Refer to https://golang.github.io/dep/docs/Gopkg.toml.html
 # for detailed Gopkg.toml documentation.
 
-required = [  
-  "knative.dev/pkg/testutils/clustermanager/perf-tests",
+required = [
+  # prow-cluster-operation is temporary solution for calling clustermanager lib
+  # from bash during e2e tests
+  "knative.dev/pkg/testutils/clustermanager/prow-cluster-operation",
+  "knative.dev/pkg/testutils/metahelper",
+  "knative.dev/pkg/testutils/clustermanager/perf-tests"
 ]
 
 [[override]]

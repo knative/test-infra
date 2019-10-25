@@ -14,8 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// data definitions that are used for the config file generation of postsubmit prow jobs
-
 package main
 
 import (

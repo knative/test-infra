@@ -50,23 +50,33 @@ presubmits:
     - custom-test: istio-1.2-mesh
       always_run: false
       optional: true
-      full-command: "./test/e2e-tests.sh --istio-version 1.2-latest --mesh"
+      args:
+      - "--run-test"
+      - "./test/e2e-tests.sh --istio-version 1.2-latest --mesh"
     - custom-test: istio-1.2-no-mesh
       always_run: false
       optional: true
-      full-command: "./test/e2e-tests.sh --istio-version 1.2-latest --no-mesh"
+      args:
+      - "--run-test"
+      - "./test/e2e-tests.sh --istio-version 1.2-latest --no-mesh"
     - custom-test: istio-1.3-mesh
       always_run: false
       optional: true
-      full-command: "./test/e2e-tests.sh --istio-version 1.3-latest --mesh"
+      args:
+      - "--run-test"
+      - "./test/e2e-tests.sh --istio-version 1.3-latest --mesh"
     - custom-test: istio-1.3-no-mesh
       always_run: false
       optional: true
-      full-command: "./test/e2e-tests.sh --istio-version 1.3-latest --no-mesh"
+      args:
+      - "--run-test"
+      - "./test/e2e-tests.sh --istio-version 1.3-latest --no-mesh"
     - custom-test: gloo-0.17.1
       always_run: false
       optional: true
-      full-command: "./test/e2e-tests.sh --gloo-version 0.17.1"
+      args:
+      - "--run-test"
+      - "./test/e2e-tests.sh --gloo-version 0.17.1"
 
   knative/client:
     - build-tests: true
@@ -170,6 +180,12 @@ presubmits:
       dot-dev: true
     - go-coverage: true
       dot-dev: true
+    - custom-test: integration-tests-on-latest-serving
+      always_run: false
+      optional: true
+      args:
+      - "--run-test"
+      - "./test/e2e-tests-latest-serving.sh"
 
   knative/eventing-operator:
     - build-tests: true
@@ -345,6 +361,10 @@ periodics:
       # release-0.10 is cut
       dot-dev: true
     - auto-release: true
+      dot-dev: true
+      go113: true
+    - custom-job: integration-tests-on-latest-serving
+      command: "./test/e2e-tests-latest-serving.sh"
       dot-dev: true
       go113: true
 

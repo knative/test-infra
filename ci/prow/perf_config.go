@@ -21,7 +21,11 @@ package main
 
 import (
 	"fmt"
-	"log"
+)
+
+const (
+	perfTestScriptPath = "./test/performance/performance-tests.sh"
+	perfTestSecretName = "performance-test"
 )
 
 // generatePerfClusterUpdatePeriodicJobs generates periodic jobs to update clusters
@@ -32,18 +36,18 @@ func generatePerfClusterUpdatePeriodicJobs() {
 			perfClusterPeriodicJob(
 				"recreate-clusters",
 				recreatePerfClusterPeriodicJobCron,
-				"./test/performance/performance-tests.sh",
+				perfTestScriptPath,
 				[]string{"--recreate-clusters"},
 				repo.Name,
-				perfClusterJobSecret(repo.Name),
+				perfTestSecretName,
 			)
 			perfClusterPeriodicJob(
 				"update-clusters",
 				updatePerfClusterPeriodicJobCron,
-				"./test/performance/performance-tests.sh",
+				perfTestScriptPath,
 				[]string{"--update-clusters"},
 				repo.Name,
-				perfClusterJobSecret(repo.Name),
+				perfTestSecretName,
 			)
 		}
 	}
@@ -54,26 +58,11 @@ func generatePerfClusterUpdatePeriodicJobs() {
 func generatePerfClusterPostsubmitJob(repo repositoryData) {
 	perfClusterReconcilePostsubmitJob(
 		"reconcile-clusters",
-		"./test/performance/performance-tests.sh",
+		perfTestScriptPath,
 		[]string{"--reconcile-clusters"},
 		repo.Name,
-		perfClusterJobSecret(repo.Name),
+		perfTestSecretName,
 	)
-}
-
-// perfClusterJobSecret returns the secret we need to mount for the given repo
-func perfClusterJobSecret(fullRepoName string) string {
-	// secret that needs to be mounted for the job
-	var secret string
-	switch fullRepoName {
-	case "knative/serving":
-		secret = "performance-test"
-	case "knative/eventing":
-		secret = "eventing-performance-test"
-	default:
-		log.Fatalf("Secret hasn't been added for repo %q for performance testing", fullRepoName)
-	}
-	return secret
 }
 
 func perfClusterPeriodicJob(jobNamePostFix, cronString, command string, args []string, repo, sa string) {

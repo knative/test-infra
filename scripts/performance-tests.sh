@@ -26,7 +26,8 @@ readonly PROJECT_NAME=${PROJECT_NAME:-knative-performance}
 readonly SERVICE_ACCOUNT_NAME=${SERVICE_ACCOUNT_NAME:-mako-job}
 
 # Setup env vars.
-readonly KO_DOCKER_REPO="gcr.io/${PROJECT_NAME}"
+export KO_DOCKER_REPO="gcr.io/${PROJECT_NAME}"
+# Constants
 readonly GOOGLE_APPLICATION_CREDENTIALS="/etc/performance-test/service-account.json"
 readonly GITHUB_TOKEN="/etc/performance-test/github-token"
 readonly SLACK_READ_TOKEN="/etc/performance-test/slack-read-token"

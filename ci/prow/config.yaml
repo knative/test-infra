@@ -29,10 +29,10 @@ plank:
     grace_period: 15000000000 # 15s
     utility_images:
       # Update these versions when updating plank version in cluster.yaml
-      clonerefs: "gcr.io/k8s-prow/clonerefs:v20191009-0492f1d6e"
-      initupload: "gcr.io/k8s-prow/initupload:v20191009-0492f1d6e"
-      entrypoint: "gcr.io/k8s-prow/entrypoint:v20191009-0492f1d6e"
-      sidecar: "gcr.io/k8s-prow/sidecar:v20191009-0492f1d6e"
+      clonerefs: "gcr.io/k8s-prow/clonerefs:v20191015-68dd384c9"
+      initupload: "gcr.io/k8s-prow/initupload:v20191015-68dd384c9"
+      entrypoint: "gcr.io/k8s-prow/entrypoint:v20191015-68dd384c9"
+      sidecar: "gcr.io/k8s-prow/sidecar:v20191015-68dd384c9"
     gcs_configuration:
       bucket: "knative-prow"
       path_strategy: "explicit"
@@ -866,10 +866,9 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "./test/e2e-tests.sh"
-        - "--istio-version"
-        - "1.2-latest"
-        - "--mesh"
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version 1.2-latest --mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -902,10 +901,9 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "./test/e2e-tests.sh"
-        - "--istio-version"
-        - "1.2-latest"
-        - "--mesh"
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version 1.2-latest --mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -940,10 +938,9 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "./test/e2e-tests.sh"
-        - "--istio-version"
-        - "1.2-latest"
-        - "--mesh"
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version 1.2-latest --mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -975,10 +972,9 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "./test/e2e-tests.sh"
-        - "--istio-version"
-        - "1.2-latest"
-        - "--no-mesh"
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version 1.2-latest --no-mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -1011,10 +1007,9 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "./test/e2e-tests.sh"
-        - "--istio-version"
-        - "1.2-latest"
-        - "--no-mesh"
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version 1.2-latest --no-mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -1049,10 +1044,9 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "./test/e2e-tests.sh"
-        - "--istio-version"
-        - "1.2-latest"
-        - "--no-mesh"
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version 1.2-latest --no-mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -1084,10 +1078,9 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "./test/e2e-tests.sh"
-        - "--istio-version"
-        - "1.3-latest"
-        - "--mesh"
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version 1.3-latest --mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -1120,10 +1113,9 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "./test/e2e-tests.sh"
-        - "--istio-version"
-        - "1.3-latest"
-        - "--mesh"
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version 1.3-latest --mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -1158,10 +1150,9 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "./test/e2e-tests.sh"
-        - "--istio-version"
-        - "1.3-latest"
-        - "--mesh"
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version 1.3-latest --mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -1193,10 +1184,9 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "./test/e2e-tests.sh"
-        - "--istio-version"
-        - "1.3-latest"
-        - "--no-mesh"
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version 1.3-latest --no-mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -1229,10 +1219,9 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "./test/e2e-tests.sh"
-        - "--istio-version"
-        - "1.3-latest"
-        - "--no-mesh"
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version 1.3-latest --no-mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -1267,10 +1256,9 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "./test/e2e-tests.sh"
-        - "--istio-version"
-        - "1.3-latest"
-        - "--no-mesh"
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version 1.3-latest --no-mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -1302,9 +1290,9 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "./test/e2e-tests.sh"
-        - "--gloo-version"
-        - "0.17.1"
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --gloo-version 0.17.1"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -1337,9 +1325,9 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "./test/e2e-tests.sh"
-        - "--gloo-version"
-        - "0.17.1"
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --gloo-version 0.17.1"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -1374,9 +1362,9 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "./test/e2e-tests.sh"
-        - "--gloo-version"
-        - "0.17.1"
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --gloo-version 0.17.1"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -3391,6 +3379,72 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
+  - name: pull-knative-serving-operator-integration-tests-on-latest-serving
+    agent: kubernetes
+    context: pull-knative-serving-operator-integration-tests-on-latest-serving
+    always_run: false
+    rerun_command: "/test pull-knative-serving-operator-integration-tests-on-latest-serving"
+    trigger: "(?m)^/test (all|pull-knative-serving-operator-integration-tests-on-latest-serving),?(\\s+|$)"
+    decorate: true
+    optional: true
+    branches:
+    - "release-0.9"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests-latest-serving.sh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-operator-integration-tests-on-latest-serving
+    agent: kubernetes
+    context: pull-knative-serving-operator-integration-tests-on-latest-serving
+    always_run: false
+    rerun_command: "/test pull-knative-serving-operator-integration-tests-on-latest-serving"
+    trigger: "(?m)^/test (all|pull-knative-serving-operator-integration-tests-on-latest-serving),?(\\s+|$)"
+    decorate: true
+    optional: true
+    skip_branches:
+    - "release-0.9"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests-latest-serving.sh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
   knative/eventing-operator:
   - name: pull-knative-eventing-operator-build-tests
     agent: kubernetes
@@ -5508,6 +5562,36 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
+- cron: "48 */2 * * *"
+  name: ci-knative-serving-operator-integration-tests-on-latest-serving
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving-operator
+    base_ref: master
+    path_alias: knative.dev/serving-operator
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/e2e-tests-latest-serving.sh"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
 - cron: "0 1 * * *"
   name: ci-knative-serving-operator-go-coverage
   labels:
