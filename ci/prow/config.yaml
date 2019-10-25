@@ -6542,7 +6542,7 @@ postsubmits:
         - runner.sh
         args:
         - "./test/performance/performance-tests.sh"
-        - "--reconcile-clusters"
+        - "--reconcile-benchmark-clusters"
         volumeMounts:
         - name: performance-test
           mountPath: /etc/performance-test
@@ -6626,7 +6626,7 @@ postsubmits:
         - runner.sh
         args:
         - "./test/performance/performance-tests.sh"
-        - "--reconcile-clusters"
+        - "--reconcile-benchmark-clusters"
         volumeMounts:
         - name: performance-test
           mountPath: /etc/performance-test
