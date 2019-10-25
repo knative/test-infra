@@ -6466,7 +6466,7 @@ periodics:
       - "./test/performance/performance-tests.sh"
       - "--recreate-clusters"
       volumeMounts:
-      - name: eventing-performance-test
+      - name: performance-test
         mountPath: /etc/performance-test
         readOnly: true
       env:
@@ -6479,9 +6479,9 @@ periodics:
       - name: SLACK_WRITE_TOKEN
         value: /etc/performance-test/slack-write-token
     volumes:
-    - name: eventing-performance-test
+    - name: performance-test
       secret:
-        secretName: eventing-performance-test
+        secretName: performance-test
 - cron: "5 * * * *"
   name: ci-knative-eventing-update-clusters
   agent: kubernetes
@@ -6505,7 +6505,7 @@ periodics:
       - "./test/performance/performance-tests.sh"
       - "--update-clusters"
       volumeMounts:
-      - name: eventing-performance-test
+      - name: performance-test
         mountPath: /etc/performance-test
         readOnly: true
       env:
@@ -6518,9 +6518,9 @@ periodics:
       - name: SLACK_WRITE_TOKEN
         value: /etc/performance-test/slack-write-token
     volumes:
-    - name: eventing-performance-test
+    - name: performance-test
       secret:
-        secretName: eventing-performance-test
+        secretName: performance-test
 postsubmits:
   knative/serving:
   - name: post-knative-serving-reconcile-clusters
@@ -6628,7 +6628,7 @@ postsubmits:
         - "./test/performance/performance-tests.sh"
         - "--reconcile-clusters"
         volumeMounts:
-        - name: eventing-performance-test
+        - name: performance-test
           mountPath: /etc/performance-test
           readOnly: true
         env:
@@ -6641,9 +6641,9 @@ postsubmits:
         - name: SLACK_WRITE_TOKEN
           value: /etc/performance-test/slack-write-token
       volumes:
-      - name: eventing-performance-test
+      - name: performance-test
         secret:
-          secretName: eventing-performance-test
+          secretName: performance-test
   - name: post-knative-eventing-go-coverage
     branches:
     - master
