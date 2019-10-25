@@ -91,12 +91,6 @@ test_groups:
 - name: ci-knative-serving-latency
   gcs_prefix: knative-prow/logs/ci-knative-serving-latency
   short_text_metric: "latency"
-- name: ci-knative-serving-performance
-  gcs_prefix: knative-prow/logs/ci-knative-serving-performance
-  short_text_metric: "perf_latency"
-- name: ci-knative-serving-performance-mesh
-  gcs_prefix: knative-prow/logs/ci-knative-serving-performance-mesh
-  short_text_metric: "perf_latency"
 - name: ci-knative-serving-webhook-apicoverage
   gcs_prefix: knative-prow/logs/ci-knative-serving-webhook-apicoverage
   alert_stale_results_hours: 48
@@ -302,12 +296,6 @@ dashboards:
     test_group_name: ci-knative-serving-latency
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
     description: "95% latency in ms"
-  - name: performance
-    test_group_name: ci-knative-serving-performance
-    base_options: "exclude-filter-by-regex=Overall$&group-by-target=&expand-groups=&sort-by-name="
-  - name: performance-mesh
-    test_group_name: ci-knative-serving-performance-mesh
-    base_options: "exclude-filter-by-regex=Overall$&group-by-target=&expand-groups=&sort-by-name="
   - name: webhook-apicoverage
     test_group_name: ci-knative-serving-webhook-apicoverage
     base_options: "sort-by-name="

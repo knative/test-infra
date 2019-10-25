@@ -21,6 +21,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"math"
 	"path"
 
 	yaml "gopkg.in/yaml.v2"
@@ -40,7 +41,6 @@ const (
 	flakesResultRecorderPeriodicJobCron = "0 * * * *"    // Run every hour
 	prowversionbumperPeriodicJobCron    = "0 20 * * 1"   // Run at 12:00PST/13:00PST every Monday (20:00 UTC)
 	backupPeriodicJobCron               = "15 9 * * *"   // Run at 02:15PST every day (09:15 UTC)
-	perfPeriodicJobCron                 = "0 */3 * * *"  // Run every 3 hours
 	clearAlertsPeriodicJobCron          = "0,30 * * * *" // Run every 30 minutes
 	recreatePerfClusterPeriodicJobCron  = "30 07 * * *"  // Run at 00:30PST every day (07:30 UTC)
 	updatePerfClusterPeriodicJobCron    = "5 * * * *"    // Run every an hour
@@ -56,6 +56,53 @@ type periodicJobTemplateData struct {
 	PeriodicJobName string
 	CronString      string
 	PeriodicCommand []string
+}
+
+// Generate cron string based on job type, offset generated from jobname
+// instead of assign random value to ensure consistency among runs,
+// timeout is used for determining how many hours apart
+func generateCron(jobType, jobName string, timeout int) string {
+	getUTCtime := func(i int) int { return i + 7 }
+	// Sums the ascii valus of all letters in a jobname,
+	// this value is used for deriving offset after hour
+	var sum float64
+	for _, c := range jobType + jobName {
+		sum += float64(c)
+	}
+	// Divide 60 minutes into 6 buckets
+	bucket := int(math.Mod(sum, 6))
+	// Offset in bucket, range from 0-9, first mod with 11(a random prime number)
+	// to ensure every digit has a chance (i.e., if bucket is 0, sum has to be multiply of 6,
+	// so mod by 10 can only return even number)
+	offsetInBucket := int(math.Mod(math.Mod(sum, 11), 10))
+	minutesOffset := bucket*10 + offsetInBucket
+	// Determines hourly job inteval based on timeout
+	hours := int((timeout+5)/60) + 1 // Allow at least 5 minutes between runs
+	hourCron := fmt.Sprintf("%d * * * *", minutesOffset)
+	if hours > 1 {
+		hourCron = fmt.Sprintf("%d */%d * * *", minutesOffset, hours)
+	}
+	dayCron := fmt.Sprintf("%d %%d * * *", minutesOffset)    // hour
+	weekCron := fmt.Sprintf("%d %%d * * %%d", minutesOffset) // hour, weekday
+
+	var res string
+	switch jobType {
+	case "continuous", "custom-job", "auto-release": // Every hour
+		res = fmt.Sprintf(hourCron)
+	case "branch-ci": // Every day 1-2 PST
+		res = fmt.Sprintf(dayCron, getUTCtime(1))
+	case "nightly": // Every day 2-3 PST
+		res = fmt.Sprintf(dayCron, getUTCtime(2))
+	case "dot-release": // Every Tuesday 2-3 PST
+		res = fmt.Sprintf(weekCron, getUTCtime(2), 2)
+	case "latency": // Every day 1-2 PST
+		res = fmt.Sprintf(dayCron, getUTCtime(1))
+	case "webhook-apicoverage": // Every day 2-3 PST
+		res = fmt.Sprintf(dayCron, getUTCtime(2))
+	default:
+		log.Printf("job type not supported for cron generation '%s'", jobName)
+	}
+	return res
 }
 
 // generatePeriodic generates all periodic job configs for the given repo and configuration.
@@ -121,19 +168,6 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 				"--github-token /etc/hub-token/token"}
 			addVolumeToJob(&data.Base, "/etc/hub-token", "hub-token", true, "")
 			data.Base.Timeout = 90
-			isMonitoredJob = true
-		case "performance", "performance-mesh":
-			if !getBool(item.Value) {
-				return
-			}
-			jobType = getString(item.Key)
-			jobNameSuffix = getString(item.Key)
-			data.Base.Command = performanceScript
-			data.CronString = perfPeriodicJobCron
-			// We need a larger cluster of at least 16 nodes for perf tests
-			addEnvToJob(&data.Base, "E2E_MIN_CLUSTER_NODES", perfNodes)
-			addEnvToJob(&data.Base, "E2E_MAX_CLUSTER_NODES", perfNodes)
-			data.Base.Timeout = perfTimeout
 			isMonitoredJob = true
 		case "latency":
 			if !getBool(item.Value) {
@@ -331,66 +365,4 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 		executeJobTemplate("periodic go coverage", readTemplate(periodicCustomJob), title, repoName, data.PeriodicJobName, false, data)
 		return
 	}
-}
-
-// generatePerfClusterUpdatePeriodicJobs generates periodic jobs to update serving clusters
-// that run performance testing benchmarks
-func generatePerfClusterUpdatePeriodicJobs() {
-	// Generate periodic performance jobs for serving
-	perfClusterUpdatePeriodicJob(
-		"ci-knative-serving-recreate-clusters",
-		recreatePerfClusterPeriodicJobCron,
-		"./test/performance/tools/recreate_clusters.sh",
-		"serving",
-		"performance-test",
-	)
-	perfClusterUpdatePeriodicJob(
-		"ci-knative-serving-update-clusters",
-		updatePerfClusterPeriodicJobCron,
-		"./test/performance/tools/update_clusters.sh",
-		"serving",
-		"performance-test",
-	)
-
-	// Generate periodic performance jobs for eventing
-	perfClusterUpdatePeriodicJob(
-		"ci-knative-eventing-recreate-clusters",
-		recreatePerfClusterPeriodicJobCron,
-		"./test/performance/tools/recreate_clusters.sh",
-		"eventing",
-		"eventing-performance-test",
-	)
-	perfClusterUpdatePeriodicJob(
-		"ci-knative-eventing-update-clusters",
-		updatePerfClusterPeriodicJobCron,
-		"./test/performance/tools/update_clusters.sh",
-		"eventing",
-		"eventing-performance-test",
-	)
-}
-
-func perfClusterUpdatePeriodicJob(jobName, cronString, command, repoName, sa string) {
-	var data periodicJobTemplateData
-	data.Base = newbaseProwJobTemplateData("knative/" + repoName)
-	for _, repo := range repositories {
-		if "knative/"+repoName == repo.Name && repo.Go113 {
-			data.Base.Image = getGo113ImageName(data.Base.Image)
-			break
-		}
-	}
-	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
-	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  path_alias: knative.dev/"+repoName)
-	data.Base.Command = command
-	data.PeriodicJobName = jobName
-	data.CronString = cronString
-	data.PeriodicCommand = createCommand(data.Base)
-	configureServiceAccountForJob(&data.Base)
-	addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
-	addVolumeToJob(&data.Base, "/etc/performance-test", sa, true, "")
-	addEnvToJob(&data.Base, "PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS", "/etc/performance-test/service-account.json")
-	addEnvToJob(&data.Base, "GITHUB_TOKEN", "/etc/performance-test/github-token")
-	addEnvToJob(&data.Base, "SLACK_READ_TOKEN", "/etc/performance-test/slack-read-token")
-	addEnvToJob(&data.Base, "SLACK_WRITE_TOKEN", "/etc/performance-test/slack-write-token")
-	addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
-	executeJobTemplate(jobName, readTemplate(periodicTestJob), "presubmits", "", data.PeriodicJobName, false, data)
 }

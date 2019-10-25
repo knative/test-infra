@@ -848,109 +848,6 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
-  - name: pull-knative-serving-perf-tests
-    agent: kubernetes
-    context: pull-knative-serving-perf-tests
-    always_run: false
-    rerun_command: "/test pull-knative-serving-perf-tests"
-    trigger: "(?m)^/test (all|pull-knative-serving-perf-tests),?(\\s+|$)"
-    decorate: true
-    branches:
-    - "release-0.6"
-    - "release-0.7"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--run-test"
-        - "./test/performance-tests.sh"
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-serving-perf-tests
-    agent: kubernetes
-    context: pull-knative-serving-perf-tests
-    always_run: false
-    rerun_command: "/test pull-knative-serving-perf-tests"
-    trigger: "(?m)^/test (all|pull-knative-serving-perf-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/serving
-    branches:
-    - "release-0.8"
-    - "release-0.9"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--run-test"
-        - "./test/performance-tests.sh"
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-serving-perf-tests
-    agent: kubernetes
-    context: pull-knative-serving-perf-tests
-    always_run: false
-    rerun_command: "/test pull-knative-serving-perf-tests"
-    trigger: "(?m)^/test (all|pull-knative-serving-perf-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/serving
-    skip_branches:
-    - "release-0.6"
-    - "release-0.7"
-    - "release-0.8"
-    - "release-0.9"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--run-test"
-        - "./test/performance-tests.sh"
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: test-account
-        secret:
-          secretName: test-account
   - name: pull-knative-serving-istio-1.2-mesh
     agent: kubernetes
     context: pull-knative-serving-istio-1.2-mesh
@@ -4256,83 +4153,6 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 */3 * * *"
-  name: ci-knative-serving-performance
-  agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-serving-performance
-  decorate: true
-  extra_refs:
-  - org: knative
-    repo: serving
-    base_ref: master
-    path_alias: knative.dev/serving
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      command:
-      - runner.sh
-      args:
-      - "./test/performance-tests.sh"
-      volumeMounts:
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
-      env:
-      - name: E2E_MIN_CLUSTER_NODES
-        value: "4"
-      - name: E2E_MAX_CLUSTER_NODES
-        value: "4"
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-    volumes:
-    - name: test-account
-      secret:
-        secretName: test-account
-- cron: "0 */3 * * *"
-  name: ci-knative-serving-performance-mesh
-  agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-serving-performance-mesh
-  decorate: true
-  extra_refs:
-  - org: knative
-    repo: serving
-    base_ref: master
-    path_alias: knative.dev/serving
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      command:
-      - runner.sh
-      args:
-      - "./test/performance-tests.sh"
-      - "--mesh"
-      volumeMounts:
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
-      env:
-      - name: E2E_MIN_CLUSTER_NODES
-        value: "4"
-      - name: E2E_MAX_CLUSTER_NODES
-        value: "4"
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-    volumes:
-    - name: test-account
-      secret:
-        secretName: test-account
 - cron: "13 9 * * *"
   name: ci-knative-serving-webhook-apicoverage
   agent: kubernetes
@@ -6565,18 +6385,14 @@ periodics:
       command:
       - runner.sh
       args:
-      - "./test/performance/tools/recreate_clusters.sh"
+      - "./test/performance/performance-tests.sh"
+      - "--recreate-clusters"
       volumeMounts:
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
       - name: performance-test
         mountPath: /etc/performance-test
         readOnly: true
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/performance-test/service-account.json
       - name: GITHUB_TOKEN
         value: /etc/performance-test/github-token
@@ -6585,9 +6401,6 @@ periodics:
       - name: SLACK_WRITE_TOKEN
         value: /etc/performance-test/slack-write-token
     volumes:
-    - name: test-account
-      secret:
-        secretName: test-account
     - name: performance-test
       secret:
         secretName: performance-test
@@ -6611,18 +6424,14 @@ periodics:
       command:
       - runner.sh
       args:
-      - "./test/performance/tools/update_clusters.sh"
+      - "./test/performance/performance-tests.sh"
+      - "--update-clusters"
       volumeMounts:
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
       - name: performance-test
         mountPath: /etc/performance-test
         readOnly: true
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/performance-test/service-account.json
       - name: GITHUB_TOKEN
         value: /etc/performance-test/github-token
@@ -6631,9 +6440,6 @@ periodics:
       - name: SLACK_WRITE_TOKEN
         value: /etc/performance-test/slack-write-token
     volumes:
-    - name: test-account
-      secret:
-        secretName: test-account
     - name: performance-test
       secret:
         secretName: performance-test
@@ -6657,18 +6463,14 @@ periodics:
       command:
       - runner.sh
       args:
-      - "./test/performance/tools/recreate_clusters.sh"
+      - "./test/performance/performance-tests.sh"
+      - "--recreate-clusters"
       volumeMounts:
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
-      - name: eventing-performance-test
+      - name: performance-test
         mountPath: /etc/performance-test
         readOnly: true
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/performance-test/service-account.json
       - name: GITHUB_TOKEN
         value: /etc/performance-test/github-token
@@ -6677,12 +6479,9 @@ periodics:
       - name: SLACK_WRITE_TOKEN
         value: /etc/performance-test/slack-write-token
     volumes:
-    - name: test-account
+    - name: performance-test
       secret:
-        secretName: test-account
-    - name: eventing-performance-test
-      secret:
-        secretName: eventing-performance-test
+        secretName: performance-test
 - cron: "5 * * * *"
   name: ci-knative-eventing-update-clusters
   agent: kubernetes
@@ -6703,18 +6502,14 @@ periodics:
       command:
       - runner.sh
       args:
-      - "./test/performance/tools/update_clusters.sh"
+      - "./test/performance/performance-tests.sh"
+      - "--update-clusters"
       volumeMounts:
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
-      - name: eventing-performance-test
+      - name: performance-test
         mountPath: /etc/performance-test
         readOnly: true
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: PERF_TEST_GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/performance-test/service-account.json
       - name: GITHUB_TOKEN
         value: /etc/performance-test/github-token
@@ -6723,14 +6518,48 @@ periodics:
       - name: SLACK_WRITE_TOKEN
         value: /etc/performance-test/slack-write-token
     volumes:
-    - name: test-account
+    - name: performance-test
       secret:
-        secretName: test-account
-    - name: eventing-performance-test
-      secret:
-        secretName: eventing-performance-test
+        secretName: performance-test
 postsubmits:
   knative/serving:
+  - name: post-knative-serving-reconcile-clusters
+    branches:
+    - master
+    agent: kubernetes
+    decorate: true
+    max_concurrency: 1
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: post-knative-serving-reconcile-clusters
+    path_alias: knative.dev/serving
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/performance/performance-tests.sh"
+        - "--reconcile-clusters"
+        volumeMounts:
+        - name: performance-test
+          mountPath: /etc/performance-test
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/performance-test/service-account.json
+        - name: GITHUB_TOKEN
+          value: /etc/performance-test/github-token
+        - name: SLACK_READ_TOKEN
+          value: /etc/performance-test/slack-read-token
+        - name: SLACK_WRITE_TOKEN
+          value: /etc/performance-test/slack-write-token
+      volumes:
+      - name: performance-test
+        secret:
+          secretName: performance-test
   - name: post-knative-serving-go-coverage
     branches:
     - master
@@ -6778,6 +6607,43 @@ postsubmits:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
   knative/eventing:
+  - name: post-knative-eventing-reconcile-clusters
+    branches:
+    - master
+    agent: kubernetes
+    decorate: true
+    max_concurrency: 1
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: post-knative-eventing-reconcile-clusters
+    path_alias: knative.dev/eventing
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/performance/performance-tests.sh"
+        - "--reconcile-clusters"
+        volumeMounts:
+        - name: performance-test
+          mountPath: /etc/performance-test
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/performance-test/service-account.json
+        - name: GITHUB_TOKEN
+          value: /etc/performance-test/github-token
+        - name: SLACK_READ_TOKEN
+          value: /etc/performance-test/slack-read-token
+        - name: SLACK_WRITE_TOKEN
+          value: /etc/performance-test/slack-write-token
+      volumes:
+      - name: performance-test
+        secret:
+          secretName: performance-test
   - name: post-knative-eventing-go-coverage
     branches:
     - master

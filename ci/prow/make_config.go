@@ -25,7 +25,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"math"
 	"os"
 	"path"
 	"regexp"
@@ -50,29 +49,21 @@ const (
 	// generalProwConfig contains config-wide definitions.
 	generalProwConfig = "prow_config_header.yaml"
 
-	// presubmitJob is the template for presubmit jobs.
-	presubmitJob = "prow_presubmit_job.yaml"
-
-	// presubmitGoCoverageJob is the template for go coverage presubmit jobs.
-	presubmitGoCoverageJob = "prow_presubmit_gocoverate_job.yaml"
-
-	// goCoveragePostsubmitJob is the template for the go postsubmit coverage job.
-	goCoveragePostsubmitJob = "prow_postsubmit_gocoverage_job.yaml"
-
 	// pluginsConfig is the template for the plugins YAML file.
 	pluginsConfig = "prow_plugins.yaml"
 )
 
 // repositoryData contains basic data about each Knative repository.
 type repositoryData struct {
-	Name                string
-	EnableGoCoverage    bool
-	GoCoverageThreshold int
-	Processed           bool
-	DotDev              bool
-	Go113               bool
-	LegacyBranches      []string
-	Go112Branches       []string
+	Name                   string
+	EnablePerformanceTests bool
+	EnableGoCoverage       bool
+	GoCoverageThreshold    int
+	Processed              bool
+	DotDev                 bool
+	Go113                  bool
+	LegacyBranches         []string
+	Go112Branches          []string
 }
 
 // prowConfigTemplateData contains basic data about Prow.
@@ -125,20 +116,6 @@ type baseProwJobTemplateData struct {
 // ####################################################################################################
 // ################ data definitions that are used for the prow config file generation ################
 // ####################################################################################################
-// presubmitJobTemplateData contains data about a presubmit Prow job.
-type presubmitJobTemplateData struct {
-	Base                 baseProwJobTemplateData
-	PresubmitJobName     string
-	PresubmitPullJobName string
-	PresubmitPostJobName string
-	PresubmitCommand     []string
-}
-
-// postsubmitJobTemplateData contains data about a postsubmit Prow job.
-type postsubmitJobTemplateData struct {
-	Base              baseProwJobTemplateData
-	PostsubmitJobName string
-}
 
 // sectionGenerator is a function that generates Prow job configs given a slice of a yaml file with configs.
 type sectionGenerator func(string, string, yaml.MapSlice)
@@ -171,7 +148,6 @@ var (
 	backupsDockerImage           string
 	presubmitScript              string
 	releaseScript                string
-	performanceScript            string
 	webhookAPICoverageScript     string
 	cleanupScript                string
 
@@ -201,57 +177,6 @@ var (
 
 	projNameRegex = regexp.MustCompile(`.+-[0-9\.]+$`)
 )
-
-// Generate cron string based on job type, offset generated from jobname
-// instead of assign random value to ensure consistency among runs,
-// timeout is used for determining how many hours apart
-func generateCron(jobType, jobName string, timeout int) string {
-	getUTCtime := func(i int) int { return i + 7 }
-	// Sums the ascii valus of all letters in a jobname,
-	// this value is used for deriving offset after hour
-	var sum float64
-	for _, c := range jobType + jobName {
-		sum += float64(c)
-	}
-	// Divide 60 minutes into 6 buckets
-	bucket := int(math.Mod(sum, 6))
-	// Offset in bucket, range from 0-9, first mod with 11(a random prime number)
-	// to ensure every digit has a chance (i.e., if bucket is 0, sum has to be multiply of 6,
-	// so mod by 10 can only return even number)
-	offsetInBucket := int(math.Mod(math.Mod(sum, 11), 10))
-	minutesOffset := bucket*10 + offsetInBucket
-	// Determines hourly job inteval based on timeout
-	hours := int((timeout+5)/60) + 1 // Allow at least 5 minutes between runs
-	hourCron := fmt.Sprintf("%d * * * *", minutesOffset)
-	if hours > 1 {
-		hourCron = fmt.Sprintf("%d */%d * * *", minutesOffset, hours)
-	}
-	dayCron := fmt.Sprintf("%d %%d * * *", minutesOffset)    // hour
-	weekCron := fmt.Sprintf("%d %%d * * %%d", minutesOffset) // hour, weekday
-
-	var res string
-	switch jobType {
-	case "continuous", "custom-job", "auto-release": // Every hour
-		res = fmt.Sprintf(hourCron)
-	case "branch-ci": // Every day 1-2 PST
-		res = fmt.Sprintf(dayCron, getUTCtime(1))
-	case "nightly": // Every day 2-3 PST
-		res = fmt.Sprintf(dayCron, getUTCtime(2))
-	case "dot-release": // Every Tuesday 2-3 PST
-		res = fmt.Sprintf(weekCron, getUTCtime(2), 2)
-	case "latency": // Every day 1-2 PST
-		res = fmt.Sprintf(dayCron, getUTCtime(1))
-	case "performance": // Every day 1-2 PST
-		res = fmt.Sprintf(dayCron, getUTCtime(1))
-	case "performance-mesh": // Every day 3-4 PST
-		res = fmt.Sprintf(dayCron, getUTCtime(3))
-	case "webhook-apicoverage": // Every day 2-3 PST
-		res = fmt.Sprintf(dayCron, getUTCtime(2))
-	default:
-		log.Printf("job type not supported for cron generation '%s'", jobName)
-	}
-	return res
-}
 
 // Yaml parsing helpers.
 
@@ -637,6 +562,12 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 					repositories[i].Go113 = true
 				}
 			}
+		case "performance":
+			for i, repo := range repositories {
+				if path.Base(repo.Name) == (*data).RepoName {
+					repositories[i].EnablePerformanceTests = true
+				}
+			}
 		case "legacy-branches":
 			for i, repo := range repositories {
 				if path.Base(repo.Name) == (*data).RepoName {
@@ -675,118 +606,6 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 	// Override any values if provided by command-line flags.
 	if timeoutOverride > 0 {
 		(*data).Timeout = timeoutOverride
-	}
-}
-
-// generatePresubmit generates all presubmit job configs for the given repo and configuration.
-func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSlice) {
-	var data presubmitJobTemplateData
-	data.Base = newbaseProwJobTemplateData(repoName)
-	data.Base.Command = presubmitScript
-	data.Base.GoCoverageThreshold = 50
-	jobTemplate := readTemplate(presubmitJob)
-	repoData := repositoryData{Name: repoName, EnableGoCoverage: false, GoCoverageThreshold: data.Base.GoCoverageThreshold}
-	isMonitoredJob := false
-	generateJob := true
-	for i, item := range presubmitConfig {
-		switch item.Key {
-		case "build-tests", "unit-tests", "integration-tests":
-			if !getBool(item.Value) {
-				return
-			}
-			jobName := getString(item.Key)
-			data.PresubmitJobName = data.Base.RepoNameForJob + "-" + jobName
-			// Use default arguments if none given.
-			if len(data.Base.Args) == 0 {
-				data.Base.Args = []string{"--" + jobName}
-			}
-			if item.Key == "integration-tests" || item.Key == "unit-tests" {
-				isMonitoredJob = true
-			}
-			addVolumeToJob(&data.Base, "/etc/repoview-token", "repoview-token", true, "")
-		case "go-coverage":
-			if !getBool(item.Value) {
-				return
-			}
-			jobTemplate = readTemplate(presubmitGoCoverageJob)
-			data.PresubmitJobName = data.Base.RepoNameForJob + "-go-coverage"
-			data.Base.Image = coverageDockerImage
-			data.Base.ServiceAccount = ""
-			repoData.EnableGoCoverage = true
-			addVolumeToJob(&data.Base, "/etc/covbot-token", "covbot-token", true, "")
-		case "custom-test":
-			data.PresubmitJobName = data.Base.RepoNameForJob + "-" + getString(item.Value)
-		case "go-coverage-threshold":
-			data.Base.GoCoverageThreshold = getInt(item.Value)
-			repoData.GoCoverageThreshold = data.Base.GoCoverageThreshold
-		case "repo-settings":
-			generateJob = false
-		default:
-			continue
-		}
-		// Knock-out the item, signalling it was already parsed.
-		presubmitConfig[i] = yaml.MapItem{}
-	}
-	repositories = append(repositories, repoData)
-	parseBasicJobConfigOverrides(&data.Base, presubmitConfig)
-	if !generateJob {
-		return
-	}
-	data.PresubmitCommand = createCommand(data.Base)
-	data.PresubmitPullJobName = "pull-" + data.PresubmitJobName
-	data.PresubmitPostJobName = "post-" + data.PresubmitJobName
-	if data.Base.ServiceAccount != "" {
-		addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
-		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-central1")
-	}
-	if isMonitoredJob {
-		addMonitoringPubsubLabelsToJob(&data.Base, data.PresubmitPullJobName)
-	}
-	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
-	configureServiceAccountForJob(&data.Base)
-	jobName := data.PresubmitPullJobName
-	executeJobTemplateWrapper(repoName, &data, func(data interface{}) {
-		executeJobTemplate("presubmit", jobTemplate, title, repoName, jobName, true, data)
-	})
-	// TODO(adrcunha): remove once the coverage-dev job isn't necessary anymore.
-	// Generate config for pull-knative-serving-go-coverage-dev right after pull-knative-serving-go-coverage
-	if data.PresubmitPullJobName == "pull-knative-serving-go-coverage" {
-		data.PresubmitPullJobName += "-dev"
-		data.Base.AlwaysRun = false
-		data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest", -1)
-		data.Base.Image = strings.Replace(data.Base.Image, "coverage-go112:latest", "coverage-dev:latest", -1)
-		template := strings.Replace(readTemplate(presubmitGoCoverageJob), "(all|", "(", 1)
-		executeJobTemplate("presubmit", template, title, repoName, data.PresubmitPullJobName, true, data)
-	}
-}
-
-// generateGoCoveragePostsubmit generates the go coverage postsubmit job config for the given repo.
-func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
-	var data postsubmitJobTemplateData
-	data.Base = newbaseProwJobTemplateData(repoName)
-	data.Base.Image = coverageDockerImage
-	data.PostsubmitJobName = fmt.Sprintf("post-%s-go-coverage", data.Base.RepoNameForJob)
-	for _, repo := range repositories {
-		if repo.Name == repoName && repo.DotDev {
-			data.Base.PathAlias = "path_alias: knative.dev/" + path.Base(repoName)
-		}
-		if repo.Name == repoName && repo.Go113 {
-			data.Base.Image = getGo113ImageName(data.Base.Image)
-		}
-	}
-	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
-	configureServiceAccountForJob(&data.Base)
-	jobName := data.PostsubmitJobName
-	executeJobTemplateWrapper(repoName, &data, func(data interface{}) {
-		executeJobTemplate("postsubmit go coverage", readTemplate(goCoveragePostsubmitJob), "postsubmits", repoName, jobName, true, data)
-	})
-	// TODO(adrcunha): remove once the coverage-dev job isn't necessary anymore.
-	// Generate config for post-knative-serving-go-coverage-dev right after post-knative-serving-go-coverage
-	if data.PostsubmitJobName == "post-knative-serving-go-coverage" {
-		data.PostsubmitJobName += "-dev"
-		data.Base.Image = strings.Replace(data.Base.Image, "coverage-go112:latest", "coverage-dev:latest", -1)
-		data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest", -1)
-		executeJobTemplate("presubmit", readTemplate(goCoveragePostsubmitJob), "postsubmits", repoName, data.PostsubmitJobName, false, data)
 	}
 }
 
@@ -831,16 +650,6 @@ func parseSection(config yaml.MapSlice, title string, generate sectionGenerator,
 				finalize(title, repoName, nil)
 			}
 		}
-	}
-}
-
-// generateOtherJobConfigs generates job config with the generator if new job is required for it.
-func generateOtherJobConfigs(title string, newJobNeeded newJobNeeded, generate sectionGenerator) {
-	for i := range repositories { // Keep order for predictable output.
-		if !newJobNeeded(repositories[i]) {
-			continue
-		}
-		generate(title, repositories[i].Name, nil)
 	}
 }
 
@@ -1161,7 +970,7 @@ func collectMetaData(periodicJob yaml.MapSlice) {
 			releaseVersion := ""
 			for _, item := range jobConfig {
 				switch item.Key {
-				case "continuous", "dot-release", "auto-release", "performance", "performance-mesh",
+				case "continuous", "dot-release", "auto-release", "performance",
 					"latency", "nightly", "webhook-apicoverage":
 					if getBool(item.Value) {
 						enabled = true
@@ -1191,7 +1000,7 @@ func collectMetaData(periodicJob yaml.MapSlice) {
 				jobDetailMap[repoName] = newJobTypes
 			}
 		}
-		addTestCoverageJobIfNeeded(&jobDetailMap, repoName)
+		updateTestCoverageJobDataIfNeeded(&jobDetailMap, repoName)
 	}
 
 	// add test coverage jobs for the repos that haven't been handled
@@ -1219,8 +1028,8 @@ func addProjAndRepoIfNeed(projName string, repoName string) map[string][]string 
 	return jobDetailMap
 }
 
-// addTestCoverageJobIfNeeded adds test-coverage job for the repo if it has go coverage check
-func addTestCoverageJobIfNeeded(jobDetailMap *map[string][]string, repoName string) {
+// updateTestCoverageJobDataIfNeeded adds test-coverage job data for the repo if it has go coverage check
+func updateTestCoverageJobDataIfNeeded(jobDetailMap *map[string][]string, repoName string) {
 	if goCoverageMap[repoName] {
 		newJobTypes := append((*jobDetailMap)[repoName], "test-coverage")
 		(*jobDetailMap)[repoName] = newJobTypes
@@ -1230,7 +1039,7 @@ func addTestCoverageJobIfNeeded(jobDetailMap *map[string][]string, repoName stri
 	}
 }
 
-// addRemainingTestCoverageJobs adds test-coverage jobs for the repos that haven't been processed.
+// addRemainingTestCoverageJobs adds test-coverage jobs data for the repos that haven't been processed.
 func addRemainingTestCoverageJobs() {
 	// handle repos that only have go coverage
 	for repoName, hasGoCoverage := range goCoverageMap {
@@ -1310,7 +1119,6 @@ func main() {
 	flag.StringVar(&githubCommenterDockerImage, "github-commenter-docker", "gcr.io/k8s-prow/commenter:v20190731-e3f7b9853", "github commenter docker image")
 	flag.StringVar(&presubmitScript, "presubmit-script", "./test/presubmit-tests.sh", "Executable for running presubmit tests")
 	flag.StringVar(&releaseScript, "release-script", "./hack/release.sh", "Executable for creating releases")
-	flag.StringVar(&performanceScript, "performance-script", "./test/performance-tests.sh", "Executable for running performance tests")
 	flag.StringVar(&webhookAPICoverageScript, "webhook-api-coverage-script", "./test/apicoverage.sh", "Executable for running webhook apicoverage tool")
 	flag.StringVar(&cleanupScript, "cleanup-script", "./tools/cleanup/cleanup.sh", "Executable for running the cleanup tasks")
 	flag.StringVar(&repositoryOverride, "repo-override", "", "Repository path (github.com/foo/bar[=branch]) to use instead for a job")
@@ -1360,9 +1168,11 @@ func main() {
 		}
 		parseSection(config, "presubmits", generatePresubmit, nil)
 		parseSection(config, "periodics", generatePeriodic, generateGoCoveragePeriodic)
-		generateOtherJobConfigs("periodics", func(repo repositoryData) bool {
-			return !repo.Processed && repo.EnableGoCoverage
-		}, generateGoCoveragePeriodic)
+		for _, repo := range repositories { // Keep order for predictable output.
+			if !repo.Processed && repo.EnableGoCoverage {
+				generateGoCoveragePeriodic("periodics", repo.Name, nil)
+			}
+		}
 		if *generateMaintenanceJobs {
 			generateCleanupPeriodicJob()
 			generateFlakytoolPeriodicJob()
@@ -1371,9 +1181,14 @@ func main() {
 			generateIssueTrackerPeriodicJobs()
 			generatePerfClusterUpdatePeriodicJobs()
 		}
-		generateOtherJobConfigs("postsubmits", func(repo repositoryData) bool {
-			return repo.EnableGoCoverage
-		}, generateGoCoveragePostsubmit)
+		for _, repo := range repositories {
+			if repo.EnableGoCoverage {
+				generateGoCoveragePostsubmit("postsubmits", repo.Name, nil)
+			}
+			if repo.EnablePerformanceTests {
+				generatePerfClusterPostsubmitJob(repo)
+			}
+		}
 	}
 
 	// config object is modified when we generate prow config, so we'll need to reload it here
