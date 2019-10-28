@@ -277,9 +277,6 @@ periodics:
           memory: 12Gi
         limits:
           memory: 16Gi
-    - latency: true
-      dot-dev: true
-      go113: true
     - webhook-apicoverage: true
       dot-dev: true
       go113: true

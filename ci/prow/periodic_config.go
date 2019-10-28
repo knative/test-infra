@@ -95,8 +95,6 @@ func generateCron(jobType, jobName string, timeout int) string {
 		res = fmt.Sprintf(dayCron, getUTCtime(2))
 	case "dot-release": // Every Tuesday 2-3 PST
 		res = fmt.Sprintf(weekCron, getUTCtime(2), 2)
-	case "latency": // Every day 1-2 PST
-		res = fmt.Sprintf(dayCron, getUTCtime(1))
 	case "webhook-apicoverage": // Every day 2-3 PST
 		res = fmt.Sprintf(dayCron, getUTCtime(2))
 	default:
@@ -168,20 +166,6 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 				"--github-token /etc/hub-token/token"}
 			addVolumeToJob(&data.Base, "/etc/hub-token", "hub-token", true, "")
 			data.Base.Timeout = 90
-			isMonitoredJob = true
-		case "latency":
-			if !getBool(item.Value) {
-				return
-			}
-			jobType = getString(item.Key)
-			jobTemplate = readTemplate(periodicCustomJob)
-			jobNameSuffix = "latency"
-			data.Base.Image = metricsDockerImage
-			data.Base.Command = "/metrics"
-			data.Base.Args = []string{
-				fmt.Sprintf("--source-directory=ci-%s-continuous", data.Base.RepoNameForJob),
-				"--artifacts-dir=$(ARTIFACTS)",
-				"--service-account=" + data.Base.ServiceAccount}
 			isMonitoredJob = true
 		case "custom-job":
 			jobType = getString(item.Key)

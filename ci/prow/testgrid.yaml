@@ -88,9 +88,6 @@ test_groups:
 - name: ci-knative-serving-auto-release
   gcs_prefix: knative-prow/logs/ci-knative-serving-auto-release
   alert_stale_results_hours: 3
-- name: ci-knative-serving-latency
-  gcs_prefix: knative-prow/logs/ci-knative-serving-latency
-  short_text_metric: "latency"
 - name: ci-knative-serving-webhook-apicoverage
   gcs_prefix: knative-prow/logs/ci-knative-serving-webhook-apicoverage
   alert_stale_results_hours: 48
@@ -292,10 +289,6 @@ dashboards:
   - name: auto-release
     test_group_name: ci-knative-serving-auto-release
     base_options: "sort-by-name="
-  - name: latency
-    test_group_name: ci-knative-serving-latency
-    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-    description: "95% latency in ms"
   - name: webhook-apicoverage
     test_group_name: ci-knative-serving-webhook-apicoverage
     base_options: "sort-by-name="

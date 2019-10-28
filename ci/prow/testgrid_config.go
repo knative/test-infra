@@ -54,7 +54,7 @@ var (
 
 	// metaData saves the meta data needed to generate the final config file.
 	// key is the main project version, value is another map containing job details
-	//     for the job detail map, key is the repo name, value is the list of job types, like continuous, latency, nightly, and etc.
+	//     for the job detail map, key is the repo name, value is the list of job types, like continuous, nightly, and etc.
 	metaData = make(map[string]map[string][]string)
 
 	// templatesCache caches templates in memory to avoid I/O
@@ -142,8 +142,8 @@ func generateTestGroup(projName string, repoName string, jobNames []string) {
 		gcsLogDir := fmt.Sprintf("%s/%s/%s", gcsBucket, logsDir, testGroupName)
 		extras := make(map[string]string)
 		switch jobName {
-		case "continuous", "dot-release", "auto-release", "performance", "performance-mesh",
-			"latency", "nightly", "webhook-apicoverage":
+		case "continuous", "dot-release", "auto-release",
+			"nightly", "webhook-apicoverage":
 			isDailyBranch := contRegex.FindString(testGroupName) != ""
 			if !isDailyBranch && (jobName == "continuous" || jobName == "auto-release") {
 				// TODO(Fredy-Z): this value should be derived from the cron string
@@ -156,12 +156,6 @@ func generateTestGroup(projName string, repoName string, jobNames []string) {
 			if jobName == "dot-release" {
 				// TODO(Fredy-Z): this value should be derived from the cron string
 				extras["alert_stale_results_hours"] = "170" // 1 week + 2h
-			}
-			if jobName == "latency" {
-				extras["short_text_metric"] = "latency"
-			}
-			if jobName == "performance" || jobName == "performance-mesh" {
-				extras["short_text_metric"] = "perf_latency"
 			}
 			if jobName == "webhook-apicoverage" {
 				extras["alert_stale_results_hours"] = "48" // 2 days
@@ -203,17 +197,9 @@ func generateDashboard(projName string, repoName string, jobNames []string) {
 			if projRepoStr == "knative-serving" {
 				executeDashboardTabTemplate("conformance", testGroupName, "include-filter-by-regex=test/conformance/&sort-by-name=", noExtras)
 			}
-		case "dot-release", "auto-release", "performance", "performance-mesh",
-			"latency", "webhook-apicoverage":
+		case "dot-release", "auto-release", "webhook-apicoverage":
 			extras := make(map[string]string)
 			baseOptions := testgridTabSortByName
-			if jobName == "performance" || jobName == "performance-mesh" {
-				baseOptions = testgridTabGroupByTarget
-			}
-			if jobName == "latency" {
-				baseOptions = testgridTabGroupByDir
-				extras["description"] = "95% latency in ms"
-			}
 			executeDashboardTabTemplate(jobName, testGroupName, baseOptions, extras)
 		case "nightly":
 			executeDashboardTabTemplate("nightly", testGroupName, testgridTabSortByName, noExtras)
