@@ -971,7 +971,7 @@ func collectMetaData(periodicJob yaml.MapSlice) {
 			for _, item := range jobConfig {
 				switch item.Key {
 				case "continuous", "dot-release", "auto-release", "performance",
-					"latency", "nightly", "webhook-apicoverage":
+					"nightly", "webhook-apicoverage":
 					if getBool(item.Value) {
 						enabled = true
 						jobName = getString(item.Key)
