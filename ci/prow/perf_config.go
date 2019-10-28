@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 // data definitions that are used for the config file generation of performance
-// tests cluster maintanence jobs.
+// tests cluster maintenance jobs.
 
 package main
 
