@@ -408,7 +408,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh"
+        - "./test/e2e-tests.sh --istio-version 1.2-latest --no-mesh"
         volumeMounts:
         - name: repoview-token
           mountPath: /etc/repoview-token
@@ -452,7 +452,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh"
+        - "./test/e2e-tests.sh --istio-version 1.2-latest --no-mesh"
         volumeMounts:
         - name: repoview-token
           mountPath: /etc/repoview-token
@@ -498,7 +498,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh"
+        - "./test/e2e-tests.sh --istio-version 1.2-latest --no-mesh"
         volumeMounts:
         - name: repoview-token
           mountPath: /etc/repoview-token
@@ -537,7 +537,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-upgrade-tests.sh"
+        - "./test/e2e-upgrade-tests.sh --istio-version 1.2-latest --no-mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -571,7 +571,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-upgrade-tests.sh"
+        - "./test/e2e-upgrade-tests.sh --istio-version 1.2-latest --no-mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -607,7 +607,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-upgrade-tests.sh"
+        - "./test/e2e-upgrade-tests.sh --istio-version 1.2-latest --no-mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
