@@ -28,7 +28,7 @@ monitoring_service file to make any updates.
 
 ### Update Image
 
-1. `images/monitoring/Makefile` Commands to build and deploy the monitoring
+1. Run `make push` in `images/monitoring/` to build and deploy the monitoring
    images.
 
 1. Update to use the latest image on GKE
