@@ -58,8 +58,8 @@ func (c *Client) RunAlerting() {
 }
 
 func (c *Client) handleReportMessage(rmsg *prowapi.ReportMessage) {
-	if rmsg.Status == prowapi.SuccessState || rmsg.Status == prowapi.FailureState || rmsg.Status == prowapi.AbortedState {
-		log.Printf("Received Pubsub message %v\n", rmsg)
+	if rmsg.Status == prowapi.FailureState || rmsg.Status == prowapi.AbortedState {
+		log.Printf("Received Pubsub message in %s state: %v\n", rmsg.Status, rmsg)
 
 		config, err := config.ParseDefaultConfig()
 		if err != nil {
