@@ -40,7 +40,7 @@ spec:
     spec:
       containers:
       - name: monitoring-app
-        image: gcr.io/knative-tests/test-infra/monitoring:v20191028-53c47f7
+        image: gcr.io/knative-tests/test-infra/monitoring:v20191029-cc28ee3
         command: ["/monitoring"]
         env:
         - name: GOOGLE_APPLICATION_CREDENTIALS
