@@ -31,23 +31,15 @@ monitoring_service file to make any updates.
 1. Build and deploy the monitoring images.
    ```bash
    cd images/monitoring/
-   make build
-   make push_versioned
+   make push
    ```
 
 1. Update `tools/monitoring/gke_deployment/monitoring_service.yaml` to use the image tag created in previous step
 
-1. Update to use the latest image on GKE
+1. Apply the changes to use the new image in production
 
    ```bash
-   kubectl rollout restart deployment.apps/monitoring-app
-   ```
-   Note that if the "restart" sub-command is not found, update your kubectl installation.
-
-   Check the rollout status
-
-   ```bash
-   kubectl rollout status deployment.apps/monitoring-app
+   kubectl apply -f monitoring_service.yaml
    ```
 
 ### Clearing the alerts
