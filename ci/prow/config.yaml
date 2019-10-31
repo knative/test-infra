@@ -130,7 +130,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-serving-build-tests),?(\\s+|$)"
     decorate: true
     branches:
-    - "release-0.6"
     - "release-0.7"
     spec:
       containers:
@@ -218,7 +217,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/serving
     skip_branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     - "release-0.9"
@@ -267,7 +265,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-serving-unit-tests),?(\\s+|$)"
     decorate: true
     branches:
-    - "release-0.6"
     - "release-0.7"
     spec:
       containers:
@@ -353,7 +350,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/serving
     skip_branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     - "release-0.9"
@@ -397,7 +393,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-serving-integration-tests),?(\\s+|$)"
     decorate: true
     branches:
-    - "release-0.6"
     - "release-0.7"
     spec:
       containers:
@@ -485,7 +480,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/serving
     skip_branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     - "release-0.9"
@@ -526,7 +520,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-serving-upgrade-tests),?(\\s+|$)"
     decorate: true
     branches:
-    - "release-0.6"
     - "release-0.7"
     spec:
       containers:
@@ -594,7 +587,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/serving
     skip_branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     - "release-0.9"
@@ -696,7 +688,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/serving
     skip_branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     - "release-0.9"
@@ -732,7 +723,6 @@ presubmits:
     optional: true
     decorate: true
     branches:
-    - "release-0.6"
     - "release-0.7"
     spec:
       containers:
@@ -794,7 +784,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/serving
     skip_branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     - "release-0.9"
@@ -826,7 +815,6 @@ presubmits:
     optional: true
     decorate: true
     skip_branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     - "release-0.9"
@@ -858,7 +846,6 @@ presubmits:
     decorate: true
     optional: true
     branches:
-    - "release-0.6"
     - "release-0.7"
     spec:
       containers:
@@ -928,7 +915,6 @@ presubmits:
     optional: true
     path_alias: knative.dev/serving
     skip_branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     - "release-0.9"
@@ -964,7 +950,6 @@ presubmits:
     decorate: true
     optional: true
     branches:
-    - "release-0.6"
     - "release-0.7"
     spec:
       containers:
@@ -1034,7 +1019,6 @@ presubmits:
     optional: true
     path_alias: knative.dev/serving
     skip_branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     - "release-0.9"
@@ -1070,7 +1054,6 @@ presubmits:
     decorate: true
     optional: true
     branches:
-    - "release-0.6"
     - "release-0.7"
     spec:
       containers:
@@ -1140,7 +1123,6 @@ presubmits:
     optional: true
     path_alias: knative.dev/serving
     skip_branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     - "release-0.9"
@@ -1176,7 +1158,6 @@ presubmits:
     decorate: true
     optional: true
     branches:
-    - "release-0.6"
     - "release-0.7"
     spec:
       containers:
@@ -1246,7 +1227,6 @@ presubmits:
     optional: true
     path_alias: knative.dev/serving
     skip_branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     - "release-0.9"
@@ -1282,7 +1262,6 @@ presubmits:
     decorate: true
     optional: true
     branches:
-    - "release-0.6"
     - "release-0.7"
     spec:
       containers:
@@ -1352,7 +1331,6 @@ presubmits:
     optional: true
     path_alias: knative.dev/serving
     skip_branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     - "release-0.9"
@@ -1562,7 +1540,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-eventing-build-tests),?(\\s+|$)"
     decorate: true
     branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     spec:
@@ -1602,7 +1579,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/eventing
     skip_branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     spec:
@@ -1645,7 +1621,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-eventing-unit-tests),?(\\s+|$)"
     decorate: true
     branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     spec:
@@ -1689,7 +1664,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/eventing
     skip_branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     spec:
@@ -1732,7 +1706,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-eventing-integration-tests),?(\\s+|$)"
     decorate: true
     branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     spec:
@@ -1776,7 +1749,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/eventing
     skip_branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     spec:
@@ -1816,7 +1788,6 @@ presubmits:
     optional: true
     decorate: true
     branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     spec:
@@ -1848,7 +1819,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/eventing
     skip_branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     spec:
@@ -1879,7 +1849,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-eventing-contrib-build-tests),?(\\s+|$)"
     decorate: true
     branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     spec:
@@ -1919,7 +1888,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/eventing-contrib
     skip_branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     spec:
@@ -1962,7 +1930,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-eventing-contrib-unit-tests),?(\\s+|$)"
     decorate: true
     branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     spec:
@@ -2006,7 +1973,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/eventing-contrib
     skip_branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     spec:
@@ -2049,7 +2015,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-eventing-contrib-integration-tests),?(\\s+|$)"
     decorate: true
     branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     spec:
@@ -2093,7 +2058,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/eventing-contrib
     skip_branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     spec:
@@ -2133,7 +2097,6 @@ presubmits:
     optional: true
     decorate: true
     branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     spec:
@@ -2165,7 +2128,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/eventing-contrib
     skip_branches:
-    - "release-0.6"
     - "release-0.7"
     - "release-0.8"
     spec:
@@ -3633,51 +3595,6 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "28 8 * * *"
-  name: ci-knative-serving-0.6-continuous
-  agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-serving-0.6-continuous
-  decorate: true
-  extra_refs:
-  - org: knative
-    repo: serving
-    base_ref: release-0.6
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-      imagePullPolicy: Always
-      command:
-      - runner.sh
-      args:
-      - "./hack/release.sh"
-      - "--nopublish"
-      - "--notag-release"
-      securityContext:
-        privileged: true
-      volumeMounts:
-      - name: docker-graph
-        mountPath: /docker-graph
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
-      env:
-      - name: DOCKER_IN_DOCKER_ENABLED
-        value: "true"
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-      - name: PULL_BASE_REF
-        value: release-0.6
-    volumes:
-    - name: docker-graph
-      emptyDir: {}
-    - name: test-account
-      secret:
-        secretName: test-account
 - cron: "39 8 * * *"
   name: ci-knative-serving-0.7-continuous
   agent: kubernetes
@@ -3809,6 +3726,52 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.9
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "37 8 * * *"
+  name: ci-knative-serving-0.10-continuous
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-serving-0.10-continuous
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: release-0.10
+    path_alias: knative.dev/serving
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.10
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -4035,7 +3998,7 @@ periodics:
     path_alias: knative.dev/serving
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -4454,51 +4417,6 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "47 8 * * *"
-  name: ci-knative-eventing-0.6-continuous
-  agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-0.6-continuous
-  decorate: true
-  extra_refs:
-  - org: knative
-    repo: eventing
-    base_ref: release-0.6
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-      imagePullPolicy: Always
-      command:
-      - runner.sh
-      args:
-      - "./hack/release.sh"
-      - "--nopublish"
-      - "--notag-release"
-      securityContext:
-        privileged: true
-      volumeMounts:
-      - name: docker-graph
-        mountPath: /docker-graph
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
-      env:
-      - name: DOCKER_IN_DOCKER_ENABLED
-        value: "true"
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-      - name: PULL_BASE_REF
-        value: release-0.6
-    volumes:
-    - name: docker-graph
-      emptyDir: {}
-    - name: test-account
-      secret:
-        secretName: test-account
 - cron: "58 8 * * *"
   name: ci-knative-eventing-0.7-continuous
   agent: kubernetes
@@ -4629,6 +4547,52 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.9
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "56 8 * * *"
+  name: ci-knative-eventing-0.10-continuous
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-eventing-0.10-continuous
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: eventing
+    base_ref: release-0.10
+    path_alias: knative.dev/eventing
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.10
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -4817,51 +4781,6 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "42 8 * * *"
-  name: ci-knative-eventing-contrib-0.6-continuous
-  agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-contrib-0.6-continuous
-  decorate: true
-  extra_refs:
-  - org: knative
-    repo: eventing-contrib
-    base_ref: release-0.6
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-      imagePullPolicy: Always
-      command:
-      - runner.sh
-      args:
-      - "./hack/release.sh"
-      - "--nopublish"
-      - "--notag-release"
-      securityContext:
-        privileged: true
-      volumeMounts:
-      - name: docker-graph
-        mountPath: /docker-graph
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
-      env:
-      - name: DOCKER_IN_DOCKER_ENABLED
-        value: "true"
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-      - name: PULL_BASE_REF
-        value: release-0.6
-    volumes:
-    - name: docker-graph
-      emptyDir: {}
-    - name: test-account
-      secret:
-        secretName: test-account
 - cron: "53 8 * * *"
   name: ci-knative-eventing-contrib-0.7-continuous
   agent: kubernetes
@@ -4992,6 +4911,52 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.9
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "51 8 * * *"
+  name: ci-knative-eventing-contrib-0.10-continuous
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-eventing-contrib-0.10-continuous
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: eventing-contrib
+    base_ref: release-0.10
+    path_alias: knative.dev/eventing-contrib
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.10
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -5454,7 +5419,7 @@ periodics:
     path_alias: knative.dev/serving-operator
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
       - runner.sh
