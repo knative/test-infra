@@ -28,19 +28,18 @@ monitoring_service file to make any updates.
 
 ### Update Image
 
-1. `images/monitoring/Makefile` Commands to build and deploy the monitoring
-   images.
-
-1. Update to use the latest image on GKE
-
+1. Build and deploy the monitoring images.
    ```bash
-   kubectl rollout restart deployment.apps/monitoring-app
+   cd images/monitoring/
+   make push
    ```
 
-   Check the rollout status
+1. Update `tools/monitoring/gke_deployment/monitoring_service.yaml` to use the image tag created in previous step
+
+1. Apply the changes to use the new image in production
 
    ```bash
-   kubectl rollout status deployment.apps/monitoring-app
+   kubectl apply -f monitoring_service.yaml
    ```
 
 ### Clearing the alerts
