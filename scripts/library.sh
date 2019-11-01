@@ -132,6 +132,7 @@ function wait_until_object_does_not_exist() {
 # Parameters: $1 - namespace.
 function wait_until_pods_running() {
   echo -n "Waiting until all pods in namespace $1 are up"
+  local failed_pod=""
   for i in {1..150}; do  # timeout after 5 minutes
     local pods="$(kubectl get pods --no-headers -n $1 2>/dev/null)"
     # All pods must be running
@@ -140,12 +141,13 @@ function wait_until_pods_running() {
       local all_ready=1
       while read pod ; do
         local status=(`echo -n ${pod} | cut -f2 -d' ' | tr '/' ' '`)
+        local pod_name=$(echo -n ${pod} | cut -f1 -d' ')
         # All containers must be ready
-        [[ -z ${status[0]} ]] && all_ready=0 && break
-        [[ -z ${status[1]} ]] && all_ready=0 && break
-        [[ ${status[0]} -lt 1 ]] && all_ready=0 && break
-        [[ ${status[1]} -lt 1 ]] && all_ready=0 && break
-        [[ ${status[0]} -ne ${status[1]} ]] && all_ready=0 && break
+        [[ -z ${status[0]} ]] && all_ready=0 && failed_pod="${pod_name}" && break
+        [[ -z ${status[1]} ]] && all_ready=0 && failed_pod="${pod_name}" && break
+        [[ ${status[0]} -lt 1 ]] && all_ready=0 && failed_pod="${pod_name}" && break
+        [[ ${status[1]} -lt 1 ]] && all_ready=0 && failed_pod="${pod_name}" && break
+        [[ ${status[0]} -ne ${status[1]} ]] && all_ready=0 && failed_pod="${pod_name}" && break
       done <<< "$(echo "${pods}" | grep -v Completed)"
       if (( all_ready )); then
         echo -e "\nAll pods are up:\n${pods}"
@@ -156,6 +158,12 @@ function wait_until_pods_running() {
     sleep 2
   done
   echo -e "\n\nERROR: timeout waiting for pods to come up\n${pods}"
+  if [[ -n "${failed_pod}" ]]; then
+    echo -e "\n\nFailed pod oyaml - ${failed_pod}\n"
+    kubectl -n $1 get pods "${failed_pod}" -oyaml
+    echo -e "\n\nPod Logs\n"
+    kubectl -n $1 logs "${failed_pod}" --all-containers
+  fi
   return 1
 }
 
