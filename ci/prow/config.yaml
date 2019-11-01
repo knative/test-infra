@@ -3350,6 +3350,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-serving-operator-integration-tests-on-latest-serving),?(\\s+|$)"
     decorate: true
     optional: true
+    path_alias: knative.dev/serving-operator
     branches:
     - "release-0.9"
     spec:
@@ -3383,6 +3384,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-serving-operator-integration-tests-on-latest-serving),?(\\s+|$)"
     decorate: true
     optional: true
+    path_alias: knative.dev/serving-operator
     skip_branches:
     - "release-0.9"
     spec:
@@ -3561,6 +3563,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-eventing-operator-integration-tests-on-latest-eventing),?(\\s+|$)"
     decorate: true
     optional: true
+    path_alias: knative.dev/eventing-operator
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
