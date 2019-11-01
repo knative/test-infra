@@ -178,8 +178,9 @@ presubmits:
       always_run: false
       optional: true
       args:
-      - "--run-test"
-      - "./test/e2e-tests-latest-serving.sh"
+        - "--run-test"
+        - "./test/e2e-tests-latest-serving.sh"
+      dot-dev: true
 
   knative/eventing-operator:
     - build-tests: true
@@ -196,6 +197,7 @@ presubmits:
       args:
         - "--run-test"
         - "./test/e2e-tests-latest-eventing.sh"
+      dot-dev: true
 
   knative/website:
     # This repo only uses Tide
