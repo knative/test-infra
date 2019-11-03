@@ -127,8 +127,7 @@ function recreate_clusters() {
 # This function will be run as postsubmit jobs.
 function reconcile_benchmark_clusters() {
   header "Reconciling clusters for ${REPO_NAME}"
-  run_perf_cluster_tool --recreate \
-    --reconcile \
+  run_perf_cluster_tool --reconcile \
     --gcp-project=${PROJECT_NAME} --repository=${REPO_NAME} --benchmark-root=${BENCHMARK_ROOT_PATH} \
     || abort "failed reconciling clusters for ${REPO_NAME}"
   header "Done reconciling clusters"
