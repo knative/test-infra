@@ -366,8 +366,9 @@ periodics:
       dot-dev: true
       go113: true
     - dot-release: true
+      # TODO(chaodaiG): dot-release will need to use go1.13 after branch
+      # release-0.10 is cut
       dot-dev: true
-      go113: true
     - auto-release: true
       dot-dev: true
       go113: true

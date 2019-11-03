@@ -5453,7 +5453,7 @@ periodics:
     path_alias: knative.dev/serving-operator
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
       imagePullPolicy: Always
       command:
       - runner.sh
