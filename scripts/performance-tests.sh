@@ -117,7 +117,7 @@ function recreate_clusters() {
   header "Recreating clusters for ${REPO_NAME}"
   run_perf_cluster_tool --recreate \
     --gcp-project=${PROJECT_NAME} --repository=${REPO_NAME} --benchmark-root=${BENCHMARK_ROOT_PATH} \
-    || abort "failed recreating for ${REPO_NAME}"
+    || abort "failed recreating clusters for ${REPO_NAME}"
   header "Done recreating clusters"
   # Update all clusters after they are recreated
   update_clusters
