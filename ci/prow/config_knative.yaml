@@ -235,6 +235,7 @@ periodics:
     - branch-ci: true
       release: "0.10"
       dot-dev: true
+      go113: true
     - custom-job: istio-1.2-mesh
       full-command: "./test/e2e-tests.sh --istio-version 1.2-latest --mesh"
       dot-dev: true
@@ -365,8 +366,9 @@ periodics:
       dot-dev: true
       go113: true
     - dot-release: true
+      # TODO(chaodaiG): dot-release will need to use go1.13 after branch
+      # release-0.10 is cut
       dot-dev: true
-      go113: true
     - auto-release: true
       dot-dev: true
       go113: true
