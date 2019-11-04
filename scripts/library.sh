@@ -137,38 +137,37 @@ function wait_until_pods_running() {
     local pods="$(kubectl get pods --no-headers -n $1 2>/dev/null)"
     # All pods must be running
     local not_running_pods=$(echo "${pods}" | grep -v Running | grep -v Completed)
-    local not_running=$(echo "${not_running_pods}" | wc -l)
-    if [[ -n "${pods}" && ${not_running} -eq 0 ]]; then
+    if [[ -n "${pods}" ]] && [[ -z "${not_running_pods}" ]]; then
       # All Pods are running or completed. Verify the containers on each Pod.
       local all_ready=1
       while read pod ; do
         local status=(`echo -n ${pod} | cut -f2 -d' ' | tr '/' ' '`)
-        local pod_name=$(echo -n ${pod} | cut -f1 -d' ')
+        # Set this Pod as the failed_pod. If nothing is wrong with it, then after the checks, set
+        # failed_pod to the empty string.
+        failed_pod=$(echo -n "${pod}" | cut -f1 -d' ')
         # All containers must be ready
-        [[ -z ${status[0]} ]] && all_ready=0 && failed_pod="${pod_name}" && break
-        [[ -z ${status[1]} ]] && all_ready=0 && failed_pod="${pod_name}" && break
-        [[ ${status[0]} -lt 1 ]] && all_ready=0 && failed_pod="${pod_name}" && break
-        [[ ${status[1]} -lt 1 ]] && all_ready=0 && failed_pod="${pod_name}" && break
-        [[ ${status[0]} -ne ${status[1]} ]] && all_ready=0 && failed_pod="${pod_name}" && break
+        [[ -z ${status[0]} ]] && all_ready=0 && break
+        [[ -z ${status[1]} ]] && all_ready=0 && break
+        [[ ${status[0]} -lt 1 ]] && all_ready=0 && break
+        [[ ${status[1]} -lt 1 ]] && all_ready=0 && break
+        [[ ${status[0]} -ne ${status[1]} ]] && all_ready=0 && break
+        # All the tests passed, this is not a failed pod.
+        failed_pod=""
       done <<< "$(echo "${pods}" | grep -v Completed)"
       if (( all_ready )); then
         echo -e "\nAll pods are up:\n${pods}"
         return 0
       fi
-    elif [[ ${not_running} -ne 0 ]]; then
+    elif [[ -n "${not_running_pods}" ]]; then
       # At least one Pod is not running, just save the first one's name as the failed_pod.
-      while read pod ; do
-        local pod_name=$(echo -n ${pod} | cut -f1 -d' ')
-        failed_pod="${pod_name}"
-        break
-      done <<< "$(echo "${not_running_pods}")"
+      failed_pod="$(echo "${not_running_pods}" | head -n 1 | cut -f1 -d' ')"
     fi
     echo -n "."
     sleep 2
   done
   echo -e "\n\nERROR: timeout waiting for pods to come up\n${pods}"
   if [[ -n "${failed_pod}" ]]; then
-    echo -e "\n\nFailed pod oyaml - ${failed_pod}\n"
+    echo -e "\n\nFailed Pod (data in YAML format) - ${failed_pod}\n"
     kubectl -n $1 get pods "${failed_pod}" -oyaml
     echo -e "\n\nPod Logs\n"
     kubectl -n $1 logs "${failed_pod}" --all-containers
