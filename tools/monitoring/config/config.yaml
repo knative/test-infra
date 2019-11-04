@@ -181,4 +181,4 @@ spec:
       - job-name-regex: 'ci-knative-.*-clusters' # Performance recycle clusters jobs
         occurrences: 3
         jobs-affected: 1
-        period: 180
+        period: 1440
