@@ -136,8 +136,10 @@ function wait_until_pods_running() {
   for i in {1..150}; do  # timeout after 5 minutes
     local pods="$(kubectl get pods --no-headers -n $1 2>/dev/null)"
     # All pods must be running
-    local not_running=$(echo "${pods}" | grep -v Running | grep -v Completed | wc -l)
+    local not_running_pods=$(echo "${pods}" | grep -v Running | grep -v Completed)
+    local not_running=$(echo "${not_running_pods}" | wc -l)
     if [[ -n "${pods}" && ${not_running} -eq 0 ]]; then
+      # All Pods are running or completed. Verify the containers on each Pod.
       local all_ready=1
       while read pod ; do
         local status=(`echo -n ${pod} | cut -f2 -d' ' | tr '/' ' '`)
@@ -153,6 +155,13 @@ function wait_until_pods_running() {
         echo -e "\nAll pods are up:\n${pods}"
         return 0
       fi
+    elif [[ ${not_running} -ne 0 ]]; then
+      # At least one Pod is not running, just save the first one's name as the failed_pod.
+      while read pod ; do
+        local pod_name=$(echo -n ${pod} | cut -f1 -d' ')
+        failed_pod="${pod_name}"
+        break
+      done <<< "$(echo "${not_running_pods}")"
     fi
     echo -n "."
     sleep 2
