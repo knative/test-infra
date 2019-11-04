@@ -45,6 +45,20 @@
   version = "v1.3.2"
 
 [[projects]]
+  digest = "1:1d1cbf539d9ac35eb3148129f96be5537f1a1330cadcc7e3a83b4e72a59672a3"
+  name = "github.com/google/go-cmp"
+  packages = [
+    "cmp",
+    "cmp/internal/diff",
+    "cmp/internal/flags",
+    "cmp/internal/function",
+    "cmp/internal/value",
+  ]
+  pruneopts = "NUT"
+  revision = "2d0692c2e9617365a95b295612ac0d4415ba4627"
+  version = "v0.3.1"
+
+[[projects]]
   digest = "1:4fdd1e197fe66f23c4d58419111852037ab72c1c51212fa083d15994d775c2d4"
   name = "github.com/google/go-github"
   packages = ["github"]
@@ -443,9 +457,10 @@
     "cloud.google.com/go/pubsub",
     "cloud.google.com/go/storage",
     "github.com/go-sql-driver/mysql",
+    "github.com/google/go-cmp/cmp",
     "github.com/google/go-github/github",
     "github.com/google/licenseclassifier",
-    "golang.org/x/net/context",
+    "github.com/sirupsen/logrus",
     "golang.org/x/oauth2",
     "google.golang.org/api/iterator",
     "google.golang.org/api/option",
