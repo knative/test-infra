@@ -5971,7 +5971,7 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "0 19 * * 1"
+- cron: "0 */6 * * *"
   name: ci-knative-cleanup
   labels:
       prow.k8s.io/pubsub.project: knative-tests
