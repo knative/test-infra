@@ -38,7 +38,7 @@ func generatePerfClusterUpdatePeriodicJobs() {
 				recreatePerfClusterPeriodicJobCron,
 				perfTestScriptPath,
 				[]string{"--recreate-clusters"},
-				repo.Name,
+				repo,
 				perfTestSecretName,
 			)
 			perfClusterPeriodicJob(
@@ -46,7 +46,7 @@ func generatePerfClusterUpdatePeriodicJobs() {
 				updatePerfClusterPeriodicJobCron,
 				perfTestScriptPath,
 				[]string{"--update-clusters"},
-				repo.Name,
+				repo,
 				perfTestSecretName,
 			)
 		}
@@ -60,33 +60,37 @@ func generatePerfClusterPostsubmitJob(repo repositoryData) {
 		"reconcile-clusters",
 		perfTestScriptPath,
 		[]string{"--reconcile-benchmark-clusters"},
-		repo.Name,
+		repo,
 		perfTestSecretName,
 	)
 }
 
-func perfClusterPeriodicJob(jobNamePostFix, cronString, command string, args []string, repo, sa string) {
+func perfClusterPeriodicJob(jobNamePostFix, cronString, command string, args []string, repo repositoryData, sa string) {
 	var data periodicJobTemplateData
-	data.Base = perfClusterBaseProwJob(command, args, repo, sa)
+	data.Base = perfClusterBaseProwJob(command, args, repo.Name, sa)
 	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
-	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  path_alias: knative.dev/"+data.Base.RepoName)
+	if repo.DotDev {
+		data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  path_alias: knative.dev/"+data.Base.RepoName)
+	}
 	data.PeriodicJobName = fmt.Sprintf("ci-%s-%s", data.Base.RepoNameForJob, jobNamePostFix)
 	data.CronString = cronString
 	data.PeriodicCommand = createCommand(data.Base)
 	addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
 	executeJobTemplate("performance tests periodic", readTemplate(periodicTestJob),
-		"periodics", repo, data.PeriodicJobName, false, data)
+		"periodics", repo.Name, data.PeriodicJobName, false, data)
 }
 
-func perfClusterReconcilePostsubmitJob(jobNamePostFix, command string, args []string, repo, sa string) {
+func perfClusterReconcilePostsubmitJob(jobNamePostFix, command string, args []string, repo repositoryData, sa string) {
 	var data postsubmitJobTemplateData
-	data.Base = perfClusterBaseProwJob(command, args, repo, sa)
-	data.Base.PathAlias = "path_alias: knative.dev/" + data.Base.RepoName
+	data.Base = perfClusterBaseProwJob(command, args, repo.Name, sa)
+	if repo.DotDev {
+		data.Base.PathAlias = "path_alias: knative.dev/" + data.Base.RepoName
+	}
 	data.PostsubmitJobName = fmt.Sprintf("post-%s-%s", data.Base.RepoNameForJob, jobNamePostFix)
 	data.PostsubmitCommand = createCommand(data.Base)
 	addMonitoringPubsubLabelsToJob(&data.Base, data.PostsubmitJobName)
 	executeJobTemplate("performance tests postsubmit", readTemplate(perfPostsubmitJob),
-		"postsubmits", repo, data.PostsubmitJobName, true, data)
+		"postsubmits", repo.Name, data.PostsubmitJobName, true, data)
 }
 
 func perfClusterBaseProwJob(command string, args []string, fullRepoName, sa string) baseProwJobTemplateData {

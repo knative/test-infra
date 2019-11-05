@@ -157,6 +157,8 @@ presubmits:
       dot-dev: true
 
   google/knative-gcp:
+    - repo-settings:
+      performance: true
     - build-tests: true
     - unit-tests: true
     - integration-tests: true
