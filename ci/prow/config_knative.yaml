@@ -116,6 +116,10 @@ presubmits:
     - integration-tests: true
       needs-dind: true
     - go-coverage: true
+    - custom-test: markdown-link-check
+      always_run: true
+      command:
+        - "./test/presubmit-link-check.sh"
 
   knative/pkg:
     - build-tests: true
