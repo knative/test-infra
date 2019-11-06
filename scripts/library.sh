@@ -411,9 +411,9 @@ function start_knative_serving() {
   header "Starting Knative Serving"
   subheader "Installing Knative Serving"
   echo "Installing Serving CRDs from $1"
-  kubectl apply --selector knative.dev/crd-install=true -f "$1" || return 1
+  kubectl apply --selector knative.dev/crd-install=true -f "$1"
   echo "Installing the rest of serving components from $1"
-  kubectl apply -f "$1" || return 1
+  kubectl apply -f "$1"
   wait_until_pods_running knative-serving || return 1
 }
 
