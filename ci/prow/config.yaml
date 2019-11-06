@@ -2305,6 +2305,7 @@ presubmits:
     rerun_command: "/test pull-knative-docs-markdown-link-check"
     trigger: "(?m)^/test (all|pull-knative-docs-markdown-link-check),?(\\s+|$)"
     decorate: true
+    optional: true
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
