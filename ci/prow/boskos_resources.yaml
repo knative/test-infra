@@ -89,5 +89,30 @@ resources:
   - knative-boskos-73
   - knative-boskos-74
   - knative-boskos-75
+  - knative-boskos-76
+  - knative-boskos-77
+  - knative-boskos-78
+  - knative-boskos-79
+  - knative-boskos-80
+  - knative-boskos-81
+  - knative-boskos-82
+  - knative-boskos-83
+  - knative-boskos-84
+  - knative-boskos-85
+  - knative-boskos-86
+  - knative-boskos-87
+  - knative-boskos-88
+  - knative-boskos-89
+  - knative-boskos-90
+  - knative-boskos-91
+  - knative-boskos-92
+  - knative-boskos-93
+  - knative-boskos-94
+  - knative-boskos-95
+  - knative-boskos-96
+  - knative-boskos-97
+  - knative-boskos-98
+  - knative-boskos-99
+  - knative-boskos-100
   state: dirty
   type: gke-project
