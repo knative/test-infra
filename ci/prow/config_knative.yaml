@@ -96,6 +96,11 @@ presubmits:
       - release-0.7
       - release-0.8
     - build-tests: true
+      resources:
+        requests:
+          memory: 12Gi # Real request for this pod is 16 as sidecar requests 4
+        limits:
+          memory: 16Gi
     - unit-tests: true
     - integration-tests: true
     - go-coverage: true
@@ -106,6 +111,11 @@ presubmits:
       - release-0.7
       - release-0.8
     - build-tests: true
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     - unit-tests: true
     - integration-tests: true
     - go-coverage: true
@@ -308,6 +318,11 @@ periodics:
     - continuous: true
       timeout: 90
       dot-dev: true
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     - branch-ci: true
       release: "0.7"
     - branch-ci: true
@@ -320,14 +335,34 @@ periodics:
       dot-dev: true
     - nightly: true
       dot-dev: true
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     - dot-release: true
       dot-dev: true
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     - auto-release: true
       dot-dev: true
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
 
   knative/eventing-contrib:
     - continuous: true
       dot-dev: true
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     - branch-ci: true
       release: "0.7"
     - branch-ci: true
@@ -340,10 +375,25 @@ periodics:
       dot-dev: true
     - nightly: true
       dot-dev: true
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     - dot-release: true
       dot-dev: true
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     - auto-release: true
       dot-dev: true
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
 
   knative/pkg:
     - continuous: true
