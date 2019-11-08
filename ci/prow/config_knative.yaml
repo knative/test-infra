@@ -73,6 +73,12 @@ presubmits:
       args:
       - "--run-test"
       - "./test/e2e-tests.sh --gloo-version 0.17.1"
+    - custom-test: https
+      always_run: false
+      optional: true
+      args:
+      - "--run-test"
+      - "./test/e2e-tests.sh --https"
 
   knative/client:
     - build-tests: true
