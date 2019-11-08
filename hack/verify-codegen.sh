@@ -38,6 +38,7 @@ cp -aR "${REPO_ROOT_DIR}/Gopkg.lock" "${REPO_ROOT_DIR}/vendor" "${TMP_DIFFROOT}"
 echo "Diffing ${REPO_ROOT_DIR} against freshly generated codegen"
 ret=0
 diff -Nupr --no-dereference "${REPO_ROOT_DIR}/vendor" "${TMP_DIFFROOT}/vendor" || ret=1
+diff -Nup --no-dereference "${REPO_ROOT_DIR}/Gopkg.lock" "${TMP_DIFFROOT}/Gopkg.lock" || ret=1
 
 # Restore working tree state
 rm -fr "${REPO_ROOT_DIR}/Gopkg.lock" "${REPO_ROOT_DIR}/pkg" "${REPO_ROOT_DIR}/vendor"

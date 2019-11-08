@@ -120,9 +120,6 @@ type baseProwJobTemplateData struct {
 // sectionGenerator is a function that generates Prow job configs given a slice of a yaml file with configs.
 type sectionGenerator func(string, string, yaml.MapSlice)
 
-// newJobNeeded is a function that determined if we need to add a new job for this repository.
-type newJobNeeded func(repositoryData) bool
-
 // stringArrayFlag is the content of a multi-value flag.
 type stringArrayFlag []string
 
