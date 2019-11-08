@@ -41,13 +41,8 @@ const (
 	flakesResultRecorderPeriodicJobCron = "0 * * * *"    // Run every hour
 	prowversionbumperPeriodicJobCron    = "0 20 * * 1"   // Run at 12:00PST/13:00PST every Monday (20:00 UTC)
 	backupPeriodicJobCron               = "15 9 * * *"   // Run at 02:15PST every day (09:15 UTC)
-	clearAlertsPeriodicJobCron          = "0,30 * * * *" // Run every 30 minutes
 	recreatePerfClusterPeriodicJobCron  = "30 07 * * *"  // Run at 00:30PST every day (07:30 UTC)
 	updatePerfClusterPeriodicJobCron    = "5 * * * *"    // Run every an hour
-
-	// Perf job constants
-	perfTimeout = 120 // Job timeout in minutes
-	perfNodes   = "4" // Number of nodes needed to run perf tests. Needs to be string
 )
 
 // periodicJobTemplateData contains data about a periodic Prow job.
