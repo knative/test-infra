@@ -101,6 +101,9 @@ function setup_test_cluster() {
   set -o errexit
   set -o pipefail
 
+  header "Test cluster setup"
+  kubectl get nodes
+
   header "Setting up test cluster"
 
   # Run cluster-creator for acquiring existing test cluster, will fail if
