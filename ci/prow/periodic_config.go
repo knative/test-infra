@@ -35,14 +35,14 @@ const (
 	periodicCustomJob = "prow_periodic_custom_job.yaml"
 
 	// Cron strings for key jobs
-	goCoveragePeriodicJobCron           = "0 1 * * *"    // Run at 01:00 every day
-	cleanupPeriodicJobCron              = "0 */6 * * *"  // Run every 6 hours
-	flakesReporterPeriodicJobCron       = "0 12 * * *"   // Run at 4:00PST/5:00PST every day (12:00 UTC)
-	flakesResultRecorderPeriodicJobCron = "0 * * * *"    // Run every hour
-	prowversionbumperPeriodicJobCron    = "0 20 * * 1"   // Run at 12:00PST/13:00PST every Monday (20:00 UTC)
-	backupPeriodicJobCron               = "15 9 * * *"   // Run at 02:15PST every day (09:15 UTC)
-	recreatePerfClusterPeriodicJobCron  = "30 07 * * *"  // Run at 00:30PST every day (07:30 UTC)
-	updatePerfClusterPeriodicJobCron    = "5 * * * *"    // Run every an hour
+	goCoveragePeriodicJobCron           = "0 1 * * *"   // Run at 01:00 every day
+	cleanupPeriodicJobCron              = "0 */6 * * *" // Run every 6 hours
+	flakesReporterPeriodicJobCron       = "0 12 * * *"  // Run at 4:00PST/5:00PST every day (12:00 UTC)
+	flakesResultRecorderPeriodicJobCron = "0 * * * *"   // Run every hour
+	prowversionbumperPeriodicJobCron    = "0 20 * * 1"  // Run at 12:00PST/13:00PST every Monday (20:00 UTC)
+	backupPeriodicJobCron               = "15 9 * * *"  // Run at 02:15PST every day (09:15 UTC)
+	recreatePerfClusterPeriodicJobCron  = "30 07 * * *" // Run at 00:30PST every day (07:30 UTC)
+	updatePerfClusterPeriodicJobCron    = "5 * * * *"   // Run every an hour
 )
 
 // periodicJobTemplateData contains data about a periodic Prow job.
