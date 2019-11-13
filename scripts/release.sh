@@ -99,7 +99,6 @@ YAMLS_TO_PUBLISH=""
 ARTIFACTS_TO_PUBLISH=""
 FROM_NIGHTLY_RELEASE=""
 FROM_NIGHTLY_RELEASE_GCS=""
-export KO_DOCKER_REPO="gcr.io/knative-nightly"
 export GITHUB_TOKEN=""
 
 # Convenience function to run the hub tool.
@@ -421,8 +420,8 @@ function parse_flags() {
   if (( ! PUBLISH_RELEASE )); then
     (( has_gcr_flag )) && echo "Not publishing the release, GCR flag is ignored"
     (( has_gcs_flag )) && echo "Not publishing the release, GCS flag is ignored"
-    KO_DOCKER_REPO="ko.local"
-    KO_FLAGS="-L ${KO_FLAGS}"
+    KO_DOCKER_REPO="${KO_DOCKER_REPO:-ko.local}"
+    KO_FLAGS="${KO_FLAGS}"
     RELEASE_GCS_BUCKET=""
   fi
 
@@ -436,6 +435,9 @@ function parse_flags() {
   (( TAG_RELEASE )) && TAG="${BUILD_TAG}"
   [[ -n "${RELEASE_VERSION}" ]] && TAG="v${RELEASE_VERSION}"
   [[ -n "${RELEASE_VERSION}" && -n "${RELEASE_BRANCH}" ]] && (( PUBLISH_RELEASE )) && PUBLISH_TO_GITHUB=1
+
+  # If not already set then go ahead and default to gcr
+  export KO_DOCKER_REPO="${KO_DOCKER_REPO:-gcr.io/knative-nightly}"
 
   readonly BUILD_COMMIT_HASH
   readonly BUILD_YYYYMMDD
