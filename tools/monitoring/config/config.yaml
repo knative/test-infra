@@ -13,20 +13,6 @@
 # limitations under the License.
 
 spec:
-  - error-pattern: 'Something went wrong: starting e2e cluster: error creating cluster'
-    hint: 'Check gcp status'
-    alerts:
-      - job-name-regex: 'pull.*'
-        occurrences: 2
-        jobs-affected: 1
-        prs-affected: 2
-        period: 1440
-      - job-name-regex: '.*'
-        occurrences: 1
-        jobs-affected: 1
-        prs-affected: 0
-        period: 1440
-
   - error-pattern: 'Something went wrong: failed to prepare test environment: --provider=.* boskos failed to acquire project: resources not found'
     hint: 'boskos resource exhaustion. Check playbook'
     alerts:
@@ -45,27 +31,13 @@ spec:
     hint: 'This may lead to Knative setup failure'
     alerts:
       - job-name-regex: 'pull.*'
-        occurrences: 2
+        occurrences: 10
         jobs-affected: 1
         prs-affected: 2
         period: 1440
       - job-name-regex: '.*'
-        occurrences: 1
+        occurrences: 10
         jobs-affected: 1
-        prs-affected: 0
-        period: 1440
-
-  - error-pattern: 'Knative setup failed'
-    hint: ''
-    alerts:
-      - job-name-regex: 'pull.*'
-        occurrences: 2
-        jobs-affected: 10
-        prs-affected: 2
-        period: 1440
-      - job-name-regex: '.*'
-        occurrences: 1
-        jobs-affected: 5
         prs-affected: 0
         period: 1440
 
@@ -73,12 +45,12 @@ spec:
     hint: ''
     alerts:
       - job-name-regex: 'pull.*'
-        occurrences: 2
+        occurrences: 10
         jobs-affected: 10
         prs-affected: 2
         period: 1440
       - job-name-regex: '.*'
-        occurrences: 1
+        occurrences: 10
         jobs-affected: 5
         prs-affected: 0
         period: 1440
