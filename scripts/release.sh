@@ -99,6 +99,7 @@ YAMLS_TO_PUBLISH=""
 ARTIFACTS_TO_PUBLISH=""
 FROM_NIGHTLY_RELEASE=""
 FROM_NIGHTLY_RELEASE_GCS=""
+USE_KO_DOCKER_REPO=""
 export GITHUB_TOKEN=""
 
 # Convenience function to run the hub tool.
@@ -348,6 +349,7 @@ function parse_flags() {
       --dot-release) is_dot_release=1 ;;
       --auto-release) is_auto_release=1 ;;
       --from-latest-nightly) FROM_NIGHTLY_RELEASE=latest ;;
+      --use-ko-docker-repo) USE_KO_DOCKER_REPO=1 ;;
       *)
         [[ $# -ge 2 ]] || abort "missing parameter after $1"
         shift
@@ -381,6 +383,9 @@ function parse_flags() {
           --from-nightly)
             [[ $1 =~ ^v[0-9]+-[0-9a-f]+$ ]] || abort "nightly tag must be 'vYYYYMMDD-commithash'"
             FROM_NIGHTLY_RELEASE=$1
+            ;;
+          --use-env-ko-docker-repo)
+            USE_KO_DOCKER_REPO=$1
             ;;
           *) abort "unknown option ${parameter}" ;;
         esac
@@ -420,7 +425,11 @@ function parse_flags() {
   if (( ! PUBLISH_RELEASE )); then
     (( has_gcr_flag )) && echo "Not publishing the release, GCR flag is ignored"
     (( has_gcs_flag )) && echo "Not publishing the release, GCS flag is ignored"
-    KO_DOCKER_REPO="${KO_DOCKER_REPO:-ko.local}"
+    if (( USE_KO_DOCKER_REPO )); then
+      KO_DOCKER_REPO="${KO_DOCKER_REPO:-ko.local}"
+    else
+      KO_DOCKER_REPO="ko.local"
+    fi
     KO_FLAGS="${KO_FLAGS}"
     RELEASE_GCS_BUCKET=""
   fi
