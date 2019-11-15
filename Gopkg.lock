@@ -45,6 +45,40 @@
   version = "v1.3.2"
 
 [[projects]]
+  digest = "1:1d1cbf539d9ac35eb3148129f96be5537f1a1330cadcc7e3a83b4e72a59672a3"
+  name = "github.com/google/go-cmp"
+  packages = [
+    "cmp",
+    "cmp/internal/diff",
+    "cmp/internal/flags",
+    "cmp/internal/function",
+    "cmp/internal/value",
+  ]
+  pruneopts = "NUT"
+  revision = "2d0692c2e9617365a95b295612ac0d4415ba4627"
+  version = "v0.3.1"
+
+[[projects]]
+  digest = "1:44c8cbd8921e9e6cea78a92b26602694dd42e324d4e83fdd475b1d6a6ab1f3e1"
+  name = "github.com/google/go-containerregistry"
+  packages = [
+    "pkg/authn",
+    "pkg/internal/retry",
+    "pkg/internal/retry/wait",
+    "pkg/logs",
+    "pkg/name",
+    "pkg/v1",
+    "pkg/v1/google",
+    "pkg/v1/partial",
+    "pkg/v1/remote",
+    "pkg/v1/remote/transport",
+    "pkg/v1/types",
+    "pkg/v1/v1util",
+  ]
+  pruneopts = "NUT"
+  revision = "b02d448a3705facf11018efff34f1d2830be5724"
+
+[[projects]]
   digest = "1:4fdd1e197fe66f23c4d58419111852037ab72c1c51212fa083d15994d775c2d4"
   name = "github.com/google/go-github"
   packages = ["github"]
@@ -121,6 +155,14 @@
   pruneopts = "NUT"
   revision = "f55edac94c9bbba5d6182a4be46d86a2c9b5b50e"
   version = "v1.0.2"
+
+[[projects]]
+  digest = "1:14715f705ff5dfe0ffd6571d7d201dd8e921030f8070321a79380d8ca4ec1a24"
+  name = "github.com/pkg/errors"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "ba968bfe8b2f7e042a574c888954fccecfa385b4"
+  version = "v0.8.1"
 
 [[projects]]
   digest = "1:d917313f309bda80d27274d53985bc65651f81a5b66b820749ac7f8ef061fd04"
@@ -404,7 +446,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:663360c7438d6f16bc164ff6891ce45c74f601fa84dc9b87e9acddbbee818c9f"
+  digest = "1:dc825a2b8706211a3d8b1a1d1b616aea67838761662be7e502dbeeb6509cb111"
   name = "knative.dev/pkg"
   packages = [
     "test/gcs",
@@ -426,7 +468,7 @@
     "testutils/metahelper/client",
   ]
   pruneopts = "NUT"
-  revision = "15e34cab9467bc3399a531a1e0dced02b3e89274"
+  revision = "6335100d292c9ff09161c5c11714ffb8cc4c730a"
 
 [[projects]]
   digest = "1:8730e0150dfb2b7e173890c8b9868e7a273082ef8e39f4940e3506a481cf895c"
@@ -443,8 +485,14 @@
     "cloud.google.com/go/pubsub",
     "cloud.google.com/go/storage",
     "github.com/go-sql-driver/mysql",
+    "github.com/google/go-cmp/cmp",
+    "github.com/google/go-containerregistry/pkg/authn",
+    "github.com/google/go-containerregistry/pkg/name",
+    "github.com/google/go-containerregistry/pkg/v1/google",
+    "github.com/google/go-containerregistry/pkg/v1/remote",
     "github.com/google/go-github/github",
     "github.com/google/licenseclassifier",
+    "github.com/pkg/errors",
     "golang.org/x/oauth2",
     "google.golang.org/api/iterator",
     "google.golang.org/api/option",
@@ -452,6 +500,7 @@
     "k8s.io/apimachinery/pkg/util/sets",
     "knative.dev/pkg/test/ghutil",
     "knative.dev/pkg/test/ghutil/fakeghutil",
+    "knative.dev/pkg/test/gke",
     "knative.dev/pkg/test/helpers",
     "knative.dev/pkg/test/slackutil",
     "knative.dev/pkg/testutils/clustermanager/perf-tests",
