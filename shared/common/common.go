@@ -17,6 +17,7 @@ limitations under the License.
 package common
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"os/exec"
@@ -42,14 +43,21 @@ func CreateDirWithFileMode(dirPath string, perm os.FileMode) error {
 	return nil
 }
 
+// ExecCommand run the given command and returns the output
+func ExecCommand(cmd string, args ...string) (string, string, error) {
+	c := exec.Command(cmd, args...)
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	c.Stdout = &stdout
+	c.Stderr = &stderr
+	err := c.Run()
+	return stdout.String(), stderr.String(), err
+}
+
 // GetRootDir gets directory of git root
 func GetRootDir() (string, error) {
-	cmd := exec.Command("git", "rev-parse", "--show-toplevel")
-	output, err := cmd.Output()
-	if err != nil {
-		return "", err
-	}
-	return strings.TrimSpace(string(output)), nil
+	stdout, _, err := ExecCommand("git", "rev-parse", "--show-toplevel")
+	return strings.TrimSpace(string(stdout)), err
 }
 
 // CDToRootDir change directory to git root dir

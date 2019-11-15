@@ -10,20 +10,13 @@ required = [
 ]
 
 [[override]]
-  name = "k8s.io/api"
-  version = "kubernetes-1.12.6"
-
-[[override]]
   name = "k8s.io/apimachinery"
   version = "kubernetes-1.12.6"
 
-[[override]]
-  name = "k8s.io/code-generator"
-  version = "kubernetes-1.12.6"
-
-[[override]]
-  name = "k8s.io/client-go"
-  version = "kubernetes-1.12.6"
+[[constraint]]
+  name = "github.com/google/go-containerregistry"
+  # HEAD as of 2019-09-10
+  revision = "b02d448a3705facf11018efff34f1d2830be5724"
 
 [[override]]
   name = "knative.dev/pkg"
