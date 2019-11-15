@@ -56,16 +56,16 @@ deck:
         name: buildlog
         config:
           highlight_regexes:
-          # regexes to match generic errors
-          - timed out
-
-          # regexes to match specific errors we can have
+          # timed out error in waiting for Kubernetes resources
+          - 'timed out waiting for the condition'
           # go test timeout
           - 'panic: test timed out after.*$'
           # test case failure
           - 'FAIL:'
           # boskos error
           - 'boskos failed to acquire project'
+          # cluster creation error
+          - 'failed creating test cluster'
       required_files:
       - build-log.txt
     - lens:
