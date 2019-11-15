@@ -141,15 +141,3 @@ spec:
         occurrences: 2
         jobs-affected: 1
         period: 2880
-
-  - error-pattern: '.*' # We need to check for all errors
-    hint: 'Look at the errors in the log'
-    alerts:
-      - job-name-regex: 'ci-knative-cleanup' # Cleanup test images for all knative
-        occurrences: 1
-        jobs-affected: 1
-        period: 1440
-      - job-name-regex: 'ci-knative-.*-clusters' # Performance recycle clusters jobs
-        occurrences: 3
-        jobs-affected: 1
-        period: 1440
