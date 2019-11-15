@@ -66,6 +66,8 @@ deck:
           - 'FAIL:'
           # boskos error
           - 'boskos failed to acquire project'
+          # cluster creation error
+          - 'failed creating test cluster'
       required_files:
       - build-log.txt
     - lens:
