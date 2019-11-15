@@ -384,9 +384,6 @@ function parse_flags() {
             [[ $1 =~ ^v[0-9]+-[0-9a-f]+$ ]] || abort "nightly tag must be 'vYYYYMMDD-commithash'"
             FROM_NIGHTLY_RELEASE=$1
             ;;
-          --use-env-ko-docker-repo)
-            USE_KO_DOCKER_REPO=$1
-            ;;
           *) abort "unknown option ${parameter}" ;;
         esac
     esac
@@ -421,6 +418,11 @@ function parse_flags() {
     prepare_dot_release
   fi
 
+  if (( ! USE_KO_DOCKER_REPO )); then
+    # If they didn't use the special flag then force it to gcr
+    export KO_DOCKER_REPO="gcr.io/knative-nightly"
+  fi
+
   # Update KO_DOCKER_REPO and KO_FLAGS if we're not publishing.
   if (( ! PUBLISH_RELEASE )); then
     (( has_gcr_flag )) && echo "Not publishing the release, GCR flag is ignored"
@@ -444,9 +446,6 @@ function parse_flags() {
   (( TAG_RELEASE )) && TAG="${BUILD_TAG}"
   [[ -n "${RELEASE_VERSION}" ]] && TAG="v${RELEASE_VERSION}"
   [[ -n "${RELEASE_VERSION}" && -n "${RELEASE_BRANCH}" ]] && (( PUBLISH_RELEASE )) && PUBLISH_TO_GITHUB=1
-
-  # If not already set then go ahead and default to gcr
-  export KO_DOCKER_REPO="${KO_DOCKER_REPO:-gcr.io/knative-nightly}"
 
   readonly BUILD_COMMIT_HASH
   readonly BUILD_YYYYMMDD
