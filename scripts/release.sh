@@ -427,12 +427,11 @@ function parse_flags() {
   if (( ! PUBLISH_RELEASE )); then
     (( has_gcr_flag )) && echo "Not publishing the release, GCR flag is ignored"
     (( has_gcs_flag )) && echo "Not publishing the release, GCS flag is ignored"
-    if (( USE_KO_DOCKER_REPO )); then
-      KO_DOCKER_REPO="${KO_DOCKER_REPO:-ko.local}"
-    else
-      KO_DOCKER_REPO="ko.local"
-    fi
-    KO_FLAGS="${KO_FLAGS}"
+
+    KO_DOCKER_REPO="${KO_DOCKER_REPO:-ko.local}"
+    # Force back to "ko.local" if the don't set the USE_KO_DOCKER_REPO flag
+    (( ! USE_KO_DOCKER_REPO )) && KO_DOCKER_REPO="ko.local"
+
     RELEASE_GCS_BUCKET=""
   fi
 
