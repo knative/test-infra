@@ -84,6 +84,8 @@ test_function ${FAILURE} "error: cannot have both --dot-release and --auto-relea
 test_function ${FAILURE} "error: cannot have both --version and --auto-release set simultaneously" parse_flags --auto-release --version 1.0.0
 test_function ${FAILURE} "error: cannot have both --branch and --auto-release set simultaneously" parse_flags --auto-release --branch release-0.0
 
+test_function ${FAILURE} "error: cannot have both --release-gcs and --release-dir set simultaneously" parse_flags --release-gcs a --release-dir b
+
 test_function ${FAILURE} "error: missing parameter" parse_flags --from-nightly
 test_function ${FAILURE} "error: nightly tag" parse_flags --from-nightly aaa
 
@@ -96,14 +98,17 @@ echo ">> Testing GCR/GCS values"
 test_function ${SUCCESS} "GCR flag is ignored" parse_flags --release-gcr foo
 test_function ${SUCCESS} "GCS flag is ignored" parse_flags --release-gcs foo
 
+default_release_dir="$(ls -1 $(dirname $0)/../..)"
 test_function ${SUCCESS} ":ko.local:" call_function_post "echo :\$KO_DOCKER_REPO:" parse_flags
 test_function ${SUCCESS} "::" call_function_post "echo :\$RELEASE_GCS_BUCKET:" parse_flags
+test_function ${SUCCESS} ":${default_release_dir}:" call_function_post "echo :\$RELEASE_DIR:" parse_flags
 
 test_function ${SUCCESS} ":gcr.io/knative-nightly:" call_function_post "echo :\$KO_DOCKER_REPO:" parse_flags --publish
-test_function ${SUCCESS} ":knative-nightly/test-infra:" call_function_post "echo :\$RELEASE_GCS_BUCKET:" parse_flags --publish
+test_function ${SUCCESS} ":knative-nightly/test-infra:${default_release_dir}:" call_function_post "echo :\$RELEASE_GCS_BUCKET:\$RELEASE_DIR" parse_flags --publish
+test_function ${SUCCESS} ":foo::" call_function_post "echo :\$RELEASE_DIR:\$RELEASE_GCS_BUCKET:" parse_flags --publish --release-dir foo
 
 test_function ${SUCCESS} ":foo:" call_function_post "echo :\$KO_DOCKER_REPO:" parse_flags --release-gcr foo --publish
-test_function ${SUCCESS} ":foo:" call_function_post "echo :\$RELEASE_GCS_BUCKET:" parse_flags --release-gcs foo --publish
+test_function ${SUCCESS} ":foo::" call_function_post "echo :\$RELEASE_GCS_BUCKET:\$RELEASE_DIR:" parse_flags --release-gcs foo --publish
 
 echo ">> Testing publishing to GitHub"
 
