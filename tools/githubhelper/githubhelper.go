@@ -88,7 +88,8 @@ func listChangedFiles() {
 	files := make([]*github.CommitFile, 0)
 
 	listOptions := &github.ListOptions{
-		Page: 1,
+		Page:    1,
+		PerPage: 300,
 	}
 	for {
 		commitFiles, rsp, err := client.PullRequests.ListFiles(ctx, repoOwner, repoName, pullNumber, listOptions)
