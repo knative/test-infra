@@ -404,7 +404,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh --istio-version 1.2-latest --no-mesh"
+        - "./test/e2e-tests.sh --istio-version 1.4-latest --no-mesh"
         volumeMounts:
         - name: repoview-token
           mountPath: /etc/repoview-token
@@ -448,7 +448,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh --istio-version 1.2-latest --no-mesh"
+        - "./test/e2e-tests.sh --istio-version 1.4-latest --no-mesh"
         volumeMounts:
         - name: repoview-token
           mountPath: /etc/repoview-token
@@ -493,7 +493,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh --istio-version 1.2-latest --no-mesh"
+        - "./test/e2e-tests.sh --istio-version 1.4-latest --no-mesh"
         volumeMounts:
         - name: repoview-token
           mountPath: /etc/repoview-token
@@ -531,7 +531,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-upgrade-tests.sh --istio-version 1.2-latest --no-mesh"
+        - "./test/e2e-upgrade-tests.sh --istio-version 1.4-latest --no-mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -565,7 +565,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-upgrade-tests.sh --istio-version 1.2-latest --no-mesh"
+        - "./test/e2e-upgrade-tests.sh --istio-version 1.4-latest --no-mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -600,7 +600,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-upgrade-tests.sh --istio-version 1.2-latest --no-mesh"
+        - "./test/e2e-upgrade-tests.sh --istio-version 1.4-latest --no-mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -838,214 +838,6 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
-  - name: pull-knative-serving-istio-1.2-mesh
-    agent: kubernetes
-    context: pull-knative-serving-istio-1.2-mesh
-    always_run: false
-    rerun_command: "/test pull-knative-serving-istio-1.2-mesh"
-    trigger: "(?m)^/test (all|pull-knative-serving-istio-1.2-mesh),?(\\s+|$)"
-    decorate: true
-    optional: true
-    branches:
-    - "release-0.7"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--run-test"
-        - "./test/e2e-tests.sh --istio-version 1.2-latest --mesh"
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-serving-istio-1.2-mesh
-    agent: kubernetes
-    context: pull-knative-serving-istio-1.2-mesh
-    always_run: false
-    rerun_command: "/test pull-knative-serving-istio-1.2-mesh"
-    trigger: "(?m)^/test (all|pull-knative-serving-istio-1.2-mesh),?(\\s+|$)"
-    decorate: true
-    optional: true
-    path_alias: knative.dev/serving
-    branches:
-    - "release-0.8"
-    - "release-0.9"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--run-test"
-        - "./test/e2e-tests.sh --istio-version 1.2-latest --mesh"
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-serving-istio-1.2-mesh
-    agent: kubernetes
-    context: pull-knative-serving-istio-1.2-mesh
-    always_run: false
-    rerun_command: "/test pull-knative-serving-istio-1.2-mesh"
-    trigger: "(?m)^/test (all|pull-knative-serving-istio-1.2-mesh),?(\\s+|$)"
-    decorate: true
-    optional: true
-    path_alias: knative.dev/serving
-    skip_branches:
-    - "release-0.7"
-    - "release-0.8"
-    - "release-0.9"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--run-test"
-        - "./test/e2e-tests.sh --istio-version 1.2-latest --mesh"
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-serving-istio-1.2-no-mesh
-    agent: kubernetes
-    context: pull-knative-serving-istio-1.2-no-mesh
-    always_run: false
-    rerun_command: "/test pull-knative-serving-istio-1.2-no-mesh"
-    trigger: "(?m)^/test (all|pull-knative-serving-istio-1.2-no-mesh),?(\\s+|$)"
-    decorate: true
-    optional: true
-    branches:
-    - "release-0.7"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--run-test"
-        - "./test/e2e-tests.sh --istio-version 1.2-latest --no-mesh"
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-serving-istio-1.2-no-mesh
-    agent: kubernetes
-    context: pull-knative-serving-istio-1.2-no-mesh
-    always_run: false
-    rerun_command: "/test pull-knative-serving-istio-1.2-no-mesh"
-    trigger: "(?m)^/test (all|pull-knative-serving-istio-1.2-no-mesh),?(\\s+|$)"
-    decorate: true
-    optional: true
-    path_alias: knative.dev/serving
-    branches:
-    - "release-0.8"
-    - "release-0.9"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--run-test"
-        - "./test/e2e-tests.sh --istio-version 1.2-latest --no-mesh"
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-serving-istio-1.2-no-mesh
-    agent: kubernetes
-    context: pull-knative-serving-istio-1.2-no-mesh
-    always_run: false
-    rerun_command: "/test pull-knative-serving-istio-1.2-no-mesh"
-    trigger: "(?m)^/test (all|pull-knative-serving-istio-1.2-no-mesh),?(\\s+|$)"
-    decorate: true
-    optional: true
-    path_alias: knative.dev/serving
-    skip_branches:
-    - "release-0.7"
-    - "release-0.8"
-    - "release-0.9"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--run-test"
-        - "./test/e2e-tests.sh --istio-version 1.2-latest --no-mesh"
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: test-account
-        secret:
-          secretName: test-account
   - name: pull-knative-serving-istio-1.3-mesh
     agent: kubernetes
     context: pull-knative-serving-istio-1.3-mesh
@@ -1241,6 +1033,214 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-tests.sh --istio-version 1.3-latest --no-mesh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-istio-1.4-mesh
+    agent: kubernetes
+    context: pull-knative-serving-istio-1.4-mesh
+    always_run: false
+    rerun_command: "/test pull-knative-serving-istio-1.4-mesh"
+    trigger: "(?m)^/test (all|pull-knative-serving-istio-1.4-mesh),?(\\s+|$)"
+    decorate: true
+    optional: true
+    branches:
+    - "release-0.7"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version 1.4-latest --mesh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-istio-1.4-mesh
+    agent: kubernetes
+    context: pull-knative-serving-istio-1.4-mesh
+    always_run: false
+    rerun_command: "/test pull-knative-serving-istio-1.4-mesh"
+    trigger: "(?m)^/test (all|pull-knative-serving-istio-1.4-mesh),?(\\s+|$)"
+    decorate: true
+    optional: true
+    path_alias: knative.dev/serving
+    branches:
+    - "release-0.8"
+    - "release-0.9"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version 1.4-latest --mesh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-istio-1.4-mesh
+    agent: kubernetes
+    context: pull-knative-serving-istio-1.4-mesh
+    always_run: false
+    rerun_command: "/test pull-knative-serving-istio-1.4-mesh"
+    trigger: "(?m)^/test (all|pull-knative-serving-istio-1.4-mesh),?(\\s+|$)"
+    decorate: true
+    optional: true
+    path_alias: knative.dev/serving
+    skip_branches:
+    - "release-0.7"
+    - "release-0.8"
+    - "release-0.9"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version 1.4-latest --mesh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-istio-1.4-no-mesh
+    agent: kubernetes
+    context: pull-knative-serving-istio-1.4-no-mesh
+    always_run: false
+    rerun_command: "/test pull-knative-serving-istio-1.4-no-mesh"
+    trigger: "(?m)^/test (all|pull-knative-serving-istio-1.4-no-mesh),?(\\s+|$)"
+    decorate: true
+    optional: true
+    branches:
+    - "release-0.7"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version 1.4-latest --no-mesh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-istio-1.4-no-mesh
+    agent: kubernetes
+    context: pull-knative-serving-istio-1.4-no-mesh
+    always_run: false
+    rerun_command: "/test pull-knative-serving-istio-1.4-no-mesh"
+    trigger: "(?m)^/test (all|pull-knative-serving-istio-1.4-no-mesh),?(\\s+|$)"
+    decorate: true
+    optional: true
+    path_alias: knative.dev/serving
+    branches:
+    - "release-0.8"
+    - "release-0.9"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version 1.4-latest --no-mesh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-istio-1.4-no-mesh
+    agent: kubernetes
+    context: pull-knative-serving-istio-1.4-no-mesh
+    always_run: false
+    rerun_command: "/test pull-knative-serving-istio-1.4-no-mesh"
+    trigger: "(?m)^/test (all|pull-knative-serving-istio-1.4-no-mesh),?(\\s+|$)"
+    decorate: true
+    optional: true
+    path_alias: knative.dev/serving
+    skip_branches:
+    - "release-0.7"
+    - "release-0.8"
+    - "release-0.9"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version 1.4-latest --no-mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -3967,72 +3967,6 @@ periodics:
       secret:
         secretName: test-account
 - cron: "40 */2 * * *"
-  name: ci-knative-serving-istio-1.2-mesh
-  agent: kubernetes
-  decorate: true
-  extra_refs:
-  - org: knative
-    repo: serving
-    base_ref: master
-    path_alias: knative.dev/serving
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      command:
-      - runner.sh
-      args:
-      - "./test/e2e-tests.sh"
-      - "--istio-version"
-      - "1.2-latest"
-      - "--mesh"
-      volumeMounts:
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
-      env:
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-    volumes:
-    - name: test-account
-      secret:
-        secretName: test-account
-- cron: "1 */2 * * *"
-  name: ci-knative-serving-istio-1.2-no-mesh
-  agent: kubernetes
-  decorate: true
-  extra_refs:
-  - org: knative
-    repo: serving
-    base_ref: master
-    path_alias: knative.dev/serving
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      command:
-      - runner.sh
-      args:
-      - "./test/e2e-tests.sh"
-      - "--istio-version"
-      - "1.2-latest"
-      - "--no-mesh"
-      volumeMounts:
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
-      env:
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-    volumes:
-    - name: test-account
-      secret:
-        secretName: test-account
-- cron: "50 */2 * * *"
   name: ci-knative-serving-istio-1.3-mesh
   agent: kubernetes
   decorate: true
@@ -4065,7 +3999,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "12 */2 * * *"
+- cron: "1 */2 * * *"
   name: ci-knative-serving-istio-1.3-no-mesh
   agent: kubernetes
   decorate: true
@@ -4084,6 +4018,72 @@ periodics:
       - "./test/e2e-tests.sh"
       - "--istio-version"
       - "1.3-latest"
+      - "--no-mesh"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "50 */2 * * *"
+  name: ci-knative-serving-istio-1.4-mesh
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+    path_alias: knative.dev/serving
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/e2e-tests.sh"
+      - "--istio-version"
+      - "1.4-latest"
+      - "--mesh"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "12 */2 * * *"
+  name: ci-knative-serving-istio-1.4-no-mesh
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: master
+    path_alias: knative.dev/serving
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/e2e-tests.sh"
+      - "--istio-version"
+      - "1.4-latest"
       - "--no-mesh"
       volumeMounts:
       - name: test-account

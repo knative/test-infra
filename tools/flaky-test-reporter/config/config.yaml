@@ -20,18 +20,6 @@ jobConfigs:
     slackChannels:
       - name: serving-api
         identity: CA4DNJ9A4
-  - name: ci-knative-serving-istio-1.2-mesh
-    repo: serving
-    type: postsubmit
-    slackChannels:
-      - name: networking
-        identity: CA9RHBGJX
-  - name: ci-knative-serving-istio-1.2-no-mesh
-    repo: serving
-    type: postsubmit
-    slackChannels:
-      - name: networking
-        identity: CA9RHBGJX
   - name: ci-knative-serving-istio-1.3-mesh
     repo: serving
     type: postsubmit
@@ -39,6 +27,18 @@ jobConfigs:
       - name: networking
         identity: CA9RHBGJX
   - name: ci-knative-serving-istio-1.3-no-mesh
+    repo: serving
+    type: postsubmit
+    slackChannels:
+      - name: networking
+        identity: CA9RHBGJX
+  - name: ci-knative-serving-istio-1.4-mesh
+    repo: serving
+    type: postsubmit
+    slackChannels:
+      - name: networking
+        identity: CA9RHBGJX
+  - name: ci-knative-serving-istio-1.4-no-mesh
     repo: serving
     type: postsubmit
     slackChannels:
