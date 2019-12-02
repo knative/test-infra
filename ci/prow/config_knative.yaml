@@ -177,6 +177,12 @@ presubmits:
     - unit-tests: true
       dot-dev: true
 
+  knative/sample-source:
+    - build-tests: true
+      dot-dev: true
+    - unit-tests: true
+      dot-dev: true
+
   google/knative-gcp:
     - repo-settings:
       performance: true

@@ -25,6 +25,7 @@ approve:
   - "knative/observability"
   - "knative/pkg"
   - "knative/sample-controller"
+  - "knative/sample-source"
   - "knative/serving"
   - "knative/serving-operator"
   - "knative/test-infra"
@@ -303,6 +304,30 @@ plugins:
   - yuks
   - project
   knative/sample-controller:
+  - approve
+  - assign
+  - blunderbuss
+  - buildifier
+  - cat
+  - dog
+  - golint
+  - heart
+  - help
+  - hold
+  - label
+  - lgtm
+  - lifecycle
+  - milestone
+  - owners-label
+  - shrug
+  - size
+  - skip
+  - trigger
+  - verify-owners
+  - wip
+  - yuks
+  - project
+  knative/sample-source:
   - approve
   - assign
   - blunderbuss
