@@ -5602,6 +5602,42 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+- cron: "36 * * * *"
+  name: ci-knative-sample-source-continuous
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-sample-source-continuous
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: sample-source
+    base_ref: master
+    path_alias: knative.dev/sample-source
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/presubmit-tests.sh"
+      - "--all-tests"
+      - "--emit-metrics"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
 - cron: "42 * * * *"
   name: ci-knative-test-infra-continuous
   agent: kubernetes

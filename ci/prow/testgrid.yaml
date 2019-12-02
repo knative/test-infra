@@ -176,6 +176,10 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-sample-controller-continuous
   alert_stale_results_hours: 3
   num_failures_to_alert: 3
+- name: ci-knative-sample-source-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-sample-source-continuous
+  alert_stale_results_hours: 3
+  num_failures_to_alert: 3
 - name: ci-knative-test-infra-continuous
   gcs_prefix: knative-prow/logs/ci-knative-test-infra-continuous
   alert_stale_results_hours: 3
@@ -384,6 +388,11 @@ dashboards:
   - name: continuous
     test_group_name: ci-knative-sample-controller-continuous
     base_options: "sort-by-name="
+- name: sample-source
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-sample-source-continuous
+    base_options: "sort-by-name="
 - name: test-infra
   dashboard_tab:
   - name: continuous
@@ -502,6 +511,7 @@ dashboard_groups:
   - "caching"
   - "observability"
   - "sample-controller"
+  - "sample-source"
   - "test-infra"
   - "serving-operator"
   - "eventing-operator"

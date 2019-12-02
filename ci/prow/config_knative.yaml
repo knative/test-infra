@@ -423,6 +423,10 @@ periodics:
     - continuous: true
       dot-dev: true
 
+  knative/sample-source:
+    - continuous: true
+      dot-dev: true
+
   knative/test-infra:
     - continuous: true
       dot-dev: true
