@@ -27,7 +27,8 @@ required = [
 
 [[override]]
   name = "knative.dev/pkg"
-  branch = "master"
+  source = "github.com/yt3liu/pkg"
+  branch = "boskos-update"
 
 # TODO(mattmoor): Find a way to bundle the licenseclassifier's
 # license database, so folks don't have to go get it.
