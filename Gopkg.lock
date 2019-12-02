@@ -403,8 +403,8 @@
   revision = "5458503e8b07feacd8c3d38ab77e959326bda435"
 
 [[projects]]
-  branch = "master"
-  digest = "1:663360c7438d6f16bc164ff6891ce45c74f601fa84dc9b87e9acddbbee818c9f"
+  branch = "cluster-err"
+  digest = "1:c39752f90946d5c6a19dd40ca4ed62bf4416f0c5b02e7d966f7c72014c3cb091"
   name = "knative.dev/pkg"
   packages = [
     "test/gcs",
@@ -426,7 +426,8 @@
     "testutils/metahelper/client",
   ]
   pruneopts = "NUT"
-  revision = "15e34cab9467bc3399a531a1e0dced02b3e89274"
+  revision = "fef7815d62bb9ff952188bd3eb9283eeab68209e"
+  source = "github.com/yt3liu/pkg"
 
 [[projects]]
   digest = "1:8730e0150dfb2b7e173890c8b9868e7a273082ef8e39f4940e3506a481cf895c"
