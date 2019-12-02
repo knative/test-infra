@@ -57,7 +57,7 @@ RUN ko version > /ko_version
 
 # Extra tools through gem
 RUN gem install mixlib-config -v 2.2.4  # required because ruby is 2.1
-RUN gem install mdl
+RUN gem install mdl -v 0.5  # required because later version of mdl requires ruby >= 2.4
 
 # Temporarily add test-infra to the image to build custom tools
 ADD . /go/src/knative.dev/test-infra
