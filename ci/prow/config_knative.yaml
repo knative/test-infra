@@ -73,6 +73,12 @@ presubmits:
       args:
       - "--run-test"
       - "./test/e2e-tests.sh --gloo-version 0.17.1"
+    - custom-test: kourier-stable
+      always_run: false
+      optional: true
+      args:
+        - "--run-test"
+        - "./test/e2e-tests.sh --kourier-version stable"
     - custom-test: https
       always_run: false
       optional: true
@@ -283,6 +289,10 @@ periodics:
       go113: true
     - custom-job: gloo-0.17.1
       full-command: "./test/e2e-tests.sh --gloo-version 0.17.1"
+      dot-dev: true
+      go113: true
+    - custom-job: kourier-stable
+      full-command: "./test/e2e-tests.sh --kourier-version stable"
       dot-dev: true
       go113: true
     - nightly: true
