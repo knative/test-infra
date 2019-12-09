@@ -3946,7 +3946,6 @@ periodics:
       args:
       - "./test/presubmit-tests.sh"
       - "--all-tests"
-      - "--emit-metrics"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -4559,7 +4558,6 @@ periodics:
       args:
       - "./test/presubmit-tests.sh"
       - "--all-tests"
-      - "--emit-metrics"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -4740,7 +4738,6 @@ periodics:
       args:
       - "./test/presubmit-tests.sh"
       - "--all-tests"
-      - "--emit-metrics"
       securityContext:
         privileged: true
       volumeMounts:
@@ -4805,7 +4802,6 @@ periodics:
       args:
       - "./test/presubmit-tests.sh"
       - "--all-tests"
-      - "--emit-metrics"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -5189,7 +5185,6 @@ periodics:
       args:
       - "./test/presubmit-tests.sh"
       - "--all-tests"
-      - "--emit-metrics"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -5573,7 +5568,6 @@ periodics:
       args:
       - "./test/presubmit-tests.sh"
       - "--all-tests"
-      - "--emit-metrics"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -5631,7 +5625,6 @@ periodics:
       args:
       - "./test/presubmit-tests.sh"
       - "--all-tests"
-      - "--emit-metrics"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -5688,7 +5681,6 @@ periodics:
       args:
       - "./test/presubmit-tests.sh"
       - "--all-tests"
-      - "--emit-metrics"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -5724,7 +5716,6 @@ periodics:
       args:
       - "./test/presubmit-tests.sh"
       - "--all-tests"
-      - "--emit-metrics"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -5760,7 +5751,6 @@ periodics:
       args:
       - "./test/presubmit-tests.sh"
       - "--all-tests"
-      - "--emit-metrics"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -5796,7 +5786,6 @@ periodics:
       args:
       - "./test/presubmit-tests.sh"
       - "--all-tests"
-      - "--emit-metrics"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -5832,7 +5821,6 @@ periodics:
       args:
       - "./test/presubmit-tests.sh"
       - "--all-tests"
-      - "--emit-metrics"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -6044,7 +6032,6 @@ periodics:
       args:
       - "./test/presubmit-tests.sh"
       - "--all-tests"
-      - "--emit-metrics"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -6255,7 +6242,6 @@ periodics:
       args:
       - "./test/presubmit-tests.sh"
       - "--all-tests"
-      - "--emit-metrics"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
