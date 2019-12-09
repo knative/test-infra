@@ -165,10 +165,7 @@ This is a helper script for Knative E2E test scripts. To use it:
    (or `report_go_test()` if you need a more fine-grained control) and call
    `fail_test()` or `success()` if any of them failed. The environment variable
    `KO_DOCKER_REPO` and `E2E_PROJECT_ID` will be set according to the test
-   cluster. You can also use the following boolean (0 is false, 1 is true)
-   environment variables for the logic:
-
-   All environment variables above are marked read-only.
+   cluster.
 
 **Notes:**
 
