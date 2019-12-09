@@ -68,9 +68,7 @@ tests to be executed, in the right order (i.e., build, then unit, then
 integration tests).
 
 Use the flags `--build-tests`, `--unit-tests` and `--integration-tests` to run a
-specific set of tests. The flag `--emit-metrics` is used to emit metrics when
-running the tests, and is automatically handled by the default action for
-integration tests (see above).
+specific set of tests.
 
 To run a specific program as a test, use the `--run-test` flag, and provide the
 program as the argument. If arguments are required for the program, pass
@@ -169,8 +167,6 @@ This is a helper script for Knative E2E test scripts. To use it:
    `KO_DOCKER_REPO` and `E2E_PROJECT_ID` will be set according to the test
    cluster. You can also use the following boolean (0 is false, 1 is true)
    environment variables for the logic:
-
-   - `EMIT_METRICS`: true if `--emit-metrics` was passed.
 
    All environment variables above are marked read-only.
 
