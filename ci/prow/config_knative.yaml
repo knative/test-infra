@@ -87,6 +87,10 @@ presubmits:
       - "./test/e2e-tests.sh --https"
 
   knative/client:
+    - repo-settings:
+      go112-branches:
+      - release-0.9
+      - release-0.10
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -107,6 +111,11 @@ presubmits:
       legacy-branches:
       - release-0.7
       - release-0.8
+      go112-branches:
+      - release-0.7
+      - release-0.8
+      - release-0.9
+      - release-0.10
     - build-tests: true
       resources:
         requests:
@@ -122,6 +131,11 @@ presubmits:
       legacy-branches:
       - release-0.7
       - release-0.8
+      go112-branches:
+      - release-0.7
+      - release-0.8
+      - release-0.9
+      - release-0.10
     - build-tests: true
       resources:
         requests:
@@ -133,6 +147,12 @@ presubmits:
     - go-coverage: true
 
   knative/docs:
+    - repo-settings:
+      go112-branches:
+      - release-0.7
+      - release-0.8
+      - release-0.9
+      - release-0.10
     - build-tests: true
     - unit-tests: true
     - integration-tests: true
@@ -163,6 +183,10 @@ presubmits:
       dot-dev: true
 
   knative/caching:
+    - repo-settings:
+      go112-branches:
+      - release-0.9
+      - release-0.10
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -192,6 +216,10 @@ presubmits:
   google/knative-gcp:
     - repo-settings:
       performance: true
+      go112-branches:
+      - release-0.8
+      - release-0.9
+      - release-0.10
     - build-tests: true
     - unit-tests: true
     - integration-tests: true
@@ -218,6 +246,10 @@ presubmits:
       dot-dev: true
 
   knative/eventing-operator:
+    - repo-settings:
+      go112-branches:
+      - release-0.9
+      - release-0.10
     - build-tests: true
       dot-dev: true
     - unit-tests: true
