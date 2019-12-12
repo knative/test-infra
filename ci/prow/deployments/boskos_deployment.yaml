@@ -19,7 +19,6 @@ metadata:
   name: boskos
   namespace: test-pods
 spec:
-  serviceName: "boskos"
   replicas: 1  # one canonical source of resources
   selector:
     matchLabels:
