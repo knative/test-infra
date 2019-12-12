@@ -12,15 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Start of StatefulSet
+# Start of Deployment
 apiVersion: apps/v1beta1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: boskos
   namespace: test-pods
 spec:
   serviceName: "boskos"
   replicas: 1  # one canonical source of resources
+  selector:
+    matchLabels:
+      app: boskos
   template:
     metadata:
       labels:
@@ -33,15 +36,12 @@ spec:
       - name: boskos
         image: gcr.io/k8s-prow/boskos/boskos:v20191204-a3f3e1686
         args:
-        - --storage=/store/boskos.json
         - --config=/etc/config/config
         - --namespace=test-pods
         ports:
           - containerPort: 8080
             protocol: TCP
         volumeMounts:
-        - name: boskos-volume
-          mountPath: /store
         - name: boskos-config
           mountPath: /etc/config
           readOnly: true
@@ -49,12 +49,3 @@ spec:
         - name: boskos-config
           configMap:
             name: resources
-  volumeClaimTemplates:
-  - metadata:
-      name: boskos-volume
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      storageClassName: boskos
-      resources:
-        requests:
-          storage: 1Gi
