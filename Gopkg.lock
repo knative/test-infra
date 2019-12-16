@@ -830,7 +830,7 @@
 
 [[projects]]
   branch = "boskos-update"
-  digest = "1:1187c5f9dd354da0a7d2d4e8e112b794f987cfb442849941108efd437e84f3ee"
+  digest = "1:452a796772176456248c9c77924077cf775ec5afff4190db92f35b1f76d04439"
   name = "knative.dev/pkg"
   packages = [
     "changeset",
@@ -861,7 +861,7 @@
     "testutils/metahelper/client",
   ]
   pruneopts = "NUT"
-  revision = "0fd749cc4ae25b709ba794e395d3261fb13e499b"
+  revision = "4420099dbe4874c555fea4e9b989f42c6dbea48a"
   source = "github.com/yt3liu/pkg"
 
 [[projects]]

@@ -50,14 +50,16 @@ type Client struct {
 
 // NewClient creates a boskos Client with GKE operation. The owner of any resources acquired
 // by this client is the same as the host name. `user` and `pass` are used for basic
-// authentication for boskos client where pass is a password file.
-func NewClient(host *string, user string, pass string) (*Client, error) {
-	if host == nil {
-		hostName := common.GetOSEnv("JOB_NAME")
-		host = &hostName
+// authentication for boskos client where pass is a password file. `user` and `pass` fields
+// are passed directly to k8s boskos client. Refer to
+// [k8s boskos](https://github.com/kubernetes/test-infra/tree/master/boskos) for more details.
+// If host is "", it looks up JOB_NAME environment variable and set it to be the host name.
+func NewClient(host string, user string, pass string) (*Client, error) {
+	if host == "" {
+		host = common.GetOSEnv("JOB_NAME")
 	}
 
-	c, err := boskosclient.NewClient(*host, boskosURI, user, pass)
+	c, err := boskosclient.NewClient(host, boskosURI, user, pass)
 	if err != nil {
 		return nil, err
 	}
