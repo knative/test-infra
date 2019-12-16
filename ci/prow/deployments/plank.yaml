@@ -29,7 +29,7 @@ spec:
       containers:
       - name: plank
         # Update plank utility_images versions in config.yaml when updating this version
-        image: gcr.io/k8s-prow/plank:v20191204-d7993c80e
+        image: gcr.io/k8s-prow/plank:v20191210-5844d8374
         args:
         - --dry-run=false
         volumeMounts:
