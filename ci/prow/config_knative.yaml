@@ -378,6 +378,14 @@ periodics:
     - nightly: true
       dot-dev: true
       go113: true
+    - custom-job: tekton
+      # This job must run after the nightly job so it uses the latest nightly.
+      # Nightly jobs run between 1AM and 3AM PST.
+      # Run this job at 5AM PST (1PM UTC)
+      cron: "0 13 * * *"
+      full-command: "./test/tekton-tests.sh"
+      dot-dev: true
+      go113: true
     - dot-release: true
       dot-dev: true
       go113: true
