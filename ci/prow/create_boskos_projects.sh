@@ -36,10 +36,10 @@ LAST_INDEX=$(grep "${BOSKOS_PROJECT_PREFIX}" ${BOSKOS_RESOURCE_FILE} | grep -o "
 [[ -z "${LAST_INDEX}" ]] && LAST_INDEX=0
 for (( i=1; i<=${NUMBER}; i++ )); do
   PROJECT="$(printf ${BOSKOS_PROJECT_PREFIX}%02d $(( ${LAST_INDEX} + i )))"
-  # This Folder ID is google.com/google-default
+  # This Folder ID is google.com/knative
   # If this needs to be changed for any reason, GCP project settings must be updated.
   # Details are available in Google's internal issue 137963841.
-  gcloud projects create ${PROJECT} --folder=396521612403
+  gcloud projects create ${PROJECT} --folder=829970148577
   gcloud beta billing projects link ${PROJECT} --billing-account=${BILLING_ACCOUNT}
 
   LAST_PROJECT=$(grep "${BOSKOS_PROJECT_PREFIX}" ${BOSKOS_RESOURCE_FILE} | tail -1)
