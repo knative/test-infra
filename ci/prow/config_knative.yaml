@@ -95,6 +95,13 @@ presubmits:
       args:
         - "--run-test"
         - "./test/e2e-tests.sh --contour-version latest"
+    - custom-test: ambassador-latest
+      dot-dev: true
+      always_run: false
+      optional: true
+      args:
+        - "--run-test"
+        - "./test/e2e-tests.sh --ambassador-version 0.86.1"
     - custom-test: https
       dot-dev: true
       always_run: false
@@ -358,6 +365,10 @@ periodics:
       go113: true
     - custom-job: contour-latest
       full-command: "./test/e2e-tests.sh --contour-version latest"
+      dot-dev: true
+      go113: true
+    - custom-job: ambassador-latest
+      full-command: "./test/e2e-tests.sh --ambassador-version 0.86.1"
       dot-dev: true
       go113: true
     - nightly: true

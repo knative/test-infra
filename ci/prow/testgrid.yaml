@@ -88,6 +88,10 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-serving-contour-latest
   alert_stale_results_hours: 3
   num_failures_to_alert: 3
+- name: ci-knative-serving-ambassador-latest
+  gcs_prefix: knative-prow/logs/ci-knative-serving-ambassador-latest
+  alert_stale_results_hours: 3
+  num_failures_to_alert: 3
 - name: ci-knative-serving-nightly-release
   gcs_prefix: knative-prow/logs/ci-knative-serving-nightly-release
 - name: ci-knative-serving-dot-release
@@ -311,6 +315,9 @@ dashboards:
     base_options: "sort-by-name="
   - name: contour-latest
     test_group_name: ci-knative-serving-contour-latest
+    base_options: "sort-by-name="
+  - name: ambassador-latest
+    test_group_name: ci-knative-serving-ambassador-latest
     base_options: "sort-by-name="
   - name: nightly
     test_group_name: ci-knative-serving-nightly-release
