@@ -101,7 +101,7 @@ presubmits:
       optional: true
       args:
         - "--run-test"
-        - "./test/e2e-tests.sh --ambassador-version 0.86.1"
+        - "./test/e2e-tests.sh --ambassador-version latest"
     - custom-test: https
       dot-dev: true
       always_run: false
@@ -368,7 +368,7 @@ periodics:
       dot-dev: true
       go113: true
     - custom-job: ambassador-latest
-      full-command: "./test/e2e-tests.sh --ambassador-version 0.86.1"
+      full-command: "./test/e2e-tests.sh --ambassador-version latest"
       dot-dev: true
       go113: true
     - nightly: true

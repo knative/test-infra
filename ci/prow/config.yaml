@@ -987,7 +987,7 @@ presubmits:
           args:
             - "./test/presubmit-tests.sh"
             - "--run-test"
-            - "./test/e2e-tests.sh --ambassador-version 0.86.1"
+            - "./test/e2e-tests.sh --ambassador-version latest"
           volumeMounts:
             - name: test-account
               mountPath: /etc/test-account
@@ -1022,7 +1022,7 @@ presubmits:
           args:
             - "./test/presubmit-tests.sh"
             - "--run-test"
-            - "./test/e2e-tests.sh --ambassador-version 0.86.1"
+            - "./test/e2e-tests.sh --ambassador-version latest"
           volumeMounts:
             - name: test-account
               mountPath: /etc/test-account
@@ -1058,7 +1058,7 @@ presubmits:
           args:
             - "./test/presubmit-tests.sh"
             - "--run-test"
-            - "./test/e2e-tests.sh --ambassador-version 0.86.1"
+            - "./test/e2e-tests.sh --ambassador-version latest"
           volumeMounts:
             - name: test-account
               mountPath: /etc/test-account
@@ -5976,7 +5976,7 @@ periodics:
         args:
           - "./test/e2e-tests.sh"
           - "--ambassador-version"
-          - "0.86.1"
+          - "latest"
         volumeMounts:
           - name: test-account
             mountPath: /etc/test-account
