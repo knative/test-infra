@@ -63,6 +63,9 @@ deck:
           - 'boskos failed to acquire project'
           # cluster creation error
           - 'failed creating test cluster'
+          # Knative setup errors
+          - 'Knative setup failed'
+          - 'timeout waiting for pods to come up'
       required_files:
       - build-log.txt
     - lens:
