@@ -57,6 +57,8 @@ func defaultSubscriberClientOptions() []option.ClientOption {
 	return []option.ClientOption{
 		option.WithEndpoint("pubsub.googleapis.com:443"),
 		option.WithScopes(DefaultAuthScopes()...),
+		option.WithGRPCDialOption(grpc.WithDefaultCallOptions(
+			grpc.MaxCallRecvMsgSize(math.MaxInt32))),
 	}
 }
 
@@ -110,6 +112,21 @@ func defaultSubscriberCallOptions() *SubscriberCallOptions {
 				})
 			}),
 		},
+		{"streaming_messaging", "streaming_pull"}: {
+			gax.WithRetry(func() gax.Retryer {
+				return gax.OnCodes([]codes.Code{
+					codes.Aborted,
+					codes.DeadlineExceeded,
+					codes.Internal,
+					codes.ResourceExhausted,
+					codes.Unavailable,
+				}, gax.Backoff{
+					Initial:    100 * time.Millisecond,
+					Max:        60000 * time.Millisecond,
+					Multiplier: 1.3,
+				})
+			}),
+		},
 	}
 	return &SubscriberCallOptions{
 		CreateSubscription: retry[[2]string{"default", "idempotent"}],
@@ -120,7 +137,7 @@ func defaultSubscriberCallOptions() *SubscriberCallOptions {
 		ModifyAckDeadline:  retry[[2]string{"default", "non_idempotent"}],
 		Acknowledge:        retry[[2]string{"messaging", "non_idempotent"}],
 		Pull:               retry[[2]string{"messaging", "idempotent"}],
-		StreamingPull:      retry[[2]string{"streaming_messaging", "none"}],
+		StreamingPull:      retry[[2]string{"streaming_messaging", "streaming_pull"}],
 		ModifyPushConfig:   retry[[2]string{"default", "non_idempotent"}],
 		ListSnapshots:      retry[[2]string{"default", "idempotent"}],
 		CreateSnapshot:     retry[[2]string{"default", "non_idempotent"}],
