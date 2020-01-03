@@ -40,7 +40,7 @@ if [[ -z "${BOSKOS_PROJECTS}" ]]; then
     exit 0
 fi
 
-echo "${BOSKOS_PROJECTS}" | while read boskos_project ; do
+for boskos_project in ${BOSKOS_PROJECTS}; do
     # Set permissions for this project
    "./set_boskos_permissions.sh" ${boskos_project} $@
 done
