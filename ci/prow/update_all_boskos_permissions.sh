@@ -26,14 +26,14 @@ readonly BOSKOS_RESOURCE_FILE=${BOSKOS_RESOURCE_FILE:-boskos_resources.yaml}
 readonly BOSKOS_PROJECT_PREFIX=${BOSKOS_PROJECT_PREFIX:-knative-boskos-}
 
 if [[ ! -f ${BOSKOS_RESOURCE_FILE} ]]; then
-  echo "${BOSKOS_RESOURCE_FILE} does not exist or is not readable"
+  echo "${BOSKOS_RESOURCE_FILE} does not exist"
   exit 1
 fi
 
 # Get the all boskos project names from the resource file. Each project separated by new line
 BOSKOS_PROJECTS=$(grep "${BOSKOS_PROJECT_PREFIX}" ${BOSKOS_RESOURCE_FILE} | grep -o "${BOSKOS_PROJECT_PREFIX}[0-9]\+")
 if [[ -z "${BOSKOS_PROJECTS}" ]]; then
-  echo "There's no boskos projects with prefix ${BOSKOS_PROJECT_PREFIX} to update."
+  echo "There's no Boskos project with prefix ${BOSKOS_PROJECT_PREFIX} to update."
   exit 0
 fi
 
