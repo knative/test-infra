@@ -52,6 +52,12 @@ readonly RESOURCES=(
     "roles/storage.admin"
     "prow-job@knative-tests.iam.gserviceaccount.com"
 
+    "roles/pubsub.admin"
+    "prow-job@knative-tests.iam.gserviceaccount.com"
+
+    "roles/logging.configWriter"
+    "prow-job@knative-tests.iam.gserviceaccount.com"
+
     "roles/viewer"
     "knative-dev@googlegroups.com"
 
