@@ -16,10 +16,7 @@ presubmits:
   knative/serving:
     - repo-settings:
       performance: true
-      legacy-branches:
-      - release-0.7
       go112-branches:
-      - release-0.7
       - release-0.8
       - release-0.9
     - build-tests: true
@@ -109,10 +106,8 @@ presubmits:
     - repo-settings:
       performance: true
       legacy-branches:
-      - release-0.7
       - release-0.8
       go112-branches:
-      - release-0.7
       - release-0.8
       - release-0.9
       - release-0.10
@@ -129,10 +124,8 @@ presubmits:
   knative/eventing-contrib:
     - repo-settings:
       legacy-branches:
-      - release-0.7
       - release-0.8
       go112-branches:
-      - release-0.7
       - release-0.8
       - release-0.9
       - release-0.10
@@ -149,7 +142,6 @@ presubmits:
   knative/docs:
     - repo-settings:
       go112-branches:
-      - release-0.7
       - release-0.8
       - release-0.9
       - release-0.10
@@ -167,7 +159,6 @@ presubmits:
   knative/pkg:
     - repo-settings:
       go112-branches:
-      - release-0.7
       - release-0.8
       - release-0.9
       - release-0.10
@@ -308,8 +299,6 @@ periodics:
         limits:
           memory: 16Gi
     - branch-ci: true
-      release: "0.7"
-    - branch-ci: true
       release: "0.8"
       dot-dev: true
     - branch-ci: true
@@ -317,6 +306,10 @@ periodics:
       dot-dev: true
     - branch-ci: true
       release: "0.10"
+      dot-dev: true
+      go113: true
+    - branch-ci: true
+      release: "0.11"
       dot-dev: true
       go113: true
     - custom-job: istio-1.3-mesh
@@ -375,6 +368,10 @@ periodics:
     - continuous: true
       dot-dev: true
       go113: true
+    - branch-ci: true
+      release: "0.11"
+      dot-dev: true
+      go113: true
     - nightly: true
       dot-dev: true
       go113: true
@@ -408,8 +405,6 @@ periodics:
         limits:
           memory: 16Gi
     - branch-ci: true
-      release: "0.7"
-    - branch-ci: true
       release: "0.8"
     - branch-ci: true
       release: "0.9"
@@ -417,6 +412,10 @@ periodics:
     - branch-ci: true
       release: "0.10"
       dot-dev: true
+    - branch-ci: true
+      release: "0.11"
+      dot-dev: true
+      go113: true
     - nightly: true
       dot-dev: true
       go113: true
@@ -452,8 +451,6 @@ periodics:
         limits:
           memory: 16Gi
     - branch-ci: true
-      release: "0.7"
-    - branch-ci: true
       release: "0.8"
     - branch-ci: true
       release: "0.9"
@@ -461,6 +458,10 @@ periodics:
     - branch-ci: true
       release: "0.10"
       dot-dev: true
+    - branch-ci: true
+      release: "0.11"
+      dot-dev: true
+      go113: true
     - nightly: true
       dot-dev: true
       go113: true
@@ -519,6 +520,10 @@ periodics:
     - continuous: true
       dot-dev: true
       go113: true
+    - branch-ci: true
+      release: "0.11"
+      dot-dev: true
+      go113: true
     - nightly: true
       dot-dev: true
       go113: true
@@ -535,6 +540,10 @@ periodics:
 
   knative/eventing-operator:
     - continuous: true
+      dot-dev: true
+      go113: true
+    - branch-ci: true
+      release: "0.11"
       dot-dev: true
       go113: true
     - nightly: true
