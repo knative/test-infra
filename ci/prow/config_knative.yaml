@@ -20,63 +20,76 @@ presubmits:
       - release-0.8
       - release-0.9
     - build-tests: true
+      dot-dev: true
       resources:
         requests:
           memory: 12Gi # Real request for this pod is 16 as sidecar requests 4
         limits:
           memory: 16Gi
     - unit-tests: true
+      dot-dev: true
     - integration-tests: true
+      dot-dev: true
       args:
       - "--run-test"
       - "./test/e2e-tests.sh --istio-version 1.3-latest --no-mesh"
     - custom-test: upgrade-tests
+      dot-dev: true
       args:
       - "--run-test"
       - "./test/e2e-upgrade-tests.sh --istio-version 1.3-latest --no-mesh"
     - custom-test: smoke-tests
+      dot-dev: true
       args:
       - "--run-test"
       - "./test/e2e-smoke-tests.sh"
     - go-coverage: true
       go-coverage-threshold: 80
+      dot-dev: true
     - custom-test: istio-1.3-mesh
+      dot-dev: true
       always_run: false
       optional: true
       args:
       - "--run-test"
       - "./test/e2e-tests.sh --istio-version 1.3-latest --mesh"
     - custom-test: istio-1.3-no-mesh
+      dot-dev: true
       always_run: false
       optional: true
       args:
       - "--run-test"
       - "./test/e2e-tests.sh --istio-version 1.3-latest --no-mesh"
     - custom-test: istio-1.4-mesh
+      dot-dev: true
       always_run: false
       optional: true
       args:
       - "--run-test"
       - "./test/e2e-tests.sh --istio-version 1.4-latest --mesh"
     - custom-test: istio-1.4-no-mesh
+      dot-dev: true
       always_run: false
       optional: true
       args:
       - "--run-test"
       - "./test/e2e-tests.sh --istio-version 1.4-latest --no-mesh"
     - custom-test: gloo-0.17.1
+      dot-dev: true
       always_run: false
       optional: true
       args:
       - "--run-test"
       - "./test/e2e-tests.sh --gloo-version 0.17.1"
     - custom-test: kourier-stable
+      dot-dev: true
       always_run: false
       optional: true
       args:
         - "--run-test"
         - "./test/e2e-tests.sh --kourier-version stable"
     - custom-test: https
+      dot-dev: true
       always_run: false
       optional: true
       args:
