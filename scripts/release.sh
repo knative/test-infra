@@ -437,7 +437,9 @@ function parse_flags() {
   fi
 
   [[ -z "${RELEASE_GCS_BUCKET}" && -z "${RELEASE_DIR}" ]] && abort "--release-gcs or --release-dir must be used"
-  [[ -n "${RELEASE_DIR}" ]] && mkdir -p "${RELEASE_DIR}" 2> /dev/null
+  if [[ -n "${RELEASE_DIR}" ]]; then
+    mkdir -p "${RELEASE_DIR}" || abort "cannot create release dir '${RELEASE_DIR}'"
+  fi
 
   # Get the commit, excluding any tags but keeping the "dirty" flag
   BUILD_COMMIT_HASH="$(git describe --always --dirty --match '^$')"
