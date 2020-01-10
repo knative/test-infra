@@ -50,6 +50,12 @@ jobConfigs:
     slackChannels:
       - name: networking
         identity: CA9RHBGJX
+  - name: ci-knative-serving-contour-latest
+    repo: serving
+    type: postsubmit
+    slackChannels:
+      - name: networking
+        identity: CA9RHBGJX
   - name: ci-knative-serving-kourier-stable
     repo: serving
     type: postsubmit
