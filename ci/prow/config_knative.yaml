@@ -88,6 +88,13 @@ presubmits:
       args:
         - "--run-test"
         - "./test/e2e-tests.sh --kourier-version stable"
+    - custom-test: contour-latest
+      dot-dev: true
+      always_run: false
+      optional: true
+      args:
+        - "--run-test"
+        - "./test/e2e-tests.sh --contour-version latest"
     - custom-test: https
       dot-dev: true
       always_run: false
@@ -347,6 +354,10 @@ periodics:
       go113: true
     - custom-job: kourier-stable
       full-command: "./test/e2e-tests.sh --kourier-version stable"
+      dot-dev: true
+      go113: true
+    - custom-job: contour-latest
+      full-command: "./test/e2e-tests.sh --contour-version latest"
       dot-dev: true
       go113: true
     - nightly: true
