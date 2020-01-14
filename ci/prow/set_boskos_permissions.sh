@@ -65,6 +65,7 @@ readonly RESOURCES=(
     "cloudresourcemanager.googleapis.com"
     "compute.googleapis.com"
     "container.googleapis.com"
+    "cloudscheduler.googleapis.com"
 )
 
 # Loop through the list of resources and add them.
