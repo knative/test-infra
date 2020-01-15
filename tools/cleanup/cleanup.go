@@ -37,7 +37,7 @@ import (
 	"github.com/google/go-containerregistry/pkg/v1/remote"
 	"github.com/pkg/errors"
 	"google.golang.org/api/option"
-	"knative.dev/test-infra/shared/common"
+	"knative.dev/pkg/test/cmd"
 	"knative.dev/pkg/test/helpers"
 	"knative.dev/pkg/test/gke"
 )
@@ -77,13 +77,14 @@ func NewImageDeleter(projects []string, gcr string, serviceAccount string) (Imag
 	deleter := ImageDeleter{gcr: gcr, projects:projects}
 	if serviceAccount != "" {
 		// Activate the service account.
-		var output string
-		_, output, err = common.ExecCommand("gcloud", "auth", "activate-service-account", "--key-file="+serviceAccount)
+		_, err = cmd.RunCommand("gcloud auth activate-service-account --key-file="+serviceAccount)
 		if err != nil {
-			err = fmt.Errorf("cannot activate service account:\n%s", output)
+			if cmdErr, ok := err.(*cmd.CommandLineError); ok {
+				err = fmt.Errorf("cannot activate service account:\n%s", cmdErr.ErrorOutput)
+			}
 		}
 	}
-	return deleter, nil
+	return deleter, err
 }
 
 func (d ImageDeleter) Projects() []string {
