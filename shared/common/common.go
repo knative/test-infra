@@ -23,7 +23,7 @@ import (
 	"os/exec"
 	"strings"
 
-	"knative.dev/test/cmd"
+	"knative.dev/pkg/test/cmd"
 )
 
 const allUsersFullPermission = 0777
