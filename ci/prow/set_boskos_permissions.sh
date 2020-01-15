@@ -58,6 +58,9 @@ readonly RESOURCES=(
     "roles/logging.configWriter"
     "prow-job@knative-tests.iam.gserviceaccount.com"
 
+    "roles/cloudscheduler.admin"
+    "prow-job@knative-tests.iam.gserviceaccount.com"
+
     "roles/viewer"
     "knative-dev@googlegroups.com"
 
