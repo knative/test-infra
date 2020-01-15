@@ -151,7 +151,7 @@ var (
 	// ############## data used for generating prow configuration ##############
 	// #########################################################################
 	// Array constants used throughout the jobs.
-	allPresubmitTests = []string{"--all-tests", "--emit-metrics"}
+	allPresubmitTests = []string{"--all-tests"}
 	releaseNightly    = []string{"--publish", "--tag-release"}
 	releaseLocal      = []string{"--nopublish", "--notag-release"}
 

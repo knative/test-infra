@@ -52,6 +52,15 @@ readonly RESOURCES=(
     "roles/storage.admin"
     "prow-job@knative-tests.iam.gserviceaccount.com"
 
+    "roles/pubsub.admin"
+    "prow-job@knative-tests.iam.gserviceaccount.com"
+
+    "roles/logging.configWriter"
+    "prow-job@knative-tests.iam.gserviceaccount.com"
+
+    "roles/cloudscheduler.admin"
+    "prow-job@knative-tests.iam.gserviceaccount.com"
+
     "roles/viewer"
     "knative-dev@googlegroups.com"
 
@@ -59,6 +68,7 @@ readonly RESOURCES=(
     "cloudresourcemanager.googleapis.com"
     "compute.googleapis.com"
     "container.googleapis.com"
+    "cloudscheduler.googleapis.com"
 )
 
 # Loop through the list of resources and add them.

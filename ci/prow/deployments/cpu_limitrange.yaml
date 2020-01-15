@@ -22,5 +22,5 @@ spec:
     - default:
         cpu: 4000m
       defaultRequest:
-        cpu: 1000m
+        cpu: 2000m
       type: Container

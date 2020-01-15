@@ -25,6 +25,7 @@ approve:
   - "knative/observability"
   - "knative/pkg"
   - "knative/sample-controller"
+  - "knative/sample-source"
   - "knative/serving"
   - "knative/serving-operator"
   - "knative/test-infra"
@@ -60,6 +61,18 @@ project_config:
         eventing-contrib:
           # TODO(grantr): replace with a new team eventing-contrib-project-maintainers
           repo_maintainers_team_id: 3012514 # knative-milestone-maintainers
+# Settings for the "label" plugin.
+label:
+  additional_labels:
+  - proposal/0.11
+  - proposal/0.12
+  - proposal/0.13
+  - proposal/0.14
+  - proposal/0.15
+  - proposal/0.16
+  - proposal/0.17
+  - proposal/0.18
+  - proposal/0.19
 # Plugins enabled for each repo.
 plugins:
   google/knative-gcp:
@@ -303,6 +316,30 @@ plugins:
   - yuks
   - project
   knative/sample-controller:
+  - approve
+  - assign
+  - blunderbuss
+  - buildifier
+  - cat
+  - dog
+  - golint
+  - heart
+  - help
+  - hold
+  - label
+  - lgtm
+  - lifecycle
+  - milestone
+  - owners-label
+  - shrug
+  - size
+  - skip
+  - trigger
+  - verify-owners
+  - wip
+  - yuks
+  - project
+  knative/sample-source:
   - approve
   - assign
   - blunderbuss

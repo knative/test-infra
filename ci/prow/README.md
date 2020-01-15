@@ -19,3 +19,5 @@ This directory contains the config for our
 - `run_job.sh` Convenience script to start a Prow job from command-line.
 - `set_boskos_permissions.sh` Script to set up permissions for a Boskos project.
 - `testgrid.yaml` Generated Testgrid configuration.
+- `update_all_boskos_permissions.sh` Script to reset permissions in Boskos
+  projects.

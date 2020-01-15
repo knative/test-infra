@@ -44,6 +44,24 @@ jobConfigs:
     slackChannels:
       - name: networking
         identity: CA9RHBGJX
+  - name: ci-knative-serving-gloo-0.17.1
+    repo: serving
+    type: postsubmit
+    slackChannels:
+      - name: networking
+        identity: CA9RHBGJX
+  - name: ci-knative-serving-contour-latest
+    repo: serving
+    type: postsubmit
+    slackChannels:
+      - name: networking
+        identity: CA9RHBGJX
+  - name: ci-knative-serving-kourier-stable
+    repo: serving
+    type: postsubmit
+    slackChannels:
+      - name: networking
+        identity: CA9RHBGJX
   - name: ci-knative-test-infra-continuous
     repo: test-infra
     type: postsubmit

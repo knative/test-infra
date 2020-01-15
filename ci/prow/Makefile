@@ -138,9 +138,9 @@ test:
 		--testgrid-config-output=$(TMP_YAML_TESTGRID) \
 		--testgrid-gcs-bucket=$(TESTGRID_GCS) \
 		$(KNATIVE_CONFIG)
-	diff $(PROW_CONFIG) $(TMP_YAML_PROW)
-	diff $(PROW_PLUGINS) $(TMP_YAML_PLUGINS)
-	diff $(TESTGRID_CONFIG) $(TMP_YAML_TESTGRID)
+	diff --ignore-matching-lines="^# Copyright " $(PROW_CONFIG) $(TMP_YAML_PROW)
+	diff --ignore-matching-lines="^# Copyright " $(PROW_PLUGINS) $(TMP_YAML_PLUGINS)
+	diff --ignore-matching-lines="^# Copyright " $(TESTGRID_CONFIG) $(TMP_YAML_TESTGRID)
 	@echo "*** Checking configs validity"
 	bazel run @k8s//prow/cmd/checkconfig -- \
 		--config-path=$(PROW_CONFIG) \

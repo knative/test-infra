@@ -1,4 +1,4 @@
-# Copyright 2019 The Knative Authors
+# Copyright 2020 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -80,6 +80,14 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-serving-gloo-0.17.1
   alert_stale_results_hours: 3
   num_failures_to_alert: 3
+- name: ci-knative-serving-kourier-stable
+  gcs_prefix: knative-prow/logs/ci-knative-serving-kourier-stable
+  alert_stale_results_hours: 3
+  num_failures_to_alert: 3
+- name: ci-knative-serving-contour-latest
+  gcs_prefix: knative-prow/logs/ci-knative-serving-contour-latest
+  alert_stale_results_hours: 3
+  num_failures_to_alert: 3
 - name: ci-knative-serving-nightly-release
   gcs_prefix: knative-prow/logs/ci-knative-serving-nightly-release
 - name: ci-knative-serving-dot-release
@@ -102,6 +110,10 @@ test_groups:
   num_failures_to_alert: 3
 - name: ci-knative-client-nightly-release
   gcs_prefix: knative-prow/logs/ci-knative-client-nightly-release
+- name: ci-knative-client-tekton
+  gcs_prefix: knative-prow/logs/ci-knative-client-tekton
+  alert_stale_results_hours: 3
+  num_failures_to_alert: 3
 - name: ci-knative-client-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-client-dot-release
   alert_stale_results_hours: 170
@@ -176,6 +188,10 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-sample-controller-continuous
   alert_stale_results_hours: 3
   num_failures_to_alert: 3
+- name: ci-knative-sample-source-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-sample-source-continuous
+  alert_stale_results_hours: 3
+  num_failures_to_alert: 3
 - name: ci-knative-test-infra-continuous
   gcs_prefix: knative-prow/logs/ci-knative-test-infra-continuous
   alert_stale_results_hours: 3
@@ -220,12 +236,6 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-eventing-operator-go-coverage
   num_failures_to_alert: 9999
   short_text_metric: "coverage"
-- name: ci-knative-serving-0.7-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-serving-0.7-continuous
-- name: ci-knative-eventing-0.7-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-0.7-continuous
-- name: ci-knative-eventing-contrib-0.7-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-0.7-continuous
 - name: ci-knative-serving-0.8-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.8-continuous
 - name: ci-knative-eventing-0.8-continuous
@@ -244,6 +254,18 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-eventing-0.10-continuous
 - name: ci-knative-eventing-contrib-0.10-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-0.10-continuous
+- name: ci-knative-serving-0.11-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-serving-0.11-continuous
+- name: ci-knative-client-0.11-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-client-0.11-continuous
+- name: ci-knative-eventing-0.11-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-0.11-continuous
+- name: ci-knative-eventing-contrib-0.11-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-0.11-continuous
+- name: ci-knative-serving-operator-0.11-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-serving-operator-0.11-continuous
+- name: ci-knative-eventing-operator-0.11-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-operator-0.11-continuous
 - name: ci-google-knative-gcp-continuous
   gcs_prefix: knative-prow/logs/ci-google-knative-gcp-continuous
   alert_stale_results_hours: 3
@@ -284,6 +306,12 @@ dashboards:
   - name: gloo-0.17.1
     test_group_name: ci-knative-serving-gloo-0.17.1
     base_options: "sort-by-name="
+  - name: kourier-stable
+    test_group_name: ci-knative-serving-kourier-stable
+    base_options: "sort-by-name="
+  - name: contour-latest
+    test_group_name: ci-knative-serving-contour-latest
+    base_options: "sort-by-name="
   - name: nightly
     test_group_name: ci-knative-serving-nightly-release
     base_options: "sort-by-name="
@@ -306,6 +334,9 @@ dashboards:
     base_options: "sort-by-name="
   - name: nightly
     test_group_name: ci-knative-client-nightly-release
+    base_options: "sort-by-name="
+  - name: tekton
+    test_group_name: ci-knative-client-tekton
     base_options: "sort-by-name="
   - name: dot-release
     test_group_name: ci-knative-client-dot-release
@@ -384,6 +415,11 @@ dashboards:
   - name: continuous
     test_group_name: ci-knative-sample-controller-continuous
     base_options: "sort-by-name="
+- name: sample-source
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-sample-source-continuous
+    base_options: "sort-by-name="
 - name: test-infra
   dashboard_tab:
   - name: continuous
@@ -446,17 +482,6 @@ dashboards:
   - name: coverage
     test_group_name: pull-google-knative-gcp-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-0.7
-  dashboard_tab:
-  - name: serving
-    test_group_name: ci-knative-serving-0.7-continuous
-    base_options: "sort-by-name="
-  - name: eventing
-    test_group_name: ci-knative-eventing-0.7-continuous
-    base_options: "sort-by-name="
-  - name: eventing-contrib
-    test_group_name: ci-knative-eventing-contrib-0.7-continuous
-    base_options: "sort-by-name="
 - name: knative-0.8
   dashboard_tab:
   - name: serving
@@ -490,6 +515,26 @@ dashboards:
   - name: eventing-contrib
     test_group_name: ci-knative-eventing-contrib-0.10-continuous
     base_options: "sort-by-name="
+- name: knative-0.11
+  dashboard_tab:
+  - name: serving
+    test_group_name: ci-knative-serving-0.11-continuous
+    base_options: "sort-by-name="
+  - name: client
+    test_group_name: ci-knative-client-0.11-continuous
+    base_options: "sort-by-name="
+  - name: eventing
+    test_group_name: ci-knative-eventing-0.11-continuous
+    base_options: "sort-by-name="
+  - name: eventing-contrib
+    test_group_name: ci-knative-eventing-contrib-0.11-continuous
+    base_options: "sort-by-name="
+  - name: serving-operator
+    test_group_name: ci-knative-serving-operator-0.11-continuous
+    base_options: "sort-by-name="
+  - name: eventing-operator
+    test_group_name: ci-knative-eventing-operator-0.11-continuous
+    base_options: "sort-by-name="
 dashboard_groups:
 - name: knative
   dashboard_names:
@@ -502,6 +547,7 @@ dashboard_groups:
   - "caching"
   - "observability"
   - "sample-controller"
+  - "sample-source"
   - "test-infra"
   - "serving-operator"
   - "eventing-operator"
