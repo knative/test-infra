@@ -99,3 +99,8 @@ curl -s -X GET -H "Authorization: Bearer ${ACCESS_TOKEN}" "https://www.googleapi
 gcloud projects add-iam-policy-binding ${PROJECT} \
   --member="serviceAccount:service-${PROJECT_NUMBER}@gs-project-accounts.iam.gserviceaccount.com" \
   --role roles/pubsub.publisher
+
+# As required by step 1 in https://github.com/google/knative-gcp/tree/master/docs/scheduler,
+# create an App Engine app.
+# We use us-central here, but it indeed does not matter which region this app is created in.
+gcloud app create --region=us-central
