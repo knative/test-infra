@@ -106,4 +106,4 @@ gcloud projects add-iam-policy-binding ${PROJECT} \
 #
 # This command will throw an error if the app is already created, but since we expect to run
 # this script idempotently, we always mark this command as succeeded.
-gcloud app create --region=us-central || true
+gcloud app create --region=us-central || echo "AppEngine app probably already exists, ignoring..."

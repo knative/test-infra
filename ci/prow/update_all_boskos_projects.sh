@@ -39,5 +39,5 @@ fi
 
 for boskos_project in ${BOSKOS_PROJECTS}; do
   # Set up this project
-  "./set_up_boskos_project.sh" ${boskos_project} $@
+  ./set_up_boskos_project.sh ${boskos_project} $@
 done
