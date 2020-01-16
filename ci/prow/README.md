@@ -17,7 +17,6 @@ This directory contains the config for our
   `plugins.yaml` and `testgrid.yaml` from `config_knative.yaml`.
 - `plugins.yaml` Generated configuration of the Prow plugins.
 - `run_job.sh` Convenience script to start a Prow job from command-line.
-- `set_boskos_permissions.sh` Script to set up permissions for a Boskos project.
+- `set_up_boskos_project.sh` Script to set up a Boskos project.
 - `testgrid.yaml` Generated Testgrid configuration.
-- `update_all_boskos_permissions.sh` Script to reset permissions in Boskos
-  projects.
+- `update_all_boskos_projects.sh` Script to set up all Boskos projects.

@@ -17,8 +17,8 @@
 set -e
 
 # This scripts takes no command line parameters. It reads from BOSKOS_RESOURCE_FILE
-# and run set_boskos_permissions.sh on projects that matches BOSKOS_PROJECT_PREFIX.
-# All additional arguments will be passed verbatim to set_boskos_permissions.sh
+# and run set_up_boskos_project.sh on projects that matches BOSKOS_PROJECT_PREFIX.
+# All additional arguments will be passed verbatim to set_up_boskos_project.sh
 
 cd "$(dirname $0)"
 
@@ -38,6 +38,6 @@ if [[ -z "${BOSKOS_PROJECTS}" ]]; then
 fi
 
 for boskos_project in ${BOSKOS_PROJECTS}; do
-  # Set permissions for this project
-  "./set_boskos_permissions.sh" ${boskos_project} $@
+  # Set up this project
+  "./set_up_boskos_project.sh" ${boskos_project} $@
 done
