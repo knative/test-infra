@@ -92,14 +92,14 @@ func (pv *PRVersions) parseChangelist(gcw *GHClientWrapper, gi gitInfo) error {
 		}
 		minuses := imageMinusRegexp.FindAllStringSubmatch(*f.Patch, -1)
 		for _, minus := range minuses {
-			iv := pv.getIndex(minus[imageImagePart], minus[imageTagPart])
-			pv.images[minus[imageImagePart]][iv].oldVersion = minus[imageTagPart]
+			iv := pv.getIndex(minus[imageRootPart], minus[imageTagPart])
+			pv.images[minus[imageRootPart]][iv].oldVersion = minus[imageTagPart]
 		}
 
 		pluses := imagePlusRegexp.FindAllStringSubmatch(*f.Patch, -1)
 		for _, plus := range pluses {
-			iv := pv.getIndex(plus[imageImagePart], plus[imageTagPart])
-			pv.images[plus[imageImagePart]][iv].newVersion = plus[imageTagPart]
+			iv := pv.getIndex(plus[imageRootPart], plus[imageTagPart])
+			pv.images[plus[imageRootPart]][iv].newVersion = plus[imageTagPart]
 		}
 	}
 
