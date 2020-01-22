@@ -1,3 +1,3 @@
-# Prow Job Images
+# Knative Test Images
 
-This directory contains custom Docker images used by our Prow jobs.
+This directory contains custom container images used by our Knative projects.

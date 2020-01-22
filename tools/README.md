@@ -1,3 +1,3 @@
 # Test Infrastructure tools
 
-This directory contains tools used by our Prow jobs.
+This directory contains tools used by our Knative projects.
