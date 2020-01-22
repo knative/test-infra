@@ -43,9 +43,9 @@ func (pv *PRVersions) updateAllTags(content []byte, imageFilter *regexp.Regexp) 
 	lastIndex := 0
 	for _, m := range indexes {
 		// Append from end of last match to end of image part, including ":"
-		res += string(content[lastIndex : m[imageImagePart*2+1]+1])
+		res += string(content[lastIndex : m[imageRootPart*2+1]+1])
 		// Image part of a version, i.e. the portion before ":"
-		image := string(content[m[imageImagePart*2]:m[imageImagePart*2+1]])
+		image := string(content[m[imageRootPart*2]:m[imageRootPart*2+1]])
 		// Tag part of a version, i.e. the portion after ":"
 		tag := string(content[m[imageTagPart*2]:m[imageTagPart*2+1]])
 		// m[1] is the end index of current match

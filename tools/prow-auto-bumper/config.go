@@ -48,8 +48,9 @@ const (
 	PRBase = "master"
 
 	// Index for regex matching groups
-	imageImagePart = 1 // first group is image part
-	imageTagPart   = 2 // second group is tag part
+	imageRootPart = 1 // first group is image root folder part
+	imageSubPart  = 2 // second group is the optional subfolder in the image path
+	imageTagPart  = 3 // third group is tag part
 	// Max delta away from target date
 	maxDelta = 2 * 24 // 2 days
 	// K8s updates Prow versions everyday, which should be ~24 hours,
@@ -63,8 +64,8 @@ const (
 var (
 	// Whitelist of files to be scanned by this tool
 	fileFilters = []*regexp.Regexp{regexp.MustCompile(`\.yaml$`)}
-	// Matching            gcr.io /k8s-(prow|testimage)/(tide|kubekin-e2e|.*)    :vYYYYMMDD-HASH-VARIANT
-	imagePattern     = `\b(gcr\.io/k8s[a-z0-9-]{5,29}/[a-zA-Z0-9][a-zA-Z0-9_.-]+):(v[a-zA-Z0-9_.-]+)\b`
+	// Matching            gcr.io /k8s-(prow|testimage)/(kubekin-e2e|boskos|.*) (/janitor|/reaper|/.*)?        :vYYYYMMDD-HASH-VARIANT
+	imagePattern     = `\b(gcr\.io/k8s[a-z0-9-]{5,29}/[a-zA-Z0-9][a-zA-Z0-9_.-]+(/[a-zA-Z0-9][a-zA-Z0-9_.-]+)?):(v[a-zA-Z0-9_.-]+)\b`
 	imageRegexp      = regexp.MustCompile(imagePattern)
 	imageLinePattern = fmt.Sprintf(`\s+[a-z]+:\s+"?'?%s"?'?`, imagePattern)
 	// Matching   "-    image: gcr.io /k8s-(prow|testimage)/(tide|kubekin-e2e|.*)    :vYYYYMMDD-HASH-VARIANT"
