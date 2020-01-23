@@ -17,7 +17,6 @@ presubmits:
     - repo-settings:
       performance: true
       go112-branches:
-      - release-0.8
       - release-0.9
     - build-tests: true
       dot-dev: true
@@ -132,44 +131,45 @@ presubmits:
   knative/eventing:
     - repo-settings:
       performance: true
-      legacy-branches:
-      - release-0.8
       go112-branches:
-      - release-0.8
       - release-0.9
       - release-0.10
     - build-tests: true
+      dot-dev: true
       resources:
         requests:
           memory: 12Gi # Real request for this pod is 16 as sidecar requests 4
         limits:
           memory: 16Gi
     - unit-tests: true
+      dot-dev: true
     - integration-tests: true
+      dot-dev: true
     - go-coverage: true
+      dot-dev: true
 
   knative/eventing-contrib:
     - repo-settings:
-      legacy-branches:
-      - release-0.8
       go112-branches:
-      - release-0.8
       - release-0.9
       - release-0.10
     - build-tests: true
+      dot-dev: true
       resources:
         requests:
           memory: 12Gi
         limits:
           memory: 16Gi
     - unit-tests: true
+      dot-dev: true
     - integration-tests: true
+      dot-dev: true
     - go-coverage: true
+      dot-dev: true
 
   knative/docs:
     - repo-settings:
       go112-branches:
-      - release-0.8
       - release-0.9
       - release-0.10
     - build-tests: true
@@ -186,7 +186,6 @@ presubmits:
   knative/pkg:
     - repo-settings:
       go112-branches:
-      - release-0.8
       - release-0.9
       - release-0.10
     - build-tests: true
@@ -252,7 +251,6 @@ presubmits:
     - repo-settings:
       performance: true
       go112-branches:
-      - release-0.8
       - release-0.9
       - release-0.10
     - build-tests: true
@@ -325,9 +323,6 @@ periodics:
           memory: 12Gi
         limits:
           memory: 16Gi
-    - branch-ci: true
-      release: "0.8"
-      dot-dev: true
     - branch-ci: true
       release: "0.9"
       dot-dev: true
@@ -440,8 +435,6 @@ periodics:
         limits:
           memory: 16Gi
     - branch-ci: true
-      release: "0.8"
-    - branch-ci: true
       release: "0.9"
       dot-dev: true
     - branch-ci: true
@@ -485,8 +478,6 @@ periodics:
           memory: 12Gi
         limits:
           memory: 16Gi
-    - branch-ci: true
-      release: "0.8"
     - branch-ci: true
       release: "0.9"
       dot-dev: true
