@@ -334,6 +334,10 @@ periodics:
       release: "0.11"
       dot-dev: true
       go113: true
+    - branch-ci: true
+      release: "0.12"
+      dot-dev: true
+      go113: true
     - custom-job: istio-1.3-mesh
       full-command: "./test/e2e-tests.sh --istio-version 1.3-latest --mesh"
       dot-dev: true
@@ -402,6 +406,10 @@ periodics:
       release: "0.11"
       dot-dev: true
       go113: true
+    - branch-ci: true
+      release: "0.12"
+      dot-dev: true
+      go113: true
     - nightly: true
       dot-dev: true
       go113: true
@@ -442,6 +450,10 @@ periodics:
       dot-dev: true
     - branch-ci: true
       release: "0.11"
+      dot-dev: true
+      go113: true
+    - branch-ci: true
+      release: "0.12"
       dot-dev: true
       go113: true
     - nightly: true
@@ -486,6 +498,10 @@ periodics:
       dot-dev: true
     - branch-ci: true
       release: "0.11"
+      dot-dev: true
+      go113: true
+    - branch-ci: true
+      release: "0.12"
       dot-dev: true
       go113: true
     - nightly: true
@@ -550,6 +566,10 @@ periodics:
       release: "0.11"
       dot-dev: true
       go113: true
+    - branch-ci: true
+      release: "0.12"
+      dot-dev: true
+      go113: true
     - nightly: true
       dot-dev: true
       go113: true
@@ -572,6 +592,10 @@ periodics:
       release: "0.11"
       dot-dev: true
       go113: true
+    - branch-ci: true
+      release: "0.12"
+      dot-dev: true
+      go113: true
     - nightly: true
       dot-dev: true
       go113: true
@@ -588,6 +612,9 @@ periodics:
 
   google/knative-gcp:
     - continuous: true
+      go113: true
+    - branch-ci: true
+      release: "0.12"
       go113: true
     - nightly: true
       go113: true
