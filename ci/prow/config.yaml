@@ -66,6 +66,8 @@ deck:
           # Knative setup errors
           - 'Knative setup failed'
           - 'timeout waiting for pods to come up'
+          # Prow job killed
+          - 'Entrypoint received interrupt: terminated'
       required_files:
       - build-log.txt
     - lens:
