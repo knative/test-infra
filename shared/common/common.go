@@ -17,10 +17,8 @@ limitations under the License.
 package common
 
 import (
-	"bytes"
 	"fmt"
 	"os"
-	"os/exec"
 	"strings"
 
 	"knative.dev/pkg/test/cmd"

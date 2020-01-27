@@ -155,20 +155,12 @@ func (i *uncompressedImageExtender) Manifest() (*v1.Manifest, error) {
 
 	m.Layers = make([]v1.Descriptor, len(ls))
 	for i, l := range ls {
-		sz, err := l.Size()
-		if err != nil {
-			return nil, err
-		}
-		h, err := l.Digest()
+		desc, err := Descriptor(l)
 		if err != nil {
 			return nil, err
 		}
 
-		m.Layers[i] = v1.Descriptor{
-			MediaType: types.DockerLayer,
-			Size:      sz,
-			Digest:    h,
-		}
+		m.Layers[i] = *desc
 	}
 
 	i.manifest = m
@@ -178,6 +170,11 @@ func (i *uncompressedImageExtender) Manifest() (*v1.Manifest, error) {
 // RawManifest implements v1.Image
 func (i *uncompressedImageExtender) RawManifest() ([]byte, error) {
 	return RawManifest(i)
+}
+
+// Size implements v1.Image
+func (i *uncompressedImageExtender) Size() (int64, error) {
+	return Size(i)
 }
 
 // ConfigName implements v1.Image

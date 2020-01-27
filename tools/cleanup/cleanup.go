@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// The cleanup tool deletes old GCR images and test clusters from test
+// The cleanup tool deletes old images and test clusters from test
 // projects.
 
 package main
@@ -50,31 +50,37 @@ var (
 	remoteDelete = remote.Delete
 )
 
+// ResourceDeleter deletes a specific kind of resource in a GCP project.
 type ResourceDeleter interface {
 	Projects() []string
 	Delete(hoursToKeepResource int, concurrentOperations int, dryRun bool)
 	DeleteResources(project string, hoursToKeepResource int, dryRun bool) (int, error)
 }
 
+// BaseResourceDeleter implements the base operations of a ResourceDeleter.
 type BaseResourceDeleter struct {
 	ResourceDeleter
+	projects []string
+	deleteResourceFunc func(string, int, bool) (int, error)
 }
 
+// ImageDeleter deletes old images in a given registry.
 type ImageDeleter struct {
 	BaseResourceDeleter
-	projects []string
-	gcr string
+	registry string
 }
 
-type ClusterDeleter struct {
+// GkeClusterDeleter deletes old GKE cluster in a given project.
+type GkeClusterDeleter struct {
 	BaseResourceDeleter
-	projects []string
 	gkeClient gke.SDKOperations
 }
 
-func NewImageDeleter(projects []string, gcr string, serviceAccount string) (ImageDeleter, error) {
+// NewImageDeleter returns a brand new ImageDeleter.
+func NewImageDeleter(projects []string, registry string, serviceAccount string) (*ImageDeleter, error) {
 	var err error
-	deleter := ImageDeleter{gcr: gcr, projects:projects}
+	deleter := ImageDeleter{BaseResourceDeleter{projects:projects}, registry}
+	deleter.deleteResourceFunc = deleter.DeleteResources
 	if serviceAccount != "" {
 		// Activate the service account.
 		_, err = cmd.RunCommand("gcloud auth activate-service-account --key-file="+serviceAccount)
@@ -84,15 +90,13 @@ func NewImageDeleter(projects []string, gcr string, serviceAccount string) (Imag
 			}
 		}
 	}
-	return deleter, err
+	return &deleter, err
 }
 
-func (d ImageDeleter) Projects() []string {
-	return d.projects
-}
-
-func NewClusterDeleter(projects []string, serviceAccount string) (ClusterDeleter, error) {
-	deleter := ClusterDeleter{projects:projects}
+// NewGkeClusterDeleter returns a brand new GkeClusterDeleter.
+func NewGkeClusterDeleter(projects []string, serviceAccount string) (*GkeClusterDeleter, error) {
+	deleter := GkeClusterDeleter{BaseResourceDeleter{projects:projects}, nil}
+	deleter.deleteResourceFunc = deleter.DeleteResources
 	opts := make([]option.ClientOption, 0)
 	if serviceAccount != "" {
 		// Create GKE client with specific credentials.
@@ -103,11 +107,7 @@ func NewClusterDeleter(projects []string, serviceAccount string) (ClusterDeleter
 	if err != nil {
 		err = errors.Wrapf(err, "cannot create GKE SDK client")
 	}
-	return deleter, err
-}
-
-func (d ClusterDeleter) Projects() []string {
-	return d.projects
+	return &deleter, err
 }
 
 // selectProjects returns the list of projects to iterate over.
@@ -145,12 +145,12 @@ func selectProjects(project, resourceFile, regex string) ([]string, error) {
 	if len(projects) == 0 {
 		return nil, fmt.Errorf("no project found in %q matching %q", resourceFile, regex)
 	}
-	log.Printf("Iterating over projects defined in %q, matching %q", resourceFile, regex)
+	log.Printf("Iterating over %d projects defined in %q, matching %q", len(projects), resourceFile, regex)
 	return projects, nil
 }
 
-// deleteImage deletes a single GCR image pointed by the given reference.
-func deleteImage(ref string) error {
+// deleteImage deletes a single image pointed by the given reference.
+func (d* ImageDeleter) deleteImage(ref string) error {
 	image, err := name.ParseReference(ref)
 	if err != nil {
 		return errors.Wrapf(err, "failed to parse reference %q", ref)
@@ -162,7 +162,7 @@ func deleteImage(ref string) error {
 }
 
 // DeleteResources deletes old clusters from a given project.
-func (d ClusterDeleter) DeleteResources(project string, hoursToKeepResource int, dryRun bool) (int, error) {
+func (d *GkeClusterDeleter) DeleteResources(project string, hoursToKeepResource int, dryRun bool) (int, error) {
 	before := time.Now().Add(-time.Hour*time.Duration(hoursToKeepResource))
 	// TODO(adrcunha): Consider exposing https://github.com/knative/pkg/blob/6d806b998379948bd0107d77bcd831e2bdb4f3cb/testutils/clustermanager/e2e-tests/gke.go#L281
 	if project == "knative-tests" {
@@ -180,10 +180,10 @@ func (d ClusterDeleter) DeleteResources(project string, hoursToKeepResource int,
 			return count, errors.Wrapf(err, "error getting creation time for cluster %q", cluster.Name)
 		}
 		age := int(time.Since(creation).Hours())
-		clusterName := project+"/"+cluster.Name
-		log.Printf("%s/%s is %d hours old", project, age, clusterName)
+		fullClusterName := project + "/" + cluster.Name
+		log.Printf("%s is %d hours old", fullClusterName, age)
 		if creation.Before(before) {
-			if err := helpers.Run(fmt.Sprintf("Deleting %q", clusterName), func() error {
+			if err := helpers.Run(fmt.Sprintf("Deleting %q", fullClusterName), func() error {
 				region, zone := gke.RegionZoneFromLoc(cluster.Location)
 				if err := d.gkeClient.DeleteCluster(project, region, zone, cluster.Name); err != nil {
 					return errors.Wrapf(err, "error deleting cluster %q in project %q", cluster.Name, project)
@@ -199,9 +199,9 @@ func (d ClusterDeleter) DeleteResources(project string, hoursToKeepResource int,
 }
 
 // DeleteResources deletes old docker images from a given project.
-func (d ImageDeleter) DeleteResources(project string, hoursToKeepResource int, dryRun bool) (int, error) {
+func (d *ImageDeleter) DeleteResources(project string, hoursToKeepResource int, dryRun bool) (int, error) {
 	before := time.Now().Add(-time.Hour*time.Duration(hoursToKeepResource))
-	repoRoot := d.gcr + "/" + project
+	repoRoot := d.registry + "/" + project
 	// TODO(adrcunha): This should be a helper function, like https://github.com/knative/pkg/blob/6d806b998379948bd0107d77bcd831e2bdb4f3cb/testutils/clustermanager/e2e-tests/gke.go#L281
 	if repoRoot == "gcr.io/knative-releases" || repoRoot == "gcr.io/knative-nightly" {
 		return 0, fmt.Errorf("cleaning up %q is forbidden", repoRoot)
@@ -228,11 +228,11 @@ func (d ImageDeleter) DeleteResources(project string, hoursToKeepResource int, d
 				if err := helpers.Run(fmt.Sprintf("Deleting %q", ref), func() error {
 					// Delete all tags first, otherwise the image can't be deleted.
 					for _, tag := range m.Tags {
-						if err := deleteImage(repo.String() + ":" + tag); err != nil {
+						if err := d.deleteImage(repo.String() + ":" + tag); err != nil {
 							return err
 						}
 					}
-					if err := deleteImage(ref); err != nil {
+					if err := d.deleteImage(ref); err != nil {
 						return err
 					}
 					count++
@@ -246,8 +246,18 @@ func (d ImageDeleter) DeleteResources(project string, hoursToKeepResource int, d
 	}, google.WithAuthFromKeychain(auther))
 }
 
+// Projects returns the projects that should be cleaned up by a ResourceDeleter.
+func (d *BaseResourceDeleter) Projects() []string {
+	return d.projects
+}
+
+// DeleteResources base method that does nothing, as it must be overriden.
+func (d *BaseResourceDeleter) DeleteResources(project string, hoursToKeepResource int, dryRun bool) (int, error) {
+	return 0, fmt.Errorf("not implemented")
+}
+
 // Delete call DeleteResource in parallel, one for each given project.
-func (d BaseResourceDeleter) Delete(hoursToKeepResource int, concurrentOperations int, dryRun bool) {
+func (d *BaseResourceDeleter) Delete(hoursToKeepResource int, concurrentOperations int, dryRun bool) {
 	// Locks for the concurrent tasks.
 	var wg sync.WaitGroup
 
@@ -269,7 +279,7 @@ func (d BaseResourceDeleter) Delete(hoursToKeepResource int, concurrentOperation
 			// Do not process if previous invocations failed. This prevents a large
 			// build-up of failed requests and rate limit exceeding (e.g. bad auth).
 			if len(errorChan) == 0 {
-				c, err := d.DeleteResources(project, hoursToKeepResource, dryRun)
+				c, err := d.deleteResourceFunc(project, hoursToKeepResource, dryRun)
 				// Update counter and errors list.
 				atomic.AddInt32(&count, int32(c))
 				if err != nil {
@@ -312,14 +322,18 @@ func cleanup() error {
 	reProjectName        := flag.String("re-project-name", "knative-boskos-[a-zA-Z0-9]+", "Regular expression for filtering project names from the resources file.")
 	daysToKeepImages     := flag.Int("days-to-keep-images", 365, "Images older than this amount of days will be deleted (defaults to 1 year, -1 means 'forever').")
 	hoursToKeepClusters  := flag.Int("hours-to-keep-clusters", 720, "Clusters older than this amount of hours will be deleted (defautls to 1 month, -1 means 'forever').")
-	gcr                  := flag.String("gcr", "gcr.io", "The GCR hostname to use.")
+	registry             := flag.String("gcr", "gcr.io", "The registry hostname to use (defaults to gcr.io; currently only GCR is supported).")
 	serviceAccount       := flag.String("service-account", "", "Specify the key file of the service account to use.")
-	concurrentOperations := flag.Int("concurrent-operations", 10, "How many deletion operations to run concurrently.")
+	concurrentOperations := flag.Int("concurrent-operations", 10, "How many deletion operations to run concurrently (defaults to 10).")
 	dryRun               := flag.Bool("dry-run", false, "Performs a dry run for all deletion functions.")
 	flag.Parse()
 
 	if *dryRun {
 		log.Println("-- Running in dry-run mode, no resource deletion --")
+	}
+
+	if !strings.HasSuffix(*registry, "gcr.io") {
+		return fmt.Errorf("currently only GCR is supported")
 	}
 
 	var projects []string
@@ -332,7 +346,7 @@ func cleanup() error {
 
 	var deleter ResourceDeleter
 	if *daysToKeepImages >= 0 {
-		if deleter, err = NewImageDeleter(projects, *gcr, *serviceAccount); err != nil {
+		if deleter, err = NewImageDeleter(projects, *registry, *serviceAccount); err != nil {
 			return err
 		}
 		log.Println("Removing images that are:")
@@ -341,7 +355,7 @@ func cleanup() error {
 	}
 
 	if *hoursToKeepClusters >= 0 {
-		if deleter, err = NewClusterDeleter(projects, *serviceAccount); err != nil {
+		if deleter, err = NewGkeClusterDeleter(projects, *serviceAccount); err != nil {
 			return err
 		}
 		log.Println("Removing clusters that are:")

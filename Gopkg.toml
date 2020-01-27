@@ -9,14 +9,10 @@ required = [
   "knative.dev/pkg/testutils/clustermanager/perf-tests"
 ]
 
-[[override]]
-  name = "k8s.io/apimachinery"
-  version = "kubernetes-1.12.6"
-
 [[constraint]]
   name = "github.com/google/go-containerregistry"
-  # HEAD as of 2019-09-10
-  revision = "b02d448a3705facf11018efff34f1d2830be5724"
+  # HEAD as of 2020-01-23
+  revision = "53ce695e4179e310fd4f7c34099a731829a5d41f"
 
 [[override]]
   name = "knative.dev/pkg"
