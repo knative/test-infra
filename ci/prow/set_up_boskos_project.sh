@@ -19,7 +19,7 @@ set -e
 readonly PROJECT=${1:?"First argument must be the boskos project name."}
 # Remaining arguments are resources to be added, just like the RESOURCES array below.
 # For example, this command add an extra editor to the project:
-# $ set_boskos_permissions.sh my-boskos roles/editor my@service-account.com
+# $ set_up_boskos_project.sh my-boskos roles/editor my@service-account.com
 shift
 
 if [[ ! -f $HOME/.config/gcloud/application_default_credentials.json ]]; then
@@ -99,3 +99,11 @@ curl -s -X GET -H "Authorization: Bearer ${ACCESS_TOKEN}" "https://www.googleapi
 gcloud projects add-iam-policy-binding ${PROJECT} \
   --member="serviceAccount:service-${PROJECT_NUMBER}@gs-project-accounts.iam.gserviceaccount.com" \
   --role roles/pubsub.publisher
+
+# As required by step 1 in https://github.com/google/knative-gcp/tree/master/docs/scheduler,
+# create an App Engine app.
+# We use us-central here, but it indeed does not matter which region this app is created in.
+#
+# This command will throw an error if the app is already created, but since we expect to run
+# this script idempotently, we always mark this command as succeeded.
+gcloud app create --region=us-central || echo "AppEngine app probably already exists, ignoring..."

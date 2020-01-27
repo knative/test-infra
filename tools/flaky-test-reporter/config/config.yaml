@@ -62,6 +62,12 @@ jobConfigs:
     slackChannels:
       - name: networking
         identity: CA9RHBGJX
+  - name: ci-knative-serving-ambassador-latest
+    repo: serving
+    type: postsubmit
+    slackChannels:
+      - name: networking
+        identity: CA9RHBGJX
   - name: ci-knative-test-infra-continuous
     repo: test-infra
     type: postsubmit
