@@ -240,6 +240,10 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-eventing-operator-go-coverage
   num_failures_to_alert: 9999
   short_text_metric: "coverage"
+- name: pull-knative-net-contour-test-coverage
+  gcs_prefix: knative-prow/logs/ci-knative-net-contour-go-coverage
+  num_failures_to_alert: 9999
+  short_text_metric: "coverage"
 - name: ci-knative-serving-0.9-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.9-continuous
 - name: ci-knative-eventing-0.9-continuous
@@ -480,6 +484,11 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-eventing-operator-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+- name: net-contour
+  dashboard_tab:
+  - name: coverage
+    test_group_name: pull-knative-net-contour-test-coverage
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: knative-gcp
   dashboard_tab:
   - name: continuous
@@ -580,6 +589,7 @@ dashboard_groups:
   - "test-infra"
   - "serving-operator"
   - "eventing-operator"
+  - "net-contour"
 - name: google
   dashboard_names:
   - "knative-gcp"
