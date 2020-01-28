@@ -620,18 +620,12 @@ function get_latest_knative_yaml_source() {
   local yaml_name="$2"
   # If it's a release branch, the yaml source URL should point to a specific version.
   if is_release_branch; then
-    local major_minor="UNKNOWN"
-    # Extract the release major&minor version from either the latest tag or the branch name.
-    local tag_name="$(git describe --tags --abbrev=0 2> /dev/null)"
-    if [[ -n "${tag_name}" ]]; then
-      major_minor="$(echo ${tag_name} | cut -d. -f1-2)"
-    else
-      local branch_name="$(current_branch)"
-      major_minor="${branch_name##release-}"
-    fi
+    # Extract the release major&minor version from the branch name.
+    local branch_name="$(current_branch)"
+    local major_minor="${branch_name##release-}"
     # Find the latest release manifest with the same major&minor version.
     local yaml_source_path="$(
-      gsutil ls gs://knative-releases/${repo_name}/previous/${major_minor}.*/${yaml_name}.yaml 2> /dev/null \
+      gsutil ls gs://knative-releases/${repo_name}/previous/v${major_minor}.*/${yaml_name}.yaml 2> /dev/null \
       | sort \
       | tail -n 1 \
       | cut -b6-)"
