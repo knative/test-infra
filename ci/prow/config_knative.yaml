@@ -258,6 +258,16 @@ presubmits:
     - integration-tests: true
     - go-coverage: true
 
+  knative/net-contour:
+    - build-tests: true
+      dot-dev: true
+    - unit-tests: true
+      dot-dev: true
+    - integration-tests: false
+      dot-dev: true
+    - go-coverage: true
+      dot-dev: true
+
   knative/serving-operator:
     - repo-settings:
       go112-branches:
