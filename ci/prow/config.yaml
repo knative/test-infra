@@ -8234,6 +8234,7 @@ periodics:
   - org: knative
     repo: net-contour
     base_ref: master
+    path_alias: knative.dev/net-contour
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8268,6 +8269,7 @@ periodics:
   - org: knative
     repo: net-contour
     base_ref: master
+    path_alias: knative.dev/net-contour
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8303,6 +8305,7 @@ periodics:
   - org: knative
     repo: net-contour
     base_ref: master
+    path_alias: knative.dev/net-contour
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8346,6 +8349,7 @@ periodics:
   - org: knative
     repo: net-contour
     base_ref: master
+    path_alias: knative.dev/net-contour
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
