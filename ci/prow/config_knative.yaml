@@ -258,6 +258,20 @@ presubmits:
     - integration-tests: true
     - go-coverage: true
 
+  knative/net-contour:
+    - repo-settings:
+      go112-branches:
+      - release-0.9 # This branch doesn't actually exist, create here to make
+      # config generator work
+    - build-tests: true
+      dot-dev: true
+    - unit-tests: true
+      dot-dev: true
+    - integration-tests: false
+      dot-dev: true
+    - go-coverage: true
+      dot-dev: true
+
   knative/serving-operator:
     - repo-settings:
       go112-branches:
@@ -626,3 +640,13 @@ periodics:
       go113: true
       env-vars:
       - ORG_NAME=google
+
+  knative/net-contour:
+    - continuous: true
+      go113: true
+    - nightly: true
+      go113: true
+    - dot-release: true
+      go113: true
+    - auto-release: true
+      go113: true
