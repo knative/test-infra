@@ -22,6 +22,7 @@ approve:
   - "knative/eventing"
   - "knative/eventing-contrib"
   - "knative/eventing-operator"
+  - "knative/net-contour"
   - "knative/observability"
   - "knative/pkg"
   - "knative/sample-controller"
@@ -244,6 +245,30 @@ plugins:
   - yuks
   - project
   knative/eventing-operator:
+  - approve
+  - assign
+  - blunderbuss
+  - buildifier
+  - cat
+  - dog
+  - golint
+  - heart
+  - help
+  - hold
+  - label
+  - lgtm
+  - lifecycle
+  - milestone
+  - owners-label
+  - shrug
+  - size
+  - skip
+  - trigger
+  - verify-owners
+  - wip
+  - yuks
+  - project
+  knative/net-contour:
   - approve
   - assign
   - blunderbuss
