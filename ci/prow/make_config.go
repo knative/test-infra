@@ -146,7 +146,6 @@ var (
 	presubmitScript              string
 	releaseScript                string
 	webhookAPICoverageScript     string
-	cleanupScript                string
 
 	// #########################################################################
 	// ############## data used for generating prow configuration ##############
@@ -1117,7 +1116,6 @@ func main() {
 	flag.StringVar(&presubmitScript, "presubmit-script", "./test/presubmit-tests.sh", "Executable for running presubmit tests")
 	flag.StringVar(&releaseScript, "release-script", "./hack/release.sh", "Executable for creating releases")
 	flag.StringVar(&webhookAPICoverageScript, "webhook-api-coverage-script", "./test/apicoverage.sh", "Executable for running webhook apicoverage tool")
-	flag.StringVar(&cleanupScript, "cleanup-script", "./tools/cleanup/cleanup.sh", "Executable for running the cleanup tasks")
 	flag.StringVar(&repositoryOverride, "repo-override", "", "Repository path (github.com/foo/bar[=branch]) to use instead for a job")
 	flag.IntVar(&timeoutOverride, "timeout-override", 0, "Timeout (in minutes) to use instead for a job")
 	flag.StringVar(&jobNameFilter, "job-filter", "", "Generate only this job, instead of all jobs")
