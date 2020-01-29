@@ -23,7 +23,6 @@ import (
 	"strings"
 	"strconv"
 	"testing"
-	"time"
 )
 
 // errorMismatch compares two errors by their error string
