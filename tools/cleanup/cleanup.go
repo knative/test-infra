@@ -53,8 +53,9 @@ var (
 // ResourceDeleter deletes a specific kind of resource in a GCP project.
 type ResourceDeleter interface {
 	Projects() []string
-	Delete(hoursToKeepResource int, concurrentOperations int, dryRun bool)
+	Delete(hoursToKeepResource int, concurrentOperations int, dryRun bool) (int, []string)
 	DeleteResources(project string, hoursToKeepResource int, dryRun bool) (int, error)
+	ShowStats(count int, errors []string)
 }
 
 // BaseResourceDeleter implements the base operations of a ResourceDeleter.
@@ -76,10 +77,17 @@ type GkeClusterDeleter struct {
 	gkeClient gke.SDKOperations
 }
 
+// NewBaseResourceDeleter returns a brand new BaseResourceDeleter.
+func NewBaseResourceDeleter(projects []string) *BaseResourceDeleter {
+	deleter := BaseResourceDeleter{projects:projects}
+	deleter.deleteResourceFunc = deleter.DeleteResources
+	return &deleter
+}
+
 // NewImageDeleter returns a brand new ImageDeleter.
 func NewImageDeleter(projects []string, registry string, serviceAccount string) (*ImageDeleter, error) {
 	var err error
-	deleter := ImageDeleter{BaseResourceDeleter{projects:projects}, registry}
+	deleter := ImageDeleter{*NewBaseResourceDeleter(projects), registry}
 	deleter.deleteResourceFunc = deleter.DeleteResources
 	if serviceAccount != "" {
 		// Activate the service account.
@@ -95,18 +103,17 @@ func NewImageDeleter(projects []string, registry string, serviceAccount string) 
 
 // NewGkeClusterDeleter returns a brand new GkeClusterDeleter.
 func NewGkeClusterDeleter(projects []string, serviceAccount string) (*GkeClusterDeleter, error) {
-	deleter := GkeClusterDeleter{BaseResourceDeleter{projects:projects}, nil}
-	deleter.deleteResourceFunc = deleter.DeleteResources
 	opts := make([]option.ClientOption, 0)
 	if serviceAccount != "" {
 		// Create GKE client with specific credentials.
 		opts = append(opts, option.WithCredentialsFile(serviceAccount))
 	}
-	var err error
-	deleter.gkeClient, err = gke.NewSDKClient(opts...)
+	gkeClient, err := gke.NewSDKClient(opts...)
 	if err != nil {
 		err = errors.Wrapf(err, "cannot create GKE SDK client")
 	}
+	deleter := GkeClusterDeleter{*NewBaseResourceDeleter(projects), gkeClient}
+	deleter.deleteResourceFunc = deleter.DeleteResources
 	return &deleter, err
 }
 
@@ -257,7 +264,7 @@ func (d *BaseResourceDeleter) DeleteResources(project string, hoursToKeepResourc
 }
 
 // Delete call DeleteResource in parallel, one for each given project.
-func (d *BaseResourceDeleter) Delete(hoursToKeepResource int, concurrentOperations int, dryRun bool) {
+func (d *BaseResourceDeleter) Delete(hoursToKeepResource int, concurrentOperations int, dryRun bool) (int, []string) {
 	// Locks for the concurrent tasks.
 	var wg sync.WaitGroup
 
@@ -308,9 +315,14 @@ func (d *BaseResourceDeleter) Delete(hoursToKeepResource int, concurrentOperatio
 		}
 	}
 	sort.Strings(errStrings)
+	return int(count), errStrings
+}
+
+// ShowStats simply shows the number of resources deleted, and any errors.
+func (d *BaseResourceDeleter) ShowStats(count int, errors []string) {
 	log.Printf("%d resources deleted", count)
-	if len(errStrings) > 0 {
-		log.Printf("%d errors occurred: %s", len(errStrings), strings.Join(errStrings, ", "))
+	if len(errors) > 0 {
+		log.Printf("%d errors occurred: %s", len(errors), strings.Join(errors, ", "))
 	}
 }
 
@@ -351,7 +363,7 @@ func cleanup() error {
 		}
 		log.Println("Removing images that are:")
 		log.Printf("- older than %d days", *daysToKeepImages)
-		deleter.Delete(*daysToKeepImages * 24, *concurrentOperations, *dryRun)
+		deleter.ShowStats(deleter.Delete(*daysToKeepImages * 24, *concurrentOperations, *dryRun))
 	}
 
 	if *hoursToKeepClusters >= 0 {
@@ -360,7 +372,7 @@ func cleanup() error {
 		}
 		log.Println("Removing clusters that are:")
 		log.Printf("- older than %d hours", *hoursToKeepClusters)
-		deleter.Delete(*hoursToKeepClusters, *concurrentOperations, *dryRun)
+		deleter.ShowStats(deleter.Delete(*hoursToKeepClusters, *concurrentOperations, *dryRun))
 	}
 
 	log.Printf("All operations finished in %s", time.Now().Sub(start))
