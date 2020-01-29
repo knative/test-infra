@@ -620,6 +620,16 @@ periodics:
       dot-dev: true
       go113: true
 
+  knative/net-contour:
+    - continuous: true
+      go113: true
+    - nightly: true
+      go113: true
+    - dot-release: true
+      go113: true
+    - auto-release: true
+      go113: true
+
   google/knative-gcp:
     - continuous: true
       go113: true
