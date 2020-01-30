@@ -17,7 +17,6 @@ package git
 
 import (
 	"bytes"
-	"io"
 	"log"
 	"os/exec"
 	"strings"
@@ -30,27 +29,18 @@ const (
 
 // hasGitAttr checks git attribute value exist for the file
 func hasGitAttr(attr string, fileName string) bool {
-	//fmt.Printf("filename=*%s*\n", fileName)
-	attrCmd := exec.Command("git", "check-attr", attr, "--", fileName)
-	valCmd := exec.Command("cut", "-d:", "-f", "3")
-
-	pr, pw := io.Pipe()
-	attrCmd.Stdout = pw
-	valCmd.Stdin = pr
 	var val bytes.Buffer
-	valCmd.Stdout = &val
+	attrCmd := exec.Command("git", "check-attr", attr, "--", fileName)
 
+	attrCmd.Stdout = &val
 	attrCmd.Start()
-	valCmd.Start()
+	attrCmd.Wait()
 
-	go func() {
-		defer pw.Close()
-		attrCmd.Wait()
-	}()
-	valCmd.Wait()
-
-	//fmt.Println(strings.ToLower(strings.TrimSpace(val.String())))
-	return strings.ToLower(strings.TrimSpace(val.String())) == "true"
+	cleaned := strings.TrimSpace(val.String())
+	n := len(cleaned)
+	// TODO: was only checking "true" before this; I doubt there's ever a
+	// situation where it returns "true" instead of "set"
+	return cleaned[n-4:n] == "true" || cleaned[n-3:n] == "set"
 }
 
 func IsCoverageSkipped(filePath string) bool {
