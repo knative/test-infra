@@ -44,7 +44,7 @@ import (
 
 var (
 	// Authentication method for using Google Cloud Registry APIs.
-	auther = authn.DefaultKeychain
+	author = authn.DefaultKeychain
 
 	// Alias of remote.Delete for testing purposes.
 	remoteDelete = remote.Delete
@@ -162,7 +162,7 @@ func (d* ImageDeleter) deleteImage(ref string) error {
 	if err != nil {
 		return errors.Wrapf(err, "failed to parse reference %q", ref)
 	}
-	if err := remoteDelete(image, remote.WithAuthFromKeychain(auther)); err != nil {
+	if err := remoteDelete(image, remote.WithAuthFromKeychain(author)); err != nil {
 		return errors.Wrapf(err, "failed to delete %q", image)
 	}
 	return nil
@@ -250,7 +250,7 @@ func (d *ImageDeleter) DeleteResources(project string, hoursToKeepResource int, 
 			}
 		}
 		return nil
-	}, google.WithAuthFromKeychain(auther))
+	}, google.WithAuthFromKeychain(author))
 }
 
 // Projects returns the projects that should be cleaned up by a ResourceDeleter.
@@ -258,7 +258,7 @@ func (d *BaseResourceDeleter) Projects() []string {
 	return d.projects
 }
 
-// DeleteResources base method that does nothing, as it must be overriden.
+// DeleteResources base method that does nothing, as it must be overridden.
 func (d *BaseResourceDeleter) DeleteResources(project string, hoursToKeepResource int, dryRun bool) (int, error) {
 	return 0, fmt.Errorf("not implemented")
 }
@@ -333,7 +333,7 @@ func cleanup() error {
 	project              := flag.String("project", "", "Project to be cleaned up.")
 	reProjectName        := flag.String("re-project-name", "knative-boskos-[a-zA-Z0-9]+", "Regular expression for filtering project names from the resources file.")
 	daysToKeepImages     := flag.Int("days-to-keep-images", 365, "Images older than this amount of days will be deleted (defaults to 1 year, -1 means 'forever').")
-	hoursToKeepClusters  := flag.Int("hours-to-keep-clusters", 720, "Clusters older than this amount of hours will be deleted (defautls to 1 month, -1 means 'forever').")
+	hoursToKeepClusters  := flag.Int("hours-to-keep-clusters", 720, "Clusters older than this amount of hours will be deleted (defaults to 1 month, -1 means 'forever').")
 	registry             := flag.String("gcr", "gcr.io", "The registry hostname to use (defaults to gcr.io; currently only GCR is supported).")
 	serviceAccount       := flag.String("service-account", "", "Specify the key file of the service account to use.")
 	concurrentOperations := flag.Int("concurrent-operations", 10, "How many deletion operations to run concurrently (defaults to 10).")
