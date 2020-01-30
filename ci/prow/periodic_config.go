@@ -231,7 +231,7 @@ func generateCleanupPeriodicJob() {
 	data.Base = newbaseProwJobTemplateData("knative/test-infra")
 	data.PeriodicJobName = "ci-knative-cleanup"
 	data.CronString = cleanupPeriodicJobCron
-	data.Base.DecorationConfig = []string{fmt.Sprintf("timeout: %d", 6 * time.Hour)} // 6 hours
+	data.Base.DecorationConfig = []string{fmt.Sprintf("timeout: %d", 6*time.Hour)} // 6 hours
 	data.Base.Command = "go"
 	data.Base.Args = []string{
 		"run",

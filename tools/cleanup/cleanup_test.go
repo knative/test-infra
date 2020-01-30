@@ -18,11 +18,12 @@ package main
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
+	"testing"
+
 	"github.com/google/go-cmp/cmp"
 	"github.com/pkg/errors"
-	"strings"
-	"strconv"
-	"testing"
 )
 
 // errorMismatch compares two errors by their error string
@@ -110,7 +111,7 @@ func TestSelectProjects(t *testing.T) {
 func TestBaseResourceDeleter(t *testing.T) {
 	datas := []struct {
 		projects []string
-		expErr int
+		expErr   int
 	}{
 		{ // No projects.
 			[]string{},
@@ -241,7 +242,7 @@ func TestDelete(t *testing.T) {
 
 func TestNewImageDeleter(t *testing.T) {
 	datas := []struct {
-		sa string
+		sa  string
 		err error
 	}{
 		{ // No service account.
@@ -274,7 +275,7 @@ func TestNewImageDeleter(t *testing.T) {
 
 func TestNewGkeClusterDeleter(t *testing.T) {
 	datas := []struct {
-		sa string
+		sa  string
 		err error
 	}{
 		{ // No service account.
