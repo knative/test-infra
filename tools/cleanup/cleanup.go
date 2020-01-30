@@ -25,9 +25,9 @@ import (
 	"io/ioutil"
 	"log"
 	"regexp"
+	"sort"
 	"strings"
 	"sync"
-	"sort"
 	"sync/atomic"
 	"time"
 
@@ -38,8 +38,8 @@ import (
 	"github.com/pkg/errors"
 	"google.golang.org/api/option"
 	"knative.dev/pkg/test/cmd"
-	"knative.dev/pkg/test/helpers"
 	"knative.dev/pkg/test/gke"
+	"knative.dev/pkg/test/helpers"
 )
 
 var (
@@ -61,7 +61,7 @@ type ResourceDeleter interface {
 // BaseResourceDeleter implements the base operations of a ResourceDeleter.
 type BaseResourceDeleter struct {
 	ResourceDeleter
-	projects []string
+	projects           []string
 	deleteResourceFunc func(string, int, bool) (int, error)
 }
 
@@ -79,7 +79,7 @@ type GkeClusterDeleter struct {
 
 // NewBaseResourceDeleter returns a brand new BaseResourceDeleter.
 func NewBaseResourceDeleter(projects []string) *BaseResourceDeleter {
-	deleter := BaseResourceDeleter{projects:projects}
+	deleter := BaseResourceDeleter{projects: projects}
 	deleter.deleteResourceFunc = deleter.DeleteResources
 	return &deleter
 }
@@ -91,7 +91,7 @@ func NewImageDeleter(projects []string, registry string, serviceAccount string) 
 	deleter.deleteResourceFunc = deleter.DeleteResources
 	if serviceAccount != "" {
 		// Activate the service account.
-		_, err = cmd.RunCommand("gcloud auth activate-service-account --key-file="+serviceAccount)
+		_, err = cmd.RunCommand("gcloud auth activate-service-account --key-file=" + serviceAccount)
 		if err != nil {
 			if cmdErr, ok := err.(*cmd.CommandLineError); ok {
 				err = fmt.Errorf("cannot activate service account:\n%s", cmdErr.ErrorOutput)
@@ -157,7 +157,7 @@ func selectProjects(project, resourceFile, regex string) ([]string, error) {
 }
 
 // deleteImage deletes a single image pointed by the given reference.
-func (d* ImageDeleter) deleteImage(ref string) error {
+func (d *ImageDeleter) deleteImage(ref string) error {
 	image, err := name.ParseReference(ref)
 	if err != nil {
 		return errors.Wrapf(err, "failed to parse reference %q", ref)
@@ -170,7 +170,7 @@ func (d* ImageDeleter) deleteImage(ref string) error {
 
 // DeleteResources deletes old clusters from a given project.
 func (d *GkeClusterDeleter) DeleteResources(project string, hoursToKeepResource int, dryRun bool) (int, error) {
-	before := time.Now().Add(-time.Hour*time.Duration(hoursToKeepResource))
+	before := time.Now().Add(-time.Hour * time.Duration(hoursToKeepResource))
 	// TODO(adrcunha): Consider exposing https://github.com/knative/pkg/blob/6d806b998379948bd0107d77bcd831e2bdb4f3cb/testutils/clustermanager/e2e-tests/gke.go#L281
 	if project == "knative-tests" {
 		return 0, fmt.Errorf("cleaning up %q is forbidden", project)
@@ -207,7 +207,7 @@ func (d *GkeClusterDeleter) DeleteResources(project string, hoursToKeepResource 
 
 // DeleteResources deletes old docker images from a given project.
 func (d *ImageDeleter) DeleteResources(project string, hoursToKeepResource int, dryRun bool) (int, error) {
-	before := time.Now().Add(-time.Hour*time.Duration(hoursToKeepResource))
+	before := time.Now().Add(-time.Hour * time.Duration(hoursToKeepResource))
 	repoRoot := d.registry + "/" + project
 	// TODO(adrcunha): This should be a helper function, like https://github.com/knative/pkg/blob/6d806b998379948bd0107d77bcd831e2bdb4f3cb/testutils/clustermanager/e2e-tests/gke.go#L281
 	if repoRoot == "gcr.io/knative-releases" || repoRoot == "gcr.io/knative-nightly" {
@@ -329,15 +329,15 @@ func (d *BaseResourceDeleter) ShowStats(count int, errors []string) {
 // cleanup parses flags, run the operations and returns the status.
 func cleanup() error {
 	// Command-line flags.
-	projectResourceYaml  := flag.String("project-resource-yaml", "", "Resources file containing the names of the projects to be cleaned up.")
-	project              := flag.String("project", "", "Project to be cleaned up.")
-	reProjectName        := flag.String("re-project-name", "knative-boskos-[a-zA-Z0-9]+", "Regular expression for filtering project names from the resources file.")
-	daysToKeepImages     := flag.Int("days-to-keep-images", 365, "Images older than this amount of days will be deleted (defaults to 1 year, -1 means 'forever').")
-	hoursToKeepClusters  := flag.Int("hours-to-keep-clusters", 720, "Clusters older than this amount of hours will be deleted (defautls to 1 month, -1 means 'forever').")
-	registry             := flag.String("gcr", "gcr.io", "The registry hostname to use (defaults to gcr.io; currently only GCR is supported).")
-	serviceAccount       := flag.String("service-account", "", "Specify the key file of the service account to use.")
+	projectResourceYaml := flag.String("project-resource-yaml", "", "Resources file containing the names of the projects to be cleaned up.")
+	project := flag.String("project", "", "Project to be cleaned up.")
+	reProjectName := flag.String("re-project-name", "knative-boskos-[a-zA-Z0-9]+", "Regular expression for filtering project names from the resources file.")
+	daysToKeepImages := flag.Int("days-to-keep-images", 365, "Images older than this amount of days will be deleted (defaults to 1 year, -1 means 'forever').")
+	hoursToKeepClusters := flag.Int("hours-to-keep-clusters", 720, "Clusters older than this amount of hours will be deleted (defautls to 1 month, -1 means 'forever').")
+	registry := flag.String("gcr", "gcr.io", "The registry hostname to use (defaults to gcr.io; currently only GCR is supported).")
+	serviceAccount := flag.String("service-account", "", "Specify the key file of the service account to use.")
 	concurrentOperations := flag.Int("concurrent-operations", 10, "How many deletion operations to run concurrently (defaults to 10).")
-	dryRun               := flag.Bool("dry-run", false, "Performs a dry run for all deletion functions.")
+	dryRun := flag.Bool("dry-run", false, "Performs a dry run for all deletion functions.")
 	flag.Parse()
 
 	if *dryRun {
@@ -363,7 +363,7 @@ func cleanup() error {
 		}
 		log.Println("Removing images that are:")
 		log.Printf("- older than %d days", *daysToKeepImages)
-		deleter.ShowStats(deleter.Delete(*daysToKeepImages * 24, *concurrentOperations, *dryRun))
+		deleter.ShowStats(deleter.Delete(*daysToKeepImages*24, *concurrentOperations, *dryRun))
 	}
 
 	if *hoursToKeepClusters >= 0 {
