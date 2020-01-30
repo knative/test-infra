@@ -37,10 +37,9 @@ func hasGitAttr(attr string, fileName string) bool {
 	attrCmd.Wait()
 
 	cleaned := strings.TrimSpace(val.String())
-	n := len(cleaned)
-	// TODO: was only checking "true" before this; I doubt there's ever a
-	// situation where it returns "true" instead of "set"
-	return cleaned[n-4:n] == "true" || cleaned[n-3:n] == "set"
+	// TODO: Prior to this rewrite, the code was checking only for "true"
+	// `git check-attr` returns set, unset, or unspecified. Not sure where "true" comes from, but keeping it just in case.
+	return strings.HasSuffix(cleaned, "true") || strings.HasSuffix(cleaned, "set")
 }
 
 func IsCoverageSkipped(filePath string) bool {
