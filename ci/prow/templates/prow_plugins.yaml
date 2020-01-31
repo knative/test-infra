@@ -84,12 +84,13 @@ plugins:
   - lifecycle
   - milestone
   - owners-label
+  - project
   - shrug
   - size
   - skip
   - trigger
   - verify-owners
+  - welcome
   - wip
   - yuks
-  - project
 [[end]]
