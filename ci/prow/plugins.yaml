@@ -92,14 +92,15 @@ plugins:
   - lifecycle
   - milestone
   - owners-label
+  - project
   - shrug
   - size
   - skip
   - trigger
   - verify-owners
+  - welcome
   - wip
   - yuks
-  - project
   knative/caching:
   - approve
   - assign
@@ -116,14 +117,15 @@ plugins:
   - lifecycle
   - milestone
   - owners-label
+  - project
   - shrug
   - size
   - skip
   - trigger
   - verify-owners
+  - welcome
   - wip
   - yuks
-  - project
   knative/client:
   - approve
   - assign
@@ -140,14 +142,15 @@ plugins:
   - lifecycle
   - milestone
   - owners-label
+  - project
   - shrug
   - size
   - skip
   - trigger
   - verify-owners
+  - welcome
   - wip
   - yuks
-  - project
   knative/community:
   - approve
   - assign
@@ -164,14 +167,15 @@ plugins:
   - lifecycle
   - milestone
   - owners-label
+  - project
   - shrug
   - size
   - skip
   - trigger
   - verify-owners
+  - welcome
   - wip
   - yuks
-  - project
   knative/docs:
   - approve
   - assign
@@ -188,14 +192,15 @@ plugins:
   - lifecycle
   - milestone
   - owners-label
+  - project
   - shrug
   - size
   - skip
   - trigger
   - verify-owners
+  - welcome
   - wip
   - yuks
-  - project
   knative/eventing:
   - approve
   - assign
@@ -212,14 +217,15 @@ plugins:
   - lifecycle
   - milestone
   - owners-label
+  - project
   - shrug
   - size
   - skip
   - trigger
   - verify-owners
+  - welcome
   - wip
   - yuks
-  - project
   knative/eventing-contrib:
   - approve
   - assign
@@ -236,14 +242,15 @@ plugins:
   - lifecycle
   - milestone
   - owners-label
+  - project
   - shrug
   - size
   - skip
   - trigger
   - verify-owners
+  - welcome
   - wip
   - yuks
-  - project
   knative/eventing-operator:
   - approve
   - assign
@@ -260,14 +267,15 @@ plugins:
   - lifecycle
   - milestone
   - owners-label
+  - project
   - shrug
   - size
   - skip
   - trigger
   - verify-owners
+  - welcome
   - wip
   - yuks
-  - project
   knative/net-contour:
   - approve
   - assign
@@ -284,14 +292,15 @@ plugins:
   - lifecycle
   - milestone
   - owners-label
+  - project
   - shrug
   - size
   - skip
   - trigger
   - verify-owners
+  - welcome
   - wip
   - yuks
-  - project
   knative/observability:
   - approve
   - assign
@@ -308,14 +317,15 @@ plugins:
   - lifecycle
   - milestone
   - owners-label
+  - project
   - shrug
   - size
   - skip
   - trigger
   - verify-owners
+  - welcome
   - wip
   - yuks
-  - project
   knative/pkg:
   - approve
   - assign
@@ -332,14 +342,15 @@ plugins:
   - lifecycle
   - milestone
   - owners-label
+  - project
   - shrug
   - size
   - skip
   - trigger
   - verify-owners
+  - welcome
   - wip
   - yuks
-  - project
   knative/sample-controller:
   - approve
   - assign
@@ -356,14 +367,15 @@ plugins:
   - lifecycle
   - milestone
   - owners-label
+  - project
   - shrug
   - size
   - skip
   - trigger
   - verify-owners
+  - welcome
   - wip
   - yuks
-  - project
   knative/sample-source:
   - approve
   - assign
@@ -380,14 +392,15 @@ plugins:
   - lifecycle
   - milestone
   - owners-label
+  - project
   - shrug
   - size
   - skip
   - trigger
   - verify-owners
+  - welcome
   - wip
   - yuks
-  - project
   knative/serving:
   - approve
   - assign
@@ -404,14 +417,15 @@ plugins:
   - lifecycle
   - milestone
   - owners-label
+  - project
   - shrug
   - size
   - skip
   - trigger
   - verify-owners
+  - welcome
   - wip
   - yuks
-  - project
   knative/serving-operator:
   - approve
   - assign
@@ -428,14 +442,15 @@ plugins:
   - lifecycle
   - milestone
   - owners-label
+  - project
   - shrug
   - size
   - skip
   - trigger
   - verify-owners
+  - welcome
   - wip
   - yuks
-  - project
   knative/test-infra:
   - approve
   - assign
@@ -452,14 +467,15 @@ plugins:
   - lifecycle
   - milestone
   - owners-label
+  - project
   - shrug
   - size
   - skip
   - trigger
   - verify-owners
+  - welcome
   - wip
   - yuks
-  - project
   knative/website:
   - approve
   - assign
@@ -476,11 +492,12 @@ plugins:
   - lifecycle
   - milestone
   - owners-label
+  - project
   - shrug
   - size
   - skip
   - trigger
   - verify-owners
+  - welcome
   - wip
   - yuks
-  - project
