@@ -8426,10 +8426,10 @@ periodics:
       args:
       - "run"
       - "./tools/cleanup/cleanup.go"
-      - "--project-resource-yaml ci/prow/boskos_resources.yaml"
-      - "--days-to-keep-images 30"
-      - "--hours-to-keep-clusters 24"
-      - "--service-account /etc/test-account/service-account.json"
+      - "--project-resource-yaml=ci/prow/boskos_resources.yaml"
+      - "--days-to-keep-images=30"
+      - "--hours-to-keep-clusters=24"
+      - "--service-account=/etc/test-account/service-account.json"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
