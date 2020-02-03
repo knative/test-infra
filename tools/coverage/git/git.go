@@ -37,8 +37,9 @@ func hasGitAttr(attr string, fileName string) bool {
 	attrCmd.Wait()
 
 	cleaned := strings.TrimSpace(val.String())
-	// TODO: Prior to this rewrite, the code was checking only for "true"
-	// `git check-attr` returns set, unset, or unspecified. Not sure where "true" comes from, but keeping it just in case.
+	// Git attributes can either be set/unset, or can have an arbitrary string value.
+	// Whoever originally defined exclusions assigned a string value of "true" instead of using the builtin set/unset.
+	// This allows either.
 	return strings.HasSuffix(cleaned, "true") || strings.HasSuffix(cleaned, "set")
 }
 
