@@ -62,6 +62,7 @@ type repositoryData struct {
 	Processed              bool
 	DotDev                 bool
 	Go113                  bool
+	Go114                  bool
 	LegacyBranches         []string
 	Go112Branches          []string
 }
@@ -301,31 +302,50 @@ func getGo112ID() string {
 	return "-go112"
 }
 
+// getGo114ID returns image identifier for go114 images
+func getGo114ID() string {
+	return "-go114"
+}
+
 // Get go113 image name from base image name, following the contract of
 // [IMAGE]:[DIGEST]-> [IMAGE]-go112:[DIGEST]
 func getGo113ImageName(name string) string {
-	go112ID := getGo112ID()
+	return stripSuffixFromImageName(name, []string{getGo112ID()})
+}
+
+// strip out all suffixes from the image name
+func stripSuffixFromImageName(name string, suffixes []string) string {
 	parts := strings.SplitN(name, ":", 2)
 	if len(parts) != 2 {
 		log.Fatalf("image name should contain ':': %q", name)
 	}
-	if strings.HasSuffix(parts[0], go112ID) {
-		parts[0] = strings.TrimSuffix(parts[0], go112ID)
+	for _, s := range suffixes {
+		if strings.HasSuffix(parts[0], s) {
+			parts[0] = strings.TrimSuffix(parts[0], s)
+		}
 	}
 	return strings.Join(parts, ":")
 }
 
-// Remove go113 image name suffix
-func restoreGo113ImageName(name string) string {
-	go112ID := getGo112ID()
+// add suffix to the image name
+// e.g. if suffix = "-go112", then [IMAGE]:[DIGEST]-> [IMAGE]-go112:[DIGEST]
+func addSuffixToImageName(name string, suffix string) string {
 	parts := strings.SplitN(name, ":", 2)
 	if len(parts) != 2 {
 		log.Fatalf("image name should contain ':': %q", name)
 	}
-	if !strings.HasSuffix(parts[0], go112ID) {
-		parts[0] = fmt.Sprintf("%s%s", parts[0], go112ID)
+	if !strings.HasSuffix(parts[0], suffix) {
+		parts[0] = fmt.Sprintf("%s%s", parts[0], suffix)
 	}
 	return strings.Join(parts, ":")
+}
+
+func getGo112ImageName(name string) string {
+	return addSuffixToImageName(name, getGo112ID())
+}
+
+func getGo114ImageName(name string) string {
+	return addSuffixToImageName(stripSuffixFromImageName(name, []string{getGo112ID()}), getGo114ID())
 }
 
 // Consolidate whitelisted and skipped branches with newly added
@@ -521,7 +541,7 @@ func setReourcesReqForJob(res yaml.MapSlice, data *baseProwJobTemplateData) {
 // parseBasicJobConfigOverrides updates the given baseProwJobTemplateData with any base option present in the given config.
 func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.MapSlice) {
 	(*data).ExtraRefs = append((*data).ExtraRefs, "  base_ref: "+(*data).RepoBranch)
-	var needDotdev, needGo113 bool
+	var needDotdev, needGo113, needGo114 bool
 	for i, item := range config {
 		switch item.Key {
 		case "skip_branches":
@@ -556,6 +576,14 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 			for i, repo := range repositories {
 				if path.Base(repo.Name) == (*data).RepoName {
 					repositories[i].Go113 = true
+				}
+			}
+		case "go114":
+			needGo114 = true
+			for i, repo := range repositories {
+				if path.Base(repo.Name) == (*data).RepoName {
+					repositories[i].Go114 = true
+					data.RepoNameForJob = (*data).RepoName + getGo114ID()
 				}
 			}
 		case "performance":
@@ -598,6 +626,9 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 	}
 	if needGo113 {
 		(*data).Image = getGo113ImageName((*data).Image)
+	}
+	if needGo114 {
+		(*data).Image = getGo114ImageName((*data).Image)
 	}
 	// Override any values if provided by command-line flags.
 	if timeoutOverride > 0 {
@@ -857,7 +888,7 @@ func executeJobTemplateWrapper(repoName string, data interface{}, generateOneJob
 				base.Image = getGo113ImageName(base.Image)
 			},
 			restore: func(base *baseProwJobTemplateData) {
-				base.Image = restoreGo113ImageName(base.Image)
+				base.Image = getGo112ImageName(base.Image)
 			},
 		})
 	}
@@ -966,7 +997,7 @@ func collectMetaData(periodicJob yaml.MapSlice) {
 			releaseVersion := ""
 			for _, item := range jobConfig {
 				switch item.Key {
-				case "continuous", "dot-release", "auto-release", "performance",
+				case "continuous", "continuous-go114", "dot-release", "auto-release", "performance",
 					"nightly", "webhook-apicoverage":
 					if getBool(item.Value) {
 						enabled = true

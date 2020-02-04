@@ -51,7 +51,7 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	generateJob := true
 	for i, item := range presubmitConfig {
 		switch item.Key {
-		case "build-tests", "unit-tests", "integration-tests":
+		case "build-tests", "build-tests-go114", "unit-tests", "integration-tests", "integration-tests-go114":
 			if !getBool(item.Value) {
 				return
 			}
@@ -61,7 +61,7 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 			if len(data.Base.Args) == 0 {
 				data.Base.Args = []string{"--" + jobName}
 			}
-			if item.Key == "integration-tests" || item.Key == "unit-tests" {
+			if item.Key == "integration-tests" || item.Key == "integration-tests-go114" || item.Key == "unit-tests" {
 				isMonitoredJob = true
 			}
 			addVolumeToJob(&data.Base, "/etc/repoview-token", "repoview-token", true, "")

@@ -83,7 +83,7 @@ func generateCron(jobType, jobName string, timeout int) string {
 
 	var res string
 	switch jobType {
-	case "continuous", "custom-job", "auto-release": // Every hour
+	case "continuous", "custom-job", "auto-release", "continuous-go114": // Every hour
 		res = fmt.Sprintf(hourCron)
 	case "branch-ci": // Every day 1-2 PST
 		res = fmt.Sprintf(dayCron, getUTCtime(1))
