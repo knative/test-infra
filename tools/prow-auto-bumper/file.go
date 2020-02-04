@@ -96,13 +96,13 @@ func (pv *PRVersions) updateAllFiles(fileFilters []*regexp.Regexp, imageFilter *
 		return msgs, fmt.Errorf("failed to change to root dir")
 	}
 
-	err := filepath.Walk(".", func(filename string, info os.FileInfo, err error) error {
+	err := filepath.Walk(configPath, func(filename string, info os.FileInfo, err error) error {
 		for _, ff := range fileFilters {
 			if ff.Match([]byte(filename)) {
 				tmp, err := pv.updateFile(filename, imageFilter, dryrun)
 				msgs = append(msgs, tmp...)
 				if err != nil {
-					return fmt.Errorf("Failed to update path %s '%v'", filename, err)
+					return fmt.Errorf("failed to update path %s '%v'", filename, err)
 				}
 			}
 		}
