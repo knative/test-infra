@@ -25,17 +25,6 @@ presubmits:
           memory: 12Gi # Real request for this pod is 16 as sidecar requests 4
         limits:
           memory: 16Gi
-    - build-tests-go114: true
-      dot-dev: true
-      optional: true
-      go114: true
-      resources:
-        requests:
-          memory: 12Gi # Real request for this pod is 16 as sidecar requests 4
-        limits:
-          memory: 16Gi
-      args:
-      - "--build-tests"
     - unit-tests: true
       dot-dev: true
     - integration-tests: true
@@ -43,13 +32,6 @@ presubmits:
       args:
       - "--run-test"
       - "./test/e2e-tests.sh --istio-version 1.3-latest --no-mesh"
-    - integration-tests-go114: true
-      dot-dev: true
-      optional: true
-      go114: true
-      args:
-        - "--run-test"
-        - "./test/e2e-tests.sh --istio-version 1.3-latest --no-mesh"
     - custom-test: upgrade-tests
       dot-dev: true
       args:
@@ -126,6 +108,24 @@ presubmits:
       args:
       - "--run-test"
       - "./test/e2e-tests.sh --https"
+    - custom-test: build-tests-go114
+      dot-dev: true
+      optional: true
+      go114: true
+      resources:
+        requests:
+          memory: 12Gi # Real request for this pod is 16 as sidecar requests 4
+        limits:
+          memory: 16Gi
+      args:
+        - "--build-tests"
+    - custom-test: integration-tests-go114
+      dot-dev: true
+      optional: true
+      go114: true
+      args:
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version 1.3-latest --no-mesh"
 
   knative/client:
     - repo-settings:
