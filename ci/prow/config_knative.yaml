@@ -355,15 +355,6 @@ periodics:
           memory: 12Gi
         limits:
           memory: 16Gi
-    - continuous: true
-      timeout: 100
-      dot-dev: true
-      go114: true
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
     - branch-ci: true
       release: "0.9"
       dot-dev: true
@@ -438,6 +429,16 @@ periodics:
     - webhook-apicoverage: true
       dot-dev: true
       go113: true
+    - custom-job: continuous-go114
+      full-command: "./test/e2e-tests.sh"
+      timeout: 100
+      dot-dev: true
+      go114: true
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+            memory: 16Gi
 
   knative/client:
     - continuous: true
