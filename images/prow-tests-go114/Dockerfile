@@ -1,4 +1,4 @@
-# Copyright 2019 The Knative Authors
+# Copyright 2020 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ LABEL maintainer "Chao Dai <chaodai@google.com>"
 ENV GO_TARBALL "go1.14beta1.tar.gz"
 
 # Required variables to install go from source
+# Reference: https://golang.org/doc/install/source#environment
 ENV GOROOT_BOOTSTRAP "/usr/local/go-old"
 ENV GOROOT "/usr/local/go"
 ENV CGO_ENABLED 0
@@ -25,8 +26,7 @@ ENV GOOS "linux"
 ENV GOARCH "amd64"
 
 # install netbase as it's required for Go linux amd64 install (OS specific)
-RUN apt-get update && \
-    apt-get install netbase
+RUN apt-get install netbase
 
 # go1.14 is not released yet. Downloading the beta version directly from github and building from source
 # Reference: https://golang.org/doc/install/source
@@ -36,4 +36,5 @@ RUN mv /usr/local/go /usr/local/go-old && \
     mv /usr/local/go-go1.14beta1 /usr/local/go && \
     cd ${GOROOT}/src && \
     echo go1.14beta1 > ${GOROOT}/VERSION && \
-    ./all.bash
+    ./all.bash && \
+    rm -rf ${GOROOT_BOOTSTRAP}
