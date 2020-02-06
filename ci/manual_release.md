@@ -31,6 +31,9 @@ release.
 - `--release-gcr` Defines the GCR where the images will be stored. By default,
   this is `gcr.io/knative-nightly`. This flag is ignored if the release is not
   being published.
+- `--release-dir` Defines the directory where the manifests will be stored. It
+  is mutually exclusive to `release-gcs`. If `--nopublish` is used, and
+  `--release-dir` is not passed, the directory defaults to the repository root.
 - `--publish`, `--nopublish` Whether the generated images should be published to
   a GCR, and the generated manifests written to a GCS bucket or not. If yes, the
   `--release-gcs` and `--release-gcr` flags can be used to change the default
