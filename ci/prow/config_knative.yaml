@@ -309,6 +309,11 @@ presubmits:
         - "--run-test"
         - "./test/e2e-tests-latest-serving.sh"
       dot-dev: true
+    - custom-test: upgrade-tests
+      dot-dev: true
+      args:
+        - "--run-test"
+        - "./test/e2e-upgrade-tests.sh"
 
   knative/eventing-operator:
     - repo-settings:
