@@ -21,7 +21,7 @@ ENV GO_TARBALL "go1.14beta1.tar.gz"
 # Reference: https://golang.org/doc/install/source#environment
 ENV GOROOT_BOOTSTRAP "/usr/local/go-old"
 ENV GOROOT "/usr/local/go"
-ENV CGO_ENABLED 0
+ENV CGO_ENABLED 1
 ENV GOOS "linux"
 ENV GOARCH "amd64"
 
