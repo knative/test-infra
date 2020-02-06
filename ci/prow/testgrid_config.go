@@ -142,33 +142,24 @@ func generateTestGroup(projName string, repoName string, jobNames []string) {
 		gcsLogDir := fmt.Sprintf("%s/%s/%s", gcsBucket, logsDir, testGroupName)
 		extras := make(map[string]string)
 		switch jobName {
-		case "continuous", "dot-release", "auto-release",
-			"nightly", "webhook-apicoverage":
-			isDailyBranch := contRegex.FindString(testGroupName) != ""
-			if !isDailyBranch && (jobName == "continuous" || jobName == "auto-release") {
-				// TODO(Fredy-Z): this value should be derived from the cron string
+		case "continuous":
+			if contRegex.FindString(testGroupName) != "" {
+				extras["num_failures_to_alert"] = "3"
+			} else {
 				extras["alert_stale_results_hours"] = "3"
-				if jobName == "continuous" {
-					// For continuous flows, alert after 3 failures due to flakiness
-					extras["num_failures_to_alert"] = "3"
-				}
 			}
+		case "dot-release", "auto-release", "nightly":
+			extras["num_failures_to_alert"] = "1"
 			if jobName == "dot-release" {
-				// TODO(Fredy-Z): this value should be derived from the cron string
 				extras["alert_stale_results_hours"] = "170" // 1 week + 2h
 			}
-			if jobName == "webhook-apicoverage" {
-				extras["alert_stale_results_hours"] = "48" // 2 days
-				extras["num_failures_to_alert"] = "3"
-			}
+		case "webhook-apicoverage":
+			extras["alert_stale_results_hours"] = "48" // 2 days
 		case "test-coverage":
 			gcsLogDir = strings.ToLower(fmt.Sprintf("%s/%s/ci-%s-%s", gcsBucket, logsDir, projRepoStr, "go-coverage"))
 			extras["short_text_metric"] = "coverage"
-			// Do not alert on coverage failures (i.e., coverage below threshold)
-			extras["num_failures_to_alert"] = "9999"
 		default:
 			extras["alert_stale_results_hours"] = "3"
-			extras["num_failures_to_alert"] = "3"
 		}
 		executeTestGroupTemplate(testGroupName, gcsLogDir, extras)
 	}
