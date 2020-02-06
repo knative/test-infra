@@ -44,7 +44,7 @@ import (
 
 var (
 	// Authentication method for using Google Cloud Registry APIs.
-	auther = authn.DefaultKeychain
+	author = authn.DefaultKeychain
 
 	// Alias of remote.Delete for testing purposes.
 	remoteDelete = remote.Delete
@@ -162,7 +162,7 @@ func (d *ImageDeleter) deleteImage(ref string) error {
 	if err != nil {
 		return errors.Wrapf(err, "failed to parse reference %q", ref)
 	}
-	if err := remoteDelete(image, remote.WithAuthFromKeychain(auther)); err != nil {
+	if err := remoteDelete(image, remote.WithAuthFromKeychain(author)); err != nil {
 		return errors.Wrapf(err, "failed to delete %q", image)
 	}
 	return nil
@@ -250,7 +250,7 @@ func (d *ImageDeleter) DeleteResources(project string, hoursToKeepResource int, 
 			}
 		}
 		return nil
-	}, google.WithAuthFromKeychain(auther))
+	}, google.WithAuthFromKeychain(author))
 }
 
 // Projects returns the projects that should be cleaned up by a ResourceDeleter.
