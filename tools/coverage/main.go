@@ -43,9 +43,14 @@ const (
 func main() {
 	fmt.Println("entering code coverage main")
 
+	envOverriddenDefaultArtifactsDir := os.Getenv("ARTIFACTS")
+	if envOverriddenDefaultArtifactsDir == "" {
+		envOverriddenDefaultArtifactsDir = defaultArtifactsDir
+	}
+
 	gcsBucketName := flag.String("postsubmit-gcs-bucket", defaultGcsBucket, "gcs bucket name")
 	postSubmitJobName := flag.String("postsubmit-job-name", defaultPostSubmitJobName, "name of the prow job")
-	artifactsDir := flag.String("artifacts", defaultArtifactsDir, "directory for artifacts")
+	artifactsDir := flag.String("artifacts", envOverriddenDefaultArtifactsDir, "directory for artifacts")
 	coverageTargetDir := flag.String("cov-target", defaultCoverageTargetDir, "target directory for test coverage")
 	coverageProfileName := flag.String("profile-name", defaultCoverageProfileName, "file name for coverage profile")
 	githubTokenPath := flag.String("github-token", "", "path to token to access github repo")
