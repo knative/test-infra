@@ -320,13 +320,11 @@ presubmits:
       dot-dev: true
     - go-coverage: true
       dot-dev: true
-    - custom-test: integration-tests-on-latest-eventing
-      always_run: false
-      optional: true
+    - custom-test: upgrade-tests
+      dot-dev: true
       args:
         - "--run-test"
-        - "./test/e2e-tests-latest-eventing.sh"
-      dot-dev: true
+        - "./test/e2e-upgrade-tests.sh"
 
   knative/website:
     # This repo only uses Tide
@@ -639,10 +637,6 @@ periodics:
       dot-dev: true
       go113: true
     - auto-release: true
-      dot-dev: true
-      go113: true
-    - custom-job: integration-tests-on-latest-eventing
-      command: "./test/e2e-tests-latest-eventing.sh"
       dot-dev: true
       go113: true
 
