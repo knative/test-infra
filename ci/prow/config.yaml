@@ -1223,7 +1223,7 @@ presubmits:
   - name: pull-knative-serving-build-tests-go114
     agent: kubernetes
     context: pull-knative-serving-build-tests-go114
-    always_run: true
+    always_run: false
     rerun_command: "/test pull-knative-serving-build-tests-go114"
     trigger: "(?m)^/test (all|pull-knative-serving-build-tests-go114),?(\\s+|$)"
     decorate: true
@@ -1261,7 +1261,7 @@ presubmits:
   - name: pull-knative-serving-build-tests-go114
     agent: kubernetes
     context: pull-knative-serving-build-tests-go114
-    always_run: true
+    always_run: false
     rerun_command: "/test pull-knative-serving-build-tests-go114"
     trigger: "(?m)^/test (all|pull-knative-serving-build-tests-go114),?(\\s+|$)"
     decorate: true
@@ -1299,7 +1299,7 @@ presubmits:
   - name: pull-knative-serving-integration-tests-go114
     agent: kubernetes
     context: pull-knative-serving-integration-tests-go114
-    always_run: true
+    always_run: false
     rerun_command: "/test pull-knative-serving-integration-tests-go114"
     trigger: "(?m)^/test (all|pull-knative-serving-integration-tests-go114),?(\\s+|$)"
     decorate: true
@@ -1333,7 +1333,7 @@ presubmits:
   - name: pull-knative-serving-integration-tests-go114
     agent: kubernetes
     context: pull-knative-serving-integration-tests-go114
-    always_run: true
+    always_run: false
     rerun_command: "/test pull-knative-serving-integration-tests-go114"
     trigger: "(?m)^/test (all|pull-knative-serving-integration-tests-go114),?(\\s+|$)"
     decorate: true
