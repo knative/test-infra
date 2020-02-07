@@ -5398,14 +5398,13 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
-  - name: pull-knative-eventing-operator-integration-tests-on-latest-eventing
+  - name: pull-knative-eventing-operator-upgrade-tests
     agent: kubernetes
-    context: pull-knative-eventing-operator-integration-tests-on-latest-eventing
-    always_run: false
-    rerun_command: "/test pull-knative-eventing-operator-integration-tests-on-latest-eventing"
-    trigger: "(?m)^/test (all|pull-knative-eventing-operator-integration-tests-on-latest-eventing),?(\\s+|$)"
+    context: pull-knative-eventing-operator-upgrade-tests
+    always_run: true
+    rerun_command: "/test pull-knative-eventing-operator-upgrade-tests"
+    trigger: "(?m)^/test (all|pull-knative-eventing-operator-upgrade-tests),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/eventing-operator
     branches:
     - "release-0.10"
@@ -5418,7 +5417,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests-latest-eventing.sh"
+        - "./test/e2e-upgrade-tests.sh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -5432,14 +5431,13 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-eventing-operator-integration-tests-on-latest-eventing
+  - name: pull-knative-eventing-operator-upgrade-tests
     agent: kubernetes
-    context: pull-knative-eventing-operator-integration-tests-on-latest-eventing
-    always_run: false
-    rerun_command: "/test pull-knative-eventing-operator-integration-tests-on-latest-eventing"
-    trigger: "(?m)^/test (all|pull-knative-eventing-operator-integration-tests-on-latest-eventing),?(\\s+|$)"
+    context: pull-knative-eventing-operator-upgrade-tests
+    always_run: true
+    rerun_command: "/test pull-knative-eventing-operator-upgrade-tests"
+    trigger: "(?m)^/test (all|pull-knative-eventing-operator-upgrade-tests),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/eventing-operator
     skip_branches:
     - "release-0.10"
@@ -5452,7 +5450,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests-latest-eventing.sh"
+        - "./test/e2e-upgrade-tests.sh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -8092,36 +8090,6 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "26 */2 * * *"
-  name: ci-knative-eventing-operator-integration-tests-on-latest-eventing
-  agent: kubernetes
-  decorate: true
-  extra_refs:
-  - org: knative
-    repo: eventing-operator
-    base_ref: master
-    path_alias: knative.dev/eventing-operator
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      command:
-      - runner.sh
-      args:
-      - "./test/e2e-tests-latest-eventing.sh"
-      volumeMounts:
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
-      env:
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-    volumes:
-    - name: test-account
-      secret:
-        secretName: test-account
 - cron: "0 1 * * *"
   name: ci-knative-eventing-operator-go-coverage
   labels:

@@ -211,9 +211,6 @@ test_groups:
 - name: ci-knative-eventing-operator-auto-release
   gcs_prefix: knative-prow/logs/ci-knative-eventing-operator-auto-release
   num_failures_to_alert: 1
-- name: ci-knative-eventing-operator-integration-tests-on-latest-eventing
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-operator-integration-tests-on-latest-eventing
-  alert_stale_results_hours: 3
 - name: pull-knative-eventing-operator-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-eventing-operator-go-coverage
   short_text_metric: "coverage"
@@ -485,9 +482,6 @@ dashboards:
     base_options: "sort-by-name="
   - name: auto-release
     test_group_name: ci-knative-eventing-operator-auto-release
-    base_options: "sort-by-name="
-  - name: integration-tests-on-latest-eventing
-    test_group_name: ci-knative-eventing-operator-integration-tests-on-latest-eventing
     base_options: "sort-by-name="
   - name: coverage
     test_group_name: pull-knative-eventing-operator-test-coverage
