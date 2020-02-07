@@ -39,6 +39,9 @@ presubmits:
       - "./test/e2e-upgrade-tests.sh --istio-version 1.3-latest --no-mesh"
     - custom-test: smoke-tests
       dot-dev: true
+      #
+      always_run: false
+      optional: true
       args:
       - "--run-test"
       - "./test/e2e-smoke-tests.sh"

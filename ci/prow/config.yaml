@@ -455,10 +455,11 @@ presubmits:
   - name: pull-knative-serving-smoke-tests
     agent: kubernetes
     context: pull-knative-serving-smoke-tests
-    always_run: true
+    always_run: false
     rerun_command: "/test pull-knative-serving-smoke-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-smoke-tests),?(\\s+|$)"
     decorate: true
+    optional: true
     path_alias: knative.dev/serving
     branches:
     - "release-0.9"
@@ -488,10 +489,11 @@ presubmits:
   - name: pull-knative-serving-smoke-tests
     agent: kubernetes
     context: pull-knative-serving-smoke-tests
-    always_run: true
+    always_run: false
     rerun_command: "/test pull-knative-serving-smoke-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-smoke-tests),?(\\s+|$)"
     decorate: true
+    optional: true
     path_alias: knative.dev/serving
     skip_branches:
     - "release-0.9"
