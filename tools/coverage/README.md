@@ -20,7 +20,7 @@ This tool allows users to specify which files to skip, from reporting and aggreg
 User can add the git attribute `coverage-excluded=true` to any directory or file to exclude files.
 [Here](https://github.com/knative/serving/blob/master/.gitattributes) is an example.
 
-### Other automatically excluded files
+### Other Automatically Excluded Files
 - Source file (say `abc.go`) without corresponding `_test.go` file (abc_test.go)
 - Any file that has the gitattribute of `linguist-generated=true`
 
