@@ -14,6 +14,16 @@ The code coverage tool has two major features:
 
 See the [design document](design.md).
 
+## Skipped Files
+
+This tool allows users to specify which files to skip, from reporting and aggregation.
+User can add the git attribute `coverage-excluded=true` to any directory or file to exclude files.
+[Here](https://github.com/knative/serving/blob/master/.gitattributes) is an example.
+
+### Other automatically excluded files
+- Source file (say `abc.go`) without corresponding `_test.go` file (abc_test.go)
+- Any file that has the gitattribute of `linguist-generated=true`
+
 ## Build and Release
 
 In the `/images/coverage` directory, run `make IMAGE_NAME=coverage-dev push` to
