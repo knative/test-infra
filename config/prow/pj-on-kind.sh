@@ -26,5 +26,6 @@ set -o pipefail
 
 prowdir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 export CONFIG_PATH="${prowdir}/config.yaml"
+export JOB_CONFIG_PATH="${prowdir}/jobs/config.yaml"
 
 bash <(curl -sSfL https://raw.githubusercontent.com/kubernetes/test-infra/master/prow/pj-on-kind.sh) "$@"

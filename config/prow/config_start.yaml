@@ -34,6 +34,14 @@ metadata:
 data:
   config: ""
 ---
+# Prow jobs config
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: job-config
+data:
+  config: ""
+---
 # Boskos resources
 apiVersion: v1
 kind: ConfigMap
