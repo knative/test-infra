@@ -39,7 +39,7 @@ robot GitHub account.
 Produces periodic code coverage results as input for TestGrid.
 
 1. Periodic Prow job starts. The frequency and start time can be configured in
-   [the config file](../../ci/prow/testgrid_config.go)
+   [the config file](../../config/prow/testgrid_config.go)
 1. Test coverage profile and metadata generated.
 1. Generate and store per-file coverage data.
 

@@ -236,7 +236,7 @@ func generateCleanupPeriodicJob() {
 	data.Base.Args = []string{
 		"run",
 		"./tools/cleanup/cleanup.go",
-		"--project-resource-yaml=ci/prow/boskos_resources.yaml",
+		"--project-resource-yaml=config/prow/boskos_resources.yaml",
 		"--days-to-keep-images=30",
 		"--hours-to-keep-clusters=24",
 		"--service-account=" + data.Base.ServiceAccount}

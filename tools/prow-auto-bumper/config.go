@@ -40,7 +40,7 @@ const (
 	srcPRUserID = "k8s-ci-robot"
 
 	// configPath is the path where the configuration files are saved
-	configPath = "ci"
+	configPath = "config"
 
 	// Git info for target repo that Prow version bump PR targets
 	org  = "knative"

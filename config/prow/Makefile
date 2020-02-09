@@ -23,7 +23,7 @@ PROW_HOST     ?= https://prow.knative.dev
 SKIP_CONFIG_BACKUP        ?=
 GENERATE_MAINTENANCE_JOBS ?= true
 
-# This is the canonical path of this Makefile, aka /ci/prow dir.
+# This is the canonical path of this Makefile, aka /config/prow dir.
 PROW_DIR ?= $(realpath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 
 KNATIVE_CONFIG  ?= $(PROW_DIR)/config_knative.yaml
