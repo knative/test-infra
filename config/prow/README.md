@@ -8,7 +8,8 @@ This directory contains the config for our
 - `boskos_resources.yaml` Pool of projects used by Boskos.
 - `create_boskos_projects.sh` Script to create new Boskos projects.
 - `deployments/*.yaml` Deployments of the Prow cluster.
-- `config.yaml` Generated configuration of the Prow jobs.
+- `config.yaml` Generated configuration for Prow.
+- `jobs/config.yaml` Generated configuration of the Prow jobs.
 - `config_knative.yaml` Input configuration for `make_config.go` to generate
   `config.yaml`.
 - `config_start.yaml` Initial, empty configuration for Prow.

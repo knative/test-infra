@@ -31,6 +31,8 @@ spec:
         # Update plank utility_images versions in config.yaml when updating this version
         image: gcr.io/k8s-prow/plank:v20200130-51abc4f96
         args:
+        - --config-path=/etc/config/config.yaml
+        - --job-config-path=/etc/job-config
         - --dry-run=false
         volumeMounts:
         - name: oauth
@@ -39,6 +41,9 @@ spec:
         - name: config
           mountPath: /etc/config
           readOnly: true
+        - name: job-config
+          mountPath: /etc/job-config
+          readOnly: true
       volumes:
       - name: oauth
         secret:
@@ -46,3 +51,6 @@ spec:
       - name: config
         configMap:
           name: config
+      - name: job-config
+        configMap:
+          name: job-config

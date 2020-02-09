@@ -26,12 +26,13 @@ GENERATE_MAINTENANCE_JOBS ?= true
 # This is the canonical path of this Makefile, aka /config/prow dir.
 PROW_DIR ?= $(realpath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 
-KNATIVE_CONFIG  ?= $(PROW_DIR)/config_knative.yaml
-PROW_PLUGINS    ?= $(PROW_DIR)/plugins.yaml
-PROW_CONFIG     ?= $(PROW_DIR)/config.yaml
-PROW_DEPLOYS    ?= $(PROW_DIR)/deployments
-PROW_GCS        ?= knative-prow
-PROW_CONFIG_GCS ?= gs://$(PROW_GCS)/configs
+KNATIVE_CONFIG   ?= $(PROW_DIR)/config_knative.yaml
+PROW_PLUGINS     ?= $(PROW_DIR)/plugins.yaml
+PROW_CONFIG      ?= $(PROW_DIR)/config.yaml
+PROW_JOB_CONFIG ?= ${PROW_DIR}/jobs/config.yaml
+PROW_DEPLOYS     ?= $(PROW_DIR)/deployments
+PROW_GCS         ?= knative-prow
+PROW_CONFIG_GCS  ?= gs://$(PROW_GCS)/configs
 
 TESTGRID_GCS    ?= knative-testgrid
 TESTGRID_CONFIG ?= $(PROW_DIR)/testgrid.yaml
@@ -63,25 +64,32 @@ config:
 		--image-docker=gcr.io/$(PROJECT)/test-infra \
 		--plugins-config-output=$(PROW_PLUGINS) \
 		--prow-config-output=$(PROW_CONFIG) \
+		--prow-jobs-config-output=$(PROW_JOB_CONFIG) \
 		--prow-host=$(PROW_HOST) \
 		--testgrid-config-output=$(TESTGRID_CONFIG) \
 		--testgrid-gcs-bucket=$(TESTGRID_GCS) \
 		$(KNATIVE_CONFIG)
 
+# Update prow config
+update-prow-config:
+	$(SET_CONTEXT)
+	kubectl create configmap config --from-file=config.yaml=$(PROW_CONFIG) --dry-run -o yaml | kubectl replace configmap config -f -
+	$(UNSET_CONTEXT)
+
 # Update all prow job configs
-update-config:
+update-prow-job-config:
 	$(SET_CONTEXT)
 ifndef SKIP_CONFIG_BACKUP
 	$(eval OLD_YAML_CONFIG := $(shell mktemp))
 	$(eval NEW_YAML_CONFIG := $(shell mktemp))
 	$(eval GCS_DEST := $(PROW_CONFIG_GCS)/config-$(shell date '+%Y_%m_%d_%H:%M:%S').yaml)
-	@kubectl get configmap config -o jsonpath="{.data['config\.yaml']}" 2>/dev/null > "${OLD_YAML_CONFIG}"
+	@kubectl get configmap job-config -o jsonpath="{.data['config\.yaml']}" 2>/dev/null > "${OLD_YAML_CONFIG}"
 	@gsutil cp "${OLD_YAML_CONFIG}" "${GCS_DEST}" > /dev/null
-	@sed -e "s/((COMMIT_HASH_TOKEN))/$(shell git rev-parse HEAD)/" $(PROW_CONFIG) > "${NEW_YAML_CONFIG}"
+	@sed -e "s/((COMMIT_HASH_TOKEN))/$(shell git rev-parse HEAD)/" $(PROW_JOB_CONFIG) > "${NEW_YAML_CONFIG}"
 else
-	$(eval NEW_YAML_CONFIG := $(PROW_CONFIG))
+	$(eval NEW_YAML_CONFIG := $(PROW_JOB_CONFIG))
 endif
-	kubectl create configmap config --from-file=config.yaml=${NEW_YAML_CONFIG} --dry-run -o yaml | kubectl replace configmap config -f -
+	kubectl create configmap job-config --from-file=${NEW_YAML_CONFIG} --dry-run -o yaml | kubectl replace configmap job-config -f -
 	$(UNSET_CONTEXT)
 ifndef SKIP_CONFIG_BACKUP
 	diff "${OLD_YAML_CONFIG}" "${NEW_YAML_CONFIG}" --color=auto || true
@@ -120,12 +128,13 @@ update-single-cluster-deployment:
 	$(UNSET_CONTEXT)
 
 # Update all resources on Prow cluster except boskos resource
-update-full: update-all-cluster-deployments update-all-boskos-deployments update-plugins update-config
+update-full: update-all-cluster-deployments update-all-boskos-deployments update-plugins update-prow-config update-prow-job-config
 
 # Ensure that configs are valid and up-to-date
 test:
 	@echo "*** Checking config generator for prow and testgrid"
 	$(eval TMP_YAML_PROW := $(shell mktemp))
+	$(eval TMP_YAML_PROW_JOBS := $(shell mktemp))
 	$(eval TMP_YAML_PLUGINS := $(shell mktemp))
 	$(eval TMP_YAML_TESTGRID := $(shell mktemp))
 	$(MAKE_CONFIG) \
@@ -134,16 +143,19 @@ test:
 		--image-docker=gcr.io/$(PROJECT)/test-infra \
 		--plugins-config-output=$(TMP_YAML_PLUGINS) \
 		--prow-config-output=$(TMP_YAML_PROW) \
+		--prow-jobs-config-output=$(TMP_YAML_PROW_JOBS) \
 		--prow-host=$(PROW_HOST) \
 		--testgrid-config-output=$(TMP_YAML_TESTGRID) \
 		--testgrid-gcs-bucket=$(TESTGRID_GCS) \
 		$(KNATIVE_CONFIG)
 	diff --ignore-matching-lines="^# Copyright " $(PROW_CONFIG) $(TMP_YAML_PROW)
+	diff --ignore-matching-lines="^# Copyright " $(PROW_JOB_CONFIG) $(TMP_YAML_PROW_JOBS)
 	diff --ignore-matching-lines="^# Copyright " $(PROW_PLUGINS) $(TMP_YAML_PLUGINS)
 	diff --ignore-matching-lines="^# Copyright " $(TESTGRID_CONFIG) $(TMP_YAML_TESTGRID)
 	@echo "*** Checking configs validity"
 	bazel run @k8s//prow/cmd/checkconfig -- \
 		--config-path=$(PROW_CONFIG) \
+		--job-config-path=$(PROW_JOB_CONFIG) \
 		--plugin-config=$(PROW_PLUGINS)
 	bazel run @k8s//testgrid/cmd/configurator -- \
 		--validate-config-file \

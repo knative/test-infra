@@ -46,8 +46,11 @@ const (
 	// ##########################################################
 	// ############## prow configuration templates ##############
 	// ##########################################################
+	// commonHeaderConfig contains common header definitions.
+	commonHeaderConfig = "common_header.yaml"
+
 	// generalProwConfig contains config-wide definitions.
-	generalProwConfig = "prow_config_header.yaml"
+	generalProwConfig = "prow_config.yaml"
 
 	// pluginsConfig is the template for the plugins YAML file.
 	pluginsConfig = "prow_plugins.yaml"
@@ -1117,6 +1120,7 @@ func setOutput(fileName string) {
 func main() {
 	// Parse flags and sanity check them.
 	prowConfigOutput := ""
+	prowJobsConfigOutput := ""
 	testgridConfigOutput := ""
 	var generateProwConfig = flag.Bool("generate-prow-config", true, "Whether to generate the prow configuration file from the template")
 	var generatePluginsConfig = flag.Bool("generate-plugins-config", true, "Whether to generate the plugins configuration file from the template")
@@ -1125,6 +1129,7 @@ func main() {
 	var includeConfig = flag.Bool("include-config", true, "Whether to include general configuration (e.g., plank) in the generated config")
 	var dockerImagesBase = flag.String("image-docker", "gcr.io/knative-tests/test-infra", "Default registry for the docker images used by the jobs")
 	flag.StringVar(&prowConfigOutput, "prow-config-output", "", "The destination for the prow config output, default to be stdout")
+	flag.StringVar(&prowJobsConfigOutput, "prow-jobs-config-output", "", "The destination for the prow jobs config output, default to be stdout")
 	var pluginsConfigOutput = flag.String("plugins-config-output", "", "The destination for the plugins config output, default to be stdout")
 	flag.StringVar(&testgridConfigOutput, "testgrid-config-output", "", "The destination for the testgrid config output, default to be stdout")
 	flag.StringVar(&prowHost, "prow-host", "https://prow.knative.dev", "Prow host, including HTTP protocol")
@@ -1190,8 +1195,12 @@ func main() {
 		repositories = make([]repositoryData, 0)
 		sectionMap = make(map[string]bool)
 		if *includeConfig {
+			executeTemplate("general header", readTemplate(commonHeaderConfig), prowConfigData)
 			executeTemplate("general config", readTemplate(generalProwConfig), prowConfigData)
 		}
+
+		setOutput(prowJobsConfigOutput)
+		executeTemplate("general header", readTemplate(commonHeaderConfig), prowConfigData)
 		parseSection(config, "presubmits", generatePresubmit, nil)
 		parseSection(config, "periodics", generatePeriodic, generateGoCoveragePeriodic)
 		for _, repo := range repositories { // Keep order for predictable output.
@@ -1226,6 +1235,7 @@ func main() {
 		setOutput(testgridConfigOutput)
 
 		if *includeConfig {
+			executeTemplate("general header", readTemplate(commonHeaderConfig), newBaseTestgridTemplateData(""))
 			executeTemplate("general config", readTemplate(generalTestgridConfig), newBaseTestgridTemplateData(""))
 		}
 

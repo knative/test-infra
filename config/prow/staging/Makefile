@@ -26,6 +26,7 @@ GENERATE_MAINTENANCE_JOBS := false
 KNATIVE_CONFIG   := $(STAGING_DIR)/config_staging.yaml
 PROW_PLUGINS     := $(STAGING_DIR)/plugins.yaml
 PROW_CONFIG      := $(STAGING_DIR)/config.yaml
+PROW_JOB_CONFIG := $(STAGING_DIR)/jobs/config.yaml
 TESTGRID_CONFIG  := $(STAGING_DIR)/testgrid.yaml
 BOSKOS_RESOURCES := $(STAGING_DIR)/boskos_resources.yaml
 

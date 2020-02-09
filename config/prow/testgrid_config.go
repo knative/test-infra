@@ -64,7 +64,7 @@ var (
 )
 
 // baseTestgridTemplateData contains basic data about the testgrid config file.
-// TODO(Fredy-Z): remove this structure and use baseProwJobTemplateData instead
+// TODO(chizhg): remove this structure and use baseProwJobTemplateData instead
 type baseTestgridTemplateData struct {
 	ProwHost          string
 	TestGridHost      string
@@ -77,7 +77,7 @@ type baseTestgridTemplateData struct {
 // testGroupTemplateData contains data about a test group
 type testGroupTemplateData struct {
 	Base baseTestgridTemplateData
-	// TODO(Fredy-Z): use baseProwJobTemplateData then this attribute can be removed
+	// TODO(chizhg): use baseProwJobTemplateData then this attribute can be removed
 	GcsLogDir string
 	Extras    map[string]string
 }

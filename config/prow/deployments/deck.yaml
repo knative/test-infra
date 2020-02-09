@@ -39,6 +39,8 @@ spec:
         - --hook-url=http://hook:8888/plugin-help
         - --tide-url=http://tide/
         - --spyglass
+        - --config-path=/etc/config/config.yaml
+        - --job-config-path=/etc/job-config
         - --oauth-url=/github-login
         ports:
           - name: http
@@ -46,6 +48,9 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /etc/config
+          readOnly: true
+        - name: job-config
+          mountPath: /etc/job-config
           readOnly: true
         - name: oauth-config
           mountPath: /etc/github
@@ -57,6 +62,9 @@ spec:
       - name: config
         configMap:
           name: config
+      - name: job-config
+        configMap:
+          name: job-config
       - name: oauth-config
         secret:
           secretName: github-oauth-config-secret

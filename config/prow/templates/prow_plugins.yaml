@@ -40,7 +40,7 @@ project_config:
   project_org_configs:
     knative:
       org_maintainers_team_id: 2652083 # knative-admin
-      # TODO(Fredy-Z): Enable the plugin for other repos when needed.
+      # TODO(chizhg): Enable the plugin for other repos when needed.
       project_repo_configs:
         eventing:
           # TODO(grantr): replace with a new team eventing-project-maintainers
