@@ -31,12 +31,12 @@ presubmits:
       dot-dev: true
       args:
       - "--run-test"
-      - "./test/e2e-tests.sh --istio-version 1.3-latest --no-mesh"
+      - "./test/e2e-tests.sh"
     - custom-test: upgrade-tests
       dot-dev: true
       args:
       - "--run-test"
-      - "./test/e2e-upgrade-tests.sh --istio-version 1.3-latest --no-mesh"
+      - "./test/e2e-upgrade-tests.sh"
     - custom-test: smoke-tests
       dot-dev: true
       #
@@ -130,7 +130,7 @@ presubmits:
       go114: true
       args:
         - "--run-test"
-        - "./test/e2e-tests.sh --istio-version 1.3-latest --no-mesh"
+        - "./test/e2e-tests.sh"
 
   knative/client:
     - repo-settings:
