@@ -45,6 +45,7 @@ spec:
         - --config-path=/etc/config/config.yaml
         - --job-config-path=/etc/job-config
         - --oauth-url=/github-login
+        - --cookie-secret=/etc/cookie/secret
         ports:
           - name: http
             containerPort: 8080
