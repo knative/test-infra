@@ -455,8 +455,8 @@ function initialize() {
     case ${parameter} in
       --run-tests) RUN_TESTS=1 ;;
       --skip-knative-setup) SKIP_KNATIVE_SETUP=1 ;;
+      --skip-teardowns) SKIP_TEARDOWNS=1 ;;
       --skip-istio-addon) SKIP_ISTIO_ADDON=1 ;;
-      --skip-tear-downs) SKIP_TEARDOWNS=1 ;;
       *)
         [[ $# -ge 2 ]] || abort "missing parameter after $1"
         shift
