@@ -74,6 +74,15 @@ label:
   - proposal/0.17
   - proposal/0.18
   - proposal/0.19
+  - channel/kafka
+  - channel/natss
+  - source/awssqs
+  - source/camel
+  - source/ceph
+  - source/couchdb
+  - source/github
+  - source/kafka
+  - source/prometheus
 # Plugins enabled for each repo.
 plugins:
   google/knative-gcp:
