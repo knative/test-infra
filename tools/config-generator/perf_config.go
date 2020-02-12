@@ -20,7 +20,7 @@ limitations under the License.
 package main
 
 import (
-	"fmt"
+    "fmt"
 )
 
 const (
@@ -35,7 +35,7 @@ func generatePerfClusterUpdatePeriodicJobs() {
 		if repo.EnablePerformanceTests {
 			perfClusterPeriodicJob(
 				"recreate-clusters",
-				recreatePerfClusterPeriodicJobCron,
+                recreatePerfClusterPeriodicJobCron,
 				perfTestScriptPath,
 				[]string{"--recreate-clusters"},
 				repo,
@@ -43,7 +43,7 @@ func generatePerfClusterUpdatePeriodicJobs() {
 			)
 			perfClusterPeriodicJob(
 				"update-clusters",
-				updatePerfClusterPeriodicJobCron,
+                updatePerfClusterPeriodicJobCron,
 				perfTestScriptPath,
 				[]string{"--update-clusters"},
 				repo,

@@ -17,7 +17,7 @@ limitations under the License.
 package main
 
 import (
-	"strings"
+    "strings"
 
 	yaml "gopkg.in/yaml.v2"
 )

@@ -182,14 +182,14 @@ var (
 
 // read template yaml file content
 func readTemplate(fp string) string {
-	if _, ok := templatesCache[fp]; !ok {
+	if _, ok := config_generator.templatesCache[fp]; !ok {
 		content, err := ioutil.ReadFile(path.Join(templateDir, fp))
 		if err != nil {
 			log.Fatalf("Failed read file '%s': '%v'", fp, err)
 		}
-		templatesCache[fp] = string(content)
+		config_generator.templatesCache[fp] = string(content)
 	}
-	return templatesCache[fp]
+	return config_generator.templatesCache[fp]
 }
 
 // getString casts the given interface (expected string) as string.
@@ -993,7 +993,7 @@ func collectMetaData(periodicJob yaml.MapSlice) {
 
 		// parse job configs
 		for _, conf := range getInterfaceArray(repo.Value) {
-			jobDetailMap = metaData[projName]
+			jobDetailMap = config_generator.metaData[projName]
 			jobConfig := getMapSlice(conf)
 			enabled := false
 			jobName := ""
@@ -1040,18 +1040,18 @@ func collectMetaData(periodicJob yaml.MapSlice) {
 // addProjAndRepoIfNeed adds the project and repo if they are new in the metaData map, then return the jobDetailMap
 func addProjAndRepoIfNeed(projName string, repoName string) map[string][]string {
 	// add project in the metaData
-	if _, exists := metaData[projName]; !exists {
-		metaData[projName] = make(map[string][]string)
-		if !strExists(projNames, projName) {
-			projNames = append(projNames, projName)
+	if _, exists := config_generator.metaData[projName]; !exists {
+		config_generator.metaData[projName] = make(map[string][]string)
+		if !strExists(config_generator.projNames, projName) {
+			config_generator.projNames = append(config_generator.projNames, projName)
 		}
 	}
 
 	// add repo in the project
-	jobDetailMap := metaData[projName]
+	jobDetailMap := config_generator.metaData[projName]
 	if _, exists := jobDetailMap[repoName]; !exists {
-		if !strExists(repoNames, repoName) {
-			repoNames = append(repoNames, repoName)
+		if !strExists(config_generator.repoNames, repoName) {
+			config_generator.repoNames = append(config_generator.repoNames, repoName)
 		}
 		jobDetailMap[repoName] = make([]string, 0)
 	}
@@ -1060,21 +1060,21 @@ func addProjAndRepoIfNeed(projName string, repoName string) map[string][]string 
 
 // updateTestCoverageJobDataIfNeeded adds test-coverage job data for the repo if it has go coverage check
 func updateTestCoverageJobDataIfNeeded(jobDetailMap *map[string][]string, repoName string) {
-	if goCoverageMap[repoName] {
+	if config_generator.goCoverageMap[repoName] {
 		newJobTypes := append((*jobDetailMap)[repoName], "test-coverage")
 		(*jobDetailMap)[repoName] = newJobTypes
 		// delete this repoName from the goCoverageMap to avoid it being processed again when we
 		// call the function addRemainingTestCoverageJobs
-		delete(goCoverageMap, repoName)
+		delete(config_generator.goCoverageMap, repoName)
 	}
 }
 
 // addRemainingTestCoverageJobs adds test-coverage jobs data for the repos that haven't been processed.
 func addRemainingTestCoverageJobs() {
 	// handle repos that only have go coverage
-	for repoName, hasGoCoverage := range goCoverageMap {
+	for repoName, hasGoCoverage := range config_generator.goCoverageMap {
 		if hasGoCoverage {
-			jobDetailMap := addProjAndRepoIfNeed(projNames[0], repoName)
+			jobDetailMap := addProjAndRepoIfNeed(config_generator.projNames[0], repoName)
 			jobDetailMap[repoName] = []string{"test-coverage"}
 		}
 	}
@@ -1235,19 +1235,19 @@ func main() {
 		setOutput(testgridConfigOutput)
 
 		if *includeConfig {
-			executeTemplate("general header", readTemplate(commonHeaderConfig), newBaseTestgridTemplateData(""))
-			executeTemplate("general config", readTemplate(generalTestgridConfig), newBaseTestgridTemplateData(""))
+			executeTemplate("general header", readTemplate(commonHeaderConfig), config_generator.newBaseTestgridTemplateData(""))
+			executeTemplate("general config", readTemplate(config_generator.generalTestgridConfig), config_generator.newBaseTestgridTemplateData(""))
 		}
 
 		presubmitJobData := parseJob(config, "presubmits")
-		goCoverageMap = parseGoCoverageMap(presubmitJobData)
+		config_generator.goCoverageMap = parseGoCoverageMap(presubmitJobData)
 
 		periodicJobData := parseJob(config, "periodics")
 		collectMetaData(periodicJobData)
 
-		generateTestGridSection("test_groups", generateTestGroup, false)
-		generateTestGridSection("dashboards", generateDashboard, true)
-		generateDashboardsForReleases()
-		generateDashboardGroups()
+		config_generator.generateTestGridSection("test_groups", config_generator.generateTestGroup, false)
+		config_generator.generateTestGridSection("dashboards", config_generator.generateDashboard, true)
+		config_generator.generateDashboardsForReleases()
+		config_generator.generateDashboardGroups()
 	}
 }
