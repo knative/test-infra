@@ -151,6 +151,18 @@ presubmits:
         - "./test/presubmit-integration-tests-latest-release.sh"
       dot-dev: true
 
+  knative/client-contrib:
+    - repo-settings:
+      go112-branches: []
+    - build-tests: true
+      dot-dev: true
+    - unit-tests: true
+      dot-dev: true
+    - integration-tests: true
+      dot-dev: true
+    - go-coverage: true
+      dot-dev: true
+
   knative/eventing:
     - repo-settings:
       performance: true
