@@ -74,6 +74,7 @@ label:
   - proposal/0.17
   - proposal/0.18
   - proposal/0.19
+  # eventing-contrib labels
   - channel/kafka
   - channel/natss
   - source/awssqs
