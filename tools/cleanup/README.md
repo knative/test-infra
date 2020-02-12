@@ -38,7 +38,7 @@ This command deletes test images older than 90 days and test clusters created
 more than 24 hours ago in all Boskos projects.
 
 ```sh
-$ go run cleanup.go --project-resource-yaml ci/prow/boskos_resources.yaml --days-to-keep-images 90 --hours-to-keep-clusters 24`
+$ go run cleanup.go --project-resource-yaml config/prow/boskos_resources.yaml --days-to-keep-images 90 --hours-to-keep-clusters 24`
 ```
 
 This command deletes test images older than 1 day and test clusters created more
@@ -52,5 +52,5 @@ $ go run cleanup.go --project my-knative-project --days-to-keep-images 1 --hours
 
 There is a weekly prow job that triggers this tool runs at 11:00/12:00PM(Day
 light saving) PST every Monday. This tool scans all projects defined in
-[ci/prow/boskos_resources.yaml](/ci/prow/boskos_resources.yaml) and deletes
+[config/prow/boskos_resources.yaml](/config/prow/boskos_resources.yaml) and deletes
 images older than 90 days and clusters older than 24 hours.

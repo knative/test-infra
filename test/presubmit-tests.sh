@@ -36,7 +36,7 @@ function post_build_tests() {
     make -n -C $(dirname ${makefile}) || failed=1
   done
   subheader "Checking config files"
-  make -C ci/prow test || failed=1
+  make -C config/prow test || failed=1
   for script in scripts/*.sh; do
     subheader "Checking integrity of ${script}"
     bash -c "source ${script}" || failed=1

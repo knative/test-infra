@@ -9,7 +9,7 @@ Documentation can be found in the several directories of the repository. For
 example:
 
 - [Main README](../README.md)
-- [Documentation on the CI/CD system](../ci/README.md)
+- [Documentation on configuration of the CI/CD system](../config/README.md)
 - [Documentation on the helper scripts](../scripts/README.md)
 
 ## Updating the test-infra GitHub page
