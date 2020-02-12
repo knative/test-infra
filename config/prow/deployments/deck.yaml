@@ -25,6 +25,9 @@ spec:
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: deck
   template:
     metadata:
       labels:
@@ -34,7 +37,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
       - name: deck
-        image: gcr.io/k8s-prow/deck:v20200130-51abc4f96
+        image: gcr.io/k8s-prow/deck:v20200204-7e8cd997a
         args:
         - --hook-url=http://hook:8888/plugin-help
         - --tide-url=http://tide/
@@ -58,6 +61,19 @@ spec:
         - name: cookie-secret
           mountPath: /etc/cookie
           readOnly: true
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8081
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: /healthz/ready
+            port: 8081
+          initialDelaySeconds: 10
+          periodSeconds: 3
+          timeoutSeconds: 600
       volumes:
       - name: config
         configMap:
