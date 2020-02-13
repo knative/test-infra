@@ -104,10 +104,14 @@
 
    ![Branch Checks](branch_checks.png)
 
-## Setting up the issue tracker for a new repo
+## Setting up the issue tracker for a repo
+
+If you want Prow to manage the freshness level for Issues and Pull Requests for
+a repo (see the [proposal](https://docs.google.com/document/d/15sqqVxOGAXLNEDFp777NWIpevwrSMYbGQABFLNqiq5Q/edit#heading=h.n8a530nnrb)),
+you can set it up by following steps below:
 
 1. Create the labels `lifecycle/stale`, `lifecycle/rotten` and
-   `lifecycle/frozen` in the new repo.
+   `lifecycle/frozen` in the repo.
 
 1. Update
    [`generateIssueTrackerPeriodicJobs()`](https://github.com/knative/test-infra/blob/51c37921d4a7722855fcbb020db3c3865db1cb8f/ci/prow/issue_tracker_config.go#L48)
