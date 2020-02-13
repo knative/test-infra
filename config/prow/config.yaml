@@ -98,6 +98,7 @@ tide:
     - "google/knative-gcp"
     - "knative/caching"
     - "knative/client"
+    - "knative/client-contrib"
     - "knative/community"
     - "knative/docs"
     - "knative/eventing"

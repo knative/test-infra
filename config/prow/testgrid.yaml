@@ -121,6 +121,12 @@ test_groups:
 - name: pull-knative-client-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-client-go-coverage
   short_text_metric: "coverage"
+- name: ci-knative-client-contrib-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-client-contrib-continuous
+  alert_stale_results_hours: 3
+- name: pull-knative-client-contrib-test-coverage
+  gcs_prefix: knative-prow/logs/ci-knative-client-contrib-go-coverage
+  short_text_metric: "coverage"
 - name: ci-knative-docs-continuous
   gcs_prefix: knative-prow/logs/ci-knative-docs-continuous
   alert_stale_results_hours: 3
@@ -375,6 +381,14 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-client-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+- name: client-contrib
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-client-contrib-continuous
+    base_options: "sort-by-name="
+  - name: coverage
+    test_group_name: pull-knative-client-contrib-test-coverage
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: docs
   dashboard_tab:
   - name: continuous
@@ -593,6 +607,7 @@ dashboard_groups:
   dashboard_names:
   - "serving"
   - "client"
+  - "client-contrib"
   - "docs"
   - "eventing"
   - "eventing-contrib"

@@ -69,6 +69,7 @@ func generateIssueTrackerPeriodicJobs() {
 		daysToRot:   rotDefault,
 		daysToClose: closeDefault,
 	}.generateJobs()
+
 }
 
 // generateJobs generates all the issue tracker jobs per repoIssue
