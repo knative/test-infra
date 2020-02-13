@@ -124,16 +124,6 @@ test_groups:
 - name: ci-knative-client-contrib-continuous
   gcs_prefix: knative-prow/logs/ci-knative-client-contrib-continuous
   alert_stale_results_hours: 3
-- name: ci-knative-client-contrib-nightly-release
-  gcs_prefix: knative-prow/logs/ci-knative-client-contrib-nightly-release
-  num_failures_to_alert: 1
-- name: ci-knative-client-contrib-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-client-contrib-dot-release
-  alert_stale_results_hours: 170
-  num_failures_to_alert: 1
-- name: ci-knative-client-contrib-auto-release
-  gcs_prefix: knative-prow/logs/ci-knative-client-contrib-auto-release
-  num_failures_to_alert: 1
 - name: pull-knative-client-contrib-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-client-contrib-go-coverage
   short_text_metric: "coverage"
@@ -395,15 +385,6 @@ dashboards:
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-client-contrib-continuous
-    base_options: "sort-by-name="
-  - name: nightly
-    test_group_name: ci-knative-client-contrib-nightly-release
-    base_options: "sort-by-name="
-  - name: dot-release
-    test_group_name: ci-knative-client-contrib-dot-release
-    base_options: "sort-by-name="
-  - name: auto-release
-    test_group_name: ci-knative-client-contrib-auto-release
     base_options: "sort-by-name="
   - name: coverage
     test_group_name: pull-knative-client-contrib-test-coverage

@@ -489,15 +489,6 @@ periodics:
     - continuous: true
       dot-dev: true
       go113: true
-    - nightly: true
-      dot-dev: true
-      go113: true
-    - dot-release: true
-      dot-dev: true
-      go113: true
-    - auto-release: true
-      dot-dev: true
-      go113: true
 
   knative/docs:
     - continuous: true
