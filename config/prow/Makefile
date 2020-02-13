@@ -89,7 +89,9 @@ ifndef SKIP_CONFIG_BACKUP
 else
 	$(eval NEW_YAML_CONFIG := $(PROW_JOB_CONFIG))
 endif
-	kubectl create configmap job-config --from-file=config.yaml=$(NEW_YAML_CONFIG) --dry-run --save-config -o yaml | kubectl apply -f -
+	# We'll have to use `kubectl replace` here because `kubectl apply` will add the whole original configmap to the
+	# `last-applied-configuration` annotation, but k8s has a maxmium 256kb limit for it, see https://github.com/kubernetes/kubectl/issues/712
+	kubectl create configmap job-config --from-file=config.yaml=$(NEW_YAML_CONFIG) --dry-run -o yaml | kubectl replace configmap job-config -f -
 	$(UNSET_CONTEXT)
 ifndef SKIP_CONFIG_BACKUP
 	diff "${OLD_YAML_CONFIG}" "${NEW_YAML_CONFIG}" --color=auto || true
