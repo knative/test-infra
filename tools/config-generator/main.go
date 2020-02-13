@@ -28,13 +28,14 @@ import (
 	"os"
 	"path"
 	"regexp"
+	"runtime"
 	"sort"
 	"strconv"
 	"strings"
 	"text/template"
 	"time"
 
-	yaml "gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
 	"k8s.io/apimachinery/pkg/util/sets"
 )
 
@@ -183,7 +184,9 @@ var (
 // read template yaml file content
 func readTemplate(fp string) string {
 	if _, ok := templatesCache[fp]; !ok {
-		content, err := ioutil.ReadFile(path.Join(templateDir, fp))
+		// get the directory of the currently running file
+		_, f, _, _ := runtime.Caller(0)
+		content, err := ioutil.ReadFile(path.Join(path.Dir(f), templateDir, fp))
 		if err != nil {
 			log.Fatalf("Failed read file '%s': '%v'", fp, err)
 		}

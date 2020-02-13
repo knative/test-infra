@@ -19,13 +19,13 @@ limitations under the License.
 package main
 
 import (
-	"fmt"
+    "fmt"
 	"log"
 	"math"
 	"path"
 	"time"
 
-	yaml "gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v2"
 )
 
 const (
