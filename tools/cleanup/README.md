@@ -52,5 +52,5 @@ $ go run cleanup.go --project my-knative-project --days-to-keep-images 1 --hours
 
 There is a weekly prow job that triggers this tool runs at 11:00/12:00PM(Day
 light saving) PST every Monday. This tool scans all projects defined in
-[config/prow/boskos_resources.yaml](/config/prow/boskos_resources.yaml) and deletes
-images older than 90 days and clusters older than 24 hours.
+[config/prow/boskos_resources.yaml](/config/prow/boskos_resources.yaml) and
+deletes images older than 90 days and clusters older than 24 hours.
