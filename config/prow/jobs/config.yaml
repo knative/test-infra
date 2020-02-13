@@ -8605,7 +8605,6 @@ periodics:
       - "/app/robots/commenter/app.binary"
       args:
       - "--query=repo:knative/test-infra
-        is:issue
         is:open
         -label:lifecycle/frozen
         -label:lifecycle/stale
@@ -8640,7 +8639,6 @@ periodics:
       - "/app/robots/commenter/app.binary"
       args:
       - "--query=repo:knative/test-infra
-        is:issue
         is:open
         -label:lifecycle/frozen
         label:lifecycle/stale
@@ -8675,7 +8673,6 @@ periodics:
       - "/app/robots/commenter/app.binary"
       args:
       - "--query=repo:knative/test-infra
-        is:issue
         is:open
         -label:lifecycle/frozen
         -label:lifecycle/stale
@@ -8710,7 +8707,6 @@ periodics:
       - "/app/robots/commenter/app.binary"
       args:
       - "--query=repo:knative/docs
-        is:issue
         is:open
         -label:lifecycle/frozen
         -label:lifecycle/stale
@@ -8745,7 +8741,6 @@ periodics:
       - "/app/robots/commenter/app.binary"
       args:
       - "--query=repo:knative/docs
-        is:issue
         is:open
         -label:lifecycle/frozen
         label:lifecycle/stale
@@ -8780,7 +8775,6 @@ periodics:
       - "/app/robots/commenter/app.binary"
       args:
       - "--query=repo:knative/docs
-        is:issue
         is:open
         -label:lifecycle/frozen
         -label:lifecycle/stale
@@ -8815,7 +8809,6 @@ periodics:
       - "/app/robots/commenter/app.binary"
       args:
       - "--query=repo:knative/serving
-        is:issue
         is:open
         -label:lifecycle/frozen
         -label:lifecycle/stale
@@ -8850,7 +8843,6 @@ periodics:
       - "/app/robots/commenter/app.binary"
       args:
       - "--query=repo:knative/serving
-        is:issue
         is:open
         -label:lifecycle/frozen
         label:lifecycle/stale
@@ -8885,7 +8877,6 @@ periodics:
       - "/app/robots/commenter/app.binary"
       args:
       - "--query=repo:knative/serving
-        is:issue
         is:open
         -label:lifecycle/frozen
         -label:lifecycle/stale
