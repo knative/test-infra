@@ -73,7 +73,7 @@ config:
 # Update prow config
 update-prow-config:
 	$(SET_CONTEXT)
-	kubectl create configmap config --from-file=config.yaml=$(PROW_CONFIG) --dry-run -o yaml | kubectl apply -f -
+	kubectl create configmap config --from-file=config.yaml=$(PROW_CONFIG) --dry-run --save-config -o yaml | kubectl apply -f -
 	$(UNSET_CONTEXT)
 
 # Update all prow job configs
@@ -89,7 +89,7 @@ ifndef SKIP_CONFIG_BACKUP
 else
 	$(eval NEW_YAML_CONFIG := $(PROW_JOB_CONFIG))
 endif
-	kubectl create configmap job-config --from-file=config.yaml=$(NEW_YAML_CONFIG) --dry-run -o yaml | kubectl apply -f -
+	kubectl create configmap job-config --from-file=config.yaml=$(NEW_YAML_CONFIG) --dry-run --save-config -o yaml | kubectl apply -f -
 	$(UNSET_CONTEXT)
 ifndef SKIP_CONFIG_BACKUP
 	diff "${OLD_YAML_CONFIG}" "${NEW_YAML_CONFIG}" --color=auto || true
@@ -100,7 +100,7 @@ endif
 # Update prow plugins
 update-prow-plugins:
 	$(SET_CONTEXT)
-	kubectl create configmap plugins --from-file=plugins.yaml=$(PROW_PLUGINS) --dry-run -o yaml | kubectl apply -f -
+	kubectl create configmap plugins --from-file=plugins.yaml=$(PROW_PLUGINS) --dry-run --save-config -o yaml | kubectl apply -f -
 	$(UNSET_CONTEXT)
 
 # Update all deployments of boskos
@@ -112,7 +112,7 @@ update-all-boskos-deployments::
 # Update the list of resources for Boskos
 update-boskos-resource:
 	$(SET_CONTEXT)
-	kubectl create configmap resources --from-file=config=$(BOSKOS_RESOURCES) --dry-run -o yaml | kubectl --namespace="$(JOB_NAMESPACE)" apply -f -
+	kubectl create configmap resources --from-file=config=$(BOSKOS_RESOURCES) --dry-run --save-config -o yaml | kubectl --namespace="$(JOB_NAMESPACE)" apply -f -
 	$(UNSET_CONTEXT)
 
 # Update all deployment of cluster
