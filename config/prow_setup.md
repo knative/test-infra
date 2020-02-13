@@ -2,16 +2,8 @@
 
 ## Adding new Kubernetes resources
 
-1. Check under [prow/deployments](./prow/deployments) and add a new file there
+1. Check under [prow/cluster](./prow/cluster) and add a new file there
    if not exist.
-
-1. If the change involves adding new namespace or user, add it in
-   [prow/config_start.yaml](./prow/config_start.yaml).
-
-1. Create a PR with the changes and once it's merged ask one of the owners of
-   _knative/test-infra_ to deploy the new resource by running
-   `make get-cluster-credentials`, `kubectl apply -f ./config_start.yaml`,
-   `make update-single-deployment [FILE_NAME_WITHOUT_EXTENSION]`.
 
 ## Expanding Boskos pool
 
