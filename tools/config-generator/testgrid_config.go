@@ -103,21 +103,21 @@ type testgridEntityGenerator func(string, string, []string)
 func newBaseTestgridTemplateData(testGroupName string) baseTestgridTemplateData {
 	var data baseTestgridTemplateData
 	data.Year = time.Now().Year()
-	data.ProwHost = main.prowHost
-	data.TestGridHost = main.testGridHost
-	data.GubernatorHost = main.gubernatorHost
-	data.TestGridGcsBucket = main.testGridGcsBucket
+	data.ProwHost = prowHost
+	data.TestGridHost = testGridHost
+	data.GubernatorHost = gubernatorHost
+	data.TestGridGcsBucket = testGridGcsBucket
 	data.TestGroupName = testGroupName
 	return data
 }
 
 // generateTestGridSection generates the configs for a TestGrid section using the given generator
 func generateTestGridSection(sectionName string, generator testgridEntityGenerator, skipReleasedProj bool) {
-	main.outputConfig(sectionName + ":")
-	main.emittedOutput = false
+	outputConfig(sectionName + ":")
+	emittedOutput = false
 	for _, projName := range projNames {
 		// Do not handle the project if it is released and we want to skip it.
-		if skipReleasedProj && main.isReleased(projName) {
+		if skipReleasedProj && isReleased(projName) {
 			continue
 		}
 		repos := metaData[projName]
@@ -129,17 +129,17 @@ func generateTestGridSection(sectionName string, generator testgridEntityGenerat
 	}
 	// A TestGrid config cannot have an empty section, so add a bogus entry
 	// if nothing was generated, thus the config is semantically valid.
-	if !main.emittedOutput {
-		main.outputConfig(main.baseIndent + "- name: empty")
+	if !emittedOutput {
+		outputConfig(baseIndent + "- name: empty")
 	}
 }
 
 // generateTestGroup generates the test group configuration
 func generateTestGroup(projName string, repoName string, jobNames []string) {
-	projRepoStr := main.buildProjRepoStr(projName, repoName)
+	projRepoStr := buildProjRepoStr(projName, repoName)
 	for _, jobName := range jobNames {
 		testGroupName := getTestGroupName(projRepoStr, jobName)
-		gcsLogDir := fmt.Sprintf("%s/%s/%s", main.gcsBucket, main.logsDir, testGroupName)
+		gcsLogDir := fmt.Sprintf("%s/%s/%s", gcsBucket, logsDir, testGroupName)
 		extras := make(map[string]string)
 		switch jobName {
 		case "continuous":
@@ -156,7 +156,7 @@ func generateTestGroup(projName string, repoName string, jobNames []string) {
 		case "webhook-apicoverage":
 			extras["alert_stale_results_hours"] = "48" // 2 days
 		case "test-coverage":
-			gcsLogDir = strings.ToLower(fmt.Sprintf("%s/%s/ci-%s-%s", main.gcsBucket, main.logsDir, projRepoStr, "go-coverage"))
+			gcsLogDir = strings.ToLower(fmt.Sprintf("%s/%s/ci-%s-%s", gcsBucket, logsDir, projRepoStr, "go-coverage"))
 			extras["short_text_metric"] = "coverage"
 		default:
 			extras["alert_stale_results_hours"] = "3"
@@ -171,13 +171,13 @@ func executeTestGroupTemplate(testGroupName string, gcsLogDir string, extras map
 	data.Base.TestGroupName = testGroupName
 	data.GcsLogDir = gcsLogDir
 	data.Extras = extras
-	main.executeTemplate("test group", main.readTemplate(testGroupTemplate), data)
+	executeTemplate("test group", readTemplate(testGroupTemplate), data)
 }
 
 // generateDashboard generates the dashboard configuration
 func generateDashboard(projName string, repoName string, jobNames []string) {
-	projRepoStr := main.buildProjRepoStr(projName, repoName)
-	main.outputConfig("- name: " + strings.ToLower(repoName) + "\n" + main.baseIndent + "dashboard_tab:")
+	projRepoStr := buildProjRepoStr(projName, repoName)
+	outputConfig("- name: " + strings.ToLower(repoName) + "\n" + baseIndent + "dashboard_tab:")
 	noExtras := make(map[string]string)
 	for _, jobName := range jobNames {
 		testGroupName := getTestGroupName(projRepoStr, jobName)
@@ -209,7 +209,7 @@ func executeDashboardTabTemplate(dashboardTabName string, testGroupName string, 
 	data.Base.TestGroupName = testGroupName
 	data.BaseOptions = baseOptions
 	data.Extras = extras
-	main.executeTemplate("dashboard tab", main.readTemplate(dashboardTabTemplate), data)
+	executeTemplate("dashboard tab", readTemplate(dashboardTabTemplate), data)
 }
 
 // getTestGroupName get the testGroupName from the given repoName and jobName
@@ -227,15 +227,15 @@ func getTestGroupName(repoName string, jobName string) string {
 func generateDashboardsForReleases() {
 	for _, projName := range projNames {
 		// Do not handle the project if it is not released.
-		if !main.isReleased(projName) {
+		if !isReleased(projName) {
 			continue
 		}
 		repos := metaData[projName]
-		main.outputConfig("- name: " + projName + "\n" + main.baseIndent + "dashboard_tab:")
+		outputConfig("- name: " + projName + "\n" + baseIndent + "dashboard_tab:")
 		noExtras := make(map[string]string)
 		for _, repoName := range repoNames {
 			if _, exists := repos[repoName]; exists {
-				testGroupName := getTestGroupName(main.buildProjRepoStr(projName, repoName), "continuous")
+				testGroupName := getTestGroupName(buildProjRepoStr(projName, repoName), "continuous")
 				executeDashboardTabTemplate(repoName, testGroupName, testgridTabSortByName, noExtras)
 			}
 		}
@@ -244,10 +244,10 @@ func generateDashboardsForReleases() {
 
 // generateDashboardGroups generates the dashboard groups configuration
 func generateDashboardGroups() {
-	main.outputConfig("dashboard_groups:")
+	outputConfig("dashboard_groups:")
 	for _, projName := range projNames {
 		// there is only one dashboard for each released project, so we do not need to group them
-		if main.isReleased(projName) {
+		if isReleased(projName) {
 			continue
 		}
 
@@ -267,5 +267,5 @@ func executeDashboardGroupTemplate(dashboardGroupName string, dashboardRepoNames
 	var data dashboardGroupTemplateData
 	data.Name = dashboardGroupName
 	data.RepoNames = dashboardRepoNames
-	main.executeTemplate("dashboard group", main.readTemplate(dashboardGroupTemplate), data)
+	executeTemplate("dashboard group", readTemplate(dashboardGroupTemplate), data)
 }

@@ -24,7 +24,8 @@ SKIP_CONFIG_BACKUP        ?=
 GENERATE_MAINTENANCE_JOBS ?= true
 
 # This is the canonical path of this Makefile, aka /config/prow dir.
-PROW_DIR ?= $(realpath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
+PROW_DIR             ?= $(realpath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
+CONFIG_GENERATOR_DIR ?= $(PROW_DIR)/../../tools/config-generator
 
 KNATIVE_CONFIG   ?= $(PROW_DIR)/config_knative.yaml
 PROW_PLUGINS     ?= $(PROW_DIR)/plugins.yaml
@@ -43,7 +44,7 @@ BOSKOS_RESOURCES ?= $(PROW_DIR)/boskos_resources.yaml
 
 SET_CONTEXT   := gcloud container clusters get-credentials "$(CLUSTER)" --project="$(PROJECT)" --zone="$(ZONE)"
 UNSET_CONTEXT := kubectl config unset current-context
-MAKE_CONFIG   := cd $(PROW_DIR) && go run *_config.go
+MAKE_CONFIG   := go run "${CONFIG_GENERATOR_DIR}"
 
 # Avoid the default target being harmful.
 default:
