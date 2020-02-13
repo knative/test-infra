@@ -12,37 +12,39 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Janitor
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: boskos-janitor
+  name: horologium
   labels:
-    app: boskos-janitor
-  namespace: test-pods
+    app: horologium
 spec:
-  replicas: 35  # Number of distributed janitor instances
+  replicas: 1
   template:
     metadata:
       labels:
-        app: boskos-janitor
+        app: horologium
     spec:
-      serviceAccountName: "boskos"
-      terminationGracePeriodSeconds: 300
+      serviceAccountName: "horologium"
+      terminationGracePeriodSeconds: 30
       containers:
-      - name: boskos-janitor
-        image: gcr.io/k8s-prow/boskos/janitor:v20200121-9a9eed662
+      - name: horologium
+        image: gcr.io/k8s-prow/horologium:v20200204-7e8cd997a
         args:
-        - --resource-type=gke-project
-        - --
-        - --service_account=/etc/test-account/service-account.json
-        - --hours=0
-        - --verbose
+        - --config-path=/etc/config/config.yaml
+        - --job-config-path=/etc/job-config
+        - --dry-run=false
         volumeMounts:
-        - mountPath: /etc/test-account
-          name: service
+        - name: config
+          mountPath: /etc/config
+          readOnly: true
+        - name: job-config
+          mountPath: /etc/job-config
           readOnly: true
       volumes:
-      - name: service
-        secret:
-          secretName: test-account
+      - name: config
+        configMap:
+          name: config
+      - name: job-config
+        configMap:
+          name: job-config

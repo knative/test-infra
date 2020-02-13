@@ -31,7 +31,7 @@ KNATIVE_CONFIG   ?= $(PROW_DIR)/config_knative.yaml
 PROW_PLUGINS     ?= $(PROW_DIR)/plugins.yaml
 PROW_CONFIG      ?= $(PROW_DIR)/config.yaml
 PROW_JOB_CONFIG  ?= ${PROW_DIR}/jobs/config.yaml
-PROW_DEPLOYS     ?= $(PROW_DIR)/deployments
+PROW_DEPLOYS     ?= $(PROW_DIR)/cluster
 PROW_GCS         ?= knative-prow
 PROW_CONFIG_GCS  ?= gs://$(PROW_GCS)/configs
 
@@ -74,7 +74,7 @@ config:
 # Update prow config
 update-prow-config:
 	$(SET_CONTEXT)
-	kubectl create configmap config --from-file=config.yaml=$(PROW_CONFIG) --dry-run -o yaml | kubectl replace configmap config -f -
+	kubectl create configmap config --from-file=config.yaml=$(PROW_CONFIG) --dry-run --save-config -o yaml | kubectl apply -f -
 	$(UNSET_CONTEXT)
 
 # Update all prow job configs
@@ -90,7 +90,7 @@ ifndef SKIP_CONFIG_BACKUP
 else
 	$(eval NEW_YAML_CONFIG := $(PROW_JOB_CONFIG))
 endif
-	kubectl create configmap job-config --from-file=config.yaml=$(NEW_YAML_CONFIG) --dry-run -o yaml | kubectl replace configmap job-config -f -
+	kubectl create configmap job-config --from-file=config.yaml=$(NEW_YAML_CONFIG) --dry-run --save-config -o yaml | kubectl apply -f -
 	$(UNSET_CONTEXT)
 ifndef SKIP_CONFIG_BACKUP
 	diff "${OLD_YAML_CONFIG}" "${NEW_YAML_CONFIG}" --color=auto || true
@@ -101,7 +101,7 @@ endif
 # Update prow plugins
 update-prow-plugins:
 	$(SET_CONTEXT)
-	kubectl create configmap plugins --from-file=plugins.yaml=$(PROW_PLUGINS) --dry-run -o yaml | kubectl replace configmap plugins -f -
+	kubectl create configmap plugins --from-file=plugins.yaml=$(PROW_PLUGINS) --dry-run --save-config -o yaml | kubectl apply -f -
 	$(UNSET_CONTEXT)
 
 # Update all deployments of boskos
@@ -113,7 +113,7 @@ update-all-boskos-deployments::
 # Update the list of resources for Boskos
 update-boskos-resource:
 	$(SET_CONTEXT)
-	kubectl create configmap resources --from-file=config=$(BOSKOS_RESOURCES) --dry-run -o yaml | kubectl --namespace="$(JOB_NAMESPACE)" replace configmap resources -f -
+	kubectl create configmap resources --from-file=config=$(BOSKOS_RESOURCES) --dry-run --save-config -o yaml | kubectl --namespace="$(JOB_NAMESPACE)" apply -f -
 	$(UNSET_CONTEXT)
 
 # Update all deployment of cluster

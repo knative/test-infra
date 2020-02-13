@@ -12,45 +12,37 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Janitor
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: plank
+  name: boskos-janitor
   labels:
-    app: plank
+    app: boskos-janitor
+  namespace: test-pods
 spec:
-  replicas: 1 # Do not scale up.
+  replicas: 35  # Number of distributed janitor instances
   template:
     metadata:
       labels:
-        app: plank
+        app: boskos-janitor
     spec:
-      serviceAccountName: "plank"
+      serviceAccountName: "boskos"
+      terminationGracePeriodSeconds: 300
       containers:
-      - name: plank
-        # Update plank utility_images versions in config.yaml when updating this version
-        image: gcr.io/k8s-prow/plank:v20200130-51abc4f96
+      - name: boskos-janitor
+        image: gcr.io/k8s-prow/boskos/janitor:v20200203-a909b961a
         args:
-        - --config-path=/etc/config/config.yaml
-        - --job-config-path=/etc/job-config
-        - --dry-run=false
+        - --resource-type=gke-project
+        - --
+        - --service_account=/etc/test-account/service-account.json
+        - --hours=0
+        - --verbose
         volumeMounts:
-        - name: oauth
-          mountPath: /etc/github
-          readOnly: true
-        - name: config
-          mountPath: /etc/config
-          readOnly: true
-        - name: job-config
-          mountPath: /etc/job-config
+        - mountPath: /etc/test-account
+          name: service
           readOnly: true
       volumes:
-      - name: oauth
+      - name: service
         secret:
-          secretName: oauth-token
-      - name: config
-        configMap:
-          name: config
-      - name: job-config
-        configMap:
-          name: job-config
+          secretName: test-account

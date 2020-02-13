@@ -12,58 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Initial configuration of Prow cluster.
-# Most of the settings -- specially accounts and roles -- come from the Kubernetes
-# Prow cluster configs at https://github.com/kubernetes/test-infra/tree/master/prow/cluster
-
-# Configs
-
-# Prow plugins
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: plugins
-data:
-  plugins: ""
----
-# Prow config
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: config
-data:
-  config: ""
----
-# Prow jobs config
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: job-config
-data:
-  config: ""
----
-# Boskos resources
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: resources
-  namespace: test-pods
-data:
-  resources: ""
----
-
-# Namespaces
-
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: prow
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: test-pods
----
+# RBAC resources needed on the Prow cluster.
+# All the settings come from the Kubernetes Prow cluster configs
+# at https://github.com/kubernetes/test-infra/tree/master/prow/cluster
 
 # Service accounts, roles and bindings
 
@@ -178,6 +129,7 @@ rules:
     verbs:
       - get
       - list
+      - watch
       # Required when deck runs with `--rerun-creates-job=true`
       # **Warning:** Only use this for non-public deck instances, this allows
       # anyone with access to your Deck instance to create new Prowjobs
@@ -469,6 +421,14 @@ rules:
     - "watch"
     - "list"
     - "patch"
+- apiGroups:
+    - ""
+  resources:
+    - "pods"
+    - "events"
+  verbs:
+    - "get"
+    - "list"
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1

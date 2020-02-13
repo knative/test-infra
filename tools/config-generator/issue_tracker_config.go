@@ -69,6 +69,7 @@ func generateIssueTrackerPeriodicJobs() {
 		daysToRot:   rotDefault,
 		daysToClose: closeDefault,
 	}.generateJobs()
+
 }
 
 // generateJobs generates all the issue tracker jobs per repoIssue
@@ -130,7 +131,6 @@ func (r repoIssue) generateJob(jobName, labelFilter, updatedTime, comment string
 	data.Base.Command = jobCmd
 	data.Base.Args = []string{
 		fmt.Sprintf(`--query=repo:%s
-        is:issue
         is:open
         %s`, r.name, labelFilter),
 		"--updated=" + updatedTime,

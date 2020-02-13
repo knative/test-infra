@@ -15,26 +15,29 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: horologium
+  name: plank
   labels:
-    app: horologium
+    app: plank
 spec:
-  replicas: 1
+  replicas: 1 # Do not scale up.
   template:
     metadata:
       labels:
-        app: horologium
+        app: plank
     spec:
-      serviceAccountName: "horologium"
-      terminationGracePeriodSeconds: 30
+      serviceAccountName: "plank"
       containers:
-      - name: horologium
-        image: gcr.io/k8s-prow/horologium:v20200130-51abc4f96
+      - name: plank
+        # Update plank utility_images versions in config.yaml when updating this version
+        image: gcr.io/k8s-prow/plank:v20200204-7e8cd997a
         args:
         - --config-path=/etc/config/config.yaml
         - --job-config-path=/etc/job-config
         - --dry-run=false
         volumeMounts:
+        - name: oauth
+          mountPath: /etc/github
+          readOnly: true
         - name: config
           mountPath: /etc/config
           readOnly: true
@@ -42,6 +45,9 @@ spec:
           mountPath: /etc/job-config
           readOnly: true
       volumes:
+      - name: oauth
+        secret:
+          secretName: oauth-token
       - name: config
         configMap:
           name: config
