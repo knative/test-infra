@@ -70,14 +70,6 @@ func generateIssueTrackerPeriodicJobs() {
 		daysToClose: closeDefault,
 	}.generateJobs()
 
-	// generate for knative/client-contrib
-	repoIssue{
-		name:        "knative/client-contrib",
-		daysToStale: staleDefault,
-		daysToRot:   rotDefault,
-		daysToClose: closeDefault,
-	}.generateJobs()
-
 }
 
 // generateJobs generates all the issue tracker jobs per repoIssue

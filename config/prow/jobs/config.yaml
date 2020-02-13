@@ -6517,6 +6517,187 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
+- cron: "0 * * * *"
+  name: ci-knative-client-contrib-continuous
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-client-contrib-continuous
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: client-contrib
+    base_ref: master
+    path_alias: knative.dev/client-contrib
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/presubmit-tests.sh"
+      - "--all-tests"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "46 9 * * *"
+  name: ci-knative-client-contrib-nightly-release
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-client-contrib-nightly-release
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: client-contrib
+    base_ref: master
+    path_alias: knative.dev/client-contrib
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--publish"
+      - "--tag-release"
+      volumeMounts:
+      - name: nightly-account
+        mountPath: /etc/nightly-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/nightly-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: nightly-account
+      secret:
+        secretName: nightly-account
+- cron: "27 9 * * 2"
+  name: ci-knative-client-contrib-dot-release
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-client-contrib-dot-release
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: client-contrib
+    base_ref: master
+    path_alias: knative.dev/client-contrib
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--dot-release"
+      - "--release-gcs knative-releases/client-contrib"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
+- cron: "24 */2 * * *"
+  name: ci-knative-client-contrib-auto-release
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-client-contrib-auto-release
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: client-contrib
+    base_ref: master
+    path_alias: knative.dev/client-contrib
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--auto-release"
+      - "--release-gcs knative-releases/client-contrib"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
+- cron: "0 1 * * *"
+  name: ci-knative-client-contrib-go-coverage
+  labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-client-contrib-go-coverage
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: client-contrib
+    base_ref: master
+    path_alias: knative.dev/client-contrib
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/coverage:latest
+      imagePullPolicy: Always
+      command:
+      - "/coverage"
+      args:
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=50"
 - cron: "20 * * * *"
   name: ci-knative-docs-continuous
   agent: kubernetes
@@ -8555,28 +8736,6 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "0 1 * * *"
-  name: ci-knative-client-contrib-go-coverage
-  labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-client-contrib-go-coverage
-  agent: kubernetes
-  decorate: true
-  extra_refs:
-  - org: knative
-    repo: client-contrib
-    base_ref: master
-    path_alias: knative.dev/client-contrib
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
-      imagePullPolicy: Always
-      command:
-      - "/coverage"
-      args:
-      - "--artifacts=$(ARTIFACTS)"
-      - "--cov-threshold-percentage=50"
 - cron: "0 19 * * 1,3,5"
   name: ci-knative-cleanup
   labels:
@@ -9071,111 +9230,6 @@ periodics:
     - name: housekeeping-github-token
       secret:
         secretName: housekeeping-github-token
-- cron: "0 */12 * * *"
-  name: ci-knative-client-contrib-issue-tracker-stale
-  agent: kubernetes
-  decorate: true
-  extra_refs:
-  - org: knative
-    repo: test-infra
-    base_ref: master
-  spec:
-    containers:
-    - image: gcr.io/k8s-prow/commenter:v20190731-e3f7b9853
-      imagePullPolicy: Always
-      command:
-      - "/app/robots/commenter/app.binary"
-      args:
-      - "--query=repo:knative/client-contrib
-        is:issue
-        is:open
-        -label:lifecycle/frozen
-        -label:lifecycle/stale
-        -label:lifecycle/rotten"
-      - "--updated=2160h"
-      - "--token=/etc/housekeeping-github-token/token"
-      - "--comment=Issues go stale after 90 days of inactivity.\nMark the issue as fresh by adding the comment `/remove-lifecycle stale`.\nStale issues rot after an additional 30 days of inactivity and eventually close.\nIf this issue is safe to close now please do so by adding the comment `/close`.\n\nSend feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra/issues/new).\n\n/lifecycle stale"
-      - "--template"
-      - "--ceiling=10"
-      - "--confirm"
-      volumeMounts:
-      - name: housekeeping-github-token
-        mountPath: /etc/housekeeping-github-token
-        readOnly: true
-    volumes:
-    - name: housekeeping-github-token
-      secret:
-        secretName: housekeeping-github-token
-- cron: "0 */12 * * *"
-  name: ci-knative-client-contrib-issue-tracker-rotten
-  agent: kubernetes
-  decorate: true
-  extra_refs:
-  - org: knative
-    repo: test-infra
-    base_ref: master
-  spec:
-    containers:
-    - image: gcr.io/k8s-prow/commenter:v20190731-e3f7b9853
-      imagePullPolicy: Always
-      command:
-      - "/app/robots/commenter/app.binary"
-      args:
-      - "--query=repo:knative/client-contrib
-        is:issue
-        is:open
-        -label:lifecycle/frozen
-        label:lifecycle/stale
-        -label:lifecycle/rotten"
-      - "--updated=720h"
-      - "--token=/etc/housekeeping-github-token/token"
-      - "--comment=Stale issues rot after 30 days of inactivity.\nMark the issue as fresh by adding the comment `/remove-lifecycle rotten`.\nRotten issues close after an additional 30 days of inactivity.\nIf this issue is safe to close now please do so by adding the comment `/close`.\n\nSend feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra/issues/new).\n\n/lifecycle rotten"
-      - "--template"
-      - "--ceiling=10"
-      - "--confirm"
-      volumeMounts:
-      - name: housekeeping-github-token
-        mountPath: /etc/housekeeping-github-token
-        readOnly: true
-    volumes:
-    - name: housekeeping-github-token
-      secret:
-        secretName: housekeeping-github-token
-- cron: "0 */12 * * *"
-  name: ci-knative-client-contrib-issue-tracker-close
-  agent: kubernetes
-  decorate: true
-  extra_refs:
-  - org: knative
-    repo: test-infra
-    base_ref: master
-  spec:
-    containers:
-    - image: gcr.io/k8s-prow/commenter:v20190731-e3f7b9853
-      imagePullPolicy: Always
-      command:
-      - "/app/robots/commenter/app.binary"
-      args:
-      - "--query=repo:knative/client-contrib
-        is:issue
-        is:open
-        -label:lifecycle/frozen
-        -label:lifecycle/stale
-        label:lifecycle/rotten"
-      - "--updated=720h"
-      - "--token=/etc/housekeeping-github-token/token"
-      - "--comment=Rotten issues close after 30 days of inactivity.\nReopen the issue with `/reopen`.\nMark the issue as fresh by adding the comment `/remove-lifecycle rotten`.\n\nSend feedback to [Knative Productivity Slack channel](https://knative.slack.com/messages/CCSNR4FCH) or file an issue in [knative/test-infra](https://github.com/knative/test-infra/issues/new).\n\n/close"
-      - "--template"
-      - "--ceiling=10"
-      - "--confirm"
-      volumeMounts:
-      - name: housekeeping-github-token
-        mountPath: /etc/housekeeping-github-token
-        readOnly: true
-    volumes:
-    - name: housekeeping-github-token
-      secret:
-        secretName: housekeeping-github-token
 - cron: "30 07 * * *"
   name: ci-knative-serving-recreate-clusters
   agent: kubernetes
@@ -9502,7 +9556,7 @@ postsubmits:
     path_alias: knative.dev/client-contrib
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
         imagePullPolicy: Always
         command:
         - "/coverage"

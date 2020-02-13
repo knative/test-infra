@@ -153,7 +153,9 @@ presubmits:
 
   knative/client-contrib:
     - repo-settings:
-      go112-branches: []
+      go112-branches:
+      - release-0.9 # This branch doesn't actually exist, create here to make
+      # config generator work
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -474,6 +476,20 @@ periodics:
       # Run this job at 5AM PST (1PM UTC)
       cron: "0 13 * * *"
       full-command: "./test/tekton-tests.sh"
+      dot-dev: true
+      go113: true
+    - dot-release: true
+      dot-dev: true
+      go113: true
+    - auto-release: true
+      dot-dev: true
+      go113: true
+
+  knative/client-contrib:
+    - continuous: true
+      dot-dev: true
+      go113: true
+    - nightly: true
       dot-dev: true
       go113: true
     - dot-release: true

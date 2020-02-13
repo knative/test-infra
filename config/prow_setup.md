@@ -69,7 +69,7 @@
 1. Make sure that _Knative Robots_ is an Admin of the repo.
 
 1. Add the new repo to [config_knative.yaml](./prow/config_knative.yaml),
-   without any presubmits. Run `make config` to regenerate
+   without any presubmits. Check the top-level section `presubmits:` and `periodics:` for blueprints for what to add. Then run `make config` to regenerate
    [config.yaml](./prow/config.yaml), otherwise the presubmit test will fail.
    Create a PR with the changes; once it's merged ask the
    [oncall](https://knative.github.io/test-infra/) to update the Prow cluster.

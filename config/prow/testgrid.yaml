@@ -121,6 +121,22 @@ test_groups:
 - name: pull-knative-client-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-client-go-coverage
   short_text_metric: "coverage"
+- name: ci-knative-client-contrib-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-client-contrib-continuous
+  alert_stale_results_hours: 3
+- name: ci-knative-client-contrib-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-client-contrib-nightly-release
+  num_failures_to_alert: 1
+- name: ci-knative-client-contrib-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-client-contrib-dot-release
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-client-contrib-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-client-contrib-auto-release
+  num_failures_to_alert: 1
+- name: pull-knative-client-contrib-test-coverage
+  gcs_prefix: knative-prow/logs/ci-knative-client-contrib-go-coverage
+  short_text_metric: "coverage"
 - name: ci-knative-docs-continuous
   gcs_prefix: knative-prow/logs/ci-knative-docs-continuous
   alert_stale_results_hours: 3
@@ -230,9 +246,6 @@ test_groups:
   num_failures_to_alert: 1
 - name: pull-knative-net-contour-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-net-contour-go-coverage
-  short_text_metric: "coverage"
-- name: pull-knative-client-contrib-test-coverage
-  gcs_prefix: knative-prow/logs/ci-knative-client-contrib-go-coverage
   short_text_metric: "coverage"
 - name: ci-knative-serving-0.9-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.9-continuous
@@ -378,6 +391,23 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-client-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+- name: client-contrib
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-client-contrib-continuous
+    base_options: "sort-by-name="
+  - name: nightly
+    test_group_name: ci-knative-client-contrib-nightly-release
+    base_options: "sort-by-name="
+  - name: dot-release
+    test_group_name: ci-knative-client-contrib-dot-release
+    base_options: "sort-by-name="
+  - name: auto-release
+    test_group_name: ci-knative-client-contrib-auto-release
+    base_options: "sort-by-name="
+  - name: coverage
+    test_group_name: pull-knative-client-contrib-test-coverage
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: docs
   dashboard_tab:
   - name: continuous
@@ -507,11 +537,6 @@ dashboards:
   - name: coverage
     test_group_name: pull-knative-net-contour-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: client-contrib
-  dashboard_tab:
-  - name: coverage
-    test_group_name: pull-knative-client-contrib-test-coverage
-    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: knative-gcp
   dashboard_tab:
   - name: continuous
@@ -601,6 +626,7 @@ dashboard_groups:
   dashboard_names:
   - "serving"
   - "client"
+  - "client-contrib"
   - "docs"
   - "eventing"
   - "eventing-contrib"
@@ -613,7 +639,6 @@ dashboard_groups:
   - "serving-operator"
   - "eventing-operator"
   - "net-contour"
-  - "client-contrib"
 - name: google
   dashboard_names:
   - "knative-gcp"
