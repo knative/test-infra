@@ -14,7 +14,7 @@
    the event the script fails, it should be easy to follow along with in the GUI
    or run on the CLI. Projects are created with a numeric, incremental prefix
    automatically, based on the contents of
-   [prow/boskos_resources.yaml](./prow/boskos_resources.yaml), which is
+   [prow/boskos_resources.yaml](prow/boskos/boskos_resources.yaml), which is
    automatically updated.
 
 1. Increase the compute CPU quota for the project to 200. Go to
@@ -49,7 +49,7 @@
    [knative-prow-releaser-robot](https://github.com/knative-prow-releaser-robot)
    and [knative-metrics-robot](https://github.com/knative-metrics-robot).
 
-1. Add the org (and/or repo) to the [plugins.yaml](./prow/plugins.yaml) file, at
+1. Add the org (and/or repo) to the [plugins.yaml](prow/core/plugins.yaml) file, at
    least to the `approve` and `plugins` sections. Create a PR with the changes
    and once it's merged ask the [oncall](https://knative.github.io/test-infra/)
    to update the Prow cluster.
@@ -61,9 +61,10 @@
 1. Make sure that _Knative Robots_ is an Admin of the repo.
 
 1. Add the new repo to [config_knative.yaml](./prow/config_knative.yaml),
-   without any presubmits. Check the top-level section `presubmits:` and `periodics:` for blueprints for what to add. Then run `make config` to regenerate
-   [config.yaml](./prow/config.yaml), otherwise the presubmit test will fail.
-   Create a PR with the changes; once it's merged ask the
+   without any job settings. Check the top-level section `presubmits:` and `periodics:`
+   for blueprints for what to add. Then run `make config` to regenerate
+   [config.yaml](./prow/jobs/config.yaml), otherwise the presubmit test in test-infra
+   will fail. Create a PR with the changes; once it's merged ask the
    [oncall](https://knative.github.io/test-infra/) to update the Prow cluster.
 
 1. Wait a few minutes, check that Prow is working by entering `/woof` as a
@@ -83,7 +84,7 @@
    [config_knative.yaml](./prow/config_knative.yaml), the Prow config file
    (usually, copy and update the existing configuration from another
    repository). Run `make config` to regenerate
-   [config.yaml](./prow/config.yaml), otherwise the presubmit test will fail.
+   [config.yaml](./prow/jobs/config.yaml), otherwise the presubmit test will fail.
 
 1. Ask the [oncall](https://knative.github.io/test-infra/) to update the Prow
    cluster and TestGrid with the new configs, by running `make update-config`
@@ -108,7 +109,7 @@ you can set it up by following steps below:
 
 1. Update
    [`generateIssueTrackerPeriodicJobs()`](https://github.com/knative/test-infra/blob/51c37921d4a7722855fcbb020db3c3865db1cb8f/ci/prow/issue_tracker_config.go#L48)
-   in [issue_tracker_config.go](./prow/issue_tracker_config.go), adding the call
+   in [issue_tracker_config.go](./../tools/config-generator/issue_tracker_config.go), adding the call
    to generate the config for the new repo.
 
 1. Run `make config` to regenerate the Prow config, and submit a PR with the two

@@ -28,8 +28,8 @@ PROW_DIR             ?= $(realpath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))
 CONFIG_GENERATOR_DIR ?= $(PROW_DIR)/../../tools/config-generator
 
 KNATIVE_CONFIG   ?= $(PROW_DIR)/config_knative.yaml
-PROW_PLUGINS     ?= $(PROW_DIR)/plugins.yaml
-PROW_CONFIG      ?= $(PROW_DIR)/config.yaml
+PROW_PLUGINS     ?= $(PROW_DIR)/core/plugins.yaml
+PROW_CONFIG      ?= $(PROW_DIR)/core/config.yaml
 PROW_JOB_CONFIG  ?= ${PROW_DIR}/jobs/config.yaml
 PROW_DEPLOYS     ?= $(PROW_DIR)/cluster
 PROW_GCS         ?= knative-prow
@@ -38,7 +38,7 @@ PROW_CONFIG_GCS  ?= gs://$(PROW_GCS)/configs
 TESTGRID_GCS    ?= knative-testgrid
 TESTGRID_CONFIG ?= $(PROW_DIR)/testgrid.yaml
 
-BOSKOS_RESOURCES ?= $(PROW_DIR)/boskos_resources.yaml
+BOSKOS_RESOURCES ?= $(PROW_DIR)/boskos/boskos_resources.yaml
 
 # Useful shortcuts.
 
