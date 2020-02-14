@@ -28,8 +28,8 @@ PROW_DIR             ?= $(realpath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))
 CONFIG_GENERATOR_DIR ?= $(PROW_DIR)/../../tools/config-generator
 
 KNATIVE_CONFIG   ?= $(PROW_DIR)/config_knative.yaml
-PROW_PLUGINS     ?= $(PROW_DIR)/plugins.yaml
-PROW_CONFIG      ?= $(PROW_DIR)/config.yaml
+PROW_PLUGINS     ?= $(PROW_DIR)/core/plugins.yaml
+PROW_CONFIG      ?= $(PROW_DIR)/core/config.yaml
 PROW_JOB_CONFIG  ?= ${PROW_DIR}/jobs/config.yaml
 PROW_DEPLOYS     ?= $(PROW_DIR)/cluster
 PROW_GCS         ?= knative-prow

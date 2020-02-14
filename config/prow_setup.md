@@ -49,7 +49,7 @@
    [knative-prow-releaser-robot](https://github.com/knative-prow-releaser-robot)
    and [knative-metrics-robot](https://github.com/knative-metrics-robot).
 
-1. Add the org (and/or repo) to the [plugins.yaml](./prow/plugins.yaml) file, at
+1. Add the org (and/or repo) to the [plugins.yaml](prow/core/plugins.yaml) file, at
    least to the `approve` and `plugins` sections. Create a PR with the changes
    and once it's merged ask the [oncall](https://knative.github.io/test-infra/)
    to update the Prow cluster.
