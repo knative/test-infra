@@ -126,7 +126,9 @@ function report_build_test() {
 
 # Perform markdown build tests if necessary, unless disabled.
 function markdown_build_tests() {
+  echo "check markdown"
   (( DISABLE_MD_LINTING && DISABLE_MD_LINK_CHECK )) && return 0
+  echo "start checking markdown"
   # Get changed markdown files (ignore /vendor and deleted files)
   local mdfiles=""
   for file in $(echo "${CHANGED_FILES}" | grep \.md$ | grep -v ^vendor/); do
