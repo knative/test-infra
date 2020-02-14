@@ -2,8 +2,8 @@
 
 ## Adding new Kubernetes resources
 
-1. Check under [prow/cluster](./prow/cluster) and add a new file there
-   if not exist.
+1. Check under [prow/cluster](./prow/cluster) and add a new file there if not
+   exist.
 
 ## Expanding Boskos pool
 
@@ -61,9 +61,10 @@
 1. Make sure that _Knative Robots_ is an Admin of the repo.
 
 1. Add the new repo to [config_knative.yaml](./prow/config_knative.yaml),
-   without any presubmits. Check the top-level section `presubmits:` and `periodics:` for blueprints for what to add. Then run `make config` to regenerate
-   [config.yaml](./prow/config.yaml), otherwise the presubmit test will fail.
-   Create a PR with the changes; once it's merged ask the
+   without any presubmits. Check the top-level section `presubmits:` and
+   `periodics:` for blueprints for what to add. Then run `make config` to
+   regenerate [config.yaml](./prow/config.yaml), otherwise the presubmit test
+   will fail. Create a PR with the changes; once it's merged ask the
    [oncall](https://knative.github.io/test-infra/) to update the Prow cluster.
 
 1. Wait a few minutes, check that Prow is working by entering `/woof` as a
