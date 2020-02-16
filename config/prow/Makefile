@@ -36,7 +36,7 @@ PROW_GCS         ?= knative-prow
 PROW_CONFIG_GCS  ?= gs://$(PROW_GCS)/configs
 
 TESTGRID_GCS    ?= knative-testgrid
-TESTGRID_CONFIG ?= $(PROW_DIR)/testgrid.yaml
+TESTGRID_CONFIG ?= $(PROW_DIR)/testgrid/testgrid.yaml
 
 BOSKOS_RESOURCES ?= $(PROW_DIR)/boskos/boskos_resources.yaml
 
