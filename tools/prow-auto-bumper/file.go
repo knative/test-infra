@@ -26,6 +26,8 @@ import (
 	"path/filepath"
 	"regexp"
 
+	"knative.dev/pkg/test/helpers"
+
 	"knative.dev/test-infra/shared/common"
 )
 
@@ -96,17 +98,21 @@ func (pv *PRVersions) updateAllFiles(fileFilters []*regexp.Regexp, imageFilter *
 		return msgs, fmt.Errorf("failed to change to root dir")
 	}
 
-	err := filepath.Walk(configPath, func(filename string, info os.FileInfo, err error) error {
-		for _, ff := range fileFilters {
-			if ff.Match([]byte(filename)) {
-				tmp, err := pv.updateFile(filename, imageFilter, dryrun)
-				msgs = append(msgs, tmp...)
-				if err != nil {
-					return fmt.Errorf("failed to update path %s '%v'", filename, err)
+	var errs []error
+	for _, p := range configPaths {
+		err := filepath.Walk(p, func(filename string, info os.FileInfo, err error) error {
+			for _, ff := range fileFilters {
+				if ff.Match([]byte(filename)) {
+					tmp, err := pv.updateFile(filename, imageFilter, dryrun)
+					msgs = append(msgs, tmp...)
+					if err != nil {
+						return fmt.Errorf("failed to update path %s '%v'", filename, err)
+					}
 				}
 			}
-		}
-		return nil
-	})
-	return msgs, err
+			return nil
+		})
+		errs = append(errs, err)
+	}
+	return msgs, helpers.CombineErrors(errs)
 }
