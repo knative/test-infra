@@ -11,4 +11,3 @@ This directory contains the config for our staging
 - `config_staging.yaml` Input configuration for `make_config.go` to generate
   `config.yaml`.
 - `plugins.yaml` Generated configuration of the Prow plugins.
-- `testgrid.yaml` Generated Testgrid configuration.
