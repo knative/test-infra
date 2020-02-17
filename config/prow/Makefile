@@ -22,6 +22,7 @@ PROW_HOST     ?= https://prow.knative.dev
 
 SKIP_CONFIG_BACKUP        ?=
 GENERATE_MAINTENANCE_JOBS ?= true
+GENERATE_TESTGRID_CONFIG  ?= true
 
 # This is the canonical path of this Makefile, aka /config/prow dir.
 PROW_DIR             ?= $(realpath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
@@ -61,6 +62,7 @@ unset-cluster-credentials:
 config:
 	$(MAKE_CONFIG) \
 		--gcs-bucket=$(PROW_GCS) \
+		--generate-testgrid-config=$(GENERATE_TESTGRID_CONFIG) \
 		--generate-maintenance-jobs=$(GENERATE_MAINTENANCE_JOBS) \
 		--image-docker=gcr.io/$(PROJECT)/test-infra \
 		--plugins-config-output=$(PROW_PLUGINS) \

@@ -13,4 +13,5 @@ This directory contains the config for our
 - `config_knative.yaml` Input configuration for `config-generator` tool to generate
   `core/config.yaml`, `core/plugins.yaml`, `jobs/config.yaml` and `testgrid/testgrid.yaml`.
 - `run_job.sh` Convenience script to start a Prow job from command-line.
-- `pj-on-kind.sh` Convenience script to start a Prow job on kind from command-line.
+- `pj-on-kind.sh` Convenience script to start a Prow job on kind from
+  command-line.
