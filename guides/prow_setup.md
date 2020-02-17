@@ -14,8 +14,8 @@
    the event the script fails, it should be easy to follow along with in the GUI
    or run on the CLI. Projects are created with a numeric, incremental prefix
    automatically, based on the contents of
-   [prow/boskos_resources.yaml](../config/prow/boskos/boskos_resources.yaml), which is
-   automatically updated.
+   [prow/boskos_resources.yaml](../config/prow/boskos/boskos_resources.yaml),
+   which is automatically updated.
 
 1. Increase the compute CPU quota for the project to 200. Go to
    <https://console.cloud.google.com/iam-admin/quotas?service=compute.googleapis.com&metric=CPUs&project=PROJECT_NAME>
@@ -49,10 +49,11 @@
    [knative-prow-releaser-robot](https://github.com/knative-prow-releaser-robot)
    and [knative-metrics-robot](https://github.com/knative-metrics-robot).
 
-1. Add the org (and/or repo) to the [plugins.yaml](../config/prow/core/plugins.yaml) file, at
-   least to the `approve` and `plugins` sections. Create a PR with the changes
-   and once it's merged ask the [oncall](https://knative.github.io/test-infra/)
-   to update the Prow cluster.
+1. Add the org (and/or repo) to the
+   [plugins.yaml](../config/prow/core/plugins.yaml) file, at least to the
+   `approve` and `plugins` sections. Create a PR with the changes and once it's
+   merged ask the [oncall](https://knative.github.io/test-infra/) to update the
+   Prow cluster.
 
 ## Setting up Prow for a new repo (reviewers assignment and auto merge)
 
@@ -60,12 +61,14 @@
 
 1. Make sure that _Knative Robots_ is an Admin of the repo.
 
-1. Add the new repo to [config_knative.yaml](../config/prow/config_knative.yaml),
-   without any job settings. Check the top-level section `presubmits:` and `periodics:`
-   for blueprints for what to add. Then run `make config` to regenerate
-   [config.yaml](../config/prow/jobs/config.yaml), otherwise the presubmit test in test-infra
-   will fail. Create a PR with the changes; once it's merged ask the
-   [oncall](https://knative.github.io/test-infra/) to update the Prow cluster.
+1. Add the new repo to
+   [config_knative.yaml](../config/prow/config_knative.yaml), without any job
+   settings. Check the top-level section `presubmits:` and `periodics:` for
+   blueprints for what to add. Then run `make config` to regenerate
+   [config.yaml](../config/prow/jobs/config.yaml), otherwise the presubmit test
+   in test-infra will fail. Create a PR with the changes; once it's merged ask
+   the [oncall](https://knative.github.io/test-infra/) to update the Prow
+   cluster.
 
 1. Wait a few minutes, check that Prow is working by entering `/woof` as a
    comment in any PR in the new repo.
@@ -81,10 +84,11 @@
    working for automated nightly releases).
 
 1. Merge a pull request that updates
-   [config_knative.yaml](../config/prow/config_knative.yaml), the Prow config file
-   (usually, copy and update the existing configuration from another
+   [config_knative.yaml](../config/prow/config_knative.yaml), the Prow config
+   file (usually, copy and update the existing configuration from another
    repository). Run `make config` to regenerate
-   [config.yaml](../config/prow/jobs/config.yaml), otherwise the presubmit test will fail.
+   [config.yaml](../config/prow/jobs/config.yaml), otherwise the presubmit test
+   will fail.
 
 1. Ask the [oncall](https://knative.github.io/test-infra/) to update the Prow
    cluster and TestGrid with the new configs, by running `make update-config`
@@ -109,8 +113,9 @@ you can set it up by following steps below:
 
 1. Update
    [`generateIssueTrackerPeriodicJobs()`](https://github.com/knative/test-infra/blob/51c37921d4a7722855fcbb020db3c3865db1cb8f/ci/prow/issue_tracker_config.go#L48)
-   in [issue_tracker_config.go](../tools/config-generator/issue_tracker_config.go), adding the call
-   to generate the config for the new repo.
+   in
+   [issue_tracker_config.go](../tools/config-generator/issue_tracker_config.go),
+   adding the call to generate the config for the new repo.
 
 1. Run `make config` to regenerate the Prow config, and submit a PR with the two
    changes. Once the PR is merged, ask the
