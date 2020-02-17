@@ -61,8 +61,8 @@ Versioned releases can be one of two kinds:
     - auto-release: true
    ```
 
-1. Run `make config` to regenerate [config.yaml](prow/core/config.yaml), otherwise
-   the presubmit test will fail. Merge such pull request and ask the
+1. Run `make config` to regenerate [config.yaml](prow/core/config.yaml),
+   otherwise the presubmit test will fail. Merge such pull request and ask the
    [oncall](https://knative.github.io/test-infra/) to update the Prow cluster
    and TestGrid with the new configs, by running `make update-config` and
    `make update-testgrid-config` in `config/prow`. Within two hours the 3 new
