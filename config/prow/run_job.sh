@@ -30,7 +30,7 @@ run_mkpj="mkpj"
 [[ -z "$(which mkpj)" ]] && run_mkpj="bazel run @k8s//prow/cmd/mkpj --"
 
 JOB_YAML=$(mktemp)
-CONFIG_YAML=${REPO_ROOT_DIR}/config/prow/config.yaml
+CONFIG_YAML=${REPO_ROOT_DIR}/config/prow/core/config.yaml
 JOB_CONFIG_YAML=${REPO_ROOT_DIR}/config/prow/jobs/config.yaml
 ${run_mkpj} --job=$1 --config-path=${CONFIG_YAML} --job-config-path=${JOB_CONFIG_YAML} > ${JOB_YAML}
 echo "Job YAML file saved to ${JOB_YAML}"
