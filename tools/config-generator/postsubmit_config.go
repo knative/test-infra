@@ -19,6 +19,7 @@ package main
 import (
 	"fmt"
 	"path"
+	"strings"
 
 	"gopkg.in/yaml.v2"
 )
@@ -59,4 +60,12 @@ func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
 	executeJobTemplateWrapper(repoName, &data, func(data interface{}) {
 		executeJobTemplate("postsubmit go coverage", readTemplate(goCoveragePostsubmitJob), title, repoName, jobName, true, data)
 	})
+	// Generate config for post-knative-serving-go-coverage-dev right after post-knative-serving-go-coverage,
+	// this job is mainly for debugging purpose.
+	if data.PostsubmitJobName == "post-knative-serving-go-coverage" {
+		data.PostsubmitJobName += "-dev"
+		data.Base.Image = strings.Replace(data.Base.Image, "coverage-go112:latest", "coverage-dev:latest", -1)
+		data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest", -1)
+		executeJobTemplate("postsubmit go coverage", readTemplate(goCoveragePostsubmitJob), title, repoName, data.PostsubmitJobName, false, data)
+	}
 }

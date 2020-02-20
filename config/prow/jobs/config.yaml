@@ -9543,6 +9543,21 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+  - name: post-knative-serving-go-coverage-dev
+    branches:
+    - master
+    agent: kubernetes
+    decorate: true
+    path_alias: knative.dev/serving
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/coverage-dev:latest
+        imagePullPolicy: Always
+        command:
+        - "/coverage"
+        args:
+        - "--artifacts=$(ARTIFACTS)"
+        - "--cov-threshold-percentage=0"
   knative/client:
   - name: post-knative-client-go-coverage
     branches:
