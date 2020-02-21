@@ -60,8 +60,8 @@ func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
 	executeJobTemplateWrapper(repoName, &data, func(data interface{}) {
 		executeJobTemplate("postsubmit go coverage", readTemplate(goCoveragePostsubmitJob), title, repoName, jobName, true, data)
 	})
-	// TODO(adrcunha): remove once the coverage-dev job isn't necessary anymore.
-	// Generate config for post-knative-serving-go-coverage-dev right after post-knative-serving-go-coverage
+	// Generate config for post-knative-serving-go-coverage-dev right after post-knative-serving-go-coverage,
+	// this job is mainly for debugging purpose.
 	if data.PostsubmitJobName == "post-knative-serving-go-coverage" {
 		data.PostsubmitJobName += "-dev"
 		data.Base.Image = strings.Replace(data.Base.Image, "coverage-go112:latest", "coverage-dev:latest", -1)
