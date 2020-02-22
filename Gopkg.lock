@@ -70,6 +70,14 @@
   version = "v0.6.3"
 
 [[projects]]
+  digest = "1:53becd66889185091b58ea3fc49294996f2179fb05a89702f4de7d15e581b509"
+  name = "github.com/go-logr/logr"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "9fb12b3b21c5415d16ac18dc5cd42c1cfdd40c4e"
+  version = "v0.1.0"
+
+[[projects]]
   digest = "1:24f20a61b3d084137d13cf53aba7365862b850fe4f30b733ed0e3c7ade9ca86d"
   name = "github.com/go-sql-driver/mysql"
   packages = ["."]
@@ -87,14 +95,6 @@
   pruneopts = "NUT"
   revision = "5628607bb4c51c3157aacc3a50f0ab707582b805"
   version = "v1.3.1"
-
-[[projects]]
-  branch = "master"
-  digest = "1:e2b86e41f3d669fc36b50d31d32d22c8ac656c75aa5ea89717ce7177e134ff2a"
-  name = "github.com/golang/glog"
-  packages = ["."]
-  pruneopts = "NUT"
-  revision = "23def4e6c14b4da8ac2ed8007337bc5eb5007998"
 
 [[projects]]
   branch = "master"
@@ -926,12 +926,9 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:5159a199e29decc279315d61ad089c51afc702b655b3088f2b12c0828b51130c"
+  digest = "1:eeff9025862df5bada2c0266aee6b8d743c854e1daaa558bc91e5fef3a326b27"
   name = "knative.dev/pkg"
   packages = [
-    "changeset",
-    "logging",
-    "logging/logkey",
     "test",
     "test/cmd",
     "test/gcs",
@@ -958,7 +955,7 @@
     "testutils/metahelper/client",
   ]
   pruneopts = "NUT"
-  revision = "4252f595d1ff347f0396166a0bd688a14463581a"
+  revision = "3a272190c3e22b5b9fc5508a8fe255b5a1510389"
 
 [[projects]]
   digest = "1:8730e0150dfb2b7e173890c8b9868e7a273082ef8e39f4940e3506a481cf895c"
