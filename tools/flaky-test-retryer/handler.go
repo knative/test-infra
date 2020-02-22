@@ -84,6 +84,17 @@ func (hc *HandlerClient) Listen() {
 func (hc *HandlerClient) HandleJob(jd *JobData) {
 	logWithPrefix(jd, "fit all criteria - Starting analysis\n")
 
+	pull, err := hc.github.GetPullRequest(jd.Refs[0].Org, jd.Refs[0].Repo, jd.Refs[0].Pulls[0].Number)
+	if err != nil {
+		logWithPrefix(jd, "could not get Pull Request: %v", err)
+		return
+	}
+
+	if *pull.State != "open" {
+		logWithPrefix(jd, "Pull Request is not open: %q", *pull.State)
+		return
+	}
+
 	failedTests, err := jd.getFailedTests()
 	if err != nil {
 		logWithPrefix(jd, "could not get failed tests: %v", err)
