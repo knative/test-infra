@@ -121,3 +121,14 @@ plugins:
   - welcome
   - wip
   - yuks
+external_plugins:
+  knative-prow-robot/serving:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
+  knative-prow-robot/test-infra:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request

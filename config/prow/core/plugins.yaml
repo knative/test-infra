@@ -537,3 +537,94 @@ plugins:
   - welcome
   - wip
   - yuks
+external_plugins:
+  google/knative-gcp:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
+  knative/caching:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
+  knative/client:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
+  knative/client-contrib:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
+  knative/community:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
+  knative/docs:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
+  knative/eventing:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
+  knative/eventing-contrib:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
+  knative/eventing-operator:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
+  knative/net-contour:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
+  knative/observability:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
+  knative/pkg:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
+  knative/sample-controller:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
+  knative/sample-source:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
+  knative/serving:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
+  knative/serving-operator:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
+  knative/test-infra:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
+  knative/website:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
