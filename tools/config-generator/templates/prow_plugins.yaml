@@ -104,3 +104,12 @@ plugins:
   - wip
   - yuks
 [[end]]
+
+external_plugins:
+[[range .TideRepos]]
+  [[.]]:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
+[[end]]
