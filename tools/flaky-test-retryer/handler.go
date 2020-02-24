@@ -25,6 +25,8 @@ import (
 	"fmt"
 	"log"
 
+	"knative.dev/pkg/test/ghutil"
+
 	"knative.dev/test-infra/tools/monitoring/subscriber"
 	// TODO: remove this import once "k8s.io/test-infra" import problems are fixed
 	// https://github.com/test-infra/test-infra/issues/912
@@ -83,6 +85,17 @@ func (hc *HandlerClient) Listen() {
 // compares them, and triggers a retest if all the failed tests are flaky.
 func (hc *HandlerClient) HandleJob(jd *JobData) {
 	logWithPrefix(jd, "fit all criteria - Starting analysis\n")
+
+	pull, err := hc.github.GetPullRequest(jd.Refs[0].Org, jd.Refs[0].Repo, jd.Refs[0].Pulls[0].Number)
+	if err != nil {
+		logWithPrefix(jd, "could not get Pull Request: %v", err)
+		return
+	}
+
+	if *pull.State != string(ghutil.PullRequestOpenState) {
+		logWithPrefix(jd, "Pull Request is not open: %q", *pull.State)
+		return
+	}
 
 	failedTests, err := jd.getFailedTests()
 	if err != nil {
