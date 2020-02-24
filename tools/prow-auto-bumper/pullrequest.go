@@ -58,7 +58,7 @@ func generatePRBody(extraMsgs []string) string {
 	var assignment string
 	if err == nil {
 		if oncaller != "" {
-			assignment = "/assign @" + oncaller
+			assignment = fmt.Sprintf("/assign @%s\n/cc @%s\n", oncaller, oncaller)
 		} else {
 			assignment = "Nobody is currently oncall."
 		}
