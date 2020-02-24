@@ -87,6 +87,7 @@ tide:
     - do-not-merge/hold
     - do-not-merge/work-in-progress
     - do-not-merge/invalid-owners-file
+    - needs-rebase
   merge_method:
     knative: squash
     google/knative-gcp: squash
