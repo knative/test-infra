@@ -25,6 +25,8 @@ import (
 	"fmt"
 	"log"
 
+	"knative.dev/pkg/test/ghutil"
+
 	"knative.dev/test-infra/tools/monitoring/subscriber"
 	// TODO: remove this import once "k8s.io/test-infra" import problems are fixed
 	// https://github.com/test-infra/test-infra/issues/912
@@ -90,7 +92,7 @@ func (hc *HandlerClient) HandleJob(jd *JobData) {
 		return
 	}
 
-	if *pull.State != "open" {
+	if *pull.State != string(ghutil.PullRequestOpenState) {
 		logWithPrefix(jd, "Pull Request is not open: %q", *pull.State)
 		return
 	}
