@@ -31,22 +31,22 @@ presubmits:
           memory: 16Gi
     - unit-tests: true
       dot-dev: true
-      is-monitored: true
+      needs-monitor: true
     - integration-tests: true
       dot-dev: true
-      is-monitored: true
+      needs-monitor: true
       args:
       - "--run-test"
       - "./test/e2e-tests.sh"
     - custom-test: upgrade-tests
       dot-dev: true
-      is-monitored: true
+      needs-monitor: true
       args:
       - "--run-test"
       - "./test/e2e-upgrade-tests.sh"
     - custom-test: autotls-tests
       dot-dev: true
-      is-monitored: true
+      needs-monitor: true
       args:
       - "--run-test"
       - "./test/e2e-auto-tls.sh"

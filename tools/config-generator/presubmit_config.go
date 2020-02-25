@@ -96,7 +96,7 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 		addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
 		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-central1")
 	}
-	if data.Base.IsMonitored {
+	if data.Base.NeedsMonitor {
 		addMonitoringPubsubLabelsToJob(&data.Base, data.PresubmitPullJobName)
 	}
 	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
