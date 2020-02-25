@@ -33,13 +33,13 @@ function post_build_tests() {
   subheader "Checking Makefiles"
   for makefile in $(find . -name Makefile | grep -v /vendor/); do
     echo "*** Checking ${makefile}"
-    make -n -C $(dirname ${makefile}) || failed=1
+    make -n -C $(dirname ${makefile}) || { failed=1; echo "--- FAIL: ${makefile}"; }
   done
   subheader "Checking config files"
-  make -C config/prow test || failed=1
+  make -C config/prow test || { failed=1; echo "--- FAIL"; }
   for script in scripts/*.sh; do
     subheader "Checking integrity of ${script}"
-    bash -c "source ${script}" || failed=1
+    bash -c "source ${script}" || { failed=1; echo "--- FAIL: ${script}"; }
   done
   return ${failed}
 }
@@ -50,7 +50,7 @@ function post_unit_tests() {
   local failed=0
   for test in ./test/unit/*-tests.sh; do
     subheader "Running tests in ${test}"
-    ${test} || failed=1
+    ${test} || { failed=1; echo "--- FAIL: ${test}"; }
   done
   return ${failed}
 }
