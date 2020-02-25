@@ -168,17 +168,17 @@ test:
 	diff --ignore-matching-lines="^# Copyright " $(TESTGRID_CONFIG) $(TMP_YAML_TESTGRID)
 	@echo "*** Checking configs validity"
 	bazel run @k8s//prow/cmd/checkconfig -- \
-		--config-path=$(PROW_CONFIG) \
-		--job-config-path=$(PROW_JOB_CONFIG) \
-		--plugin-config=$(PROW_PLUGINS)
+		--config-path=$(realpath $(PROW_CONFIG)) \
+		--job-config-path=$(realpath $(PROW_JOB_CONFIG)) \
+		--plugin-config=$(realpath $(PROW_PLUGINS))
 	bazel run @k8s//testgrid/cmd/configurator -- \
 		--validate-config-file \
-		--yaml=$(TESTGRID_CONFIG) \
+		--yaml=$(realpath $(TESTGRID_CONFIG)) \
 # Ensure TestGrid config can be converted to binary form.
 	bazel run @k8s//testgrid/cmd/configurator -- \
 		--oneshot \
 		--output=/dev/null \
-		--yaml=$(TESTGRID_CONFIG)
+		--yaml=$(realpath $(TESTGRID_CONFIG))
 
 # Update TestGrid config.
 # Application Default Credentials must be set, otherwise the upload will fail.
@@ -189,4 +189,4 @@ update-testgrid-config:
 	bazel run @k8s//testgrid/cmd/configurator -- \
 		--oneshot \
 		--output=gs://$(TESTGRID_GCS)/config \
-		--yaml=$(TESTGRID_CONFIG)
+		--yaml=$(realpath $(TESTGRID_CONFIG))
