@@ -47,7 +47,6 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	data.Base.GoCoverageThreshold = 50
 	jobTemplate := readTemplate(presubmitJob)
 	repoData := repositoryData{Name: repoName, EnableGoCoverage: false, GoCoverageThreshold: data.Base.GoCoverageThreshold}
-	isMonitoredJob := false
 	generateJob := true
 	for i, item := range presubmitConfig {
 		switch item.Key {
@@ -60,9 +59,6 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 			// Use default arguments if none given.
 			if len(data.Base.Args) == 0 {
 				data.Base.Args = []string{"--" + jobName}
-			}
-			if item.Key == "integration-tests" || item.Key == "unit-tests" {
-				isMonitoredJob = true
 			}
 			addVolumeToJob(&data.Base, "/etc/repoview-token", "repoview-token", true, "")
 		case "go-coverage":
@@ -100,7 +96,7 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 		addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
 		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-central1")
 	}
-	if isMonitoredJob {
+	if data.Base.NeedsMonitor {
 		addMonitoringPubsubLabelsToJob(&data.Base, data.PresubmitPullJobName)
 	}
 	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
