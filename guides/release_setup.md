@@ -62,7 +62,7 @@ Versioned releases can be one of two kinds:
    ```
 
 1. Run `make jobs/config.yaml` to regenerate
-   [config.yaml](../config/prow/core/config.yaml), otherwise the presubmit test
+   [config.yaml](../config/prow/jobs/config.yaml), otherwise the presubmit test
    will fail. Merge such pull request and ask the
    [oncall](https://knative.github.io/test-infra/) to update the Prow cluster
    and TestGrid with the new configs, by running `make update-prow-job-config`
