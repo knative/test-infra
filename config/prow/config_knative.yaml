@@ -43,8 +43,6 @@ presubmits:
       - "./test/e2e-upgrade-tests.sh"
     - custom-test: autotls-tests
       dot-dev: true
-      always_run: false # TODO(chaodaiG): Lets make sure it works before turn on
-      optional: true
       args:
       - "--run-test"
       - "./test/e2e-auto-tls.sh"
