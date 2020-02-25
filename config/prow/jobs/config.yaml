@@ -602,7 +602,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh --istio-version 1.3-latest --mesh"
+        - "./test/e2e-tests.sh --istio-version 1.3-latest --mesh && ./test/e2e-tests.sh --run-tests --skip-knative-setup --istio-version 1.3-latest --mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -636,7 +636,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh --istio-version 1.3-latest --mesh"
+        - "./test/e2e-tests.sh --istio-version 1.3-latest --mesh && ./test/e2e-tests.sh --run-tests --skip-knative-setup --istio-version 1.3-latest --mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -670,7 +670,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh --istio-version 1.3-latest --no-mesh"
+        - "./test/e2e-tests.sh --istio-version 1.3-latest --no-mesh && ./test/e2e-tests.sh --run-tests --skip-knative-setup --istio-version 1.3-latest --no-mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -704,7 +704,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh --istio-version 1.3-latest --no-mesh"
+        - "./test/e2e-tests.sh --istio-version 1.3-latest --no-mesh && ./test/e2e-tests.sh --run-tests --skip-knative-setup --istio-version 1.3-latest --no-mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -738,7 +738,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh --istio-version 1.4-latest --mesh"
+        - "./test/e2e-tests.sh --istio-version 1.4-latest --mesh && ./test/e2e-tests.sh --run-tests --skip-knative-setup --istio-version 1.4-latest --mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -772,7 +772,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh --istio-version 1.4-latest --mesh"
+        - "./test/e2e-tests.sh --istio-version 1.4-latest --mesh && ./test/e2e-tests.sh --run-tests --skip-knative-setup --istio-version 1.4-latest --mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -806,7 +806,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh --istio-version 1.4-latest --no-mesh"
+        - "./test/e2e-tests.sh --istio-version 1.4-latest --no-mesh && ./test/e2e-tests.sh --run-tests --skip-knative-setup --istio-version 1.4-latest --no-mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -840,7 +840,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh --istio-version 1.4-latest --no-mesh"
+        - "./test/e2e-tests.sh --istio-version 1.4-latest --no-mesh && ./test/e2e-tests.sh --run-tests --skip-knative-setup --istio-version 1.4-latest --no-mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -874,7 +874,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh --gloo-version 0.17.1"
+        - "./test/e2e-tests.sh --gloo-version 0.17.1 && ./test/e2e-tests.sh --run-tests --skip-knative-setup --gloo-version 0.17.1"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -908,7 +908,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh --gloo-version 0.17.1"
+        - "./test/e2e-tests.sh --gloo-version 0.17.1 && ./test/e2e-tests.sh --run-tests --skip-knative-setup --gloo-version 0.17.1"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -942,7 +942,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh --kourier-version stable"
+        - "./test/e2e-tests.sh --kourier-version stable && ./test/e2e-tests.sh --run-tests --skip-knative-setup --kourier-version stable"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -976,7 +976,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh --kourier-version stable"
+        - "./test/e2e-tests.sh --kourier-version stable && ./test/e2e-tests.sh --run-tests --skip-knative-setup --kourier-version stable"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -1010,7 +1010,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh --contour-version latest"
+        - "./test/e2e-tests.sh --contour-version latest && ./test/e2e-tests.sh --run-tests --skip-knative-setup --contour-version latest"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -1044,7 +1044,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh --contour-version latest"
+        - "./test/e2e-tests.sh --contour-version latest && ./test/e2e-tests.sh --run-tests --skip-knative-setup --contour-version latest"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -1078,7 +1078,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh --ambassador-version latest"
+        - "./test/e2e-tests.sh --ambassador-version latest && ./test/e2e-tests.sh --run-tests --skip-knative-setup --ambassador-version latest"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -1112,7 +1112,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh --ambassador-version latest"
+        - "./test/e2e-tests.sh --ambassador-version latest && ./test/e2e-tests.sh --run-tests --skip-knative-setup --ambassador-version latest"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -1146,7 +1146,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh --https"
+        - "./test/e2e-tests.sh --https && ./test/e2e-tests.sh --run-tests --skip-knative-setup --https"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -1180,7 +1180,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh --https"
+        - "./test/e2e-tests.sh --https && ./test/e2e-tests.sh --run-tests --skip-knative-setup --https"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -5772,6 +5772,13 @@ periodics:
       - "--istio-version"
       - "1.3-latest"
       - "--mesh"
+      - "&&"
+      - "./test/e2e-tests.sh"
+      - "--run-tests"
+      - "--skip-knative-setup"
+      - "--istio-version"
+      - "1.3-latest"
+      - "--mesh"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -5802,6 +5809,13 @@ periodics:
       - runner.sh
       args:
       - "./test/e2e-tests.sh"
+      - "--istio-version"
+      - "1.3-latest"
+      - "--no-mesh"
+      - "&&"
+      - "./test/e2e-tests.sh"
+      - "--run-tests"
+      - "--skip-knative-setup"
       - "--istio-version"
       - "1.3-latest"
       - "--no-mesh"
@@ -5838,6 +5852,13 @@ periodics:
       - "--istio-version"
       - "1.4-latest"
       - "--mesh"
+      - "&&"
+      - "./test/e2e-tests.sh"
+      - "--run-tests"
+      - "--skip-knative-setup"
+      - "--istio-version"
+      - "1.4-latest"
+      - "--mesh"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -5868,6 +5889,13 @@ periodics:
       - runner.sh
       args:
       - "./test/e2e-tests.sh"
+      - "--istio-version"
+      - "1.4-latest"
+      - "--no-mesh"
+      - "&&"
+      - "./test/e2e-tests.sh"
+      - "--run-tests"
+      - "--skip-knative-setup"
       - "--istio-version"
       - "1.4-latest"
       - "--no-mesh"
@@ -5903,6 +5931,12 @@ periodics:
       - "./test/e2e-tests.sh"
       - "--gloo-version"
       - "0.17.1"
+      - "&&"
+      - "./test/e2e-tests.sh"
+      - "--run-tests"
+      - "--skip-knative-setup"
+      - "--gloo-version"
+      - "0.17.1"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -5933,6 +5967,12 @@ periodics:
       - runner.sh
       args:
       - "./test/e2e-tests.sh"
+      - "--kourier-version"
+      - "stable"
+      - "&&"
+      - "./test/e2e-tests.sh"
+      - "--run-tests"
+      - "--skip-knative-setup"
       - "--kourier-version"
       - "stable"
       volumeMounts:
@@ -5967,6 +6007,12 @@ periodics:
       - "./test/e2e-tests.sh"
       - "--contour-version"
       - "latest"
+      - "&&"
+      - "./test/e2e-tests.sh"
+      - "--run-tests"
+      - "--skip-knative-setup"
+      - "--contour-version"
+      - "latest"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -5999,6 +6045,12 @@ periodics:
       - "./test/e2e-tests.sh"
       - "--ambassador-version"
       - "latest"
+      - "&&"
+      - "./test/e2e-tests.sh"
+      - "--run-tests"
+      - "--skip-knative-setup"
+      - "--ambassador-version"
+      - "latest"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -6029,6 +6081,11 @@ periodics:
       - runner.sh
       args:
       - "./test/e2e-tests.sh"
+      - "--https"
+      - "&&"
+      - "./test/e2e-tests.sh"
+      - "--run-tests"
+      - "--skip-knative-setup"
       - "--https"
       volumeMounts:
       - name: test-account
