@@ -24,22 +24,20 @@ SKIP_CONFIG_BACKUP        ?=
 GENERATE_MAINTENANCE_JOBS ?= true
 GENERATE_TESTGRID_CONFIG  ?= true
 
-# This is the canonical path of this Makefile, aka /config/prow dir.
-PROW_DIR             ?= $(realpath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
-CONFIG_GENERATOR_DIR ?= $(PROW_DIR)/../../tools/config-generator
+CONFIG_GENERATOR_DIR ?= ../../tools/config-generator
 
-KNATIVE_CONFIG   ?= $(PROW_DIR)/config_knative.yaml
-PROW_PLUGINS     ?= $(PROW_DIR)/core/plugins.yaml
-PROW_CONFIG      ?= $(PROW_DIR)/core/config.yaml
-PROW_JOB_CONFIG  ?= ${PROW_DIR}/jobs/config.yaml
-PROW_DEPLOYS     ?= $(PROW_DIR)/cluster
+KNATIVE_CONFIG   ?= config_knative.yaml
+PROW_PLUGINS     ?= core/plugins.yaml
+PROW_CONFIG      ?= core/config.yaml
+PROW_JOB_CONFIG  ?= jobs/config.yaml
+PROW_DEPLOYS     ?= cluster
 PROW_GCS         ?= knative-prow
 PROW_CONFIG_GCS  ?= gs://$(PROW_GCS)/configs
 
 TESTGRID_GCS    ?= knative-testgrid
-TESTGRID_CONFIG ?= $(PROW_DIR)/testgrid/testgrid.yaml
+TESTGRID_CONFIG ?= testgrid/testgrid.yaml
 
-BOSKOS_RESOURCES ?= $(PROW_DIR)/boskos/boskos_resources.yaml
+BOSKOS_RESOURCES ?= boskos/boskos_resources.yaml
 
 # Useful shortcuts.
 
@@ -47,9 +45,18 @@ SET_CONTEXT   := gcloud container clusters get-credentials "$(CLUSTER)" --projec
 UNSET_CONTEXT := kubectl config unset current-context
 MAKE_CONFIG   := go run "${CONFIG_GENERATOR_DIR}"
 
-# Avoid the default target being harmful.
-default:
-	@echo "You must specify a target"
+.PHONY: help get-cluster-credentials unset-cluster-credentials
+help:
+	@echo "Help"
+	@echo "'Update' means updating the servers and can only be run by oncall staff."
+	@echo "Common usage:"
+	@echo " make update-prow: Update all Prow things  except Boskos resources for some reason"
+	@echo " make update-prow-job-config: Update just the Prow job config"
+	@echo " make jobs/config.yaml: Generate Prow job config.yaml"
+	@echo " make update-all-cluster-deployments: Update all Prow deployments except Boskos for some reason"
+	@echo " make update-all-boskos-deployments: Update Boskos deployments"
+	@echo " make update-boskos-resource: Update the Boskos resources"
+	@echo " make update-testgrid-config: Update the Testgrid config"
 
 # Useful general targets.
 get-cluster-credentials:
@@ -59,7 +66,7 @@ unset-cluster-credentials:
 	$(UNSET_CONTEXT)
 
 # Generate the Prow config file
-config:
+jobs/config.yaml:
 	$(MAKE_CONFIG) \
 		--gcs-bucket=$(PROW_GCS) \
 		--generate-testgrid-config=$(GENERATE_TESTGRID_CONFIG) \
@@ -73,6 +80,8 @@ config:
 		--testgrid-gcs-bucket=$(TESTGRID_GCS) \
 		$(KNATIVE_CONFIG)
 
+.PHONY: update-prow-config update-prow-job-config update-prow-plugins update-all-boskos-deployments update-boskos-resource update-all-cluster-deployments update-single-cluster-deployment update-prow test update-testgrid-config
+
 # Update prow config
 update-prow-config:
 	$(SET_CONTEXT)
@@ -80,7 +89,7 @@ update-prow-config:
 	$(UNSET_CONTEXT)
 
 # Update all prow job configs
-update-prow-job-config:
+update-prow-job-config: jobs/config.yaml
 	$(SET_CONTEXT)
 ifndef SKIP_CONFIG_BACKUP
 	$(eval OLD_YAML_CONFIG := $(shell mktemp))
@@ -92,8 +101,8 @@ ifndef SKIP_CONFIG_BACKUP
 else
 	$(eval NEW_YAML_CONFIG := $(PROW_JOB_CONFIG))
 endif
-	# We'll have to use `kubectl replace` here because `kubectl apply` will add the whole original configmap to the
-	# `last-applied-configuration` annotation, but k8s has a maxmium 256kb limit for it, see https://github.com/kubernetes/kubectl/issues/712
+# We'll have to use `kubectl replace` here because `kubectl apply` will add the whole original configmap to the
+# `last-applied-configuration` annotation, but k8s has a maxmium 256kb limit for it, see https://github.com/kubernetes/kubectl/issues/712
 	kubectl create configmap job-config --from-file=config.yaml=$(NEW_YAML_CONFIG) --dry-run -o yaml | kubectl replace configmap job-config -f -
 	$(UNSET_CONTEXT)
 ifndef SKIP_CONFIG_BACKUP
@@ -109,9 +118,9 @@ update-prow-plugins:
 	$(UNSET_CONTEXT)
 
 # Update all deployments of boskos
-update-all-boskos-deployments::
+update-all-boskos-deployments:
 	$(SET_CONTEXT)
-	@for f in $(wildcard $(PROW_DEPLOYS)/boskos*.yaml); do kubectl apply -f $${f}; done
+	@for f in $(wildcard $(PROW_DEPLOYS)/*boskos*.yaml); do kubectl apply -f $${f}; done
 	$(UNSET_CONTEXT)
 
 # Update the list of resources for Boskos
@@ -120,10 +129,10 @@ update-boskos-resource:
 	kubectl create configmap resources --from-file=config=$(BOSKOS_RESOURCES) --dry-run --save-config -o yaml | kubectl --namespace="$(JOB_NAMESPACE)" apply -f -
 	$(UNSET_CONTEXT)
 
-# Update all deployment of cluster
-update-all-cluster-deployments::
+# Update all deployments of cluster except Boskos for some reason
+update-all-cluster-deployments:
 	$(SET_CONTEXT)
-	@for f in $(filter-out $(wildcard $(PROW_DEPLOYS)/boskos*.yaml),$(wildcard $(PROW_DEPLOYS)/*.yaml)); do kubectl apply -f $${f}; done
+	@for f in $(filter-out $(wildcard $(PROW_DEPLOYS)/*boskos*.yaml),$(wildcard $(PROW_DEPLOYS)/*.yaml)); do kubectl apply -f $${f}; done
 	$(UNSET_CONTEXT)
 
 # Update single deployment of cluster, expect passing in ${NAME} like `make update-single-cluster-deployment NAME=crier_deployment`
@@ -133,7 +142,7 @@ update-single-cluster-deployment:
 	$(UNSET_CONTEXT)
 
 # Update all resources on Prow cluster except boskos resource
-update-full: update-all-cluster-deployments update-all-boskos-deployments update-prow-plugins update-prow-config update-prow-job-config
+update-prow: update-all-cluster-deployments update-all-boskos-deployments update-prow-plugins update-prow-config update-prow-job-config
 
 # Ensure that configs are valid and up-to-date
 test:
@@ -165,7 +174,7 @@ test:
 	bazel run @k8s//testgrid/cmd/configurator -- \
 		--validate-config-file \
 		--yaml=$(TESTGRID_CONFIG) \
-	# Ensure TestGrid config can be converted to binary form.
+# Ensure TestGrid config can be converted to binary form.
 	bazel run @k8s//testgrid/cmd/configurator -- \
 		--oneshot \
 		--output=/dev/null \
