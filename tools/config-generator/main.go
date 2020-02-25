@@ -116,6 +116,7 @@ type baseProwJobTemplateData struct {
 	Labels              []string
 	PathAlias           string
 	Optional            string
+	IsMonitored         bool
 }
 
 // ####################################################################################################
@@ -564,6 +565,8 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 			parts := strings.Split(getString(item.Value), " ")
 			(*data).Command = parts[0]
 			(*data).Args = parts[1:]
+		case "is-monitored":
+			(*data).IsMonitored = true
 		case "needs-dind":
 			if getBool(item.Value) {
 				setupDockerInDockerForJob(data)
