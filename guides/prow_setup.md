@@ -36,8 +36,8 @@
    `application/json` format and for all events. Ask one of the owners of
    _knative/test-infra_ for the webhook secrets.
 
-   1. <http://prow.knative.dev/hook> (for Prow)
-   1. <https://github-dot-knative-tests.appspot.com/webhook> (for Gubernator PR
+   1. `http://prow.knative.dev/hook` (for Prow)
+   1. `https://github-dot-knative-tests.appspot.com/webhook` (for Gubernator PR
       Dashboard)
 
 1. Create a team called _Knative Prow Robots_, and make it an Admin of the org
