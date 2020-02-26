@@ -68,6 +68,9 @@ deck:
           - 'timeout waiting for pods to come up'
           # Prow job killed
           - 'Entrypoint received interrupt: terminated'
+          # Code is outdated
+          # TODO(chizhg): this error message should be defined by the common test infrastructure
+          - 'Please run .*hack/update-codegen.sh'
       required_files:
       - build-log.txt
     - lens:
