@@ -49,7 +49,7 @@ presubmits:
       needs-monitor: true
       args:
       - "--run-test"
-      - "./test/e2e-auto-tls.sh"
+      - "./test/e2e-auto-tls-tests.sh"
     - custom-test: smoke-tests
       dot-dev: true
       always_run: false

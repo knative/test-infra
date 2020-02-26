@@ -373,7 +373,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-auto-tls.sh"
+        - "./test/e2e-auto-tls-tests.sh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -410,7 +410,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-auto-tls.sh"
+        - "./test/e2e-auto-tls-tests.sh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
