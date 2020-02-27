@@ -192,10 +192,8 @@ presubmits:
           memory: 16Gi
     - unit-tests: true
       dot-dev: true
-      needs-monitor: true
     - integration-tests: true
       dot-dev: true
-      needs-monitor: true
     - go-coverage: true
       dot-dev: true
 
