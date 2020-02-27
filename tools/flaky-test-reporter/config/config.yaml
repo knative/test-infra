@@ -71,12 +71,10 @@ jobConfigs:
   - name: ci-knative-eventing-continuous
     repo: eventing
     type: postsubmit
-    # Uncomment line below to enable auto bugs
-    # issueRepo: eventing
-    # Uncomment section below to enable slack notifications
-    # slackChannels:
-    #   - name: eventing
-    #     identity: C9JP909F0
+    issueRepo: eventing
+    slackChannels:
+      - name: eventing
+        identity: C9JP909F0
   - name: ci-knative-test-infra-continuous
     repo: test-infra
     type: postsubmit
