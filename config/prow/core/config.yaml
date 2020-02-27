@@ -108,6 +108,7 @@ tide:
     - "knative/eventing-contrib"
     - "knative/eventing-operator"
     - "knative/net-contour"
+    - "knative/net-istio"
     - "knative/observability"
     - "knative/pkg"
     - "knative/sample-controller"
