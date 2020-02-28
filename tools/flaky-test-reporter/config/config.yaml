@@ -75,6 +75,15 @@ jobConfigs:
     slackChannels:
       - name: eventing
         identity: C9JP909F0
+  - name: ci-knative-eventing-contrib-continuous
+    repo: eventing-contrib
+    type: postsubmit
+    issueRepo: eventing-contrib
+    slackChannels:
+      - name: eventing-sources
+        identity: CQBKVH4QY
+      - name: eventing-channels
+        identity: CR2141CGY
   - name: ci-knative-test-infra-continuous
     repo: test-infra
     type: postsubmit
