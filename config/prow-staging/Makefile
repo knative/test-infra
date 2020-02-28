@@ -23,7 +23,7 @@ GENERATE_MAINTENANCE_JOBS := false
 
 KNATIVE_CONFIG   := config_staging.yaml
 
-include ../prow/prod_staging.mk
+include ../prow_common.mk
 
 # Append to update-all-boskos-deployments: only 3 replicas of janitor
 update-all-boskos-deployments::
@@ -31,7 +31,7 @@ update-all-boskos-deployments::
 	kubectl patch deployment boskos-janitor -n test-pods -p '{"spec":{"replicas":3}}'
 	$(UNSET_CONTEXT)
 
-update-all-cluster-deployments::
+update-almost-all-cluster-deployments::
 	$(SET_CONTEXT)
 	$(eval host := $(subst https://,,$(PROW_HOST)))
 	kubectl get ingress -oyaml | sed "s/prow.knative.dev/$(host)/" | kubectl apply -f -

@@ -86,12 +86,12 @@
 1. Merge a pull request that updates
    [config_knative.yaml](../config/prow/config_knative.yaml), the Prow config
    file (usually, copy and update the existing configuration from another
-   repository). Run `make jobs/config.yaml` to regenerate
+   repository). Run `make config` to regenerate
    [config.yaml](../config/prow/jobs/config.yaml), otherwise the presubmit test
    will fail.
 
 1. Ask the [oncall](https://knative.github.io/test-infra/) to update the Prow
-   cluster and TestGrid with the new configs, by running `make update-prow`
+   cluster and TestGrid with the new configs, by running `make update-prow-cluster`
    and `make update-testgrid-config` in `config/prow`.
 
 1. Wait a few minutes, enter `/retest` as a comment in any PR in the repo and

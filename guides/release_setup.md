@@ -61,7 +61,7 @@ Versioned releases can be one of two kinds:
     - auto-release: true
    ```
 
-1. Run `make jobs/config.yaml` to regenerate
+1. Run `make config` to regenerate
    [config.yaml](../config/prow/jobs/config.yaml), otherwise the presubmit test
    will fail. Merge such pull request and ask the
    [oncall](https://knative.github.io/test-infra/) to update the Prow cluster

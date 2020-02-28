@@ -46,17 +46,13 @@ SET_CONTEXT   := gcloud container clusters get-credentials "$(CLUSTER)" --projec
 UNSET_CONTEXT := kubectl config unset current-context
 MAKE_CONFIG   := go run "${CONFIG_GENERATOR_DIR}"
 
-.PHONY: help get-cluster-credentials unset-cluster-credentials
+.PHONY: help get-cluster-credentials unset-cluster-credentials config
 help:
 	@echo "Help"
 	@echo "'Update' means updating the servers and can only be run by oncall staff."
 	@echo "Common usage:"
-	@echo " make update-prow: Update all Prow things  except Boskos resources for some reason"
-	@echo " make update-prow-job-config: Update just the Prow job config"
-	@echo " make jobs/config.yaml: Generate Prow job config.yaml"
-	@echo " make update-all-cluster-deployments: Update all Prow deployments except Boskos for some reason"
-	@echo " make update-all-boskos-deployments: Update Boskos deployments"
-	@echo " make update-boskos-resource: Update the Boskos resources"
+	@echo " make update-prow-cluster: Update all Prow things on the server to match the current branch. Errors if not master."
+	@echo " make config: Update all generated files"
 	@echo " make update-testgrid-config: Update the Testgrid config"
 
 # Useful general targets.
@@ -67,7 +63,7 @@ unset-cluster-credentials:
 	$(UNSET_CONTEXT)
 
 # Generate the Prow config file
-$(PROW_JOB_CONFIG) $(PROW_CONFIG) $(PROW_PLUGINS) $(TESTGRID_CONFIG): $(KNATIVE_CONFIG) $(wildcard $(CONFIG_GENERATOR_DIR)/templates/*.yaml)
+config $(PROW_JOB_CONFIG) $(PROW_CONFIG) $(PROW_PLUGINS) $(TESTGRID_CONFIG): $(KNATIVE_CONFIG) $(wildcard $(CONFIG_GENERATOR_DIR)/templates/*.yaml)
 	$(MAKE_CONFIG) \
 		--gcs-bucket=$(PROW_GCS) \
 		--generate-testgrid-config=$(GENERATE_TESTGRID_CONFIG) \
@@ -81,16 +77,16 @@ $(PROW_JOB_CONFIG) $(PROW_CONFIG) $(PROW_PLUGINS) $(TESTGRID_CONFIG): $(KNATIVE_
 		--testgrid-gcs-bucket=$(TESTGRID_GCS) \
 		$(KNATIVE_CONFIG)
 
-.PHONY: update-prow-config update-prow-job-config update-prow-plugins update-all-boskos-deployments update-boskos-resource update-all-cluster-deployments update-single-cluster-deployment update-prow test update-testgrid-config
+.PHONY: update-prow-config update-prow-job-config update-prow-plugins update-all-boskos-deployments update-boskos-resource update-almost-all-cluster-deployments update-single-cluster-deployment update-prow test update-testgrid-config confirm-master
 
 # Update prow config
-update-prow-config:
+update-prow-config: confirm-master
 	$(SET_CONTEXT)
 	kubectl create configmap config --from-file=config.yaml=$(PROW_CONFIG) --dry-run --save-config -o yaml | kubectl apply -f -
 	$(UNSET_CONTEXT)
 
 # Update all prow job configs
-update-prow-job-config: jobs/config.yaml
+update-prow-job-config: confirm-master
 	$(SET_CONTEXT)
 ifndef SKIP_CONFIG_BACKUP
 	$(eval OLD_YAML_CONFIG := $(shell mktemp))
@@ -113,39 +109,48 @@ ifndef SKIP_CONFIG_BACKUP
 endif
 
 # Update prow plugins
-update-prow-plugins:
+update-prow-plugins: confirm-master
 	$(SET_CONTEXT)
 	kubectl create configmap plugins --from-file=plugins.yaml=$(PROW_PLUGINS) --dry-run --save-config -o yaml | kubectl apply -f -
 	$(UNSET_CONTEXT)
 
 # Update all deployments of boskos
-# Overridden in staging Makefile
-update-all-boskos-deployments::
+# Boskos is separate because of patching done in staging Makefile
+update-all-boskos-deployments:: confirm-master
 	$(SET_CONTEXT)
 	@for f in $(wildcard $(PROW_DEPLOYS)/*boskos*.yaml); do kubectl apply -f $${f}; done
 	$(UNSET_CONTEXT)
 
 # Update the list of resources for Boskos
-update-boskos-resource:
+update-boskos-resource: confirm-master
 	$(SET_CONTEXT)
 	kubectl create configmap resources --from-file=config=$(BOSKOS_RESOURCES) --dry-run --save-config -o yaml | kubectl --namespace="$(JOB_NAMESPACE)" apply -f -
 	$(UNSET_CONTEXT)
 
-# Update all deployments of cluster except Boskos for some reason
-# Overridden in staging Makefile
-update-all-cluster-deployments::
+# Update all deployments of cluster except Boskos
+# Boskos is separate because of patching done in staging Makefile
+update-almost-all-cluster-deployments:: confirm-master
 	$(SET_CONTEXT)
 	@for f in $(filter-out $(wildcard $(PROW_DEPLOYS)/*boskos*.yaml),$(wildcard $(PROW_DEPLOYS)/*.yaml)); do kubectl apply -f $${f}; done
 	$(UNSET_CONTEXT)
 
 # Update single deployment of cluster, expect passing in ${NAME} like `make update-single-cluster-deployment NAME=crier_deployment`
-update-single-cluster-deployment:
+update-single-cluster-deployment: confirm-master
 	$(SET_CONTEXT)
 	kubectl apply -f $(PROW_DEPLOYS)/$(NAME).yaml
 	$(UNSET_CONTEXT)
 
-# Update all resources on Prow cluster except boskos resource
-update-prow: update-all-cluster-deployments update-all-boskos-deployments update-prow-plugins update-prow-config update-prow-job-config
+# Update all resources on Prow cluster
+update-prow-cluster: update-almost-all-cluster-deployments update-all-boskos-deployments update-boskos-resource update-prow-plugins update-prow-config update-prow-job-config
+
+# Do not allow server update from wrong branch or dirty working space
+# In emergency, could easily edit this file, deleting all these lines
+confirm-master:
+	@if git diff-index --quiet HEAD; then true; else echo "Git working space is dirty -- will not update server"; false; fi;
+ifneq ("$(shell git branch --show-current)","master")
+	@echo "Branch is not master -- will not update server"
+	@false
+endif
 
 # Ensure that configs are valid and up-to-date
 test:
@@ -194,5 +199,3 @@ update-testgrid-config:
 		--output=gs://$(TESTGRID_GCS)/config \
 		--yaml=$(realpath $(TESTGRID_CONFIG))
 
-test2:
-	echo $(realpath $(KNATIVE_CONFIG))
