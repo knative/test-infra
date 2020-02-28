@@ -32,6 +32,9 @@ spec:
         image: gcr.io/k8s-prow/crier:v20200219-5ea024fc8
         args:
         - --pubsub-workers=5 # Arbitrary number of multiplier
+        - --gcs-workers=1
+        - --gcs-credentials-file=/etc/service-account/service-account.json # TODO(chizhg): use workload identity
+        - --kubernetes-gcs-workers=1
         - --report-agent=knative-build
         - --config-path=/etc/config/config.yaml
         - --job-config-path=/etc/job-config
@@ -45,6 +48,9 @@ spec:
         - name: oauth
           mountPath: /etc/github
           readOnly: true
+        - name: service-account
+          mountPath: /etc/service-account
+          readOnly: true
       volumes:
       - name: config
         configMap:
@@ -55,3 +61,6 @@ spec:
       - name: oauth
         secret:
           secretName: oauth-token
+      - name: service-account
+        secret:
+          secretName: service-account
