@@ -50,13 +50,6 @@ presubmits:
       args:
       - "--run-test"
       - "./test/e2e-auto-tls-tests.sh"
-    - custom-test: smoke-tests
-      dot-dev: true
-      always_run: false
-      optional: true
-      args:
-      - "--run-test"
-      - "./test/e2e-smoke-tests.sh"
     - go-coverage: true
       go-coverage-threshold: 80
       dot-dev: true
