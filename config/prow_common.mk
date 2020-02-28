@@ -199,7 +199,7 @@ test:
 # Either export $GOOGLE_APPLICATION_CREDENTIALS pointing to a valid service
 # account key, or temporarily use your own credentials by running
 # gcloud auth application-default login
-update-testgrid-config:
+update-testgrid-config: confirm-master
 	bazel run @k8s//testgrid/cmd/configurator -- \
 		--oneshot \
 		--output=gs://$(TESTGRID_GCS)/config \
