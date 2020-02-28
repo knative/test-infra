@@ -27,6 +27,7 @@ GENERATE_TESTGRID_CONFIG  ?= true
 CONFIG_GENERATOR_DIR ?= ../../tools/config-generator
 
 # Any changes to file location must be made to staging directory also
+# or overridden in the Makefile before this file is included.
 PROW_PLUGINS     ?= core/plugins.yaml
 PROW_CONFIG      ?= core/config.yaml
 PROW_JOB_CONFIG  ?= jobs/config.yaml
@@ -54,6 +55,8 @@ help:
 	@echo " make update-prow-cluster: Update all Prow things on the server to match the current branch. Errors if not master."
 	@echo " make config: Update all generated files"
 	@echo " make update-testgrid-config: Update the Testgrid config"
+	@echo " make get-cluster-credentials: Setup kubectl to point to Prow cluster"
+	@echo " make unset-cluster-credentials: Clear kubectl context"
 
 # Useful general targets.
 get-cluster-credentials:
@@ -116,6 +119,7 @@ update-prow-plugins: confirm-master
 
 # Update all deployments of boskos
 # Boskos is separate because of patching done in staging Makefile
+# Double-colon because staging Makefile piggy-backs on this
 update-all-boskos-deployments:: confirm-master
 	$(SET_CONTEXT)
 	@for f in $(wildcard $(PROW_DEPLOYS)/*boskos*.yaml); do kubectl apply -f $${f}; done
@@ -129,6 +133,7 @@ update-boskos-resource: confirm-master
 
 # Update all deployments of cluster except Boskos
 # Boskos is separate because of patching done in staging Makefile
+# Double-colon because staging Makefile piggy-backs on this
 update-almost-all-cluster-deployments:: confirm-master
 	$(SET_CONTEXT)
 	@for f in $(filter-out $(wildcard $(PROW_DEPLOYS)/*boskos*.yaml),$(wildcard $(PROW_DEPLOYS)/*.yaml)); do kubectl apply -f $${f}; done
