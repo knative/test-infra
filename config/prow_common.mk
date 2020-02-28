@@ -97,7 +97,8 @@ ifndef SKIP_CONFIG_BACKUP
 	$(eval GCS_DEST := $(PROW_CONFIG_GCS)/config-$(shell date '+%Y_%m_%d_%H:%M:%S').yaml)
 	@kubectl get configmap job-config -o jsonpath="{.data['config\.yaml']}" 2>/dev/null > "${OLD_YAML_CONFIG}"
 	@gsutil cp "${OLD_YAML_CONFIG}" "${GCS_DEST}" > /dev/null
-	@sed -e "s/((COMMIT_HASH_TOKEN))/$(shell git rev-parse HEAD)/" $(PROW_JOB_CONFIG) > "${NEW_YAML_CONFIG}"
+	@cp "$(PROW_JOB_CONFIG)" "${NEW_YAML_CONFIG}"
+	@echo "# FROM COMMIT: $(shell git rev-parse HEAD)" >> "${NEW_YAML_CONFIG}"
 else
 	$(eval NEW_YAML_CONFIG := $(PROW_JOB_CONFIG))
 endif
