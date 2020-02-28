@@ -17,7 +17,6 @@
 # ####     USE "make config" TO REGENERATE THIS FILE.     ####
 # ####                                                    ####
 # ############################################################
-# FROM COMMIT: ((COMMIT_HASH_TOKEN))
 # Default testgroup and dashboardtab, please do not change them
 default_test_group:
   days_of_results: 14            # Number of days of test results to gather and serve
