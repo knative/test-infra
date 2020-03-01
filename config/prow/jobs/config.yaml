@@ -3428,6 +3428,70 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+  - name: pull-knative-test-infra-check-config
+    agent: kubernetes
+    context: pull-knative-test-infra-check-config
+    always_run: true
+    rerun_command: "/test pull-knative-test-infra-check-config"
+    trigger: "(?m)^/test (all|pull-knative-test-infra-check-config),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/test-infra
+    branches:
+    - "release-0.10"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "./test/presubmit-config-check.sh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-test-infra-check-config
+    agent: kubernetes
+    context: pull-knative-test-infra-check-config
+    always_run: true
+    rerun_command: "/test pull-knative-test-infra-check-config"
+    trigger: "(?m)^/test (all|pull-knative-test-infra-check-config),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/test-infra
+    skip_branches:
+    - "release-0.10"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "./test/presubmit-config-check.sh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
   knative/caching:
   - name: pull-knative-caching-build-tests
     agent: kubernetes

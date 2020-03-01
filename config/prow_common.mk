@@ -153,46 +153,10 @@ update-prow-cluster: update-almost-all-cluster-deployments update-all-boskos-dep
 # In emergency, could easily edit this file, deleting all these lines
 confirm-master:
 	@if git diff-index --quiet HEAD; then true; else echo "Git working space is dirty -- will not update server"; false; fi;
-ifneq ("$(shell git branch --show-current)","master")
+ifneq ("$(shell git rev-parse --abbrev-ref HEAD)","master")
 	@echo "Branch is not master -- will not update server"
 	@false
 endif
-
-# Ensure that configs are valid and up-to-date
-test:
-	@echo "*** Checking config generator for prow and testgrid"
-	$(eval TMP_YAML_PROW := $(shell mktemp))
-	$(eval TMP_YAML_PROW_JOBS := $(shell mktemp))
-	$(eval TMP_YAML_PLUGINS := $(shell mktemp))
-	$(eval TMP_YAML_TESTGRID := $(shell mktemp))
-	$(MAKE_CONFIG) \
-		--gcs-bucket=$(PROW_GCS) \
-		--generate-maintenance-jobs=$(GENERATE_MAINTENANCE_JOBS) \
-		--image-docker=gcr.io/$(PROJECT)/test-infra \
-		--plugins-config-output=$(TMP_YAML_PLUGINS) \
-		--prow-config-output=$(TMP_YAML_PROW) \
-		--prow-jobs-config-output=$(TMP_YAML_PROW_JOBS) \
-		--prow-host=$(PROW_HOST) \
-		--testgrid-config-output=$(TMP_YAML_TESTGRID) \
-		--testgrid-gcs-bucket=$(TESTGRID_GCS) \
-		$(KNATIVE_CONFIG)
-	diff --ignore-matching-lines="^# Copyright " $(PROW_CONFIG) $(TMP_YAML_PROW)
-	diff --ignore-matching-lines="^# Copyright " $(PROW_JOB_CONFIG) $(TMP_YAML_PROW_JOBS)
-	diff --ignore-matching-lines="^# Copyright " $(PROW_PLUGINS) $(TMP_YAML_PLUGINS)
-	diff --ignore-matching-lines="^# Copyright " $(TESTGRID_CONFIG) $(TMP_YAML_TESTGRID)
-	@echo "*** Checking configs validity"
-	bazel run @k8s//prow/cmd/checkconfig -- \
-		--config-path=$(realpath $(PROW_CONFIG)) \
-		--job-config-path=$(realpath $(PROW_JOB_CONFIG)) \
-		--plugin-config=$(realpath $(PROW_PLUGINS))
-	bazel run @k8s//testgrid/cmd/configurator -- \
-		--validate-config-file \
-		--yaml=$(realpath $(TESTGRID_CONFIG)) \
-# Ensure TestGrid config can be converted to binary form.
-	bazel run @k8s//testgrid/cmd/configurator -- \
-		--oneshot \
-		--output=/dev/null \
-		--yaml=$(realpath $(TESTGRID_CONFIG))
 
 # Update TestGrid config.
 # Application Default Credentials must be set, otherwise the upload will fail.

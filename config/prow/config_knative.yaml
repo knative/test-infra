@@ -249,6 +249,10 @@ presubmits:
       dot-dev: true
     - integration-tests: true
       dot-dev: true
+    - custom-test: check-config
+      dot-dev: true
+      args:
+        - "./test/presubmit-config-check.sh"
 
   knative/caching:
     - repo-settings:
