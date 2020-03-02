@@ -18,7 +18,7 @@ PROW_HOST     := https://prow.knative.dev
 TESTGRID_GCS  := knative-testgrid
 
 KNATIVE_CONFIG   := config_knative.yaml
-TESTGRID_CONFIG  := testgrid/testgrid.yaml
+TESTGRID_CONFIG  ?= testgrid/testgrid.yaml
 
 include ../prow_common.mk
 

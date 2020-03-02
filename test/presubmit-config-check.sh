@@ -23,9 +23,18 @@ function diff_config_files() {
   diff --ignore-matching-lines="^# Copyright " "$1" "$2"
 }
 
+# Run diff on the Prow configuration files.
+# Parameters: $1 - the environent, can be prow or prow-staging.
+function diff_prow_config_files() {
+  local prow_env="$1"
+  diff_config_files "${PROW_CONFIG}" "config/${prow_env}/core/config.yaml"
+  diff_config_files "${PROW_PLUGINS}" "config/${prow_env}/core/plugins.yaml"
+  diff_config_files "${PROW_JOB_CONFIG}" "config/${prow_env}/jobs/config.yaml"
+}
+
 set -e
 
-trap 'echo "Please rerun \`make -C config/prow config\`."' ERR
+trap 'echo "--- FAIL: Please rerun \`make -C config/prow config\`."' ERR
 header "Checking generated config for production prow and testgrid"
 export PROW_CONFIG=$(mktemp)
 export PROW_JOB_CONFIG=$(mktemp)
@@ -34,21 +43,17 @@ export TESTGRID_CONFIG=$(mktemp)
 subheader "Regenerating config for production prow and testgrid"
 make -C config/prow config
 subheader "Comparing the generated config files with the existing config files"
-diff_config_files "${PROW_CONFIG}" "config/prow/core/config.yaml"
-diff_config_files "${PROW_JOB_CONFIG}" "config/prow/jobs/config.yaml"
-diff_config_files "${PROW_PLUGINS}" "config/prow/core/plugins.yaml"
+diff_prow_config_files "prow"
 diff_config_files "${TESTGRID_CONFIG}" "config/prow/testgrid/testgrid.yaml"
 
-trap 'echo "Please rerun \`make -C config/prow-staging config\`."' ERR
+trap 'echo "--- FAIL: Please rerun \`make -C config/prow-staging config\`."' ERR
 header "Checking generated config for staging prow"
 subheader "Regenerating config for staging prow"
 make -C config/prow-staging config
 subheader "Comparing the generated config files with the existing config files"
-diff_config_files "${PROW_CONFIG}" "config/prow-staging/core/config.yaml"
-diff_config_files "${PROW_JOB_CONFIG}" "config/prow-staging/jobs/config.yaml"
-diff_config_files "${PROW_PLUGINS}" "config/prow-staging/core/plugins.yaml"
+diff_prow_config_files "prow-staging"
 
-trap 'echo "Prow config files have errors, please check."' ERR
+trap 'echo "--- FAIL: Prow config files have errors, please check."' ERR
 header "Validating production Prow config files"
 bazel run @k8s//prow/cmd/checkconfig -- \
   --config-path="$(realpath "config/prow/core/config.yaml")" \
@@ -61,7 +66,7 @@ bazel run @k8s//prow/cmd/checkconfig -- \
   --job-config-path="$(realpath "config/prow-staging/jobs/config.yaml")" \
   --plugin-config="$(realpath "config/prow-staging/core/plugins.yaml")"
 
-trap 'echo "Testgrid config file has errors, please check."' ERR
+trap 'echo "--- FAIL: Testgrid config file has errors, please check."' ERR
 header "Validating Testgrid config file"
 bazel run @k8s//testgrid/cmd/configurator -- \
   --validate-config-file \
