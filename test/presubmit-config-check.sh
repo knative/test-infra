@@ -16,6 +16,13 @@
 
 source $(dirname $0)/../scripts/library.sh
 
+# Run diff on the two configuration files.
+# Parameters: $1 - the regenerated temp file.
+#             $2 - the existing file.
+function diff_config_files() {
+  diff --ignore-matching-lines="^# Copyright " "$1" "$2"
+}
+
 set -e
 
 trap 'echo "Please rerun \`make -C config/prow config\`."' ERR
@@ -27,19 +34,19 @@ export TESTGRID_CONFIG=$(mktemp)
 subheader "Regenerating config for production prow and testgrid"
 make -C config/prow config
 subheader "Comparing the generated config files with the existing config files"
-diff --ignore-matching-lines="^# Copyright " "${PROW_CONFIG}" "config/prow/core/config.yaml"
-diff --ignore-matching-lines="^# Copyright " "${PROW_JOB_CONFIG}" "config/prow/jobs/config.yaml"
-diff --ignore-matching-lines="^# Copyright " "${PROW_PLUGINS}" "config/prow/core/plugins.yaml"
-diff --ignore-matching-lines="^# Copyright " "${TESTGRID_CONFIG}" "config/prow/testgrid/testgrid.yaml"
+diff_config_files "${PROW_CONFIG}" "config/prow/core/config.yaml"
+diff_config_files "${PROW_JOB_CONFIG}" "config/prow/jobs/config.yaml"
+diff_config_files "${PROW_PLUGINS}" "config/prow/core/plugins.yaml"
+diff_config_files "${TESTGRID_CONFIG}" "config/prow/testgrid/testgrid.yaml"
 
 trap 'echo "Please rerun \`make -C config/prow-staging config\`."' ERR
 header "Checking generated config for staging prow"
 subheader "Regenerating config for staging prow"
 make -C config/prow-staging config
 subheader "Comparing the generated config files with the existing config files"
-diff --ignore-matching-lines="^# Copyright " "${PROW_CONFIG}" "config/prow-staging/core/config.yaml"
-diff --ignore-matching-lines="^# Copyright " "${PROW_JOB_CONFIG}" "config/prow-staging/jobs/config.yaml"
-diff --ignore-matching-lines="^# Copyright " "${PROW_PLUGINS}" "config/prow-staging/core/plugins.yaml"
+diff_config_files "${PROW_CONFIG}" "config/prow-staging/core/config.yaml"
+diff_config_files "${PROW_JOB_CONFIG}" "config/prow-staging/jobs/config.yaml"
+diff_config_files "${PROW_PLUGINS}" "config/prow-staging/core/plugins.yaml"
 
 trap 'echo "Prow config files have errors, please check."' ERR
 header "Validating production Prow config files"

@@ -242,7 +242,7 @@ presubmits:
   knative/test-infra:
     - repo-settings:
       go112-branches:
-      - release-0.10
+      - legacy  # Doesn't exist, for compatibility purposes only
     - build-tests: true
       dot-dev: true
     - unit-tests: true

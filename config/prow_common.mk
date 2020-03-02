@@ -36,9 +36,6 @@ PROW_DEPLOYS     ?= cluster
 PROW_GCS         ?= knative-prow
 PROW_CONFIG_GCS  ?= gs://$(PROW_GCS)/configs
 
-TESTGRID_GCS     ?= knative-testgrid
-TESTGRID_CONFIG  ?= testgrid/testgrid.yaml
-
 BOSKOS_RESOURCES ?= boskos/boskos_resources.yaml
 
 # Useful shortcuts.
