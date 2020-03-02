@@ -15,4 +15,5 @@ This directory contains the config for our
 - `run_job.sh` Convenience script to start a Prow job from command-line.
 - `pj-on-kind.sh` Convenience script to start a Prow job on kind from
   command-line.
-- `boskos` Just Boskos resource definition and helper scripts; deployments in `cluster/*`.
+- `boskos` Just Boskos resource definition and helper scripts; deployments in
+  `cluster/*`.

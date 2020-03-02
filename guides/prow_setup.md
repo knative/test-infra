@@ -91,8 +91,9 @@
    will fail.
 
 1. Ask the [oncall](https://knative.github.io/test-infra/) to update the Prow
-   cluster and TestGrid with the new configs, by running `make update-prow-cluster`
-   and `make update-testgrid-config` in `config/prow`.
+   cluster and TestGrid with the new configs, by running
+   `make update-prow-cluster` and `make update-testgrid-config` in
+   `config/prow`.
 
 1. Wait a few minutes, enter `/retest` as a comment in any PR in the repo and
    ensure the test jobs are executed.
