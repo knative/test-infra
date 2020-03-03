@@ -3445,7 +3445,6 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "./test/presubmit-tests.sh"
         - "./test/presubmit-config-check.sh"
         volumeMounts:
         - name: test-account
@@ -3477,7 +3476,6 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "./test/presubmit-tests.sh"
         - "./test/presubmit-config-check.sh"
         volumeMounts:
         - name: test-account
