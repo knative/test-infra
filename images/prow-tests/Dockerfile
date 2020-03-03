@@ -16,7 +16,8 @@
 # do `make push` in `../prow-tests-go112` directory to make sure these 2 images are in
 # sync
 
-FROM gcr.io/k8s-testimages/kubekins-e2e:v20190716-41e2a9e-master
+# TODO(chizhg): probably build the image from scratch?
+FROM gcr.io/k8s-testimages/kubekins-e2e:v20200302-c921a88-master
 LABEL maintainer "Adriano Cunha <adrcunha@google.com>"
 
 # Install extras on top of base image
