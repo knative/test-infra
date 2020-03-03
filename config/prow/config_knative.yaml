@@ -251,7 +251,7 @@ presubmits:
       dot-dev: true
     - custom-test: check-config
       dot-dev: true
-      args:
+      command:
         - "./test/presubmit-config-check.sh"
 
   knative/caching:

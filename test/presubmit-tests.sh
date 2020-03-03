@@ -53,7 +53,6 @@ function post_unit_tests() {
   return ${failed}
 }
 
-
 # We use the default integration test runner.
 
 main "$@"
