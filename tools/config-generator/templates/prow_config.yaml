@@ -42,6 +42,8 @@ deck:
           - 'panic: test timed out after.*$'
           # test case failure
           - 'FAIL:'
+          # step failed
+          - 'Step failed:'
           # boskos error
           - 'boskos failed to acquire project'
           # cluster creation error
