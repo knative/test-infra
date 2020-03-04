@@ -325,7 +325,7 @@ function main() {
 
   [[ -z $1 ]] && set -- "--all-tests"
 
-  local TEST_TO_RUN=""
+  local TESTS_TO_RUN=()
 
   while [[ $# -ne 0 ]]; do
     local parameter=$1
@@ -341,7 +341,7 @@ function main() {
       --run-test)
         shift
         [[ $# -ge 1 ]] || abort "missing executable after --run-test"
-        TEST_TO_RUN="$1"
+        TESTS_TO_RUN+=("$1")
         ;;
       *) abort "error: unknown option ${parameter}" ;;
     esac
@@ -351,7 +351,7 @@ function main() {
   readonly RUN_BUILD_TESTS
   readonly RUN_UNIT_TESTS
   readonly RUN_INTEGRATION_TESTS
-  readonly TEST_TO_RUN
+  readonly TESTS_TO_RUN
 
   cd ${REPO_ROOT_DIR}
 
@@ -359,7 +359,7 @@ function main() {
 
   local failed=0
 
-  if [[ -n "${TEST_TO_RUN}" ]]; then
+  if [[ ${#TESTS_TO_RUN[@]} > 0 ]]; then
     if (( RUN_BUILD_TESTS || RUN_UNIT_TESTS || RUN_INTEGRATION_TESTS )); then
       abort "--run-test must be used alone"
     fi
@@ -368,7 +368,9 @@ function main() {
       header "Documentation only PR, skipping running custom test"
       exit 0
     fi
-    ${TEST_TO_RUN} || failed=1
+    for test_to_run in ${TESTS_TO_RUN[@]}; do
+      ${test_to_run} || failed=1
+    done
   fi
 
   run_build_tests || failed=1
