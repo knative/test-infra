@@ -179,7 +179,7 @@ function default_build_test_runner() {
   for pkg in ${tagged_pkgs}; do
     # `go test -c` lets us compile the tests but do not run them.
     if ! capture_output "${report}" go test -c -tags="${tags}" ${pkg} ; then
-      failed=1;
+      failed=1
       # Consider an error message everything that's not a successful test result.
       errors_go2+="$(grep -v '^\(ok\|\?\)\s\+\(github\.com\|knative\.dev\)/' "${report}")"
     fi
