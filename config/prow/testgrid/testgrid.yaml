@@ -30,9 +30,6 @@ default_test_group:
   is_external: true              # ** This field is deprecated and should always be true **
   alert_stale_results_hours: 26  # Alert if tests haven't run for a day (1 day + 2h)
   num_passes_to_disable_alert: 1 # Consider a failing test passing if it has 1 or more consecutive passes
-  num_failures_to_alert: 0 #Disable failure alerts by default
-  alert_options:
-    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
 default_dashboard_tab:
   open_test_template:            # The URL template to visit after clicking on a cell
     url: https://prow.knative.dev/view/gcs/<gcs_prefix>/<changelist>
@@ -88,13 +85,19 @@ test_groups:
   alert_stale_results_hours: 3
 - name: ci-knative-serving-nightly-release
   gcs_prefix: knative-prow/logs/ci-knative-serving-nightly-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 1
 - name: ci-knative-serving-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-serving-dot-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   alert_stale_results_hours: 170
   num_failures_to_alert: 1
 - name: ci-knative-serving-auto-release
   gcs_prefix: knative-prow/logs/ci-knative-serving-auto-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 1
 - name: ci-knative-serving-webhook-apicoverage
   gcs_prefix: knative-prow/logs/ci-knative-serving-webhook-apicoverage
@@ -110,16 +113,22 @@ test_groups:
   alert_stale_results_hours: 3
 - name: ci-knative-client-nightly-release
   gcs_prefix: knative-prow/logs/ci-knative-client-nightly-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 1
 - name: ci-knative-client-tekton
   gcs_prefix: knative-prow/logs/ci-knative-client-tekton
   alert_stale_results_hours: 3
 - name: ci-knative-client-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-client-dot-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   alert_stale_results_hours: 170
   num_failures_to_alert: 1
 - name: ci-knative-client-auto-release
   gcs_prefix: knative-prow/logs/ci-knative-client-auto-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 1
 - name: ci-knative-client-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-client-go-coverage
@@ -141,13 +150,19 @@ test_groups:
   alert_stale_results_hours: 3
 - name: ci-knative-eventing-nightly-release
   gcs_prefix: knative-prow/logs/ci-knative-eventing-nightly-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 1
 - name: ci-knative-eventing-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-eventing-dot-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   alert_stale_results_hours: 170
   num_failures_to_alert: 1
 - name: ci-knative-eventing-auto-release
   gcs_prefix: knative-prow/logs/ci-knative-eventing-auto-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 1
 - name: ci-knative-eventing-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-eventing-go-coverage
@@ -157,13 +172,19 @@ test_groups:
   alert_stale_results_hours: 3
 - name: ci-knative-eventing-contrib-nightly-release
   gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-nightly-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 1
 - name: ci-knative-eventing-contrib-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-dot-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   alert_stale_results_hours: 170
   num_failures_to_alert: 1
 - name: ci-knative-eventing-contrib-auto-release
   gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-auto-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 1
 - name: ci-knative-eventing-contrib-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-go-coverage
@@ -197,13 +218,19 @@ test_groups:
   alert_stale_results_hours: 3
 - name: ci-knative-serving-operator-nightly-release
   gcs_prefix: knative-prow/logs/ci-knative-serving-operator-nightly-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 1
 - name: ci-knative-serving-operator-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-serving-operator-dot-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   alert_stale_results_hours: 170
   num_failures_to_alert: 1
 - name: ci-knative-serving-operator-auto-release
   gcs_prefix: knative-prow/logs/ci-knative-serving-operator-auto-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 1
 - name: ci-knative-serving-operator-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-serving-operator-go-coverage
@@ -213,13 +240,19 @@ test_groups:
   alert_stale_results_hours: 3
 - name: ci-knative-eventing-operator-nightly-release
   gcs_prefix: knative-prow/logs/ci-knative-eventing-operator-nightly-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 1
 - name: ci-knative-eventing-operator-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-eventing-operator-dot-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   alert_stale_results_hours: 170
   num_failures_to_alert: 1
 - name: ci-knative-eventing-operator-auto-release
   gcs_prefix: knative-prow/logs/ci-knative-eventing-operator-auto-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 1
 - name: ci-knative-eventing-operator-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-eventing-operator-go-coverage
@@ -229,13 +262,19 @@ test_groups:
   alert_stale_results_hours: 3
 - name: ci-knative-net-contour-nightly-release
   gcs_prefix: knative-prow/logs/ci-knative-net-contour-nightly-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 1
 - name: ci-knative-net-contour-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-net-contour-dot-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   alert_stale_results_hours: 170
   num_failures_to_alert: 1
 - name: ci-knative-net-contour-auto-release
   gcs_prefix: knative-prow/logs/ci-knative-net-contour-auto-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 1
 - name: ci-knative-net-contour-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-net-contour-go-coverage
@@ -245,89 +284,139 @@ test_groups:
   alert_stale_results_hours: 3
 - name: ci-knative-net-istio-nightly-release
   gcs_prefix: knative-prow/logs/ci-knative-net-istio-nightly-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 1
 - name: ci-knative-net-istio-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-net-istio-dot-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   alert_stale_results_hours: 170
   num_failures_to_alert: 1
 - name: ci-knative-net-istio-auto-release
   gcs_prefix: knative-prow/logs/ci-knative-net-istio-auto-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 1
 - name: ci-knative-net-istio-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-net-istio-go-coverage
   short_text_metric: "coverage"
 - name: ci-knative-serving-0.9-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.9-continuous
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 3
 - name: ci-knative-eventing-0.9-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-0.9-continuous
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 3
 - name: ci-knative-eventing-contrib-0.9-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-0.9-continuous
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 3
 - name: ci-knative-serving-0.10-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.10-continuous
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 3
 - name: ci-knative-eventing-0.10-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-0.10-continuous
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 3
 - name: ci-knative-eventing-contrib-0.10-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-0.10-continuous
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 3
 - name: ci-knative-serving-0.11-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.11-continuous
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 3
 - name: ci-knative-client-0.11-continuous
   gcs_prefix: knative-prow/logs/ci-knative-client-0.11-continuous
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 3
 - name: ci-knative-eventing-0.11-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-0.11-continuous
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 3
 - name: ci-knative-eventing-contrib-0.11-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-0.11-continuous
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 3
 - name: ci-knative-serving-operator-0.11-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-operator-0.11-continuous
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 3
 - name: ci-knative-eventing-operator-0.11-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-operator-0.11-continuous
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 3
 - name: ci-knative-serving-0.12-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.12-continuous
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 3
 - name: ci-knative-client-0.12-continuous
   gcs_prefix: knative-prow/logs/ci-knative-client-0.12-continuous
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 3
 - name: ci-knative-eventing-0.12-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-0.12-continuous
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 3
 - name: ci-knative-eventing-contrib-0.12-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-0.12-continuous
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 3
 - name: ci-knative-serving-operator-0.12-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-operator-0.12-continuous
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 3
 - name: ci-knative-eventing-operator-0.12-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-operator-0.12-continuous
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 3
 - name: ci-google-knative-gcp-continuous
   gcs_prefix: knative-prow/logs/ci-google-knative-gcp-continuous
   alert_stale_results_hours: 3
 - name: ci-google-knative-gcp-nightly-release
   gcs_prefix: knative-prow/logs/ci-google-knative-gcp-nightly-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 1
 - name: ci-google-knative-gcp-dot-release
   gcs_prefix: knative-prow/logs/ci-google-knative-gcp-dot-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   alert_stale_results_hours: 170
   num_failures_to_alert: 1
 - name: ci-google-knative-gcp-auto-release
   gcs_prefix: knative-prow/logs/ci-google-knative-gcp-auto-release
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 1
 - name: ci-google-knative-gcp-test-coverage
   gcs_prefix: knative-prow/logs/ci-google-knative-gcp-go-coverage
   short_text_metric: "coverage"
 - name: ci-google-knative-gcp-0.12-continuous
   gcs_prefix: knative-prow/logs/ci-google-knative-gcp-0.12-continuous
+  alert_options: 
+    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
   num_failures_to_alert: 3
 dashboards:
 - name: serving

@@ -11,9 +11,6 @@ default_test_group:
   is_external: true              # ** This field is deprecated and should always be true **
   alert_stale_results_hours: 26  # Alert if tests haven't run for a day (1 day + 2h)
   num_passes_to_disable_alert: 1 # Consider a failing test passing if it has 1 or more consecutive passes
-  num_failures_to_alert: 0 #Disable failure alerts by default
-  alert_options:
-    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
 
 default_dashboard_tab:
   open_test_template:            # The URL template to visit after clicking on a cell
