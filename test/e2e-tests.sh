@@ -75,6 +75,7 @@ function create_test_cluster() {
   header "Creating test cluster"
 
   local creation_args=""
+  (( SKIP_ISTIO_ADDON )) || creation_args+=" --addons istio"
   [[ -n "${GCP_PROJECT}" ]] && creation_args+=" --project ${GCP_PROJECT}"
   echo "Creating cluster with args ${creation_args}"
   run_prow_cluster_tool --create ${creation_args} || fail_test "failed creating test cluster"
@@ -155,7 +156,8 @@ function setup_test_cluster() {
   set +o pipefail
 
   if (( ! SKIP_KNATIVE_SETUP )) && function_exists knative_setup; then
-    wait_until_batch_job_complete istio-system || return 1
+    # Wait for Istio installation to complete, if necessary, before calling knative_setup.
+    (( ! SKIP_ISTIO_ADDON )) && (wait_until_batch_job_complete istio-system || return 1)
     knative_setup || fail_test "Knative setup failed"
   fi
   if function_exists test_setup; then
