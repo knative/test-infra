@@ -212,7 +212,7 @@ This is the preferred method of manually building a new release.
    module name (e.g., `serving` or `eventing`).
 
    ```
-   cd ci/prow
+   cd config/prow
    ./run_job.sh ci-knative-MODULE-dot-release
    ```
 
@@ -225,7 +225,7 @@ This is the preferred method of manually building a new release.
    module name (e.g., `serving` or `eventing`).
 
    ```
-   cd ci/prow
+   cd config/prow
    ./run_job.sh ci-knative-MODULE-nightly-release
    ```
 
