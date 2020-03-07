@@ -20,16 +20,26 @@ source $(dirname $0)/../scripts/library.sh
 # Parameters: $1 - the regenerated temp file.
 #             $2 - the existing file.
 function diff_config_files() {
-  diff --ignore-matching-lines="^# Copyright " "$1" "$2"
+  diff --ignore-matching-lines="^# Copyright " "$1" "$2" || return 1
 }
 
 # Run diff on the Prow configuration files.
 # Parameters: $1 - the environent, can be prow or prow-staging.
 function diff_prow_config_files() {
   local prow_env="$1"
-  diff_config_files "${PROW_CONFIG}" "config/${prow_env}/core/config.yaml"
-  diff_config_files "${PROW_PLUGINS}" "config/${prow_env}/core/plugins.yaml"
-  diff_config_files "${PROW_JOB_CONFIG}" "config/${prow_env}/jobs/config.yaml"
+  diff_config_files "${PROW_CONFIG}" "config/${prow_env}/core/config.yaml" || return 1
+  diff_config_files "${PROW_PLUGINS}" "config/${prow_env}/core/plugins.yaml" || return 1
+  diff_config_files "${PROW_JOB_CONFIG}" "config/${prow_env}/jobs/config.yaml" || return 1
+}
+
+# Check Prow configuration files.
+# Parameters: $1 - the environent, can be prow or prow-staging.
+function check_prow_config_files() {
+  local prow_env="$1"
+  bazel run @k8s//prow/cmd/checkconfig -- \
+    --config-path="$(realpath "config/${prow_env}/core/config.yaml")" \
+    --job-config-path="$(realpath "config/${prow_env}/jobs/config.yaml")" \
+    --plugin-config="$(realpath "config/${prow_env}/core/plugins.yaml")" || return 1
 }
 
 set -e
@@ -55,16 +65,10 @@ diff_prow_config_files "prow-staging"
 
 trap 'echo "--- FAIL: Prow config files have errors, please check."' ERR
 header "Validating production Prow config files"
-bazel run @k8s//prow/cmd/checkconfig -- \
-  --config-path="$(realpath "config/prow/core/config.yaml")" \
-  --job-config-path="$(realpath "config/prow/jobs/config.yaml")" \
-  --plugin-config="$(realpath "config/prow/core/plugins.yaml")"
+check_prow_config_files "prow"
 
 header "Validating staging Prow config files"
-bazel run @k8s//prow/cmd/checkconfig -- \
-  --config-path="$(realpath "config/prow-staging/core/config.yaml")" \
-  --job-config-path="$(realpath "config/prow-staging/jobs/config.yaml")" \
-  --plugin-config="$(realpath "config/prow-staging/core/plugins.yaml")"
+check_prow_config_files "prow-staging"
 
 trap 'echo "--- FAIL: Testgrid config file has errors, please check."' ERR
 header "Validating Testgrid config file"
