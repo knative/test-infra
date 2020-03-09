@@ -38,8 +38,6 @@ import (
 
 	"gopkg.in/yaml.v2"
 	"k8s.io/apimachinery/pkg/util/sets"
-
-	"knative.dev/test-infra/bazel-test-infra/external/go_sdk/src/path/filepath"
 )
 
 const (

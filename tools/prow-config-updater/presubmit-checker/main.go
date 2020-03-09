@@ -2,20 +2,13 @@ package main
 
 import (
 	"flag"
+	"log"
+	"strings"
 
 	"knative.dev/pkg/test/ghutil"
 
-	"knative.dev/test-infra/bazel-test-infra/external/go_sdk/src/log"
-	"knative.dev/test-infra/bazel-test-infra/external/go_sdk/src/strings"
 	"knative.dev/test-infra/shared/prow"
-)
-
-const (
-	ghBotName = "knative-prow-robot"
-)
-
-var (
-	prodProwConfigPaths = []string{"config/prow/cluster", "config-generator/templates/prow"}
+	"knative.dev/test-infra/tools/prow-config-updater/config"
 )
 
 func main() {
@@ -24,7 +17,7 @@ func main() {
 
 	ec, err := prow.GetEnvConfig()
 	if err != nil {
-		log.Fatal("Error getting environment variables for Prow: %v", err)
+		log.Fatalf("Error getting environment variables for Prow: %v", err)
 	}
 
 	// We only check for presubmit jobs.
@@ -43,7 +36,7 @@ func main() {
 		}
 
 		// If the PR is created by the bot, skip the check.
-		if *pr.User.Name == ghBotName {
+		if *pr.User.Name == config.ProwBotName {
 			return
 		}
 
@@ -55,7 +48,7 @@ func main() {
 		// Collect all files that are not allowed to change directly by users.
 		bannedFiles := make([]string, 0)
 		for _, file := range files {
-			for _, p := range prodProwConfigPaths {
+			for _, p := range config.ProdProwKeyConfigPaths {
 				fileName := file.GetFilename()
 				if strings.HasPrefix(fileName, p) {
 					bannedFiles = append(bannedFiles, fileName)
@@ -63,7 +56,7 @@ func main() {
 			}
 		}
 
-		// If any of the production Prow config files are changed, report the error.
+		// If any of the production Prow key config files are changed, report the error.
 		if len(bannedFiles) != 0 {
 			log.Fatalf(
 				"Directly changing the production Prow cluster config and templates is not allowed, please revert:\n%s",

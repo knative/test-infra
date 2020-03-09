@@ -84,7 +84,7 @@ func listChangedFiles() {
 }
 
 func main() {
-	githubTokenPath := flag.String("github-token", "", "Github token file path for authenticating with Github")
+	githubTokenPath := flag.String("github-token", os.Getenv("GITHUB_BOT_TOKEN"), "Github token file path for authenticating with Github")
 	listChangedFilesFlag := flag.Bool("list-changed-files", false, "List the files changed by the current pull request")
 	verboseFlag := flag.Bool("verbose", false, "Whether to dump extra info on output or not; intended for debugging")
 	flag.Parse()
