@@ -125,11 +125,21 @@ tide:
     labels:
     - lgtm
     - approved
-    missingLabels:
+    - "cla: yes"
+    missingLabels: &knative_tide_missing_labels
     - do-not-merge/hold
     - do-not-merge/work-in-progress
     - do-not-merge/invalid-owners-file
     - needs-rebase
+  - repos:
+    # Allow PRs for test-infra to be automatically merged without manual approval.
+    - "knative/test-infra"
+    labels:
+    - "cla: yes"
+    - auto-merge
+    missingLabels: *knative_tide_missing_labels
+    author: knative-prow-robot
+    reviewApprovedRequired: false
   merge_method:
     knative: squash
     google/knative-gcp: squash
