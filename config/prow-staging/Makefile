@@ -14,6 +14,8 @@
 
 # Staging cluster configuration
 
+SKIP_CONFIG_BACKUP        := true
+
 PROJECT                   := knative-tests-staging
 PROW_GCS                  := knative-prow-staging
 PROW_HOST                 := https://prow-staging.knative.dev

@@ -20,7 +20,7 @@ CLUSTER       ?= prow
 ZONE          ?= us-central1-f
 JOB_NAMESPACE ?= test-pods
 
-SKIP_CONFIG_BACKUP        ?=
+SKIP_CONFIG_BACKUP        ?= false
 GENERATE_MAINTENANCE_JOBS ?= true
 GENERATE_TESTGRID_CONFIG  ?= true
 
@@ -165,4 +165,3 @@ update-testgrid-config: confirm-master
 		--oneshot \
 		--output=gs://$(TESTGRID_GCS)/config \
 		--yaml=$(realpath $(TESTGRID_CONFIG))
-
