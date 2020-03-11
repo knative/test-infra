@@ -509,6 +509,7 @@ function main() {
     # HACK HACK HACK
     # Rerun the release script from the release branch. Fixes https://github.com/knative/test-infra/issues/1262
     ./hack/release.sh "$@"
+    exit "$?"
   fi
 
   function_exists build_release || abort "function 'build_release()' not defined"
