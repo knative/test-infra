@@ -53,14 +53,14 @@ presubmits:
     - go-coverage: true
       go-coverage-threshold: 80
       dot-dev: true
-    - custom-test: istio-1.3-mesh
+    - custom-test: istio-1.5-mesh
       dot-dev: true
       always_run: false
       optional: true
       args:
       - "--run-test"
       - "./test/e2e-tests.sh --istio-version 1.3-latest --mesh"
-    - custom-test: istio-1.3-no-mesh
+    - custom-test: istio-1.5-no-mesh
       dot-dev: true
       always_run: false
       optional: true
@@ -408,11 +408,11 @@ periodics:
       release: "0.12"
       dot-dev: true
       go113: true
-    - custom-job: istio-1.3-mesh
+    - custom-job: istio-1.5-mesh
       full-command: "./test/e2e-tests.sh --istio-version 1.3-latest --mesh"
       dot-dev: true
       go113: true
-    - custom-job: istio-1.3-no-mesh
+    - custom-job: istio-1.5-no-mesh
       full-command: "./test/e2e-tests.sh --istio-version 1.3-latest --no-mesh"
       dot-dev: true
       go113: true
