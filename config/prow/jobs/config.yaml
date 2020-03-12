@@ -6034,7 +6034,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "50 */2 * * *"
+- cron: "12 */2 * * *"
   name: ci-knative-serving-istio-1.5-mesh
   agent: kubernetes
   decorate: true
@@ -6067,7 +6067,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "12 */2 * * *"
+- cron: "34 */2 * * *"
   name: ci-knative-serving-istio-1.5-no-mesh
   agent: kubernetes
   decorate: true
