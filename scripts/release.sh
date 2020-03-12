@@ -506,7 +506,7 @@ function main() {
   if [[ -n "${RELEASE_BRANCH}" && -z "${FROM_NIGHTLY_RELEASE}" && "${current_branch}" != "${RELEASE_BRANCH}" ]]; then
     setup_upstream
     setup_branch
-    git checkout upstream/"${RELEASE_BRANCH}" || abort "cannot checkout branch ${RELEASE_BRANCH}"
+    git checkout -b "${RELEASE_BRANCH}" upstream/"${RELEASE_BRANCH}" || abort "cannot checkout branch ${RELEASE_BRANCH}"
     # HACK HACK HACK
     # Rerun the release script from the release branch. Fixes https://github.com/knative/test-infra/issues/1262
     ./hack/release.sh "$@"
