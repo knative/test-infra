@@ -34,3 +34,5 @@ default_dashboard_tab:
   num_columns_recent: 10
   code_search_url_template:      # The URL template to visit when searching for changelists
     url: https://github.com/knative/serving/compare/<start-custom-0>...<end-custom-0>
+  num_failures_to_alert: 0
+  num_passes_to_disable_alert: 1
