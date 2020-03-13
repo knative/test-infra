@@ -18,23 +18,41 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
+# Download the Go rules
 http_archive(
     name = "io_bazel_rules_go",
-    sha256 = "f04d2373bcaf8aa09bccb08a98a57e721306c8f6043a2a0ee610fd6853dcde3d",
-    urls = ["https://github.com/bazelbuild/rules_go/releases/download/0.18.6/rules_go-0.18.6.tar.gz"],
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/v0.22.1/rules_go-v0.22.1.tar.gz",
+        "https://github.com/bazelbuild/rules_go/releases/download/v0.22.1/rules_go-v0.22.1.tar.gz",
+    ],
+    sha256 = "e6a6c016b0663e06fa5fccf1cd8152eab8aa8180c583ec20c872f4f9953a7ac5",
 )
 
+# Load and call the dependencies
 load("@io_bazel_rules_go//go:deps.bzl", "go_rules_dependencies", "go_register_toolchains")
 
 go_rules_dependencies()
 
-go_register_toolchains(
-    go_version = "1.12.2",
+go_register_toolchains()
+
+# Download Gazelle
+http_archive(
+    name = "bazel_gazelle",
+    urls = [
+        "https://storage.googleapis.com/bazel-mirror/github.com/bazelbuild/bazel-gazelle/releases/download/v0.20.0/bazel-gazelle-v0.20.0.tar.gz",
+        "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.20.0/bazel-gazelle-v0.20.0.tar.gz",
+    ],
+    sha256 = "d8c45ee70ec39a57e7a05e5027c32b1576cc7f16d9dd37135b0eddde45cf1b10",
 )
+
+# Load and call Gazelle dependencies
+load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies", "go_repository")
+
+gazelle_dependencies()
 
 git_repository(
     name = "io_bazel_rules_k8s",
-    commit = "94e92d11da6fa178d035cedf9041bae9a104b948",
+    commit = "3dcc327551590e7bdc16e40c9ead13a26b7c3c10",
     remote = "https://github.com/bazelbuild/rules_k8s.git",
 )
 
@@ -50,6 +68,6 @@ http_archive(
 git_repository(
     name = "k8s",
     remote = "http://github.com/kubernetes/test-infra.git",
-    commit = "f56e8904a7430e907f03fb4d0236511fe9d36ee6",  # HEAD as of 5/7/2019
+    commit = "35305da38c3b53d93f8b2c966fe9ea0b1785c849",  # HEAD as of 3/12/2020
 )
 
