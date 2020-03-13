@@ -185,17 +185,28 @@ func generateDashboard(projName string, repoName string, jobNames []string) {
 		testGroupName := getTestGroupName(projRepoStr, jobName)
 		switch jobName {
 		case "continuous":
-			executeDashboardTabTemplate("continuous", testGroupName, testgridTabSortByName, noExtras)
+			extras := make(map[string]string)
+			extras["num_failures_to_alert"] = "3"
+			extras["alert_options"] = "\n      alert_mail_to_addresses: \"knative-productivity-dev@googlegroups.com\""
+			executeDashboardTabTemplate("continuous", testGroupName, testgridTabSortByName, extras)
 			// This is a special case for knative/serving, as conformance tab is just a filtered view of the continuous tab.
 			if projRepoStr == "knative-serving" {
-				executeDashboardTabTemplate("conformance", testGroupName, "include-filter-by-regex=test/conformance/&sort-by-name=", noExtras)
+				executeDashboardTabTemplate("conformance", testGroupName, "include-filter-by-regex=test/conformance/&sort-by-name=", extras)
 			}
-		case "dot-release", "auto-release", "webhook-apicoverage":
+		case "dot-release", "auto-release":
 			extras := make(map[string]string)
+			extras["num_failures_to_alert"] = "1"
+			extras["alert_options"] = "\n      alert_mail_to_addresses: \"knative-productivity-dev@googlegroups.com\""
 			baseOptions := testgridTabSortByName
 			executeDashboardTabTemplate(jobName, testGroupName, baseOptions, extras)
+		case "webhook-apicoverage":
+			baseOptions := testgridTabSortByName
+			executeDashboardTabTemplate(jobName, testGroupName, baseOptions, noExtras)
 		case "nightly":
-			executeDashboardTabTemplate("nightly", testGroupName, testgridTabSortByName, noExtras)
+			extras := make(map[string]string)
+			extras["num_failures_to_alert"] = "1"
+			extras["alert_options"] = "\n      alert_mail_to_addresses: \"knative-productivity-dev@googlegroups.com\""
+			executeDashboardTabTemplate("nightly", testGroupName, testgridTabSortByName, extras)
 		case "test-coverage":
 			executeDashboardTabTemplate("coverage", testGroupName, testgridTabGroupByDir, noExtras)
 		default:
@@ -232,11 +243,13 @@ func generateDashboardsForReleases() {
 		}
 		repos := metaData[projName]
 		outputConfig("- name: " + projName + "\n" + baseIndent + "dashboard_tab:")
-		noExtras := make(map[string]string)
 		for _, repoName := range repoNames {
 			if _, exists := repos[repoName]; exists {
+				extras := make(map[string]string)
+				extras["num_failures_to_alert"] = "3"
+				extras["alert_options"] = "\n      alert_mail_to_addresses: \"knative-productivity-dev@googlegroups.com\""
 				testGroupName := getTestGroupName(buildProjRepoStr(projName, repoName), "continuous")
-				executeDashboardTabTemplate(repoName, testGroupName, testgridTabSortByName, noExtras)
+				executeDashboardTabTemplate(repoName, testGroupName, testgridTabSortByName, extras)
 			}
 		}
 	}

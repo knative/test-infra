@@ -426,9 +426,15 @@ dashboards:
   - name: continuous
     test_group_name: ci-knative-serving-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: conformance
     test_group_name: ci-knative-serving-continuous
     base_options: "include-filter-by-regex=test/conformance/&sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: istio-1.5-mesh
     test_group_name: ci-knative-serving-istio-1.5-mesh
     base_options: "sort-by-name="
@@ -459,12 +465,21 @@ dashboards:
   - name: nightly
     test_group_name: ci-knative-serving-nightly-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: dot-release
     test_group_name: ci-knative-serving-dot-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: auto-release
     test_group_name: ci-knative-serving-auto-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: webhook-apicoverage
     test_group_name: ci-knative-serving-webhook-apicoverage
     base_options: "sort-by-name="
@@ -479,18 +494,30 @@ dashboards:
   - name: continuous
     test_group_name: ci-knative-client-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: nightly
     test_group_name: ci-knative-client-nightly-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: tekton
     test_group_name: ci-knative-client-tekton
     base_options: "sort-by-name="
   - name: dot-release
     test_group_name: ci-knative-client-dot-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: auto-release
     test_group_name: ci-knative-client-auto-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: coverage
     test_group_name: ci-knative-client-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
@@ -499,6 +526,9 @@ dashboards:
   - name: continuous
     test_group_name: ci-knative-client-contrib-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: coverage
     test_group_name: ci-knative-client-contrib-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
@@ -507,6 +537,9 @@ dashboards:
   - name: continuous
     test_group_name: ci-knative-docs-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: coverage
     test_group_name: ci-knative-docs-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
@@ -515,15 +548,27 @@ dashboards:
   - name: continuous
     test_group_name: ci-knative-eventing-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: nightly
     test_group_name: ci-knative-eventing-nightly-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: dot-release
     test_group_name: ci-knative-eventing-dot-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: auto-release
     test_group_name: ci-knative-eventing-auto-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: coverage
     test_group_name: ci-knative-eventing-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
@@ -532,15 +577,27 @@ dashboards:
   - name: continuous
     test_group_name: ci-knative-eventing-contrib-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: nightly
     test_group_name: ci-knative-eventing-contrib-nightly-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: dot-release
     test_group_name: ci-knative-eventing-contrib-dot-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: auto-release
     test_group_name: ci-knative-eventing-contrib-auto-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: coverage
     test_group_name: ci-knative-eventing-contrib-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
@@ -549,6 +606,9 @@ dashboards:
   - name: continuous
     test_group_name: ci-knative-pkg-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: coverage
     test_group_name: ci-knative-pkg-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
@@ -557,6 +617,9 @@ dashboards:
   - name: continuous
     test_group_name: ci-knative-caching-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: coverage
     test_group_name: ci-knative-caching-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
@@ -565,35 +628,59 @@ dashboards:
   - name: continuous
     test_group_name: ci-knative-observability-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
 - name: sample-controller
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-sample-controller-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
 - name: sample-source
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-sample-source-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
 - name: test-infra
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-test-infra-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
 - name: serving-operator
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-serving-operator-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: nightly
     test_group_name: ci-knative-serving-operator-nightly-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: dot-release
     test_group_name: ci-knative-serving-operator-dot-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: auto-release
     test_group_name: ci-knative-serving-operator-auto-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: coverage
     test_group_name: ci-knative-serving-operator-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
@@ -602,15 +689,27 @@ dashboards:
   - name: continuous
     test_group_name: ci-knative-eventing-operator-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: nightly
     test_group_name: ci-knative-eventing-operator-nightly-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: dot-release
     test_group_name: ci-knative-eventing-operator-dot-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: auto-release
     test_group_name: ci-knative-eventing-operator-auto-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: coverage
     test_group_name: ci-knative-eventing-operator-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
@@ -619,15 +718,27 @@ dashboards:
   - name: continuous
     test_group_name: ci-knative-net-contour-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: nightly
     test_group_name: ci-knative-net-contour-nightly-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: dot-release
     test_group_name: ci-knative-net-contour-dot-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: auto-release
     test_group_name: ci-knative-net-contour-auto-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: coverage
     test_group_name: ci-knative-net-contour-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
@@ -636,15 +747,27 @@ dashboards:
   - name: continuous
     test_group_name: ci-knative-net-istio-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: nightly
     test_group_name: ci-knative-net-istio-nightly-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: dot-release
     test_group_name: ci-knative-net-istio-dot-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: auto-release
     test_group_name: ci-knative-net-istio-auto-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: coverage
     test_group_name: ci-knative-net-istio-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
@@ -653,15 +776,27 @@ dashboards:
   - name: continuous
     test_group_name: ci-google-knative-gcp-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: nightly
     test_group_name: ci-google-knative-gcp-nightly-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: dot-release
     test_group_name: ci-google-knative-gcp-dot-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: auto-release
     test_group_name: ci-google-knative-gcp-auto-release
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 1
   - name: coverage
     test_group_name: ci-google-knative-gcp-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
@@ -670,68 +805,125 @@ dashboards:
   - name: serving
     test_group_name: ci-knative-serving-0.9-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: eventing
     test_group_name: ci-knative-eventing-0.9-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: eventing-contrib
     test_group_name: ci-knative-eventing-contrib-0.9-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
 - name: knative-0.10
   dashboard_tab:
   - name: serving
     test_group_name: ci-knative-serving-0.10-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: eventing
     test_group_name: ci-knative-eventing-0.10-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: eventing-contrib
     test_group_name: ci-knative-eventing-contrib-0.10-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
 - name: knative-0.11
   dashboard_tab:
   - name: serving
     test_group_name: ci-knative-serving-0.11-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: client
     test_group_name: ci-knative-client-0.11-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: eventing
     test_group_name: ci-knative-eventing-0.11-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: eventing-contrib
     test_group_name: ci-knative-eventing-contrib-0.11-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: serving-operator
     test_group_name: ci-knative-serving-operator-0.11-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: eventing-operator
     test_group_name: ci-knative-eventing-operator-0.11-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
 - name: knative-0.12
   dashboard_tab:
   - name: serving
     test_group_name: ci-knative-serving-0.12-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: client
     test_group_name: ci-knative-client-0.12-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: eventing
     test_group_name: ci-knative-eventing-0.12-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: eventing-contrib
     test_group_name: ci-knative-eventing-contrib-0.12-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: serving-operator
     test_group_name: ci-knative-serving-operator-0.12-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
   - name: eventing-operator
     test_group_name: ci-knative-eventing-operator-0.12-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
 - name: google-0.12
   dashboard_tab:
   - name: knative-gcp
     test_group_name: ci-google-knative-gcp-0.12-continuous
     base_options: "sort-by-name="
+    alert_options: 
+      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
+    num_failures_to_alert: 3
 dashboard_groups:
 - name: knative
   dashboard_names:
