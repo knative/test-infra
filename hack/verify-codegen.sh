@@ -20,7 +20,7 @@ set -o pipefail
 
 source $(dirname $0)/../scripts/library.sh
 
-readonly TMP_DIFFROOT="$(mktemp -d ${REPO_ROOT_DIR}/tmpdiffroot.XXXXXX)"
+readonly TMP_DIFFROOT="$(mktemp -d)"
 DIRS_TOBE_INSPECTED=(
   "Gopkg.lock"
   "vendor"
@@ -45,7 +45,8 @@ done
 echo "Diffing ${REPO_ROOT_DIR} against freshly generated codegen"
 ret=0
 for dir in ${DIRS_TOBE_INSPECTED[@]}; do
-  diff -Nupr --no-dereference "${REPO_ROOT_DIR}/${dir}" "${TMP_DIFFROOT}/${dir}" || ret=1
+  diff -Nupr --no-dereference "${REPO_ROOT_DIR}/${dir}" "${TMP_DIFFROOT}/${dir}" || \
+    { ret=1; echo "--- FAIL: file difference ${REPO_ROOT_DIR}/${dir}"; }
 done
 
 # Restore working tree state

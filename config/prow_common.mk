@@ -40,7 +40,7 @@ BOSKOS_RESOURCES ?= boskos/boskos_resources.yaml
 SET_CONTEXT   := gcloud container clusters get-credentials "$(CLUSTER)" --project="$(PROJECT)" --zone="$(ZONE)"
 UNSET_CONTEXT := kubectl config unset current-context
 
-.PHONY: help get-cluster-credentials unset-cluster-credentials config
+.PHONY: help get-cluster-credentials unset-cluster-credentials
 help:
 	@echo "Help"
 	@echo "'Update' means updating the servers and can only be run by oncall staff."
