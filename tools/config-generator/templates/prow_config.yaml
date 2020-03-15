@@ -65,6 +65,9 @@ deck:
       required_files:
       - podinfo.json
   tide_update_period: 1s
+  rerun_auth_config:
+    github_team_ids:
+      - 3012514 # Knative Milestone Maintainers
 
 prowjob_namespace: default
 pod_namespace: test-pods

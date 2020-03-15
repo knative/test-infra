@@ -42,11 +42,14 @@ spec:
         - --hook-url=http://hook:8888/plugin-help
         - --tide-url=http://tide/
         - --spyglass
+        - --rerun-creates-job
         - --config-path=/etc/config/config.yaml
         - --job-config-path=/etc/job-config
         - --kubeconfig=/etc/kubeconfig/config
         - --oauth-url=/github-login
         - --cookie-secret=/etc/cookie/secret
+        - --github-oauth-config-file=/etc/github/secret
+        - --github-token-path=/etc/githubtoken/oauth
         ports:
           - name: http
             containerPort: 8080
@@ -59,6 +62,9 @@ spec:
           readOnly: true
         - name: oauth-config
           mountPath: /etc/github
+          readOnly: true
+        - name: oauth-token
+          mountPath: /etc/githubtoken
           readOnly: true
         - name: cookie-secret
           mountPath: /etc/cookie
@@ -89,6 +95,9 @@ spec:
       - name: oauth-config
         secret:
           secretName: github-oauth-config-secret
+      - name: oauth-token
+        secret:
+            secretName: oauth-token
       - name: cookie-secret
         secret:
           secretName: cookie-secret
