@@ -279,6 +279,14 @@
   revision = "95032a82bc518f77982ea72343cc1ade730072f0"
 
 [[projects]]
+  digest = "1:08c58ac78a8c1f61e9a96350066d30fe194b8779799bd932a79932a5166a173f"
+  name = "github.com/kelseyhightower/envconfig"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "0b417c4ec4a8a82eecc22a1459a504aa55163d61"
+  version = "v1.4.0"
+
+[[projects]]
   digest = "1:58999a98719fddbac6303cb17e8d85b945f60b72f48e3a2df6b950b97fa926f1"
   name = "github.com/konsorten/go-windows-terminal-sequences"
   packages = ["."]
@@ -926,7 +934,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:46f5ceece09456cf3ef1a2109a4029a644c7324cbe8fc2d6d0955a6376f467bf"
+  digest = "1:66b9990459cccee8a348f0b9e6f450096ca653fc3dbb11573fff1d7e9bff9997"
   name = "knative.dev/pkg"
   packages = [
     "test",
@@ -955,7 +963,7 @@
     "testutils/metahelper/client",
   ]
   pruneopts = "NUT"
-  revision = "1327ff317946b1d98492b35655e761702db330ca"
+  revision = "7cbd0bcc1a30e5205033b35a60149063abeda8e3"
 
 [[projects]]
   digest = "1:8730e0150dfb2b7e173890c8b9868e7a273082ef8e39f4940e3506a481cf895c"
