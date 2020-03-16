@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"knative.dev/pkg/test/ghutil"
+	"knative.dev/pkg/test/prow"
 
-	"knative.dev/test-infra/shared/prow"
 	"knative.dev/test-infra/tools/prow-config-updater/config"
 )
 
@@ -55,6 +55,8 @@ func main() {
 				}
 			}
 		}
+
+		// TODO(chizhg): should not allow other production Prow config files to be changed if staging is needed.
 
 		// If any of the production Prow key config files are changed, report the error.
 		if len(bannedFiles) != 0 {

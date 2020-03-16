@@ -49,7 +49,7 @@ func getChangedFiles(gc *ghutil.GithubClient, pn int) ([]string, error) {
 // Use the pull bot (https://github.com/wei/pull) to create a PR in the fork repository.
 func createForkPullRequest(gc *ghutil.GithubClient) (*github.PullRequest, error) {
 	// The endpoint to manually trigger pull bot to create the pull request in the fork.
-	pullTriggerEndpoint := fmt.Sprintf("https://pull.git.ci/process/%s/%s", config.ProwBotName, config.RepoName)
+	pullTriggerEndpoint := fmt.Sprintf("https://pull.git.ci/process/%s/%s", config.ForkOrgName, config.RepoName)
 	resp, err := http.Get(pullTriggerEndpoint)
 	if err != nil {
 		return nil, fmt.Errorf("error creating the pull request in the fork repository: %v", err)
@@ -69,12 +69,12 @@ func createForkPullRequest(gc *ghutil.GithubClient) (*github.PullRequest, error)
 // Find the pull request created by the pull bot (should be exactly one pull request, otherwise there must be an error)
 func findForkPullRequest(gc *ghutil.GithubClient) (*github.PullRequest, error) {
 	prs, _, err := gc.Client.PullRequests.List(
-		context.Background(), config.ProwBotName, config.RepoName,
+		context.Background(), config.ForkOrgName, config.RepoName,
 		&github.PullRequestListOptions{
 			State: "open",
 			Head:  "knative:master",
 		})
-	orgRepoName := fmt.Sprintf("%s/%s", config.ProwBotName, config.RepoName)
+	orgRepoName := fmt.Sprintf("%s/%s", config.ForkOrgName, config.RepoName)
 	if err != nil {
 		return nil, fmt.Errorf("error listing pull request in repository %s: %v", orgRepoName, err)
 	}
@@ -88,7 +88,7 @@ func waitForForkPullRequestMerged(gc *ghutil.GithubClient, pn int) error {
 	interval := 10 * time.Second
 	timeout := 20 * time.Minute
 	return wait.PollImmediate(interval, timeout, func() (bool, error) {
-		pr, err := gc.GetPullRequest(config.ProwBotName, config.RepoName, pn)
+		pr, err := gc.GetPullRequest(config.ForkOrgName, config.RepoName, pn)
 		if err != nil {
 			return false, err
 		}

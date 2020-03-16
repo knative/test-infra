@@ -991,6 +991,7 @@
     "knative.dev/pkg/test/ghutil/fakeghutil",
     "knative.dev/pkg/test/gke",
     "knative.dev/pkg/test/helpers",
+    "knative.dev/pkg/test/prow",
     "knative.dev/pkg/test/slackutil",
     "knative.dev/pkg/testutils/clustermanager/perf-tests",
     "knative.dev/pkg/testutils/clustermanager/prow-cluster-operation",

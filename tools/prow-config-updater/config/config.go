@@ -5,17 +5,18 @@ import "path/filepath"
 type ProwEnv string
 
 const (
-	ProdProwEnv        ProwEnv = "prow"
-	StagingProwEnv     ProwEnv = "prow-staging"
+	ProdProwEnv    ProwEnv = "prow"
+	StagingProwEnv ProwEnv = "prow-staging"
 )
 
 const (
 	ProwBotName = "knative-prow-robot"
+	ForkOrgName = ProwBotName
 	OrgName     = "knative"
 	RepoName    = "test-infra"
 
-	configPath                 = "config"
-	configTemplatePath         = "config-generator/templates"
+	configPath         = "config"
+	configTemplatePath = "config-generator/templates"
 )
 
 var (
