@@ -13,13 +13,13 @@ import (
 const (
 	successUpdatedConfigsCommentTemplate = "Updated %s configs with below files being modified: \n%s"
 	failureUpdatedConfigsCommentTemplate = "Failed updating %s configs with below files being modified: \n%s\nSee error detail below: %v"
-	successStagingCommentTemplate = "The staging process is completed and succeeded.\nCreated an auto-merge PR to sync the changes to production Prow."
-	failureStagingCommentTemplate = "The staging process failed with the error below:\n%v\n\nPlease check if there is anything going wrong."
+	successStagingCommentTemplate        = "The staging process is completed and succeeded.\nCreated an auto-merge PR to sync the changes to production Prow."
+	failureStagingCommentTemplate        = "The staging process failed with the error below:\n%v\n\nPlease check if there is anything going wrong."
 )
 
 type GitHubCommenter struct {
-	client   *ghutil.GithubClient
-	dryrun   bool
+	client *ghutil.GithubClient
+	dryrun bool
 }
 
 // Comment on the pull request for the Prow update success result.
