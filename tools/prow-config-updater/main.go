@@ -24,16 +24,7 @@ func main() {
 		log.Fatalf("Failed creating commenter github client: %v", err)
 	}
 
-	pr, err := getLatestPullRequest(mgc)
-	if err != nil {
-		log.Fatalf("Failed getting the latest PR number: %v", err)
-	}
-	fs, err := getChangedFiles(mgc, *pr.Number)
-	if err != nil {
-		log.Fatalf("Failed getting changed files in PR %q: %v", *pr.Number, err)
-	}
-
-	if err := runProwConfigUpdate(mgc, cgc, pr, fs, *dryrun); err != nil {
+	if err := runProwConfigUpdate(mgc, cgc, *dryrun); err != nil {
 		log.Fatalf("Failed updating Prow configs: %v", err)
 	}
 }

@@ -5,7 +5,6 @@ import (
 	"log"
 	"strings"
 
-	"github.com/google/go-github/github"
 	"knative.dev/pkg/test/cmd"
 	"knative.dev/pkg/test/ghutil"
 	"knative.dev/pkg/test/helpers"
@@ -15,11 +14,11 @@ import (
 )
 
 type ConfigUpdater struct {
-	maingithubclient    *ghutil.GithubClient
-	commentgithubclient *ghutil.GithubClient
-	prnumber            int
-	files               []string
-	dryrun              bool
+	githubmainhandler *GitHubMainHandler
+	githubcommenter   *GitHubCommenter
+	prnumber          int
+	files             []string
+	dryrun            bool
 }
 
 const (
@@ -33,18 +32,27 @@ var (
 	updateProwConfigFilesCommand = fmt.Sprintf("make -C %s config", config.ProdProwConfigRoot)
 )
 
-func runProwConfigUpdate(mgc *ghutil.GithubClient, cgc *ghutil.GithubClient,
-	pr *github.PullRequest, fs []string, dryrun bool) error {
+func runProwConfigUpdate(mgc *ghutil.GithubClient, cgc *ghutil.GithubClient, dryrun bool) error {
+	githubmainhandler := &GitHubMainHandler{client: mgc, dryrun: dryrun}
+	pr, err := githubmainhandler.getLatestPullRequest()
+	if err != nil {
+		return fmt.Errorf("error getting the latest PR number: %v", err)
+	}
+	fs, err := githubmainhandler.getChangedFiles(*pr.Number)
+	if err != nil {
+		return fmt.Errorf("error getting changed files in PR %q: %v", *pr.Number, err)
+	}
+
 	if err := common.CDToRootDir(); err != nil {
 		return err
 	}
 
-	cu := ConfigUpdater{
-		maingithubclient:    mgc,
-		commentgithubclient: cgc,
-		prnumber:            *pr.Number,
-		files:               fs,
-		dryrun:              dryrun,
+	cu := &ConfigUpdater{
+		githubmainhandler: githubmainhandler,
+		githubcommenter:   &GitHubCommenter{client: cgc, dryrun: dryrun},
+		prnumber:          *pr.Number,
+		files:             fs,
+		dryrun:            dryrun,
 	}
 	// If the PR is created by the Prow bot, we should be confident to blindly update production Prow configs.
 	if *pr.User.Name == config.ProwBotName {
@@ -54,14 +62,13 @@ func runProwConfigUpdate(mgc *ghutil.GithubClient, cgc *ghutil.GithubClient,
 	} else {
 		// Check if we need staging process for updating the config files.
 		if cu.needsStaging() {
-			ghc := GitHubCommenter{client: cu.commentgithubclient, dryrun: dryrun}
 			if err := cu.startStaging(); err != nil {
 				// Best effort, won't fail the process if the comment fails.
-				ghc.commentOnStagingFailure(*pr.Number, err)
+				cu.githubcommenter.commentOnStagingFailure(*pr.Number, err)
 				return fmt.Errorf("error running Prow staging process: %v", err)
 			} else {
 				// Best effort, won't fail the process if the comment fails.
-				ghc.commentOnStagingSuccess(*pr.Number, err)
+				cu.githubcommenter.commentOnStagingSuccess(*pr.Number, err)
 			}
 			// TODO(chizhg): create an auto-merge pull request to update production Prow configs.
 		} else {
@@ -76,14 +83,13 @@ func runProwConfigUpdate(mgc *ghutil.GithubClient, cgc *ghutil.GithubClient,
 // Update Prow with the changed config files and send message for the update result.
 func (cu *ConfigUpdater) updateProw(env config.ProwEnv) error {
 	updatedFiles, err := cu.doProwUpdate(env)
-	ghc := GitHubCommenter{client: cu.commentgithubclient, dryrun: cu.dryrun}
 	prnumber := cu.prnumber
 	if err == nil {
 		// Best effort, won't fail the process if the comment fails.
-		ghc.commentOnUpdateConfigsSuccess(prnumber, config.ProdProwEnv, updatedFiles)
+		cu.githubcommenter.commentOnUpdateConfigsSuccess(prnumber, config.ProdProwEnv, updatedFiles)
 	} else {
 		// Best effort, won't fail the process if the comment fails.
-		ghc.commentOnUpdateConfigsFailure(prnumber, config.StagingProwEnv, updatedFiles, err)
+		cu.githubcommenter.commentOnUpdateConfigsFailure(prnumber, config.StagingProwEnv, updatedFiles, err)
 	}
 	return err
 }
@@ -102,18 +108,17 @@ func (cu *ConfigUpdater) startStaging() error {
 		return fmt.Errorf("error updating staging Prow configs: %v", err)
 	}
 	// Create pull request in the fork repository for the testing of staging Prow.
-	fpr, err := createForkPullRequest(cu.maingithubclient)
+	fpr, err := cu.githubmainhandler.createForkPullRequest()
 	if err != nil {
 		return fmt.Errorf("error creating pull request in the fork repository: %v", err)
 	}
 	// Create comment on the fork pull request to get it tested by staging Prow and merged.
-	ghc := GitHubCommenter{client: cu.commentgithubclient, dryrun: cu.dryrun}
 	forkprnumber := *fpr.Number
-	if err = ghc.commentToMergePullRequest(forkprnumber); err != nil {
+	if err = cu.githubcommenter.commentToMergePullRequest(forkprnumber); err != nil {
 		return fmt.Errorf("error creating comment on the fork pull request: %v", err)
 	}
 	// Wait for the fork pull request to be automatically merged by staging Prow.
-	if err := waitForForkPullRequestMerged(cu.maingithubclient, *fpr.Number); err != nil {
+	if err := cu.githubmainhandler.waitForForkPullRequestMerged(*fpr.Number); err != nil {
 		return fmt.Errorf("error waiting for the fork pull request to be merged: %v", err)
 	}
 	return nil
