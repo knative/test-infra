@@ -209,7 +209,8 @@ This is the preferred method of manually building a new release.
 
 ### Option #1: Via Prow UI
 
-**Note:** Has to be a member of [Knative Milestone Maintainer](https://github.com/orgs/knative/teams/knative-milestone-maintainers)
+**Note:** Has to be a member of
+[Knative Milestone Maintainer](https://github.com/orgs/knative/teams/knative-milestone-maintainers)
 
 1. Open a browser, navigate to
    `https://prow.knative.dev/?job=ci-knative-MODULE-dot-release` (Replace
@@ -217,7 +218,7 @@ This is the preferred method of manually building a new release.
 
 1. Pick the first line, click on the refresh button, then click `RERUN` button
 
-  ![Rerun Button](rerun_button.png)
+![Rerun Button](rerun_button.png)
 
 ### Option #2: ask one of Prow admin
 
@@ -236,7 +237,8 @@ This is the preferred method of manually building a new release.
 
 ### Option #1: Via Prow UI
 
-**Note:** Has to be a member of [Knative Milestone Maintainer](https://github.com/orgs/knative/teams/knative-milestone-maintainers)
+**Note:** Has to be a member of
+[Knative Milestone Maintainer](https://github.com/orgs/knative/teams/knative-milestone-maintainers)
 
 1. Open a browser, navigate to
    `https://prow.knative.dev/?job=ci-knative-MODULE-nightly-release` (Replace
