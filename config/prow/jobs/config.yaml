@@ -4992,6 +4992,7 @@ periodics:
       - "--release-gcs knative-releases/serving"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
+      - "--branch release-0.10"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -5045,6 +5046,7 @@ periodics:
       - "--release-gcs knative-releases/serving"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
+      - "--branch release-0.11"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -5098,6 +5100,7 @@ periodics:
       - "--release-gcs knative-releases/serving"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
+      - "--branch release-0.12"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -5531,6 +5534,7 @@ periodics:
       - "--release-gcs knative-releases/client"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
+      - "--branch release-0.11"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -5579,6 +5583,7 @@ periodics:
       - "--release-gcs knative-releases/client"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
+      - "--branch release-0.12"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -6076,6 +6081,7 @@ periodics:
       - "--release-gcs knative-releases/eventing"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
+      - "--branch release-0.10"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -6129,6 +6135,7 @@ periodics:
       - "--release-gcs knative-releases/eventing"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
+      - "--branch release-0.11"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -6182,6 +6189,7 @@ periodics:
       - "--release-gcs knative-releases/eventing"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
+      - "--branch release-0.12"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -6574,6 +6582,7 @@ periodics:
       - "--release-gcs knative-releases/eventing-contrib"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
+      - "--branch release-0.10"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -6627,6 +6636,7 @@ periodics:
       - "--release-gcs knative-releases/eventing-contrib"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
+      - "--branch release-0.11"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -6680,6 +6690,7 @@ periodics:
       - "--release-gcs knative-releases/eventing-contrib"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
+      - "--branch release-0.12"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -7269,6 +7280,7 @@ periodics:
       - "--release-gcs knative-releases/serving-operator"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
+      - "--branch release-0.11"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -7317,6 +7329,7 @@ periodics:
       - "--release-gcs knative-releases/serving-operator"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
+      - "--branch release-0.12"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -7638,6 +7651,7 @@ periodics:
       - "--release-gcs knative-releases/eventing-operator"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
+      - "--branch release-0.11"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -7686,6 +7700,7 @@ periodics:
       - "--release-gcs knative-releases/eventing-operator"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
+      - "--branch release-0.12"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -7957,6 +7972,7 @@ periodics:
       - "--release-gcs knative-releases/knative-gcp"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
+      - "--branch release-0.12"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
