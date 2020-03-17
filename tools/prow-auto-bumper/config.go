@@ -83,21 +83,6 @@ type GHClientWrapper struct {
 	ghutil.GithubOperations
 }
 
-type gitInfo struct {
-	org      string
-	repo     string
-	head     string // PR head branch
-	base     string // PR base branch
-	userID   string // Github User ID of PR creator
-	userName string // User display name for Git commit
-	email    string // User email address for Git commit
-}
-
-// HeadRef is in the form of "user:head", i.e. "github_user:branch_foo"
-func (gi *gitInfo) getHeadRef() string {
-	return fmt.Sprintf("%s:%s", gi.userID, gi.head)
-}
-
 // Versions holds the version change for an image
 // oldVersion and newVersion are both in the format of "vYYYYMMDD-HASH-VARIANT"
 type versions struct {

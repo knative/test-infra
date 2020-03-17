@@ -1,5 +1,5 @@
 /*
-Copyright 2019 The Knative Authors
+Copyright 2020 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,19 +14,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// run.go controls how to run functions that needs dryrun support
+package git
 
-package main
+import "fmt"
 
-import (
-	"log"
-)
+type Info struct {
+    Org      string
+    Repo     string
+    Head     string // PR head branch
+    Base     string // PR base branch
+    UserID   string // Github User ID of PR creator
+    UserName string // User display name for Git commit
+    Email    string // User email address for Git commit
+}
 
-func run(message string, call func() error, dryrun bool) error {
-	if dryrun {
-		log.Printf("[dry run] %s", message)
-		return nil
-	}
-	log.Printf(message)
-	return call()
+// HeadRef is in the form of "user:head", i.e. "github_user:branch_foo"
+func (gi *Info) GetHeadRef() string {
+    return fmt.Sprintf("%s:%s", gi.UserID, gi.Head)
 }
