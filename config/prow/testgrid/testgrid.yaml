@@ -303,21 +303,6 @@ test_groups:
 - name: ci-knative-net-istio-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-net-istio-go-coverage
   short_text_metric: "coverage"
-- name: ci-knative-serving-0.9-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-serving-0.9-continuous
-  alert_options: 
-    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
-  num_failures_to_alert: 3
-- name: ci-knative-eventing-0.9-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-0.9-continuous
-  alert_options: 
-    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
-  num_failures_to_alert: 3
-- name: ci-knative-eventing-contrib-0.9-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-0.9-continuous
-  alert_options: 
-    alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
-  num_failures_to_alert: 3
 - name: ci-knative-serving-0.10-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.10-continuous
   alert_options: 
@@ -800,26 +785,6 @@ dashboards:
   - name: coverage
     test_group_name: ci-google-knative-gcp-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: knative-0.9
-  dashboard_tab:
-  - name: serving
-    test_group_name: ci-knative-serving-0.9-continuous
-    base_options: "sort-by-name="
-    alert_options: 
-      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
-    num_failures_to_alert: 3
-  - name: eventing
-    test_group_name: ci-knative-eventing-0.9-continuous
-    base_options: "sort-by-name="
-    alert_options: 
-      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
-    num_failures_to_alert: 3
-  - name: eventing-contrib
-    test_group_name: ci-knative-eventing-contrib-0.9-continuous
-    base_options: "sort-by-name="
-    alert_options: 
-      alert_mail_to_addresses: "knative-productivity-dev@googlegroups.com"
-    num_failures_to_alert: 3
 - name: knative-0.10
   dashboard_tab:
   - name: serving

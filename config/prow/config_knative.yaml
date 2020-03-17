@@ -20,8 +20,6 @@ presubmits:
   knative/serving:
     - repo-settings:
       performance: true
-      go112-branches:
-      - release-0.9
     - build-tests: true
       dot-dev: true
       resources:
@@ -140,7 +138,6 @@ presubmits:
   knative/client:
     - repo-settings:
       go112-branches:
-      - release-0.9
       - release-0.10
     - build-tests: true
       dot-dev: true
@@ -157,10 +154,6 @@ presubmits:
       dot-dev: true
 
   knative/client-contrib:
-    - repo-settings:
-      go112-branches:
-      - release-0.9 # This branch doesn't actually exist, create here to make
-      # config generator work
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -174,7 +167,6 @@ presubmits:
     - repo-settings:
       performance: true
       go112-branches:
-      - release-0.9
       - release-0.10
     - build-tests: true
       dot-dev: true
@@ -193,7 +185,6 @@ presubmits:
   knative/eventing-contrib:
     - repo-settings:
       go112-branches:
-      - release-0.9
       - release-0.10
     - build-tests: true
       dot-dev: true
@@ -212,7 +203,6 @@ presubmits:
   knative/docs:
     - repo-settings:
       go112-branches:
-      - release-0.9
       - release-0.10
     - build-tests: true
     - unit-tests: true
@@ -228,7 +218,6 @@ presubmits:
   knative/pkg:
     - repo-settings:
       go112-branches:
-      - release-0.9
       - release-0.10
     - build-tests: true
       dot-dev: true
@@ -240,9 +229,6 @@ presubmits:
       dot-dev: true
 
   knative/test-infra:
-    - repo-settings:
-      go112-branches:
-      - legacy  # Doesn't exist, for compatibility purposes only
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -297,7 +283,6 @@ presubmits:
     - repo-settings:
       performance: true
       go112-branches:
-      - release-0.9
       - release-0.10
     - build-tests: true
     - unit-tests: true
@@ -305,10 +290,6 @@ presubmits:
     - go-coverage: true
 
   knative/net-contour:
-    - repo-settings:
-      go112-branches:
-      - release-0.9 # This branch doesn't actually exist, create here to make
-      # config generator work
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -319,10 +300,6 @@ presubmits:
       dot-dev: true
 
   knative/net-istio:
-    - repo-settings:
-      go112-branches:
-      - release-0.9 # This branch doesn't actually exist, create here to make
-      # config generator work
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -333,9 +310,6 @@ presubmits:
       dot-dev: true
 
   knative/serving-operator:
-    - repo-settings:
-      go112-branches:
-      - release-0.9
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -393,9 +367,6 @@ periodics:
           memory: 12Gi
         limits:
           memory: 16Gi
-    - branch-ci: true
-      release: "0.9"
-      dot-dev: true
     - branch-ci: true
       release: "0.10"
       dot-dev: true
@@ -532,9 +503,6 @@ periodics:
         limits:
           memory: 16Gi
     - branch-ci: true
-      release: "0.9"
-      dot-dev: true
-    - branch-ci: true
       release: "0.10"
       dot-dev: true
     - branch-ci: true
@@ -579,9 +547,6 @@ periodics:
           memory: 12Gi
         limits:
           memory: 16Gi
-    - branch-ci: true
-      release: "0.9"
-      dot-dev: true
     - branch-ci: true
       release: "0.10"
       dot-dev: true
