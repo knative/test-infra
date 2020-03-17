@@ -438,7 +438,7 @@ periodics:
       go113: true
       release: "0.10"
       env-vars:
-      - RELEASE_BRANCH=releaes-0.10
+      - RELEASE_BRANCH=release-0.10
       resources:
         requests:
           memory: 12Gi
@@ -449,7 +449,7 @@ periodics:
       go113: true
       release: "0.11"
       env-vars:
-      - RELEASE_BRANCH=releaes-0.11
+      - RELEASE_BRANCH=release-0.11
       resources:
         requests:
           memory: 12Gi
@@ -460,7 +460,7 @@ periodics:
       go113: true
       release: "0.12"
       env-vars:
-      - RELEASE_BRANCH=releaes-0.12
+      - RELEASE_BRANCH=release-0.12
       resources:
         requests:
           memory: 12Gi
@@ -524,13 +524,13 @@ periodics:
       go113: true
       release: "0.11"
       env-vars:
-      - RELEASE_BRANCH=releaes-0.11
+      - RELEASE_BRANCH=release-0.11
     - dot-release: true
       dot-dev: true
       go113: true
       release: "0.12"
       env-vars:
-      - RELEASE_BRANCH=releaes-0.12
+      - RELEASE_BRANCH=release-0.12
     - dot-release: true
       dot-dev: true
       go113: true
@@ -581,7 +581,7 @@ periodics:
       go113: true
       release: "0.10"
       env-vars:
-      - RELEASE_BRANCH=releaes-0.10
+      - RELEASE_BRANCH=release-0.10
       resources:
         requests:
           memory: 12Gi
@@ -592,7 +592,7 @@ periodics:
       go113: true
       release: "0.11"
       env-vars:
-      - RELEASE_BRANCH=releaes-0.11
+      - RELEASE_BRANCH=release-0.11
       resources:
         requests:
           memory: 12Gi
@@ -603,7 +603,7 @@ periodics:
       go113: true
       release: "0.12"
       env-vars:
-      - RELEASE_BRANCH=releaes-0.12
+      - RELEASE_BRANCH=release-0.12
       resources:
         requests:
           memory: 12Gi
@@ -659,7 +659,7 @@ periodics:
       go113: true
       release: "0.10"
       env-vars:
-      - RELEASE_BRANCH=releaes-0.10
+      - RELEASE_BRANCH=release-0.10
       resources:
         requests:
           memory: 12Gi
@@ -670,7 +670,7 @@ periodics:
       go113: true
       release: "0.11"
       env-vars:
-      - RELEASE_BRANCH=releaes-0.11
+      - RELEASE_BRANCH=release-0.11
       resources:
         requests:
           memory: 12Gi
@@ -681,7 +681,7 @@ periodics:
       go113: true
       release: "0.12"
       env-vars:
-      - RELEASE_BRANCH=releaes-0.12
+      - RELEASE_BRANCH=release-0.12
       resources:
         requests:
           memory: 12Gi
@@ -753,13 +753,13 @@ periodics:
       go113: true
       release: "0.11"
       env-vars:
-      - RELEASE_BRANCH=releaes-0.11
+      - RELEASE_BRANCH=release-0.11
     - dot-release: true
       dot-dev: true
       go113: true
       release: "0.12"
       env-vars:
-      - RELEASE_BRANCH=releaes-0.12
+      - RELEASE_BRANCH=release-0.12
     - dot-release: true
       dot-dev: true
       go113: true
@@ -787,13 +787,13 @@ periodics:
       go113: true
       release: "0.11"
       env-vars:
-      - RELEASE_BRANCH=releaes-0.11
+      - RELEASE_BRANCH=release-0.11
     - dot-release: true
       dot-dev: true
       go113: true
       release: "0.12"
       env-vars:
-      - RELEASE_BRANCH=releaes-0.12
+      - RELEASE_BRANCH=release-0.12
     - dot-release: true
       dot-dev: true
       go113: true
@@ -814,7 +814,7 @@ periodics:
       release: "0.12"
       env-vars:
       - ORG_NAME=google
-        RELEASE_BRANCH=releaes-0.12
+        RELEASE_BRANCH=release-0.12
     - dot-release: true
       go113: true
       env-vars:
