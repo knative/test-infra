@@ -28,23 +28,25 @@ import (
 	"github.com/google/go-github/github"
 	"knative.dev/pkg/test/ghutil"
 	"knative.dev/pkg/test/ghutil/fakeghutil"
+
+	"knative.dev/test-infra/shared/git"
 )
 
-func getFakeGitInfo() gitInfo {
-	return gitInfo{
-		org:    "fakeorg",
-		repo:   "fakerepo",
-		userID: "fakeuserID",
-		head:   "fakehead",
-		base:   "fakebase",
-		email:  "fake@email",
+func getFakeGitInfo() git.Info {
+	return git.Info{
+		Org:    "fakeorg",
+		Repo:   "fakerepo",
+		UserID: "fakeuserID",
+		Head:   "fakehead",
+		Base:   "fakebase",
+		Email:  "fake@email",
 	}
 }
 
-func createPullRequest(t *testing.T, fgc *fakeghutil.FakeGithubClient, fakeGi gitInfo) *github.PullRequest {
-	PR, err := fgc.CreatePullRequest(fakeGi.org, fakeGi.repo, fakeGi.getHeadRef(), fakeGi.base, "title", "body")
+func createPullRequest(t *testing.T, fgc *fakeghutil.FakeGithubClient, fakeGi git.Info) *github.PullRequest {
+	PR, err := fgc.CreatePullRequest(fakeGi.Org, fakeGi.Repo, fakeGi.GetHeadRef(), fakeGi.Base, "title", "body")
 	if err != nil {
-		t.Fatalf("Create PR in %s/%s, want: no error, got: '%v'", fakeGi.org, fakeGi.org, err)
+		t.Fatalf("Create PR in %s/%s, want: no error, got: '%v'", fakeGi.Org, fakeGi.Org, err)
 	}
 	return PR
 }
@@ -264,8 +266,8 @@ func TestParseChangelist(t *testing.T) {
 		for i, patch := range data.patches {
 			SHA := strconv.Itoa(i)
 			filename := fmt.Sprintf("file_%d", i)
-			fgc.AddCommitToPullRequest(fakeGi.org, fakeGi.repo, *pv.PR.Number, SHA)
-			fgc.AddFileToCommit(fakeGi.org, fakeGi.repo, SHA, filename, patch)
+			fgc.AddCommitToPullRequest(fakeGi.Org, fakeGi.Repo, *pv.PR.Number, SHA)
+			fgc.AddFileToCommit(fakeGi.Org, fakeGi.Repo, SHA, filename, patch)
 		}
 
 		pv.parseChangelist(fcw, fakeGi)
@@ -340,8 +342,8 @@ func TestGetBestVersion(t *testing.T) {
 				- image: gcr.io/k8s-foofoo/bar:%s
 				+ image: gcr.io/k8s-foofoo/bar:%s
 			`, PI.oldVersion, PI.newVersion)
-			fgc.AddCommitToPullRequest(fakeGi.org, fakeGi.repo, *PR.Number, SHA)
-			fgc.AddFileToCommit(fakeGi.org, fakeGi.repo, SHA, filename, patch)
+			fgc.AddCommitToPullRequest(fakeGi.Org, fakeGi.Repo, *PR.Number, SHA)
+			fgc.AddFileToCommit(fakeGi.Org, fakeGi.Repo, SHA, filename, patch)
 		}
 
 		pv, err := getBestVersion(fcw, fakeGi)
