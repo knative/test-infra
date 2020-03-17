@@ -173,6 +173,9 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			version := getString(item.Value)
 			jobNameSuffix = version + "-" + jobNameSuffix
 			data.Base.RepoBranch = "release-" + version
+			if jobType == "dot-release" {
+				data.Base.Args = append(data.Base.Args, "--branch release-"+version)
+			}
 			isMonitoredJob = true
 		case "webhook-apicoverage":
 			if !getBool(item.Value) {

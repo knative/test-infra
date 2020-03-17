@@ -67,7 +67,6 @@ type repositoryData struct {
 	DotDev                 bool
 	Go113                  bool
 	Go114                  bool
-	LegacyBranches         []string
 	Go112Branches          []string
 }
 
@@ -602,12 +601,6 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 					repositories[i].EnablePerformanceTests = true
 				}
 			}
-		case "legacy-branches":
-			for i, repo := range repositories {
-				if path.Base(repo.Name) == (*data).RepoName {
-					repositories[i].LegacyBranches = getStringArray(item.Value)
-				}
-			}
 		case "go112-branches":
 			for i, repo := range repositories {
 				if path.Base(repo.Name) == (*data).RepoName {
@@ -788,7 +781,7 @@ func indentMap(indentation int, mp map[string]string) string {
 // outputConfig outputs the given line, if not empty, to stdout.
 func outputConfig(line string) {
 	if strings.TrimSpace(line) != "" {
-		fmt.Fprintln(output, line)
+		fmt.Fprintln(output, strings.TrimRight(line, " "))
 		emittedOutput = true
 	}
 }
@@ -863,29 +856,6 @@ func executeJobTemplateWrapper(repoName string, data interface{}, generateOneJob
 		}
 	}
 
-	var legacyBranches []string
-	// Find out if LegacyBranches is set in repo settings
-	for _, repo := range repositories {
-		if repo.Name == repoName {
-			if len(repo.LegacyBranches) > 0 {
-				legacyBranches = repo.LegacyBranches
-			}
-		}
-	}
-	if len(legacyBranches) > 0 {
-		sbs = append(sbs, specialBranchLogic{
-			branches: legacyBranches,
-			opsNew: func(base *baseProwJobTemplateData) {
-				base.PathAlias = "path_alias: knative.dev/" + base.RepoName
-				base.ExtraRefs = append(base.ExtraRefs, "  "+base.PathAlias)
-			},
-			restore: func(base *baseProwJobTemplateData) {
-				base.PathAlias = ""
-				base.ExtraRefs = base.ExtraRefs[:len(base.ExtraRefs)-1]
-			},
-		})
-	}
-
 	var go112Branches []string
 	// Find out if Go112Branches is set in repo settings
 	for _, repo := range repositories {
@@ -905,6 +875,9 @@ func executeJobTemplateWrapper(repoName string, data interface{}, generateOneJob
 				base.Image = getGo112ImageName(base.Image)
 			},
 		})
+	} else {
+		base := getBase(data)
+		base.Image = getGo113ImageName(base.Image)
 	}
 
 	if len(sbs) == 0 { // Generate single job if there is no special branch logic
