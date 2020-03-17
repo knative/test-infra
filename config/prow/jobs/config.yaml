@@ -4635,6 +4635,52 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+- cron: "0 8 * * *"
+  name: ci-knative-serving-0.13-continuous
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-serving-0.13-continuous
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: release-0.13
+    path_alias: knative.dev/serving
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.13
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
 - cron: "12 */2 * * *"
   name: ci-knative-serving-istio-1.5-mesh
   agent: kubernetes
@@ -5437,6 +5483,52 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+- cron: "54 8 * * *"
+  name: ci-knative-client-0.13-continuous
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-client-0.13-continuous
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: client
+    base_ref: release-0.13
+    path_alias: knative.dev/client
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.13
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
 - cron: "40 9 * * *"
   name: ci-knative-client-nightly-release
   agent: kubernetes
@@ -6005,6 +6097,52 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+- cron: "29 8 * * *"
+  name: ci-knative-eventing-0.13-continuous
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-eventing-0.13-continuous
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: eventing
+    base_ref: release-0.13
+    path_alias: knative.dev/eventing
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.13
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
 - cron: "15 9 * * *"
   name: ci-knative-eventing-nightly-release
   agent: kubernetes
@@ -6494,6 +6632,52 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.12
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "24 8 * * *"
+  name: ci-knative-eventing-contrib-0.13-continuous
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-eventing-contrib-0.13-continuous
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: eventing-contrib
+    base_ref: release-0.13
+    path_alias: knative.dev/eventing-contrib
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.13
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -7197,6 +7381,52 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+- cron: "37 8 * * *"
+  name: ci-knative-serving-operator-0.13-continuous
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-serving-operator-0.13-continuous
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving-operator
+    base_ref: release-0.13
+    path_alias: knative.dev/serving-operator
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.13
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
 - cron: "23 9 * * *"
   name: ci-knative-serving-operator-nightly-release
   agent: kubernetes
@@ -7564,6 +7794,52 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+- cron: "56 8 * * *"
+  name: ci-knative-eventing-operator-0.13-continuous
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-eventing-operator-0.13-continuous
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: eventing-operator
+    base_ref: release-0.13
+    path_alias: knative.dev/eventing-operator
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.13
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
 - cron: "42 9 * * *"
   name: ci-knative-eventing-operator-nightly-release
   agent: kubernetes
@@ -7877,6 +8153,51 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.12
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "29 8 * * *"
+  name: ci-google-knative-gcp-0.13-continuous
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-0.13-continuous
+  decorate: true
+  extra_refs:
+  - org: google
+    repo: knative-gcp
+    base_ref: release-0.13
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.13
     volumes:
     - name: docker-graph
       emptyDir: {}

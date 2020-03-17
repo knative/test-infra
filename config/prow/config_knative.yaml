@@ -389,6 +389,10 @@ periodics:
       release: "0.12"
       dot-dev: true
       go113: true
+    - branch-ci: true
+      release: "0.13"
+      dot-dev: true
+      go113: true
     - custom-job: istio-1.5-mesh
       full-command: "./test/e2e-tests.sh --istio-version 1.5-latest --mesh"
       dot-dev: true
@@ -502,6 +506,10 @@ periodics:
       release: "0.12"
       dot-dev: true
       go113: true
+    - branch-ci: true
+      release: "0.13"
+      dot-dev: true
+      go113: true
     - nightly: true
       dot-dev: true
       go113: true
@@ -556,6 +564,10 @@ periodics:
       go113: true
     - branch-ci: true
       release: "0.12"
+      dot-dev: true
+      go113: true
+    - branch-ci: true
+      release: "0.13"
       dot-dev: true
       go113: true
     - nightly: true
@@ -628,6 +640,10 @@ periodics:
       go113: true
     - branch-ci: true
       release: "0.12"
+      dot-dev: true
+      go113: true
+    - branch-ci: true
+      release: "0.13"
       dot-dev: true
       go113: true
     - nightly: true
@@ -723,6 +739,10 @@ periodics:
       release: "0.12"
       dot-dev: true
       go113: true
+    - branch-ci: true
+      release: "0.13"
+      dot-dev: true
+      go113: true
     - nightly: true
       dot-dev: true
       go113: true
@@ -753,6 +773,10 @@ periodics:
       release: "0.12"
       dot-dev: true
       go113: true
+    - branch-ci: true
+      release: "0.13"
+      dot-dev: true
+      go113: true
     - nightly: true
       dot-dev: true
       go113: true
@@ -776,6 +800,9 @@ periodics:
       go113: true
     - branch-ci: true
       release: "0.12"
+      go113: true
+    - branch-ci: true
+      release: "0.13"
       go113: true
     - nightly: true
       go113: true
