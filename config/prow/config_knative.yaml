@@ -235,9 +235,6 @@ presubmits:
       dot-dev: true
 
   knative/test-infra:
-    - repo-settings:
-      go112-branches:
-      - legacy  # Doesn't exist, for compatibility purposes only
     - build-tests: true
       dot-dev: true
     - unit-tests: true

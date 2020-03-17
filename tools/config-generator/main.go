@@ -67,7 +67,6 @@ type repositoryData struct {
 	DotDev                 bool
 	Go113                  bool
 	Go114                  bool
-	LegacyBranches         []string
 	Go112Branches          []string
 }
 
@@ -602,12 +601,6 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 					repositories[i].EnablePerformanceTests = true
 				}
 			}
-		case "legacy-branches":
-			for i, repo := range repositories {
-				if path.Base(repo.Name) == (*data).RepoName {
-					repositories[i].LegacyBranches = getStringArray(item.Value)
-				}
-			}
 		case "go112-branches":
 			for i, repo := range repositories {
 				if path.Base(repo.Name) == (*data).RepoName {
@@ -863,29 +856,6 @@ func executeJobTemplateWrapper(repoName string, data interface{}, generateOneJob
 		}
 	}
 
-	var legacyBranches []string
-	// Find out if LegacyBranches is set in repo settings
-	for _, repo := range repositories {
-		if repo.Name == repoName {
-			if len(repo.LegacyBranches) > 0 {
-				legacyBranches = repo.LegacyBranches
-			}
-		}
-	}
-	if len(legacyBranches) > 0 {
-		sbs = append(sbs, specialBranchLogic{
-			branches: legacyBranches,
-			opsNew: func(base *baseProwJobTemplateData) {
-				base.PathAlias = "path_alias: knative.dev/" + base.RepoName
-				base.ExtraRefs = append(base.ExtraRefs, "  "+base.PathAlias)
-			},
-			restore: func(base *baseProwJobTemplateData) {
-				base.PathAlias = ""
-				base.ExtraRefs = base.ExtraRefs[:len(base.ExtraRefs)-1]
-			},
-		})
-	}
-
 	var go112Branches []string
 	// Find out if Go112Branches is set in repo settings
 	for _, repo := range repositories {
@@ -905,6 +875,9 @@ func executeJobTemplateWrapper(repoName string, data interface{}, generateOneJob
 				base.Image = getGo112ImageName(base.Image)
 			},
 		})
+	} else {
+		base := getBase(data)
+		base.Image = getGo113ImageName(base.Image)
 	}
 
 	if len(sbs) == 0 { // Generate single job if there is no special branch logic
@@ -1155,8 +1128,8 @@ func main() {
 	flag.StringVar(&releaseAccount, "release-account", "/etc/release-account/service-account.json", "Path to the service account JSON for release jobs")
 	var flakesreporterDockerImageName = flag.String("flaky-test-reporter-docker", "flaky-test-reporter:latest", "Docker image for flaky test reporting tool")
 	var prowversionbumperDockerImageName = flag.String("prow-auto-bumper", "prow-auto-bumper:latest", "Docker image for Prow version bumping tool")
-	var coverageDockerImageName = flag.String("coverage-docker", "coverage-go112:latest", "Docker image for coverage tool")
-	var prowTestsDockerImageName = flag.String("prow-tests-docker", "prow-tests-go112:stable", "prow-tests docker image")
+	var coverageDockerImageName = flag.String("coverage-docker", "coverage:latest", "Docker image for coverage tool")
+	var prowTestsDockerImageName = flag.String("prow-tests-docker", "prow-tests:stable", "prow-tests docker image")
 	var metricsDockerImageName = flag.String("metrics-docker", "metrics:latest", "Docker image for the metrics reporting tool")
 	var backupsDockerImageName = flag.String("backups-docker", "backups:latest", "Docker image for the backups job")
 	flag.StringVar(&githubCommenterDockerImage, "github-commenter-docker", "gcr.io/k8s-prow/commenter:v20190731-e3f7b9853", "github commenter docker image")

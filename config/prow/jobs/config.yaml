@@ -31,7 +31,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -121,7 +121,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -205,7 +205,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -291,7 +291,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -365,7 +365,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -436,7 +436,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
         imagePullPolicy: Always
         command:
         - "/coverage"
@@ -526,7 +526,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -594,7 +594,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -662,7 +662,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -730,7 +730,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -798,7 +798,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -866,7 +866,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -934,7 +934,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -1002,7 +1002,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -1070,7 +1070,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -1282,7 +1282,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -1358,7 +1358,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -1434,7 +1434,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -1511,7 +1511,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
         imagePullPolicy: Always
         command:
         - "/coverage"
@@ -1570,7 +1570,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -1633,7 +1633,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -1709,7 +1709,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -1785,7 +1785,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -1862,7 +1862,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
         imagePullPolicy: Always
         command:
         - "/coverage"
@@ -1922,7 +1922,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -2008,7 +2008,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -2084,7 +2084,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -2161,7 +2161,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
         imagePullPolicy: Always
         command:
         - "/coverage"
@@ -2221,7 +2221,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -2307,7 +2307,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -2383,7 +2383,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -2460,7 +2460,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
         imagePullPolicy: Always
         command:
         - "/coverage"
@@ -2519,7 +2519,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -2593,7 +2593,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -2667,7 +2667,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -2758,7 +2758,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
         imagePullPolicy: Always
         command:
         - "/coverage"
@@ -2816,7 +2816,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -2879,7 +2879,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -2955,7 +2955,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -3031,7 +3031,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -3108,7 +3108,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
         imagePullPolicy: Always
         command:
         - "/coverage"
@@ -3164,46 +3164,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-test-infra-build-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/test-infra
-    branches:
-    - "legacy"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--build-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-test-infra-build-tests
-    agent: kubernetes
-    context: pull-knative-test-infra-build-tests
-    always_run: true
-    rerun_command: "/test pull-knative-test-infra-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-test-infra-build-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/test-infra
-    skip_branches:
-    - "legacy"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3240,46 +3200,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-test-infra-unit-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/test-infra
-    branches:
-    - "legacy"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--unit-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-test-infra-unit-tests
-    agent: kubernetes
-    context: pull-knative-test-infra-unit-tests
-    always_run: true
-    rerun_command: "/test pull-knative-test-infra-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-test-infra-unit-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/test-infra
-    skip_branches:
-    - "legacy"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3316,46 +3236,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-test-infra-integration-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/test-infra
-    branches:
-    - "legacy"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--integration-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-test-infra-integration-tests
-    agent: kubernetes
-    context: pull-knative-test-infra-integration-tests
-    always_run: true
-    rerun_command: "/test pull-knative-test-infra-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-test-infra-integration-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/test-infra
-    skip_branches:
-    - "legacy"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3392,39 +3272,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-test-infra-check-config),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/test-infra
-    branches:
-    - "legacy"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-config-check.sh"
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-test-infra-check-config
-    agent: kubernetes
-    context: pull-knative-test-infra-check-config
-    always_run: true
-    rerun_command: "/test pull-knative-test-infra-check-config"
-    trigger: "(?m)^/test (all|pull-knative-test-infra-check-config),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/test-infra
-    skip_branches:
-    - "legacy"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3459,7 +3306,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -3535,7 +3382,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -3611,7 +3458,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -3688,7 +3535,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
         imagePullPolicy: Always
         command:
         - "/coverage"
@@ -3747,7 +3594,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -3821,7 +3668,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -3895,7 +3742,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -3971,7 +3818,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -4047,7 +3894,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -4124,7 +3971,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -4200,7 +4047,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -4276,7 +4123,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -4350,7 +4197,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -4424,7 +4271,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -4499,7 +4346,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
         imagePullPolicy: Always
         command:
         - "/coverage"
@@ -4558,7 +4405,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -4634,7 +4481,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -4711,7 +4558,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
         imagePullPolicy: Always
         command:
         - "/coverage"
@@ -4771,7 +4618,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -4847,7 +4694,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -4923,7 +4770,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -5000,7 +4847,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
         imagePullPolicy: Always
         command:
         - "/coverage"
@@ -5060,7 +4907,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -5136,7 +4983,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -5212,7 +5059,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -5289,7 +5136,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
         imagePullPolicy: Always
         command:
         - "/coverage"
@@ -5348,7 +5195,7 @@ presubmits:
     - "release-0.9"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -5415,7 +5262,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -5491,7 +5338,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -5567,7 +5414,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -5644,7 +5491,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
         imagePullPolicy: Always
         command:
         - "/coverage"
@@ -5703,7 +5550,7 @@ presubmits:
     - "release-0.10"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -6921,7 +6768,7 @@ periodics:
     base_ref: master
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -6963,7 +6810,7 @@ periodics:
     base_ref: master
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+    - image: gcr.io/knative-tests/test-infra/coverage:latest
       imagePullPolicy: Always
       command:
       - "/coverage"
@@ -7025,7 +6872,7 @@ periodics:
     path_alias: knative.dev/eventing
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -7410,7 +7257,7 @@ periodics:
     path_alias: knative.dev/eventing-contrib
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -9279,7 +9126,7 @@ periodics:
     base_ref: master
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
       - "go"
@@ -10158,7 +10005,7 @@ postsubmits:
     decorate: true
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
         imagePullPolicy: Always
         command:
         - "/coverage"
