@@ -25,6 +25,7 @@ approve:
   - "knative/eventing-operator"
   - "knative/net-contour"
   - "knative/net-istio"
+  - "knative/net-kourier"
   - "knative/observability"
   - "knative/pkg"
   - "knative/sample-controller"
@@ -363,6 +364,31 @@ plugins:
   - welcome
   - wip
   - yuks
+  knative/net-kourier:
+  - approve
+  - assign
+  - blunderbuss
+  - buildifier
+  - cat
+  - dog
+  - golint
+  - heart
+  - help
+  - hold
+  - label
+  - lgtm
+  - lifecycle
+  - milestone
+  - owners-label
+  - project
+  - shrug
+  - size
+  - skip
+  - trigger
+  - verify-owners
+  - welcome
+  - wip
+  - yuks
   knative/observability:
   - approve
   - assign
@@ -615,6 +641,11 @@ external_plugins:
       - issue_comment
       - pull_request
   knative/net-istio:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
+  knative/net-kourier:
   - name: needs-rebase
     events:
       - issue_comment
