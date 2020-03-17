@@ -18,6 +18,7 @@ package git
 
 import "fmt"
 
+// Info saves information that can be used to interact with GitHub.
 type Info struct {
     Org      string
     Repo     string
@@ -28,6 +29,7 @@ type Info struct {
     Email    string // User email address for Git commit
 }
 
+// GetHeadRef returns the HeadRef with the given Git Info.
 // HeadRef is in the form of "user:head", i.e. "github_user:branch_foo"
 func (gi *Info) GetHeadRef() string {
     return fmt.Sprintf("%s:%s", gi.UserID, gi.Head)

@@ -33,6 +33,7 @@ func call(cmd string, args ...string) error {
 	return c.Run()
 }
 
+// MakeCommit adds the changed files and create a new Git commit.
 func MakeCommit(gi Info, message string, dryrun bool) error {
 	if gi.Head == "" {
 		log.Fatal("pushing to empty branch ref is not allowed")
