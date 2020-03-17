@@ -436,6 +436,33 @@ periodics:
     - dot-release: true
       dot-dev: true
       go113: true
+      release: "0.10"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    - dot-release: true
+      dot-dev: true
+      go113: true
+      release: "0.11"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    - dot-release: true
+      dot-dev: true
+      go113: true
+      release: "0.12"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    - dot-release: true
+      dot-dev: true
+      go113: true
       resources:
         requests:
           memory: 12Gi
@@ -489,6 +516,14 @@ periodics:
     - dot-release: true
       dot-dev: true
       go113: true
+      release: "0.11"
+    - dot-release: true
+      dot-dev: true
+      go113: true
+      release: "0.12"
+    - dot-release: true
+      dot-dev: true
+      go113: true
     - auto-release: true
       dot-dev: true
       go113: true
@@ -534,6 +569,33 @@ periodics:
     - dot-release: true
       dot-dev: true
       go113: true
+      release: "0.10"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    - dot-release: true
+      dot-dev: true
+      go113: true
+      release: "0.11"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    - dot-release: true
+      dot-dev: true
+      go113: true
+      release: "0.12"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    - dot-release: true
+      dot-dev: true
+      go113: true
       resources:
         requests:
           memory: 12Gi
@@ -571,6 +633,33 @@ periodics:
     - nightly: true
       dot-dev: true
       go113: true
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    - dot-release: true
+      dot-dev: true
+      go113: true
+      release: "0.10"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    - dot-release: true
+      dot-dev: true
+      go113: true
+      release: "0.11"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    - dot-release: true
+      dot-dev: true
+      go113: true
+      release: "0.12"
       resources:
         requests:
           memory: 12Gi
@@ -640,6 +729,14 @@ periodics:
     - dot-release: true
       dot-dev: true
       go113: true
+      release: "0.11"
+    - dot-release: true
+      dot-dev: true
+      go113: true
+      release: "0.12"
+    - dot-release: true
+      dot-dev: true
+      go113: true
     - auto-release: true
       dot-dev: true
       go113: true
@@ -662,6 +759,14 @@ periodics:
     - dot-release: true
       dot-dev: true
       go113: true
+      release: "0.11"
+    - dot-release: true
+      dot-dev: true
+      go113: true
+      release: "0.12"
+    - dot-release: true
+      dot-dev: true
+      go113: true
     - auto-release: true
       dot-dev: true
       go113: true
@@ -674,6 +779,11 @@ periodics:
       go113: true
     - nightly: true
       go113: true
+    - dot-release: true
+      go113: true
+      release: "0.12"
+      env-vars:
+      - ORG_NAME=google
     - dot-release: true
       go113: true
       env-vars:
