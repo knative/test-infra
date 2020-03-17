@@ -781,7 +781,7 @@ func indentMap(indentation int, mp map[string]string) string {
 // outputConfig outputs the given line, if not empty, to stdout.
 func outputConfig(line string) {
 	if strings.TrimSpace(line) != "" {
-		fmt.Fprintln(output, line)
+		fmt.Fprintln(output, strings.TrimRight(line, " "))
 		emittedOutput = true
 	}
 }
