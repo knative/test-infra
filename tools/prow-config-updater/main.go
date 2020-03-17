@@ -1,3 +1,19 @@
+/*
+Copyright 2020 The Knative Authors
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 package main
 
 import (
@@ -5,11 +21,20 @@ import (
 	"log"
 
 	"knative.dev/pkg/test/ghutil"
+
+	"knative.dev/test-infra/shared/git"
+	"knative.dev/test-infra/tools/prow-config-updater/config"
 )
 
 func main() {
 	mainGithubTokenFile := flag.String("main-github-token-file", "",
 		"Token file for Github authentication, used for most of important interactions with Github")
+	mainGitUserID := flag.String("main-git-userid", "",
+		"The github ID of user for hosting fork, i.e. Github ID of bot")
+	mainGitUserName := flag.String("main-git-username", "",
+		"The username to use on the git commit. Requires --git-email")
+	mainGitEmail := flag.String("main-git-email", "",
+		"The email to use on the git commit. Requires --git-username")
 	commentGithubTokenFile := flag.String("comment-github-token-file", "",
 		"Token file for Github authentication, used for adding comments on Github")
 	dryrun := flag.Bool("dry-run", false, "dry run switch")
@@ -24,7 +49,26 @@ func main() {
 		log.Fatalf("Failed creating commenter github client: %v", err)
 	}
 
-	if err := runProwConfigUpdate(mgc, cgc, *dryrun); err != nil {
+	cli := &Client{
+		githubmainhandler: &GitHubMainHandler{client: mgc, dryrun: *dryrun, info: git.Info{
+			Org:      config.OrgName,
+			Repo:     config.RepoName,
+			Head:     config.PRHead,
+			Base:     config.PRBase,
+			UserID:   *mainGitUserID,
+			UserName: *mainGitUserName,
+			Email:    *mainGitEmail,
+		}},
+		githubcommenter: &GitHubCommenter{client: cgc, dryrun: *dryrun},
+		// The forkOrgName is the same as the Git user ID we use in this tool.
+		forkOrgName:     *mainGitUserID,
+		dryrun:          *dryrun,
+	}
+	if err := cli.initialize(); err != nil {
+		log.Fatalf("Failed intializing the client: %v", err)
+	}
+
+	if err := cli.runProwConfigUpdate(); err != nil {
 		log.Fatalf("Failed updating Prow configs: %v", err)
 	}
 }

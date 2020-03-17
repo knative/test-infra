@@ -1,3 +1,19 @@
+/*
+Copyright 2020 The Knative Authors
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 package main
 
 import (
@@ -11,12 +27,15 @@ import (
 	"k8s.io/apimachinery/pkg/util/wait"
 	"knative.dev/pkg/test/cmd"
 	"knative.dev/pkg/test/ghutil"
+	"knative.dev/pkg/test/helpers"
 
+	"knative.dev/test-infra/shared/git"
 	"knative.dev/test-infra/tools/prow-config-updater/config"
 )
 
 type GitHubMainHandler struct {
 	client *ghutil.GithubClient
+	info   git.Info
 	dryrun bool
 }
 
@@ -52,9 +71,9 @@ func (gc *GitHubMainHandler) getChangedFiles(pn int) ([]string, error) {
 }
 
 // Use the pull bot (https://github.com/wei/pull) to create a PR in the fork repository.
-func (gc *GitHubMainHandler) createForkPullRequest() (*github.PullRequest, error) {
+func (gc *GitHubMainHandler) createForkPullRequest(forkOrgName string) (*github.PullRequest, error) {
 	// The endpoint to manually trigger pull bot to create the pull request in the fork.
-	pullTriggerEndpoint := fmt.Sprintf("https://pull.git.ci/process/%s/%s", config.ForkOrgName, config.RepoName)
+	pullTriggerEndpoint := fmt.Sprintf("https://pull.git.ci/process/%s/%s", forkOrgName, config.RepoName)
 	resp, err := http.Get(pullTriggerEndpoint)
 	if err != nil {
 		return nil, fmt.Errorf("error creating the pull request in the fork repository: %v", err)
@@ -68,18 +87,18 @@ func (gc *GitHubMainHandler) createForkPullRequest() (*github.PullRequest, error
 		return nil, fmt.Errorf("error creating the pull request in the fork repository: "+
 			"status code is %d, body is %s", resp.StatusCode, body)
 	}
-	return gc.findForkPullRequest()
+	return gc.findForkPullRequest(forkOrgName)
 }
 
 // Find the pull request created by the pull bot (should be exactly one pull request, otherwise there must be an error)
-func (gc *GitHubMainHandler) findForkPullRequest() (*github.PullRequest, error) {
+func (gc *GitHubMainHandler) findForkPullRequest(forkOrgName string) (*github.PullRequest, error) {
 	prs, _, err := gc.client.Client.PullRequests.List(
-		context.Background(), config.ForkOrgName, config.RepoName,
+		context.Background(), forkOrgName, config.RepoName,
 		&github.PullRequestListOptions{
 			State: "open",
 			Head:  "knative:master",
 		})
-	orgRepoName := fmt.Sprintf("%s/%s", config.ForkOrgName, config.RepoName)
+	orgRepoName := fmt.Sprintf("%s/%s", forkOrgName, config.RepoName)
 	if err != nil {
 		return nil, fmt.Errorf("error listing pull request in repository %s: %v", orgRepoName, err)
 	}
@@ -89,11 +108,11 @@ func (gc *GitHubMainHandler) findForkPullRequest() (*github.PullRequest, error) 
 	return prs[0], nil
 }
 
-func (gc *GitHubMainHandler) waitForForkPullRequestMerged(pn int) error {
+func (gc *GitHubMainHandler) waitForForkPullRequestMerged(forkOrgName string, pn int) error {
 	interval := 10 * time.Second
 	timeout := 20 * time.Minute
 	return wait.PollImmediate(interval, timeout, func() (bool, error) {
-		pr, err := gc.client.GetPullRequest(config.ForkOrgName, config.RepoName, pn)
+		pr, err := gc.client.GetPullRequest(forkOrgName, config.RepoName, pn)
 		if err != nil {
 			return false, err
 		}
@@ -104,7 +123,26 @@ func (gc *GitHubMainHandler) waitForForkPullRequestMerged(pn int) error {
 	})
 }
 
-func createAutoMergePullRequest() error {
-	// TODO(chizhg): create a pull request with the auto-merge label.
-	return nil
+func (gc *GitHubMainHandler) createAutoMergePullRequest(title, body string) (*github.PullRequest, error) {
+	if err := git.MakeCommit(gc.info, title, gc.dryrun); err != nil {
+		return nil, fmt.Errorf("error creating a new Git commit: %v", err)
+	}
+
+	gi := gc.info
+	var pr *github.PullRequest
+	err := helpers.Run(
+		fmt.Sprintf("Creating an auto-merge pull request %q", title),
+		func() error {
+			pr, err := gc.client.CreatePullRequest(gi.Org, gi.Repo, gi.GetHeadRef(), gi.Base, title, body)
+			if err != nil {
+				return fmt.Errorf("error creating the auto-merge pull request: %v", err)
+			}
+			if err = gc.client.AddLabelsToIssue(gi.Org, gi.Repo, *pr.Number, []string{config.AutoMergeLabel}); err != nil {
+				return fmt.Errorf("error adding label on the auto-merge pull request: %v", err)
+			}
+			return nil
+		},
+		gc.dryrun,
+	)
+	return pr, err
 }
