@@ -26,6 +26,8 @@ import (
 	"time"
 
 	"knative.dev/pkg/test/ghutil"
+
+	"knative.dev/test-infra/shared/git"
 )
 
 // Tags could be in the form of: v[YYYYMMDD]-[GIT_HASH](-[VARIANT_PART]),
@@ -81,8 +83,8 @@ func (pv *PRVersions) getDominantVersions() versions {
 }
 
 // Parse changelist, find all version changes, and store them in image name: versions map
-func (pv *PRVersions) parseChangelist(gcw *GHClientWrapper, gi gitInfo) error {
-	fs, err := gcw.ListFiles(gi.org, gi.repo, *pv.PR.Number)
+func (pv *PRVersions) parseChangelist(gcw *GHClientWrapper, gi git.Info) error {
+	fs, err := gcw.ListFiles(gi.Org, gi.Repo, *pv.PR.Number)
 	if err != nil {
 		return err
 	}
@@ -108,12 +110,12 @@ func (pv *PRVersions) parseChangelist(gcw *GHClientWrapper, gi gitInfo) error {
 
 // Query all PRs from "k8s-ci-robot:autobump", find PR roughly 7 days old and was not reverted later.
 // Only return error if it's github related
-func getBestVersion(gcw *GHClientWrapper, gi gitInfo) (*PRVersions, error) {
+func getBestVersion(gcw *GHClientWrapper, gi git.Info) (*PRVersions, error) {
 	visited := make(map[string]PRVersions)
 	var bestPv *PRVersions
 	var overallErr error
 	var bestDelta float64 = maxDelta + 1
-	PRs, err := gcw.ListPullRequests(gi.org, gi.repo, gi.getHeadRef(), gi.base)
+	PRs, err := gcw.ListPullRequests(gi.Org, gi.Repo, gi.GetHeadRef(), gi.Base)
 	if err != nil {
 		return bestPv, fmt.Errorf("failed list pull request: '%v'", err)
 	}
@@ -163,7 +165,7 @@ func getBestVersion(gcw *GHClientWrapper, gi gitInfo) (*PRVersions, error) {
 	return bestPv, overallErr
 }
 
-func retryGetBestVersion(gcw *GHClientWrapper, gi gitInfo) (*PRVersions, error) {
+func retryGetBestVersion(gcw *GHClientWrapper, gi git.Info) (*PRVersions, error) {
 	var bestPv *PRVersions
 	var overallErr error
 	// retry if there is github related error

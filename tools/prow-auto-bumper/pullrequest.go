@@ -23,22 +23,15 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
-	"os/exec"
 	"strings"
 
-	"k8s.io/apimachinery/pkg/util/sets"
-
 	"github.com/google/go-github/github"
+	"k8s.io/apimachinery/pkg/util/sets"
 	"knative.dev/pkg/test/ghutil"
-)
+	"knative.dev/pkg/test/helpers"
 
-func call(cmd string, args ...string) error {
-	c := exec.Command(cmd, args...)
-	c.Stdout = os.Stdout
-	c.Stderr = os.Stderr
-	return c.Run()
-}
+	"knative.dev/test-infra/shared/git"
+)
 
 func generatePRBody(extraMsgs []string) string {
 	var body string
@@ -89,44 +82,10 @@ func getOncaller() (string, error) {
 	return oncall.Oncall.ToolsInfra, nil
 }
 
-func makeGitCommit(gi gitInfo, message string, dryrun bool) error {
-	if gi.head == "" {
-		log.Fatal("pushing to empty branch ref is not allowed")
-	}
-	if err := run(
-		"Running 'git add -A'",
-		func() error { return call("git", "add", "-A") },
-		dryrun,
-	); err != nil {
-		return fmt.Errorf("failed to git add: %v", err)
-	}
-	commitArgs := []string{"commit", "-m", message}
-	if gi.userName != "" && gi.email != "" {
-		commitArgs = append(commitArgs, "--author", fmt.Sprintf("%s <%s>", gi.userName, gi.email))
-	}
-	if err := run(
-		fmt.Sprintf("Running 'git %s'", strings.Join(commitArgs, " ")),
-		func() error { return call("git", commitArgs...) },
-		dryrun,
-	); err != nil {
-		return fmt.Errorf("failed to git commit: %v", err)
-	}
-	pushArgs := []string{"push", "-f", fmt.Sprintf("git@github.com:%s/%s.git", gi.userID, gi.repo),
-		fmt.Sprintf("HEAD:%s", gi.head)}
-	if err := run(
-		fmt.Sprintf("Running 'git %s'", strings.Join(pushArgs, " ")),
-		func() error { return call("git", pushArgs...) },
-		dryrun,
-	); err != nil {
-		return fmt.Errorf("failed to git push: %v", err)
-	}
-	return nil
-}
-
 // Get existing open PR not merged yet
-func getExistingPR(gcw *GHClientWrapper, gi gitInfo, matchTitle string) (*github.PullRequest, error) {
+func getExistingPR(gcw *GHClientWrapper, gi git.Info, matchTitle string) (*github.PullRequest, error) {
 	var res *github.PullRequest
-	PRs, err := gcw.ListPullRequests(gi.org, gi.repo, gi.getHeadRef(), gi.base)
+	PRs, err := gcw.ListPullRequests(gi.Org, gi.Repo, gi.GetHeadRef(), gi.Base)
 	if err == nil {
 		for _, PR := range PRs {
 			if string(ghutil.PullRequestOpenState) == *PR.State && strings.Contains(*PR.Title, matchTitle) {
@@ -138,13 +97,13 @@ func getExistingPR(gcw *GHClientWrapper, gi gitInfo, matchTitle string) (*github
 	return res, err
 }
 
-func createOrUpdatePR(gcw *GHClientWrapper, pv *PRVersions, gi gitInfo, extraMsgs []string, dryrun bool) error {
+func createOrUpdatePR(gcw *GHClientWrapper, pv *PRVersions, gi git.Info, extraMsgs []string, dryrun bool) error {
 	vs := pv.getDominantVersions()
 	commitMsg := fmt.Sprintf("Update prow from %s to %s, and other images as necessary.", vs.oldVersion, vs.newVersion)
 	matchTitle := "Update prow to"
 	title := fmt.Sprintf("%s %s", matchTitle, vs.newVersion)
 	body := generatePRBody(extraMsgs)
-	if err := makeGitCommit(gi, commitMsg, dryrun); err != nil {
+	if err := git.MakeCommit(gi, commitMsg, dryrun); err != nil {
 		return fmt.Errorf("failed git commit: '%v'", err)
 	}
 	existPR, err := getExistingPR(gcw, gi, matchTitle)
@@ -153,10 +112,10 @@ func createOrUpdatePR(gcw *GHClientWrapper, pv *PRVersions, gi gitInfo, extraMsg
 	}
 	if existPR != nil {
 		log.Printf("Found open PR '%d'", *existPR.Number)
-		return run(
+		return helpers.Run(
 			fmt.Sprintf("Updating PR '%d', title: '%s', body: '%s'", *existPR.Number, title, body),
 			func() error {
-				if _, err := gcw.EditPullRequest(gi.org, gi.repo, *existPR.Number, title, body); err != nil {
+				if _, err := gcw.EditPullRequest(gi.Org, gi.Repo, *existPR.Number, title, body); err != nil {
 					return fmt.Errorf("failed updating pullrequest: '%v'", err)
 				}
 				return nil
@@ -164,10 +123,10 @@ func createOrUpdatePR(gcw *GHClientWrapper, pv *PRVersions, gi gitInfo, extraMsg
 			dryrun,
 		)
 	}
-	return run(
+	return helpers.Run(
 		fmt.Sprintf("Creating PR, title: '%s', body: '%s'", title, body),
 		func() error {
-			if _, err := gcw.CreatePullRequest(gi.org, gi.repo, gi.getHeadRef(), gi.base, title, body); err != nil {
+			if _, err := gcw.CreatePullRequest(gi.Org, gi.Repo, gi.GetHeadRef(), gi.Base, title, body); err != nil {
 				return fmt.Errorf("failed creating pullrequest: '%v'", err)
 			}
 			return nil

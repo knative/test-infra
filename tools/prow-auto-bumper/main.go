@@ -24,6 +24,8 @@ import (
 	"log"
 
 	"knative.dev/pkg/test/ghutil"
+
+	"knative.dev/test-infra/shared/git"
 )
 
 func main() {
@@ -43,28 +45,28 @@ func main() {
 		log.Fatalf("cannot authenticate to github: %v", err)
 	}
 
-	srcGI := gitInfo{
-		org:    srcOrg,
-		repo:   srcRepo,
-		head:   srcPRHead,
-		base:   srcPRBase,
-		userID: srcPRUserID,
+	srcGI := git.Info{
+		Org:    srcOrg,
+		Repo:   srcRepo,
+		Head:   srcPRHead,
+		Base:   srcPRBase,
+		UserID: srcPRUserID,
 	}
 
-	targetGI := gitInfo{
-		org:      org,
-		repo:     repo,
-		head:     PRHead,
-		base:     PRBase,
-		userID:   *gitUserID,
-		userName: *gitUserName,
-		email:    *gitEmail,
+	targetGI := git.Info{
+		Org:      org,
+		Repo:     repo,
+		Head:     PRHead,
+		Base:     PRBase,
+		UserID:   *gitUserID,
+		UserName: *gitUserName,
+		Email:    *gitEmail,
 	}
 
 	gcw := &GHClientWrapper{gc}
 	bestVersion, err := retryGetBestVersion(gcw, srcGI)
 	if err != nil {
-		log.Fatalf("cannot get best version from %s/%s: '%v'", srcGI.org, srcGI.repo, err)
+		log.Fatalf("cannot get best version from %s/%s: '%v'", srcGI.Org, srcGI.Repo, err)
 	}
 	log.Printf("Found version to update. Old Version: '%s', New Version: '%s'",
 		bestVersion.dominantVersions.oldVersion, bestVersion.dominantVersions.newVersion)
