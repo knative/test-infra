@@ -5001,8 +5001,6 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
-      - name: RELEASE_BRANCH
-        value: release-0.10
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -5055,8 +5053,6 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
-      - name: RELEASE_BRANCH
-        value: release-0.11
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -5109,8 +5105,6 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
-      - name: RELEASE_BRANCH
-        value: release-0.12
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -5543,8 +5537,6 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
-      - name: RELEASE_BRANCH
-        value: release-0.11
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -5592,8 +5584,6 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
-      - name: RELEASE_BRANCH
-        value: release-0.12
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -6090,8 +6080,6 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
-      - name: RELEASE_BRANCH
-        value: release-0.10
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -6144,8 +6132,6 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
-      - name: RELEASE_BRANCH
-        value: release-0.11
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -6198,8 +6184,6 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
-      - name: RELEASE_BRANCH
-        value: release-0.12
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -6591,8 +6575,6 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
-      - name: RELEASE_BRANCH
-        value: release-0.10
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -6645,8 +6627,6 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
-      - name: RELEASE_BRANCH
-        value: release-0.11
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -6699,8 +6679,6 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
-      - name: RELEASE_BRANCH
-        value: release-0.12
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -7289,8 +7267,6 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
-      - name: RELEASE_BRANCH
-        value: release-0.11
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -7338,8 +7314,6 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
-      - name: RELEASE_BRANCH
-        value: release-0.12
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -7660,8 +7634,6 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
-      - name: RELEASE_BRANCH
-        value: release-0.11
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -7709,8 +7681,6 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
-      - name: RELEASE_BRANCH
-        value: release-0.12
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -7982,7 +7952,7 @@ periodics:
         readOnly: true
       env:
       - name: ORG_NAME
-        value: google RELEASE_BRANCH=release-0.12
+        value: google
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
