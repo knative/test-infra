@@ -309,6 +309,16 @@ presubmits:
     - go-coverage: true
       dot-dev: true
 
+  knative/net-kourier:
+    - build-tests: true
+      dot-dev: true
+    - unit-tests: true
+      dot-dev: true
+    - integration-tests: false
+      dot-dev: true
+    - go-coverage: true
+      dot-dev: true
+
   knative/serving-operator:
     - build-tests: true
       dot-dev: true
@@ -688,6 +698,20 @@ periodics:
       go113: true
 
   knative/net-istio:
+    - continuous: true
+      dot-dev: true
+      go113: true
+    - nightly: true
+      dot-dev: true
+      go113: true
+    - dot-release: true
+      dot-dev: true
+      go113: true
+    - auto-release: true
+      dot-dev: true
+      go113: true
+
+  knative/net-kourier:
     - continuous: true
       dot-dev: true
       go113: true
