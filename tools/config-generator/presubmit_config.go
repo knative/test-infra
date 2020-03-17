@@ -105,7 +105,7 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	executeJobTemplateWrapper(repoName, &data, func(data interface{}) {
 		executeJobTemplate("presubmit", jobTemplate, title, repoName, jobName, true, data)
 	})
-	// Generate config for post-knative-serving-go-coverage-dev right after post-knative-serving-go-coverage,
+	// Generate config for pull-knative-serving-go-coverage-dev right after pull-knative-serving-go-coverage,
 	// this job is mainly for debugging purpose.
 	if data.PresubmitPullJobName == "pull-knative-serving-go-coverage" {
 		data.PresubmitPullJobName += "-dev"
