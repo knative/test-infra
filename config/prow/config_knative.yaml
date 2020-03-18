@@ -407,7 +407,11 @@ periodics:
       release: "0.12"
       dot-dev: true
       go113: true
-    - custom-job: istio-1.3-mesh
+    - branch-ci: true
+      release: "0.13"
+      dot-dev: true
+      go113: true
+    - custom-job: istio-1.5-mesh
       command:
       - "./test/presubmit-tests.sh"
       args:
@@ -417,7 +421,7 @@ periodics:
       - "./test/e2e-auto-tls-tests.sh --istio-version 1.5-latest --mesh"
       dot-dev: true
       go113: true
-    - custom-job: istio-1.3-no-mesh
+    - custom-job: istio-1.5-no-mesh
       command:
       - "./test/presubmit-tests.sh"
       args:

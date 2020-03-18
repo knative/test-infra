@@ -4689,8 +4689,54 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "50 */2 * * *"
-  name: ci-knative-serving-istio-1.3-mesh
+- cron: "0 8 * * *"
+  name: ci-knative-serving-0.13-continuous
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-serving-0.13-continuous
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: serving
+    base_ref: release-0.13
+    path_alias: knative.dev/serving
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.13
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "12 */2 * * *"
+  name: ci-knative-serving-istio-1.5-mesh
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -4723,8 +4769,8 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "12 */2 * * *"
-  name: ci-knative-serving-istio-1.3-no-mesh
+- cron: "34 */2 * * *"
+  name: ci-knative-serving-istio-1.5-no-mesh
   agent: kubernetes
   decorate: true
   extra_refs:
