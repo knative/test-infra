@@ -244,12 +244,14 @@ func generateDashboardsForReleases() {
 		repos := metaData[projName]
 		outputConfig("- name: " + projName + "\n" + baseIndent + "dashboard_tab:")
 		for _, repoName := range repoNames {
-			if _, exists := repos[repoName]; exists {
-				extras := make(map[string]string)
-				extras["num_failures_to_alert"] = "3"
-				extras["alert_options"] = "\n      alert_mail_to_addresses: \"knative-productivity-dev@googlegroups.com\""
-				testGroupName := getTestGroupName(buildProjRepoStr(projName, repoName), "continuous")
-				executeDashboardTabTemplate(repoName, testGroupName, testgridTabSortByName, extras)
+			if jobNames, exists := repos[repoName]; exists {
+				for _, jobName := range jobNames {
+					extras := make(map[string]string)
+					extras["num_failures_to_alert"] = "3"
+					extras["alert_options"] = "\n      alert_mail_to_addresses: \"knative-productivity-dev@googlegroups.com\""
+					testGroupName := getTestGroupName(buildProjRepoStr(projName, repoName), jobName)
+					executeDashboardTabTemplate(repoName+"-"+jobName, testGroupName, testgridTabSortByName, extras)
+				}
 			}
 		}
 	}
