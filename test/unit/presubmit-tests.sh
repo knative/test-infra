@@ -270,4 +270,9 @@ test_function ${SUCCESS} "BUILD TESTS PASSED" main --build-tests
 test_function ${SUCCESS} "EXECUTING default_build_test_runner" main --build-tests
 test_function ${SUCCESS} "BUILD TESTS PASSED" call_function_pre run_markdown_build_tests
 
+echo ">> Testing custom and multi-script execution"
+
+test_function ${SUCCESS} "One" main --run-test "echo One"
+test_function ${SUCCESS} "Second" main --run-test "echo First" --run-test "echo Second"
+
 echo ">> All tests passed"
