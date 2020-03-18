@@ -16,7 +16,6 @@
 
 # Default settings for the CI/CD system.
 
-ENVIRONMENT   ?= prow
 CLUSTER       ?= prow
 ZONE          ?= us-central1-f
 JOB_NAMESPACE ?= test-pods
@@ -66,7 +65,6 @@ unset-cluster-credentials:
 # Generate the Prow config file
 config $(PROW_JOB_CONFIG) $(PROW_CONFIG) $(PROW_PLUGINS) $(TESTGRID_CONFIG): $(KNATIVE_CONFIG) $(wildcard $(CONFIG_GENERATOR_DIR)/templates/*.yaml)
 	$(MAKE_CONFIG) \
-		--env=$(ENVIRONMENT) \
 		--gcs-bucket=$(PROW_GCS) \
 		--generate-testgrid-config=$(GENERATE_TESTGRID_CONFIG) \
 		--generate-maintenance-jobs=$(GENERATE_MAINTENANCE_JOBS) \
@@ -168,4 +166,3 @@ update-testgrid-config: confirm-master
 		--oneshot \
 		--output=gs://$(TESTGRID_GCS)/config \
 		--yaml=$(realpath $(TESTGRID_CONFIG))
-
