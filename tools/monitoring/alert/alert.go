@@ -20,7 +20,7 @@ import (
 	"context"
 	"log"
 
-	"knative.dev/test-infra/shared/gcs"
+	"knative.dev/test-infra/pkg/gcs"
 	"knative.dev/test-infra/tools/monitoring/config"
 	"knative.dev/test-infra/tools/monitoring/log_parser"
 	"knative.dev/test-infra/tools/monitoring/mail"

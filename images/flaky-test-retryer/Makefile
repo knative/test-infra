@@ -13,5 +13,5 @@
 # limitations under the License.
 
 IMAGE_NAME = flaky-test-retryer
-include ../../shared/Makefile.simple-image
+include ../../pkg/Makefile.simple-image
 
