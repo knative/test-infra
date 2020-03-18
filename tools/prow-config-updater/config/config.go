@@ -16,7 +16,10 @@ limitations under the License.
 
 package config
 
-import "path/filepath"
+import (
+	"fmt"
+	"path/filepath"
+)
 
 type ProwEnv string
 
@@ -33,8 +36,23 @@ const (
 	// the label that needs to be applied on the PR to get it automatically merged
 	AutoMergeLabel = "auto-merge"
 
+	PullBotName          = "pull[bot]"
+	PullEndpointTemplate = "https://pull.git.ci/process/%s/%s"
+
 	configPath         = "config"
-	configTemplatePath = "config-generator/templates"
+	configTemplatePath = "tools/config-generator/templates"
+)
+
+// Commands that operate on Prow configs.
+var (
+	updateProwCommandTemplate = "make -C %s update-prow-cluster"
+	UpdateProdProwCommand     = fmt.Sprintf(updateProwCommandTemplate, ProdProwConfigRoot)
+	UpdateStagingProwCommand  = fmt.Sprintf(updateProwCommandTemplate, StagingProwConfigRoot)
+
+	// These two commands are only used for production prow in this tool.
+	UpdateTestgridCommand = fmt.Sprintf("make -C %s update-testgrid-config", ProdProwConfigRoot)
+	// TODO(chizhg): replace with the new command to generate configs once https://github.com/knative/test-infra/pull/1815 is merged.
+	GenerateProwConfigFilesCommand = fmt.Sprintf("make -C %s config", ProdProwConfigRoot)
 )
 
 var (

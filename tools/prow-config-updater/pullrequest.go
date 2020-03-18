@@ -73,7 +73,7 @@ func (gc *GitHubMainHandler) getChangedFiles(pn int) ([]string, error) {
 // Use the pull bot (https://github.com/wei/pull) to create a PR in the fork repository.
 func (gc *GitHubMainHandler) createForkPullRequest(forkOrgName string) (*github.PullRequest, error) {
 	// The endpoint to manually trigger pull bot to create the pull request in the fork.
-	pullTriggerEndpoint := fmt.Sprintf("https://pull.git.ci/process/%s/%s", forkOrgName, config.RepoName)
+	pullTriggerEndpoint := fmt.Sprintf(config.PullEndpointTemplate, forkOrgName, config.RepoName)
 	resp, err := http.Get(pullTriggerEndpoint)
 	if err != nil {
 		return nil, fmt.Errorf("error creating the pull request in the fork repository: %v", err)
@@ -102,38 +102,52 @@ func (gc *GitHubMainHandler) findForkPullRequest(forkOrgName string) (*github.Pu
 	if err != nil {
 		return nil, fmt.Errorf("error listing pull request in repository %s: %v", orgRepoName, err)
 	}
-	if len(prs) != 1 {
+	var forkpr *github.PullRequest
+	for _, pr := range prs {
+		if *pr.User.Login == config.PullBotName {
+			forkpr = pr
+		}
+	}
+	if forkpr == nil {
 		return nil, fmt.Errorf("expected one pull request in repository %s but found %d", orgRepoName, len(prs))
 	}
-	return prs[0], nil
+	return forkpr, nil
 }
 
+// Wait for the fork pull request to be merged by polling its state.
 func (gc *GitHubMainHandler) waitForForkPullRequestMerged(forkOrgName string, pn int) error {
 	interval := 10 * time.Second
 	timeout := 20 * time.Minute
-	return wait.PollImmediate(interval, timeout, func() (bool, error) {
-		pr, err := gc.client.GetPullRequest(forkOrgName, config.RepoName, pn)
-		if err != nil {
-			return false, err
-		}
-		if !*pr.Merged {
-			return false, nil
-		}
-		return true, nil
-	})
+	return helpers.Run(
+		fmt.Sprintf("Wait until the fork pull request %d to merged", pn),
+		func() error {
+			return wait.PollImmediate(interval, timeout, func() (bool, error) {
+				pr, err := gc.client.GetPullRequest(forkOrgName, config.RepoName, pn)
+				if err != nil {
+					return false, err
+				}
+				if pr.Merged == nil || !*pr.Merged {
+					return false, nil
+				}
+				return true, nil
+			})
+		},
+		gc.dryrun,
+	)
 }
 
+// Create a pull request that can be automatically merged without manual approval.
 func (gc *GitHubMainHandler) createAutoMergePullRequest(title, body string) (*github.PullRequest, error) {
-	if err := git.MakeCommit(gc.info, title, gc.dryrun); err != nil {
-		return nil, fmt.Errorf("error creating a new Git commit: %v", err)
-	}
-
 	gi := gc.info
 	var pr *github.PullRequest
-	err := helpers.Run(
-		fmt.Sprintf("Creating an auto-merge pull request %q", title),
+	var err error
+	err = helpers.Run(
+		fmt.Sprintf("Committing the local changes and creating an auto-merge pull request %q", title),
 		func() error {
-			pr, err := gc.client.CreatePullRequest(gi.Org, gi.Repo, gi.GetHeadRef(), gi.Base, title, body)
+			if err = git.MakeCommit(gi, title, gc.dryrun); err != nil {
+				return fmt.Errorf("error creating a new Git commit: %v", err)
+			}
+			pr, err = gc.client.CreatePullRequest(gi.Org, gi.Repo, gi.GetHeadRef(), gi.Base, title, body)
 			if err != nil {
 				return fmt.Errorf("error creating the auto-merge pull request: %v", err)
 			}

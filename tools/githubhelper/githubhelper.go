@@ -50,7 +50,7 @@ func authenticate(githubTokenPath *string) {
 	if err != nil {
 		infof("Error creating client with token %q: %v", *githubTokenPath, err)
 		infof("Proceeding with unauthenticated client")
-		client = &ghutil.GithubClient{Client: &github.Client{}}
+		client = &ghutil.GithubClient{Client: github.NewClient(nil)}
 	}
 }
 

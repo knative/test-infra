@@ -37,19 +37,6 @@ type Client struct {
 	dryrun            bool
 }
 
-const (
-	// This command can be used for both production and staging prow (%s can be replace as the environment name).
-	updateProwCommandTemplate = "make -C %s update-prow-cluster"
-)
-
-var (
-	// These two commands are only used for production prow in this tool.
-	updateTestgridCommand = fmt.Sprintf("make -C %s update-testgrid-config", config.ProdProwConfigRoot)
-
-	// TODO(chizhg): replace with the new command to generate configs once https://github.com/knative/test-infra/pull/1815 is merged.
-	generateProwConfigFilesCommand = fmt.Sprintf("make -C %s config", config.ProdProwConfigRoot)
-)
-
 func (cli *Client) initialize() error {
 	pr, err := cli.githubmainhandler.getLatestPullRequest()
 	if err != nil {
@@ -97,9 +84,8 @@ func (cli *Client) runProwConfigUpdate() error {
 
 // Decide if we need staging process by checking the PR.
 func (cli *Client) needsStaging() bool {
-	// If the PR is created by the Prow bot, we should be confident to blindly update production Prow configs.
-	// TODO(chizhg): confirm if we should use userName or userID???
-	if *cli.pr.User.Name == cli.githubmainhandler.info.UserID {
+	// If the PR is created by the main github bot, we should be confident to blindly update production Prow configs.
+	if *cli.pr.User.Login == cli.githubmainhandler.info.UserID {
 		return false
 	}
 	// If any key config files for staging Prow are changed, the staging process will be needed.
@@ -165,10 +151,10 @@ func (cli *Client) doProwUpdate(env config.ProwEnv) ([]string, error) {
 	switch env {
 	case config.ProdProwEnv:
 		relevantFiles = append(relevantFiles, collectRelevantFiles(cli.files, config.ProdProwConfigPaths)...)
-		updateCommand = fmt.Sprintf(updateProwCommandTemplate, config.ProdProwConfigRoot)
+		updateCommand = config.UpdateProdProwCommand
 	case config.StagingProwEnv:
 		relevantFiles = append(relevantFiles, collectRelevantFiles(cli.files, config.StagingProwConfigPaths)...)
-		updateCommand = fmt.Sprintf(updateProwCommandTemplate, config.StagingProwConfigRoot)
+		updateCommand = config.UpdateStagingProwCommand
 	default:
 		return nil, fmt.Errorf("unsupported Prow environement: %q, cannot make the update", env)
 	}
@@ -193,9 +179,9 @@ func (cli *Client) doProwUpdate(env config.ProwEnv) ([]string, error) {
 		if len(tfs) != 0 {
 			relevantFiles = append(relevantFiles, tfs...)
 			if err := helpers.Run(
-				fmt.Sprintf("Updating Testgrid config with command %q", updateTestgridCommand),
+				fmt.Sprintf("Updating Testgrid config with command %q", config.UpdateTestgridCommand),
 				func() error {
-					out, err := cmd.RunCommand(updateTestgridCommand)
+					out, err := cmd.RunCommand(config.UpdateTestgridCommand)
 					log.Println(out)
 					return err
 				},
@@ -212,14 +198,14 @@ func (cli *Client) doProwUpdate(env config.ProwEnv) ([]string, error) {
 func (cli *Client) rollOutToProd() (*github.PullRequest, error) {
 	// Copy staging config files to production.
 	for i, stagingPath := range config.StagingProwKeyConfigPaths {
-		cpCmd := fmt.Sprintf("cp %s %s", stagingPath, config.ProdProwKeyConfigPaths[i])
+		cpCmd := fmt.Sprintf("cp %s/* %s", stagingPath, config.ProdProwKeyConfigPaths[i])
 		if _, err := cmd.RunCommand(cpCmd); err != nil {
 			return nil, fmt.Errorf("error copying staging config files to production: %v", err)
 		}
 	}
 
 	// Try generating new config files for production Prow.
-	if _, err := cmd.RunCommand(generateProwConfigFilesCommand); err != nil {
+	if _, err := cmd.RunCommand(config.GenerateProwConfigFilesCommand); err != nil {
 		return nil, fmt.Errorf("error generating Prow config files for production: %v", err)
 	}
 

@@ -27,7 +27,6 @@ import (
 	"log"
 	"os"
 	"path"
-	"path/filepath"
 	"regexp"
 	"runtime"
 	"sort"
@@ -1107,7 +1106,6 @@ func main() {
 	prowConfigOutput := ""
 	prowJobsConfigOutput := ""
 	testgridConfigOutput := ""
-	var env = flag.String("env", "prow", "The name of the environment, can be prow or prow-staging")
 	var generateProwConfig = flag.Bool("generate-prow-config", true, "Whether to generate the prow configuration file from the template")
 	var generatePluginsConfig = flag.Bool("generate-plugins-config", true, "Whether to generate the plugins configuration file from the template")
 	var generateTestgridConfig = flag.Bool("generate-testgrid-config", true, "Whether to generate the testgrid config from the template file")
@@ -1172,7 +1170,7 @@ func main() {
 
 	if *generatePluginsConfig {
 		setOutput(*pluginsConfigOutput)
-		executeTemplate("plugins config", readTemplate(filepath.Join(*env, pluginsConfig)), prowConfigData)
+		executeTemplate("plugins config", readTemplate(pluginsConfig), prowConfigData)
 	}
 
 	// Generate Prow config.
@@ -1182,7 +1180,7 @@ func main() {
 		sectionMap = make(map[string]bool)
 		if *includeConfig {
 			executeTemplate("general header", readTemplate(commonHeaderConfig), prowConfigData)
-			executeTemplate("general config", readTemplate(filepath.Join(*env, generalProwConfig)), prowConfigData)
+			executeTemplate("general config", readTemplate(generalProwConfig), prowConfigData)
 		}
 
 		setOutput(prowJobsConfigOutput)

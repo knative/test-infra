@@ -21,6 +21,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/google/go-github/github"
 	"knative.dev/pkg/test/ghutil"
 	"knative.dev/pkg/test/prow"
 
@@ -38,9 +39,12 @@ func main() {
 
 	// We only check for presubmit jobs.
 	if ec.JobType == prow.PresubmitJob {
+		var err error
 		gc, err := ghutil.NewGithubClient(*githubTokenPath)
 		if err != nil {
-			log.Fatalf("Cannot authenticate to github: %v", err)
+			log.Printf("Error creating client with token %q: %v", *githubTokenPath, err)
+			log.Printf("Proceeding with unauthenticated client")
+			gc = &ghutil.GithubClient{Client: github.NewClient(nil)}
 		}
 
 		pn := ec.PullNumber
@@ -52,7 +56,7 @@ func main() {
 		}
 
 		// If the PR is created by the bot, skip the check.
-		if *pr.User.Name == config.ProwBotName {
+		if *pr.User.Login == *githubBotName {
 			return
 		}
 
@@ -71,8 +75,6 @@ func main() {
 				}
 			}
 		}
-
-		// TODO(chizhg): should not allow other production Prow config files to be changed if staging is needed.
 
 		// If any of the production Prow key config files are changed, report the error.
 		if len(bannedFiles) != 0 {

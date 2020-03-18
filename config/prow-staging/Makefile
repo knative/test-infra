@@ -14,7 +14,6 @@
 
 # Staging cluster configuration
 
-ENVIRONMENT               := prow-staging
 PROJECT                   := knative-tests-staging
 PROW_GCS                  := knative-prow-staging
 PROW_HOST                 := https://prow-staging.knative.dev
