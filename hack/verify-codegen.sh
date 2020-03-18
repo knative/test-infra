@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright 2019 The Knative Authors
+# Copyright 2020 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ echo "Diffing ${REPO_ROOT_DIR} against freshly generated codegen"
 ret=0
 for dir in ${DIRS_TOBE_INSPECTED[@]}; do
   diff -Nupr --no-dereference "${REPO_ROOT_DIR}/${dir}" "${TMP_DIFFROOT}/${dir}" || \
-    { ret=1; echo "--- FAIL: file difference ${REPO_ROOT_DIR}/${dir}"; }
+    { ret=1; echo "--- FAIL: ${REPO_ROOT_DIR}/${dir} is not up-to-date"; }
 done
 
 # Restore working tree state
