@@ -273,7 +273,7 @@ test_function ${SUCCESS} "BUILD TESTS PASSED" call_function_pre run_markdown_bui
 echo ">> Testing custom and multi-script execution"
 
 test_function ${SUCCESS} "Completed" main --run-test "echo Completed"
-PIPE_FILE="/tmp/presubmit-test.pipe"
+PIPE_FILE="$(mktemp)"
 test_function ${SUCCESS} "$PIPE_FILE" main --run-test "rm -f $PIPE_FILE" --run-test "touch $PIPE_FILE" --run-test "ls $PIPE_FILE"
 
 echo ">> All tests passed"
