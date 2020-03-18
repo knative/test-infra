@@ -1008,7 +1008,7 @@ func collectMetaData(periodicJob yaml.MapSlice) {
 				// if it's a job for a release branch
 				if releaseVersion != "" {
 					releaseProjName := fmt.Sprintf("%s-%s", projName, releaseVersion)
-					jobDetailMap = addProjAndRepoIfNeed(releaseProjName, repoName)
+					jobDetailMap = addProjAndRepoIfNeed(releaseProjName, repoName+"-"+jobName)
 				}
 				newJobTypes := append(jobDetailMap[repoName], jobName)
 				jobDetailMap[repoName] = newJobTypes
