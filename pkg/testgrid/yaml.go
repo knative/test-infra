@@ -23,7 +23,7 @@ import (
 
 	"gopkg.in/yaml.v2"
 
-	"knative.dev/test-infra/shared/common"
+	"knative.dev/test-infra/pkg/common"
 )
 
 const configPath = "config/prow/testgrid/testgrid.yaml"

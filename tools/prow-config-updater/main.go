@@ -22,7 +22,7 @@ import (
 
 	"knative.dev/pkg/test/ghutil"
 
-	"knative.dev/test-infra/shared/git"
+	"knative.dev/test-infra/pkg/git"
 	"knative.dev/test-infra/tools/prow-config-updater/config"
 )
 

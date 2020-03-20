@@ -28,7 +28,7 @@ import (
 
 	"knative.dev/pkg/test/helpers"
 	"knative.dev/pkg/test/slackutil"
-	"knative.dev/test-infra/shared/prow"
+	"knative.dev/test-infra/pkg/prow"
 	"knative.dev/test-infra/tools/flaky-test-reporter/config"
 )
 

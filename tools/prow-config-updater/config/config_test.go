@@ -21,7 +21,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"knative.dev/test-infra/shared/common"
+	"knative.dev/test-infra/pkg/common"
 )
 
 func TestProwConfigPathsExist(t *testing.T) {

@@ -22,8 +22,8 @@ import (
 	"path"
 	"testing"
 
-	"knative.dev/test-infra/shared/junit"
-	"knative.dev/test-infra/shared/prow"
+	"knative.dev/test-infra/pkg/junit"
+	"knative.dev/test-infra/pkg/prow"
 )
 
 const (
