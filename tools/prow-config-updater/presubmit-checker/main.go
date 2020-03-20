@@ -29,7 +29,10 @@ import (
 )
 
 func main() {
-	githubTokenPath := flag.String("github-token", "", "Github token file path for authenticating with Github")
+	githubTokenPath := flag.String("github-token", "",
+		"Github token file path for authenticating with Github")
+	githubBotName := flag.String("github-bot-name", "knative-prow-robot",
+		"Github bot name that is used in creating auto-merge PRs")
 	flag.Parse()
 
 	ec, err := prow.GetEnvConfig()

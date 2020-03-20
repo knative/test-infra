@@ -27,20 +27,20 @@ import (
 )
 
 func main() {
-	mainGithubTokenFile := flag.String("main-github-token-file", "",
+	githubTokenFile := flag.String("github-token-file", "",
 		"Token file for Github authentication, used for most of important interactions with Github")
-	mainGitUserID := flag.String("main-git-userid", "",
+	githubUserID := flag.String("github-userid", "",
 		"The github ID of user for hosting fork, i.e. Github ID of bot")
-	mainGitUserName := flag.String("main-git-username", "",
+	gitUserName := flag.String("git-username", "",
 		"The username to use on the git commit. Requires --git-email")
-	mainGitEmail := flag.String("main-git-email", "",
+	gitEmail := flag.String("git-email", "",
 		"The email to use on the git commit. Requires --git-username")
 	commentGithubTokenFile := flag.String("comment-github-token-file", "",
 		"Token file for Github authentication, used for adding comments on Github")
 	dryrun := flag.Bool("dry-run", false, "dry run switch")
 	flag.Parse()
 
-	mgc, err := ghutil.NewGithubClient(*mainGithubTokenFile)
+	mgc, err := ghutil.NewGithubClient(*githubTokenFile)
 	if err != nil {
 		log.Fatalf("Failed creating main github client: %v", err)
 	}
@@ -55,14 +55,14 @@ func main() {
 			Repo:     config.RepoName,
 			Head:     config.PRHead,
 			Base:     config.PRBase,
-			UserID:   *mainGitUserID,
-			UserName: *mainGitUserName,
-			Email:    *mainGitEmail,
+			UserID:   *githubUserID,
+			UserName: *gitUserName,
+			Email:    *gitEmail,
 		}},
 		githubcommenter: &GitHubCommenter{client: cgc, dryrun: *dryrun},
 		// The forkOrgName is the same as the Git user ID we use in this tool.
-		forkOrgName:     *mainGitUserID,
-		dryrun:          *dryrun,
+		forkOrgName: *githubUserID,
+		dryrun:      *dryrun,
 	}
 	if err := cli.initialize(); err != nil {
 		log.Fatalf("Failed intializing the client: %v", err)

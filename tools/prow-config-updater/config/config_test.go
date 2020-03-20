@@ -17,28 +17,28 @@ limitations under the License.
 package config
 
 import (
-    "os"
-    "testing"
+	"os"
+	"testing"
 )
 
 func TestProwConfigPathsExist(t *testing.T) {
-    pathsToCheck := [][]string{ProdProwConfigPaths, StagingProwKeyConfigPaths, {ProdTestgridConfigPath}}
-    checkPaths(pathsToCheck, t)
+	pathsToCheck := [][]string{ProdProwConfigPaths, StagingProwKeyConfigPaths, {ProdTestgridConfigPath}}
+	checkPaths(pathsToCheck, t)
 }
 
 func TestProwKeyConfigPathsExist(t *testing.T) {
-    pathsToCheck := [][]string{ProdProwKeyConfigPaths, StagingProwKeyConfigPaths}
-    checkPaths(pathsToCheck, t)
+	pathsToCheck := [][]string{ProdProwKeyConfigPaths, StagingProwKeyConfigPaths}
+	checkPaths(pathsToCheck, t)
 }
 
 func checkPaths(pathsArr [][]string, t *testing.T) {
-    t.Helper()
-    for _, paths := range pathsArr  {
-        for _, p := range paths {
-            info, err := os.Stat(p)
-            if os.IsNotExist(err) || !info.IsDir() {
-                t.Fatalf("Expected %q to be a dir, but it's not: %v", p, err)
-            }
-        }
-    }
+	t.Helper()
+	for _, paths := range pathsArr {
+		for _, p := range paths {
+			info, err := os.Stat(p)
+			if os.IsNotExist(err) || !info.IsDir() {
+				t.Fatalf("Expected %q to be a dir, but it's not: %v", p, err)
+			}
+		}
+	}
 }

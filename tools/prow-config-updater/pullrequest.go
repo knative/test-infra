@@ -33,6 +33,7 @@ import (
 	"knative.dev/test-infra/tools/prow-config-updater/config"
 )
 
+// GitHubMainHandler is used for the performing main operations on GitHub.
 type GitHubMainHandler struct {
 	client *ghutil.GithubClient
 	info   git.Info

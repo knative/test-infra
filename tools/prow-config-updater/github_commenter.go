@@ -35,6 +35,7 @@ const (
 	failureRolloutCommentTemplate        = "Failed to create an auto-merge PR to roll out the staging change to production, please check the error below:\n%v"
 )
 
+// GitHubCommenter is used for making comments on the pull requests.
 type GitHubCommenter struct {
 	client *ghutil.GithubClient
 	dryrun bool
@@ -43,35 +44,19 @@ type GitHubCommenter struct {
 // Comment on the pull request for the Prow update success result.
 func (ghc *GitHubCommenter) commentOnUpdateConfigsSuccess(prnumber int, env config.ProwEnv, files []string) error {
 	comment := fmt.Sprintf(successUpdatedConfigsCommentTemplate, env, fileListCommentString(files))
-	return helpers.Run(
-		fmt.Sprintf("Creating 'update success' comment %q on PR %q in %s/%s",
-			comment, prnumber, config.OrgName, config.RepoName),
-		func() error {
-			_, err := ghc.client.CreateComment(config.OrgName, config.RepoName, prnumber, comment)
-			return err
-		},
-		ghc.dryrun,
-	)
+	return ghc.commentOnMainPullRequest(prnumber, "update success", comment)
 }
 
 // Comment on the pull request for the Prow update failure result.
 func (ghc *GitHubCommenter) commentOnUpdateConfigsFailure(prnumber int, env config.ProwEnv, files []string, err error) error {
 	comment := fmt.Sprintf(failureUpdatedConfigsCommentTemplate, env, fileListCommentString(files), err)
-	return helpers.Run(
-		fmt.Sprintf("Creating 'update failure' comment %q on PR %q in %s/%s",
-			comment, prnumber, config.OrgName, config.RepoName),
-		func() error {
-			_, err := ghc.client.CreateComment(config.OrgName, config.RepoName, prnumber, comment)
-			return err
-		},
-		ghc.dryrun,
-	)
+	return ghc.commentOnMainPullRequest(prnumber, "update failure", comment)
 }
 
 // Try to get the fork pull request tested and merged by staging Prow.
 func (ghc *GitHubCommenter) tryMergeForkPullRequest(forkOrgName string, prnumber int) error {
-	commentToAdd := "/ok-to-test\n/lgtm\n/approve"
-	labelToAdd := []string{"cla: yes"}
+	const commentToAdd = "/ok-to-test\n/lgtm\n/approve"
+	var labelToAdd = []string{"cla: yes"}
 	return helpers.Run(
 		fmt.Sprintf("Add comment %q on the pull request", commentToAdd),
 		func() error {
@@ -85,52 +70,32 @@ func (ghc *GitHubCommenter) tryMergeForkPullRequest(forkOrgName string, prnumber
 }
 
 // Comment on the pull request for the staging success result.
-func (ghc *GitHubCommenter) commentOnStagingSuccess(prnumber int, err error) error {
-	return helpers.Run(
-		fmt.Sprintf("Creating 'staging success' comment %q on PR %q in %s/%s",
-			successStagingCommentTemplate, prnumber, config.OrgName, config.RepoName),
-		func() error {
-			_, err := ghc.client.CreateComment(config.OrgName, config.RepoName, prnumber, successStagingCommentTemplate)
-			return err
-		},
-		ghc.dryrun,
-	)
+func (ghc *GitHubCommenter) commentOnStagingSuccess(prnumber int) error {
+	return ghc.commentOnMainPullRequest(prnumber, "staging success", successStagingCommentTemplate)
 }
 
 // Comment on the pull request for the staging failure result.
 func (ghc *GitHubCommenter) commentOnStagingFailure(prnumber int, err error) error {
 	comment := fmt.Sprintf(failureStagingCommentTemplate, err)
-	return helpers.Run(
-		fmt.Sprintf("Creating 'staging failure' comment %q on PR %q in %s/%s",
-			comment, prnumber, config.OrgName, config.RepoName),
-		func() error {
-			_, err := ghc.client.CreateComment(config.OrgName, config.RepoName, prnumber, comment)
-			return err
-		},
-		ghc.dryrun,
-	)
+	return ghc.commentOnMainPullRequest(prnumber, "staging failure", comment)
 }
 
 // Comment on the pull request for the rollout success result.
 func (ghc *GitHubCommenter) commentOnRolloutSuccess(prnumber, newprnumber int) error {
 	comment := fmt.Sprintf(successRolloutCommentTemplate, newprnumber)
-	return helpers.Run(
-		fmt.Sprintf("Creating 'rollout success' comment %q on PR %q in %s/%s",
-			comment, prnumber, config.OrgName, config.RepoName),
-		func() error {
-			_, err := ghc.client.CreateComment(config.OrgName, config.RepoName, prnumber, comment)
-			return err
-		},
-		ghc.dryrun,
-	)
+	return ghc.commentOnMainPullRequest(prnumber, "rollout success", comment)
 }
 
 // Comment on the pull request for the rollout failure result.
 func (ghc *GitHubCommenter) commentOnRolloutFailure(prnumber int, err error) error {
 	comment := fmt.Sprintf(failureRolloutCommentTemplate, err)
+	return ghc.commentOnMainPullRequest(prnumber, "rollout failure", comment)
+}
+
+func (ghc *GitHubCommenter) commentOnMainPullRequest(prnumber int, topic, comment string) error {
 	return helpers.Run(
-		fmt.Sprintf("Creating 'rollout failure' comment %q on PR %q in %s/%s",
-			comment, prnumber, config.OrgName, config.RepoName),
+		fmt.Sprintf("Creating %q comment on PR %q in %s/%s with content:\n%s",
+			topic, prnumber, config.OrgName, config.RepoName, comment),
 		func() error {
 			_, err := ghc.client.CreateComment(config.OrgName, config.RepoName, prnumber, comment)
 			return err

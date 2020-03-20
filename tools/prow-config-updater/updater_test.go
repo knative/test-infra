@@ -53,6 +53,8 @@ func TestCollectRelevantFiles(t *testing.T) {
 	for _, test := range tests {
 		res := collectRelevantFiles(test.files, test.paths)
 		cmpRes := cmp.Diff(res, test.expected)
-		t.Log(cmpRes)
+		if cmpRes != "" {
+			t.Fatalf("expect and actual are different:\n%s", cmpRes)
+		}
 	}
 }
