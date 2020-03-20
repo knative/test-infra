@@ -16,7 +16,6 @@
 
 # Default settings for the CI/CD system.
 
-ENVIRONMENT   ?= prow
 CLUSTER       ?= prow
 ZONE          ?= us-central1-f
 JOB_NAMESPACE ?= test-pods
