@@ -18,6 +18,7 @@ package main
 
 import (
 	"fmt"
+	"path/filepath"
 	"strings"
 
 	"github.com/google/go-github/github"
@@ -133,6 +134,9 @@ func collectRelevantFiles(files []string, paths []string) []string {
 	rfs := make([]string, 0)
 	for _, f := range files {
 		for _, p := range paths {
+			if !strings.HasSuffix("p", string(filepath.Separator)) {
+				p = p + string(filepath.Separator)
+			}
 			if strings.HasPrefix(f, p) {
 				rfs = append(rfs, f)
 			}

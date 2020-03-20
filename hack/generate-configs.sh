@@ -25,6 +25,7 @@ readonly CONFIG_DIR="${REPO_ROOT_DIR}/config"
 
 # Generate config for production Prow
 go run "${CONFIG_GENERATOR_DIR}" \
+    --env="prow" \
     --gcs-bucket="knative-prow" \
     --generate-testgrid-config=true \
     --generate-maintenance-jobs=true \
@@ -39,6 +40,7 @@ go run "${CONFIG_GENERATOR_DIR}" \
 
 # Generate config for staging Prow
 go run "${CONFIG_GENERATOR_DIR}" \
+    --env="prow-staging" \
     --gcs-bucket="knative-prow-staging" \
     --generate-testgrid-config=false \
     --generate-maintenance-jobs=false \

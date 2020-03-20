@@ -18,7 +18,10 @@ package config
 
 import (
 	"os"
+	"path/filepath"
 	"testing"
+
+	"knative.dev/test-infra/shared/common"
 )
 
 func TestProwConfigPathsExist(t *testing.T) {
@@ -33,9 +36,13 @@ func TestProwKeyConfigPathsExist(t *testing.T) {
 
 func checkPaths(pathsArr [][]string, t *testing.T) {
 	t.Helper()
+	root, err := common.GetRootDir()
+	if err != nil {
+		t.Fatalf("Failed to get the root dir: %v", err)
+	}
 	for _, paths := range pathsArr {
 		for _, p := range paths {
-			info, err := os.Stat(p)
+			info, err := os.Stat(filepath.Join(root, p))
 			if os.IsNotExist(err) || !info.IsDir() {
 				t.Fatalf("Expected %q to be a dir, but it's not: %v", p, err)
 			}
