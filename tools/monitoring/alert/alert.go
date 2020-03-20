@@ -31,7 +31,7 @@ import (
 
 const subName = "test-infra-monitoring-sub"
 
-var alertEmailRecipients = []string{"knative-productivity-dev@googlegroups.com"}
+var alertEmailRecipients = []string{"prime-engprod-sea@google.com"}
 
 // Client holds all the resources required to run alerting
 type Client struct {

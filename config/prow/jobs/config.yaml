@@ -286,6 +286,8 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-tests.sh --istio-version 1.5-latest --mesh"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --istio-version 1.5-latest --mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -318,6 +320,8 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-tests.sh --istio-version 1.5-latest --no-mesh"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --istio-version 1.5-latest --no-mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -350,6 +354,8 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-tests.sh --istio-version 1.4-latest --mesh"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --istio-version 1.4-latest --mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -382,6 +388,8 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-tests.sh --istio-version 1.4-latest --no-mesh"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --istio-version 1.4-latest --no-mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -414,6 +422,8 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-tests.sh --gloo-version 0.17.1"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --gloo-version 0.17.1"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -446,6 +456,8 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-tests.sh --kourier-version stable"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --kourier-version stable"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -478,6 +490,8 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-tests.sh --contour-version latest"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --contour-version latest"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -510,6 +524,8 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-tests.sh --ambassador-version latest"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --ambassador-version latest"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -542,6 +558,8 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-tests.sh --https"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --https"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -3667,6 +3685,42 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+  - name: pull-knative-net-contour-integration-tests
+    agent: kubernetes
+    context: pull-knative-net-contour-integration-tests
+    always_run: true
+    rerun_command: "/test pull-knative-net-contour-integration-tests"
+    trigger: "(?m)^/test (all|pull-knative-net-contour-integration-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/net-contour
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--integration-tests"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
   - name: pull-knative-net-contour-go-coverage
     agent: kubernetes
     context: pull-knative-net-contour-go-coverage
@@ -4697,10 +4751,11 @@ periodics:
       command:
       - runner.sh
       args:
-      - "./test/e2e-tests.sh"
-      - "--istio-version"
-      - "1.5-latest"
-      - "--mesh"
+      - "./test/presubmit-tests.sh"
+      - "--run-test"
+      - "./test/e2e-tests.sh --istio-version 1.5-latest --mesh"
+      - "--run-test"
+      - "./test/e2e-auto-tls-tests.sh --istio-version 1.5-latest --mesh"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -4730,10 +4785,11 @@ periodics:
       command:
       - runner.sh
       args:
-      - "./test/e2e-tests.sh"
-      - "--istio-version"
-      - "1.5-latest"
-      - "--no-mesh"
+      - "./test/presubmit-tests.sh"
+      - "--run-test"
+      - "./test/e2e-tests.sh --istio-version 1.5-latest --no-mesh"
+      - "--run-test"
+      - "./test/e2e-auto-tls-tests.sh --istio-version 1.5-latest --no-mesh"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -4763,10 +4819,11 @@ periodics:
       command:
       - runner.sh
       args:
-      - "./test/e2e-tests.sh"
-      - "--istio-version"
-      - "1.4-latest"
-      - "--mesh"
+      - "./test/presubmit-tests.sh"
+      - "--run-test"
+      - "./test/e2e-tests.sh --istio-version 1.4-latest --mesh"
+      - "--run-test"
+      - "./test/e2e-auto-tls-tests.sh --istio-version 1.4-latest --mesh"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -4796,10 +4853,11 @@ periodics:
       command:
       - runner.sh
       args:
-      - "./test/e2e-tests.sh"
-      - "--istio-version"
-      - "1.4-latest"
-      - "--no-mesh"
+      - "./test/presubmit-tests.sh"
+      - "--run-test"
+      - "./test/e2e-tests.sh --istio-version 1.4-latest --no-mesh"
+      - "--run-test"
+      - "./test/e2e-auto-tls-tests.sh --istio-version 1.4-latest --no-mesh"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -4829,9 +4887,11 @@ periodics:
       command:
       - runner.sh
       args:
-      - "./test/e2e-tests.sh"
-      - "--gloo-version"
-      - "0.17.1"
+      - "./test/presubmit-tests.sh"
+      - "--run-test"
+      - "./test/e2e-tests.sh --gloo-version 0.17.1"
+      - "--run-test"
+      - "./test/e2e-auto-tls-tests.sh --gloo-version 0.17.1"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -4861,9 +4921,11 @@ periodics:
       command:
       - runner.sh
       args:
-      - "./test/e2e-tests.sh"
-      - "--kourier-version"
-      - "stable"
+      - "./test/presubmit-tests.sh"
+      - "--run-test"
+      - "./test/e2e-tests.sh --kourier-version stable"
+      - "--run-test"
+      - "./test/e2e-auto-tls-tests.sh --kourier-version stable"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -4893,9 +4955,11 @@ periodics:
       command:
       - runner.sh
       args:
-      - "./test/e2e-tests.sh"
-      - "--contour-version"
-      - "latest"
+      - "./test/presubmit-tests.sh"
+      - "--run-test"
+      - "./test/e2e-tests.sh --contour-version latest"
+      - "--run-test"
+      - "./test/e2e-auto-tls-tests.sh --contour-version latest"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -4925,9 +4989,11 @@ periodics:
       command:
       - runner.sh
       args:
-      - "./test/e2e-tests.sh"
-      - "--ambassador-version"
-      - "latest"
+      - "./test/presubmit-tests.sh"
+      - "--run-test"
+      - "./test/e2e-tests.sh --ambassador-version latest"
+      - "--run-test"
+      - "./test/e2e-auto-tls-tests.sh --ambassador-version latest"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -4957,8 +5023,11 @@ periodics:
       command:
       - runner.sh
       args:
-      - "./test/e2e-tests.sh"
-      - "--https"
+      - "./test/presubmit-tests.sh"
+      - "--run-test"
+      - "./test/e2e-tests.sh --https"
+      - "--run-test"
+      - "./test/e2e-auto-tls-tests.sh --https"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account

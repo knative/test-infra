@@ -1,7 +1,7 @@
 plank:
   job_url_template: '[[.ProwHost]]/view/gcs/[[.GcsBucket]]/{{if or (eq .Spec.Type "presubmit") (eq .Spec.Type "batch")}}[[.PresubmitLogsDir]]/pull{{with .Spec.Refs}}/{{.Org}}_{{.Repo}}{{end}}{{else}}[[.LogsDir]]{{end}}{{if eq .Spec.Type "presubmit"}}/{{with index .Spec.Refs.Pulls 0}}{{.Number}}{{end}}{{else if eq .Spec.Type "batch"}}/batch{{end}}/{{.Spec.Job}}/{{.Status.BuildID}}/'
   report_template: '[Full PR test history]([[.GubernatorHost]]/pr/{{.Spec.Refs.Org}}_{{.Spec.Refs.Repo}}/{{with index .Spec.Refs.Pulls 0}}{{.Number}}{{end}}). [Your PR dashboard]([[.GubernatorHost]]/pr/{{with index .Spec.Refs.Pulls 0}}{{.Author}}{{end}}).'
-  job_url_prefix_config: 
+  job_url_prefix_config:
     "*": "[[.ProwHost]]/view/gcs/"
   pod_pending_timeout: 60m
   default_decoration_config:
@@ -42,6 +42,8 @@ deck:
           - 'panic: test timed out after.*$'
           # test case failure
           - 'FAIL:'
+          # step failed
+          - 'Step failed:'
           # boskos error
           - 'boskos failed to acquire project'
           # cluster creation error
