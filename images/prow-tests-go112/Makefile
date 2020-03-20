@@ -13,4 +13,4 @@
 # limitations under the License.
 
 IMAGE_NAME = prow-tests-go112
-include ../../pkg/Makefile.simple-image
+include ../Makefile.simple-image

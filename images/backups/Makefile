@@ -13,4 +13,4 @@
 # limitations under the License.
 
 IMAGE_NAME = backups
-include ../../pkg/Makefile.simple-image
+include ../Makefile.simple-image

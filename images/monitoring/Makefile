@@ -13,5 +13,4 @@
 # limitations under the License.
 
 IMAGE_NAME = monitoring
-include ../../pkg/Makefile.simple-image
-
+include ../Makefile.simple-image
