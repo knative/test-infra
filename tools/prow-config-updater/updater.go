@@ -119,7 +119,7 @@ func (cli *Client) startStaging() error {
 	}
 	// Create comment on the fork pull request to get it tested by staging Prow and merged.
 	forkprnumber := *fpr.Number
-	if err = cli.githubcommenter.tryMergeForkPullRequest(cli.forkOrgName, forkprnumber); err != nil {
+	if err = cli.githubcommenter.mergeForkPullRequest(cli.forkOrgName, forkprnumber); err != nil {
 		return fmt.Errorf("error creating comment on the fork pull request: %v", err)
 	}
 	// Wait for the fork pull request to be automatically merged by staging Prow.
@@ -184,8 +184,8 @@ func (cli *Client) rollOutToProd() (*github.PullRequest, error) {
 		}
 	}
 
-	// Try generating new config files for production Prow.
-	if err := config.GenerateProwConfigFiles(); err != nil {
+	// Try generating new config files.
+	if err := config.GenerateConfigFiles(); err != nil {
 		return nil, fmt.Errorf("error generating Prow config files for production: %v", err)
 	}
 

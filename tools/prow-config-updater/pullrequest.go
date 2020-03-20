@@ -41,6 +41,8 @@ type GitHubMainHandler struct {
 }
 
 // Get the latest pull request created in this repository.
+// This function is based on the assumption that all PRs are merged with "squash" and no force push is allowed,
+// if the repository is not configured in this way, it will not work.
 // TODO(chizhg): get rid of this hack once Prow supports setting PR number as an env var for postsubmit jobs.
 func (gc *GitHubMainHandler) getLatestPullRequest() (*github.PullRequest, error) {
 	// Use git command to get the latest commit ID.

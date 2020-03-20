@@ -59,15 +59,14 @@ var (
 
 	// Commands that generate and update Prow configs.
 	// These are commands for both staging and production Prow.
-	generateProwConfigFilesCommand = "./hack/generate-configs.sh"
-	updateProwCommandTemplate      = "make -C %s update-prow-cluster"
-	updateProdProwCommand          = fmt.Sprintf(updateProwCommandTemplate, prodProwConfigRoot)
-	updateStagingProwCommand       = fmt.Sprintf(updateProwCommandTemplate, stagingProwConfigRoot)
+	generateConfigFilesCommand = "./hack/generate-configs.sh"
+	updateProwCommandTemplate  = "make -C %s update-prow-cluster"
+	updateProdProwCommand      = fmt.Sprintf(updateProwCommandTemplate, prodProwConfigRoot)
+	updateStagingProwCommand   = fmt.Sprintf(updateProwCommandTemplate, stagingProwConfigRoot)
 	// This command is only used for production prow in this tool.
 	updateTestgridCommand = fmt.Sprintf("make -C %s update-testgrid-config", prodProwConfigRoot)
 
 	// Config paths that need to be handled by prow-config-updater if files under them are changed.
-
 	ProdProwConfigPaths = []string{
 		filepath.Join(prodProwConfigRoot, core),
 		filepath.Join(prodProwConfigRoot, jobs),
@@ -132,8 +131,8 @@ func UpdateTestgrid(env ProwEnv, dryrun bool) error {
 	)
 }
 
-// GenerateProwConfigFiles will run the config generator command to generate new Prow config files.
-func GenerateProwConfigFiles() error {
-	_, err := cmd.RunCommand(generateProwConfigFilesCommand)
+// GenerateConfigFiles will run the config generator command to generate new Prow config files.
+func GenerateConfigFiles() error {
+	_, err := cmd.RunCommand(generateConfigFilesCommand)
 	return err
 }

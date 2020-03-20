@@ -41,6 +41,8 @@ type GitHubCommenter struct {
 	dryrun bool
 }
 
+// TODO(chizhg): use the fake ghutil to bump up unit test coverage.
+
 // Comment on the pull request for the Prow update success result.
 func (ghc *GitHubCommenter) commentOnUpdateConfigsSuccess(prnumber int, env config.ProwEnv, files []string) error {
 	comment := fmt.Sprintf(successUpdatedConfigsCommentTemplate, env, fileListCommentString(files))
@@ -54,7 +56,7 @@ func (ghc *GitHubCommenter) commentOnUpdateConfigsFailure(prnumber int, env conf
 }
 
 // Try to get the fork pull request tested and merged by staging Prow.
-func (ghc *GitHubCommenter) tryMergeForkPullRequest(forkOrgName string, prnumber int) error {
+func (ghc *GitHubCommenter) mergeForkPullRequest(forkOrgName string, prnumber int) error {
 	const commentToAdd = "/ok-to-test\n/lgtm\n/approve"
 	var labelToAdd = []string{"cla: yes"}
 	return helpers.Run(
