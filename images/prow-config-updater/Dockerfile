@@ -13,20 +13,20 @@
 # limitations under the License.
 
 FROM golang:1.13
-LABEL maintainer "Chao Dai <chaodai@google.com>"
+LABEL maintainer "Chi Zhang <chizhg@google.com>"
 RUN apt-get update
 
 ENV TEMP_REPO_DIR /go/src/knative.dev/test-infra
-ENV TOOL_NAME prow-auto-bumper
+ENV TOOL_NAME prow-config-updater
 
 # Temporarily add test-infra to the image to build custom tools
 ADD . $TEMP_REPO_DIR
 
-# Build Prow auto bumper tool in the container
+# Build prow config updater tool in the container
 RUN make -C $TEMP_REPO_DIR/tools/$TOOL_NAME/
 RUN cp $TEMP_REPO_DIR/tools/$TOOL_NAME/$TOOL_NAME /$TOOL_NAME
 
 # Remove test-infra from the container
 RUN rm -fr $TEMP_REPO_DIR
 
-ENTRYPOINT ["/prow-auto-bumper"]
+ENTRYPOINT ["/prow-config-updater"]

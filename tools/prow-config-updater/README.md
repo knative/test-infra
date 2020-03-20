@@ -1,0 +1,2 @@
+# prow-config-updater
+
