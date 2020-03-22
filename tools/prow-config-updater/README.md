@@ -17,6 +17,6 @@ Flags for this tool are:
   Requires --git-email.
 - `--git-email` [Optional] specifies the email to use on the git commit.
   Requires --git-username.
-- `--comment-github-token-file` [Required] specifies the path of file containing Github
-  token for adding comments on the pull requests.
+- `--comment-github-token-file` [Required] specifies the path of file containing
+  Github token for adding comments on the pull requests.
 - `--dry-run` [Optional] enables dry-run mode.
