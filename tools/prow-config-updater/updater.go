@@ -101,7 +101,7 @@ func (cli *Client) updateProw(env config.ProwEnv) error {
 		cli.githubcommenter.commentOnUpdateConfigsSuccess(prnumber, config.ProdProwEnv, updatedFiles)
 	} else {
 		// Best effort, won't fail the process if the comment fails.
-		cli.githubcommenter.commentOnUpdateConfigsFailure(prnumber, config.StagingProwEnv, updatedFiles, err)
+		cli.githubcommenter.commentOnUpdateConfigsFailure(prnumber, config.ProdProwEnv, updatedFiles, err)
 	}
 	return err
 }
@@ -134,7 +134,7 @@ func collectRelevantFiles(files []string, paths []string) []string {
 	rfs := make([]string, 0)
 	for _, f := range files {
 		for _, p := range paths {
-			if !strings.HasSuffix("p", string(filepath.Separator)) {
+			if !strings.HasSuffix(p, string(filepath.Separator)) {
 				p = p + string(filepath.Separator)
 			}
 			if strings.HasPrefix(f, p) {

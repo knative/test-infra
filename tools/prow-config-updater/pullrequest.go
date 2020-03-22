@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/google/go-github/github"
@@ -51,9 +52,9 @@ func (gc *GitHubMainHandler) getLatestPullRequest() (*github.PullRequest, error)
 		return nil, fmt.Errorf("error getting the last commit ID: %v", err)
 	}
 	// As we always use squash in merging PRs, we can get the pull request with the commit ID.
-	pr, err := gc.client.GetPullRequestByCommitID(config.OrgName, config.RepoName, ci)
+	pr, err := gc.client.GetPullRequestByCommitID(config.OrgName, config.RepoName, strings.Trim(ci, "\n"))
 	if err != nil {
-		return nil, fmt.Errorf("error getting the PR with commit ID %q: %v", ci, err)
+		return nil, fmt.Errorf("error getting the PR with commit ID %q: %v", strings.Trim(ci, "\n"), err)
 	}
 	return pr, nil
 }
