@@ -564,7 +564,7 @@ periodics:
         requests:
           memory: 12Gi
         limits:
-            memory: 16Gi
+          memory: 16Gi
 
   knative/client:
     - continuous: true

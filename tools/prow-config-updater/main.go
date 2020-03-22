@@ -36,7 +36,7 @@ func main() {
 	gitEmail := flag.String("git-email", "",
 		"The email to use on the git commit. Requires --git-username")
 	commentGithubTokenFile := flag.String("comment-github-token-file", "",
-		"Token file for Github authentication, used for adding comments on Github")
+		"Token file for Github authentication, used for adding comments on Github pull requests")
 	dryrun := flag.Bool("dry-run", false, "dry run switch")
 	flag.Parse()
 
