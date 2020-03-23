@@ -19,6 +19,7 @@ package config
 import (
 	"fmt"
 	"log"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -127,7 +128,7 @@ func UpdateTestgrid(env ProwEnv, dryrun bool) error {
 	return helpers.Run(
 		fmt.Sprintf("Updating Testgrid config with command %q", updateTestgridCommand),
 		func() error {
-			out, err := cmd.RunCommand(updateTestgridCommand)
+			out, err := cmd.RunCommand(updateTestgridCommand, cmd.WithEnvs(os.Environ()))
 			log.Println(out)
 			return err
 		},
