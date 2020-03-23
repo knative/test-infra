@@ -18,6 +18,10 @@ source $(dirname $0)/../scripts/library.sh
 
 set -e
 
+trap 'echo "--- FAIL: Directly changing production Prow config files is not allowed, please move the changes to staging directories."' ERR
+header "Checking to make sure Prow productions config files are not modified manually"
+go run "${REPO_ROOT_DIR}"/tools/prow-config-updater/presubmit-checker --github-token="/etc/repoview-token/token"
+
 trap 'echo "--- FAIL: Prow config files have errors, please check."' ERR
 header "Validating production Prow config files"
 bazel run @k8s//prow/cmd/checkconfig -- \
