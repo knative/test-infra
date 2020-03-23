@@ -281,6 +281,28 @@ test_groups:
 - name: ci-knative-net-contour-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-net-contour-go-coverage
   short_text_metric: "coverage"
+- name: ci-knative-net-http01-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-net-http01-continuous
+  alert_stale_results_hours: 3
+- name: ci-knative-net-http01-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-net-http01-nightly-release
+  alert_options:
+    alert_mail_to_addresses: "prime-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-net-http01-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-net-http01-dot-release
+  alert_options:
+    alert_mail_to_addresses: "prime-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-net-http01-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-net-http01-auto-release
+  alert_options:
+    alert_mail_to_addresses: "prime-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-net-http01-test-coverage
+  gcs_prefix: knative-prow/logs/ci-knative-net-http01-go-coverage
+  short_text_metric: "coverage"
 - name: ci-knative-net-istio-continuous
   gcs_prefix: knative-prow/logs/ci-knative-net-istio-continuous
   alert_stale_results_hours: 3
@@ -880,6 +902,35 @@ dashboards:
   - name: coverage
     test_group_name: ci-knative-net-contour-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+- name: net-http01
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-net-http01-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "prime-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: nightly
+    test_group_name: ci-knative-net-http01-nightly-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "prime-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: dot-release
+    test_group_name: ci-knative-net-http01-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "prime-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: auto-release
+    test_group_name: ci-knative-net-http01-auto-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "prime-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: coverage
+    test_group_name: ci-knative-net-http01-test-coverage
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: net-istio
   dashboard_tab:
   - name: continuous
@@ -1231,6 +1282,7 @@ dashboard_groups:
   - "serving-operator"
   - "eventing-operator"
   - "net-contour"
+  - "net-http01"
   - "net-istio"
   - "net-kourier"
 - name: google

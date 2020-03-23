@@ -24,6 +24,7 @@ approve:
   - "knative/eventing-contrib"
   - "knative/eventing-operator"
   - "knative/net-contour"
+  - "knative/net-http01"
   - "knative/net-istio"
   - "knative/net-kourier"
   - "knative/observability"
@@ -315,6 +316,31 @@ plugins:
   - wip
   - yuks
   knative/net-contour:
+  - approve
+  - assign
+  - blunderbuss
+  - buildifier
+  - cat
+  - dog
+  - golint
+  - heart
+  - help
+  - hold
+  - label
+  - lgtm
+  - lifecycle
+  - milestone
+  - owners-label
+  - project
+  - shrug
+  - size
+  - skip
+  - trigger
+  - verify-owners
+  - welcome
+  - wip
+  - yuks
+  knative/net-http01:
   - approve
   - assign
   - blunderbuss
@@ -636,6 +662,11 @@ external_plugins:
       - issue_comment
       - pull_request
   knative/net-contour:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
+  knative/net-http01:
   - name: needs-rebase
     events:
       - issue_comment
