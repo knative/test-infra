@@ -58,7 +58,7 @@ var (
 	ProdProwConfigRoot    = filepath.Join(configPath, string(ProdProwEnv))
 	StagingProwConfigRoot = filepath.Join(configPath, string(StagingProwEnv))
 	// Prow config templates paths.
-	ProdProwConfigTemplatesPath = filepath.Join(configTemplatePath, string(ProdProwEnv))
+	ProdProwConfigTemplatesPath    = filepath.Join(configTemplatePath, string(ProdProwEnv))
 	StagingProwConfigTemplatesPath = filepath.Join(configTemplatePath, string(StagingProwEnv))
 
 	// Commands that generate and update Prow configs.
@@ -141,7 +141,7 @@ func GenerateConfigFiles() error {
 	return err
 }
 
-// Filter out all files that are under the given paths.
+// CollectRelevantFiles can filter out all files that are under the given paths.
 func CollectRelevantFiles(files []string, paths []string) []string {
 	rfs := make([]string, 0)
 	for _, f := range files {
