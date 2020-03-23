@@ -2484,6 +2484,34 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+  - name: pull-knative-test-infra-go-coverage
+    agent: kubernetes
+    context: pull-knative-test-infra-go-coverage
+    always_run: true
+    rerun_command: "/test pull-knative-test-infra-go-coverage"
+    trigger: "(?m)^/test (all|pull-knative-test-infra-go-coverage),?(\\s+|$)"
+    optional: true
+    decorate: true
+    path_alias: knative.dev/test-infra
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
+        imagePullPolicy: Always
+        command:
+        - "/coverage"
+        args:
+        - "--postsubmit-job-name=post-knative-test-infra-go-coverage"
+        - "--artifacts=$(ARTIFACTS)"
+        - "--cov-threshold-percentage=50"
+        - "--github-token=/etc/covbot-token/token"
+        volumeMounts:
+        - name: covbot-token
+          mountPath: /etc/covbot-token
+          readOnly: true
+      volumes:
+      - name: covbot-token
+        secret:
+          secretName: covbot-token
   - name: pull-knative-test-infra-check-config
     agent: kubernetes
     context: pull-knative-test-infra-check-config
@@ -7323,6 +7351,28 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+- cron: "0 1 * * *"
+  name: ci-knative-test-infra-go-coverage
+  labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-test-infra-go-coverage
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: master
+    path_alias: knative.dev/test-infra
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/coverage:latest
+      imagePullPolicy: Always
+      command:
+      - "/coverage"
+      args:
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=50"
 - cron: "48 * * * *"
   name: ci-knative-serving-operator-continuous
   agent: kubernetes
@@ -9928,6 +9978,69 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+  knative/test-infra:
+  - name: post-knative-test-infra-go-coverage
+    branches:
+    - master
+    agent: kubernetes
+    decorate: true
+    path_alias: knative.dev/test-infra
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
+        imagePullPolicy: Always
+        command:
+        - "/coverage"
+        args:
+        - "--artifacts=$(ARTIFACTS)"
+        - "--cov-threshold-percentage=0"
+  - name: post-knative-prow-config-updater
+    agent: kubernetes
+    decorate: true
+    max_concurrency: 1
+    run_if_changed: "^(config/(prow|prow-staging)/(cluster|core|jobs|testgrid)/.*.yaml)|(tools/config-generator/templates/(prow|prow-staging)/.*.yaml)$"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-config-updater:latest
+        imagePullPolicy: Always
+        command:
+        - "/prow-config-updater"
+        args:
+        - "--github-token-file=/etc/prow-robot-github-token/token"
+        - "--github-userid=knative-prow-robot"
+        - "--git-username='Knative Prow Robot'"
+        - "--git-email=knative-prow-robot@google.com"
+        - "--comment-github-token-file=/etc/prow-updater-robot-github-token/token"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        - name: prow-robot-github-token
+          mountPath: /etc/prow-robot-github-token
+          readOnly: true
+        - name: prow-updater-robot-github-token
+          mountPath: /etc/prow-updater-robot-github-token
+          readOnly: true
+        - name: prow-robot-ssh-key
+          mountPath: /root/.ssh
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+      - name: prow-robot-github-token
+        secret:
+          secretName: prow-robot-github-token
+      - name: prow-updater-robot-github-token
+        secret:
+          secretName: prow-updater-robot-github-token
+      - name: prow-robot-ssh-key
+        secret:
+          secretName: prow-robot-ssh-key
+          defaultMode: 0400
   knative/caching:
   - name: post-knative-caching-go-coverage
     branches:
