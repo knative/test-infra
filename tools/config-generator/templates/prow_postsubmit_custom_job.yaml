@@ -7,6 +7,7 @@
     [[indent_array_section 4 "skip_branches" .Base.SkipBranches]]
     [[.Base.PathAlias]]
     [[.Base.RunIfChanged]]
+    [[.Base.Cluster]]
     spec:
       containers:
       - image: [[.Base.Image]]

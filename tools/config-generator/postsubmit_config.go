@@ -79,6 +79,8 @@ func generateConfigUpdaterToolPostsubmitJob() {
 	data.Base.Image = prowconfigupdaterDockerImage
 	data.PostsubmitJobName = "post-knative-prow-config-updater"
 	data.Base.RunIfChanged = "run_if_changed: \"^(config/(prow|prow-staging)/(cluster|core|jobs|testgrid)/.*.yaml)|(tools/config-generator/templates/(prow|prow-staging)/.*.yaml)$\""
+	// Run the job on the prow-trusted build cluster.
+	data.Base.Cluster = "cluster: \"prow-trusted\""
 	data.Base.Command = "/prow-config-updater"
 	data.Base.Args = []string{
 		"--github-token-file=/etc/prow-robot-github-token/token",

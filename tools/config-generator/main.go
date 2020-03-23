@@ -117,6 +117,7 @@ type baseProwJobTemplateData struct {
 	Labels              []string
 	PathAlias           string
 	RunIfChanged        string
+	Cluster             string
 	Optional            string
 	NeedsMonitor        bool
 }
