@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"log"
 	"path/filepath"
+	"strings"
 
 	"knative.dev/pkg/test/cmd"
 	"knative.dev/pkg/test/helpers"
@@ -54,39 +55,42 @@ const (
 
 var (
 	// Prow config root paths.
-	prodProwConfigRoot    = filepath.Join(configPath, string(ProdProwEnv))
-	stagingProwConfigRoot = filepath.Join(configPath, string(StagingProwEnv))
+	ProdProwConfigRoot    = filepath.Join(configPath, string(ProdProwEnv))
+	StagingProwConfigRoot = filepath.Join(configPath, string(StagingProwEnv))
+	// Prow config templates paths.
+	ProdProwConfigTemplatesPath = filepath.Join(configTemplatePath, string(ProdProwEnv))
+	StagingProwConfigTemplatesPath = filepath.Join(configTemplatePath, string(StagingProwEnv))
 
 	// Commands that generate and update Prow configs.
 	// These are commands for both staging and production Prow.
 	generateConfigFilesCommand = "./hack/generate-configs.sh"
 	updateProwCommandTemplate  = "make -C %s update-prow-cluster"
-	updateProdProwCommand      = fmt.Sprintf(updateProwCommandTemplate, prodProwConfigRoot)
-	updateStagingProwCommand   = fmt.Sprintf(updateProwCommandTemplate, stagingProwConfigRoot)
+	updateProdProwCommand      = fmt.Sprintf(updateProwCommandTemplate, ProdProwConfigRoot)
+	updateStagingProwCommand   = fmt.Sprintf(updateProwCommandTemplate, StagingProwConfigRoot)
 	// This command is only used for production prow in this tool.
-	updateTestgridCommand = fmt.Sprintf("make -C %s update-testgrid-config", prodProwConfigRoot)
+	updateTestgridCommand = fmt.Sprintf("make -C %s update-testgrid-config", ProdProwConfigRoot)
 
 	// Config paths that need to be handled by prow-config-updater if files under them are changed.
 	ProdProwConfigPaths = []string{
-		filepath.Join(prodProwConfigRoot, core),
-		filepath.Join(prodProwConfigRoot, jobs),
-		filepath.Join(prodProwConfigRoot, cluster),
+		filepath.Join(ProdProwConfigRoot, core),
+		filepath.Join(ProdProwConfigRoot, jobs),
+		filepath.Join(ProdProwConfigRoot, cluster),
 	}
 	StagingProwConfigPaths = []string{
-		filepath.Join(stagingProwConfigRoot, core),
-		filepath.Join(stagingProwConfigRoot, jobs),
-		filepath.Join(stagingProwConfigRoot, cluster),
+		filepath.Join(StagingProwConfigRoot, core),
+		filepath.Join(StagingProwConfigRoot, jobs),
+		filepath.Join(StagingProwConfigRoot, cluster),
 	}
-	ProdTestgridConfigPath = filepath.Join(prodProwConfigRoot, "testgrid")
+	ProdTestgridConfigPath = filepath.Join(ProdProwConfigRoot, "testgrid")
 
 	// Config paths that need to be gated and tested by prow-config-updater.
 	ProdProwKeyConfigPaths = []string{
-		filepath.Join(prodProwConfigRoot, cluster),
-		filepath.Join(configTemplatePath, string(ProdProwEnv)),
+		filepath.Join(ProdProwConfigRoot, cluster),
+		ProdProwConfigTemplatesPath,
 	}
 	StagingProwKeyConfigPaths = []string{
-		filepath.Join(stagingProwConfigRoot, cluster),
-		filepath.Join(configTemplatePath, string(StagingProwEnv)),
+		filepath.Join(StagingProwConfigRoot, cluster),
+		StagingProwConfigTemplatesPath,
 	}
 )
 
@@ -135,4 +139,20 @@ func UpdateTestgrid(env ProwEnv, dryrun bool) error {
 func GenerateConfigFiles() error {
 	_, err := cmd.RunCommand(generateConfigFilesCommand)
 	return err
+}
+
+// Filter out all files that are under the given paths.
+func CollectRelevantFiles(files []string, paths []string) []string {
+	rfs := make([]string, 0)
+	for _, f := range files {
+		for _, p := range paths {
+			if !strings.HasSuffix(p, string(filepath.Separator)) {
+				p = p + string(filepath.Separator)
+			}
+			if strings.HasPrefix(f, p) {
+				rfs = append(rfs, f)
+			}
+		}
+	}
+	return rfs
 }

@@ -18,8 +18,6 @@ package main
 
 import (
 	"fmt"
-	"path/filepath"
-	"strings"
 
 	"github.com/google/go-github/github"
 	"knative.dev/pkg/test/cmd"
@@ -88,7 +86,7 @@ func (cli *Client) needsStaging() bool {
 		return false
 	}
 	// If any key config files for staging Prow are changed, the staging process will be needed.
-	fs := collectRelevantFiles(cli.files, config.StagingProwKeyConfigPaths)
+	fs := config.CollectRelevantFiles(cli.files, config.StagingProwKeyConfigPaths)
 	return len(fs) != 0
 }
 
@@ -129,31 +127,15 @@ func (cli *Client) startStaging() error {
 	return nil
 }
 
-// Filter out all files that are under the given paths.
-func collectRelevantFiles(files []string, paths []string) []string {
-	rfs := make([]string, 0)
-	for _, f := range files {
-		for _, p := range paths {
-			if !strings.HasSuffix(p, string(filepath.Separator)) {
-				p = p + string(filepath.Separator)
-			}
-			if strings.HasPrefix(f, p) {
-				rfs = append(rfs, f)
-			}
-		}
-	}
-	return rfs
-}
-
 // Run the `make` command to update Prow configs.
 // path is the Prow config root folder.
 func (cli *Client) doProwUpdate(env config.ProwEnv) ([]string, error) {
 	relevantFiles := make([]string, 0)
 	switch env {
 	case config.ProdProwEnv:
-		relevantFiles = append(relevantFiles, collectRelevantFiles(cli.files, config.ProdProwConfigPaths)...)
+		relevantFiles = append(relevantFiles, config.CollectRelevantFiles(cli.files, config.ProdProwConfigPaths)...)
 	case config.StagingProwEnv:
-		relevantFiles = append(relevantFiles, collectRelevantFiles(cli.files, config.StagingProwConfigPaths)...)
+		relevantFiles = append(relevantFiles, config.CollectRelevantFiles(cli.files, config.StagingProwConfigPaths)...)
 	default:
 		return nil, fmt.Errorf("unsupported Prow environement: %q, cannot make the update", env)
 	}
@@ -164,7 +146,7 @@ func (cli *Client) doProwUpdate(env config.ProwEnv) ([]string, error) {
 	}
 
 	// For production Prow, we also need to update Testgrid config if it's changed.
-	tfs := collectRelevantFiles(cli.files, []string{config.ProdTestgridConfigPath})
+	tfs := config.CollectRelevantFiles(cli.files, []string{config.ProdTestgridConfigPath})
 	if len(tfs) != 0 {
 		relevantFiles = append(relevantFiles, tfs...)
 		if err := config.UpdateTestgrid(env, cli.dryrun); err != nil {
