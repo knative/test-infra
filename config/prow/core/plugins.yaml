@@ -15,6 +15,7 @@
 approve:
 - repos:
   - "google/knative-gcp"
+  - "knative-sandbox/operator"
   - "knative/caching"
   - "knative/client"
   - "knative/client-contrib"
@@ -35,7 +36,6 @@ approve:
   - "knative/serving-operator"
   - "knative/test-infra"
   - "knative/website"
-  - "knative-sandbox/operator"
   require_self_approval: false
   ignore_review_state: false
 # Settings for the "heart" plugin.
@@ -116,6 +116,31 @@ plugins:
   - welcome
   - wip
   - yuks
+  knative-sandbox/operator:
+  - approve
+  - assign
+  - blunderbuss
+  - buildifier
+  - cat
+  - dog
+  - golint
+  - heart
+  - help
+  - hold
+  - label
+  - lgtm
+  - lifecycle
+  - milestone
+  - owners-label
+  - project
+  - shrug
+  - size
+  - skip
+  - trigger
+  - verify-owners
+  - welcome
+  - wip
+  - yuks
   knative/caching:
   - approve
   - assign
@@ -592,31 +617,6 @@ plugins:
   - wip
   - yuks
   knative/website:
-  - approve
-  - assign
-  - blunderbuss
-  - buildifier
-  - cat
-  - dog
-  - golint
-  - heart
-  - help
-  - hold
-  - label
-  - lgtm
-  - lifecycle
-  - milestone
-  - owners-label
-  - project
-  - shrug
-  - size
-  - skip
-  - trigger
-  - verify-owners
-  - welcome
-  - wip
-  - yuks
-  knative-sandbox/operator:
   - approve
   - assign
   - blunderbuss
@@ -647,6 +647,11 @@ external_plugins:
     events:
       - issue_comment
       - pull_request
+  knative-sandbox/operator:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
   knative/caching:
   - name: needs-rebase
     events:
@@ -747,8 +752,3 @@ external_plugins:
     events:
       - issue_comment
       - pull_request
-  knative-sandbox/operator:
-  - name: needs-rebase
-    events:
-    - issue_comment
-    - pull_request
