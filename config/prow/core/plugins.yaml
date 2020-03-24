@@ -747,7 +747,7 @@ external_plugins:
     events:
       - issue_comment
       - pull_request
-  knative-sandbox/operator
+  knative-sandbox/operator:
   - name: needs-rebase
     events:
     - issue_comment

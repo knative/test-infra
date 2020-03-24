@@ -4769,7 +4769,7 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
-    
+
 periodics:
 - cron: "10 */2 * * *"
   name: ci-knative-serving-continuous
