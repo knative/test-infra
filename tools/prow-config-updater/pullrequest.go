@@ -123,7 +123,7 @@ func (gc *GitHubMainHandler) waitForForkPullRequestMerged(forkOrgName string, pn
 	interval := 10 * time.Second
 	timeout := 20 * time.Minute
 	return helpers.Run(
-		fmt.Sprintf("Wait until the fork pull request %d to merged", pn),
+		fmt.Sprintf("Wait until the fork pull request '%d' to merged", pn),
 		func() error {
 			return wait.PollImmediate(interval, timeout, func() (bool, error) {
 				pr, err := gc.client.GetPullRequest(forkOrgName, config.RepoName, pn)
