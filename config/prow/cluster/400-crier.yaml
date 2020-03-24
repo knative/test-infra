@@ -29,7 +29,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
       - name: crier
-        image: gcr.io/k8s-prow/crier:v20200312-052680510
+        image: gcr.io/k8s-prow/crier:v20200317-190894183
         args:
         - --pubsub-workers=5 # Arbitrary number of multiplier
         - --gcs-workers=1

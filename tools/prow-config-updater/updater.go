@@ -58,23 +58,23 @@ func (cli *Client) runProwConfigUpdate() error {
 			return fmt.Errorf("error updating production Prow configs: %v", err)
 		}
 	} else {
-		if err := cli.startStaging(); err != nil {
-			// Best effort, won't fail the process if the comment fails.
-			cli.githubcommenter.commentOnStagingFailure(*cli.pr.Number, err)
-			return fmt.Errorf("error running Prow staging process: %v", err)
-		} else {
-			// Best effort, won't fail the process if the comment fails.
-			cli.githubcommenter.commentOnStagingSuccess(*cli.pr.Number)
-		}
+		// if err := cli.startStaging(); err != nil {
+		// 	// Best effort, won't fail the process if the comment fails.
+		// 	cli.githubcommenter.commentOnStagingFailure(*cli.pr.Number, err)
+		// 	return fmt.Errorf("error running Prow staging process: %v", err)
+		// } else {
+		// 	// Best effort, won't fail the process if the comment fails.
+		// 	cli.githubcommenter.commentOnStagingSuccess(*cli.pr.Number)
+		// }
 
-		newpr, err := cli.rollOutToProd()
+		_, err := cli.rollOutToProd()
 		if err != nil {
 			// Best effort, won't fail the process if the comment fails.
-			cli.githubcommenter.commentOnRolloutFailure(*cli.pr.Number, err)
+			// cli.githubcommenter.commentOnRolloutFailure(*cli.pr.Number, err)
 			return fmt.Errorf("error rolling out the staging change to production: %v", err)
 		} else {
 			// Best effort, won't fail the process if the comment fails.
-			cli.githubcommenter.commentOnRolloutSuccess(*cli.pr.Number, *newpr.Number)
+			// cli.githubcommenter.commentOnRolloutSuccess(*cli.pr.Number, *newpr.Number)
 		}
 	}
 	return nil

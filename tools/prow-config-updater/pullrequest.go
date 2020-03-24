@@ -52,7 +52,7 @@ func (gc *GitHubMainHandler) getLatestPullRequest() (*github.PullRequest, error)
 		return nil, fmt.Errorf("error getting the last commit ID: %v", err)
 	}
 	// As we always use squash in merging PRs, we can get the pull request with the commit ID.
-	pr, err := gc.client.GetPullRequestByCommitID(config.OrgName, config.RepoName, strings.TrimSpace(ci))
+	pr, err := gc.client.GetPullRequestByCommitID(config.OrgName, config.RepoName, "2bcce0d051582c9b197b96a2bd55135ba860822d")
 	if err != nil {
 		return nil, fmt.Errorf("error getting the PR with commit ID %q: %v", strings.TrimSpace(ci), err)
 	}
