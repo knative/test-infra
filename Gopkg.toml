@@ -18,7 +18,8 @@ required = [
 
 [[override]]
   name = "knative.dev/pkg"
-  branch = "master"
+  branch = "move-from-test-infra"
+  source = "github.com/chizhg/pkg"
 
 # TODO(mattmoor): Find a way to bundle the licenseclassifier's
 # license database, so folks don't have to go get it.

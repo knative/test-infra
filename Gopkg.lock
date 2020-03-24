@@ -933,8 +933,8 @@
   revision = "861946025e3491219eaccb1bf693e23df70c2fa8"
 
 [[projects]]
-  branch = "master"
-  digest = "1:907c509dfa754ee63f3ee2dcc1ea533ca5d39cbc1fd030296f118525b7cef7f6"
+  branch = "move-from-test-infra"
+  digest = "1:11fc90eb159f36585f313ecdbfb15a60996a4aa87befd5b1139b339cdff7f420"
   name = "knative.dev/pkg"
   packages = [
     "test",
@@ -945,11 +945,13 @@
     "test/gke",
     "test/helpers",
     "test/ingress",
+    "test/junit",
     "test/logging",
     "test/monitoring",
     "test/prow",
     "test/slackutil",
     "test/spoof",
+    "test/testgrid",
     "test/zipkin",
     "testutils/clustermanager/e2e-tests",
     "testutils/clustermanager/e2e-tests/boskos",
@@ -963,7 +965,8 @@
     "testutils/metahelper/client",
   ]
   pruneopts = "NUT"
-  revision = "0840da9555a3a75f801abc1d654fb00dfe9a687a"
+  revision = "613ab598e8ee1517c89f3db4b6afb82ae957b31c"
+  source = "github.com/chizhg/pkg"
 
 [[projects]]
   digest = "1:8730e0150dfb2b7e173890c8b9868e7a273082ef8e39f4940e3506a481cf895c"
@@ -996,12 +999,15 @@
     "k8s.io/apimachinery/pkg/util/sets",
     "k8s.io/apimachinery/pkg/util/wait",
     "knative.dev/pkg/test/cmd",
+    "knative.dev/pkg/test/gcs",
     "knative.dev/pkg/test/ghutil",
     "knative.dev/pkg/test/ghutil/fakeghutil",
     "knative.dev/pkg/test/gke",
     "knative.dev/pkg/test/helpers",
+    "knative.dev/pkg/test/junit",
     "knative.dev/pkg/test/prow",
     "knative.dev/pkg/test/slackutil",
+    "knative.dev/pkg/test/testgrid",
     "knative.dev/pkg/testutils/clustermanager/perf-tests",
     "knative.dev/pkg/testutils/clustermanager/prow-cluster-operation",
     "knative.dev/pkg/testutils/metahelper",

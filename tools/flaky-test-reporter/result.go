@@ -28,9 +28,9 @@ import (
 	"sort"
 	"strings"
 
-	"knative.dev/test-infra/pkg/common"
-	"knative.dev/test-infra/pkg/junit"
-	"knative.dev/test-infra/pkg/prow"
+	"knative.dev/pkg/test/helpers"
+	"knative.dev/pkg/test/junit"
+	"knative.dev/pkg/test/prow"
 	"knative.dev/test-infra/tools/flaky-test-reporter/config"
 )
 
@@ -125,7 +125,7 @@ func flakyRateAboveThreshold(rd RepoData) bool {
 // under local artifacts directory
 func createArtifactForRepo(rd RepoData) error {
 	artifactsDir := prow.GetLocalArtifactsDir()
-	err := common.CreateDir(path.Join(artifactsDir, rd.Config.Repo))
+	err := helpers.CreateDir(path.Join(artifactsDir, rd.Config.Repo))
 	if err != nil {
 		return err
 	}

@@ -22,8 +22,9 @@ import (
 	"path"
 	"testing"
 
-	"knative.dev/test-infra/pkg/junit"
-	"knative.dev/test-infra/pkg/prow"
+	"knative.dev/pkg/test/junit"
+	"knative.dev/pkg/test/prow"
+	pkgTestgrid "knative.dev/pkg/test/testgrid"
 )
 
 const (
@@ -56,7 +57,7 @@ func TestXMLOutput(t *testing.T) {
 `
 
 	// Create a test file
-	if err := CreateXMLOutput(tc, name); err != nil {
+	if err := pkgTestgrid.CreateXMLOutput(tc, name); err != nil {
 		t.Fatalf("Error when creating xml output file: %v", err)
 	}
 	checkFileText(resultFile, want, t)
