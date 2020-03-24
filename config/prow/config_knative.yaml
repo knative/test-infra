@@ -402,6 +402,16 @@ presubmits:
     - integration-tests: false
     - go-coverage: false
 
+  knative-sandbox/operator:
+    - build-tests: true
+      dot-dev: true
+    - unit-tests: true
+      dot-dev: true
+    - integration-tests: true
+      dot-dev: true
+    - go-coverage: true
+      dot-dev: true
+
 periodics:
   knative/serving:
     - continuous: true
@@ -953,6 +963,20 @@ periodics:
       go113: true
 
   knative/net-kourier:
+    - continuous: true
+      dot-dev: true
+      go113: true
+    - nightly: true
+      dot-dev: true
+      go113: true
+    - dot-release: true
+      dot-dev: true
+      go113: true
+    - auto-release: true
+      dot-dev: true
+      go113: true
+
+  knative-sandbox/operator:
     - continuous: true
       dot-dev: true
       go113: true

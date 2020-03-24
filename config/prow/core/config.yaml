@@ -129,6 +129,7 @@ tide:
     - "knative/serving-operator"
     - "knative/test-infra"
     - "knative/website"
+    - "knative-sandbox/operator"
     labels:
     - lgtm
     - approved

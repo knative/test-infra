@@ -35,6 +35,7 @@ approve:
   - "knative/serving-operator"
   - "knative/test-infra"
   - "knative/website"
+  - "knative-sandbox/operator"
   require_self_approval: false
   ignore_review_state: false
 # Settings for the "heart" plugin.
@@ -615,6 +616,31 @@ plugins:
   - welcome
   - wip
   - yuks
+  knative-sandbox/operator:
+  - approve
+  - assign
+  - blunderbuss
+  - buildifier
+  - cat
+  - dog
+  - golint
+  - heart
+  - help
+  - hold
+  - label
+  - lgtm
+  - lifecycle
+  - milestone
+  - owners-label
+  - project
+  - shrug
+  - size
+  - skip
+  - trigger
+  - verify-owners
+  - welcome
+  - wip
+  - yuks
 external_plugins:
   google/knative-gcp:
   - name: needs-rebase
@@ -721,3 +747,8 @@ external_plugins:
     events:
       - issue_comment
       - pull_request
+  knative-sandbox/operator
+  - name: needs-rebase
+    events:
+    - issue_comment
+    - pull_request
