@@ -485,7 +485,12 @@ function run_go_tool() {
     # Avoid running `go get` from root dir of the repository, as it can change go.sum and go.mod files.
     # See discussions in https://github.com/golang/go/issues/27643.
     if [[ ${action} == "get" && $(pwd) == "${REPO_ROOT_DIR}" ]]; then
-      cd .. && go ${action} $1 && cd - || return 1
+      local temp_dir="$(mktemp -d)"
+      local install_failed=0
+      pushd "${temp_dir}"
+      go ${action} $1 || install_failed=1
+      popd
+      (( install_failed )) && return ${install_failed}
     else
       go ${action} $1
     fi
