@@ -324,7 +324,7 @@ presubmits:
       dot-dev: true
     - unit-tests: true
       dot-dev: true
-    - integration-tests: false
+    - integration-tests: true
       dot-dev: true
     - go-coverage: true
       dot-dev: true

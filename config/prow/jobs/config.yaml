@@ -3850,6 +3850,42 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+  - name: pull-knative-net-http01-integration-tests
+    agent: kubernetes
+    context: pull-knative-net-http01-integration-tests
+    always_run: true
+    rerun_command: "/test pull-knative-net-http01-integration-tests"
+    trigger: "(?m)^/test (all|pull-knative-net-http01-integration-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/net-http01
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--integration-tests"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
   - name: pull-knative-net-http01-go-coverage
     agent: kubernetes
     context: pull-knative-net-http01-go-coverage
