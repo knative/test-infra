@@ -338,6 +338,12 @@ presubmits:
       dot-dev: true
     - go-coverage: true
       dot-dev: true
+    - custom-test: latest
+      dot-dev: true
+      optional: true
+      args:
+      - "--run-test"
+      - "./test/e2e-tests.sh --istio-version latest"
 
   knative/net-kourier:
     - build-tests: true

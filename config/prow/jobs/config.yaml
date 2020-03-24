@@ -4015,6 +4015,38 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
+  - name: pull-knative-net-istio-latest
+    agent: kubernetes
+    context: pull-knative-net-istio-latest
+    always_run: true
+    rerun_command: "/test pull-knative-net-istio-latest"
+    trigger: "(?m)^/test (all|pull-knative-net-istio-latest),?(\\s+|$)"
+    decorate: true
+    optional: true
+    path_alias: knative.dev/net-istio
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version latest"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
   knative/net-kourier:
   - name: pull-knative-net-kourier-build-tests
     agent: kubernetes
