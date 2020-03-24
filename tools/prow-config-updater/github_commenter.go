@@ -28,7 +28,7 @@ import (
 
 const (
 	successUpdatedConfigsCommentTemplate = "Updated %s configs with below files being modified: \n%s"
-	failureUpdatedConfigsCommentTemplate = "Failed updating %s configs with below files being modified: \n%s\nSee error details below: %v"
+	failureUpdatedConfigsCommentTemplate = "Failed updating %s configs with below files being modified:\n%s\nSee error details below:\n%v"
 	successStagingCommentTemplate        = "The staging process is completed and succeeded.\nWill create an auto-merge PR to roll out the changes to production."
 	failureStagingCommentTemplate        = "The staging process failed with the error below:\n%v\n\nPlease check if there is anything going wrong."
 	successRolloutCommentTemplate        = "Created #%d to roll out the staging changes to production."
@@ -96,7 +96,7 @@ func (ghc *GitHubCommenter) commentOnRolloutFailure(prnumber int, err error) err
 
 func (ghc *GitHubCommenter) commentOnMainPullRequest(prnumber int, topic, comment string) error {
 	return helpers.Run(
-		fmt.Sprintf("Creating %q comment on PR %q in %s/%s with content:\n%s",
+		fmt.Sprintf("Creating %q comment on PR '%d' in %s/%s with content:\n%s",
 			topic, prnumber, config.OrgName, config.RepoName, comment),
 		func() error {
 			_, err := ghc.client.CreateComment(config.OrgName, config.RepoName, prnumber, comment)

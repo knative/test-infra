@@ -110,7 +110,16 @@ func UpdateProw(env ProwEnv, dryrun bool) error {
 	return helpers.Run(
 		fmt.Sprintf("Updating Prow configs with command %q", updateCommand),
 		func() error {
-			out, err := cmd.RunCommand(updateCommand)
+			// Use the default GOOGLE_APPLICATION_CREDENTIALS to authenticate with the gcloud services,
+			// it will fallback to use the local credentials if the env var does not exist.
+			kf := os.Getenv("GOOGLE_APPLICATION_CREDENTIALS")
+			if kf != "" {
+				authCommand := "gcloud auth activate-service-account --key-file=" + kf
+				if _, err := cmd.RunCommand(authCommand); err != nil {
+					return fmt.Errorf("error activating service account with %q", kf)
+				}
+			}
+			out, err := cmd.RunCommand(updateCommand, cmd.WithEnvs(os.Environ()))
 			log.Println(out)
 			return err
 		},
