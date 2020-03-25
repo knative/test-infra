@@ -13,8 +13,8 @@
 # limitations under the License.
 
 # This is the meta config file for Prow Jobs in all Knative projects.
-# Run `make config` after making changes to this file, the config-generator
-# will generate Prow jobs for you in jobs/config.yaml.
+# Run `./hack/generate-configs.sh` after making changes to this file,
+# the config-generator will generate Prow jobs for you in jobs/config.yaml.
 
 presubmits:
   knative/serving:

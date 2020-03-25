@@ -1,9 +1,22 @@
 # Prow setup
 
-## Adding new Kubernetes resources
+All Prow related config files for [prow.knative.dev](https://prow.knative.dev) are under 
+[config/prow](../config/prow). We have also set up [prow-staging.knative.dev](https://prow-staging.knative.dev)
+to test against the 
+
+ 
+
+## Modify Prow cluster configs
+
+Prow is a collection of microservices that are deployed on a Kubernetes cluster,
+and all the Kubernetes resource files are under [prow-cluster](../config/prow/cluster).
+
+To make changes to Prow cluster configs, please follow the staging process:
 
 1. Check under [prow/cluster](../config/prow/cluster) and add a new file there
    if not exist.
+   
+1. 
 
 ## Expanding Boskos pool
 
@@ -102,7 +115,7 @@
 
    ![Branch Checks](branch_checks.png)
 
-## Setting up the issue tracker for a repo
+## Setting up the issue tracker for a repo (optional)
 
 If you want Prow to manage the freshness level for Issues and Pull Requests for
 a repo (see the
