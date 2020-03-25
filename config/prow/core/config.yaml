@@ -109,6 +109,7 @@ tide:
   queries:
   - repos:
     - "google/knative-gcp"
+    - "knative-sandbox/operator"
     - "knative/caching"
     - "knative/client"
     - "knative/client-contrib"

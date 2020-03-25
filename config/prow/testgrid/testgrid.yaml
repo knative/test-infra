@@ -583,6 +583,28 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "prime-engprod-sea@google.com"
   num_failures_to_alert: 3
+- name: ci-knative-operator-sandbox-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-operator-sandbox-continuous
+  alert_stale_results_hours: 3
+- name: ci-knative-operator-sandbox-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-operator-sandbox-nightly-release
+  alert_options:
+    alert_mail_to_addresses: "prime-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-operator-sandbox-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-operator-sandbox-dot-release
+  alert_options:
+    alert_mail_to_addresses: "prime-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-operator-sandbox-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-operator-sandbox-auto-release
+  alert_options:
+    alert_mail_to_addresses: "prime-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-operator-sandbox-test-coverage
+  gcs_prefix: knative-prow/logs/ci-knative-operator-sandbox-go-coverage
+  short_text_metric: "coverage"
 dashboards:
 - name: serving
   dashboard_tab:
@@ -1024,6 +1046,35 @@ dashboards:
   - name: coverage
     test_group_name: ci-google-knative-gcp-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+- name: operator
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-operator-sandbox-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "prime-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: nightly
+    test_group_name: ci-knative-operator-sandbox-nightly-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "prime-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: dot-release
+    test_group_name: ci-knative-operator-sandbox-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "prime-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: auto-release
+    test_group_name: ci-knative-operator-sandbox-auto-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "prime-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: coverage
+    test_group_name: ci-knative-operator-sandbox-test-coverage
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: knative-0.10
   dashboard_tab:
   - name: serving-continuous
@@ -1294,3 +1345,6 @@ dashboard_groups:
 - name: google
   dashboard_names:
   - "knative-gcp"
+- name: knative-sandbox
+  dashboard_names:
+  - "operator"

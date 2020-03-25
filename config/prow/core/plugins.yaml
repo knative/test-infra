@@ -15,6 +15,7 @@
 approve:
 - repos:
   - "google/knative-gcp"
+  - "knative-sandbox/operator"
   - "knative/caching"
   - "knative/client"
   - "knative/client-contrib"
@@ -91,6 +92,31 @@ label:
 # Plugins enabled for each repo.
 plugins:
   google/knative-gcp:
+  - approve
+  - assign
+  - blunderbuss
+  - buildifier
+  - cat
+  - dog
+  - golint
+  - heart
+  - help
+  - hold
+  - label
+  - lgtm
+  - lifecycle
+  - milestone
+  - owners-label
+  - project
+  - shrug
+  - size
+  - skip
+  - trigger
+  - verify-owners
+  - welcome
+  - wip
+  - yuks
+  knative-sandbox/operator:
   - approve
   - assign
   - blunderbuss
@@ -617,6 +643,11 @@ plugins:
   - yuks
 external_plugins:
   google/knative-gcp:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
+  knative-sandbox/operator:
   - name: needs-rebase
     events:
       - issue_comment
