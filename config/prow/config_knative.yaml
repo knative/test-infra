@@ -404,13 +404,9 @@ presubmits:
 
   knative-sandbox/operator:
     - build-tests: true
-      dot-dev: true
     - unit-tests: true
-      dot-dev: true
     - integration-tests: true
-      dot-dev: true
     - go-coverage: true
-      dot-dev: true
 
 periodics:
   knative/serving:
@@ -978,14 +974,14 @@ periodics:
 
   knative-sandbox/operator:
     - continuous: true
-      dot-dev: true
       go113: true
     - nightly: true
-      dot-dev: true
       go113: true
     - dot-release: true
-      dot-dev: true
       go113: true
+      env-vars:
+      - ORG_NAME=knative-sandbox
     - auto-release: true
-      dot-dev: true
       go113: true
+      env-vars:
+      - ORG_NAME=knative-sandbox
