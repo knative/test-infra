@@ -8956,7 +8956,7 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "28 * * * *"
+- cron: "8 * * * *"
   name: ci-knative-net-certmanager-continuous
   agent: kubernetes
   labels:
@@ -8991,7 +8991,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "3 9 * * *"
+- cron: "43 9 * * *"
   name: ci-knative-net-certmanager-nightly-release
   agent: kubernetes
   labels:
@@ -9027,7 +9027,7 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "44 9 * * 2"
+- cron: "24 9 * * 2"
   name: ci-knative-net-certmanager-dot-release
   agent: kubernetes
   labels:
@@ -9071,7 +9071,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "41 */2 * * *"
+- cron: "21 */2 * * *"
   name: ci-knative-net-certmanager-auto-release
   agent: kubernetes
   labels:
