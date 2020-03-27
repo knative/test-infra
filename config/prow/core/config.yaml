@@ -118,6 +118,7 @@ tide:
     - "knative/eventing"
     - "knative/eventing-contrib"
     - "knative/eventing-operator"
+    - "knative/net-certmanager"
     - "knative/net-contour"
     - "knative/net-http01"
     - "knative/net-istio"
