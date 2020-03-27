@@ -308,7 +308,6 @@ presubmits:
     - unit-tests: true
     - integration-tests: true
     - go-coverage: true
-  
   knative/net-certmanager:
     - build-tests: true
       dot-dev: true
