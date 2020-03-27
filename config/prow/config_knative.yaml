@@ -308,6 +308,7 @@ presubmits:
     - unit-tests: true
     - integration-tests: true
     - go-coverage: true
+
   knative/net-certmanager:
     - build-tests: true
       dot-dev: true
@@ -924,6 +925,8 @@ periodics:
       go113: true
       env-vars:
       - ORG_NAME=google
+  
+  knative/net-certmanager:
     - continuous: true
       dot-dev: true
       go113: true
