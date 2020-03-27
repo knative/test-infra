@@ -32,7 +32,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
       - name: metrics
-        image: gcr.io/k8s-prow/boskos/metrics:v20200220-47050c474
+        image: gcr.io/k8s-prow/boskos/metrics:v20200327-4e1ed20bb
         args:
         - --resource-type=gke-project
         ports:

@@ -31,7 +31,7 @@ spec:
       terminationGracePeriodSeconds: 300
       containers:
       - name: boskos-janitor
-        image: gcr.io/k8s-prow/boskos/janitor:v20200225-e5243e7de
+        image: gcr.io/k8s-prow/boskos/janitor:v20200327-4e1ed20bb
         args:
         - --resource-type=gke-project
         - --
