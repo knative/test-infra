@@ -172,7 +172,7 @@ func init() {
 	}
 }
 
-// These arrays hold the default OpenCensus views that keep track of publish/subscribe operations.
+// The following arrays are the default views related to publish/subscribe operations provided by this package.
 // It is EXPERIMENTAL and subject to change or removal without notice.
 var (
 	DefaultPublishViews   []*view.View

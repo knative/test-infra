@@ -62,13 +62,9 @@ func NewClient(ctx context.Context, projectID string, opts ...option.ClientOptio
 		}
 		o = []option.ClientOption{option.WithGRPCConn(conn)}
 	} else {
-		numConns := runtime.GOMAXPROCS(0)
-		if numConns > 4 {
-			numConns = 4
-		}
 		o = []option.ClientOption{
 			// Create multiple connections to increase throughput.
-			option.WithGRPCConnectionPool(numConns),
+			option.WithGRPCConnectionPool(runtime.GOMAXPROCS(0)),
 			option.WithGRPCDialOption(grpc.WithKeepaliveParams(keepalive.ClientParameters{
 				Time: 5 * time.Minute,
 			})),

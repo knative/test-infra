@@ -21,10 +21,7 @@ import (
 
 // RepositoryContent represents a file or directory in a github repository.
 type RepositoryContent struct {
-	Type *string `json:"type,omitempty"`
-	// Target is only set if the type is "symlink" and the target is not a normal file.
-	// If Target is set, Path will be the symlink path.
-	Target   *string `json:"target,omitempty"`
+	Type     *string `json:"type,omitempty"`
 	Encoding *string `json:"encoding,omitempty"`
 	Size     *int    `json:"size,omitempty"`
 	Name     *string `json:"name,omitempty"`
@@ -240,28 +237,15 @@ const (
 // or github.Zipball constant.
 //
 // GitHub API docs: https://developer.github.com/v3/repos/contents/#get-archive-link
-func (s *RepositoriesService) GetArchiveLink(ctx context.Context, owner, repo string, archiveformat archiveFormat, opt *RepositoryContentGetOptions, followRedirects bool) (*url.URL, *Response, error) {
+func (s *RepositoriesService) GetArchiveLink(ctx context.Context, owner, repo string, archiveformat archiveFormat, opt *RepositoryContentGetOptions) (*url.URL, *Response, error) {
 	u := fmt.Sprintf("repos/%s/%s/%s", owner, repo, archiveformat)
 	if opt != nil && opt.Ref != "" {
 		u += fmt.Sprintf("/%s", opt.Ref)
 	}
-	resp, err := s.getArchiveLinkFromURL(ctx, u, followRedirects)
+	req, err := s.client.NewRequest("GET", u, nil)
 	if err != nil {
 		return nil, nil, err
 	}
-	if resp.StatusCode != http.StatusFound {
-		return nil, newResponse(resp), fmt.Errorf("unexpected status code: %s", resp.Status)
-	}
-	parsedURL, err := url.Parse(resp.Header.Get("Location"))
-	return parsedURL, newResponse(resp), err
-}
-
-func (s *RepositoriesService) getArchiveLinkFromURL(ctx context.Context, u string, followRedirects bool) (*http.Response, error) {
-	req, err := s.client.NewRequest("GET", u, nil)
-	if err != nil {
-		return nil, err
-	}
-
 	var resp *http.Response
 	// Use http.DefaultTransport if no custom Transport is configured
 	req = withContext(ctx, req)
@@ -271,14 +255,12 @@ func (s *RepositoriesService) getArchiveLinkFromURL(ctx context.Context, u strin
 		resp, err = s.client.client.Transport.RoundTrip(req)
 	}
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	resp.Body.Close()
-
-	// If redirect response is returned, follow it
-	if followRedirects && resp.StatusCode == http.StatusMovedPermanently {
-		u = resp.Header.Get("Location")
-		resp, err = s.getArchiveLinkFromURL(ctx, u, false)
+	if resp.StatusCode != http.StatusFound {
+		return nil, newResponse(resp), fmt.Errorf("unexpected status code: %s", resp.Status)
 	}
-	return resp, err
+	parsedURL, err := url.Parse(resp.Header.Get("Location"))
+	return parsedURL, newResponse(resp), err
 }

@@ -9,7 +9,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"strings"
 )
 
 // Deployment represents a deployment in a repo
@@ -32,15 +31,15 @@ type Deployment struct {
 
 // DeploymentRequest represents a deployment request
 type DeploymentRequest struct {
-	Ref                   *string     `json:"ref,omitempty"`
-	Task                  *string     `json:"task,omitempty"`
-	AutoMerge             *bool       `json:"auto_merge,omitempty"`
-	RequiredContexts      *[]string   `json:"required_contexts,omitempty"`
-	Payload               interface{} `json:"payload,omitempty"`
-	Environment           *string     `json:"environment,omitempty"`
-	Description           *string     `json:"description,omitempty"`
-	TransientEnvironment  *bool       `json:"transient_environment,omitempty"`
-	ProductionEnvironment *bool       `json:"production_environment,omitempty"`
+	Ref                   *string   `json:"ref,omitempty"`
+	Task                  *string   `json:"task,omitempty"`
+	AutoMerge             *bool     `json:"auto_merge,omitempty"`
+	RequiredContexts      *[]string `json:"required_contexts,omitempty"`
+	Payload               *string   `json:"payload,omitempty"`
+	Environment           *string   `json:"environment,omitempty"`
+	Description           *string   `json:"description,omitempty"`
+	TransientEnvironment  *bool     `json:"transient_environment,omitempty"`
+	ProductionEnvironment *bool     `json:"production_environment,omitempty"`
 }
 
 // DeploymentsListOptions specifies the optional parameters to the
@@ -117,8 +116,7 @@ func (s *RepositoriesService) CreateDeployment(ctx context.Context, owner, repo 
 	}
 
 	// TODO: remove custom Accept headers when APIs fully launch.
-	acceptHeaders := []string{mediaTypeDeploymentStatusPreview, mediaTypeExpandDeploymentStatusPreview}
-	req.Header.Set("Accept", strings.Join(acceptHeaders, ", "))
+	req.Header.Set("Accept", mediaTypeDeploymentStatusPreview)
 
 	d := new(Deployment)
 	resp, err := s.client.Do(ctx, req, d)
@@ -151,7 +149,6 @@ type DeploymentStatusRequest struct {
 	State          *string `json:"state,omitempty"`
 	LogURL         *string `json:"log_url,omitempty"`
 	Description    *string `json:"description,omitempty"`
-	Environment    *string `json:"environment,omitempty"`
 	EnvironmentURL *string `json:"environment_url,omitempty"`
 	AutoInactive   *bool   `json:"auto_inactive,omitempty"`
 }
@@ -192,8 +189,7 @@ func (s *RepositoriesService) GetDeploymentStatus(ctx context.Context, owner, re
 	}
 
 	// TODO: remove custom Accept headers when APIs fully launch.
-	acceptHeaders := []string{mediaTypeDeploymentStatusPreview, mediaTypeExpandDeploymentStatusPreview}
-	req.Header.Set("Accept", strings.Join(acceptHeaders, ", "))
+	req.Header.Set("Accept", mediaTypeDeploymentStatusPreview)
 
 	d := new(DeploymentStatus)
 	resp, err := s.client.Do(ctx, req, d)
@@ -216,8 +212,7 @@ func (s *RepositoriesService) CreateDeploymentStatus(ctx context.Context, owner,
 	}
 
 	// TODO: remove custom Accept headers when APIs fully launch.
-	acceptHeaders := []string{mediaTypeDeploymentStatusPreview, mediaTypeExpandDeploymentStatusPreview}
-	req.Header.Set("Accept", strings.Join(acceptHeaders, ", "))
+	req.Header.Set("Accept", mediaTypeDeploymentStatusPreview)
 
 	d := new(DeploymentStatus)
 	resp, err := s.client.Do(ctx, req, d)
