@@ -129,7 +129,7 @@ func githubOperations(ghToken string, repoData []RepoData, dryrun bool) (map[str
 
 func isWeekend(t time.Time) bool {
 	weekDay := t.Weekday()
-	return weekDay > 5 || weekDay < 1
+	return weekDay == 6 || weekDay == 0
 }
 
 func slackOperations(slackToken string, repoData []RepoData, flakyIssues map[string][]flakyIssue, dryrun bool) error {
