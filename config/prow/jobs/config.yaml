@@ -1101,34 +1101,6 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-client-contrib-go-coverage
-    agent: kubernetes
-    context: pull-knative-client-contrib-go-coverage
-    always_run: true
-    rerun_command: "/test pull-knative-client-contrib-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-client-contrib-go-coverage),?(\\s+|$)"
-    optional: true
-    decorate: true
-    path_alias: knative.dev/client-contrib
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--postsubmit-job-name=post-knative-client-contrib-go-coverage"
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=50"
-        - "--github-token=/etc/covbot-token/token"
-        volumeMounts:
-        - name: covbot-token
-          mountPath: /etc/covbot-token
-          readOnly: true
-      volumes:
-      - name: covbot-token
-        secret:
-          secretName: covbot-token
   knative/eventing:
   - name: pull-knative-eventing-build-tests
     agent: kubernetes
@@ -6370,28 +6342,6 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 1 * * *"
-  name: ci-knative-client-contrib-go-coverage
-  labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-client-contrib-go-coverage
-  agent: kubernetes
-  decorate: true
-  extra_refs:
-  - org: knative
-    repo: client-contrib
-    base_ref: master
-    path_alias: knative.dev/client-contrib
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/coverage:latest
-      imagePullPolicy: Always
-      command:
-      - "/coverage"
-      args:
-      - "--artifacts=$(ARTIFACTS)"
-      - "--cov-threshold-percentage=50"
 - cron: "20 * * * *"
   name: ci-knative-docs-continuous
   agent: kubernetes
@@ -10834,22 +10784,6 @@ postsubmits:
     agent: kubernetes
     decorate: true
     path_alias: knative.dev/client
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=0"
-  knative/client-contrib:
-  - name: post-knative-client-contrib-go-coverage
-    branches:
-    - master
-    agent: kubernetes
-    decorate: true
-    path_alias: knative.dev/client-contrib
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
