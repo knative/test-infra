@@ -10,7 +10,7 @@ require (
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/google/go-cmp v0.4.0
 	github.com/google/go-containerregistry v0.0.0-20200123184029-53ce695e4179
-	github.com/google/go-github v17.0.0+incompatible
+	github.com/google/go-github/v27 v27.0.6
 	github.com/google/licenseclassifier v0.0.0-20181010185715-e979a0b10eeb
 	github.com/googleapis/gnostic v0.4.0 // indirect
 	github.com/json-iterator/go v1.1.9 // indirect
@@ -29,4 +29,9 @@ require (
 	knative.dev/pkg v0.0.0-20200323231609-0840da9555a3
 )
 
-replace knative.dev/pkg => github.com/chizhg/pkg v0.0.0-20200330020211-4643096970a8
+replace (
+
+	k8s.io/apimachinery => k8s.io/apimachinery v0.16.4
+	k8s.io/client-go => k8s.io/client-go v0.16.4
+	knative.dev/pkg => github.com/chizhg/pkg v0.0.0-20200330020211-4643096970a8
+)
