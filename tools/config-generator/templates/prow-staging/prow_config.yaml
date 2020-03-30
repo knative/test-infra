@@ -42,6 +42,8 @@ deck:
           - 'panic: test timed out after.*$'
           # test case failure
           - 'FAIL:'
+          # data race errors
+          - 'WARNING: DATA RACE'
           # step failed
           - 'Step failed:'
           # boskos error
