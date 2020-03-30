@@ -18,6 +18,8 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+export GO111MODULE=on
+
 source $(dirname $0)/../scripts/library.sh
 
 # Make sure our dependencies are up-to-date
