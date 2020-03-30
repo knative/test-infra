@@ -20,4 +20,5 @@ package tools
 
 import (
     _ "knative.dev/pkg/testutils/clustermanager/prow-cluster-operation"
+    _ "knative.dev/pkg/testutils/metahelper"
 )
