@@ -178,8 +178,6 @@ presubmits:
       dot-dev: true
     - integration-tests: true
       dot-dev: true
-    - go-coverage: true
-      dot-dev: true
 
   knative/eventing:
     - repo-settings:
