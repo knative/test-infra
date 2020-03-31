@@ -48,6 +48,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed creating commenter github client: %v", err)
 	}
+	var test1 error
+	var test2 error
 
 	cli := &Client{
 		githubmainhandler: &GitHubMainHandler{client: mgc, dryrun: *dryrun, info: git.Info{
