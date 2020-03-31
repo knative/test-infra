@@ -56,7 +56,7 @@ done
 cp -aR "${TMP_DIFFROOT}"/* "${REPO_ROOT_DIR}"
 
 echo "################"
-git diff
+cat "${TMP_DIFFROOT}/vendor/modules.txt"
 echo "################"
 
 if [[ $ret -eq 0 ]]
