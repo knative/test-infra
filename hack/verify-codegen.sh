@@ -55,6 +55,10 @@ for dir in {DIRS_TOBE_INSPECTED[@]}; do
 done
 cp -aR "${TMP_DIFFROOT}"/* "${REPO_ROOT_DIR}"
 
+echo "################"
+git diff
+echo "################"
+
 if [[ $ret -eq 0 ]]
 then
   echo "${REPO_ROOT_DIR} up to date."
