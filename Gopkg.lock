@@ -950,7 +950,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:907c509dfa754ee63f3ee2dcc1ea533ca5d39cbc1fd030296f118525b7cef7f6"
+  digest = "1:97b91191b888cfd00e9ca6d3b0a73274ea688068cbad75ffff274d60dba77d50"
   name = "knative.dev/pkg"
   packages = [
     "test",
@@ -972,9 +972,6 @@
     "testutils/clustermanager/e2e-tests/common",
     "testutils/clustermanager/perf-tests",
     "testutils/clustermanager/perf-tests/pkg",
-    "testutils/clustermanager/prow-cluster-operation",
-    "testutils/clustermanager/prow-cluster-operation/actions",
-    "testutils/clustermanager/prow-cluster-operation/options",
     "testutils/metahelper",
     "testutils/metahelper/client",
   ]
@@ -1007,6 +1004,7 @@
     "github.com/pkg/errors",
     "github.com/spf13/cobra",
     "golang.org/x/oauth2",
+    "google.golang.org/api/container/v1beta1",
     "google.golang.org/api/iterator",
     "google.golang.org/api/option",
     "gopkg.in/yaml.v2",
@@ -1019,9 +1017,10 @@
     "knative.dev/pkg/test/helpers",
     "knative.dev/pkg/test/prow",
     "knative.dev/pkg/test/slackutil",
+    "knative.dev/pkg/testutils/clustermanager/e2e-tests",
     "knative.dev/pkg/testutils/clustermanager/perf-tests",
-    "knative.dev/pkg/testutils/clustermanager/prow-cluster-operation",
     "knative.dev/pkg/testutils/metahelper",
+    "knative.dev/pkg/testutils/metahelper/client",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

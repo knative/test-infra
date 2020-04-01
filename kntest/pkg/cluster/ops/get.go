@@ -1,5 +1,5 @@
 /*
-Copyright 2019 The Knative Authors
+Copyright 2020 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,18 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package actions
+package ops
 
 import (
-	clm "knative.dev/pkg/testutils/clustermanager/e2e-tests"
-	"knative.dev/pkg/testutils/clustermanager/prow-cluster-operation/options"
+    clm "knative.dev/pkg/testutils/clustermanager/e2e-tests"
 )
 
 // Get gets a GKE cluster
-func Get(o *options.RequestWrapper) (*clm.GKECluster, error) {
-	o.Prep()
-	o.Request.SkipCreation = true
-	// Reuse `Create` for getting operation, so that we can reuse the same logic
-	// such as protected project/cluster etc.
-	return Create(o)
+func Get(o *RequestWrapper) (*clm.GKECluster, error) {
+    o.Request.SkipCreation = true
+    // Reuse `Create` for getting operation, so that we can reuse the same logic
+    // such as protected project/cluster etc.
+    return Create(o)
 }

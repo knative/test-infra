@@ -35,10 +35,10 @@ function knative_setup() {
   start_latest_knative_serving
 }
 
-# Run a prow-cluster-operation tool
+# Run "kntest cluster" tool
 # Parameters: $1..$n - parameters passed to the tool
 function run_prow_cluster_tool() {
-  go run ${REPO_ROOT_DIR}/vendor/knative.dev/pkg/testutils/clustermanager/prow-cluster-operation $@
+   run_go_tool knative.dev/test-infra/kntest "$@"
 }
 
 # Get test cluster from kubeconfig, fail if it's protected
@@ -57,7 +57,7 @@ function get_e2e_test_cluster() {
 function add_trap {
   local cmd=$1
   shift
-  for trap_signal in $@; do
+  for trap_signal in "$@"; do
     local current_trap="$(trap -p $trap_signal | cut -d\' -f2)"
     local new_cmd="($cmd)"
     [[ -n "${current_trap}" ]] && new_cmd="${current_trap};${new_cmd}"
@@ -78,7 +78,7 @@ function create_test_cluster() {
   (( SKIP_ISTIO_ADDON )) || creation_args+=" --addons istio"
   [[ -n "${GCP_PROJECT}" ]] && creation_args+=" --project ${GCP_PROJECT}"
   echo "Creating cluster with args ${creation_args}"
-  run_prow_cluster_tool --create ${creation_args} || fail_test "failed creating test cluster"
+  run_prow_cluster_tool create "${creation_args}" || fail_test "failed creating test cluster"
   # Should have kubeconfig set already
   local k8s_cluster
   k8s_cluster=$(get_e2e_test_cluster)
@@ -86,7 +86,7 @@ function create_test_cluster() {
   # Since calling `create_test_cluster` assumes cluster creation, removing
   # cluster afterwards.
   # TODO(chaodaiG) calling async method so that it doesn't wait
-  add_trap "run_prow_cluster_tool --delete > /dev/null &" EXIT SIGINT
+  add_trap "run_prow_cluster_tool delete > /dev/null &" EXIT SIGINT
   set +o errexit
   set +o pipefail
 }
@@ -168,7 +168,7 @@ function setup_test_cluster() {
 # Script entry point.
 
 # Create cluster, this should have kubectl set
-initialize $@
+initialize "$@"
 # Setup cluster
 setup_test_cluster # NA
 
