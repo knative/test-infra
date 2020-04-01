@@ -86,7 +86,7 @@ func generateConfigUpdaterToolPostsubmitJob() {
 		"--github-token-file=/etc/prow-robot-github-token/token",
 		"--github-userid=knative-prow-robot",
 		"--git-username='Knative Prow Robot'",
-		"--git-email=knative-prow-robot@google.com",
+		"--git-email=adrcunha+knative-prow-robot@google.com",
 		"--comment-github-token-file=/etc/prow-updater-robot-github-token/token",
 	}
 	addExtraEnvVarsToJob(extraEnvVars, &data.Base)

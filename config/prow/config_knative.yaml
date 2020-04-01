@@ -178,8 +178,6 @@ presubmits:
       dot-dev: true
     - integration-tests: true
       dot-dev: true
-    - go-coverage: true
-      dot-dev: true
 
   knative/eventing:
     - repo-settings:
@@ -309,6 +307,16 @@ presubmits:
     - integration-tests: true
     - go-coverage: true
 
+  knative/net-certmanager:
+    - build-tests: true
+      dot-dev: true
+    - unit-tests: true
+      dot-dev: true
+    - integration-tests: false
+      dot-dev: true
+    - go-coverage: true
+      dot-dev: true
+
   knative/net-contour:
     - build-tests: true
       dot-dev: true
@@ -324,7 +332,7 @@ presubmits:
       dot-dev: true
     - unit-tests: true
       dot-dev: true
-    - integration-tests: false
+    - integration-tests: true
       dot-dev: true
     - go-coverage: true
       dot-dev: true
@@ -350,7 +358,7 @@ presubmits:
       dot-dev: true
     - unit-tests: true
       dot-dev: true
-    - integration-tests: false
+    - integration-tests: true
       dot-dev: true
     - go-coverage: true
       dot-dev: true
@@ -401,6 +409,12 @@ presubmits:
     - unit-tests: false
     - integration-tests: false
     - go-coverage: false
+
+  knative-sandbox/operator:
+    - build-tests: true
+    - unit-tests: true
+    - integration-tests: true
+    - go-coverage: true
 
 periodics:
   knative/serving:
@@ -910,6 +924,20 @@ periodics:
       env-vars:
       - ORG_NAME=google
 
+  knative/net-certmanager:
+    - continuous: true
+      dot-dev: true
+      go113: true
+    - nightly: true
+      dot-dev: true
+      go113: true
+    - dot-release: true
+      dot-dev: true
+      go113: true
+    - auto-release: true
+      dot-dev: true
+      go113: true
+
   knative/net-contour:
     - continuous: true
       dot-dev: true
@@ -965,3 +993,17 @@ periodics:
     - auto-release: true
       dot-dev: true
       go113: true
+
+  knative-sandbox/operator:
+    - continuous: true
+      go113: true
+    - nightly: true
+      go113: true
+    - dot-release: true
+      go113: true
+      env-vars:
+      - ORG_NAME=knative-sandbox
+    - auto-release: true
+      go113: true
+      env-vars:
+      - ORG_NAME=knative-sandbox
