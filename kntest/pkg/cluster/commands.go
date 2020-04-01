@@ -25,7 +25,7 @@ import (
 	"knative.dev/test-infra/kntest/pkg/cluster/ops"
 )
 
-// Add cluster subcommands.
+// AddCommands adds cluster subcommands.
 func AddCommands(topLevel *cobra.Command) {
 	var clusterCmd = &cobra.Command{
 		Use:   "cluster",

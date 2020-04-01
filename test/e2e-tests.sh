@@ -38,9 +38,9 @@ function knative_setup() {
 # Run "kntest cluster" tool
 # Parameters: $1..$n - parameters passed to the tool
 function run_prow_cluster_tool() {
-  go run "${REPO_ROOT_DIR}"/kntest "$@"
+  go run "${REPO_ROOT_DIR}"/kntest/cmd/kntest cluster $@
   # TODO(chizhg): use run_go_tool instead
-  # run_go_tool knative.dev/test-infra/kntest "$@"
+  # run_go_tool knative.dev/test-infra/kntest/cmd/kntest cluster $@
 }
 
 # Get test cluster from kubeconfig, fail if it's protected
@@ -59,7 +59,7 @@ function get_e2e_test_cluster() {
 function add_trap {
   local cmd=$1
   shift
-  for trap_signal in "$@"; do
+  for trap_signal in $@; do
     local current_trap="$(trap -p "$trap_signal" | cut -d\' -f2)"
     local new_cmd="($cmd)"
     [[ -n "${current_trap}" ]] && new_cmd="${current_trap};${new_cmd}"
@@ -170,7 +170,7 @@ function setup_test_cluster() {
 # Script entry point.
 
 # Create cluster, this should have kubectl set
-initialize "$@"
+initialize $@
 # Setup cluster
 setup_test_cluster # NA
 
