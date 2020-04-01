@@ -251,6 +251,14 @@
   version = "v0.3.8"
 
 [[projects]]
+  digest = "1:406338ad39ab2e37b7f4452906442a3dbf0eb3379dd1f06aafb5c07e769a5fbb"
+  name = "github.com/inconshreveable/mousetrap"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75"
+  version = "v1.0"
+
+[[projects]]
   digest = "1:88116f979a2f3ff8e6748a942ec37efd668ba2db062fc9a5e47f4dd2de339a38"
   name = "github.com/json-iterator/go"
   packages = ["."]
@@ -349,6 +357,14 @@
   pruneopts = "NUT"
   revision = "839c75faf7f98a33d445d181f3018b5c3409a45e"
   version = "v1.4.2"
+
+[[projects]]
+  digest = "1:cae9f5ec514bfd95d4292a27124d368aa542be8a12fbdd3148cf981daddea182"
+  name = "github.com/spf13/cobra"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "6607e6b8603f56adb027298ee6695e06ffb3a819"
+  version = "0.0.7"
 
 [[projects]]
   digest = "1:d115708a27806831d1babbc6f28a7478ddf8e32a7095507c816e2515fb03a810"
@@ -989,6 +1005,7 @@
     "github.com/google/licenseclassifier",
     "github.com/kelseyhightower/envconfig",
     "github.com/pkg/errors",
+    "github.com/spf13/cobra",
     "golang.org/x/oauth2",
     "google.golang.org/api/iterator",
     "google.golang.org/api/option",
