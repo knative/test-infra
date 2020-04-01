@@ -933,8 +933,8 @@
   revision = "861946025e3491219eaccb1bf693e23df70c2fa8"
 
 [[projects]]
-  branch = "move-from-test-infra"
-  digest = "1:11fc90eb159f36585f313ecdbfb15a60996a4aa87befd5b1139b339cdff7f420"
+  branch = "master"
+  digest = "1:89b5bcbd2eecc9b58e2483f15dae699a46aaabc2c4755363004dc63ad89a77a2"
   name = "knative.dev/pkg"
   packages = [
     "test",
@@ -965,8 +965,7 @@
     "testutils/metahelper/client",
   ]
   pruneopts = "NUT"
-  revision = "613ab598e8ee1517c89f3db4b6afb82ae957b31c"
-  source = "github.com/chizhg/pkg"
+  revision = "55250e6aab62f767b8680a12ddeb771c519d78fe"
 
 [[projects]]
   digest = "1:8730e0150dfb2b7e173890c8b9868e7a273082ef8e39f4940e3506a481cf895c"
