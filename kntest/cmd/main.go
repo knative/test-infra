@@ -17,27 +17,27 @@ limitations under the License.
 package main
 
 import (
-    "log"
+	"log"
 
-    "github.com/spf13/cobra"
+	"github.com/spf13/cobra"
 
-    "knative.dev/test-infra/kntest/pkg/cluster"
+	"knative.dev/test-infra/kntest/pkg/cluster"
 )
 
 func main() {
-    // Parent command to which all subcommands are added.
-    cmds := &cobra.Command{
-        Use:   "kntest",
-        Short: "Tool used in Knative testing, implemented with Go.",
-        Run: func(cmd *cobra.Command, args []string) {
-            // Print out help info if parent command is run.
-            cmd.Help()
-        },
-    }
+	// Parent command to which all subcommands are added.
+	cmds := &cobra.Command{
+		Use:   "kntest",
+		Short: "Tool used in Knative testing, implemented with Go.",
+		Run: func(cmd *cobra.Command, args []string) {
+			// Print out help info if parent command is run.
+			cmd.Help()
+		},
+	}
 
-    cluster.AddCommands(cmds)
+	cluster.AddCommands(cmds)
 
-    if err := cmds.Execute(); err != nil {
-        log.Fatalf("error during command execution: %v", err)
-    }
+	if err := cmds.Execute(); err != nil {
+		log.Fatalf("error during command execution: %v", err)
+	}
 }

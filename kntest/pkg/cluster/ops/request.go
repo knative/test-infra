@@ -19,6 +19,6 @@ package ops
 import clm "knative.dev/pkg/testutils/clustermanager/e2e-tests"
 
 type RequestWrapper struct {
-    Request          clm.GKERequest
-    NoWait           bool
+	Request clm.GKERequest
+	NoWait  bool
 }
