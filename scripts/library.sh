@@ -514,10 +514,10 @@ function update_licenses() {
 # Parameters: $1...$n - directories and files to inspect.
 function check_licenses() {
   # Fetch the google/licenseclassifier for its license db
-  rm -fr ${GOPATH}/src/github.com/google/licenseclassifier
-  go get -u github.com/google/licenseclassifier
+#  rm -fr ${GOPATH}/src/github.com/google/licenseclassifier
+#  go get -u github.com/google/licenseclassifier
   # Check that we don't have any forbidden licenses in our images.
-  run_go_tool knative.dev/test-infra/tools/dep-collector dep-collector -check $@
+  run_go_tool github.com/google/go-licenses go-licenses check $@
 }
 
 # Run the given linter on the given files, checking it exists first.
