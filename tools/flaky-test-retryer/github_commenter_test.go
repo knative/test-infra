@@ -18,6 +18,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"reflect"
 	"testing"
 
@@ -293,5 +294,19 @@ func TestAppendComment(t *testing.T) {
 			t.Fatalf("testing appending existing comment, with:\nold comment:\n%s\nfailed tests:'%v'\nwant:\n%s\ngot:\n%s",
 				test.oldCommentBody, test.outliers, test.expCommentBody, *actualComment.Body)
 		}
+	}
+}
+
+func TestAAAllPass(t *testing.T) {
+	t.Log("Just pass")
+}
+
+func TestAAAllFail(t *testing.T) {
+	t.Fatal("Just fail")
+}
+
+func TestAASomeFail(t *testing.T) {
+	if r := rand.Intn(2); r == 1 {
+		t.Fatal("Failed randomly")
 	}
 }
