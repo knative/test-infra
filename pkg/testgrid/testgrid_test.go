@@ -17,51 +17,8 @@ limitations under the License.
 package testgrid
 
 import (
-	"io/ioutil"
-	"os"
-	"path"
 	"testing"
-
-	"knative.dev/pkg/test/junit"
-	"knative.dev/pkg/test/prow"
-	pkgTestgrid "knative.dev/pkg/test/testgrid"
 )
-
-const (
-	filename = "junit_test.xml"
-	name     = "test"
-)
-
-func checkFileText(resultFile, expected string, t *testing.T) {
-	d, err := ioutil.ReadFile(resultFile)
-	s := string(d)
-	if err != nil {
-		t.Fatalf("Failed to open test file: %v", err)
-	}
-	if s != expected {
-		t.Fatalf("Got:\n%s, Want:\n %s", s, expected)
-	}
-}
-
-func TestXMLOutput(t *testing.T) {
-	resultFile := path.Join(prow.GetLocalArtifactsDir(), filename)
-	defer os.Remove(resultFile)
-
-	// Create a test suites
-	tc := []junit.TestCase{}
-	want := `<testsuites>
-  <testsuite name="test" time="0" failures="0" tests="0">
-    <properties></properties>
-  </testsuite>
-</testsuites>
-`
-
-	// Create a test file
-	if err := pkgTestgrid.CreateXMLOutput(tc, name); err != nil {
-		t.Fatalf("Error when creating xml output file: %v", err)
-	}
-	checkFileText(resultFile, want, t)
-}
 
 func TestConfigPath(t *testing.T) {
 	if _, err := NewConfig(); err != nil {
