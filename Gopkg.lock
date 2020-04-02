@@ -934,7 +934,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:89b5bcbd2eecc9b58e2483f15dae699a46aaabc2c4755363004dc63ad89a77a2"
+  digest = "1:fb737248fa04011f76fe4788a155017257e2a54b25fcf8078ddadb69aa22bb2a"
   name = "knative.dev/pkg"
   packages = [
     "test",
@@ -951,7 +951,6 @@
     "test/prow",
     "test/slackutil",
     "test/spoof",
-    "test/testgrid",
     "test/zipkin",
     "testutils/clustermanager/e2e-tests",
     "testutils/clustermanager/e2e-tests/boskos",
@@ -1006,7 +1005,6 @@
     "knative.dev/pkg/test/junit",
     "knative.dev/pkg/test/prow",
     "knative.dev/pkg/test/slackutil",
-    "knative.dev/pkg/test/testgrid",
     "knative.dev/pkg/testutils/clustermanager/perf-tests",
     "knative.dev/pkg/testutils/clustermanager/prow-cluster-operation",
     "knative.dev/pkg/testutils/metahelper",
