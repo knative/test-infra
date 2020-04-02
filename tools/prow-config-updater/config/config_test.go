@@ -23,7 +23,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 
-	"knative.dev/test-infra/pkg/common"
+	"knative.dev/pkg/test/helpers"
 )
 
 func TestProwConfigPathsExist(t *testing.T) {
@@ -38,7 +38,7 @@ func TestProwKeyConfigPathsExist(t *testing.T) {
 
 func checkPaths(pathsArr [][]string, t *testing.T) {
 	t.Helper()
-	root, err := common.GetRootDir()
+	root, err := helpers.GetRootDir()
 	if err != nil {
 		t.Fatalf("Failed to get the root dir: %v", err)
 	}

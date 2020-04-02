@@ -934,7 +934,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:80da6fdd8753468465bc60587d0886ef7326368a19a8a2ecd9f9da51e4feb9d0"
+  digest = "1:fb737248fa04011f76fe4788a155017257e2a54b25fcf8078ddadb69aa22bb2a"
   name = "knative.dev/pkg"
   packages = [
     "test",
@@ -945,6 +945,7 @@
     "test/gke",
     "test/helpers",
     "test/ingress",
+    "test/junit",
     "test/logging",
     "test/monitoring",
     "test/prow",
@@ -996,10 +997,12 @@
     "k8s.io/apimachinery/pkg/util/sets",
     "k8s.io/apimachinery/pkg/util/wait",
     "knative.dev/pkg/test/cmd",
+    "knative.dev/pkg/test/gcs",
     "knative.dev/pkg/test/ghutil",
     "knative.dev/pkg/test/ghutil/fakeghutil",
     "knative.dev/pkg/test/gke",
     "knative.dev/pkg/test/helpers",
+    "knative.dev/pkg/test/junit",
     "knative.dev/pkg/test/prow",
     "knative.dev/pkg/test/slackutil",
     "knative.dev/pkg/testutils/clustermanager/perf-tests",

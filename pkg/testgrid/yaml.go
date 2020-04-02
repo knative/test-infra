@@ -23,7 +23,7 @@ import (
 
 	"gopkg.in/yaml.v2"
 
-	"knative.dev/test-infra/pkg/common"
+	"knative.dev/pkg/test/helpers"
 )
 
 const configPath = "config/prow/testgrid/testgrid.yaml"
@@ -47,7 +47,7 @@ type Tab struct {
 
 // NewConfig loads from default config
 func NewConfig() (*Config, error) {
-	root, err := common.GetRootDir()
+	root, err := helpers.GetRootDir()
 	if err != nil {
 		return nil, err
 	}
