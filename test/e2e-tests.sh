@@ -110,7 +110,7 @@ function setup_test_cluster() {
 
   # Run cluster-creator for acquiring existing test cluster, will fail if
   # kubeconfig isn't set or cluster doesn't exist
-  run_prow_cluster_tool --get || fail_test "failed getting test cluster" # NA
+  run_prow_cluster_tool get || fail_test "failed getting test cluster" # NA
   # The step above collects cluster metadata and writes to
   # ${ARTIFACTS}/metadata.json file, use this information
   echo "Cluster used for running tests: $(cat "${ARTIFACTS}"/metadata.json)"
