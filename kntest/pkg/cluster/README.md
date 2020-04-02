@@ -1,4 +1,4 @@
-## prow-cluster-operation
+## kntest cluster
 
 `kntest cluster` command is used for creating, deleting or getting a GKE cluster
 

@@ -28,7 +28,7 @@ source $(dirname $0)/../scripts/e2e-tests.sh
 # Read metadata.json and get value for key
 # Parameters: $1 - Key for metadata
 function get_meta_value() {
-  go run "${REPO_ROOT_DIR}"/vendor/knative.dev/pkg/testutils/metahelper --get "$1"
+  go run "${REPO_ROOT_DIR}/vendor/knative.dev/pkg/testutils/metahelper" --get "$1"
 }
 
 function knative_setup() {
