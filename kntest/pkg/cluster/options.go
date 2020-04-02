@@ -34,6 +34,7 @@ func addOptions(clusterCmd *cobra.Command, rw *ops.RequestWrapper) {
 	pf.StringVar(&req.ClusterName, "name", "", "cluster name")
 	pf.StringVar(&req.ReleaseChannel, "release-channel", "", "GKE release channel")
 	pf.StringVar(&req.ResourceType, "resource-type", "", "Boskos Resource Type")
+	pf.StringVar(&req.GKEVersion, "version", "", "GKE version")
 	pf.StringSliceVar(&req.BackupRegions, "backup-regions", []string{}, "GCP regions as backup, separated by comma")
 	pf.StringSliceVar(&req.Addons, "addons", []string{}, "addons to be added, separated by comma")
 	pf.BoolVar(&rw.Request.SkipCreation, "skip-creation", false, "should skip creation or not")
