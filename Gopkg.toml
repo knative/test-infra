@@ -17,7 +17,8 @@ required = [
 
 [[override]]
   name = "knative.dev/pkg"
-  branch = "master"
+  source = "github.com/chizhg/pkg"
+  branch = "fix-prow-cluster-management"
 
 # TODO(mattmoor): Find a way to bundle the licenseclassifier's
 # license database, so folks don't have to go get it.
