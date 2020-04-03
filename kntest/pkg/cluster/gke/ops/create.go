@@ -54,7 +54,6 @@ func Create(o *RequestWrapper) (*clm.GKECluster, error) {
 	writeMetaData(gkeOps.Cluster, gkeOps.Project)
 
 	// set up kube config points to cluster
-	// TODO(chaodaiG): this probably should also be part of clustermanager lib
 	clusterAuthCmd := fmt.Sprintf(
 		"gcloud beta container clusters get-credentials %s --region %s --project %s",
 		gkeOps.Cluster.Name, gkeOps.Cluster.Location, gkeOps.Project)
@@ -72,7 +71,7 @@ func Create(o *RequestWrapper) (*clm.GKECluster, error) {
 // after the cluster operation is finished
 func writeMetaData(cluster *container.Cluster, project string) {
 	// Set up metadata client for saving metadata
-	c, err := client.NewClient("")
+	c, err := client.New("")
 	if err != nil {
 		log.Fatal(err)
 	}

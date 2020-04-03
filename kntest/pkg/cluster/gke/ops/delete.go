@@ -20,33 +20,31 @@ import (
 	"fmt"
 	"log"
 
+	"knative.dev/pkg/test/cmd"
 	clm "knative.dev/pkg/testutils/clustermanager/e2e-tests"
 )
 
 // Delete deletes a GKE cluster
 func Delete(o *RequestWrapper) error {
-	o.Request.NeedsCleanup = true
 	o.Request.SkipCreation = true
 
 	gkeClient := clm.GKEClient{}
 	clusterOps := gkeClient.Setup(o.Request)
 	gkeOps := clusterOps.(*clm.GKECluster)
 	if err := gkeOps.Acquire(); err != nil || gkeOps.Cluster == nil {
-		return fmt.Errorf("failed identifying cluster for cleanup: '%v'", err)
+		return fmt.Errorf("failed identifying cluster for cleanup: '%w'", err)
 	}
 	log.Printf("Identified project %q and cluster %q for removal", gkeOps.Project, gkeOps.Cluster.Name)
 	var err error
 	if err = gkeOps.Delete(); err != nil {
-		return fmt.Errorf("failed deleting cluster: '%v'", err)
+		return fmt.Errorf("failed deleting cluster: '%w'", err)
 	}
-	// TODO: uncomment the lines below when previous Delete command becomes async operation
-	// // Unset context with best effort. The first command only unsets current
-	// // context, but doesn't delete the entry from kubeconfig, and should return it's
-	// // context if succeeded, which can be used by the second command to
-	// // delete it from kubeconfig
-	// if out, err := common.StandardExec("kubectl", "config", "unset", "current-context"); err != nil {
-	// 	common.StandardExec("kubectl", "config", "unset", "contexts."+string(out))
-	// }
+	// Unset context with best effort.
+	// The commands will try to unset the current context and delete it from kubeconfig.
+	cc, _ := cmd.RunCommand("kubectl config current-context")
+	if _, err := cmd.RunCommand("kubectl config unset current-context"); err != nil {
+		cmd.RunCommand("kubectl config unset contexts."+cc)
+	}
 
 	return nil
 }

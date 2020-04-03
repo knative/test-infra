@@ -14,17 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package cluster
+package gke
 
 import (
 	"github.com/spf13/cobra"
 
-	"knative.dev/test-infra/kntest/pkg/cluster/ops"
+	"knative.dev/test-infra/kntest/pkg/cluster/gke/ops"
 )
 
 func addOptions(clusterCmd *cobra.Command, rw *ops.RequestWrapper) {
 	pf := clusterCmd.PersistentFlags()
 	req := &rw.Request
+	// The default values set here are not used in the final operations,
+	// they will further be defaulted in
+	// https://github.com/knative/pkg/blob/7727cb37e05d6c6dd2abadbc3ab01ab748f12561/testutils/clustermanager/e2e-tests/gke.go#L73-L114
 	pf.Int64Var(&req.MinNodes, "min-nodes", 0, "minimal number of nodes")
 	pf.Int64Var(&req.MaxNodes, "max-nodes", 0, "maximal number of nodes")
 	pf.StringVar(&req.NodeType, "node-type", "", "node type")

@@ -1,6 +1,6 @@
-## kntest cluster
+## kntest cluster gke
 
-`kntest cluster` command is used for creating, deleting or getting a GKE cluster
+`kntest cluster gke` command is used for creating, deleting or getting a GKE cluster
 
 ## Prerequisite
 

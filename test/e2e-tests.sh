@@ -38,9 +38,12 @@ function knative_setup() {
 # Run "kntest cluster" tool
 # Parameters: $1..$n - parameters passed to the tool
 function run_prow_cluster_tool() {
-  go run "${REPO_ROOT_DIR}"/kntest/cmd/kntest cluster $@
-  # TODO(chizhg): use run_go_tool instead
-  # run_go_tool knative.dev/test-infra/kntest/cmd/kntest cluster $@
+  if [[ "${REPO_NAME}" == "test-infra" ]]; then
+    # TODO(chizhg): support parameterizing "gke" so that we can create other types of clusters
+    go run "${REPO_ROOT_DIR}"/kntest/cmd/kntest cluster gke $@
+  else
+    run_go_tool knative.dev/test-infra/kntest/cmd/kntest cluster gke $@
+  fi
 }
 
 # Get test cluster from kubeconfig, fail if it's protected
@@ -87,7 +90,6 @@ function create_test_cluster() {
 
   # Since calling `create_test_cluster` assumes cluster creation, removing
   # cluster afterwards.
-  # TODO(chaodaiG) calling async method so that it doesn't wait
   add_trap "run_prow_cluster_tool delete > /dev/null &" EXIT SIGINT
   set +o errexit
   set +o pipefail
