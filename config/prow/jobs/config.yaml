@@ -4824,6 +4824,7 @@ presubmits:
     rerun_command: "/test pull-knative-sandbox-operator-build-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-operator-build-tests),?(\\s+|$)"
     decorate: true
+    path_alias: knative.dev/operator
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4859,6 +4860,7 @@ presubmits:
     rerun_command: "/test pull-knative-sandbox-operator-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-operator-unit-tests),?(\\s+|$)"
     decorate: true
+    path_alias: knative.dev/operator
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4894,6 +4896,7 @@ presubmits:
     rerun_command: "/test pull-knative-sandbox-operator-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-operator-integration-tests),?(\\s+|$)"
     decorate: true
+    path_alias: knative.dev/operator
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4930,6 +4933,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-sandbox-operator-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
+    path_alias: knative.dev/operator
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -9823,6 +9827,7 @@ periodics:
   - org: knative-sandbox
     repo: operator
     base_ref: master
+    path_alias: knative.dev/operator
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9857,6 +9862,7 @@ periodics:
   - org: knative-sandbox
     repo: operator
     base_ref: master
+    path_alias: knative.dev/operator
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9892,6 +9898,7 @@ periodics:
   - org: knative-sandbox
     repo: operator
     base_ref: master
+    path_alias: knative.dev/operator
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9937,6 +9944,7 @@ periodics:
   - org: knative-sandbox
     repo: operator
     base_ref: master
+    path_alias: knative.dev/operator
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9982,6 +9990,7 @@ periodics:
   - org: knative-sandbox
     repo: operator
     base_ref: master
+    path_alias: knative.dev/operator
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -11142,6 +11151,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
+    path_alias: knative.dev/operator
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
