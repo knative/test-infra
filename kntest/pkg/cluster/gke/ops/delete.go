@@ -43,7 +43,7 @@ func Delete(o *RequestWrapper) error {
 	// The commands will try to unset the current context and delete it from kubeconfig.
 	cc, _ := cmd.RunCommand("kubectl config current-context")
 	if _, err := cmd.RunCommand("kubectl config unset current-context"); err != nil {
-		cmd.RunCommand("kubectl config unset contexts."+cc)
+		cmd.RunCommand("kubectl config unset contexts." + cc)
 	}
 
 	return nil
