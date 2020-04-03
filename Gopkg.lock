@@ -950,7 +950,7 @@
 
 [[projects]]
   branch = "fix-prow-cluster-management"
-  digest = "1:bed5b1bffb2b6ce7e8fea153e2dd42053d676dad298c23a83931dac8f8c18de7"
+  digest = "1:ac9624067da5a1a95e86606f8112e599091988c4a17a938c4c3e4fe012570932"
   name = "knative.dev/pkg"
   packages = [
     "test",
@@ -977,7 +977,7 @@
     "testutils/metahelper/client",
   ]
   pruneopts = "NUT"
-  revision = "7a42c229532b398bd3a51ca6dc0da2335ddbe8c4"
+  revision = "0d80e9e71771b822a38f395aa73fa33fdb30b79b"
   source = "github.com/chizhg/pkg"
 
 [[projects]]
