@@ -25,7 +25,7 @@ import (
 )
 
 // Delete deletes a GKE cluster
-func Delete(o *RequestWrapper) error {
+func (o *RequestWrapper) Delete() error {
 	o.Request.SkipCreation = true
 
 	gkeClient := clm.GKEClient{}

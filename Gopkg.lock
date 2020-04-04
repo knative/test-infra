@@ -592,7 +592,7 @@
   revision = "d33eef8e6825f50394356b51ff2bbbe3d30e07e7"
 
 [[projects]]
-  digest = "1:081608ceb454c46b54d24b7561e5744088f3ff69478b23f50277ec83bd8636b0"
+  digest = "1:74ee58de746e67a8d7d44b8b71ca3b980f6b1f62211075832d2f427205ea18cd"
   name = "google.golang.org/api"
   packages = [
     "container/v1beta1",
@@ -603,16 +603,18 @@
     "internal/third_party/uritemplates",
     "iterator",
     "option",
+    "option/internaloption",
     "storage/v1",
     "support/bundler",
     "transport",
+    "transport/cert",
     "transport/grpc",
     "transport/http",
     "transport/http/internal/propagation",
   ]
   pruneopts = "NUT"
-  revision = "aa5d4e47691e7ae1aebb5221ff8e4beea23fad72"
-  version = "v0.15.0"
+  revision = "52f0532eadbcc6f6b82d6f5edf66e610d10bfde6"
+  version = "v0.21.0"
 
 [[projects]]
   digest = "1:be5054b1c190011dca4e1c3c051025294e97f14fdfd354093fc233b4d05dcd98"
@@ -652,7 +654,7 @@
   revision = "2548664c049f60b1d6488978017f539ec300e34d"
 
 [[projects]]
-  digest = "1:81fc76a3a29cafb597e19c2016c278f0ffa44c98893de090ec0c924643c68918"
+  digest = "1:c37329e8e9ea45a568f1804138ec01718acddb52e2ef2a9a503a5a57136fd2bc"
   name = "google.golang.org/grpc"
   packages = [
     ".",
@@ -687,8 +689,10 @@
     "internal/buffer",
     "internal/channelz",
     "internal/envconfig",
+    "internal/grpclog",
     "internal/grpcrand",
     "internal/grpcsync",
+    "internal/grpcutil",
     "internal/resolver/dns",
     "internal/resolver/passthrough",
     "internal/syscall",
@@ -704,8 +708,8 @@
     "tap",
   ]
   pruneopts = "NUT"
-  revision = "f5b0812e6fe574d90da76b205e9eb51f6ddb1919"
-  version = "v1.26.0"
+  revision = "142182889d38b76209f1d9f1d8e91d7608aff542"
+  version = "v1.28.0"
 
 [[projects]]
   digest = "1:2d1fbdc6777e5408cabeb02bf336305e724b925ff4546ded0fa8715a7267922a"
@@ -950,7 +954,7 @@
 
 [[projects]]
   branch = "fix-prow-cluster-management"
-  digest = "1:ac9624067da5a1a95e86606f8112e599091988c4a17a938c4c3e4fe012570932"
+  digest = "1:54bd09904e0da8d363534939d984a2af03463b4b81b46392dcfe30b435fd0ff3"
   name = "knative.dev/pkg"
   packages = [
     "test",
@@ -977,7 +981,7 @@
     "testutils/metahelper/client",
   ]
   pruneopts = "NUT"
-  revision = "0d80e9e71771b822a38f395aa73fa33fdb30b79b"
+  revision = "23d8d37354a5a55aa8b4ce29e3274002267e4c2d"
   source = "github.com/chizhg/pkg"
 
 [[projects]]

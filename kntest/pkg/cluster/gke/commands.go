@@ -34,7 +34,6 @@ func AddCommands(clusterCmd *cobra.Command) {
 
 	rw := &ops.RequestWrapper{
 		Request: clm.GKERequest{},
-		NoWait:  false,
 	}
 	addOptions(gkeCmd, rw)
 	addCreate(gkeCmd, rw)
@@ -49,7 +48,7 @@ func addCreate(cc *cobra.Command, rw *ops.RequestWrapper) {
 		Short: "Create a GKE cluster.",
 		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
-			if _, err := ops.Create(rw); err != nil {
+			if _, err := rw.Create(); err != nil {
 				log.Fatalf("error creating the cluster: %v", err)
 			}
 		},
@@ -62,7 +61,7 @@ func addDelete(clusterCmd *cobra.Command, rw *ops.RequestWrapper) {
 		Use:   "delete",
 		Short: "Delete the current GKE cluster.",
 		Run: func(cmd *cobra.Command, args []string) {
-			if err := ops.Delete(rw); err != nil {
+			if err := rw.Delete(); err != nil {
 				log.Fatalf("error deleting the cluster: %v", err)
 			}
 		},
@@ -75,7 +74,7 @@ func addGet(clusterCmd *cobra.Command, rw *ops.RequestWrapper) {
 		Use:   "get",
 		Short: "Get the existing cluster from kubeconfig or gcloud.",
 		Run: func(cmd *cobra.Command, args []string) {
-			if _, err := ops.Get(rw); err != nil {
+			if _, err := rw.Get(); err != nil {
 				log.Fatalf("error getting the cluster: %v", err)
 			}
 		},

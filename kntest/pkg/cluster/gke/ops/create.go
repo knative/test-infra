@@ -40,7 +40,7 @@ const (
 )
 
 // Create creates a GKE cluster and configures gcloud after successful GKE create request
-func Create(o *RequestWrapper) (*clm.GKECluster, error) {
+func (o *RequestWrapper) Create() (*clm.GKECluster, error) {
 	gkeClient := clm.GKEClient{}
 	clusterOps := gkeClient.Setup(o.Request)
 	gkeOps := clusterOps.(*clm.GKECluster)
