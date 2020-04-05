@@ -107,8 +107,8 @@ func (lt *LicenseFile) CSVRow(classifier *licenseclassifier.License) (string, er
 	}, ","), nil
 }
 
-func findLicense(ip string) (*LicenseFile, error) {
-	pkg, err := importPackage(ip)
+func findLicense(g *gobuild, ip string) (*LicenseFile, error) {
+	pkg, err := g.importPackage(ip)
 	if err != nil {
 		return nil, err
 	}
@@ -180,8 +180,9 @@ func (lc LicenseCollection) Check(classifier *licenseclassifier.License) error {
 func CollectLicenses(imports []string) (LicenseCollection, error) {
 	// for each of the import paths, search for a license file.
 	licenseFiles := make(map[string]*LicenseFile)
+	g := &gobuild{moduleInfo()}
 	for _, ip := range imports {
-		lf, err := findLicense(ip)
+		lf, err := findLicense(g, ip)
 		if err != nil {
 			return nil, err
 		}

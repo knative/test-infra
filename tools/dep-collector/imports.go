@@ -36,11 +36,12 @@ func CollectTransitiveImports(binaries []string) ([]string, error) {
 			// importpath = ip
 		}
 
-		pkg, err := importPackage(importpath)
+		g := &gobuild{moduleInfo()}
+		pkg, err := g.importPackage(importpath)
 		if err != nil {
 			return nil, err
 		}
-		if err := visit(pkg, visited); err != nil {
+		if err := visit(g, pkg, visited); err != nil {
 			return nil, err
 		}
 	}
@@ -67,18 +68,19 @@ func qualifyLocalImport(ip string) (string, error) {
 	return filepath.Join(strings.TrimPrefix(WorkingDir, gopathsrc+string(filepath.Separator)), ip), nil
 }
 
-func visit(pkg *gb.Package, visited map[string]struct{}) error {
+func visit(g *gobuild, pkg *gb.Package, visited map[string]struct{}) error {
 	if _, ok := visited[pkg.ImportPath]; ok {
 		return nil
 	}
 	visited[pkg.ImportPath] = struct{}{}
+	fmt.Println(pkg.ImportPath)
 
 	for _, ip := range pkg.Imports {
 		if ip == "C" {
 			// skip cgo
 			continue
 		}
-		subpkg, err := importPackage(ip)
+		subpkg, err := g.importPackage(ip)
 		if err != nil {
 			return fmt.Errorf("%v\n -> %v", pkg.ImportPath, err)
 		}
@@ -86,7 +88,7 @@ func visit(pkg *gb.Package, visited map[string]struct{}) error {
 			// Skip import paths outside of our workspace (std library)
 			continue
 		}
-		if err := visit(subpkg, visited); err != nil {
+		if err := visit(g, subpkg, visited); err != nil {
 			return fmt.Errorf("%v (%v)\n -> %v", pkg.ImportPath, pkg.Dir, err)
 		}
 	}

@@ -29,6 +29,10 @@ type modInfo struct {
 	Dir  string
 }
 
+type gobuild struct {
+	mod *modInfo
+}
+
 // moduleInfo returns the module path and module root directory for a project
 // using go modules, otherwise returns nil.
 //
@@ -48,9 +52,8 @@ func moduleInfo() *modInfo {
 // importPackage wraps go/build.Import to handle go modules.
 //
 // Note that we will fall back to GOPATH if the project isn't using go modules.
-func importPackage(s string) (*gb.Package, error) {
-	mod := moduleInfo()
-	if mod == nil {
+func (g *gobuild)importPackage(s string) (*gb.Package, error) {
+	if g.mod == nil {
 		return gb.Import(s, gb.Default.GOPATH, gb.ImportComment)
 	}
 
@@ -59,7 +62,7 @@ func importPackage(s string) (*gb.Package, error) {
 	// * paths that match module path prefix (they should be in this project)
 	// * relative paths (they should also be in this project)
 	// if strings.HasPrefix(s, mod.Path) || gb.IsLocalImport(s) {
-	return gb.Import(s, mod.Dir, gb.ImportComment)
+	return gb.Import(s, g.mod.Dir, gb.ImportComment)
 	// }
 
 	// return nil, errors.New("unmatched importPackage with Go modules")
