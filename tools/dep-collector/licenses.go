@@ -18,7 +18,6 @@ package main
 
 import (
 	"fmt"
-	gb "go/build"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -72,7 +71,7 @@ func (lt *LicenseFile) Check(classifier *licenseclassifier.License) error {
 	}
 	ms := classifier.MultipleMatch(body, false)
 	for _, m := range ms {
-		return fmt.Errorf("Found matching forbidden license in %q: %v", lt.EnclosingImportPath, m.Name)
+		return fmt.Errorf("found matching forbidden license in %q: %v", lt.EnclosingImportPath, m.Name)
 	}
 	return nil
 }
@@ -109,7 +108,7 @@ func (lt *LicenseFile) CSVRow(classifier *licenseclassifier.License) (string, er
 }
 
 func findLicense(ip string) (*LicenseFile, error) {
-	pkg, err := gb.Import(ip, WorkingDir, gb.ImportComment)
+	pkg, err := importPackage(ip)
 	if err != nil {
 		return nil, err
 	}

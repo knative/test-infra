@@ -507,7 +507,7 @@ function update_licenses() {
   cd ${REPO_ROOT_DIR} || return 1
   local dst=$1
   shift
-  run_go_tool knative.dev/test-infra/tools/dep-collector dep-collector $@ > ./${dst}
+  go run knative.dev/test-infra/tools/dep-collector $@ > ./${dst}
 }
 
 # Run dep-collector to check for forbidden liceses.

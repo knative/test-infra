@@ -29,14 +29,14 @@ func CollectTransitiveImports(binaries []string) ([]string, error) {
 	visited := make(map[string]struct{})
 	for _, importpath := range binaries {
 		if gb.IsLocalImport(importpath) {
-			ip, err := qualifyLocalImport(importpath)
-			if err != nil {
-				return nil, err
-			}
-			importpath = ip
+			// ip, err := qualifyLocalImport(importpath)
+			// if err != nil {
+			// 	return nil, err
+			// }
+			// importpath = ip
 		}
 
-		pkg, err := gb.Import(importpath, WorkingDir, gb.ImportComment)
+		pkg, err := importPackage(importpath)
 		if err != nil {
 			return nil, err
 		}
@@ -78,7 +78,7 @@ func visit(pkg *gb.Package, visited map[string]struct{}) error {
 			// skip cgo
 			continue
 		}
-		subpkg, err := gb.Import(ip, WorkingDir, gb.ImportComment)
+		subpkg, err := importPackage(ip)
 		if err != nil {
 			return fmt.Errorf("%v\n -> %v", pkg.ImportPath, err)
 		}
