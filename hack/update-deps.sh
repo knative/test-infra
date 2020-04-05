@@ -22,10 +22,12 @@ source $(dirname $0)/../scripts/library.sh
 
 cd ${REPO_ROOT_DIR}
 
+export GO111MODULE=on
+
 # The list of dependencies that we track at HEAD and periodically
 # float forward in this repository.
 FLOATING_DEPS=(
-  "knative.dev/pkg"
+  "knative.dev/pkg@master"
 )
 
 # Parse flags to determine any we should pass to dep.
@@ -53,5 +55,5 @@ rm -rf $(find vendor/ -name 'OWNERS')
 rm -rf $(find vendor/ -name 'OWNERS_ALIASES')
 rm -rf $(find vendor/ -name '*_test.go')
 
-update_licenses third_party/VENDOR-LICENSE \
-  $(find . -name "*.go" | grep -v vendor | xargs grep "package main" | cut -d: -f1 | xargs -n1 dirname | uniq)
+#update_licenses third_party/VENDOR-LICENSE \
+#  $(find . -name "*.go" | grep -v vendor | xargs grep "package main" | cut -d: -f1 | xargs -n1 dirname | uniq)

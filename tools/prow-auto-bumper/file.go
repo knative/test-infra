@@ -27,8 +27,6 @@ import (
 	"regexp"
 
 	"knative.dev/pkg/test/helpers"
-
-	"knative.dev/test-infra/pkg/common"
 )
 
 // Update all tags in a byte slice
@@ -94,7 +92,7 @@ func (pv *PRVersions) updateFile(filename string, imageFilter *regexp.Regexp, dr
 func (pv *PRVersions) updateAllFiles(fileFilters []*regexp.Regexp, imageFilter *regexp.Regexp,
 	dryrun bool) ([]string, error) {
 	var msgs []string
-	if err := common.CDToRootDir(); err != nil {
+	if err := helpers.ChdirToRoot(); err != nil {
 		return msgs, fmt.Errorf("failed to change to root dir")
 	}
 
