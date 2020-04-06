@@ -57,7 +57,7 @@ func moduleInfo() *modInfo {
 // Note that we will fall back to GOPATH if the project isn't using go modules.
 func (g *gobuild) importPackage(s string) (*gb.Package, error) {
 	if g.mod == nil {
-		return gb.Import(s, gb.Default.GOPATH, gb.ImportComment)
+		return gb.Import(s, WorkingDir, gb.ImportComment)
 	}
 
 	// If we're inside a go modules project, try to use the module's directory
@@ -75,7 +75,6 @@ func (g *gobuild) qualifyLocalImport(ip string) (string, error) {
 			return "", fmt.Errorf("working directory must be on ${GOPATH}/src = %s", gopathsrc)
 		}
 		return filepath.Join(strings.TrimPrefix(WorkingDir, gopathsrc+string(filepath.Separator)), ip), nil
-	} else {
-		return filepath.Join(g.mod.Path, ip), nil
 	}
+	return filepath.Join(g.mod.Path, ip), nil
 }

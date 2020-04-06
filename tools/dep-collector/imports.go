@@ -25,7 +25,7 @@ import (
 
 type importInfo struct {
 	importPath string
-	dir string
+	dir        string
 }
 
 func CollectTransitiveImports(binaries []string) ([]importInfo, error) {
@@ -73,7 +73,7 @@ func visit(g *gobuild, pkg *gb.Package, visited map[string]importInfo) error {
 	if _, ok := visited[pkg.Dir]; ok {
 		return nil
 	}
-	visited[pkg.Dir] = importInfo{dir: pkg.Dir, importPath:pkg.ImportPath}
+	visited[pkg.Dir] = importInfo{dir: pkg.Dir, importPath: pkg.ImportPath}
 
 	for _, ip := range pkg.Imports {
 		if ip == "C" {

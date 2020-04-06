@@ -12,9 +12,6 @@ require (
 	github.com/google/go-github/v27 v27.0.6
 	github.com/google/licenseclassifier v0.0.0-20190926221455-842c0d70d702
 	github.com/googleapis/gnostic v0.4.0 // indirect
-	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
-	github.com/kelseyhightower/envconfig v1.4.0 // indirect
-	github.com/openzipkin/zipkin-go v0.2.2 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/sergi/go-diff v1.1.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
@@ -23,11 +20,12 @@ require (
 	k8s.io/apimachinery v0.17.3
 	k8s.io/test-infra v0.0.0-20200405022946-02a6dffa9047 // indirect
 	k8s.io/utils v0.0.0-20200124190032-861946025e34 // indirect
-	knative.dev/pkg v0.0.0-20200404181734-92cdec5b3593
+	knative.dev/pkg v0.0.0-20200406152719-35060482898b
 	sigs.k8s.io/yaml v1.2.0
 )
 
 replace (
 	k8s.io/apimachinery => k8s.io/apimachinery v0.16.4
 	k8s.io/client-go => k8s.io/client-go v0.16.4
+	knative.dev/pkg => github.com/chizhg/pkg v0.0.0-20200406184416-752f7a4bd351
 )

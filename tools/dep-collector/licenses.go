@@ -113,7 +113,7 @@ func findLicense(ii importInfo) (*LicenseFile, error) {
 	for {
 		// When we reach the root of our workspace, stop searching.
 		if dir == WorkingDir {
-			return nil, fmt.Errorf("unable to find license for %q", dir)
+			return nil, fmt.Errorf("unable to find license for %q", ip)
 		}
 
 		for _, name := range LicenseNames {
