@@ -17,23 +17,23 @@ limitations under the License.
 package main
 
 import (
-    "encoding/json"
-    "fmt"
-    gb "go/build"
-    "path/filepath"
-    "strings"
+	"encoding/json"
+	"fmt"
+	gb "go/build"
+	"path/filepath"
+	"strings"
 
-    "knative.dev/pkg/test/cmd"
+	"knative.dev/pkg/test/cmd"
 )
 
 // https://golang.org/pkg/cmd/go/internal/modinfo/#ModulePublic
 type modInfo struct {
-    Path string
-    Dir  string
+	Path string
+	Dir  string
 }
 
 type gobuild struct {
-    mod *modInfo
+	mod *modInfo
 }
 
 // moduleInfo returns the module path and module root directory for a project
@@ -41,41 +41,40 @@ type gobuild struct {
 //
 // Related: https://github.com/golang/go/issues/26504
 func moduleInfo() *modInfo {
-    output, err := cmd.RunCommand("go list -mod=readonly -m -json")
-    if err != nil {
-        return nil
-    }
-    var info modInfo
-    if err := json.Unmarshal([]byte(output), &info); err != nil {
-        return nil
-    }
-    return &info
+	output, err := cmd.RunCommand("go list -mod=readonly -m -json")
+	if err != nil {
+		return nil
+	}
+	var info modInfo
+	if err := json.Unmarshal([]byte(output), &info); err != nil {
+		return nil
+	}
+	return &info
 }
 
 // importPackage wraps go/build.Import to handle go modules.
 //
 // Note that we will fall back to GOPATH if the project isn't using go modules.
 func (g *gobuild) importPackage(s string) (*gb.Package, error) {
-    if g.mod == nil {
-        return gb.Import(s, gb.Default.GOPATH, gb.ImportComment)
-    }
+	if g.mod == nil {
+		return gb.Import(s, WorkingDir, gb.ImportComment)
+	}
 
-    // If we're inside a go modules project, try to use the module's directory
-    // as our source root to import:
-    // * paths that match module path prefix (they should be in this project)
-    // * relative paths (they should also be in this project)
-    gp, err := gb.Import(s, g.mod.Dir, gb.ImportComment)
-    return gp, err
+	// If we're inside a go modules project, try to use the module's directory
+	// as our source root to import:
+	// * paths that match module path prefix (they should be in this project)
+	// * relative paths (they should also be in this project)
+	gp, err := gb.Import(s, g.mod.Dir, gb.ImportComment)
+	return gp, err
 }
 
 func (g *gobuild) qualifyLocalImport(ip string) (string, error) {
-    if g.mod == nil {
-        gopathsrc := filepath.Join(gb.Default.GOPATH, "src")
-        if !strings.HasPrefix(WorkingDir, gopathsrc) {
-            return "", fmt.Errorf("working directory must be on ${GOPATH}/src = %s", gopathsrc)
-        }
-        return filepath.Join(strings.TrimPrefix(WorkingDir, gopathsrc+string(filepath.Separator)), ip), nil
-    } else {
-        return filepath.Join(g.mod.Path, ip), nil
-    }
+	if g.mod == nil {
+		gopathsrc := filepath.Join(gb.Default.GOPATH, "src")
+		if !strings.HasPrefix(WorkingDir, gopathsrc) {
+			return "", fmt.Errorf("working directory must be on ${GOPATH}/src = %s", gopathsrc)
+		}
+		return filepath.Join(strings.TrimPrefix(WorkingDir, gopathsrc+string(filepath.Separator)), ip), nil
+	}
+	return filepath.Join(g.mod.Path, ip), nil
 }

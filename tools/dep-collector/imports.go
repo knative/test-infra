@@ -23,14 +23,14 @@ import (
 	"strings"
 )
 
-type importInfo struct {
-	importPath string
-	dir string
+type ImportInfo struct {
+	ImportPath string
+	Dir        string
 }
 
-func CollectTransitiveImports(binaries []string) ([]importInfo, error) {
+func CollectTransitiveImports(binaries []string) ([]ImportInfo, error) {
 	// Perform a simple DFS to collect the binaries' transitive dependencies.
-	visited := make(map[string]importInfo)
+	visited := make(map[string]ImportInfo)
 	g := &gobuild{moduleInfo()}
 	for _, importpath := range binaries {
 		if gb.IsLocalImport(importpath) {
@@ -61,7 +61,7 @@ func CollectTransitiveImports(binaries []string) ([]importInfo, error) {
 	}
 	list.Sort()
 
-	iiList := make([]importInfo, len(list))
+	iiList := make([]ImportInfo, len(list))
 	for i := range iiList {
 		iiList[i] = visited[list[i]]
 	}
@@ -69,11 +69,11 @@ func CollectTransitiveImports(binaries []string) ([]importInfo, error) {
 	return iiList, nil
 }
 
-func visit(g *gobuild, pkg *gb.Package, visited map[string]importInfo) error {
+func visit(g *gobuild, pkg *gb.Package, visited map[string]ImportInfo) error {
 	if _, ok := visited[pkg.Dir]; ok {
 		return nil
 	}
-	visited[pkg.Dir] = importInfo{dir: pkg.Dir, importPath:pkg.ImportPath}
+	visited[pkg.Dir] = ImportInfo{Dir: pkg.Dir, ImportPath: pkg.ImportPath}
 
 	for _, ip := range pkg.Imports {
 		if ip == "C" {

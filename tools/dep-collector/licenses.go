@@ -107,9 +107,9 @@ func (lt *LicenseFile) CSVRow(classifier *licenseclassifier.License) (string, er
 	}, ","), nil
 }
 
-func findLicense(ii importInfo) (*LicenseFile, error) {
-	dir := ii.dir
-	ip := ii.importPath
+func findLicense(ii ImportInfo) (*LicenseFile, error) {
+	dir := ii.Dir
+	ip := ii.ImportPath
 	for {
 		// When we reach the root of our workspace, stop searching.
 		if dir == WorkingDir {
@@ -173,7 +173,8 @@ func (lc LicenseCollection) Check(classifier *licenseclassifier.License) error {
 	return fmt.Errorf("Errors validating licenses:\n%v", strings.Join(errors, "\n"))
 }
 
-func CollectLicenses(importInfos []importInfo) (LicenseCollection, error) {
+// CollectLicenses collects a list of licenses for the given imports.
+func CollectLicenses(importInfos []ImportInfo) (LicenseCollection, error) {
 	// for each of the import paths, search for a license file.
 	licenseFiles := make(map[string]*LicenseFile)
 	for _, info := range importInfos {
