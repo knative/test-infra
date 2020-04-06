@@ -64,12 +64,8 @@ func (g *gobuild) importPackage(s string) (*gb.Package, error) {
 	// as our source root to import:
 	// * paths that match module path prefix (they should be in this project)
 	// * relative paths (they should also be in this project)
-	// if strings.HasPrefix(s, mod.Path) || gb.IsLocalImport(s) {
 	gp, err := gb.Import(s, g.mod.Dir, gb.ImportComment)
 	return gp, err
-	// }
-
-	// return nil, errors.New("unmatched importPackage with Go modules")
 }
 
 func (g *gobuild) qualifyLocalImport(ip string) (string, error) {
