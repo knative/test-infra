@@ -26,9 +26,8 @@ import (
 func CollectTransitiveImports(binaries []string) ([]string, error) {
 	// Perform a simple DFS to collect the binaries' transitive dependencies.
 	visited := make(map[string]struct{})
+	g := &gobuild{moduleInfo()}
 	for _, importpath := range binaries {
-		g := &gobuild{moduleInfo()}
-
 		if gb.IsLocalImport(importpath) {
 			ip, err := g.qualifyLocalImport(importpath)
 			if err != nil {
@@ -48,12 +47,12 @@ func CollectTransitiveImports(binaries []string) ([]string, error) {
 
 	// Sort the dependencies deterministically.
 	var list sort.StringSlice
-	for ip := range visited {
-		if !strings.Contains(ip, "/vendor/") {
+	for dir := range visited {
+		if !strings.Contains(dir, "/vendor/") {
 			// Skip files outside of vendor
 			continue
 		}
-		list = append(list, ip)
+		list = append(list, dir)
 	}
 	list.Sort()
 
@@ -61,11 +60,10 @@ func CollectTransitiveImports(binaries []string) ([]string, error) {
 }
 
 func visit(g *gobuild, pkg *gb.Package, visited map[string]struct{}) error {
-	importPath := g.importPath(pkg)
-	if _, ok := visited[importPath]; ok {
+	if _, ok := visited[pkg.Dir]; ok {
 		return nil
 	}
-	visited[importPath] = struct{}{}
+	visited[pkg.Dir] = struct{}{}
 
 	for _, ip := range pkg.Imports {
 		if ip == "C" {

@@ -107,17 +107,11 @@ func (lt *LicenseFile) CSVRow(classifier *licenseclassifier.License) (string, er
 	}, ","), nil
 }
 
-func findLicense(g *gobuild, ip string) (*LicenseFile, error) {
-	pkg, err := g.importPackage(ip)
-	if err != nil {
-		return nil, err
-	}
-	dir := pkg.Dir
-
+func findLicense(dir string) (*LicenseFile, error) {
 	for {
 		// When we reach the root of our workspace, stop searching.
 		if dir == WorkingDir {
-			return nil, fmt.Errorf("unable to find license for %q", pkg.ImportPath)
+			return nil, fmt.Errorf("unable to find license for %q", dir)
 		}
 
 		for _, name := range LicenseNames {
@@ -127,14 +121,13 @@ func findLicense(g *gobuild, ip string) (*LicenseFile, error) {
 			}
 
 			return &LicenseFile{
-				EnclosingImportPath: ip,
+				EnclosingImportPath: dir,
 				LicensePath:         p,
 			}, nil
 		}
 
 		// Walk to the parent directory / import path
 		dir = filepath.Dir(dir)
-		ip = filepath.Dir(ip)
 	}
 }
 
@@ -177,12 +170,11 @@ func (lc LicenseCollection) Check(classifier *licenseclassifier.License) error {
 	return fmt.Errorf("Errors validating licenses:\n%v", strings.Join(errors, "\n"))
 }
 
-func CollectLicenses(imports []string) (LicenseCollection, error) {
+func CollectLicenses(importDirs []string) (LicenseCollection, error) {
 	// for each of the import paths, search for a license file.
 	licenseFiles := make(map[string]*LicenseFile)
-	g := &gobuild{moduleInfo()}
-	for _, ip := range imports {
-		lf, err := findLicense(g, ip)
+	for _, dir := range importDirs {
+		lf, err := findLicense(dir)
 		if err != nil {
 			return nil, err
 		}

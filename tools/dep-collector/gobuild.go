@@ -20,10 +20,8 @@ import (
 	"encoding/json"
 	"fmt"
 	gb "go/build"
-	"log"
 	"path/filepath"
 	"strings"
-	"time"
 
 	"knative.dev/pkg/test/cmd"
 )
@@ -67,10 +65,7 @@ func (g *gobuild) importPackage(s string) (*gb.Package, error) {
 	// * paths that match module path prefix (they should be in this project)
 	// * relative paths (they should also be in this project)
 	// if strings.HasPrefix(s, mod.Path) || gb.IsLocalImport(s) {
-	now := time.Now()
 	gp, err := gb.Import(s, g.mod.Dir, gb.ImportComment)
-	then := time.Now()
-	log.Printf("time spent: %s", then.Sub(now))
 	return gp, err
 	// }
 
@@ -86,13 +81,5 @@ func (g *gobuild) qualifyLocalImport(ip string) (string, error) {
 		return filepath.Join(strings.TrimPrefix(WorkingDir, gopathsrc+string(filepath.Separator)), ip), nil
 	} else {
 		return filepath.Join(g.mod.Path, ip), nil
-	}
-}
-
-func (g *gobuild) importPath(pkg *gb.Package) string {
-	if g.mod == nil {
-		return pkg.ImportPath
-	} else {
-		return strings.TrimLeft(pkg.Dir, pkg.SrcRoot)
 	}
 }
