@@ -19,7 +19,6 @@ package main
 import (
 	"fmt"
 	gb "go/build"
-	"path/filepath"
 	"sort"
 	"strings"
 )
@@ -28,15 +27,16 @@ func CollectTransitiveImports(binaries []string) ([]string, error) {
 	// Perform a simple DFS to collect the binaries' transitive dependencies.
 	visited := make(map[string]struct{})
 	for _, importpath := range binaries {
+		g := &gobuild{moduleInfo()}
+
 		if gb.IsLocalImport(importpath) {
-			// ip, err := qualifyLocalImport(importpath)
-			// if err != nil {
-			// 	return nil, err
-			// }
-			// importpath = ip
+			ip, err := g.qualifyLocalImport(importpath)
+			if err != nil {
+				return nil, err
+			}
+			importpath = ip
 		}
 
-		g := &gobuild{moduleInfo()}
 		pkg, err := g.importPackage(importpath)
 		if err != nil {
 			return nil, err
@@ -58,14 +58,6 @@ func CollectTransitiveImports(binaries []string) ([]string, error) {
 	list.Sort()
 
 	return list, nil
-}
-
-func qualifyLocalImport(ip string) (string, error) {
-	gopathsrc := filepath.Join(gb.Default.GOPATH, "src")
-	if !strings.HasPrefix(WorkingDir, gopathsrc) {
-		return "", fmt.Errorf("working directory must be on ${GOPATH}/src = %s", gopathsrc)
-	}
-	return filepath.Join(strings.TrimPrefix(WorkingDir, gopathsrc+string(filepath.Separator)), ip), nil
 }
 
 func visit(g *gobuild, pkg *gb.Package, visited map[string]struct{}) error {

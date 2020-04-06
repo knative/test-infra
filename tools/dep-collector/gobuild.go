@@ -18,8 +18,11 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	gb "go/build"
 	"log"
+	"path/filepath"
+	"strings"
 	"time"
 
 	"knative.dev/pkg/test/cmd"
@@ -54,7 +57,7 @@ func moduleInfo() *modInfo {
 // importPackage wraps go/build.Import to handle go modules.
 //
 // Note that we will fall back to GOPATH if the project isn't using go modules.
-func (g *gobuild)importPackage(s string) (*gb.Package, error) {
+func (g *gobuild) importPackage(s string) (*gb.Package, error) {
 	if g.mod == nil {
 		return gb.Import(s, gb.Default.GOPATH, gb.ImportComment)
 	}
@@ -72,4 +75,16 @@ func (g *gobuild)importPackage(s string) (*gb.Package, error) {
 	// }
 
 	// return nil, errors.New("unmatched importPackage with Go modules")
+}
+
+func (g *gobuild) qualifyLocalImport(ip string) (string, error) {
+	if g.mod == nil {
+		gopathsrc := filepath.Join(gb.Default.GOPATH, "src")
+		if !strings.HasPrefix(WorkingDir, gopathsrc) {
+			return "", fmt.Errorf("working directory must be on ${GOPATH}/src = %s", gopathsrc)
+		}
+		return filepath.Join(strings.TrimPrefix(WorkingDir, gopathsrc+string(filepath.Separator)), ip), nil
+	} else {
+		return filepath.Join(g.mod.Path, ip), nil
+	}
 }
