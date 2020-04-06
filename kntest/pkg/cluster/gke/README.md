@@ -26,11 +26,13 @@ This tool can be invoked from command line with following parameters:
 - `--addons`: GKE addons, comma separated list, default empty
 - `--skip-creation`: should skip creation or not
 
-## Flow
+## Subcommands
 
 ### Create
 
-1. Acquiring cluster if kubeconfig already points to it
+`kntest cluster gke create` will always create a new cluster.
+
+The flow is:
 1. Get GCP project name if not provided as a parameter:
 
    - [In Prow] Acquire from Boskos
@@ -40,20 +42,25 @@ This tool can be invoked from command line with following parameters:
 
 1. Get default cluster name if not provided as a parameter
 1. Delete cluster if cluster with same name and location already exists in GKE
-1. Create cluster
+1. Create a new cluster with the config being provided
 1. Write cluster metadata to `${ARTIFACT}/metadata.json`
 
 ### Delete
 
+`kntest cluster gke delete` will delete the existing cluster.
+
+The flow is:
 1. Acquiring cluster if kubeconfig already points to it
 1. If cluster name is defined then getting cluster by its name
 1. If no cluster is found from previous step then it fails
 1. Delete:
-   - [In Prow] Release Boskos project
-   - [Not in Prow] Delete cluster
+   - [In Prow] Delete cluster asynchronously and release Boskos project
+   - [Not in Prow] Delete cluster synchronously
 
 ### Get
 
+`kntest cluster gke get` will get the existing cluster.
+
 1. Acquiring cluster if kubeconfig already points to it
 1. If cluster name is defined then getting cluster by its name
-1. If no cluster is found from previous step then it fails
+1. If no cluster is found from previous steps then it fails
