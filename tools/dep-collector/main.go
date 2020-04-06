@@ -37,10 +37,6 @@ func main() {
 		log.Fatalf("Expected a list of import paths, got: %v", flag.Args())
 	}
 
-	for _, arg := range flag.Args() {
-		log.Println(arg)
-	}
-
 	// Perform a simple DFS to collect the binaries' transitive dependencies.
 	transitiveImports, err := CollectTransitiveImports(flag.Args())
 	if err != nil {
