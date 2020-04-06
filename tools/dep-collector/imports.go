@@ -69,11 +69,11 @@ func qualifyLocalImport(ip string) (string, error) {
 }
 
 func visit(g *gobuild, pkg *gb.Package, visited map[string]struct{}) error {
-	if _, ok := visited[pkg.ImportPath]; ok {
+	if _, ok := visited[pkg.Dir]; ok {
 		return nil
 	}
-	visited[pkg.ImportPath] = struct{}{}
-	fmt.Println(pkg.ImportPath)
+	visited[pkg.Dir] = struct{}{}
+	fmt.Println(pkg.Dir)
 
 	for _, ip := range pkg.Imports {
 		if ip == "C" {

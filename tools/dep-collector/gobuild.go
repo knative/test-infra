@@ -19,6 +19,8 @@ package main
 import (
 	"encoding/json"
 	gb "go/build"
+	"log"
+	"time"
 
 	"knative.dev/pkg/test/cmd"
 )
@@ -62,7 +64,11 @@ func (g *gobuild)importPackage(s string) (*gb.Package, error) {
 	// * paths that match module path prefix (they should be in this project)
 	// * relative paths (they should also be in this project)
 	// if strings.HasPrefix(s, mod.Path) || gb.IsLocalImport(s) {
-	return gb.Import(s, g.mod.Dir, gb.ImportComment)
+	now := time.Now()
+	gp, err := gb.Import(s, g.mod.Dir, gb.ImportComment)
+	then := time.Now()
+	log.Printf("time spent: %s", then.Sub(now))
+	return gp, err
 	// }
 
 	// return nil, errors.New("unmatched importPackage with Go modules")
