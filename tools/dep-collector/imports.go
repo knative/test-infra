@@ -73,7 +73,7 @@ func visit(g *gobuild, pkg *gb.Package, visited map[string]struct{}) error {
 		return nil
 	}
 	visited[pkg.Dir] = struct{}{}
-	fmt.Println(pkg.Dir)
+	fmt.Println(pkg.ImportPath)
 
 	for _, ip := range pkg.Imports {
 		if ip == "C" {
