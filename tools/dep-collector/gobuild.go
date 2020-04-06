@@ -38,18 +38,19 @@ type gobuild struct {
 
 // moduleInfo returns the module path and module root directory for a project
 // using go modules, otherwise returns nil.
+// If there is something wrong in parsing the json output, it will return an error.
 //
 // Related: https://github.com/golang/go/issues/26504
-func moduleInfo() *modInfo {
+func moduleInfo() (*modInfo, error) {
 	output, err := cmd.RunCommand("go list -mod=readonly -m -json")
 	if err != nil {
-		return nil
+		return nil, nil
 	}
 	var info modInfo
 	if err := json.Unmarshal([]byte(output), &info); err != nil {
-		return nil
+		return nil, err
 	}
-	return &info
+	return &info, nil
 }
 
 // importPackage wraps go/build.Import to handle go modules.

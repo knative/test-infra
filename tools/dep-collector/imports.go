@@ -31,7 +31,11 @@ type ImportInfo struct {
 func CollectTransitiveImports(binaries []string) ([]ImportInfo, error) {
 	// Perform a simple DFS to collect the binaries' transitive dependencies.
 	visited := make(map[string]ImportInfo)
-	g := &gobuild{moduleInfo()}
+	mi, err := moduleInfo()
+	if err != nil {
+		return nil, fmt.Errorf("failed getting Go module info: %v", err)
+	}
+	g := &gobuild{mi}
 	for _, importpath := range binaries {
 		if gb.IsLocalImport(importpath) {
 			ip, err := g.qualifyLocalImport(importpath)
