@@ -419,6 +419,11 @@ presubmits:
       dot-dev: true
     - go-coverage: true
       dot-dev: true
+    - custom-test: upgrade-tests
+      dot-dev: true
+      args:
+        - "--run-test"
+        - "./test/e2e-upgrade-tests.sh"
 
 periodics:
   knative/serving:
