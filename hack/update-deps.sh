@@ -23,6 +23,7 @@ source $(dirname $0)/../scripts/library.sh
 cd ${REPO_ROOT_DIR}
 
 export GO111MODULE=auto
+export GOFLAGS=-mod=vendor
 
 # The list of dependencies that we track at HEAD and periodically
 # float forward in this repository.

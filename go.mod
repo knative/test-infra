@@ -24,7 +24,7 @@ require (
 	k8s.io/test-infra v0.0.0-20200405022946-02a6dffa9047 // indirect
 	k8s.io/utils v0.0.0-20200124190032-861946025e34 // indirect
 	knative.dev/pkg v0.0.0-20200404181734-92cdec5b3593
-	sigs.k8s.io/yaml v1.2.0 // indirect
+	sigs.k8s.io/yaml v1.2.0
 )
 
 replace (
