@@ -934,7 +934,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:fb737248fa04011f76fe4788a155017257e2a54b25fcf8078ddadb69aa22bb2a"
+  digest = "1:c4e52d5f3b992aad5cc15b81fee7600e0d4cc7a0afe36a2ef37415488ef0b298"
   name = "knative.dev/pkg"
   packages = [
     "test",
@@ -964,7 +964,7 @@
     "testutils/metahelper/client",
   ]
   pruneopts = "NUT"
-  revision = "55250e6aab62f767b8680a12ddeb771c519d78fe"
+  revision = "92cdec5b35931192590f5d8affad86898b6c50d6"
 
 [[projects]]
   digest = "1:8730e0150dfb2b7e173890c8b9868e7a273082ef8e39f4940e3506a481cf895c"
