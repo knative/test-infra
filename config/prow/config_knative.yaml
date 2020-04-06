@@ -412,9 +412,18 @@ presubmits:
 
   knative-sandbox/operator:
     - build-tests: true
+      dot-dev: true
     - unit-tests: true
+      dot-dev: true
     - integration-tests: true
+      dot-dev: true
     - go-coverage: true
+      dot-dev: true
+    - custom-test: upgrade-tests
+      dot-dev: true
+      args:
+        - "--run-test"
+        - "./test/e2e-upgrade-tests.sh"
 
 periodics:
   knative/serving:
@@ -997,13 +1006,17 @@ periodics:
   knative-sandbox/operator:
     - continuous: true
       go113: true
+      dot-dev: true
     - nightly: true
       go113: true
+      dot-dev: true
     - dot-release: true
       go113: true
+      dot-dev: true
       env-vars:
       - ORG_NAME=knative-sandbox
     - auto-release: true
       go113: true
+      dot-dev: true
       env-vars:
       - ORG_NAME=knative-sandbox

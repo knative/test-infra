@@ -4824,6 +4824,7 @@ presubmits:
     rerun_command: "/test pull-knative-sandbox-operator-build-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-operator-build-tests),?(\\s+|$)"
     decorate: true
+    path_alias: knative.dev/operator
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4859,6 +4860,7 @@ presubmits:
     rerun_command: "/test pull-knative-sandbox-operator-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-operator-unit-tests),?(\\s+|$)"
     decorate: true
+    path_alias: knative.dev/operator
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4894,6 +4896,7 @@ presubmits:
     rerun_command: "/test pull-knative-sandbox-operator-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-operator-integration-tests),?(\\s+|$)"
     decorate: true
+    path_alias: knative.dev/operator
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4930,6 +4933,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-sandbox-operator-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
+    path_alias: knative.dev/operator
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -4949,6 +4953,37 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
+  - name: pull-knative-sandbox-operator-upgrade-tests
+    agent: kubernetes
+    context: pull-knative-sandbox-operator-upgrade-tests
+    always_run: true
+    rerun_command: "/test pull-knative-sandbox-operator-upgrade-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-operator-upgrade-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/operator
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-upgrade-tests.sh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
 periodics:
 - cron: "10 */2 * * *"
   name: ci-knative-serving-continuous
@@ -9823,6 +9858,7 @@ periodics:
   - org: knative-sandbox
     repo: operator
     base_ref: master
+    path_alias: knative.dev/operator
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9857,6 +9893,7 @@ periodics:
   - org: knative-sandbox
     repo: operator
     base_ref: master
+    path_alias: knative.dev/operator
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9892,6 +9929,7 @@ periodics:
   - org: knative-sandbox
     repo: operator
     base_ref: master
+    path_alias: knative.dev/operator
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9937,6 +9975,7 @@ periodics:
   - org: knative-sandbox
     repo: operator
     base_ref: master
+    path_alias: knative.dev/operator
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9982,6 +10021,7 @@ periodics:
   - org: knative-sandbox
     repo: operator
     base_ref: master
+    path_alias: knative.dev/operator
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -11142,6 +11182,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
+    path_alias: knative.dev/operator
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
