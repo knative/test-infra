@@ -19,7 +19,6 @@ package main
 import (
 	"fmt"
 	gb "go/build"
-	"log"
 	"sort"
 	"strings"
 )
@@ -62,11 +61,11 @@ func CollectTransitiveImports(binaries []string) ([]string, error) {
 }
 
 func visit(g *gobuild, pkg *gb.Package, visited map[string]struct{}) error {
-	if _, ok := visited[pkg.Dir]; ok {
+	importPath := g.importPath(pkg)
+	if _, ok := visited[importPath]; ok {
 		return nil
 	}
-	visited[pkg.Dir] = struct{}{}
-	log.Println(pkg)
+	visited[importPath] = struct{}{}
 
 	for _, ip := range pkg.Imports {
 		if ip == "C" {
