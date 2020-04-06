@@ -33,6 +33,7 @@ This tool can be invoked from command line with following parameters:
 `kntest cluster gke create` will always create a new cluster.
 
 The flow is:
+
 1. Get GCP project name if not provided as a parameter:
 
    - [In Prow] Acquire from Boskos
@@ -50,6 +51,7 @@ The flow is:
 `kntest cluster gke delete` will delete the existing cluster.
 
 The flow is:
+
 1. Acquiring cluster if kubeconfig already points to it
 1. If cluster name is defined then getting cluster by its name
 1. If no cluster is found from previous step then it fails
