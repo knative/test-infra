@@ -55,10 +55,6 @@ for dir in {DIRS_TOBE_INSPECTED[@]}; do
 done
 cp -aR "${TMP_DIFFROOT}"/* "${REPO_ROOT_DIR}"
 
-echo "################"
-cat "${TMP_DIFFROOT}/vendor/modules.txt"
-echo "################"
-
 if [[ $ret -eq 0 ]]
 then
   echo "${REPO_ROOT_DIR} up to date."
