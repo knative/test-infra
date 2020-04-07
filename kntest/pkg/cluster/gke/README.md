@@ -61,8 +61,8 @@ The flow is:
 
 ### Get
 
-`kntest cluster gke get` will validate the current kubeconfig
-context points to a usable cluster requested by the user.
+`kntest cluster gke get` will validate the current kubeconfig context points to
+a usable cluster requested by the user.
 
 1. Acquiring cluster if kubeconfig already points to it
 1. If cluster name is defined then getting cluster by its name
