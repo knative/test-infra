@@ -659,11 +659,11 @@ var fileDescriptor_7cd3f6d792743fdf = []byte{
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ context.Context
-var _ grpc.ClientConnInterface
+var _ grpc.ClientConn
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the grpc package it is being compiled against.
-const _ = grpc.SupportPackageIsVersion6
+const _ = grpc.SupportPackageIsVersion4
 
 // LoadBalancerClient is the client API for LoadBalancer service.
 //
@@ -674,10 +674,10 @@ type LoadBalancerClient interface {
 }
 
 type loadBalancerClient struct {
-	cc grpc.ClientConnInterface
+	cc *grpc.ClientConn
 }
 
-func NewLoadBalancerClient(cc grpc.ClientConnInterface) LoadBalancerClient {
+func NewLoadBalancerClient(cc *grpc.ClientConn) LoadBalancerClient {
 	return &loadBalancerClient{cc}
 }
 
