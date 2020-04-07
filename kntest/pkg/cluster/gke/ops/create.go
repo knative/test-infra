@@ -25,7 +25,7 @@ import (
 	"knative.dev/pkg/test/cmd"
 	"knative.dev/pkg/test/gke"
 	clm "knative.dev/pkg/testutils/clustermanager/e2e-tests"
-	"knative.dev/pkg/testutils/metahelper/client"
+	mhclient "knative.dev/pkg/testutils/metahelper/client"
 )
 
 const (
@@ -71,7 +71,7 @@ func (o *RequestWrapper) Create() (*clm.GKECluster, error) {
 // after the cluster operation is finished
 func writeMetaData(cluster *container.Cluster, project string) {
 	// Set up metadata client for saving metadata
-	c, err := client.New("")
+	c, err := mhclient.New("")
 	if err != nil {
 		log.Fatal(err)
 	}

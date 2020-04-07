@@ -981,7 +981,7 @@
     "testutils/metahelper/client",
   ]
   pruneopts = "NUT"
-  revision = "064b156ab7c632f690e21f3009fb3644feb2cf8c"
+  revision = "466c676678ddd57b3ec05a06a2d0bc6cfca8c3db"
 
 [[projects]]
   digest = "1:8730e0150dfb2b7e173890c8b9868e7a273082ef8e39f4940e3506a481cf895c"
