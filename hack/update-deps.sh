@@ -18,7 +18,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-export GO111MODULE=on
+export GO111MODULE=auto
 export GOFLAGS=-mod=vendor
 
 source $(dirname $0)/../scripts/library.sh
