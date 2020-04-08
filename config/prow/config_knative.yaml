@@ -305,6 +305,13 @@ presubmits:
     - build-tests: true
     - unit-tests: true
     - integration-tests: true
+      args:
+      - "--run-test"
+      - "./test/e2e-tests.sh"
+    - custom-test: wi-tests
+      args:
+      - "--run-test"
+      - "./test/e2e-wi-tests.sh"
     - go-coverage: true
 
   knative/net-certmanager:
