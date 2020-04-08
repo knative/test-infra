@@ -14,38 +14,36 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package actions
+package ops
 
 import (
 	"fmt"
 	"log"
 
+	"knative.dev/pkg/test/cmd"
 	clm "knative.dev/pkg/testutils/clustermanager/e2e-tests"
-	"knative.dev/pkg/testutils/clustermanager/e2e-tests/common"
-	"knative.dev/pkg/testutils/clustermanager/prow-cluster-operation/options"
 )
 
 // Delete deletes a GKE cluster
-func Delete(o *options.RequestWrapper) error {
+func (o *RequestWrapper) Delete() error {
 	o.Request.SkipCreation = true
 
 	gkeClient := clm.GKEClient{}
 	clusterOps := gkeClient.Setup(o.Request)
 	gkeOps := clusterOps.(*clm.GKECluster)
 	if err := gkeOps.Acquire(); err != nil || gkeOps.Cluster == nil {
-		return fmt.Errorf("failed identifying cluster for cleanup: '%v'", err)
+		return fmt.Errorf("failed identifying cluster for cleanup: '%w'", err)
 	}
 	log.Printf("Identified project %q and cluster %q for removal", gkeOps.Project, gkeOps.Cluster.Name)
 	var err error
 	if err = gkeOps.Delete(); err != nil {
-		return fmt.Errorf("failed deleting cluster: '%v'", err)
+		return fmt.Errorf("failed deleting cluster: '%w'", err)
 	}
-	// Unset context with best effort. The first command only unsets current
-	// context, but doesn't delete the entry from kubeconfig, and should return it's
-	// context if succeeded, which can be used by the second command to
-	// delete it from kubeconfig
-	if out, err := common.StandardExec("kubectl", "config", "unset", "current-context"); err != nil {
-		common.StandardExec("kubectl", "config", "unset", "contexts."+string(out))
+	// Unset context with best effort.
+	// The commands will try to unset the current context and delete it from kubeconfig.
+	cc, _ := cmd.RunCommand("kubectl config current-context")
+	if _, err := cmd.RunCommand("kubectl config unset current-context"); err != nil {
+		cmd.RunCommand("kubectl config unset contexts." + cc)
 	}
 
 	return nil

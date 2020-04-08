@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package actions
+package ops
 
 import (
 	"fmt"
@@ -22,11 +22,10 @@ import (
 	"strconv"
 
 	container "google.golang.org/api/container/v1beta1"
+	"knative.dev/pkg/test/cmd"
 	"knative.dev/pkg/test/gke"
 	clm "knative.dev/pkg/testutils/clustermanager/e2e-tests"
-	"knative.dev/pkg/testutils/clustermanager/e2e-tests/common"
-	"knative.dev/pkg/testutils/clustermanager/prow-cluster-operation/options"
-	"knative.dev/pkg/testutils/metahelper/client"
+	mhclient "knative.dev/pkg/testutils/metahelper/client"
 )
 
 const (
@@ -40,11 +39,39 @@ const (
 	projectKey        = "E2E:Project"
 )
 
+// Create creates a GKE cluster and configures gcloud after successful GKE create request
+func (o *RequestWrapper) Create() (*clm.GKECluster, error) {
+	gkeClient := clm.GKEClient{}
+	clusterOps := gkeClient.Setup(o.Request)
+	gkeOps := clusterOps.(*clm.GKECluster)
+	if err := gkeOps.Acquire(); err != nil || gkeOps.Cluster == nil {
+		return nil, fmt.Errorf("failed acquiring GKE cluster: '%v'", err)
+	}
+
+	// At this point we should have a cluster ready to run test. Need to save
+	// metadata so that following flow can understand the context of cluster, as
+	// well as for Prow usage later
+	writeMetaData(gkeOps.Cluster, gkeOps.Project)
+
+	// set up kube config points to cluster
+	clusterAuthCmd := fmt.Sprintf(
+		"gcloud beta container clusters get-credentials %s --region %s --project %s",
+		gkeOps.Cluster.Name, gkeOps.Cluster.Location, gkeOps.Project)
+	if out, err := cmd.RunCommand(clusterAuthCmd); err != nil {
+		return nil, fmt.Errorf("failed connecting to cluster: %q, '%v'", out, err)
+	}
+	if out, err := cmd.RunCommand("gcloud config set project " + gkeOps.Project); err != nil {
+		return nil, fmt.Errorf("failed setting gcloud: %q, '%v'", out, err)
+	}
+
+	return gkeOps, nil
+}
+
 // writeMetadata writes the cluster information to a metadata file defined in the request
 // after the cluster operation is finished
 func writeMetaData(cluster *container.Cluster, project string) {
 	// Set up metadata client for saving metadata
-	c, err := client.New("")
+	c, err := mhclient.New("")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -54,12 +81,12 @@ func writeMetaData(cluster *container.Cluster, project string) {
 	var minNodes, maxNodes string
 	for _, np := range cluster.NodePools {
 		if np.Name == "default-pool" {
-			minNodes = strconv.FormatInt(np.InitialNodeCount, 10)
+			minNodes = strconv.Itoa(int(np.InitialNodeCount))
 			// maxNodes is equal to minNodes if autoscaling isn't on
 			maxNodes = minNodes
 			if np.Autoscaling != nil {
-				minNodes = strconv.FormatInt(np.Autoscaling.MinNodeCount, 10)
-				maxNodes = strconv.FormatInt(np.Autoscaling.MaxNodeCount, 10)
+				minNodes = strconv.Itoa(int(np.Autoscaling.MinNodeCount))
+				maxNodes = strconv.Itoa(int(np.Autoscaling.MaxNodeCount))
 			} else {
 				log.Printf("DEBUG: nodepool is default-pool but autoscaling is not on: '%+v'", np)
 			}
@@ -82,33 +109,4 @@ func writeMetaData(cluster *container.Cluster, project string) {
 		}
 	}
 	log.Println("Done writing metadata")
-}
-
-// Create creates a GKE cluster and configures gcloud after successful GKE create request
-func Create(o *options.RequestWrapper) (*clm.GKECluster, error) {
-	o.Prep()
-
-	gkeClient := clm.GKEClient{}
-	clusterOps := gkeClient.Setup(o.Request)
-	gkeOps := clusterOps.(*clm.GKECluster)
-	if err := gkeOps.Acquire(); err != nil || gkeOps.Cluster == nil {
-		return nil, fmt.Errorf("failed acquiring GKE cluster: '%v'", err)
-	}
-
-	// At this point we should have a cluster ready to run test. Need to save
-	// metadata so that following flow can understand the context of cluster, as
-	// well as for Prow usage later
-	writeMetaData(gkeOps.Cluster, gkeOps.Project)
-
-	// set up kube config points to cluster
-	// TODO(chaodaiG): this probably should also be part of clustermanager lib
-	if out, err := common.StandardExec("gcloud", "beta", "container", "clusters", "get-credentials",
-		gkeOps.Cluster.Name, "--region", gkeOps.Cluster.Location, "--project", gkeOps.Project); err != nil {
-		return nil, fmt.Errorf("failed connecting to cluster: %q, '%v'", out, err)
-	}
-	if out, err := common.StandardExec("gcloud", "config", "set", "project", gkeOps.Project); err != nil {
-		return nil, fmt.Errorf("failed setting gcloud: %q, '%v'", out, err)
-	}
-
-	return gkeOps, nil
 }
