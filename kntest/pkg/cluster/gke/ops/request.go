@@ -21,4 +21,5 @@ import clm "knative.dev/pkg/testutils/clustermanager/e2e-tests"
 // RequestWrapper is a wrapper of the GKERequest.
 type RequestWrapper struct {
 	Request clm.GKERequest
+	Regions []string
 }

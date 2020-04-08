@@ -48,6 +48,13 @@ func addCreate(cc *cobra.Command, rw *ops.RequestWrapper) {
 		Short: "Create a GKE cluster.",
 		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
+			regions := rw.Regions
+			if len(regions) != 0 {
+				rw.Request.Region = regions[0]
+			}
+			if len(regions) > 1 {
+				rw.Request.BackupRegions = regions[1:]
+			}
 			if _, err := rw.Create(); err != nil {
 				log.Fatalf("error creating the cluster: %v", err)
 			}
