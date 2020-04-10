@@ -116,6 +116,7 @@ tide:
     reviewApprovedRequired: false
   merge_method:
     knative: squash
+    knative-sandbox: squash
     google/knative-gcp: squash
   target_url: [[.ProwHost]]/tide
   pr_status_base_url: [[.ProwHost]]/pr
