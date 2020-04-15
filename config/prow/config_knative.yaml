@@ -178,8 +178,6 @@ presubmits:
       dot-dev: true
     - integration-tests: true
       dot-dev: true
-    - go-coverage: true
-      dot-dev: true
 
   knative/eventing:
     - repo-settings:
@@ -253,6 +251,8 @@ presubmits:
       dot-dev: true
     - integration-tests: true
       dot-dev: true
+    - go-coverage: true
+      dot-dev: true
     - custom-test: check-config
       dot-dev: true
       command:
@@ -305,9 +305,36 @@ presubmits:
     - build-tests: true
     - unit-tests: true
     - integration-tests: true
+      args:
+      - "--run-test"
+      - "./test/e2e-tests.sh"
+    - custom-test: wi-tests
+      args:
+      - "--run-test"
+      - "./test/e2e-wi-tests.sh"
     - go-coverage: true
 
+  knative/net-certmanager:
+    - build-tests: true
+      dot-dev: true
+    - unit-tests: true
+      dot-dev: true
+    - integration-tests: false
+      dot-dev: true
+    - go-coverage: true
+      dot-dev: true
+
   knative/net-contour:
+    - build-tests: true
+      dot-dev: true
+    - unit-tests: true
+      dot-dev: true
+    - integration-tests: true
+      dot-dev: true
+    - go-coverage: true
+      dot-dev: true
+
+  knative/net-http01:
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -326,13 +353,19 @@ presubmits:
       dot-dev: true
     - go-coverage: true
       dot-dev: true
+    - custom-test: latest
+      dot-dev: true
+      optional: true
+      args:
+      - "--run-test"
+      - "./test/e2e-tests.sh --istio-version latest"
 
   knative/net-kourier:
     - build-tests: true
       dot-dev: true
     - unit-tests: true
       dot-dev: true
-    - integration-tests: false
+    - integration-tests: true
       dot-dev: true
     - go-coverage: true
       dot-dev: true
@@ -383,6 +416,21 @@ presubmits:
     - unit-tests: false
     - integration-tests: false
     - go-coverage: false
+
+  knative-sandbox/operator:
+    - build-tests: true
+      dot-dev: true
+    - unit-tests: true
+      dot-dev: true
+    - integration-tests: true
+      dot-dev: true
+    - go-coverage: true
+      dot-dev: true
+    - custom-test: upgrade-tests
+      dot-dev: true
+      args:
+        - "--run-test"
+        - "./test/e2e-upgrade-tests.sh"
 
 periodics:
   knative/serving:
@@ -564,7 +612,7 @@ periodics:
         requests:
           memory: 12Gi
         limits:
-            memory: 16Gi
+          memory: 16Gi
 
   knative/client:
     - continuous: true
@@ -892,7 +940,35 @@ periodics:
       env-vars:
       - ORG_NAME=google
 
+  knative/net-certmanager:
+    - continuous: true
+      dot-dev: true
+      go113: true
+    - nightly: true
+      dot-dev: true
+      go113: true
+    - dot-release: true
+      dot-dev: true
+      go113: true
+    - auto-release: true
+      dot-dev: true
+      go113: true
+
   knative/net-contour:
+    - continuous: true
+      dot-dev: true
+      go113: true
+    - nightly: true
+      dot-dev: true
+      go113: true
+    - dot-release: true
+      dot-dev: true
+      go113: true
+    - auto-release: true
+      dot-dev: true
+      go113: true
+
+  knative/net-http01:
     - continuous: true
       dot-dev: true
       go113: true
@@ -933,3 +1009,21 @@ periodics:
     - auto-release: true
       dot-dev: true
       go113: true
+
+  knative-sandbox/operator:
+    - continuous: true
+      go113: true
+      dot-dev: true
+    - nightly: true
+      go113: true
+      dot-dev: true
+    - dot-release: true
+      go113: true
+      dot-dev: true
+      env-vars:
+      - ORG_NAME=knative-sandbox
+    - auto-release: true
+      go113: true
+      dot-dev: true
+      env-vars:
+      - ORG_NAME=knative-sandbox

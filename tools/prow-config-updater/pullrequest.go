@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/google/go-github/github"
@@ -31,6 +32,11 @@ import (
 
 	"knative.dev/test-infra/pkg/git"
 	"knative.dev/test-infra/tools/prow-config-updater/config"
+)
+
+const (
+	interval = 10 * time.Second
+	timeout  = 30 * time.Minute
 )
 
 // GitHubMainHandler is used for the performing main operations on GitHub.
@@ -51,9 +57,9 @@ func (gc *GitHubMainHandler) getLatestPullRequest() (*github.PullRequest, error)
 		return nil, fmt.Errorf("error getting the last commit ID: %v", err)
 	}
 	// As we always use squash in merging PRs, we can get the pull request with the commit ID.
-	pr, err := gc.client.GetPullRequestByCommitID(config.OrgName, config.RepoName, ci)
+	pr, err := gc.client.GetPullRequestByCommitID(config.OrgName, config.RepoName, strings.TrimSpace(ci))
 	if err != nil {
-		return nil, fmt.Errorf("error getting the PR with commit ID %q: %v", ci, err)
+		return nil, fmt.Errorf("error getting the PR with commit ID %q: %v", strings.TrimSpace(ci), err)
 	}
 	return pr, nil
 }
@@ -95,34 +101,39 @@ func (gc *GitHubMainHandler) createForkPullRequest(forkOrgName string) (*github.
 
 // Find the pull request created by the pull bot (should be exactly one pull request, otherwise there must be an error)
 func (gc *GitHubMainHandler) findForkPullRequest(forkOrgName string) (*github.PullRequest, error) {
-	prs, _, err := gc.client.Client.PullRequests.List(
-		context.Background(), forkOrgName, config.RepoName,
-		&github.PullRequestListOptions{
-			State: "open",
-			Head:  "knative:master",
-		})
 	orgRepoName := fmt.Sprintf("%s/%s", forkOrgName, config.RepoName)
-	if err != nil {
-		return nil, fmt.Errorf("error listing pull request in repository %s: %v", orgRepoName, err)
-	}
 	var forkpr *github.PullRequest
-	for _, pr := range prs {
-		if *pr.User.Login == config.PullBotName {
-			forkpr = pr
+
+	if err := wait.PollImmediate(interval, timeout, func() (bool, error) {
+		prs, _, err := gc.client.Client.PullRequests.List(
+			context.Background(), forkOrgName, config.RepoName,
+			&github.PullRequestListOptions{
+				State: "open",
+				Head:  "knative:master",
+			})
+		if err != nil {
+			return false, fmt.Errorf("error listing pull request in repository %q: %v", orgRepoName, err)
 		}
-	}
-	if forkpr == nil {
-		return nil, fmt.Errorf("expected one pull request in repository %s but found %d", orgRepoName, len(prs))
+
+		for _, pr := range prs {
+			if *pr.User.Login == config.PullBotName {
+				forkpr = pr
+				// found the PR, return
+				return true, nil
+			}
+		}
+		// PR is not found, continue polling
+		return false, nil
+	}); err != nil {
+		return nil, fmt.Errorf("error finding the pull request in repository %q created by %q", orgRepoName, config.PullBotName)
 	}
 	return forkpr, nil
 }
 
 // Wait for the fork pull request to be merged by polling its state.
 func (gc *GitHubMainHandler) waitForForkPullRequestMerged(forkOrgName string, pn int) error {
-	interval := 10 * time.Second
-	timeout := 20 * time.Minute
 	return helpers.Run(
-		fmt.Sprintf("Wait until the fork pull request %d to merged", pn),
+		fmt.Sprintf("Wait until the fork pull request '%d' to merged", pn),
 		func() error {
 			return wait.PollImmediate(interval, timeout, func() (bool, error) {
 				pr, err := gc.client.GetPullRequest(forkOrgName, config.RepoName, pn)

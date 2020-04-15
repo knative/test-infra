@@ -69,15 +69,11 @@ func main() {
 		}
 
 		// Collect all files that are not allowed to change directly by users.
-		bannedFiles := make([]string, 0)
-		for _, file := range files {
-			for _, p := range config.ProdProwKeyConfigPaths {
-				fileName := file.GetFilename()
-				if strings.HasPrefix(fileName, p) {
-					bannedFiles = append(bannedFiles, fileName)
-				}
-			}
+		fns := make([]string, len(files))
+		for i, f := range files {
+			fns[i] = f.GetFilename()
 		}
+		bannedFiles := config.CollectRelevantFiles(fns, config.ProdProwKeyConfigPaths)
 
 		// If any of the production Prow key config files are changed, report the error.
 		if len(bannedFiles) != 0 {

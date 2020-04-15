@@ -25,8 +25,8 @@ import (
 	"strings"
 	"time"
 
-	"knative.dev/test-infra/pkg/common"
-	"knative.dev/test-infra/pkg/prow"
+	"knative.dev/pkg/test/helpers"
+	"knative.dev/pkg/test/prow"
 )
 
 const (
@@ -75,7 +75,7 @@ func (c *JSONClient) CreateReport(repo string, flaky []string, writeFile bool) (
 // writeToArtifactsDir writes the flaky test data for this repo to disk.
 func (c *JSONClient) writeToArtifactsDir(r *Report) error {
 	artifactsDir := prow.GetLocalArtifactsDir()
-	if err := common.CreateDir(path.Join(artifactsDir, r.Repo)); err != nil {
+	if err := helpers.CreateDir(path.Join(artifactsDir, r.Repo)); err != nil {
 		return err
 	}
 	outFilePath := path.Join(artifactsDir, r.Repo, filename)

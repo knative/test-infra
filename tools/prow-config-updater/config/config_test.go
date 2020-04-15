@@ -21,7 +21,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"knative.dev/test-infra/pkg/common"
+	"github.com/google/go-cmp/cmp"
+
+	"knative.dev/pkg/test/helpers"
 )
 
 func TestProwConfigPathsExist(t *testing.T) {
@@ -36,7 +38,7 @@ func TestProwKeyConfigPathsExist(t *testing.T) {
 
 func checkPaths(pathsArr [][]string, t *testing.T) {
 	t.Helper()
-	root, err := common.GetRootDir()
+	root, err := helpers.GetRootDir()
 	if err != nil {
 		t.Fatalf("Failed to get the root dir: %v", err)
 	}
@@ -46,6 +48,43 @@ func checkPaths(pathsArr [][]string, t *testing.T) {
 			if os.IsNotExist(err) || !info.IsDir() {
 				t.Fatalf("Expected %q to be a dir, but it's not: %v", p, err)
 			}
+		}
+	}
+}
+
+func TestCollectRelevantFiles(t *testing.T) {
+	tests := []struct {
+		name     string
+		files    []string
+		paths    []string
+		expected []string
+	}{{
+		name:     "no relevant files",
+		files:    []string{"test/file1.yaml", "test1/file2.yaml"},
+		paths:    []string{"test3"},
+		expected: []string{},
+	}, {
+		name:     "relevant files from one dir",
+		files:    []string{"test/file1.yaml", "test2/file2.yaml"},
+		paths:    []string{"test"},
+		expected: []string{"test/file1.yaml"},
+	}, {
+		name:     "relevant files from multiple dirs",
+		files:    []string{"test/file1.yaml", "test2/file2.yaml", "test3/file3.yaml"},
+		paths:    []string{"test", "test2"},
+		expected: []string{"test/file1.yaml", "test2/file2.yaml"},
+	}, {
+		name:     "relevant files from root dir",
+		files:    []string{"test/test1/file1.yaml", "test/test2/file2.yaml", "test111/file3.yaml"},
+		paths:    []string{"test"},
+		expected: []string{"test/test1/file1.yaml", "test/test2/file2.yaml"},
+	}}
+
+	for _, test := range tests {
+		res := CollectRelevantFiles(test.files, test.paths)
+		cmpRes := cmp.Diff(res, test.expected)
+		if cmpRes != "" {
+			t.Fatalf("expect and actual are different:\n%s", cmpRes)
 		}
 	}
 }

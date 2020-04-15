@@ -19,7 +19,6 @@ package main
 import (
 	"fmt"
 	"path/filepath"
-	"strings"
 
 	"github.com/google/go-github/github"
 	"knative.dev/pkg/test/cmd"
@@ -88,7 +87,7 @@ func (cli *Client) needsStaging() bool {
 		return false
 	}
 	// If any key config files for staging Prow are changed, the staging process will be needed.
-	fs := collectRelevantFiles(cli.files, config.StagingProwKeyConfigPaths)
+	fs := config.CollectRelevantFiles(cli.files, config.StagingProwKeyConfigPaths)
 	return len(fs) != 0
 }
 
@@ -98,10 +97,10 @@ func (cli *Client) updateProw(env config.ProwEnv) error {
 	prnumber := *cli.pr.Number
 	if err == nil {
 		// Best effort, won't fail the process if the comment fails.
-		cli.githubcommenter.commentOnUpdateConfigsSuccess(prnumber, config.ProdProwEnv, updatedFiles)
+		cli.githubcommenter.commentOnUpdateConfigsSuccess(prnumber, env, updatedFiles)
 	} else {
 		// Best effort, won't fail the process if the comment fails.
-		cli.githubcommenter.commentOnUpdateConfigsFailure(prnumber, config.StagingProwEnv, updatedFiles, err)
+		cli.githubcommenter.commentOnUpdateConfigsFailure(prnumber, env, updatedFiles, err)
 	}
 	return err
 }
@@ -129,46 +128,30 @@ func (cli *Client) startStaging() error {
 	return nil
 }
 
-// Filter out all files that are under the given paths.
-func collectRelevantFiles(files []string, paths []string) []string {
-	rfs := make([]string, 0)
-	for _, f := range files {
-		for _, p := range paths {
-			if !strings.HasSuffix("p", string(filepath.Separator)) {
-				p = p + string(filepath.Separator)
-			}
-			if strings.HasPrefix(f, p) {
-				rfs = append(rfs, f)
-			}
-		}
-	}
-	return rfs
-}
-
 // Run the `make` command to update Prow configs.
 // path is the Prow config root folder.
 func (cli *Client) doProwUpdate(env config.ProwEnv) ([]string, error) {
 	relevantFiles := make([]string, 0)
 	switch env {
 	case config.ProdProwEnv:
-		relevantFiles = append(relevantFiles, collectRelevantFiles(cli.files, config.ProdProwConfigPaths)...)
+		relevantFiles = append(relevantFiles, config.CollectRelevantFiles(cli.files, config.ProdProwConfigPaths)...)
 	case config.StagingProwEnv:
-		relevantFiles = append(relevantFiles, collectRelevantFiles(cli.files, config.StagingProwConfigPaths)...)
+		relevantFiles = append(relevantFiles, config.CollectRelevantFiles(cli.files, config.StagingProwConfigPaths)...)
 	default:
-		return nil, fmt.Errorf("unsupported Prow environement: %q, cannot make the update", env)
+		return relevantFiles, fmt.Errorf("unsupported Prow environement: %q, cannot make the update", env)
 	}
 	if len(relevantFiles) != 0 {
 		if err := config.UpdateProw(env, cli.dryrun); err != nil {
-			return nil, fmt.Errorf("error updating Prow configs for %q environment: %v", env, err)
+			return relevantFiles, fmt.Errorf("error updating Prow configs for %q environment: %v", env, err)
 		}
 	}
 
 	// For production Prow, we also need to update Testgrid config if it's changed.
-	tfs := collectRelevantFiles(cli.files, []string{config.ProdTestgridConfigPath})
+	tfs := config.CollectRelevantFiles(cli.files, []string{config.ProdTestgridConfigPath})
 	if len(tfs) != 0 {
 		relevantFiles = append(relevantFiles, tfs...)
 		if err := config.UpdateTestgrid(env, cli.dryrun); err != nil {
-			return nil, fmt.Errorf("error updating Testgrid configs for %q environment: %v", env, err)
+			return relevantFiles, fmt.Errorf("error updating Testgrid configs for %q environment: %v", env, err)
 		}
 	}
 	return relevantFiles, nil
@@ -178,7 +161,12 @@ func (cli *Client) doProwUpdate(env config.ProwEnv) ([]string, error) {
 func (cli *Client) rollOutToProd() (*github.PullRequest, error) {
 	// Copy staging config files to production.
 	for i, stagingPath := range config.StagingProwKeyConfigPaths {
-		cpCmd := fmt.Sprintf("cp -r %s/* %s", stagingPath, config.ProdProwKeyConfigPaths[i])
+		// Get the absolute paths.
+		// We do not need to check the error here as the unit tests can guarantee the paths exist.
+		stagingPath, _ = filepath.Abs(stagingPath)
+		prodPath, _ := filepath.Abs(config.ProdProwKeyConfigPaths[i])
+		// The wildcard '*' needs to be expanded by the shell, so the cp command needs to be run in a shell process.
+		cpCmd := fmt.Sprintf("/bin/bash -c 'cp -r %s/* %s'", stagingPath, prodPath)
 		if _, err := cmd.RunCommand(cpCmd); err != nil {
 			return nil, fmt.Errorf("error copying staging config files to production: %v", err)
 		}
@@ -190,7 +178,7 @@ func (cli *Client) rollOutToProd() (*github.PullRequest, error) {
 	}
 
 	// Create a pull request to update production Prow.
-	commitMsg := fmt.Sprintf("roll out staging Prow change in #%d to production", *cli.pr.Number)
+	commitMsg := fmt.Sprintf("[Auto]Roll out staging Prow change in #%d to production", *cli.pr.Number)
 	body := fmt.Sprintf(
 		"This is a PR auto-synced from #%d, it will be automatically merged after all tests pass.",
 		*cli.pr.Number)
