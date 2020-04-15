@@ -432,6 +432,16 @@ presubmits:
         - "--run-test"
         - "./test/e2e-upgrade-tests.sh"
 
+  knative-sandbox/eventing-kafka:
+    - build-tests: true
+      dot-dev: true
+    - unit-tests: true
+      dot-dev: true
+    - integration-tests: true
+      dot-dev: true
+    - go-coverage: true
+      dot-dev: true
+
 periodics:
   knative/serving:
     - continuous: true
@@ -1020,6 +1030,23 @@ periodics:
     - dot-release: true
       go113: true
       dot-dev: true
+      env-vars:
+      - ORG_NAME=knative-sandbox
+    - auto-release: true
+      go113: true
+      dot-dev: true
+      env-vars:
+      - ORG_NAME=knative-sandbox
+
+  knative-sandbox/eventing-kafka:
+    - continuous: true
+      go113: true
+      dot-dev: true
+    - nightly: true
+      go113: true
+      dot-dev: true
+    - dot-release: true
+      go113: true
       env-vars:
       - ORG_NAME=knative-sandbox
     - auto-release: true
