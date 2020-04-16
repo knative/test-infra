@@ -5,6 +5,7 @@
 with defined env vars overriding GCP project, cluster used by Knative.
 
 Create build cluster:
+
 ```
 # Creating build cluster, skip `Create a SA and secret for uploading results to GCS` as it's not needed
 ./create-build-cluster.sh
@@ -18,7 +19,8 @@ popd
 python3 "${GOPATH}/src/k8s.io/test-infra/gencred/merge_kubeconfig_secret.py" --src-key config --dest-key config build-cluster-kubeconfig.yaml
 ```
 
-Copy secrets from old cluster to build cluster
+Copy secrets from old cluster to build cluster:
+
 ```
 # Copy over secrets needed for jobs
 ./add-secrets.sh
