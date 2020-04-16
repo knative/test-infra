@@ -5,6 +5,7 @@
 with defined env vars overriding GCP project, cluster used by Knative.
 
 Run:
+
 ```
 # Creating build cluster, skip `Create a SA and secret for uploading results to GCS` as it's not needed
 ./create-build-cluster.sh
