@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Copyright 2019 The Knative Authors
+
+# Copyright 2020 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Requries gcloud and kubectl. Assume the cluster contexts are already set for
+# Requires gcloud and kubectl. Assume the cluster contexts are already set for
 # both service and build clusters
 
 KUBECONFIG_SERVICE_CLUSTER="gke_knative-tests_us-central1-f_prow"
