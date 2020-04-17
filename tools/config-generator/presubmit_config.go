@@ -18,8 +18,6 @@ package main
 
 import (
 	"strings"
-
-	"gopkg.in/yaml.v2"
 )
 
 const (
@@ -40,7 +38,7 @@ type presubmitJobTemplateData struct {
 }
 
 // generatePresubmit generates all presubmit job configs for the given repo and configuration.
-func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSlice) {
+func generatePresubmit(title string, repoName string, pj *prowJob) {
 	var data presubmitJobTemplateData
 	data.Base = newbaseProwJobTemplateData(repoName)
 	data.Base.Command = presubmitScript
@@ -48,44 +46,37 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	jobTemplate := readTemplate(presubmitJob)
 	repoData := repositoryData{Name: repoName, EnableGoCoverage: false, GoCoverageThreshold: data.Base.GoCoverageThreshold}
 	generateJob := true
-	for i, item := range presubmitConfig {
-		switch item.Key {
-		case "build-tests", "unit-tests", "integration-tests":
-			if !getBool(item.Value) {
-				return
-			}
-			jobName := getString(item.Key)
-			data.PresubmitJobName = data.Base.RepoNameForJob + "-" + jobName
-			// Use default arguments if none given.
-			if len(data.Base.Args) == 0 {
-				data.Base.Args = []string{"--" + jobName}
-			}
-			addVolumeToJob(&data.Base, "/etc/repoview-token", "repoview-token", true, "")
-		case "go-coverage":
-			if !getBool(item.Value) {
-				return
-			}
-			jobTemplate = readTemplate(presubmitGoCoverageJob)
-			data.PresubmitJobName = data.Base.RepoNameForJob + "-go-coverage"
-			data.Base.Image = coverageDockerImage
-			data.Base.ServiceAccount = ""
-			repoData.EnableGoCoverage = true
-			addVolumeToJob(&data.Base, "/etc/covbot-token", "covbot-token", true, "")
-		case "custom-test":
-			data.PresubmitJobName = data.Base.RepoNameForJob + "-" + getString(item.Value)
-		case "go-coverage-threshold":
-			data.Base.GoCoverageThreshold = getInt(item.Value)
-			repoData.GoCoverageThreshold = data.Base.GoCoverageThreshold
-		case "repo-settings":
-			generateJob = false
-		default:
-			continue
+	switch pj.Type {
+	case "build-tests", "unit-tests", "integration-tests":
+		if !pj.Enabled {
+			return
 		}
-		// Knock-out the item, signalling it was already parsed.
-		presubmitConfig[i] = yaml.MapItem{}
+		data.PresubmitJobName = data.Base.RepoNameForJob + "-" + pj.Type
+		// Use default arguments if none given.
+		if len(data.Base.Args) == 0 {
+			data.Base.Args = []string{"--" + pj.Type}
+		}
+		addVolumeToJob(&data.Base, "/etc/repoview-token", "repoview-token", true, "")
+	case "go-coverage":
+		if !pj.Enabled {
+			return
+		}
+		jobTemplate = readTemplate(presubmitGoCoverageJob)
+		data.PresubmitJobName = data.Base.RepoNameForJob + "-go-coverage"
+		data.Base.Image = coverageDockerImage
+		data.Base.ServiceAccount = ""
+		repoData.EnableGoCoverage = true
+		addVolumeToJob(&data.Base, "/etc/covbot-token", "covbot-token", true, "")
+	case "custom-test":
+		data.PresubmitJobName = data.Base.RepoNameForJob + "-" + pj.Name
+	case "go-coverage-threshold":
+		data.Base.GoCoverageThreshold = pj.GoCoverageThreshold
+		repoData.GoCoverageThreshold = data.Base.GoCoverageThreshold
+	case "repo-settings":
+		generateJob = false
 	}
 	repositories = append(repositories, repoData)
-	parseBasicJobConfigOverrides(&data.Base, presubmitConfig)
+	parseBasicJobConfigOverrides(&data.Base, pj)
 	if !generateJob {
 		return
 	}

@@ -127,7 +127,7 @@ type baseProwJobTemplateData struct {
 // ####################################################################################################
 
 // sectionGenerator is a function that generates Prow job configs given a slice of a yaml file with configs.
-type sectionGenerator func(string, string, yaml.MapSlice)
+type sectionGenerator func(string, string, *prowJob)
 
 // stringArrayFlag is the content of a multi-value flag.
 type stringArrayFlag []string
@@ -537,90 +537,85 @@ func setupDockerInDockerForJob(data *baseProwJobTemplateData) {
 }
 
 // setReourcesReqForJob sets resource requirement for job
-func setReourcesReqForJob(res yaml.MapSlice, data *baseProwJobTemplateData) {
-	for _, val := range res {
-		data.Resources = append(data.Resources, fmt.Sprintf("  %s:", getString(val.Key)))
-		for _, item := range getMapSlice(val.Value) {
-			data.Resources = append(data.Resources, fmt.Sprintf("    %s: %s", getString(item.Key), getString(item.Value)))
+func setReourcesReqForJob(r resources, data *baseProwJobTemplateData) {
+	var rsToStr func(key string, rd resourcesDef) []string
+	rsToStr = func(key string, rd resourcesDef) []string {
+		var res []string
+		if rd.CPU != "" || rd.Memory != "" {
+			res = append(res, fmt.Sprintf("  %s:", key))
+			res = append(res, fmt.Sprintf("    cpu: %s", rd.CPU))
+			res = append(res, fmt.Sprintf("    memory: %s", rd.Memory))
 		}
+		return res
 	}
+	data.Resources = append(data.Resources, rsToStr("limits", r.Limits)...)
+	data.Resources = append(data.Resources, rsToStr("requests", r.Requests)...)
 }
 
 // Config parsers.
 
 // parseBasicJobConfigOverrides updates the given baseProwJobTemplateData with any base option present in the given config.
-func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.MapSlice) {
+func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, pj *prowJob) {
 	(*data).ExtraRefs = append((*data).ExtraRefs, "  base_ref: "+(*data).RepoBranch)
 	var needDotdev, needGo113, needGo114 bool
-	for i, item := range config {
-		switch item.Key {
-		case "skip_branches":
-			(*data).SkipBranches = getStringArray(item.Value)
-		case "branches":
-			(*data).Branches = getStringArray(item.Value)
-		case "args":
-			(*data).Args = getStringArray(item.Value)
-		case "timeout":
-			(*data).Timeout = getInt(item.Value)
-		case "command":
-			(*data).Command = getString(item.Value)
-		case "needs-monitor":
-			(*data).NeedsMonitor = true
-		case "needs-dind":
-			if getBool(item.Value) {
-				setupDockerInDockerForJob(data)
-			}
-		case "always_run":
-			(*data).AlwaysRun = getBool(item.Value)
-		case "dot-dev":
-			needDotdev = true
-			for i, repo := range repositories {
-				if path.Base(repo.Name) == (*data).RepoName {
-					repositories[i].DotDev = true
-				}
-			}
-		case "go113":
-			needGo113 = true
-			for i, repo := range repositories {
-				if path.Base(repo.Name) == (*data).RepoName {
-					repositories[i].Go113 = true
-				}
-			}
-		case "go114":
-			needGo114 = true
-			for i, repo := range repositories {
-				if path.Base(repo.Name) == (*data).RepoName {
-					repositories[i].Go114 = true
-					data.RepoNameForJob = (*data).RepoName + getGo114ID()
-				}
-			}
-		case "performance":
-			for i, repo := range repositories {
-				if path.Base(repo.Name) == (*data).RepoName {
-					repositories[i].EnablePerformanceTests = true
-				}
-			}
-		case "go112-branches":
-			for i, repo := range repositories {
-				if path.Base(repo.Name) == (*data).RepoName {
-					repositories[i].Go112Branches = getStringArray(item.Value)
-				}
-			}
-		case "env-vars":
-			addExtraEnvVarsToJob(getStringArray(item.Value), data)
-		case "optional":
-			(*data).Optional = "optional: true"
-		case "resources":
-			setReourcesReqForJob(getMapSlice(item.Value), data)
-		case nil: // already processed
-			continue
-		default:
-			log.Fatalf("Unknown entry %q for job", item.Key)
-			continue
-		}
-		// Knock-out the item, signalling it was already parsed.
-		config[i] = yaml.MapItem{}
+
+	(*data).SkipBranches = pj.SkipBranches
+	(*data).Branches = pj.Branches
+	(*data).Args = pj.Args
+	(*data).Timeout = pj.Timeout
+	(*data).Command = pj.Command
+	(*data).NeedsMonitor = pj.NeedsMonitor
+	if pj.NeedsDind {
+		setupDockerInDockerForJob(data)
 	}
+	(*data).AlwaysRun = pj.AlwaysRun
+	// This is a good candidate of using default
+	if pj.DotDev {
+		needDotdev = true
+		for i, repo := range repositories {
+			if path.Base(repo.Name) == (*data).RepoName {
+				repositories[i].DotDev = true
+			}
+		}
+	}
+	if pj.Go113 {
+		needGo113 = true
+		for i, repo := range repositories {
+			if path.Base(repo.Name) == (*data).RepoName {
+				repositories[i].Go113 = true
+			}
+		}
+	}
+	if pj.Go114 {
+		needGo114 = true
+		for i, repo := range repositories {
+			if path.Base(repo.Name) == (*data).RepoName {
+				repositories[i].Go114 = true
+				data.RepoNameForJob = (*data).RepoName + getGo114ID()
+			}
+		}
+	}
+	if pj.Performance {
+		for i, repo := range repositories {
+			if path.Base(repo.Name) == (*data).RepoName {
+				repositories[i].EnablePerformanceTests = true
+			}
+		}
+	}
+	if len(pj.Go112Branches) > 0 {
+		for i, repo := range repositories {
+			if path.Base(repo.Name) == (*data).RepoName {
+				repositories[i].Go112Branches = pj.Go112Branches
+			}
+		}
+	}
+
+	addExtraEnvVarsToJob(pj.EnvVars, data)
+
+	if pj.Optional {
+		(*data).Optional = "optional: true"
+	}
+	setReourcesReqForJob(pj.Resources, data)
 
 	if needDotdev {
 		(*data).PathAlias = "path_alias: knative.dev/" + (*data).RepoName
@@ -639,7 +634,7 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 }
 
 // getProwConfigData gets some basic, general data for the Prow config.
-func getProwConfigData(config yaml.MapSlice) prowConfigTemplateData {
+func getProwConfigData(ac allConfig) prowConfigTemplateData {
 	var data prowConfigTemplateData
 	data.Year = time.Now().Year()
 	data.ProwHost = prowHost
@@ -651,37 +646,26 @@ func getProwConfigData(config yaml.MapSlice) prowConfigTemplateData {
 	data.LogsDir = logsDir
 	data.TideRepos = make([]string, 0)
 	// Repos enabled for tide are all those that have presubmit jobs.
-	for _, section := range config {
-		if section.Key != "presubmits" {
-			continue
-		}
-		for _, repo := range getMapSlice(section.Value) {
-			orgRepoName := getString(repo.Key)
-			data.TideRepos = appendIfUnique(data.TideRepos, orgRepoName)
-			if strings.HasSuffix(orgRepoName, "test-infra") {
-				data.TestInfraRepo = orgRepoName
-			}
+	for repo, _ := range ac.Periodics {
+		data.TideRepos = appendIfUnique(data.TideRepos, repo)
+		if strings.HasSuffix(repo, "test-infra") {
+			data.TestInfraRepo = repo
 		}
 	}
+
 	// Sort repos to make output stable.
 	sort.Strings(data.TideRepos)
 	return data
 }
 
 // parseSection generate the configs from a given section of the input yaml file.
-func parseSection(config yaml.MapSlice, title string, generate sectionGenerator, finalize sectionGenerator) {
-	for _, section := range config {
-		if section.Key != title {
-			continue
+func parseSection(sc map[string][]prowJob, title string, generate sectionGenerator, finalize sectionGenerator) {
+	for repo, pjs := range sc {
+		for _, pj := range pjs {
+			generate(title, repo, &pj)
 		}
-		for _, repo := range getMapSlice(section.Value) {
-			repoName := getString(repo.Key)
-			for _, jobConfig := range getInterfaceArray(repo.Value) {
-				generate(title, repoName, getMapSlice(jobConfig))
-			}
-			if finalize != nil {
-				finalize(title, repoName, nil)
-			}
+		if finalize != nil {
+			finalize(title, repo, nil)
 		}
 	}
 }
@@ -1108,7 +1092,7 @@ func main() {
 	var env = flag.String("env", "prow", "The name of the environment, can be prow or prow-staging")
 	var generateProwConfig = flag.Bool("generate-prow-config", true, "Whether to generate the prow configuration file from the template")
 	var generatePluginsConfig = flag.Bool("generate-plugins-config", true, "Whether to generate the plugins configuration file from the template")
-	var generateTestgridConfig = flag.Bool("generate-testgrid-config", true, "Whether to generate the testgrid config from the template file")
+	// var generateTestgridConfig = flag.Bool("generate-testgrid-config", true, "Whether to generate the testgrid config from the template file")
 	var generateMaintenanceJobs = flag.Bool("generate-maintenance-jobs", true, "Whether to generate the maintenance periodic jobs (e.g. backup)")
 	var includeConfig = flag.Bool("include-config", true, "Whether to include general configuration (e.g., plank) in the generated config")
 	var dockerImagesBase = flag.String("image-docker", "gcr.io/knative-tests/test-infra", "Default registry for the docker images used by the jobs")
@@ -1154,7 +1138,7 @@ func main() {
 	backupsDockerImage = path.Join(*dockerImagesBase, *backupsDockerImageName)
 
 	// We use MapSlice instead of maps to keep key order and create predictable output.
-	config := yaml.MapSlice{}
+	// config := yaml.MapSlice{}
 
 	// Read input config.
 	name := flag.Arg(0)
@@ -1162,11 +1146,16 @@ func main() {
 	if err != nil {
 		log.Fatalf("Cannot read file %q: %v", name, err)
 	}
-	if err = yaml.Unmarshal(content, &config); err != nil {
+	// if err = yaml.Unmarshal(content, &config); err != nil {
+	// 	log.Fatalf("Cannot parse config %q: %v", name, err)
+	// }
+
+	var ac allConfig
+	if err = yaml.Unmarshal(content, &ac); err != nil {
 		log.Fatalf("Cannot parse config %q: %v", name, err)
 	}
 
-	prowConfigData := getProwConfigData(config)
+	prowConfigData := getProwConfigData(ac)
 
 	if *generatePluginsConfig {
 		setOutput(*pluginsConfigOutput)
@@ -1185,21 +1174,22 @@ func main() {
 
 		setOutput(prowJobsConfigOutput)
 		executeTemplate("general header", readTemplate(commonHeaderConfig), prowConfigData)
-		parseSection(config, "presubmits", generatePresubmit, nil)
-		parseSection(config, "periodics", generatePeriodic, generateGoCoveragePeriodic)
+		parseSection(ac.Presubmits, "presubmits", generatePresubmit, nil)
+		parseSection(ac.Periodics, "periodics", generatePeriodic, generateGoCoveragePeriodic)
 		for _, repo := range repositories { // Keep order for predictable output.
 			if !repo.Processed && repo.EnableGoCoverage {
 				generateGoCoveragePeriodic("periodics", repo.Name, nil)
 			}
 		}
-		if *generateMaintenanceJobs {
-			generateCleanupPeriodicJob()
-			generateFlakytoolPeriodicJob()
-			generateVersionBumpertoolPeriodicJob()
-			generateBackupPeriodicJob()
-			generateIssueTrackerPeriodicJobs()
-			generatePerfClusterUpdatePeriodicJobs()
-		}
+		// Intentionally removed as Chi is working on disabling generating these
+		// if *generateMaintenanceJobs {
+		// 	generateCleanupPeriodicJob()
+		// 	generateFlakytoolPeriodicJob()
+		// 	generateVersionBumpertoolPeriodicJob()
+		// 	generateBackupPeriodicJob()
+		// 	generateIssueTrackerPeriodicJobs()
+		// 	generatePerfClusterUpdatePeriodicJobs()
+		// }
 		for _, repo := range repositories {
 			if repo.EnableGoCoverage {
 				generateGoCoveragePostsubmit("postsubmits", repo.Name, nil)
@@ -1213,28 +1203,29 @@ func main() {
 		}
 	}
 
-	// config object is modified when we generate prow config, so we'll need to reload it here
-	if err = yaml.Unmarshal(content, &config); err != nil {
-		log.Fatalf("Cannot parse config %q: %v", name, err)
-	}
-	// Generate Testgrid config.
-	if *generateTestgridConfig {
-		setOutput(testgridConfigOutput)
+	// Worry about testgrid later
+	// // config object is modified when we generate prow config, so we'll need to reload it here
+	// if err = yaml.Unmarshal(content, &config); err != nil {
+	// 	log.Fatalf("Cannot parse config %q: %v", name, err)
+	// }
+	// // Generate Testgrid config.
+	// if *generateTestgridConfig {
+	// 	setOutput(testgridConfigOutput)
 
-		if *includeConfig {
-			executeTemplate("general header", readTemplate(commonHeaderConfig), newBaseTestgridTemplateData(""))
-			executeTemplate("general config", readTemplate(generalTestgridConfig), newBaseTestgridTemplateData(""))
-		}
+	// 	if *includeConfig {
+	// 		executeTemplate("general header", readTemplate(commonHeaderConfig), newBaseTestgridTemplateData(""))
+	// 		executeTemplate("general config", readTemplate(generalTestgridConfig), newBaseTestgridTemplateData(""))
+	// 	}
 
-		presubmitJobData := parseJob(config, "presubmits")
-		goCoverageMap = parseGoCoverageMap(presubmitJobData)
+	// 	presubmitJobData := parseJob(config, "presubmits")
+	// 	goCoverageMap = parseGoCoverageMap(presubmitJobData)
 
-		periodicJobData := parseJob(config, "periodics")
-		collectMetaData(periodicJobData)
+	// 	periodicJobData := parseJob(config, "periodics")
+	// 	collectMetaData(periodicJobData)
 
-		generateTestGridSection("test_groups", generateTestGroup, false)
-		generateTestGridSection("dashboards", generateDashboard, true)
-		generateDashboardsForReleases()
-		generateDashboardGroups()
-	}
+	// 	generateTestGridSection("test_groups", generateTestGroup, false)
+	// 	generateTestGridSection("dashboards", generateDashboard, true)
+	// 	generateDashboardsForReleases()
+	// 	generateDashboardGroups()
+	// }
 }

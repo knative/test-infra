@@ -24,8 +24,6 @@ import (
 	"math"
 	"path"
 	"time"
-
-	"gopkg.in/yaml.v2"
 )
 
 const (
@@ -100,98 +98,73 @@ func generateCron(jobType, jobName string, timeout int) string {
 }
 
 // generatePeriodic generates all periodic job configs for the given repo and configuration.
-func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlice) {
+func generatePeriodic(title string, repoName string, pj *prowJob) {
 	var data periodicJobTemplateData
 	data.Base = newbaseProwJobTemplateData(repoName)
-	jobNameSuffix := ""
 	jobTemplate := readTemplate(periodicTestJob)
-	jobType := ""
+	jobType := pj.Type
+	jobNameSuffix := pj.Type
 	isMonitoredJob := false
 
-	for i, item := range periodicConfig {
-		switch item.Key {
-		case "continuous":
-			if !getBool(item.Value) {
-				return
-			}
-			jobType = getString(item.Key)
-			jobNameSuffix = "continuous"
-			isMonitoredJob = true
-			// Use default command and arguments if none given.
-			if data.Base.Command == "" {
-				data.Base.Command = presubmitScript
-			}
-			if len(data.Base.Args) == 0 {
-				data.Base.Args = allPresubmitTests
-			}
-		case "nightly":
-			if !getBool(item.Value) {
-				return
-			}
-			jobType = getString(item.Key)
-			jobNameSuffix = "nightly-release"
-			data.Base.ServiceAccount = nightlyAccount
-			data.Base.Command = releaseScript
-			data.Base.Args = releaseNightly
-			data.Base.Timeout = 90
-			isMonitoredJob = true
-		case "branch-ci":
-			if !getBool(item.Value) {
-				return
-			}
-			jobType = getString(item.Key)
-			jobNameSuffix = "continuous"
-			data.Base.Command = releaseScript
-			data.Base.Args = releaseLocal
-			setupDockerInDockerForJob(&data.Base)
-			// TODO(adrcunha): Consider reducing the timeout in the future.
-			data.Base.Timeout = 180
-			isMonitoredJob = true
-		case "dot-release", "auto-release":
-			if !getBool(item.Value) {
-				return
-			}
-			jobType = getString(item.Key)
-			jobNameSuffix = getString(item.Key)
-			data.Base.ServiceAccount = releaseAccount
-			data.Base.Command = releaseScript
-			data.Base.Args = []string{
-				"--" + jobNameSuffix,
-				"--release-gcs " + data.Base.ReleaseGcs,
-				"--release-gcr gcr.io/knative-releases",
-				"--github-token /etc/hub-token/token"}
-			addVolumeToJob(&data.Base, "/etc/hub-token", "hub-token", true, "")
-			data.Base.Timeout = 90
-			isMonitoredJob = true
-		case "custom-job":
-			jobType = getString(item.Key)
-			jobNameSuffix = getString(item.Value)
-			data.Base.Timeout = 100
-		case "cron":
-			data.CronString = getString(item.Value)
-		case "release":
-			version := getString(item.Value)
-			jobNameSuffix = version + "-" + jobNameSuffix
-			data.Base.RepoBranch = "release-" + version
-			if jobType == "dot-release" {
-				data.Base.Args = append(data.Base.Args, "--branch release-"+version)
-			}
-			isMonitoredJob = true
-		case "webhook-apicoverage":
-			if !getBool(item.Value) {
-				return
-			}
-			jobType = getString(item.Key)
-			jobNameSuffix = "webhook-apicoverage"
-			data.Base.Command = webhookAPICoverageScript
-			addEnvToJob(&data.Base, "SYSTEM_NAMESPACE", data.Base.RepoNameForJob)
-		default:
-			continue
-		}
-		// Knock-out the item, signalling it was already parsed.
-		periodicConfig[i] = yaml.MapItem{}
+	if !pj.Enabled {
+		return
 	}
-	parseBasicJobConfigOverrides(&data.Base, periodicConfig)
+
+	switch pj.Type {
+	case "continuous":
+		isMonitoredJob = true
+		// Use default command and arguments if none given.
+		if data.Base.Command == "" {
+			data.Base.Command = presubmitScript
+		}
+		if len(data.Base.Args) == 0 {
+			data.Base.Args = allPresubmitTests
+		}
+	case "nightly":
+		data.Base.ServiceAccount = nightlyAccount
+		data.Base.Command = releaseScript
+		data.Base.Args = releaseNightly
+		data.Base.Timeout = 90
+		isMonitoredJob = true
+	case "branch-ci":
+		data.Base.Command = releaseScript
+		data.Base.Args = releaseLocal
+		setupDockerInDockerForJob(&data.Base)
+		// TODO(adrcunha): Consider reducing the timeout in the future.
+		data.Base.Timeout = 180
+		isMonitoredJob = true
+	case "dot-release", "auto-release":
+		data.Base.ServiceAccount = releaseAccount
+		data.Base.Command = releaseScript
+		data.Base.Args = []string{
+			"--" + jobNameSuffix,
+			"--release-gcs " + data.Base.ReleaseGcs,
+			"--release-gcr gcr.io/knative-releases",
+			"--github-token /etc/hub-token/token"}
+		addVolumeToJob(&data.Base, "/etc/hub-token", "hub-token", true, "")
+		data.Base.Timeout = 90
+		isMonitoredJob = true
+	case "custom-job":
+		// Candidate of default config
+		data.Base.Timeout = 100
+	case "webhook-apicoverage":
+		data.Base.Command = webhookAPICoverageScript
+		addEnvToJob(&data.Base, "SYSTEM_NAMESPACE", data.Base.RepoNameForJob)
+	}
+
+	data.CronString = pj.Cron
+
+	if pj.Release != "" {
+		version := pj.Release
+		jobNameSuffix = version + "-" + jobNameSuffix
+		data.Base.RepoBranch = "release-" + version
+		if jobType == "dot-release" {
+			data.Base.Args = append(data.Base.Args, "--branch release-"+version)
+		}
+		isMonitoredJob = true
+	}
+
+	parseBasicJobConfigOverrides(&data.Base, pj)
 	data.PeriodicJobName = fmt.Sprintf("ci-%s", data.Base.RepoNameForJob)
 	if jobNameSuffix != "" {
 		data.PeriodicJobName += "-" + jobNameSuffix
@@ -319,7 +292,7 @@ func generateBackupPeriodicJob() {
 }
 
 // generateGoCoveragePeriodic generates the go coverage periodic job config for the given repo (configuration is ignored).
-func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) {
+func generateGoCoveragePeriodic(title string, repoName string, _ *prowJob) {
 	for i, repo := range repositories {
 		if repoName != repo.Name || !repo.EnableGoCoverage {
 			continue
