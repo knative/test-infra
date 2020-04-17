@@ -564,10 +564,6 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 			(*data).Timeout = getInt(item.Value)
 		case "command":
 			(*data).Command = getString(item.Value)
-		case "full-command":
-			parts := strings.Split(getString(item.Value), " ")
-			(*data).Command = parts[0]
-			(*data).Args = parts[1:]
 		case "needs-monitor":
 			(*data).NeedsMonitor = true
 		case "needs-dind":

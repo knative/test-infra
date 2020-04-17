@@ -614,7 +614,7 @@ periodics:
       dot-dev: true
       go113: true
     - custom-job: continuous-go114
-      full-command: "./test/e2e-tests.sh"
+      command: "./test/e2e-tests.sh"
       timeout: 100
       dot-dev: true
       go114: true
@@ -648,7 +648,7 @@ periodics:
       # Nightly jobs run between 1AM and 3AM PST.
       # Run this job at 5AM PST (1PM UTC)
       cron: "0 13 * * *"
-      full-command: "./test/tekton-tests.sh"
+      command: "./test/tekton-tests.sh"
       dot-dev: true
       go113: true
     - dot-release: true
