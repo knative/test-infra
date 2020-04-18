@@ -122,27 +122,27 @@ func generatePeriodic(title string, repoName string, pj *prowJob) {
 		}
 	case "nightly-release":
 		data.Base.ServiceAccount = nightlyAccount
-		data.Base.Command = releaseScript
-		data.Base.Args = releaseNightly
+		// data.Base.Command = releaseScript
+		// data.Base.Args = releaseNightly
 		data.Base.Timeout = 90
 		isMonitoredJob = true
 	case "branch-ci":
 		// TODO(chaodaiG): This could merge with continous job
 		jobNameSuffix = "continuous"
-		data.Base.Command = releaseScript
-		data.Base.Args = releaseLocal
+		// data.Base.Command = releaseScript
+		// data.Base.Args = releaseLocal
 		setupDockerInDockerForJob(&data.Base)
 		// TODO(adrcunha): Consider reducing the timeout in the future.
 		data.Base.Timeout = 180
 		isMonitoredJob = true
 	case "dot-release", "auto-release":
 		data.Base.ServiceAccount = releaseAccount
-		data.Base.Command = releaseScript
-		data.Base.Args = []string{
-			"--" + jobNameSuffix,
-			"--release-gcs " + data.Base.ReleaseGcs,
-			"--release-gcr gcr.io/knative-releases",
-			"--github-token /etc/hub-token/token"}
+		// data.Base.Command = releaseScript
+		// data.Base.Args = []string{
+		// 	"--" + jobNameSuffix,
+		// 	"--release-gcs " + data.Base.ReleaseGcs,
+		// 	"--release-gcr gcr.io/knative-releases",
+		// 	"--github-token /etc/hub-token/token"}
 		addVolumeToJob(&data.Base, "/etc/hub-token", "hub-token", true, "")
 		data.Base.Timeout = 90
 		isMonitoredJob = true

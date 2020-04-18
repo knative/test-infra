@@ -332,6 +332,15 @@ func parseSection(rcs []repoConfig, title string, generate sectionGenerator, fin
 					}
 				}
 			}
+			if rc.Repo == repo {
+				for _, job := range rc.Jobs {
+					if job.Type == "*" {
+						if err := mergo.Merge(pj, job); err != nil {
+							log.Fatalf("failed overriding: %v", err)
+						}
+					}
+				}
+			}
 		}
 	}
 	for _, rc := range rcs {

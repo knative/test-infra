@@ -28,6 +28,8 @@ const (
 	perfTestSecretName = "performance-test"
 )
 
+// TODO(chizhg): move this entire thing to a `postsubmit` section in `config_knative`
+
 // generatePerfClusterUpdatePeriodicJobs generates periodic jobs to update clusters
 // that run performance testing benchmarks
 func generatePerfClusterUpdatePeriodicJobs() {
