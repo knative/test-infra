@@ -85,7 +85,7 @@ func generateCron(jobType, jobName string, timeout int) string {
 		res = fmt.Sprintf(hourCron)
 	case "branch-ci": // Every day 1-2 PST
 		res = fmt.Sprintf(dayCron, getUTCtime(1))
-	case "nightly": // Every day 2-3 PST
+	case "nightly-release": // Every day 2-3 PST
 		res = fmt.Sprintf(dayCron, getUTCtime(2))
 	case "dot-release": // Every Tuesday 2-3 PST
 		res = fmt.Sprintf(weekCron, getUTCtime(2), 2)
@@ -120,13 +120,15 @@ func generatePeriodic(title string, repoName string, pj *prowJob) {
 		if len(data.Base.Args) == 0 {
 			data.Base.Args = allPresubmitTests
 		}
-	case "nightly":
+	case "nightly-release":
 		data.Base.ServiceAccount = nightlyAccount
 		data.Base.Command = releaseScript
 		data.Base.Args = releaseNightly
 		data.Base.Timeout = 90
 		isMonitoredJob = true
 	case "branch-ci":
+		// TODO(chaodaiG): This could merge with continous job
+		jobNameSuffix = "continuous"
 		data.Base.Command = releaseScript
 		data.Base.Args = releaseLocal
 		setupDockerInDockerForJob(&data.Base)
@@ -146,6 +148,7 @@ func generatePeriodic(title string, repoName string, pj *prowJob) {
 		isMonitoredJob = true
 	case "custom-job":
 		// Candidate of default config
+		jobNameSuffix = pj.Name
 		data.Base.Timeout = 100
 	case "webhook-apicoverage":
 		data.Base.Command = webhookAPICoverageScript

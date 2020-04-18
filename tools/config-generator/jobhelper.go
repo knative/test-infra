@@ -97,11 +97,15 @@ func setReourcesReqForJob(r resources, data *baseProwJobTemplateData) {
 		var res []string
 		if rd.CPU != "" || rd.Memory != "" {
 			res = append(res, fmt.Sprintf("  %s:", key))
-			res = append(res, fmt.Sprintf("    cpu: %s", rd.CPU))
-			res = append(res, fmt.Sprintf("    memory: %s", rd.Memory))
+			if rd.Memory != "" {
+				res = append(res, fmt.Sprintf("    memory: %s", rd.Memory))
+			}
+			if rd.CPU != "" {
+				res = append(res, fmt.Sprintf("    cpu: %s", rd.CPU))
+			}
 		}
 		return res
 	}
-	data.Resources = append(data.Resources, rsToStr("limits", r.Limits)...)
 	data.Resources = append(data.Resources, rsToStr("requests", r.Requests)...)
+	data.Resources = append(data.Resources, rsToStr("limits", r.Limits)...)
 }

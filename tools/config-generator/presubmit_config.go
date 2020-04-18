@@ -49,6 +49,10 @@ func generatePresubmit(title string, repoName string, pj *prowJob) {
 	if pj.Skipped {
 		return
 	}
+	if pj.GoCoverageThreshold != 0 {
+		data.Base.GoCoverageThreshold = pj.GoCoverageThreshold
+		repoData.GoCoverageThreshold = data.Base.GoCoverageThreshold
+	}
 
 	switch pj.Type {
 	case "build-tests", "unit-tests", "integration-tests":
@@ -67,9 +71,6 @@ func generatePresubmit(title string, repoName string, pj *prowJob) {
 		addVolumeToJob(&data.Base, "/etc/covbot-token", "covbot-token", true, "")
 	case "custom-test":
 		data.PresubmitJobName = data.Base.RepoNameForJob + "-" + pj.Name
-	case "go-coverage-threshold":
-		data.Base.GoCoverageThreshold = pj.GoCoverageThreshold
-		repoData.GoCoverageThreshold = data.Base.GoCoverageThreshold
 	case "repo-settings":
 		generateJob = false
 	}

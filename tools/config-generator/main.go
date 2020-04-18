@@ -34,6 +34,7 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/imdario/mergo"
 	"gopkg.in/yaml.v3"
 )
 
@@ -305,10 +306,10 @@ func getProwConfigData(ac allConfig) prowConfigTemplateData {
 	data.LogsDir = logsDir
 	data.TideRepos = make([]string, 0)
 	// Repos enabled for tide are all those that have presubmit jobs.
-	for repo, _ := range ac.Periodics {
-		data.TideRepos = appendIfUnique(data.TideRepos, repo)
-		if strings.HasSuffix(repo, "test-infra") {
-			data.TestInfraRepo = repo
+	for _, rc := range ac.Periodics {
+		data.TideRepos = appendIfUnique(data.TideRepos, rc.Repo)
+		if strings.HasSuffix(rc.Repo, "test-infra") {
+			data.TestInfraRepo = rc.Repo
 		}
 	}
 
@@ -318,13 +319,35 @@ func getProwConfigData(ac allConfig) prowConfigTemplateData {
 }
 
 // parseSection generate the configs from a given section of the input yaml file.
-func parseSection(sc map[string][]prowJob, title string, generate sectionGenerator, finalize sectionGenerator) {
-	for repo, pjs := range sc {
-		for _, pj := range pjs {
-			generate(title, repo, &pj)
+func parseSection(rcs []repoConfig, title string, generate sectionGenerator, finalize sectionGenerator) {
+	var overrideFunc func([]repoConfig, string, *prowJob)
+	overrideFunc = func(rcs []repoConfig, repo string, pj *prowJob) {
+		for _, rc := range rcs {
+			if rc.Repo == "*" {
+				for _, job := range rc.Jobs {
+					if job.Type == "*" || job.Type == pj.Type {
+						if err := mergo.Merge(pj, job); err != nil {
+							log.Fatalf("failed overriding: %v", err)
+						}
+					}
+				}
+			}
+		}
+	}
+	for _, rc := range rcs {
+		if rc.Repo == "*" {
+			continue
+		}
+		for _, pj := range rc.Jobs {
+			pj := pj
+			if pj.Type == "*" {
+				continue
+			}
+			overrideFunc(rcs, rc.Repo, &pj)
+			generate(title, rc.Repo, &pj)
 		}
 		if finalize != nil {
-			finalize(title, repo, nil)
+			finalize(title, rc.Repo, nil)
 		}
 	}
 }
@@ -430,37 +453,6 @@ func executeTemplate(name, templ string, data interface{}) {
 	for _, line := range strings.Split(res.String(), "\n") {
 		outputConfig(line)
 	}
-}
-
-// parseJob gets the job data from the original yaml data, now the jobName can be "presubmits" or "periodic"
-func parseJob(config yaml.MapSlice, jobName string) yaml.MapSlice {
-	for _, section := range config {
-		if section.Key == jobName {
-			return getMapSlice(section.Value)
-		}
-	}
-
-	log.Fatalf("The metadata misses %s configuration, cannot continue.", jobName)
-	return nil
-}
-
-// parseGoCoverageMap constructs a map, indicating which repo is enabled for go coverage check
-func parseGoCoverageMap(presubmitJob yaml.MapSlice) map[string]bool {
-	goCoverageMap := make(map[string]bool)
-	for _, repo := range presubmitJob {
-		repoName := strings.Split(getString(repo.Key), "/")[1]
-		goCoverageMap[repoName] = false
-		for _, jobConfig := range getInterfaceArray(repo.Value) {
-			for _, item := range getMapSlice(jobConfig) {
-				if item.Key == "go-coverage" {
-					goCoverageMap[repoName] = getBool(item.Value)
-					break
-				}
-			}
-		}
-	}
-
-	return goCoverageMap
 }
 
 // main is the script entry point.

@@ -151,7 +151,7 @@ func generateTestGroup(projName string, repoName string, jobNames []string) {
 			} else {
 				extras["alert_stale_results_hours"] = "3"
 			}
-		case "dot-release", "auto-release", "nightly":
+		case "dot-release", "auto-release", "nightly-release":
 			extras["num_failures_to_alert"] = "1"
 			extras["alert_options"] = "\n    alert_mail_to_addresses: \"prime-engprod-sea@google.com\""
 			if jobName == "dot-release" {
@@ -208,7 +208,7 @@ func generateDashboard(projName string, repoName string, jobNames []string) {
 			extras := make(map[string]string)
 			extras["num_failures_to_alert"] = "1"
 			extras["alert_options"] = "\n      alert_mail_to_addresses: \"prime-engprod-sea@google.com\""
-			executeDashboardTabTemplate("nightly", testGroupName, testgridTabSortByName, extras)
+			executeDashboardTabTemplate("nightly-release", testGroupName, testgridTabSortByName, extras)
 		case "test-coverage":
 			executeDashboardTabTemplate("coverage", testGroupName, testgridTabGroupByDir, noExtras)
 		default:
@@ -230,7 +230,7 @@ func executeDashboardTabTemplate(dashboardTabName string, testGroupName string, 
 // getTestGroupName get the testGroupName from the given repoName and jobName
 func getTestGroupName(repoName string, jobName string) string {
 	switch jobName {
-	case "nightly":
+	case "nightly-release":
 		return strings.ToLower(fmt.Sprintf("ci-%s-%s-release", repoName, jobName))
 	default:
 		return strings.ToLower(fmt.Sprintf("ci-%s-%s", repoName, jobName))
@@ -305,7 +305,7 @@ func collectMetaData(periodicJob yaml.MapSlice) {
 			for _, item := range jobConfig {
 				switch item.Key {
 				case "continuous", "dot-release", "auto-release", "performance",
-					"nightly", "webhook-apicoverage":
+					"nightly-release", "webhook-apicoverage":
 					if getBool(item.Value) {
 						enabled = true
 						jobName = getString(item.Key)
@@ -340,3 +340,34 @@ func collectMetaData(periodicJob yaml.MapSlice) {
 	// add test coverage jobs for the repos that haven't been handled
 	addRemainingTestCoverageJobs()
 }
+
+// // parseJob gets the job data from the original yaml data, now the jobName can be "presubmits" or "periodic"
+// func parseJob(config yaml.MapSlice, jobName string) yaml.MapSlice {
+// 	for _, section := range config {
+// 		if section.Key == jobName {
+// 			return getMapSlice(section.Value)
+// 		}
+// 	}
+
+// 	log.Fatalf("The metadata misses %s configuration, cannot continue.", jobName)
+// 	return nil
+// }
+
+// // parseGoCoverageMap constructs a map, indicating which repo is enabled for go coverage check
+// func parseGoCoverageMap(presubmitJob yaml.MapSlice) map[string]bool {
+// 	goCoverageMap := make(map[string]bool)
+// 	for _, repo := range presubmitJob {
+// 		repoName := strings.Split(getString(repo.Key), "/")[1]
+// 		goCoverageMap[repoName] = false
+// 		for _, jobConfig := range getInterfaceArray(repo.Value) {
+// 			for _, item := range getMapSlice(jobConfig) {
+// 				if item.Key == "go-coverage" {
+// 					goCoverageMap[repoName] = getBool(item.Value)
+// 					break
+// 				}
+// 			}
+// 		}
+// 	}
+
+// 	return goCoverageMap
+// }

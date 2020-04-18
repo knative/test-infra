@@ -17,1062 +17,1408 @@
 # will generate Prow jobs for you in jobs/config.yaml.
 
 presubmits:
-  knative/serving:
-    - type: repo-settings
-      performance: true
-    - type: build-tests
-      dot-dev: true
-      resources:
-        requests:
-          memory: 12Gi # Real request for this pod is 16 as sidecar requests 4
-        limits:
-          memory: 16Gi
-    - type: unit-tests
-      dot-dev: true
-      needs-monitor: true
-    - type: integration-tests
-      dot-dev: true
-      needs-monitor: true
-      args:
-      - "--run-test"
-      - "./test/e2e-tests.sh"
-    - type: custom-test
-      name: upgrade-tests
-      dot-dev: true
-      needs-monitor: true
-      args:
-      - "--run-test"
-      - "./test/e2e-upgrade-tests.sh"
-    - type: custom-test
-      name: autotls-tests
-      dot-dev: true
-      needs-monitor: true
-      args:
-      - "--run-test"
-      - "./test/e2e-auto-tls-tests.sh"
-    - type: go-coverage
-      go-coverage-threshold: 80
-      dot-dev: true
-    - type: custom-test
-      name: istio-1.5-mesh
-      dot-dev: true
-      always_run: false
-      optional: true
-      args:
-      - "--run-test"
-      - "./test/e2e-tests.sh --istio-version 1.5-latest --mesh"
-      - "--run-test"
-      - "./test/e2e-auto-tls-tests.sh --istio-version 1.5-latest --mesh"
-    - type: custom-test
-      name: istio-1.5-no-mesh
-      dot-dev: true
-      always_run: false
-      optional: true
-      args:
-      - "--run-test"
-      - "./test/e2e-tests.sh --istio-version 1.5-latest --no-mesh"
-      - "--run-test"
-      - "./test/e2e-auto-tls-tests.sh --istio-version 1.5-latest --no-mesh"
-    - type: custom-test
-      name: istio-1.4-mesh
-      dot-dev: true
-      always_run: false
-      optional: true
-      args:
-      - "--run-test"
-      - "./test/e2e-tests.sh --istio-version 1.4-latest --mesh"
-      - "--run-test"
-      - "./test/e2e-auto-tls-tests.sh --istio-version 1.4-latest --mesh"
-    - type: custom-test
-      name: istio-1.4-no-mesh
-      dot-dev: true
-      always_run: false
-      optional: true
-      args:
-      - "--run-test"
-      - "./test/e2e-tests.sh --istio-version 1.4-latest --no-mesh"
-      - "--run-test"
-      - "./test/e2e-auto-tls-tests.sh --istio-version 1.4-latest --no-mesh"
-    - type: custom-test
-      name: gloo-0.17.1
-      dot-dev: true
-      always_run: false
-      optional: true
-      args:
-      - "--run-test"
-      - "./test/e2e-tests.sh --gloo-version 0.17.1"
-      - "--run-test"
-      - "./test/e2e-auto-tls-tests.sh --gloo-version 0.17.1"
-    - type: custom-test
-      name: kourier-stable
-      dot-dev: true
-      always_run: false
-      optional: true
-      args:
-      - "--run-test"
-      - "./test/e2e-tests.sh --kourier-version stable"
-      - "--run-test"
-      - "./test/e2e-auto-tls-tests.sh --kourier-version stable"
-    - type: custom-test
-      name: contour-latest
-      dot-dev: true
-      always_run: false
-      optional: true
-      args:
-      - "--run-test"
-      - "./test/e2e-tests.sh --contour-version latest"
-      - "--run-test"
-      - "./test/e2e-auto-tls-tests.sh --contour-version latest"
-    - type: custom-test
-      name: ambassador-latest
-      dot-dev: true
-      always_run: false
-      optional: true
-      args:
-      - "--run-test"
-      - "./test/e2e-tests.sh --ambassador-version latest"
-      - "--run-test"
-      - "./test/e2e-auto-tls-tests.sh --ambassador-version latest"
-    - type: custom-test
-      name: https
-      dot-dev: true
-      always_run: false
-      optional: true
-      args:
-      - "--run-test"
-      - "./test/e2e-tests.sh --https"
-      - "--run-test"
-      - "./test/e2e-auto-tls-tests.sh --https"
-    - type: custom-test
-      name: build-tests-go114
-      dot-dev: true
-      always_run: false
-      optional: true
-      go114: true
-      resources:
-        requests:
-          memory: 12Gi # Real request for this pod is 16 as sidecar requests 4
-        limits:
-          memory: 16Gi
-      args:
+  - repo: "*"
+    jobs:
+      - type: "*"
+        command: "./test/presubmit-tests.sh"
+      - type: build-tests
+        always-run: true
+        optional: false
+        args:
         - "--build-tests"
-    - type: custom-test
-      name: integration-tests-go114
-      dot-dev: true
-      always_run: false
-      optional: true
-      go114: true
-      args:
+      - type: unit-tests
+        always-run: true
+        optional: false
+        args:
+        - "--unit-tests"
+      - type: integration-tests
+        always-run: true
+        optional: false
+        args:
+        - "--integration-tests"
+      - type: go-coverage
+        always-run: true
+        
+  - repo: knative/serving
+    jobs:
+      - type: repo-settings
+        performance: true
+      - type: build-tests
+        dot-dev: true
+        resources:
+          requests:
+            memory: 12Gi # Real request for this pod is 16 as sidecar requests 4
+          limits:
+            memory: 16Gi
+      - type: unit-tests
+        dot-dev: true
+        needs-monitor: true
+      - type: integration-tests
+        dot-dev: true
+        needs-monitor: true
+        args:
         - "--run-test"
         - "./test/e2e-tests.sh"
-
-  knative/client:
-    - type: repo-settings
-      go112-branches:
-      - release-0.10
-    - type: build-tests
-      dot-dev: true
-    - type: unit-tests
-      dot-dev: true
-    - type: integration-tests
-      dot-dev: true
-    - type: go-coverage
-      dot-dev: true
-    - type: custom-test
-      name: integration-tests-latest-release
-      always_run: true
-      command: "./test/presubmit-integration-tests-latest-release.sh"
-      dot-dev: true
-
-  knative/client-contrib:
-    - type: build-tests
-      dot-dev: true
-    - type: unit-tests
-      dot-dev: true
-    - type: integration-tests
-      dot-dev: true
-
-  knative/eventing:
-    - type: repo-settings
-      performance: true
-      go112-branches:
-      - release-0.10
-    - type: build-tests
-      dot-dev: true
-      resources:
-        requests:
-          memory: 12Gi # Real request for this pod is 16 as sidecar requests 4
-        limits:
-          memory: 16Gi
-    - type: unit-tests
-      dot-dev: true
-    - type: integration-tests
-      dot-dev: true
-    - type: go-coverage
-      dot-dev: true
-
-  knative/eventing-contrib:
-    - type: repo-settings
-      go112-branches:
-      - release-0.10
-    - type: build-tests
-      dot-dev: true
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - type: unit-tests
-      dot-dev: true
-    - type: integration-tests
-      dot-dev: true
-    - type: go-coverage
-      dot-dev: true
-
-  knative/docs:
-    - type: repo-settings
-      go112-branches:
-      - release-0.10
-    - type: build-tests
-    - type: unit-tests
-    - type: integration-tests
-      needs-dind: true
-    - type: go-coverage
-    - type: custom-test
-      name: markdown-link-check
-      always_run: true
-      optional: true
-      command: "./test/presubmit-link-check.sh"
-
-  knative/pkg:
-    - type: repo-settings
-      go112-branches:
-      - release-0.10
-    - type: build-tests
-      dot-dev: true
-    - type: unit-tests
-      dot-dev: true
-    - type: integration-tests
-      dot-dev: true
-    - type: go-coverage
-      dot-dev: true
-
-  knative/test-infra:
-    - type: build-tests
-      dot-dev: true
-    - type: unit-tests
-      dot-dev: true
-    - type: integration-tests
-      dot-dev: true
-    - type: go-coverage
-      dot-dev: true
-    - type: custom-test
-      name: check-config
-      dot-dev: true
-      command: "./test/presubmit-config-check.sh"
-
-  knative/caching:
-    - type: repo-settings
-      go112-branches:
-      - release-0.10
-    - type: build-tests
-      dot-dev: true
-    - type: unit-tests
-      dot-dev: true
-    - type: integration-tests
-      dot-dev: true
-    - type: go-coverage
-      dot-dev: true
-
-  knative/observability:
-    - type: repo-settings
-      go112-branches:
-      - release-0.10
-    - type: build-tests
-    - type: unit-tests
-    - type: integration-tests
-
-  knative/sample-controller:
-    - type: repo-settings
-      go112-branches:
-      - release-0.10
-    - type: build-tests
-      dot-dev: true
-    - type: unit-tests
-      dot-dev: true
-
-  knative/sample-source:
-    - type: repo-settings
-      go112-branches:
-      - release-0.10
-    - type: build-tests
-      dot-dev: true
-    - type: unit-tests
-      dot-dev: true
-
-  google/knative-gcp:
-    - type: repo-settings
-      performance: true
-      go112-branches:
-      - release-0.10
-    - type: build-tests
-    - type: unit-tests
-    - type: integration-tests
-      args:
-      - "--run-test"
-      - "./test/e2e-tests.sh"
-    - type: custom-test
-      name: wi-tests
-      args:
-      - "--run-test"
-      - "./test/e2e-wi-tests.sh"
-    - type: go-coverage
-
-  knative/net-certmanager:
-    - type: build-tests
-      dot-dev: true
-    - type: unit-tests
-      dot-dev: true
-    - type: integration-tests
-      dot-dev: true
-    - type: go-coverage
-      dot-dev: true
-
-  knative/net-contour:
-    - type: build-tests
-      dot-dev: true
-    - type: unit-tests
-      dot-dev: true
-    - type: integration-tests
-      dot-dev: true
-    - type: go-coverage
-      dot-dev: true
-
-  knative/net-http01:
-    - type: build-tests
-      dot-dev: true
-    - type: unit-tests
-      dot-dev: true
-    - type: integration-tests
-      dot-dev: true
-    - type: go-coverage
-      dot-dev: true
-
-  knative/net-istio:
-    - type: build-tests
-      dot-dev: true
-    - type: unit-tests
-      dot-dev: true
-    - type: integration-tests
-      dot-dev: true
-    - type: go-coverage
-      dot-dev: true
-    - type: custom-test
-      name: latest
-      dot-dev: true
-      optional: true
-      args:
-      - "--run-test"
-      - "./test/e2e-tests.sh --istio-version latest"
-
-  knative/net-kourier:
-    - type: build-tests
-      dot-dev: true
-    - type: unit-tests
-      dot-dev: true
-    - type: integration-tests
-      dot-dev: true
-    - type: go-coverage
-      dot-dev: true
-
-  knative/serving-operator:
-    - type: build-tests
-      dot-dev: true
-    - type: unit-tests
-      dot-dev: true
-    - type: integration-tests
-      dot-dev: true
-    - type: go-coverage
-      dot-dev: true
-    - type: custom-test
-      name: upgrade-tests
-      dot-dev: true
-      args:
+      - type: custom-test
+        name: upgrade-tests
+        dot-dev: true
+        always-run: true
+        optional: false
+        needs-monitor: true
+        args:
         - "--run-test"
         - "./test/e2e-upgrade-tests.sh"
-
-  knative/eventing-operator:
-    - type: repo-settings
-      go112-branches:
-      - release-0.10
-    - type: build-tests
-      dot-dev: true
-    - type: unit-tests
-      dot-dev: true
-    - type: integration-tests
-      dot-dev: true
-    - type: go-coverage
-      dot-dev: true
-    - type: custom-test
-      name: upgrade-tests
-      dot-dev: true
-      args:
+      - type: custom-test
+        name: autotls-tests
+        always-run: true
+        optional: false
+        dot-dev: true
+        needs-monitor: true
+        args:
         - "--run-test"
-        - "./test/e2e-upgrade-tests.sh"
-
-  knative/website:
-    # This repo only uses Tide
-    - type: repo-settings
-    # No need of any of these
-    # - type: build-tests: false
-    # - type: unit-tests: false
-    # - type: integration-tests: false
-    # - type: go-coverage: false
-
-  knative/community:
-    # This repo only uses Tide
-    - type: build-tests
-    - type: unit-tests
-    - type: integration-tests
-    - type: go-coverage
-
-  knative-sandbox/operator:
-    - type: build-tests
-      dot-dev: true
-    - type: unit-tests
-      dot-dev: true
-    - type: integration-tests
-      dot-dev: true
-    - type: go-coverage
-      dot-dev: true
-    - type: custom-test
-      name: upgrade-tests
-      dot-dev: true
-      args:
+        - "./test/e2e-auto-tls-tests.sh"
+      - type: go-coverage
+        always-run: true
+        go-coverage-threshold: 80
+        dot-dev: true
+      - type: custom-test
+        name: istio-1.5-mesh
+        dot-dev: true
+        always-run: false
+        optional: true
+        args:
         - "--run-test"
-        - "./test/e2e-upgrade-tests.sh"
+        - "./test/e2e-tests.sh --istio-version 1.5-latest --mesh"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --istio-version 1.5-latest --mesh"
+      - type: custom-test
+        name: istio-1.5-no-mesh
+        dot-dev: true
+        always-run: false
+        optional: true
+        args:
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version 1.5-latest --no-mesh"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --istio-version 1.5-latest --no-mesh"
+      - type: custom-test
+        name: istio-1.4-mesh
+        dot-dev: true
+        always-run: false
+        optional: true
+        args:
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version 1.4-latest --mesh"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --istio-version 1.4-latest --mesh"
+      - type: custom-test
+        name: istio-1.4-no-mesh
+        dot-dev: true
+        always-run: false
+        optional: true
+        args:
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version 1.4-latest --no-mesh"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --istio-version 1.4-latest --no-mesh"
+      - type: custom-test
+        name: gloo-0.17.1
+        dot-dev: true
+        always-run: false
+        optional: true
+        args:
+        - "--run-test"
+        - "./test/e2e-tests.sh --gloo-version 0.17.1"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --gloo-version 0.17.1"
+      - type: custom-test
+        name: kourier-stable
+        dot-dev: true
+        always-run: false
+        optional: true
+        args:
+        - "--run-test"
+        - "./test/e2e-tests.sh --kourier-version stable"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --kourier-version stable"
+      - type: custom-test
+        name: contour-latest
+        dot-dev: true
+        always-run: false
+        optional: true
+        args:
+        - "--run-test"
+        - "./test/e2e-tests.sh --contour-version latest"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --contour-version latest"
+      - type: custom-test
+        name: ambassador-latest
+        dot-dev: true
+        always-run: false
+        optional: true
+        args:
+        - "--run-test"
+        - "./test/e2e-tests.sh --ambassador-version latest"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --ambassador-version latest"
+      - type: custom-test
+        name: https
+        dot-dev: true
+        always-run: false
+        optional: true
+        args:
+        - "--run-test"
+        - "./test/e2e-tests.sh --https"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --https"
+      - type: custom-test
+        name: build-tests-go114
+        dot-dev: true
+        always-run: false
+        optional: true
+        go114: true
+        resources:
+          requests:
+            memory: 12Gi # Real request for this pod is 16 as sidecar requests 4
+          limits:
+            memory: 16Gi
+        args:
+          - "--build-tests"
+      - type: custom-test
+        name: integration-tests-go114
+        dot-dev: true
+        always-run: false
+        optional: true
+        go114: true
+        args:
+          - "--run-test"
+          - "./test/e2e-tests.sh"
 
-  knative-sandbox/eventing-kafka:
-    - type: build-tests
-      dot-dev: true
-    - type: unit-tests
-      dot-dev: true
-    - type: integration-tests
-      dot-dev: true
-    - type: go-coverage
-      dot-dev: true
+  - repo: knative/client
+    jobs:
+      - type: repo-settings
+        go112-branches:
+        - release-0.10
+      - type: build-tests
+        dot-dev: true
+      - type: unit-tests
+        dot-dev: true
+      - type: integration-tests
+        dot-dev: true
+      - type: go-coverage
+        dot-dev: true
+      - type: custom-test
+        name: integration-tests-latest-release
+        always-run: true
+        command: "./test/presubmit-integration-tests-latest-release.sh"
+        dot-dev: true
+
+  - repo: knative/client-contrib
+    jobs:
+      - type: build-tests
+        dot-dev: true
+      - type: unit-tests
+        dot-dev: true
+      - type: integration-tests
+        dot-dev: true
+
+  - repo: knative/eventing
+    jobs:
+      - type: repo-settings
+        performance: true
+        go112-branches:
+        - release-0.10
+      - type: build-tests
+        dot-dev: true
+        resources:
+          requests:
+            memory: 12Gi # Real request for this pod is 16 as sidecar requests 4
+          limits:
+            memory: 16Gi
+      - type: unit-tests
+        dot-dev: true
+      - type: integration-tests
+        dot-dev: true
+      - type: go-coverage
+        dot-dev: true
+
+  - repo: knative/eventing-contrib
+    jobs:
+      - type: repo-settings
+        go112-branches:
+        - release-0.10
+      - type: build-tests
+        dot-dev: true
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      - type: unit-tests
+        dot-dev: true
+      - type: integration-tests
+        dot-dev: true
+      - type: go-coverage
+        dot-dev: true
+
+  - repo: knative/docs
+    jobs:
+      - type: repo-settings
+        go112-branches:
+        - release-0.10
+      - type: build-tests
+      - type: unit-tests
+      - type: integration-tests
+        needs-dind: true
+      - type: go-coverage
+        always-run: true
+      - type: custom-test
+        name: markdown-link-check
+        always-run: true
+        optional: true
+        command: "./test/presubmit-link-check.sh"
+
+  - repo: knative/pkg
+    jobs:
+      - type: repo-settings
+        go112-branches:
+        - release-0.10
+      - type: build-tests
+        dot-dev: true
+      - type: unit-tests
+        dot-dev: true
+      - type: integration-tests
+        dot-dev: true
+      - type: go-coverage
+        dot-dev: true
+
+  - repo: knative/test-infra
+    jobs:
+      - type: build-tests
+        dot-dev: true
+      - type: unit-tests
+        dot-dev: true
+      - type: integration-tests
+        dot-dev: true
+      - type: go-coverage
+        dot-dev: true
+      - type: custom-test
+        name: check-config
+        dot-dev: true
+        always-run: true
+        command: "./test/presubmit-config-check.sh"
+
+  - repo: knative/caching
+    jobs:
+      - type: repo-settings
+        go112-branches:
+        - release-0.10
+      - type: build-tests
+        dot-dev: true
+      - type: unit-tests
+        dot-dev: true
+      - type: integration-tests
+        dot-dev: true
+      - type: go-coverage
+        dot-dev: true
+
+  - repo: knative/observability
+    jobs:
+      - type: repo-settings
+        go112-branches:
+        - release-0.10
+      - type: build-tests
+      - type: unit-tests
+      - type: integration-tests
+
+  - repo: knative/sample-controller
+    jobs:
+      - type: repo-settings
+        go112-branches:
+        - release-0.10
+      - type: build-tests
+        dot-dev: true
+      - type: unit-tests
+        dot-dev: true
+
+  - repo: knative/sample-source
+    jobs:
+      - type: repo-settings
+        go112-branches:
+        - release-0.10
+      - type: build-tests
+        dot-dev: true
+      - type: unit-tests
+        dot-dev: true
+
+  - repo: google/knative-gcp
+    jobs:
+      - type: repo-settings
+        performance: true
+        go112-branches:
+        - release-0.10
+      - type: build-tests
+      - type: unit-tests
+      - type: integration-tests
+        args:
+        - "--run-test"
+        - "./test/e2e-tests.sh"
+      - type: custom-test
+        name: wi-tests
+        always-run: true
+        args:
+        - "--run-test"
+        - "./test/e2e-wi-tests.sh"
+      - type: go-coverage
+
+  - repo: knative/net-certmanager
+    jobs:
+      - type: build-tests
+        dot-dev: true
+      - type: unit-tests
+        dot-dev: true
+      - type: integration-tests
+        dot-dev: true
+      - type: go-coverage
+        dot-dev: true
+
+  - repo: knative/net-contour
+    jobs:
+      - type: build-tests
+        dot-dev: true
+      - type: unit-tests
+        dot-dev: true
+      - type: integration-tests
+        dot-dev: true
+      - type: go-coverage
+        dot-dev: true
+
+  - repo: knative/net-http01
+    jobs:
+      - type: build-tests
+        dot-dev: true
+      - type: unit-tests
+        dot-dev: true
+      - type: integration-tests
+        dot-dev: true
+      - type: go-coverage
+        dot-dev: true
+
+  - repo: knative/net-istio
+    jobs:
+      - type: build-tests
+        dot-dev: true
+      - type: unit-tests
+        dot-dev: true
+      - type: integration-tests
+        dot-dev: true
+      - type: go-coverage
+        dot-dev: true
+      - type: custom-test
+        name: latest
+        dot-dev: true
+        always-run: true
+        optional: true
+        args:
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version latest"
+
+  - repo: knative/net-kourier
+    jobs:
+      - type: build-tests
+        dot-dev: true
+      - type: unit-tests
+        dot-dev: true
+      - type: integration-tests
+        dot-dev: true
+      - type: go-coverage
+        dot-dev: true
+
+  - repo: knative/serving-operator
+    jobs:
+      - type: build-tests
+        dot-dev: true
+      - type: unit-tests
+        dot-dev: true
+      - type: integration-tests
+        dot-dev: true
+      - type: go-coverage
+        dot-dev: true
+      - type: custom-test
+        name: upgrade-tests
+        dot-dev: true
+        always-run: true
+        args:
+          - "--run-test"
+          - "./test/e2e-upgrade-tests.sh"
+
+  - repo: knative/eventing-operator
+    jobs:
+      - type: repo-settings
+        go112-branches:
+        - release-0.10
+      - type: build-tests
+        dot-dev: true
+      - type: unit-tests
+        dot-dev: true
+      - type: integration-tests
+        dot-dev: true
+      - type: go-coverage
+        dot-dev: true
+      - type: custom-test
+        name: upgrade-tests
+        dot-dev: true
+        always-run: true
+        args:
+          - "--run-test"
+          - "./test/e2e-upgrade-tests.sh"
+
+  - repo: knative/website
+    jobs:
+      # This repo only uses Tide
+      - type: repo-settings
+      # No need of any of these
+      # - type: build-tests: false
+      # - type: unit-tests: false
+      # - type: integration-tests: false
+      # - type: go-coverage: false
+
+  - repo: knative/community
+
+  - repo: knative-sandbox/operator
+    jobs:
+      - type: build-tests
+        dot-dev: true
+      - type: unit-tests
+        dot-dev: true
+      - type: integration-tests
+        dot-dev: true
+      - type: go-coverage
+        dot-dev: true
+      - type: custom-test
+        name: upgrade-tests
+        dot-dev: true
+        always-run: true
+        args:
+          - "--run-test"
+          - "./test/e2e-upgrade-tests.sh"
+
+  - repo: knative-sandbox/eventing-kafka
+    jobs:
+      - type: build-tests
+        dot-dev: true
+      - type: unit-tests
+        dot-dev: true
+      - type: integration-tests
+        dot-dev: true
+      - type: go-coverage
+        dot-dev: true
 
 periodics:
-  knative/serving:
-    - type: continuous
-      timeout: 100
-      dot-dev: true
-      go113: true
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - type: branch-ci
-      release: "0.10"
-      dot-dev: true
-      go113: true
-    - type: branch-ci
-      release: "0.11"
-      dot-dev: true
-      go113: true
-    - type: branch-ci
-      release: "0.12"
-      dot-dev: true
-      go113: true
-    - type: branch-ci
-      release: "0.13"
-      dot-dev: true
-      go113: true
-    - type: custom-job
-      name: istio-1.5-mesh
-      command: "./test/presubmit-tests.sh"
-      args:
-      - "--run-test"
-      - "./test/e2e-tests.sh --istio-version 1.5-latest --mesh"
-      - "--run-test"
-      - "./test/e2e-auto-tls-tests.sh --istio-version 1.5-latest --mesh"
-      dot-dev: true
-      go113: true
-    - type: custom-job
-      name: istio-1.5-no-mesh
-      command: "./test/presubmit-tests.sh"
-      args:
-      - "--run-test"
-      - "./test/e2e-tests.sh --istio-version 1.5-latest --no-mesh"
-      - "--run-test"
-      - "./test/e2e-auto-tls-tests.sh --istio-version 1.5-latest --no-mesh"
-      dot-dev: true
-      go113: true
-    - type: custom-job
-      name: istio-1.4-mesh
-      command: "./test/presubmit-tests.sh"
-      args:
-      - "--run-test"
-      - "./test/e2e-tests.sh --istio-version 1.4-latest --mesh"
-      - "--run-test"
-      - "./test/e2e-auto-tls-tests.sh --istio-version 1.4-latest --mesh"
-      dot-dev: true
-      go113: true
-    - type: custom-job
-      name: istio-1.4-no-mesh
-      command: "./test/presubmit-tests.sh"
-      args:
-      - "--run-test"
-      - "./test/e2e-tests.sh --istio-version 1.4-latest --no-mesh"
-      - "--run-test"
-      - "./test/e2e-auto-tls-tests.sh --istio-version 1.4-latest --no-mesh"
-      dot-dev: true
-      go113: true
-    - type: custom-job
-      name: gloo-0.17.1
-      command: "./test/presubmit-tests.sh"
-      args:
-      - "--run-test"
-      - "./test/e2e-tests.sh --gloo-version 0.17.1"
-      - "--run-test"
-      - "./test/e2e-auto-tls-tests.sh --gloo-version 0.17.1"
-      dot-dev: true
-      go113: true
-    - type: custom-job
-      name: kourier-stable
-      command: "./test/presubmit-tests.sh"
-      args:
-      - "--run-test"
-      - "./test/e2e-tests.sh --kourier-version stable"
-      - "--run-test"
-      - "./test/e2e-auto-tls-tests.sh --kourier-version stable"
-      dot-dev: true
-      go113: true
-    - type: custom-job
-      name: contour-latest
-      command: "./test/presubmit-tests.sh"
-      args:
-      - "--run-test"
-      - "./test/e2e-tests.sh --contour-version latest"
-      - "--run-test"
-      - "./test/e2e-auto-tls-tests.sh --contour-version latest"
-      dot-dev: true
-      go113: true
-    - type: custom-job
-      name: ambassador-latest
-      command: "./test/presubmit-tests.sh"
-      args:
-      - "--run-test"
-      - "./test/e2e-tests.sh --ambassador-version latest"
-      - "--run-test"
-      - "./test/e2e-auto-tls-tests.sh --ambassador-version latest"
-      dot-dev: true
-      go113: true
-    - type: custom-job
-      name: https
-      command: "./test/presubmit-tests.sh"
-      args:
-      - "--run-test"
-      - "./test/e2e-tests.sh --https"
-      - "--run-test"
-      - "./test/e2e-auto-tls-tests.sh --https"
-      dot-dev: true
-      go113: true
-    - type: nightly
-      dot-dev: true
-      go113: true
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - type: dot-release
-      dot-dev: true
-      go113: true
-      release: "0.10"
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - type: dot-release
-      dot-dev: true
-      go113: true
-      release: "0.11"
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - type: dot-release
-      dot-dev: true
-      go113: true
-      release: "0.12"
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - type: dot-release
-      dot-dev: true
-      go113: true
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - type: auto-release
-      dot-dev: true
-      go113: true
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - type: webhook-apicoverage
-      dot-dev: true
-      go113: true
-    - type: custom-job
-      name: continuous-go114
-      command: "./test/e2e-tests.sh"
-      timeout: 100
-      dot-dev: true
-      go114: true
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
+  - repo: "*"
+    jobs:
+      - type: continuous
+        command: "./test/presubmit-tests.sh"
+        args:
+          - "--all-tests"
+      - type: branch-ci
+        command: "./hack/release.sh"
+        args:
+          - "--nopublish"
+          - "--notag-release"
+      - type: nightly-release
+        command: "./hack/release.sh"
+        args:
+          - "--publish"
+          - "--tag-release"
+      - type: auto-release
+        command: "./hack/release.sh"
+      - type: dot-release
+        command: "./hack/release.sh"
 
-  knative/client:
-    - type: continuous
-      dot-dev: true
-      go113: true
-    - type: branch-ci
-      release: "0.11"
-      dot-dev: true
-      go113: true
-    - type: branch-ci
-      release: "0.12"
-      dot-dev: true
-      go113: true
-    - type: branch-ci
-      release: "0.13"
-      dot-dev: true
-      go113: true
-    - type: nightly
-      dot-dev: true
-      go113: true
-    - type: custom-job
-      name: tekton
-      # This job must run after the nightly job so it uses the latest nightly.
-      # Nightly jobs run between 1AM and 3AM PST.
-      # Run this job at 5AM PST (1PM UTC)
-      cron: "0 13 * * *"
-      command: "./test/tekton-tests.sh"
-      dot-dev: true
-      go113: true
-    - type: dot-release
-      dot-dev: true
-      go113: true
-      release: "0.11"
-    - type: dot-release
-      dot-dev: true
-      go113: true
-      release: "0.12"
-    - type: dot-release
-      dot-dev: true
-      go113: true
-    - type: auto-release
-      dot-dev: true
-      go113: true
+  - repo: knative/serving
+    jobs:
+      - type: continuous
+        timeout: 100
+        dot-dev: true
+        go113: true
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      - type: branch-ci
+        release: "0.10"
+        dot-dev: true
+        go113: true
+      - type: branch-ci
+        release: "0.11"
+        dot-dev: true
+        go113: true
+      - type: branch-ci
+        release: "0.12"
+        dot-dev: true
+        go113: true
+      - type: branch-ci
+        release: "0.13"
+        dot-dev: true
+        go113: true
+      - type: custom-job
+        name: istio-1.5-mesh
+        command: "./test/presubmit-tests.sh"
+        args:
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version 1.5-latest --mesh"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --istio-version 1.5-latest --mesh"
+        dot-dev: true
+        go113: true
+      - type: custom-job
+        name: istio-1.5-no-mesh
+        command: "./test/presubmit-tests.sh"
+        args:
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version 1.5-latest --no-mesh"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --istio-version 1.5-latest --no-mesh"
+        dot-dev: true
+        go113: true
+      - type: custom-job
+        name: istio-1.4-mesh
+        command: "./test/presubmit-tests.sh"
+        args:
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version 1.4-latest --mesh"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --istio-version 1.4-latest --mesh"
+        dot-dev: true
+        go113: true
+      - type: custom-job
+        name: istio-1.4-no-mesh
+        command: "./test/presubmit-tests.sh"
+        args:
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version 1.4-latest --no-mesh"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --istio-version 1.4-latest --no-mesh"
+        dot-dev: true
+        go113: true
+      - type: custom-job
+        name: gloo-0.17.1
+        command: "./test/presubmit-tests.sh"
+        args:
+        - "--run-test"
+        - "./test/e2e-tests.sh --gloo-version 0.17.1"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --gloo-version 0.17.1"
+        dot-dev: true
+        go113: true
+      - type: custom-job
+        name: kourier-stable
+        command: "./test/presubmit-tests.sh"
+        args:
+        - "--run-test"
+        - "./test/e2e-tests.sh --kourier-version stable"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --kourier-version stable"
+        dot-dev: true
+        go113: true
+      - type: custom-job
+        name: contour-latest
+        command: "./test/presubmit-tests.sh"
+        args:
+        - "--run-test"
+        - "./test/e2e-tests.sh --contour-version latest"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --contour-version latest"
+        dot-dev: true
+        go113: true
+      - type: custom-job
+        name: ambassador-latest
+        command: "./test/presubmit-tests.sh"
+        args:
+        - "--run-test"
+        - "./test/e2e-tests.sh --ambassador-version latest"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --ambassador-version latest"
+        dot-dev: true
+        go113: true
+      - type: custom-job
+        name: https
+        command: "./test/presubmit-tests.sh"
+        args:
+        - "--run-test"
+        - "./test/e2e-tests.sh --https"
+        - "--run-test"
+        - "./test/e2e-auto-tls-tests.sh --https"
+        dot-dev: true
+        go113: true
+      - type: nightly-release
+        dot-dev: true
+        go113: true
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      - type: dot-release
+        dot-dev: true
+        go113: true
+        release: "0.10"
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/serving"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+          - "--branch release-0.10"
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      - type: dot-release
+        dot-dev: true
+        go113: true
+        release: "0.11"
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/serving"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+          - "--branch release-0.11"
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      - type: dot-release
+        dot-dev: true
+        go113: true
+        release: "0.12"
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/serving"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+          - "--branch release-0.12"
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      - type: dot-release
+        dot-dev: true
+        go113: true
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/serving"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      - type: auto-release
+        dot-dev: true
+        go113: true
+        command: "./hack/release.sh"
+        args:
+          - "--auto-release"
+          - "--release-gcs knative-releases/serving"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      - type: webhook-apicoverage
+        dot-dev: true
+        go113: true
+        command: "./test/apicoverage.sh"
+      - type: custom-job
+        name: continuous-go114
+        command: "./test/e2e-tests.sh"
+        timeout: 100
+        dot-dev: true
+        go114: true
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
 
-  knative/client-contrib:
-    - type: continuous
-      dot-dev: true
-      go113: true
+  - repo: knative/client
+    jobs:
+      - type: continuous
+        dot-dev: true
+        go113: true
+      - type: branch-ci
+        release: "0.11"
+        dot-dev: true
+        go113: true
+      - type: branch-ci
+        release: "0.12"
+        dot-dev: true
+        go113: true
+      - type: branch-ci
+        release: "0.13"
+        dot-dev: true
+        go113: true
+      - type: nightly-release
+        dot-dev: true
+        go113: true
+      - type: custom-job
+        name: tekton
+        # This job must run after the nightly job so it uses the latest nightly.
+        # Nightly jobs run between 1AM and 3AM PST.
+        # Run this job at 5AM PST (1PM UTC)
+        cron: "0 13 * * *"
+        command: "./test/tekton-tests.sh"
+        dot-dev: true
+        go113: true
+      - type: dot-release
+        dot-dev: true
+        go113: true
+        release: "0.11"
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/client"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+          - "--branch release-0.11"
+      - type: dot-release
+        dot-dev: true
+        go113: true
+        release: "0.12"
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/client"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+          - "--branch release-0.12"
+      - type: dot-release
+        dot-dev: true
+        go113: true
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/client"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+      - type: auto-release
+        dot-dev: true
+        command: "./hack/release.sh"
+        args:
+          - "--auto-release"
+          - "--release-gcs knative-releases/client"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+        go113: true
 
-  knative/docs:
-    - type: continuous
-      needs-dind: true
+  - repo: knative/client-contrib
+    jobs:
+      - type: continuous
+        dot-dev: true
+        go113: true
 
-  knative/eventing:
-    - type: continuous
-      timeout: 90
-      dot-dev: true
-      go113: true
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - type: branch-ci
-      release: "0.10"
-      dot-dev: true
-    - type: branch-ci
-      release: "0.11"
-      dot-dev: true
-      go113: true
-    - type: branch-ci
-      release: "0.12"
-      dot-dev: true
-      go113: true
-    - type: branch-ci
-      release: "0.13"
-      dot-dev: true
-      go113: true
-    - type: nightly
-      dot-dev: true
-      go113: true
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - type: dot-release
-      dot-dev: true
-      go113: true
-      release: "0.10"
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - type: dot-release
-      dot-dev: true
-      go113: true
-      release: "0.11"
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - type: dot-release
-      dot-dev: true
-      go113: true
-      release: "0.12"
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - type: dot-release
-      dot-dev: true
-      go113: true
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - type: auto-release
-      dot-dev: true
-      go113: true
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
+  - repo: knative/docs
+    jobs:
+      - type: continuous
+        needs-dind: true
 
-  knative/eventing-contrib:
-    - type: continuous
-      dot-dev: true
-      go113: true
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - type: branch-ci
-      release: "0.10"
-      dot-dev: true
-    - type: branch-ci
-      release: "0.11"
-      dot-dev: true
-      go113: true
-    - type: branch-ci
-      release: "0.12"
-      dot-dev: true
-      go113: true
-    - type: branch-ci
-      release: "0.13"
-      dot-dev: true
-      go113: true
-    - type: nightly
-      dot-dev: true
-      go113: true
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - type: dot-release
-      dot-dev: true
-      go113: true
-      release: "0.10"
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - type: dot-release
-      dot-dev: true
-      go113: true
-      release: "0.11"
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - type: dot-release
-      dot-dev: true
-      go113: true
-      release: "0.12"
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - type: dot-release
-      dot-dev: true
-      go113: true
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - type: auto-release
-      dot-dev: true
-      go113: true
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
+  - repo: knative/eventing
+    jobs:
+      - type: continuous
+        timeout: 90
+        dot-dev: true
+        go113: true
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      - type: branch-ci
+        release: "0.10"
+        dot-dev: true
+      - type: branch-ci
+        release: "0.11"
+        dot-dev: true
+        go113: true
+      - type: branch-ci
+        release: "0.12"
+        dot-dev: true
+        go113: true
+      - type: branch-ci
+        release: "0.13"
+        dot-dev: true
+        go113: true
+      - type: nightly-release
+        dot-dev: true
+        go113: true
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      - type: dot-release
+        dot-dev: true
+        go113: true
+        release: "0.10"
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/eventing"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+          - "--branch release-0.10"
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      - type: dot-release
+        dot-dev: true
+        go113: true
+        release: "0.11"
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/eventing"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+          - "--branch release-0.11"
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      - type: dot-release
+        dot-dev: true
+        go113: true
+        release: "0.12"
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/eventing"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+          - "--branch release-0.12"
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      - type: dot-release
+        dot-dev: true
+        go113: true
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/eventing"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      - type: auto-release
+        dot-dev: true
+        go113: true
+        command: "./hack/release.sh"
+        args:
+          - "--auto-release"
+          - "--release-gcs knative-releases/eventing"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
 
-  knative/pkg:
-    - type: continuous
-      dot-dev: true
-      go113: true
+  - repo: knative/eventing-contrib
+    jobs:
+      - type: continuous
+        dot-dev: true
+        go113: true
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      - type: branch-ci
+        release: "0.10"
+        dot-dev: true
+      - type: branch-ci
+        release: "0.11"
+        dot-dev: true
+        go113: true
+      - type: branch-ci
+        release: "0.12"
+        dot-dev: true
+        go113: true
+      - type: branch-ci
+        release: "0.13"
+        dot-dev: true
+        go113: true
+      - type: nightly-release
+        dot-dev: true
+        go113: true
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      - type: dot-release
+        dot-dev: true
+        go113: true
+        release: "0.10"
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/eventing-contrib"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+          - "--branch release-0.10"
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      - type: dot-release
+        dot-dev: true
+        go113: true
+        release: "0.11"
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/eventing-contrib"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+          - "--branch release-0.11"
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      - type: dot-release
+        dot-dev: true
+        go113: true
+        release: "0.12"
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/eventing-contrib"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+          - "--branch release-0.12"
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      - type: dot-release
+        dot-dev: true
+        go113: true
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/eventing-contrib"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      - type: auto-release
+        dot-dev: true
+        go113: true
+        command: "./hack/release.sh"
+        args:
+          - "--auto-release"
+          - "--release-gcs knative-releases/eventing-contrib"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
 
-  knative/caching:
-    - type: continuous
-      dot-dev: true
-      go113: true
+  - repo: knative/pkg
+    jobs:
+      - type: continuous
+        dot-dev: true
+        go113: true
 
-  knative/observability:
-    - type: continuous
-      go113: true
+  - repo: knative/caching
+    jobs:
+      - type: continuous
+        dot-dev: true
+        go113: true
 
-  knative/sample-controller:
-    - type: continuous
-      dot-dev: true
-      go113: true
+  - repo: knative/observability
+    jobs:
+      - type: continuous
+        go113: true
 
-  knative/sample-source:
-    - type: continuous
-      dot-dev: true
-      go113: true
+  - repo: knative/sample-controller
+    jobs:
+      - type: continuous
+        dot-dev: true
+        go113: true
 
-  knative/test-infra:
-    - type: continuous
-      dot-dev: true
-      go113: true
+  - repo: knative/sample-source
+    jobs:
+      - type: continuous
+        dot-dev: true
+        go113: true
 
-  knative/serving-operator:
-    - type: continuous
-      dot-dev: true
-      go113: true
-    - type: branch-ci
-      release: "0.11"
-      dot-dev: true
-      go113: true
-    - type: branch-ci
-      release: "0.12"
-      dot-dev: true
-      go113: true
-    - type: branch-ci
-      release: "0.13"
-      dot-dev: true
-      go113: true
-    - type: nightly
-      dot-dev: true
-      go113: true
-    - type: dot-release
-      dot-dev: true
-      go113: true
-      release: "0.11"
-    - type: dot-release
-      dot-dev: true
-      go113: true
-      release: "0.12"
-    - type: dot-release
-      dot-dev: true
-      go113: true
-    - type: auto-release
-      dot-dev: true
-      go113: true
+  - repo: knative/test-infra
+    jobs:
+      - type: continuous
+        dot-dev: true
+        go113: true
 
-  knative/eventing-operator:
-    - type: continuous
-      dot-dev: true
-      go113: true
-    - type: branch-ci
-      release: "0.11"
-      dot-dev: true
-      go113: true
-    - type: branch-ci
-      release: "0.12"
-      dot-dev: true
-      go113: true
-    - type: branch-ci
-      release: "0.13"
-      dot-dev: true
-      go113: true
-    - type: nightly
-      dot-dev: true
-      go113: true
-    - type: dot-release
-      dot-dev: true
-      go113: true
-      release: "0.11"
-    - type: dot-release
-      dot-dev: true
-      go113: true
-      release: "0.12"
-    - type: dot-release
-      dot-dev: true
-      go113: true
-    - type: auto-release
-      dot-dev: true
-      go113: true
+  - repo: knative/serving-operator
+    jobs:
+      - type: continuous
+        dot-dev: true
+        go113: true
+      - type: branch-ci
+        release: "0.11"
+        dot-dev: true
+        go113: true
+      - type: branch-ci
+        release: "0.12"
+        dot-dev: true
+        go113: true
+      - type: branch-ci
+        release: "0.13"
+        dot-dev: true
+        go113: true
+      - type: nightly-release
+        dot-dev: true
+        go113: true
+      - type: dot-release
+        dot-dev: true
+        go113: true
+        release: "0.11"
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/serving-operator"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+          - "--branch release-0.11"
+      - type: dot-release
+        dot-dev: true
+        go113: true
+        release: "0.12"
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/serving-operator"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+          - "--branch release-0.12"
+      - type: dot-release
+        dot-dev: true
+        go113: true
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/serving-operator"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+      - type: auto-release
+        dot-dev: true
+        go113: true
+        command: "./hack/release.sh"
+        args:
+          - "--auto-release"
+          - "--release-gcs knative-releases/serving-operator"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
 
-  google/knative-gcp:
-    - type: continuous
-      go113: true
-    - type: branch-ci
-      release: "0.12"
-      go113: true
-    - type: branch-ci
-      release: "0.13"
-      go113: true
-    - type: nightly
-      go113: true
-    - type: dot-release
-      go113: true
-      release: "0.12"
-      env-vars:
-      - ORG_NAME=google
-    - type: dot-release
-      go113: true
-      env-vars:
-      - ORG_NAME=google
-    - type: auto-release
-      go113: true
-      env-vars:
-      - ORG_NAME=google
+  - repo: knative/eventing-operator
+    jobs:
+      - type: continuous
+        dot-dev: true
+        go113: true
+      - type: branch-ci
+        release: "0.11"
+        dot-dev: true
+        go113: true
+      - type: branch-ci
+        release: "0.12"
+        dot-dev: true
+        go113: true
+      - type: branch-ci
+        release: "0.13"
+        dot-dev: true
+        go113: true
+      - type: nightly-release
+        dot-dev: true
+        go113: true
+      - type: dot-release
+        dot-dev: true
+        go113: true
+        release: "0.11"
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/eventing-operator"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+          - "--branch release-0.11"
+      - type: dot-release
+        dot-dev: true
+        go113: true
+        release: "0.12"
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/eventing-operator"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+          - "--branch release-0.12"
+      - type: dot-release
+        dot-dev: true
+        go113: true
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/eventing-operator"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+      - type: auto-release
+        dot-dev: true
+        go113: true
+        command: "./hack/release.sh"
+        args:
+          - "--auto-release"
+          - "--release-gcs knative-releases/eventing-operator"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
 
-  knative/net-certmanager:
-    - type: continuous
-      dot-dev: true
-      go113: true
-    - type: nightly
-      dot-dev: true
-      go113: true
-    - type: dot-release
-      dot-dev: true
-      go113: true
-    - type: auto-release
-      dot-dev: true
-      go113: true
+  - repo: google/knative-gcp
+    jobs:
+      - type: continuous
+        go113: true
+      - type: branch-ci
+        release: "0.12"
+        go113: true
+      - type: branch-ci
+        release: "0.13"
+        go113: true
+      - type: nightly-release
+        go113: true
+      - type: dot-release
+        go113: true
+        release: "0.12"
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/knative-gcp"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+          - "--branch release-0.12"
+        env-vars:
+        - ORG_NAME=google
+      - type: dot-release
+        go113: true
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/knative-gcp"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+        env-vars:
+        - ORG_NAME=google
+      - type: auto-release
+        go113: true
+        command: "./hack/release.sh"
+        args:
+          - "--auto-release"
+          - "--release-gcs knative-releases/knative-gcp"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+        env-vars:
+        - ORG_NAME=google
 
-  knative/net-contour:
-    - type: continuous
-      dot-dev: true
-      go113: true
-    - type: nightly
-      dot-dev: true
-      go113: true
-    - type: dot-release
-      dot-dev: true
-      go113: true
-    - type: auto-release
-      dot-dev: true
-      go113: true
+  - repo: knative/net-certmanager
+    jobs:
+      - type: continuous
+        dot-dev: true
+        go113: true
+      - type: nightly-release
+        dot-dev: true
+        go113: true
+      - type: dot-release
+        dot-dev: true
+        go113: true
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/net-certmanager"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+      - type: auto-release
+        dot-dev: true
+        go113: true
+        command: "./hack/release.sh"
+        args:
+          - "--auto-release"
+          - "--release-gcs knative-releases/net-certmanager"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
 
-  knative/net-http01:
-    - type: continuous
-      dot-dev: true
-      go113: true
-    - type: nightly
-      dot-dev: true
-      go113: true
-    - type: dot-release
-      dot-dev: true
-      go113: true
-    - type: auto-release
-      dot-dev: true
-      go113: true
+  - repo: knative/net-contour
+    jobs:
+      - type: continuous
+        dot-dev: true
+        go113: true
+      - type: nightly-release
+        dot-dev: true
+        go113: true
+      - type: dot-release
+        dot-dev: true
+        go113: true
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/net-contour"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+      - type: auto-release
+        dot-dev: true
+        go113: true
+        command: "./hack/release.sh"
+        args:
+          - "--auto-release"
+          - "--release-gcs knative-releases/net-contour"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
 
-  knative/net-istio:
-    - type: continuous
-      dot-dev: true
-      go113: true
-    - type: nightly
-      dot-dev: true
-      go113: true
-    - type: dot-release
-      dot-dev: true
-      go113: true
-    - type: auto-release
-      dot-dev: true
-      go113: true
+  - repo: knative/net-http01
+    jobs:
+      - type: continuous
+        dot-dev: true
+        go113: true
+      - type: nightly-release
+        dot-dev: true
+        go113: true
+      - type: dot-release
+        dot-dev: true
+        go113: true
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/net-http01"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+      - type: auto-release
+        dot-dev: true
+        go113: true
+        command: "./hack/release.sh"
+        args:
+          - "--auto-release"
+          - "--release-gcs knative-releases/net-http01"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
 
-  knative/net-kourier:
-    - type: continuous
-      dot-dev: true
-      go113: true
-    - type: nightly
-      dot-dev: true
-      go113: true
-    - type: dot-release
-      dot-dev: true
-      go113: true
-    - type: auto-release
-      dot-dev: true
-      go113: true
+  - repo: knative/net-istio
+    jobs:
+      - type: continuous
+        dot-dev: true
+        go113: true
+      - type: nightly-release
+        dot-dev: true
+        go113: true
+      - type: dot-release
+        dot-dev: true
+        go113: true
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/net-istio"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+      - type: auto-release
+        dot-dev: true
+        go113: true
+        command: "./hack/release.sh"
+        args:
+          - "--auto-release"
+          - "--release-gcs knative-releases/net-istio"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
 
-  knative-sandbox/operator:
-    - type: continuous
-      go113: true
-      dot-dev: true
-    - type: nightly
-      go113: true
-      dot-dev: true
-    - type: dot-release
-      go113: true
-      dot-dev: true
-      env-vars:
-      - ORG_NAME=knative-sandbox
-    - type: auto-release
-      go113: true
-      dot-dev: true
-      env-vars:
-      - ORG_NAME=knative-sandbox
+  - repo: knative/net-kourier
+    jobs:
+      - type: continuous
+        dot-dev: true
+        go113: true
+      - type: nightly-release
+        dot-dev: true
+        go113: true
+      - type: dot-release
+        dot-dev: true
+        go113: true
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/net-kourier"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+      - type: auto-release
+        dot-dev: true
+        go113: true
+        command: "./hack/release.sh"
+        args:
+          - "--auto-release"
+          - "--release-gcs knative-releases/net-kourier"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
 
-  knative-sandbox/eventing-kafka:
-    - type: continuous
-      go113: true
-      dot-dev: true
-    - type: nightly
-      go113: true
-      dot-dev: true
-    - type: dot-release
-      go113: true
-      env-vars:
-      - ORG_NAME=knative-sandbox
-    - type: auto-release
-      go113: true
-      dot-dev: true
-      env-vars:
-      - ORG_NAME=knative-sandbox
+  - repo: knative-sandbox/operator
+    jobs:
+      - type: continuous
+        go113: true
+        dot-dev: true
+      - type: nightly-release
+        go113: true
+        dot-dev: true
+      - type: dot-release
+        go113: true
+        dot-dev: true
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/operator"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+        env-vars:
+        - ORG_NAME=knative-sandbox
+      - type: auto-release
+        go113: true
+        dot-dev: true
+        command: "./hack/release.sh"
+        args:
+          - "--auto-release"
+          - "--release-gcs knative-releases/operator"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+        env-vars:
+        - ORG_NAME=knative-sandbox
+
+  - repo: knative-sandbox/eventing-kafka
+    jobs:
+      - type: continuous
+        go113: true
+        dot-dev: true
+      - type: nightly-release
+        go113: true
+        dot-dev: true
+      - type: dot-release
+        go113: true
+        args:
+          - "--dot-release"
+          - "--release-gcs knative-releases/eventing-kafka"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+        env-vars:
+        - ORG_NAME=knative-sandbox
+      - type: auto-release
+        go113: true
+        dot-dev: true
+        command: "./hack/release.sh"
+        args:
+          - "--auto-release"
+          - "--release-gcs knative-releases/eventing-kafka"
+          - "--release-gcr gcr.io/knative-releases"
+          - "--github-token /etc/hub-token/token"
+        env-vars:
+        - ORG_NAME=knative-sandbox

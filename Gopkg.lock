@@ -739,6 +739,14 @@
   version = "v2.2.8"
 
 [[projects]]
+  branch = "v3"
+  digest = "1:2719dacdf70ad8b19e0db9b7716ef948e7a554a73eb28332fdda04f6571eb9f1"
+  name = "gopkg.in/yaml.v3"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "9f266ea9e77c4c7aab4cf02650570e7c7b3031a5"
+
+[[projects]]
   digest = "1:41dcca9245f5ee3e71365b39b1eed7f4c8d8d50a4c5397cd3ac21a3c7a8866ef"
   name = "honnef.co/go/tools"
   packages = [
@@ -1036,6 +1044,7 @@
     "google.golang.org/api/iterator",
     "google.golang.org/api/option",
     "gopkg.in/yaml.v2",
+    "gopkg.in/yaml.v3",
     "k8s.io/apimachinery/pkg/util/sets",
     "k8s.io/apimachinery/pkg/util/wait",
     "knative.dev/pkg/test/cmd",

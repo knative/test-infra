@@ -2,9 +2,14 @@ package main
 
 type allConfig struct {
 	// Presubmit holds presubmit configs for each repo(key of map)
-	Presubmits map[string][]prowJob `yaml:"presubmits,omitempty"`
+	Presubmits []repoConfig `yaml:"presubmits,omitempty"`
 	// Periodics holds periodic configs for each repo(key of map)
-	Periodics map[string][]prowJob `yaml:"periodics,omitempty"`
+	Periodics []repoConfig `yaml:"periodics,omitempty"`
+}
+
+type repoConfig struct {
+	Repo string    `yaml:"repo"`
+	Jobs []prowJob `yaml:"jobs,omitempty"`
 }
 
 type prowJob struct {
@@ -17,7 +22,7 @@ type prowJob struct {
 	Skipped bool `yaml:"skipped,omitempty"`
 	// DotDev: is this repo using knative.dev alias
 	DotDev    bool `yaml:"dot-dev,omitempty"`
-	AlwaysRun bool `yaml:"always_run,omitempty"`
+	AlwaysRun bool `yaml:"always-run,omitempty"`
 	Optional  bool `yaml:"optional,omitempty"`
 	// NeedsMonitor specifies if crier sends it's pubsub message to GCP
 	NeedsMonitor bool `yaml:"needs-monitor,omitempty"`
