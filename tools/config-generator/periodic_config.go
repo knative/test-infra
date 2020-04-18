@@ -106,7 +106,7 @@ func generatePeriodic(title string, repoName string, pj *prowJob) {
 	jobNameSuffix := pj.Type
 	isMonitoredJob := false
 
-	if !pj.Enabled {
+	if pj.Skipped {
 		return
 	}
 

@@ -46,11 +46,12 @@ func generatePresubmit(title string, repoName string, pj *prowJob) {
 	jobTemplate := readTemplate(presubmitJob)
 	repoData := repositoryData{Name: repoName, EnableGoCoverage: false, GoCoverageThreshold: data.Base.GoCoverageThreshold}
 	generateJob := true
+	if pj.Skipped {
+		return
+	}
+
 	switch pj.Type {
 	case "build-tests", "unit-tests", "integration-tests":
-		if !pj.Enabled {
-			return
-		}
 		data.PresubmitJobName = data.Base.RepoNameForJob + "-" + pj.Type
 		// Use default arguments if none given.
 		if len(data.Base.Args) == 0 {
@@ -58,9 +59,6 @@ func generatePresubmit(title string, repoName string, pj *prowJob) {
 		}
 		addVolumeToJob(&data.Base, "/etc/repoview-token", "repoview-token", true, "")
 	case "go-coverage":
-		if !pj.Enabled {
-			return
-		}
 		jobTemplate = readTemplate(presubmitGoCoverageJob)
 		data.PresubmitJobName = data.Base.RepoNameForJob + "-go-coverage"
 		data.Base.Image = coverageDockerImage

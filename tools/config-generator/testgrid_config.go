@@ -23,6 +23,8 @@ import (
 	"regexp"
 	"strings"
 	"time"
+
+	"gopkg.in/yaml.v2"
 )
 
 const (
@@ -283,4 +285,58 @@ func executeDashboardGroupTemplate(dashboardGroupName string, dashboardRepoNames
 	data.Name = dashboardGroupName
 	data.RepoNames = dashboardRepoNames
 	executeTemplate("dashboard group", readTemplate(dashboardGroupTemplate), data)
+}
+
+// collectMetaData collects the meta data from the original yaml data, which can be then used for building the test groups and dashboards config
+func collectMetaData(periodicJob yaml.MapSlice) {
+	for _, repo := range periodicJob {
+		rawName := getString(repo.Key)
+		projName := strings.Split(rawName, "/")[0]
+		repoName := strings.Split(rawName, "/")[1]
+		jobDetailMap := addProjAndRepoIfNeed(projName, repoName)
+
+		// parse job configs
+		for _, conf := range getInterfaceArray(repo.Value) {
+			jobDetailMap = metaData[projName]
+			jobConfig := getMapSlice(conf)
+			enabled := false
+			jobName := ""
+			releaseVersion := ""
+			for _, item := range jobConfig {
+				switch item.Key {
+				case "continuous", "dot-release", "auto-release", "performance",
+					"nightly", "webhook-apicoverage":
+					if getBool(item.Value) {
+						enabled = true
+						jobName = getString(item.Key)
+					}
+				case "branch-ci":
+					enabled = getBool(item.Value)
+					jobName = "continuous"
+				case "release":
+					releaseVersion = getString(item.Value)
+				case "custom-job":
+					enabled = true
+					jobName = getString(item.Value)
+				default:
+					// continue here since we do not need to care about other entries, like cron, command, etc.
+					continue
+				}
+			}
+			// add job types for the corresponding repos, if needed
+			if enabled {
+				// if it's a job for a release branch
+				if releaseVersion != "" {
+					releaseProjName := fmt.Sprintf("%s-%s", projName, releaseVersion)
+					jobDetailMap = addProjAndRepoIfNeed(releaseProjName, repoName)
+				}
+				newJobTypes := append(jobDetailMap[repoName], jobName)
+				jobDetailMap[repoName] = newJobTypes
+			}
+		}
+		updateTestCoverageJobDataIfNeeded(&jobDetailMap, repoName)
+	}
+
+	// add test coverage jobs for the repos that haven't been handled
+	addRemainingTestCoverageJobs()
 }

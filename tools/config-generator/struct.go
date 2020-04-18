@@ -13,8 +13,8 @@ type prowJob struct {
 	// Name is the identifier of job name, for example:
 	//	Name `upgrade-tests` in serving repo means `pull-kantive-serving-upgrade-tests`
 	Name string `yaml:"name,omitempty"`
-	// Enabled can be used to negate global default
-	Enabled bool `yaml:"enabled,omitempty"`
+	// Skipped can be used to negate global default
+	Skipped bool `yaml:"skipped,omitempty"`
 	// DotDev: is this repo using knative.dev alias
 	DotDev    bool `yaml:"dot-dev,omitempty"`
 	AlwaysRun bool `yaml:"always_run,omitempty"`
