@@ -18,7 +18,7 @@ SRC     := test-infra/gubernator
 deploy:
 	# Fetch latest source, patch for our instance
 	rm -fr test-infra
-	git clone http://github.com/kubernetes/test-infra.git
+	git clone https://github.com/kubernetes/test-infra.git
 	cp config.yaml $(SRC)
 	cp redir_github.py $(SRC)
 	sed -i -e '/^runtime: .*/a service: gubernator' $(SRC)/app.yaml
