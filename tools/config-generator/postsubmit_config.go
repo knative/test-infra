@@ -17,11 +17,7 @@ limitations under the License.
 package main
 
 import (
-	"fmt"
-	"path"
 	"strings"
-
-	"gopkg.in/yaml.v2"
 )
 
 const (
@@ -43,34 +39,58 @@ type postsubmitJobTemplateData struct {
 	PostsubmitCommand []string
 }
 
-// generateGoCoveragePostsubmit generates the go coverage postsubmit job config for the given repo.
-func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
+// generatePostsubmit generates all presubmit job configs for the given repo and configuration.
+func generatePostsubmit(title string, repoName string, pj *prowJob) {
 	var data postsubmitJobTemplateData
 	data.Base = newbaseProwJobTemplateData(repoName)
-	data.Base.Image = coverageDockerImage
-	data.PostsubmitJobName = fmt.Sprintf("post-%s-go-coverage", data.Base.RepoNameForJob)
-	for _, repo := range repositories {
-		if repo.Name == repoName && repo.DotDev {
-			data.Base.PathAlias = "path_alias: knative.dev/" + path.Base(repoName)
-		}
-		if repo.Name == repoName && repo.Go113 {
-			data.Base.Image = getGo113ImageName(data.Base.Image)
-		}
+	generateJob := true
+	if pj.Skipped {
+		return
+	}
+	if pj.GoCoverageThreshold != 0 {
+		data.Base.GoCoverageThreshold = pj.GoCoverageThreshold
+	}
+
+	switch pj.Type {
+	case "go-coverage":
+		// jobTemplate = readTemplate(presubmitGoCoverageJob)
+		data.PostsubmitJobName = data.Base.RepoNameForJob + "-go-coverage"
+		data.Base.Image = strings.Replace(coverageDockerImage, "coverage-go112", "coverage", 1)
+		data.Base.ServiceAccount = ""
+		// repoData.EnableGoCoverage = true
+		addVolumeToJob(&data.Base, "/etc/covbot-token", "covbot-token", true, "")
+	case "repo-settings":
+		generateJob = false
+	}
+	parseBasicJobConfigOverrides(&data.Base, pj)
+	if !generateJob {
+		return
+	}
+	// data.PresubmitCommand = createCommand(data.Base)
+	data.PostsubmitJobName = "post-" + data.PostsubmitJobName
+	if data.Base.ServiceAccount != "" {
+		addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
+		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-central1")
+	}
+	if data.Base.NeedsMonitor {
+		addMonitoringPubsubLabelsToJob(&data.Base, data.PostsubmitJobName)
 	}
 	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 	configureServiceAccountForJob(&data.Base)
 	jobName := data.PostsubmitJobName
 	executeJobTemplateWrapper(repoName, &data, func(data interface{}) {
-		executeJobTemplate("postsubmit go coverage", readTemplate(goCoveragePostsubmitJob), title, repoName, jobName, true, data)
+		executeJobTemplate("postsubmit", readTemplate(pj.Template), title, repoName, jobName, true, data)
 	})
-	// Generate config for post-knative-serving-go-coverage-dev right after post-knative-serving-go-coverage,
-	// this job is mainly for debugging purpose.
-	if data.PostsubmitJobName == "post-knative-serving-go-coverage" {
-		data.PostsubmitJobName += "-dev"
-		data.Base.Image = strings.Replace(data.Base.Image, "coverage-go112:latest", "coverage-dev:latest", -1)
-		data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest", -1)
-		executeJobTemplate("postsubmit go coverage", readTemplate(goCoveragePostsubmitJob), title, repoName, data.PostsubmitJobName, false, data)
-	}
+	// // Generate config for pull-knative-serving-go-coverage-dev right after pull-knative-serving-go-coverage,
+	// // this job is mainly for debugging purpose.
+	// if data.PresubmitPullJobName == "pull-knative-serving-go-coverage" {
+	// 	data.PresubmitPullJobName += "-dev"
+	// 	data.Base.AlwaysRun = false
+	// 	data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest", -1)
+	// 	data.Base.Image = strings.Replace(data.Base.Image, "coverage-go112:latest", "coverage-dev:latest", -1)
+	// 	template := strings.Replace(readTemplate(pj.Template), "(all|", "(", 1)
+	// 	executeJobTemplate("presubmit", template, title, repoName, data.PresubmitPullJobName, true, data)
+	// }
 }
 
 func generateConfigUpdaterToolPostsubmitJob() {

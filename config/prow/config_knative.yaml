@@ -16,6 +16,47 @@
 # Run `make config` after making changes to this file, the config-generator
 # will generate Prow jobs for you in jobs/config.yaml.
 
+# toplevel contains repo top level settings:
+# - go-coverage set to true meas presubmit, postsubmit, and continuous coverage
+#   jobs available
+# toplevels:
+#   - repo: "knative/serving"
+#     go-coverage: true
+#   - repo: "google/knative-gcp"
+#     go-coverage: true
+#   - repo: "knative-sandbox/eventing-kafka"
+#     go-coverage: true
+#   - repo: "knative-sandbox/operator"
+#     go-coverage: true
+#   - repo: "knative/caching"
+#     go-coverage: true
+#   - repo: "knative/client"
+#     go-coverage: true
+#   - repo: "knative/client-contrib"
+#     go-coverage: true
+#   - repo: "knative/docs"
+#     go-coverage: true
+#   - repo: "knative/eventing"
+#     go-coverage: true
+#   - repo: "knative/eventing-operator"
+#     go-coverage: true
+#   - repo: "knative/net-certmanager"
+#     go-coverage: true
+#   - repo: "knative/net-contour"
+#     go-coverage: true
+#   - repo: "knative/net-http01"
+#     go-coverage: true
+#   - repo: "knative/net-istio"
+#     go-coverage: true
+#   - repo: "knative/net-kourier"
+#     go-coverage: true
+#   - repo: "knative/pkg"
+#     go-coverage: true
+#   - repo: "knative/serving-operator"
+#     go-coverage: true
+#   - repo: "knative/test-infra"
+#     go-coverage: true
+
 presubmits:
   - repo: "*"
     jobs:
@@ -39,6 +80,7 @@ presubmits:
         - "--integration-tests"
       - type: go-coverage
         template: "prow_presubmit_gocoverate_job"
+        go-coverage-threshold: 50
         always-run: true
       - type: custom-job
         template: "prow_presubmit_custom_job.yaml"
@@ -466,16 +508,27 @@ presubmits:
       - type: integration-tests
       - type: go-coverage
 
+postsubmits:
+  - repo: "*"
+    jobs:
+      - type: "go-coverage"
+        template: "prow_postsubmit_gocoverage_job"
+
 periodics:
   - repo: "*"
     jobs:
       - type: "*"
+        timeout: 90
+        needs-monitor: true
         template: "prow_periodic_test_job.yaml"
       - type: continuous
         command: "./test/presubmit-tests.sh"
         args:
           - "--all-tests"
       - type: branch-ci
+        name: continuous
+        timeout: 180
+        needs-dind: true
         command: "./hack/release.sh"
         args:
           - "--nopublish"
@@ -489,6 +542,11 @@ periodics:
         command: "./hack/release.sh"
       - type: dot-release
         command: "./hack/release.sh"
+      - type: custom-job
+        timeout: 100
+      - type: go-coverage
+        template: "prow_periodic_custom_go_coverage.yaml"
+        command: "/coverage"
 
   - repo: knative/serving
     jobs:
@@ -671,6 +729,7 @@ periodics:
             memory: 16Gi
       - type: webhook-apicoverage
         go113: true
+        timeout: 100
         command: "./test/apicoverage.sh"
       - type: custom-job
         name: continuous-go114

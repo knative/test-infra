@@ -29,25 +29,16 @@ type presubmitJobTemplateData struct {
 func generatePresubmit(title string, repoName string, pj *prowJob) {
 	var data presubmitJobTemplateData
 	data.Base = newbaseProwJobTemplateData(repoName)
-	data.Base.Command = presubmitScript
-	data.Base.GoCoverageThreshold = 50
 	repoData := repositoryData{Name: repoName, EnableGoCoverage: false, GoCoverageThreshold: data.Base.GoCoverageThreshold}
 	generateJob := true
 	if pj.Skipped {
 		return
 	}
-	if pj.GoCoverageThreshold != 0 {
-		data.Base.GoCoverageThreshold = pj.GoCoverageThreshold
-		repoData.GoCoverageThreshold = data.Base.GoCoverageThreshold
-	}
+	data.Base.GoCoverageThreshold = pj.GoCoverageThreshold
 
 	switch pj.Type {
 	case "build-tests", "unit-tests", "integration-tests":
 		data.PresubmitJobName = data.Base.RepoNameForJob + "-" + pj.Type
-		// Use default arguments if none given.
-		if len(data.Base.Args) == 0 {
-			data.Base.Args = []string{"--" + pj.Type}
-		}
 		addVolumeToJob(&data.Base, "/etc/repoview-token", "repoview-token", true, "")
 	case "go-coverage":
 		// jobTemplate = readTemplate(presubmitGoCoverageJob)
@@ -66,7 +57,7 @@ func generatePresubmit(title string, repoName string, pj *prowJob) {
 	if !generateJob {
 		return
 	}
-	data.PresubmitCommand = createCommand(data.Base)
+	// data.PresubmitCommand = createCommand(data.Base)
 	data.PresubmitPullJobName = "pull-" + data.PresubmitJobName
 	data.PresubmitPostJobName = "post-" + data.PresubmitJobName
 	if data.Base.ServiceAccount != "" {

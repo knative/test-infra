@@ -34,7 +34,6 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/imdario/mergo"
 	"gopkg.in/yaml.v3"
 )
 
@@ -320,57 +319,9 @@ func getProwConfigData(ac allConfig) prowConfigTemplateData {
 
 // parseSection generate the configs from a given section of the input yaml file.
 func parseSection(rcs []repoConfig, title string, generate sectionGenerator, finalize sectionGenerator) {
-	// overrideFunc overrides configs, overrides if a value of the struct is
-	// default value.
-	// There is a glitch that false bool might not be able to override true, if
-	// it comes needs may need to convert these to pointers instead of relying
-	// on defaults. Or, change it to string representing bools
-	var overrideFunc func([]repoConfig, string, *prowJob)
-	overrideFunc = func(rcs []repoConfig, repo string, pj *prowJob) {
-		for _, rc := range rcs {
-			if rc.Repo == repo {
-				for _, job := range rc.Jobs {
-					if job.Type == "*" {
-						if err := mergo.Merge(pj, job); err != nil {
-							log.Fatalf("failed overriding: %v", err)
-						}
-					}
-				}
-			}
-		}
-		for _, rc := range rcs {
-			if rc.Repo == "*" {
-				for _, job := range rc.Jobs {
-					if job.Type == pj.Type {
-						if err := mergo.Merge(pj, job); err != nil {
-							log.Fatalf("failed overriding: %v", err)
-						}
-					}
-				}
-			}
-		}
-		for _, rc := range rcs {
-			if rc.Repo == "*" {
-				for _, job := range rc.Jobs {
-					if job.Type == "*" {
-						if err := mergo.Merge(pj, job); err != nil {
-							log.Fatalf("failed overriding: %v", err)
-						}
-					}
-				}
-			}
-		}
-	}
 	for _, rc := range rcs {
-		if rc.Repo == "*" {
-			continue
-		}
 		for _, pj := range rc.Jobs {
 			pj := pj
-			if pj.Type == "*" {
-				continue
-			}
-			overrideFunc(rcs, rc.Repo, &pj)
 			generate(title, rc.Repo, &pj)
 		}
 		if finalize != nil {
@@ -536,23 +487,20 @@ func main() {
 	prowTestsDockerImage = path.Join(*dockerImagesBase, *prowTestsDockerImageName)
 	backupsDockerImage = path.Join(*dockerImagesBase, *backupsDockerImageName)
 
-	// We use MapSlice instead of maps to keep key order and create predictable output.
-	// config := yaml.MapSlice{}
-
 	// Read input config.
 	name := flag.Arg(0)
 	content, err := ioutil.ReadFile(name)
 	if err != nil {
 		log.Fatalf("Cannot read file %q: %v", name, err)
 	}
-	// if err = yaml.Unmarshal(content, &config); err != nil {
-	// 	log.Fatalf("Cannot parse config %q: %v", name, err)
-	// }
 
 	var ac allConfig
 	if err = yaml.Unmarshal(content, &ac); err != nil {
 		log.Fatalf("Cannot parse config %q: %v", name, err)
 	}
+
+	// Inject top level configs into presubmit, postsubmit, and periodic configs
+	ac.init()
 
 	prowConfigData := getProwConfigData(ac)
 
@@ -574,12 +522,14 @@ func main() {
 		setOutput(prowJobsConfigOutput)
 		executeTemplate("general header", readTemplate(commonHeaderConfig), prowConfigData)
 		parseSection(ac.Presubmits, "presubmits", generatePresubmit, nil)
-		parseSection(ac.Periodics, "periodics", generatePeriodic, generateGoCoveragePeriodic)
-		for _, repo := range repositories { // Keep order for predictable output.
-			if !repo.Processed && repo.EnableGoCoverage {
-				generateGoCoveragePeriodic("periodics", repo.Name, nil)
-			}
-		}
+		parseSection(ac.Postsubmits, "postsubmits", generatePostsubmit, nil /*, generateGoCoveragePeriodic*/)
+		parseSection(ac.Periodics, "periodics", generatePeriodic, nil /*, generateGoCoveragePeriodic*/)
+
+		// for _, repo := range repositories { // Keep order for predictable output.
+		// 	if !repo.Processed && repo.EnableGoCoverage {
+		// 		generateGoCoveragePeriodic("periodics", repo.Name, nil)
+		// 	}
+		// }
 		// Intentionally removed as Chi is working on disabling generating these
 		// if *generateMaintenanceJobs {
 		// 	generateCleanupPeriodicJob()
@@ -589,9 +539,11 @@ func main() {
 		// 	generateIssueTrackerPeriodicJobs()
 		// 	generatePerfClusterUpdatePeriodicJobs()
 		// }
+
+		// TODO(chizhg): These should be defined as postsubmit in config_knative.yaml
 		for _, repo := range repositories {
 			if repo.EnableGoCoverage {
-				generateGoCoveragePostsubmit("postsubmits", repo.Name, nil)
+				// generateGoCoveragePostsubmit("postsubmits", repo.Name, nil)
 				if repo.Name == "knative/test-infra" && *generateMaintenanceJobs {
 					generateConfigUpdaterToolPostsubmitJob()
 				}

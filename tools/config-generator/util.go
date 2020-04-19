@@ -357,6 +357,9 @@ func indentSectionBase(indentation int, title string, prefix string, array []str
 	if keys == "" {
 		return keys
 	}
+	if title == "" {
+		return keys
+	}
 	return title + ":\n" + keys
 }
 
@@ -482,4 +485,16 @@ func setOutput(fileName string) {
 	configFile.Truncate(0)
 	configFile.Seek(0, 0)
 	output = configFile
+}
+
+func jobNameSuffix(pj *prowJob) string {
+	var s string
+	s = pj.Type
+	if pj.Name != "" {
+		s = pj.Name
+	}
+	if pj.Release != "" {
+		s = fmt.Sprintf("%s-%s", pj.Release, s)
+	}
+	return s
 }

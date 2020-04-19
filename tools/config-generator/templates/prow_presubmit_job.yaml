@@ -17,7 +17,8 @@
         command:
         - runner.sh
         args:
-        [[indent_array 8 .PresubmitCommand]]
+        - "[[.Base.Command]]"
+        [[indent_array_section 8 "" .Base.Args]]
         [[indent_section 10 "securityContext" .Base.SecurityContext]]
         [[indent_section 8 "volumeMounts" .Base.VolumeMounts]]
         [[indent_section 8 "env" .Base.Env]]

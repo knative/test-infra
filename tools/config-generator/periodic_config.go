@@ -22,7 +22,6 @@ import (
 	"fmt"
 	"log"
 	"math"
-	"path"
 	"time"
 )
 
@@ -82,6 +81,8 @@ func generateCron(jobType, jobName string, timeout int) string {
 		res = fmt.Sprintf(hourCron)
 	case "branch-ci": // Every day 1-2 PST
 		res = fmt.Sprintf(dayCron, getUTCtime(1))
+	case "go-coverage": // Every day 1-2 PST
+		res = fmt.Sprintf(dayCron, getUTCtime(1))
 	case "nightly-release": // Every day 2-3 PST
 		res = fmt.Sprintf(dayCron, getUTCtime(2))
 	case "dot-release": // Every Tuesday 2-3 PST
@@ -98,10 +99,7 @@ func generateCron(jobType, jobName string, timeout int) string {
 func generatePeriodic(title string, repoName string, pj *prowJob) {
 	var data periodicJobTemplateData
 	data.Base = newbaseProwJobTemplateData(repoName)
-	// jobTemplate := readTemplate(periodicTestJob)
-	jobType := pj.Type
-	jobNameSuffix := pj.Type
-	isMonitoredJob := false
+	jobNameSuffix := jobNameSuffix(pj)
 
 	if pj.Skipped {
 		return
@@ -109,53 +107,26 @@ func generatePeriodic(title string, repoName string, pj *prowJob) {
 
 	switch pj.Type {
 	case "continuous":
-		isMonitoredJob = true
-		// Use default command and arguments if none given.
-		if data.Base.Command == "" {
-			data.Base.Command = presubmitScript
-		}
-		if len(data.Base.Args) == 0 {
-			data.Base.Args = allPresubmitTests
-		}
+
 	case "nightly-release":
 		data.Base.ServiceAccount = nightlyAccount
-		// data.Base.Command = releaseScript
-		// data.Base.Args = releaseNightly
-		data.Base.Timeout = 90
-		isMonitoredJob = true
 	case "branch-ci":
-		// TODO(chaodaiG): This could merge with continous job
-		jobNameSuffix = "continuous"
-		// data.Base.Command = releaseScript
-		// data.Base.Args = releaseLocal
-		setupDockerInDockerForJob(&data.Base)
-		// TODO(adrcunha): Consider reducing the timeout in the future.
-		data.Base.Timeout = 180
-		isMonitoredJob = true
+
 	case "dot-release", "auto-release":
 		data.Base.ServiceAccount = releaseAccount
 		addVolumeToJob(&data.Base, "/etc/hub-token", "hub-token", true, "")
-		data.Base.Timeout = 90
-		isMonitoredJob = true
 	case "custom-job":
-		// Candidate of default config
-		jobNameSuffix = pj.Name
-		data.Base.Timeout = 100
+
+	case "go-coverage":
+		data.Base.ServiceAccount = ""
 	case "webhook-apicoverage":
-		data.Base.Command = webhookAPICoverageScript
 		addEnvToJob(&data.Base, "SYSTEM_NAMESPACE", data.Base.RepoNameForJob)
 	}
 
 	data.CronString = pj.Cron
 
 	if pj.Release != "" {
-		version := pj.Release
-		jobNameSuffix = version + "-" + jobNameSuffix
-		data.Base.RepoBranch = "release-" + version
-		if jobType == "dot-release" {
-			data.Base.Args = append(data.Base.Args, "--branch release-"+version)
-		}
-		isMonitoredJob = true
+		data.Base.RepoBranch = "release-" + pj.Release
 	}
 
 	parseBasicJobConfigOverrides(&data.Base, pj)
@@ -163,24 +134,12 @@ func generatePeriodic(title string, repoName string, pj *prowJob) {
 	if jobNameSuffix != "" {
 		data.PeriodicJobName += "-" + jobNameSuffix
 	}
-	if isMonitoredJob {
+	if pj.NeedsMonitor {
 		addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
 	}
 	if data.CronString == "" {
-		data.CronString = generateCron(jobType, data.PeriodicJobName, data.Base.Timeout)
+		data.CronString = generateCron(pj.Type, data.PeriodicJobName, data.Base.Timeout)
 	}
-	// Ensure required data exist.
-	if data.CronString == "" {
-		log.Fatalf("Job %q is missing cron string", data.PeriodicJobName)
-	}
-	if len(data.Base.Args) == 0 && data.Base.Command == "" {
-		log.Fatalf("Job %q is missing command", data.PeriodicJobName)
-	}
-	if jobType == "branch-ci" && data.Base.RepoBranch == "" {
-		log.Fatalf("%q jobs are intended to be used on release branches", jobType)
-	}
-	// Generate config itself.
-	data.PeriodicCommand = createCommand(data.Base)
 	if data.Base.ServiceAccount != "" {
 		addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
 		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-central1")
@@ -283,37 +242,4 @@ func generateBackupPeriodicJob() {
 	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 	configureServiceAccountForJob(&data.Base)
 	executeJobTemplate("periodic backup", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
-}
-
-// generateGoCoveragePeriodic generates the go coverage periodic job config for the given repo (configuration is ignored).
-func generateGoCoveragePeriodic(title string, repoName string, _ *prowJob) {
-	for i, repo := range repositories {
-		if repoName != repo.Name || !repo.EnableGoCoverage {
-			continue
-		}
-		repositories[i].Processed = true
-		var data periodicJobTemplateData
-		data.Base = newbaseProwJobTemplateData(repoName)
-		data.Base.Image = coverageDockerImage
-		data.PeriodicJobName = fmt.Sprintf("ci-%s-go-coverage", data.Base.RepoNameForJob)
-		data.CronString = goCoveragePeriodicJobCron
-		data.Base.GoCoverageThreshold = repo.GoCoverageThreshold
-		data.Base.Command = "/coverage"
-		data.Base.Args = []string{
-			"--artifacts=$(ARTIFACTS)",
-			fmt.Sprintf("--cov-threshold-percentage=%d", data.Base.GoCoverageThreshold)}
-		data.Base.ServiceAccount = ""
-		data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
-		if repositories[i].DotDev {
-			data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  path_alias: knative.dev/"+path.Base(repoName))
-		}
-		if repositories[i].Go113 {
-			data.Base.Image = getGo113ImageName(data.Base.Image)
-		}
-		addExtraEnvVarsToJob(extraEnvVars, &data.Base)
-		addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
-		configureServiceAccountForJob(&data.Base)
-		executeJobTemplate("periodic go coverage", readTemplate(periodicCustomJob), title, repoName, data.PeriodicJobName, false, data)
-		return
-	}
 }
