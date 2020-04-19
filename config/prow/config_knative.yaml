@@ -20,6 +20,7 @@ presubmits:
   - repo: "*"
     jobs:
       - type: "*"
+        template: "prow_presubmit_job"
         command: "./test/presubmit-tests.sh"
       - type: build-tests
         always-run: true
@@ -37,7 +38,10 @@ presubmits:
         args:
         - "--integration-tests"
       - type: go-coverage
+        template: "prow_presubmit_gocoverate_job"
         always-run: true
+      - type: custom-job
+        template: "prow_presubmit_custom_job.yaml"
         
   - repo: knative/serving
     jobs:
@@ -465,6 +469,8 @@ presubmits:
 periodics:
   - repo: "*"
     jobs:
+      - type: "*"
+        template: "prow_periodic_test_job.yaml"
       - type: continuous
         command: "./test/presubmit-tests.sh"
         args:

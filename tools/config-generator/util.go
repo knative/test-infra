@@ -19,6 +19,10 @@ import (
 
 // read template yaml file content
 func readTemplate(fp string) string {
+	// Normalize fp
+	if !strings.HasSuffix(fp, ".yaml") {
+		fp = fmt.Sprintf("%s.yaml", fp)
+	}
 	if _, ok := templatesCache[fp]; !ok {
 		// get the directory of the currently running file
 		_, f, _, _ := runtime.Caller(0)

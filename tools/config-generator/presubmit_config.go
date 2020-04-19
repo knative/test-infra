@@ -16,18 +16,6 @@ limitations under the License.
 
 package main
 
-import (
-	"strings"
-)
-
-const (
-	// presubmitJob is the template for presubmit jobs.
-	presubmitJob = "prow_presubmit_job.yaml"
-
-	// presubmitGoCoverageJob is the template for go coverage presubmit jobs.
-	presubmitGoCoverageJob = "prow_presubmit_gocoverate_job.yaml"
-)
-
 // presubmitJobTemplateData contains data about a presubmit Prow job.
 type presubmitJobTemplateData struct {
 	Base                 baseProwJobTemplateData
@@ -43,7 +31,6 @@ func generatePresubmit(title string, repoName string, pj *prowJob) {
 	data.Base = newbaseProwJobTemplateData(repoName)
 	data.Base.Command = presubmitScript
 	data.Base.GoCoverageThreshold = 50
-	jobTemplate := readTemplate(presubmitJob)
 	repoData := repositoryData{Name: repoName, EnableGoCoverage: false, GoCoverageThreshold: data.Base.GoCoverageThreshold}
 	generateJob := true
 	if pj.Skipped {
@@ -63,7 +50,7 @@ func generatePresubmit(title string, repoName string, pj *prowJob) {
 		}
 		addVolumeToJob(&data.Base, "/etc/repoview-token", "repoview-token", true, "")
 	case "go-coverage":
-		jobTemplate = readTemplate(presubmitGoCoverageJob)
+		// jobTemplate = readTemplate(presubmitGoCoverageJob)
 		data.PresubmitJobName = data.Base.RepoNameForJob + "-go-coverage"
 		data.Base.Image = coverageDockerImage
 		data.Base.ServiceAccount = ""
@@ -93,16 +80,16 @@ func generatePresubmit(title string, repoName string, pj *prowJob) {
 	configureServiceAccountForJob(&data.Base)
 	jobName := data.PresubmitPullJobName
 	executeJobTemplateWrapper(repoName, &data, func(data interface{}) {
-		executeJobTemplate("presubmit", jobTemplate, title, repoName, jobName, true, data)
+		executeJobTemplate("presubmit", readTemplate(pj.Template), title, repoName, jobName, true, data)
 	})
-	// Generate config for pull-knative-serving-go-coverage-dev right after pull-knative-serving-go-coverage,
-	// this job is mainly for debugging purpose.
-	if data.PresubmitPullJobName == "pull-knative-serving-go-coverage" {
-		data.PresubmitPullJobName += "-dev"
-		data.Base.AlwaysRun = false
-		data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest", -1)
-		data.Base.Image = strings.Replace(data.Base.Image, "coverage-go112:latest", "coverage-dev:latest", -1)
-		template := strings.Replace(readTemplate(presubmitGoCoverageJob), "(all|", "(", 1)
-		executeJobTemplate("presubmit", template, title, repoName, data.PresubmitPullJobName, true, data)
-	}
+	// // Generate config for pull-knative-serving-go-coverage-dev right after pull-knative-serving-go-coverage,
+	// // this job is mainly for debugging purpose.
+	// if data.PresubmitPullJobName == "pull-knative-serving-go-coverage" {
+	// 	data.PresubmitPullJobName += "-dev"
+	// 	data.Base.AlwaysRun = false
+	// 	data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest", -1)
+	// 	data.Base.Image = strings.Replace(data.Base.Image, "coverage-go112:latest", "coverage-dev:latest", -1)
+	// 	template := strings.Replace(readTemplate(pj.Template), "(all|", "(", 1)
+	// 	executeJobTemplate("presubmit", template, title, repoName, data.PresubmitPullJobName, true, data)
+	// }
 }

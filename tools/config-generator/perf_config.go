@@ -24,6 +24,9 @@ import (
 )
 
 const (
+	// Template for periodic test/release jobs.
+	periodicTestJob = "prow_periodic_test_job.yaml"
+
 	perfTestScriptPath = "./test/performance/performance-tests.sh"
 	perfTestSecretName = "performance-test"
 )

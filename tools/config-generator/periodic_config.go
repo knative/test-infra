@@ -27,9 +27,6 @@ import (
 )
 
 const (
-	// Template for periodic test/release jobs.
-	periodicTestJob = "prow_periodic_test_job.yaml"
-
 	// Template for periodic custom jobs.
 	periodicCustomJob = "prow_periodic_custom_job.yaml"
 
@@ -101,7 +98,7 @@ func generateCron(jobType, jobName string, timeout int) string {
 func generatePeriodic(title string, repoName string, pj *prowJob) {
 	var data periodicJobTemplateData
 	data.Base = newbaseProwJobTemplateData(repoName)
-	jobTemplate := readTemplate(periodicTestJob)
+	// jobTemplate := readTemplate(periodicTestJob)
 	jobType := pj.Type
 	jobNameSuffix := pj.Type
 	isMonitoredJob := false
@@ -137,12 +134,6 @@ func generatePeriodic(title string, repoName string, pj *prowJob) {
 		isMonitoredJob = true
 	case "dot-release", "auto-release":
 		data.Base.ServiceAccount = releaseAccount
-		// data.Base.Command = releaseScript
-		// data.Base.Args = []string{
-		// 	"--" + jobNameSuffix,
-		// 	"--release-gcs " + data.Base.ReleaseGcs,
-		// 	"--release-gcr gcr.io/knative-releases",
-		// 	"--github-token /etc/hub-token/token"}
 		addVolumeToJob(&data.Base, "/etc/hub-token", "hub-token", true, "")
 		data.Base.Timeout = 90
 		isMonitoredJob = true
@@ -201,7 +192,7 @@ func generatePeriodic(title string, repoName string, pj *prowJob) {
 	}
 	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 	configureServiceAccountForJob(&data.Base)
-	executeJobTemplate("periodic", jobTemplate, title, repoName, data.PeriodicJobName, false, data)
+	executeJobTemplate("periodic", readTemplate(pj.Template), title, repoName, data.PeriodicJobName, false, data)
 }
 
 // generateCleanupPeriodicJob generates the cleanup job config.

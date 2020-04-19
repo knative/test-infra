@@ -320,19 +320,37 @@ func getProwConfigData(ac allConfig) prowConfigTemplateData {
 
 // parseSection generate the configs from a given section of the input yaml file.
 func parseSection(rcs []repoConfig, title string, generate sectionGenerator, finalize sectionGenerator) {
+	// overrideFunc overrides configs, overrides if a value of the struct is
+	// default value.
+	// There is a glitch that false bool might not be able to override true, if
+	// it comes needs may need to convert these to pointers instead of relying
+	// on defaults. Or, change it to string representing bools
 	var overrideFunc func([]repoConfig, string, *prowJob)
 	overrideFunc = func(rcs []repoConfig, repo string, pj *prowJob) {
 		for _, rc := range rcs {
-			if rc.Repo == "*" {
+			if rc.Repo == repo {
 				for _, job := range rc.Jobs {
-					if job.Type == "*" || job.Type == pj.Type {
+					if job.Type == "*" {
 						if err := mergo.Merge(pj, job); err != nil {
 							log.Fatalf("failed overriding: %v", err)
 						}
 					}
 				}
 			}
-			if rc.Repo == repo {
+		}
+		for _, rc := range rcs {
+			if rc.Repo == "*" {
+				for _, job := range rc.Jobs {
+					if job.Type == pj.Type {
+						if err := mergo.Merge(pj, job); err != nil {
+							log.Fatalf("failed overriding: %v", err)
+						}
+					}
+				}
+			}
+		}
+		for _, rc := range rcs {
+			if rc.Repo == "*" {
 				for _, job := range rc.Jobs {
 					if job.Type == "*" {
 						if err := mergo.Merge(pj, job); err != nil {

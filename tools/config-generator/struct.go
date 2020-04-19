@@ -13,6 +13,8 @@ type repoConfig struct {
 }
 
 type prowJob struct {
+	// Template is the template to use for the job
+	Template string `yaml:"template,omitempty"`
 	// Type is job type, i.e. build-tests, custom-test
 	Type string `yaml:"type"`
 	// Name is the identifier of job name, for example:
