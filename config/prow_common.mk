@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+SHELL := /bin/bash
+
 # This file is used by prod and staging Makefiles
 
 # Default settings for the CI/CD system.
@@ -59,7 +61,7 @@ unset-cluster-credentials:
 .PHONY: update-prow-config update-all-boskos-deployments update-boskos-resource update-almost-all-cluster-deployments update-single-cluster-deployment test update-testgrid-config confirm-master
 
 # Update prow config
-update-prow-config: $(eval SHELL:=/bin/bash) confirm-master
+update-prow-config: confirm-master
 	$(SET_CONTEXT)
 	python2 <(curl -sSfL https://raw.githubusercontent.com/istio/test-infra/master/prow/recreate_prow_configmaps.py) \
 		--prow-config-path=$(realpath $(PROW_CONFIG)) \
