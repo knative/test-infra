@@ -4,7 +4,6 @@
 required = [
   # prow-cluster-operation is temporary solution for calling clustermanager lib
   # from bash during e2e tests
-  "knative.dev/pkg/testutils/clustermanager/prow-cluster-operation",
   "knative.dev/pkg/testutils/metahelper",
   "knative.dev/pkg/testutils/clustermanager/perf-tests",
 
