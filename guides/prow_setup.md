@@ -8,11 +8,15 @@ under [config/prow-staging](../config/prow-staging).
 
 ## Modify Prow cluster configs
 
-Prow is a collection of microservices that are deployed on a Kubernetes cluster,
-and all the Kubernetes object YAML files (except secrets) are under
-[config/prow/cluster](../config/prow/cluster).
+Prow is a collection of microservices that are deployed on a Kubernetes cluster.
+All the Kubernetes object `.yaml` files (except secrets) for Knative production
+Prow are under [config/prow/cluster](../config/prow/cluster). These files are
+auto-synced from [config/prow-staging/cluster](../config/prow-staging/cluster)
+by the [prow-config-updater](../tools/prow-config-updater) tool in the Prow
+staging process, so developers should _NOT_ modify these files directly.
 
-To make changes to Prow cluster configs, please follow the staging process:
+To make changes to production Prow cluster configs, please follow the staging
+process:
 
 1. Check files under
    [config/prow-staging/cluster](../config/prow-staging/cluster) and make
