@@ -73,7 +73,7 @@ func main() {
 		for i, f := range files {
 			fns[i] = f.GetFilename()
 		}
-		bannedFiles := config.CollectRelevantFiles(fns, config.ProdProwKeyConfigPaths)
+		bannedFiles := config.CollectRelevantConfigFiles(fns, config.ProdProwKeyConfigPaths)
 
 		// If any of the production Prow key config files are changed, report the error.
 		if len(bannedFiles) != 0 {
