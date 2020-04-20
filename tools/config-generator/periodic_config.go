@@ -23,6 +23,7 @@ import (
 	"log"
 	"math"
 	"path"
+	"strings"
 	"time"
 
 	"gopkg.in/yaml.v2"
@@ -57,7 +58,7 @@ type periodicJobTemplateData struct {
 // Generate cron string based on job type, offset generated from jobname
 // instead of assign random value to ensure consistency among runs,
 // timeout is used for determining how many hours apart
-func generateCron(jobType, jobName string, timeout int) string {
+func generateCron(jobType, jobName, repoName string, timeout int) string {
 	getUTCtime := func(i int) int { return i + 7 }
 	// Sums the ascii valus of all letters in a jobname,
 	// this value is used for deriving offset after hour
@@ -89,8 +90,14 @@ func generateCron(jobType, jobName string, timeout int) string {
 		res = fmt.Sprintf(dayCron, getUTCtime(1))
 	case "nightly": // Every day 2-3 PST
 		res = fmt.Sprintf(dayCron, getUTCtime(2))
-	case "dot-release": // Every Tuesday 2-3 PST
-		res = fmt.Sprintf(weekCron, getUTCtime(2), 2)
+	case "dot-release":
+		if strings.HasSuffix(repoName, "-operator") {
+			// Every Tuesday 12-13 PST
+			res = fmt.Sprintf(weekCron, getUTCtime(12), 2)
+		} else {
+			// Every Tuesday 2-3 PST
+			res = fmt.Sprintf(weekCron, getUTCtime(2), 2)
+		}
 	case "webhook-apicoverage": // Every day 2-3 PST
 		res = fmt.Sprintf(dayCron, getUTCtime(2))
 	default:
@@ -200,7 +207,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
 	}
 	if data.CronString == "" {
-		data.CronString = generateCron(jobType, data.PeriodicJobName, data.Base.Timeout)
+		data.CronString = generateCron(jobType, data.PeriodicJobName, data.Base.RepoName, data.Base.Timeout)
 	}
 	// Ensure required data exist.
 	if data.CronString == "" {
