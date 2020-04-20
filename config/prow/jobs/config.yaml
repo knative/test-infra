@@ -8245,7 +8245,7 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "30 9 * * 2"
+- cron: "30 19 * * 2"
   name: ci-knative-serving-operator-0.11-dot-release
   agent: kubernetes
   labels:
@@ -8292,7 +8292,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "40 9 * * 2"
+- cron: "40 19 * * 2"
   name: ci-knative-serving-operator-0.12-dot-release
   agent: kubernetes
   labels:
@@ -8339,7 +8339,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "4 9 * * 2"
+- cron: "4 19 * * 2"
   name: ci-knative-serving-operator-dot-release
   agent: kubernetes
   labels:
@@ -8658,7 +8658,7 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "59 9 * * 2"
+- cron: "59 19 * * 2"
   name: ci-knative-eventing-operator-0.11-dot-release
   agent: kubernetes
   labels:
@@ -8705,7 +8705,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "0 9 * * 2"
+- cron: "0 19 * * 2"
   name: ci-knative-eventing-operator-0.12-dot-release
   agent: kubernetes
   labels:
@@ -8752,7 +8752,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "23 9 * * 2"
+- cron: "23 19 * * 2"
   name: ci-knative-eventing-operator-dot-release
   agent: kubernetes
   labels:
