@@ -10348,7 +10348,7 @@ postsubmits:
     agent: kubernetes
     decorate: true
     max_concurrency: 1
-    run_if_changed: "^(config/(prow|prow-staging)/(cluster|core|jobs|testgrid)/.*.yaml)|(tools/config-generator/templates/(prow|prow-staging)/.*.yaml)$"
+    run_if_changed: "^(config/(prow|prow-staging)/(cluster|core|jobs|boskos|testgrid)/.*.yaml)|(tools/config-generator/templates/(prow|prow-staging)/.*.yaml)$"
     cluster: "prow-trusted"
     spec:
       containers:
