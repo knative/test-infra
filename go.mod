@@ -27,5 +27,5 @@ replace (
 	k8s.io/apimachinery => k8s.io/apimachinery v0.16.4
 	k8s.io/client-go => k8s.io/client-go v0.16.4
 
-	knative.dev/pkg => github.com/chizhg/pkg v0.0.0-20200407030034-5966ae6eba0c
+	knative.dev/pkg => github.com/chizhg/pkg v0.0.0-20200420011907-9117cd5cf224
 )

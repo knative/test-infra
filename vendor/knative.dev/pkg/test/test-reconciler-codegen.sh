@@ -55,7 +55,6 @@ ${KNATIVE_CODEGEN_PKG}/hack/generate-knative.sh "injection" \
   "pub:v1alpha1" \
   --go-header-file ${REPO_ROOT_DIR}/hack/boilerplate/boilerplate.go.txt
 
-
 if ! go build -v $(dirname $0)/genclient/... ; then
     exit 1
 fi
