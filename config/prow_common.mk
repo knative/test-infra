@@ -63,7 +63,7 @@ unset-cluster-credentials:
 # Update prow config
 update-prow-config: confirm-master
 	$(SET_CONTEXT)
-	python2 <(curl -sSfL https://raw.githubusercontent.com/istio/test-infra/master/prow/recreate_prow_configmaps.py) \
+	python3 <(curl -sSfL https://raw.githubusercontent.com/istio/test-infra/master/prow/recreate_prow_configmaps.py) \
 		--prow-config-path=$(realpath $(PROW_CONFIG)) \
 		--plugins-config-path=$(realpath $(PROW_PLUGINS)) \
 		--job-config-dir=$(realpath $(PROW_JOB_CONFIG)) \
