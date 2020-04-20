@@ -52,10 +52,10 @@ func (cli *Client) initialize() error {
 }
 
 func (cli *Client) runProwConfigUpdate() error {
-	// If no staging process if needed, we can directly update production Prow configs.
+	// If no staging process if needed, we can directly update the changed Prow configs.
 	if !cli.needsStaging() {
-		if err := cli.updateProw(config.ProdProwEnv); err != nil {
-			return fmt.Errorf("error updating production Prow configs: %v", err)
+		if err := cli.updateProw(); err != nil {
+			return fmt.Errorf("error updating Prow configs: %v", err)
 		}
 	} else {
 		if err := cli.startStaging(); err != nil {
@@ -92,17 +92,23 @@ func (cli *Client) needsStaging() bool {
 }
 
 // Update Prow with the changed config files and send message for the update result.
-func (cli *Client) updateProw(env config.ProwEnv) error {
-	updatedFiles, err := cli.doProwUpdate(env)
-	prnumber := *cli.pr.Number
-	if err == nil {
-		// Best effort, won't fail the process if the comment fails.
-		cli.githubcommenter.commentOnUpdateConfigsSuccess(prnumber, env, updatedFiles)
-	} else {
-		// Best effort, won't fail the process if the comment fails.
-		cli.githubcommenter.commentOnUpdateConfigsFailure(prnumber, env, updatedFiles, err)
+// If no config changes need to be updated, this function call will be just a no-op.
+func (cli *Client) updateProw() error {
+	for _, env := range []config.ProwEnv{config.StagingProwEnv, config.ProdProwEnv} {
+		updatedFiles, err := cli.doProwUpdate(env)
+		prnumber := *cli.pr.Number
+		if err == nil {
+			if len(updatedFiles) != 0 {
+				// Best effort, won't fail the process if the comment fails.
+				cli.githubcommenter.commentOnUpdateConfigsSuccess(prnumber, env, updatedFiles)
+			}
+		} else {
+			// Best effort, won't fail the process if the comment fails.
+			cli.githubcommenter.commentOnUpdateConfigsFailure(prnumber, env, updatedFiles, err)
+		}
+		return err
 	}
-	return err
+	return nil
 }
 
 // Start running the staging process to update and test staging Prow.
