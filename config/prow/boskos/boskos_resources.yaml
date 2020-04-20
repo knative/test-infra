@@ -113,6 +113,5 @@ resources:
   - knative-boskos-97
   - knative-boskos-98
   - knative-boskos-99
-  - knative-boskos-100
   state: dirty
   type: gke-project
