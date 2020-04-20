@@ -112,6 +112,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-serving-integration-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/serving
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
