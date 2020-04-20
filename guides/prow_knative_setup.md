@@ -25,8 +25,8 @@ All Prow config files for running Prow jobs for Knative projects are under
 
 ## Setting up Prow for a new repo (reviewers assignment and auto merge)
 
-1. Create the appropriate `OWNERS` and/or `OWNERS_ALIASES` files (at least for
-   the root dir).
+1. Create the appropriate `OWNERS` and optional `OWNERS_ALIASES` files (at least
+   for the root dir).
 
 1. Make sure that _Knative Prow Robots_ team is an Admin of the repo.
 
@@ -35,8 +35,9 @@ All Prow config files for running Prow jobs for Knative projects are under
    file for generating Prow config and Prow job config. Check the top-level
    section `presubmits:` and `periodics:` for blueprints for what to add. Then
    run `./hack/generate-configs.sh` to regenerate
-   [config.yaml](../config/prow/jobs/config.yaml), otherwise the presubmit test
-   in test-infra will fail. Create a PR with the changes. Once it's merged the
+   [config/prow/jobs/config.yaml](../config/prow/jobs/config.yaml) and
+   [config/prow/core](../config/prow/core), otherwise the presubmit test in
+   test-infra will fail. Create a PR with the changes. Once it's merged the
    configs will be automatically updated by a postsubmit job.
 
 1. Wait a few minutes, check that Prow is working by entering `/woof` as a

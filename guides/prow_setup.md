@@ -8,9 +8,8 @@ under [config/prow-staging](../config/prow-staging).
 
 ## Modify Prow cluster configs
 
-Prow is a collection of microservices that are deployed on a Kubernetes
-cluster,  
-and all the Kubernetes resource files (except secrets) are under
+Prow is a collection of microservices that are deployed on a Kubernetes cluster,
+and all the Kubernetes object YAML files (except secrets) are under
 [config/prow/cluster](../config/prow/cluster).
 
 To make changes to Prow cluster configs, please follow the staging process:
@@ -36,7 +35,7 @@ We use [GKE](https://cloud.google.com/kubernetes-engine) to run integration
 tests for Knative projects. To create a GKE cluster, a GCP project is needed.
 [boskos](https://github.com/kubernetes/test-infra/tree/master/boskos) is the
 resource manager service we use to manage a pool of GCP projects and handle the
-transition between different states for each project.
+transition between different states for these projects.
 
 1. All projects and permissions can be created by running
    `./config/prow/create_boskos_projects.sh`. For example, to create 10 extra
