@@ -3,11 +3,11 @@
     agent: kubernetes
     decorate: true
     max_concurrency: 1
+    [[.Base.Cluster]]
     [[indent_array_section 4 "branches" .Base.Branches]]
     [[indent_array_section 4 "skip_branches" .Base.SkipBranches]]
     [[.Base.PathAlias]]
     [[.Base.RunIfChanged]]
-    [[.Base.Cluster]]
     spec:
       containers:
       - image: [[.Base.Image]]

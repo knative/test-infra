@@ -449,6 +449,14 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.ExtraRefs = []string{"- org: " + data.OrgName, "  repo: " + data.RepoName}
 	data.Labels = make([]string, 0)
 	data.Optional = ""
+
+	// Temporary solution for migrating repos to use build cluster step by step
+	set := sets.NewString("knative/test-infra", "knative/docs", "knative-caching",
+		"knative/observability", "knative/sample-controller", "knative/sample-source",
+		"knative/website", "knative/community", "knative-sandbox/eventing-kafka")
+	if set.Has(repo) {
+		data.Cluster = "cluster: \"build-knative\""
+	}
 	return data
 }
 
