@@ -52,6 +52,7 @@ const (
 	core    = "core"
 	jobs    = "jobs"
 	cluster = "cluster"
+	boskos  = "boskos"
 )
 
 var (
@@ -76,11 +77,13 @@ var (
 		filepath.Join(ProdProwConfigRoot, core),
 		filepath.Join(ProdProwConfigRoot, jobs),
 		filepath.Join(ProdProwConfigRoot, cluster),
+		filepath.Join(ProdProwConfigRoot, boskos),
 	}
 	StagingProwConfigPaths = []string{
 		filepath.Join(StagingProwConfigRoot, core),
 		filepath.Join(StagingProwConfigRoot, jobs),
 		filepath.Join(StagingProwConfigRoot, cluster),
+		filepath.Join(StagingProwConfigRoot, boskos),
 	}
 	ProdTestgridConfigPath = filepath.Join(ProdProwConfigRoot, "testgrid")
 
@@ -151,10 +154,14 @@ func GenerateConfigFiles() error {
 	return err
 }
 
-// CollectRelevantFiles can filter out all files that are under the given paths.
-func CollectRelevantFiles(files []string, paths []string) []string {
+// CollectRelevantConfigFiles can filter out all config files that are under the given paths.
+func CollectRelevantConfigFiles(files []string, paths []string) []string {
 	rfs := make([]string, 0)
 	for _, f := range files {
+		// Only consider .yaml files.
+		if !strings.HasSuffix(f, ".yaml") {
+			continue
+		}
 		for _, p := range paths {
 			if !strings.HasSuffix(p, string(filepath.Separator)) {
 				p = p + string(filepath.Separator)

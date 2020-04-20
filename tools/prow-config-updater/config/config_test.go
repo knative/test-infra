@@ -78,10 +78,15 @@ func TestCollectRelevantFiles(t *testing.T) {
 		files:    []string{"test/test1/file1.yaml", "test/test2/file2.yaml", "test111/file3.yaml"},
 		paths:    []string{"test"},
 		expected: []string{"test/test1/file1.yaml", "test/test2/file2.yaml"},
+	}, {
+		name:     "non-yaml files will be ignored",
+		files:    []string{"test/test1/file1.yaml", "test/test2/file2.yaml", "test111/file3.yaml", "test/test.sh"},
+		paths:    []string{"test"},
+		expected: []string{"test/test1/file1.yaml", "test/test2/file2.yaml"},
 	}}
 
 	for _, test := range tests {
-		res := CollectRelevantFiles(test.files, test.paths)
+		res := CollectRelevantConfigFiles(test.files, test.paths)
 		cmpRes := cmp.Diff(res, test.expected)
 		if cmpRes != "" {
 			t.Fatalf("expect and actual are different:\n%s", cmpRes)
