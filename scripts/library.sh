@@ -513,9 +513,6 @@ function update_licenses() {
 # Run dep-collector to check for forbidden liceses.
 # Parameters: $1...$n - directories and files to inspect.
 function check_licenses() {
-  # Fetch the google/licenseclassifier for its license db
-  rm -fr ${GOPATH}/src/github.com/google/licenseclassifier
-  go get -u github.com/google/licenseclassifier
   # Check that we don't have any forbidden licenses in our images.
   run_go_tool knative.dev/test-infra/tools/dep-collector dep-collector -check $@
 }

@@ -10,7 +10,7 @@ require (
 	github.com/google/go-cmp v0.4.0
 	github.com/google/go-containerregistry v0.0.0-20200123184029-53ce695e4179
 	github.com/google/go-github/v27 v27.0.6
-	github.com/google/licenseclassifier v0.0.0-20190926221455-842c0d70d702
+	github.com/google/licenseclassifier v0.0.0-20200402202327-879cb1424de0
 	github.com/googleapis/gnostic v0.4.0 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/sergi/go-diff v1.1.0 // indirect

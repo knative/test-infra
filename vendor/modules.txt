@@ -73,7 +73,7 @@ github.com/google/go-github/v27/github
 github.com/google/go-querystring/query
 # github.com/google/gofuzz v1.1.0
 github.com/google/gofuzz
-# github.com/google/licenseclassifier v0.0.0-20190926221455-842c0d70d702
+# github.com/google/licenseclassifier v0.0.0-20200402202327-879cb1424de0
 github.com/google/licenseclassifier
 github.com/google/licenseclassifier/internal/sets
 github.com/google/licenseclassifier/stringclassifier
