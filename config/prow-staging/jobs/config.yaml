@@ -27,6 +27,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-prow-robot-serving-build-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/serving
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests-staging/test-infra/prow-tests:stable
@@ -63,6 +64,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-prow-robot-serving-unit-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/serving
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests-staging/test-infra/prow-tests:stable
@@ -99,6 +101,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-prow-robot-serving-integration-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/serving
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests-staging/test-infra/prow-tests:stable
@@ -136,6 +139,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-prow-robot-test-infra-build-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/test-infra
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests-staging/test-infra/prow-tests:stable
@@ -172,6 +176,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-prow-robot-test-infra-unit-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/test-infra
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests-staging/test-infra/prow-tests:stable
@@ -208,6 +213,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-prow-robot-test-infra-integration-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/test-infra
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests-staging/test-infra/prow-tests:stable
