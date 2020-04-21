@@ -3716,6 +3716,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-net-certmanager-build-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-certmanager
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3752,6 +3753,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-net-certmanager-unit-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-certmanager
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3788,6 +3790,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-net-certmanager-integration-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-certmanager
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3825,6 +3828,7 @@ presubmits:
     optional: true
     decorate: true
     path_alias: knative.dev/net-certmanager
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -3853,6 +3857,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-net-contour-build-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-contour
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3889,6 +3894,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-net-contour-unit-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-contour
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3925,6 +3931,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-net-contour-integration-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-contour
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3962,6 +3969,7 @@ presubmits:
     optional: true
     decorate: true
     path_alias: knative.dev/net-contour
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -3990,6 +3998,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-net-http01-build-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-http01
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4026,6 +4035,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-net-http01-unit-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-http01
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4062,6 +4072,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-net-http01-integration-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-http01
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4099,6 +4110,7 @@ presubmits:
     optional: true
     decorate: true
     path_alias: knative.dev/net-http01
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -4127,6 +4139,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-net-istio-build-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-istio
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4163,6 +4176,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-net-istio-unit-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-istio
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4199,6 +4213,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-net-istio-integration-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-istio
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4236,6 +4251,7 @@ presubmits:
     optional: true
     decorate: true
     path_alias: knative.dev/net-istio
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -4264,6 +4280,7 @@ presubmits:
     decorate: true
     optional: true
     path_alias: knative.dev/net-istio
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4296,6 +4313,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-net-kourier-build-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-kourier
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4332,6 +4350,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-net-kourier-unit-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-kourier
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4368,6 +4387,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-net-kourier-integration-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-kourier
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4405,6 +4425,7 @@ presubmits:
     optional: true
     decorate: true
     path_alias: knative.dev/net-kourier
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -4433,6 +4454,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-serving-operator-build-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/serving-operator
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4469,6 +4491,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-serving-operator-unit-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/serving-operator
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4505,6 +4528,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-serving-operator-integration-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/serving-operator
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4542,6 +4566,7 @@ presubmits:
     optional: true
     decorate: true
     path_alias: knative.dev/serving-operator
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -4569,6 +4594,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-serving-operator-upgrade-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/serving-operator
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4601,6 +4627,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-eventing-operator-build-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/eventing-operator
+    cluster: "build-knative"
     branches:
     - "release-0.10"
     spec:
@@ -4639,6 +4666,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-eventing-operator-build-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/eventing-operator
+    cluster: "build-knative"
     skip_branches:
     - "release-0.10"
     spec:
@@ -4677,6 +4705,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-eventing-operator-unit-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/eventing-operator
+    cluster: "build-knative"
     branches:
     - "release-0.10"
     spec:
@@ -4715,6 +4744,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-eventing-operator-unit-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/eventing-operator
+    cluster: "build-knative"
     skip_branches:
     - "release-0.10"
     spec:
@@ -4753,6 +4783,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-eventing-operator-integration-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/eventing-operator
+    cluster: "build-knative"
     branches:
     - "release-0.10"
     spec:
@@ -4791,6 +4822,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-eventing-operator-integration-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/eventing-operator
+    cluster: "build-knative"
     skip_branches:
     - "release-0.10"
     spec:
@@ -4830,6 +4862,7 @@ presubmits:
     optional: true
     decorate: true
     path_alias: knative.dev/eventing-operator
+    cluster: "build-knative"
     branches:
     - "release-0.10"
     spec:
@@ -4860,6 +4893,7 @@ presubmits:
     optional: true
     decorate: true
     path_alias: knative.dev/eventing-operator
+    cluster: "build-knative"
     skip_branches:
     - "release-0.10"
     spec:
@@ -4889,6 +4923,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-eventing-operator-upgrade-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/eventing-operator
+    cluster: "build-knative"
     branches:
     - "release-0.10"
     spec:
@@ -4922,6 +4957,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-eventing-operator-upgrade-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/eventing-operator
+    cluster: "build-knative"
     skip_branches:
     - "release-0.10"
     spec:
@@ -8084,6 +8120,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-serving-operator-continuous
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving-operator
@@ -8119,6 +8156,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-serving-operator-0.11-continuous
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving-operator
@@ -8165,6 +8203,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-serving-operator-0.12-continuous
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving-operator
@@ -8211,6 +8250,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-serving-operator-0.13-continuous
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving-operator
@@ -8257,6 +8297,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-serving-operator-nightly-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving-operator
@@ -8293,6 +8334,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-serving-operator-0.11-dot-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving-operator
@@ -8340,6 +8382,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-serving-operator-0.12-dot-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving-operator
@@ -8387,6 +8430,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-serving-operator-dot-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving-operator
@@ -8431,6 +8475,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-serving-operator-auto-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving-operator
@@ -8475,6 +8520,7 @@ periodics:
       prow.k8s.io/pubsub.runID: ci-knative-serving-operator-go-coverage
   agent: kubernetes
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving-operator
@@ -8497,6 +8543,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-eventing-operator-continuous
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-operator
@@ -8532,6 +8579,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-eventing-operator-0.11-continuous
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-operator
@@ -8578,6 +8626,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-eventing-operator-0.12-continuous
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-operator
@@ -8624,6 +8673,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-eventing-operator-0.13-continuous
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-operator
@@ -8670,6 +8720,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-eventing-operator-nightly-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-operator
@@ -8706,6 +8757,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-eventing-operator-0.11-dot-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-operator
@@ -8753,6 +8805,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-eventing-operator-0.12-dot-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-operator
@@ -8800,6 +8853,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-eventing-operator-dot-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-operator
@@ -8844,6 +8898,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-eventing-operator-auto-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-operator
@@ -8888,6 +8943,7 @@ periodics:
       prow.k8s.io/pubsub.runID: ci-knative-eventing-operator-go-coverage
   agent: kubernetes
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-operator
@@ -9228,6 +9284,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-net-certmanager-continuous
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: net-certmanager
@@ -9263,6 +9320,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-net-certmanager-nightly-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: net-certmanager
@@ -9299,6 +9357,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-net-certmanager-dot-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: net-certmanager
@@ -9343,6 +9402,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-net-certmanager-auto-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: net-certmanager
@@ -9387,6 +9447,7 @@ periodics:
       prow.k8s.io/pubsub.runID: ci-knative-net-certmanager-go-coverage
   agent: kubernetes
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: net-certmanager
@@ -9409,6 +9470,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-net-contour-continuous
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: net-contour
@@ -9444,6 +9506,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-net-contour-nightly-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: net-contour
@@ -9480,6 +9543,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-net-contour-dot-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: net-contour
@@ -9524,6 +9588,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-net-contour-auto-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: net-contour
@@ -9568,6 +9633,7 @@ periodics:
       prow.k8s.io/pubsub.runID: ci-knative-net-contour-go-coverage
   agent: kubernetes
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: net-contour
@@ -9590,6 +9656,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-net-http01-continuous
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: net-http01
@@ -9625,6 +9692,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-net-http01-nightly-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: net-http01
@@ -9661,6 +9729,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-net-http01-dot-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: net-http01
@@ -9705,6 +9774,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-net-http01-auto-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: net-http01
@@ -9749,6 +9819,7 @@ periodics:
       prow.k8s.io/pubsub.runID: ci-knative-net-http01-go-coverage
   agent: kubernetes
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: net-http01
@@ -9771,6 +9842,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-net-istio-continuous
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: net-istio
@@ -9806,6 +9878,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-net-istio-nightly-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: net-istio
@@ -9842,6 +9915,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-net-istio-dot-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: net-istio
@@ -9886,6 +9960,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-net-istio-auto-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: net-istio
@@ -9930,6 +10005,7 @@ periodics:
       prow.k8s.io/pubsub.runID: ci-knative-net-istio-go-coverage
   agent: kubernetes
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: net-istio
@@ -9952,6 +10028,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-net-kourier-continuous
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: net-kourier
@@ -9987,6 +10064,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-net-kourier-nightly-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: net-kourier
@@ -10023,6 +10101,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-net-kourier-dot-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: net-kourier
@@ -10067,6 +10146,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-net-kourier-auto-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: net-kourier
@@ -10111,6 +10191,7 @@ periodics:
       prow.k8s.io/pubsub.runID: ci-knative-net-kourier-go-coverage
   agent: kubernetes
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: net-kourier
@@ -11553,6 +11634,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
+    cluster: "build-knative"
     path_alias: knative.dev/net-certmanager
     spec:
       containers:
@@ -11569,6 +11651,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
+    cluster: "build-knative"
     path_alias: knative.dev/net-contour
     spec:
       containers:
@@ -11585,6 +11668,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
+    cluster: "build-knative"
     path_alias: knative.dev/net-http01
     spec:
       containers:
@@ -11601,6 +11685,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
+    cluster: "build-knative"
     path_alias: knative.dev/net-istio
     spec:
       containers:
@@ -11617,6 +11702,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
+    cluster: "build-knative"
     path_alias: knative.dev/net-kourier
     spec:
       containers:
@@ -11633,6 +11719,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
+    cluster: "build-knative"
     path_alias: knative.dev/serving-operator
     spec:
       containers:
@@ -11649,6 +11736,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
+    cluster: "build-knative"
     path_alias: knative.dev/eventing-operator
     spec:
       containers:

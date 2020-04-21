@@ -453,7 +453,10 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	// Temporary solution for migrating repos to use build cluster step by step
 	set := sets.NewString("knative/test-infra", "knative/docs", "knative-caching",
 		"knative/observability", "knative/sample-controller", "knative/sample-source",
-		"knative/website", "knative/community", "knative-sandbox/eventing-kafka")
+		"knative/website", "knative/community", "knative-sandbox/eventing-kafka",
+		"knative/net-certmanager", "knative/net-contour", "knative/net-http01",
+		"knative/net-istio", "knative/net-kourier", "knative/serving-operator",
+		"knative/eventing-operator")
 	if set.Has(repo) {
 		data.Cluster = "cluster: \"build-knative\""
 	}
