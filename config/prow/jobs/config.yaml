@@ -1707,6 +1707,7 @@ presubmits:
     rerun_command: "/test pull-knative-docs-build-tests"
     trigger: "(?m)^/test (all|pull-knative-docs-build-tests),?(\\s+|$)"
     decorate: true
+    cluster: "build-knative"
     branches:
     - "release-0.10"
     spec:
@@ -1744,6 +1745,7 @@ presubmits:
     rerun_command: "/test pull-knative-docs-build-tests"
     trigger: "(?m)^/test (all|pull-knative-docs-build-tests),?(\\s+|$)"
     decorate: true
+    cluster: "build-knative"
     skip_branches:
     - "release-0.10"
     spec:
@@ -1781,6 +1783,7 @@ presubmits:
     rerun_command: "/test pull-knative-docs-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-docs-unit-tests),?(\\s+|$)"
     decorate: true
+    cluster: "build-knative"
     branches:
     - "release-0.10"
     spec:
@@ -1818,6 +1821,7 @@ presubmits:
     rerun_command: "/test pull-knative-docs-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-docs-unit-tests),?(\\s+|$)"
     decorate: true
+    cluster: "build-knative"
     skip_branches:
     - "release-0.10"
     spec:
@@ -1855,6 +1859,7 @@ presubmits:
     rerun_command: "/test pull-knative-docs-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-docs-integration-tests),?(\\s+|$)"
     decorate: true
+    cluster: "build-knative"
     branches:
     - "release-0.10"
     spec:
@@ -1900,6 +1905,7 @@ presubmits:
     rerun_command: "/test pull-knative-docs-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-docs-integration-tests),?(\\s+|$)"
     decorate: true
+    cluster: "build-knative"
     skip_branches:
     - "release-0.10"
     spec:
@@ -1946,6 +1952,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-docs-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
+    cluster: "build-knative"
     branches:
     - "release-0.10"
     spec:
@@ -1975,6 +1982,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-docs-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
+    cluster: "build-knative"
     skip_branches:
     - "release-0.10"
     spec:
@@ -2004,6 +2012,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-docs-markdown-link-check),?(\\s+|$)"
     decorate: true
     optional: true
+    cluster: "build-knative"
     branches:
     - "release-0.10"
     spec:
@@ -2035,6 +2044,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-docs-markdown-link-check),?(\\s+|$)"
     decorate: true
     optional: true
+    cluster: "build-knative"
     skip_branches:
     - "release-0.10"
     spec:
@@ -2356,6 +2366,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-test-infra-build-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/test-infra
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2392,6 +2403,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-test-infra-unit-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/test-infra
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2428,6 +2440,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-test-infra-integration-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/test-infra
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2465,6 +2478,7 @@ presubmits:
     optional: true
     decorate: true
     path_alias: knative.dev/test-infra
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -2492,6 +2506,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-test-infra-check-config),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/test-infra
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2810,6 +2825,7 @@ presubmits:
     rerun_command: "/test pull-knative-observability-build-tests"
     trigger: "(?m)^/test (all|pull-knative-observability-build-tests),?(\\s+|$)"
     decorate: true
+    cluster: "build-knative"
     branches:
     - "release-0.10"
     spec:
@@ -2847,6 +2863,7 @@ presubmits:
     rerun_command: "/test pull-knative-observability-build-tests"
     trigger: "(?m)^/test (all|pull-knative-observability-build-tests),?(\\s+|$)"
     decorate: true
+    cluster: "build-knative"
     skip_branches:
     - "release-0.10"
     spec:
@@ -2884,6 +2901,7 @@ presubmits:
     rerun_command: "/test pull-knative-observability-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-observability-unit-tests),?(\\s+|$)"
     decorate: true
+    cluster: "build-knative"
     branches:
     - "release-0.10"
     spec:
@@ -2921,6 +2939,7 @@ presubmits:
     rerun_command: "/test pull-knative-observability-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-observability-unit-tests),?(\\s+|$)"
     decorate: true
+    cluster: "build-knative"
     skip_branches:
     - "release-0.10"
     spec:
@@ -2958,6 +2977,7 @@ presubmits:
     rerun_command: "/test pull-knative-observability-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-observability-integration-tests),?(\\s+|$)"
     decorate: true
+    cluster: "build-knative"
     branches:
     - "release-0.10"
     spec:
@@ -2995,6 +3015,7 @@ presubmits:
     rerun_command: "/test pull-knative-observability-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-observability-integration-tests),?(\\s+|$)"
     decorate: true
+    cluster: "build-knative"
     skip_branches:
     - "release-0.10"
     spec:
@@ -3034,6 +3055,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-sample-controller-build-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/sample-controller
+    cluster: "build-knative"
     branches:
     - "release-0.10"
     spec:
@@ -3072,6 +3094,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-sample-controller-build-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/sample-controller
+    cluster: "build-knative"
     skip_branches:
     - "release-0.10"
     spec:
@@ -3110,6 +3133,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-sample-controller-unit-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/sample-controller
+    cluster: "build-knative"
     branches:
     - "release-0.10"
     spec:
@@ -3148,6 +3172,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-sample-controller-unit-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/sample-controller
+    cluster: "build-knative"
     skip_branches:
     - "release-0.10"
     spec:
@@ -3187,6 +3212,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-sample-source-build-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/sample-source
+    cluster: "build-knative"
     branches:
     - "release-0.10"
     spec:
@@ -3225,6 +3251,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-sample-source-build-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/sample-source
+    cluster: "build-knative"
     skip_branches:
     - "release-0.10"
     spec:
@@ -3263,6 +3290,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-sample-source-unit-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/sample-source
+    cluster: "build-knative"
     branches:
     - "release-0.10"
     spec:
@@ -3301,6 +3329,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-sample-source-unit-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/sample-source
+    cluster: "build-knative"
     skip_branches:
     - "release-0.10"
     spec:
@@ -5095,6 +5124,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-build-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/eventing-kafka
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5131,6 +5161,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-unit-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/eventing-kafka
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5167,6 +5198,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-integration-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/eventing-kafka
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5204,6 +5236,7 @@ presubmits:
     optional: true
     decorate: true
     path_alias: knative.dev/eventing-kafka
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -6624,6 +6657,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-docs-continuous
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: docs
@@ -6666,6 +6700,7 @@ periodics:
       prow.k8s.io/pubsub.runID: ci-knative-docs-go-coverage
   agent: kubernetes
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: docs
@@ -7883,6 +7918,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-observability-continuous
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: observability
@@ -7917,6 +7953,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-sample-controller-continuous
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: sample-controller
@@ -7952,6 +7989,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-sample-source-continuous
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: sample-source
@@ -7987,6 +8025,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-test-infra-continuous
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: test-infra
@@ -8022,6 +8061,7 @@ periodics:
       prow.k8s.io/pubsub.runID: ci-knative-test-infra-go-coverage
   agent: kubernetes
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: test-infra
@@ -10278,6 +10318,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-sandbox-eventing-kafka-continuous
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka
@@ -10313,6 +10354,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-sandbox-eventing-kafka-nightly-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka
@@ -10349,6 +10391,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-sandbox-eventing-kafka-dot-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka
@@ -10394,6 +10437,7 @@ periodics:
     prow.k8s.io/pubsub.topic: knative-monitoring
     prow.k8s.io/pubsub.runID: ci-knative-sandbox-eventing-kafka-auto-release
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka
@@ -10440,6 +10484,7 @@ periodics:
       prow.k8s.io/pubsub.runID: ci-knative-sandbox-eventing-kafka-go-coverage
   agent: kubernetes
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka
@@ -10462,6 +10507,7 @@ periodics:
       prow.k8s.io/pubsub.runID: ci-knative-cleanup
   agent: kubernetes
   decorate: true
+  cluster: "build-knative"
   decoration_config:
     timeout: 21600000000000
   extra_refs:
@@ -10497,6 +10543,7 @@ periodics:
       prow.k8s.io/pubsub.runID: ci-knative-flakes-reporter
   agent: kubernetes
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: test-infra
@@ -10539,6 +10586,7 @@ periodics:
       prow.k8s.io/pubsub.runID: ci-knative-flakes-reporter
   agent: kubernetes
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: test-infra
@@ -10577,6 +10625,7 @@ periodics:
   name: ci-knative-prow-auto-bumper
   agent: kubernetes
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: test-infra
@@ -10637,6 +10686,7 @@ periodics:
   name: ci-knative-test-infra-issue-tracker-stale
   agent: kubernetes
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: test-infra
@@ -10671,6 +10721,7 @@ periodics:
   name: ci-knative-test-infra-issue-tracker-rotten
   agent: kubernetes
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: test-infra
@@ -10705,6 +10756,7 @@ periodics:
   name: ci-knative-test-infra-issue-tracker-close
   agent: kubernetes
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: test-infra
@@ -10739,6 +10791,7 @@ periodics:
   name: ci-knative-docs-issue-tracker-stale
   agent: kubernetes
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: test-infra
@@ -10773,6 +10826,7 @@ periodics:
   name: ci-knative-docs-issue-tracker-rotten
   agent: kubernetes
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: test-infra
@@ -10807,6 +10861,7 @@ periodics:
   name: ci-knative-docs-issue-tracker-close
   agent: kubernetes
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: test-infra
@@ -10841,6 +10896,7 @@ periodics:
   name: ci-knative-serving-issue-tracker-stale
   agent: kubernetes
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: test-infra
@@ -10875,6 +10931,7 @@ periodics:
   name: ci-knative-serving-issue-tracker-rotten
   agent: kubernetes
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: test-infra
@@ -10909,6 +10966,7 @@ periodics:
   name: ci-knative-serving-issue-tracker-close
   agent: kubernetes
   decorate: true
+  cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: test-infra
@@ -11331,6 +11389,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
+    cluster: "build-knative"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
@@ -11362,6 +11421,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
+    cluster: "build-knative"
     path_alias: knative.dev/test-infra
     spec:
       containers:
@@ -11376,8 +11436,8 @@ postsubmits:
     agent: kubernetes
     decorate: true
     max_concurrency: 1
-    run_if_changed: "^(config/(prow|prow-staging)/(cluster|core|jobs|boskos|testgrid)/.*.yaml)|(tools/config-generator/templates/(prow|prow-staging)/.*.yaml)$"
     cluster: "prow-trusted"
+    run_if_changed: "^(config/(prow|prow-staging)/(cluster|core|jobs|boskos|testgrid)/.*.yaml)|(tools/config-generator/templates/(prow|prow-staging)/.*.yaml)$"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-config-updater:latest
@@ -11621,6 +11681,7 @@ postsubmits:
     - master
     agent: kubernetes
     decorate: true
+    cluster: "build-knative"
     path_alias: knative.dev/eventing-kafka
     spec:
       containers:

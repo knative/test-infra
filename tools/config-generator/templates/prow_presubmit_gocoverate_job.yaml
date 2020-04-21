@@ -8,6 +8,7 @@
     optional: true
     decorate: true
     [[.Base.PathAlias]]
+    [[.Base.Cluster]]
     [[indent_array_section 4 "branches" .Base.Branches]]
     [[indent_array_section 4 "skip_branches" .Base.SkipBranches]]
     spec:

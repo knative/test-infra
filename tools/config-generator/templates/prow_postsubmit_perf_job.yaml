@@ -4,6 +4,7 @@
     agent: kubernetes
     decorate: true
     max_concurrency: 1
+    [[.Base.Cluster]]
     [[indent_section 6 "labels" .Base.Labels]]
     [[.Base.PathAlias]]
     spec:
