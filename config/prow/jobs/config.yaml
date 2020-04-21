@@ -5170,14 +5170,20 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--build-tests"
+        securityContext:
+          privileged: true
         volumeMounts:
         - name: repoview-token
           mountPath: /etc/repoview-token
           readOnly: true
+        - name: docker-graph
+          mountPath: /docker-graph
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
         env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
@@ -5186,6 +5192,8 @@ presubmits:
       - name: repoview-token
         secret:
           secretName: repoview-token
+      - name: docker-graph
+        emptyDir: {}
       - name: test-account
         secret:
           secretName: test-account
@@ -5207,14 +5215,20 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
+        securityContext:
+          privileged: true
         volumeMounts:
         - name: repoview-token
           mountPath: /etc/repoview-token
           readOnly: true
+        - name: docker-graph
+          mountPath: /docker-graph
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
         env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
@@ -5223,6 +5237,8 @@ presubmits:
       - name: repoview-token
         secret:
           secretName: repoview-token
+      - name: docker-graph
+        emptyDir: {}
       - name: test-account
         secret:
           secretName: test-account
@@ -5244,14 +5260,20 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
+        securityContext:
+          privileged: true
         volumeMounts:
         - name: repoview-token
           mountPath: /etc/repoview-token
           readOnly: true
+        - name: docker-graph
+          mountPath: /docker-graph
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
         env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
@@ -5260,6 +5282,8 @@ presubmits:
       - name: repoview-token
         secret:
           secretName: repoview-token
+      - name: docker-graph
+        emptyDir: {}
       - name: test-account
         secret:
           secretName: test-account
@@ -5288,10 +5312,17 @@ presubmits:
         - name: covbot-token
           mountPath: /etc/covbot-token
           readOnly: true
+        - name: docker-graph
+          mountPath: /docker-graph
+        env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
       volumes:
       - name: covbot-token
         secret:
           secretName: covbot-token
+      - name: docker-graph
+        emptyDir: {}
 periodics:
 - cron: "10 */2 * * *"
   name: ci-knative-serving-continuous
@@ -10414,16 +10445,24 @@ periodics:
       args:
       - "./test/presubmit-tests.sh"
       - "--all-tests"
+      securityContext:
+        privileged: true
       volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
     volumes:
+    - name: docker-graph
+      emptyDir: {}
     - name: test-account
       secret:
         secretName: test-account
@@ -10451,16 +10490,24 @@ periodics:
       - "./hack/release.sh"
       - "--publish"
       - "--tag-release"
+      securityContext:
+        privileged: true
       volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
       - name: nightly-account
         mountPath: /etc/nightly-account
         readOnly: true
       env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
     volumes:
+    - name: docker-graph
+      emptyDir: {}
     - name: nightly-account
       secret:
         secretName: nightly-account
@@ -10477,6 +10524,7 @@ periodics:
   - org: knative-sandbox
     repo: eventing-kafka
     base_ref: master
+    path_alias: knative.dev/eventing-kafka
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10489,14 +10537,20 @@ periodics:
       - "--release-gcs knative-releases/eventing-kafka"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
+      securityContext:
+        privileged: true
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
         readOnly: true
+      - name: docker-graph
+        mountPath: /docker-graph
       - name: release-account
         mountPath: /etc/release-account
         readOnly: true
       env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       - name: ORG_NAME
         value: knative-sandbox
       - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -10507,6 +10561,8 @@ periodics:
     - name: hub-token
       secret:
         secretName: hub-token
+    - name: docker-graph
+      emptyDir: {}
     - name: release-account
       secret:
         secretName: release-account
@@ -10536,14 +10592,20 @@ periodics:
       - "--release-gcs knative-releases/eventing-kafka"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
+      securityContext:
+        privileged: true
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
         readOnly: true
+      - name: docker-graph
+        mountPath: /docker-graph
       - name: release-account
         mountPath: /etc/release-account
         readOnly: true
       env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       - name: ORG_NAME
         value: knative-sandbox
       - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -10554,6 +10616,8 @@ periodics:
     - name: hub-token
       secret:
         secretName: hub-token
+    - name: docker-graph
+      emptyDir: {}
     - name: release-account
       secret:
         secretName: release-account
