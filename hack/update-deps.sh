@@ -19,7 +19,7 @@ set -o nounset
 set -o pipefail
 
 export GO111MODULE=on
-#export GOFLAGS=-mod=vendor
+export GOFLAGS=-mod=vendor
 
 source $(dirname $0)/../scripts/library.sh
 
