@@ -456,7 +456,8 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 		"knative/website", "knative/community", "knative-sandbox/eventing-kafka",
 		"knative/net-certmanager", "knative/net-contour", "knative/net-http01",
 		"knative/net-istio", "knative/net-kourier", "knative/serving-operator",
-		"knative/eventing-operator")
+		"knative/eventing-operator", "knative/client", "knative/client-contrib",
+		"knative-pkg", "knative-sandbox/operator", "knative-sandbox/eventing-kafka")
 	if set.Has(repo) {
 		data.Cluster = "cluster: \"build-knative\""
 	}
