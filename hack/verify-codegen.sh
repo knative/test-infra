@@ -25,6 +25,7 @@ DIRS_TOBE_INSPECTED=(
   "go.sum"
   "vendor"
   "config"
+  "third_party"
 )
 
 cleanup() {
