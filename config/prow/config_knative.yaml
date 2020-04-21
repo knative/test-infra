@@ -435,12 +435,16 @@ presubmits:
   knative-sandbox/eventing-kafka:
     - build-tests: true
       dot-dev: true
+      needs-dind: true
     - unit-tests: true
       dot-dev: true
+      needs-dind: true
     - integration-tests: true
       dot-dev: true
+      needs-dind: true
     - go-coverage: true
       dot-dev: true
+      needs-dind: true
 
 periodics:
   knative/serving:
@@ -1042,15 +1046,19 @@ periodics:
     - continuous: true
       go113: true
       dot-dev: true
+      needs-dind: true
     - nightly: true
       go113: true
       dot-dev: true
+      needs-dind: true
     - dot-release: true
       go113: true
+      needs-dind: true
       env-vars:
       - ORG_NAME=knative-sandbox
     - auto-release: true
       go113: true
       dot-dev: true
+      needs-dind: true
       env-vars:
       - ORG_NAME=knative-sandbox
