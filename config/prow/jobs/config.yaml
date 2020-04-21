@@ -10443,6 +10443,7 @@ periodics:
   - org: knative-sandbox
     repo: eventing-kafka
     base_ref: master
+    path_alias: knative.dev/eventing-kafka
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable

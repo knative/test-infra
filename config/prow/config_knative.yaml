@@ -1053,6 +1053,7 @@ periodics:
       needs-dind: true
     - dot-release: true
       go113: true
+      dot-dev: true
       needs-dind: true
       env-vars:
       - ORG_NAME=knative-sandbox
