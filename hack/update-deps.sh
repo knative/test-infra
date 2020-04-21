@@ -18,8 +18,6 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-export GO111MODULE=on
-
 source $(dirname $0)/../scripts/library.sh
 
 cd ${REPO_ROOT_DIR}
