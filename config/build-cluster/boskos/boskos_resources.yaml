@@ -14,6 +14,26 @@
 
 resources:
 - names:
+  - knative-boskos-61
+  - knative-boskos-62
+  - knative-boskos-63
+  - knative-boskos-64
+  - knative-boskos-65
+  - knative-boskos-66
+  - knative-boskos-67
+  - knative-boskos-68
+  - knative-boskos-69
+  - knative-boskos-70
+  - knative-boskos-71
+  - knative-boskos-72
+  - knative-boskos-73
+  - knative-boskos-74
+  - knative-boskos-75
+  - knative-boskos-76
+  - knative-boskos-77
+  - knative-boskos-78
+  - knative-boskos-79
+  - knative-boskos-80
   - knative-boskos-81
   - knative-boskos-82
   - knative-boskos-83
