@@ -12,6 +12,41 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+presubmits:
+  knative/test-infra:
+  - name: pull-test-infra-validate-prow-yaml
+    decorate: true
+    run_if_changed: "^config/prow/(cluster|core|jobs)/.*.yaml$"
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/k8s-prow/checkconfig:v20200413-65958d4a8
+        command:
+        - "/checkconfig"
+        args:
+        - "--config-path=config/prow/core/config.yaml"
+        - "--job-config-path=config/prow/jobs"
+        - "--plugin-config=config/prow/core/plugins.yaml"
+        - "--prow-yaml-repo-name=$(REPO_OWNER)/$(REPO_NAME)"
+        - "--strict"
+        - "--exclude-warning=mismatched-tide"
+  - name: pull-test-infra-validate-staging-prow-yaml
+    decorate: true
+    run_if_changed: "^config/prow-staging/(cluster|core|jobs)/.*.yaml$"
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/k8s-prow/checkconfig:v20200413-65958d4a8
+        command:
+        - "/checkconfig"
+        args:
+        - "--config-path=config/prow-staging/core/config.yaml"
+        - "--job-config-path=config/prow-staging/jobs"
+        - "--plugin-config=config/prow-staging/core/plugins.yaml"
+        - "--prow-yaml-repo-name=$(REPO_OWNER)/$(REPO_NAME)"
+        - "--strict"
+        - "--exclude-warning=mismatched-tide"
+
 periodics:
 - cron: "15 9 * * *"
   name: ci-knative-backup-artifacts
