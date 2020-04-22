@@ -177,36 +177,6 @@ var (
 	emittedOutput bool
 
 	projNameRegex = regexp.MustCompile(`.+-[0-9\.]+$`)
-
-	// defaultResource setting for each job
-	defaultResource = yaml.MapSlice{
-		yaml.MapItem{
-			Key: "requests",
-			Value: yaml.MapSlice{
-				yaml.MapItem{
-					Key:   "memory",
-					Value: "8Gi",
-				},
-				yaml.MapItem{
-					Key:   "cpu",
-					Value: "2000m",
-				},
-			},
-		},
-		yaml.MapItem{
-			Key: "limits",
-			Value: yaml.MapSlice{
-				yaml.MapItem{
-					Key:   "memory",
-					Value: "8Gi",
-				},
-				yaml.MapItem{
-					Key:   "cpu",
-					Value: "4000m",
-				},
-			},
-		},
-	}
 )
 
 // Yaml parsing helpers.
@@ -475,7 +445,6 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.Labels = make([]string, 0)
 	data.Optional = ""
 
-	setResourcesReqForJob(defaultResource, &data)
 	// Temporary solution for migrating repos to use build cluster step by step
 	if repo != "knative/serving" {
 		data.Cluster = "cluster: \"build-knative\""

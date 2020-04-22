@@ -37,6 +37,11 @@ plank:
         bucket: "knative-prow-staging"
         path_strategy: "explicit"
       gcs_credentials_secret: "test-account"
+      resources:
+        sidecar:
+          requests:
+            cpu: 100m
+            memory: 20Mi
 deck:
   spyglass:
     size_limit: 500000000 # 500MB

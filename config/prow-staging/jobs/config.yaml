@@ -49,13 +49,6 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
-        resources:
-          requests:
-            memory: 8Gi
-            cpu: 2000m
-          limits:
-            memory: 8Gi
-            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -93,13 +86,6 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
-        resources:
-          requests:
-            memory: 8Gi
-            cpu: 2000m
-          limits:
-            memory: 8Gi
-            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -137,13 +123,6 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
-        resources:
-          requests:
-            memory: 8Gi
-            cpu: 2000m
-          limits:
-            memory: 8Gi
-            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -182,13 +161,6 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
-        resources:
-          requests:
-            memory: 8Gi
-            cpu: 2000m
-          limits:
-            memory: 8Gi
-            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -226,13 +198,6 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
-        resources:
-          requests:
-            memory: 8Gi
-            cpu: 2000m
-          limits:
-            memory: 8Gi
-            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -270,13 +235,6 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
-        resources:
-          requests:
-            memory: 8Gi
-            cpu: 2000m
-          limits:
-            memory: 8Gi
-            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
