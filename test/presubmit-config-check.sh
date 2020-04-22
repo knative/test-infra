@@ -22,19 +22,6 @@ trap 'echo "--- FAIL: Directly changing production Prow config files is not allo
 header "Checking to make sure Prow productions config files are not modified manually"
 go run "${REPO_ROOT_DIR}"/tools/prow-config-updater/presubmit-checker --github-token="/etc/repoview-token/token"
 
-trap 'echo "--- FAIL: Prow config files have errors, please check."' ERR
-header "Validating production Prow config files"
-bazel run @k8s//prow/cmd/checkconfig -- \
-  --config-path="$(realpath "config/prow/core/config.yaml")" \
-  --job-config-path="$(realpath "config/prow/jobs/config.yaml")" \
-  --plugin-config="$(realpath "config/prow/core/plugins.yaml")"
-
-header "Validating staging Prow config files"
-bazel run @k8s//prow/cmd/checkconfig -- \
-  --config-path="$(realpath "config/prow-staging/core/config.yaml")" \
-  --job-config-path="$(realpath "config/prow-staging/jobs/config.yaml")" \
-  --plugin-config="$(realpath "config/prow-staging/core/plugins.yaml")"
-
 trap 'echo "--- FAIL: Testgrid config file has errors, please check."' ERR
 header "Validating Testgrid config file"
 bazel run @k8s//testgrid/cmd/configurator -- \
