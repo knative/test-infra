@@ -154,9 +154,6 @@ presubmits:
         - "./test/e2e-tests.sh"
 
   knative/client:
-    - repo-settings:
-      go112-branches:
-      - release-0.10
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -182,8 +179,6 @@ presubmits:
   knative/eventing:
     - repo-settings:
       performance: true
-      go112-branches:
-      - release-0.10
     - build-tests: true
       dot-dev: true
       resources:
@@ -199,9 +194,6 @@ presubmits:
       dot-dev: true
 
   knative/eventing-contrib:
-    - repo-settings:
-      go112-branches:
-      - release-0.10
     - build-tests: true
       dot-dev: true
       resources:
@@ -217,9 +209,6 @@ presubmits:
       dot-dev: true
 
   knative/docs:
-    - repo-settings:
-      go112-branches:
-      - release-0.10
     - build-tests: true
     - unit-tests: true
     - integration-tests: true
@@ -232,9 +221,6 @@ presubmits:
         - "./test/presubmit-link-check.sh"
 
   knative/pkg:
-    - repo-settings:
-      go112-branches:
-      - release-0.10
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -255,9 +241,6 @@ presubmits:
       dot-dev: true
 
   knative/caching:
-    - repo-settings:
-      go112-branches:
-      - release-0.10
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -268,26 +251,17 @@ presubmits:
       dot-dev: true
 
   knative/observability:
-    - repo-settings:
-      go112-branches:
-      - release-0.10
     - build-tests: true
     - unit-tests: true
     - integration-tests: true
 
   knative/sample-controller:
-    - repo-settings:
-      go112-branches:
-      - release-0.10
     - build-tests: true
       dot-dev: true
     - unit-tests: true
       dot-dev: true
 
   knative/sample-source:
-    - repo-settings:
-      go112-branches:
-      - release-0.10
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -296,8 +270,6 @@ presubmits:
   google/knative-gcp:
     - repo-settings:
       performance: true
-      go112-branches:
-      - release-0.10
     - build-tests: true
     - unit-tests: true
     - integration-tests: true
@@ -382,9 +354,6 @@ presubmits:
         - "./test/e2e-upgrade-tests.sh"
 
   knative/eventing-operator:
-    - repo-settings:
-      go112-branches:
-      - release-0.10
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -674,6 +643,7 @@ periodics:
   knative/docs:
     - continuous: true
       needs-dind: true
+      go113: true
 
   knative/eventing:
     - continuous: true
@@ -686,9 +656,6 @@ periodics:
         limits:
           memory: 16Gi
     - branch-ci: true
-      release: "0.10"
-      dot-dev: true
-    - branch-ci: true
       release: "0.11"
       dot-dev: true
       go113: true
@@ -698,6 +665,10 @@ periodics:
       go113: true
     - branch-ci: true
       release: "0.13"
+      dot-dev: true
+      go113: true
+    - branch-ci: true
+      release: "0.14"
       dot-dev: true
       go113: true
     - nightly: true
@@ -711,15 +682,6 @@ periodics:
     - dot-release: true
       dot-dev: true
       go113: true
-      release: "0.10"
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - dot-release: true
-      dot-dev: true
-      go113: true
       release: "0.11"
       resources:
         requests:
@@ -730,6 +692,15 @@ periodics:
       dot-dev: true
       go113: true
       release: "0.12"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    - dot-release: true
+      dot-dev: true
+      go113: true
+      release: "0.13"
       resources:
         requests:
           memory: 12Gi
@@ -762,9 +733,6 @@ periodics:
         limits:
           memory: 16Gi
     - branch-ci: true
-      release: "0.10"
-      dot-dev: true
-    - branch-ci: true
       release: "0.11"
       dot-dev: true
       go113: true
@@ -774,6 +742,10 @@ periodics:
       go113: true
     - branch-ci: true
       release: "0.13"
+      dot-dev: true
+      go113: true
+    - branch-ci: true
+      release: "0.14"
       dot-dev: true
       go113: true
     - nightly: true
@@ -787,15 +759,6 @@ periodics:
     - dot-release: true
       dot-dev: true
       go113: true
-      release: "0.10"
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - dot-release: true
-      dot-dev: true
-      go113: true
       release: "0.11"
       resources:
         requests:
@@ -806,6 +769,15 @@ periodics:
       dot-dev: true
       go113: true
       release: "0.12"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    - dot-release: true
+      dot-dev: true
+      go113: true
+      release: "0.13"
       resources:
         requests:
           memory: 12Gi
@@ -873,6 +845,10 @@ periodics:
       release: "0.13"
       dot-dev: true
       go113: true
+    - branch-ci: true
+      release: "0.14"
+      dot-dev: true
+      go113: true
     - nightly: true
       dot-dev: true
       go113: true
@@ -884,6 +860,10 @@ periodics:
       dot-dev: true
       go113: true
       release: "0.12"
+    - dot-release: true
+      dot-dev: true
+      go113: true
+      release: "0.13"
     - dot-release: true
       dot-dev: true
       go113: true
@@ -907,6 +887,10 @@ periodics:
       release: "0.13"
       dot-dev: true
       go113: true
+    - branch-ci: true
+      release: "0.14"
+      dot-dev: true
+      go113: true
     - nightly: true
       dot-dev: true
       go113: true
@@ -918,6 +902,10 @@ periodics:
       dot-dev: true
       go113: true
       release: "0.12"
+    - dot-release: true
+      dot-dev: true
+      go113: true
+      release: "0.13"
     - dot-release: true
       dot-dev: true
       go113: true
@@ -934,6 +922,9 @@ periodics:
     - branch-ci: true
       release: "0.13"
       go113: true
+    - branch-ci: true
+      release: "0.14"
+      go113: true
     - nightly: true
       go113: true
     - dot-release: true
@@ -941,6 +932,11 @@ periodics:
       release: "0.12"
       env-vars:
       - ORG_NAME=google
+    - dot-release: true
+      go113: true
+      release: "0.13"
+      env-vars:
+        - ORG_NAME=google
     - dot-release: true
       go113: true
       env-vars:
