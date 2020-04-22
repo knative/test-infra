@@ -24,7 +24,6 @@ import (
 	"math"
 	"path"
 	"strings"
-	"time"
 
 	"gopkg.in/yaml.v2"
 )
@@ -37,14 +36,9 @@ const (
 	periodicCustomJob = "prow_periodic_custom_job.yaml"
 
 	// Cron strings for key jobs
-	goCoveragePeriodicJobCron           = "0 1 * * *"      // Run at 01:00 every day
-	cleanupPeriodicJobCron              = "0 19 * * 1,3,5" // Run at 11:00PST/12:00PST (19:00 UTC) every Mon/Wed/Fri
-	flakesReporterPeriodicJobCron       = "0 12 * * *"     // Run at 4:00PST/5:00PST every day (12:00 UTC)
-	flakesResultRecorderPeriodicJobCron = "0 * * * *"      // Run every hour
-	prowversionbumperPeriodicJobCron    = "0 20 * * 1"     // Run at 12:00PST/13:00PST every Monday (20:00 UTC)
-	backupPeriodicJobCron               = "15 9 * * *"     // Run at 02:15PST every day (09:15 UTC)
-	recreatePerfClusterPeriodicJobCron  = "30 07 * * *"    // Run at 00:30PST every day (07:30 UTC)
-	updatePerfClusterPeriodicJobCron    = "5 * * * *"      // Run every hour
+	goCoveragePeriodicJobCron          = "0 1 * * *"   // Run at 01:00 every day
+	recreatePerfClusterPeriodicJobCron = "30 07 * * *" // Run at 00:30PST every day (07:30 UTC)
+	updatePerfClusterPeriodicJobCron   = "5 * * * *"   // Run every hour
 )
 
 // periodicJobTemplateData contains data about a periodic Prow job.
@@ -233,96 +227,6 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 	configureServiceAccountForJob(&data.Base)
 	executeJobTemplate("periodic", jobTemplate, title, repoName, data.PeriodicJobName, false, data)
-}
-
-// generateCleanupPeriodicJob generates the cleanup job config.
-func generateCleanupPeriodicJob() {
-	var data periodicJobTemplateData
-	data.Base = newbaseProwJobTemplateData("knative/test-infra")
-	data.PeriodicJobName = "ci-knative-cleanup"
-	data.CronString = cleanupPeriodicJobCron
-	data.Base.DecorationConfig = []string{fmt.Sprintf("timeout: %d", 6*time.Hour)} // 6 hours
-	data.Base.Command = "go"
-	data.Base.Args = []string{
-		"run",
-		"./tools/cleanup/cleanup.go",
-		"--project-resource-yaml=config/prow/boskos_resources.yaml",
-		"--days-to-keep-images=30",
-		"--hours-to-keep-clusters=24",
-		"--service-account=" + data.Base.ServiceAccount}
-	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
-	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
-	configureServiceAccountForJob(&data.Base)
-	addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
-	executeJobTemplate("periodic cleanup", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
-}
-
-// generateFlakytoolPeriodicJob generates the flaky tests reporting job config.
-func generateFlakytoolPeriodicJob() {
-	var data periodicJobTemplateData
-	data.Base = newbaseProwJobTemplateData("knative/test-infra")
-	data.Base.Image = flakesreporterDockerImage
-	data.PeriodicJobName = "ci-knative-flakes-reporter"
-	data.CronString = flakesReporterPeriodicJobCron
-	data.Base.Command = "/flaky-test-reporter"
-	data.Base.Args = []string{
-		"--service-account=" + data.Base.ServiceAccount,
-		"--github-account=/etc/flaky-test-reporter-github-token/token",
-		"--slack-account=/etc/flaky-test-reporter-slack-token/token"}
-	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
-	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
-	configureServiceAccountForJob(&data.Base)
-	addVolumeToJob(&data.Base, "/etc/flaky-test-reporter-github-token", "flaky-test-reporter-github-token", true, "")
-	addVolumeToJob(&data.Base, "/etc/flaky-test-reporter-slack-token", "flaky-test-reporter-slack-token", true, "")
-	addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
-	executeJobTemplate("periodic flakesreporter", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
-
-	// Generate another job that runs more frequently but not reporting to
-	// Github or Slack
-	data.PeriodicJobName = "ci-knative-flakes-resultsrecorder"
-	data.CronString = flakesResultRecorderPeriodicJobCron
-	data.Base.Args = []string{
-		"--service-account=" + data.Base.ServiceAccount,
-		"--skip-report",
-		"--build-count=20"}
-	executeJobTemplate("periodic flakesresultrecorder", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
-}
-
-// generateVersionBumpertoolPeriodicJob generates the Prow version bumper job config.
-func generateVersionBumpertoolPeriodicJob() {
-	var data periodicJobTemplateData
-	data.Base = newbaseProwJobTemplateData("knative/test-infra")
-	data.Base.Image = prowversionbumperDockerImage
-	data.PeriodicJobName = "ci-knative-prow-auto-bumper"
-	data.CronString = prowversionbumperPeriodicJobCron
-	data.Base.Command = "/prow-auto-bumper"
-	data.Base.Args = []string{
-		"--github-account=/etc/prow-auto-bumper-github-token/token",
-		"--git-userid=knative-prow-updater-robot",
-		"--git-username='Knative Prow Updater Robot'",
-		"--git-email=knative-prow-updater-robot@google.com"}
-	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
-	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
-	configureServiceAccountForJob(&data.Base)
-	addVolumeToJob(&data.Base, "/etc/prow-auto-bumper-github-token", "prow-auto-bumper-github-token", true, "")
-	addVolumeToJob(&data.Base, "/root/.ssh", "prow-updater-robot-ssh-key", true, "0400")
-	executeJobTemplate("periodic versionbumper", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
-}
-
-// generateBackupPeriodicJob generates the backup job config.
-func generateBackupPeriodicJob() {
-	var data periodicJobTemplateData
-	data.Base = newbaseProwJobTemplateData("none/unused")
-	data.Base.ServiceAccount = "/etc/backup-account/service-account.json"
-	data.Base.Image = backupsDockerImage
-	data.PeriodicJobName = "ci-knative-backup-artifacts"
-	data.CronString = backupPeriodicJobCron
-	data.Base.Command = "/backup.sh"
-	data.Base.Args = []string{data.Base.ServiceAccount}
-	data.Base.ExtraRefs = []string{} // no repo clone required
-	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
-	configureServiceAccountForJob(&data.Base)
-	executeJobTemplate("periodic backup", readTemplate(periodicCustomJob), "presubmits", "", data.PeriodicJobName, false, data)
 }
 
 // generateGoCoveragePeriodic generates the go coverage periodic job config for the given repo (configuration is ignored).
