@@ -177,6 +177,28 @@ var (
 	emittedOutput bool
 
 	projNameRegex = regexp.MustCompile(`.+-[0-9\.]+$`)
+
+	// defaultResource setting for each job
+	defaultResource = yaml.MapSlice{
+		yaml.MapItem{
+			Key: "requests",
+			Value: yaml.MapSlice{
+				yaml.MapItem{
+					Key:   "memory",
+					Value: "8Gi",
+				},
+			},
+		},
+		yaml.MapItem{
+			Key: "limits",
+			Value: yaml.MapSlice{
+				yaml.MapItem{
+					Key:   "memory",
+					Value: "8Gi",
+				},
+			},
+		},
+	}
 )
 
 // Yaml parsing helpers.
@@ -440,12 +462,12 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.Args = make([]string, 0)
 	data.Volumes = make([]string, 0)
 	data.VolumeMounts = make([]string, 0)
-	data.Resources = make([]string, 0)
 	data.Env = make([]string, 0)
 	data.ExtraRefs = []string{"- org: " + data.OrgName, "  repo: " + data.RepoName}
 	data.Labels = make([]string, 0)
 	data.Optional = ""
 
+	setReourcesReqForJob(defaultResource, &data)
 	// Temporary solution for migrating repos to use build cluster step by step
 	if repo != "knative/serving" {
 		data.Cluster = "cluster: \"build-knative\""
@@ -539,6 +561,7 @@ func setupDockerInDockerForJob(data *baseProwJobTemplateData) {
 
 // setReourcesReqForJob sets resource requirement for job
 func setReourcesReqForJob(res yaml.MapSlice, data *baseProwJobTemplateData) {
+	data.Resources = nil
 	for _, val := range res {
 		data.Resources = append(data.Resources, fmt.Sprintf("  %s:", getString(val.Key)))
 		for _, item := range getMapSlice(val.Value) {

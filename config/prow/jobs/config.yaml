@@ -93,6 +93,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -134,6 +139,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -172,6 +182,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: test-account
         secret:
@@ -207,6 +222,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: test-account
         secret:
@@ -235,6 +255,11 @@ presubmits:
         - name: covbot-token
           mountPath: /etc/covbot-token
           readOnly: true
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: covbot-token
         secret:
@@ -263,6 +288,11 @@ presubmits:
         - name: covbot-token
           mountPath: /etc/covbot-token
           readOnly: true
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: covbot-token
         secret:
@@ -297,6 +327,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: test-account
         secret:
@@ -331,6 +366,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: test-account
         secret:
@@ -365,6 +405,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: test-account
         secret:
@@ -399,6 +444,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: test-account
         secret:
@@ -433,6 +483,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: test-account
         secret:
@@ -467,6 +522,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: test-account
         secret:
@@ -501,6 +561,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: test-account
         secret:
@@ -535,6 +600,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: test-account
         secret:
@@ -569,6 +639,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: test-account
         secret:
@@ -637,6 +712,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: test-account
         secret:
@@ -672,6 +752,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -709,6 +794,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -746,6 +836,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -778,6 +873,11 @@ presubmits:
         - name: covbot-token
           mountPath: /etc/covbot-token
           readOnly: true
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: covbot-token
         secret:
@@ -808,6 +908,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: test-account
         secret:
@@ -843,6 +948,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -880,6 +990,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -917,6 +1032,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -997,6 +1117,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -1034,6 +1159,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -1066,6 +1196,11 @@ presubmits:
         - name: covbot-token
           mountPath: /etc/covbot-token
           readOnly: true
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: covbot-token
         secret:
@@ -1143,6 +1278,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -1180,6 +1320,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -1212,6 +1357,11 @@ presubmits:
         - name: covbot-token
           mountPath: /etc/covbot-token
           readOnly: true
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: covbot-token
         secret:
@@ -1246,6 +1396,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -1282,6 +1437,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -1324,6 +1484,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -1357,6 +1522,11 @@ presubmits:
         - name: covbot-token
           mountPath: /etc/covbot-token
           readOnly: true
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: covbot-token
         secret:
@@ -1387,6 +1557,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: test-account
         secret:
@@ -1422,6 +1597,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -1459,6 +1639,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -1496,6 +1681,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -1528,6 +1718,11 @@ presubmits:
         - name: covbot-token
           mountPath: /etc/covbot-token
           readOnly: true
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: covbot-token
         secret:
@@ -1563,6 +1758,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -1600,6 +1800,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -1637,6 +1842,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -1669,6 +1879,11 @@ presubmits:
         - name: covbot-token
           mountPath: /etc/covbot-token
           readOnly: true
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: covbot-token
         secret:
@@ -1704,6 +1919,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -1741,6 +1961,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -1778,6 +2003,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -1810,6 +2040,11 @@ presubmits:
         - name: covbot-token
           mountPath: /etc/covbot-token
           readOnly: true
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: covbot-token
         secret:
@@ -1844,6 +2079,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -1880,6 +2120,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -1916,6 +2161,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -1954,6 +2204,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -1991,6 +2246,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -2029,6 +2289,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -2066,6 +2331,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -2103,6 +2373,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -2139,6 +2414,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -2176,6 +2456,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -2210,6 +2495,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: test-account
         secret:
@@ -2238,6 +2528,11 @@ presubmits:
         - name: covbot-token
           mountPath: /etc/covbot-token
           readOnly: true
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: covbot-token
         secret:
@@ -2273,6 +2568,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -2310,6 +2610,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -2347,6 +2652,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -2379,6 +2689,11 @@ presubmits:
         - name: covbot-token
           mountPath: /etc/covbot-token
           readOnly: true
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: covbot-token
         secret:
@@ -2414,6 +2729,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -2451,6 +2771,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -2488,6 +2813,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -2520,6 +2850,11 @@ presubmits:
         - name: covbot-token
           mountPath: /etc/covbot-token
           readOnly: true
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: covbot-token
         secret:
@@ -2555,6 +2890,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -2592,6 +2932,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -2629,6 +2974,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -2661,6 +3011,11 @@ presubmits:
         - name: covbot-token
           mountPath: /etc/covbot-token
           readOnly: true
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: covbot-token
         secret:
@@ -2696,6 +3051,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -2733,6 +3093,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -2770,6 +3135,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -2802,6 +3172,11 @@ presubmits:
         - name: covbot-token
           mountPath: /etc/covbot-token
           readOnly: true
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: covbot-token
         secret:
@@ -2835,6 +3210,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: test-account
         secret:
@@ -2870,6 +3250,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -2907,6 +3292,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -2944,6 +3334,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -2976,6 +3371,11 @@ presubmits:
         - name: covbot-token
           mountPath: /etc/covbot-token
           readOnly: true
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: covbot-token
         secret:
@@ -3011,6 +3411,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -3048,6 +3453,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -3085,6 +3495,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -3117,6 +3532,11 @@ presubmits:
         - name: covbot-token
           mountPath: /etc/covbot-token
           readOnly: true
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: covbot-token
         secret:
@@ -3149,6 +3569,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: test-account
         secret:
@@ -3184,6 +3609,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -3221,6 +3651,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -3258,6 +3693,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -3290,6 +3730,11 @@ presubmits:
         - name: covbot-token
           mountPath: /etc/covbot-token
           readOnly: true
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: covbot-token
         secret:
@@ -3322,6 +3767,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: test-account
         secret:
@@ -3357,6 +3807,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -3394,6 +3849,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -3431,6 +3891,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -3463,6 +3928,11 @@ presubmits:
         - name: covbot-token
           mountPath: /etc/covbot-token
           readOnly: true
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: covbot-token
         secret:
@@ -3495,6 +3965,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: test-account
         secret:
@@ -3536,6 +4011,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -3581,6 +4061,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -3626,6 +4111,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: repoview-token
         secret:
@@ -3665,6 +4155,11 @@ presubmits:
         env:
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: covbot-token
         secret:
@@ -3752,6 +4247,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.10
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -3798,6 +4298,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.11
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -3844,6 +4349,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.12
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -3890,6 +4400,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.13
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -3926,6 +4441,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -3960,6 +4480,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -3994,6 +4519,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -4028,6 +4558,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -4062,6 +4597,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -4096,6 +4636,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -4130,6 +4675,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -4164,6 +4714,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -4198,6 +4753,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -4525,6 +5085,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -4586,6 +5151,11 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=80"
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
 - cron: "5 * * * *"
   name: ci-knative-client-continuous
   agent: kubernetes
@@ -4618,6 +5188,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -4663,6 +5238,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.11
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -4710,6 +5290,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.12
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -4757,6 +5342,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.13
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -4796,6 +5386,11 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: nightly-account
       secret:
@@ -4827,6 +5422,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -4872,6 +5472,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.11
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -4920,6 +5525,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.12
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -4965,6 +5575,11 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -5010,6 +5625,11 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -5040,6 +5660,11 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
 - cron: "0 * * * *"
   name: ci-knative-client-contrib-continuous
   agent: kubernetes
@@ -5072,6 +5697,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -5113,6 +5743,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -5141,6 +5776,11 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
 - cron: "30 */2 * * *"
   name: ci-knative-eventing-continuous
   agent: kubernetes
@@ -5223,6 +5863,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.11
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -5270,6 +5915,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.12
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -5317,6 +5967,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.13
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -5364,6 +6019,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.14
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -5694,6 +6354,11 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
 - cron: "35 * * * *"
   name: ci-knative-eventing-contrib-continuous
   agent: kubernetes
@@ -5776,6 +6441,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.11
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -5823,6 +6493,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.12
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -5870,6 +6545,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.13
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -5917,6 +6597,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.14
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -6247,6 +6932,11 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
 - cron: "17 * * * *"
   name: ci-knative-pkg-continuous
   agent: kubernetes
@@ -6279,6 +6969,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -6306,6 +7001,11 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
 - cron: "6 * * * *"
   name: ci-knative-caching-continuous
   agent: kubernetes
@@ -6338,6 +7038,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -6365,6 +7070,11 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
 - cron: "3 * * * *"
   name: ci-knative-observability-continuous
   agent: kubernetes
@@ -6396,6 +7106,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -6432,6 +7147,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -6468,6 +7188,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -6504,6 +7229,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -6531,6 +7261,11 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
 - cron: "48 * * * *"
   name: ci-knative-serving-operator-continuous
   agent: kubernetes
@@ -6563,6 +7298,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -6608,6 +7348,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.11
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -6655,6 +7400,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.12
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -6702,6 +7452,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.13
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -6749,6 +7504,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.14
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -6788,6 +7548,11 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: nightly-account
       secret:
@@ -6833,6 +7598,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.11
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -6881,6 +7651,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.12
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -6929,6 +7704,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.13
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -6974,6 +7754,11 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -7019,6 +7804,11 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -7049,6 +7839,11 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
 - cron: "7 * * * *"
   name: ci-knative-eventing-operator-continuous
   agent: kubernetes
@@ -7081,6 +7876,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -7126,6 +7926,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.11
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -7173,6 +7978,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.12
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -7220,6 +8030,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.13
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -7267,6 +8082,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.14
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -7306,6 +8126,11 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: nightly-account
       secret:
@@ -7351,6 +8176,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.11
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -7399,6 +8229,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.12
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -7447,6 +8282,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.13
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -7492,6 +8332,11 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -7537,6 +8382,11 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -7567,6 +8417,11 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
 - cron: "30 * * * *"
   name: ci-google-knative-gcp-continuous
   agent: kubernetes
@@ -7598,6 +8453,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -7642,6 +8502,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.12
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -7688,6 +8553,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.13
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -7734,6 +8604,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.14
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -7772,6 +8647,11 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: nightly-account
       secret:
@@ -7818,6 +8698,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.12
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -7867,6 +8752,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.13
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -7913,6 +8803,11 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -7959,6 +8854,11 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -7988,6 +8888,11 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
 - cron: "8 * * * *"
   name: ci-knative-net-certmanager-continuous
   agent: kubernetes
@@ -8020,6 +8925,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -8057,6 +8967,11 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: nightly-account
       secret:
@@ -8099,6 +9014,11 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -8144,6 +9064,11 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -8174,6 +9099,11 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
 - cron: "10 * * * *"
   name: ci-knative-net-contour-continuous
   agent: kubernetes
@@ -8206,6 +9136,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -8243,6 +9178,11 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: nightly-account
       secret:
@@ -8285,6 +9225,11 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -8330,6 +9275,11 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -8360,6 +9310,11 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
 - cron: "28 * * * *"
   name: ci-knative-net-http01-continuous
   agent: kubernetes
@@ -8392,6 +9347,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -8429,6 +9389,11 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: nightly-account
       secret:
@@ -8471,6 +9436,11 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -8516,6 +9486,11 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -8546,6 +9521,11 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
 - cron: "34 * * * *"
   name: ci-knative-net-istio-continuous
   agent: kubernetes
@@ -8578,6 +9558,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -8615,6 +9600,11 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: nightly-account
       secret:
@@ -8657,6 +9647,11 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -8702,6 +9697,11 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -8732,6 +9732,11 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
 - cron: "41 * * * *"
   name: ci-knative-net-kourier-continuous
   agent: kubernetes
@@ -8764,6 +9769,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -8801,6 +9811,11 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: nightly-account
       secret:
@@ -8843,6 +9858,11 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -8888,6 +9908,11 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -8918,6 +9943,11 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
 - cron: "14 * * * *"
   name: ci-knative-sandbox-operator-continuous
   agent: kubernetes
@@ -8950,6 +9980,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: test-account
       secret:
@@ -8987,6 +10022,11 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: nightly-account
       secret:
@@ -9031,6 +10071,11 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -9078,6 +10123,11 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -9108,6 +10158,11 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
 - cron: "48 * * * *"
   name: ci-knative-sandbox-eventing-kafka-continuous
   agent: kubernetes
@@ -9146,6 +10201,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -9191,6 +10251,11 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -9243,6 +10308,11 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -9298,6 +10368,11 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: hub-token
       secret:
@@ -9330,6 +10405,11 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
 - cron: "30 07 * * *"
   name: ci-knative-serving-recreate-clusters
   agent: kubernetes
@@ -9365,6 +10445,11 @@ periodics:
         value: /etc/performance-test/slack-read-token
       - name: SLACK_WRITE_TOKEN
         value: /etc/performance-test/slack-write-token
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: performance-test
       secret:
@@ -9404,6 +10489,11 @@ periodics:
         value: /etc/performance-test/slack-read-token
       - name: SLACK_WRITE_TOKEN
         value: /etc/performance-test/slack-write-token
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: performance-test
       secret:
@@ -9444,6 +10534,11 @@ periodics:
         value: /etc/performance-test/slack-read-token
       - name: SLACK_WRITE_TOKEN
         value: /etc/performance-test/slack-write-token
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: performance-test
       secret:
@@ -9484,6 +10579,11 @@ periodics:
         value: /etc/performance-test/slack-read-token
       - name: SLACK_WRITE_TOKEN
         value: /etc/performance-test/slack-write-token
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: performance-test
       secret:
@@ -9523,6 +10623,11 @@ periodics:
         value: /etc/performance-test/slack-read-token
       - name: SLACK_WRITE_TOKEN
         value: /etc/performance-test/slack-write-token
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: performance-test
       secret:
@@ -9562,6 +10667,11 @@ periodics:
         value: /etc/performance-test/slack-read-token
       - name: SLACK_WRITE_TOKEN
         value: /etc/performance-test/slack-write-token
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: performance-test
       secret:
@@ -9597,6 +10707,11 @@ periodics:
       - name: housekeeping-github-token
         mountPath: /etc/housekeeping-github-token
         readOnly: true
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: housekeeping-github-token
       secret:
@@ -9632,6 +10747,11 @@ periodics:
       - name: housekeeping-github-token
         mountPath: /etc/housekeeping-github-token
         readOnly: true
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: housekeeping-github-token
       secret:
@@ -9667,6 +10787,11 @@ periodics:
       - name: housekeeping-github-token
         mountPath: /etc/housekeeping-github-token
         readOnly: true
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: housekeeping-github-token
       secret:
@@ -9702,6 +10827,11 @@ periodics:
       - name: housekeeping-github-token
         mountPath: /etc/housekeeping-github-token
         readOnly: true
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: housekeeping-github-token
       secret:
@@ -9737,6 +10867,11 @@ periodics:
       - name: housekeeping-github-token
         mountPath: /etc/housekeeping-github-token
         readOnly: true
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: housekeeping-github-token
       secret:
@@ -9772,6 +10907,11 @@ periodics:
       - name: housekeeping-github-token
         mountPath: /etc/housekeeping-github-token
         readOnly: true
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: housekeeping-github-token
       secret:
@@ -9807,6 +10947,11 @@ periodics:
       - name: housekeeping-github-token
         mountPath: /etc/housekeeping-github-token
         readOnly: true
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: housekeeping-github-token
       secret:
@@ -9842,6 +10987,11 @@ periodics:
       - name: housekeeping-github-token
         mountPath: /etc/housekeeping-github-token
         readOnly: true
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: housekeeping-github-token
       secret:
@@ -9877,6 +11027,11 @@ periodics:
       - name: housekeeping-github-token
         mountPath: /etc/housekeeping-github-token
         readOnly: true
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 8Gi
     volumes:
     - name: housekeeping-github-token
       secret:
@@ -9916,6 +11071,11 @@ postsubmits:
           value: /etc/performance-test/slack-read-token
         - name: SLACK_WRITE_TOKEN
           value: /etc/performance-test/slack-write-token
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: performance-test
         secret:
@@ -9935,6 +11095,11 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
   - name: post-knative-serving-go-coverage-dev
     branches:
     - master
@@ -9950,6 +11115,11 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
   knative/client:
   - name: post-knative-client-go-coverage
     branches:
@@ -9967,6 +11137,11 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
   knative/eventing:
   - name: post-knative-eventing-reconcile-clusters
     branches:
@@ -10002,6 +11177,11 @@ postsubmits:
           value: /etc/performance-test/slack-read-token
         - name: SLACK_WRITE_TOKEN
           value: /etc/performance-test/slack-write-token
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: performance-test
         secret:
@@ -10022,6 +11202,11 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
   knative/eventing-contrib:
   - name: post-knative-eventing-contrib-go-coverage
     branches:
@@ -10039,6 +11224,11 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
   knative/docs:
   - name: post-knative-docs-go-coverage
     branches:
@@ -10055,6 +11245,11 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
   knative/pkg:
   - name: post-knative-pkg-go-coverage
     branches:
@@ -10072,6 +11267,11 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
   knative/test-infra:
   - name: post-knative-test-infra-go-coverage
     branches:
@@ -10089,6 +11289,11 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
   knative/caching:
   - name: post-knative-caching-go-coverage
     branches:
@@ -10106,6 +11311,11 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
   google/knative-gcp:
   - name: post-google-knative-gcp-reconcile-clusters
     branches:
@@ -10140,6 +11350,11 @@ postsubmits:
           value: /etc/performance-test/slack-read-token
         - name: SLACK_WRITE_TOKEN
           value: /etc/performance-test/slack-write-token
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
       volumes:
       - name: performance-test
         secret:
@@ -10159,6 +11374,11 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
   knative/net-certmanager:
   - name: post-knative-net-certmanager-go-coverage
     branches:
@@ -10176,6 +11396,11 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
   knative/net-contour:
   - name: post-knative-net-contour-go-coverage
     branches:
@@ -10193,6 +11418,11 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
   knative/net-http01:
   - name: post-knative-net-http01-go-coverage
     branches:
@@ -10210,6 +11440,11 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
   knative/net-istio:
   - name: post-knative-net-istio-go-coverage
     branches:
@@ -10227,6 +11462,11 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
   knative/net-kourier:
   - name: post-knative-net-kourier-go-coverage
     branches:
@@ -10244,6 +11484,11 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
   knative/serving-operator:
   - name: post-knative-serving-operator-go-coverage
     branches:
@@ -10261,6 +11506,11 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
   knative/eventing-operator:
   - name: post-knative-eventing-operator-go-coverage
     branches:
@@ -10278,6 +11528,11 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
   knative-sandbox/operator:
   - name: post-knative-sandbox-operator-go-coverage
     branches:
@@ -10295,6 +11550,11 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
   knative-sandbox/eventing-kafka:
   - name: post-knative-sandbox-eventing-kafka-go-coverage
     branches:
@@ -10312,3 +11572,8 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        resources:
+          requests:
+            memory: 8Gi
+          limits:
+            memory: 8Gi
