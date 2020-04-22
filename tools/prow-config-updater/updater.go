@@ -154,11 +154,13 @@ func (cli *Client) doProwUpdate(env config.ProwEnv) ([]string, error) {
 	}
 
 	// For production Prow, we also need to update Testgrid config if it's changed.
-	tfs := config.CollectRelevantConfigFiles(cli.files, []string{config.ProdTestgridConfigPath})
-	if len(tfs) != 0 {
-		relevantFiles = append(relevantFiles, tfs...)
-		if err := config.UpdateTestgrid(env, cli.dryrun); err != nil {
-			return relevantFiles, fmt.Errorf("error updating Testgrid configs for %q environment: %v", env, err)
+	if env == config.ProdProwEnv {
+		tfs := config.CollectRelevantConfigFiles(cli.files, []string{config.ProdTestgridConfigPath})
+		if len(tfs) != 0 {
+			relevantFiles = append(relevantFiles, tfs...)
+			if err := config.UpdateTestgrid(env, cli.dryrun); err != nil {
+				return relevantFiles, fmt.Errorf("error updating Testgrid configs for %q environment: %v", env, err)
+			}
 		}
 	}
 	return relevantFiles, nil
