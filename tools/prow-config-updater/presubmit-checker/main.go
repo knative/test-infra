@@ -17,9 +17,9 @@ limitations under the License.
 package main
 
 import (
+	"flag"
 	"log"
 	"strings"
-	"testing"
 
 	"github.com/google/go-github/github"
 	"knative.dev/pkg/test/ghutil"
@@ -28,15 +28,13 @@ import (
 	"knative.dev/test-infra/tools/prow-config-updater/config"
 )
 
-// TODO(chizhg): find a better approach to parameterize these.
-const (
-	// Github token file path for authenticating with Github
-	githubTokenPath = "/etc/repoview-token/token"
-	// name of the github bot that is used in creating auto-merge PRs"
-	githubBotName = "knative-prow-robot"
-)
+func main() {
+	githubTokenPath := flag.String("github-token", "",
+		"Github token file path for authenticating with Github")
+	githubBotName := flag.String("github-bot-name", "",
+		"Github bot name that is used in creating auto-merge PRs")
+	flag.Parse()
 
-func TestPresubmitConfigChanges(t *testing.T) {
 	ec, err := prow.GetEnvConfig()
 	if err != nil {
 		log.Fatalf("Error getting environment variables for Prow: %v", err)
@@ -45,9 +43,9 @@ func TestPresubmitConfigChanges(t *testing.T) {
 	// We only check for presubmit jobs.
 	if ec.JobType == prow.PresubmitJob {
 		var err error
-		gc, err := ghutil.NewGithubClient(githubTokenPath)
+		gc, err := ghutil.NewGithubClient(*githubTokenPath)
 		if err != nil {
-			log.Printf("Error creating client with token %q: %v", githubTokenPath, err)
+			log.Printf("Error creating client with token %q: %v", *githubTokenPath, err)
 			log.Printf("Proceeding with unauthenticated client")
 			gc = &ghutil.GithubClient{Client: github.NewClient(nil)}
 		}
@@ -57,17 +55,17 @@ func TestPresubmitConfigChanges(t *testing.T) {
 		repo := ec.RepoName
 		pr, err := gc.GetPullRequest(org, repo, int(pn))
 		if err != nil {
-			t.Fatalf("Cannot find the pull request %d: %v", int(pn), err)
+			log.Fatalf("Cannot find the pull request %d: %v", int(pn), err)
 		}
 
 		// If the PR is created by the bot, skip the check.
-		if *pr.User.Login == githubBotName {
+		if *pr.User.Login == *githubBotName {
 			return
 		}
 
 		files, err := gc.ListFiles(org, repo, int(pn))
 		if err != nil {
-			t.Fatalf("Cannot find files changed in this PR: %v", err)
+			log.Fatalf("Cannot find files changed in this PR: %v", err)
 		}
 
 		// Collect all files that are not allowed to change directly by users.
@@ -79,7 +77,7 @@ func TestPresubmitConfigChanges(t *testing.T) {
 
 		// If any of the production Prow key config files are changed, report the error.
 		if len(bannedFiles) != 0 {
-			t.Fatalf(
+			log.Fatalf(
 				"Directly changing the production Prow cluster config and templates is not allowed, please revert:\n%s",
 				strings.Join(bannedFiles, "\n"))
 		}

@@ -12,6 +12,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+presubmits:
+  knative/test-infra:
+  - name: pull-test-infra-config-changes-checker
+    decorate: true
+    run_if_changed: "^(config/(prow|prow-staging)/cluster/.*.yaml)|(tools/config-generator/templates/(prow|prow-staging)/.*.yaml)$"
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        command:
+        - "go"
+        args:
+        - "run"
+        - "./tools/prow-config-updater/presubmit-checker"
+        - "--github-bot-name=knative-prow-robot"
+        - "--github-token=/etc/repoview-token/token"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+
 periodics:
 - cron: "15 9 * * *"
   name: ci-knative-backup-artifacts
@@ -51,7 +76,7 @@ periodics:
     base_ref: master
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
       - "go"
