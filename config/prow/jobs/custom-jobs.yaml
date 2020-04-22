@@ -86,14 +86,14 @@ periodics:
     base_ref: master
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
       - "go"
       args:
       - "run"
       - "./tools/cleanup/cleanup.go"
-      - "--project-resource-yaml=config/prow/boskos_resources.yaml"
+      - "--project-resource-yaml=config/prow/boskos/boskos_resources.yaml"
       - "--days-to-keep-images=30"
       - "--hours-to-keep-clusters=24"
       - "--service-account=/etc/test-account/service-account.json"
