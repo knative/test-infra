@@ -651,47 +651,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/client
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--build-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-client-build-tests
-    agent: kubernetes
-    context: pull-knative-client-build-tests
-    always_run: true
-    rerun_command: "/test pull-knative-client-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-client-build-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/client
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -729,47 +688,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/client
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--unit-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-client-unit-tests
-    agent: kubernetes
-    context: pull-knative-client-unit-tests
-    always_run: true
-    rerun_command: "/test pull-knative-client-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-client-unit-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/client
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -807,47 +725,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/client
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--integration-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-client-integration-tests
-    agent: kubernetes
-    context: pull-knative-client-integration-tests
-    always_run: true
-    rerun_command: "/test pull-knative-client-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-client-integration-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/client
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -886,39 +763,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/client
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--postsubmit-job-name=post-knative-client-go-coverage"
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=50"
-        - "--github-token=/etc/covbot-token/token"
-        volumeMounts:
-        - name: covbot-token
-          mountPath: /etc/covbot-token
-          readOnly: true
-      volumes:
-      - name: covbot-token
-        secret:
-          secretName: covbot-token
-  - name: pull-knative-client-go-coverage
-    agent: kubernetes
-    context: pull-knative-client-go-coverage
-    always_run: true
-    rerun_command: "/test pull-knative-client-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-client-go-coverage),?(\\s+|$)"
-    optional: true
-    decorate: true
-    path_alias: knative.dev/client
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -947,40 +791,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/client
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-integration-tests-latest-release.sh"
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-client-integration-tests-latest-release
-    agent: kubernetes
-    context: pull-knative-client-integration-tests-latest-release
-    always_run: true
-    rerun_command: "/test pull-knative-client-integration-tests-latest-release"
-    trigger: "(?m)^/test (all|pull-knative-client-integration-tests-latest-release),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/client
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1124,52 +934,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/eventing
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--build-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-        resources:
-          requests:
-            memory: 12Gi
-          limits:
-            memory: 16Gi
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-eventing-build-tests
-    agent: kubernetes
-    context: pull-knative-eventing-build-tests
-    always_run: true
-    rerun_command: "/test pull-knative-eventing-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-eventing-build-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/eventing
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1212,47 +976,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/eventing
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--unit-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-eventing-unit-tests
-    agent: kubernetes
-    context: pull-knative-eventing-unit-tests
-    always_run: true
-    rerun_command: "/test pull-knative-eventing-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-eventing-unit-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/eventing
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1290,47 +1013,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/eventing
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--integration-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-eventing-integration-tests
-    agent: kubernetes
-    context: pull-knative-eventing-integration-tests
-    always_run: true
-    rerun_command: "/test pull-knative-eventing-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-eventing-integration-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/eventing
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1369,39 +1051,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/eventing
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--postsubmit-job-name=post-knative-eventing-go-coverage"
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=50"
-        - "--github-token=/etc/covbot-token/token"
-        volumeMounts:
-        - name: covbot-token
-          mountPath: /etc/covbot-token
-          readOnly: true
-      volumes:
-      - name: covbot-token
-        secret:
-          secretName: covbot-token
-  - name: pull-knative-eventing-go-coverage
-    agent: kubernetes
-    context: pull-knative-eventing-go-coverage
-    always_run: true
-    rerun_command: "/test pull-knative-eventing-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-eventing-go-coverage),?(\\s+|$)"
-    optional: true
-    decorate: true
-    path_alias: knative.dev/eventing
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -1431,52 +1080,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/eventing-contrib
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--build-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-        resources:
-          requests:
-            memory: 12Gi
-          limits:
-            memory: 16Gi
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-eventing-contrib-build-tests
-    agent: kubernetes
-    context: pull-knative-eventing-contrib-build-tests
-    always_run: true
-    rerun_command: "/test pull-knative-eventing-contrib-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-eventing-contrib-build-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/eventing-contrib
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1519,47 +1122,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/eventing-contrib
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--unit-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-eventing-contrib-unit-tests
-    agent: kubernetes
-    context: pull-knative-eventing-contrib-unit-tests
-    always_run: true
-    rerun_command: "/test pull-knative-eventing-contrib-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-eventing-contrib-unit-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/eventing-contrib
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1597,47 +1159,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/eventing-contrib
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--integration-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-eventing-contrib-integration-tests
-    agent: kubernetes
-    context: pull-knative-eventing-contrib-integration-tests
-    always_run: true
-    rerun_command: "/test pull-knative-eventing-contrib-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-eventing-contrib-integration-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/eventing-contrib
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1676,39 +1197,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/eventing-contrib
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--postsubmit-job-name=post-knative-eventing-contrib-go-coverage"
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=50"
-        - "--github-token=/etc/covbot-token/token"
-        volumeMounts:
-        - name: covbot-token
-          mountPath: /etc/covbot-token
-          readOnly: true
-      volumes:
-      - name: covbot-token
-        secret:
-          secretName: covbot-token
-  - name: pull-knative-eventing-contrib-go-coverage
-    agent: kubernetes
-    context: pull-knative-eventing-contrib-go-coverage
-    always_run: true
-    rerun_command: "/test pull-knative-eventing-contrib-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-eventing-contrib-go-coverage),?(\\s+|$)"
-    optional: true
-    decorate: true
-    path_alias: knative.dev/eventing-contrib
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -1737,46 +1225,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-docs-build-tests),?(\\s+|$)"
     decorate: true
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--build-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-docs-build-tests
-    agent: kubernetes
-    context: pull-knative-docs-build-tests
-    always_run: true
-    rerun_command: "/test pull-knative-docs-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-docs-build-tests),?(\\s+|$)"
-    decorate: true
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1813,46 +1261,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-docs-unit-tests),?(\\s+|$)"
     decorate: true
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--unit-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-docs-unit-tests
-    agent: kubernetes
-    context: pull-knative-docs-unit-tests
-    always_run: true
-    rerun_command: "/test pull-knative-docs-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-docs-unit-tests),?(\\s+|$)"
-    decorate: true
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1889,54 +1297,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-docs-integration-tests),?(\\s+|$)"
     decorate: true
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--integration-tests"
-        securityContext:
-          privileged: true
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: docker-graph
-          mountPath: /docker-graph
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: DOCKER_IN_DOCKER_ENABLED
-          value: "true"
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: docker-graph
-        emptyDir: {}
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-docs-integration-tests
-    agent: kubernetes
-    context: pull-knative-docs-integration-tests
-    always_run: true
-    rerun_command: "/test pull-knative-docs-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-docs-integration-tests),?(\\s+|$)"
-    decorate: true
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -1982,38 +1342,6 @@ presubmits:
     optional: true
     decorate: true
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--postsubmit-job-name=post-knative-docs-go-coverage"
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=50"
-        - "--github-token=/etc/covbot-token/token"
-        volumeMounts:
-        - name: covbot-token
-          mountPath: /etc/covbot-token
-          readOnly: true
-      volumes:
-      - name: covbot-token
-        secret:
-          secretName: covbot-token
-  - name: pull-knative-docs-go-coverage
-    agent: kubernetes
-    context: pull-knative-docs-go-coverage
-    always_run: true
-    rerun_command: "/test pull-knative-docs-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-docs-go-coverage),?(\\s+|$)"
-    optional: true
-    decorate: true
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -2042,40 +1370,6 @@ presubmits:
     decorate: true
     optional: true
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-link-check.sh"
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-docs-markdown-link-check
-    agent: kubernetes
-    context: pull-knative-docs-markdown-link-check
-    always_run: true
-    rerun_command: "/test pull-knative-docs-markdown-link-check"
-    trigger: "(?m)^/test (all|pull-knative-docs-markdown-link-check),?(\\s+|$)"
-    decorate: true
-    optional: true
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2107,47 +1401,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/pkg
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--build-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-pkg-build-tests
-    agent: kubernetes
-    context: pull-knative-pkg-build-tests
-    always_run: true
-    rerun_command: "/test pull-knative-pkg-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-pkg-build-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/pkg
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2185,47 +1438,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/pkg
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--unit-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-pkg-unit-tests
-    agent: kubernetes
-    context: pull-knative-pkg-unit-tests
-    always_run: true
-    rerun_command: "/test pull-knative-pkg-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-pkg-unit-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/pkg
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2263,47 +1475,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/pkg
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--integration-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-pkg-integration-tests
-    agent: kubernetes
-    context: pull-knative-pkg-integration-tests
-    always_run: true
-    rerun_command: "/test pull-knative-pkg-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-pkg-integration-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/pkg
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2342,39 +1513,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/pkg
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--postsubmit-job-name=post-knative-pkg-go-coverage"
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=50"
-        - "--github-token=/etc/covbot-token/token"
-        volumeMounts:
-        - name: covbot-token
-          mountPath: /etc/covbot-token
-          readOnly: true
-      volumes:
-      - name: covbot-token
-        secret:
-          secretName: covbot-token
-  - name: pull-knative-pkg-go-coverage
-    agent: kubernetes
-    context: pull-knative-pkg-go-coverage
-    always_run: true
-    rerun_command: "/test pull-knative-pkg-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-pkg-go-coverage),?(\\s+|$)"
-    optional: true
-    decorate: true
-    path_alias: knative.dev/pkg
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -2545,47 +1683,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/caching
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--build-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-caching-build-tests
-    agent: kubernetes
-    context: pull-knative-caching-build-tests
-    always_run: true
-    rerun_command: "/test pull-knative-caching-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-caching-build-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/caching
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2623,47 +1720,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/caching
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--unit-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-caching-unit-tests
-    agent: kubernetes
-    context: pull-knative-caching-unit-tests
-    always_run: true
-    rerun_command: "/test pull-knative-caching-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-caching-unit-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/caching
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2701,47 +1757,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/caching
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--integration-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-caching-integration-tests
-    agent: kubernetes
-    context: pull-knative-caching-integration-tests
-    always_run: true
-    rerun_command: "/test pull-knative-caching-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-caching-integration-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/caching
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2780,39 +1795,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/caching
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--postsubmit-job-name=post-knative-caching-go-coverage"
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=50"
-        - "--github-token=/etc/covbot-token/token"
-        volumeMounts:
-        - name: covbot-token
-          mountPath: /etc/covbot-token
-          readOnly: true
-      volumes:
-      - name: covbot-token
-        secret:
-          secretName: covbot-token
-  - name: pull-knative-caching-go-coverage
-    agent: kubernetes
-    context: pull-knative-caching-go-coverage
-    always_run: true
-    rerun_command: "/test pull-knative-caching-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-caching-go-coverage),?(\\s+|$)"
-    optional: true
-    decorate: true
-    path_alias: knative.dev/caching
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -2841,46 +1823,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-observability-build-tests),?(\\s+|$)"
     decorate: true
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--build-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-observability-build-tests
-    agent: kubernetes
-    context: pull-knative-observability-build-tests
-    always_run: true
-    rerun_command: "/test pull-knative-observability-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-observability-build-tests),?(\\s+|$)"
-    decorate: true
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2917,46 +1859,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-observability-unit-tests),?(\\s+|$)"
     decorate: true
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--unit-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-observability-unit-tests
-    agent: kubernetes
-    context: pull-knative-observability-unit-tests
-    always_run: true
-    rerun_command: "/test pull-knative-observability-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-observability-unit-tests),?(\\s+|$)"
-    decorate: true
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -2993,46 +1895,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-observability-integration-tests),?(\\s+|$)"
     decorate: true
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--integration-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-observability-integration-tests
-    agent: kubernetes
-    context: pull-knative-observability-integration-tests
-    always_run: true
-    rerun_command: "/test pull-knative-observability-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-observability-integration-tests),?(\\s+|$)"
-    decorate: true
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3071,47 +1933,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/sample-controller
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--build-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-sample-controller-build-tests
-    agent: kubernetes
-    context: pull-knative-sample-controller-build-tests
-    always_run: true
-    rerun_command: "/test pull-knative-sample-controller-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-sample-controller-build-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/sample-controller
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3149,47 +1970,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/sample-controller
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--unit-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-sample-controller-unit-tests
-    agent: kubernetes
-    context: pull-knative-sample-controller-unit-tests
-    always_run: true
-    rerun_command: "/test pull-knative-sample-controller-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-sample-controller-unit-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/sample-controller
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3228,47 +2008,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/sample-source
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--build-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-sample-source-build-tests
-    agent: kubernetes
-    context: pull-knative-sample-source-build-tests
-    always_run: true
-    rerun_command: "/test pull-knative-sample-source-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-sample-source-build-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/sample-source
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3306,47 +2045,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/sample-source
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--unit-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-sample-source-unit-tests
-    agent: kubernetes
-    context: pull-knative-sample-source-unit-tests
-    always_run: true
-    rerun_command: "/test pull-knative-sample-source-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-sample-source-unit-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/sample-source
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3384,46 +2082,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-google-knative-gcp-build-tests),?(\\s+|$)"
     decorate: true
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--build-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-google-knative-gcp-build-tests
-    agent: kubernetes
-    context: pull-google-knative-gcp-build-tests
-    always_run: true
-    rerun_command: "/test pull-google-knative-gcp-build-tests"
-    trigger: "(?m)^/test (all|pull-google-knative-gcp-build-tests),?(\\s+|$)"
-    decorate: true
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3460,46 +2118,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-google-knative-gcp-unit-tests),?(\\s+|$)"
     decorate: true
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--unit-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-google-knative-gcp-unit-tests
-    agent: kubernetes
-    context: pull-google-knative-gcp-unit-tests
-    always_run: true
-    rerun_command: "/test pull-google-knative-gcp-unit-tests"
-    trigger: "(?m)^/test (all|pull-google-knative-gcp-unit-tests),?(\\s+|$)"
-    decorate: true
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3536,47 +2154,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-google-knative-gcp-integration-tests),?(\\s+|$)"
     decorate: true
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--run-test"
-        - "./test/e2e-tests.sh"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-google-knative-gcp-integration-tests
-    agent: kubernetes
-    context: pull-google-knative-gcp-integration-tests
-    always_run: true
-    rerun_command: "/test pull-google-knative-gcp-integration-tests"
-    trigger: "(?m)^/test (all|pull-google-knative-gcp-integration-tests),?(\\s+|$)"
-    decorate: true
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3614,41 +2191,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-google-knative-gcp-wi-tests),?(\\s+|$)"
     decorate: true
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--run-test"
-        - "./test/e2e-wi-tests.sh"
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-google-knative-gcp-wi-tests
-    agent: kubernetes
-    context: pull-google-knative-gcp-wi-tests
-    always_run: true
-    rerun_command: "/test pull-google-knative-gcp-wi-tests"
-    trigger: "(?m)^/test (all|pull-google-knative-gcp-wi-tests),?(\\s+|$)"
-    decorate: true
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3681,38 +2223,6 @@ presubmits:
     optional: true
     decorate: true
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--postsubmit-job-name=post-google-knative-gcp-go-coverage"
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=50"
-        - "--github-token=/etc/covbot-token/token"
-        volumeMounts:
-        - name: covbot-token
-          mountPath: /etc/covbot-token
-          readOnly: true
-      volumes:
-      - name: covbot-token
-        secret:
-          secretName: covbot-token
-  - name: pull-google-knative-gcp-go-coverage
-    agent: kubernetes
-    context: pull-google-knative-gcp-go-coverage
-    always_run: true
-    rerun_command: "/test pull-google-knative-gcp-go-coverage"
-    trigger: "(?m)^/test (all|pull-google-knative-gcp-go-coverage),?(\\s+|$)"
-    optional: true
-    decorate: true
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -4653,47 +3163,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/eventing-operator
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--build-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-eventing-operator-build-tests
-    agent: kubernetes
-    context: pull-knative-eventing-operator-build-tests
-    always_run: true
-    rerun_command: "/test pull-knative-eventing-operator-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-eventing-operator-build-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/eventing-operator
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4731,47 +3200,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/eventing-operator
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--unit-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-eventing-operator-unit-tests
-    agent: kubernetes
-    context: pull-knative-eventing-operator-unit-tests
-    always_run: true
-    rerun_command: "/test pull-knative-eventing-operator-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-eventing-operator-unit-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/eventing-operator
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4809,47 +3237,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/eventing-operator
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--integration-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-eventing-operator-integration-tests
-    agent: kubernetes
-    context: pull-knative-eventing-operator-integration-tests
-    always_run: true
-    rerun_command: "/test pull-knative-eventing-operator-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-eventing-operator-integration-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/eventing-operator
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4888,39 +3275,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/eventing-operator
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--postsubmit-job-name=post-knative-eventing-operator-go-coverage"
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=50"
-        - "--github-token=/etc/covbot-token/token"
-        volumeMounts:
-        - name: covbot-token
-          mountPath: /etc/covbot-token
-          readOnly: true
-      volumes:
-      - name: covbot-token
-        secret:
-          secretName: covbot-token
-  - name: pull-knative-eventing-operator-go-coverage
-    agent: kubernetes
-    context: pull-knative-eventing-operator-go-coverage
-    always_run: true
-    rerun_command: "/test pull-knative-eventing-operator-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-eventing-operator-go-coverage),?(\\s+|$)"
-    optional: true
-    decorate: true
-    path_alias: knative.dev/eventing-operator
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
@@ -4949,42 +3303,6 @@ presubmits:
     decorate: true
     path_alias: knative.dev/eventing-operator
     cluster: "build-knative"
-    branches:
-    - "release-0.10"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--run-test"
-        - "./test/e2e-upgrade-tests.sh"
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-eventing-operator-upgrade-tests
-    agent: kubernetes
-    context: pull-knative-eventing-operator-upgrade-tests
-    always_run: true
-    rerun_command: "/test pull-knative-eventing-operator-upgrade-tests"
-    trigger: "(?m)^/test (all|pull-knative-eventing-operator-upgrade-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/eventing-operator
-    cluster: "build-knative"
-    skip_branches:
-    - "release-0.10"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6773,7 +5091,7 @@ periodics:
     base_ref: master
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -6816,7 +5134,7 @@ periodics:
     base_ref: master
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+    - image: gcr.io/knative-tests/test-infra/coverage:latest
       imagePullPolicy: Always
       command:
       - "/coverage"
@@ -6861,53 +5179,6 @@ periodics:
         limits:
           memory: 16Gi
     volumes:
-    - name: test-account
-      secret:
-        secretName: test-account
-- cron: "56 8 * * *"
-  name: ci-knative-eventing-0.10-continuous
-  agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-0.10-continuous
-  decorate: true
-  cluster: "build-knative"
-  extra_refs:
-  - org: knative
-    repo: eventing
-    base_ref: release-0.10
-    path_alias: knative.dev/eventing
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-      imagePullPolicy: Always
-      command:
-      - runner.sh
-      args:
-      - "./hack/release.sh"
-      - "--nopublish"
-      - "--notag-release"
-      securityContext:
-        privileged: true
-      volumeMounts:
-      - name: docker-graph
-        mountPath: /docker-graph
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
-      env:
-      - name: DOCKER_IN_DOCKER_ENABLED
-        value: "true"
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-      - name: PULL_BASE_REF
-        value: release-0.10
-    volumes:
-    - name: docker-graph
-      emptyDir: {}
     - name: test-account
       secret:
         secretName: test-account
@@ -7052,6 +5323,53 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+- cron: "30 8 * * *"
+  name: ci-knative-eventing-0.14-continuous
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-eventing-0.14-continuous
+  decorate: true
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: eventing
+    base_ref: release-0.14
+    path_alias: knative.dev/eventing
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.14
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
 - cron: "15 9 * * *"
   name: ci-knative-eventing-nightly-release
   agent: kubernetes
@@ -7094,59 +5412,6 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "10 9 * * 2"
-  name: ci-knative-eventing-0.10-dot-release
-  agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-0.10-dot-release
-  decorate: true
-  cluster: "build-knative"
-  extra_refs:
-  - org: knative
-    repo: eventing
-    base_ref: release-0.10
-    path_alias: knative.dev/eventing
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      command:
-      - runner.sh
-      args:
-      - "./hack/release.sh"
-      - "--dot-release"
-      - "--release-gcs knative-releases/eventing"
-      - "--release-gcr gcr.io/knative-releases"
-      - "--github-token /etc/hub-token/token"
-      - "--branch release-0.10"
-      volumeMounts:
-      - name: hub-token
-        mountPath: /etc/hub-token
-        readOnly: true
-      - name: release-account
-        mountPath: /etc/release-account
-        readOnly: true
-      env:
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/release-account/service-account.json
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-      - name: PULL_BASE_REF
-        value: release-0.10
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    volumes:
-    - name: hub-token
-      secret:
-        secretName: hub-token
-    - name: release-account
-      secret:
-        secretName: release-account
 - cron: "21 9 * * 2"
   name: ci-knative-eventing-0.11-dot-release
   agent: kubernetes
@@ -7241,6 +5506,59 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.12
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
+- cron: "43 9 * * 2"
+  name: ci-knative-eventing-0.13-dot-release
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-eventing-0.13-dot-release
+  decorate: true
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: eventing
+    base_ref: release-0.13
+    path_alias: knative.dev/eventing
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--dot-release"
+      - "--release-gcs knative-releases/eventing"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      - "--branch release-0.13"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.13
       resources:
         requests:
           memory: 12Gi
@@ -7417,53 +5735,6 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "51 8 * * *"
-  name: ci-knative-eventing-contrib-0.10-continuous
-  agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-contrib-0.10-continuous
-  decorate: true
-  cluster: "build-knative"
-  extra_refs:
-  - org: knative
-    repo: eventing-contrib
-    base_ref: release-0.10
-    path_alias: knative.dev/eventing-contrib
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
-      imagePullPolicy: Always
-      command:
-      - runner.sh
-      args:
-      - "./hack/release.sh"
-      - "--nopublish"
-      - "--notag-release"
-      securityContext:
-        privileged: true
-      volumeMounts:
-      - name: docker-graph
-        mountPath: /docker-graph
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
-      env:
-      - name: DOCKER_IN_DOCKER_ENABLED
-        value: "true"
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-      - name: PULL_BASE_REF
-        value: release-0.10
-    volumes:
-    - name: docker-graph
-      emptyDir: {}
-    - name: test-account
-      secret:
-        secretName: test-account
 - cron: "2 8 * * *"
   name: ci-knative-eventing-contrib-0.11-continuous
   agent: kubernetes
@@ -7605,6 +5876,53 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+- cron: "35 8 * * *"
+  name: ci-knative-eventing-contrib-0.14-continuous
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-eventing-contrib-0.14-continuous
+  decorate: true
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: eventing-contrib
+    base_ref: release-0.14
+    path_alias: knative.dev/eventing-contrib
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.14
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
 - cron: "10 9 * * *"
   name: ci-knative-eventing-contrib-nightly-release
   agent: kubernetes
@@ -7647,59 +5965,6 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "16 9 * * 2"
-  name: ci-knative-eventing-contrib-0.10-dot-release
-  agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-contrib-0.10-dot-release
-  decorate: true
-  cluster: "build-knative"
-  extra_refs:
-  - org: knative
-    repo: eventing-contrib
-    base_ref: release-0.10
-    path_alias: knative.dev/eventing-contrib
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      command:
-      - runner.sh
-      args:
-      - "./hack/release.sh"
-      - "--dot-release"
-      - "--release-gcs knative-releases/eventing-contrib"
-      - "--release-gcr gcr.io/knative-releases"
-      - "--github-token /etc/hub-token/token"
-      - "--branch release-0.10"
-      volumeMounts:
-      - name: hub-token
-        mountPath: /etc/hub-token
-        readOnly: true
-      - name: release-account
-        mountPath: /etc/release-account
-        readOnly: true
-      env:
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/release-account/service-account.json
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-      - name: PULL_BASE_REF
-        value: release-0.10
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    volumes:
-    - name: hub-token
-      secret:
-        secretName: hub-token
-    - name: release-account
-      secret:
-        secretName: release-account
 - cron: "27 9 * * 2"
   name: ci-knative-eventing-contrib-0.11-dot-release
   agent: kubernetes
@@ -7794,6 +6059,59 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.12
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
+- cron: "49 9 * * 2"
+  name: ci-knative-eventing-contrib-0.13-dot-release
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-eventing-contrib-0.13-dot-release
+  decorate: true
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: eventing-contrib
+    base_ref: release-0.13
+    path_alias: knative.dev/eventing-contrib
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--dot-release"
+      - "--release-gcs knative-releases/eventing-contrib"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      - "--branch release-0.13"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.13
       resources:
         requests:
           memory: 12Gi
@@ -8390,6 +6708,53 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+- cron: "48 8 * * *"
+  name: ci-knative-serving-operator-0.14-continuous
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-serving-operator-0.14-continuous
+  decorate: true
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: serving-operator
+    base_ref: release-0.14
+    path_alias: knative.dev/serving-operator
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.14
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
 - cron: "23 9 * * *"
   name: ci-knative-serving-operator-nightly-release
   agent: kubernetes
@@ -8516,6 +6881,54 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.12
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
+- cron: "51 19 * * 2"
+  name: ci-knative-serving-operator-0.13-dot-release
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-serving-operator-0.13-dot-release
+  decorate: true
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: serving-operator
+    base_ref: release-0.13
+    path_alias: knative.dev/serving-operator
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--dot-release"
+      - "--release-gcs knative-releases/serving-operator"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      - "--branch release-0.13"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.13
     volumes:
     - name: hub-token
       secret:
@@ -8813,6 +7226,53 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+- cron: "7 8 * * *"
+  name: ci-knative-eventing-operator-0.14-continuous
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-eventing-operator-0.14-continuous
+  decorate: true
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: eventing-operator
+    base_ref: release-0.14
+    path_alias: knative.dev/eventing-operator
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.14
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
 - cron: "42 9 * * *"
   name: ci-knative-eventing-operator-nightly-release
   agent: kubernetes
@@ -8939,6 +7399,54 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.12
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
+- cron: "10 19 * * 2"
+  name: ci-knative-eventing-operator-0.13-dot-release
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-eventing-operator-0.13-dot-release
+  decorate: true
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: eventing-operator
+    base_ref: release-0.13
+    path_alias: knative.dev/eventing-operator
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--dot-release"
+      - "--release-gcs knative-releases/eventing-operator"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      - "--branch release-0.13"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.13
     volumes:
     - name: hub-token
       secret:
@@ -9186,6 +7694,52 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+- cron: "30 8 * * *"
+  name: ci-google-knative-gcp-0.14-continuous
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-0.14-continuous
+  decorate: true
+  cluster: "build-knative"
+  extra_refs:
+  - org: google
+    repo: knative-gcp
+    base_ref: release-0.14
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.14
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: test-account
+      secret:
+        secretName: test-account
 - cron: "15 9 * * *"
   name: ci-google-knative-gcp-nightly-release
   agent: kubernetes
@@ -9264,6 +7818,55 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.12
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
+- cron: "43 9 * * 2"
+  name: ci-google-knative-gcp-0.13-dot-release
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-0.13-dot-release
+  decorate: true
+  cluster: "build-knative"
+  extra_refs:
+  - org: google
+    repo: knative-gcp
+    base_ref: release-0.13
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--dot-release"
+      - "--release-gcs knative-releases/knative-gcp"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      - "--branch release-0.13"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: ORG_NAME
+        value: google
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.13
     volumes:
     - name: hub-token
       secret:
@@ -11445,7 +10048,7 @@ postsubmits:
     cluster: "build-knative"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go112:latest
+      - image: gcr.io/knative-tests/test-infra/coverage:latest
         imagePullPolicy: Always
         command:
         - "/coverage"
