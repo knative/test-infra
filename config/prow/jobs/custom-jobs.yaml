@@ -16,6 +16,7 @@ presubmits:
   knative/test-infra:
   - name: pull-test-infra-config-changes-checker
     decorate: true
+    path_alias: knative.dev/test-infra
     run_if_changed: "^(config/(prow|prow-staging)/cluster/.*.yaml)|(tools/config-generator/templates/(prow|prow-staging)/.*.yaml)$"
     cluster: "build-knative"
     spec:
@@ -106,6 +107,7 @@ periodics:
   - org: knative
     repo: test-infra
     base_ref: master
+    path_alias: knative.dev/test-infra
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -136,10 +138,6 @@ periodics:
   agent: kubernetes
   decorate: true
   cluster: "build-knative"
-  extra_refs:
-  - org: knative
-    repo: test-infra
-    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/flaky-test-reporter:latest
@@ -179,10 +177,6 @@ periodics:
   agent: kubernetes
   decorate: true
   cluster: "build-knative"
-  extra_refs:
-  - org: knative
-    repo: test-infra
-    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/flaky-test-reporter:latest
@@ -218,10 +212,6 @@ periodics:
   agent: kubernetes
   decorate: true
   cluster: "build-knative"
-  extra_refs:
-  - org: knative
-    repo: test-infra
-    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-auto-bumper:latest
