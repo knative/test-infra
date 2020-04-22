@@ -52,8 +52,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -94,8 +96,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -136,8 +140,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -179,8 +185,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -221,8 +229,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -263,8 +273,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:

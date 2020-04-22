@@ -96,8 +96,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -142,8 +144,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -185,8 +189,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: test-account
         secret:
@@ -225,8 +231,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: test-account
         secret:
@@ -258,8 +266,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: covbot-token
         secret:
@@ -291,8 +301,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: covbot-token
         secret:
@@ -330,8 +342,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: test-account
         secret:
@@ -369,8 +383,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: test-account
         secret:
@@ -408,8 +424,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: test-account
         secret:
@@ -447,8 +465,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: test-account
         secret:
@@ -486,8 +506,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: test-account
         secret:
@@ -525,8 +547,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: test-account
         secret:
@@ -564,8 +588,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: test-account
         secret:
@@ -603,8 +629,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: test-account
         secret:
@@ -642,8 +670,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: test-account
         secret:
@@ -715,8 +745,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: test-account
         secret:
@@ -755,8 +787,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -797,8 +831,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -839,8 +875,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -876,8 +914,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: covbot-token
         secret:
@@ -911,8 +951,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: test-account
         secret:
@@ -951,8 +993,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -993,8 +1037,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -1035,8 +1081,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -1120,8 +1168,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -1162,8 +1212,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -1199,8 +1251,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: covbot-token
         secret:
@@ -1281,8 +1335,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -1323,8 +1379,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -1360,8 +1418,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: covbot-token
         secret:
@@ -1399,8 +1459,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -1440,8 +1502,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -1487,8 +1551,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -1525,8 +1591,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: covbot-token
         secret:
@@ -1560,8 +1628,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: test-account
         secret:
@@ -1600,8 +1670,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -1642,8 +1714,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -1684,8 +1758,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -1721,8 +1797,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: covbot-token
         secret:
@@ -1761,8 +1839,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -1803,8 +1883,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -1845,8 +1927,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -1882,8 +1966,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: covbot-token
         secret:
@@ -1922,8 +2008,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -1964,8 +2052,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -2006,8 +2096,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -2043,8 +2135,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: covbot-token
         secret:
@@ -2082,8 +2176,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -2123,8 +2219,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -2164,8 +2262,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -2207,8 +2307,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -2249,8 +2351,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -2292,8 +2396,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -2334,8 +2440,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -2376,8 +2484,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -2417,8 +2527,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -2459,8 +2571,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -2498,8 +2612,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: test-account
         secret:
@@ -2531,8 +2647,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: covbot-token
         secret:
@@ -2571,8 +2689,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -2613,8 +2733,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -2655,8 +2777,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -2692,8 +2816,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: covbot-token
         secret:
@@ -2732,8 +2858,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -2774,8 +2902,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -2816,8 +2946,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -2853,8 +2985,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: covbot-token
         secret:
@@ -2893,8 +3027,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -2935,8 +3071,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -2977,8 +3115,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -3014,8 +3154,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: covbot-token
         secret:
@@ -3054,8 +3196,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -3096,8 +3240,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -3138,8 +3284,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -3175,8 +3323,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: covbot-token
         secret:
@@ -3213,8 +3363,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: test-account
         secret:
@@ -3253,8 +3405,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -3295,8 +3449,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -3337,8 +3493,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -3374,8 +3532,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: covbot-token
         secret:
@@ -3414,8 +3574,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -3456,8 +3618,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -3498,8 +3662,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -3535,8 +3701,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: covbot-token
         secret:
@@ -3572,8 +3740,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: test-account
         secret:
@@ -3612,8 +3782,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -3654,8 +3826,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -3696,8 +3870,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -3733,8 +3909,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: covbot-token
         secret:
@@ -3770,8 +3948,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: test-account
         secret:
@@ -3810,8 +3990,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -3852,8 +4034,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -3894,8 +4078,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -3931,8 +4117,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: covbot-token
         secret:
@@ -3968,8 +4156,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: test-account
         secret:
@@ -4014,8 +4204,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -4064,8 +4256,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -4114,8 +4308,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: repoview-token
         secret:
@@ -4158,8 +4354,10 @@ presubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: covbot-token
         secret:
@@ -4250,8 +4448,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -4301,8 +4501,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -4352,8 +4554,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -4403,8 +4607,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -4444,8 +4650,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -4483,8 +4691,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -4522,8 +4732,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -4561,8 +4773,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -4600,8 +4814,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -4639,8 +4855,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -4678,8 +4896,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -4717,8 +4937,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -4756,8 +4978,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -5088,8 +5312,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -5154,8 +5380,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
 - cron: "5 * * * *"
   name: ci-knative-client-continuous
   agent: kubernetes
@@ -5191,8 +5419,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -5241,8 +5471,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -5293,8 +5525,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -5345,8 +5579,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -5389,8 +5625,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: nightly-account
       secret:
@@ -5425,8 +5663,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -5475,8 +5715,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -5528,8 +5770,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -5578,8 +5822,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -5628,8 +5874,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -5663,8 +5911,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
 - cron: "0 * * * *"
   name: ci-knative-client-contrib-continuous
   agent: kubernetes
@@ -5700,8 +5950,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -5746,8 +5998,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -5779,8 +6033,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
 - cron: "30 */2 * * *"
   name: ci-knative-eventing-continuous
   agent: kubernetes
@@ -5866,8 +6122,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -5918,8 +6176,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -5970,8 +6230,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -6022,8 +6284,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -6357,8 +6621,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
 - cron: "35 * * * *"
   name: ci-knative-eventing-contrib-continuous
   agent: kubernetes
@@ -6444,8 +6710,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -6496,8 +6764,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -6548,8 +6818,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -6600,8 +6872,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -6935,8 +7209,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
 - cron: "17 * * * *"
   name: ci-knative-pkg-continuous
   agent: kubernetes
@@ -6972,8 +7248,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -7004,8 +7282,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
 - cron: "6 * * * *"
   name: ci-knative-caching-continuous
   agent: kubernetes
@@ -7041,8 +7321,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -7073,8 +7355,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
 - cron: "3 * * * *"
   name: ci-knative-observability-continuous
   agent: kubernetes
@@ -7109,8 +7393,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -7150,8 +7436,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -7191,8 +7479,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -7232,8 +7522,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -7264,8 +7556,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
 - cron: "48 * * * *"
   name: ci-knative-serving-operator-continuous
   agent: kubernetes
@@ -7301,8 +7595,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -7351,8 +7647,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -7403,8 +7701,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -7455,8 +7755,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -7507,8 +7809,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -7551,8 +7855,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: nightly-account
       secret:
@@ -7601,8 +7907,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -7654,8 +7962,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -7707,8 +8017,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -7757,8 +8069,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -7807,8 +8121,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -7842,8 +8158,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
 - cron: "7 * * * *"
   name: ci-knative-eventing-operator-continuous
   agent: kubernetes
@@ -7879,8 +8197,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -7929,8 +8249,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -7981,8 +8303,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -8033,8 +8357,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -8085,8 +8411,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -8129,8 +8457,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: nightly-account
       secret:
@@ -8179,8 +8509,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -8232,8 +8564,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -8285,8 +8619,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -8335,8 +8671,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -8385,8 +8723,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -8420,8 +8760,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
 - cron: "30 * * * *"
   name: ci-google-knative-gcp-continuous
   agent: kubernetes
@@ -8456,8 +8798,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -8505,8 +8849,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -8556,8 +8902,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -8607,8 +8955,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -8650,8 +9000,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: nightly-account
       secret:
@@ -8701,8 +9053,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -8755,8 +9109,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -8806,8 +9162,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -8857,8 +9215,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -8891,8 +9251,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
 - cron: "8 * * * *"
   name: ci-knative-net-certmanager-continuous
   agent: kubernetes
@@ -8928,8 +9290,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -8970,8 +9334,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: nightly-account
       secret:
@@ -9017,8 +9383,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -9067,8 +9435,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -9102,8 +9472,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
 - cron: "10 * * * *"
   name: ci-knative-net-contour-continuous
   agent: kubernetes
@@ -9139,8 +9511,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -9181,8 +9555,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: nightly-account
       secret:
@@ -9228,8 +9604,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -9278,8 +9656,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -9313,8 +9693,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
 - cron: "28 * * * *"
   name: ci-knative-net-http01-continuous
   agent: kubernetes
@@ -9350,8 +9732,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -9392,8 +9776,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: nightly-account
       secret:
@@ -9439,8 +9825,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -9489,8 +9877,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -9524,8 +9914,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
 - cron: "34 * * * *"
   name: ci-knative-net-istio-continuous
   agent: kubernetes
@@ -9561,8 +9953,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -9603,8 +9997,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: nightly-account
       secret:
@@ -9650,8 +10046,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -9700,8 +10098,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -9735,8 +10135,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
 - cron: "41 * * * *"
   name: ci-knative-net-kourier-continuous
   agent: kubernetes
@@ -9772,8 +10174,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -9814,8 +10218,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: nightly-account
       secret:
@@ -9861,8 +10267,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -9911,8 +10319,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -9946,8 +10356,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
 - cron: "14 * * * *"
   name: ci-knative-sandbox-operator-continuous
   agent: kubernetes
@@ -9983,8 +10395,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: test-account
       secret:
@@ -10025,8 +10439,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: nightly-account
       secret:
@@ -10074,8 +10490,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -10126,8 +10544,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -10161,8 +10581,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
 - cron: "48 * * * *"
   name: ci-knative-sandbox-eventing-kafka-continuous
   agent: kubernetes
@@ -10204,8 +10626,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -10254,8 +10678,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -10311,8 +10737,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -10371,8 +10799,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: hub-token
       secret:
@@ -10408,8 +10838,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
 - cron: "30 07 * * *"
   name: ci-knative-serving-recreate-clusters
   agent: kubernetes
@@ -10448,8 +10880,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: performance-test
       secret:
@@ -10492,8 +10926,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: performance-test
       secret:
@@ -10537,8 +10973,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: performance-test
       secret:
@@ -10582,8 +11020,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: performance-test
       secret:
@@ -10626,8 +11066,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: performance-test
       secret:
@@ -10670,8 +11112,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: performance-test
       secret:
@@ -10710,8 +11154,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: housekeeping-github-token
       secret:
@@ -10750,8 +11196,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: housekeeping-github-token
       secret:
@@ -10790,8 +11238,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: housekeeping-github-token
       secret:
@@ -10830,8 +11280,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: housekeeping-github-token
       secret:
@@ -10870,8 +11322,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: housekeeping-github-token
       secret:
@@ -10910,8 +11364,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: housekeeping-github-token
       secret:
@@ -10950,8 +11406,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: housekeeping-github-token
       secret:
@@ -10990,8 +11448,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: housekeeping-github-token
       secret:
@@ -11030,8 +11490,10 @@ periodics:
       resources:
         requests:
           memory: 8Gi
+          cpu: 2000m
         limits:
           memory: 8Gi
+          cpu: 4000m
     volumes:
     - name: housekeeping-github-token
       secret:
@@ -11074,8 +11536,10 @@ postsubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: performance-test
         secret:
@@ -11098,8 +11562,10 @@ postsubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
   - name: post-knative-serving-go-coverage-dev
     branches:
     - master
@@ -11118,8 +11584,10 @@ postsubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
   knative/client:
   - name: post-knative-client-go-coverage
     branches:
@@ -11140,8 +11608,10 @@ postsubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
   knative/eventing:
   - name: post-knative-eventing-reconcile-clusters
     branches:
@@ -11180,8 +11650,10 @@ postsubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: performance-test
         secret:
@@ -11205,8 +11677,10 @@ postsubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
   knative/eventing-contrib:
   - name: post-knative-eventing-contrib-go-coverage
     branches:
@@ -11227,8 +11701,10 @@ postsubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
   knative/docs:
   - name: post-knative-docs-go-coverage
     branches:
@@ -11248,8 +11724,10 @@ postsubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
   knative/pkg:
   - name: post-knative-pkg-go-coverage
     branches:
@@ -11270,8 +11748,10 @@ postsubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
   knative/test-infra:
   - name: post-knative-test-infra-go-coverage
     branches:
@@ -11292,8 +11772,10 @@ postsubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
   knative/caching:
   - name: post-knative-caching-go-coverage
     branches:
@@ -11314,8 +11796,10 @@ postsubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
   google/knative-gcp:
   - name: post-google-knative-gcp-reconcile-clusters
     branches:
@@ -11353,8 +11837,10 @@ postsubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
       volumes:
       - name: performance-test
         secret:
@@ -11377,8 +11863,10 @@ postsubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
   knative/net-certmanager:
   - name: post-knative-net-certmanager-go-coverage
     branches:
@@ -11399,8 +11887,10 @@ postsubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
   knative/net-contour:
   - name: post-knative-net-contour-go-coverage
     branches:
@@ -11421,8 +11911,10 @@ postsubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
   knative/net-http01:
   - name: post-knative-net-http01-go-coverage
     branches:
@@ -11443,8 +11935,10 @@ postsubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
   knative/net-istio:
   - name: post-knative-net-istio-go-coverage
     branches:
@@ -11465,8 +11959,10 @@ postsubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
   knative/net-kourier:
   - name: post-knative-net-kourier-go-coverage
     branches:
@@ -11487,8 +11983,10 @@ postsubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
   knative/serving-operator:
   - name: post-knative-serving-operator-go-coverage
     branches:
@@ -11509,8 +12007,10 @@ postsubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
   knative/eventing-operator:
   - name: post-knative-eventing-operator-go-coverage
     branches:
@@ -11531,8 +12031,10 @@ postsubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
   knative-sandbox/operator:
   - name: post-knative-sandbox-operator-go-coverage
     branches:
@@ -11553,8 +12055,10 @@ postsubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m
   knative-sandbox/eventing-kafka:
   - name: post-knative-sandbox-eventing-kafka-go-coverage
     branches:
@@ -11575,5 +12079,7 @@ postsubmits:
         resources:
           requests:
             memory: 8Gi
+            cpu: 2000m
           limits:
             memory: 8Gi
+            cpu: 4000m

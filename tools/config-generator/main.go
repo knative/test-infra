@@ -187,6 +187,10 @@ var (
 					Key:   "memory",
 					Value: "8Gi",
 				},
+				yaml.MapItem{
+					Key:   "cpu",
+					Value: "2000m",
+				},
 			},
 		},
 		yaml.MapItem{
@@ -195,6 +199,10 @@ var (
 				yaml.MapItem{
 					Key:   "memory",
 					Value: "8Gi",
+				},
+				yaml.MapItem{
+					Key:   "cpu",
+					Value: "4000m",
 				},
 			},
 		},
@@ -467,7 +475,7 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.Labels = make([]string, 0)
 	data.Optional = ""
 
-	setReourcesReqForJob(defaultResource, &data)
+	setResourcesReqForJob(defaultResource, &data)
 	// Temporary solution for migrating repos to use build cluster step by step
 	if repo != "knative/serving" {
 		data.Cluster = "cluster: \"build-knative\""
@@ -559,8 +567,8 @@ func setupDockerInDockerForJob(data *baseProwJobTemplateData) {
 	(*data).SecurityContext = []string{"privileged: true"}
 }
 
-// setReourcesReqForJob sets resource requirement for job
-func setReourcesReqForJob(res yaml.MapSlice, data *baseProwJobTemplateData) {
+// setResourcesReqForJob sets resource requirement for job
+func setResourcesReqForJob(res yaml.MapSlice, data *baseProwJobTemplateData) {
 	data.Resources = nil
 	for _, val := range res {
 		data.Resources = append(data.Resources, fmt.Sprintf("  %s:", getString(val.Key)))
@@ -635,7 +643,7 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 		case "optional":
 			(*data).Optional = "optional: true"
 		case "resources":
-			setReourcesReqForJob(getMapSlice(item.Value), data)
+			setResourcesReqForJob(getMapSlice(item.Value), data)
 		case nil: // already processed
 			continue
 		default:
