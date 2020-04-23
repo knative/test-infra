@@ -4529,8 +4529,8 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "21 */2 * * *"
-  name: ci-serving-go114-continuous-go114
+- cron: "26 */2 * * *"
+  name: ci-knative-serving-continuous-go114
   agent: kubernetes
   decorate: true
   extra_refs:
