@@ -592,7 +592,7 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 			for i, repo := range repositories {
 				if path.Base(repo.Name) == (*data).RepoName {
 					repositories[i].Go114 = true
-					data.RepoNameForJob = (*data).RepoName + getGo114ID()
+					data.RepoNameForJob = fmt.Sprintf("%s-%s", (*data).OrgName, (*data).RepoName)
 				}
 			}
 		case "performance":
