@@ -13,9 +13,9 @@
 # limitations under the License.
 
 FROM gcr.io/knative-tests/test-infra/prow-tests:stable
-LABEL maintainer "Chao Dai <chaodai@google.com>"
+LABEL maintainer="Chao Dai <chaodai@google.com>"
 
-ENV GO_TARBALL "go1.14beta1.tar.gz"
+ENV GO_TARBALL "go1.14.2.tar.gz"
 
 # Required variables to install go from source
 # Reference: https://golang.org/doc/install/source#environment
@@ -28,13 +28,12 @@ ENV GOARCH "amd64"
 # install netbase as it's required for Go linux amd64 install (OS specific)
 RUN apt-get install netbase
 
-# go1.14 is not released yet. Downloading the beta version directly from github and building from source
 # Reference: https://golang.org/doc/install/source
 RUN mv /usr/local/go /usr/local/go-old && \
     wget -q "https://github.com/golang/go/archive/${GO_TARBALL}" && \
     tar xzf "${GO_TARBALL}" -C /usr/local && \
-    mv /usr/local/go-go1.14beta1 /usr/local/go && \
+    mv /usr/local/go-go1.14.2 /usr/local/go && \
     cd ${GOROOT}/src && \
-    echo go1.14beta1 > ${GOROOT}/VERSION && \
+    echo go1.14.2 > ${GOROOT}/VERSION && \
     ./all.bash && \
     rm -rf ${GOROOT_BOOTSTRAP}
