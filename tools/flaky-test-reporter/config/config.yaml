@@ -1,4 +1,4 @@
-# Copyright 2019 The Knative Authors
+x# Copyright 2019 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,49 +24,49 @@ jobConfigs:
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: networking
+      - name: net-istio
         identity: CA9RHBGJX
   - name: ci-knative-serving-istio-1.5-no-mesh
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: networking
+      - name: net-istio
         identity: CA9RHBGJX
   - name: ci-knative-serving-istio-1.4-mesh
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: networking
+      - name: net-istio
         identity: CA9RHBGJX
   - name: ci-knative-serving-istio-1.4-no-mesh
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: networking
+      - name: net-istio
         identity: CA9RHBGJX
   - name: ci-knative-serving-gloo-0.17.1
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: networking
+      - name: net-gloo
         identity: CA9RHBGJX
   - name: ci-knative-serving-contour-latest
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: networking
+      - name: net-contour
         identity: CA9RHBGJX
   - name: ci-knative-serving-kourier-stable
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: networking
+      - name: net-kourier
         identity: CA9RHBGJX
   - name: ci-knative-serving-ambassador-latest
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: networking
+      - name: net-ambassador
         identity: CA9RHBGJX
   - name: ci-knative-eventing-continuous
     repo: eventing
