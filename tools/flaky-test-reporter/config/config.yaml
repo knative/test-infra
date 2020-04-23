@@ -37,7 +37,7 @@ jobConfigs:
     type: postsubmit
     slackChannels:
       - name: net-istio
-        identity C012AK2FPK7
+        identity: C012AK2FPK7
   - name: ci-knative-serving-istio-1.4-no-mesh
     repo: serving
     type: postsubmit
