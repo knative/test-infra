@@ -440,7 +440,6 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.Args = make([]string, 0)
 	data.Volumes = make([]string, 0)
 	data.VolumeMounts = make([]string, 0)
-	data.Resources = make([]string, 0)
 	data.Env = make([]string, 0)
 	data.ExtraRefs = []string{"- org: " + data.OrgName, "  repo: " + data.RepoName}
 	data.Labels = make([]string, 0)
@@ -537,8 +536,9 @@ func setupDockerInDockerForJob(data *baseProwJobTemplateData) {
 	(*data).SecurityContext = []string{"privileged: true"}
 }
 
-// setReourcesReqForJob sets resource requirement for job
-func setReourcesReqForJob(res yaml.MapSlice, data *baseProwJobTemplateData) {
+// setResourcesReqForJob sets resource requirement for job
+func setResourcesReqForJob(res yaml.MapSlice, data *baseProwJobTemplateData) {
+	data.Resources = nil
 	for _, val := range res {
 		data.Resources = append(data.Resources, fmt.Sprintf("  %s:", getString(val.Key)))
 		for _, item := range getMapSlice(val.Value) {
@@ -612,7 +612,7 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 		case "optional":
 			(*data).Optional = "optional: true"
 		case "resources":
-			setReourcesReqForJob(getMapSlice(item.Value), data)
+			setResourcesReqForJob(getMapSlice(item.Value), data)
 		case nil: // already processed
 			continue
 		default:

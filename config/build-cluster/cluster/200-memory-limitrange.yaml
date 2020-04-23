@@ -22,5 +22,5 @@ spec:
     - default:
         memory: 8Gi
       defaultRequest:
-        memory: 4Gi
+        memory: 8Gi
       type: Container
