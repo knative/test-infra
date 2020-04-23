@@ -19,6 +19,12 @@ popd
 python3 "${GOPATH}/src/k8s.io/test-infra/gencred/merge_kubeconfig_secret.py" --src-key config --dest-key config build-cluster-kubeconfig.yaml
 ```
 
+The previous step created a build cluster, and registered it's kubeconfig as
+part of a secret named `kubeconfig`, and maps it with a nick name of
+`build-knative`, and this is what is will be refered to when being used by main
+Prow cluster. To make this work, the deployments depend on these secrets need to
+be restarted, so far these are `deck`, `sinker`, and `crier`
+
 Copy secrets from old cluster to build cluster:
 
 ```
