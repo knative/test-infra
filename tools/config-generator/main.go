@@ -446,7 +446,7 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.Optional = ""
 
 	// Temporary solution for migrating repos to use build cluster step by step
-	if repo != "knative/serving" {
+	if repo != "knative/serving" && data.OrgName != "knative-prow-robot" {
 		data.Cluster = "cluster: \"build-knative\""
 	}
 	return data
