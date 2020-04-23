@@ -42,6 +42,10 @@ spec:
         - mountPath: /etc/test-account
           name: service
           readOnly: true
+        resources:
+          requests:
+            cpu: 200m
+            memory: 20Mi
       volumes:
       - name: service
         secret:
