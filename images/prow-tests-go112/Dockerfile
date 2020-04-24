@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM gcr.io/knative-tests/test-infra/prow-tests:stable
+FROM gcr.io/knative-tests/test-infra/prow-tests:v20200327-9a6c4b1d
 LABEL maintainer "Chao Dai <chaodai@google.com>"
 
 # Install go at 1.12 same as how it's installed in kubekins-e2e image, reference code here:

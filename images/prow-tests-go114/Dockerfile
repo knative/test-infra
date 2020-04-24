@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM gcr.io/knative-tests/test-infra/prow-tests:stable
+FROM gcr.io/knative-tests/test-infra/prow-tests:v20200327-9a6c4b1d
 LABEL maintainer "Chao Dai <chaodai@google.com>"
 
 # Install go at 1.14 same as how it's installed in kubekins-e2e image, reference code here:
@@ -23,8 +23,3 @@ RUN rm -rf /usr/local/go && \
     wget -q "${GO_TARBALL_HOST}/${GO_TARBALL}" && \
     tar xzf "${GO_TARBALL}" -C /usr/local && \
     rm "${GO_TARBALL}"
-
-# Don't know why, ko installed in base image doesn't work well with this image.
-# Got `error during command execution: exit status 128` when run `ko version`.
-# Install ko again with go1.14 seems fixing the problem
-RUN GO111MODULE=on go get github.com/google/ko/cmd/ko@v0.3.0
