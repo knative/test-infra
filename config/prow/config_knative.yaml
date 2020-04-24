@@ -407,9 +407,6 @@ presubmits:
     - integration-tests: true
       dot-dev: true
       needs-dind: true
-    - go-coverage: true
-      dot-dev: true
-      needs-dind: true
 
 periodics:
   knative/serving:
