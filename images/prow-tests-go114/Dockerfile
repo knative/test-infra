@@ -23,3 +23,8 @@ RUN rm -rf /usr/local/go && \
     wget -q "${GO_TARBALL_HOST}/${GO_TARBALL}" && \
     tar xzf "${GO_TARBALL}" -C /usr/local && \
     rm "${GO_TARBALL}"
+
+# Don't know why, ko installed in base image doesn't work well with this image.
+# Got `error during command execution: exit status 128` when run `ko version`.
+# Install ko again with go1.14 seems fixing the problem
+RUN GO111MODULE=on go get github.com/google/ko/cmd/ko@v0.3.0
