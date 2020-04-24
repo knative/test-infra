@@ -676,9 +676,6 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "prime-engprod-sea@google.com"
   num_failures_to_alert: 1
-- name: ci-knative-eventing-kafka-sandbox-test-coverage
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-kafka-sandbox-go-coverage
-  short_text_metric: "coverage"
 dashboards:
 - name: serving
   dashboard_tab:
@@ -1201,9 +1198,6 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "prime-engprod-sea@google.com"
     num_failures_to_alert: 1
-  - name: coverage
-    test_group_name: ci-knative-eventing-kafka-sandbox-test-coverage
-    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: knative-0.10
   dashboard_tab:
   - name: serving-continuous

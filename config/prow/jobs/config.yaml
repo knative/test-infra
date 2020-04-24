@@ -3653,42 +3653,6 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-sandbox-eventing-kafka-go-coverage
-    agent: kubernetes
-    context: pull-knative-sandbox-eventing-kafka-go-coverage
-    always_run: true
-    rerun_command: "/test pull-knative-sandbox-eventing-kafka-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-go-coverage),?(\\s+|$)"
-    optional: true
-    decorate: true
-    path_alias: knative.dev/eventing-kafka
-    cluster: "build-knative"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--postsubmit-job-name=post-knative-sandbox-eventing-kafka-go-coverage"
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=50"
-        - "--github-token=/etc/covbot-token/token"
-        volumeMounts:
-        - name: covbot-token
-          mountPath: /etc/covbot-token
-          readOnly: true
-        - name: docker-graph
-          mountPath: /docker-graph
-        env:
-        - name: DOCKER_IN_DOCKER_ENABLED
-          value: "true"
-      volumes:
-      - name: covbot-token
-        secret:
-          secretName: covbot-token
-      - name: docker-graph
-        emptyDir: {}
 periodics:
 - cron: "10 */2 * * *"
   name: ci-knative-serving-continuous
@@ -9348,29 +9312,6 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "0 1 * * *"
-  name: ci-knative-sandbox-eventing-kafka-go-coverage
-  labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-sandbox-eventing-kafka-go-coverage
-  agent: kubernetes
-  decorate: true
-  cluster: "build-knative"
-  extra_refs:
-  - org: knative-sandbox
-    repo: eventing-kafka
-    base_ref: master
-    path_alias: knative.dev/eventing-kafka
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/coverage:latest
-      imagePullPolicy: Always
-      command:
-      - "/coverage"
-      args:
-      - "--artifacts=$(ARTIFACTS)"
-      - "--cov-threshold-percentage=50"
 - cron: "30 07 * * *"
   name: ci-knative-serving-recreate-clusters
   agent: kubernetes
@@ -10332,23 +10273,6 @@ postsubmits:
     decorate: true
     cluster: "build-knative"
     path_alias: knative.dev/operator
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
-        imagePullPolicy: Always
-        command:
-        - "/coverage"
-        args:
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=0"
-  knative-sandbox/eventing-kafka:
-  - name: post-knative-sandbox-eventing-kafka-go-coverage
-    branches:
-    - master
-    agent: kubernetes
-    decorate: true
-    cluster: "build-knative"
-    path_alias: knative.dev/eventing-kafka
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/coverage:latest
