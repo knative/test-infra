@@ -912,7 +912,7 @@ periodics:
 
   google/knative-gcp:
     - continuous: true
-      go113: true
+      go114: true
     - branch-ci: true
       release: "0.12"
       go113: true
@@ -923,7 +923,7 @@ periodics:
       release: "0.14"
       go113: true
     - nightly: true
-      go113: true
+      go114: true
     - dot-release: true
       go113: true
       release: "0.12"

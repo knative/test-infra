@@ -7587,7 +7587,7 @@ periodics:
     base_ref: master
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:stable
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -7760,7 +7760,7 @@ periodics:
     base_ref: master
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:stable
       imagePullPolicy: Always
       command:
       - runner.sh
