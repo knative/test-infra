@@ -13,6 +13,7 @@
 # limitations under the License.
 
 SHELL := /bin/bash
+include ../common.mk
 
 # This file is used by prod and staging Makefiles
 
@@ -101,16 +102,6 @@ update-single-cluster-deployment: confirm-master
 
 # Update all resources on Prow cluster
 update-prow-cluster: update-almost-all-cluster-deployments update-all-boskos-deployments update-boskos-resource update-prow-config
-
-# Do not allow server update from wrong branch or dirty working space
-# In emergency, could easily edit this file, deleting all these lines
-confirm-master:
-	@if git diff-index --quiet HEAD; then true; else echo "Git working space is dirty -- will not update server"; false; fi;
-# TODO(chizhg): change to `git branch --show-current` after we update the Git version in prow-tests image.
-ifneq ("$(shell git rev-parse --abbrev-ref HEAD)","master")
-	@echo "Branch is not master -- will not update server"
-	@false
-endif
 
 # Update TestGrid config.
 # Application Default Credentials must be set, otherwise the upload will fail.
