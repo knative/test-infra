@@ -176,6 +176,6 @@ initialize $@
 # Setup cluster
 setup_test_cluster # NA
 
-go_test_e2e ./test/e2e || fail_test
+go_test_e2e ./test/e2e111 || fail_test
 
 success

@@ -384,7 +384,7 @@ function report_go_test() {
   # Just run regular go tests if not on Prow.
   echo "Running tests with '${go_test}'"
   local report="$(mktemp)"
-  capture_output "${report}" ${go_test}
+  capture_output "${report}" ${go_test} || return 1
   local failed=$?
   echo "Finished run, return code is ${failed}"
   # Install go-junit-report if necessary.
