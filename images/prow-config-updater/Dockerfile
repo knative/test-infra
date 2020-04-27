@@ -14,7 +14,7 @@
 
 # TODO(chizhg): Make this image smaller by only installing components we need, in this case gcloud, kubectl, bazel and Go
 FROM gcr.io/k8s-testimages/kubekins-e2e:v20200302-c921a88-master
-LABEL maintainer "Chi Zhang <chizhg@google.com>"
+LABEL maintainer="Chi Zhang <chizhg@google.com>"
 RUN apt-get update
 RUN gcloud components update
 
