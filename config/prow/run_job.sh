@@ -26,13 +26,17 @@ cd ${REPO_ROOT_DIR}
 
 make -C ./config/prow get-cluster-credentials
 
-run_mkpj="mkpj"
-[[ -z "$(which mkpj)" ]] && run_mkpj="bazel run @k8s//prow/cmd/mkpj --"
-
 JOB_YAML=$(mktemp)
 CONFIG_YAML=${REPO_ROOT_DIR}/config/prow/core/config.yaml
 JOB_CONFIG_YAML=${REPO_ROOT_DIR}/config/prow/jobs
-${run_mkpj} --job=$1 --config-path=${CONFIG_YAML} --job-config-path=${JOB_CONFIG_YAML} > ${JOB_YAML}
+
+docker run -i --rm \
+    -v "${PWD}:${PWD}" -v "${CONFIG_YAML}:${CONFIG_YAML}" -v "${JOB_CONFIG_YAML}:${JOB_CONFIG_YAML}" \
+    -w "${PWD}" \
+    gcr.io/k8s-prow/mkpj:v20200427-84e5e2b2c \
+    "--job=$1" "--config-path=${CONFIG_YAML}" "--job-config-path=${JOB_CONFIG_YAML}" \
+    > ${JOB_YAML}
+
 echo "Job YAML file saved to ${JOB_YAML}"
 kubectl apply -f ${JOB_YAML}
 
