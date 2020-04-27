@@ -1,7 +1,7 @@
 # Prow Test Job Image
 
-This directory contains the custom Docker image used by our Prow test jobs.
-Some forks of this images exist under images/.
+This directory contains the custom Docker image used by our Prow test jobs. Some
+forks of this images exist under images/.
 
 The `prow-tests` image is pinned on a specific `kubekins` image; update
 `Dockerfile` if you need to use a newer/different image. This will basically
