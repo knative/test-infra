@@ -13,7 +13,6 @@
 # limitations under the License.
 
 FROM gcr.io/knative-tests/test-infra/prow-tests:v20200327-9a6c4b1d
-LABEL maintainer "Chao Dai <chaodai@google.com>"
 
 # Install go at 1.12 same as how it's installed in kubekins-e2e image, reference code here:
 # https://github.com/kubernetes/test-infra/blob/1e9b5dc3de4b268aab57c9c48120aa3dcf096bc6/images/kubekins-e2e/Dockerfile#L64

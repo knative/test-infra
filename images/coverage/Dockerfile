@@ -13,7 +13,7 @@
 # limitations under the License.
 
 FROM golang:1.13
-LABEL maintainer "Stephen Lu <syzf@google.com>"
+LABEL maintainer="Stephen Lu <syzf@google.com>"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \

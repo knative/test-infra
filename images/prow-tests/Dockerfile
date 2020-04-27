@@ -18,7 +18,6 @@
 
 # TODO(chizhg): probably build the image from scratch?
 FROM gcr.io/k8s-testimages/kubekins-e2e:v20200326-e946722-master
-LABEL maintainer "Adriano Cunha <adrcunha@google.com>"
 
 # Install extras on top of base image
 
@@ -59,13 +58,3 @@ RUN ko version > /ko_version
 # Extra tools through gem
 RUN gem install mixlib-config -v 2.2.4  # required because ruby is 2.1
 RUN gem install mdl -v 0.5  # required because later version of mdl requires ruby >= 2.4
-
-# Temporarily add test-infra to the image to build custom tools
-ADD . /go/src/knative.dev/test-infra
-
-# Build custom tools in the container
-RUN make -C /go/src/knative.dev/test-infra/tools/githubhelper
-RUN cp /go/src/knative.dev/test-infra/tools/githubhelper/githubhelper .
-
-# Remove test-infra from the container
-RUN rm -fr /go/src/knative.dev/test-infra
