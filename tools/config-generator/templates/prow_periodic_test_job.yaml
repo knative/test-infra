@@ -3,6 +3,7 @@
   agent: kubernetes
   [[indent_section 4 "labels" .Base.Labels]]
   decorate: true
+  [[.Base.Cluster]]
   [[indent_section 2 "extra_refs" .Base.ExtraRefs]]
   [[indent_array_section 4 "branches" .Base.Branches]]
   [[indent_array_section 4 "skip_branches" .Base.SkipBranches]]

@@ -13,8 +13,8 @@
 # limitations under the License.
 
 # This is the meta config file for Prow Jobs in all Knative projects.
-# Run `make config` after making changes to this file, the config-generator
-# will generate Prow jobs for you in jobs/config.yaml.
+# Run `./hack/generate-configs.sh` after making changes to this file,
+# the config-generator will generate Prow jobs for you in jobs/config.yaml.
 
 presubmits:
   knative/serving:
@@ -154,9 +154,6 @@ presubmits:
         - "./test/e2e-tests.sh"
 
   knative/client:
-    - repo-settings:
-      go112-branches:
-      - release-0.10
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -182,8 +179,6 @@ presubmits:
   knative/eventing:
     - repo-settings:
       performance: true
-      go112-branches:
-      - release-0.10
     - build-tests: true
       dot-dev: true
       resources:
@@ -199,9 +194,6 @@ presubmits:
       dot-dev: true
 
   knative/eventing-contrib:
-    - repo-settings:
-      go112-branches:
-      - release-0.10
     - build-tests: true
       dot-dev: true
       resources:
@@ -217,9 +209,6 @@ presubmits:
       dot-dev: true
 
   knative/docs:
-    - repo-settings:
-      go112-branches:
-      - release-0.10
     - build-tests: true
     - unit-tests: true
     - integration-tests: true
@@ -232,9 +221,6 @@ presubmits:
         - "./test/presubmit-link-check.sh"
 
   knative/pkg:
-    - repo-settings:
-      go112-branches:
-      - release-0.10
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -253,15 +239,8 @@ presubmits:
       dot-dev: true
     - go-coverage: true
       dot-dev: true
-    - custom-test: check-config
-      dot-dev: true
-      command:
-        - "./test/presubmit-config-check.sh"
 
   knative/caching:
-    - repo-settings:
-      go112-branches:
-      - release-0.10
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -272,26 +251,17 @@ presubmits:
       dot-dev: true
 
   knative/observability:
-    - repo-settings:
-      go112-branches:
-      - release-0.10
     - build-tests: true
     - unit-tests: true
     - integration-tests: true
 
   knative/sample-controller:
-    - repo-settings:
-      go112-branches:
-      - release-0.10
     - build-tests: true
       dot-dev: true
     - unit-tests: true
       dot-dev: true
 
   knative/sample-source:
-    - repo-settings:
-      go112-branches:
-      - release-0.10
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -300,11 +270,16 @@ presubmits:
   google/knative-gcp:
     - repo-settings:
       performance: true
-      go112-branches:
-      - release-0.10
     - build-tests: true
     - unit-tests: true
     - integration-tests: true
+      args:
+      - "--run-test"
+      - "./test/e2e-tests.sh"
+    - custom-test: wi-tests
+      args:
+      - "--run-test"
+      - "./test/e2e-wi-tests.sh"
     - go-coverage: true
 
   knative/net-certmanager:
@@ -312,7 +287,7 @@ presubmits:
       dot-dev: true
     - unit-tests: true
       dot-dev: true
-    - integration-tests: false
+    - integration-tests: true
       dot-dev: true
     - go-coverage: true
       dot-dev: true
@@ -379,9 +354,6 @@ presubmits:
         - "./test/e2e-upgrade-tests.sh"
 
   knative/eventing-operator:
-    - repo-settings:
-      go112-branches:
-      - release-0.10
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -424,6 +396,17 @@ presubmits:
       args:
         - "--run-test"
         - "./test/e2e-upgrade-tests.sh"
+
+  knative-sandbox/eventing-kafka:
+    - build-tests: true
+      dot-dev: true
+      needs-dind: true
+    - unit-tests: true
+      dot-dev: true
+      needs-dind: true
+    - integration-tests: true
+      dot-dev: true
+      needs-dind: true
 
 periodics:
   knative/serving:
@@ -597,7 +580,7 @@ periodics:
       dot-dev: true
       go113: true
     - custom-job: continuous-go114
-      full-command: "./test/e2e-tests.sh"
+      command: "./test/e2e-tests.sh"
       timeout: 100
       dot-dev: true
       go114: true
@@ -631,7 +614,7 @@ periodics:
       # Nightly jobs run between 1AM and 3AM PST.
       # Run this job at 5AM PST (1PM UTC)
       cron: "0 13 * * *"
-      full-command: "./test/tekton-tests.sh"
+      command: "./test/tekton-tests.sh"
       dot-dev: true
       go113: true
     - dot-release: true
@@ -657,6 +640,7 @@ periodics:
   knative/docs:
     - continuous: true
       needs-dind: true
+      go113: true
 
   knative/eventing:
     - continuous: true
@@ -669,9 +653,6 @@ periodics:
         limits:
           memory: 16Gi
     - branch-ci: true
-      release: "0.10"
-      dot-dev: true
-    - branch-ci: true
       release: "0.11"
       dot-dev: true
       go113: true
@@ -681,6 +662,10 @@ periodics:
       go113: true
     - branch-ci: true
       release: "0.13"
+      dot-dev: true
+      go113: true
+    - branch-ci: true
+      release: "0.14"
       dot-dev: true
       go113: true
     - nightly: true
@@ -694,15 +679,6 @@ periodics:
     - dot-release: true
       dot-dev: true
       go113: true
-      release: "0.10"
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - dot-release: true
-      dot-dev: true
-      go113: true
       release: "0.11"
       resources:
         requests:
@@ -713,6 +689,15 @@ periodics:
       dot-dev: true
       go113: true
       release: "0.12"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    - dot-release: true
+      dot-dev: true
+      go113: true
+      release: "0.13"
       resources:
         requests:
           memory: 12Gi
@@ -745,9 +730,6 @@ periodics:
         limits:
           memory: 16Gi
     - branch-ci: true
-      release: "0.10"
-      dot-dev: true
-    - branch-ci: true
       release: "0.11"
       dot-dev: true
       go113: true
@@ -757,6 +739,10 @@ periodics:
       go113: true
     - branch-ci: true
       release: "0.13"
+      dot-dev: true
+      go113: true
+    - branch-ci: true
+      release: "0.14"
       dot-dev: true
       go113: true
     - nightly: true
@@ -770,15 +756,6 @@ periodics:
     - dot-release: true
       dot-dev: true
       go113: true
-      release: "0.10"
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - dot-release: true
-      dot-dev: true
-      go113: true
       release: "0.11"
       resources:
         requests:
@@ -789,6 +766,15 @@ periodics:
       dot-dev: true
       go113: true
       release: "0.12"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    - dot-release: true
+      dot-dev: true
+      go113: true
+      release: "0.13"
       resources:
         requests:
           memory: 12Gi
@@ -856,6 +842,10 @@ periodics:
       release: "0.13"
       dot-dev: true
       go113: true
+    - branch-ci: true
+      release: "0.14"
+      dot-dev: true
+      go113: true
     - nightly: true
       dot-dev: true
       go113: true
@@ -867,6 +857,10 @@ periodics:
       dot-dev: true
       go113: true
       release: "0.12"
+    - dot-release: true
+      dot-dev: true
+      go113: true
+      release: "0.13"
     - dot-release: true
       dot-dev: true
       go113: true
@@ -890,6 +884,10 @@ periodics:
       release: "0.13"
       dot-dev: true
       go113: true
+    - branch-ci: true
+      release: "0.14"
+      dot-dev: true
+      go113: true
     - nightly: true
       dot-dev: true
       go113: true
@@ -901,6 +899,10 @@ periodics:
       dot-dev: true
       go113: true
       release: "0.12"
+    - dot-release: true
+      dot-dev: true
+      go113: true
+      release: "0.13"
     - dot-release: true
       dot-dev: true
       go113: true
@@ -917,6 +919,9 @@ periodics:
     - branch-ci: true
       release: "0.13"
       go113: true
+    - branch-ci: true
+      release: "0.14"
+      go113: true
     - nightly: true
       go113: true
     - dot-release: true
@@ -924,6 +929,11 @@ periodics:
       release: "0.12"
       env-vars:
       - ORG_NAME=google
+    - dot-release: true
+      go113: true
+      release: "0.13"
+      env-vars:
+        - ORG_NAME=google
     - dot-release: true
       go113: true
       env-vars:
@@ -1018,5 +1028,27 @@ periodics:
     - auto-release: true
       go113: true
       dot-dev: true
+      env-vars:
+      - ORG_NAME=knative-sandbox
+
+  knative-sandbox/eventing-kafka:
+    - continuous: true
+      go113: true
+      dot-dev: true
+      needs-dind: true
+    - nightly: true
+      go113: true
+      dot-dev: true
+      needs-dind: true
+    - dot-release: true
+      go113: true
+      dot-dev: true
+      needs-dind: true
+      env-vars:
+      - ORG_NAME=knative-sandbox
+    - auto-release: true
+      go113: true
+      dot-dev: true
+      needs-dind: true
       env-vars:
       - ORG_NAME=knative-sandbox

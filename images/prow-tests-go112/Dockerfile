@@ -12,13 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM gcr.io/knative-tests/test-infra/prow-tests:stable
+FROM gcr.io/knative-tests/test-infra/prow-tests:v20200327-9a6c4b1d
 LABEL maintainer "Chao Dai <chaodai@google.com>"
 
 # Install go at 1.12 same as how it's installed in kubekins-e2e image, reference code here:
 # https://github.com/kubernetes/test-infra/blob/1e9b5dc3de4b268aab57c9c48120aa3dcf096bc6/images/kubekins-e2e/Dockerfile#L64
+ENV GO_TARBALL_HOST "https://storage.googleapis.com/golang"
 ENV GO_TARBALL "go1.12.linux-amd64.tar.gz"
 RUN rm -rf /usr/local/go && \
-    wget -q "https://storage.googleapis.com/golang/${GO_TARBALL}" && \
+    wget -q "${GO_TARBALL_HOST}/${GO_TARBALL}" && \
     tar xzf "${GO_TARBALL}" -C /usr/local && \
     rm "${GO_TARBALL}"

@@ -24,50 +24,50 @@ jobConfigs:
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: networking
-        identity: CA9RHBGJX
+      - name: net-istio
+        identity: C012AK2FPK7
   - name: ci-knative-serving-istio-1.5-no-mesh
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: networking
-        identity: CA9RHBGJX
+      - name: net-istio
+        identity: C012AK2FPK7
   - name: ci-knative-serving-istio-1.4-mesh
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: networking
-        identity: CA9RHBGJX
+      - name: net-istio
+        identity: C012AK2FPK7
   - name: ci-knative-serving-istio-1.4-no-mesh
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: networking
-        identity: CA9RHBGJX
+      - name: net-istio
+        identity: C012AK2FPK7
   - name: ci-knative-serving-gloo-0.17.1
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: networking
-        identity: CA9RHBGJX
+      - name: net-gloo
+        identity: C011X8RKZBR
   - name: ci-knative-serving-contour-latest
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: networking
-        identity: CA9RHBGJX
+      - name: net-contour
+        identity: C012J5TCS6Q
   - name: ci-knative-serving-kourier-stable
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: networking
-        identity: CA9RHBGJX
+      - name: net-kourier
+        identity: C012C0VQJAW
   - name: ci-knative-serving-ambassador-latest
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: networking
-        identity: CA9RHBGJX
+      - name: net-ambassador
+        identity: C011X8SPF8X
   - name: ci-knative-eventing-continuous
     repo: eventing
     type: postsubmit

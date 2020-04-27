@@ -243,12 +243,31 @@
   version = "v1.0.0"
 
 [[projects]]
+  digest = "1:9676627451831e0d8e347007d871eac494ce51d55b95a3fe1fac30ad8d717ab9"
+  name = "github.com/hashicorp/golang-lru"
+  packages = [
+    ".",
+    "simplelru",
+  ]
+  pruneopts = "NUT"
+  revision = "14eae340515388ca95aa8e7b86f0de668e981f54"
+  version = "v0.5.4"
+
+[[projects]]
   digest = "1:7c47a990a91ab4922f4009c8ba8dcf35dad08e2b697cf26ea87eaae90e3f7aa1"
   name = "github.com/imdario/mergo"
   packages = ["."]
   pruneopts = "NUT"
   revision = "1afb36080aec31e0d1528973ebe6721b191b0369"
   version = "v0.3.8"
+
+[[projects]]
+  digest = "1:406338ad39ab2e37b7f4452906442a3dbf0eb3379dd1f06aafb5c07e769a5fbb"
+  name = "github.com/inconshreveable/mousetrap"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75"
+  version = "v1.0"
 
 [[projects]]
   digest = "1:88116f979a2f3ff8e6748a942ec37efd668ba2db062fc9a5e47f4dd2de339a38"
@@ -349,6 +368,14 @@
   pruneopts = "NUT"
   revision = "839c75faf7f98a33d445d181f3018b5c3409a45e"
   version = "v1.4.2"
+
+[[projects]]
+  digest = "1:cae9f5ec514bfd95d4292a27124d368aa542be8a12fbdd3148cf981daddea182"
+  name = "github.com/spf13/cobra"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "6607e6b8603f56adb027298ee6695e06ffb3a819"
+  version = "0.0.7"
 
 [[projects]]
   digest = "1:d115708a27806831d1babbc6f28a7478ddf8e32a7095507c816e2515fb03a810"
@@ -576,7 +603,7 @@
   revision = "d33eef8e6825f50394356b51ff2bbbe3d30e07e7"
 
 [[projects]]
-  digest = "1:081608ceb454c46b54d24b7561e5744088f3ff69478b23f50277ec83bd8636b0"
+  digest = "1:74ee58de746e67a8d7d44b8b71ca3b980f6b1f62211075832d2f427205ea18cd"
   name = "google.golang.org/api"
   packages = [
     "container/v1beta1",
@@ -587,16 +614,18 @@
     "internal/third_party/uritemplates",
     "iterator",
     "option",
+    "option/internaloption",
     "storage/v1",
     "support/bundler",
     "transport",
+    "transport/cert",
     "transport/grpc",
     "transport/http",
     "transport/http/internal/propagation",
   ]
   pruneopts = "NUT"
-  revision = "aa5d4e47691e7ae1aebb5221ff8e4beea23fad72"
-  version = "v0.15.0"
+  revision = "52f0532eadbcc6f6b82d6f5edf66e610d10bfde6"
+  version = "v0.21.0"
 
 [[projects]]
   digest = "1:be5054b1c190011dca4e1c3c051025294e97f14fdfd354093fc233b4d05dcd98"
@@ -636,7 +665,7 @@
   revision = "2548664c049f60b1d6488978017f539ec300e34d"
 
 [[projects]]
-  digest = "1:81fc76a3a29cafb597e19c2016c278f0ffa44c98893de090ec0c924643c68918"
+  digest = "1:c37329e8e9ea45a568f1804138ec01718acddb52e2ef2a9a503a5a57136fd2bc"
   name = "google.golang.org/grpc"
   packages = [
     ".",
@@ -671,8 +700,10 @@
     "internal/buffer",
     "internal/channelz",
     "internal/envconfig",
+    "internal/grpclog",
     "internal/grpcrand",
     "internal/grpcsync",
+    "internal/grpcutil",
     "internal/resolver/dns",
     "internal/resolver/passthrough",
     "internal/syscall",
@@ -688,8 +719,8 @@
     "tap",
   ]
   pruneopts = "NUT"
-  revision = "f5b0812e6fe574d90da76b205e9eb51f6ddb1919"
-  version = "v1.26.0"
+  revision = "142182889d38b76209f1d9f1d8e91d7608aff542"
+  version = "v1.28.0"
 
 [[projects]]
   digest = "1:2d1fbdc6777e5408cabeb02bf336305e724b925ff4546ded0fa8715a7267922a"
@@ -789,14 +820,16 @@
   version = "kubernetes-1.16.4"
 
 [[projects]]
-  digest = "1:39fdda8acc1d34a52b34fbcc67946941eee320973f3f29ea1bad88dde39a11dd"
+  digest = "1:f146ce4d5442df9fe77aac9c4816ee0d1843981571073aaf1a29521a85c15ad1"
   name = "k8s.io/apimachinery"
   packages = [
     "pkg/api/errors",
     "pkg/api/meta",
     "pkg/api/resource",
+    "pkg/apis/meta/internalversion",
     "pkg/apis/meta/v1",
     "pkg/apis/meta/v1/unstructured",
+    "pkg/apis/meta/v1beta1",
     "pkg/conversion",
     "pkg/conversion/queryparams",
     "pkg/fields",
@@ -811,7 +844,9 @@
     "pkg/runtime/serializer/versioning",
     "pkg/selection",
     "pkg/types",
+    "pkg/util/cache",
     "pkg/util/clock",
+    "pkg/util/diff",
     "pkg/util/errors",
     "pkg/util/framer",
     "pkg/util/intstr",
@@ -833,7 +868,7 @@
   version = "kubernetes-1.16.4"
 
 [[projects]]
-  digest = "1:d25f42cd2bc6da2d77315ad7fe547729e417218fd9811a99faae89d793442453"
+  digest = "1:0485d43f52326a9b6be4211998d00b47aa4169302a17feeb8f05fe032740d8ed"
   name = "k8s.io/client-go"
   packages = [
     "discovery",
@@ -885,11 +920,13 @@
     "rest",
     "rest/watch",
     "tools/auth",
+    "tools/cache",
     "tools/clientcmd",
     "tools/clientcmd/api",
     "tools/clientcmd/api/latest",
     "tools/clientcmd/api/v1",
     "tools/metrics",
+    "tools/pager",
     "tools/reference",
     "transport",
     "util/cert",
@@ -897,6 +934,7 @@
     "util/flowcontrol",
     "util/homedir",
     "util/keyutil",
+    "util/retry",
   ]
   pruneopts = "NUT"
   revision = "20ea64f01e4d4026bce06d61d697368390aeda4e"
@@ -926,17 +964,22 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:8a5e4720aca8a94c876d960a2b86afcaf98e8ded4b5bd7fe42d920806b292c57"
+  digest = "1:2d3f59daa4b479ff4e100a2e1d8fea6780040fdadc177869531fe4cc29407f55"
   name = "k8s.io/utils"
-  packages = ["integer"]
+  packages = [
+    "buffer",
+    "integer",
+    "trace",
+  ]
   pruneopts = "NUT"
   revision = "861946025e3491219eaccb1bf693e23df70c2fa8"
 
 [[projects]]
   branch = "master"
-  digest = "1:fb737248fa04011f76fe4788a155017257e2a54b25fcf8078ddadb69aa22bb2a"
+  digest = "1:57b37fef4efc00ff4faedd318095881115062cc5cdc68e2d02fa08a8bb575ac4"
   name = "knative.dev/pkg"
   packages = [
+    "kmeta",
     "test",
     "test/cmd",
     "test/gcs",
@@ -957,14 +1000,11 @@
     "testutils/clustermanager/e2e-tests/common",
     "testutils/clustermanager/perf-tests",
     "testutils/clustermanager/perf-tests/pkg",
-    "testutils/clustermanager/prow-cluster-operation",
-    "testutils/clustermanager/prow-cluster-operation/actions",
-    "testutils/clustermanager/prow-cluster-operation/options",
     "testutils/metahelper",
     "testutils/metahelper/client",
   ]
   pruneopts = "NUT"
-  revision = "55250e6aab62f767b8680a12ddeb771c519d78fe"
+  revision = "f68639f04b397e9b24ee9d8591db43fa448d2a9e"
 
 [[projects]]
   digest = "1:8730e0150dfb2b7e173890c8b9868e7a273082ef8e39f4940e3506a481cf895c"
@@ -990,7 +1030,9 @@
     "github.com/google/licenseclassifier",
     "github.com/kelseyhightower/envconfig",
     "github.com/pkg/errors",
+    "github.com/spf13/cobra",
     "golang.org/x/oauth2",
+    "google.golang.org/api/container/v1beta1",
     "google.golang.org/api/iterator",
     "google.golang.org/api/option",
     "gopkg.in/yaml.v2",
@@ -1005,9 +1047,10 @@
     "knative.dev/pkg/test/junit",
     "knative.dev/pkg/test/prow",
     "knative.dev/pkg/test/slackutil",
+    "knative.dev/pkg/testutils/clustermanager/e2e-tests",
     "knative.dev/pkg/testutils/clustermanager/perf-tests",
-    "knative.dev/pkg/testutils/clustermanager/prow-cluster-operation",
     "knative.dev/pkg/testutils/metahelper",
+    "knative.dev/pkg/testutils/metahelper/client",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
