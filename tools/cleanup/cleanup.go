@@ -31,6 +31,8 @@ import (
 	"sync/atomic"
 	"time"
 
+	"knative.dev/test-infra/tools/cleanup/options"
+
 	"github.com/google/go-containerregistry/pkg/authn"
 	"github.com/google/go-containerregistry/pkg/name"
 	"github.com/google/go-containerregistry/pkg/v1/google"
@@ -118,13 +120,13 @@ func NewGkeClusterDeleter(projects []string, serviceAccount string) (*GkeCluster
 }
 
 // selectProjects returns the list of projects to iterate over.
-func selectProjects(project, resourceFile, regex string) ([]string, error) {
+func selectProjects(project string, resourceFiles []string, regex string) ([]string, error) {
 	// Sanity check flags
-	if project == "" && resourceFile == "" {
+	if project == "" && len(resourceFiles) == 0 {
 		return nil, errors.New("neither project nor resource file provided")
 	}
 
-	if project != "" && resourceFile != "" {
+	if project != "" && len(resourceFiles) > 0 {
 		return nil, errors.New("provided both project and resource file")
 	}
 	// --project used, just return it.
@@ -132,27 +134,39 @@ func selectProjects(project, resourceFile, regex string) ([]string, error) {
 		log.Printf("Iterating over projects [%s]", project)
 		return []string{project}, nil
 	}
+
 	// Otherwise, read the resource file and extract the project names.
+	return fromResourceFiles(resourceFiles, regex)
+}
+
+// selectProjects returns the list of projects to iterate over.
+func fromResourceFiles(resourceFiles []string, regex string) ([]string, error) {
+	var projects []string
 	projectRegex, err := regexp.Compile(regex)
 	if err != nil {
 		return nil, errors.Wrapf(err, "invalid regular expression %q", regex)
 	}
-	content, err := ioutil.ReadFile(resourceFile)
-	if err != nil {
-		return nil, errors.Wrapf(err, "cannot read file %q", resourceFile)
-	}
-	projects := make([]string, 0)
-	for _, line := range strings.Split(string(content), "\n") {
-		if len(line) > 0 {
-			if p := projectRegex.Find([]byte(line)); p != nil {
-				projects = append(projects, string(p))
+	for _, resourceFile := range resourceFiles {
+		content, err := ioutil.ReadFile(resourceFile)
+		if err != nil {
+			return nil, errors.Wrapf(err, "cannot read file %q", resourceFile)
+		}
+		log.Printf("Iterating over projects defined in %q, matching %q", resourceFile, regex)
+		var count int
+		for _, line := range strings.Split(string(content), "\n") {
+			if len(line) > 0 {
+				if p := projectRegex.Find([]byte(line)); p != nil {
+					log.Printf("\t- %s", string(p))
+					projects = append(projects, string(p))
+					count++
+				}
 			}
 		}
+		log.Printf("Found %d projects", count)
 	}
 	if len(projects) == 0 {
-		return nil, fmt.Errorf("no project found in %q matching %q", resourceFile, regex)
+		return nil, fmt.Errorf("no project found in '%v' matching %q", resourceFiles, regex)
 	}
-	log.Printf("Iterating over %d projects defined in %q, matching %q", len(projects), resourceFile, regex)
 	return projects, nil
 }
 
@@ -327,52 +341,40 @@ func (d *BaseResourceDeleter) ShowStats(count int, errors []string) {
 }
 
 // cleanup parses flags, run the operations and returns the status.
-func cleanup() error {
-	// Command-line flags.
-	projectResourceYaml := flag.String("project-resource-yaml", "", "Resources file containing the names of the projects to be cleaned up.")
-	project := flag.String("project", "", "Project to be cleaned up.")
-	reProjectName := flag.String("re-project-name", "knative-boskos-[a-zA-Z0-9]+", "Regular expression for filtering project names from the resources file.")
-	daysToKeepImages := flag.Int("days-to-keep-images", 365, "Images older than this amount of days will be deleted (defaults to 1 year, -1 means 'forever').")
-	hoursToKeepClusters := flag.Int("hours-to-keep-clusters", 720, "Clusters older than this amount of hours will be deleted (defaults to 1 month, -1 means 'forever').")
-	registry := flag.String("gcr", "gcr.io", "The registry hostname to use (defaults to gcr.io; currently only GCR is supported).")
-	serviceAccount := flag.String("service-account", "", "Specify the key file of the service account to use.")
-	concurrentOperations := flag.Int("concurrent-operations", 10, "How many deletion operations to run concurrently (defaults to 10).")
-	dryRun := flag.Bool("dry-run", false, "Performs a dry run for all deletion functions.")
-	flag.Parse()
-
-	if *dryRun {
+func cleanup(o options.Options) error {
+	if o.DryRun {
 		log.Println("-- Running in dry-run mode, no resource deletion --")
 	}
 
-	if !strings.HasSuffix(*registry, "gcr.io") {
+	if !strings.HasSuffix(o.Registry, "gcr.io") {
 		return fmt.Errorf("currently only GCR is supported")
 	}
 
 	var projects []string
 	var err error
-	if projects, err = selectProjects(*project, *projectResourceYaml, *reProjectName); err != nil {
+	if projects, err = selectProjects(o.Project, o.ProjectResourceYaml, o.ReProjectName); err != nil {
 		return err
 	}
 
 	start := time.Now()
 
 	var deleter ResourceDeleter
-	if *daysToKeepImages >= 0 {
-		if deleter, err = NewImageDeleter(projects, *registry, *serviceAccount); err != nil {
+	if o.DaysToKeepImages >= 0 {
+		if deleter, err = NewImageDeleter(projects, o.Registry, o.ServiceAccount); err != nil {
 			return err
 		}
 		log.Println("Removing images that are:")
-		log.Printf("- older than %d days", *daysToKeepImages)
-		deleter.ShowStats(deleter.Delete(*daysToKeepImages*24, *concurrentOperations, *dryRun))
+		log.Printf("- older than %d days", o.DaysToKeepImages)
+		deleter.ShowStats(deleter.Delete(o.DaysToKeepImages*24, o.ConcurrentOperations, o.DryRun))
 	}
 
-	if *hoursToKeepClusters >= 0 {
-		if deleter, err = NewGkeClusterDeleter(projects, *serviceAccount); err != nil {
+	if o.HoursToKeepClusters >= 0 {
+		if deleter, err = NewGkeClusterDeleter(projects, o.ServiceAccount); err != nil {
 			return err
 		}
 		log.Println("Removing clusters that are:")
-		log.Printf("- older than %d hours", *hoursToKeepClusters)
-		deleter.ShowStats(deleter.Delete(*hoursToKeepClusters, *concurrentOperations, *dryRun))
+		log.Printf("- older than %d hours", o.HoursToKeepClusters)
+		deleter.ShowStats(deleter.Delete(o.HoursToKeepClusters, o.ConcurrentOperations, o.DryRun))
 	}
 
 	log.Printf("All operations finished in %s", time.Now().Sub(start))
@@ -382,7 +384,11 @@ func cleanup() error {
 
 // main is the script entry point.
 func main() {
-	if err := cleanup(); err != nil {
+	var o options.Options
+	o.AddOptions()
+	flag.Parse()
+
+	if err := cleanup(o); err != nil {
 		log.Fatalf("ERROR: %v", err)
 	}
 }

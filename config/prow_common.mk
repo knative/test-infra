@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+SHELL := /bin/bash
+
 # This file is used by prod and staging Makefiles
 
 # Default settings for the CI/CD system.
@@ -26,7 +28,7 @@ SKIP_CONFIG_BACKUP        ?=
 # or overridden in the Makefile before this file is included.
 PROW_PLUGINS     ?= core/plugins.yaml
 PROW_CONFIG      ?= core/config.yaml
-PROW_JOB_CONFIG  ?= jobs/config.yaml
+PROW_JOB_CONFIG  ?= jobs
 
 PROW_DEPLOYS     ?= cluster
 PROW_GCS         ?= knative-prow
@@ -56,42 +58,17 @@ get-cluster-credentials:
 unset-cluster-credentials:
 	$(UNSET_CONTEXT)
 
-.PHONY: update-prow-config update-prow-job-config update-prow-plugins update-all-boskos-deployments update-boskos-resource update-almost-all-cluster-deployments update-single-cluster-deployment update-prow test update-testgrid-config confirm-master
+.PHONY: update-prow-config update-all-boskos-deployments update-boskos-resource update-almost-all-cluster-deployments update-single-cluster-deployment test update-testgrid-config confirm-master
 
 # Update prow config
 update-prow-config: confirm-master
 	$(SET_CONTEXT)
-	kubectl create configmap config --from-file=config.yaml=$(PROW_CONFIG) --dry-run --save-config -o yaml | kubectl apply -f -
-	$(UNSET_CONTEXT)
-
-# Update all prow job configs
-update-prow-job-config: confirm-master
-	$(SET_CONTEXT)
-ifndef SKIP_CONFIG_BACKUP
-	$(eval OLD_YAML_CONFIG := $(shell mktemp))
-	$(eval NEW_YAML_CONFIG := $(shell mktemp))
-	$(eval GCS_DEST := $(PROW_CONFIG_GCS)/config-$(shell date '+%Y_%m_%d_%H:%M:%S').yaml)
-	@kubectl get configmap job-config -o jsonpath="{.data['config\.yaml']}" 2>/dev/null > "${OLD_YAML_CONFIG}"
-	@gsutil cp "${OLD_YAML_CONFIG}" "${GCS_DEST}" > /dev/null
-	@cp "$(PROW_JOB_CONFIG)" "${NEW_YAML_CONFIG}"
-	@echo "# FROM COMMIT: $(shell git rev-parse HEAD)" >> "${NEW_YAML_CONFIG}"
-else
-	$(eval NEW_YAML_CONFIG := $(PROW_JOB_CONFIG))
-endif
-# We'll have to use `kubectl replace` here because `kubectl apply` will add the whole original configmap to the
-# `last-applied-configuration` annotation, but k8s has a maxmium 256kb limit for it, see https://github.com/kubernetes/kubectl/issues/712
-	kubectl create configmap job-config --from-file=config.yaml=$(NEW_YAML_CONFIG) --dry-run -o yaml | kubectl replace configmap job-config -f -
-	$(UNSET_CONTEXT)
-ifndef SKIP_CONFIG_BACKUP
-	diff "${OLD_YAML_CONFIG}" "${NEW_YAML_CONFIG}" --color=auto || true
-	@echo "Inspect uploaded config file at: ${NEW_YAML_CONFIG}"
-	@echo "Old config file saved at: ${GCS_DEST}"
-endif
-
-# Update prow plugins
-update-prow-plugins: confirm-master
-	$(SET_CONTEXT)
-	kubectl create configmap plugins --from-file=plugins.yaml=$(PROW_PLUGINS) --dry-run --save-config -o yaml | kubectl apply -f -
+	python3 <(curl -sSfL https://raw.githubusercontent.com/istio/test-infra/master/prow/recreate_prow_configmaps.py) \
+		--prow-config-path=$(realpath $(PROW_CONFIG)) \
+		--plugins-config-path=$(realpath $(PROW_PLUGINS)) \
+		--job-config-dir=$(realpath $(PROW_JOB_CONFIG)) \
+		--wet \
+		--silent
 	$(UNSET_CONTEXT)
 
 # Update all deployments of boskos
@@ -123,7 +100,7 @@ update-single-cluster-deployment: confirm-master
 	$(UNSET_CONTEXT)
 
 # Update all resources on Prow cluster
-update-prow-cluster: update-almost-all-cluster-deployments update-all-boskos-deployments update-boskos-resource update-prow-plugins update-prow-config update-prow-job-config
+update-prow-cluster: update-almost-all-cluster-deployments update-all-boskos-deployments update-boskos-resource update-prow-config
 
 # Do not allow server update from wrong branch or dirty working space
 # In emergency, could easily edit this file, deleting all these lines

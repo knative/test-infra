@@ -504,7 +504,7 @@ k8s.io/test-infra/prow/version
 k8s.io/utils/buffer
 k8s.io/utils/integer
 k8s.io/utils/trace
-# knative.dev/pkg v0.0.0-20200406231459-466c676678dd => github.com/chizhg/pkg v0.0.0-20200420011907-9117cd5cf224
+# knative.dev/pkg v0.0.0-20200406231459-466c676678dd => github.com/chizhg/pkg v0.0.0-20200427225849-8dd906c83e27
 knative.dev/pkg/kmeta
 knative.dev/pkg/test
 knative.dev/pkg/test/cmd

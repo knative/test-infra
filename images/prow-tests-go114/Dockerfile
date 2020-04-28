@@ -12,29 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM gcr.io/knative-tests/test-infra/prow-tests:stable
-LABEL maintainer "Chao Dai <chaodai@google.com>"
+FROM gcr.io/knative-tests/test-infra/prow-tests:v20200327-9a6c4b1d
 
-ENV GO_TARBALL "go1.14beta1.tar.gz"
-
-# Required variables to install go from source
-# Reference: https://golang.org/doc/install/source#environment
-ENV GOROOT_BOOTSTRAP "/usr/local/go-old"
-ENV GOROOT "/usr/local/go"
-ENV CGO_ENABLED 1
-ENV GOOS "linux"
-ENV GOARCH "amd64"
-
-# install netbase as it's required for Go linux amd64 install (OS specific)
-RUN apt-get install netbase
-
-# go1.14 is not released yet. Downloading the beta version directly from github and building from source
-# Reference: https://golang.org/doc/install/source
-RUN mv /usr/local/go /usr/local/go-old && \
-    wget -q "https://github.com/golang/go/archive/${GO_TARBALL}" && \
+# Install go at 1.14 same as how it's installed in kubekins-e2e image, reference code here:
+# https://github.com/kubernetes/test-infra/blob/1e9b5dc3de4b268aab57c9c48120aa3dcf096bc6/images/kubekins-e2e/Dockerfile#L64
+ENV GO_TARBALL_HOST "https://dl.google.com/go"
+ENV GO_TARBALL "go1.14.linux-amd64.tar.gz"
+RUN rm -rf /usr/local/go && \
+    wget -q "${GO_TARBALL_HOST}/${GO_TARBALL}" && \
     tar xzf "${GO_TARBALL}" -C /usr/local && \
-    mv /usr/local/go-go1.14beta1 /usr/local/go && \
-    cd ${GOROOT}/src && \
-    echo go1.14beta1 > ${GOROOT}/VERSION && \
-    ./all.bash && \
-    rm -rf ${GOROOT_BOOTSTRAP}
+    rm "${GO_TARBALL}"

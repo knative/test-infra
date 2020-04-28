@@ -3,6 +3,7 @@
     - master
     agent: kubernetes
     decorate: true
+    [[.Base.Cluster]]
     [[indent_section 8 "labels" .Base.Labels]]
     [[.Base.PathAlias]]
     spec:
@@ -14,3 +15,4 @@
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        [[indent_section 8 "resources" .Base.Resources]]

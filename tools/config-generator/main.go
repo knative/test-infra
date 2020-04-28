@@ -134,27 +134,23 @@ type stringArrayFlag []string
 
 var (
 	// Values used in the jobs that can be changed through command-line flags.
-	output                       *os.File
-	prowHost                     string
-	testGridHost                 string
-	gubernatorHost               string
-	gcsBucket                    string
-	testGridGcsBucket            string
-	logsDir                      string
-	presubmitLogsDir             string
-	testAccount                  string
-	nightlyAccount               string
-	releaseAccount               string
-	flakesreporterDockerImage    string
-	prowversionbumperDockerImage string
-	prowconfigupdaterDockerImage string
-	githubCommenterDockerImage   string
-	coverageDockerImage          string
-	prowTestsDockerImage         string
-	backupsDockerImage           string
-	presubmitScript              string
-	releaseScript                string
-	webhookAPICoverageScript     string
+	output                     *os.File
+	prowHost                   string
+	testGridHost               string
+	gubernatorHost             string
+	gcsBucket                  string
+	testGridGcsBucket          string
+	logsDir                    string
+	presubmitLogsDir           string
+	testAccount                string
+	nightlyAccount             string
+	releaseAccount             string
+	githubCommenterDockerImage string
+	coverageDockerImage        string
+	prowTestsDockerImage       string
+	presubmitScript            string
+	releaseScript              string
+	webhookAPICoverageScript   string
 
 	// #########################################################################
 	// ############## data used for generating prow configuration ##############
@@ -444,11 +440,15 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.Args = make([]string, 0)
 	data.Volumes = make([]string, 0)
 	data.VolumeMounts = make([]string, 0)
-	data.Resources = make([]string, 0)
 	data.Env = make([]string, 0)
 	data.ExtraRefs = []string{"- org: " + data.OrgName, "  repo: " + data.RepoName}
 	data.Labels = make([]string, 0)
 	data.Optional = ""
+
+	// Staging jobs don't use prod build cluster
+	if data.OrgName != "knative-prow-robot" {
+		data.Cluster = "cluster: \"build-knative\""
+	}
 	return data
 }
 
@@ -536,8 +536,9 @@ func setupDockerInDockerForJob(data *baseProwJobTemplateData) {
 	(*data).SecurityContext = []string{"privileged: true"}
 }
 
-// setReourcesReqForJob sets resource requirement for job
-func setReourcesReqForJob(res yaml.MapSlice, data *baseProwJobTemplateData) {
+// setResourcesReqForJob sets resource requirement for job
+func setResourcesReqForJob(res yaml.MapSlice, data *baseProwJobTemplateData) {
+	data.Resources = nil
 	for _, val := range res {
 		data.Resources = append(data.Resources, fmt.Sprintf("  %s:", getString(val.Key)))
 		for _, item := range getMapSlice(val.Value) {
@@ -591,7 +592,7 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 			for i, repo := range repositories {
 				if path.Base(repo.Name) == (*data).RepoName {
 					repositories[i].Go114 = true
-					data.RepoNameForJob = (*data).RepoName + getGo114ID()
+					data.RepoNameForJob = fmt.Sprintf("%s-%s", (*data).OrgName, (*data).RepoName)
 				}
 			}
 		case "performance":
@@ -611,7 +612,7 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 		case "optional":
 			(*data).Optional = "optional: true"
 		case "resources":
-			setReourcesReqForJob(getMapSlice(item.Value), data)
+			setResourcesReqForJob(getMapSlice(item.Value), data)
 		case nil: // already processed
 			continue
 		default:
@@ -1126,12 +1127,8 @@ func main() {
 	flag.StringVar(&testAccount, "test-account", "/etc/test-account/service-account.json", "Path to the service account JSON for test jobs")
 	flag.StringVar(&nightlyAccount, "nightly-account", "/etc/nightly-account/service-account.json", "Path to the service account JSON for nightly release jobs")
 	flag.StringVar(&releaseAccount, "release-account", "/etc/release-account/service-account.json", "Path to the service account JSON for release jobs")
-	var flakesreporterDockerImageName = flag.String("flaky-test-reporter-docker", "flaky-test-reporter:latest", "Docker image for flaky test reporting tool")
-	var prowversionbumperDockerImageName = flag.String("prow-auto-bumper", "prow-auto-bumper:latest", "Docker image for Prow version bumping tool")
-	var prowconfigupdaterDockerImageName = flag.String("prow-config-updater", "prow-config-updater:latest", "Docker image for Prow config updater tool")
 	var coverageDockerImageName = flag.String("coverage-docker", "coverage-go112:latest", "Docker image for coverage tool")
 	var prowTestsDockerImageName = flag.String("prow-tests-docker", "prow-tests-go112:stable", "prow-tests docker image")
-	var backupsDockerImageName = flag.String("backups-docker", "backups:latest", "Docker image for the backups job")
 	flag.StringVar(&githubCommenterDockerImage, "github-commenter-docker", "gcr.io/k8s-prow/commenter:v20190731-e3f7b9853", "github commenter docker image")
 	flag.StringVar(&presubmitScript, "presubmit-script", "./test/presubmit-tests.sh", "Executable for running presubmit tests")
 	flag.StringVar(&releaseScript, "release-script", "./hack/release.sh", "Executable for creating releases")
@@ -1146,12 +1143,8 @@ func main() {
 		log.Fatal("Pass the config file as parameter")
 	}
 
-	flakesreporterDockerImage = path.Join(*dockerImagesBase, *flakesreporterDockerImageName)
-	prowversionbumperDockerImage = path.Join(*dockerImagesBase, *prowversionbumperDockerImageName)
-	prowconfigupdaterDockerImage = path.Join(*dockerImagesBase, *prowconfigupdaterDockerImageName)
 	coverageDockerImage = path.Join(*dockerImagesBase, *coverageDockerImageName)
 	prowTestsDockerImage = path.Join(*dockerImagesBase, *prowTestsDockerImageName)
-	backupsDockerImage = path.Join(*dockerImagesBase, *backupsDockerImageName)
 
 	// We use MapSlice instead of maps to keep key order and create predictable output.
 	config := yaml.MapSlice{}
@@ -1192,20 +1185,13 @@ func main() {
 				generateGoCoveragePeriodic("periodics", repo.Name, nil)
 			}
 		}
+		generatePerfClusterUpdatePeriodicJobs()
 		if *generateMaintenanceJobs {
-			generateCleanupPeriodicJob()
-			generateFlakytoolPeriodicJob()
-			generateVersionBumpertoolPeriodicJob()
-			generateBackupPeriodicJob()
 			generateIssueTrackerPeriodicJobs()
-			generatePerfClusterUpdatePeriodicJobs()
 		}
 		for _, repo := range repositories {
 			if repo.EnableGoCoverage {
 				generateGoCoveragePostsubmit("postsubmits", repo.Name, nil)
-				if repo.Name == "knative/test-infra" && *generateMaintenanceJobs {
-					generateConfigUpdaterToolPostsubmitJob()
-				}
 			}
 			if repo.EnablePerformanceTests {
 				generatePerfClusterPostsubmitJob(repo)

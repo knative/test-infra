@@ -14,32 +14,26 @@
 
 presubmits:
   knative-prow-robot/serving:
-    - repo-settings:
-      go112-branches:
-      - legacy  # Doesn't exist, for compatibility purposes only
-    - build-tests: true
-      dot-dev: true
-    - unit-tests: true
-      dot-dev: true
-    - integration-tests: true
-      dot-dev: true
+  - build-tests: true
+    dot-dev: true
+  - unit-tests: true
+    dot-dev: true
+  - integration-tests: true
+    dot-dev: true
 
   knative-prow-robot/test-infra:
-    - repo-settings:
-      go112-branches:
-        - legacy  # Doesn't exist, for compatibility purposes only
-    - build-tests: true
-      dot-dev: true
-    - unit-tests: true
-      dot-dev: true
-    - integration-tests: true
-      dot-dev: true
+  - build-tests: true
+    dot-dev: true
+  - unit-tests: true
+    dot-dev: true
+  - integration-tests: true
+    dot-dev: true
 
 periodics:
   knative-prow-robot/serving:
-    - continuous: false
-      dot-dev: true
+  - continuous: false
+    dot-dev: true
 
   knative-prow-robot/test-infra:
-    - continuous: false
-      dot-dev: true
+  - continuous: false
+    dot-dev: true

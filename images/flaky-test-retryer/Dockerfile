@@ -13,7 +13,7 @@
 # limitations under the License.
 
 FROM golang:latest
-LABEL maintainer "Trevor Farrelly <trevorfarrelly@google.com>"
+LABEL maintainer="Chao Dai <chaodai@google.com>"
 RUN apt-get update
 
 ENV TEMP_REPO_DIR /go/src/knative.dev/test-infra

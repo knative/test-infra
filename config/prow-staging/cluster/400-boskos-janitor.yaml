@@ -31,7 +31,7 @@ spec:
       terminationGracePeriodSeconds: 300
       containers:
       - name: boskos-janitor
-        image: gcr.io/k8s-prow/boskos/janitor:v20200406-3d3428b91
+        image: gcr.io/k8s-prow/boskos/janitor:v20200413-9f25a5cd4
         args:
         - --resource-type=gke-project
         - --
@@ -42,6 +42,10 @@ spec:
         - mountPath: /etc/test-account
           name: service
           readOnly: true
+        resources:
+          requests:
+            cpu: 200m
+            memory: 20Mi
       volumes:
       - name: service
         secret:
