@@ -25,7 +25,8 @@
 REGISTRY ?= gcr.io
 PROJECT  ?= knative-tests
 
-include ../common.mk
+SELF_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
+include $(SELF_DIR)../common.mk
 
 IMG = $(REGISTRY)/$(PROJECT)/test-infra/$(IMAGE_NAME)
 TAG := $(shell date +v%Y%m%d)-$(shell git describe --always --dirty --match '^$$')

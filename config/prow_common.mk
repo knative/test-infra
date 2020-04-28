@@ -13,7 +13,8 @@
 # limitations under the License.
 
 SHELL := /bin/bash
-include ../common.mk
+SELF_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
+include $(SELF_DIR)../common.mk
 
 # This file is used by prod and staging Makefiles
 
