@@ -21,7 +21,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/google/go-github/v27/github"
+	"github.com/google/go-github/github"
 	"knative.dev/test-infra/tools/coverage/git"
 	"knative.dev/test-infra/tools/coverage/githubUtil/githubPr"
 	"knative.dev/test-infra/tools/coverage/logUtil"

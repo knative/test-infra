@@ -21,7 +21,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/google/go-github/v27/github"
+	"github.com/google/go-github/github"
 	"knative.dev/pkg/test/ghutil"
 	"knative.dev/pkg/test/prow"
 

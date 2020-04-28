@@ -24,8 +24,6 @@
 # markdown linting is too picky for /docs; disabling it for now.
 DISABLE_MD_LINTING=1
 
-export GO111MODULE=on
-
 source $(dirname $0)/../scripts/presubmit-tests.sh
 
 # Run our custom build tests after the standard build tests.

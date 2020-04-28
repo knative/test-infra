@@ -100,20 +100,19 @@ func NewClient(ctx context.Context, opts ...option.ClientOption) (*Client, error
 		scheme = "https"
 		readHost = "storage.googleapis.com"
 
-		// Prepend default options to avoid overriding options passed by the user.
-		opts = append([]option.ClientOption{option.WithScopes(ScopeFullControl), option.WithUserAgent(userAgent)}, opts...)
+		opts = append(opts, option.WithScopes(ScopeFullControl), option.WithUserAgent(userAgent))
 	} else {
 		scheme = "http"
 		readHost = host
 
-		opts = append([]option.ClientOption{option.WithoutAuthentication()}, opts...)
+		opts = append(opts, option.WithoutAuthentication())
 	}
 
 	hc, ep, err := htransport.NewClient(ctx, opts...)
 	if err != nil {
 		return nil, fmt.Errorf("dialing: %v", err)
 	}
-	rawService, err := raw.NewService(ctx, option.WithHTTPClient(hc))
+	rawService, err := raw.New(hc)
 	if err != nil {
 		return nil, fmt.Errorf("storage client: %v", err)
 	}
@@ -129,7 +128,7 @@ func NewClient(ctx context.Context, opts ...option.ClientOption) (*Client, error
 		if err != nil {
 			return nil, fmt.Errorf("supplied endpoint %v is not valid: %v", ep, err)
 		}
-		readHost = u.Host
+		readHost = u.Hostname()
 	}
 
 	return &Client{

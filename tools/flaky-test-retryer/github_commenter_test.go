@@ -21,7 +21,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/google/go-github/v27/github"
+	"github.com/google/go-github/github"
 	"knative.dev/pkg/test/ghutil/fakeghutil"
 	"knative.dev/test-infra/tools/monitoring/prowapi"
 )

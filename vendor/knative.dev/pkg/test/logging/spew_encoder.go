@@ -162,7 +162,7 @@ func (enc *SpewEncoder) writeContext(line *buffer.Buffer, extra []Field) {
 
 	enc.addTabIfNecessary(line)
 	line.AppendString("\nContext:\n")
-	keys := make([]string, 0, len(context.Fields))
+	var keys []string
 	for k := range context.Fields {
 		keys = append(keys, k)
 	}
