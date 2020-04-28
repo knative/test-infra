@@ -39,6 +39,7 @@ const (
 	RepoName = "test-infra"
 	PRHead   = "autoupdate"
 	PRBase   = "master"
+
 	// the label that needs to be applied on the PR to get it automatically merged
 	AutoMergeLabel = "auto-merge"
 
@@ -47,6 +48,12 @@ const (
 
 	configPath         = "config"
 	configTemplatePath = "tools/config-generator/templates"
+
+	// Prow config folder names
+	prodProwConfigDirName                = string(ProdProwEnv)
+	stagingProwConfigDirName             = string(StagingProwEnv)
+	prodProwBuildClusterConfigDirName    = "build-cluster"
+	stagingProwBuildClusterConfigDirName = "build-cluster-staging"
 
 	// Prow config subfolder names
 	core    = "core"
@@ -57,8 +64,11 @@ const (
 
 var (
 	// Prow config root paths.
-	ProdProwConfigRoot    = filepath.Join(configPath, string(ProdProwEnv))
-	StagingProwConfigRoot = filepath.Join(configPath, string(StagingProwEnv))
+	ProdProwConfigRoot    = filepath.Join(configPath, prodProwConfigDirName)
+	StagingProwConfigRoot = filepath.Join(configPath, stagingProwConfigDirName)
+	// Prow build cluster config root paths.
+	ProdProwBuildClusterConfigRoot    = filepath.Join(configPath, prodProwBuildClusterConfigDirName)
+	StagingProwBuildClusterConfigRoot = filepath.Join(configPath, stagingProwBuildClusterConfigDirName)
 	// Prow config templates paths.
 	ProdProwConfigTemplatesPath    = filepath.Join(configTemplatePath, string(ProdProwEnv))
 	StagingProwConfigTemplatesPath = filepath.Join(configTemplatePath, string(StagingProwEnv))
@@ -67,8 +77,14 @@ var (
 	// These are commands for both staging and production Prow.
 	generateConfigFilesCommand = "./hack/generate-configs.sh"
 	updateProwCommandTemplate  = "make -C %s update-prow-cluster"
-	updateProdProwCommand      = fmt.Sprintf(updateProwCommandTemplate, ProdProwConfigRoot)
-	updateStagingProwCommand   = fmt.Sprintf(updateProwCommandTemplate, StagingProwConfigRoot)
+	updateProdProwCommand      = []string{
+		fmt.Sprintf(updateProwCommandTemplate, ProdProwConfigRoot),
+		fmt.Sprintf(updateProwCommandTemplate, ProdProwBuildClusterConfigRoot),
+	}
+	updateStagingProwCommand = []string{
+		fmt.Sprintf(updateProwCommandTemplate, StagingProwConfigRoot),
+		fmt.Sprintf(updateProwCommandTemplate, StagingProwBuildClusterConfigRoot),
+	}
 	// This command is only used for production prow in this tool.
 	updateTestgridCommand = fmt.Sprintf("make -C %s update-testgrid-config", ProdProwConfigRoot)
 
@@ -78,40 +94,46 @@ var (
 		filepath.Join(ProdProwConfigRoot, jobs),
 		filepath.Join(ProdProwConfigRoot, cluster),
 		filepath.Join(ProdProwConfigRoot, boskos),
+		filepath.Join(ProdProwBuildClusterConfigRoot, cluster),
+		filepath.Join(ProdProwBuildClusterConfigRoot, boskos),
 	}
 	StagingProwConfigPaths = []string{
 		filepath.Join(StagingProwConfigRoot, core),
 		filepath.Join(StagingProwConfigRoot, jobs),
 		filepath.Join(StagingProwConfigRoot, cluster),
 		filepath.Join(StagingProwConfigRoot, boskos),
+		filepath.Join(StagingProwBuildClusterConfigRoot, cluster),
+		filepath.Join(StagingProwBuildClusterConfigRoot, boskos),
 	}
 	ProdTestgridConfigPath = filepath.Join(ProdProwConfigRoot, "testgrid")
 
 	// Config paths that need to be gated and tested by prow-config-updater.
 	ProdProwKeyConfigPaths = []string{
 		filepath.Join(ProdProwConfigRoot, cluster),
+		filepath.Join(ProdProwBuildClusterConfigRoot, cluster),
 		ProdProwConfigTemplatesPath,
 	}
 	StagingProwKeyConfigPaths = []string{
 		filepath.Join(StagingProwConfigRoot, cluster),
+		filepath.Join(StagingProwBuildClusterConfigRoot, cluster),
 		StagingProwConfigTemplatesPath,
 	}
 )
 
 // UpdateProw will update Prow with the existing Prow config files.
 func UpdateProw(env ProwEnv, dryrun bool) error {
-	updateCommand := ""
+	var updateCommands []string
 	switch env {
 	case ProdProwEnv:
-		updateCommand = updateProdProwCommand
+		updateCommands = updateProdProwCommand
 	case StagingProwEnv:
-		updateCommand = updateStagingProwCommand
+		updateCommands = updateStagingProwCommand
 	default:
 		return fmt.Errorf("unsupported Prow environement: %q, cannot make the update", env)
 	}
 
 	return helpers.Run(
-		fmt.Sprintf("Updating Prow configs with command %q", updateCommand),
+		fmt.Sprintf("Updating Prow configs with command %v", updateCommands),
 		func() error {
 			// Use the default GOOGLE_APPLICATION_CREDENTIALS to authenticate with the gcloud services,
 			// it will fallback to use the local credentials if the env var does not exist.
@@ -122,7 +144,14 @@ func UpdateProw(env ProwEnv, dryrun bool) error {
 					return fmt.Errorf("error activating service account with %q", kf)
 				}
 			}
-			out, err := cmd.RunCommand(updateCommand, cmd.WithEnvs(os.Environ()))
+			var out string
+			var err error
+			for _, updateCommand := range updateCommands {
+				out, err = cmd.RunCommand(updateCommand, cmd.WithEnvs(os.Environ()))
+				if err != nil {
+					break
+				}
+			}
 			log.Println(out)
 			return err
 		},
