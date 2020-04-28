@@ -69,7 +69,7 @@ ADD . /go/src/knative.dev/test-infra
 # Build custom tools in the container
 RUN make -C /go/src/knative.dev/test-infra/tools/githubhelper
 RUN cp /go/src/knative.dev/test-infra/tools/githubhelper/githubhelper .
-RUN go install knative.dev/test-infra/kntest/cmd/kntest
+# RUN go install knative.dev/test-infra/kntest/cmd/kntest # Uncomment when you wish to have kntest installed
 
 # Remove test-infra from the container
 RUN rm -fr /go/src/knative.dev/test-infra
