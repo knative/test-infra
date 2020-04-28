@@ -21,12 +21,10 @@ require (
 	k8s.io/apimachinery v0.17.3
 	k8s.io/test-infra v0.0.0-20200407001919-bc7f71ef65b8 // indirect
 	k8s.io/utils v0.0.0-20200124190032-861946025e34 // indirect
-	knative.dev/pkg v0.0.0-20200406231459-466c676678dd
+	knative.dev/pkg v0.0.0-20200428194351-90fc61bae7f7
 )
 
 replace (
 	k8s.io/apimachinery => k8s.io/apimachinery v0.16.4
 	k8s.io/client-go => k8s.io/client-go v0.16.4
-
-	knative.dev/pkg => github.com/chizhg/pkg v0.0.0-20200427225849-8dd906c83e27
 )
