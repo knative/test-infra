@@ -13,5 +13,5 @@
 # limitations under the License.
 
 IMAGE_NAME = prow-config-updater
-include ../Makefile.simple-image
+include ../simple-image.mk
 
