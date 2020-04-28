@@ -21,7 +21,7 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/google/go-github/github"
+	"github.com/google/go-github/v27/github"
 	"knative.dev/pkg/test/ghutil"
 
 	"knative.dev/test-infra/tools/prow-config-updater/config"
