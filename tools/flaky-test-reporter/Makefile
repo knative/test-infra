@@ -14,5 +14,5 @@
 
 all:
 	go get -u golang.org/x/oauth2
-	go get -u github.com/google/go-github/v27/github
+	go get -u github.com/google/go-github/github
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build .

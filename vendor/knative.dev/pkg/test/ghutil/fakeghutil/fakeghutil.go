@@ -23,7 +23,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/google/go-github/v27/github"
+	"github.com/google/go-github/github"
 	"knative.dev/pkg/test/ghutil"
 )
 
@@ -118,9 +118,8 @@ func (fgc *FakeGithubClient) ReopenIssue(org, repo string, issueNumber int) erro
 
 // ListComments gets all comments from issue
 func (fgc *FakeGithubClient) ListComments(org, repo string, issueNumber int) ([]*github.IssueComment, error) {
-	ghComments := fgc.Comments[issueNumber]
-	comments := make([]*github.IssueComment, 0, len(ghComments))
-	for _, comment := range ghComments {
+	var comments []*github.IssueComment
+	for _, comment := range fgc.Comments[issueNumber] {
 		comments = append(comments, comment)
 	}
 	return comments, nil
@@ -241,7 +240,7 @@ func (fgc *FakeGithubClient) ListFiles(org, repo string, ID int) ([]*github.Comm
 	var res []*github.CommitFile
 	commits, err := fgc.ListCommits(org, repo, ID)
 	if nil != err {
-		return nil, err
+		return res, err
 	}
 	for _, commit := range commits {
 		files, ok := fgc.CommitFiles[*commit.SHA]

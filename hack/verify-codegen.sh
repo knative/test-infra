@@ -22,10 +22,9 @@ source $(dirname $0)/../scripts/library.sh
 
 readonly TMP_DIFFROOT="$(mktemp -d)"
 DIRS_TOBE_INSPECTED=(
-  "go.sum"
+  "Gopkg.lock"
   "vendor"
   "config"
-  "third_party"
 )
 
 cleanup() {

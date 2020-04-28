@@ -211,9 +211,8 @@ func (j *Job) GetFinishedBuilds() []Build {
 // by parsing "Started.json" and "Finished.json" on gcs, could be very expensive if there are
 // large number of builds
 func (j *Job) GetBuilds() []Build {
-	buildIDs := j.GetBuildIDs()
-	builds := make([]Build, 0, len(buildIDs))
-	for _, ID := range buildIDs {
+	var builds []Build
+	for _, ID := range j.GetBuildIDs() {
 		builds = append(builds, *j.NewBuild(ID))
 	}
 	return builds

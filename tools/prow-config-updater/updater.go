@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/google/go-github/v27/github"
+	"github.com/google/go-github/github"
 	"knative.dev/pkg/test/cmd"
 
 	"knative.dev/test-infra/tools/prow-config-updater/config"
