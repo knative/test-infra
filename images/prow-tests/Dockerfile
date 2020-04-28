@@ -31,7 +31,8 @@ RUN docker-credential-gcr configure-docker
 
 # Extra tools through apt-get
 RUN apt-get install -y uuid-runtime  # for uuidgen
-RUN apt-get install -y rubygems  # for mdl
+RUN apt-get install -y rubygems      # for mdl
+RUN apt-get install -y shellcheck    # for presubmit
 
 # Install go at 1.13 same as how it's installed in kubekins-e2e image, reference code here:
 # https://github.com/kubernetes/test-infra/blob/1e9b5dc3de4b268aab57c9c48120aa3dcf096bc6/images/kubekins-e2e/Dockerfile#L64
@@ -59,12 +60,16 @@ RUN ko version > /ko_version
 RUN gem install mixlib-config -v 2.2.4  # required because ruby is 2.1
 RUN gem install mdl -v 0.5  # required because later version of mdl requires ruby >= 2.4
 
+# Install our own tools
+RUN go get knative.dev/pkg/testutils/junithelper
+
 # Temporarily add test-infra to the image to build custom tools
 ADD . /go/src/knative.dev/test-infra
 
 # Build custom tools in the container
 RUN make -C /go/src/knative.dev/test-infra/tools/githubhelper
 RUN cp /go/src/knative.dev/test-infra/tools/githubhelper/githubhelper .
+# RUN go install knative.dev/test-infra/kntest/cmd/kntest # Uncomment when you wish to have kntest installed
 
 # Remove test-infra from the container
 RUN rm -fr /go/src/knative.dev/test-infra
