@@ -17,7 +17,7 @@ presubmits:
   - name: pull-test-infra-config-changes-checker
     decorate: true
     path_alias: knative.dev/test-infra
-    run_if_changed: "^(config/(prow|prow-staging)/cluster/.*.yaml)|(tools/config-generator/templates/(prow|prow-staging)/.*.yaml)$"
+    run_if_changed: "^(config/(prod/staging)(prow)/cluster/.*.yaml)|(tools/config-generator/templates/(prow|prow-staging)/.*.yaml)$"
     cluster: "build-knative"
     spec:
       containers:
@@ -39,7 +39,7 @@ presubmits:
           secretName: repoview-token
   - name: pull-test-infra-validate-prow-yaml
     decorate: true
-    run_if_changed: "^config/prow/(cluster|core|jobs)/.*.yaml$"
+    run_if_changed: "^config/prod/prow/(cluster|core|jobs)/.*.yaml$"
     cluster: "build-knative"
     spec:
       containers:
@@ -47,15 +47,15 @@ presubmits:
         command:
         - "/checkconfig"
         args:
-        - "--config-path=config/prow/core/config.yaml"
-        - "--job-config-path=config/prow/jobs"
-        - "--plugin-config=config/prow/core/plugins.yaml"
+        - "--config-path=config/prod/prow/core/config.yaml"
+        - "--job-config-path=config/prod/prow/jobs"
+        - "--plugin-config=config/prod/prow/core/plugins.yaml"
         - "--prow-yaml-repo-name=$(REPO_OWNER)/$(REPO_NAME)"
         - "--strict"
         - "--exclude-warning=mismatched-tide"
   - name: pull-test-infra-validate-staging-prow-yaml
     decorate: true
-    run_if_changed: "^config/prow-staging/(cluster|core|jobs)/.*.yaml$"
+    run_if_changed: "^config/(prod/staging)/prow/(cluster|core|jobs)/.*.yaml$"
     cluster: "build-knative"
     spec:
       containers:
@@ -63,9 +63,9 @@ presubmits:
         command:
         - "/checkconfig"
         args:
-        - "--config-path=config/prow-staging/core/config.yaml"
-        - "--job-config-path=config/prow-staging/jobs"
-        - "--plugin-config=config/prow-staging/core/plugins.yaml"
+        - "--config-path=config/staging/prow/core/config.yaml"
+        - "--job-config-path=config/staging/prow/jobs"
+        - "--plugin-config=config/staging/prow/core/plugins.yaml"
         - "--prow-yaml-repo-name=$(REPO_OWNER)/$(REPO_NAME)"
         - "--strict"
         - "--exclude-warning=mismatched-tide"
@@ -117,7 +117,7 @@ periodics:
       args:
       - "run"
       - "./tools/cleanup/cleanup.go"
-      - "--project-resource-yaml=config/prow/boskos/boskos_resources.yaml"
+      - "--project-resource-yaml=config/prod/prow/boskos/boskos_resources.yaml"
       - "--days-to-keep-images=30"
       - "--hours-to-keep-clusters=24"
       - "--service-account=/etc/test-account/service-account.json"

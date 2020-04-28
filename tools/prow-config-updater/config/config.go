@@ -32,9 +32,7 @@ type ProwEnv string
 const (
 	ProdProwEnv    ProwEnv = "prow"
 	StagingProwEnv ProwEnv = "prow-staging"
-)
 
-const (
 	OrgName  = "knative"
 	RepoName = "test-infra"
 	PRHead   = "autoupdate"
@@ -48,6 +46,12 @@ const (
 	configPath         = "config"
 	configTemplatePath = "tools/config-generator/templates"
 
+	// Prow config folder names
+	prodConfigDirName             = "prod"
+	stagingConfigDirName          = "staging"
+	prowConfigDirName             = "prow"
+	prowBuildclusterConfigDirName = "build-cluster"
+
 	// Prow config subfolder names
 	core    = "core"
 	jobs    = "jobs"
@@ -57,8 +61,8 @@ const (
 
 var (
 	// Prow config root paths.
-	ProdProwConfigRoot    = filepath.Join(configPath, string(ProdProwEnv))
-	StagingProwConfigRoot = filepath.Join(configPath, string(StagingProwEnv))
+	ProdProwConfigRoot    = filepath.Join(configPath, prodConfigDirName, prowConfigDirName)
+	StagingProwConfigRoot = filepath.Join(configPath, stagingConfigDirName, prowConfigDirName)
 	// Prow config templates paths.
 	ProdProwConfigTemplatesPath    = filepath.Join(configTemplatePath, string(ProdProwEnv))
 	StagingProwConfigTemplatesPath = filepath.Join(configTemplatePath, string(StagingProwEnv))

@@ -24,11 +24,11 @@ set -e
 
 cd ${REPO_ROOT_DIR}
 
-make -C ./config/prow get-cluster-credentials
+make -C ./config/prod/prow get-cluster-credentials
 
 JOB_YAML=$(mktemp)
-CONFIG_YAML=${REPO_ROOT_DIR}/config/prow/core/config.yaml
-JOB_CONFIG_YAML=${REPO_ROOT_DIR}/config/prow/jobs
+CONFIG_YAML=${REPO_ROOT_DIR}/config/prod/prow/core/config.yaml
+JOB_CONFIG_YAML=${REPO_ROOT_DIR}/config/prod/prow/jobs
 
 docker run -i --rm \
     -v "${PWD}:${PWD}" -v "${CONFIG_YAML}:${CONFIG_YAML}" -v "${JOB_CONFIG_YAML}:${JOB_CONFIG_YAML}" \
@@ -40,4 +40,4 @@ docker run -i --rm \
 echo "Job YAML file saved to ${JOB_YAML}"
 kubectl apply -f ${JOB_YAML}
 
-make -C ./config/prow unset-cluster-credentials
+make -C ./config/prod/prow unset-cluster-credentials

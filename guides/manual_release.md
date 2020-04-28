@@ -231,7 +231,7 @@ This is the preferred method of manually building a new release.
    branch (e.g., `0.11-`)
 
    ```
-   cd config/prow
+   cd config/prod/prow
    ./run_job.sh ci-knative-MODULE-[OLD_RELEASE_BRANCH-]dot-release
    ```
 
@@ -257,7 +257,7 @@ This is the preferred method of manually building a new release.
    module name (e.g., `serving` or `eventing`).
 
    ```
-   cd config/prow
+   cd config/prod/prow
    ./run_job.sh ci-knative-MODULE-nightly-release
    ```
 

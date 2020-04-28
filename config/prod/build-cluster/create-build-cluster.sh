@@ -25,11 +25,11 @@ set -o nounset
 set -o pipefail
 
 export TEAM="knative"
-export PROJECT="knative-tests"
+export PROJECT="${PROJECT:-knative-tests}"
 export ZONE="us-central1-f"
 export CLUSTER="knative-prow-build-cluster"
 export MACHINE="n1-standard-16"
-export GCSBUCKET="knative-prow"
+export GCSBUCKET="${GCSBUCKET:-knative-prow}"
 export NODECOUNT=4
 export OUT_FILE="build-cluster-kubeconfig.yaml"
 
