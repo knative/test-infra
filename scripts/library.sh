@@ -500,12 +500,17 @@ function run_go_tool() {
 
 # Run dep-collector to update licenses.
 # Parameters: $1 - output file, relative to repo root dir.
-#             $2...$n - directories and files to inspect.
+#             $2 - directory to inspect.
 function update_licenses() {
   cd "${REPO_ROOT_DIR}" || return 1
   local dst=$1
+  local dir=$2
   shift
-  run_go_tool knative.dev/test-infra/tools/dep-collector dep-collector $@ > ./${dst}
+  go-licenses save "${dir}" --save_path="${dst}" --force
+  # Hack to make sure directories retain write permissions after save. This
+  # can happen if the directory being copied is a Go module.
+  # See https://github.com/google/go-licenses/issues/11
+  chmod +w "$(find "${dst}" -type d)"
 }
 
 # Run go-licenses to check for forbidden liceses.
