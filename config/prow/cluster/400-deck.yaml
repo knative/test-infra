@@ -50,6 +50,8 @@ spec:
         - --cookie-secret=/etc/cookie/secret
         - --github-oauth-config-file=/etc/github/secret
         - --github-token-path=/etc/githubtoken/oauth
+        - --github-endpoint=http://ghproxy
+        - --github-endpoint=https://api.github.com
         ports:
           - name: http
             containerPort: 8080
