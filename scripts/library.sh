@@ -498,7 +498,7 @@ function run_go_tool() {
   ${tool} "$@"
 }
 
-# Run dep-collector to update licenses.
+# Run go-licenses to update licenses.
 # Parameters: $1 - output file, relative to repo root dir.
 #             $2 - directory to inspect.
 function update_licenses() {
@@ -506,14 +506,14 @@ function update_licenses() {
   local dst=$1
   local dir=$2
   shift
-  run_go_tool github.com/google/go-licenses go-licenses save "${dir}" --save_path="${dst}" --force
+  run_go_tool github.com/google/go-licenses go-licenses save "${dir}" --save_path="${dst}" --force || return 1
   # Hack to make sure directories retain write permissions after save. This
   # can happen if the directory being copied is a Go module.
   # See https://github.com/google/go-licenses/issues/11
   chmod -R +w "${dst}"
 }
 
-# Run go-licenses to check for forbidden liceses.
+# Run go-licenses to check for forbidden licenses.
 function check_licenses() {
   # Check that we don't have any forbidden licenses.
   run_go_tool github.com/google/go-licenses go-licenses check "${REPO_ROOT_DIR}/..." || return 1
