@@ -17,8 +17,10 @@ limitations under the License.
 package main
 
 import (
+	"errors"
 	"fmt"
 	"path/filepath"
+	"strings"
 
 	"github.com/google/go-github/github"
 	"knative.dev/pkg/test/cmd"
@@ -177,7 +179,7 @@ func (cli *Client) rollOutToProd() (*github.PullRequest, error) {
 		}
 		// The wildcard '*' needs to be expanded by the shell, so the cp command
 		// needs to be run in a shell process.
-		syncCmds := []{
+		syncCmds := []string{
 			fmt.Sprintf("/bin/bash -c 'rm -rf %s/*'", prodPath),
 			fmt.Sprintf("/bin/bash -c 'cp -r %s/* %s'", stagingPath, prodPath),
 		}
