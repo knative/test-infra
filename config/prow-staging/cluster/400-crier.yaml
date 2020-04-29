@@ -38,6 +38,9 @@ spec:
         - --report-agent=knative-build
         - --config-path=/etc/config/config.yaml
         - --job-config-path=/etc/job-config
+        - --github-workers=5
+        - --github-endpoint=http://ghproxy
+        - --github-endpoint=https://api.github.com
         volumeMounts:
         - name: config
           mountPath: /etc/config
