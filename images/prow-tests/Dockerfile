@@ -48,6 +48,7 @@ RUN GO111MODULE=on go get github.com/boz/kail/cmd/kail
 RUN go get -u github.com/golang/dep/cmd/dep
 RUN go get -u github.com/jstemmer/go-junit-report
 RUN GO111MODULE=on go get -u github.com/raviqqe/liche@v0.0.0-20200229003944-f57a5d1c5be4  # stable liche version for checking md links
+RUN GO111MODULE=on go get -u github.com/google/go-licenses
 
 # Extract bazel version
 RUN bazel version > /bazel_version
