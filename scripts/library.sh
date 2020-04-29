@@ -506,7 +506,7 @@ function update_licenses() {
   local dst=$1
   local dir=$2
   shift
-  go-licenses save "${dir}" --save_path="${dst}" --force
+  run_go_tool github.com/google/go-licenses go-licenses save "${dir}" --save_path="${dst}" --force
   # Hack to make sure directories retain write permissions after save. This
   # can happen if the directory being copied is a Go module.
   # See https://github.com/google/go-licenses/issues/11
@@ -516,7 +516,7 @@ function update_licenses() {
 # Run go-licenses to check for forbidden liceses.
 function check_licenses() {
   # Check that we don't have any forbidden licenses.
-  go-licenses check "${REPO_ROOT_DIR}/..." || return 1
+  run_go_tool github.com/google/go-licenses go-licenses check "${REPO_ROOT_DIR}/..." || return 1
 }
 
 # Run the given linter on the given files, checking it exists first.
