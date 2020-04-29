@@ -47,5 +47,4 @@ rm -rf $(find vendor/ -name 'OWNERS')
 rm -rf $(find vendor/ -name 'OWNERS_ALIASES')
 rm -rf $(find vendor/ -name '*_test.go')
 
-update_licenses third_party/VENDOR-LICENSE \
-  $(find . -name "*.go" | grep -v vendor | xargs grep "package main" | cut -d: -f1 | xargs -n1 dirname | uniq)
+update_licenses third_party/VENDOR-LICENSE "./..."
