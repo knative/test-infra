@@ -17,7 +17,7 @@ presubmits:
   - name: pull-test-infra-config-changes-checker
     decorate: true
     path_alias: knative.dev/test-infra
-    run_if_changed: "^(config/(prod/staging)(prow)/cluster/.*.yaml)|(tools/config-generator/templates/(prow|prow-staging)/.*.yaml)$"
+    run_if_changed: "^(config/(prod/staging)/prow/cluster/.*.yaml)|(tools/config-generator/templates/(prow|prow-staging)/.*.yaml)$"
     cluster: "build-knative"
     spec:
       containers:
