@@ -31,9 +31,6 @@ const (
 	// perfPostsubmitJob is the template for the performance operations
 	// postsubmit job.
 	perfPostsubmitJob = "prow_postsubmit_perf_job.yaml"
-
-	// Template for postsubmit custom jobs.
-	postsubmitCustomJob = "prow_postsubmit_custom_job.yaml"
 )
 
 // postsubmitJobTemplateData contains data about a postsubmit Prow job.
@@ -53,8 +50,8 @@ func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
 		if repo.Name == repoName && repo.DotDev {
 			data.Base.PathAlias = "path_alias: knative.dev/" + path.Base(repoName)
 		}
-		if repo.Name == repoName && repo.Go113 {
-			data.Base.Image = getGo113ImageName(data.Base.Image)
+		if repo.Name == repoName && repo.Go114 {
+			data.Base.Image = getGo114ImageName(data.Base.Image)
 		}
 	}
 	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
