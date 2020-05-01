@@ -20,6 +20,8 @@ presubmits:
   knative/serving:
     - repo-settings:
       performance: true
+      go113-branches:
+      - "release-0.11"
     - build-tests: true
       dot-dev: true
       resources:
@@ -413,7 +415,6 @@ periodics:
     - continuous: true
       timeout: 100
       dot-dev: true
-      go113: true
       resources:
         requests:
           memory: 12Gi
@@ -422,19 +423,15 @@ periodics:
     - branch-ci: true
       release: "0.10"
       dot-dev: true
-      go113: true
     - branch-ci: true
       release: "0.11"
       dot-dev: true
-      go113: true
     - branch-ci: true
       release: "0.12"
       dot-dev: true
-      go113: true
     - branch-ci: true
       release: "0.13"
       dot-dev: true
-      go113: true
     - custom-job: istio-1.5-mesh
       command:
       - "./test/presubmit-tests.sh"
@@ -444,7 +441,6 @@ periodics:
       - "--run-test"
       - "./test/e2e-auto-tls-tests.sh --istio-version 1.5-latest --mesh"
       dot-dev: true
-      go113: true
     - custom-job: istio-1.5-no-mesh
       command:
       - "./test/presubmit-tests.sh"
@@ -454,7 +450,6 @@ periodics:
       - "--run-test"
       - "./test/e2e-auto-tls-tests.sh --istio-version 1.5-latest --no-mesh"
       dot-dev: true
-      go113: true
     - custom-job: istio-1.4-mesh
       command:
       - "./test/presubmit-tests.sh"
@@ -464,7 +459,6 @@ periodics:
       - "--run-test"
       - "./test/e2e-auto-tls-tests.sh --istio-version 1.4-latest --mesh"
       dot-dev: true
-      go113: true
     - custom-job: istio-1.4-no-mesh
       command:
       - "./test/presubmit-tests.sh"
@@ -474,7 +468,6 @@ periodics:
       - "--run-test"
       - "./test/e2e-auto-tls-tests.sh --istio-version 1.4-latest --no-mesh"
       dot-dev: true
-      go113: true
     - custom-job: gloo-0.17.1
       command:
       - "./test/presubmit-tests.sh"
@@ -484,7 +477,6 @@ periodics:
       - "--run-test"
       - "./test/e2e-auto-tls-tests.sh --gloo-version 0.17.1"
       dot-dev: true
-      go113: true
     - custom-job: kourier-stable
       command:
       - "./test/presubmit-tests.sh"
@@ -494,7 +486,6 @@ periodics:
       - "--run-test"
       - "./test/e2e-auto-tls-tests.sh --kourier-version stable"
       dot-dev: true
-      go113: true
     - custom-job: contour-latest
       command:
       - "./test/presubmit-tests.sh"
@@ -504,7 +495,6 @@ periodics:
       - "--run-test"
       - "./test/e2e-auto-tls-tests.sh --contour-version latest"
       dot-dev: true
-      go113: true
     - custom-job: ambassador-latest
       command:
       - "./test/presubmit-tests.sh"
@@ -514,7 +504,6 @@ periodics:
       - "--run-test"
       - "./test/e2e-auto-tls-tests.sh --ambassador-version latest"
       dot-dev: true
-      go113: true
     - custom-job: https
       command:
       - "./test/presubmit-tests.sh"
@@ -524,10 +513,8 @@ periodics:
       - "--run-test"
       - "./test/e2e-auto-tls-tests.sh --https"
       dot-dev: true
-      go113: true
     - nightly: true
       dot-dev: true
-      go113: true
       resources:
         requests:
           memory: 12Gi
@@ -535,7 +522,6 @@ periodics:
           memory: 16Gi
     - dot-release: true
       dot-dev: true
-      go113: true
       release: "0.10"
       resources:
         requests:
@@ -544,7 +530,6 @@ periodics:
           memory: 16Gi
     - dot-release: true
       dot-dev: true
-      go113: true
       release: "0.11"
       resources:
         requests:
@@ -553,7 +538,6 @@ periodics:
           memory: 16Gi
     - dot-release: true
       dot-dev: true
-      go113: true
       release: "0.12"
       resources:
         requests:
@@ -562,7 +546,6 @@ periodics:
           memory: 16Gi
     - dot-release: true
       dot-dev: true
-      go113: true
       resources:
         requests:
           memory: 12Gi
@@ -570,7 +553,6 @@ periodics:
           memory: 16Gi
     - auto-release: true
       dot-dev: true
-      go113: true
       resources:
         requests:
           memory: 12Gi
@@ -578,7 +560,6 @@ periodics:
           memory: 16Gi
     - webhook-apicoverage: true
       dot-dev: true
-      go113: true
     - custom-job: continuous-go114
       command: "./test/e2e-tests.sh"
       timeout: 100
@@ -593,22 +574,17 @@ periodics:
   knative/client:
     - continuous: true
       dot-dev: true
-      go113: true
     - branch-ci: true
       release: "0.11"
       dot-dev: true
-      go113: true
     - branch-ci: true
       release: "0.12"
       dot-dev: true
-      go113: true
     - branch-ci: true
       release: "0.13"
       dot-dev: true
-      go113: true
     - nightly: true
       dot-dev: true
-      go113: true
     - custom-job: tekton
       # This job must run after the nightly job so it uses the latest nightly.
       # Nightly jobs run between 1AM and 3AM PST.
@@ -616,37 +592,29 @@ periodics:
       cron: "0 13 * * *"
       command: "./test/tekton-tests.sh"
       dot-dev: true
-      go113: true
     - dot-release: true
       dot-dev: true
-      go113: true
       release: "0.11"
     - dot-release: true
       dot-dev: true
-      go113: true
       release: "0.12"
     - dot-release: true
       dot-dev: true
-      go113: true
     - auto-release: true
       dot-dev: true
-      go113: true
 
   knative/client-contrib:
     - continuous: true
       dot-dev: true
-      go113: true
 
   knative/docs:
     - continuous: true
       needs-dind: true
-      go113: true
 
   knative/eventing:
     - continuous: true
       timeout: 90
       dot-dev: true
-      go113: true
       resources:
         requests:
           memory: 12Gi
@@ -655,22 +623,17 @@ periodics:
     - branch-ci: true
       release: "0.11"
       dot-dev: true
-      go113: true
     - branch-ci: true
       release: "0.12"
       dot-dev: true
-      go113: true
     - branch-ci: true
       release: "0.13"
       dot-dev: true
-      go113: true
     - branch-ci: true
       release: "0.14"
       dot-dev: true
-      go113: true
     - nightly: true
       dot-dev: true
-      go113: true
       resources:
         requests:
           memory: 12Gi
@@ -678,7 +641,6 @@ periodics:
           memory: 16Gi
     - dot-release: true
       dot-dev: true
-      go113: true
       release: "0.11"
       resources:
         requests:
@@ -687,7 +649,6 @@ periodics:
           memory: 16Gi
     - dot-release: true
       dot-dev: true
-      go113: true
       release: "0.12"
       resources:
         requests:
@@ -696,7 +657,6 @@ periodics:
           memory: 16Gi
     - dot-release: true
       dot-dev: true
-      go113: true
       release: "0.13"
       resources:
         requests:
@@ -705,7 +665,6 @@ periodics:
           memory: 16Gi
     - dot-release: true
       dot-dev: true
-      go113: true
       resources:
         requests:
           memory: 12Gi
@@ -713,7 +672,6 @@ periodics:
           memory: 16Gi
     - auto-release: true
       dot-dev: true
-      go113: true
       resources:
         requests:
           memory: 12Gi
@@ -723,7 +681,6 @@ periodics:
   knative/eventing-contrib:
     - continuous: true
       dot-dev: true
-      go113: true
       resources:
         requests:
           memory: 12Gi
@@ -732,22 +689,17 @@ periodics:
     - branch-ci: true
       release: "0.11"
       dot-dev: true
-      go113: true
     - branch-ci: true
       release: "0.12"
       dot-dev: true
-      go113: true
     - branch-ci: true
       release: "0.13"
       dot-dev: true
-      go113: true
     - branch-ci: true
       release: "0.14"
       dot-dev: true
-      go113: true
     - nightly: true
       dot-dev: true
-      go113: true
       resources:
         requests:
           memory: 12Gi
@@ -755,7 +707,6 @@ periodics:
           memory: 16Gi
     - dot-release: true
       dot-dev: true
-      go113: true
       release: "0.11"
       resources:
         requests:
@@ -764,7 +715,6 @@ periodics:
           memory: 16Gi
     - dot-release: true
       dot-dev: true
-      go113: true
       release: "0.12"
       resources:
         requests:
@@ -773,7 +723,6 @@ periodics:
           memory: 16Gi
     - dot-release: true
       dot-dev: true
-      go113: true
       release: "0.13"
       resources:
         requests:
@@ -782,7 +731,6 @@ periodics:
           memory: 16Gi
     - dot-release: true
       dot-dev: true
-      go113: true
       resources:
         requests:
           memory: 12Gi
@@ -790,7 +738,6 @@ periodics:
           memory: 16Gi
     - auto-release: true
       dot-dev: true
-      go113: true
       resources:
         requests:
           memory: 12Gi
@@ -800,254 +747,191 @@ periodics:
   knative/pkg:
     - continuous: true
       dot-dev: true
-      go113: true
 
   knative/caching:
     - continuous: true
       dot-dev: true
-      go113: true
 
   knative/observability:
     - continuous: true
-      go113: true
 
   knative/sample-controller:
     - continuous: true
       dot-dev: true
-      go113: true
 
   knative/sample-source:
     - continuous: true
       dot-dev: true
-      go113: true
 
   knative/test-infra:
     - continuous: true
       dot-dev: true
-      go113: true
 
   knative/serving-operator:
     - continuous: true
       dot-dev: true
-      go113: true
     - branch-ci: true
       release: "0.11"
       dot-dev: true
-      go113: true
     - branch-ci: true
       release: "0.12"
       dot-dev: true
-      go113: true
     - branch-ci: true
       release: "0.13"
       dot-dev: true
-      go113: true
     - branch-ci: true
       release: "0.14"
       dot-dev: true
-      go113: true
     - nightly: true
       dot-dev: true
-      go113: true
     - dot-release: true
       dot-dev: true
-      go113: true
       release: "0.11"
     - dot-release: true
       dot-dev: true
-      go113: true
       release: "0.12"
     - dot-release: true
       dot-dev: true
-      go113: true
       release: "0.13"
     - dot-release: true
       dot-dev: true
-      go113: true
     - auto-release: true
       dot-dev: true
-      go113: true
 
   knative/eventing-operator:
     - continuous: true
       dot-dev: true
-      go113: true
     - branch-ci: true
       release: "0.11"
       dot-dev: true
-      go113: true
     - branch-ci: true
       release: "0.12"
       dot-dev: true
-      go113: true
     - branch-ci: true
       release: "0.13"
       dot-dev: true
-      go113: true
     - branch-ci: true
       release: "0.14"
       dot-dev: true
-      go113: true
     - nightly: true
       dot-dev: true
-      go113: true
     - dot-release: true
       dot-dev: true
-      go113: true
       release: "0.11"
     - dot-release: true
       dot-dev: true
-      go113: true
       release: "0.12"
     - dot-release: true
       dot-dev: true
-      go113: true
       release: "0.13"
     - dot-release: true
       dot-dev: true
-      go113: true
     - auto-release: true
       dot-dev: true
-      go113: true
 
   google/knative-gcp:
     - continuous: true
       go114: true
     - branch-ci: true
       release: "0.12"
-      go113: true
     - branch-ci: true
       release: "0.13"
-      go113: true
     - branch-ci: true
       release: "0.14"
-      go113: true
     - nightly: true
       go114: true
     - dot-release: true
-      go113: true
       release: "0.12"
       env-vars:
       - ORG_NAME=google
     - dot-release: true
-      go113: true
       release: "0.13"
       env-vars:
         - ORG_NAME=google
     - dot-release: true
-      go113: true
       env-vars:
       - ORG_NAME=google
     - auto-release: true
-      go113: true
       env-vars:
       - ORG_NAME=google
 
   knative/net-certmanager:
     - continuous: true
       dot-dev: true
-      go113: true
     - nightly: true
       dot-dev: true
-      go113: true
     - dot-release: true
       dot-dev: true
-      go113: true
     - auto-release: true
       dot-dev: true
-      go113: true
 
   knative/net-contour:
     - continuous: true
       dot-dev: true
-      go113: true
     - nightly: true
       dot-dev: true
-      go113: true
     - dot-release: true
       dot-dev: true
-      go113: true
     - auto-release: true
       dot-dev: true
-      go113: true
 
   knative/net-http01:
     - continuous: true
       dot-dev: true
-      go113: true
     - nightly: true
       dot-dev: true
-      go113: true
     - dot-release: true
       dot-dev: true
-      go113: true
     - auto-release: true
       dot-dev: true
-      go113: true
 
   knative/net-istio:
     - continuous: true
       dot-dev: true
-      go113: true
     - nightly: true
       dot-dev: true
-      go113: true
     - dot-release: true
       dot-dev: true
-      go113: true
     - auto-release: true
       dot-dev: true
-      go113: true
 
   knative/net-kourier:
     - continuous: true
       dot-dev: true
-      go113: true
     - nightly: true
       dot-dev: true
-      go113: true
     - dot-release: true
       dot-dev: true
-      go113: true
     - auto-release: true
       dot-dev: true
-      go113: true
 
   knative-sandbox/operator:
     - continuous: true
-      go113: true
       dot-dev: true
     - nightly: true
-      go113: true
       dot-dev: true
     - dot-release: true
-      go113: true
       dot-dev: true
       env-vars:
       - ORG_NAME=knative-sandbox
     - auto-release: true
-      go113: true
       dot-dev: true
       env-vars:
       - ORG_NAME=knative-sandbox
 
   knative-sandbox/eventing-kafka:
     - continuous: true
-      go113: true
       dot-dev: true
       needs-dind: true
     - nightly: true
-      go113: true
       dot-dev: true
       needs-dind: true
     - dot-release: true
-      go113: true
       dot-dev: true
       needs-dind: true
       env-vars:
       - ORG_NAME=knative-sandbox
     - auto-release: true
-      go113: true
       dot-dev: true
       needs-dind: true
       env-vars:
