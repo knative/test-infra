@@ -17,8 +17,8 @@
 # Requires gcloud and kubectl. Assume the cluster contexts are already set for
 # both service and build clusters
 
-KUBECONFIG_SERVICE_CLUSTER="gke_knative-tests_us-central1-f_prow"
-KUBECONFIG_BUILD_CLUSTER="gke_knative-tests_us-central1-f_knative-prow-build-cluster"
+KUBECONFIG_SERVICE_CLUSTER="${KUBECONFIG_SERVICE_CLUSTER:-gke_knative-tests_us-central1-f_prow}"
+KUBECONFIG_BUILD_CLUSTER="${KUBECONFIG_BUILD_CLUSTER:-gke_knative-tests_us-central1-f_knative-prow-build-cluster}"
 
 secrets=(
     "test-pods;covbot-token;GitHub token for the coverage job."
