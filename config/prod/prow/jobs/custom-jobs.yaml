@@ -55,7 +55,7 @@ presubmits:
         - "--exclude-warning=mismatched-tide"
   - name: pull-test-infra-validate-staging-prow-yaml
     decorate: true
-    run_if_changed: "^config/(prod/staging)/prow/(cluster|core|jobs)/.*.yaml$"
+    run_if_changed: "^config/staging/prow/(cluster|core|jobs)/.*.yaml$"
     cluster: "build-knative"
     spec:
       containers:
