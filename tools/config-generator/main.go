@@ -861,10 +861,10 @@ func executeJobTemplateWrapper(repoName string, data interface{}, generateOneJob
 		sbs = append(sbs, specialBranchLogic{
 			branches: go113Branches,
 			opsNew: func(base *baseProwJobTemplateData) {
-				base.Image = getGo113ImageName(base.Image)
+				base.Image = getGo114ImageName(base.Image)
 			},
 			restore: func(base *baseProwJobTemplateData) {
-				base.Image = getGo114ImageName(base.Image)
+				base.Image = getGo113ImageName(base.Image)
 			},
 		})
 	} else {
