@@ -35,7 +35,7 @@ func AddCommands(clusterCmd *cobra.Command) {
 	rw := &ops.RequestWrapper{
 		Request: clm.GKERequest{},
 	}
-	addOptions(gkeCmd, rw)
+	addCommonOptions(gkeCmd, rw)
 	addCreate(gkeCmd, rw)
 	addDelete(gkeCmd, rw)
 	addGet(gkeCmd, rw)
@@ -60,6 +60,7 @@ func addCreate(cc *cobra.Command, rw *ops.RequestWrapper) {
 			}
 		},
 	}
+	addCreateOptions(createCmd, rw)
 	cc.AddCommand(createCmd)
 }
 

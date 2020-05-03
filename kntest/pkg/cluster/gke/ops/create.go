@@ -40,12 +40,10 @@ const (
 )
 
 // Create creates a GKE cluster and configures gcloud after successful GKE create request
-func (o *RequestWrapper) Create() (*clm.GKECluster, error) {
-	gkeClient := clm.GKEClient{}
-	clusterOps := gkeClient.Setup(o.Request)
-	gkeOps := clusterOps.(*clm.GKECluster)
-	if err := gkeOps.Acquire(); err != nil || gkeOps.Cluster == nil {
-		return nil, fmt.Errorf("failed acquiring GKE cluster: '%v'", err)
+func (rw *RequestWrapper) Create() (*clm.GKECluster, error) {
+	gkeOps, err := rw.acquire()
+	if err != nil {
+		return nil, err
 	}
 
 	// At this point we should have a cluster ready to run test. Need to save
@@ -58,10 +56,10 @@ func (o *RequestWrapper) Create() (*clm.GKECluster, error) {
 		"gcloud beta container clusters get-credentials %s --region %s --project %s",
 		gkeOps.Cluster.Name, gkeOps.Cluster.Location, gkeOps.Project)
 	if out, err := cmd.RunCommand(clusterAuthCmd); err != nil {
-		return nil, fmt.Errorf("failed connecting to cluster: %q, '%v'", out, err)
+		return nil, fmt.Errorf("failed connecting to cluster: %q, %w", out, err)
 	}
 	if out, err := cmd.RunCommand("gcloud config set project " + gkeOps.Project); err != nil {
-		return nil, fmt.Errorf("failed setting gcloud: %q, '%v'", out, err)
+		return nil, fmt.Errorf("failed setting gcloud: %q, %w", out, err)
 	}
 
 	return gkeOps, nil

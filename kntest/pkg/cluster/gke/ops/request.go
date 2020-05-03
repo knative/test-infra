@@ -16,10 +16,24 @@ limitations under the License.
 
 package ops
 
-import clm "knative.dev/pkg/testutils/clustermanager/e2e-tests"
+import (
+	"fmt"
+
+	clm "knative.dev/pkg/testutils/clustermanager/e2e-tests"
+)
 
 // RequestWrapper is a wrapper of the GKERequest.
 type RequestWrapper struct {
 	Request clm.GKERequest
 	Regions []string
+}
+
+func (rw *RequestWrapper) acquire() (*clm.GKECluster, error) {
+	gkeClient := clm.GKEClient{}
+	clusterOps := gkeClient.Setup(rw.Request)
+	gkeOps := clusterOps.(*clm.GKECluster)
+	if err := gkeOps.Acquire(); err != nil || gkeOps.Cluster == nil {
+		return nil, fmt.Errorf("failed acquiring GKE cluster: %w", err)
+	}
+	return gkeOps, nil
 }
