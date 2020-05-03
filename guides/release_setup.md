@@ -52,7 +52,8 @@ Versioned releases can be one of two kinds:
    [helper script documentation](../scripts/README.md#using-the-releasesh-helper-script).
 
 1. Enable `nightly`, `auto-release` and `dot-release` jobs for your repo in the
-   [config_knative.yaml](../config/prow/config_knative.yaml) file. For example:
+   [config_knative.yaml](../config/prod/prow/config_knative.yaml) file. For
+   example:
 
    ```
    knative/MODULE:
@@ -62,12 +63,12 @@ Versioned releases can be one of two kinds:
    ```
 
 1. Run `./hack/generate-configs.sh` to regenerate
-   [config.yaml](../config/prow/jobs/config.yaml), otherwise the presubmit test
-   will fail. Merge such pull request and ask the
+   [config.yaml](../config/prod/prow/jobs/config.yaml), otherwise the presubmit
+   test will fail. Merge such pull request and ask the
    [oncall](https://knative.github.io/test-infra/) to update the Prow cluster
    and TestGrid with the new configs, by running `make update-prow-job-config`
-   and `make update-testgrid-config` in `config/prow`. Within two hours the 3
-   new jobs (nightly, auto-release and dot-release) will appear on TestGrid.
+   and `make update-testgrid-config` in `config/prod/prow`. Within two hours the
+   3 new jobs (nightly, auto-release and dot-release) will appear on TestGrid.
 
    The jobs can also be found in the
    [Prow status page](https://prow.knative.dev) under the names

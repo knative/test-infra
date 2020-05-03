@@ -26,7 +26,7 @@ import (
 	"knative.dev/pkg/test/helpers"
 )
 
-const configPath = "config/prow/testgrid/testgrid.yaml"
+const configPath = "config/prod/prow/testgrid/testgrid.yaml"
 
 // Config is entire testgrid config
 type Config struct {

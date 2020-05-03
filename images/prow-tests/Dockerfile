@@ -29,9 +29,17 @@ RUN gcloud components update
 RUN gcloud components install docker-credential-gcr
 RUN docker-credential-gcr configure-docker
 
+# Replace kubectl with a working version
+# TODO(chizhg): remove once https://github.com/knative/test-infra/issues/1858 is fixed
+ARG K8S_RELEASE=v1.17.4
+RUN rm -f $(which kubectl) && \
+    wget https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl -O /usr/local/bin/kubectl && \
+    chmod +x /usr/local/bin/kubectl
+
 # Extra tools through apt-get
 RUN apt-get install -y uuid-runtime  # for uuidgen
-RUN apt-get install -y rubygems  # for mdl
+RUN apt-get install -y rubygems      # for mdl
+RUN apt-get install -y shellcheck    # for presubmit
 
 # Install go at 1.13 same as how it's installed in kubekins-e2e image, reference code here:
 # https://github.com/kubernetes/test-infra/blob/1e9b5dc3de4b268aab57c9c48120aa3dcf096bc6/images/kubekins-e2e/Dockerfile#L64
@@ -47,6 +55,7 @@ RUN GO111MODULE=on go get github.com/boz/kail/cmd/kail
 RUN go get -u github.com/golang/dep/cmd/dep
 RUN go get -u github.com/jstemmer/go-junit-report
 RUN GO111MODULE=on go get -u github.com/raviqqe/liche@v0.0.0-20200229003944-f57a5d1c5be4  # stable liche version for checking md links
+RUN GO111MODULE=on go get -u github.com/google/go-licenses
 
 # Extract bazel version
 RUN bazel version > /bazel_version
@@ -59,12 +68,16 @@ RUN ko version > /ko_version
 RUN gem install mixlib-config -v 2.2.4  # required because ruby is 2.1
 RUN gem install mdl -v 0.5  # required because later version of mdl requires ruby >= 2.4
 
+# Install our own tools
+RUN go get knative.dev/pkg/testutils/junithelper
+
 # Temporarily add test-infra to the image to build custom tools
 ADD . /go/src/knative.dev/test-infra
 
 # Build custom tools in the container
 RUN make -C /go/src/knative.dev/test-infra/tools/githubhelper
 RUN cp /go/src/knative.dev/test-infra/tools/githubhelper/githubhelper .
+# RUN go install knative.dev/test-infra/kntest/cmd/kntest # Uncomment when you wish to have kntest installed
 
 # Remove test-infra from the container
 RUN rm -fr /go/src/knative.dev/test-infra

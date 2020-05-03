@@ -17,8 +17,10 @@ limitations under the License.
 package main
 
 import (
+	"errors"
 	"fmt"
 	"path/filepath"
+	"strings"
 
 	"github.com/google/go-github/v27/github"
 	"knative.dev/pkg/test/cmd"
@@ -172,9 +174,16 @@ func (cli *Client) rollOutToProd() (*github.PullRequest, error) {
 		// We do not need to check the error here as the unit tests can guarantee the paths exist.
 		stagingPath, _ = filepath.Abs(stagingPath)
 		prodPath, _ := filepath.Abs(config.ProdProwKeyConfigPaths[i])
-		// The wildcard '*' needs to be expanded by the shell, so the cp command needs to be run in a shell process.
-		cpCmd := fmt.Sprintf("/bin/bash -c 'cp -r %s/* %s'", stagingPath, prodPath)
-		if _, err := cmd.RunCommand(cpCmd); err != nil {
+		if strings.TrimSpace(prodPath) == "" {
+			return nil, errors.New("prod path can't be empty")
+		}
+		// The wildcard '*' needs to be expanded by the shell, so the cp command
+		// needs to be run in a shell process.
+		syncCmds := []string{
+			fmt.Sprintf("/bin/bash -c 'rm -rf %s/*'", prodPath),
+			fmt.Sprintf("/bin/bash -c 'cp -r %s/* %s'", stagingPath, prodPath),
+		}
+		if _, err := cmd.RunCommands(syncCmds...); err != nil {
 			return nil, fmt.Errorf("error copying staging config files to production: %v", err)
 		}
 	}
