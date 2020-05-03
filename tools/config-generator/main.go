@@ -66,9 +66,8 @@ type repositoryData struct {
 	GoCoverageThreshold    int
 	Processed              bool
 	DotDev                 bool
-	Go113                  bool
 	Go114                  bool
-	Go112Branches          []string
+	Go113Branches          []string
 }
 
 // prowConfigTemplateData contains basic data about Prow.
@@ -440,14 +439,13 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.Args = make([]string, 0)
 	data.Volumes = make([]string, 0)
 	data.VolumeMounts = make([]string, 0)
-	data.Resources = make([]string, 0)
 	data.Env = make([]string, 0)
 	data.ExtraRefs = []string{"- org: " + data.OrgName, "  repo: " + data.RepoName}
 	data.Labels = make([]string, 0)
 	data.Optional = ""
 
-	// Temporary solution for migrating repos to use build cluster step by step
-	if repo != "knative/serving" {
+	// Staging jobs don't use prod build cluster
+	if data.OrgName != "knative-prow-robot" {
 		data.Cluster = "cluster: \"build-knative\""
 	}
 	return data
@@ -537,8 +535,9 @@ func setupDockerInDockerForJob(data *baseProwJobTemplateData) {
 	(*data).SecurityContext = []string{"privileged: true"}
 }
 
-// setReourcesReqForJob sets resource requirement for job
-func setReourcesReqForJob(res yaml.MapSlice, data *baseProwJobTemplateData) {
+// setResourcesReqForJob sets resource requirement for job
+func setResourcesReqForJob(res yaml.MapSlice, data *baseProwJobTemplateData) {
+	data.Resources = nil
 	for _, val := range res {
 		data.Resources = append(data.Resources, fmt.Sprintf("  %s:", getString(val.Key)))
 		for _, item := range getMapSlice(val.Value) {
@@ -580,19 +579,12 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 					repositories[i].DotDev = true
 				}
 			}
-		case "go113":
-			needGo113 = true
-			for i, repo := range repositories {
-				if path.Base(repo.Name) == (*data).RepoName {
-					repositories[i].Go113 = true
-				}
-			}
 		case "go114":
 			needGo114 = true
 			for i, repo := range repositories {
 				if path.Base(repo.Name) == (*data).RepoName {
 					repositories[i].Go114 = true
-					data.RepoNameForJob = (*data).RepoName + getGo114ID()
+					data.RepoNameForJob = fmt.Sprintf("%s-%s", (*data).OrgName, (*data).RepoName)
 				}
 			}
 		case "performance":
@@ -601,10 +593,10 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 					repositories[i].EnablePerformanceTests = true
 				}
 			}
-		case "go112-branches":
+		case "go113-branches":
 			for i, repo := range repositories {
 				if path.Base(repo.Name) == (*data).RepoName {
-					repositories[i].Go112Branches = getStringArray(item.Value)
+					repositories[i].Go113Branches = getStringArray(item.Value)
 				}
 			}
 		case "env-vars":
@@ -612,7 +604,7 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 		case "optional":
 			(*data).Optional = "optional: true"
 		case "resources":
-			setReourcesReqForJob(getMapSlice(item.Value), data)
+			setResourcesReqForJob(getMapSlice(item.Value), data)
 		case nil: // already processed
 			continue
 		default:
@@ -856,23 +848,23 @@ func executeJobTemplateWrapper(repoName string, data interface{}, generateOneJob
 		}
 	}
 
-	var go112Branches []string
+	var go113Branches []string
 	// Find out if Go112Branches is set in repo settings
 	for _, repo := range repositories {
 		if repo.Name == repoName {
-			if len(repo.Go112Branches) > 0 {
-				go112Branches = repo.Go112Branches
+			if len(repo.Go113Branches) > 0 {
+				go113Branches = repo.Go113Branches
 			}
 		}
 	}
-	if len(go112Branches) > 0 {
+	if len(go113Branches) > 0 {
 		sbs = append(sbs, specialBranchLogic{
-			branches: go112Branches,
+			branches: go113Branches,
 			opsNew: func(base *baseProwJobTemplateData) {
-				base.Image = getGo113ImageName(base.Image)
+				base.Image = getGo114ImageName(base.Image)
 			},
 			restore: func(base *baseProwJobTemplateData) {
-				base.Image = getGo112ImageName(base.Image)
+				base.Image = getGo113ImageName(base.Image)
 			},
 		})
 	} else {
@@ -1127,8 +1119,8 @@ func main() {
 	flag.StringVar(&testAccount, "test-account", "/etc/test-account/service-account.json", "Path to the service account JSON for test jobs")
 	flag.StringVar(&nightlyAccount, "nightly-account", "/etc/nightly-account/service-account.json", "Path to the service account JSON for nightly release jobs")
 	flag.StringVar(&releaseAccount, "release-account", "/etc/release-account/service-account.json", "Path to the service account JSON for release jobs")
-	var coverageDockerImageName = flag.String("coverage-docker", "coverage-go112:latest", "Docker image for coverage tool")
-	var prowTestsDockerImageName = flag.String("prow-tests-docker", "prow-tests-go112:stable", "prow-tests docker image")
+	var coverageDockerImageName = flag.String("coverage-docker", "coverage:latest", "Docker image for coverage tool")
+	var prowTestsDockerImageName = flag.String("prow-tests-docker", "prow-tests:stable", "prow-tests docker image")
 	flag.StringVar(&githubCommenterDockerImage, "github-commenter-docker", "gcr.io/k8s-prow/commenter:v20190731-e3f7b9853", "github commenter docker image")
 	flag.StringVar(&presubmitScript, "presubmit-script", "./test/presubmit-tests.sh", "Executable for running presubmit tests")
 	flag.StringVar(&releaseScript, "release-script", "./hack/release.sh", "Executable for creating releases")

@@ -18,6 +18,11 @@ plank:
         bucket: "[[.GcsBucket]]"
         path_strategy: "explicit"
       gcs_credentials_secret: "test-account"
+      resources:
+        sidecar:
+          requests:
+            cpu: 100m
+            memory: 20Mi
 
 deck:
   spyglass:
