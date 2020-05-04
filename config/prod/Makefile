@@ -20,5 +20,5 @@ TESTGRID_GCS  := knative-testgrid
 KNATIVE_CONFIG   := config_knative.yaml
 TESTGRID_CONFIG  ?= testgrid/testgrid.yaml
 
-include ../../prow_common.mk
+include ../prow_common.mk
 

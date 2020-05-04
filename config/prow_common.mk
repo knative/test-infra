@@ -20,28 +20,31 @@ include $(SELF_DIR)../common.mk
 
 # Default settings for the CI/CD system.
 
-CLUSTER       ?= prow
-ZONE          ?= us-central1-f
-JOB_NAMESPACE ?= test-pods
+CLUSTER       	?= prow
+BUILD_CLUSTER 	?= knative-prow-build-cluster
+ZONE          	?= us-central1-f
+JOB_NAMESPACE 	?= test-pods
 
 SKIP_CONFIG_BACKUP        ?=
 
 # Any changes to file location must be made to staging directory also
 # or overridden in the Makefile before this file is included.
-PROW_PLUGINS     ?= core/plugins.yaml
-PROW_CONFIG      ?= core/config.yaml
-PROW_JOB_CONFIG  ?= jobs
+PROW_PLUGINS     				?= prod/core/plugins.yaml
+PROW_CONFIG      				?= prod/core/config.yaml
+PROW_JOB_CONFIG  				?= prod/jobs
 
-PROW_DEPLOYS     ?= cluster
-PROW_GCS         ?= knative-prow
-PROW_CONFIG_GCS  ?= gs://$(PROW_GCS)/configs
+PROW_DEPLOYS     				?= prod/cluster
+BUILD_CLUSTER_PROW_DEPLOYS    	?= build-cluster/cluster
+PROW_GCS         				?= knative-prow
+PROW_CONFIG_GCS  				?= gs://$(PROW_GCS)/configs
 
-BOSKOS_RESOURCES ?= boskos/boskos_resources.yaml
+BOSKOS_RESOURCES 				?= build-cluster/boskos/boskos_resources.yaml
 
 # Useful shortcuts.
 
-SET_CONTEXT   := gcloud container clusters get-credentials "$(CLUSTER)" --project="$(PROJECT)" --zone="$(ZONE)"
-UNSET_CONTEXT := kubectl config unset current-context
+SET_CONTEXT   				  := gcloud container clusters get-credentials "$(CLUSTER)" --project="$(PROJECT)" --zone="$(ZONE)"
+SET_BUILD_CLUSTER_CONTEXT     := gcloud container clusters get-credentials "$(BUILD_CLUSTER)" --project="$(PROJECT)" --zone="$(ZONE)"
+UNSET_CONTEXT 				  := kubectl config unset current-context
 
 .PHONY: help get-cluster-credentials unset-cluster-credentials
 help:
@@ -60,6 +63,9 @@ get-cluster-credentials:
 unset-cluster-credentials:
 	$(UNSET_CONTEXT)
 
+get-build-cluster-credentials:
+	$(SET_BUILD_CLUSTER_CONTEXT)
+
 .PHONY: update-prow-config update-all-boskos-deployments update-boskos-resource update-almost-all-cluster-deployments update-single-cluster-deployment test update-testgrid-config confirm-master
 
 # Update prow config
@@ -77,13 +83,13 @@ update-prow-config: confirm-master
 # Boskos is separate because of patching done in staging Makefile
 # Double-colon because staging Makefile piggy-backs on this
 update-all-boskos-deployments:: confirm-master
-	$(SET_CONTEXT)
-	@for f in $(wildcard $(PROW_DEPLOYS)/*boskos*.yaml); do kubectl apply -f $${f}; done
+	$(SET_BUILD_CLUSTER_CONTEXT)
+	@for f in $(wildcard $(BUILD_CLUSTER_PROW_DEPLOYS)/*boskos*.yaml); do kubectl apply -f $${f}; done
 	$(UNSET_CONTEXT)
 
 # Update the list of resources for Boskos
 update-boskos-resource: confirm-master
-	$(SET_CONTEXT)
+	$(SET_BUILD_CLUSTER_CONTEXT)
 	kubectl create configmap resources --from-file=config=$(BOSKOS_RESOURCES) --dry-run --save-config -o yaml | kubectl --namespace="$(JOB_NAMESPACE)" apply -f -
 	$(UNSET_CONTEXT)
 
@@ -94,11 +100,17 @@ update-almost-all-cluster-deployments:: confirm-master
 	$(SET_CONTEXT)
 	@for f in $(filter-out $(wildcard $(PROW_DEPLOYS)/*boskos*.yaml),$(wildcard $(PROW_DEPLOYS)/*.yaml)); do kubectl apply -f $${f}; done
 	$(UNSET_CONTEXT)
+	$(SET_BUILD_CLUSTER_CONTEXT)
+	@for f in $(filter-out $(wildcard $(BUILD_CLUSTER_PROW_DEPLOYS)/*boskos*.yaml),$(wildcard $(BUILD_CLUSTER_PROW_DEPLOYS)/*.yaml)); do kubectl apply -f $${f}; done
+	$(UNSET_CONTEXT)
 
 # Update single deployment of cluster, expect passing in ${NAME} like `make update-single-cluster-deployment NAME=crier_deployment`
 update-single-cluster-deployment: confirm-master
 	$(SET_CONTEXT)
 	kubectl apply -f $(PROW_DEPLOYS)/$(NAME).yaml
+	$(UNSET_CONTEXT)
+	$(SET_BUILD_CLUSTER_CONTEXT)
+	kubectl apply -f $(BUILD_CLUSTER_PROW_DEPLOYS)/$(NAME).yaml
 	$(UNSET_CONTEXT)
 
 # Update all resources on Prow cluster
