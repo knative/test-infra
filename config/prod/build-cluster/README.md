@@ -11,9 +11,7 @@ Create build cluster:
 ./create-build-cluster.sh
 
 # Connect to knative-prow cluster
-pushd ../prow
-make get-cluster-credentials
-popd
+make -C .. get-cluster-credentials
 
 # Add the kubeconfig of newly created cluster to kubeconfig secret in Prow cluster
 python3 "${GOPATH}/src/k8s.io/test-infra/gencred/merge_kubeconfig_secret.py" --src-key config --dest-key config build-cluster-kubeconfig.yaml

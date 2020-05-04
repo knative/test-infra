@@ -28,7 +28,7 @@ deploy:
 	sed -i -e 's/k8s-testgrid.appspot.com/testgrid.knative.dev/' $(SRC)/filters.py
 	sed -i -e 's/k8s-testgrid/knative-testgrid/' $(SRC)/testgrid.py
 	# Deploy
-	make -C ../prow get-cluster-credentials PROJECT=$(PROJECT)
+	make -C .. get-cluster-credentials PROJECT=$(PROJECT)
 	make -C $(SRC) deploy PROJECT=$(PROJECT)
 	# Cleanup
 	rm -fr test-infra
