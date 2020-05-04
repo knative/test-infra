@@ -16,24 +16,32 @@ presubmits:
   knative-prow-robot/serving:
   - build-tests: true
     dot-dev: true
+    go114: true
   - unit-tests: true
     dot-dev: true
+    go114: true
   - integration-tests: true
     dot-dev: true
+    go114: true
 
   knative-prow-robot/test-infra:
   - build-tests: true
     dot-dev: true
+    go114: true
   - unit-tests: true
     dot-dev: true
+    go114: true
   - integration-tests: true
     dot-dev: true
+    go114: true
 
 periodics:
   knative-prow-robot/serving:
   - continuous: false
     dot-dev: true
+    go114: true
 
   knative-prow-robot/test-infra:
   - continuous: false
     dot-dev: true
+    go114: true

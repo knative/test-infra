@@ -29,7 +29,7 @@ presubmits:
     path_alias: knative.dev/serving
     spec:
       containers:
-      - image: gcr.io/knative-tests-staging/test-infra/prow-tests:stable
+      - image: gcr.io/knative-tests-staging/test-infra/prow-tests-go114:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -65,7 +65,7 @@ presubmits:
     path_alias: knative.dev/serving
     spec:
       containers:
-      - image: gcr.io/knative-tests-staging/test-infra/prow-tests:stable
+      - image: gcr.io/knative-tests-staging/test-infra/prow-tests-go114:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -101,7 +101,7 @@ presubmits:
     path_alias: knative.dev/serving
     spec:
       containers:
-      - image: gcr.io/knative-tests-staging/test-infra/prow-tests:stable
+      - image: gcr.io/knative-tests-staging/test-infra/prow-tests-go114:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -138,7 +138,7 @@ presubmits:
     path_alias: knative.dev/test-infra
     spec:
       containers:
-      - image: gcr.io/knative-tests-staging/test-infra/prow-tests:stable
+      - image: gcr.io/knative-tests-staging/test-infra/prow-tests-go114:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -174,7 +174,7 @@ presubmits:
     path_alias: knative.dev/test-infra
     spec:
       containers:
-      - image: gcr.io/knative-tests-staging/test-infra/prow-tests:stable
+      - image: gcr.io/knative-tests-staging/test-infra/prow-tests-go114:stable
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -210,7 +210,7 @@ presubmits:
     path_alias: knative.dev/test-infra
     spec:
       containers:
-      - image: gcr.io/knative-tests-staging/test-infra/prow-tests:stable
+      - image: gcr.io/knative-tests-staging/test-infra/prow-tests-go114:stable
         imagePullPolicy: Always
         command:
         - runner.sh
