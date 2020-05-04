@@ -1,10 +1,10 @@
 # Prow setup
 
 All Prow related config files for [prow.knative.dev](https://prow.knative.dev)
-are under [config/prod/prow](../config/prod/prow). There is also a staging Prow in
-[prow-staging.knative.dev](https://prow-staging.knative.dev) for testing the new
-config changes before rolling out to production, and all its config files are
-under [config/staging/prow](../config/staging/prow).
+are under [config/prod/prow](../config/prod/prow). There is also a staging Prow
+in [prow-staging.knative.dev](https://prow-staging.knative.dev) for testing the
+new config changes before rolling out to production, and all its config files
+are under [config/staging/prow](../config/staging/prow).
 
 ## Modify Prow cluster configs
 
