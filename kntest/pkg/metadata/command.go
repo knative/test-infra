@@ -33,12 +33,19 @@ func AddCommands(topLevel *cobra.Command) {
 
 	metadataCmd.PersistentFlags().StringVar(&key, "key", "", "meta info key")
 
-	addSetCommand(metadataCmd)
-	addGetCommand(metadataCmd)
+	// Create with default path of metahelper/client, so that the path is
+	// consistent with all other consumers of metahelper/client that run within
+	// the same context of this tool
+	c, err := client.New("")
+	if err != nil {
+		log.Fatal(err)
+	}
+	addSetCommand(metadataCmd, c)
+	addGetCommand(metadataCmd, c)
 	topLevel.AddCommand(metadataCmd)
 }
 
-func addSetCommand(metadataCmd *cobra.Command) {
+func addSetCommand(metadataCmd *cobra.Command, c *client.Client) {
 	var value string
 
 	var setCmd = &cobra.Command{
@@ -48,24 +55,17 @@ func addSetCommand(metadataCmd *cobra.Command) {
 			if key == "" {
 				log.Fatal("meta info key cannot be empty")
 			}
-			// Create with default path of metahelper/client, so that the path is
-			// consistent with all other consumers of metahelper/client that run within
-			// the same context of this tool
-			c, err := client.New("")
-			if err != nil {
-				log.Fatal(err)
-			}
 
 			if err := c.Set(key, value); err != nil {
 				log.Fatalf("error setting meta info for %q=%q: %v", key, value, err)
 			}
 		},
 	}
-	setCmd.PersistentFlags().StringVar(&value, "value", "", "meta info value")
+	setCmd.Flags().StringVar(&value, "value", "", "meta info value")
 	metadataCmd.AddCommand(setCmd)
 }
 
-func addGetCommand(metadataCmd *cobra.Command) {
+func addGetCommand(metadataCmd *cobra.Command, c *client.Client) {
 	var setCmd = &cobra.Command{
 		Use:   "get",
 		Short: "Get the meta info value for the given key.",
@@ -73,17 +73,10 @@ func addGetCommand(metadataCmd *cobra.Command) {
 			if key == "" {
 				log.Fatal("meta info key cannot be empty")
 			}
-			// Create with default path of metahelper/client, so that the path is
-			// consistent with all other consumers of metahelper/client that run within
-			// the same context of this tool
-			c, err := client.New("")
-			if err != nil {
-				log.Fatal(err)
-			}
 
 			res, err := c.Get(key)
 			if err != nil {
-				log.Fatalf("error setting meta info for %q: %v", key, err)
+				log.Fatalf("error getting meta info for %q: %v", key, err)
 			}
 
 			log.Print(res)
