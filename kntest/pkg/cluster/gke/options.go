@@ -35,7 +35,7 @@ func addCommonOptions(clusterCmd *cobra.Command, rw *ops.RequestWrapper) {
 }
 
 func addCreateOptions(clusterCmd *cobra.Command, rw *ops.RequestWrapper) {
-	pf := clusterCmd.PersistentFlags()
+	pf := clusterCmd.Flags()
 	req := &rw.Request
 	// The default values set here are not used in the final operations,
 	// they will further be defaulted in
