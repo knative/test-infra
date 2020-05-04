@@ -24,7 +24,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/google/go-github/github"
+	"github.com/google/go-github/v27/github"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"knative.dev/pkg/test/cmd"
 	"knative.dev/pkg/test/ghutil"
