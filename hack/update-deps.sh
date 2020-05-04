@@ -18,6 +18,9 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+export GO111MODULE=on
+export GOFLAGS=-mod=vendor
+
 source $(dirname $0)/../scripts/library.sh
 
 cd ${REPO_ROOT_DIR}
@@ -29,19 +32,25 @@ FLOATING_DEPS=(
 )
 
 # Parse flags to determine any we should pass to dep.
-DEP_FLAGS=()
+GO_GET=0
 while [[ $# -ne 0 ]]; do
   parameter=$1
   case ${parameter} in
-    --upgrade) DEP_FLAGS=( -update ${FLOATING_DEPS[@]} ) ;;
+    --upgrade) GO_GET=1 ;;
     *) abort "unknown option ${parameter}" ;;
   esac
   shift
 done
-readonly DEP_FLAGS
+readonly GO_GET
 
-# Ensure we have everything we need under vendor/
-dep ensure ${DEP_FLAGS[@]}
+if (( GO_GET )); then
+  go get -d ${FLOATING_DEPS[@]}
+fi
+
+
+# Prune modules.
+go mod tidy
+go mod vendor
 
 rm -rf $(find vendor/ -name 'OWNERS')
 rm -rf $(find vendor/ -name 'OWNERS_ALIASES')

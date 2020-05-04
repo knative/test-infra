@@ -20,7 +20,7 @@ import (
 	"log"
 	"path"
 
-	"github.com/google/go-github/github"
+	"github.com/google/go-github/v27/github"
 	"knative.dev/test-infra/tools/coverage/githubUtil/githubClient"
 	"knative.dev/test-infra/tools/coverage/githubUtil/githubPr"
 	"knative.dev/test-infra/tools/coverage/test"
