@@ -53,12 +53,13 @@ All Prow config files for running Prow jobs for Knative projects are under
    `//test/presubmit-tests.sh` working, and optionally `//hack/release.sh`
    working for automated nightly releases).
 
-1. Update [config_knative.yaml](../config/prod/prow/config_knative.yaml) (usually,
-   copy and update the existing configuration from another repository). Run
-   `./hack/generate-configs.sh` to regenerate
-   [config/prod/prow/jobs/config.yaml](../config/prod/prow/jobs/config.yaml), otherwise
-   the presubmit test will fail. Create a pull request with the changes. Once
-   it's merged the configs will be automatically updated by a postsubmit job.
+1. Update [config_knative.yaml](../config/prod/prow/config_knative.yaml)
+   (usually, copy and update the existing configuration from another
+   repository). Run `./hack/generate-configs.sh` to regenerate
+   [config/prod/prow/jobs/config.yaml](../config/prod/prow/jobs/config.yaml),
+   otherwise the presubmit test will fail. Create a pull request with the
+   changes. Once it's merged the configs will be automatically updated by a
+   postsubmit job.
 
 1. Wait a few minutes, enter `/test [prow_job_name]` or `/test all` or `/retest`
    as a comment in any PR in the repo and ensure the test jobs are executed.
