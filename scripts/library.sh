@@ -38,7 +38,7 @@ fi
 readonly IS_PROW
 [[ -z "${REPO_ROOT_DIR:-}" ]] && REPO_ROOT_DIR="$(git rev-parse --show-toplevel)"
 readonly REPO_ROOT_DIR
-readonly REPO_NAME="$(basename ${REPO_ROOT_DIR})"
+readonly REPO_NAME="$(basename "${REPO_ROOT_DIR}")"
 
 # Useful flags about the current OS
 IS_LINUX=0
@@ -65,7 +65,7 @@ fi
 # Print error message and exit 1
 # Parameters: $1..$n - error message to be displayed
 function abort() {
-  echo "error: $@"
+  echo "error: $*"
   exit 1
 }
 
@@ -116,7 +116,7 @@ function wait_until_object_does_not_exist() {
   fi
   echo -n "Waiting until ${DESCRIPTION} does not exist"
   for i in {1..150}; do  # timeout after 5 minutes
-    if ! kubectl ${KUBECTL_ARGS} > /dev/null 2>&1; then
+    if ! kubectl "${KUBECTL_ARGS}" > /dev/null 2>&1; then
       echo -e "\n${DESCRIPTION} does not exist"
       return 0
     fi
@@ -124,7 +124,7 @@ function wait_until_object_does_not_exist() {
     sleep 2
   done
   echo -e "\n\nERROR: timeout waiting for ${DESCRIPTION} not to exist"
-  kubectl ${KUBECTL_ARGS}
+  kubectl "${KUBECTL_ARGS}"
   return 1
 }
 
@@ -133,15 +133,15 @@ function wait_until_object_does_not_exist() {
 function wait_until_pods_running() {
   echo -n "Waiting until all pods in namespace $1 are up"
   local failed_pod=""
-  for i in {1..150}; do  # timeout after 5 minutes
+  for _ in {1..150}; do  # timeout after 5 minutes
     local pods="$(kubectl get pods --no-headers -n $1 2>/dev/null)"
     # All pods must be running (ignore ImagePull error to allow the pod to retry)
     local not_running_pods=$(echo "${pods}" | grep -v Running | grep -v Completed | grep -v ErrImagePull | grep -v ImagePullBackOff)
     if [[ -n "${pods}" ]] && [[ -z "${not_running_pods}" ]]; then
       # All Pods are running or completed. Verify the containers on each Pod.
       local all_ready=1
-      while read pod ; do
-        local status=(`echo -n ${pod} | cut -f2 -d' ' | tr '/' ' '`)
+      while read -r pod ; do
+        local status=("$(echo -n "${pod}" | cut -f2 -d' ' | tr '/' ' ')")
         # Set this Pod as the failed_pod. If nothing is wrong with it, then after the checks, set
         # failed_pod to the empty string.
         failed_pod=$(echo -n "${pod}" | cut -f1 -d' ')
@@ -168,9 +168,9 @@ function wait_until_pods_running() {
   echo -e "\n\nERROR: timeout waiting for pods to come up\n${pods}"
   if [[ -n "${failed_pod}" ]]; then
     echo -e "\n\nFailed Pod (data in YAML format) - ${failed_pod}\n"
-    kubectl -n $1 get pods "${failed_pod}" -oyaml
+    kubectl -n "$1" get pods "${failed_pod}" -oyaml
     echo -e "\n\nPod Logs\n"
-    kubectl -n $1 logs "${failed_pod}" --all-containers
+    kubectl -n "$1" logs "${failed_pod}" --all-containers
   fi
   return 1
 }
@@ -179,7 +179,7 @@ function wait_until_pods_running() {
 # Parameters: $1 - namespace.
 function wait_until_batch_job_complete() {
   echo -n "Waiting until all batch jobs in namespace $1 run to completion."
-  for i in {1..150}; do  # timeout after 5 minutes
+  for _ in {1..150}; do  # timeout after 5 minutes
     local jobs=$(kubectl get jobs -n $1 --no-headers \
                  -ocustom-columns='n:{.metadata.name},c:{.spec.completions},s:{.status.succeeded}')
     # All jobs must be complete
@@ -200,13 +200,13 @@ function wait_until_batch_job_complete() {
 #             $2 - service name.
 function wait_until_service_has_external_ip() {
   echo -n "Waiting until service $2 in namespace $1 has an external address (IP/hostname)"
-  for i in {1..150}; do  # timeout after 15 minutes
-    local ip=$(kubectl get svc -n $1 $2 -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
+  for _ in {1..150}; do  # timeout after 15 minutes
+    local ip=$(kubectl get svc -n "$1" "$2" -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
     if [[ -n "${ip}" ]]; then
       echo -e "\nService $2.$1 has IP $ip"
       return 0
     fi
-    local hostname=$(kubectl get svc -n $1 $2 -o jsonpath="{.status.loadBalancer.ingress[0].hostname}")
+    local hostname=$(kubectl get svc -n "$1" "$2" -o jsonpath="{.status.loadBalancer.ingress[0].hostname}")
     if [[ -n "${hostname}" ]]; then
       echo -e "\nService $2.$1 has hostname $hostname"
       return 0
@@ -215,7 +215,7 @@ function wait_until_service_has_external_ip() {
     sleep 6
   done
   echo -e "\n\nERROR: timeout waiting for service $2.$1 to have an external address"
-  kubectl get pods -n $1
+  kubectl get pods -n "$1"
   return 1
 }
 
@@ -224,7 +224,7 @@ function wait_until_service_has_external_ip() {
 #             $2 - cluster hostname.
 function wait_until_routable() {
   echo -n "Waiting until cluster $2 at $1 has a routable endpoint"
-  for i in {1..150}; do  # timeout after 5 minutes
+  for _ in {1..150}; do  # timeout after 5 minutes
     local val=$(curl -H "Host: $2" "http://$1" 2>/dev/null)
     if [[ -n "$val" ]]; then
       echo -e "\nEndpoint is now routable"
@@ -241,7 +241,7 @@ function wait_until_routable() {
 # Parameters: $1 - app name.
 #             $2 - namespace (optional).
 function get_app_pod() {
-  local pods=($(get_app_pods $1 $2))
+  local pods="($(get_app_pods "$1" "$2"))"
   echo "${pods[0]}"
 }
 
@@ -251,15 +251,16 @@ function get_app_pod() {
 function get_app_pods() {
   local namespace=""
   [[ -n $2 ]] && namespace="-n $2"
-  kubectl get pods ${namespace} --selector=app=$1 --output=jsonpath="{.items[*].metadata.name}"
+  kubectl get pods "${namespace}" --selector=app="$1" --output=jsonpath="{.items[*].metadata.name}"
 }
 
 # Capitalize the first letter of each word.
 # Parameters: $1..$n - words to capitalize.
 function capitalize() {
   local capitalized=()
+  # Do not quota $@ to allow words to be re-splitted.
   for word in $@; do
-    local initial="$(echo ${word:0:1}| tr 'a-z' 'A-Z')"
+    local initial="$(echo "${word:0:1}"| tr '[:lower:]' '[:upper:]')"
     capitalized+=("${initial}${word:1}")
   done
   echo "${capitalized[@]}"
@@ -289,30 +290,30 @@ function acquire_cluster_admin_role() {
   # Get the password of the admin and use it, as the service account (or the user)
   # might not have the necessary permission.
   local password=$(gcloud --format="value(masterAuth.password)" \
-      container clusters describe $2 ${geoflag})
+      container clusters describe "$2" "${geoflag}")
   if [[ -n "${password}" ]]; then
     # Cluster created with basic authentication
     kubectl config set-credentials cluster-admin \
-        --username=admin --password=${password}
+        --username=admin --password="${password}"
   else
     local cert=$(mktemp)
     local key=$(mktemp)
     echo "Certificate in ${cert}, key in ${key}"
     gcloud --format="value(masterAuth.clientCertificate)" \
-      container clusters describe $2 ${geoflag} | base64 --decode > ${cert}
+      container clusters describe "$2" "${geoflag}" | base64 --decode > "${cert}"
     gcloud --format="value(masterAuth.clientKey)" \
-      container clusters describe $2 ${geoflag} | base64 --decode > ${key}
+      container clusters describe "$2" "${geoflag}" | base64 --decode > "${key}"
     kubectl config set-credentials cluster-admin \
-      --client-certificate=${cert} --client-key=${key}
+      --client-certificate="${cert}" --client-key="${key}"
   fi
-  kubectl config set-context $(kubectl config current-context) \
+  kubectl config set-context "$(kubectl config current-context)" \
       --user=cluster-admin
   kubectl create clusterrolebinding cluster-admin-binding \
       --clusterrole=cluster-admin \
-      --user=$1
+      --user="$1"
   # Reset back to the default account
   gcloud container clusters get-credentials \
-      $2 ${geoflag} --project $(gcloud config get-value project)
+      "$2" "${geoflag}" --project "$(gcloud config get-value project)"
 }
 
 # Run a command through tee and capture its output.
@@ -322,16 +323,16 @@ function capture_output() {
   local report="$1"
   shift
   "$@" 2>&1 | tee "${report}"
-  local failed=( ${PIPESTATUS[@]} )
-  [[ ${failed[0]} -eq 0 ]] && failed=${failed[1]} || failed=${failed[0]}
-  return ${failed}
+  local failed=( "${PIPESTATUS[@]}" )
+  [[ ${failed[0]} -eq 0 ]] && failed=( "${failed[1]}" ) || failed=( "${failed[0]}" )
+  return "${failed[@]}"
 }
 
 # Print failed step, which could be highlighted by spyglass.
 # Parameters: $1...n - description of step that failed
 function step_failed() {
   local spyglass_token="Step failed:"
-  echo "${spyglass_token} $@"
+  echo "${spyglass_token} $*"
 }
 
 # Create a temporary file with the given extension in a way that works on both Linux and macOS.
@@ -341,11 +342,11 @@ function mktemp_with_extension() {
   local nameprefix
   local fullname
 
-  nameprefix="$(mktemp $1)"
+  nameprefix="$(mktemp "$1")"
   fullname="${nameprefix}.$2"
-  mv ${nameprefix} ${fullname}
+  mv "${nameprefix}" "${fullname}"
 
-  echo ${fullname}
+  echo "${fullname}"
 }
 
 # Create a JUnit XML for a test.
@@ -379,7 +380,7 @@ EOF
 function report_go_test() {
   # Run tests in verbose mode to capture details.
   # go doesn't like repeating -v, so remove if passed.
-  local args=" $@ "
+  local args=" $* "
   local go_test="go test -v ${args/ -v / }"
   # Just run regular go tests if not on Prow.
   echo "Running tests with '${go_test}'"
@@ -533,14 +534,14 @@ function check_licenses() {
 function run_lint_tool() {
   local checker=$1
   local params=$3
-  if ! hash ${checker} 2>/dev/null; then
+  if ! hash "${checker}" 2>/dev/null; then
     warning "${checker} not installed, not $2"
     return 127
   fi
   shift 3
   local failed=0
-  for file in $@; do
-    ${checker} ${params} ${file} || failed=1
+  for file in "$@"; do
+    ${checker} "${params}" "${file}" || failed=1
   done
   return ${failed}
 }
@@ -551,8 +552,8 @@ function check_links_in_markdown() {
   # https://github.com/raviqqe/liche
   local config="${REPO_ROOT_DIR}/test/markdown-link-check-config.rc"
   [[ ! -e ${config} ]] && config="${_TEST_INFRA_SCRIPTS_DIR}/markdown-link-check-config.rc"
-  local options="$(grep '^-' ${config} | tr \"\n\" ' ')"
-  run_lint_tool liche "checking links in markdown files" "-d ${REPO_ROOT_DIR} ${options}" $@
+  local options="$(grep '^-' "${config}" | tr \"\n\" ' ')"
+  run_lint_tool liche "checking links in markdown files" "-d ${REPO_ROOT_DIR} ${options}" "$@"
 }
 
 # Check format of the given markdown files.
@@ -561,7 +562,7 @@ function lint_markdown() {
   # https://github.com/markdownlint/markdownlint
   local config="${REPO_ROOT_DIR}/test/markdown-lint-config.rc"
   [[ ! -e ${config} ]] && config="${_TEST_INFRA_SCRIPTS_DIR}/markdown-lint-config.rc"
-  run_lint_tool mdl "linting markdown files" "-c ${config}" $@
+  run_lint_tool mdl "linting markdown files" "-c ${config}" "$@"
 }
 
 # Return whether the given parameter is an integer.
@@ -595,16 +596,16 @@ function remove_broken_symlinks() {
   for link in $(find $1 -type l); do
     # Remove broken symlinks
     if [[ ! -e ${link} ]]; then
-      unlink ${link}
+      unlink "${link}"
       continue
     fi
     # Get canonical path to target, remove if outside the repo
-    local target="$(ls -l ${link})"
+    local target="$(ls -l "${link}")"
     target="${target##* -> }"
     [[ ${target} == /* ]] || target="./${target}"
-    target="$(cd `dirname ${link}` && cd ${target%/*} && echo $PWD/${target##*/})"
+    target="$(cd "$(dirname "${link}")" && cd "${target%/*}" && echo "$PWD"/"${target##*/}")"
     if [[ ${target} != *github.com/knative/* && ${target} != *knative.dev/* ]]; then
-      unlink ${link}
+      unlink "${link}"
       continue
     fi
   done
@@ -666,7 +667,7 @@ function get_latest_knative_yaml_source() {
 # Initializations that depend on previous functions.
 # These MUST come last.
 
-readonly _TEST_INFRA_SCRIPTS_DIR="$(dirname $(get_canonical_path ${BASH_SOURCE[0]}))"
+readonly _TEST_INFRA_SCRIPTS_DIR="$(dirname "$(get_canonical_path "${BASH_SOURCE[0]}")")"
 readonly REPO_NAME_FORMATTED="Knative $(capitalize ${REPO_NAME//-/ })"
 
 # Public latest nightly or release yaml files.

@@ -52,7 +52,7 @@ function list_changed_files() {
   # Avoid warning when there are more than 1085 files renamed:
   # https://stackoverflow.com/questions/7830728/warning-on-diff-renamelimit-variable-when-doing-git-push
   git config diff.renames 0
-  git --no-pager diff --name-only ${PULL_BASE_SHA}..${PULL_SHA}
+  git --no-pager diff --name-only ${PULL_BASE_SHA}..${PULL_PULL_SHA}
 }
 
 # Initialize flags and context for presubmit tests:
@@ -332,7 +332,7 @@ function main() {
     echo ${HOSTNAME}
   fi
 
-  [[ -z $1 ]] && set -- "--all-tests"
+  [[ $# -eq 0 ]] && set -- "--all-tests"
 
   local TESTS_TO_RUN=()
 

@@ -17,6 +17,10 @@
 # This is a helper script for Knative E2E test scripts.
 # See README.md for instructions on how to use it.
 
+set -o errexit
+set -o pipefail
+set -o nounset
+
 source $(dirname ${BASH_SOURCE})/library.sh
 
 # Build a resource name based on $E2E_BASE_NAME, a suffix and $BUILD_NUMBER.
