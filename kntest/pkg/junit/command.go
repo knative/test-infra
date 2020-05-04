@@ -17,7 +17,6 @@ limitations under the License.
 package junit
 
 import (
-	"html"
 	"io/ioutil"
 	"log"
 
@@ -47,11 +46,12 @@ func AddCommands(topLevel *cobra.Command) {
 		Run: func(cmd *cobra.Command, args []string) {
 			suites := junit.TestSuites{}
 			suite := junit.TestSuite{Name: suite}
-			errMsg := html.EscapeString(errMsg)
-			suite.AddTestCase(junit.TestCase{
-				Name:    name,
-				Failure: &errMsg,
-			})
+			tc := junit.TestCase{Name: name}
+			if errMsg != "" {
+				// errMsg := html.EscapeString(errMsg)
+				tc.Failure = &errMsg
+			}
+			suite.AddTestCase(tc)
 			// Ignore the error as it only happens if the test suite name already exists.
 			suites.AddTestSuite(&suite)
 			contents, err := suites.ToBytes("", "")

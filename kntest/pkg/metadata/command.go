@@ -39,13 +39,6 @@ func AddCommands(topLevel *cobra.Command) {
 }
 
 func addSetCommand(metadataCmd *cobra.Command) {
-	// Create with default path of metahelper/client, so that the path is
-	// consistent with all other consumers of metahelper/client that run within
-	// the same context of this tool
-	c, err := client.New("")
-	if err != nil {
-		log.Fatal(err)
-	}
 	var value string
 
 	var setCmd = &cobra.Command{
@@ -54,6 +47,13 @@ func addSetCommand(metadataCmd *cobra.Command) {
 		Run: func(cmd *cobra.Command, args []string) {
 			if key == "" {
 				log.Fatal("meta info key cannot be empty")
+			}
+			// Create with default path of metahelper/client, so that the path is
+			// consistent with all other consumers of metahelper/client that run within
+			// the same context of this tool
+			c, err := client.New("")
+			if err != nil {
+				log.Fatal(err)
 			}
 
 			if err := c.Set(key, value); err != nil {
@@ -66,20 +66,19 @@ func addSetCommand(metadataCmd *cobra.Command) {
 }
 
 func addGetCommand(metadataCmd *cobra.Command) {
-	// Create with default path of metahelper/client, so that the path is
-	// consistent with all other consumers of metahelper/client that run within
-	// the same context of this tool
-	c, err := client.New("")
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	var setCmd = &cobra.Command{
 		Use:   "get",
 		Short: "Get the meta info value for the given key.",
 		Run: func(cmd *cobra.Command, args []string) {
 			if key == "" {
 				log.Fatal("meta info key cannot be empty")
+			}
+			// Create with default path of metahelper/client, so that the path is
+			// consistent with all other consumers of metahelper/client that run within
+			// the same context of this tool
+			c, err := client.New("")
+			if err != nil {
+				log.Fatal(err)
 			}
 
 			res, err := c.Get(key)

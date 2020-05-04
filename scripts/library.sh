@@ -468,9 +468,9 @@ function run_go_tool() {
   # Install the tool in the following situations:
   #   - The tool does not exist.
   #   - The tool needs to be installed from a local path.
-  #   - Version of the tool is specificied.
+  #   - Version of the tool is specificied in the given tool path.
   # TODO(chizhg): derive a better versioning story for the tools being used.
-  if [[ -z "$(which ${tool})" || "${action}" == "install" || "${tool}" =~ "@" ]]; then
+  if [[ -z "$(which "${tool}")" || "${action}" == "install" || "${tool}" =~ "@" ]]; then
     # Avoid running `go get` from root dir of the repository, as it can change go.sum and go.mod files.
     # See discussions in https://github.com/golang/go/issues/27643.
     if [[ ${action} == "get" && $(pwd) == "${REPO_ROOT_DIR}" ]]; then
