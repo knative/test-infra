@@ -20,4 +20,4 @@
 export KUBECONFIG_SERVICE_CLUSTER="gke_knative-tests-staging_us-central1-f_prow"
 export KUBECONFIG_BUILD_CLUSTER="gke_knative-tests-staging_us-central1-f_knative-prow-build-cluster"
 
-../build-cluster/add-secrets.sh
+../../prod/build-cluster/add-secrets.sh
