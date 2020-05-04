@@ -11,7 +11,7 @@ Create build cluster:
 ./create-build-cluster.sh
 
 # Connect to knative-prow cluster
-pushd ../
+pushd ../prow
 make get-cluster-credentials
 popd
 

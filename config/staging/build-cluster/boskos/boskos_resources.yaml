@@ -16,6 +16,5 @@ resources:
 - names:
   - knative-boskos-staging-01
   - knative-boskos-staging-02
-  - knative-boskos-staging-03
   state: dirty
   type: gke-project
