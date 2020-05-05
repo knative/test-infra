@@ -22,6 +22,8 @@ import (
 	"github.com/spf13/cobra"
 
 	"knative.dev/test-infra/kntest/pkg/cluster"
+	"knative.dev/test-infra/kntest/pkg/junit"
+	"knative.dev/test-infra/kntest/pkg/metadata"
 )
 
 func main() {
@@ -36,8 +38,10 @@ func main() {
 	}
 
 	cluster.AddCommands(cmds)
+	junit.AddCommands(cmds)
+	metadata.AddCommands(cmds)
 
 	if err := cmds.Execute(); err != nil {
-		log.Fatalf("error during command execution: %v", err)
+		log.Fatalf("Error during command execution: %v", err)
 	}
 }

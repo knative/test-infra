@@ -22,8 +22,20 @@ import (
 	"knative.dev/test-infra/kntest/pkg/cluster/gke/ops"
 )
 
-func addOptions(clusterCmd *cobra.Command, rw *ops.RequestWrapper) {
+func addCommonOptions(clusterCmd *cobra.Command, rw *ops.RequestWrapper) {
 	pf := clusterCmd.PersistentFlags()
+	req := &rw.Request
+	// The default values set here are not used in the final operations,
+	// they will further be defaulted in
+	// https://github.com/knative/pkg/blob/7727cb37e05d6c6dd2abadbc3ab01ab748f12561/testutils/clustermanager/e2e-tests/gke.go#L73-L114
+	pf.StringVar(&req.Project, "project", "", "GCP project")
+	pf.StringVar(&req.ClusterName, "name", "", "cluster name")
+	pf.StringSliceVar(&rw.Regions, "region", []string{}, "GCP regions, separated by comma or multiple args")
+	pf.StringVar(&req.ResourceType, "resource-type", "", "Boskos Resource Type")
+}
+
+func addCreateOptions(clusterCmd *cobra.Command, rw *ops.RequestWrapper) {
+	pf := clusterCmd.Flags()
 	req := &rw.Request
 	// The default values set here are not used in the final operations,
 	// they will further be defaulted in
@@ -31,12 +43,7 @@ func addOptions(clusterCmd *cobra.Command, rw *ops.RequestWrapper) {
 	pf.Int64Var(&req.MinNodes, "min-nodes", 0, "minimal number of nodes")
 	pf.Int64Var(&req.MaxNodes, "max-nodes", 0, "maximal number of nodes")
 	pf.StringVar(&req.NodeType, "node-type", "", "node type")
-	pf.StringSliceVar(&rw.Regions, "region", []string{}, "GCP regions, separated by comma or multiple args")
-	pf.StringVar(&req.Project, "project", "", "GCP project")
-	pf.StringVar(&req.ClusterName, "name", "", "cluster name")
 	pf.StringVar(&req.ReleaseChannel, "release-channel", "", "GKE release channel")
-	pf.StringVar(&req.ResourceType, "resource-type", "", "Boskos Resource Type")
 	pf.StringVar(&req.GKEVersion, "version", "", "GKE version")
 	pf.StringSliceVar(&req.Addons, "addons", []string{}, "addons to be added, separated by comma")
-	pf.BoolVar(&rw.Request.SkipCreation, "skip-creation", false, "should skip creation or not")
 }
