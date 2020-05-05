@@ -225,14 +225,14 @@ function wait_until_service_has_external_ip() {
 function wait_until_service_has_external_http_address() {
   local ns=$1
   local svc=$2
-  local sleep_seconds=20
+  local sleep_seconds=6
   local attempts=150
 
   echo -n "Waiting until service $ns/$svc has an external address (IP/hostname)"
   for attempt in $(seq 1 $attempts); do  # timeout after 15 minutes
     local address=$(kubectl get svc $svc -n $ns -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
     if [[ -n "${address}" ]]; then
-      echo -e "Service $2.$1 has IP $address"
+      echo -e "Service $ns/$svc has IP $address"
     else
       address=$(kubectl get svc $svc -n $ns -o jsonpath="{.status.loadBalancer.ingress[0].hostname}")
       if [[ -n "${hostname}" ]]; then
@@ -249,10 +249,9 @@ function wait_until_service_has_external_http_address() {
       fi
     fi
     echo -n "."
-    sleep 6
+    sleep $sleep_seconds
   done
-  echo -e "\n\nERROR: timeout waiting for service $2.$1 to have an external HTTP address"
-  kubectl get pods -n $1
+  echo -e "\n\nERROR: timeout waiting for service $ns/$svc to have an external HTTP address"
   return 1
 }
 
