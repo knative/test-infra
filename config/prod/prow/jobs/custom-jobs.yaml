@@ -219,7 +219,7 @@ periodics:
     path_alias: knative.dev/test-infra
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:stable
       imagePullPolicy: Always
       command:
       - "go"
@@ -230,7 +230,6 @@ periodics:
       - "--git-userid=knative-prow-updater-robot"
       - "--git-username='Knative Prow Updater Robot'"
       - "--git-email=knative-prow-updater-robot@google.com"
-      - "--dry-run"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
