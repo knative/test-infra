@@ -27,4 +27,4 @@ set -o pipefail
 export PROJECT="knative-tests-staging"
 export GCSBUCKET="knative-prow-staging"
 
-../build-cluster/create-build-cluster.sh
+../../prod/build-cluster/create-build-cluster.sh

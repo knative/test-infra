@@ -219,6 +219,42 @@ function wait_until_service_has_external_ip() {
   return 1
 }
 
+# Waits until the given service has an external address (IP/hostname) that allow HTTP connections.
+# Parameters: $1 - namespace.
+#             $2 - service name.
+function wait_until_service_has_external_http_address() {
+  local ns=$1
+  local svc=$2
+  local sleep_seconds=6
+  local attempts=150
+
+  echo -n "Waiting until service $ns/$svc has an external address (IP/hostname)"
+  for attempt in $(seq 1 $attempts); do  # timeout after 15 minutes
+    local address=$(kubectl get svc $svc -n $ns -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
+    if [[ -n "${address}" ]]; then
+      echo -e "Service $ns/$svc has IP $address"
+    else
+      address=$(kubectl get svc $svc -n $ns -o jsonpath="{.status.loadBalancer.ingress[0].hostname}")
+      if [[ -n "${address}" ]]; then
+        echo -e "Service $ns/$svc has hostname $address"
+      fi
+    fi
+    if [[ -n "${address}" ]]; then
+      local status=$(curl -s -o /dev/null -w "%{http_code}" http://"${address}")
+      if [[ $status != "" && $status != "000" ]]; then
+        echo -e "$address is ready: prober observed HTTP $status"
+        return 0
+      else
+        echo -e "$address is not ready: prober observed HTTP $status"
+      fi
+    fi
+    echo -n "."
+    sleep $sleep_seconds
+  done
+  echo -e "\n\nERROR: timeout waiting for service $ns/$svc to have an external HTTP address"
+  return 1
+}
+
 # Waits for the endpoint to be routable.
 # Parameters: $1 - External ingress IP address.
 #             $2 - cluster hostname.

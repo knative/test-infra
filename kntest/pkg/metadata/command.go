@@ -23,14 +23,13 @@ import (
 	"knative.dev/pkg/testutils/metahelper/client"
 )
 
-var key string
-
 func AddCommands(topLevel *cobra.Command) {
 	var metadataCmd = &cobra.Command{
 		Use:   "metadata",
 		Short: "Commands for manipulating metadata.json file in Prow job artifacts.",
 	}
 
+	var key string
 	metadataCmd.PersistentFlags().StringVar(&key, "key", "", "meta info key")
 
 	// Create with default path of metahelper/client, so that the path is
@@ -40,24 +39,24 @@ func AddCommands(topLevel *cobra.Command) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	addSetCommand(metadataCmd, c)
-	addGetCommand(metadataCmd, c)
+	addSetCommand(metadataCmd, c, &key)
+	addGetCommand(metadataCmd, c, &key)
 	topLevel.AddCommand(metadataCmd)
 }
 
-func addSetCommand(metadataCmd *cobra.Command, c *client.Client) {
+func addSetCommand(metadataCmd *cobra.Command, c *client.Client, key *string) {
 	var value string
 
 	var setCmd = &cobra.Command{
 		Use:   "set",
 		Short: "Set the meta info key to the given value.",
 		Run: func(cmd *cobra.Command, args []string) {
-			if key == "" {
+			if *key == "" {
 				log.Fatal("meta info key cannot be empty")
 			}
 
-			if err := c.Set(key, value); err != nil {
-				log.Fatalf("error setting meta info for %q=%q: %v", key, value, err)
+			if err := c.Set(*key, value); err != nil {
+				log.Fatalf("error setting meta info for %q=%q: %v", *key, value, err)
 			}
 		},
 	}
@@ -65,22 +64,22 @@ func addSetCommand(metadataCmd *cobra.Command, c *client.Client) {
 	metadataCmd.AddCommand(setCmd)
 }
 
-func addGetCommand(metadataCmd *cobra.Command, c *client.Client) {
-	var setCmd = &cobra.Command{
+func addGetCommand(metadataCmd *cobra.Command, c *client.Client, key *string) {
+	var getCmd = &cobra.Command{
 		Use:   "get",
 		Short: "Get the meta info value for the given key.",
 		Run: func(cmd *cobra.Command, args []string) {
-			if key == "" {
+			if *key == "" {
 				log.Fatal("meta info key cannot be empty")
 			}
 
-			res, err := c.Get(key)
+			res, err := c.Get(*key)
 			if err != nil {
-				log.Fatalf("error getting meta info for %q: %v", key, err)
+				log.Fatalf("error getting meta info for %q: %v", *key, err)
 			}
 
 			log.Print(res)
 		},
 	}
-	metadataCmd.AddCommand(setCmd)
+	metadataCmd.AddCommand(getCmd)
 }

@@ -17,7 +17,7 @@
 # - update-all-boskos-deployments
 # - update-boskos-resource
 
-PROJECT := knative-tests
+PROJECT := knative-tests-staging
 CLUSTER := knative-prow-build-cluster
 
 include ../../prow_common.mk

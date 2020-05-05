@@ -444,10 +444,9 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.Labels = make([]string, 0)
 	data.Optional = ""
 
-	// Staging jobs don't use prod build cluster
-	if data.OrgName != "knative-prow-robot" {
-		data.Cluster = "cluster: \"build-knative\""
-	}
+	// The build cluster for prod and staging Prow are both named
+	// `build-knative` in kubeconfig in the cluster
+	data.Cluster = "cluster: \"build-knative\""
 	return data
 }
 
