@@ -16,7 +16,7 @@
 
 # Simple script to start a Prow job.
 
-source $(dirname $0)/../../scripts/library.sh
+source $(dirname $0)/../../../scripts/library.sh
 
 [[ -z "$1" ]] && abort "pass the name of the job to start as argument"
 
