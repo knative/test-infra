@@ -25,10 +25,13 @@ source $(dirname $0)/../scripts/library.sh
 
 cd ${REPO_ROOT_DIR}
 
+# This controls the release branch we track.
+VERSION="master"
+
 # The list of dependencies that we track at HEAD and periodically
 # float forward in this repository.
 FLOATING_DEPS=(
-  "knative.dev/pkg"
+  "knative.dev/pkg@${VERSION}"
 )
 
 # Parse flags to determine any we should pass to dep.
@@ -56,5 +59,4 @@ rm -rf $(find vendor/ -name 'OWNERS')
 rm -rf $(find vendor/ -name 'OWNERS_ALIASES')
 rm -rf $(find vendor/ -name '*_test.go')
 
-# TODO(chizhg): add it back after switched to Go modules
-#update_licenses third_party/VENDOR-LICENSE "./..."
+update_licenses third_party/VENDOR-LICENSE "./..."
