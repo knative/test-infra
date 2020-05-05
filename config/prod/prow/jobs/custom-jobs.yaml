@@ -212,17 +212,25 @@ periodics:
   agent: kubernetes
   decorate: true
   cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: master
+    path_alias: knative.dev/test-infra
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-auto-bumper:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
-      - "/prow-auto-bumper"
+      - "go"
       args:
+      - "run"
+      - "./tools/prow-auto-bumper/."
       - "--github-account=/etc/prow-auto-bumper-github-token/token"
       - "--git-userid=knative-prow-updater-robot"
       - "--git-username='Knative Prow Updater Robot'"
       - "--git-email=knative-prow-updater-robot@google.com"
+      - "--dry-run"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
