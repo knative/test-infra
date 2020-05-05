@@ -21,7 +21,7 @@ require (
 	k8s.io/apimachinery v0.17.3
 	k8s.io/test-infra v0.0.0-20200407001919-bc7f71ef65b8 // indirect
 	k8s.io/utils v0.0.0-20200124190032-861946025e34 // indirect
-	knative.dev/pkg v0.0.0-20200428194351-90fc61bae7f7
+	knative.dev/pkg v0.0.0-20200504180943-4a2ba059b008
 )
 
 replace (
