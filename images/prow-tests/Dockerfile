@@ -31,7 +31,7 @@ RUN docker-credential-gcr configure-docker
 
 # Replace kubectl with a working version
 # TODO(chizhg): remove once https://github.com/knative/test-infra/issues/1858 is fixed
-ARG K8S_RELEASE=v1.17.4
+ARG KUBECTL_VERSION=v1.17.4
 RUN rm -f $(which kubectl) && \
     wget https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl -O /usr/local/bin/kubectl && \
     chmod +x /usr/local/bin/kubectl
@@ -50,7 +50,7 @@ RUN rm -rf /usr/local/go && \
     rm "${GO_TARBALL}"
 
 # Extra tools through go get
-RUN GO111MODULE=on go get github.com/google/ko/cmd/ko@v0.3.0
+RUN GO111MODULE=on go get github.com/google/ko/cmd/ko@v0.5.0
 RUN GO111MODULE=on go get github.com/boz/kail/cmd/kail
 RUN go get -u github.com/golang/dep/cmd/dep
 RUN go get -u github.com/jstemmer/go-junit-report
