@@ -120,19 +120,19 @@ func NewGkeClusterDeleter(projects []string, serviceAccount string) (*GkeCluster
 }
 
 // selectProjects returns the list of projects to iterate over.
-func selectProjects(project string, resourceFiles []string, regex string) ([]string, error) {
+func selectProjects(projects []string, resourceFiles []string, regex string) ([]string, error) {
 	// Sanity check flags
-	if project == "" && len(resourceFiles) == 0 {
+	if len(projects) == 0 && len(resourceFiles) == 0 {
 		return nil, errors.New("neither project nor resource file provided")
 	}
 
-	if project != "" && len(resourceFiles) > 0 {
+	if len(projects) != 0 && len(resourceFiles) > 0 {
 		return nil, errors.New("provided both project and resource file")
 	}
 	// --project used, just return it.
-	if project != "" {
-		log.Printf("Iterating over projects [%s]", project)
-		return []string{project}, nil
+	if len(projects) != 0 {
+		log.Printf("Iterating over projects %v", projects)
+		return projects, nil
 	}
 
 	// Otherwise, read the resource file and extract the project names.
@@ -378,7 +378,6 @@ func cleanup(o options.Options) error {
 	}
 
 	log.Printf("All operations finished in %s", time.Now().Sub(start))
-
 	return nil
 }
 
