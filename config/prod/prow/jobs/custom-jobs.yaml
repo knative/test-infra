@@ -296,7 +296,7 @@ postsubmits:
     decorate: true
     max_concurrency: 1
     cluster: "prow-trusted"
-    run_if_changed: "^(config/(prod|staging)(prow|build-cluster)/(cluster|core|jobs|boskos|testgrid)/.*.yaml)|(tools/config-generator/templates/(prow|prow-staging)/.*.yaml)$"
+    run_if_changed: "^(config/(prod|staging)/(prow|build-cluster)/(cluster|core|jobs|boskos|testgrid)/.*.yaml)|(tools/config-generator/templates/(prow|prow-staging)/.*.yaml)$"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-config-updater:latest
