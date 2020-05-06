@@ -311,7 +311,6 @@ postsubmits:
         - "--git-username='Knative Prow Robot'"
         - "--git-email=adrcunha+knative-prow-robot@google.com"
         - "--comment-github-token-file=/etc/prow-updater-robot-github-token/token"
-        - "--dry-run"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
