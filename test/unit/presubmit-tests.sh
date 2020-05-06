@@ -15,9 +15,9 @@
 # limitations under the License.
 
 # Fake we're in a Prow job, if running locally.
-[[ -z "${PROW_JOB_ID:-}" ]] && PROW_JOB_ID=123
-[[ -z "${PULL_PULL_SHA:-}" ]] && PULL_PULL_SHA=456
-[[ -z "${ARTIFATCS:-}" ]] && ARTIFACTS=/tmp
+[[ ! -v PROW_JOB_ID ]] && PROW_JOB_ID=123
+[[ ! -v PULL_PULL_SHA ]] && PULL_PULL_SHA=456
+[[ ! -v ARTIFACTS ]] && ARTIFACTS=/tmp
 
 source $(dirname $0)/test-helper.sh
 

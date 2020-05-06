@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # This is the base Dockerfile for knative-tests images, please remember to also
-# do `make push` in `../prow-tests-go112` directory to make sure these 2 images are in
+# do `make push` in `../prow-tests-*` directories to make sure these images are in
 # sync
 
 # TODO(chizhg): probably build the image from scratch?
@@ -32,8 +32,8 @@ RUN docker-credential-gcr configure-docker
 # Replace kubectl with a working version
 # TODO(chizhg): remove once https://github.com/knative/test-infra/issues/1858 is fixed
 ARG KUBECTL_VERSION=v1.17.4
-RUN rm -f $(which kubectl) && \
-    wget https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl -O /usr/local/bin/kubectl && \
+RUN rm -f "$(which kubectl)" && \
+    wget "https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -O /usr/local/bin/kubectl && \
     chmod +x /usr/local/bin/kubectl
 
 # Extra tools through apt-get
@@ -71,8 +71,11 @@ RUN gem install mdl -v 0.5  # required because later version of mdl requires rub
 # Install our own tools
 RUN go get knative.dev/pkg/testutils/junithelper
 
+# And our scripts
+COPY scripts /scripts
+
 # Temporarily add test-infra to the image to build custom tools
-ADD . /go/src/knative.dev/test-infra
+COPY . /go/src/knative.dev/test-infra
 
 # Build custom tools in the container
 RUN make -C /go/src/knative.dev/test-infra/tools/githubhelper
