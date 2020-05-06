@@ -7,7 +7,7 @@ import (
 
 type Options struct {
 	ProjectResourceYaml  strSliceArg
-	Project              string
+	Project              strSliceArg
 	ReProjectName        string
 	DaysToKeepImages     int
 	HoursToKeepClusters  int
@@ -30,7 +30,7 @@ func (ss *strSliceArg) Set(val string) error {
 
 func (o *Options) AddOptions() {
 	flag.Var(&o.ProjectResourceYaml, "project-resource-yaml", "Resources file containing the names of the projects to be cleaned up.")
-	flag.StringVar(&o.Project, "project", "", "Project to be cleaned up.")
+	flag.Var(&o.Project, "project", "Project to be cleaned up.")
 	flag.StringVar(&o.ReProjectName, "re-project-name", "knative-boskos-[a-zA-Z0-9]+", "Regular expression for filtering project names from the resources file.")
 	flag.IntVar(&o.DaysToKeepImages, "days-to-keep-images", 365, "Images older than this amount of days will be deleted (defaults to 1 year, -1 means 'forever').")
 	flag.IntVar(&o.HoursToKeepClusters, "hours-to-keep-clusters", 720, "Clusters older than this amount of hours will be deleted (defaults to 1 month, -1 means 'forever').")
