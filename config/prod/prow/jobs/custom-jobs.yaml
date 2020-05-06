@@ -262,7 +262,7 @@ periodics:
       - "go"
       args:
       - "run"
-      - "./tools/prow-auto-bumper/."
+      - "./tools/prow-auto-bumper"
       - "--github-account=/etc/prow-auto-bumper-github-token/token"
       - "--git-userid=knative-prow-updater-robot"
       - "--git-username='Knative Prow Updater Robot'"
