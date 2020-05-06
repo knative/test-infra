@@ -102,7 +102,7 @@ periodics:
   decorate: true
   cluster: "build-knative"
   decoration_config:
-    timeout: 21600000000000
+    timeout: 6h
   extra_refs:
   - org: knative
     repo: test-infra
@@ -117,7 +117,7 @@ periodics:
       args:
       - "run"
       - "./tools/cleanup/cleanup.go"
-      - "--project-resource-yaml=config/prod/prow/boskos/boskos_resources.yaml"
+      - "--project-resource-yaml=config/prod/build-cluster/boskos/boskos_resources.yaml"
       - "--days-to-keep-images=30"
       - "--hours-to-keep-clusters=24"
       - "--service-account=/etc/test-account/service-account.json"
@@ -139,7 +139,7 @@ periodics:
   decorate: true
   cluster: "build-knative"
   decoration_config:
-    timeout: 21600000000000
+    timeout: 6h
   extra_refs:
   - org: knative
     repo: test-infra
@@ -157,15 +157,15 @@ periodics:
       - "--project=knative-performance"
       - "--project=knative-eventing-performance"
       - "--days-to-keep-images=30"
-      - "--service-account=/etc/test-account/service-account.json"
+      - "--service-account=/etc/performance-test/service-account.json"
       volumeMounts:
-      - name: test-account
-        mountPath: /etc/test-account
+      - name: performance-test
+        mountPath: /etc/performance-test
         readOnly: true
     volumes:
-    - name: test-account
+    - name: performance-test
       secret:
-        secretName: test-account
+        secretName: performance-test
 - cron: "0 12 * * *"
   name: ci-knative-flakes-reporter
   labels:
