@@ -40,7 +40,7 @@ iterative-build:
 
 # And get a shell in the container
 iterative-shell:
-	docker run -it --entrypoint bash $(IMG_PATH):local
+	docker run -it --entrypoint bash $(IMG):local
 
 push_versioned: confirm-master build
 	docker push $(IMG):$(TAG)

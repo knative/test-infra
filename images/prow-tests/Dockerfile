@@ -72,6 +72,7 @@ RUN gem install mdl -v 0.5  # required because later version of mdl requires rub
 RUN go get knative.dev/pkg/testutils/junithelper
 
 # And our scripts
+ENV SCRIPTS /scripts
 COPY scripts /scripts
 
 # Temporarily add test-infra to the image to build custom tools
