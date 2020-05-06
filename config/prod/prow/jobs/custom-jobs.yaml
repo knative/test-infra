@@ -299,11 +299,13 @@ postsubmits:
     run_if_changed: "^(config/(prod|staging)/(prow|build-cluster)/(cluster|core|jobs|boskos|testgrid)/.*.yaml)|(tools/config-generator/templates/(prow|prow-staging)/.*.yaml)$"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-config-updater:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests-go114:stable
         imagePullPolicy: Always
         command:
-        - "/prow-config-updater"
+        - "go"
         args:
+        - "run"
+        - "./tools/prow-config-updater"
         - "--github-token-file=/etc/prow-robot-github-token/token"
         - "--github-userid=knative-prow-robot"
         - "--git-username='Knative Prow Robot'"
