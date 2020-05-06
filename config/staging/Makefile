@@ -21,11 +21,11 @@ TESTGRID_GCS              := knative-testgrid-staging
 
 KNATIVE_CONFIG   := config_staging.yaml
 
-include ../../prow_common.mk
+include ../prow_common.mk
 
 # Append to update-all-boskos-deployments: only 3 replicas of janitor
 update-all-boskos-deployments::
-	$(SET_CONTEXT)
+	$(SET_BUILD_CLUSTER_CONTEXT)
 	kubectl patch deployment boskos-janitor -n test-pods -p '{"spec":{"replicas":3}}'
 	$(UNSET_CONTEXT)
 
