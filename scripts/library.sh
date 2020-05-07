@@ -515,10 +515,10 @@ function start_latest_knative_eventing() {
 #             $3..$n - parameters passed to the tool.
 function run_go_tool() {
   local tool=$2
+  local install_failed=0
   if [[ -z "$(which ${tool})" ]]; then
     local action=get
     [[ $1 =~ ^[\./].* ]] && action=install
-    local install_failed=0
     # Avoid running `go get` from root dir of the repository, as it can change go.sum and go.mod files.
     # See discussions in https://github.com/golang/go/issues/27643.
     if [[ ${action} == "get" && $(pwd) == "${REPO_ROOT_DIR}" ]]; then
