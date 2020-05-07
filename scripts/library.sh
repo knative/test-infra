@@ -654,7 +654,7 @@ function get_canonical_path() {
 
 # List changed files in the current PR.
 # This is implemented as a function so it can be mocked in unit tests.
-# It will fail if a file ever contained a newline character (which is bad practice anyway)
+# It will fail if a file name ever contained a newline character (which is bad practice anyway)
 function list_changed_files() {
   if [[ -v PULL_BASE_SHA ]] && [[ -v PULL_PULL_SHA ]]; then
     # Avoid warning when there are more than 1085 files renamed:
