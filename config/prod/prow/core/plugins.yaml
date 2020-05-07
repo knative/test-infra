@@ -16,6 +16,7 @@ approve:
 - repos:
   - "google/knative-gcp"
   - "knative-sandbox/eventing-kafka"
+  - "knative-sandbox/eventing-rabbitmq"
   - "knative-sandbox/operator"
   - "knative/caching"
   - "knative/client"
@@ -119,6 +120,31 @@ plugins:
   - wip
   - yuks
   knative-sandbox/eventing-kafka:
+  - approve
+  - assign
+  - blunderbuss
+  - buildifier
+  - cat
+  - dog
+  - golint
+  - heart
+  - help
+  - hold
+  - label
+  - lgtm
+  - lifecycle
+  - milestone
+  - owners-label
+  - project
+  - shrug
+  - size
+  - skip
+  - trigger
+  - verify-owners
+  - welcome
+  - wip
+  - yuks
+  knative-sandbox/eventing-rabbitmq:
   - approve
   - assign
   - blunderbuss
@@ -700,6 +726,11 @@ external_plugins:
       - issue_comment
       - pull_request
   knative-sandbox/eventing-kafka:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
+  knative-sandbox/eventing-rabbitmq:
   - name: needs-rebase
     events:
       - issue_comment

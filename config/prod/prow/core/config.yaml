@@ -118,6 +118,7 @@ tide:
   - repos:
     - "google/knative-gcp"
     - "knative-sandbox/eventing-kafka"
+    - "knative-sandbox/eventing-rabbitmq"
     - "knative-sandbox/operator"
     - "knative/caching"
     - "knative/client"
