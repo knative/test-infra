@@ -290,10 +290,11 @@ periodics:
         defaultMode: 0400
 
 postsubmits:
-  knative/test-infra:
+  chizhg/test-infra:
   - name: post-knative-prow-config-updater
     agent: kubernetes
     decorate: true
+    path_alias: knative.dev/test-infra
     max_concurrency: 1
     cluster: "prow-trusted"
     run_if_changed: "^(config/(prod|staging)/(prow|build-cluster)/(cluster|core|jobs|boskos|testgrid)/.*.yaml)|(tools/config-generator/templates/(prow|prow-staging)/.*.yaml)$"
