@@ -4,7 +4,7 @@ set -e
 
 source "$(dirname "${BASH_SOURCE[0]}")/library.sh"
 
-if [[ IS_PROW -eq 0 ]]; then
+if (( ! IS_PROW )); then
   echo "Local run of shellcheck-presubmit detected"
   echo "This notably DOES NOT ACT LIKE THE GITHUB PRESUBMIT"
   echo "The Github presubmit job only runs shellcheck on files you touch"
