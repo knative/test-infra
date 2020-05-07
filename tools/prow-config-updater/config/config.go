@@ -60,6 +60,7 @@ const (
 )
 
 var (
+	repoRoot, _ = helpers.GetRootDir()
 	// Env path
 	ProdConfigRoot    = filepath.Join(configPath, prodConfigDirName)
 	StagingConfigRoot = filepath.Join(configPath, stagingConfigDirName)
@@ -139,7 +140,7 @@ func UpdateProw(env ProwEnv, dryrun bool) error {
 					return fmt.Errorf("error activating service account with %q", kf)
 				}
 			}
-			out, err := cmd.RunCommand(updateCommand, cmd.WithEnvs(os.Environ()))
+			out, err := cmd.RunCommand(updateCommand, cmd.WithEnvs(os.Environ()), cmd.WithDir(repoRoot))
 			log.Println(out)
 			return err
 		},
@@ -157,7 +158,7 @@ func UpdateTestgrid(env ProwEnv, dryrun bool) error {
 	return helpers.Run(
 		fmt.Sprintf("Updating Testgrid config with command %q", updateTestgridCommand),
 		func() error {
-			out, err := cmd.RunCommand(updateTestgridCommand, cmd.WithEnvs(os.Environ()))
+			out, err := cmd.RunCommand(updateTestgridCommand, cmd.WithEnvs(os.Environ()), cmd.WithDir(repoRoot))
 			log.Println(out)
 			return err
 		},
