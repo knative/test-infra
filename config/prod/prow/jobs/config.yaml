@@ -6853,20 +6853,14 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--build-tests"
-        securityContext:
-          privileged: true
         volumeMounts:
         - name: repoview-token
           mountPath: /etc/repoview-token
           readOnly: true
-        - name: docker-graph
-          mountPath: /docker-graph
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
         env:
-        - name: DOCKER_IN_DOCKER_ENABLED
-          value: "true"
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
@@ -6875,8 +6869,6 @@ presubmits:
       - name: repoview-token
         secret:
           secretName: repoview-token
-      - name: docker-graph
-        emptyDir: {}
       - name: test-account
         secret:
           secretName: test-account
@@ -6898,20 +6890,14 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
-        securityContext:
-          privileged: true
         volumeMounts:
         - name: repoview-token
           mountPath: /etc/repoview-token
           readOnly: true
-        - name: docker-graph
-          mountPath: /docker-graph
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
         env:
-        - name: DOCKER_IN_DOCKER_ENABLED
-          value: "true"
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
@@ -6920,8 +6906,6 @@ presubmits:
       - name: repoview-token
         secret:
           secretName: repoview-token
-      - name: docker-graph
-        emptyDir: {}
       - name: test-account
         secret:
           secretName: test-account
@@ -6943,20 +6927,14 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--integration-tests"
-        securityContext:
-          privileged: true
         volumeMounts:
         - name: repoview-token
           mountPath: /etc/repoview-token
           readOnly: true
-        - name: docker-graph
-          mountPath: /docker-graph
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
         env:
-        - name: DOCKER_IN_DOCKER_ENABLED
-          value: "true"
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
@@ -6965,8 +6943,6 @@ presubmits:
       - name: repoview-token
         secret:
           secretName: repoview-token
-      - name: docker-graph
-        emptyDir: {}
       - name: test-account
         secret:
           secretName: test-account
