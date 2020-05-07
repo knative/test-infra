@@ -469,6 +469,14 @@ presubmits:
       dot-dev: true
       needs-dind: true
 
+  knative-sandbox/eventing-rabbitmq:
+    - build-tests: true
+      dot-dev: true
+    - unit-tests: true
+      dot-dev: true
+    - integration-tests: true
+      dot-dev: true
+
 periodics:
   knative/serving:
     - continuous: true
