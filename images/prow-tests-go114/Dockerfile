@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM gcr.io/knative-tests/test-infra/prow-tests:v20200327-9a6c4b1d
+FROM gcr.io/knative-tests/test-infra/prow-tests:v20200506-431dda29
 
 # Install go at 1.14 same as how it's installed in kubekins-e2e image, reference code here:
 # https://github.com/kubernetes/test-infra/blob/1e9b5dc3de4b268aab57c9c48120aa3dcf096bc6/images/kubekins-e2e/Dockerfile#L64
