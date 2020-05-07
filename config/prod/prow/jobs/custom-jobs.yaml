@@ -290,7 +290,7 @@ periodics:
         defaultMode: 0400
 
 postsubmits:
-  chizhg/test-infra:
+  knative/test-infra:
   - name: post-knative-prow-config-updater
     agent: kubernetes
     decorate: true

@@ -26,6 +26,7 @@ import (
 
 	"github.com/google/go-github/v27/github"
 	"k8s.io/apimachinery/pkg/util/wait"
+	"knative.dev/pkg/test/cmd"
 	"knative.dev/pkg/test/ghutil"
 	"knative.dev/pkg/test/helpers"
 
@@ -51,12 +52,11 @@ type GitHubMainHandler struct {
 // TODO(chizhg): get rid of this hack once Prow supports setting PR number as an env var for postsubmit jobs.
 func (gc *GitHubMainHandler) getLatestPullRequest() (*github.PullRequest, error) {
 	// Use git command to get the latest commit ID.
-	// ci, err := cmd.RunCommand("git rev-parse HEAD")
-	// if err != nil {
-	// 	return nil, fmt.Errorf("error getting the last commit ID: %v", err)
-	// }
+	ci, err := cmd.RunCommand("git rev-parse HEAD")
+	if err != nil {
+		return nil, fmt.Errorf("error getting the last commit ID: %v", err)
+	}
 	// As we always use squash in merging PRs, we can get the pull request with the commit ID.
-	ci := "c8dd15bb7f0b81c73c59880c07fffab897698fca"
 	pr, err := gc.client.GetPullRequestByCommitID(config.OrgName, config.RepoName, strings.TrimSpace(ci))
 	if err != nil {
 		return nil, fmt.Errorf("error getting the PR with commit ID %q: %v", strings.TrimSpace(ci), err)
