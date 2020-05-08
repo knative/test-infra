@@ -44,7 +44,7 @@ go run "${CONFIG_GENERATOR_DIR}" \
     --gcs-bucket="knative-prow-staging" \
     --generate-testgrid-config=false \
     --generate-maintenance-jobs=false \
-    --image-docker=gcr.io/knative-tests-staging/test-infra \
+    --image-docker=gcr.io/knative-tests/test-infra \
     --prow-host=https://prow-staging.knative.dev \
     --testgrid-gcs-bucket="knative-testgrid-staging" \
     --plugins-config-output="${CONFIG_DIR}/staging/prow/core/plugins.yaml" \
