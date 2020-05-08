@@ -17,7 +17,7 @@
 # This is a helper script for Knative E2E test scripts.
 # See README.md for instructions on how to use it.
 
-source $(dirname "${BASH_SOURCE}")/library.sh
+source $(dirname "${BASH_SOURCE[0]}")/library.sh
 
 # Build a resource name based on $E2E_BASE_NAME, a suffix and $BUILD_NUMBER.
 # Restricts the name length to 40 chars (the limit for resource names in GCP).
@@ -171,7 +171,7 @@ function resolve_k8s_version() {
     E2E_CLUSTER_VERSION="${gke_versions[0]}"
     echo "Using latest version, ${E2E_CLUSTER_VERSION}"
   else
-    local latest="$(echo "${gke_versions[@]}" | tr ' ' '\n' | grep -E ^"${target_version}" | sort -V | tail -1)"
+    local latest="$(echo "${gke_versions[@]}" | tr ' ' '\n' | grep -E "^${target_version}" | sort -V | tail -1)"
     if [[ -z "${latest}" ]]; then
       echo "ERROR: version ${target_version} is not available"
       return 1

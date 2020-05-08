@@ -17,7 +17,7 @@
 # This is a helper script for Knative performance test scripts.
 # See README.md for instructions on how to use it.
 
-source $(dirname "${BASH_SOURCE}")/library.sh
+source $(dirname "${BASH_SOURCE[0]}")/library.sh
 
 # Configurable parameters.
 # If not provided, they will fall back to the default values.

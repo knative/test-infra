@@ -17,7 +17,7 @@
 # This is a helper script for Knative release scripts.
 # See README.md for instructions on how to use it.
 
-source $(dirname "${BASH_SOURCE}")/library.sh
+source $(dirname "${BASH_SOURCE[0]}")/library.sh
 
 # Organization name in GitHub; defaults to Knative.
 readonly ORG_NAME="${ORG_NAME:-knative}"
@@ -52,7 +52,7 @@ function tag_images_in_yamls() {
     echo "Inspecting ${file}"
     for image in $(grep -o "${DOCKER_BASE}/[a-z\./-]\+@sha256:[0-9a-f]\+" "${file}"); do
       for region in "" ${GEO_REGIONS// /. }; do
-        gcloud -q container images add-tag "${image}" "${region}""${image%%@*}":"${TAG}"
+        gcloud -q container images add-tag "${image}" "${region}${image%%@*}:${TAG}"
       done
     done
   done
@@ -155,7 +155,7 @@ function setup_upstream() {
 # Fetch the release branch, so we can check it out.
 function setup_branch() {
   [[ -z "${RELEASE_BRANCH}" ]] && return
-  git fetch "${REPO_UPSTREAM}" "${RELEASE_BRANCH}":upstream/"${RELEASE_BRANCH}"
+  git fetch "${REPO_UPSTREAM}" "${RELEASE_BRANCH}:upstream/${RELEASE_BRANCH}"
 }
 
 # Setup version, branch and release notes for a auto release.

@@ -696,7 +696,7 @@ function get_latest_knative_yaml_source() {
     local major_minor="${branch_name##release-}"
     # Find the latest release manifest with the same major&minor version.
     local yaml_source_path="$(
-      gsutil ls gs://knative-releases/"${repo_name}"/previous/v"${major_minor}".*/"${yaml_name}".yaml 2> /dev/null \
+      gsutil ls "gs://knative-releases/${repo_name}/previous/v${major_minor}.*/${yaml_name}.yaml" 2> /dev/null \
       | sort \
       | tail -n 1 \
       | cut -b6-)"

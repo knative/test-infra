@@ -17,7 +17,7 @@
 # This is a helper script for Knative presubmit test scripts.
 # See README.md for instructions on how to use it.
 
-source $(dirname "${BASH_SOURCE}")/library.sh
+source $(dirname "${BASH_SOURCE[0]}")/library.sh
 
 # Custom configuration of presubmit tests
 readonly DISABLE_MD_LINTING=${DISABLE_MD_LINTING:-0}
