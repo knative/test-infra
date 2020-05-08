@@ -31,7 +31,7 @@ DISABLE_MD_LINK_CHECK=1
 
 export GO111MODULE=on
 
-source $(dirname $0)/../scripts/presubmit-tests.sh
+source $(dirname "$0")/../scripts/presubmit-tests.sh
 
 # Run our custom build tests after the standard build tests.
 
@@ -40,7 +40,7 @@ function post_build_tests() {
   subheader "Checking Makefiles"
   for makefile in $(find . -name Makefile | grep -v /vendor/); do
     echo "*** Checking ${makefile}"
-    make -n -C $(dirname ${makefile}) || { failed=1; echo "--- FAIL: ${makefile}"; }
+    make -n -C $(dirname "${makefile}") || { failed=1; echo "--- FAIL: ${makefile}"; }
   done
   for script in scripts/*.sh; do
     subheader "Checking integrity of ${script}"

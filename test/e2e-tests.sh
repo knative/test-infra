@@ -23,7 +23,7 @@
 # Calling this script without arguments will create a new cluster in
 # project $PROJECT_ID, run the tests and delete the cluster.
 
-source $(dirname $0)/../scripts/e2e-tests.sh
+source $(dirname "$0")/../scripts/e2e-tests.sh
 
 # Read metadata.json and get value for key
 # Parameters: $1 - Key for metadata

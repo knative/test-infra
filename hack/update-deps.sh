@@ -21,9 +21,9 @@ set -o pipefail
 export GO111MODULE=on
 export GOFLAGS=-mod=vendor
 
-source $(dirname $0)/../scripts/library.sh
+source $(dirname "$0")/../scripts/library.sh
 
-cd ${REPO_ROOT_DIR}
+cd "${REPO_ROOT_DIR}"
 
 # This controls the release branch we track.
 VERSION="master"
