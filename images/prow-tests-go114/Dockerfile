@@ -22,3 +22,6 @@ RUN rm -rf /usr/local/go && \
     wget -q "${GO_TARBALL_HOST}/${GO_TARBALL}" && \
     tar xzf "${GO_TARBALL}" -C /usr/local && \
     rm "${GO_TARBALL}"
+
+# Temporarily pin ko for a hot fix.
+RUN GO111MODULE=on go get github.com/google/ko/cmd/ko@v0.5.1
