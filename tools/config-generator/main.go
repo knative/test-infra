@@ -834,7 +834,7 @@ func recursiveSBL(repoName string, data interface{}, generateOneJob func(data in
 	sb.restore(base)
 }
 
-// executeJobTemplateWrapper takes in consideration of repo settings, decides how many varianats of the
+// executeJobTemplateWrapper takes in consideration of repo settings, decides how many variants of the
 // same job needs to be generated and generates them.
 func executeJobTemplateWrapper(repoName string, data interface{}, generateOneJob func(data interface{})) {
 	var sbs []specialBranchLogic
