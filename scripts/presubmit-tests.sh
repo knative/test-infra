@@ -266,6 +266,8 @@ function run_integration_tests() {
 
 # Default integration test runner that runs all `test/e2e-*tests.sh`.
 function default_integration_test_runner() {
+  # options is always empty.
+  # TODO: remove it or indeed allow passing options.
   local options=""
   local failed=0
   for e2e_test in $(find test/ -name e2e-*tests.sh); do
