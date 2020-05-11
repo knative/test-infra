@@ -133,13 +133,15 @@ type stringArrayFlag []string
 
 var (
 	// Values used in the jobs that can be changed through command-line flags.
+	// TODO: these should be CapsCase
+	// ... until they are not global
 	output                     *os.File
 	prowHost                   string
 	testGridHost               string
 	gubernatorHost             string
-	gcsBucket                  string
+	GCSBucket                  string
 	testGridGcsBucket          string
-	logsDir                    string
+	LogsDir                    string
 	presubmitLogsDir           string
 	testAccount                string
 	nightlyAccount             string
@@ -175,7 +177,7 @@ var (
 	// To be used to flag that outputConfig() emitted data.
 	emittedOutput bool
 
-	projNameRegex = regexp.MustCompile(`.+-[0-9\.]+$`)
+	releaseRegex = regexp.MustCompile(`.+-[0-9\.]+$`)
 )
 
 // Yaml parsing helpers.
@@ -426,11 +428,11 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.RepoName = strings.Replace(repo, data.OrgName+"/", "", 1)
 	data.RepoNameForJob = strings.ToLower(strings.Replace(repo, "/", "-", -1))
 	data.RepoBranch = "master" // Default to be master, will override later for other branches
-	data.GcsBucket = gcsBucket
+	data.GcsBucket = GCSBucket
 	data.RepoURI = "github.com/" + repo
 	data.CloneURI = fmt.Sprintf("\"https://%s.git\"", data.RepoURI)
-	data.GcsLogDir = fmt.Sprintf("gs://%s/%s", gcsBucket, logsDir)
-	data.GcsPresubmitLogDir = fmt.Sprintf("gs://%s/%s", gcsBucket, presubmitLogsDir)
+	data.GcsLogDir = fmt.Sprintf("gs://%s/%s", GCSBucket, LogsDir)
+	data.GcsPresubmitLogDir = fmt.Sprintf("gs://%s/%s", GCSBucket, presubmitLogsDir)
 	data.ReleaseGcs = strings.Replace(repo, data.OrgName+"/", "knative-releases/", 1)
 	data.AlwaysRun = true
 	data.Image = prowTestsDockerImage
@@ -637,10 +639,10 @@ func getProwConfigData(config yaml.MapSlice) prowConfigTemplateData {
 	data.ProwHost = prowHost
 	data.TestGridHost = testGridHost
 	data.GubernatorHost = gubernatorHost
-	data.GcsBucket = gcsBucket
+	data.GcsBucket = GCSBucket
 	data.TestGridGcsBucket = testGridGcsBucket
 	data.PresubmitLogsDir = presubmitLogsDir
-	data.LogsDir = logsDir
+	data.LogsDir = LogsDir
 	data.TideRepos = make([]string, 0)
 	// Repos enabled for tide are all those that have presubmit jobs.
 	for _, section := range config {
@@ -1053,7 +1055,7 @@ func buildProjRepoStr(projName string, repoName string) string {
 
 // isReleased returns true for project name that has version
 func isReleased(projName string) bool {
-	return projNameRegex.FindString(projName) != ""
+	return releaseRegex.FindString(projName) != ""
 }
 
 // setOutput set the given file as the output target, then all the output will be written to this file
@@ -1091,9 +1093,9 @@ func main() {
 	flag.StringVar(&prowHost, "prow-host", "https://prow.knative.dev", "Prow host, including HTTP protocol")
 	flag.StringVar(&testGridHost, "testgrid-host", "https://testgrid.knative.dev", "TestGrid host, including HTTP protocol")
 	flag.StringVar(&gubernatorHost, "gubernator-host", "https://gubernator.knative.dev", "Gubernator host, including HTTP protocol")
-	flag.StringVar(&gcsBucket, "gcs-bucket", "knative-prow", "GCS bucket to upload the logs to")
+	flag.StringVar(&GCSBucket, "gcs-bucket", "knative-prow", "GCS bucket to upload the logs to")
 	flag.StringVar(&testGridGcsBucket, "testgrid-gcs-bucket", "knative-testgrid", "TestGrid GCS bucket")
-	flag.StringVar(&logsDir, "logs-dir", "logs", "Path in the GCS bucket to upload logs of periodic and post-submit jobs")
+	flag.StringVar(&LogsDir, "logs-dir", "logs", "Path in the GCS bucket to upload logs of periodic and post-submit jobs")
 	flag.StringVar(&presubmitLogsDir, "presubmit-logs-dir", "pr-logs", "Path in the GCS bucket to upload logs of pre-submit jobs")
 	flag.StringVar(&testAccount, "test-account", "/etc/test-account/service-account.json", "Path to the service account JSON for test jobs")
 	flag.StringVar(&nightlyAccount, "nightly-account", "/etc/nightly-account/service-account.json", "Path to the service account JSON for nightly release jobs")
@@ -1191,9 +1193,16 @@ func main() {
 
 		// log.Print(spew.Sdump(metaData))
 
+		// This generates "test_groups:"
 		metaData.generateTestGridSection("test_groups", metaData.generateTestGroup, false)
+		//metaData.generateNonAlignedTestGroups()
+
+		// These two generate stuff under "dashboards:"
 		metaData.generateTestGridSection("dashboards", generateDashboard, true)
 		metaData.generateDashboardsForReleases()
+		//metaData.generateDashboardForBetaProwTests()
+
+		// This generates "dashboard_groups:"
 		metaData.generateDashboardGroups()
 	}
 }

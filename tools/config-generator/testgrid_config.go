@@ -20,7 +20,6 @@ package main
 
 import (
 	"fmt"
-	"regexp"
 	"strings"
 	"time"
 )
@@ -52,8 +51,6 @@ var (
 
 	// templatesCache caches templates in memory to avoid I/O
 	templatesCache = make(map[string]string)
-
-	contRegex = regexp.MustCompile(`-[0-9\.]+-continuous`)
 )
 
 // baseTestgridTemplateData contains basic data about the testgrid config file.
@@ -156,16 +153,56 @@ func (t *TestGridMetaData) generateTestGridSection(sectionName string, generator
 	}
 }
 
+/*
+- name: ci-knative-serving-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-serving-continuous
+  alert_stale_results_hours: 3
+
+*/
+
+type NonAlignedTestGroup struct {
+	// DashboardGroup: The things shown at http://testgrid.knative.dev before you hover over anything
+	DashboardGroup string
+	// DashboardName: This is the thing with multiple tabs/test-groups/whatever-you-call-them
+	DashboardName string
+	// HumanTabName: Each set of test runs, aka test_group, with the name as shown to the human
+	HumanTabName string
+	CIJobName    string
+	// Where to find the logs
+	GcsPrefix string
+	// Extra things that show up in yaml in the test_groups section
+	Extra map[string]string
+}
+
+// // generateNonAlignedTestGroups
+// func (t *TestGridMetaData) generateNonAlignedTestGroups() {
+// 	for _, tg := range t.nonAligned {
+// 		executeTestGroupTemplate(testGroupName, gcsLogDir, extras)
+// 	}
+// }
+
+// //
+// // testGroupName: This is the human-readable tab name
+// func (t *TestGridMetaData) AddNonAlignedTest(n NonAlignedTestGroup) {
+// 	t.nonAligned = append(t.nonAligned, n)
+// }
+
+// testGroupName: the name of the job in every case AFAICT
+func getGcsLogDir(testGroupName string) string {
+	return fmt.Sprintf("%s/%s/%s", GCSBucket, LogsDir, testGroupName)
+}
+
 // generateTestGroup generates the test group configuration
 func (t *TestGridMetaData) generateTestGroup(projName string, repoName string, jobNames []string) {
 	projRepoStr := buildProjRepoStr(projName, repoName)
 	for _, jobName := range jobNames {
 		testGroupName := getTestGroupName(projRepoStr, jobName)
-		gcsLogDir := fmt.Sprintf("%s/%s/%s", gcsBucket, logsDir, testGroupName)
+		gcsLogDir := getGcsLogDir(testGroupName)
 		extras := make(map[string]string)
 		switch jobName {
 		case "continuous":
-			if contRegex.FindString(testGroupName) != "" {
+			// TODO: wtf, the "project name" has the release encoded into it !?!?!?!
+			if releaseRegex.FindString(projName) != "" {
 				extras["num_failures_to_alert"] = "3"
 				extras["alert_options"] = "\n    alert_mail_to_addresses: \"prime-engprod-sea@google.com\""
 			} else {
@@ -180,7 +217,7 @@ func (t *TestGridMetaData) generateTestGroup(projName string, repoName string, j
 		case "webhook-apicoverage":
 			extras["alert_stale_results_hours"] = "48" // 2 days
 		case "test-coverage":
-			gcsLogDir = strings.ToLower(fmt.Sprintf("%s/%s/ci-%s-%s", gcsBucket, logsDir, projRepoStr, "go-coverage"))
+			gcsLogDir = getGcsLogDir(fmt.Sprintf("ci-%s-%s", projRepoStr, "go-coverage"))
 			extras["short_text_metric"] = "coverage"
 		default:
 			extras["alert_stale_results_hours"] = "3"
@@ -257,6 +294,7 @@ func getTestGroupName(repoName string, jobName string) string {
 	}
 }
 
+// generateDashboardsForReleases generates some of the content under "dashboards:"
 func (t *TestGridMetaData) generateDashboardsForReleases() {
 	for _, projName := range t.projNames {
 		// Do not handle the project if it is not released.
@@ -279,7 +317,7 @@ func (t *TestGridMetaData) generateDashboardsForReleases() {
 	}
 }
 
-// generateDashboardGroups generates the dashboard groups configuration
+// generateDashboardGroups generates the stuff in dashboard_groups:
 func (t *TestGridMetaData) generateDashboardGroups() {
 	outputConfig("dashboard_groups:")
 	for _, projName := range t.projNames {

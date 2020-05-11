@@ -262,7 +262,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	executeJobTemplate("periodic", jobTemplate, title, repoName, data.PeriodicJobName, false, data)
 
 	// If job is a continuous run, add a duplicate for pre-release testing of new prow-tests image
-	// It will run less often than source job
+	// It will (mostly) run less often than source job
 	if isContinuousJob {
 		betaData := data.Clone()
 
@@ -270,12 +270,12 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		betaData.PeriodicJobName += "-beta-prow-tests"
 		betaData.Base.Image = strings.ReplaceAll(betaData.Base.Image, ":stable", ":beta")
 
-		// Run 2 or 4 times a day because prow-tests beta testing has different desired interval than the underlying job
+		// Run 2 or 3 times a day because prow-tests beta testing has different desired interval than the underlying job
 		hours := []int{getUTCtime(1), getUTCtime(4)}
 		if jobType == "continuous" { // as opposed to branch-ci
-			// These jobs run 8-24 times per day, so it's a little more impactful if they break
-			// So test them more often
-			hours = append(hours, getUTCtime(16), getUTCtime(22))
+			// These jobs run 8-24 times per day, so it matters more if they break
+			// So test them slightly more often
+			hours = append(hours, getUTCtime(15))
 		}
 		var hoursStr []string
 		for _, h := range hours {
@@ -287,6 +287,12 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 
 		// Write out our duplicate job
 		executeJobTemplate("periodic", jobTemplate, title, repoName, betaData.PeriodicJobName, false, betaData)
+
+		// Setup TestGrid here?
+		// Each job becomes one of "test_groups"
+		// Then we want our own "dashboard" separate from others
+		// With each one of the jobs (aka "test_groups") in the single dashboard group
+		//metaData.
 	}
 }
 

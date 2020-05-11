@@ -6988,7 +6988,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "4 8,11,23,5 * * *"
+- cron: "4 8,11,22 * * *"
   name: ci-knative-serving-continuous-beta-prow-tests
   agent: kubernetes
   labels:
@@ -8113,7 +8113,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "13 8,11,23,5 * * *"
+- cron: "13 8,11,22 * * *"
   name: ci-knative-client-continuous-beta-prow-tests
   agent: kubernetes
   labels:
@@ -8886,7 +8886,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "21 8,11,23,5 * * *"
+- cron: "21 8,11,22 * * *"
   name: ci-knative-client-contrib-continuous-beta-prow-tests
   agent: kubernetes
   labels:
@@ -8965,7 +8965,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "33 8,11,23,5 * * *"
+- cron: "33 8,11,22 * * *"
   name: ci-knative-docs-continuous-beta-prow-tests
   agent: kubernetes
   labels:
@@ -9071,7 +9071,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "8 8,11,23,5 * * *"
+- cron: "8 8,11,22 * * *"
   name: ci-knative-eventing-continuous-beta-prow-tests
   agent: kubernetes
   labels:
@@ -9853,7 +9853,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "52 8,11,23,5 * * *"
+- cron: "52 8,11,22 * * *"
   name: ci-knative-eventing-contrib-continuous-beta-prow-tests
   agent: kubernetes
   labels:
@@ -10630,7 +10630,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "18 8,11,23,5 * * *"
+- cron: "18 8,11,22 * * *"
   name: ci-knative-pkg-continuous-beta-prow-tests
   agent: kubernetes
   labels:
@@ -10725,7 +10725,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "43 8,11,23,5 * * *"
+- cron: "43 8,11,22 * * *"
   name: ci-knative-caching-continuous-beta-prow-tests
   agent: kubernetes
   labels:
@@ -10820,7 +10820,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "15 8,11,23,5 * * *"
+- cron: "15 8,11,22 * * *"
   name: ci-knative-observability-continuous-beta-prow-tests
   agent: kubernetes
   labels:
@@ -10892,7 +10892,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "31 8,11,23,5 * * *"
+- cron: "31 8,11,22 * * *"
   name: ci-knative-sample-controller-continuous-beta-prow-tests
   agent: kubernetes
   labels:
@@ -10964,7 +10964,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "56 8,11,23,5 * * *"
+- cron: "56 8,11,22 * * *"
   name: ci-knative-sample-source-continuous-beta-prow-tests
   agent: kubernetes
   labels:
@@ -11036,7 +11036,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "57 8,11,23,5 * * *"
+- cron: "57 8,11,22 * * *"
   name: ci-knative-test-infra-continuous-beta-prow-tests
   agent: kubernetes
   labels:
@@ -11131,7 +11131,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "25 8,11,23,5 * * *"
+- cron: "25 8,11,22 * * *"
   name: ci-knative-serving-operator-continuous-beta-prow-tests
   agent: kubernetes
   labels:
@@ -11873,7 +11873,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "37 8,11,23,5 * * *"
+- cron: "37 8,11,22 * * *"
   name: ci-knative-eventing-operator-continuous-beta-prow-tests
   agent: kubernetes
   labels:
@@ -12614,7 +12614,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "14 8,11,23,5 * * *"
+- cron: "14 8,11,22 * * *"
   name: ci-google-knative-gcp-continuous-beta-prow-tests
   agent: kubernetes
   labels:
@@ -13209,7 +13209,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "41 8,11,23,5 * * *"
+- cron: "41 8,11,22 * * *"
   name: ci-knative-net-certmanager-continuous-beta-prow-tests
   agent: kubernetes
   labels:
@@ -13431,7 +13431,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "4 8,11,23,5 * * *"
+- cron: "4 8,11,22 * * *"
   name: ci-knative-net-contour-continuous-beta-prow-tests
   agent: kubernetes
   labels:
@@ -13653,7 +13653,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "7 8,11,23,5 * * *"
+- cron: "7 8,11,22 * * *"
   name: ci-knative-net-http01-continuous-beta-prow-tests
   agent: kubernetes
   labels:
@@ -13875,7 +13875,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "50 8,11,23,5 * * *"
+- cron: "50 8,11,22 * * *"
   name: ci-knative-net-istio-continuous-beta-prow-tests
   agent: kubernetes
   labels:
@@ -14097,7 +14097,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "15 8,11,23,5 * * *"
+- cron: "15 8,11,22 * * *"
   name: ci-knative-net-kourier-continuous-beta-prow-tests
   agent: kubernetes
   labels:
@@ -14319,7 +14319,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "54 8,11,23,5 * * *"
+- cron: "54 8,11,22 * * *"
   name: ci-knative-sandbox-operator-continuous-beta-prow-tests
   agent: kubernetes
   labels:
@@ -14553,7 +14553,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "15 8,11,23,5 * * *"
+- cron: "15 8,11,22 * * *"
   name: ci-knative-sandbox-eventing-kafka-continuous-beta-prow-tests
   agent: kubernetes
   labels:
