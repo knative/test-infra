@@ -35,6 +35,7 @@ spec:
         - --job-config-path=/etc/job-config
         - --kubeconfig=/etc/kubeconfig/config
         - --dry-run=false
+        - --skip-report=true
         volumeMounts:
         - name: oauth
           mountPath: /etc/github
