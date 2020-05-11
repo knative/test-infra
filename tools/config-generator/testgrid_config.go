@@ -47,15 +47,8 @@ const (
 var (
 	// goCoverageMap keep track of which repo has go code coverage when parsing the simple config file
 	goCoverageMap map[string]bool
-	// projNames save the proj names in a list when parsing the simple config file, for the purpose of maintaining the output sequence
-	projNames []string
-	// repoNames save the repo names in a list when parsing the simple config file, for the purpose of maintaining the output sequence
-	repoNames []string
 
-	// metaData saves the meta data needed to generate the final config file.
-	// key is the main project version, value is another map containing job details
-	//     for the job detail map, key is the repo name, value is the list of job types, like continuous, nightly, and etc.
-	metaData = make(map[string]map[string][]string)
+	metaData = NewTestGridMetaData()
 
 	// templatesCache caches templates in memory to avoid I/O
 	templatesCache = make(map[string]string)
@@ -111,17 +104,46 @@ func newBaseTestgridTemplateData(testGroupName string) baseTestgridTemplateData 
 	return data
 }
 
+// Get returns the project JobDetailMap, creating it if necessary
+func (t *TestGridMetaData) Get(projName string) JobDetailMap {
+	t.EnsureExists(projName)
+	return t.md[projName]
+}
+
+func (t *TestGridMetaData) EnsureExists(projName string) bool {
+	_, exists := t.md[projName]
+	if !exists {
+		t.md[projName] = make(JobDetailMap)
+		if !strExists(t.projNames, projName) {
+			t.projNames = append(t.projNames, projName)
+		}
+		return false
+	}
+	return true
+}
+
+func (t *TestGridMetaData) EnsureRepo(projName, repoName string) bool {
+	jdm := t.Get(projName)
+	if !jdm.EnsureExists(repoName) {
+		if !strExists(t.repoNames, repoName) {
+			t.repoNames = append(t.repoNames, repoName)
+		}
+		return false
+	}
+	return true
+}
+
 // generateTestGridSection generates the configs for a TestGrid section using the given generator
-func generateTestGridSection(sectionName string, generator testgridEntityGenerator, skipReleasedProj bool) {
+func (t *TestGridMetaData) generateTestGridSection(sectionName string, generator testgridEntityGenerator, skipReleasedProj bool) {
 	outputConfig(sectionName + ":")
 	emittedOutput = false
-	for _, projName := range projNames {
+	for _, projName := range t.projNames {
 		// Do not handle the project if it is released and we want to skip it.
 		if skipReleasedProj && isReleased(projName) {
 			continue
 		}
-		repos := metaData[projName]
-		for _, repoName := range repoNames {
+		repos := t.md[projName]
+		for _, repoName := range t.repoNames {
 			if jobNames, exists := repos[repoName]; exists {
 				generator(projName, repoName, jobNames)
 			}
@@ -135,7 +157,7 @@ func generateTestGridSection(sectionName string, generator testgridEntityGenerat
 }
 
 // generateTestGroup generates the test group configuration
-func generateTestGroup(projName string, repoName string, jobNames []string) {
+func (t *TestGridMetaData) generateTestGroup(projName string, repoName string, jobNames []string) {
 	projRepoStr := buildProjRepoStr(projName, repoName)
 	for _, jobName := range jobNames {
 		testGroupName := getTestGroupName(projRepoStr, jobName)
@@ -235,15 +257,15 @@ func getTestGroupName(repoName string, jobName string) string {
 	}
 }
 
-func generateDashboardsForReleases() {
-	for _, projName := range projNames {
+func (t *TestGridMetaData) generateDashboardsForReleases() {
+	for _, projName := range t.projNames {
 		// Do not handle the project if it is not released.
 		if !isReleased(projName) {
 			continue
 		}
-		repos := metaData[projName]
+		repos := t.md[projName]
 		outputConfig("- name: " + projName + "\n" + baseIndent + "dashboard_tab:")
-		for _, repoName := range repoNames {
+		for _, repoName := range t.repoNames {
 			if jobNames, exists := repos[repoName]; exists {
 				for _, jobName := range jobNames {
 					extras := make(map[string]string)
@@ -258,17 +280,17 @@ func generateDashboardsForReleases() {
 }
 
 // generateDashboardGroups generates the dashboard groups configuration
-func generateDashboardGroups() {
+func (t *TestGridMetaData) generateDashboardGroups() {
 	outputConfig("dashboard_groups:")
-	for _, projName := range projNames {
+	for _, projName := range t.projNames {
 		// there is only one dashboard for each released project, so we do not need to group them
 		if isReleased(projName) {
 			continue
 		}
 
 		dashboardRepoNames := make([]string, 0)
-		repos := metaData[projName]
-		for _, repoName := range repoNames {
+		repos := t.md[projName]
+		for _, repoName := range t.repoNames {
 			if _, exists := repos[repoName]; exists {
 				dashboardRepoNames = append(dashboardRepoNames, repoName)
 			}

@@ -964,11 +964,12 @@ func collectMetaData(periodicJob yaml.MapSlice) {
 		rawName := getString(repo.Key)
 		projName := strings.Split(rawName, "/")[0]
 		repoName := strings.Split(rawName, "/")[1]
-		jobDetailMap := addProjAndRepoIfNeed(projName, repoName)
+		jobDetailMap := metaData.Get(projName)
+		metaData.EnsureRepo(projName, repoName)
 
 		// parse job configs
 		for _, conf := range getInterfaceArray(repo.Value) {
-			jobDetailMap = metaData[projName]
+			jobDetailMap = metaData.Get(projName)
 			jobConfig := getMapSlice(conf)
 			enabled := false
 			jobName := ""
@@ -999,45 +1000,24 @@ func collectMetaData(periodicJob yaml.MapSlice) {
 				// if it's a job for a release branch
 				if releaseVersion != "" {
 					releaseProjName := fmt.Sprintf("%s-%s", projName, releaseVersion)
-					jobDetailMap = addProjAndRepoIfNeed(releaseProjName, repoName)
+
+					// TODO: Why do we assign?
+					jobDetailMap = metaData.Get(releaseProjName)
 				}
-				newJobTypes := append(jobDetailMap[repoName], jobName)
-				jobDetailMap[repoName] = newJobTypes
+				jobDetailMap.Add(repoName, jobName)
 			}
 		}
-		updateTestCoverageJobDataIfNeeded(&jobDetailMap, repoName)
+		updateTestCoverageJobDataIfNeeded(jobDetailMap, repoName)
 	}
 
 	// add test coverage jobs for the repos that haven't been handled
 	addRemainingTestCoverageJobs()
 }
 
-// addProjAndRepoIfNeed adds the project and repo if they are new in the metaData map, then return the jobDetailMap
-func addProjAndRepoIfNeed(projName string, repoName string) map[string][]string {
-	// add project in the metaData
-	if _, exists := metaData[projName]; !exists {
-		metaData[projName] = make(map[string][]string)
-		if !strExists(projNames, projName) {
-			projNames = append(projNames, projName)
-		}
-	}
-
-	// add repo in the project
-	jobDetailMap := metaData[projName]
-	if _, exists := jobDetailMap[repoName]; !exists {
-		if !strExists(repoNames, repoName) {
-			repoNames = append(repoNames, repoName)
-		}
-		jobDetailMap[repoName] = make([]string, 0)
-	}
-	return jobDetailMap
-}
-
 // updateTestCoverageJobDataIfNeeded adds test-coverage job data for the repo if it has go coverage check
-func updateTestCoverageJobDataIfNeeded(jobDetailMap *map[string][]string, repoName string) {
+func updateTestCoverageJobDataIfNeeded(jobDetailMap JobDetailMap, repoName string) {
 	if goCoverageMap[repoName] {
-		newJobTypes := append((*jobDetailMap)[repoName], "test-coverage")
-		(*jobDetailMap)[repoName] = newJobTypes
+		jobDetailMap.Add(repoName, "test-coverage")
 		// delete this repoName from the goCoverageMap to avoid it being processed again when we
 		// call the function addRemainingTestCoverageJobs
 		delete(goCoverageMap, repoName)
@@ -1049,8 +1029,8 @@ func addRemainingTestCoverageJobs() {
 	// handle repos that only have go coverage
 	for repoName, hasGoCoverage := range goCoverageMap {
 		if hasGoCoverage {
-			jobDetailMap := addProjAndRepoIfNeed(projNames[0], repoName)
-			jobDetailMap[repoName] = []string{"test-coverage"}
+			jobDetailMap := metaData.Get(metaData.projNames[0]) // TODO: WTF why projNames[0] !??!?!?!?
+			jobDetailMap.Add(repoName, "test-coverage")
 		}
 	}
 }
@@ -1209,9 +1189,11 @@ func main() {
 		periodicJobData := parseJob(config, "periodics")
 		collectMetaData(periodicJobData)
 
-		generateTestGridSection("test_groups", generateTestGroup, false)
-		generateTestGridSection("dashboards", generateDashboard, true)
-		generateDashboardsForReleases()
-		generateDashboardGroups()
+		// log.Print(spew.Sdump(metaData))
+
+		metaData.generateTestGridSection("test_groups", metaData.generateTestGroup, false)
+		metaData.generateTestGridSection("dashboards", generateDashboard, true)
+		metaData.generateDashboardsForReleases()
+		metaData.generateDashboardGroups()
 	}
 }

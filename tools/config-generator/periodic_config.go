@@ -270,9 +270,11 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		betaData.PeriodicJobName += "-beta-prow-tests"
 		betaData.Base.Image = strings.ReplaceAll(betaData.Base.Image, ":stable", ":beta")
 
-		// Run 2 or 4 times a day
+		// Run 2 or 4 times a day because prow-tests beta testing has different desired interval than the underlying job
 		hours := []int{getUTCtime(1), getUTCtime(4)}
 		if jobType == "continuous" { // as opposed to branch-ci
+			// These jobs run 8-24 times per day, so it's a little more impactful if they break
+			// So test them more often
 			hours = append(hours, getUTCtime(16), getUTCtime(22))
 		}
 		var hoursStr []string
