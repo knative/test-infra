@@ -14,7 +14,7 @@
 
 # Required rules for building kubernetes/test-infra
 # These all come from http://github.com/kubernetes/test-infra/blob/master/WORKSPACE
-
+# bar
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
