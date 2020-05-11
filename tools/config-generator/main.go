@@ -1195,7 +1195,7 @@ func main() {
 
 		// This generates "test_groups:"
 		metaData.generateTestGridSection("test_groups", metaData.generateTestGroup, false)
-		//metaData.generateNonAlignedTestGroups()
+		metaData.generateNonAlignedTestGroups()
 
 		// These two generate stuff under "dashboards:"
 		metaData.generateTestGridSection("dashboards", generateDashboard, true)

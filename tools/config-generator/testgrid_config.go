@@ -20,8 +20,11 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"strings"
 	"time"
+
+	"github.com/davecgh/go-spew/spew"
 )
 
 const (
@@ -153,39 +156,19 @@ func (t *TestGridMetaData) generateTestGridSection(sectionName string, generator
 	}
 }
 
-/*
-- name: ci-knative-serving-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-serving-continuous
-  alert_stale_results_hours: 3
-
-*/
-
-type NonAlignedTestGroup struct {
-	// DashboardGroup: The things shown at http://testgrid.knative.dev before you hover over anything
-	DashboardGroup string
-	// DashboardName: This is the thing with multiple tabs/test-groups/whatever-you-call-them
-	DashboardName string
-	// HumanTabName: Each set of test runs, aka test_group, with the name as shown to the human
-	HumanTabName string
-	CIJobName    string
-	// Where to find the logs
-	GcsPrefix string
-	// Extra things that show up in yaml in the test_groups section
-	Extra map[string]string
+// generateNonAlignedTestGroups
+func (t *TestGridMetaData) generateNonAlignedTestGroups() {
+	log.Print(spew.Sdump(t.nonAligned))
+	for _, tg := range t.nonAligned {
+		executeTestGroupTemplate(tg.CIJobName, getGcsLogDir(tg.CIJobName), tg.Extra)
+	}
 }
 
-// // generateNonAlignedTestGroups
-// func (t *TestGridMetaData) generateNonAlignedTestGroups() {
-// 	for _, tg := range t.nonAligned {
-// 		executeTestGroupTemplate(testGroupName, gcsLogDir, extras)
-// 	}
-// }
-
-// //
-// // testGroupName: This is the human-readable tab name
-// func (t *TestGridMetaData) AddNonAlignedTest(n NonAlignedTestGroup) {
-// 	t.nonAligned = append(t.nonAligned, n)
-// }
+//
+// testGroupName: This is the human-readable tab name
+func (t *TestGridMetaData) AddNonAlignedTest(n NonAlignedTestGroup) {
+	t.nonAligned = append(t.nonAligned, n)
+}
 
 // testGroupName: the name of the job in every case AFAICT
 func getGcsLogDir(testGroupName string) string {

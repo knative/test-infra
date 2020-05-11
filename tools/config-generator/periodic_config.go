@@ -292,7 +292,13 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		// Each job becomes one of "test_groups"
 		// Then we want our own "dashboard" separate from others
 		// With each one of the jobs (aka "test_groups") in the single dashboard group
-		//metaData.
+		metaData.AddNonAlignedTest(NonAlignedTestGroup{
+			DashboardGroup: "prow-tests",
+			DashboardName:  "beta-prow-tests",
+			HumanTabName:   data.PeriodicJobName, // this is purposefully not betaData, so the display name is the original CI job name
+			CIJobName:      betaData.PeriodicJobName,
+			Extra:          nil,
+		})
 	}
 }
 
