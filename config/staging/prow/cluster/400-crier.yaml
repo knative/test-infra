@@ -35,7 +35,6 @@ spec:
         - --gcs-workers=1
         - --gcs-credentials-file=/etc/service-account/service-account.json # TODO(chizhg): use workload identity
         - --kubernetes-gcs-workers=1
-        - --report-agent=knative-build
         - --config-path=/etc/config/config.yaml
         - --job-config-path=/etc/job-config
         - --github-workers=5

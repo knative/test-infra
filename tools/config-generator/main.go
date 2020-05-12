@@ -305,20 +305,9 @@ func exclusiveSlices(a1, a2 []string) []string {
 	return res
 }
 
-// getGo112ID returns image identifier for go113 images
-func getGo112ID() string {
-	return "-go112"
-}
-
 // getGo114ID returns image identifier for go114 images
 func getGo114ID() string {
 	return "-go114"
-}
-
-// Get go113 image name from base image name, following the contract of
-// [IMAGE]:[DIGEST]-> [IMAGE]-go112:[DIGEST]
-func getGo113ImageName(name string) string {
-	return stripSuffixFromImageName(name, []string{getGo112ID()})
 }
 
 // strip out all suffixes from the image name
@@ -348,12 +337,8 @@ func addSuffixToImageName(name string, suffix string) string {
 	return strings.Join(parts, ":")
 }
 
-func getGo112ImageName(name string) string {
-	return addSuffixToImageName(name, getGo112ID())
-}
-
 func getGo114ImageName(name string) string {
-	return addSuffixToImageName(stripSuffixFromImageName(name, []string{getGo112ID()}), getGo114ID())
+	return addSuffixToImageName(name, getGo114ID())
 }
 
 // Consolidate whitelisted and skipped branches with newly added
@@ -466,13 +451,13 @@ func createCommand(data baseProwJobTemplateData) []string {
 }
 
 // addEnvToJob adds the given key/pair environment variable to the job.
-func addEnvToJob(data *baseProwJobTemplateData, key, value string) {
+func (data *baseProwJobTemplateData) addEnvToJob(key, value string) {
 	// Value should always be string. Add quotes if we get a number
 	if isNum(value) {
 		value = "\"" + value + "\""
 	}
 
-	(*data).Env = append((*data).Env, []string{"- name: " + key, "  value: " + value}...)
+	data.Env = append(data.Env, "- name: "+key, "  value: "+value)
 }
 
 // addLabelToJob adds extra labels to a job
@@ -526,14 +511,14 @@ func addExtraEnvVarsToJob(envVars []string, data *baseProwJobTemplateData) {
 		if len(pair) != 2 {
 			log.Fatalf("Environment variable %q is expected to be \"key=value\"", env)
 		}
-		addEnvToJob(data, pair[0], pair[1])
+		data.addEnvToJob(pair[0], pair[1])
 	}
 }
 
 // setupDockerInDockerForJob enables docker-in-docker for the given job.
 func setupDockerInDockerForJob(data *baseProwJobTemplateData) {
 	addVolumeToJob(data, "/docker-graph", "docker-graph", false, "")
-	addEnvToJob(data, "DOCKER_IN_DOCKER_ENABLED", "\"true\"")
+	data.addEnvToJob("DOCKER_IN_DOCKER_ENABLED", "\"true\"")
 	(*data).SecurityContext = []string{"privileged: true"}
 }
 
@@ -622,9 +607,10 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 		(*data).ExtraRefs = append((*data).ExtraRefs, "  "+(*data).PathAlias)
 	}
 	if needGo113 {
-		(*data).Image = getGo113ImageName((*data).Image)
+		data.addEnvToJob("GO_VERSION", "go1.13")
 	}
 	if needGo114 {
+		data.addEnvToJob("GO_VERSION", "go1.14")
 		(*data).Image = getGo114ImageName((*data).Image)
 	}
 	// Override any values if provided by command-line flags.
@@ -851,7 +837,7 @@ func executeJobTemplateWrapper(repoName string, data interface{}, generateOneJob
 	}
 
 	var go113Branches []string
-	// Find out if Go112Branches is set in repo settings
+	// Find out if Go113Branches is set in repo settings
 	for _, repo := range repositories {
 		if repo.Name == repoName {
 			if len(repo.Go113Branches) > 0 {
@@ -866,12 +852,8 @@ func executeJobTemplateWrapper(repoName string, data interface{}, generateOneJob
 				base.Image = getGo114ImageName(base.Image)
 			},
 			restore: func(base *baseProwJobTemplateData) {
-				base.Image = getGo113ImageName(base.Image)
 			},
 		})
-	} else {
-		base := getBase(data)
-		base.Image = getGo113ImageName(base.Image)
 	}
 
 	if len(sbs) == 0 { // Generate single job if there is no special branch logic

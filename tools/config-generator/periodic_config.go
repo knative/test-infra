@@ -215,7 +215,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			jobType = getString(item.Key)
 			jobNameSuffix = "webhook-apicoverage"
 			data.Base.Command = webhookAPICoverageScript
-			addEnvToJob(&data.Base, "SYSTEM_NAMESPACE", data.Base.RepoNameForJob)
+			data.Base.addEnvToJob("SYSTEM_NAMESPACE", data.Base.RepoNameForJob)
 		default:
 			continue
 		}
@@ -247,13 +247,13 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	// Generate config itself.
 	data.PeriodicCommand = createCommand(data.Base)
 	if data.Base.ServiceAccount != "" {
-		addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
-		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-central1")
+		data.Base.addEnvToJob("GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
+		data.Base.addEnvToJob("E2E_CLUSTER_REGION", "us-central1")
 	}
 	if data.Base.RepoBranch != "" && data.Base.RepoBranch != "master" {
 		// If it's a release version, add env var PULL_BASE_REF as ref name of the base branch.
 		// The reason for having it is in https://github.com/knative/test-infra/issues/780.
-		addEnvToJob(&data.Base, "PULL_BASE_REF", data.Base.RepoBranch)
+		data.Base.addEnvToJob("PULL_BASE_REF", data.Base.RepoBranch)
 	}
 	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 	configureServiceAccountForJob(&data.Base)

@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Copyright 2020 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,15 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: v1
-kind: LimitRange
-metadata:
-  name: cpu-limit-range
-  namespace: test-pods
-spec:
-  limits:
-    - default:
-        cpu: 4000m
-      defaultRequest:
-        cpu: 2000m
-      type: Container
+source "${HOME}/.gvm/scripts/gvm"
+
+if [[ -v GO_VERSION ]]; then
+  gvm use "${GO_VERSION}"
+fi
+
+kubekins-runner.sh "$@"

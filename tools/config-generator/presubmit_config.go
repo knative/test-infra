@@ -97,8 +97,8 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	data.PresubmitPullJobName = "pull-" + data.PresubmitJobName
 	data.PresubmitPostJobName = "post-" + data.PresubmitJobName
 	if data.Base.ServiceAccount != "" {
-		addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
-		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-central1")
+		data.Base.addEnvToJob("GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
+		data.Base.addEnvToJob("E2E_CLUSTER_REGION", "us-central1")
 	}
 	if data.Base.NeedsMonitor {
 		addMonitoringPubsubLabelsToJob(&data.Base, data.PresubmitPullJobName)
