@@ -105,9 +105,9 @@ func perfClusterBaseProwJob(command string, args []string, fullRepoName, sa stri
 	base.Command = command
 	base.Args = args
 	addVolumeToJob(&base, "/etc/performance-test", sa, true, "")
-	addEnvToJob(&base, "GOOGLE_APPLICATION_CREDENTIALS", "/etc/performance-test/service-account.json")
-	addEnvToJob(&base, "GITHUB_TOKEN", "/etc/performance-test/github-token")
-	addEnvToJob(&base, "SLACK_READ_TOKEN", "/etc/performance-test/slack-read-token")
-	addEnvToJob(&base, "SLACK_WRITE_TOKEN", "/etc/performance-test/slack-write-token")
+	base.addEnvToJob("GOOGLE_APPLICATION_CREDENTIALS", "/etc/performance-test/service-account.json")
+	base.addEnvToJob("GITHUB_TOKEN", "/etc/performance-test/github-token")
+	base.addEnvToJob("SLACK_READ_TOKEN", "/etc/performance-test/slack-read-token")
+	base.addEnvToJob("SLACK_WRITE_TOKEN", "/etc/performance-test/slack-write-token")
 	return base
 }

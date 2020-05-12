@@ -6975,6 +6975,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -7203,6 +7205,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -7238,6 +7242,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -7273,6 +7279,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -7308,6 +7316,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -7343,6 +7353,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -7378,6 +7390,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -7413,6 +7427,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -7448,6 +7464,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -7483,6 +7501,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -7520,6 +7540,8 @@ periodics:
         mountPath: /etc/nightly-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -7726,6 +7748,8 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -7776,6 +7800,8 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -7817,6 +7843,8 @@ periodics:
       env:
       - name: SYSTEM_NAMESPACE
         value: knative-serving
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -7876,6 +7904,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -8101,6 +8131,8 @@ periodics:
         mountPath: /etc/nightly-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -8132,6 +8164,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -8318,6 +8352,8 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -8363,6 +8399,8 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -8425,6 +8463,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -8526,6 +8566,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -8756,6 +8798,8 @@ periodics:
         mountPath: /etc/nightly-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -8962,6 +9006,8 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -9012,6 +9058,8 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -9079,6 +9127,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -9309,6 +9359,8 @@ periodics:
         mountPath: /etc/nightly-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -9515,6 +9567,8 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -9565,6 +9619,8 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -9632,6 +9688,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -9691,6 +9749,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -9750,6 +9810,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -9786,6 +9848,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -9822,6 +9886,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -9858,6 +9924,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -9917,6 +9985,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -10142,6 +10212,8 @@ periodics:
         mountPath: /etc/nightly-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -10328,6 +10400,8 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -10373,6 +10447,8 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -10435,6 +10511,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -10660,6 +10738,8 @@ periodics:
         mountPath: /etc/nightly-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -10846,6 +10926,8 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -10891,6 +10973,8 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -10952,6 +11036,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -11126,6 +11212,8 @@ periodics:
         mountPath: /etc/nightly-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -11267,6 +11355,8 @@ periodics:
       env:
       - name: ORG_NAME
         value: google
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -11313,6 +11403,8 @@ periodics:
       env:
       - name: ORG_NAME
         value: google
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -11374,6 +11466,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -11411,6 +11505,8 @@ periodics:
         mountPath: /etc/nightly-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -11453,6 +11549,8 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -11498,6 +11596,8 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -11560,6 +11660,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -11597,6 +11699,8 @@ periodics:
         mountPath: /etc/nightly-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -11639,6 +11743,8 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -11684,6 +11790,8 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -11746,6 +11854,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -11783,6 +11893,8 @@ periodics:
         mountPath: /etc/nightly-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -11825,6 +11937,8 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -11870,6 +11984,8 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -11932,6 +12048,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -11969,6 +12087,8 @@ periodics:
         mountPath: /etc/nightly-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -12011,6 +12131,8 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -12056,6 +12178,8 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -12118,6 +12242,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -12155,6 +12281,8 @@ periodics:
         mountPath: /etc/nightly-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -12197,6 +12325,8 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -12242,6 +12372,8 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -12304,6 +12436,8 @@ periodics:
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -12341,6 +12475,8 @@ periodics:
         mountPath: /etc/nightly-account
         readOnly: true
       env:
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -12385,6 +12521,8 @@ periodics:
       env:
       - name: ORG_NAME
         value: knative-sandbox
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -12432,6 +12570,8 @@ periodics:
       env:
       - name: ORG_NAME
         value: knative-sandbox
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -12500,6 +12640,8 @@ periodics:
       env:
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -12545,6 +12687,8 @@ periodics:
       env:
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -12597,6 +12741,8 @@ periodics:
         value: "true"
       - name: ORG_NAME
         value: knative-sandbox
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -12652,6 +12798,8 @@ periodics:
         value: "true"
       - name: ORG_NAME
         value: knative-sandbox
+      - name: GO_VERSION
+        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
