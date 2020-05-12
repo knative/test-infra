@@ -1,4 +1,4 @@
-# Copyright 2018 The Knative Authors
+# Copyright 2020 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,12 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-PROJECT       := knative-tests
-PROW_GCS      := knative-prow
-PROW_HOST     := https://prow.knative.dev
-TESTGRID_GCS  := knative-testgrid
-
-KNATIVE_CONFIG   := config_knative.yaml
-TESTGRID_CONFIG  ?= prow/testgrid/testgrid.yaml
-
-include ../prow_common.mk
+IMAGE_NAME = prow-tests-go113
+include ../simple-image.mk
