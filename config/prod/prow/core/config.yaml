@@ -133,7 +133,6 @@ tide:
     - "knative/net-http01"
     - "knative/net-istio"
     - "knative/net-kourier"
-    - "knative/observability"
     - "knative/pkg"
     - "knative/sample-controller"
     - "knative/sample-source"
