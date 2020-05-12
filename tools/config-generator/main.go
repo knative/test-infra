@@ -307,6 +307,11 @@ func getGo114ID() string {
 	return "-go114"
 }
 
+// getGo113ID returns image identifier for go113 images
+func getGo113ID() string {
+	return "-go113"
+}
+
 // strip out all suffixes from the image name
 func stripSuffixFromImageName(name string, suffixes []string) string {
 	parts := strings.SplitN(name, ":", 2)
@@ -335,7 +340,7 @@ func addSuffixToImageName(name string, suffix string) string {
 }
 
 func getGo114ImageName(name string) string {
-	return addSuffixToImageName(name, getGo114ID())
+	return addSuffixToImageName(stripSuffixFromImageName(name, []string{getGo113ID()}), getGo114ID())
 }
 
 // Consolidate whitelisted and skipped branches with newly added
@@ -1101,7 +1106,7 @@ func main() {
 	flag.StringVar(&nightlyAccount, "nightly-account", "/etc/nightly-account/service-account.json", "Path to the service account JSON for nightly release jobs")
 	flag.StringVar(&releaseAccount, "release-account", "/etc/release-account/service-account.json", "Path to the service account JSON for release jobs")
 	var coverageDockerImageName = flag.String("coverage-docker", "coverage:latest", "Docker image for coverage tool")
-	var prowTestsDockerImageName = flag.String("prow-tests-docker", "prow-tests:stable", "prow-tests docker image")
+	var prowTestsDockerImageName = flag.String("prow-tests-docker", "prow-tests-go113:stable", "prow-tests docker image")
 	flag.StringVar(&githubCommenterDockerImage, "github-commenter-docker", "gcr.io/k8s-prow/commenter:v20190731-e3f7b9853", "github commenter docker image")
 	flag.StringVar(&presubmitScript, "presubmit-script", "./test/presubmit-tests.sh", "Executable for running presubmit tests")
 	flag.StringVar(&releaseScript, "release-script", "./hack/release.sh", "Executable for creating releases")

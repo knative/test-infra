@@ -619,12 +619,20 @@ periodics:
           memory: 16Gi
     - dot-release: true
       dot-dev: true
-      go114: true
+      release: "0.14"
       resources:
         requests:
           memory: 12Gi
         limits:
           memory: 16Gi
+#    - dot-release: true
+#      dot-dev: true
+#      go114: true
+#      resources:
+#        requests:
+#          memory: 12Gi
+#        limits:
+#          memory: 16Gi
     - auto-release: true
       dot-dev: true
       go114: true
@@ -675,7 +683,10 @@ periodics:
       release: "0.13"
     - dot-release: true
       dot-dev: true
-      go114: true
+      release: "0.14"
+#    - dot-release: true
+#      dot-dev: true
+#      go114: true
     - auto-release: true
       dot-dev: true
       go114: true
@@ -745,12 +756,20 @@ periodics:
           memory: 16Gi
     - dot-release: true
       dot-dev: true
-      go114: true
+      release: "0.14"
       resources:
         requests:
           memory: 12Gi
         limits:
           memory: 16Gi
+#    - dot-release: true
+#      dot-dev: true
+#      go114: true
+#      resources:
+#        requests:
+#          memory: 12Gi
+#        limits:
+#          memory: 16Gi
     - auto-release: true
       dot-dev: true
       go114: true
@@ -815,12 +834,20 @@ periodics:
           memory: 16Gi
     - dot-release: true
       dot-dev: true
-      go114: true
+      release: "0.14"
       resources:
         requests:
           memory: 12Gi
         limits:
           memory: 16Gi
+#    - dot-release: true
+#      dot-dev: true
+#      go114: true
+#      resources:
+#        requests:
+#          memory: 12Gi
+#        limits:
+#          memory: 16Gi
     - auto-release: true
       dot-dev: true
       go114: true
@@ -885,7 +912,10 @@ periodics:
       release: "0.13"
     - dot-release: true
       dot-dev: true
-      go114: true
+      release: "0.14"
+#    - dot-release: true
+#      dot-dev: true
+#      go114: true
     - auto-release: true
       dot-dev: true
       go114: true
@@ -920,7 +950,10 @@ periodics:
       release: "0.13"
     - dot-release: true
       dot-dev: true
-      go114: true
+      release: "0.14"
+#    - dot-release: true
+#      dot-dev: true
+#      go114: true
     - auto-release: true
       dot-dev: true
       go114: true
@@ -945,9 +978,13 @@ periodics:
       env-vars:
         - ORG_NAME=google
     - dot-release: true
-      go114: true
+      release: "0.14"
       env-vars:
       - ORG_NAME=google
+#    - dot-release: true
+#      go114: true
+#      env-vars:
+#      - ORG_NAME=google
     - auto-release: true
       go114: true
       env-vars:
