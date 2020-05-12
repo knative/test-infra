@@ -29,12 +29,13 @@ spec:
       containers:
       - name: plank
         # Update plank utility_images versions in config.yaml when updating this version
-        image: gcr.io/k8s-prow/plank:v20200414-8099fb49a
+        image: gcr.io/k8s-prow/plank:v20200430-fdbbc1f61
         args:
         - --config-path=/etc/config/config.yaml
         - --job-config-path=/etc/job-config
         - --kubeconfig=/etc/kubeconfig/config
         - --dry-run=false
+        - --skip-report=true
         volumeMounts:
         - name: oauth
           mountPath: /etc/github
