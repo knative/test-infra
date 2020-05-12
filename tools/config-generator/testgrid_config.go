@@ -20,11 +20,8 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"strings"
 	"time"
-
-	"github.com/davecgh/go-spew/spew"
 )
 
 const (
@@ -158,7 +155,6 @@ func (t *TestGridMetaData) generateTestGridSection(sectionName string, generator
 
 // generateNonAlignedTestGroups
 func (t *TestGridMetaData) generateNonAlignedTestGroups() {
-	log.Print(spew.Sdump(t.nonAligned))
 	for _, tg := range t.nonAligned {
 		executeTestGroupTemplate(tg.CIJobName, getGcsLogDir(tg.CIJobName), tg.Extra)
 	}
