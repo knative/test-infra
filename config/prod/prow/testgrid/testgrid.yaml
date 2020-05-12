@@ -1597,6 +1597,155 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "prime-engprod-sea@google.com"
     num_failures_to_alert: 3
+- name: beta-prow-tests
+  dashboard_tab:
+  - name: ci-knative-serving-continuous
+    test_group_name: ci-knative-serving-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-serving-0.11-continuous
+    test_group_name: ci-knative-serving-0.11-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-serving-0.12-continuous
+    test_group_name: ci-knative-serving-0.12-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-serving-0.13-continuous
+    test_group_name: ci-knative-serving-0.13-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-serving-0.14-continuous
+    test_group_name: ci-knative-serving-0.14-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-client-continuous
+    test_group_name: ci-knative-client-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-client-0.11-continuous
+    test_group_name: ci-knative-client-0.11-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-client-0.12-continuous
+    test_group_name: ci-knative-client-0.12-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-client-0.13-continuous
+    test_group_name: ci-knative-client-0.13-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-client-0.14-continuous
+    test_group_name: ci-knative-client-0.14-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-client-contrib-continuous
+    test_group_name: ci-knative-client-contrib-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-docs-continuous
+    test_group_name: ci-knative-docs-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-eventing-continuous
+    test_group_name: ci-knative-eventing-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-eventing-0.11-continuous
+    test_group_name: ci-knative-eventing-0.11-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-eventing-0.12-continuous
+    test_group_name: ci-knative-eventing-0.12-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-eventing-0.13-continuous
+    test_group_name: ci-knative-eventing-0.13-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-eventing-0.14-continuous
+    test_group_name: ci-knative-eventing-0.14-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-eventing-contrib-continuous
+    test_group_name: ci-knative-eventing-contrib-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-eventing-contrib-0.11-continuous
+    test_group_name: ci-knative-eventing-contrib-0.11-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-eventing-contrib-0.12-continuous
+    test_group_name: ci-knative-eventing-contrib-0.12-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-eventing-contrib-0.13-continuous
+    test_group_name: ci-knative-eventing-contrib-0.13-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-eventing-contrib-0.14-continuous
+    test_group_name: ci-knative-eventing-contrib-0.14-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-pkg-continuous
+    test_group_name: ci-knative-pkg-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-caching-continuous
+    test_group_name: ci-knative-caching-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-observability-continuous
+    test_group_name: ci-knative-observability-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-sample-controller-continuous
+    test_group_name: ci-knative-sample-controller-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-sample-source-continuous
+    test_group_name: ci-knative-sample-source-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-test-infra-continuous
+    test_group_name: ci-knative-test-infra-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-serving-operator-continuous
+    test_group_name: ci-knative-serving-operator-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-serving-operator-0.11-continuous
+    test_group_name: ci-knative-serving-operator-0.11-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-serving-operator-0.12-continuous
+    test_group_name: ci-knative-serving-operator-0.12-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-serving-operator-0.13-continuous
+    test_group_name: ci-knative-serving-operator-0.13-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-serving-operator-0.14-continuous
+    test_group_name: ci-knative-serving-operator-0.14-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-eventing-operator-continuous
+    test_group_name: ci-knative-eventing-operator-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-eventing-operator-0.11-continuous
+    test_group_name: ci-knative-eventing-operator-0.11-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-eventing-operator-0.12-continuous
+    test_group_name: ci-knative-eventing-operator-0.12-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-eventing-operator-0.13-continuous
+    test_group_name: ci-knative-eventing-operator-0.13-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-eventing-operator-0.14-continuous
+    test_group_name: ci-knative-eventing-operator-0.14-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-google-knative-gcp-continuous
+    test_group_name: ci-google-knative-gcp-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-google-knative-gcp-0.12-continuous
+    test_group_name: ci-google-knative-gcp-0.12-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-google-knative-gcp-0.13-continuous
+    test_group_name: ci-google-knative-gcp-0.13-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-google-knative-gcp-0.14-continuous
+    test_group_name: ci-google-knative-gcp-0.14-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-net-certmanager-continuous
+    test_group_name: ci-knative-net-certmanager-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-net-contour-continuous
+    test_group_name: ci-knative-net-contour-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-net-http01-continuous
+    test_group_name: ci-knative-net-http01-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-net-istio-continuous
+    test_group_name: ci-knative-net-istio-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-net-kourier-continuous
+    test_group_name: ci-knative-net-kourier-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-sandbox-operator-continuous
+    test_group_name: ci-knative-sandbox-operator-continuous-beta-prow-tests
+    base_options: "sort-by-name="
+  - name: ci-knative-sandbox-eventing-kafka-continuous
+    test_group_name: ci-knative-sandbox-eventing-kafka-continuous-beta-prow-tests
+    base_options: "sort-by-name="
 dashboard_groups:
 - name: knative
   dashboard_names:
@@ -1626,3 +1775,6 @@ dashboard_groups:
   dashboard_names:
   - "operator"
   - "eventing-kafka"
+- name: prow-tests
+  dashboard_names:
+  - "beta-prow-tests"

@@ -1193,16 +1193,17 @@ func main() {
 
 		// log.Print(spew.Sdump(metaData))
 
-		// This generates "test_groups:"
+		// These generate "test_groups:"
 		metaData.generateTestGridSection("test_groups", metaData.generateTestGroup, false)
 		metaData.generateNonAlignedTestGroups()
 
-		// These two generate stuff under "dashboards:"
+		// These generate "dashboards:"
 		metaData.generateTestGridSection("dashboards", generateDashboard, true)
 		metaData.generateDashboardsForReleases()
-		//metaData.generateDashboardForBetaProwTests()
+		metaData.generateNonAlignedDashboards()
 
-		// This generates "dashboard_groups:"
+		// These generate "dashboard_groups:"
 		metaData.generateDashboardGroups()
+		metaData.generateNonAlignedDashboardGroups()
 	}
 }
