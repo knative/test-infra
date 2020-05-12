@@ -11,7 +11,7 @@ func TestJobDetailMap(t *testing.T) {
 		j.Add("serving", t)
 	}
 
-	for i, _ := range local {
+	for i := range local {
 		if j["serving"][i] == local[i] {
 			t.Logf("Entry %d matched", i)
 		} else {
