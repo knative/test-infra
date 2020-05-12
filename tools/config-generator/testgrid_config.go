@@ -108,8 +108,7 @@ func (t *TestGridMetaData) Get(projName string) JobDetailMap {
 }
 
 func (t *TestGridMetaData) EnsureExists(projName string) bool {
-	_, exists := t.md[projName]
-	if !exists {
+	if _, exists := t.md[projName]; !exists {
 		t.md[projName] = make(JobDetailMap)
 		if !strExists(t.projNames, projName) {
 			t.projNames = append(t.projNames, projName)
