@@ -44,6 +44,7 @@ spec:
         - --dry-run=false
         - --config-path=/etc/config/config.yaml
         - --job-config-path=/etc/job-config
+        - --github-token-path=/etc/github/oauth
         - --github-endpoint=http://ghproxy
         - --github-endpoint=https://api.github.com
         ports:
