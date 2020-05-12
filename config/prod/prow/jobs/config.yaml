@@ -7605,23 +7605,23 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "37 9 * * 2"
-  name: ci-knative-serving-dot-release
+- cron: "35 9 * * 2"
+  name: ci-knative-serving-0.14-dot-release
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-serving-dot-release
+    prow.k8s.io/pubsub.runID: ci-knative-serving-0.14-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: master
+    base_ref: release-0.14
     path_alias: knative.dev/serving
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests-go113:stable
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -7631,6 +7631,7 @@ periodics:
       - "--release-gcs knative-releases/serving"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
+      - "--branch release-0.14"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -7639,12 +7640,12 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
-      - name: GO_VERSION
-        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.14
       resources:
         requests:
           memory: 12Gi
@@ -8209,23 +8210,23 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "21 9 * * 2"
-  name: ci-knative-client-dot-release
+- cron: "20 9 * * 2"
+  name: ci-knative-client-0.14-dot-release
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-client-dot-release
+    prow.k8s.io/pubsub.runID: ci-knative-client-0.14-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: client
-    base_ref: master
+    base_ref: release-0.14
     path_alias: knative.dev/client
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests-go113:stable
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -8235,6 +8236,7 @@ periodics:
       - "--release-gcs knative-releases/client"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
+      - "--branch release-0.14"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -8243,12 +8245,12 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
-      - name: GO_VERSION
-        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.14
     volumes:
     - name: hub-token
       secret:
@@ -8863,23 +8865,23 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "56 9 * * 2"
-  name: ci-knative-eventing-dot-release
+- cron: "54 9 * * 2"
+  name: ci-knative-eventing-0.14-dot-release
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-dot-release
+    prow.k8s.io/pubsub.runID: ci-knative-eventing-0.14-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing
-    base_ref: master
+    base_ref: release-0.14
     path_alias: knative.dev/eventing
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests-go113:stable
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -8889,6 +8891,7 @@ periodics:
       - "--release-gcs knative-releases/eventing"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
+      - "--branch release-0.14"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -8897,12 +8900,12 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
-      - name: GO_VERSION
-        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.14
       resources:
         requests:
           memory: 12Gi
@@ -9424,23 +9427,23 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "51 9 * * 2"
-  name: ci-knative-eventing-contrib-dot-release
+- cron: "50 9 * * 2"
+  name: ci-knative-eventing-contrib-0.14-dot-release
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-contrib-dot-release
+    prow.k8s.io/pubsub.runID: ci-knative-eventing-contrib-0.14-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-contrib
-    base_ref: master
+    base_ref: release-0.14
     path_alias: knative.dev/eventing-contrib
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests-go113:stable
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -9450,6 +9453,7 @@ periodics:
       - "--release-gcs knative-releases/eventing-contrib"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
+      - "--branch release-0.14"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -9458,12 +9462,12 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
-      - name: GO_VERSION
-        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.14
       resources:
         requests:
           memory: 12Gi
@@ -10219,23 +10223,23 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "4 19 * * 2"
-  name: ci-knative-serving-operator-dot-release
+- cron: "2 19 * * 2"
+  name: ci-knative-serving-operator-0.14-dot-release
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-serving-operator-dot-release
+    prow.k8s.io/pubsub.runID: ci-knative-serving-operator-0.14-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving-operator
-    base_ref: master
+    base_ref: release-0.14
     path_alias: knative.dev/serving-operator
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests-go113:stable
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -10245,6 +10249,7 @@ periodics:
       - "--release-gcs knative-releases/serving-operator"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
+      - "--branch release-0.14"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -10253,12 +10258,12 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
-      - name: GO_VERSION
-        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.14
     volumes:
     - name: hub-token
       secret:
@@ -10745,23 +10750,23 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "23 19 * * 2"
-  name: ci-knative-eventing-operator-dot-release
+- cron: "21 19 * * 2"
+  name: ci-knative-eventing-operator-0.14-dot-release
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-operator-dot-release
+    prow.k8s.io/pubsub.runID: ci-knative-eventing-operator-0.14-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-operator
-    base_ref: master
+    base_ref: release-0.14
     path_alias: knative.dev/eventing-operator
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests-go113:stable
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -10771,6 +10776,7 @@ periodics:
       - "--release-gcs knative-releases/eventing-operator"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
+      - "--branch release-0.14"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -10779,12 +10785,12 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
-      - name: GO_VERSION
-        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.14
     volumes:
     - name: hub-token
       secret:
@@ -11173,22 +11179,22 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "56 9 * * 2"
-  name: ci-google-knative-gcp-dot-release
+- cron: "54 9 * * 2"
+  name: ci-google-knative-gcp-0.14-dot-release
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-dot-release
+    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-0.14-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
   - org: google
     repo: knative-gcp
-    base_ref: master
+    base_ref: release-0.14
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests-go113:stable
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -11198,6 +11204,7 @@ periodics:
       - "--release-gcs knative-releases/knative-gcp"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
+      - "--branch release-0.14"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -11208,12 +11215,12 @@ periodics:
       env:
       - name: ORG_NAME
         value: google
-      - name: GO_VERSION
-        value: go1.14
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.14
     volumes:
     - name: hub-token
       secret:
