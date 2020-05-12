@@ -19,9 +19,11 @@ limitations under the License.
 package main
 
 import (
+	"bytes"
+	"encoding/gob"
 	"fmt"
+	"hash/fnv"
 	"log"
-	"math"
 	"path"
 	"strings"
 
@@ -49,58 +51,82 @@ type periodicJobTemplateData struct {
 	PeriodicCommand []string
 }
 
+func (p periodicJobTemplateData) Clone() periodicJobTemplateData {
+	var r periodicJobTemplateData
+	var err error
+	buff := new(bytes.Buffer)
+	enc := gob.NewEncoder(buff)
+	dec := gob.NewDecoder(buff)
+	if err = enc.Encode(&p); err != nil {
+		panic(err)
+	}
+	if err = dec.Decode(&r); err != nil {
+		panic(err)
+	}
+	return r
+}
+
+func getUTCtime(i int) int {
+	r := i + 7
+	if r > 23 {
+		return r - 24
+	}
+	return r
+}
+
+func calculateMinuteOffset(str ...string) int {
+	h := fnv.New32a()
+	for _, s := range str {
+		h.Write([]byte(s))
+	}
+	return int(h.Sum32()) % 60
+}
+
 // Generate cron string based on job type, offset generated from jobname
 // instead of assign random value to ensure consistency among runs,
 // timeout is used for determining how many hours apart
 func generateCron(jobType, jobName, repoName string, timeout int) string {
-	getUTCtime := func(i int) int { return i + 7 }
-	// Sums the ascii valus of all letters in a jobname,
-	// this value is used for deriving offset after hour
-	var sum float64
-	for _, c := range jobType + jobName {
-		sum += float64(c)
-	}
-	// Divide 60 minutes into 6 buckets
-	bucket := int(math.Mod(sum, 6))
-	// Offset in bucket, range from 0-9, first mod with 11(a random prime number)
-	// to ensure every digit has a chance (i.e., if bucket is 0, sum has to be multiply of 6,
-	// so mod by 10 can only return even number)
-	offsetInBucket := int(math.Mod(math.Mod(sum, 11), 10))
-	minutesOffset := bucket*10 + offsetInBucket
+	minutesOffset := calculateMinuteOffset(jobType, jobName)
 	// Determines hourly job inteval based on timeout
 	hours := int((timeout+5)/60) + 1 // Allow at least 5 minutes between runs
 	hourCron := fmt.Sprintf("%d * * * *", minutesOffset)
 	if hours > 1 {
 		hourCron = fmt.Sprintf("%d */%d * * *", minutesOffset, hours)
 	}
-	dayCron := fmt.Sprintf("%d %%d * * *", minutesOffset)    // hour
-	weekCron := fmt.Sprintf("%d %%d * * %%d", minutesOffset) // hour, weekday
+	daily := func(pacificHour int) string {
+		return fmt.Sprintf("%d %d * * *", minutesOffset, getUTCtime(pacificHour))
+	}
+	weekly := func(pacificHour, dayOfWeek int) string {
+		return fmt.Sprintf("%d %d * * %d", minutesOffset, getUTCtime(pacificHour), dayOfWeek)
+	}
 
 	var res string
 	switch jobType {
-	case "continuous", "custom-job", "auto-release": // Every hour
-		res = fmt.Sprintf(hourCron)
-	case "branch-ci": // Every day 1-2 PST
-		res = fmt.Sprintf(dayCron, getUTCtime(1))
-	case "nightly": // Every day 2-3 PST
-		res = fmt.Sprintf(dayCron, getUTCtime(2))
+	case "continuous", "custom-job", "auto-release": // As much as every hour
+		res = hourCron
+	case "branch-ci":
+		res = daily(1) // 1 AM
+	case "nightly":
+		res = daily(2) // 2 AM
 	case "dot-release":
 		if strings.HasSuffix(repoName, "-operator") {
-			// Every Tuesday 12-13 PST
-			res = fmt.Sprintf(weekCron, getUTCtime(12), 2)
+			// Every Tuesday noon
+			res = weekly(12, 2)
 		} else {
-			// Every Tuesday 2-3 PST
-			res = fmt.Sprintf(weekCron, getUTCtime(2), 2)
+			// Every Tuesday 2 AM
+			res = weekly(2, 2)
 		}
-	case "webhook-apicoverage": // Every day 2-3 PST
-		res = fmt.Sprintf(dayCron, getUTCtime(2))
+	case "webhook-apicoverage":
+		res = daily(2) // 2 AM
 	default:
 		log.Printf("job type not supported for cron generation '%s'", jobName)
 	}
 	return res
 }
 
-// generatePeriodic generates all periodic job configs for the given repo and configuration.
+// generatePeriodic generates periodic job configs for the given repo and configuration.
+// Normally it generates one job per call
+// But if it is continuous or branch-ci job, it generates a second job for beta testing of new prow-tests images
 func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlice) {
 	var data periodicJobTemplateData
 	data.Base = newbaseProwJobTemplateData(repoName)
@@ -108,7 +134,9 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	jobTemplate := readTemplate(periodicTestJob)
 	jobType := ""
 	isMonitoredJob := false
+	isContinuousJob := false
 
+	// Parse the input yaml and set values data based on them
 	for i, item := range periodicConfig {
 		switch item.Key {
 		case "continuous":
@@ -117,6 +145,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			}
 			jobType = getString(item.Key)
 			jobNameSuffix = "continuous"
+			isContinuousJob = true
 			isMonitoredJob = true
 			// Use default command and arguments if none given.
 			if data.Base.Command == "" {
@@ -142,6 +171,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			}
 			jobType = getString(item.Key)
 			jobNameSuffix = "continuous"
+			isContinuousJob = true
 			data.Base.Command = releaseScript
 			data.Base.Args = releaseLocal
 			setupDockerInDockerForJob(&data.Base)
@@ -213,6 +243,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	if jobType == "branch-ci" && data.Base.RepoBranch == "" {
 		log.Fatalf("%q jobs are intended to be used on release branches", jobType)
 	}
+
 	// Generate config itself.
 	data.PeriodicCommand = createCommand(data.Base)
 	if data.Base.ServiceAccount != "" {
@@ -226,7 +257,50 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	}
 	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 	configureServiceAccountForJob(&data.Base)
+
+	// This is where the data actually gets written out
 	executeJobTemplate("periodic", jobTemplate, title, repoName, data.PeriodicJobName, false, data)
+
+	// If job is a continuous run, add a duplicate for pre-release testing of new prow-tests image
+	// It will (mostly) run less often than source job
+	if isContinuousJob {
+		betaData := data.Clone()
+
+		// Change the name and image
+		betaData.PeriodicJobName += "-beta-prow-tests"
+		// TODO: remove stripSuffixFromImageName call once we stop using crap images
+		betaData.Base.Image = strings.ReplaceAll(stripSuffixFromImageName(betaData.Base.Image, []string{getGo113ID()}), ":stable", ":beta")
+
+		// Run 2 or 3 times a day because prow-tests beta testing has different desired interval than the underlying job
+		hours := []int{getUTCtime(1), getUTCtime(4)}
+		if jobType == "continuous" { // as opposed to branch-ci
+			// These jobs run 8-24 times per day, so it matters more if they break
+			// So test them slightly more often
+			hours = append(hours, getUTCtime(15))
+		}
+		var hoursStr []string
+		for _, h := range hours {
+			hoursStr = append(hoursStr, fmt.Sprint(h))
+		}
+		betaData.CronString = fmt.Sprintf("%d %s * * *",
+			calculateMinuteOffset(jobType, betaData.PeriodicJobName),
+			strings.Join(hoursStr, ","))
+
+		// Write out our duplicate job
+		executeJobTemplate("periodic", jobTemplate, title, repoName, betaData.PeriodicJobName, false, betaData)
+
+		// Setup TestGrid here?
+		// Each job becomes one of "test_groups"
+		// Then we want our own "dashboard" separate from others
+		// With each one of the jobs (aka "test_groups") in the single dashboard group
+		metaData.AddNonAlignedTest(NonAlignedTestGroup{
+			DashboardGroup: "prow-tests",
+			DashboardName:  "beta-prow-tests",
+			HumanTabName:   data.PeriodicJobName, // this is purposefully not betaData, so the display name is the original CI job name
+			CIJobName:      betaData.PeriodicJobName,
+			Extra:          nil,
+		})
+	}
 }
 
 // generateGoCoveragePeriodic generates the go coverage periodic job config for the given repo (configuration is ignored).

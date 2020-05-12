@@ -21,6 +21,7 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -133,13 +134,15 @@ type stringArrayFlag []string
 
 var (
 	// Values used in the jobs that can be changed through command-line flags.
+	// TODO: these should be CapsCase
+	// ... until they are not global
 	output                     *os.File
 	prowHost                   string
 	testGridHost               string
 	gubernatorHost             string
-	gcsBucket                  string
+	GCSBucket                  string
 	testGridGcsBucket          string
-	logsDir                    string
+	LogsDir                    string
 	presubmitLogsDir           string
 	testAccount                string
 	nightlyAccount             string
@@ -175,7 +178,7 @@ var (
 	// To be used to flag that outputConfig() emitted data.
 	emittedOutput bool
 
-	projNameRegex = regexp.MustCompile(`.+-[0-9\.]+$`)
+	releaseRegex = regexp.MustCompile(`.+-[0-9\.]+$`)
 )
 
 // Yaml parsing helpers.
@@ -416,11 +419,11 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.RepoName = strings.Replace(repo, data.OrgName+"/", "", 1)
 	data.RepoNameForJob = strings.ToLower(strings.Replace(repo, "/", "-", -1))
 	data.RepoBranch = "master" // Default to be master, will override later for other branches
-	data.GcsBucket = gcsBucket
+	data.GcsBucket = GCSBucket
 	data.RepoURI = "github.com/" + repo
 	data.CloneURI = fmt.Sprintf("\"https://%s.git\"", data.RepoURI)
-	data.GcsLogDir = fmt.Sprintf("gs://%s/%s", gcsBucket, logsDir)
-	data.GcsPresubmitLogDir = fmt.Sprintf("gs://%s/%s", gcsBucket, presubmitLogsDir)
+	data.GcsLogDir = fmt.Sprintf("gs://%s/%s", GCSBucket, LogsDir)
+	data.GcsPresubmitLogDir = fmt.Sprintf("gs://%s/%s", GCSBucket, presubmitLogsDir)
 	data.ReleaseGcs = strings.Replace(repo, data.OrgName+"/", "knative-releases/", 1)
 	data.AlwaysRun = true
 	data.Image = prowTestsDockerImage
@@ -628,10 +631,10 @@ func getProwConfigData(config yaml.MapSlice) prowConfigTemplateData {
 	data.ProwHost = prowHost
 	data.TestGridHost = testGridHost
 	data.GubernatorHost = gubernatorHost
-	data.GcsBucket = gcsBucket
+	data.GcsBucket = GCSBucket
 	data.TestGridGcsBucket = testGridGcsBucket
 	data.PresubmitLogsDir = presubmitLogsDir
-	data.LogsDir = logsDir
+	data.LogsDir = LogsDir
 	data.TideRepos = make([]string, 0)
 	// Repos enabled for tide are all those that have presubmit jobs.
 	for _, section := range config {
@@ -825,7 +828,7 @@ func recursiveSBL(repoName string, data interface{}, generateOneJob func(data in
 	sb.restore(base)
 }
 
-// executeJobTemplateWrapper takes in consideration of repo settings, decides how many varianats of the
+// executeJobTemplateWrapper takes in consideration of repo settings, decides how many variants of the
 // same job needs to be generated and generates them.
 func executeJobTemplateWrapper(repoName string, data interface{}, generateOneJob func(data interface{})) {
 	var sbs []specialBranchLogic
@@ -951,11 +954,12 @@ func collectMetaData(periodicJob yaml.MapSlice) {
 		rawName := getString(repo.Key)
 		projName := strings.Split(rawName, "/")[0]
 		repoName := strings.Split(rawName, "/")[1]
-		jobDetailMap := addProjAndRepoIfNeed(projName, repoName)
+		jobDetailMap := metaData.Get(projName)
+		metaData.EnsureRepo(projName, repoName)
 
 		// parse job configs
 		for _, conf := range getInterfaceArray(repo.Value) {
-			jobDetailMap = metaData[projName]
+			jobDetailMap = metaData.Get(projName)
 			jobConfig := getMapSlice(conf)
 			enabled := false
 			jobName := ""
@@ -986,45 +990,24 @@ func collectMetaData(periodicJob yaml.MapSlice) {
 				// if it's a job for a release branch
 				if releaseVersion != "" {
 					releaseProjName := fmt.Sprintf("%s-%s", projName, releaseVersion)
-					jobDetailMap = addProjAndRepoIfNeed(releaseProjName, repoName)
+
+					// TODO: Why do we assign?
+					jobDetailMap = metaData.Get(releaseProjName)
 				}
-				newJobTypes := append(jobDetailMap[repoName], jobName)
-				jobDetailMap[repoName] = newJobTypes
+				jobDetailMap.Add(repoName, jobName)
 			}
 		}
-		updateTestCoverageJobDataIfNeeded(&jobDetailMap, repoName)
+		updateTestCoverageJobDataIfNeeded(jobDetailMap, repoName)
 	}
 
 	// add test coverage jobs for the repos that haven't been handled
 	addRemainingTestCoverageJobs()
 }
 
-// addProjAndRepoIfNeed adds the project and repo if they are new in the metaData map, then return the jobDetailMap
-func addProjAndRepoIfNeed(projName string, repoName string) map[string][]string {
-	// add project in the metaData
-	if _, exists := metaData[projName]; !exists {
-		metaData[projName] = make(map[string][]string)
-		if !strExists(projNames, projName) {
-			projNames = append(projNames, projName)
-		}
-	}
-
-	// add repo in the project
-	jobDetailMap := metaData[projName]
-	if _, exists := jobDetailMap[repoName]; !exists {
-		if !strExists(repoNames, repoName) {
-			repoNames = append(repoNames, repoName)
-		}
-		jobDetailMap[repoName] = make([]string, 0)
-	}
-	return jobDetailMap
-}
-
 // updateTestCoverageJobDataIfNeeded adds test-coverage job data for the repo if it has go coverage check
-func updateTestCoverageJobDataIfNeeded(jobDetailMap *map[string][]string, repoName string) {
+func updateTestCoverageJobDataIfNeeded(jobDetailMap JobDetailMap, repoName string) {
 	if goCoverageMap[repoName] {
-		newJobTypes := append((*jobDetailMap)[repoName], "test-coverage")
-		(*jobDetailMap)[repoName] = newJobTypes
+		jobDetailMap.Add(repoName, "test-coverage")
 		// delete this repoName from the goCoverageMap to avoid it being processed again when we
 		// call the function addRemainingTestCoverageJobs
 		delete(goCoverageMap, repoName)
@@ -1036,8 +1019,8 @@ func addRemainingTestCoverageJobs() {
 	// handle repos that only have go coverage
 	for repoName, hasGoCoverage := range goCoverageMap {
 		if hasGoCoverage {
-			jobDetailMap := addProjAndRepoIfNeed(projNames[0], repoName)
-			jobDetailMap[repoName] = []string{"test-coverage"}
+			jobDetailMap := metaData.Get(metaData.projNames[0]) // TODO: WTF why projNames[0] !??!?!?!?
+			jobDetailMap.Add(repoName, "test-coverage")
 		}
 	}
 }
@@ -1060,7 +1043,7 @@ func buildProjRepoStr(projName string, repoName string) string {
 
 // isReleased returns true for project name that has version
 func isReleased(projName string) bool {
-	return projNameRegex.FindString(projName) != ""
+	return releaseRegex.FindString(projName) != ""
 }
 
 // setOutput set the given file as the output target, then all the output will be written to this file
@@ -1089,6 +1072,10 @@ func main() {
 	var generatePluginsConfig = flag.Bool("generate-plugins-config", true, "Whether to generate the plugins configuration file from the template")
 	var generateTestgridConfig = flag.Bool("generate-testgrid-config", true, "Whether to generate the testgrid config from the template file")
 	var generateMaintenanceJobs = flag.Bool("generate-maintenance-jobs", true, "Whether to generate the maintenance periodic jobs (e.g. backup)")
+	// TODO: remove these options and just generate everything
+	if !(*generateProwConfig && *generatePluginsConfig && *generateTestgridConfig && *generateMaintenanceJobs) {
+		panic(errors.New("Must enable all generators"))
+	}
 	var includeConfig = flag.Bool("include-config", true, "Whether to include general configuration (e.g., plank) in the generated config")
 	var dockerImagesBase = flag.String("image-docker", "gcr.io/knative-tests/test-infra", "Default registry for the docker images used by the jobs")
 	flag.StringVar(&prowConfigOutput, "prow-config-output", "", "The destination for the prow config output, default to be stdout")
@@ -1098,9 +1085,9 @@ func main() {
 	flag.StringVar(&prowHost, "prow-host", "https://prow.knative.dev", "Prow host, including HTTP protocol")
 	flag.StringVar(&testGridHost, "testgrid-host", "https://testgrid.knative.dev", "TestGrid host, including HTTP protocol")
 	flag.StringVar(&gubernatorHost, "gubernator-host", "https://gubernator.knative.dev", "Gubernator host, including HTTP protocol")
-	flag.StringVar(&gcsBucket, "gcs-bucket", "knative-prow", "GCS bucket to upload the logs to")
+	flag.StringVar(&GCSBucket, "gcs-bucket", "knative-prow", "GCS bucket to upload the logs to")
 	flag.StringVar(&testGridGcsBucket, "testgrid-gcs-bucket", "knative-testgrid", "TestGrid GCS bucket")
-	flag.StringVar(&logsDir, "logs-dir", "logs", "Path in the GCS bucket to upload logs of periodic and post-submit jobs")
+	flag.StringVar(&LogsDir, "logs-dir", "logs", "Path in the GCS bucket to upload logs of periodic and post-submit jobs")
 	flag.StringVar(&presubmitLogsDir, "presubmit-logs-dir", "pr-logs", "Path in the GCS bucket to upload logs of pre-submit jobs")
 	flag.StringVar(&testAccount, "test-account", "/etc/test-account/service-account.json", "Path to the service account JSON for test jobs")
 	flag.StringVar(&nightlyAccount, "nightly-account", "/etc/nightly-account/service-account.json", "Path to the service account JSON for nightly release jobs")
@@ -1196,9 +1183,19 @@ func main() {
 		periodicJobData := parseJob(config, "periodics")
 		collectMetaData(periodicJobData)
 
-		generateTestGridSection("test_groups", generateTestGroup, false)
-		generateTestGridSection("dashboards", generateDashboard, true)
-		generateDashboardsForReleases()
-		generateDashboardGroups()
+		// log.Print(spew.Sdump(metaData))
+
+		// These generate "test_groups:"
+		metaData.generateTestGridSection("test_groups", metaData.generateTestGroup, false)
+		metaData.generateNonAlignedTestGroups()
+
+		// These generate "dashboards:"
+		metaData.generateTestGridSection("dashboards", generateDashboard, true)
+		metaData.generateDashboardsForReleases()
+		metaData.generateNonAlignedDashboards()
+
+		// These generate "dashboard_groups:"
+		metaData.generateDashboardGroups()
+		metaData.generateNonAlignedDashboardGroups()
 	}
 }

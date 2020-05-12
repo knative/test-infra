@@ -40,6 +40,10 @@ type presubmitJobTemplateData struct {
 }
 
 // generatePresubmit generates all presubmit job configs for the given repo and configuration.
+// While this function is designed to only make one "logical" presubmit, it does generate multiple separate jobs when different branches need different settings
+//  i.e. it creates all jobs pull-knative-serving-build-tests per single invocation
+// For coverage jobs, it also generates a matching postsubmit for each presubmit (because the coverage tool itself requires it? because we like them?)
+// It outputs straight to standard out
 func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSlice) {
 	var data presubmitJobTemplateData
 	data.Base = newbaseProwJobTemplateData(repoName)
@@ -102,11 +106,15 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 	configureServiceAccountForJob(&data.Base)
 	jobName := data.PresubmitPullJobName
+
+	// This is where the data actually gets written out
 	executeJobTemplateWrapper(repoName, &data, func(data interface{}) {
 		executeJobTemplate("presubmit", jobTemplate, title, repoName, jobName, true, data)
 	})
+
 	// Generate config for pull-knative-serving-go-coverage-dev right after pull-knative-serving-go-coverage,
 	// this job is mainly for debugging purpose.
+	// TODO: make this a static job in config/prod/prow/jobs/custom_jobs.yaml so the generator can be simplified
 	if data.PresubmitPullJobName == "pull-knative-serving-go-coverage" {
 		data.PresubmitPullJobName += "-dev"
 		data.Base.AlwaysRun = false
