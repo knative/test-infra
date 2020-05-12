@@ -197,9 +197,6 @@ test_groups:
 - name: ci-knative-caching-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-caching-go-coverage
   short_text_metric: "coverage"
-- name: ci-knative-observability-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-observability-continuous
-  alert_stale_results_hours: 3
 - name: ci-knative-sample-controller-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sample-controller-continuous
   alert_stale_results_hours: 3
@@ -881,14 +878,6 @@ dashboards:
   - name: coverage
     test_group_name: ci-knative-caching-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: observability
-  dashboard_tab:
-  - name: continuous
-    test_group_name: ci-knative-observability-continuous
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "prime-engprod-sea@google.com"
-    num_failures_to_alert: 3
 - name: sample-controller
   dashboard_tab:
   - name: continuous
@@ -1510,7 +1499,6 @@ dashboard_groups:
   - "eventing-contrib"
   - "pkg"
   - "caching"
-  - "observability"
   - "sample-controller"
   - "sample-source"
   - "test-infra"

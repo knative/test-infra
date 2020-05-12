@@ -31,7 +31,6 @@ approve:
   - "knative/net-http01"
   - "knative/net-istio"
   - "knative/net-kourier"
-  - "knative/observability"
   - "knative/pkg"
   - "knative/sample-controller"
   - "knative/sample-source"
@@ -519,31 +518,6 @@ plugins:
   - welcome
   - wip
   - yuks
-  knative/observability:
-  - approve
-  - assign
-  - blunderbuss
-  - buildifier
-  - cat
-  - dog
-  - golint
-  - heart
-  - help
-  - hold
-  - label
-  - lgtm
-  - lifecycle
-  - milestone
-  - owners-label
-  - project
-  - shrug
-  - size
-  - skip
-  - trigger
-  - verify-owners
-  - welcome
-  - wip
-  - yuks
   knative/pkg:
   - approve
   - assign
@@ -801,11 +775,6 @@ external_plugins:
       - issue_comment
       - pull_request
   knative/net-kourier:
-  - name: needs-rebase
-    events:
-      - issue_comment
-      - pull_request
-  knative/observability:
   - name: needs-rebase
     events:
       - issue_comment

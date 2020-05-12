@@ -264,11 +264,6 @@ presubmits:
     - go-coverage: true
       dot-dev: true
 
-  knative/observability:
-    - build-tests: true
-    - unit-tests: true
-    - integration-tests: true
-
   knative/sample-controller:
     - build-tests: true
       dot-dev: true
@@ -841,11 +836,6 @@ periodics:
       go114: true
 
   knative/caching:
-    - continuous: true
-      dot-dev: true
-      go114: true
-
-  knative/observability:
     - continuous: true
       dot-dev: true
       go114: true
