@@ -38,7 +38,7 @@ spec:
         - --config-path=/etc/config/config.yaml
         - --job-config-path=/etc/job-config
         - --github-token-path=/etc/github/oauth
-        - --github-workers=5
+        - --github-workers=1
         - --github-endpoint=http://ghproxy
         - --github-endpoint=https://api.github.com
         volumeMounts:
