@@ -29,13 +29,12 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
       - name: crier
-        image: gcr.io/k8s-prow/crier:v20200414-8099fb49a
+        image: gcr.io/k8s-prow/crier:v20200430-fdbbc1f61
         args:
         - --pubsub-workers=5 # Arbitrary number of multiplier
         - --gcs-workers=1
         - --gcs-credentials-file=/etc/service-account/service-account.json # TODO(chizhg): use workload identity
         - --kubernetes-gcs-workers=1
-        - --report-agent=knative-build
         - --config-path=/etc/config/config.yaml
         - --job-config-path=/etc/job-config
         - --github-workers=5
