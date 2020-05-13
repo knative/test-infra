@@ -269,7 +269,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		// Change the name and image
 		betaData.PeriodicJobName += "-beta-prow-tests"
 		// TODO: remove stripSuffixFromImageName call once we stop using crap images
-		betaData.Base.Image = strings.ReplaceAll(stripSuffixFromImageName(betaData.Base.Image, []string{getGo113ID()}), ":stable", ":beta")
+		betaData.Base.Image = strings.ReplaceAll(stripSuffixFromImageName(betaData.Base.Image, []string{getGo113ID(), getGo114ID()}), ":stable", ":beta")
 
 		// Run 2 or 3 times a day because prow-tests beta testing has different desired interval than the underlying job
 		hours := []int{getUTCtime(1), getUTCtime(4)}
