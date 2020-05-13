@@ -48,11 +48,12 @@ RUN gem install mdl -v 0.5  # required because later version of mdl requires rub
 # Install go 1.12, 1.13, and 1.14 using https://github.com/moovweb/gvm
 # To use this, in Prow jobs set env var GO_VERSION="go1.14" (or go1.13, go1.12, etc)
 # You can use e.g. "go1.14" even if we install a specific version here like "go1.14.2"
-# (Obviously the version of Go must be installed on the image to be available -- we don't want to be downloading and installing it over and over again)
+# (Obviously the version of Go must be installed on the image to be available -- we don't want to be downloading and installing it on every test iteration)
 # Missing prerequisite:
 RUN apt-get install -y bison
+# GVM_NO_UPDATE_PROFILE=true means do not alter /root/.bashrc to automatically source gvm config, so when not using runner.sh, image works normally
 # Install the tool:
-RUN curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer | bash
+RUN curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer | GVM_NO_UPDATE_PROFILE=true bash
 # gvm requires one to "source /root/.gvm/scripts/gvm" after installing
 #  but in Dockerfile, each RUN is its own shell, so source'd in-RUN env vars are not propagated
 # So have created "my-gvm.sh" to source the above then run gvm

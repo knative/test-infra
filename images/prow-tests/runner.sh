@@ -18,6 +18,17 @@ source "${HOME}/.gvm/scripts/gvm"
 
 if [[ -v GO_VERSION ]]; then
   gvm use "${GO_VERSION}"
+  # Get our original Go directory back into GOPATH
+  pushd /go
+  gvm pkgset create --local || echo
+  gvm pkgset use --local
+  popd
+  # At this point, our GOPATH is set to something like:
+  #  GOPATH=/go:/go/.gvm_local/pkgsets/go1.13.10/local:/root/.gvm/pkgsets/go1.13.10/global
+  # Which is fine for Go, but some scripts assume GOPATH is a single directory :(
+  # Lets hope this doesn't blow up in our face someday
+  echo "Overriding GOPATH to '/go'"
+  export GOPATH=/go
 fi
 
 kubekins-runner.sh "$@"
