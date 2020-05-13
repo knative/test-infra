@@ -1,0 +1,77 @@
+# Copyright 2020 The Knative Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Peribolos is a tool implemented by k8s sig-testing.
+# It allows the org settings, teams and memberships to be declared in a yaml file, and get GitHub updated to match the declared configuration.
+
+postsubmits:
+  knative/community:
+  # Run on the Prow deployment cluster as it needs access to the github oauth token.
+  - name: post-knative-sandbox-peribolos
+    agent: kubernetes
+    decorate: true
+    max_concurrency: 1
+    run_if_changed: "^peribolos/knative-sandbox.yaml$"
+    spec:
+      containers:
+      - image: gcr.io/k8s-prow/peribolos:v20200512-5bf6c1ac3
+        command:
+        - "/peribolos"
+        args:
+        - "--config-path=peribolos/knative-sandbox.yaml"
+        - "--github-endpoint=http://ghproxy"
+        - "--github-endpoint=https://api.github.com"
+        - "--github-token-path=/etc/github/oauth"
+        - "--fix-org=true"
+        - "--fix-org-members=true"
+        - "--confirm=true"
+        volumeMounts:
+        - name: oauth
+          mountPath: /etc/github
+          readOnly: true
+      volumes:
+      - name: oauth
+        secret:
+          secretName: oauth-token
+
+periodics:
+- interval: 24h
+  name: ci-knative-sandbox-peribolos
+  decorate: true
+  max_concurrency: 1
+  extra_refs:
+  - org: knative
+    repo: community
+    base_ref: master
+  spec:
+    containers:
+    - image: gcr.io/k8s-prow/peribolos:v20200512-5bf6c1ac3
+      command:
+      - "/peribolos"
+      args:
+      - "--config-path=peribolos/knative-sandbox.yaml"
+      - "--github-endpoint=http://ghproxy"
+      - "--github-endpoint=https://api.github.com"
+      - "--github-token-path=/etc/github/oauth"
+      - "--fix-org=true"
+      - "--fix-org-members=true"
+      - "--confirm=true"
+      volumeMounts:
+      - name: oauth
+        mountPath: /etc/github
+        readOnly: true
+    volumes:
+    - name: oauth
+      secret:
+        secretName: oauth-token
