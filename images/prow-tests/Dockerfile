@@ -61,8 +61,6 @@ COPY images/prow-tests/my-gvm.sh /usr/local/bin
 RUN my-gvm.sh install go1.12.17 --prefer-binary
 RUN my-gvm.sh install go1.13.10 --prefer-binary
 RUN my-gvm.sh install go1.14.2 --prefer-binary
-# Cleanup
-RUN rm -f /usr/local/bin/my-gvm.sh
 
 # Extra tools through go get
 # These run using the kubekins version of Go, not any defined by `gvm`
@@ -100,7 +98,12 @@ COPY . /go/src/knative.dev/test-infra
 RUN go install /go/src/knative.dev/test-infra/tools/githubhelper
 # Because githubhelper was previously installed in a stupid way, it was used as `/workspace/githubhelper` so copy it
 RUN cp "$(which githubhelper)" .
+
 # RUN go install knative.dev/test-infra/kntest/cmd/kntest # Uncomment when you wish to have kntest installed
 
-# Remove test-infra from the container
+# reset --hard doesn't care about dirty working copy
+RUN cd /go/src/knative.dev/test-infra && git reset --hard upstream/release-0.14 && go install knative.dev/test-infra/tools/dep-collector
+
+# Cleanup
 RUN rm -fr /go/src/knative.dev/test-infra
+RUN rm -f /usr/local/bin/my-gvm.sh
