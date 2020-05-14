@@ -6897,7 +6897,7 @@ periodics:
     path_alias: knative.dev/serving
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:beta
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -8053,7 +8053,7 @@ periodics:
     path_alias: knative.dev/client
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:beta
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -8839,7 +8839,7 @@ periodics:
     path_alias: knative.dev/client-contrib
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:beta
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -9028,7 +9028,7 @@ periodics:
     path_alias: knative.dev/eventing
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:beta
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -9821,7 +9821,7 @@ periodics:
     path_alias: knative.dev/eventing-contrib
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:beta
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -10609,7 +10609,7 @@ periodics:
     path_alias: knative.dev/pkg
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:beta
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -10708,7 +10708,7 @@ periodics:
     path_alias: knative.dev/caching
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:beta
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -10807,7 +10807,7 @@ periodics:
     path_alias: knative.dev/sample-controller
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:beta
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -10883,7 +10883,7 @@ periodics:
     path_alias: knative.dev/sample-source
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:beta
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -10959,7 +10959,7 @@ periodics:
     path_alias: knative.dev/test-infra
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:beta
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -11058,7 +11058,7 @@ periodics:
     path_alias: knative.dev/serving-operator
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:beta
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -11811,7 +11811,7 @@ periodics:
     path_alias: knative.dev/eventing-operator
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:beta
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -12562,7 +12562,7 @@ periodics:
     base_ref: master
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:beta
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -13169,7 +13169,7 @@ periodics:
     path_alias: knative.dev/net-certmanager
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:beta
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -13401,7 +13401,7 @@ periodics:
     path_alias: knative.dev/net-contour
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:beta
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -13633,7 +13633,7 @@ periodics:
     path_alias: knative.dev/net-http01
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:beta
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -13865,7 +13865,7 @@ periodics:
     path_alias: knative.dev/net-istio
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:beta
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -14097,7 +14097,7 @@ periodics:
     path_alias: knative.dev/net-kourier
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:beta
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -14329,7 +14329,7 @@ periodics:
     path_alias: knative.dev/operator
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:beta
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
       - runner.sh
@@ -14573,7 +14573,7 @@ periodics:
     path_alias: knative.dev/eventing-kafka
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:beta
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
       - runner.sh
