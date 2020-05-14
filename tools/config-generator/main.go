@@ -543,7 +543,7 @@ func setResourcesReqForJob(res yaml.MapSlice, data *baseProwJobTemplateData) {
 // parseBasicJobConfigOverrides updates the given baseProwJobTemplateData with any base option present in the given config.
 func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.MapSlice) {
 	(*data).ExtraRefs = append((*data).ExtraRefs, "  base_ref: "+(*data).RepoBranch)
-	var needDotdev, needGo113, needGo114 bool
+	var needDotdev, needGo114 bool
 	for i, item := range config {
 		switch item.Key {
 		case "skip_branches":
@@ -610,9 +610,6 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 	if needDotdev {
 		(*data).PathAlias = "path_alias: knative.dev/" + (*data).RepoName
 		(*data).ExtraRefs = append((*data).ExtraRefs, "  "+(*data).PathAlias)
-	}
-	if needGo113 {
-		data.addEnvToJob("GO_VERSION", "go1.13")
 	}
 	if needGo114 {
 		data.addEnvToJob("GO_VERSION", "go1.14")
