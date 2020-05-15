@@ -340,6 +340,8 @@ rules:
     verbs:
       - create
       - get
+      - list
+      - update
   - apiGroups:
       - ""
     resources:
