@@ -3725,6 +3725,10 @@ presubmits:
           secretName: test-account
   - name: pull-google-knative-gcp-integration-tests
     agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-google-knative-gcp-integration-tests
     context: pull-google-knative-gcp-integration-tests
     always_run: true
     rerun_command: "/test pull-google-knative-gcp-integration-tests"
@@ -3767,6 +3771,10 @@ presubmits:
           secretName: test-account
   - name: pull-google-knative-gcp-integration-tests
     agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-google-knative-gcp-integration-tests
     context: pull-google-knative-gcp-integration-tests
     always_run: true
     rerun_command: "/test pull-google-knative-gcp-integration-tests"
@@ -3809,6 +3817,10 @@ presubmits:
           secretName: test-account
   - name: pull-google-knative-gcp-wi-tests
     agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-google-knative-gcp-wi-tests
     context: pull-google-knative-gcp-wi-tests
     always_run: true
     rerun_command: "/test pull-google-knative-gcp-wi-tests"
@@ -3845,6 +3857,10 @@ presubmits:
           secretName: test-account
   - name: pull-google-knative-gcp-wi-tests
     agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-google-knative-gcp-wi-tests
     context: pull-google-knative-gcp-wi-tests
     always_run: true
     rerun_command: "/test pull-google-knative-gcp-wi-tests"
