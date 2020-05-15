@@ -287,10 +287,12 @@ presubmits:
     - build-tests: true
     - unit-tests: true
     - integration-tests: true
+      needs-monitor: true
       args:
       - "--run-test"
       - "./test/e2e-tests.sh"
     - custom-test: wi-tests
+      needs-monitor: true
       args:
       - "--run-test"
       - "./test/e2e-wi-tests.sh"
