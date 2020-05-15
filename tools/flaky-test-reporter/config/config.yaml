@@ -87,3 +87,7 @@ jobConfigs:
   - name: ci-knative-test-infra-continuous
     repo: test-infra
     type: postsubmit
+  - name: ci-google-knative-gcp-continuous
+    org: google
+    repo: knative-gcp
+    type: postsubmit

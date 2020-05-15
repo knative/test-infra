@@ -19,7 +19,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"path"
 	"regexp"
 	"sort"
 	"strings"
@@ -124,20 +123,20 @@ type GithubIssueHandler struct {
 func Setup(githubToken string) (*GithubIssueHandler, error) {
 	ghc, err := ghutil.NewGithubClient(githubToken)
 	if err != nil {
-		return nil, fmt.Errorf("Cannot authenticate to github: %v", err)
+		return nil, fmt.Errorf("cannot authenticate to github: %v", err)
 	}
 
 	ghUser, err := ghc.GetGithubUser()
 	if err != nil {
-		return nil, fmt.Errorf("Cannot get username: %v", err)
+		return nil, fmt.Errorf("cannot get username: %v", err)
 	}
 	return &GithubIssueHandler{user: ghUser, client: ghc}, nil
 }
 
 // The Repo field of an github Issue could be empty, use URL is more reliable
-func getRepoFromIssue(issue *github.Issue) string {
-	_, repo := path.Split(*(issue.RepositoryURL))
-	return repo
+func getOrgRepoFromIssue(issue *github.Issue) (string, string) {
+	arr := strings.Split(*(issue.RepositoryURL), "/")
+	return arr[len(arr)-2], arr[len(arr)-1]
 }
 
 // createCommentForTest summarizes latest status of current test case,
@@ -213,6 +212,7 @@ func (gih *GithubIssueHandler) createHistoryUnicode(rd RepoData, comment, testFu
 // reopens the issue if test becomes flaky while issue is closed.
 func (gih *GithubIssueHandler) updateIssue(fi flakyIssue, newComment string, ts *TestStat, dryrun bool) error {
 	issue := fi.issue
+	org, repo := getOrgRepoFromIssue(issue)
 	passedLastTime := false
 	latestStatus := reLatestStatusRegex.FindStringSubmatch(fi.comment.GetBody())
 	if len(latestStatus) >= 2 {
@@ -231,7 +231,7 @@ func (gih *GithubIssueHandler) updateIssue(fi flakyIssue, newComment string, ts 
 		if err := helpers.Run(
 			"updating comment",
 			func() error {
-				return gih.client.EditComment(org, getRepoFromIssue(issue), *fi.comment.ID, newComment)
+				return gih.client.EditComment(org, repo, *fi.comment.ID, newComment)
 			},
 			dryrun); err != nil {
 			return fmt.Errorf("failed updating comments for issue '%s': '%v'", *issue.URL, err)
@@ -243,10 +243,10 @@ func (gih *GithubIssueHandler) updateIssue(fi flakyIssue, newComment string, ts 
 			if err := helpers.Run(
 				"closing issue",
 				func() error {
-					closeErr := gih.client.CloseIssue(org, getRepoFromIssue(issue), *issue.Number)
+					closeErr := gih.client.CloseIssue(org, repo, *issue.Number)
 					if closeErr == nil {
 						closeComment := "Closing issue: this test has passed in latest 2 scans"
-						_, closeErr = gih.client.CreateComment(org, getRepoFromIssue(issue), *issue.Number, closeComment)
+						_, closeErr = gih.client.CreateComment(org, repo, *issue.Number, closeComment)
 					}
 					return closeErr
 				},
@@ -259,10 +259,10 @@ func (gih *GithubIssueHandler) updateIssue(fi flakyIssue, newComment string, ts 
 			if err := helpers.Run(
 				"reopening issue",
 				func() error {
-					openErr := gih.client.ReopenIssue(org, getRepoFromIssue(issue), *issue.Number)
+					openErr := gih.client.ReopenIssue(org, repo, *issue.Number)
 					if openErr == nil {
 						openComment := "Reopening issue: this test is flaky"
-						_, openErr = gih.client.CreateComment(org, getRepoFromIssue(issue), *issue.Number, openComment)
+						_, openErr = gih.client.CreateComment(org, repo, *issue.Number, openComment)
 					}
 					return openErr
 				},
@@ -335,7 +335,8 @@ func (gih *GithubIssueHandler) createNewIssue(org, repoForIssue, title, body, co
 // if multiple comments were found return the earliest one.
 func (gih *GithubIssueHandler) findExistingComment(issue *github.Issue, issueIdentity string) (*github.IssueComment, error) {
 	var targetComment *github.IssueComment
-	comments, err := gih.client.ListComments(org, getRepoFromIssue(issue), *issue.Number)
+	org, repo := getOrgRepoFromIssue(issue)
+	comments, err := gih.client.ListComments(org, repo, *issue.Number)
 	if err != nil {
 		return nil, err
 	}
@@ -396,14 +397,10 @@ func (gih *GithubIssueHandler) githubToFlakyIssue(issue *github.Issue, dryrun bo
 // also fail if auto comment not found.
 // In most cases there is only 1 issue for each testName, if multiple issues found open for same test,
 // most likely it's caused by old issues being reopened manually, in this case update both issues.
-func (gih *GithubIssueHandler) getFlakyIssues() (map[string][]flakyIssue, error) {
+func (gih *GithubIssueHandler) getFlakyIssues(repoDataAll []RepoData) (map[string][]flakyIssue, error) {
 	issuesMap := make(map[string][]flakyIssue)
-	reposForIssue, err := gih.client.ListRepos(org)
-	if err != nil {
-		return nil, err
-	}
-	for _, repoForIssue := range reposForIssue {
-		issues, err := gih.client.ListIssuesByRepo(org, repoForIssue, []string{flakyLabel})
+	for _, rd := range repoDataAll {
+		issues, err := gih.client.ListIssuesByRepo(rd.Config.Org, rd.Config.IssueRepo, []string{flakyLabel})
 		if err != nil {
 			return nil, err
 		}
@@ -416,36 +413,36 @@ func (gih *GithubIssueHandler) getFlakyIssues() (map[string][]flakyIssue, error)
 				issuesMap[fi.identity] = append(issuesMap[fi.identity], *fi)
 			}
 		}
-	}
-	// Handle test with multiple issues associated
-	// if all open: update all of them
-	// if all closed: only keep latest one
-	// otherwise(these may have been closed manually): remove closed ones from map
-	for k, v := range issuesMap {
-		var hasOpen, hasClosed bool
-		for _, fi := range v {
-			switch fi.issue.GetState() {
-			case string(ghutil.IssueOpenState):
-				hasOpen = true
-			case string(ghutil.IssueCloseState):
-				hasClosed = true
-			}
-		}
-		if hasOpen && hasClosed {
-			for i, fi := range v {
-				if string(ghutil.IssueCloseState) == fi.issue.GetState() {
-					issuesMap[k] = append(issuesMap[k][:i], issuesMap[k][i+1:]...)
+		// Handle test with multiple issues associated
+		// if all open: update all of them
+		// if all closed: only keep latest one
+		// otherwise(these may have been closed manually): remove closed ones from map
+		for k, v := range issuesMap {
+			var hasOpen, hasClosed bool
+			for _, fi := range v {
+				switch fi.issue.GetState() {
+				case string(ghutil.IssueOpenState):
+					hasOpen = true
+				case string(ghutil.IssueCloseState):
+					hasClosed = true
 				}
 			}
-		} else if !hasOpen {
-			sort.Slice(issuesMap[k], func(i, j int) bool {
-				return issuesMap[k][i].issue.CreatedAt != nil &&
-					(issuesMap[k][j].issue.CreatedAt == nil || issuesMap[k][i].issue.CreatedAt.Before(*issuesMap[k][j].issue.CreatedAt))
-			})
-			issuesMap[k] = []flakyIssue{issuesMap[k][0]}
+			if hasOpen && hasClosed {
+				for i, fi := range v {
+					if string(ghutil.IssueCloseState) == fi.issue.GetState() {
+						issuesMap[k] = append(issuesMap[k][:i], issuesMap[k][i+1:]...)
+					}
+				}
+			} else if !hasOpen {
+				sort.Slice(issuesMap[k], func(i, j int) bool {
+					return issuesMap[k][i].issue.CreatedAt != nil &&
+						(issuesMap[k][j].issue.CreatedAt == nil || issuesMap[k][i].issue.CreatedAt.Before(*issuesMap[k][j].issue.CreatedAt))
+				})
+				issuesMap[k] = []flakyIssue{issuesMap[k][0]}
+			}
 		}
 	}
-	return issuesMap, err
+	return issuesMap, nil
 }
 
 // processGithubIssuesForRepo reads RepoData and existing issues, and create/close/reopen/comment on issues.
@@ -472,7 +469,7 @@ func (gih *GithubIssueHandler) processGithubIssuesForRepo(rd RepoData, flakyIssu
 		message := fmt.Sprintf("Creating issue '%s' in repo '%s'", identity, rd.Config.IssueRepo)
 		log.Println(message)
 		issue, err := gih.createNewIssue(
-			org,
+			rd.Config.Org,
 			rd.Config.IssueRepo,
 			fmt.Sprintf("[flaky] %s", identity),
 			fmt.Sprintf(issueBodyTemplate, identity, rd.Config.Repo, testId),
@@ -526,7 +523,7 @@ func (gih *GithubIssueHandler) processGithubIssuesForRepo(rd RepoData, flakyIssu
 			log.Println(message)
 			messages = append(messages, message)
 			if issue, err := gih.createNewIssue(
-				org,
+				rd.Config.Org,
 				rd.Config.IssueRepo,
 				fmt.Sprintf("[flaky] %s", testFullName),
 				fmt.Sprintf(issueBodyTemplate, testFullName, rd.Config.Repo, fmt.Sprintf(testIdentifierPattern, identity)),
@@ -548,9 +545,7 @@ func (gih *GithubIssueHandler) processGithubIssuesForRepo(rd RepoData, flakyIssu
 
 // analyze all results, figure out flaky tests and processing existing auto:flaky issues
 func (gih *GithubIssueHandler) processGithubIssues(repoDataAll []RepoData, dryrun bool) (map[string][]flakyIssue, error) {
-	// Collect all flaky test issues from all knative repos, in case issues are moved around
-	// Fail this job if data collection failed
-	flakyGHIssuesMap, err := gih.getFlakyIssues()
+	flakyGHIssuesMap, err := gih.getFlakyIssues(repoDataAll)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}

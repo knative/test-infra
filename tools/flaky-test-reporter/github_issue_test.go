@@ -132,10 +132,10 @@ func TestCreateIssue(t *testing.T) {
 func TestExistingIssue(t *testing.T) {
 	fgih := getFakeGithubIssueHandler()
 	repoData := createRepoData(200, 2, 0, 0, fakeRepo, int64(0))
-	flakyIssuesMap, _ := fgih.getFlakyIssues()
+	flakyIssuesMap, _ := fgih.getFlakyIssues([]RepoData{repoData})
 	fgih.processGithubIssuesForRepo(repoData, flakyIssuesMap, dryrun)
 	existIssues, _ := fgih.client.ListIssuesByRepo(fakeOrg, fakeRepo, []string{})
-	flakyIssuesMap, _ = fgih.getFlakyIssues()
+	flakyIssuesMap, _ = fgih.getFlakyIssues([]RepoData{repoData})
 
 	*repoData.LastBuildStartTime++
 	fgih.processGithubIssuesForRepo(repoData, flakyIssuesMap, dryrun)
