@@ -56,9 +56,7 @@ function run() {
     git read-tree --prefix=scripts/test-infra -u "test-infra/${SCRIPTS_BRANCH}:scripts"
     echo "test-infra scripts installed to scripts/test-infra from branch ${SCRIPTS_BRANCH}"
   else
-    local REPO_ROOT="$(dirname "${BASH_SOURCE[0]}")/../.."
-
-    pushd "${REPO_ROOT}"
+    pushd "$(dirname "${BASH_SOURCE[0]}")/../.."
     trap popd EXIT
 
     git remote add test-infra https://github.com/knative/test-infra.git || true
