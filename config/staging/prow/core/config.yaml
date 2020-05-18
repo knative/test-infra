@@ -130,7 +130,7 @@ tide:
     - do-not-merge/invalid-owners-file
     - needs-rebase
   - repos:
-    # Allow PRs for test-infra to be automatically merged without manual approval.
+    # Allow PRs for test-infra to be automatically merged without manual approval
     - "knative-prow-robot/test-infra"
     labels:
     - "cla: yes"
