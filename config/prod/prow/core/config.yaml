@@ -82,6 +82,8 @@ deck:
           # Code is outdated
           # TODO(chizhg): this error message should be defined by the common test infrastructure
           - 'Please run .*hack/update-codegen.sh'
+          # Metrics are logged only for Pods in a failed test.
+          - 'Metrics logs'
       required_files:
       - build-log.txt
     - lens:
