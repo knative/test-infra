@@ -60,8 +60,6 @@ func init() {
 		// get current file dir and try to resolve it with Abs path
 		dir, _ := filepath.Abs(filepath.Dir(os.Args[0]))
 		contents, err = ioutil.ReadFile(filepath.Join(dir, configFile))
-		log.Printf("Printing raw content of config file: %q", filepath.Join(dir, configFile))
-		log.Print(string(contents))
 	}
 	if err != nil {
 		log.Printf("Failed to load the config file: %v", err)
@@ -74,5 +72,4 @@ func init() {
 	} else {
 		JobConfigs = config.JobConfigs
 	}
-	log.Printf("%+v", JobConfigs)
 }

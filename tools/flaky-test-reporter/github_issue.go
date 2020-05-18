@@ -400,6 +400,11 @@ func (gih *GithubIssueHandler) githubToFlakyIssue(issue *github.Issue, dryrun bo
 func (gih *GithubIssueHandler) getFlakyIssues(repoDataAll []RepoData) (map[string][]flakyIssue, error) {
 	issuesMap := make(map[string][]flakyIssue)
 	for _, rd := range repoDataAll {
+		// No need to fetch issues when a repo doesn't need tracking issues
+		if rd.Config.IssueRepo == "" {
+			continue
+		}
+		log.Printf("Listing issues with org %q and repo %q", rd.Config.Org, rd.Config.IssueRepo)
 		issues, err := gih.client.ListIssuesByRepo(rd.Config.Org, rd.Config.IssueRepo, []string{flakyLabel})
 		if err != nil {
 			return nil, err
@@ -561,7 +566,9 @@ func (gih *GithubIssueHandler) processGithubIssues(repoDataAll []RepoData, dryru
 			messagesMap[rd.Config.Repo] = make(map[string][]string)
 		}
 		messagesMap[rd.Config.Repo][rd.Config.Name] = messages
-		flakyGHIssuesMap[rd.Config.Repo] = append(flakyGHIssuesMap[rd.Config.Repo], issues...)
+		if len(issues) > 0 {
+			flakyGHIssuesMap[rd.Config.Repo] = append(flakyGHIssuesMap[rd.Config.Repo], issues...)
+		}
 
 		if err != nil {
 			if _, ok := errMap[rd.Config.Repo]; !ok {

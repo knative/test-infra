@@ -99,7 +99,6 @@ func main() {
 	if *skipReport {
 		log.Printf("--skip-report provided, skipping Github and Slack report")
 	} else {
-		log.Printf("%+v", repoDataAll)
 		flakyIssues, ghErr = githubOperations(*githubAccount, repoDataAll, *dryrun)
 		slackErr = slackOperations(*slackAccount, repoDataAll, flakyIssues, *dryrun)
 	}
