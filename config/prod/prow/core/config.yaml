@@ -19,7 +19,8 @@
 # #######################################################################
 plank:
   job_url_template: 'https://prow.knative.dev/view/gcs/knative-prow/{{if or (eq .Spec.Type "presubmit") (eq .Spec.Type "batch")}}pr-logs/pull{{with .Spec.Refs}}/{{.Org}}_{{.Repo}}{{end}}{{else}}logs{{end}}{{if eq .Spec.Type "presubmit"}}/{{with index .Spec.Refs.Pulls 0}}{{.Number}}{{end}}{{else if eq .Spec.Type "batch"}}/batch{{end}}/{{.Spec.Job}}/{{.Status.BuildID}}/'
-  report_template: '[Full PR test history](https://gubernator.knative.dev/pr/{{.Spec.Refs.Org}}_{{.Spec.Refs.Repo}}/{{with index .Spec.Refs.Pulls 0}}{{.Number}}{{end}}). [Your PR dashboard](https://gubernator.knative.dev/pr/{{with index .Spec.Refs.Pulls 0}}{{.Author}}{{end}}).'
+  report_templates:
+    '*': '[Full PR test history](https://gubernator.knative.dev/pr/{{.Spec.Refs.Org}}_{{.Spec.Refs.Repo}}/{{with index .Spec.Refs.Pulls 0}}{{.Number}}{{end}}). [Your PR dashboard](https://gubernator.knative.dev/pr/{{with index .Spec.Refs.Pulls 0}}{{.Author}}{{end}}).'
   job_url_prefix_config:
     '*': https://prow.knative.dev/view/gcs/
   pod_pending_timeout: 60m
@@ -29,10 +30,10 @@ plank:
       grace_period: 15s
       utility_images:
         # Update these versions when updating plank version in cluster.yaml
-        clonerefs: "gcr.io/k8s-prow/clonerefs:v20200430-fdbbc1f61"
-        initupload: "gcr.io/k8s-prow/initupload:v20200430-fdbbc1f61"
-        entrypoint: "gcr.io/k8s-prow/entrypoint:v20200430-fdbbc1f61"
-        sidecar: "gcr.io/k8s-prow/sidecar:v20200430-fdbbc1f61"
+        clonerefs: "gcr.io/k8s-prow/clonerefs:v20200507-4890435a6"
+        initupload: "gcr.io/k8s-prow/initupload:v20200507-4890435a6"
+        entrypoint: "gcr.io/k8s-prow/entrypoint:v20200507-4890435a6"
+        sidecar: "gcr.io/k8s-prow/sidecar:v20200507-4890435a6"
       gcs_configuration:
         bucket: "knative-prow"
         path_strategy: "explicit"
@@ -93,9 +94,10 @@ deck:
       required_files:
       - podinfo.json
   tide_update_period: 1s
-  rerun_auth_config:
-    github_team_ids:
-      - 3012514 # Knative Milestone Maintainers
+  rerun_auth_configs:
+    '*':
+      github_team_ids:
+        - 3012514 # Knative Milestone Maintainers
 prowjob_namespace: default
 pod_namespace: test-pods
 log_level: debug
@@ -150,7 +152,7 @@ tide:
     - do-not-merge/invalid-owners-file
     - needs-rebase
   - repos:
-    # Allow PRs for test-infra to be automatically merged without manual approval.
+    # Allow PRs for test-infra to be automatically merged without manual approval
     - "knative/test-infra"
     labels:
     - "cla: yes"
