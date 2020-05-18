@@ -114,7 +114,7 @@ tide:
     - do-not-merge/invalid-owners-file
     - needs-rebase
   - repos:
-    # Allow PRs for test-infra to be automatically merged without manual approval.
+    # Allow PRs for test-infra to be automatically merged without manual approval
     - "[[.TestInfraRepo]]"
     labels:
     - "cla: yes"
