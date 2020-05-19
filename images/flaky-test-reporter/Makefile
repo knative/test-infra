@@ -13,4 +13,7 @@
 # limitations under the License.
 
 IMAGE_NAME = flaky-test-reporter
+DOCKERBUILDARGS = --build-arg TOOL_NAME=flaky-test-reporter
+DOCKERFILE = ../tool/Dockerfile
+
 include ../simple-image.mk

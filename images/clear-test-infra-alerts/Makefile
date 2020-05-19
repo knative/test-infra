@@ -13,4 +13,7 @@
 # limitations under the License.
 
 IMAGE_NAME = monitoring/clear-alerts
+DOCKERBUILDARGS = --build-arg TOOL_NAME=clearalerts --build-arg TOOLS_SUBDIR=monitoring/
+DOCKERFILE = ../tool/Dockerfile
+
 include ../simple-image.mk

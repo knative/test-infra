@@ -1,4 +1,4 @@
-# Copyright 2019 The Knative Authors
+# Copyright 2020 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,23 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.14
+FROM golang:1.14.2
 LABEL maintainer="Chao Dai <chaodai@google.com>"
-RUN apt-get update
 
-ENV TEMP_REPO_DIR /go/src/knative.dev/test-infra
-ENV TOOL_NAME flaky-test-reporter
+# Required input: -e TOOL_NAME=name, i.e. TOOL_NAME=flaky-test-reporter
+ARG TOOL_NAME
+# Optional input: -e TOOLS_SUBDIR=name, i.e. TOOLS_SUBDIR=monitoring/
+ARG TOOLS_SUBDIR
 
 # Temporarily add test-infra to the image to build custom tools
-ADD . $TEMP_REPO_DIR
+COPY . /go/src/knative.dev/test-infra
 
-# Build flaky test reporter tool in the container
-RUN make -C $TEMP_REPO_DIR/tools/$TOOL_NAME/
-RUN cp $TEMP_REPO_DIR/tools/$TOOL_NAME/$TOOL_NAME /$TOOL_NAME
-RUN mkdir -p /config
-RUN cp $TEMP_REPO_DIR/tools/$TOOL_NAME/config/config.yaml /config/config.yaml
+# TODO: jobs should not run `/command`, just `command`
+
+RUN go install "/go/src/knative.dev/test-infra/tools/${TOOLS_SUBDIR}${TOOL_NAME}"
+RUN cp "$(which ${TOOL_NAME})" /
+
+RUN if [ "${TOOL_NAME}" = flaky-test-reporter ]; then mkdir -p /config && cp /go/src/knative.dev/test-infra/tools/flaky-test-reporter/config/config.yaml /config/config.yaml; fi
 
 # Remove test-infra from the container
-RUN rm -fr $TEMP_REPO_DIR
+RUN rm -fr /go/src/knative.dev/test-infra
 
-ENTRYPOINT ["/flaky-test-reporter"]
+ENTRYPOINT ["/${TOOL_NAME}"]

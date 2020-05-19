@@ -13,4 +13,7 @@
 # limitations under the License.
 
 IMAGE_NAME = monitoring
+DOCKERBUILDARGS = --build-arg TOOL_NAME=monitoring
+DOCKERFILE = ../tool/Dockerfile
+
 include ../simple-image.mk

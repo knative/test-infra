@@ -100,9 +100,14 @@ RUN go install /go/src/knative.dev/test-infra/tools/githubhelper
 # Because githubhelper was previously installed in a stupid way, it was used as `/workspace/githubhelper` so copy it
 RUN cp "$(which githubhelper)" .
 
+RUN go install /go/src/knative.dev/test-infra/tools/coverage
+# TODO: jobs should not run '/coverage', just 'coverage'
+RUN cp "$(which coverage)" /
+
 # RUN go install knative.dev/test-infra/kntest/cmd/kntest # Uncomment when you wish to have kntest installed
 
 # reset --hard doesn't care about dirty working copy
+# This must be the last install
 RUN cd /go/src/knative.dev/test-infra && git reset --hard upstream/release-0.14 && go install knative.dev/test-infra/tools/dep-collector
 
 # Cleanup
