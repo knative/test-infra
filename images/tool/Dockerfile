@@ -15,26 +15,23 @@
 FROM golang:1.14.2
 LABEL maintainer="Chao Dai <chaodai@google.com>"
 
+# Required input: -e TOOL_NAME=name, i.e. TOOL_NAME=flaky-test-reporter
+ARG TOOL_NAME
+# Optional input: -e TOOLS_SUBDIR=name, i.e. TOOLS_SUBDIR=monitoring/
+ARG TOOLS_SUBDIR
+
 # Temporarily add test-infra to the image to build custom tools
 COPY . /go/src/knative.dev/test-infra
 
-RUN go install /go/src/knative.dev/test-infra/tools/monitoring/clearalerts
-# TODO: jobs should not run '/clearalerts', just 'clearalerts'
-RUN cp "$(which clearalerts)" /
+# TODO: jobs should not run `/command`, just `command`
 
-RUN go install /go/src/knative.dev/test-infra/tools/monitoring
-# TODO: jobs should not run '/monitoring', just 'monitoring'
-RUN cp "$(which monitoring)" /
+RUN go install "/go/src/knative.dev/test-infra/tools/${TOOLS_SUBDIR}${TOOL_NAME}"
+RUN cp "$(which ${TOOL_NAME})" /
 
-RUN go install /go/src/knative.dev/test-infra/tools/flaky-test-reporter
-# TODO: jobs should not run '/flaky-test-reporter', just 'flaky-test-reporter'
-RUN cp "$(which flaky-test-reporter)" /
-RUN mkdir -p /config
-RUN cp /go/src/knative.dev/test-infra/tools/flaky-test-reporter/config/config.yaml /config/config.yaml
-
-RUN go install /go/src/knative.dev/test-infra/tools/flaky-test-retryer
-# TODO: jobs should not run '/flaky-test-retryer', just 'flaky-test-retryer'
-RUN cp "$(which flaky-test-retryer)" /
+RUN [ "${TOOL_NAME}" = flaky-test-reporter ] && mkdir -p /config || true
+RUN [ "${TOOL_NAME}" = flaky-test-reporter ] && cp /go/src/knative.dev/test-infra/tools/flaky-test-reporter/config/config.yaml /config/config.yaml || true
 
 # Remove test-infra from the container
 RUN rm -fr /go/src/knative.dev/test-infra
+
+ENTRYPOINT ["/${TOOL_NAME}"]
