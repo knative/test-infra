@@ -21,23 +21,24 @@ set -e
 # Scripts are installed to REPO_ROOT/scripts/test-infra
 
 # The following arguments are accepted:
-# TODO: --verify
-#  Verify the contents of scripts/test-infra match the contents from commit sha in scripts/test-infra/sha
-# --branch X
-#  Defines which branch of test-infra to get scripts from; defaults to master
+# --ref X
+#  Defines which ref (branch, tag, commit) of test-infra to get scripts from; defaults to master
 # --first-time
 #  Run this script from your repo root directory to install scripts for the first time
-#  TODO: also sed -i the scripts in the current repo to point to new file
+#  Will also sed -i non-vendor scripts in the current repo to point to new path
+# TODO: --verify
+#  Verify the contents of scripts/test-infra match the contents from commit sha in scripts/test-infra/COMMIT
+#  One can verify manually by running the script with '--ref $(cat scripts/test-infra/COMMIT)' and ensuring no files are staged
 
 declare -i FIRST_TIME_SETUP=0
-declare SCRIPTS_BRANCH=master
+declare SCRIPTS_REF=master
 
 while [[ $# -ne 0 ]]; do
   parameter="$1"
   case ${parameter} in
     --branch)
       shift
-      SCRIPTS_BRANCH="$1"
+      SCRIPTS_REF="$1"
       ;;
     --first-time)
       FIRST_TIME_SETUP=1
@@ -49,10 +50,10 @@ done
 
 function do_read_tree() {
     mkdir -p scripts/test-infra
-    git read-tree --prefix=scripts/test-infra -u "test-infra/${SCRIPTS_BRANCH}:scripts"
-    git show-ref -s -- "refs/remotes/test-infra/${SCRIPTS_BRANCH}" > scripts/test-infra/sha
-    git add scripts/test-infra/sha
-    echo "test-infra scripts installed to scripts/test-infra from branch ${SCRIPTS_BRANCH}"
+    git read-tree --prefix=scripts/test-infra -u "test-infra/${SCRIPTS_REF}:scripts"
+    git show-ref -s -- "refs/remotes/test-infra/${SCRIPTS_REF}" > scripts/test-infra/COMMIT
+    git add scripts/test-infra/COMMIT
+    echo "test-infra scripts installed to scripts/test-infra from branch ${SCRIPTS_REF}"
 }
 
 function run() {
@@ -62,14 +63,16 @@ function run() {
       exit 5
     fi
     git remote add test-infra https://github.com/knative/test-infra.git || true
-    git fetch test-infra "${SCRIPTS_BRANCH}"
+    git fetch test-infra "${SCRIPTS_REF}"
     do_read_tree
+    echo "Attempting to point all scripts to use this new path"
+    grep -RiIl vendor/knative.dev/test-infra | grep -v ^vendor | xargs sed -i 's+vendor/knative.dev/test-infra/scripts+scripts/test-infra+'
   else
     pushd "$(dirname "${BASH_SOURCE[0]}")/../.."
     trap popd EXIT
 
     git remote add test-infra https://github.com/knative/test-infra.git || true
-    git fetch test-infra "${SCRIPTS_BRANCH}"
+    git fetch test-infra "${SCRIPTS_REF}"
     git rm -fr scripts/test-infra
     rm -fR scripts/test-infra
     do_read_tree
