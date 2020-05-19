@@ -21,6 +21,8 @@ set -e
 # Scripts are installed to REPO_ROOT/scripts/test-infra
 
 # The following arguments are accepted:
+# --update
+#  Do the update
 # --ref X
 #  Defines which ref (branch, tag, commit) of test-infra to get scripts from; defaults to master
 # --first-time
@@ -31,6 +33,7 @@ set -e
 #  One can verify manually by running the script with '--ref $(cat scripts/test-infra/COMMIT)' and ensuring no files are staged
 
 declare -i FIRST_TIME_SETUP=0
+declare -i DO_UPDATE=0
 declare SCRIPTS_REF=master
 
 while [[ $# -ne 0 ]]; do
@@ -42,6 +45,9 @@ while [[ $# -ne 0 ]]; do
       ;;
     --first-time)
       FIRST_TIME_SETUP=1
+      ;;
+    --update)
+      DO_UPDATE=1
       ;;
     *) abort "unknown option ${parameter}" ;;
   esac
@@ -67,7 +73,7 @@ function run() {
     do_read_tree
     echo "Attempting to point all scripts to use this new path"
     grep -RiIl vendor/knative.dev/test-infra | grep -v ^vendor | xargs sed -i 's+vendor/knative.dev/test-infra/scripts+scripts/test-infra+'
-  else
+  elif (( DO_UPDATE )); then
     pushd "$(dirname "${BASH_SOURCE[0]}")/../.."
     trap popd EXIT
 
