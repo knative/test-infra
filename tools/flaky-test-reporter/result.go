@@ -188,7 +188,7 @@ func getCombinedResultsForBuild(build *prow.Build) ([]*junit.TestSuites, error) 
 // as well as LastBuildStartTime, and stores them in RepoData
 func collectTestResultsForRepo(jc config.JobConfig) (*RepoData, error) {
 	rd := &RepoData{Config: jc}
-	job := prow.NewJob(jc.Name, jc.Type, jc.Repo, 0)
+	job := prow.NewJob(jc.Name, jc.Type, jc.Org, jc.Repo, 0)
 	if !job.PathExists() {
 		return rd, fmt.Errorf("job path not exist '%s'", jc.Name)
 	}

@@ -14,6 +14,6 @@
 
 resources:
 - names:
-  - knative-boskos-staging-03
+  - knative-boskos-staging-not-exist
   state: dirty
   type: gke-project
