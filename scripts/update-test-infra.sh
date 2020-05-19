@@ -21,10 +21,13 @@ set -e
 # Scripts are installed to REPO_ROOT/scripts/test-infra
 
 # The following arguments are accepted:
+# TODO: --verify
+#  Verify the contents of scripts/test-infra match the contents from commit sha in scripts/test-infra/sha
 # --branch X
 #  Defines which branch of test-infra to get scripts from; defaults to master
 # --first-time
 #  Run this script from your repo root directory to install scripts for the first time
+#  TODO: also sed -i the scripts in the current repo to point to new file
 
 declare -i FIRST_TIME_SETUP=0
 declare SCRIPTS_BRANCH=master
@@ -44,6 +47,14 @@ while [[ $# -ne 0 ]]; do
   shift
 done
 
+function do_read_tree() {
+    mkdir -p scripts/test-infra
+    git read-tree --prefix=scripts/test-infra -u "test-infra/${SCRIPTS_BRANCH}:scripts"
+    git show-ref -s -- "refs/remotes/test-infra/${SCRIPTS_BRANCH}" > scripts/test-infra/sha
+    git add scripts/test-infra/sha
+    echo "test-infra scripts installed to scripts/test-infra from branch ${SCRIPTS_BRANCH}"
+}
+
 function run() {
   if (( FIRST_TIME_SETUP )); then
     if [[ ! -d .git ]]; then
@@ -52,9 +63,7 @@ function run() {
     fi
     git remote add test-infra https://github.com/knative/test-infra.git || true
     git fetch test-infra "${SCRIPTS_BRANCH}"
-    mkdir -p scripts/test-infra
-    git read-tree --prefix=scripts/test-infra -u "test-infra/${SCRIPTS_BRANCH}:scripts"
-    echo "test-infra scripts installed to scripts/test-infra from branch ${SCRIPTS_BRANCH}"
+    do_read_tree
   else
     pushd "$(dirname "${BASH_SOURCE[0]}")/../.."
     trap popd EXIT
@@ -63,9 +72,7 @@ function run() {
     git fetch test-infra "${SCRIPTS_BRANCH}"
     git rm -fr scripts/test-infra
     rm -fR scripts/test-infra
-    mkdir -p scripts/test-infra
-    git read-tree --prefix=scripts/test-infra -u "test-infra/${SCRIPTS_BRANCH}:scripts"
-    echo "test-infra scripts updated in scripts/test-infra from branch ${SCRIPTS_BRANCH}"
+    do_read_tree
   fi
 }
 
