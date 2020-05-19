@@ -19,17 +19,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     git
 
-ENV TEMP_REPO_DIR /go/src/knative.dev/test-infra
-ENV TOOL_NAME coverage
-
 # Temporarily add test-infra to the image to build custom tools
-ADD . $TEMP_REPO_DIR
+COPY . /go/src/knative.dev/test-infra
 
 # Build tool in the container
-RUN make -C $TEMP_REPO_DIR/tools/$TOOL_NAME/
-RUN cp $TEMP_REPO_DIR/tools/$TOOL_NAME/$TOOL_NAME /$TOOL_NAME
+RUN go install ${TEMP_REPO_DIR}/tools/coverage
+RUN cp "$(which coverage)" /
 
 # Remove test-infra from the container
-RUN rm -fr $TEMP_REPO_DIR
+RUN rm -fr /go/src/knative.dev/test-infra
 
 ENTRYPOINT ["/coverage"]
