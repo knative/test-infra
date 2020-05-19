@@ -118,7 +118,7 @@ func (c *JSONClient) GetFlakyTestReport(jobName, repo string, buildID int) ([]Re
 	if jobName == "" {
 		jobName = defaultJobName
 	}
-	job := prow.NewJob(jobName, prow.PeriodicJob, "", 0)
+	job := prow.NewJob(jobName, prow.PeriodicJob, "", "", 0)
 	var err error
 	if buildID == -1 {
 		buildID, err = c.getLatestValidBuild(job, repo)

@@ -99,7 +99,7 @@ func (jd *JobData) getFailedTests() ([]string, error) {
 	if len(jd.failedTests) > 0 {
 		return jd.failedTests, nil
 	}
-	job := prow.NewJob(jd.JobName, string(jd.JobType), jd.Refs[0].Repo, jd.Refs[0].Pulls[0].Number)
+	job := prow.NewJob(jd.JobName, string(jd.JobType), jd.Refs[0].Org, jd.Refs[0].Repo, jd.Refs[0].Pulls[0].Number)
 	// Check latest build instead of using jd.RunID, as there are times where
 	// devs initiated retry manually before retryer gets to it, and in this case
 	// scaning latest build can help retryer avoid initiating another retry
