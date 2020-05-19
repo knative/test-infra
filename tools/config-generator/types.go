@@ -1,5 +1,19 @@
 package main
 
+import (
+	"fmt"
+	"regexp"
+	"strconv"
+)
+
+var (
+	goVersionMatcher *regexp.Regexp
+)
+
+func init() {
+	goVersionMatcher = regexp.MustCompile(`go(\d+)[.](\d+)`)
+}
+
 // jobDetailMap, key is the repo name, value is the list of job types, like continuous, nightly, etc., as well as custome names
 type JobDetailMap map[string][]string
 
@@ -27,6 +41,11 @@ type NonAlignedTestGroup struct {
 	Extra map[string]string
 }
 
+type GoVersion struct {
+	Major int
+	Minor int
+}
+
 func (j JobDetailMap) Add(repo, jt string) {
 	j.EnsureExists(repo)
 	j[repo] = append(j[repo], jt)
@@ -52,4 +71,22 @@ func NewTestGridMetaData() TestGridMetaData {
 		repoNames:  make([]string, 0),
 		nonAligned: make([]NonAlignedTestGroup, 0),
 	}
+}
+
+func NewGoVersion(version string) GoVersion {
+	matches := goVersionMatcher.FindStringSubmatch(version)
+	if matches == nil || len(matches) != 3 {
+		panic(fmt.Errorf("bad version string to NewGoVersion: %q", version))
+	}
+	a, _ := strconv.Atoi(matches[1])
+	b, _ := strconv.Atoi(matches[2])
+	return GoVersion{a, b}
+}
+
+func (v GoVersion) String() string {
+	return fmt.Sprintf("go%d.%d", v.Major, v.Minor)
+}
+
+func (v GoVersion) Equals(v2 GoVersion) bool {
+	return v.Major == v2.Major && v.Minor == v2.Minor
 }

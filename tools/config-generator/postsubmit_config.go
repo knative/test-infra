@@ -51,7 +51,7 @@ func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
 			data.Base.PathAlias = "path_alias: knative.dev/" + path.Base(repoName)
 		}
 		if repo.Name == repoName && repo.Go114 {
-			data.Base.SetGoVersion("go1.14")
+			data.Base.SetGoVersion(GoVersion{1, 14})
 		}
 	}
 	addExtraEnvVarsToJob(extraEnvVars, &data.Base)

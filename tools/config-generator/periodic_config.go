@@ -325,7 +325,7 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 			data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  path_alias: knative.dev/"+path.Base(repoName))
 		}
 		if repositories[i].Go114 {
-			data.Base.SetGoVersion("go1.14")
+			data.Base.SetGoVersion(GoVersion{1, 14})
 		}
 		addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 		addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)

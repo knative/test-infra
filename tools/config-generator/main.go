@@ -455,22 +455,18 @@ func (data *baseProwJobTemplateData) addEnvToJob(key, value string) {
 	data.Env = append(data.Env, envNameToKey(key), "  value: "+value)
 }
 
-func (data *baseProwJobTemplateData) SetGoVersion(version string) {
-	match, _ := regexp.MatchString(`go\d+[.]\d+`, version)
-	if !match {
-		panic(fmt.Errorf("Bad version string to SetGoVersion: %q", version))
-	}
+func (data *baseProwJobTemplateData) SetGoVersion(version GoVersion) {
 	envKey := envNameToKey("GO_VERSION")
-	for i, value := range data.Env {
-		if value == envKey {
-			data.Env[i+1] = version
+	for i, key := range data.Env {
+		if key == envKey {
+			data.Env[i+1] = version.String()
 			return
 		}
 	}
-	data.addEnvToJob("GO_VERSION", version)
+	data.addEnvToJob("GO_VERSION", version.String())
 
 	// TODO: get coverage unified and cleaned up
-	if strings.Contains(data.Image, "coverage:") && version == "go1.14" {
+	if strings.Contains(data.Image, "coverage:") && version.Equals(GoVersion{1, 14}) {
 		data.Image = strings.ReplaceAll(data.Image, "coverage:", "coverage-go114:")
 	}
 }
@@ -622,7 +618,7 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 		(*data).ExtraRefs = append((*data).ExtraRefs, "  "+(*data).PathAlias)
 	}
 	if needGo114 {
-		data.SetGoVersion("go1.14")
+		data.SetGoVersion(GoVersion{1, 14})
 	}
 	// Override any values if provided by command-line flags.
 	if timeoutOverride > 0 {
@@ -860,7 +856,7 @@ func executeJobTemplateWrapper(repoName string, data interface{}, generateOneJob
 		sbs = append(sbs, specialBranchLogic{
 			branches: go113Branches,
 			opsNew: func(base *baseProwJobTemplateData) {
-				base.SetGoVersion("go1.14")
+				base.SetGoVersion(GoVersion{1, 14})
 			},
 			restore: func(base *baseProwJobTemplateData) {
 			},

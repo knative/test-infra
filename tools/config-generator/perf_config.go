@@ -97,7 +97,7 @@ func perfClusterBaseProwJob(command string, args []string, fullRepoName, sa stri
 	base := newbaseProwJobTemplateData(fullRepoName)
 	for _, repo := range repositories {
 		if fullRepoName == repo.Name && repo.Go114 {
-			base.SetGoVersion("go1.14")
+			base.SetGoVersion(GoVersion{1, 14})
 			break
 		}
 	}
