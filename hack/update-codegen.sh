@@ -21,7 +21,7 @@ set -o pipefail
 source $(dirname $0)/../scripts/library.sh
 
 # Make sure our dependencies are up-to-date
-${REPO_ROOT_DIR}/hack/update-deps.sh
+${REPO_ROOT_DIR}/hack/update-deps.sh $@
 
 # Generate configs
 ${REPO_ROOT_DIR}/hack/generate-configs.sh
