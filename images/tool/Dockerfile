@@ -28,8 +28,7 @@ COPY . /go/src/knative.dev/test-infra
 RUN go install "/go/src/knative.dev/test-infra/tools/${TOOLS_SUBDIR}${TOOL_NAME}"
 RUN cp "$(which ${TOOL_NAME})" /
 
-RUN [ "${TOOL_NAME}" = flaky-test-reporter ] && mkdir -p /config || true
-RUN [ "${TOOL_NAME}" = flaky-test-reporter ] && cp /go/src/knative.dev/test-infra/tools/flaky-test-reporter/config/config.yaml /config/config.yaml || true
+RUN if [ "${TOOL_NAME}" = flaky-test-reporter ]; then mkdir -p /config && cp /go/src/knative.dev/test-infra/tools/flaky-test-reporter/config/config.yaml /config/config.yaml; fi
 
 # Remove test-infra from the container
 RUN rm -fr /go/src/knative.dev/test-infra
