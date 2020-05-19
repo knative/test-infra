@@ -119,7 +119,6 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 		data.PresubmitPullJobName += "-dev"
 		data.Base.AlwaysRun = false
 		data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest", -1)
-		data.Base.Image = strings.Replace(data.Base.Image, "coverage-go112:latest", "coverage-dev:latest", -1)
 		template := strings.Replace(readTemplate(presubmitGoCoverageJob), "(all|", "(", 1)
 		executeJobTemplate("presubmit", template, title, repoName, data.PresubmitPullJobName, true, data)
 	}

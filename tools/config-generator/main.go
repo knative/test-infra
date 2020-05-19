@@ -305,16 +305,6 @@ func exclusiveSlices(a1, a2 []string) []string {
 	return res
 }
 
-// getGo114ID returns image identifier for go114 images
-func getGo114ID() string {
-	return "-go114"
-}
-
-// getGo113ID returns image identifier for go113 images
-func getGo113ID() string {
-	return "-go113"
-}
-
 // strip out all suffixes from the image name
 func stripSuffixFromImageName(name string, suffixes []string) string {
 	parts := strings.SplitN(name, ":", 2)
@@ -340,10 +330,6 @@ func addSuffixToImageName(name string, suffix string) string {
 		parts[0] = fmt.Sprintf("%s%s", parts[0], suffix)
 	}
 	return strings.Join(parts, ":")
-}
-
-func getGo114ImageName(name string) string {
-	return addSuffixToImageName(stripSuffixFromImageName(name, []string{getGo113ID()}), getGo114ID())
 }
 
 // Consolidate whitelisted and skipped branches with newly added
@@ -455,6 +441,10 @@ func createCommand(data baseProwJobTemplateData) []string {
 	return append(c, data.Args...)
 }
 
+func envNameToKey(key string) string {
+	return "- name: " + key
+}
+
 // addEnvToJob adds the given key/pair environment variable to the job.
 func (data *baseProwJobTemplateData) addEnvToJob(key, value string) {
 	// Value should always be string. Add quotes if we get a number
@@ -462,7 +452,23 @@ func (data *baseProwJobTemplateData) addEnvToJob(key, value string) {
 		value = "\"" + value + "\""
 	}
 
-	data.Env = append(data.Env, "- name: "+key, "  value: "+value)
+	data.Env = append(data.Env, envNameToKey(key), "  value: "+value)
+}
+
+func (data *baseProwJobTemplateData) SetGoVersion(version GoVersion) {
+	envKey := envNameToKey("GO_VERSION")
+	for i, key := range data.Env {
+		if key == envKey {
+			data.Env[i+1] = version.String()
+			return
+		}
+	}
+	data.addEnvToJob("GO_VERSION", version.String())
+
+	// TODO: get coverage unified and cleaned up
+	if strings.Contains(data.Image, "coverage:") && version.Equals(GoVersion{1, 14}) {
+		data.Image = strings.ReplaceAll(data.Image, "coverage:", "coverage-go114:")
+	}
 }
 
 // addLabelToJob adds extra labels to a job
@@ -612,8 +618,7 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 		(*data).ExtraRefs = append((*data).ExtraRefs, "  "+(*data).PathAlias)
 	}
 	if needGo114 {
-		data.addEnvToJob("GO_VERSION", "go1.14")
-		(*data).Image = getGo114ImageName((*data).Image)
+		data.SetGoVersion(GoVersion{1, 14})
 	}
 	// Override any values if provided by command-line flags.
 	if timeoutOverride > 0 {
@@ -851,7 +856,7 @@ func executeJobTemplateWrapper(repoName string, data interface{}, generateOneJob
 		sbs = append(sbs, specialBranchLogic{
 			branches: go113Branches,
 			opsNew: func(base *baseProwJobTemplateData) {
-				base.Image = getGo114ImageName(base.Image)
+				base.SetGoVersion(GoVersion{1, 14})
 			},
 			restore: func(base *baseProwJobTemplateData) {
 			},
@@ -1090,7 +1095,7 @@ func main() {
 	flag.StringVar(&nightlyAccount, "nightly-account", "/etc/nightly-account/service-account.json", "Path to the service account JSON for nightly release jobs")
 	flag.StringVar(&releaseAccount, "release-account", "/etc/release-account/service-account.json", "Path to the service account JSON for release jobs")
 	var coverageDockerImageName = flag.String("coverage-docker", "coverage:latest", "Docker image for coverage tool")
-	var prowTestsDockerImageName = flag.String("prow-tests-docker", "prow-tests-go113:stable", "prow-tests docker image")
+	var prowTestsDockerImageName = flag.String("prow-tests-docker", "prow-tests:stable", "prow-tests docker image")
 	flag.StringVar(&githubCommenterDockerImage, "github-commenter-docker", "gcr.io/k8s-prow/commenter:v20190731-e3f7b9853", "github commenter docker image")
 	flag.StringVar(&presubmitScript, "presubmit-script", "./test/presubmit-tests.sh", "Executable for running presubmit tests")
 	flag.StringVar(&releaseScript, "release-script", "./hack/release.sh", "Executable for creating releases")

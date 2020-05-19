@@ -268,8 +268,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 
 		// Change the name and image
 		betaData.PeriodicJobName += "-beta-prow-tests"
-		// TODO: remove stripSuffixFromImageName call once we stop using crap images
-		betaData.Base.Image = strings.ReplaceAll(stripSuffixFromImageName(betaData.Base.Image, []string{getGo113ID(), getGo114ID()}), ":stable", ":beta")
+		betaData.Base.Image = strings.ReplaceAll(betaData.Base.Image, ":stable", ":beta")
 
 		// Run 2 or 3 times a day because prow-tests beta testing has different desired interval than the underlying job
 		hours := []int{getUTCtime(1), getUTCtime(4)}
@@ -326,7 +325,7 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 			data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  path_alias: knative.dev/"+path.Base(repoName))
 		}
 		if repositories[i].Go114 {
-			data.Base.Image = getGo114ImageName(data.Base.Image)
+			data.Base.SetGoVersion(GoVersion{1, 14})
 		}
 		addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 		addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
