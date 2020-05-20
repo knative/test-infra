@@ -119,9 +119,19 @@ branch-protection:
       enforce_admins: false
 tide:
   queries:
-  - repos:
+  - org:
     - "knative"
     - "knative-sandbox"
+    labels:
+    - lgtm
+    - approved
+    - "cla: yes"
+    missingLabels: &knative_tide_missing_labels
+    - do-not-merge/hold
+    - do-not-merge/work-in-progress
+    - do-not-merge/invalid-owners-file
+    - needs-rebase
+  - repos:
     - "google/knative-gcp"
     labels:
     - lgtm
