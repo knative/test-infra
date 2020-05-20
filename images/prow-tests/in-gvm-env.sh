@@ -25,16 +25,16 @@ if [[ ! -v GO_VERSION ]]; then
 fi
 gvm use "${GO_VERSION}"
 # Get our original Go directory back into GOPATH
-pushd /go
+pushd /go || exit 5
 gvm pkgset create --local || echo
 gvm pkgset use --local
-popd
+popd || exit 5
 # At this point, our GOPATH is set to something like:
 #  GOPATH=/go:/go/.gvm_local/pkgsets/go1.13.10/local:/root/.gvm/pkgsets/go1.13.10/global
 echo "GOPATH is ${GOPATH}"
 # We want to install tools to the global bin directory for that version of Go,
 #  so set GOBIN
-IFS=: read -a arr <<< "${GOPATH}"
+IFS=: read -r -a arr <<< "${GOPATH}"
 export GOBIN="${arr[2]}/bin"
 
 "$@"

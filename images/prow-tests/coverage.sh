@@ -16,4 +16,4 @@
 
 # Transition from coverage tool calling `/coverage` to `runner.sh coverage`
 
-runner.sh coverage
+runner.sh coverage "$@"
