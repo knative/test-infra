@@ -59,7 +59,6 @@ RUN curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscript
 # So have created "my-gvm.sh" to source the above then run gvm
 COPY images/prow-tests/my-gvm.sh /usr/local/bin
 # Install our versions of Go
-RUN my-gvm.sh install go1.12.17 --prefer-binary
 RUN my-gvm.sh install go1.13.10 --prefer-binary
 RUN my-gvm.sh install go1.14.2 --prefer-binary
 
@@ -89,6 +88,7 @@ RUN go get knative.dev/pkg/testutils/junithelper
 # And our scripts
 ENV SCRIPTS /scripts
 COPY scripts /scripts
+COPY images/prow-tests/in-gvm-env.sh /usr/local/bin
 
 # Temporarily add test-infra to the image to build custom tools
 COPY . /go/src/knative.dev/test-infra
@@ -100,9 +100,16 @@ RUN go install /go/src/knative.dev/test-infra/tools/githubhelper
 # Because githubhelper was previously installed in a stupid way, it was used as `/workspace/githubhelper` so copy it
 RUN cp "$(which githubhelper)" .
 
-RUN go install /go/src/knative.dev/test-infra/tools/coverage
-# TODO: jobs should not run '/coverage', just 'coverage'
-RUN cp "$(which coverage)" /
+# If you needed to compile and install different tools for different version of Go,
+#  you could do it like:
+#  RUN GO_VERSION=go1.13 in-gvm-env.sh go install knative.dev/test-infra/tools/coverage
+#  RUN GO_VERSION=go1.14 in-gvm-env.sh go install knative.dev/test-infra/tools/coverage
+
+# Install coverage tool:
+RUN go install knative.dev/test-infra/tools/coverage
+# This runs "runner.sh coverage" so coverage can be used with any installed Go
+# TODO: Prow jobs run `runner.sh coverage` instead `/coverage`
+COPY images/prow-tests/coverage.sh /coverage
 
 # RUN go install knative.dev/test-infra/kntest/cmd/kntest # Uncomment when you wish to have kntest installed
 
@@ -113,3 +120,4 @@ RUN cd /go/src/knative.dev/test-infra && git reset --hard upstream/release-0.14 
 # Cleanup
 RUN rm -fr /go/src/knative.dev/test-infra
 RUN rm -f /usr/local/bin/my-gvm.sh
+RUN rm -f /usr/local/bin/in-gvm-env.sh

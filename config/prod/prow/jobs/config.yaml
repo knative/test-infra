@@ -15612,6 +15612,9 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        env:
+        - name: GO_VERSION
+          value: go1.14
   - name: post-knative-serving-go-coverage-dev
     branches:
     - master
@@ -15628,6 +15631,9 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        env:
+        - name: GO_VERSION
+          value: go1.14
   knative/client:
   - name: post-knative-client-go-coverage
     branches:
@@ -15645,6 +15651,9 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        env:
+        - name: GO_VERSION
+          value: go1.14
   knative/eventing:
   - name: post-knative-eventing-reconcile-clusters
     branches:
@@ -15702,6 +15711,9 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        env:
+        - name: GO_VERSION
+          value: go1.14
   knative/eventing-contrib:
   - name: post-knative-eventing-contrib-go-coverage
     branches:
@@ -15719,6 +15731,9 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        env:
+        - name: GO_VERSION
+          value: go1.14
   knative/docs:
   - name: post-knative-docs-go-coverage
     branches:
@@ -15752,6 +15767,9 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        env:
+        - name: GO_VERSION
+          value: go1.14
   knative/test-infra:
   - name: post-knative-test-infra-go-coverage
     branches:
@@ -15769,6 +15787,9 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        env:
+        - name: GO_VERSION
+          value: go1.14
   knative/caching:
   - name: post-knative-caching-go-coverage
     branches:
@@ -15786,6 +15807,9 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        env:
+        - name: GO_VERSION
+          value: go1.14
   google/knative-gcp:
   - name: post-google-knative-gcp-reconcile-clusters
     branches:
@@ -15841,6 +15865,9 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        env:
+        - name: GO_VERSION
+          value: go1.14
   knative/net-certmanager:
   - name: post-knative-net-certmanager-go-coverage
     branches:
@@ -15858,6 +15885,9 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        env:
+        - name: GO_VERSION
+          value: go1.14
   knative/net-contour:
   - name: post-knative-net-contour-go-coverage
     branches:
@@ -15875,6 +15905,9 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        env:
+        - name: GO_VERSION
+          value: go1.14
   knative/net-http01:
   - name: post-knative-net-http01-go-coverage
     branches:
@@ -15892,6 +15925,9 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        env:
+        - name: GO_VERSION
+          value: go1.14
   knative/net-istio:
   - name: post-knative-net-istio-go-coverage
     branches:
@@ -15909,6 +15945,9 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        env:
+        - name: GO_VERSION
+          value: go1.14
   knative/net-kourier:
   - name: post-knative-net-kourier-go-coverage
     branches:
@@ -15926,6 +15965,9 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        env:
+        - name: GO_VERSION
+          value: go1.14
   knative/serving-operator:
   - name: post-knative-serving-operator-go-coverage
     branches:
@@ -15943,6 +15985,9 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        env:
+        - name: GO_VERSION
+          value: go1.14
   knative/eventing-operator:
   - name: post-knative-eventing-operator-go-coverage
     branches:
@@ -15960,6 +16005,9 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        env:
+        - name: GO_VERSION
+          value: go1.14
   knative-sandbox/operator:
   - name: post-knative-sandbox-operator-go-coverage
     branches:
@@ -15977,3 +16025,6 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
+        env:
+        - name: GO_VERSION
+          value: go1.14

@@ -57,9 +57,7 @@ func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
 	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 	configureServiceAccountForJob(&data.Base)
 	jobName := data.PostsubmitJobName
-	executeJobTemplateWrapper(repoName, &data, func(data interface{}) {
-		executeJobTemplate("postsubmit go coverage", readTemplate(goCoveragePostsubmitJob), title, repoName, jobName, true, data)
-	})
+	executeJobTemplate("postsubmit go coverage", readTemplate(goCoveragePostsubmitJob), title, repoName, jobName, true, data)
 	// Generate config for post-knative-serving-go-coverage-dev right after post-knative-serving-go-coverage,
 	// this job is mainly for debugging purpose.
 	if data.PostsubmitJobName == "post-knative-serving-go-coverage" {

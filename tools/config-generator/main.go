@@ -445,6 +445,10 @@ func envNameToKey(key string) string {
 	return "- name: " + key
 }
 
+func envValueToValue(value string) string {
+	return "  value: " + value
+}
+
 // addEnvToJob adds the given key/pair environment variable to the job.
 func (data *baseProwJobTemplateData) addEnvToJob(key, value string) {
 	// Value should always be string. Add quotes if we get a number
@@ -452,14 +456,14 @@ func (data *baseProwJobTemplateData) addEnvToJob(key, value string) {
 		value = "\"" + value + "\""
 	}
 
-	data.Env = append(data.Env, envNameToKey(key), "  value: "+value)
+	data.Env = append(data.Env, envNameToKey(key), envValueToValue(value))
 }
 
 func (data *baseProwJobTemplateData) SetGoVersion(version GoVersion) {
 	envKey := envNameToKey("GO_VERSION")
 	for i, key := range data.Env {
 		if key == envKey {
-			data.Env[i+1] = version.String()
+			data.Env[i+1] = envValueToValue(version.String())
 			return
 		}
 	}
