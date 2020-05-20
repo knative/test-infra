@@ -30,14 +30,14 @@ something complicated, do some rudimentary exploration in the image by running
 With an image you feel comfortable with deploying, create a PR to
 knative/test-infra and get approval. Once merged, pull upstream into your master
 branch and run `make push`. This will upload your image to the registry at
-`gcr.io/knative-tests/test-infra/prow-tests` with a date-commit_hash, `latest`,
-and `beta` tags. Let the image run at least a single overnight and ensure the
-jobs in the https://testgrid.knative.dev/beta-prow-tests testgrid are as good as
-the jobs at https://testgrid.knative.dev/knative for master branch and releases
-under "knative-X.Y" at https://testgrid.knative.dev ; it's known that some are
-just bad so you will either learn to know them or just do a lot of clicking;
-it's unlikely to take more than ten minutes to review all the jobs unless
-something is actually wrong.
+http://gcr.io/knative-tests/test-infra/prow-tests with a date-commit_hash,
+`latest`, and `beta` tags. Let the image run at least a single overnight and
+ensure the jobs in the https://testgrid.knative.dev/beta-prow-tests testgrid are
+as good as the jobs at https://testgrid.knative.dev/knative for master branch
+and releases under "knative-X.Y" at https://testgrid.knative.dev ; it's known
+that some are just bad so you will either learn to know them or just do a lot of
+clicking; it's unlikely to take more than ten minutes to review all the jobs
+unless something is actually wrong.
 
 Once you are happy the :beta image is working, go to
 https://gcr.io/knative-tests/test-infra/prow-tests and add the label `stable` to
