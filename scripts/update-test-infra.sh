@@ -39,7 +39,7 @@ declare SCRIPTS_REF=master
 while [[ $# -ne 0 ]]; do
   parameter="$1"
   case ${parameter} in
-    --branch)
+    --ref)
       shift
       SCRIPTS_REF="$1"
       ;;
@@ -49,7 +49,10 @@ while [[ $# -ne 0 ]]; do
     --update)
       DO_UPDATE=1
       ;;
-    *) abort "unknown option ${parameter}" ;;
+    *)
+      echo "unknown option ${parameter}"
+      exit 1
+      ;;
   esac
   shift
 done
@@ -72,7 +75,7 @@ function run() {
     git fetch test-infra "${SCRIPTS_REF}"
     do_read_tree
     echo "Attempting to point all scripts to use this new path"
-    grep -RiIl vendor/knative.dev/test-infra | grep -v ^vendor | xargs sed -i 's+vendor/knative.dev/test-infra/scripts+scripts/test-infra+'
+    grep -RiIl vendor/knative.dev/test-infra | grep -v ^vendor | grep -v ^scripts/test-infra | xargs sed -i 's+vendor/knative.dev/test-infra/scripts+scripts/test-infra+'
   elif (( DO_UPDATE )); then
     pushd "$(dirname "${BASH_SOURCE[0]}")/../.."
     trap popd EXIT
