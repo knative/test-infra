@@ -304,11 +304,27 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 
 // generateGoCoveragePeriodic generates the go coverage periodic job config for the given repo (configuration is ignored).
 func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) {
-	for i, repo := range repositories {
-		if repoName != repo.Name || !repo.EnableGoCoverage {
+	var repo *repositoryData
+	// I tried to use the following function:
+	// func GetRepo(name string) *repositoryData {
+	// 	for i, data := range repositories {
+	// 		if data.Name == name {
+	// 			return &repositories[i]
+	// 		}
+	// 	}
+	// 	return nil
+	// }
+	// but it wouldn't work... EnableGoCoverage was never true
+	// which doesn't make any sense...
+
+	for i, repoI := range repositories {
+		if repoName != repoI.Name || !repoI.EnableGoCoverage {
 			continue
 		}
-		repositories[i].Processed = true
+		repo = &repositories[i]
+	}
+	if repo != nil && repo.EnableGoCoverage {
+		repo.Processed = true
 		var data periodicJobTemplateData
 		data.Base = newbaseProwJobTemplateData(repoName)
 		data.Base.Image = coverageDockerImage
@@ -321,16 +337,15 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 			fmt.Sprintf("--cov-threshold-percentage=%d", data.Base.GoCoverageThreshold)}
 		data.Base.ServiceAccount = ""
 		data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
-		if repositories[i].DotDev {
+		if repo.DotDev {
 			data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  path_alias: knative.dev/"+path.Base(repoName))
 		}
-		if repositories[i].Go114 {
+		if repo.Go114 {
 			data.Base.SetGoVersion(GoVersion{1, 14})
 		}
 		addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 		addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
 		configureServiceAccountForJob(&data.Base)
 		executeJobTemplate("periodic go coverage", readTemplate(periodicCustomJob), title, repoName, data.PeriodicJobName, false, data)
-		return
 	}
 }
