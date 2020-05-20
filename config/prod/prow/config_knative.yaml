@@ -440,7 +440,7 @@ presubmits:
     - integration-tests: false
     - go-coverage: false
 
-  knative-sandbox/operator:
+  knative/operator:
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -1062,7 +1062,7 @@ periodics:
       dot-dev: true
       go114: true
 
-  knative-sandbox/operator:
+  knative/operator:
     - continuous: true
       dot-dev: true
       go114: true
