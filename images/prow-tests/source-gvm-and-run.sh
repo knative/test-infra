@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Only used in-Dockerfile for installing Go with gvm
+
 source "${HOME}/.gvm/scripts/gvm"
 
 gvm "$@"

@@ -14,6 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Used in-Dockerfile for installing something with Go,
+#  when the tool is only compatible with the running version of Go
+
 source "${HOME}/.gvm/scripts/gvm"
 
 set -e
@@ -25,10 +28,10 @@ if [[ ! -v GO_VERSION ]]; then
 fi
 gvm use "${GO_VERSION}"
 # Get our original Go directory back into GOPATH
-pushd /go || exit 5
+pushd /go || exit 2
 gvm pkgset create --local || echo
 gvm pkgset use --local
-popd || exit 5
+popd || exit 2
 # At this point, our GOPATH is set to something like:
 #  GOPATH=/go:/go/.gvm_local/pkgsets/go1.13.10/local:/root/.gvm/pkgsets/go1.13.10/global
 echo "GOPATH is ${GOPATH}"

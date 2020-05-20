@@ -56,11 +56,11 @@ RUN apt-get install -y bison
 RUN curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer | GVM_NO_UPDATE_PROFILE=true bash
 # gvm requires one to "source /root/.gvm/scripts/gvm" after installing
 #  but in Dockerfile, each RUN is its own shell, so source'd in-RUN env vars are not propagated
-# So have created "my-gvm.sh" to source the above then run gvm
-COPY images/prow-tests/my-gvm.sh /usr/local/bin
+# So have created "source-gvm-and-run.sh" to source the above then run gvm
+COPY images/prow-tests/source-gvm-and-run.sh /usr/local/bin
 # Install our versions of Go
-RUN my-gvm.sh install go1.13.10 --prefer-binary
-RUN my-gvm.sh install go1.14.2 --prefer-binary
+RUN source-gvm-and-run.sh install go1.13.10 --prefer-binary
+RUN source-gvm-and-run.sh install go1.14.2 --prefer-binary
 
 # Extra tools through go get
 # These run using the kubekins version of Go, not any defined by `gvm`
@@ -77,7 +77,7 @@ RUN ko version > /ko_version
 
 # Set default Go version
 ENV GO_VERSION go1.13
-# Note, it's pointless to run `my-gvm.sh use go1.13` in this Dockerfile because the PATH changes it makes won't stay in effect
+# Note, it's pointless to run `source-gvm-and-run.sh use go1.13` in this Dockerfile because the PATH changes it makes won't stay in effect
 # We wrap the runner with our own which will run `gvm use $GO_VERSION` for us.
 RUN mv "$(which runner.sh)" "$(dirname "$(which runner.sh)")/kubekins-runner.sh"
 COPY images/prow-tests/runner.sh /usr/local/bin
@@ -119,5 +119,5 @@ RUN cd /go/src/knative.dev/test-infra && git reset --hard upstream/release-0.14 
 
 # Cleanup
 RUN rm -fr /go/src/knative.dev/test-infra
-RUN rm -f /usr/local/bin/my-gvm.sh
+RUN rm -f /usr/local/bin/source-gvm-and-run.sh
 RUN rm -f /usr/local/bin/in-gvm-env.sh
