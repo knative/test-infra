@@ -26,9 +26,10 @@ import (
 
 const (
 	// baseOptions setting for testgrid dashboard tabs
-	testgridTabGroupByDir    = "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-	testgridTabGroupByTarget = "exclude-filter-by-regex=Overall$&group-by-target=&expand-groups=&sort-by-name="
-	testgridTabSortByName    = "sort-by-name="
+	testgridTabGroupByDir     = "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+	testgridTabGroupByTarget  = "exclude-filter-by-regex=Overall$&group-by-target=&expand-groups=&sort-by-name="
+	testgridTabSortByName     = "sort-by-name="
+	testgridTabSortByFailures = "sort-by-failures="
 
 	// generalTestgridConfig contains config-wide definitions.
 	generalTestgridConfig = "testgrid_config_header.yaml"
@@ -179,7 +180,8 @@ func (t *TestGridMetaData) generateTestGroup(projName string, repoName string, j
 		extras := make(map[string]string)
 		switch jobName {
 		case "continuous":
-			// TODO: wtf, the "project name" has the release encoded into it !?!?!?!
+			// projName has the release encoded into it, so the main page at http://testgrid.knative.dev
+			// does not mix releases with the master branch
 			if releaseRegex.FindString(projName) != "" {
 				extras["num_failures_to_alert"] = "3"
 				extras["alert_options"] = "\n    alert_mail_to_addresses: \"prime-engprod-sea@google.com\""
@@ -286,7 +288,7 @@ func (t *TestGridMetaData) generateNonAlignedDashboards() {
 	for name, tgs := range dn {
 		outputConfig("- name: " + name + "\n" + baseIndent + "dashboard_tab:")
 		for _, tg := range tgs {
-			executeDashboardTabTemplate(tg.HumanTabName, tg.CIJobName, testgridTabSortByName, nil)
+			executeDashboardTabTemplate(tg.HumanTabName, tg.CIJobName, tg.BaseOptions, nil)
 		}
 	}
 }

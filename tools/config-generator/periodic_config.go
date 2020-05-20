@@ -288,7 +288,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		// Write out our duplicate job
 		executeJobTemplate("periodic", jobTemplate, title, repoName, betaData.PeriodicJobName, false, betaData)
 
-		// Setup TestGrid here?
+		// Setup TestGrid here
 		// Each job becomes one of "test_groups"
 		// Then we want our own "dashboard" separate from others
 		// With each one of the jobs (aka "test_groups") in the single dashboard group
@@ -297,6 +297,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			DashboardName:  "beta-prow-tests",
 			HumanTabName:   data.PeriodicJobName, // this is purposefully not betaData, so the display name is the original CI job name
 			CIJobName:      betaData.PeriodicJobName,
+			BaseOptions:    testgridTabSortByFailures,
 			Extra:          nil,
 		})
 	}
@@ -337,5 +338,34 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 		addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
 		configureServiceAccountForJob(&data.Base)
 		executeJobTemplate("periodic go coverage", readTemplate(periodicCustomJob), title, repoName, data.PeriodicJobName, false, data)
+
+		betaData := data.Clone()
+
+		// Change the name and image
+		betaData.PeriodicJobName += "-beta-prow-tests"
+		betaData.Base.Image = strings.ReplaceAll(betaData.Base.Image, ":stable", ":beta")
+
+		// Run once a day because prow-tests beta testing has different desired interval than the underlying job
+		betaData.CronString = fmt.Sprintf("%d %s * * *",
+			calculateMinuteOffset("go-coverage", betaData.PeriodicJobName),
+			fmt.Sprint(getUTCtime(0)))
+
+		// Write out our duplicate job
+		executeJobTemplate("periodic go coverage", readTemplate(periodicCustomJob), title, repoName, betaData.PeriodicJobName, false, betaData)
+
+		// Setup TestGrid here
+		// Each job becomes one of "test_groups"
+		// Then we want our own "dashboard" separate from others
+		// With each one of the jobs (aka "test_groups") in the single dashboard group
+		extras := make(map[string]string)
+		extras["short_text_metric"] = "coverage"
+		metaData.AddNonAlignedTest(NonAlignedTestGroup{
+			DashboardGroup: "prow-tests",
+			DashboardName:  "beta-prow-tests",
+			HumanTabName:   data.PeriodicJobName, // this is purposefully not betaData, so the display name is the original CI job name
+			CIJobName:      betaData.PeriodicJobName,
+			BaseOptions:    testgridTabGroupByDir,
+			Extra:          extras,
+		})
 	}
 }

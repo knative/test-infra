@@ -53,6 +53,8 @@ type NonAlignedTestGroup struct {
 	HumanTabName string
 	// Used to find the logs
 	CIJobName string
+	// Becomes BaseOptions in the tab template, is something like "sort-by-failures="
+	BaseOptions string
 	// Extra things that show up in yaml in the test_groups section
 	Extra map[string]string
 }
