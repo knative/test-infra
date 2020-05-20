@@ -122,7 +122,12 @@ update-prow-cluster: update-almost-all-cluster-deployments update-all-boskos-dep
 # account key, or temporarily use your own credentials by running
 # gcloud auth application-default login
 update-testgrid-config: confirm-master
-	bazel run @k8s//testgrid/cmd/configurator -- \
-		--oneshot \
-		--output=gs://$(TESTGRID_GCS)/config \
-		--yaml=$(realpath $(TESTGRID_CONFIG))
+	docker run -i --rm \
+		-v "$(PWD):$(PWD)" \
+		-v "$(TSETGRID_CONFIG):$(TESTGRID_CONFIG)" \
+		-w "$(PWD)" \
+		gcr.io/k8s-prow/configurator:v20200519-00d052e16 \
+		"--oneshot" \
+		"--output=gs://$(TESTGRID_GCS)/config" \
+		"--yaml=$(realpath $(TESTGRID_CONFIG))"
+
