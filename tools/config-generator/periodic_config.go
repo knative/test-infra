@@ -288,7 +288,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		// Write out our duplicate job
 		executeJobTemplate("periodic", jobTemplate, title, repoName, betaData.PeriodicJobName, false, betaData)
 
-		// Setup TestGrid here?
+		// Setup TestGrid here
 		// Each job becomes one of "test_groups"
 		// Then we want our own "dashboard" separate from others
 		// With each one of the jobs (aka "test_groups") in the single dashboard group
@@ -297,6 +297,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			DashboardName:  "beta-prow-tests",
 			HumanTabName:   data.PeriodicJobName, // this is purposefully not betaData, so the display name is the original CI job name
 			CIJobName:      betaData.PeriodicJobName,
+			BaseOptions:    testgridTabSortByFailures,
 			Extra:          nil,
 		})
 	}
@@ -304,11 +305,17 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 
 // generateGoCoveragePeriodic generates the go coverage periodic job config for the given repo (configuration is ignored).
 func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) {
-	for i, repo := range repositories {
-		if repoName != repo.Name || !repo.EnableGoCoverage {
+	var repo *repositoryData
+	// Find a repository entry where repo name matches and Go Coverage is enabled
+	for i, repoI := range repositories {
+		if repoName != repoI.Name || !repoI.EnableGoCoverage {
 			continue
 		}
-		repositories[i].Processed = true
+		repo = &repositories[i]
+		break
+	}
+	if repo != nil && repo.EnableGoCoverage {
+		repo.Processed = true
 		var data periodicJobTemplateData
 		data.Base = newbaseProwJobTemplateData(repoName)
 		data.Base.Image = coverageDockerImage
@@ -321,16 +328,44 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 			fmt.Sprintf("--cov-threshold-percentage=%d", data.Base.GoCoverageThreshold)}
 		data.Base.ServiceAccount = ""
 		data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
-		if repositories[i].DotDev {
+		if repo.DotDev {
 			data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  path_alias: knative.dev/"+path.Base(repoName))
 		}
-		if repositories[i].Go114 {
+		if repo.Go114 {
 			data.Base.SetGoVersion(GoVersion{1, 14})
 		}
 		addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 		addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
 		configureServiceAccountForJob(&data.Base)
 		executeJobTemplate("periodic go coverage", readTemplate(periodicCustomJob), title, repoName, data.PeriodicJobName, false, data)
-		return
+
+		betaData := data.Clone()
+
+		// Change the name and image
+		betaData.PeriodicJobName += "-beta-prow-tests"
+		betaData.Base.Image = strings.ReplaceAll(betaData.Base.Image, ":stable", ":beta")
+
+		// Run once a day because prow-tests beta testing has different desired interval than the underlying job
+		betaData.CronString = fmt.Sprintf("%d %s * * *",
+			calculateMinuteOffset("go-coverage", betaData.PeriodicJobName),
+			fmt.Sprint(getUTCtime(0)))
+
+		// Write out our duplicate job
+		executeJobTemplate("periodic go coverage", readTemplate(periodicCustomJob), title, repoName, betaData.PeriodicJobName, false, betaData)
+
+		// Setup TestGrid here
+		// Each job becomes one of "test_groups"
+		// Then we want our own "dashboard" separate from others
+		// With each one of the jobs (aka "test_groups") in the single dashboard group
+		extras := make(map[string]string)
+		extras["short_text_metric"] = "coverage"
+		metaData.AddNonAlignedTest(NonAlignedTestGroup{
+			DashboardGroup: "prow-tests",
+			DashboardName:  "beta-prow-tests",
+			HumanTabName:   data.PeriodicJobName, // this is purposefully not betaData, so the display name is the original CI job name
+			CIJobName:      betaData.PeriodicJobName,
+			BaseOptions:    testgridTabGroupByDir,
+			Extra:          extras,
+		})
 	}
 }

@@ -691,6 +691,9 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.13-continuous-beta-prow-tests
 - name: ci-knative-serving-0.14-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.14-continuous-beta-prow-tests
+- name: ci-knative-serving-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-serving-go-coverage-beta-prow-tests
+  short_text_metric: "coverage"
 - name: ci-knative-client-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-client-continuous-beta-prow-tests
 - name: ci-knative-client-0.11-continuous-beta-prow-tests
@@ -701,10 +704,16 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-client-0.13-continuous-beta-prow-tests
 - name: ci-knative-client-0.14-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-client-0.14-continuous-beta-prow-tests
+- name: ci-knative-client-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-client-go-coverage-beta-prow-tests
+  short_text_metric: "coverage"
 - name: ci-knative-client-contrib-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-client-contrib-continuous-beta-prow-tests
 - name: ci-knative-docs-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-docs-continuous-beta-prow-tests
+- name: ci-knative-docs-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-docs-go-coverage-beta-prow-tests
+  short_text_metric: "coverage"
 - name: ci-knative-eventing-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-eventing-continuous-beta-prow-tests
 - name: ci-knative-eventing-0.11-continuous-beta-prow-tests
@@ -715,6 +724,9 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-eventing-0.13-continuous-beta-prow-tests
 - name: ci-knative-eventing-0.14-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-eventing-0.14-continuous-beta-prow-tests
+- name: ci-knative-eventing-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-go-coverage-beta-prow-tests
+  short_text_metric: "coverage"
 - name: ci-knative-eventing-contrib-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-continuous-beta-prow-tests
 - name: ci-knative-eventing-contrib-0.11-continuous-beta-prow-tests
@@ -725,16 +737,28 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-0.13-continuous-beta-prow-tests
 - name: ci-knative-eventing-contrib-0.14-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-0.14-continuous-beta-prow-tests
+- name: ci-knative-eventing-contrib-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-go-coverage-beta-prow-tests
+  short_text_metric: "coverage"
 - name: ci-knative-pkg-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-pkg-continuous-beta-prow-tests
+- name: ci-knative-pkg-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-pkg-go-coverage-beta-prow-tests
+  short_text_metric: "coverage"
 - name: ci-knative-caching-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-caching-continuous-beta-prow-tests
+- name: ci-knative-caching-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-caching-go-coverage-beta-prow-tests
+  short_text_metric: "coverage"
 - name: ci-knative-sample-controller-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sample-controller-continuous-beta-prow-tests
 - name: ci-knative-sample-source-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sample-source-continuous-beta-prow-tests
 - name: ci-knative-test-infra-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-test-infra-continuous-beta-prow-tests
+- name: ci-knative-test-infra-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-test-infra-go-coverage-beta-prow-tests
+  short_text_metric: "coverage"
 - name: ci-knative-serving-operator-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-serving-operator-continuous-beta-prow-tests
 - name: ci-knative-serving-operator-0.11-continuous-beta-prow-tests
@@ -745,6 +769,9 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-serving-operator-0.13-continuous-beta-prow-tests
 - name: ci-knative-serving-operator-0.14-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-serving-operator-0.14-continuous-beta-prow-tests
+- name: ci-knative-serving-operator-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-serving-operator-go-coverage-beta-prow-tests
+  short_text_metric: "coverage"
 - name: ci-knative-eventing-operator-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-eventing-operator-continuous-beta-prow-tests
 - name: ci-knative-eventing-operator-0.11-continuous-beta-prow-tests
@@ -755,6 +782,9 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-eventing-operator-0.13-continuous-beta-prow-tests
 - name: ci-knative-eventing-operator-0.14-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-eventing-operator-0.14-continuous-beta-prow-tests
+- name: ci-knative-eventing-operator-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-operator-go-coverage-beta-prow-tests
+  short_text_metric: "coverage"
 - name: ci-google-knative-gcp-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-google-knative-gcp-continuous-beta-prow-tests
 - name: ci-google-knative-gcp-0.12-continuous-beta-prow-tests
@@ -763,18 +793,39 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-google-knative-gcp-0.13-continuous-beta-prow-tests
 - name: ci-google-knative-gcp-0.14-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-google-knative-gcp-0.14-continuous-beta-prow-tests
+- name: ci-google-knative-gcp-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-google-knative-gcp-go-coverage-beta-prow-tests
+  short_text_metric: "coverage"
 - name: ci-knative-net-certmanager-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-net-certmanager-continuous-beta-prow-tests
+- name: ci-knative-net-certmanager-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-net-certmanager-go-coverage-beta-prow-tests
+  short_text_metric: "coverage"
 - name: ci-knative-net-contour-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-net-contour-continuous-beta-prow-tests
+- name: ci-knative-net-contour-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-net-contour-go-coverage-beta-prow-tests
+  short_text_metric: "coverage"
 - name: ci-knative-net-http01-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-net-http01-continuous-beta-prow-tests
+- name: ci-knative-net-http01-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-net-http01-go-coverage-beta-prow-tests
+  short_text_metric: "coverage"
 - name: ci-knative-net-istio-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-net-istio-continuous-beta-prow-tests
+- name: ci-knative-net-istio-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-net-istio-go-coverage-beta-prow-tests
+  short_text_metric: "coverage"
 - name: ci-knative-net-kourier-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-net-kourier-continuous-beta-prow-tests
+- name: ci-knative-net-kourier-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-net-kourier-go-coverage-beta-prow-tests
+  short_text_metric: "coverage"
 - name: ci-knative-operator-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-operator-continuous-beta-prow-tests
+- name: ci-knative-operator-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-operator-go-coverage-beta-prow-tests
+  short_text_metric: "coverage"
 - name: ci-knative-sandbox-eventing-kafka-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-kafka-continuous-beta-prow-tests
 dashboards:
@@ -1588,148 +1639,199 @@ dashboards:
   dashboard_tab:
   - name: ci-knative-serving-continuous
     test_group_name: ci-knative-serving-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-serving-0.11-continuous
     test_group_name: ci-knative-serving-0.11-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-serving-0.12-continuous
     test_group_name: ci-knative-serving-0.12-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-serving-0.13-continuous
     test_group_name: ci-knative-serving-0.13-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-serving-0.14-continuous
     test_group_name: ci-knative-serving-0.14-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
+  - name: ci-knative-serving-go-coverage
+    test_group_name: ci-knative-serving-go-coverage-beta-prow-tests
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
   - name: ci-knative-client-continuous
     test_group_name: ci-knative-client-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-client-0.11-continuous
     test_group_name: ci-knative-client-0.11-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-client-0.12-continuous
     test_group_name: ci-knative-client-0.12-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-client-0.13-continuous
     test_group_name: ci-knative-client-0.13-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-client-0.14-continuous
     test_group_name: ci-knative-client-0.14-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
+  - name: ci-knative-client-go-coverage
+    test_group_name: ci-knative-client-go-coverage-beta-prow-tests
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
   - name: ci-knative-client-contrib-continuous
     test_group_name: ci-knative-client-contrib-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-docs-continuous
     test_group_name: ci-knative-docs-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
+  - name: ci-knative-docs-go-coverage
+    test_group_name: ci-knative-docs-go-coverage-beta-prow-tests
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
   - name: ci-knative-eventing-continuous
     test_group_name: ci-knative-eventing-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-eventing-0.11-continuous
     test_group_name: ci-knative-eventing-0.11-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-eventing-0.12-continuous
     test_group_name: ci-knative-eventing-0.12-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-eventing-0.13-continuous
     test_group_name: ci-knative-eventing-0.13-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-eventing-0.14-continuous
     test_group_name: ci-knative-eventing-0.14-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
+  - name: ci-knative-eventing-go-coverage
+    test_group_name: ci-knative-eventing-go-coverage-beta-prow-tests
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
   - name: ci-knative-eventing-contrib-continuous
     test_group_name: ci-knative-eventing-contrib-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-eventing-contrib-0.11-continuous
     test_group_name: ci-knative-eventing-contrib-0.11-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-eventing-contrib-0.12-continuous
     test_group_name: ci-knative-eventing-contrib-0.12-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-eventing-contrib-0.13-continuous
     test_group_name: ci-knative-eventing-contrib-0.13-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-eventing-contrib-0.14-continuous
     test_group_name: ci-knative-eventing-contrib-0.14-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
+  - name: ci-knative-eventing-contrib-go-coverage
+    test_group_name: ci-knative-eventing-contrib-go-coverage-beta-prow-tests
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
   - name: ci-knative-pkg-continuous
     test_group_name: ci-knative-pkg-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
+  - name: ci-knative-pkg-go-coverage
+    test_group_name: ci-knative-pkg-go-coverage-beta-prow-tests
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
   - name: ci-knative-caching-continuous
     test_group_name: ci-knative-caching-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
+  - name: ci-knative-caching-go-coverage
+    test_group_name: ci-knative-caching-go-coverage-beta-prow-tests
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
   - name: ci-knative-sample-controller-continuous
     test_group_name: ci-knative-sample-controller-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-sample-source-continuous
     test_group_name: ci-knative-sample-source-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-test-infra-continuous
     test_group_name: ci-knative-test-infra-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
+  - name: ci-knative-test-infra-go-coverage
+    test_group_name: ci-knative-test-infra-go-coverage-beta-prow-tests
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
   - name: ci-knative-serving-operator-continuous
     test_group_name: ci-knative-serving-operator-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-serving-operator-0.11-continuous
     test_group_name: ci-knative-serving-operator-0.11-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-serving-operator-0.12-continuous
     test_group_name: ci-knative-serving-operator-0.12-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-serving-operator-0.13-continuous
     test_group_name: ci-knative-serving-operator-0.13-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-serving-operator-0.14-continuous
     test_group_name: ci-knative-serving-operator-0.14-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
+  - name: ci-knative-serving-operator-go-coverage
+    test_group_name: ci-knative-serving-operator-go-coverage-beta-prow-tests
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
   - name: ci-knative-eventing-operator-continuous
     test_group_name: ci-knative-eventing-operator-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-eventing-operator-0.11-continuous
     test_group_name: ci-knative-eventing-operator-0.11-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-eventing-operator-0.12-continuous
     test_group_name: ci-knative-eventing-operator-0.12-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-eventing-operator-0.13-continuous
     test_group_name: ci-knative-eventing-operator-0.13-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-knative-eventing-operator-0.14-continuous
     test_group_name: ci-knative-eventing-operator-0.14-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
+  - name: ci-knative-eventing-operator-go-coverage
+    test_group_name: ci-knative-eventing-operator-go-coverage-beta-prow-tests
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
   - name: ci-google-knative-gcp-continuous
     test_group_name: ci-google-knative-gcp-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-google-knative-gcp-0.12-continuous
     test_group_name: ci-google-knative-gcp-0.12-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-google-knative-gcp-0.13-continuous
     test_group_name: ci-google-knative-gcp-0.13-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
   - name: ci-google-knative-gcp-0.14-continuous
     test_group_name: ci-google-knative-gcp-0.14-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
+  - name: ci-google-knative-gcp-go-coverage
+    test_group_name: ci-google-knative-gcp-go-coverage-beta-prow-tests
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
   - name: ci-knative-net-certmanager-continuous
     test_group_name: ci-knative-net-certmanager-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
+  - name: ci-knative-net-certmanager-go-coverage
+    test_group_name: ci-knative-net-certmanager-go-coverage-beta-prow-tests
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
   - name: ci-knative-net-contour-continuous
     test_group_name: ci-knative-net-contour-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
+  - name: ci-knative-net-contour-go-coverage
+    test_group_name: ci-knative-net-contour-go-coverage-beta-prow-tests
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
   - name: ci-knative-net-http01-continuous
     test_group_name: ci-knative-net-http01-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
+  - name: ci-knative-net-http01-go-coverage
+    test_group_name: ci-knative-net-http01-go-coverage-beta-prow-tests
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
   - name: ci-knative-net-istio-continuous
     test_group_name: ci-knative-net-istio-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
+  - name: ci-knative-net-istio-go-coverage
+    test_group_name: ci-knative-net-istio-go-coverage-beta-prow-tests
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
   - name: ci-knative-net-kourier-continuous
     test_group_name: ci-knative-net-kourier-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
+  - name: ci-knative-net-kourier-go-coverage
+    test_group_name: ci-knative-net-kourier-go-coverage-beta-prow-tests
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
   - name: ci-knative-operator-continuous
     test_group_name: ci-knative-operator-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
+  - name: ci-knative-operator-go-coverage
+    test_group_name: ci-knative-operator-go-coverage-beta-prow-tests
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
   - name: ci-knative-sandbox-eventing-kafka-continuous
     test_group_name: ci-knative-sandbox-eventing-kafka-continuous-beta-prow-tests
-    base_options: "sort-by-name="
+    base_options: "sort-by-failures="
 dashboard_groups:
 - name: knative
   dashboard_names:

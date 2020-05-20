@@ -14,6 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-source "${HOME}/.gvm/scripts/gvm"
+# Transition from coverage tool calling `/coverage` to `runner.sh coverage`
 
-gvm "$@"
+runner.sh coverage "$@"

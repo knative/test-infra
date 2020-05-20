@@ -21,10 +21,10 @@ source "${HOME}/.gvm/scripts/gvm"
 if [[ -v GO_VERSION ]]; then
   gvm use "${GO_VERSION}"
   # Get our original Go directory back into GOPATH
-  pushd ${ORIGINAL_GOPATH}
+  pushd "${ORIGINAL_GOPATH}" || exit 2
   gvm pkgset create --local || echo
   gvm pkgset use --local
-  popd
+  popd || exit 2
   # At this point, our GOPATH is set to something like:
   #  GOPATH=/go:/go/.gvm_local/pkgsets/go1.13.10/local:/root/.gvm/pkgsets/go1.13.10/global
   # Which is fine for Go, but some scripts assume GOPATH is a single directory :(
