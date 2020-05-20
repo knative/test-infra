@@ -82,6 +82,8 @@ type prowConfigTemplateData struct {
 	GubernatorHost    string
 	TestGridGcsBucket string
 	TideRepos         []string
+	ManagedRepos      []string
+	ManagedOrgs       []string
 	TestInfraRepo     string
 }
 
@@ -643,7 +645,10 @@ func getProwConfigData(config yaml.MapSlice) prowConfigTemplateData {
 	data.PresubmitLogsDir = presubmitLogsDir
 	data.LogsDir = LogsDir
 	data.TideRepos = make([]string, 0)
+	data.ManagedRepos = make([]string, 0)
+	data.ManagedOrgs = make([]string, 0)
 	// Repos enabled for tide are all those that have presubmit jobs.
+	var isProd bool
 	for _, section := range config {
 		if section.Key != "presubmits" {
 			continue
@@ -654,10 +659,21 @@ func getProwConfigData(config yaml.MapSlice) prowConfigTemplateData {
 			if strings.HasSuffix(orgRepoName, "test-infra") {
 				data.TestInfraRepo = orgRepoName
 			}
+			if strings.HasPrefix(orgRepoName, "knative/") {
+				isProd = true
+			}
 		}
+	}
+	if isProd {
+		data.ManagedOrgs = []string{"knative", "knative-sandbox"}
+		data.ManagedRepos = []string{"google/knative-gcp"}
+	} else {
+		data.ManagedRepos = []string{"knative-prow-robot/serving", "knative-prow-robot/test-infra"}
 	}
 	// Sort repos to make output stable.
 	sort.Strings(data.TideRepos)
+	sort.Strings(data.ManagedOrgs)
+	sort.Strings(data.ManagedRepos)
 	return data
 }
 

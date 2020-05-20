@@ -119,20 +119,31 @@ branch-protection:
       enforce_admins: false
 tide:
   queries:
-  - org:
-    - "knative"
-    - "knative-sandbox"
-    labels:
-    - lgtm
-    - approved
-    - "cla: yes"
-    missingLabels: &knative_tide_missing_labels
-    - do-not-merge/hold
-    - do-not-merge/work-in-progress
-    - do-not-merge/invalid-owners-file
-    - needs-rebase
   - repos:
     - "google/knative-gcp"
+    - "knative-sandbox/eventing-kafka"
+    - "knative-sandbox/eventing-rabbitmq"
+    - "knative/caching"
+    - "knative/client"
+    - "knative/client-contrib"
+    - "knative/community"
+    - "knative/docs"
+    - "knative/eventing"
+    - "knative/eventing-contrib"
+    - "knative/eventing-operator"
+    - "knative/net-certmanager"
+    - "knative/net-contour"
+    - "knative/net-http01"
+    - "knative/net-istio"
+    - "knative/net-kourier"
+    - "knative/operator"
+    - "knative/pkg"
+    - "knative/sample-controller"
+    - "knative/sample-source"
+    - "knative/serving"
+    - "knative/serving-operator"
+    - "knative/test-infra"
+    - "knative/website"
     labels:
     - lgtm
     - approved
