@@ -120,30 +120,9 @@ branch-protection:
 tide:
   queries:
   - repos:
+    - "knative"
+    - "knative-sandbox"
     - "google/knative-gcp"
-    - "knative-sandbox/eventing-kafka"
-    - "knative-sandbox/eventing-rabbitmq"
-    - "knative/caching"
-    - "knative/client"
-    - "knative/client-contrib"
-    - "knative/community"
-    - "knative/docs"
-    - "knative/eventing"
-    - "knative/eventing-contrib"
-    - "knative/eventing-operator"
-    - "knative/net-certmanager"
-    - "knative/net-contour"
-    - "knative/net-http01"
-    - "knative/net-istio"
-    - "knative/net-kourier"
-    - "knative/operator"
-    - "knative/pkg"
-    - "knative/sample-controller"
-    - "knative/sample-source"
-    - "knative/serving"
-    - "knative/serving-operator"
-    - "knative/test-infra"
-    - "knative/website"
     labels:
     - lgtm
     - approved

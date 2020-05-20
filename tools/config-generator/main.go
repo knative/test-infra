@@ -778,6 +778,10 @@ func outputConfig(line string) {
 	}
 }
 
+func stringSlice(elems ...string) []string {
+	return elems
+}
+
 // strExists checks if the given string exists in the array
 func strExists(arr []string, str string) bool {
 	for _, s := range arr {
@@ -903,6 +907,7 @@ func executeTemplate(name, templ string, data interface{}) {
 		"indent_keys":          indentKeys,
 		"indent_map":           indentMap,
 		"repo":                 gitHubRepo,
+		"stringSlice":          stringSlice,
 	}
 	t := template.Must(template.New(name).Funcs(funcMap).Delims("[[", "]]").Parse(templ))
 	if err := t.Execute(&res, data); err != nil {

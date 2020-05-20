@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+[[$repos := stringSlice "knative" "knative-sandbox" "google/knative-gcp"]]
+
 # Settings for the "approve" plugin.
 approve:
 - repos:
-  [[indent_array 2 .TideRepos]]
+  [[indent_array 2 $repos]]
   require_self_approval: false
   ignore_review_state: false
 
@@ -77,7 +79,7 @@ label:
 # Plugins enabled for each repo.
 
 plugins:
-[[range .TideRepos]]
+[[range $repos]]
   [[.]]:
   - approve
   - assign
@@ -106,7 +108,7 @@ plugins:
 [[end]]
 
 external_plugins:
-[[range .TideRepos]]
+[[range $repos]]
   [[.]]:
   - name: needs-rebase
     events:

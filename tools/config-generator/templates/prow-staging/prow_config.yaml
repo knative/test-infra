@@ -1,3 +1,5 @@
+[[$repos := stringSlice "knative-prow-robot/serving" "knative-prow-robot/test-infra"]]
+
 plank:
   job_url_template: '[[.ProwHost]]/view/gcs/[[.GcsBucket]]/{{if or (eq .Spec.Type "presubmit") (eq .Spec.Type "batch")}}[[.PresubmitLogsDir]]/pull{{with .Spec.Refs}}/{{.Org}}_{{.Repo}}{{end}}{{else}}[[.LogsDir]]{{end}}{{if eq .Spec.Type "presubmit"}}/{{with index .Spec.Refs.Pulls 0}}{{.Number}}{{end}}{{else if eq .Spec.Type "batch"}}/batch{{end}}/{{.Spec.Job}}/{{.Status.BuildID}}/'
   report_templates:
@@ -105,7 +107,7 @@ branch-protection:
 tide:
   queries:
   - repos:
-    [[indent_array 4 .TideRepos]]
+    [[indent_array 4 $repos]]
     labels:
     - lgtm
     - approved
