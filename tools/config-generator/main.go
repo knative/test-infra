@@ -170,6 +170,7 @@ var (
 	timeoutOverride    int
 
 	// List of Knative repositories.
+	// Not guaranteed unique by any value of the struct
 	repositories []repositoryData
 
 	// Map which sections of the config.yaml were written to stdout.
