@@ -6593,13 +6593,13 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  knative-sandbox/operator:
-  - name: pull-knative-sandbox-operator-build-tests
+  knative/operator:
+  - name: pull-knative-operator-build-tests
     agent: kubernetes
-    context: pull-knative-sandbox-operator-build-tests
+    context: pull-knative-operator-build-tests
     always_run: true
-    rerun_command: "/test pull-knative-sandbox-operator-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-sandbox-operator-build-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-operator-build-tests"
+    trigger: "(?m)^/test (all|pull-knative-operator-build-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/operator
     cluster: "build-knative"
@@ -6631,12 +6631,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-sandbox-operator-unit-tests
+  - name: pull-knative-operator-unit-tests
     agent: kubernetes
-    context: pull-knative-sandbox-operator-unit-tests
+    context: pull-knative-operator-unit-tests
     always_run: true
-    rerun_command: "/test pull-knative-sandbox-operator-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-sandbox-operator-unit-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-operator-unit-tests"
+    trigger: "(?m)^/test (all|pull-knative-operator-unit-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/operator
     cluster: "build-knative"
@@ -6668,12 +6668,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-sandbox-operator-integration-tests
+  - name: pull-knative-operator-integration-tests
     agent: kubernetes
-    context: pull-knative-sandbox-operator-integration-tests
+    context: pull-knative-operator-integration-tests
     always_run: true
-    rerun_command: "/test pull-knative-sandbox-operator-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-sandbox-operator-integration-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-operator-integration-tests"
+    trigger: "(?m)^/test (all|pull-knative-operator-integration-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/operator
     cluster: "build-knative"
@@ -6705,12 +6705,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-sandbox-operator-go-coverage
+  - name: pull-knative-operator-go-coverage
     agent: kubernetes
-    context: pull-knative-sandbox-operator-go-coverage
+    context: pull-knative-operator-go-coverage
     always_run: true
-    rerun_command: "/test pull-knative-sandbox-operator-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-sandbox-operator-go-coverage),?(\\s+|$)"
+    rerun_command: "/test pull-knative-operator-go-coverage"
+    trigger: "(?m)^/test (all|pull-knative-operator-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
     path_alias: knative.dev/operator
@@ -6722,7 +6722,7 @@ presubmits:
         command:
         - "/coverage"
         args:
-        - "--postsubmit-job-name=post-knative-sandbox-operator-go-coverage"
+        - "--postsubmit-job-name=post-knative-operator-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
         - "--github-token=/etc/covbot-token/token"
@@ -6734,12 +6734,12 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
-  - name: pull-knative-sandbox-operator-upgrade-tests
+  - name: pull-knative-operator-upgrade-tests
     agent: kubernetes
-    context: pull-knative-sandbox-operator-upgrade-tests
+    context: pull-knative-operator-upgrade-tests
     always_run: true
-    rerun_command: "/test pull-knative-sandbox-operator-upgrade-tests"
-    trigger: "(?m)^/test (all|pull-knative-sandbox-operator-upgrade-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-operator-upgrade-tests"
+    trigger: "(?m)^/test (all|pull-knative-operator-upgrade-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/operator
     cluster: "build-knative"
@@ -14497,17 +14497,17 @@ periodics:
       env:
       - name: GO_VERSION
         value: go1.14
-- cron: "18 * * * *"
-  name: ci-knative-sandbox-operator-continuous
+- cron: "0 * * * *"
+  name: ci-knative-operator-continuous
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-operator-continuous
+    prow.k8s.io/pubsub.runID: ci-knative-operator-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative-sandbox
+  - org: knative
     repo: operator
     base_ref: master
     path_alias: knative.dev/operator
@@ -14535,17 +14535,17 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "54 8,11,22 * * *"
-  name: ci-knative-sandbox-operator-continuous-beta-prow-tests
+- cron: "40 8,11,22 * * *"
+  name: ci-knative-operator-continuous-beta-prow-tests
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-operator-continuous
+    prow.k8s.io/pubsub.runID: ci-knative-operator-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative-sandbox
+  - org: knative
     repo: operator
     base_ref: master
     path_alias: knative.dev/operator
@@ -14573,17 +14573,17 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "30 9 * * *"
-  name: ci-knative-sandbox-operator-nightly-release
+- cron: "48 9 * * *"
+  name: ci-knative-operator-nightly-release
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-operator-nightly-release
+    prow.k8s.io/pubsub.runID: ci-knative-operator-nightly-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative-sandbox
+  - org: knative
     repo: operator
     base_ref: master
     path_alias: knative.dev/operator
@@ -14612,17 +14612,17 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "46 9 * * 2"
-  name: ci-knative-sandbox-operator-dot-release
+- cron: "4 9 * * 2"
+  name: ci-knative-operator-dot-release
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-operator-dot-release
+    prow.k8s.io/pubsub.runID: ci-knative-operator-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative-sandbox
+  - org: knative
     repo: operator
     base_ref: master
     path_alias: knative.dev/operator
@@ -14661,17 +14661,17 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "38 */2 * * *"
-  name: ci-knative-sandbox-operator-auto-release
+- cron: "32 */2 * * *"
+  name: ci-knative-operator-auto-release
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-operator-auto-release
+    prow.k8s.io/pubsub.runID: ci-knative-operator-auto-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative-sandbox
+  - org: knative
     repo: operator
     base_ref: master
     path_alias: knative.dev/operator
@@ -14711,16 +14711,16 @@ periodics:
       secret:
         secretName: release-account
 - cron: "0 1 * * *"
-  name: ci-knative-sandbox-operator-go-coverage
+  name: ci-knative-operator-go-coverage
   labels:
       prow.k8s.io/pubsub.project: knative-tests
       prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-sandbox-operator-go-coverage
+      prow.k8s.io/pubsub.runID: ci-knative-operator-go-coverage
   agent: kubernetes
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative-sandbox
+  - org: knative
     repo: operator
     base_ref: master
     path_alias: knative.dev/operator
@@ -15960,8 +15960,8 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
-  knative-sandbox/operator:
-  - name: post-knative-sandbox-operator-go-coverage
+  knative/operator:
+  - name: post-knative-operator-go-coverage
     branches:
     - master
     agent: kubernetes

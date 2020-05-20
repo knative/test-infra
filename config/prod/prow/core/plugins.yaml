@@ -17,7 +17,6 @@ approve:
   - "google/knative-gcp"
   - "knative-sandbox/eventing-kafka"
   - "knative-sandbox/eventing-rabbitmq"
-  - "knative-sandbox/operator"
   - "knative/caching"
   - "knative/client"
   - "knative/client-contrib"
@@ -31,6 +30,7 @@ approve:
   - "knative/net-http01"
   - "knative/net-istio"
   - "knative/net-kourier"
+  - "knative/operator"
   - "knative/pkg"
   - "knative/sample-controller"
   - "knative/sample-source"
@@ -144,31 +144,6 @@ plugins:
   - wip
   - yuks
   knative-sandbox/eventing-rabbitmq:
-  - approve
-  - assign
-  - blunderbuss
-  - buildifier
-  - cat
-  - dog
-  - golint
-  - heart
-  - help
-  - hold
-  - label
-  - lgtm
-  - lifecycle
-  - milestone
-  - owners-label
-  - project
-  - shrug
-  - size
-  - skip
-  - trigger
-  - verify-owners
-  - welcome
-  - wip
-  - yuks
-  knative-sandbox/operator:
   - approve
   - assign
   - blunderbuss
@@ -494,6 +469,31 @@ plugins:
   - wip
   - yuks
   knative/net-kourier:
+  - approve
+  - assign
+  - blunderbuss
+  - buildifier
+  - cat
+  - dog
+  - golint
+  - heart
+  - help
+  - hold
+  - label
+  - lgtm
+  - lifecycle
+  - milestone
+  - owners-label
+  - project
+  - shrug
+  - size
+  - skip
+  - trigger
+  - verify-owners
+  - welcome
+  - wip
+  - yuks
+  knative/operator:
   - approve
   - assign
   - blunderbuss
@@ -709,11 +709,6 @@ external_plugins:
     events:
       - issue_comment
       - pull_request
-  knative-sandbox/operator:
-  - name: needs-rebase
-    events:
-      - issue_comment
-      - pull_request
   knative/caching:
   - name: needs-rebase
     events:
@@ -775,6 +770,11 @@ external_plugins:
       - issue_comment
       - pull_request
   knative/net-kourier:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
+  knative/operator:
   - name: needs-rebase
     events:
       - issue_comment
