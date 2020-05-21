@@ -84,7 +84,7 @@ label:
 plugins:
 [[if .ManagedOrgs]]
 [[range .ManagedOrgs]]
-  [[.]]/*:
+  [[.]]:
   - approve
   - assign
   - blunderbuss
@@ -144,7 +144,7 @@ plugins:
 external_plugins:
 [[if .ManagedOrgs]]
 [[range .ManagedOrgs]]
-  [[.]]/*:
+  [[.]]:
   - name: needs-rebase
     events:
       - issue_comment
