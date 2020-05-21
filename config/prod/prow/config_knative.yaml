@@ -465,6 +465,9 @@ presubmits:
     - integration-tests: true
       dot-dev: true
       needs-dind: true
+    - go-coverage: true
+      dot-dev: true
+      needs-dind: true
 
   knative-sandbox/eventing-rabbitmq:
     - build-tests: true
