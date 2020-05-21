@@ -71,7 +71,7 @@ function run() {
       echo "I don't believe you are in a repo root; exiting"
       exit 5
     fi
-    git remote add test-infra https://github.com/knative/test-infra.git || true
+    git remote add test-infra https://github.com/knative/test-infra.git || echo "test-infra remote already set; not changing"
     git fetch test-infra "${SCRIPTS_REF}"
     do_read_tree
     echo "Attempting to point all scripts to use this new path"
