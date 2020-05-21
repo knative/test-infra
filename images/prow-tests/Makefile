@@ -14,3 +14,9 @@
 
 IMAGE_NAME = prow-tests
 include ../simple-image.mk
+
+push_beta: confirm-master build
+	docker tag $(IMG):$(TAG) $(IMG):beta
+	docker push $(IMG):beta
+
+push:: push_beta
