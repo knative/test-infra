@@ -27,7 +27,7 @@ const (
 	presubmitJob = "prow_presubmit_job.yaml"
 
 	// presubmitGoCoverageJob is the template for go coverage presubmit jobs.
-	presubmitGoCoverageJob = "prow_presubmit_gocoverage_job.yaml"
+	presubmitGoCoverageJob = "prow_presubmit_gocoverate_job.yaml"
 )
 
 // presubmitJobTemplateData contains data about a presubmit Prow job.
@@ -71,6 +71,7 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 			}
 			jobTemplate = readTemplate(presubmitGoCoverageJob)
 			data.PresubmitJobName = data.Base.RepoNameForJob + "-go-coverage"
+			data.Base.Image = coverageDockerImage
 			data.Base.ServiceAccount = ""
 			repoData.EnableGoCoverage = true
 			addVolumeToJob(&data.Base, "/etc/covbot-token", "covbot-token", true, "")
@@ -113,10 +114,11 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 
 	// Generate config for pull-knative-serving-go-coverage-dev right after pull-knative-serving-go-coverage,
 	// this job is mainly for debugging purpose.
+	// TODO: make this a static job in config/prod/prow/jobs/custom_jobs.yaml so the generator can be simplified
 	if data.PresubmitPullJobName == "pull-knative-serving-go-coverage" {
 		data.PresubmitPullJobName += "-dev"
 		data.Base.AlwaysRun = false
-		data.Base.Image = strings.ReplaceAll(data.Base.Image, ":stable", ":coverage-dev")
+		data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest", -1)
 		template := strings.Replace(readTemplate(presubmitGoCoverageJob), "(all|", "(", 1)
 		executeJobTemplate("presubmit", template, title, repoName, data.PresubmitPullJobName, true, data)
 	}
