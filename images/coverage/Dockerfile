@@ -12,11 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-IMAGE_NAME = prow-tests
-include ../simple-image.mk
+FROM golang:1.13
+LABEL maintainer="Stephen Lu <syzf@google.com>"
 
-push_beta: confirm-master build
-	docker tag $(IMG):$(TAG) $(IMG):beta
-	docker push $(IMG):beta
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    git
 
-push:: push_beta
+# Temporarily add test-infra to the image to build custom tools
+COPY . /go/src/knative.dev/test-infra
+
+# Build tool in the container
+RUN go install ${TEMP_REPO_DIR}/tools/coverage
+RUN cp "$(which coverage)" /
+
+# Remove test-infra from the container
+RUN rm -fr /go/src/knative.dev/test-infra
+
+ENTRYPOINT ["/coverage"]

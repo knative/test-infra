@@ -12,11 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-IMAGE_NAME = prow-tests
+IMAGE_NAME ?= coverage
 include ../simple-image.mk
-
-push_beta: confirm-master build
-	docker tag $(IMG):$(TAG) $(IMG):beta
-	docker push $(IMG):beta
-
-push:: push_beta

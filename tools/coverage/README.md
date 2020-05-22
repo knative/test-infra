@@ -16,9 +16,9 @@ See the [design document](design.md).
 
 ## Build and Release
 
-In the `/images/prow-tests` directory, run `make push_coverage_dev` to build and
-upload a staging version, intended for testing and debugging. The staging
-version can be triggered on a PR through the comment
+In the `/images/coverage` directory, run `make IMAGE_NAME=coverage-dev push` to
+build and upload a staging version, intended for testing and debugging. The
+staging version can be triggered on a PR through the comment
 `/test pull-knative-serving-go-coverage-dev`. Note that staging version can only
 be tested against the serving repository because the staging jobs only exist in
 the serving repository.
@@ -29,4 +29,5 @@ the serving repository.
   `/test pull-knative-serving-go-coverage-dev` to a PR.
 - To run the periodic workflow, (re)run a `post-knative-serving-go-coverage-dev`
   job.
-- The beta-prow-tests dashboard also has coverage running from prow-tests:beta
+
+To publish a new version of the code coverage tool, run `make push`.
