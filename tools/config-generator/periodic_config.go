@@ -323,7 +323,7 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 		data.Base.GoCoverageThreshold = repo.GoCoverageThreshold
 		data.Base.Command = "runner.sh"
 		data.Base.Args = []string{
-			"coverage",
+			"/coverage",
 			"--artifacts=$(ARTIFACTS)",
 			fmt.Sprintf("--cov-threshold-percentage=%d", data.Base.GoCoverageThreshold)}
 		data.Base.ServiceAccount = ""

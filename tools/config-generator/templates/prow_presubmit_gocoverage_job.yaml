@@ -18,7 +18,7 @@
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=[[.PresubmitPostJobName]]"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=[[.Base.GoCoverageThreshold]]"

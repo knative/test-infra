@@ -495,7 +495,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-serving-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=80"
@@ -530,7 +530,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-serving-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=80"
@@ -568,7 +568,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-serving-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=80"
@@ -1603,7 +1603,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-client-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -1638,7 +1638,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-client-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -2129,7 +2129,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-eventing-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -2164,7 +2164,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-eventing-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -2471,7 +2471,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-eventing-contrib-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -2506,7 +2506,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-eventing-contrib-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -2655,7 +2655,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-docs-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -2979,7 +2979,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-pkg-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -3014,7 +3014,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-pkg-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -3311,7 +3311,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-test-infra-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -3346,7 +3346,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-test-infra-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -3491,7 +3491,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-caching-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -4020,7 +4020,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-google-knative-gcp-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -4054,7 +4054,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-google-knative-gcp-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -4351,7 +4351,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-net-certmanager-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -4386,7 +4386,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-net-certmanager-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -4683,7 +4683,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-net-contour-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -4718,7 +4718,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-net-contour-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -5015,7 +5015,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-net-http01-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -5050,7 +5050,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-net-http01-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -5347,7 +5347,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-net-istio-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -5382,7 +5382,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-net-istio-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -5757,7 +5757,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-net-kourier-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -5792,7 +5792,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-net-kourier-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -6089,7 +6089,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-serving-operator-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -6124,7 +6124,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-serving-operator-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -6497,7 +6497,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-eventing-operator-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -6532,7 +6532,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-eventing-operator-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -6753,7 +6753,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-operator-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -6951,7 +6951,7 @@ presubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--postsubmit-job-name=post-knative-sandbox-eventing-kafka-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -8243,7 +8243,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=80"
       env:
@@ -8270,7 +8270,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=80"
       env:
@@ -9060,7 +9060,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -9087,7 +9087,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -9275,7 +9275,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
 - cron: "11 7 * * *"
@@ -9298,7 +9298,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
 - cron: "52 */2 * * *"
@@ -10092,7 +10092,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -10119,7 +10119,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -10916,7 +10916,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -10943,7 +10943,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -11046,7 +11046,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -11073,7 +11073,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -11176,7 +11176,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -11203,7 +11203,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -11458,7 +11458,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -11485,7 +11485,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -12242,7 +12242,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -12269,7 +12269,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -13026,7 +13026,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -13053,7 +13053,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -13662,7 +13662,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -13688,7 +13688,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -13924,7 +13924,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -13951,7 +13951,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -14187,7 +14187,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -14214,7 +14214,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -14450,7 +14450,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -14477,7 +14477,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -14713,7 +14713,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -14740,7 +14740,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -14976,7 +14976,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -15003,7 +15003,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -15243,7 +15243,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -15270,7 +15270,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -15550,7 +15550,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -15577,7 +15577,7 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "coverage"
+      - "/coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -16204,7 +16204,7 @@ postsubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16224,7 +16224,7 @@ postsubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16245,7 +16245,7 @@ postsubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16306,7 +16306,7 @@ postsubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16327,7 +16327,7 @@ postsubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16347,7 +16347,7 @@ postsubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
   knative/pkg:
@@ -16365,7 +16365,7 @@ postsubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16386,7 +16386,7 @@ postsubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16407,7 +16407,7 @@ postsubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16466,7 +16466,7 @@ postsubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16487,7 +16487,7 @@ postsubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16508,7 +16508,7 @@ postsubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16529,7 +16529,7 @@ postsubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16550,7 +16550,7 @@ postsubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16571,7 +16571,7 @@ postsubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16592,7 +16592,7 @@ postsubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16613,7 +16613,7 @@ postsubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16634,7 +16634,7 @@ postsubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16655,7 +16655,7 @@ postsubmits:
         command:
         - runner.sh
         args:
-        - "coverage"
+        - "/coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
