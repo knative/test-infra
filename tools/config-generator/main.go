@@ -148,7 +148,6 @@ var (
 	nightlyAccount             string
 	releaseAccount             string
 	githubCommenterDockerImage string
-	coverageDockerImage        string
 	prowTestsDockerImage       string
 	presubmitScript            string
 	releaseScript              string
@@ -469,11 +468,6 @@ func (data *baseProwJobTemplateData) SetGoVersion(version GoVersion) {
 		}
 	}
 	data.addEnvToJob("GO_VERSION", version.String())
-
-	// TODO: get coverage unified and cleaned up
-	if strings.Contains(data.Image, "coverage:") && version.Equals(GoVersion{1, 14}) {
-		data.Image = strings.ReplaceAll(data.Image, "coverage:", "coverage-go114:")
-	}
 }
 
 // addLabelToJob adds extra labels to a job
@@ -1099,7 +1093,6 @@ func main() {
 	flag.StringVar(&testAccount, "test-account", "/etc/test-account/service-account.json", "Path to the service account JSON for test jobs")
 	flag.StringVar(&nightlyAccount, "nightly-account", "/etc/nightly-account/service-account.json", "Path to the service account JSON for nightly release jobs")
 	flag.StringVar(&releaseAccount, "release-account", "/etc/release-account/service-account.json", "Path to the service account JSON for release jobs")
-	var coverageDockerImageName = flag.String("coverage-docker", "coverage:latest", "Docker image for coverage tool")
 	var prowTestsDockerImageName = flag.String("prow-tests-docker", "prow-tests:stable", "prow-tests docker image")
 	flag.StringVar(&githubCommenterDockerImage, "github-commenter-docker", "gcr.io/k8s-prow/commenter:v20190731-e3f7b9853", "github commenter docker image")
 	flag.StringVar(&presubmitScript, "presubmit-script", "./test/presubmit-tests.sh", "Executable for running presubmit tests")
@@ -1115,7 +1108,6 @@ func main() {
 		log.Fatal("Pass the config file as parameter")
 	}
 
-	coverageDockerImage = path.Join(*dockerImagesBase, *coverageDockerImageName)
 	prowTestsDockerImage = path.Join(*dockerImagesBase, *prowTestsDockerImageName)
 
 	// We use MapSlice instead of maps to keep key order and create predictable output.

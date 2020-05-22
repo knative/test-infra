@@ -490,11 +490,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-serving-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=80"
@@ -524,11 +525,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-serving-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=80"
@@ -561,11 +563,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:coverage-dev
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-serving-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=80"
@@ -1595,11 +1598,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-client-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -1629,11 +1633,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-client-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -2119,11 +2124,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-eventing-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -2153,11 +2159,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-eventing-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -2459,11 +2466,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-eventing-contrib-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -2493,11 +2501,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-eventing-contrib-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -2641,11 +2650,12 @@ presubmits:
     cluster: "build-knative"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-docs-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -2964,11 +2974,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-pkg-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -2998,11 +3009,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-pkg-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -3294,11 +3306,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-test-infra-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -3328,11 +3341,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-test-infra-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -3472,11 +3486,12 @@ presubmits:
     cluster: "build-knative"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-caching-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -4000,11 +4015,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-google-knative-gcp-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -4033,11 +4049,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-google-knative-gcp-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -4329,11 +4346,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-net-certmanager-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -4363,11 +4381,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-net-certmanager-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -4659,11 +4678,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-net-contour-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -4693,11 +4713,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-net-contour-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -4989,11 +5010,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-net-http01-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -5023,11 +5045,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-net-http01-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -5319,11 +5342,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-net-istio-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -5353,11 +5377,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-net-istio-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -5727,11 +5752,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-net-kourier-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -5761,11 +5787,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-net-kourier-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -6057,11 +6084,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-serving-operator-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -6091,11 +6119,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-serving-operator-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -6463,11 +6492,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-eventing-operator-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -6497,11 +6527,12 @@ presubmits:
     - "release-0.14"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-eventing-operator-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -6717,11 +6748,12 @@ presubmits:
     cluster: "build-knative"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-operator-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -6914,11 +6946,12 @@ presubmits:
     cluster: "build-knative"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=post-knative-sandbox-eventing-kafka-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
@@ -8205,11 +8238,12 @@ periodics:
     path_alias: knative.dev/serving
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=80"
       env:
@@ -8231,11 +8265,12 @@ periodics:
     path_alias: knative.dev/serving
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=80"
       env:
@@ -9020,11 +9055,12 @@ periodics:
     path_alias: knative.dev/client
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -9046,11 +9082,12 @@ periodics:
     path_alias: knative.dev/client
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -9233,11 +9270,12 @@ periodics:
     base_ref: master
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
 - cron: "11 7 * * *"
@@ -9255,11 +9293,12 @@ periodics:
     base_ref: master
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
 - cron: "52 */2 * * *"
@@ -10048,11 +10087,12 @@ periodics:
     path_alias: knative.dev/eventing
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -10074,11 +10114,12 @@ periodics:
     path_alias: knative.dev/eventing
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -10870,11 +10911,12 @@ periodics:
     path_alias: knative.dev/eventing-contrib
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -10896,11 +10938,12 @@ periodics:
     path_alias: knative.dev/eventing-contrib
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -10998,11 +11041,12 @@ periodics:
     path_alias: knative.dev/pkg
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -11024,11 +11068,12 @@ periodics:
     path_alias: knative.dev/pkg
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -11126,11 +11171,12 @@ periodics:
     path_alias: knative.dev/caching
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -11152,11 +11198,12 @@ periodics:
     path_alias: knative.dev/caching
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -11406,11 +11453,12 @@ periodics:
     path_alias: knative.dev/test-infra
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -11432,11 +11480,12 @@ periodics:
     path_alias: knative.dev/test-infra
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -12188,11 +12237,12 @@ periodics:
     path_alias: knative.dev/serving-operator
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -12214,11 +12264,12 @@ periodics:
     path_alias: knative.dev/serving-operator
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -12970,11 +13021,12 @@ periodics:
     path_alias: knative.dev/eventing-operator
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -12996,11 +13048,12 @@ periodics:
     path_alias: knative.dev/eventing-operator
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -13604,11 +13657,12 @@ periodics:
     base_ref: master
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -13629,11 +13683,12 @@ periodics:
     base_ref: master
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -13864,11 +13919,12 @@ periodics:
     path_alias: knative.dev/net-certmanager
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -13890,11 +13946,12 @@ periodics:
     path_alias: knative.dev/net-certmanager
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -14125,11 +14182,12 @@ periodics:
     path_alias: knative.dev/net-contour
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -14151,11 +14209,12 @@ periodics:
     path_alias: knative.dev/net-contour
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -14386,11 +14445,12 @@ periodics:
     path_alias: knative.dev/net-http01
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -14412,11 +14472,12 @@ periodics:
     path_alias: knative.dev/net-http01
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -14647,11 +14708,12 @@ periodics:
     path_alias: knative.dev/net-istio
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -14673,11 +14735,12 @@ periodics:
     path_alias: knative.dev/net-istio
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -14908,11 +14971,12 @@ periodics:
     path_alias: knative.dev/net-kourier
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -14934,11 +14998,12 @@ periodics:
     path_alias: knative.dev/net-kourier
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -15173,11 +15238,12 @@ periodics:
     path_alias: knative.dev/operator
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -15199,11 +15265,12 @@ periodics:
     path_alias: knative.dev/operator
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -15478,11 +15545,12 @@ periodics:
     path_alias: knative.dev/eventing-kafka
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -15504,11 +15572,12 @@ periodics:
     path_alias: knative.dev/eventing-kafka
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
       imagePullPolicy: Always
       command:
-      - "/coverage"
+      - "runner.sh"
       args:
+      - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
       env:
@@ -16130,11 +16199,12 @@ postsubmits:
     path_alias: knative.dev/serving
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16149,11 +16219,12 @@ postsubmits:
     path_alias: knative.dev/serving
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:coverage-dev
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16169,11 +16240,12 @@ postsubmits:
     path_alias: knative.dev/client
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16229,11 +16301,12 @@ postsubmits:
     path_alias: knative.dev/eventing
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16249,11 +16322,12 @@ postsubmits:
     path_alias: knative.dev/eventing-contrib
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16268,11 +16342,12 @@ postsubmits:
     cluster: "build-knative"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
   knative/pkg:
@@ -16285,11 +16360,12 @@ postsubmits:
     path_alias: knative.dev/pkg
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16305,11 +16381,12 @@ postsubmits:
     path_alias: knative.dev/test-infra
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16325,11 +16402,12 @@ postsubmits:
     path_alias: knative.dev/caching
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16383,11 +16461,12 @@ postsubmits:
     cluster: "build-knative"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16403,11 +16482,12 @@ postsubmits:
     path_alias: knative.dev/net-certmanager
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16423,11 +16503,12 @@ postsubmits:
     path_alias: knative.dev/net-contour
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16443,11 +16524,12 @@ postsubmits:
     path_alias: knative.dev/net-http01
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16463,11 +16545,12 @@ postsubmits:
     path_alias: knative.dev/net-istio
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16483,11 +16566,12 @@ postsubmits:
     path_alias: knative.dev/net-kourier
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16503,11 +16587,12 @@ postsubmits:
     path_alias: knative.dev/serving-operator
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16523,11 +16608,12 @@ postsubmits:
     path_alias: knative.dev/eventing-operator
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16543,11 +16629,12 @@ postsubmits:
     path_alias: knative.dev/operator
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
@@ -16563,11 +16650,12 @@ postsubmits:
     path_alias: knative.dev/eventing-kafka
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/coverage-go114:latest
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         env:
