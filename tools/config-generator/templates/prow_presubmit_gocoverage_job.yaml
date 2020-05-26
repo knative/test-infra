@@ -16,8 +16,9 @@
       - image: [[.Base.Image]]
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--postsubmit-job-name=[[.PresubmitPostJobName]]"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=[[.Base.GoCoverageThreshold]]"

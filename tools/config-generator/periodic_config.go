@@ -318,12 +318,12 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 		repo.Processed = true
 		var data periodicJobTemplateData
 		data.Base = newbaseProwJobTemplateData(repoName)
-		data.Base.Image = coverageDockerImage
 		data.PeriodicJobName = fmt.Sprintf("ci-%s-go-coverage", data.Base.RepoNameForJob)
 		data.CronString = goCoveragePeriodicJobCron
 		data.Base.GoCoverageThreshold = repo.GoCoverageThreshold
-		data.Base.Command = "/coverage"
+		data.Base.Command = "runner.sh"
 		data.Base.Args = []string{
+			"coverage",
 			"--artifacts=$(ARTIFACTS)",
 			fmt.Sprintf("--cov-threshold-percentage=%d", data.Base.GoCoverageThreshold)}
 		data.Base.ServiceAccount = ""
