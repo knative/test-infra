@@ -44,7 +44,6 @@ type postsubmitJobTemplateData struct {
 func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
 	var data postsubmitJobTemplateData
 	data.Base = newbaseProwJobTemplateData(repoName)
-	data.Base.Image = coverageDockerImage
 	data.PostsubmitJobName = fmt.Sprintf("post-%s-go-coverage", data.Base.RepoNameForJob)
 	for _, repo := range repositories {
 		if repo.Name == repoName && repo.DotDev {
@@ -62,7 +61,7 @@ func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
 	// this job is mainly for debugging purpose.
 	if data.PostsubmitJobName == "post-knative-serving-go-coverage" {
 		data.PostsubmitJobName += "-dev"
-		data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest", -1)
+		data.Base.Image = strings.ReplaceAll(data.Base.Image, ":stable", ":coverage-dev")
 		executeJobTemplate("postsubmit go coverage", readTemplate(goCoveragePostsubmitJob), title, repoName, data.PostsubmitJobName, false, data)
 	}
 }
