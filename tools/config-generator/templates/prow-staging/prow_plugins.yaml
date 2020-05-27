@@ -79,9 +79,18 @@ label:
   - source/github
   - source/kafka
   - source/prometheus
+
+config_updater:
+  maps:
+    [[.JobConfigPath]]:
+      name: job-config
+
 # Plugins enabled for each repo.
 
 plugins:
+  [[.TestInfraRepo]]
+  - config-updater
+
 [[if .ManagedOrgs]]
 [[range .ManagedOrgs]]
   [[.]]:

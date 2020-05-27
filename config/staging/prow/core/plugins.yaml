@@ -69,8 +69,14 @@ label:
   - source/github
   - source/kafka
   - source/prometheus
+config_updater:
+  maps:
+    config/prod/staging/jobs/*.yaml:
+      name: job-config
 # Plugins enabled for each repo.
 plugins:
+  knative-prow-robot/test-infra
+  - config-updater
   knative-prow-robot/serving:
   - approve
   - assign
