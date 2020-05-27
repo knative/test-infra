@@ -18,26 +18,44 @@
 
 source $(dirname $0)/../../../scripts/library.sh
 
-[[ -z "$1" ]] && abort "pass the name of the job to start as argument"
+JOB_NAME="$1"
+GITHUB_TOKEN_PATH="$2"
+
+[[ -z "${JOB_NAME}" ]] && abort "pass the name of the job to start as argument"
 
 set -e
-
-cd ${REPO_ROOT_DIR}
-
-make -C config/prod get-cluster-credentials
 
 JOB_YAML=$(mktemp)
 CONFIG_YAML=${REPO_ROOT_DIR}/config/prod/prow/core/config.yaml
 JOB_CONFIG_YAML=${REPO_ROOT_DIR}/config/prod/prow/jobs
 
-docker run -i --rm \
-    -v "${PWD}:${PWD}" -v "${CONFIG_YAML}:${CONFIG_YAML}" -v "${JOB_CONFIG_YAML}:${JOB_CONFIG_YAML}" \
-    -w "${PWD}" \
-    gcr.io/k8s-prow/mkpj:v20200427-84e5e2b2c \
-    "--job=$1" "--config-path=${CONFIG_YAML}" "--job-config-path=${JOB_CONFIG_YAML}" \
-    > ${JOB_YAML}
+if [[ -n "${GITHUB_TOKEN_PATH}" ]]; then
+    docker run -i --rm \
+        -v "${PWD}:${PWD}" -v "${CONFIG_YAML}:${CONFIG_YAML}" -v "${JOB_CONFIG_YAML}:${JOB_CONFIG_YAML}" \
+        -v "${GITHUB_TOKEN_PATH}:${GITHUB_TOKEN_PATH}" \
+        -w "${PWD}" \
+        gcr.io/k8s-prow/mkpj:v20200427-84e5e2b2c \
+        "--job=${JOB_NAME}" "--config-path=${CONFIG_YAML}" "--job-config-path=${JOB_CONFIG_YAML}" \
+        "--github-token-path=${GITHUB_TOKEN_PATH}" \
+        > ${JOB_YAML}
+else
+    failed=0
+    docker run -i --rm \
+        -v "${PWD}:${PWD}" -v "${CONFIG_YAML}:${CONFIG_YAML}" -v "${JOB_CONFIG_YAML}:${JOB_CONFIG_YAML}" \
+        -w "${PWD}" \
+        gcr.io/k8s-prow/mkpj:v20200427-84e5e2b2c \
+        "--job=${JOB_NAME}" "--config-path=${CONFIG_YAML}" "--job-config-path=${JOB_CONFIG_YAML}" \
+        > ${JOB_YAML} || failed=1
+
+    if (( failed )); then
+        echo "ERROR: failed generating job config using mkpj"
+        echo "It's possible that GitHub token is missing, please try passing github token path as second parameter"
+        exit 1
+    fi
+fi
 
 echo "Job YAML file saved to ${JOB_YAML}"
-kubectl apply -f ${JOB_YAML}
 
-make -C config/prod unset-cluster-credentials
+make -C "${REPO_ROOT_DIR}/config/prod" get-cluster-credentials
+kubectl apply -f ${JOB_YAML}
+make -C "${REPO_ROOT_DIR}/config/prod" unset-cluster-credentials
