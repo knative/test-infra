@@ -88,9 +88,6 @@ config_updater:
 # Plugins enabled for each repo.
 
 plugins:
-  [[.TestInfraRepo]]
-  - config-updater
-
 [[if .ManagedOrgs]]
 [[range .ManagedOrgs]]
   [[.]]:
@@ -149,6 +146,8 @@ plugins:
   - yuks
 [[end]]
 [[end]]
+  [[.TestInfraRepo]]:
+  - config-updater
 
 external_plugins:
 [[if .ManagedOrgs]]

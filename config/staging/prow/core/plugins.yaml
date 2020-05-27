@@ -75,8 +75,6 @@ config_updater:
       name: job-config
 # Plugins enabled for each repo.
 plugins:
-  knative-prow-robot/test-infra
-  - config-updater
   knative-prow-robot/serving:
   - approve
   - assign
@@ -127,6 +125,8 @@ plugins:
   - welcome
   - wip
   - yuks
+  knative-prow-robot/test-infra:
+  - config-updater
 external_plugins:
   knative-prow-robot/serving:
   - name: needs-rebase
