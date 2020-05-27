@@ -73,6 +73,7 @@ config_updater:
   maps:
     config/prod/staging/jobs/*.yaml:
       name: job-config
+      gzip: true
 # Plugins enabled for each repo.
 plugins:
   knative-prow-robot/serving:
@@ -127,6 +128,30 @@ plugins:
   - yuks
   knative-prow-robot/test-infra:
   - config-updater
+  - approve
+  - assign
+  - blunderbuss
+  - buildifier
+  - cat
+  - dog
+  - golint
+  - heart
+  - help
+  - hold
+  - label
+  - lgtm
+  - lifecycle
+  - milestone
+  - owners-label
+  - project
+  - shrug
+  - size
+  - skip
+  - trigger
+  - verify-owners
+  - welcome
+  - wip
+  - yuks
 external_plugins:
   knative-prow-robot/serving:
   - name: needs-rebase
