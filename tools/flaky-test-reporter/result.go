@@ -28,6 +28,7 @@ import (
 	"sort"
 	"strings"
 
+	"k8s.io/apimachinery/pkg/util/sets"
 	"knative.dev/pkg/test/helpers"
 	"knative.dev/pkg/test/junit"
 	"knative.dev/pkg/test/prow"
@@ -160,18 +161,18 @@ func addSuiteToRepoData(suite *junit.TestSuite, buildID int, rd *RepoData) {
 
 // https://github.com/knative/test-infra/issues/2120
 func filterOutParentTests(originalCases []junit.TestCase) []junit.TestCase {
-	parents := make(map[string]interface{})
+	parents := sets.NewString()
 	var cases []junit.TestCase
 
 	// Let's scan for eventual parents
 	for _, c := range originalCases {
 		if i := strings.LastIndexByte(c.Name, '/'); i != -1 {
-			parents[c.Name[:i]] = struct{}{}
+			parents.Insert(c.Name[:i])
 		}
 	}
 
 	for _, c := range originalCases {
-		if _, ok := parents[c.Name]; !ok {
+		if !parents.Has(c.Name) {
 			// This test case is not a parent, so we add it to the test cases
 			// we're interested to
 			cases = append(cases, c)
