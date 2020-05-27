@@ -142,7 +142,7 @@ func addSuiteToRepoData(suite *junit.TestSuite, buildID int, rd *RepoData) {
 	if rd.TestStats == nil {
 		rd.TestStats = make(map[string]*TestStat)
 	}
-	for _, testCase := range suite.TestCases {
+	for _, testCase := range filterOutParentTests(suite.TestCases) {
 		testFullName := fmt.Sprintf("%s.%s", suite.Name, testCase.Name)
 		if _, ok := rd.TestStats[testFullName]; !ok {
 			rd.TestStats[testFullName] = &TestStat{TestName: testFullName}
@@ -156,6 +156,29 @@ func addSuiteToRepoData(suite *junit.TestSuite, buildID int, rd *RepoData) {
 			rd.TestStats[testFullName].Failed = append(rd.TestStats[testFullName].Failed, buildID)
 		}
 	}
+}
+
+// https://github.com/knative/test-infra/issues/2120
+func filterOutParentTests(originalCases []junit.TestCase) []junit.TestCase {
+	parents := make(map[string]interface{})
+	var cases []junit.TestCase
+
+	// Let's scan for eventual parents
+	for _, c := range originalCases {
+		if i := strings.LastIndexByte(c.Name, '/'); i != -1 {
+			parents[c.Name[:i]] = struct{}{}
+		}
+	}
+
+	for _, c := range originalCases {
+		if _, ok := parents[c.Name]; !ok {
+			// This test case is not a parent, so we add it to the test cases
+			// we're interested to
+			cases = append(cases, c)
+		}
+	}
+
+	return cases
 }
 
 // TODO: This function has been directly copy-pasted into tools/flaky-test-retryer/log_parser.go
