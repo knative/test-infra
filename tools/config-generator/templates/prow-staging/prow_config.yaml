@@ -104,8 +104,9 @@ branch-protection:
 
 tide:
   queries:
-  - repos:
-    [[indent_array 4 .TideRepos]]
+  [[if .ManagedOrgs]]
+  - orgs:
+    [[indent_array 4 .ManagedOrgs]]
     labels:
     - lgtm
     - approved
@@ -115,6 +116,20 @@ tide:
     - do-not-merge/work-in-progress
     - do-not-merge/invalid-owners-file
     - needs-rebase
+  [[end]]
+  [[if .ManagedRepos]]
+  - repos:
+    [[indent_array 4 .ManagedRepos]]
+    labels:
+    - lgtm
+    - approved
+    - "cla: yes"
+    missingLabels: &knative_tide_missing_labels
+    - do-not-merge/hold
+    - do-not-merge/work-in-progress
+    - do-not-merge/invalid-owners-file
+    - needs-rebase
+  [[end]]
   - repos:
     # Allow PRs for test-infra to be automatically merged without manual approval
     - "[[.TestInfraRepo]]"

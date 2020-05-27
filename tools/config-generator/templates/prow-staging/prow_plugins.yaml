@@ -15,7 +15,12 @@
 # Settings for the "approve" plugin.
 approve:
 - repos:
-  [[indent_array 2 .TideRepos]]
+  [[if .ManagedOrgs]]
+  [[indent_array 2 .ManagedOrgs]]
+  [[end]]
+  [[if .ManagedRepos]]
+  [[indent_array 2 .ManagedRepos]]
+  [[end]]
   require_self_approval: false
   ignore_review_state: false
 
@@ -77,7 +82,8 @@ label:
 # Plugins enabled for each repo.
 
 plugins:
-[[range .TideRepos]]
+[[if .ManagedOrgs]]
+[[range .ManagedOrgs]]
   [[.]]:
   - approve
   - assign
@@ -104,12 +110,53 @@ plugins:
   - wip
   - yuks
 [[end]]
+[[end]]
+[[if .ManagedRepos]]
+[[range .ManagedRepos]]
+  [[.]]:
+  - approve
+  - assign
+  - blunderbuss
+  - buildifier
+  - cat
+  - dog
+  - golint
+  - heart
+  - help
+  - hold
+  - label
+  - lgtm
+  - lifecycle
+  - milestone
+  - owners-label
+  - project
+  - shrug
+  - size
+  - skip
+  - trigger
+  - verify-owners
+  - welcome
+  - wip
+  - yuks
+[[end]]
+[[end]]
 
 external_plugins:
-[[range .TideRepos]]
+[[if .ManagedOrgs]]
+[[range .ManagedOrgs]]
   [[.]]:
   - name: needs-rebase
     events:
       - issue_comment
       - pull_request
+[[end]]
+[[end]]
+[[if .ManagedRepos]]
+[[range .ManagedRepos]]
+  [[.]]:
+  - name: needs-rebase
+    events:
+      - issue_comment
+      - pull_request
+[[end]]
 [[end]]
