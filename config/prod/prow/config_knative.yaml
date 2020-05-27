@@ -285,6 +285,11 @@ presubmits:
       - "release-0.13"
       - "release-0.14"
     - build-tests: true
+      resources:
+        requests:
+          memory: 12Gi # Real request for this pod is 16 as sidecar requests 4
+        limits:
+          memory: 16Gi
     - unit-tests: true
     - integration-tests: true
       needs-monitor: true
