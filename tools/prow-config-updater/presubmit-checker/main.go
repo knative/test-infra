@@ -21,7 +21,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/google/go-github/github"
+	"github.com/google/go-github/v27/github"
 	"knative.dev/pkg/test/ghutil"
 	"knative.dev/pkg/test/prow"
 
@@ -31,7 +31,7 @@ import (
 func main() {
 	githubTokenPath := flag.String("github-token", "",
 		"Github token file path for authenticating with Github")
-	githubBotName := flag.String("github-bot-name", "knative-prow-robot",
+	githubBotName := flag.String("github-bot-name", "",
 		"Github bot name that is used in creating auto-merge PRs")
 	flag.Parse()
 
@@ -73,7 +73,7 @@ func main() {
 		for i, f := range files {
 			fns[i] = f.GetFilename()
 		}
-		bannedFiles := config.CollectRelevantFiles(fns, config.ProdProwKeyConfigPaths)
+		bannedFiles := config.CollectRelevantConfigFiles(fns, config.ProdProwKeyConfigPaths)
 
 		// If any of the production Prow key config files are changed, report the error.
 		if len(bannedFiles) != 0 {

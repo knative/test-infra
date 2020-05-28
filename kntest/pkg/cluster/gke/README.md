@@ -9,28 +9,28 @@ cluster
 
 ## Usage
 
-This tool can be invoked from command line with following parameters:
+This tool can be invoked from command line. The following parameters are common
+for all subcommands:
 
-- `--min-nodes`: minimum number of nodes, default 1
-- `--max-nodes`: maximum number of nodes, default 3
-- `--node-type`: GCE node type, default "e2-standard-4"
-- `--region`: GKE region, default "us-central1"
-- `--zone`: GKE zone, default empty
 - `--project`: GCP project, default empty
 - `--name`: cluster name, default empty
-- `--release-channel`: GKE release channel, default empty
-- `--resource-type`: Boskos resource type
-- `--version`: GKE version
-- `--backup-regions`: backup regions to be used if cluster creation in primary
-  region failed, comma separated list, default "us-west1,us-east1"
-- `--addons`: GKE addons, comma separated list, default empty
-- `--skip-creation`: should skip creation or not
+- `--region`: GKE region, default "us-central1". \
+  Can be more than one to set as backup regions.
+- `--resource-type`: Boskos resource type, default "gke-project"
 
 ## Subcommands
 
 ### Create
 
-`kntest cluster gke create` will always create a new cluster.
+`kntest cluster gke create` will always create a new cluster. It accepts the
+following extra parameters:
+
+- `--min-nodes`: minimum number of nodes, default 1
+- `--max-nodes`: maximum number of nodes, default 3
+- `--node-type`: GCE node type, default "e2-standard-4"
+- `--release-channel`: GKE release channel, default empty
+- `--version`: GKE version, default "latest"
+- `--addons`: GKE addons, comma separated list, default empty
 
 The flow is:
 

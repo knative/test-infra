@@ -22,6 +22,4 @@ const (
 	// Don't do anything if found more than 5 tests flaky, or 1% tests flaky, whichever comes first
 	countThreshold   = 5
 	percentThreshold = 0.01
-
-	org = "knative"
 )

@@ -21,23 +21,19 @@ import (
 	"log"
 
 	"knative.dev/pkg/test/cmd"
-	clm "knative.dev/pkg/testutils/clustermanager/e2e-tests"
 )
 
 // Delete deletes a GKE cluster
-func (o *RequestWrapper) Delete() error {
-	o.Request.SkipCreation = true
+func (rw *RequestWrapper) Delete() error {
+	rw.Request.SkipCreation = true
 
-	gkeClient := clm.GKEClient{}
-	clusterOps := gkeClient.Setup(o.Request)
-	gkeOps := clusterOps.(*clm.GKECluster)
-	if err := gkeOps.Acquire(); err != nil || gkeOps.Cluster == nil {
-		return fmt.Errorf("failed identifying cluster for cleanup: '%w'", err)
+	gkeOps, err := rw.acquire()
+	if err != nil {
+		return fmt.Errorf("error identifying cluster for deletion: %w", err)
 	}
 	log.Printf("Identified project %q and cluster %q for removal", gkeOps.Project, gkeOps.Cluster.Name)
-	var err error
 	if err = gkeOps.Delete(); err != nil {
-		return fmt.Errorf("failed deleting cluster: '%w'", err)
+		return fmt.Errorf("failed deleting cluster: %w", err)
 	}
 	// Unset context with best effort.
 	// The commands will try to unset the current context and delete it from kubeconfig.

@@ -21,8 +21,15 @@
 # Use the flags --build-tests, --unit-tests and --integration-tests
 # to run a specific set of tests.
 
-# markdown linting is too picky for /docs; disabling it for now.
+# markdown linting is too picky, disabling it for now.
 DISABLE_MD_LINTING=1
+
+# Some links under third_party/VENDOR-LICENSE are dead and it's not something
+# we can control, so disable it for now.
+# TODO(chizhg): reenable it after we can do this check more properly with kntest.
+DISABLE_MD_LINK_CHECK=1
+
+export GO111MODULE=on
 
 source $(dirname $0)/../scripts/presubmit-tests.sh
 

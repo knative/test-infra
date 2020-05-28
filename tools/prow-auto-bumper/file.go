@@ -93,7 +93,7 @@ func (pv *PRVersions) updateAllFiles(fileFilters []*regexp.Regexp, imageFilter *
 	dryrun bool) ([]string, error) {
 	var msgs []string
 	if err := helpers.ChdirToRoot(); err != nil {
-		return msgs, fmt.Errorf("failed to change to root dir")
+		return msgs, fmt.Errorf("failed to change to root dir: %w", err)
 	}
 
 	var errs []error

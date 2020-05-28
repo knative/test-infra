@@ -14,6 +14,7 @@
 
 jobConfigs:
   - name: ci-knative-serving-continuous
+    org: knative
     repo: serving
     type: postsubmit
     issueRepo: serving
@@ -21,54 +22,63 @@ jobConfigs:
       - name: serving-api
         identity: CA4DNJ9A4
   - name: ci-knative-serving-istio-1.5-mesh
+    org: knative
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: networking
-        identity: CA9RHBGJX
+      - name: net-istio
+        identity: C012AK2FPK7
   - name: ci-knative-serving-istio-1.5-no-mesh
+    org: knative
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: networking
-        identity: CA9RHBGJX
+      - name: net-istio
+        identity: C012AK2FPK7
   - name: ci-knative-serving-istio-1.4-mesh
+    org: knative
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: networking
-        identity: CA9RHBGJX
+      - name: net-istio
+        identity: C012AK2FPK7
   - name: ci-knative-serving-istio-1.4-no-mesh
+    org: knative
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: networking
-        identity: CA9RHBGJX
+      - name: net-istio
+        identity: C012AK2FPK7
   - name: ci-knative-serving-gloo-0.17.1
+    org: knative
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: networking
-        identity: CA9RHBGJX
+      - name: net-gloo
+        identity: C011X8RKZBR
   - name: ci-knative-serving-contour-latest
+    org: knative
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: networking
-        identity: CA9RHBGJX
+      - name: net-contour
+        identity: C012J5TCS6Q
   - name: ci-knative-serving-kourier-stable
+    org: knative
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: networking
-        identity: CA9RHBGJX
+      - name: net-kourier
+        identity: C012C0VQJAW
   - name: ci-knative-serving-ambassador-latest
+    org: knative
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: networking
-        identity: CA9RHBGJX
+      - name: net-ambassador
+        identity: C011X8SPF8X
   - name: ci-knative-eventing-continuous
+    org: knative
     repo: eventing
     type: postsubmit
     issueRepo: eventing
@@ -76,6 +86,7 @@ jobConfigs:
       - name: eventing
         identity: C9JP909F0
   - name: ci-knative-eventing-contrib-continuous
+    org: knative
     repo: eventing-contrib
     type: postsubmit
     issueRepo: eventing-contrib
@@ -85,5 +96,10 @@ jobConfigs:
       - name: eventing-channels
         identity: CR2141CGY
   - name: ci-knative-test-infra-continuous
+    org: knative
     repo: test-infra
+    type: postsubmit
+  - name: ci-google-knative-gcp-continuous
+    org: google
+    repo: knative-gcp
     type: postsubmit

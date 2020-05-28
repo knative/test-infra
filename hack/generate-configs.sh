@@ -32,11 +32,11 @@ go run "${CONFIG_GENERATOR_DIR}" \
     --image-docker=gcr.io/knative-tests/test-infra \
     --prow-host=https://prow.knative.dev \
     --testgrid-gcs-bucket="knative-testgrid" \
-    --plugins-config-output="${CONFIG_DIR}/prow/core/plugins.yaml" \
-    --prow-config-output="${CONFIG_DIR}/prow/core/config.yaml" \
-    --prow-jobs-config-output="${CONFIG_DIR}/prow/jobs/config.yaml" \
-    --testgrid-config-output="${CONFIG_DIR}/prow/testgrid/testgrid.yaml" \
-    "${CONFIG_DIR}/prow/config_knative.yaml"
+    --plugins-config-output="${CONFIG_DIR}/prod/prow/core/plugins.yaml" \
+    --prow-config-output="${CONFIG_DIR}/prod/prow/core/config.yaml" \
+    --prow-jobs-config-output="${CONFIG_DIR}/prod/prow/jobs/config.yaml" \
+    --testgrid-config-output="${CONFIG_DIR}/prod/prow/testgrid/testgrid.yaml" \
+    "${CONFIG_DIR}/prod/prow/config_knative.yaml"
 
 # Generate config for staging Prow
 go run "${CONFIG_GENERATOR_DIR}" \
@@ -44,11 +44,11 @@ go run "${CONFIG_GENERATOR_DIR}" \
     --gcs-bucket="knative-prow-staging" \
     --generate-testgrid-config=false \
     --generate-maintenance-jobs=false \
-    --image-docker=gcr.io/knative-tests-staging/test-infra \
+    --image-docker=gcr.io/knative-tests/test-infra \
     --prow-host=https://prow-staging.knative.dev \
     --testgrid-gcs-bucket="knative-testgrid-staging" \
-    --plugins-config-output="${CONFIG_DIR}/prow-staging/core/plugins.yaml" \
-    --prow-config-output="${CONFIG_DIR}/prow-staging/core/config.yaml" \
-    --prow-jobs-config-output="${CONFIG_DIR}/prow-staging/jobs/config.yaml" \
-    --testgrid-config-output="${CONFIG_DIR}/prow-staging/testgrid/testgrid.yaml" \
-    "${CONFIG_DIR}/prow-staging/config_staging.yaml"
+    --plugins-config-output="${CONFIG_DIR}/staging/prow/core/plugins.yaml" \
+    --prow-config-output="${CONFIG_DIR}/staging/prow/core/config.yaml" \
+    --prow-jobs-config-output="${CONFIG_DIR}/staging/prow/jobs/config.yaml" \
+    --testgrid-config-output="${CONFIG_DIR}/staging/prow/testgrid/testgrid.yaml" \
+    "${CONFIG_DIR}/staging/prow/config_staging.yaml"

@@ -21,9 +21,9 @@ import (
 )
 
 // Get gets a GKE cluster
-func (o *RequestWrapper) Get() (*clm.GKECluster, error) {
-	o.Request.SkipCreation = true
+func (rw *RequestWrapper) Get() (*clm.GKECluster, error) {
+	rw.Request.SkipCreation = true
 	// Reuse `Create` for getting operation, so that we can reuse the same logic
 	// such as protected project/cluster etc.
-	return o.Create()
+	return rw.Create()
 }

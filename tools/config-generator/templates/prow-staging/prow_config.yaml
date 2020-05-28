@@ -1,22 +1,29 @@
 plank:
   job_url_template: '[[.ProwHost]]/view/gcs/[[.GcsBucket]]/{{if or (eq .Spec.Type "presubmit") (eq .Spec.Type "batch")}}[[.PresubmitLogsDir]]/pull{{with .Spec.Refs}}/{{.Org}}_{{.Repo}}{{end}}{{else}}[[.LogsDir]]{{end}}{{if eq .Spec.Type "presubmit"}}/{{with index .Spec.Refs.Pulls 0}}{{.Number}}{{end}}{{else if eq .Spec.Type "batch"}}/batch{{end}}/{{.Spec.Job}}/{{.Status.BuildID}}/'
-  report_template: '[Full PR test history]([[.GubernatorHost]]/pr/{{.Spec.Refs.Org}}_{{.Spec.Refs.Repo}}/{{with index .Spec.Refs.Pulls 0}}{{.Number}}{{end}}). [Your PR dashboard]([[.GubernatorHost]]/pr/{{with index .Spec.Refs.Pulls 0}}{{.Author}}{{end}}).'
+  report_templates:
+    '*': '[Full PR test history]([[.GubernatorHost]]/pr/{{.Spec.Refs.Org}}_{{.Spec.Refs.Repo}}/{{with index .Spec.Refs.Pulls 0}}{{.Number}}{{end}}). [Your PR dashboard]([[.GubernatorHost]]/pr/{{with index .Spec.Refs.Pulls 0}}{{.Author}}{{end}}).'
   job_url_prefix_config:
-    "*": "[[.ProwHost]]/view/gcs/"
+    '*': [[.ProwHost]]/view/gcs/
   pod_pending_timeout: 60m
-  default_decoration_config:
-    timeout: 7200000000000 # 2h
-    grace_period: 15000000000 # 15s
-    utility_images:
-      # Update these versions when updating plank version in cluster.yaml
-      clonerefs: "gcr.io/k8s-prow/clonerefs:v20200409-becd20a71"
-      initupload: "gcr.io/k8s-prow/initupload:v20200409-becd20a71"
-      entrypoint: "gcr.io/k8s-prow/entrypoint:v20200409-becd20a71"
-      sidecar: "gcr.io/k8s-prow/sidecar:v20200409-becd20a71"
-    gcs_configuration:
-      bucket: "[[.GcsBucket]]"
-      path_strategy: "explicit"
-    gcs_credentials_secret: "test-account"
+  default_decoration_configs:
+    '*':
+      timeout: 2h
+      grace_period: 15s
+      utility_images:
+        # Update these versions when updating plank version in cluster.yaml
+        clonerefs: "gcr.io/k8s-prow/clonerefs:v20200520-e1124f454"
+        initupload: "gcr.io/k8s-prow/initupload:v20200520-e1124f454"
+        entrypoint: "gcr.io/k8s-prow/entrypoint:v20200520-e1124f454"
+        sidecar: "gcr.io/k8s-prow/sidecar:v20200520-e1124f454"
+      gcs_configuration:
+        bucket: "[[.GcsBucket]]"
+        path_strategy: "explicit"
+      gcs_credentials_secret: "test-account"
+      resources:
+        sidecar:
+          requests:
+            cpu: 100m
+            memory: 20Mi
 
 deck:
   spyglass:
@@ -58,6 +65,8 @@ deck:
           # Code is outdated
           # TODO(chizhg): this error message should be defined by the common test infrastructure
           - 'Please run .*hack/update-codegen.sh'
+          # Metrics are logged only for Pods in a failed test.
+          - 'Metrics logs'
       required_files:
       - build-log.txt
     - lens:
@@ -69,9 +78,10 @@ deck:
       required_files:
       - podinfo.json
   tide_update_period: 1s
-  rerun_auth_config:
-    github_team_ids:
-      - 3012514 # Knative Milestone Maintainers
+  rerun_auth_configs:
+    '*':
+      github_team_ids:
+        - 3012514 # Knative Milestone Maintainers
 
 prowjob_namespace: default
 pod_namespace: test-pods
@@ -94,8 +104,9 @@ branch-protection:
 
 tide:
   queries:
-  - repos:
-    [[indent_array 4 .TideRepos]]
+  [[if .ManagedOrgs]]
+  - orgs:
+    [[indent_array 4 .ManagedOrgs]]
     labels:
     - lgtm
     - approved
@@ -105,8 +116,22 @@ tide:
     - do-not-merge/work-in-progress
     - do-not-merge/invalid-owners-file
     - needs-rebase
+  [[end]]
+  [[if .ManagedRepos]]
   - repos:
-    # Allow PRs for test-infra to be automatically merged without manual approval.
+    [[indent_array 4 .ManagedRepos]]
+    labels:
+    - lgtm
+    - approved
+    - "cla: yes"
+    missingLabels: &knative_tide_missing_labels
+    - do-not-merge/hold
+    - do-not-merge/work-in-progress
+    - do-not-merge/invalid-owners-file
+    - needs-rebase
+  [[end]]
+  - repos:
+    # Allow PRs for test-infra to be automatically merged without manual approval
     - "[[.TestInfraRepo]]"
     labels:
     - "cla: yes"
@@ -119,7 +144,8 @@ tide:
     knative-sandbox: squash
     google/knative-gcp: squash
   target_url: [[.ProwHost]]/tide
-  pr_status_base_url: [[.ProwHost]]/pr
+  pr_status_base_urls:
+    '*': [[.ProwHost]]/pr
   blocker_label: tide/merge-blocker
   squash_label: tide/merge-method-squash
   rebase_label: tide/merge-method-rebase

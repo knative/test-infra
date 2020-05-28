@@ -40,6 +40,7 @@ type Config struct {
 // JobConfig is initial configuration for a given repo, defines which job to scan
 type JobConfig struct {
 	Name          string         `yaml:"name"` // name of job to analyze
+	Org           string         `yaml:"org"`  // org to test job on
 	Repo          string         `yaml:"repo"` // repository to test job on
 	Type          string         `yaml:"type"`
 	IssueRepo     string         `yaml:"issueRepo,omitempty"`

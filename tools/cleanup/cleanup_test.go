@@ -44,50 +44,57 @@ func errorMismatch(got error, want error) string {
 
 func TestSelectProjects(t *testing.T) {
 	datas := []struct {
-		projectFlag  string
-		yamlFileFlag string
+		projectFlag  []string
+		yamlFileFlag []string
 		regexFlag    string
 		exp          []string
 		err          error
 	}{
 		{ // Project provided.
-			"foo",
-			"",
+			[]string{"foo"},
+			[]string{},
 			"",
 			[]string{"foo"},
 			nil,
 		},
 		{ // File provided.
-			"",
-			"testdata/resources.yaml",
+			[]string{},
+			[]string{"testdata/resources_01.yaml"},
 			"knative-boskos-.*",
 			[]string{"knative-boskos-01", "knative-boskos-02"},
 			nil,
 		},
+		{ // Multiple files provided.
+			[]string{},
+			[]string{"testdata/resources_01.yaml", "testdata/resources_02.yaml"},
+			"knative-boskos-.*",
+			[]string{"knative-boskos-01", "knative-boskos-02", "knative-boskos-03"},
+			nil,
+		},
 		{ // Bad file provided.
-			"",
-			"/foobar_resources.yamlfoo",
+			[]string{},
+			[]string{"/foobar_resources_01.yamlfoo"},
 			"",
 			[]string{},
 			errors.New("no such file or directory"),
 		},
 		{ // Empty file provided.
-			"",
-			"testdata/empty.yaml",
+			[]string{},
+			[]string{"testdata/empty.yaml"},
 			".*",
 			[]string{},
 			errors.New("no project found"),
 		},
 		{ // Bad regex provided.
-			"",
-			"testdata/resources.yaml",
+			[]string{},
+			[]string{"testdata/resources_01.yaml"},
 			"--->}][{<---",
 			[]string{},
 			errors.New("invalid character class range"),
 		},
 		{ // Unmatching regex provided.
-			"",
-			"testdata/resources.yaml",
+			[]string{},
+			[]string{"testdata/resources_01.yaml"},
 			"foobar-[0-9]",
 			[]string{},
 			errors.New("no project found"),

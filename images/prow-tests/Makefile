@@ -13,4 +13,15 @@
 # limitations under the License.
 
 IMAGE_NAME = prow-tests
-include ../Makefile.simple-image
+include ../simple-image.mk
+
+push_coverage_dev: build
+	docker tag $(IMG):$(TAG) $(IMG):coverage-dev
+	docker push $(IMG):coverage-dev
+
+push_beta: confirm-master build
+	docker tag $(IMG):$(TAG) $(IMG):beta
+	docker push $(IMG):beta
+
+push:: push_beta
+

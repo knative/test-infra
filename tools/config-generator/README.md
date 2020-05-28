@@ -1,8 +1,8 @@
 # config-generator
 
 config-generator is a tool that takes a meta config file (e.g.
-../../config/prow/config_knative.yaml) and [templates](./templates) as input,
-and generates configuration files for Prow and testgrid.
+../../config/prod/prow/config_knative.yaml) and [templates](./templates) as
+input, and generates configuration files for Prow and testgrid.
 
 ## Notice
 

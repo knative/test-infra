@@ -15,7 +15,6 @@
 FROM gcr.io/go-containerregistry/gcrane as gcrane
 
 FROM gcr.io/cloud-builders/gcloud-slim
-LABEL maintainer "Jon Johnson <jonjohnson@google.com>"
 
 # Copy the gcrane binary from the gcrane builder (it is built with ko).
 COPY --from=gcrane /ko-app /bin/gcrane

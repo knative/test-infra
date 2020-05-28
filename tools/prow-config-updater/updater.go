@@ -17,10 +17,12 @@ limitations under the License.
 package main
 
 import (
+	"errors"
 	"fmt"
 	"path/filepath"
+	"strings"
 
-	"github.com/google/go-github/github"
+	"github.com/google/go-github/v27/github"
 	"knative.dev/pkg/test/cmd"
 
 	"knative.dev/test-infra/tools/prow-config-updater/config"
@@ -52,10 +54,14 @@ func (cli *Client) initialize() error {
 }
 
 func (cli *Client) runProwConfigUpdate() error {
-	// If no staging process if needed, we can directly update production Prow configs.
+	// If no staging process if needed, we can directly update the changed Prow configs.
 	if !cli.needsStaging() {
-		if err := cli.updateProw(config.ProdProwEnv); err != nil {
-			return fmt.Errorf("error updating production Prow configs: %v", err)
+		// Try to update both staging and production Prow.
+		// If no config changes need to be updated, the function call will be just a no-op.
+		for _, env := range []config.ProwEnv{config.StagingProwEnv, config.ProdProwEnv} {
+			if err := cli.updateProw(env); err != nil {
+				return fmt.Errorf("error updating Prow configs: %v", err)
+			}
 		}
 	} else {
 		if err := cli.startStaging(); err != nil {
@@ -87,17 +93,20 @@ func (cli *Client) needsStaging() bool {
 		return false
 	}
 	// If any key config files for staging Prow are changed, the staging process will be needed.
-	fs := config.CollectRelevantFiles(cli.files, config.StagingProwKeyConfigPaths)
+	fs := config.CollectRelevantConfigFiles(cli.files, config.StagingProwKeyConfigPaths)
 	return len(fs) != 0
 }
 
 // Update Prow with the changed config files and send message for the update result.
+// If no config changes need to be updated, this function call will be just a no-op.
 func (cli *Client) updateProw(env config.ProwEnv) error {
 	updatedFiles, err := cli.doProwUpdate(env)
 	prnumber := *cli.pr.Number
 	if err == nil {
-		// Best effort, won't fail the process if the comment fails.
-		cli.githubcommenter.commentOnUpdateConfigsSuccess(prnumber, env, updatedFiles)
+		if len(updatedFiles) != 0 {
+			// Best effort, won't fail the process if the comment fails.
+			cli.githubcommenter.commentOnUpdateConfigsSuccess(prnumber, env, updatedFiles)
+		}
 	} else {
 		// Best effort, won't fail the process if the comment fails.
 		cli.githubcommenter.commentOnUpdateConfigsFailure(prnumber, env, updatedFiles, err)
@@ -134,9 +143,9 @@ func (cli *Client) doProwUpdate(env config.ProwEnv) ([]string, error) {
 	relevantFiles := make([]string, 0)
 	switch env {
 	case config.ProdProwEnv:
-		relevantFiles = append(relevantFiles, config.CollectRelevantFiles(cli.files, config.ProdProwConfigPaths)...)
+		relevantFiles = append(relevantFiles, config.CollectRelevantConfigFiles(cli.files, config.ProdProwConfigPaths)...)
 	case config.StagingProwEnv:
-		relevantFiles = append(relevantFiles, config.CollectRelevantFiles(cli.files, config.StagingProwConfigPaths)...)
+		relevantFiles = append(relevantFiles, config.CollectRelevantConfigFiles(cli.files, config.StagingProwConfigPaths)...)
 	default:
 		return relevantFiles, fmt.Errorf("unsupported Prow environement: %q, cannot make the update", env)
 	}
@@ -147,11 +156,13 @@ func (cli *Client) doProwUpdate(env config.ProwEnv) ([]string, error) {
 	}
 
 	// For production Prow, we also need to update Testgrid config if it's changed.
-	tfs := config.CollectRelevantFiles(cli.files, []string{config.ProdTestgridConfigPath})
-	if len(tfs) != 0 {
-		relevantFiles = append(relevantFiles, tfs...)
-		if err := config.UpdateTestgrid(env, cli.dryrun); err != nil {
-			return relevantFiles, fmt.Errorf("error updating Testgrid configs for %q environment: %v", env, err)
+	if env == config.ProdProwEnv {
+		tfs := config.CollectRelevantConfigFiles(cli.files, []string{config.ProdTestgridConfigPath})
+		if len(tfs) != 0 {
+			relevantFiles = append(relevantFiles, tfs...)
+			if err := config.UpdateTestgrid(env, cli.dryrun); err != nil {
+				return relevantFiles, fmt.Errorf("error updating Testgrid configs for %q environment: %v", env, err)
+			}
 		}
 	}
 	return relevantFiles, nil
@@ -165,9 +176,16 @@ func (cli *Client) rollOutToProd() (*github.PullRequest, error) {
 		// We do not need to check the error here as the unit tests can guarantee the paths exist.
 		stagingPath, _ = filepath.Abs(stagingPath)
 		prodPath, _ := filepath.Abs(config.ProdProwKeyConfigPaths[i])
-		// The wildcard '*' needs to be expanded by the shell, so the cp command needs to be run in a shell process.
-		cpCmd := fmt.Sprintf("/bin/bash -c 'cp -r %s/* %s'", stagingPath, prodPath)
-		if _, err := cmd.RunCommand(cpCmd); err != nil {
+		if strings.TrimSpace(prodPath) == "" {
+			return nil, errors.New("prod path can't be empty")
+		}
+		// The wildcard '*' needs to be expanded by the shell, so the cp command
+		// needs to be run in a shell process.
+		syncCmds := []string{
+			fmt.Sprintf("/bin/bash -c 'rm -rf %s/*'", prodPath),
+			fmt.Sprintf("/bin/bash -c 'cp -r %s/* %s'", stagingPath, prodPath),
+		}
+		if _, err := cmd.RunCommands(syncCmds...); err != nil {
 			return nil, fmt.Errorf("error copying staging config files to production: %v", err)
 		}
 	}

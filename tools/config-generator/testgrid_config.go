@@ -20,16 +20,16 @@ package main
 
 import (
 	"fmt"
-	"regexp"
 	"strings"
 	"time"
 )
 
 const (
 	// baseOptions setting for testgrid dashboard tabs
-	testgridTabGroupByDir    = "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-	testgridTabGroupByTarget = "exclude-filter-by-regex=Overall$&group-by-target=&expand-groups=&sort-by-name="
-	testgridTabSortByName    = "sort-by-name="
+	testgridTabGroupByDir     = "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+	testgridTabGroupByTarget  = "exclude-filter-by-regex=Overall$&group-by-target=&expand-groups=&sort-by-name="
+	testgridTabSortByName     = "sort-by-name="
+	testgridTabSortByFailures = "sort-by-failures="
 
 	// generalTestgridConfig contains config-wide definitions.
 	generalTestgridConfig = "testgrid_config_header.yaml"
@@ -47,20 +47,11 @@ const (
 var (
 	// goCoverageMap keep track of which repo has go code coverage when parsing the simple config file
 	goCoverageMap map[string]bool
-	// projNames save the proj names in a list when parsing the simple config file, for the purpose of maintaining the output sequence
-	projNames []string
-	// repoNames save the repo names in a list when parsing the simple config file, for the purpose of maintaining the output sequence
-	repoNames []string
 
-	// metaData saves the meta data needed to generate the final config file.
-	// key is the main project version, value is another map containing job details
-	//     for the job detail map, key is the repo name, value is the list of job types, like continuous, nightly, and etc.
-	metaData = make(map[string]map[string][]string)
+	metaData = NewTestGridMetaData()
 
 	// templatesCache caches templates in memory to avoid I/O
 	templatesCache = make(map[string]string)
-
-	contRegex = regexp.MustCompile(`-[0-9\.]+-continuous`)
 )
 
 // baseTestgridTemplateData contains basic data about the testgrid config file.
@@ -111,17 +102,45 @@ func newBaseTestgridTemplateData(testGroupName string) baseTestgridTemplateData 
 	return data
 }
 
+// Get returns the project JobDetailMap, creating it if necessary
+func (t *TestGridMetaData) Get(projName string) JobDetailMap {
+	t.EnsureExists(projName)
+	return t.md[projName]
+}
+
+func (t *TestGridMetaData) EnsureExists(projName string) bool {
+	if _, exists := t.md[projName]; !exists {
+		t.md[projName] = make(JobDetailMap)
+		if !strExists(t.projNames, projName) {
+			t.projNames = append(t.projNames, projName)
+		}
+		return false
+	}
+	return true
+}
+
+func (t *TestGridMetaData) EnsureRepo(projName, repoName string) bool {
+	jdm := t.Get(projName)
+	if !jdm.EnsureExists(repoName) {
+		if !strExists(t.repoNames, repoName) {
+			t.repoNames = append(t.repoNames, repoName)
+		}
+		return false
+	}
+	return true
+}
+
 // generateTestGridSection generates the configs for a TestGrid section using the given generator
-func generateTestGridSection(sectionName string, generator testgridEntityGenerator, skipReleasedProj bool) {
+func (t *TestGridMetaData) generateTestGridSection(sectionName string, generator testgridEntityGenerator, skipReleasedProj bool) {
 	outputConfig(sectionName + ":")
 	emittedOutput = false
-	for _, projName := range projNames {
+	for _, projName := range t.projNames {
 		// Do not handle the project if it is released and we want to skip it.
 		if skipReleasedProj && isReleased(projName) {
 			continue
 		}
-		repos := metaData[projName]
-		for _, repoName := range repoNames {
+		repos := t.md[projName]
+		for _, repoName := range t.repoNames {
 			if jobNames, exists := repos[repoName]; exists {
 				generator(projName, repoName, jobNames)
 			}
@@ -134,16 +153,36 @@ func generateTestGridSection(sectionName string, generator testgridEntityGenerat
 	}
 }
 
+// generateNonAlignedTestGroups
+func (t *TestGridMetaData) generateNonAlignedTestGroups() {
+	for _, tg := range t.nonAligned {
+		executeTestGroupTemplate(tg.CIJobName, getGcsLogDir(tg.CIJobName), tg.Extra)
+	}
+}
+
+//
+// testGroupName: This is the human-readable tab name
+func (t *TestGridMetaData) AddNonAlignedTest(n NonAlignedTestGroup) {
+	t.nonAligned = append(t.nonAligned, n)
+}
+
+// testGroupName: the name of the job in every case AFAICT
+func getGcsLogDir(testGroupName string) string {
+	return fmt.Sprintf("%s/%s/%s", GCSBucket, LogsDir, testGroupName)
+}
+
 // generateTestGroup generates the test group configuration
-func generateTestGroup(projName string, repoName string, jobNames []string) {
+func (t *TestGridMetaData) generateTestGroup(projName string, repoName string, jobNames []string) {
 	projRepoStr := buildProjRepoStr(projName, repoName)
 	for _, jobName := range jobNames {
 		testGroupName := getTestGroupName(projRepoStr, jobName)
-		gcsLogDir := fmt.Sprintf("%s/%s/%s", gcsBucket, logsDir, testGroupName)
+		gcsLogDir := getGcsLogDir(testGroupName)
 		extras := make(map[string]string)
 		switch jobName {
 		case "continuous":
-			if contRegex.FindString(testGroupName) != "" {
+			// projName has the release encoded into it, so the main page at http://testgrid.knative.dev
+			// does not mix releases with the master branch
+			if releaseRegex.FindString(projName) != "" {
 				extras["num_failures_to_alert"] = "3"
 				extras["alert_options"] = "\n    alert_mail_to_addresses: \"prime-engprod-sea@google.com\""
 			} else {
@@ -158,7 +197,7 @@ func generateTestGroup(projName string, repoName string, jobNames []string) {
 		case "webhook-apicoverage":
 			extras["alert_stale_results_hours"] = "48" // 2 days
 		case "test-coverage":
-			gcsLogDir = strings.ToLower(fmt.Sprintf("%s/%s/ci-%s-%s", gcsBucket, logsDir, projRepoStr, "go-coverage"))
+			gcsLogDir = getGcsLogDir(fmt.Sprintf("ci-%s-%s", projRepoStr, "go-coverage"))
 			extras["short_text_metric"] = "coverage"
 		default:
 			extras["alert_stale_results_hours"] = "3"
@@ -235,15 +274,35 @@ func getTestGroupName(repoName string, jobName string) string {
 	}
 }
 
-func generateDashboardsForReleases() {
-	for _, projName := range projNames {
+// generateNonAlignedDashboards generates some of the content under "dashboards:"
+func (t *TestGridMetaData) generateNonAlignedDashboards() {
+	// Collect them by DashboardName
+	dn := make(map[string][]NonAlignedTestGroup)
+	for _, tg := range t.nonAligned {
+		_, exists := dn[tg.DashboardName]
+		if !exists {
+			dn[tg.DashboardName] = make([]NonAlignedTestGroup, 0)
+		}
+		dn[tg.DashboardName] = append(dn[tg.DashboardName], tg)
+	}
+	for name, tgs := range dn {
+		outputConfig("- name: " + name + "\n" + baseIndent + "dashboard_tab:")
+		for _, tg := range tgs {
+			executeDashboardTabTemplate(tg.HumanTabName, tg.CIJobName, tg.BaseOptions, nil)
+		}
+	}
+}
+
+// generateDashboardsForReleases generates some of the content under "dashboards:"
+func (t *TestGridMetaData) generateDashboardsForReleases() {
+	for _, projName := range t.projNames {
 		// Do not handle the project if it is not released.
 		if !isReleased(projName) {
 			continue
 		}
-		repos := metaData[projName]
+		repos := t.md[projName]
 		outputConfig("- name: " + projName + "\n" + baseIndent + "dashboard_tab:")
-		for _, repoName := range repoNames {
+		for _, repoName := range t.repoNames {
 			if jobNames, exists := repos[repoName]; exists {
 				for _, jobName := range jobNames {
 					extras := make(map[string]string)
@@ -257,18 +316,36 @@ func generateDashboardsForReleases() {
 	}
 }
 
-// generateDashboardGroups generates the dashboard groups configuration
-func generateDashboardGroups() {
+// generateNonAlignedDashboardGroups generates some of the content under "dashboards:"
+func (t *TestGridMetaData) generateNonAlignedDashboardGroups() {
+	// Collect Dashboards by DashboardGroup
+	dg := make(map[string][]string)
+	for _, tg := range t.nonAligned {
+		_, exists := dg[tg.DashboardGroup]
+		if !exists {
+			dg[tg.DashboardGroup] = make([]string, 0)
+		}
+		if !strExists(dg[tg.DashboardGroup], tg.DashboardName) {
+			dg[tg.DashboardGroup] = append(dg[tg.DashboardGroup], tg.DashboardName)
+		}
+	}
+	for group, names := range dg {
+		executeDashboardGroupTemplate(group, names)
+	}
+}
+
+// generateDashboardGroups generates the stuff in dashboard_groups:
+func (t *TestGridMetaData) generateDashboardGroups() {
 	outputConfig("dashboard_groups:")
-	for _, projName := range projNames {
+	for _, projName := range t.projNames {
 		// there is only one dashboard for each released project, so we do not need to group them
 		if isReleased(projName) {
 			continue
 		}
 
 		dashboardRepoNames := make([]string, 0)
-		repos := metaData[projName]
-		for _, repoName := range repoNames {
+		repos := t.md[projName]
+		for _, repoName := range t.repoNames {
 			if _, exists := repos[repoName]; exists {
 				dashboardRepoNames = append(dashboardRepoNames, repoName)
 			}
