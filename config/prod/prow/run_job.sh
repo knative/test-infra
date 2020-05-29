@@ -18,7 +18,12 @@
 
 source $(dirname $0)/../../../scripts/library.sh
 
+# First parameter is expected to be the prow job name
 JOB_NAME="$1"
+# Second parameter is optional, need to be supplied for running pull- and post-
+# jobs. Create a token following
+# https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line,
+# with `repo` permission, save it to a file, and supply it's path as parameter
 GITHUB_TOKEN_PATH="$2"
 
 [[ -z "${JOB_NAME}" ]] && abort "pass the name of the job to start as argument"
