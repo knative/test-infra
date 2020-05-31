@@ -309,9 +309,9 @@ function main() {
     echo ">> git version"
     git version
     echo ">> ko version"
-    [[ -f /ko_version ]] && cat /ko_version || echo "unknown"
+    ko version
     echo ">> bazel version"
-    [[ -f /bazel_version ]] && cat /bazel_version || echo "unknown"
+    bazel version
     if [[ "${DOCKER_IN_DOCKER_ENABLED}" == "true" ]]; then
       echo ">> docker version"
       docker version

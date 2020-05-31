@@ -71,10 +71,6 @@ RUN go get -u github.com/jstemmer/go-junit-report
 RUN GO111MODULE=on go get -u github.com/raviqqe/liche@v0.0.0-20200229003944-f57a5d1c5be4  # stable liche version for checking md links
 RUN GO111MODULE=on go get -u github.com/google/go-licenses
 
-# Extract versions
-RUN bazel version > /bazel_version
-RUN ko version > /ko_version
-
 # Set default Go version
 ENV GO_VERSION go1.13
 # Note, it's pointless to run `source-gvm-and-run.sh use go1.13` in this Dockerfile because the PATH changes it makes won't stay in effect
