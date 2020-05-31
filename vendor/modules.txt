@@ -7,10 +7,12 @@ cloud.google.com/go/internal/optional
 cloud.google.com/go/internal/trace
 cloud.google.com/go/internal/version
 # cloud.google.com/go/pubsub v1.2.0
+## explicit
 cloud.google.com/go/pubsub
 cloud.google.com/go/pubsub/apiv1
 cloud.google.com/go/pubsub/internal/distribution
 # cloud.google.com/go/storage v1.6.0
+## explicit
 cloud.google.com/go/storage
 # github.com/BurntSushi/toml v0.3.1
 github.com/BurntSushi/toml
@@ -29,6 +31,7 @@ github.com/docker/docker-credential-helpers/credentials
 # github.com/go-logr/logr v0.1.0
 github.com/go-logr/logr
 # github.com/go-sql-driver/mysql v1.5.0
+## explicit
 github.com/go-sql-driver/mysql
 # github.com/gogo/protobuf v1.3.1
 github.com/gogo/protobuf/proto
@@ -49,12 +52,14 @@ github.com/golang/protobuf/ptypes/duration
 github.com/golang/protobuf/ptypes/empty
 github.com/golang/protobuf/ptypes/timestamp
 # github.com/google/go-cmp v0.4.0
+## explicit
 github.com/google/go-cmp/cmp
 github.com/google/go-cmp/cmp/internal/diff
 github.com/google/go-cmp/cmp/internal/flags
 github.com/google/go-cmp/cmp/internal/function
 github.com/google/go-cmp/cmp/internal/value
 # github.com/google/go-containerregistry v0.0.0-20200123184029-53ce695e4179
+## explicit
 github.com/google/go-containerregistry/pkg/authn
 github.com/google/go-containerregistry/pkg/internal/retry
 github.com/google/go-containerregistry/pkg/internal/retry/wait
@@ -68,12 +73,14 @@ github.com/google/go-containerregistry/pkg/v1/remote/transport
 github.com/google/go-containerregistry/pkg/v1/types
 github.com/google/go-containerregistry/pkg/v1/v1util
 # github.com/google/go-github/v27 v27.0.6
+## explicit
 github.com/google/go-github/v27/github
 # github.com/google/go-querystring v1.0.0
 github.com/google/go-querystring/query
 # github.com/google/gofuzz v1.1.0
 github.com/google/gofuzz
 # github.com/google/licenseclassifier v0.0.0-20200402202327-879cb1424de0
+## explicit
 github.com/google/licenseclassifier
 github.com/google/licenseclassifier/internal/sets
 github.com/google/licenseclassifier/stringclassifier
@@ -120,12 +127,14 @@ github.com/opencontainers/runc/libcontainer/user
 # github.com/openzipkin/zipkin-go v0.2.2
 github.com/openzipkin/zipkin-go/model
 # github.com/pkg/errors v0.9.1
+## explicit
 github.com/pkg/errors
 # github.com/sergi/go-diff v1.1.0
 github.com/sergi/go-diff/diffmatchpatch
 # github.com/sirupsen/logrus v1.4.2
 github.com/sirupsen/logrus
 # github.com/spf13/cobra v0.0.6
+## explicit
 github.com/spf13/cobra
 # github.com/spf13/pflag v1.0.5
 github.com/spf13/pflag
@@ -183,6 +192,7 @@ golang.org/x/net/idna
 golang.org/x/net/internal/timeseries
 golang.org/x/net/trace
 # golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
+## explicit
 golang.org/x/oauth2
 golang.org/x/oauth2/google
 golang.org/x/oauth2/internal
@@ -226,6 +236,7 @@ golang.org/x/tools/internal/packagesinternal
 golang.org/x/xerrors
 golang.org/x/xerrors/internal
 # google.golang.org/api v0.20.0
+## explicit
 google.golang.org/api/container/v1beta1
 google.golang.org/api/googleapi
 google.golang.org/api/googleapi/transport
@@ -316,6 +327,7 @@ google.golang.org/grpc/tap
 # gopkg.in/inf.v0 v0.9.1
 gopkg.in/inf.v0
 # gopkg.in/yaml.v2 v2.2.8
+## explicit
 gopkg.in/yaml.v2
 # honnef.co/go/tools v0.0.1-2020.1.3
 honnef.co/go/tools/arg
@@ -387,6 +399,7 @@ k8s.io/api/storage/v1
 k8s.io/api/storage/v1alpha1
 k8s.io/api/storage/v1beta1
 # k8s.io/apimachinery v0.17.3 => k8s.io/apimachinery v0.16.4
+## explicit
 k8s.io/apimachinery/pkg/api/errors
 k8s.io/apimachinery/pkg/api/meta
 k8s.io/apimachinery/pkg/api/resource
@@ -505,6 +518,7 @@ k8s.io/utils/buffer
 k8s.io/utils/integer
 k8s.io/utils/trace
 # knative.dev/pkg v0.0.0-20200527024749-495174c96651
+## explicit
 knative.dev/pkg/kmeta
 knative.dev/pkg/test
 knative.dev/pkg/test/cmd
@@ -531,3 +545,5 @@ knative.dev/pkg/testutils/metahelper
 knative.dev/pkg/testutils/metahelper/client
 # sigs.k8s.io/yaml v1.2.0
 sigs.k8s.io/yaml
+# k8s.io/apimachinery => k8s.io/apimachinery v0.16.4
+# k8s.io/client-go => k8s.io/client-go v0.16.4
