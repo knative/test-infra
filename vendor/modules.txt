@@ -359,7 +359,7 @@ honnef.co/go/tools/staticcheck
 honnef.co/go/tools/stylecheck
 honnef.co/go/tools/unused
 honnef.co/go/tools/version
-# k8s.io/api v0.17.3
+# k8s.io/api v0.17.6
 k8s.io/api/admissionregistration/v1
 k8s.io/api/admissionregistration/v1beta1
 k8s.io/api/apps/v1
@@ -398,7 +398,7 @@ k8s.io/api/settings/v1alpha1
 k8s.io/api/storage/v1
 k8s.io/api/storage/v1alpha1
 k8s.io/api/storage/v1beta1
-# k8s.io/apimachinery v0.17.3 => k8s.io/apimachinery v0.16.4
+# k8s.io/apimachinery v0.17.6 => k8s.io/apimachinery v0.16.4
 ## explicit
 k8s.io/apimachinery/pkg/api/errors
 k8s.io/apimachinery/pkg/api/meta
@@ -517,7 +517,7 @@ k8s.io/test-infra/prow/version
 k8s.io/utils/buffer
 k8s.io/utils/integer
 k8s.io/utils/trace
-# knative.dev/pkg v0.0.0-20200527024749-495174c96651
+# knative.dev/pkg v0.0.0-20200601184204-18c577c87d4f
 ## explicit
 knative.dev/pkg/kmeta
 knative.dev/pkg/test

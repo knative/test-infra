@@ -15,8 +15,8 @@ require (
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 	google.golang.org/api v0.20.0
 	gopkg.in/yaml.v2 v2.2.8
-	k8s.io/apimachinery v0.17.3
-	knative.dev/pkg v0.0.0-20200527024749-495174c96651
+	k8s.io/apimachinery v0.17.6
+	knative.dev/pkg v0.0.0-20200601184204-18c577c87d4f
 )
 
 replace (
