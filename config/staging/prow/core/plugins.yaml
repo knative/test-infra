@@ -69,11 +69,6 @@ label:
   - source/github
   - source/kafka
   - source/prometheus
-config_updater:
-  maps:
-    config/prod/staging/jobs/*.yaml:
-      name: job-config
-      gzip: true
 # Plugins enabled for each repo.
 plugins:
   knative-prow-robot/serving:
@@ -102,32 +97,6 @@ plugins:
   - wip
   - yuks
   knative-prow-robot/test-infra:
-  - approve
-  - assign
-  - blunderbuss
-  - buildifier
-  - cat
-  - dog
-  - golint
-  - heart
-  - help
-  - hold
-  - label
-  - lgtm
-  - lifecycle
-  - milestone
-  - owners-label
-  - project
-  - shrug
-  - size
-  - skip
-  - trigger
-  - verify-owners
-  - welcome
-  - wip
-  - yuks
-  knative-prow-robot/test-infra:
-  - config-updater
   - approve
   - assign
   - blunderbuss
