@@ -119,9 +119,8 @@ branch-protection:
       enforce_admins: false
 tide:
   queries:
-  - repos:
-    - "knative-prow-robot/serving"
-    - "knative-prow-robot/test-infra"
+  - orgs:
+    - "knative-prow-robot"
     labels:
     - lgtm
     - approved
