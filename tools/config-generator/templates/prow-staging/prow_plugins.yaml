@@ -149,30 +149,6 @@ plugins:
 [[end]]
   [[.TestInfraRepo]]:
   - config-updater
-  - approve
-  - assign
-  - blunderbuss
-  - buildifier
-  - cat
-  - dog
-  - golint
-  - heart
-  - help
-  - hold
-  - label
-  - lgtm
-  - lifecycle
-  - milestone
-  - owners-label
-  - project
-  - shrug
-  - size
-  - skip
-  - trigger
-  - verify-owners
-  - welcome
-  - wip
-  - yuks
 
 external_plugins:
 [[if .ManagedOrgs]]
