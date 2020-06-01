@@ -79,13 +79,6 @@ label:
   - source/github
   - source/kafka
   - source/prometheus
-
-config_updater:
-  maps:
-    [[.JobConfigPath]]:
-      name: job-config
-      gzip: true
-
 # Plugins enabled for each repo.
 
 plugins:
@@ -147,32 +140,6 @@ plugins:
   - yuks
 [[end]]
 [[end]]
-  [[.TestInfraRepo]]:
-  - config-updater
-  - approve
-  - assign
-  - blunderbuss
-  - buildifier
-  - cat
-  - dog
-  - golint
-  - heart
-  - help
-  - hold
-  - label
-  - lgtm
-  - lifecycle
-  - milestone
-  - owners-label
-  - project
-  - shrug
-  - size
-  - skip
-  - trigger
-  - verify-owners
-  - welcome
-  - wip
-  - yuks
 
 external_plugins:
 [[if .ManagedOrgs]]
