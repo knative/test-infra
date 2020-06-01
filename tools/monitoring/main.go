@@ -71,12 +71,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	err = gcs.Authenticate(context.Background(), *serviceAccount)
+	client, err := gcs.NewClient(context.Background(), *serviceAccount)
 	if err != nil {
 		log.Fatalf("Failed to authenticate gcs %+v", err)
 	}
 
-	alertClient, err = alert.Setup(db, mailConfig)
+	alertClient, err = alert.Setup(db, mailConfig, client)
 	if err != nil {
 		log.Fatalf("Failed to setup test-infra monitoring: %v\n", err)
 	}

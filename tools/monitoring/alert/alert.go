@@ -38,12 +38,13 @@ type Client struct {
 	*subscriber.Client
 	*mail.Config
 	db *mysql.DB
+	g  *gcs.GCSClient
 }
 
 // Setup sets up the client required to run alerting workflow
-func Setup(db *mysql.DB, mc *mail.Config) (*Client, error) {
+func Setup(db *mysql.DB, mc *mail.Config, g *gcs.GCSClient) (*Client, error) {
 	sub, err := subscriber.NewSubscriberClient(subName)
-	return &Client{sub, mc, db}, err
+	return &Client{sub, mc, db, g}, err
 }
 
 // RunAlerting start the alerting workflow
@@ -72,7 +73,7 @@ func (c *Client) handleReportMessage(rmsg *prowapi.ReportMessage) {
 			log.Printf("Failed to construct build log url from gcs path %s. Error: %v\n", rmsg.GCSPath, err)
 			return
 		}
-		buildLog, err := gcs.ReadURL(context.Background(), blPath)
+		buildLog, err := c.g.ReadURL(context.Background(), blPath)
 		if err != nil {
 			log.Printf("Failed to read from url %s. Error: %v\n", blPath, err)
 			return
