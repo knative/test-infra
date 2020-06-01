@@ -666,7 +666,7 @@ func getProwConfigData(config yaml.MapSlice) prowConfigTemplateData {
 		data.ManagedRepos = []string{"google/knative-gcp"}
 		data.JobConfigPath = "config/prod/prow/jobs/*.yaml"
 	} else {
-		data.ManagedRepos = []string{"knative-prow-robot/serving", "knative-prow-robot/test-infra"}
+		data.ManagedOrgs = []string{"knative-prow-robot"}
 		data.JobConfigPath = "config/prod/staging/jobs/*.yaml"
 	}
 	// Sort repos to make output stable.

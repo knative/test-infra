@@ -14,8 +14,7 @@
 # Settings for the "approve" plugin.
 approve:
 - repos:
-  - "knative-prow-robot/serving"
-  - "knative-prow-robot/test-infra"
+  - "knative-prow-robot"
   require_self_approval: false
   ignore_review_state: false
 # Settings for the "heart" plugin.
@@ -76,32 +75,7 @@ config_updater:
       gzip: true
 # Plugins enabled for each repo.
 plugins:
-  knative-prow-robot/serving:
-  - approve
-  - assign
-  - blunderbuss
-  - buildifier
-  - cat
-  - dog
-  - golint
-  - heart
-  - help
-  - hold
-  - label
-  - lgtm
-  - lifecycle
-  - milestone
-  - owners-label
-  - project
-  - shrug
-  - size
-  - skip
-  - trigger
-  - verify-owners
-  - welcome
-  - wip
-  - yuks
-  knative-prow-robot/test-infra:
+  knative-prow-robot:
   - approve
   - assign
   - blunderbuss
@@ -129,12 +103,7 @@ plugins:
   knative-prow-robot/test-infra:
   - config-updater
 external_plugins:
-  knative-prow-robot/serving:
-  - name: needs-rebase
-    events:
-      - issue_comment
-      - pull_request
-  knative-prow-robot/test-infra:
+  knative-prow-robot:
   - name: needs-rebase
     events:
       - issue_comment
