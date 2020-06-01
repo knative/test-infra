@@ -84,7 +84,6 @@ type prowConfigTemplateData struct {
 	TideRepos         []string
 	ManagedRepos      []string
 	ManagedOrgs       []string
-	JobConfigPath     string
 	TestInfraRepo     string
 }
 
@@ -659,15 +658,11 @@ func getProwConfigData(config yaml.MapSlice) prowConfigTemplateData {
 			}
 		}
 	}
-	// TODO: Remove all of these once prow core and plugins configs are not
-	// generated any more
 	if isProd {
 		data.ManagedOrgs = []string{"knative", "knative-sandbox"}
 		data.ManagedRepos = []string{"google/knative-gcp"}
-		data.JobConfigPath = "config/prod/prow/jobs/*.yaml"
 	} else {
 		data.ManagedRepos = []string{"knative-prow-robot/serving", "knative-prow-robot/test-infra"}
-		data.JobConfigPath = "config/prod/staging/jobs/*.yaml"
 	}
 	// Sort repos to make output stable.
 	sort.Strings(data.TideRepos)
