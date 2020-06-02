@@ -85,6 +85,10 @@ config_updater:
     [[.JobConfigPath]]:
       name: job-config
       gzip: true
+    [[.CoreConfigPath]]:
+      name: config
+    [[.PluginConfigPath]]:
+      name: plugins
 
 # Plugins enabled for each repo.
 
