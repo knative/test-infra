@@ -173,10 +173,10 @@ function default_build_test_runner() {
   fi
   # Get all build tags in go code (ignore /vendor, /hack and /third_party)
   local tags="$(grep -r '// +build' . \
-    | grep -v '^./vendor/' | grep -v '^./hack/' | grep -v '^./third_party' \
+    | grep -v '^./vendor/' | grep -v '^./hack/' | grep -v '^./third_party' | grep -v '^./scripts' \
     | cut -f3 -d' ' | sort | uniq | tr '\n' ' ')"
   local tagged_pkgs="$(grep -r '// +build' . \
-    | grep -v '^./vendor/' | grep -v '^./hack/' | grep -v '^./third_party' \
+    | grep -v '^./vendor/' | grep -v '^./hack/' | grep -v '^./third_party' | grep -v '^./scripts' \
     | grep ":// +build " | cut -f1 -d: | xargs dirname \
     | sort | uniq | tr '\n' ' ')"
   for pkg in ${tagged_pkgs}; do
