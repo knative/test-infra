@@ -70,6 +70,11 @@ label:
   - source/github
   - source/kafka
   - source/prometheus
+config_updater:
+  maps:
+    config/prod/prow/jobs/*.yaml:
+      name: job-config
+      gzip: true
 # Plugins enabled for each repo.
 plugins:
   knative:
@@ -147,6 +152,8 @@ plugins:
   - welcome
   - wip
   - yuks
+  knative/test-infra:
+  - config-updater
 external_plugins:
   knative:
   - name: needs-rebase
