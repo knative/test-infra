@@ -13102,6 +13102,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     volumes:
     - name: test-account
       secret:
@@ -13139,6 +13144,11 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     volumes:
     - name: test-account
       secret:
@@ -13183,6 +13193,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.12
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -13229,6 +13244,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.12
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -13275,6 +13295,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.13
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -13321,6 +13346,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.13
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -13367,6 +13397,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.14
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -13413,6 +13448,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.14
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -13453,6 +13493,11 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     volumes:
     - name: nightly-account
       secret:
@@ -13499,6 +13544,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.12
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     volumes:
     - name: hub-token
       secret:
@@ -13548,6 +13598,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.13
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     volumes:
     - name: hub-token
       secret:
@@ -13597,6 +13652,11 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.14
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     volumes:
     - name: hub-token
       secret:
@@ -13645,6 +13705,11 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     volumes:
     - name: hub-token
       secret:

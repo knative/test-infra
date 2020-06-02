@@ -971,24 +971,64 @@ periodics:
   google/knative-gcp:
     - continuous: true
       go114: true
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     - branch-ci: true
       release: "0.12"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     - branch-ci: true
       release: "0.13"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     - branch-ci: true
       release: "0.14"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     - nightly: true
       go114: true
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     - dot-release: true
       release: "0.12"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
       env-vars:
       - ORG_NAME=google
     - dot-release: true
       release: "0.13"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
       env-vars:
         - ORG_NAME=google
     - dot-release: true
       release: "0.14"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
       env-vars:
       - ORG_NAME=google
 #    - dot-release: true
@@ -997,6 +1037,11 @@ periodics:
 #      - ORG_NAME=google
     - auto-release: true
       go114: true
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
       env-vars:
       - ORG_NAME=google
 
