@@ -66,7 +66,7 @@ unset-cluster-credentials:
 get-build-cluster-credentials:
 	$(SET_BUILD_CLUSTER_CONTEXT)
 
-.PHONY: update-prow-config update-all-boskos-deployments update-boskos-resource update-almost-all-cluster-deployments update-single-cluster-deployment test update-testgrid-config confirm-master
+.PHONY: update-prow-config update-boskos-resource update-all-cluster-deployments test update-testgrid-config confirm-master
 
 # Update prow config
 update-prow-config: confirm-master
@@ -79,14 +79,6 @@ update-prow-config: confirm-master
 		--silent
 	$(UNSET_CONTEXT)
 
-# Update all deployments of boskos
-# Boskos is separate because of patching done in staging Makefile
-# Double-colon because staging Makefile piggy-backs on this
-update-all-boskos-deployments:: confirm-master
-	$(SET_BUILD_CLUSTER_CONTEXT)
-	@for f in $(wildcard $(BUILD_CLUSTER_PROW_DEPLOYS)/*boskos*.yaml); do kubectl apply -f $${f}; done
-	$(UNSET_CONTEXT)
-
 # Update the list of resources for Boskos
 update-boskos-resource: confirm-master
 	$(SET_BUILD_CLUSTER_CONTEXT)
@@ -96,29 +88,21 @@ update-boskos-resource: confirm-master
 # Update all deployments of cluster except Boskos
 # Boskos is separate because of patching done in staging Makefile
 # Double-colon because staging Makefile piggy-backs on this
-update-almost-all-cluster-deployments:: confirm-master
+update-all-cluster-deployments:: confirm-master
 	$(SET_CONTEXT)
-	@for f in $(filter-out $(wildcard $(PROW_DEPLOYS)/*boskos*.yaml),$(wildcard $(PROW_DEPLOYS)/*.yaml)); do kubectl apply -f $${f}; done
+	kubectl apply -f $(PROW_DEPLOYS)/*.yaml
 	$(UNSET_CONTEXT)
 
-update-almost-all-build-cluster-deployments:: confirm-master
+update-all-build-cluster-deployments:: confirm-master
 	$(SET_BUILD_CLUSTER_CONTEXT)
-	@for f in $(filter-out $(wildcard $(BUILD_CLUSTER_PROW_DEPLOYS)/*boskos*.yaml),$(wildcard $(BUILD_CLUSTER_PROW_DEPLOYS)/*.yaml)); do kubectl apply -f $${f}; done
-	$(UNSET_CONTEXT)
-
-update-all-build-cluster-deployments:: update-almost-all-build-cluster-deployments update-all-boskos-deployments
-
-# Update single deployment of cluster, expect passing in ${NAME} like `make update-single-cluster-deployment NAME=crier_deployment`
-update-single-cluster-deployment: confirm-master
-	$(SET_CONTEXT)
-	kubectl apply -f $(PROW_DEPLOYS)/$(NAME).yaml
-	$(UNSET_CONTEXT)
-	$(SET_BUILD_CLUSTER_CONTEXT)
-	kubectl apply -f $(BUILD_CLUSTER_PROW_DEPLOYS)/$(NAME).yaml
+	kubectl apply -f $(BUILD_CLUSTER_PROW_DEPLOYS)/*.yaml
 	$(UNSET_CONTEXT)
 
 # Update all resources on Prow cluster
-update-prow-cluster: update-almost-all-cluster-deployments update-almost-all-build-cluster-deployments update-all-boskos-deployments update-boskos-resource update-prow-config
+update-prow-cluster: update-all-cluster-deployments update-all-build-cluster-deployments update-boskos-resource update-prow-config
+
+# Update everything
+update-all: update-all-cluster-deployments update-all-build-cluster-deployments update-boskos-resource update-prow-config update-testgrid-config
 
 # Update TestGrid config.
 # Application Default Credentials must be set, otherwise the upload will fail.

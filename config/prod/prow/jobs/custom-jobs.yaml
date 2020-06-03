@@ -274,7 +274,7 @@ postsubmits:
     path_alias: knative.dev/test-infra
     max_concurrency: 1
     cluster: "prow-trusted"
-    run_if_changed: "^config/prod/prow/cluster/.*.yaml$"
+    run_if_changed: "^config/prod/(prow/cluster/.*.yaml|build-cluster/(cluster|boskos)/.*.yaml|prow/testgrid/testgrid.yaml)$"
     branches:
     - "master"
     spec:
@@ -286,115 +286,7 @@ postsubmits:
         args:
         - "-C"
         - "./config/prod"
-        - "update-almost-all-cluster-deployments"
-        securityContext:
-          privileged: true
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: DOCKER_IN_DOCKER_ENABLED
-          value: "true"
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-      volumes:
-      - name: docker-graph
-        emptyDir: {}
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: post-knative-prow-build-cluster-config-updater
-    agent: kubernetes
-    decorate: true
-    path_alias: knative.dev/test-infra
-    max_concurrency: 1
-    cluster: "prow-trusted"
-    run_if_changed: "^config/prod/build-cluster/cluster/.*.yaml$"
-    branches:
-    - "master"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go114:stable
-        imagePullPolicy: Always
-        command:
-        - "make"
-        args:
-        - "-C"
-        - "./config/prod"
-        - "update-all-build-cluster-deployments"
-        securityContext:
-          privileged: true
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: DOCKER_IN_DOCKER_ENABLED
-          value: "true"
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-      volumes:
-      - name: docker-graph
-        emptyDir: {}
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: post-knative-boskos-resource-updater
-    agent: kubernetes
-    decorate: true
-    path_alias: knative.dev/test-infra
-    max_concurrency: 1
-    cluster: "prow-trusted"
-    run_if_changed: "^config/prod/build-cluster/boskos/.*.yaml$"
-    branches:
-    - "master"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go114:stable
-        imagePullPolicy: Always
-        command:
-        - "make"
-        args:
-        - "-C"
-        - "./config/prod"
-        - "update-boskos-resource"
-        securityContext:
-          privileged: true
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: DOCKER_IN_DOCKER_ENABLED
-          value: "true"
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-      volumes:
-      - name: docker-graph
-        emptyDir: {}
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: post-knative-testgrid-config-updater
-    agent: kubernetes
-    decorate: true
-    path_alias: knative.dev/test-infra
-    max_concurrency: 1
-    cluster: "prow-trusted"
-    run_if_changed: "^config/prod/prow/testgrid/testgrid.yaml$"
-    branches:
-    - "master"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go114:stable
-        imagePullPolicy: Always
-        command:
-        - "make"
-        args:
-        - "-C"
-        - "./config/prod"
-        - "update-testgrid-config"
+        - "update-all"
         securityContext:
           privileged: true
         volumeMounts:
