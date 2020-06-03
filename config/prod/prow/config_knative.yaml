@@ -505,6 +505,9 @@ periodics:
     - branch-ci: true
       release: "0.14"
       dot-dev: true
+    - branch-ci: true
+      release: "0.15"
+      dot-dev: true
     - custom-job: istio-1.5-mesh
       command:
       - "./test/presubmit-tests.sh"
@@ -635,6 +638,14 @@ periodics:
           memory: 12Gi
         limits:
           memory: 16Gi
+    - dot-release: true
+      dot-dev: true
+      release: "0.15"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
 #    - dot-release: true
 #      dot-dev: true
 #      go114: true
@@ -671,6 +682,9 @@ periodics:
     - branch-ci: true
       release: "0.14"
       dot-dev: true
+    - branch-ci: true
+      release: "0.15"
+      dot-dev: true
     - nightly: true
       dot-dev: true
       go114: true
@@ -694,6 +708,9 @@ periodics:
     - dot-release: true
       dot-dev: true
       release: "0.14"
+    - dot-release: true
+      dot-dev: true
+      release: "0.15"
 #    - dot-release: true
 #      dot-dev: true
 #      go114: true
@@ -732,6 +749,9 @@ periodics:
     - branch-ci: true
       release: "0.14"
       dot-dev: true
+    - branch-ci: true
+      release: "0.15"
+      dot-dev: true
     - nightly: true
       dot-dev: true
       go114: true
@@ -767,6 +787,14 @@ periodics:
     - dot-release: true
       dot-dev: true
       release: "0.14"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    - dot-release: true
+      dot-dev: true
+      release: "0.15"
       resources:
         requests:
           memory: 12Gi
@@ -810,6 +838,9 @@ periodics:
     - branch-ci: true
       release: "0.14"
       dot-dev: true
+    - branch-ci: true
+      release: "0.15"
+      dot-dev: true
     - nightly: true
       dot-dev: true
       go114: true
@@ -845,6 +876,14 @@ periodics:
     - dot-release: true
       dot-dev: true
       release: "0.14"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    - dot-release: true
+      dot-dev: true
+      release: "0.15"
       resources:
         requests:
           memory: 12Gi
@@ -908,6 +947,9 @@ periodics:
     - branch-ci: true
       release: "0.14"
       dot-dev: true
+    - branch-ci: true
+      release: "0.15"
+      dot-dev: true
     - nightly: true
       dot-dev: true
       go114: true
@@ -923,6 +965,9 @@ periodics:
     - dot-release: true
       dot-dev: true
       release: "0.14"
+    - dot-release: true
+      dot-dev: true
+      release: "0.15"
 #    - dot-release: true
 #      dot-dev: true
 #      go114: true
@@ -946,6 +991,9 @@ periodics:
     - branch-ci: true
       release: "0.14"
       dot-dev: true
+    - branch-ci: true
+      release: "0.15"
+      dot-dev: true
     - nightly: true
       dot-dev: true
       go114: true
@@ -961,6 +1009,9 @@ periodics:
     - dot-release: true
       dot-dev: true
       release: "0.14"
+    - dot-release: true
+      dot-dev: true
+      release: "0.15"
 #    - dot-release: true
 #      dot-dev: true
 #      go114: true
@@ -997,6 +1048,13 @@ periodics:
           memory: 12Gi
         limits:
           memory: 16Gi
+    - branch-ci: true
+      release: "0.15"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     - nightly: true
       go114: true
       resources:
@@ -1024,6 +1082,15 @@ periodics:
         - ORG_NAME=google
     - dot-release: true
       release: "0.14"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+      env-vars:
+      - ORG_NAME=google
+    - dot-release: true
+      release: "0.15"
       resources:
         requests:
           memory: 12Gi
