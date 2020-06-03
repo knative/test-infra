@@ -75,8 +75,6 @@ RUN GO111MODULE=on go get -u github.com/google/go-licenses
 RUN bazel version > /bazel_version
 RUN ko version > /ko_version
 
-# Set default Go version
-ENV GO_VERSION go1.13
 # Note, it's pointless to run `source-gvm-and-run.sh use go1.13` in this Dockerfile because the PATH changes it makes won't stay in effect
 # We wrap the runner with our own which will run `gvm use $GO_VERSION` for us.
 RUN mv "$(which runner.sh)" "$(dirname "$(which runner.sh)")/kubekins-runner.sh"
