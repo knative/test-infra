@@ -1,4 +1,4 @@
-# Copyright 2018 The Knative Authors
+# Copyright 2020 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -170,6 +170,16 @@ presubmits:
       dot-dev: true
     - integration-tests: true
       dot-dev: true
+      needs-monitor: true
+      args:
+        - "--run-test"
+        - "./test/e2e-tests.sh"
+    - custom-test: upgrade-tests
+      dot-dev: true
+      needs-monitor: true
+      args:
+        - "--run-test"
+        - "./test/e2e-upgrade-tests.sh"
     - go-coverage: true
       dot-dev: true
 
@@ -423,6 +433,9 @@ periodics:
     - branch-ci: true
       release: "0.14"
       dot-dev: true
+    - branch-ci: true
+      release: "0.15"
+      dot-dev: true
     - custom-job: istio-1.5-mesh
       command:
       - "./test/presubmit-tests.sh"
@@ -543,6 +556,14 @@ periodics:
           memory: 12Gi
         limits:
           memory: 16Gi
+    - dot-release: true
+      dot-dev: true
+      release: "0.15"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
 #    - dot-release: true
 #      dot-dev: true
 #      resources:
@@ -575,6 +596,9 @@ periodics:
     - branch-ci: true
       release: "0.14"
       dot-dev: true
+    - branch-ci: true
+      release: "0.15"
+      dot-dev: true
     - nightly: true
       dot-dev: true
     - custom-job: tekton
@@ -596,6 +620,9 @@ periodics:
     - dot-release: true
       dot-dev: true
       release: "0.14"
+    - dot-release: true
+      dot-dev: true
+      release: "0.15"
 #    - dot-release: true
 #      dot-dev: true
     - auto-release: true
@@ -630,6 +657,9 @@ periodics:
     - branch-ci: true
       release: "0.14"
       dot-dev: true
+    - branch-ci: true
+      release: "0.15"
+      dot-dev: true
     - nightly: true
       dot-dev: true
       resources:
@@ -664,6 +694,14 @@ periodics:
     - dot-release: true
       dot-dev: true
       release: "0.14"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    - dot-release: true
+      dot-dev: true
+      release: "0.15"
       resources:
         requests:
           memory: 12Gi
@@ -704,6 +742,9 @@ periodics:
     - branch-ci: true
       release: "0.14"
       dot-dev: true
+    - branch-ci: true
+      release: "0.15"
+      dot-dev: true
     - nightly: true
       dot-dev: true
       resources:
@@ -738,6 +779,14 @@ periodics:
     - dot-release: true
       dot-dev: true
       release: "0.14"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    - dot-release: true
+      dot-dev: true
+      release: "0.15"
       resources:
         requests:
           memory: 12Gi
@@ -793,6 +842,9 @@ periodics:
     - branch-ci: true
       release: "0.14"
       dot-dev: true
+    - branch-ci: true
+      release: "0.15"
+      dot-dev: true
     - nightly: true
       dot-dev: true
     - dot-release: true
@@ -807,6 +859,9 @@ periodics:
     - dot-release: true
       dot-dev: true
       release: "0.14"
+    - dot-release: true
+      dot-dev: true
+      release: "0.15"
 #    - dot-release: true
 #      dot-dev: true
     - auto-release: true
@@ -827,6 +882,9 @@ periodics:
     - branch-ci: true
       release: "0.14"
       dot-dev: true
+    - branch-ci: true
+      release: "0.15"
+      dot-dev: true
     - nightly: true
       dot-dev: true
     - dot-release: true
@@ -841,6 +899,9 @@ periodics:
     - dot-release: true
       dot-dev: true
       release: "0.14"
+    - dot-release: true
+      dot-dev: true
+      release: "0.15"
 #    - dot-release: true
 #      dot-dev: true
     - auto-release: true
@@ -874,6 +935,13 @@ periodics:
           memory: 12Gi
         limits:
           memory: 16Gi
+    - branch-ci: true
+      release: "0.15"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     - nightly: true
       resources:
         requests:
@@ -900,6 +968,15 @@ periodics:
         - ORG_NAME=google
     - dot-release: true
       release: "0.14"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+      env-vars:
+      - ORG_NAME=google
+    - dot-release: true
+      release: "0.15"
       resources:
         requests:
           memory: 12Gi

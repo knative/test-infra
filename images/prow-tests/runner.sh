@@ -18,8 +18,23 @@ ORIGINAL_GOPATH="${GOPATH}"
 
 source "${HOME}/.gvm/scripts/gvm"
 
+# By default using Go version 1.13.
+version="go1.13"
+# Extract the go version if the project is using go mod.
+if [[ -f "go.mod" ]]; then
+  version="go$(sed -n 's/^go //p' go.mod | tr -d '[:space:]')"
+  echo "Found go.mod file, using Go version '${version}' specified by it."
+fi
+# If GO_VERSION is defined, use it as the version.
+# It has a higher priority than go.mod as it's specified more explicitly.
 if [[ -v GO_VERSION ]]; then
-  gvm use "${GO_VERSION}"
+  echo "GO_VERSION is defined, overwriting Go version to '${GO_VERSION}'"
+  version="${GO_VERSION}"
+fi
+
+if [[ -n ${version} ]]; then
+  echo "Switching Go version to '${version}'"
+  gvm use "${version}"
   # Get our original Go directory back into GOPATH
   pushd "${ORIGINAL_GOPATH}" || exit 2
   gvm pkgset create --local || echo
