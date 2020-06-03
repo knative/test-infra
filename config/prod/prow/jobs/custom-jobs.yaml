@@ -14,29 +14,6 @@
 
 presubmits:
   knative/test-infra:
-  - name: pull-test-infra-config-changes-checker
-    decorate: true
-    path_alias: knative.dev/test-infra
-    run_if_changed: "^(config/(prod/staging)/prow/cluster/.*.yaml)|(tools/config-generator/templates/(prow|prow-staging)/.*.yaml)$"
-    cluster: "build-knative"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go114:stable
-        command:
-        - "go"
-        args:
-        - "run"
-        - "./tools/prow-config-updater/presubmit-checker"
-        - "--github-bot-name=knative-prow-robot"
-        - "--github-token=/etc/repoview-token/token"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
   - name: pull-test-infra-validate-prow-yaml
     decorate: true
     run_if_changed: "^config/prod/prow/(cluster|core|jobs)/.*.yaml$"
@@ -291,13 +268,13 @@ periodics:
 
 postsubmits:
   knative/test-infra:
-  - name: post-knative-prow-config-updater
+  - name: post-knative-prow-cluster-config-updater
     agent: kubernetes
     decorate: true
     path_alias: knative.dev/test-infra
     max_concurrency: 1
     cluster: "prow-trusted"
-    run_if_changed: "^(config/(prod|staging)/(prow|build-cluster)/(cluster|core|jobs|boskos|testgrid)/.*.yaml)|(tools/config-generator/templates/(prow|prow-staging)/.*.yaml)$"
+    run_if_changed: "^config/prod/(prow/cluster/.*.yaml|build-cluster/(cluster|boskos)/.*.yaml|prow/testgrid/testgrid.yaml)$"
     branches:
     - "master"
     spec:
@@ -305,29 +282,16 @@ postsubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests-go114:stable
         imagePullPolicy: Always
         command:
-        - "go"
+        - "make"
         args:
-        - "run"
-        - "./tools/prow-config-updater"
-        - "--github-token-file=/etc/prow-robot-github-token/token"
-        - "--github-userid=knative-prow-robot"
-        - "--git-username='Knative Prow Robot'"
-        - "--git-email=adrcunha+knative-prow-robot@google.com"
-        - "--comment-github-token-file=/etc/prow-updater-robot-github-token/token"
+        - "-C"
+        - "./config/prod"
+        - "update-all"
         securityContext:
           privileged: true
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
-          readOnly: true
-        - name: prow-robot-github-token
-          mountPath: /etc/prow-robot-github-token
-          readOnly: true
-        - name: prow-updater-robot-github-token
-          mountPath: /etc/prow-updater-robot-github-token
-          readOnly: true
-        - name: prow-robot-ssh-key
-          mountPath: /root/.ssh
           readOnly: true
         env:
         - name: DOCKER_IN_DOCKER_ENABLED
@@ -340,13 +304,3 @@ postsubmits:
       - name: test-account
         secret:
           secretName: test-account
-      - name: prow-robot-github-token
-        secret:
-          secretName: prow-robot-github-token
-      - name: prow-updater-robot-github-token
-        secret:
-          secretName: prow-updater-robot-github-token
-      - name: prow-robot-ssh-key
-        secret:
-          secretName: prow-robot-ssh-key
-          defaultMode: 0400
