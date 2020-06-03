@@ -90,12 +90,12 @@ update-boskos-resource: confirm-master
 # Double-colon because staging Makefile piggy-backs on this
 update-all-cluster-deployments:: confirm-master
 	$(SET_CONTEXT)
-	kubectl apply -f $(PROW_DEPLOYS)/*.yaml
+	kubectl apply -f $(PROW_DEPLOYS)
 	$(UNSET_CONTEXT)
 
 update-all-build-cluster-deployments:: confirm-master
 	$(SET_BUILD_CLUSTER_CONTEXT)
-	kubectl apply -f $(BUILD_CLUSTER_PROW_DEPLOYS)/*.yaml
+	kubectl apply -f $(BUILD_CLUSTER_PROW_DEPLOYS)
 	$(UNSET_CONTEXT)
 
 # Update all resources on Prow cluster
