@@ -87,7 +87,7 @@ periodics:
     path_alias: knative.dev/test-infra
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
       - "go"
@@ -124,7 +124,7 @@ periodics:
     path_alias: knative.dev/test-infra
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
       - "go"
@@ -233,7 +233,7 @@ periodics:
     path_alias: knative.dev/test-infra
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests-go114:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       imagePullPolicy: Always
       command:
       - "go"
@@ -279,7 +279,7 @@ postsubmits:
     - "master"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests-go114:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
         - "make"
