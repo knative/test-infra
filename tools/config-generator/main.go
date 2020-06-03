@@ -85,6 +85,8 @@ type prowConfigTemplateData struct {
 	ManagedRepos      []string
 	ManagedOrgs       []string
 	JobConfigPath     string
+	CoreConfigPath    string
+	PluginConfigPath  string
 	TestInfraRepo     string
 }
 
@@ -665,9 +667,13 @@ func getProwConfigData(config yaml.MapSlice) prowConfigTemplateData {
 		data.ManagedOrgs = []string{"knative", "knative-sandbox"}
 		data.ManagedRepos = []string{"google/knative-gcp"}
 		data.JobConfigPath = "config/prod/prow/jobs/*.yaml"
+		data.CoreConfigPath = "config/prod/prow/core/config.yaml"
+		data.PluginConfigPath = "config/prod/prow/core/plugins.yaml"
 	} else {
 		data.ManagedOrgs = []string{"knative-prow-robot"}
 		data.JobConfigPath = "config/prod/staging/jobs/*.yaml"
+		data.CoreConfigPath = "config/prod/staging/core/config.yaml"
+		data.PluginConfigPath = "config/prod/staging/core/plugins.yaml"
 	}
 	// Sort repos to make output stable.
 	sort.Strings(data.TideRepos)
