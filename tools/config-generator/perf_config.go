@@ -95,13 +95,6 @@ func perfClusterReconcilePostsubmitJob(jobNamePostFix, command string, args []st
 
 func perfClusterBaseProwJob(command string, args []string, fullRepoName, sa string) baseProwJobTemplateData {
 	base := newbaseProwJobTemplateData(fullRepoName)
-	for _, repo := range repositories {
-		if fullRepoName == repo.Name && repo.Go114 {
-			base.SetGoVersion(GoVersion{1, 14})
-			break
-		}
-	}
-
 	base.Command = command
 	base.Args = args
 	addVolumeToJob(&base, "/etc/performance-test", sa, true, "")

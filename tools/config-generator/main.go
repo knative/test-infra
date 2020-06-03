@@ -67,8 +67,6 @@ type repositoryData struct {
 	GoCoverageThreshold    int
 	Processed              bool
 	DotDev                 bool
-	Go114                  bool
-	Go113Branches          []string
 }
 
 // prowConfigTemplateData contains basic data about Prow.
@@ -308,33 +306,6 @@ func exclusiveSlices(a1, a2 []string) []string {
 	return res
 }
 
-// strip out all suffixes from the image name
-func stripSuffixFromImageName(name string, suffixes []string) string {
-	parts := strings.SplitN(name, ":", 2)
-	if len(parts) != 2 {
-		log.Fatalf("image name should contain ':': %q", name)
-	}
-	for _, s := range suffixes {
-		if strings.HasSuffix(parts[0], s) {
-			parts[0] = strings.TrimSuffix(parts[0], s)
-		}
-	}
-	return strings.Join(parts, ":")
-}
-
-// add suffix to the image name
-// e.g. if suffix = "-go112", then [IMAGE]:[DIGEST]-> [IMAGE]-go112:[DIGEST]
-func addSuffixToImageName(name string, suffix string) string {
-	parts := strings.SplitN(name, ":", 2)
-	if len(parts) != 2 {
-		log.Fatalf("image name should contain ':': %q", name)
-	}
-	if !strings.HasSuffix(parts[0], suffix) {
-		parts[0] = fmt.Sprintf("%s%s", parts[0], suffix)
-	}
-	return strings.Join(parts, ":")
-}
-
 // Consolidate whitelisted and skipped branches with newly added
 // whitelisted/skipped. To make the logic easier to maintain, this function
 // makes the assumption that the outcome follows these rules:
@@ -462,17 +433,6 @@ func (data *baseProwJobTemplateData) addEnvToJob(key, value string) {
 	data.Env = append(data.Env, envNameToKey(key), envValueToValue(value))
 }
 
-func (data *baseProwJobTemplateData) SetGoVersion(version GoVersion) {
-	envKey := envNameToKey("GO_VERSION")
-	for i, key := range data.Env {
-		if key == envKey {
-			data.Env[i+1] = envValueToValue(version.String())
-			return
-		}
-	}
-	data.addEnvToJob("GO_VERSION", version.String())
-}
-
 // addLabelToJob adds extra labels to a job
 func addLabelToJob(data *baseProwJobTemplateData, key, value string) {
 	(*data).Labels = append((*data).Labels, []string{key + ": " + value}...)
@@ -551,7 +511,7 @@ func setResourcesReqForJob(res yaml.MapSlice, data *baseProwJobTemplateData) {
 // parseBasicJobConfigOverrides updates the given baseProwJobTemplateData with any base option present in the given config.
 func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.MapSlice) {
 	(*data).ExtraRefs = append((*data).ExtraRefs, "  base_ref: "+(*data).RepoBranch)
-	var needDotdev, needGo114 bool
+	var needDotdev bool
 	for i, item := range config {
 		switch item.Key {
 		case "skip_branches":
@@ -579,24 +539,10 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 					repositories[i].DotDev = true
 				}
 			}
-		case "go114":
-			needGo114 = true
-			for i, repo := range repositories {
-				if path.Base(repo.Name) == (*data).RepoName {
-					repositories[i].Go114 = true
-					data.RepoNameForJob = fmt.Sprintf("%s-%s", (*data).OrgName, (*data).RepoName)
-				}
-			}
 		case "performance":
 			for i, repo := range repositories {
 				if path.Base(repo.Name) == (*data).RepoName {
 					repositories[i].EnablePerformanceTests = true
-				}
-			}
-		case "go113-branches":
-			for i, repo := range repositories {
-				if path.Base(repo.Name) == (*data).RepoName {
-					repositories[i].Go113Branches = getStringArray(item.Value)
 				}
 			}
 		case "env-vars":
@@ -618,9 +564,6 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 	if needDotdev {
 		(*data).PathAlias = "path_alias: knative.dev/" + (*data).RepoName
 		(*data).ExtraRefs = append((*data).ExtraRefs, "  "+(*data).PathAlias)
-	}
-	if needGo114 {
-		data.SetGoVersion(GoVersion{1, 14})
 	}
 	// Override any values if provided by command-line flags.
 	if timeoutOverride > 0 {
@@ -853,8 +796,6 @@ func recursiveSBL(repoName string, data interface{}, generateOneJob func(data in
 // executeJobTemplateWrapper takes in consideration of repo settings, decides how many variants of the
 // same job needs to be generated and generates them.
 func executeJobTemplateWrapper(repoName string, data interface{}, generateOneJob func(data interface{})) {
-	var sbs []specialBranchLogic
-
 	switch data.(type) {
 	case *postsubmitJobTemplateData:
 		if strings.HasSuffix(data.(*postsubmitJobTemplateData).PostsubmitJobName, "go-coverage") {
@@ -862,32 +803,7 @@ func executeJobTemplateWrapper(repoName string, data interface{}, generateOneJob
 			return
 		}
 	}
-
-	var go113Branches []string
-	// Find out if Go113Branches is set in repo settings
-	for _, repo := range repositories {
-		if repo.Name == repoName {
-			if len(repo.Go113Branches) > 0 {
-				go113Branches = repo.Go113Branches
-			}
-		}
-	}
-	if len(go113Branches) > 0 {
-		sbs = append(sbs, specialBranchLogic{
-			branches: go113Branches,
-			opsNew: func(base *baseProwJobTemplateData) {
-				base.SetGoVersion(GoVersion{1, 14})
-			},
-			restore: func(base *baseProwJobTemplateData) {
-			},
-		})
-	}
-
-	if len(sbs) == 0 { // Generate single job if there is no special branch logic
-		generateOneJob(data)
-	} else {
-		recursiveSBL(repoName, data, generateOneJob, sbs, 0)
-	}
+	generateOneJob(data)
 }
 
 // executeTemplate outputs the given job template with the given data, respecting any filtering.
