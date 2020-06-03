@@ -39,7 +39,7 @@ if [[ -n "${GITHUB_TOKEN_PATH}" ]]; then
         -v "${PWD}:${PWD}" -v "${CONFIG_YAML}:${CONFIG_YAML}" -v "${JOB_CONFIG_YAML}:${JOB_CONFIG_YAML}" \
         -v "${GITHUB_TOKEN_PATH}:${GITHUB_TOKEN_PATH}" \
         -w "${PWD}" \
-        gcr.io/k8s-prow/mkpj:v20200427-84e5e2b2c \
+        gcr.io/k8s-prow/mkpj:v20200603-4badfd9f37 \
         "--job=${JOB_NAME}" "--config-path=${CONFIG_YAML}" "--job-config-path=${JOB_CONFIG_YAML}" \
         "--github-token-path=${GITHUB_TOKEN_PATH}" \
         > ${JOB_YAML}
@@ -48,7 +48,7 @@ else
     docker run -i --rm \
         -v "${PWD}:${PWD}" -v "${CONFIG_YAML}:${CONFIG_YAML}" -v "${JOB_CONFIG_YAML}:${JOB_CONFIG_YAML}" \
         -w "${PWD}" \
-        gcr.io/k8s-prow/mkpj:v20200427-84e5e2b2c \
+        gcr.io/k8s-prow/mkpj:v20200603-4badfd9f37 \
         "--job=${JOB_NAME}" "--config-path=${CONFIG_YAML}" "--job-config-path=${JOB_CONFIG_YAML}" \
         > ${JOB_YAML} || failed=1
 
