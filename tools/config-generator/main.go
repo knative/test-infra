@@ -308,69 +308,6 @@ func exclusiveSlices(a1, a2 []string) []string {
 	return res
 }
 
-// Consolidate whitelisted and skipped branches with newly added
-// whitelisted/skipped. To make the logic easier to maintain, this function
-// makes the assumption that the outcome follows these rules:
-//   - Special branch logics always apply on master and future branches
-// Based on the previous rule, if there is a special branch logic, the 2 Prow
-// jobs that serves different branches become:
-//   - Standard job definition:
-//		- whitelisted: [release-0.1]
-//		- skipped: []
-//   - Standard job definition + branch special logic #1:
-//		- whitelisted: []
-//		- skipped: [release-0.1]
-// And when there is a new special logic comes up with different list of release
-// branches to exclude, for example [release-0.1, release-0.2], then the desired
-// outcome becomes:
-//   - Standard job definition:
-//		- whitelisted: [release-0.1]
-//		- skipped: []
-//   - Standard job definition + branch special logic #1: (This will never run)
-//		- whitelisted: []
-//		- skipped: []
-//   - Standard job definition + branch special logic #2:
-//		- whitelisted: [release-0.2]
-//		- skipped: []
-//   - Standard job definition + branch special logic #1 + branch special logic #2:
-//		- whitelisted: []
-//		- skipped: [release-0.1, release-0.2]
-// Noted that only jobs with all special branch logics have something in
-// skipped, while all other jobs only have whitelisted. This rule also applies
-// when there is a third branch specific logic and so on.
-// This function takes the logic above, and determines whether generate
-// whitelisted or skipped as output.
-func consolidateBranches(whitelisted []string, skipped []string, newWhitelisted []string, newSkipped []string) ([]string, []string) {
-	var combinedWhitelisted, combinedSkipped []string
-
-	// Do the legacy part(old branches):
-	if len(newWhitelisted) > 0 {
-		if len(skipped) > 0 {
-			// - if previous is skipped(latest), then minus the skipped from current
-			// branches, as we want to run exclusive on branches supported currently
-			combinedWhitelisted = exclusiveSlices(newWhitelisted, skipped)
-		} else if len(whitelisted) > 0 {
-			// - if previous is include, then find their intersections, as these are the
-			// real supported branches
-			combinedWhitelisted = intersectSlices(newWhitelisted, whitelisted)
-		} else {
-			combinedWhitelisted = newWhitelisted
-		}
-	} else if len(newSkipped) > 0 { // Then do the pos part(latest)
-		if len(skipped) > 0 {
-			// - if previous is skipped(latest), then find the combination, as we want to
-			// skip all non-supported
-			combinedSkipped = combineSlices(newSkipped, skipped)
-		} else if len(whitelisted) > 0 {
-			// - if previous is include, then minus current branches from included
-			combinedWhitelisted = exclusiveSlices(whitelisted, newSkipped)
-		} else {
-			combinedSkipped = newSkipped
-		}
-	}
-	return combinedWhitelisted, combinedSkipped
-}
-
 // Config generation functions.
 
 // newbaseProwJobTemplateData returns a baseProwJobTemplateData type with its initial, default values.
@@ -771,45 +708,6 @@ func getBase(data interface{}) *baseProwJobTemplateData {
 		log.Fatalf("Unrecognized job template type: '%v'", v)
 	}
 	return base
-}
-
-// recursiveSBL recursively going through specialBranchLogic, and generate job
-// at last. Use `i` to keeps track of current index in sbs to be used
-func recursiveSBL(repoName string, data interface{}, generateOneJob func(data interface{}), sbs []specialBranchLogic, i int) {
-	// Base case, all special branch logics have been applied
-	if i == len(sbs) {
-		// If there is no branch left, this job shouldn't be generated at all
-		if len(getBase(data).Branches) > 0 || len(getBase(data).SkipBranches) > 0 {
-			generateOneJob(data)
-		}
-		return
-	}
-
-	sb := sbs[i]
-	base := getBase(data)
-
-	origBranches, origSkipBranches := base.Branches, base.SkipBranches
-	// Do legacy branches first
-	base.Branches, base.SkipBranches = consolidateBranches(origBranches, origSkipBranches, sb.branches, []string{})
-	recursiveSBL(repoName, data, generateOneJob, sbs, i+1)
-	// Then do latest branches
-	base.Branches, base.SkipBranches = consolidateBranches(origBranches, origSkipBranches, []string{}, sb.branches)
-	sb.opsNew(base)
-	recursiveSBL(repoName, data, generateOneJob, sbs, i+1)
-	sb.restore(base)
-}
-
-// executeJobTemplateWrapper takes in consideration of repo settings, decides how many variants of the
-// same job needs to be generated and generates them.
-func executeJobTemplateWrapper(repoName string, data interface{}, generateOneJob func(data interface{})) {
-	switch data.(type) {
-	case *postsubmitJobTemplateData:
-		if strings.HasSuffix(data.(*postsubmitJobTemplateData).PostsubmitJobName, "go-coverage") {
-			generateOneJob(data)
-			return
-		}
-	}
-	generateOneJob(data)
 }
 
 // executeTemplate outputs the given job template with the given data, respecting any filtering.
