@@ -263,11 +263,21 @@ presubmits:
           memory: 16Gi
     - unit-tests: true
     - integration-tests: true
+      resources:
+        requests:
+          memory: 12Gi # Real request for this pod is 16 as sidecar requests 4
+        limits:
+          memory: 16Gi
       needs-monitor: true
       args:
       - "--run-test"
       - "./test/e2e-tests.sh"
     - custom-test: wi-tests
+      resources:
+        requests:
+          memory: 12Gi # Real request for this pod is 16 as sidecar requests 4
+        limits:
+          memory: 16Gi
       needs-monitor: true
       args:
       - "--run-test"
