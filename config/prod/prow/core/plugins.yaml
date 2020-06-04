@@ -70,7 +70,7 @@ label:
   - source/github
   - source/kafka
   - source/prometheus
-# Settings for the "config-updater" plugin
+# Settings for the "config-updater" plugin.
 config_updater:
   maps:
     config/prod/prow/jobs/*.yaml:
