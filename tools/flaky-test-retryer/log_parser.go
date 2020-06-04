@@ -31,7 +31,7 @@ import (
 
 	// TODO: remove this import once "k8s.io/test-infra" import problems are fixed
 	// https://github.com/knative/test-infra/test-infra/issues/912
-	"knative.dev/test-infra/tools/monitoring/prowapi"
+	"knative.dev/test-infra/tools/flaky-test-retryer/prowapi"
 )
 
 var client jsonreport.Client
