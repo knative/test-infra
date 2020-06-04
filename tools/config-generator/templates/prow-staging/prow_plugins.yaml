@@ -80,6 +80,7 @@ label:
   - source/kafka
   - source/prometheus
 
+# Setting for the "config-updater" plugin
 config_updater:
   maps:
     [[.JobConfigPath]]:
