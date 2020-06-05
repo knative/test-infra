@@ -27,10 +27,10 @@ import (
 
 	"knative.dev/pkg/test/ghutil"
 
-	"knative.dev/test-infra/tools/monitoring/subscriber"
+	"knative.dev/test-infra/tools/flaky-test-retryer/subscriber"
 	// TODO: remove this import once "k8s.io/test-infra" import problems are fixed
 	// https://github.com/test-infra/test-infra/issues/912
-	"knative.dev/test-infra/tools/monitoring/prowapi"
+	"knative.dev/test-infra/tools/flaky-test-retryer/prowapi"
 )
 
 const pubsubTopic = "flaky-test-retryer"

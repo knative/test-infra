@@ -21,7 +21,7 @@ import (
 	"testing"
 
 	"knative.dev/test-infra/tools/flaky-test-reporter/jsonreport/fakejsonreport"
-	"knative.dev/test-infra/tools/monitoring/prowapi"
+	"knative.dev/test-infra/tools/flaky-test-retryer/prowapi"
 )
 
 var (

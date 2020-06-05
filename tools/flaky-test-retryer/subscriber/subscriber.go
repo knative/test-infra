@@ -22,7 +22,7 @@ import (
 	"log"
 
 	"cloud.google.com/go/pubsub"
-	"knative.dev/test-infra/tools/monitoring/prowapi"
+	"knative.dev/test-infra/tools/flaky-test-retryer/prowapi"
 )
 
 const projectID = "knative-tests"
