@@ -282,8 +282,9 @@ postsubmits:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         imagePullPolicy: Always
         command:
-        - "make"
+        - runner.sh
         args:
+        - "make"
         - "-C"
         - "./config/prod"
         - "update-all"
