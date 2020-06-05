@@ -340,36 +340,6 @@ presubmits:
     - go-coverage: true
       dot-dev: true
 
-  knative/serving-operator:
-    - build-tests: true
-      dot-dev: true
-    - unit-tests: true
-      dot-dev: true
-    - integration-tests: true
-      dot-dev: true
-    - go-coverage: true
-      dot-dev: true
-    - custom-test: upgrade-tests
-      dot-dev: true
-      args:
-        - "--run-test"
-        - "./test/e2e-upgrade-tests.sh"
-
-  knative/eventing-operator:
-    - build-tests: true
-      dot-dev: true
-    - unit-tests: true
-      dot-dev: true
-    - integration-tests: true
-      dot-dev: true
-    - go-coverage: true
-      dot-dev: true
-    - custom-test: upgrade-tests
-      dot-dev: true
-      args:
-        - "--run-test"
-        - "./test/e2e-upgrade-tests.sh"
-
   knative/website:
     # This repo only uses Tide
     - build-tests: false
@@ -431,9 +401,6 @@ periodics:
           memory: 12Gi
         limits:
           memory: 16Gi
-    - branch-ci: true
-      release: "0.11"
-      dot-dev: true
     - branch-ci: true
       release: "0.12"
       dot-dev: true
@@ -536,14 +503,6 @@ periodics:
           memory: 16Gi
     - dot-release: true
       dot-dev: true
-      release: "0.11"
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - dot-release: true
-      dot-dev: true
       release: "0.12"
       resources:
         requests:
@@ -568,19 +527,11 @@ periodics:
           memory: 16Gi
     - dot-release: true
       dot-dev: true
-      release: "0.15"
       resources:
         requests:
           memory: 12Gi
         limits:
           memory: 16Gi
-#    - dot-release: true
-#      dot-dev: true
-#      resources:
-#        requests:
-#          memory: 12Gi
-#        limits:
-#          memory: 16Gi
     - auto-release: true
       dot-dev: true
       resources:
@@ -593,9 +544,6 @@ periodics:
 
   knative/client:
     - continuous: true
-      dot-dev: true
-    - branch-ci: true
-      release: "0.11"
       dot-dev: true
     - branch-ci: true
       release: "0.12"
@@ -620,9 +568,6 @@ periodics:
       dot-dev: true
     - dot-release: true
       dot-dev: true
-      release: "0.11"
-    - dot-release: true
-      dot-dev: true
       release: "0.12"
     - dot-release: true
       dot-dev: true
@@ -632,9 +577,6 @@ periodics:
       release: "0.14"
     - dot-release: true
       dot-dev: true
-      release: "0.15"
-#    - dot-release: true
-#      dot-dev: true
     - auto-release: true
       dot-dev: true
 
@@ -656,9 +598,6 @@ periodics:
         limits:
           memory: 16Gi
     - branch-ci: true
-      release: "0.11"
-      dot-dev: true
-    - branch-ci: true
       release: "0.12"
       dot-dev: true
     - branch-ci: true
@@ -679,14 +618,6 @@ periodics:
           memory: 16Gi
     - dot-release: true
       dot-dev: true
-      release: "0.11"
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - dot-release: true
-      dot-dev: true
       release: "0.12"
       resources:
         requests:
@@ -711,19 +642,11 @@ periodics:
           memory: 16Gi
     - dot-release: true
       dot-dev: true
-      release: "0.15"
       resources:
         requests:
           memory: 12Gi
         limits:
           memory: 16Gi
-#    - dot-release: true
-#      dot-dev: true
-#      resources:
-#        requests:
-#          memory: 12Gi
-#        limits:
-#          memory: 16Gi
     - auto-release: true
       dot-dev: true
       resources:
@@ -741,9 +664,6 @@ periodics:
         limits:
           memory: 16Gi
     - branch-ci: true
-      release: "0.11"
-      dot-dev: true
-    - branch-ci: true
       release: "0.12"
       dot-dev: true
     - branch-ci: true
@@ -764,14 +684,6 @@ periodics:
           memory: 16Gi
     - dot-release: true
       dot-dev: true
-      release: "0.11"
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - dot-release: true
-      dot-dev: true
       release: "0.12"
       resources:
         requests:
@@ -796,19 +708,11 @@ periodics:
           memory: 16Gi
     - dot-release: true
       dot-dev: true
-      release: "0.15"
       resources:
         requests:
           memory: 12Gi
         limits:
           memory: 16Gi
-#    - dot-release: true
-#      dot-dev: true
-#      resources:
-#        requests:
-#          memory: 12Gi
-#        limits:
-#          memory: 16Gi
     - auto-release: true
       dot-dev: true
       resources:
@@ -835,86 +739,6 @@ periodics:
 
   knative/test-infra:
     - continuous: true
-      dot-dev: true
-
-  knative/serving-operator:
-    - continuous: true
-      dot-dev: true
-    - branch-ci: true
-      release: "0.11"
-      dot-dev: true
-    - branch-ci: true
-      release: "0.12"
-      dot-dev: true
-    - branch-ci: true
-      release: "0.13"
-      dot-dev: true
-    - branch-ci: true
-      release: "0.14"
-      dot-dev: true
-    - branch-ci: true
-      release: "0.15"
-      dot-dev: true
-    - nightly: true
-      dot-dev: true
-    - dot-release: true
-      dot-dev: true
-      release: "0.11"
-    - dot-release: true
-      dot-dev: true
-      release: "0.12"
-    - dot-release: true
-      dot-dev: true
-      release: "0.13"
-    - dot-release: true
-      dot-dev: true
-      release: "0.14"
-    - dot-release: true
-      dot-dev: true
-      release: "0.15"
-#    - dot-release: true
-#      dot-dev: true
-    - auto-release: true
-      dot-dev: true
-
-  knative/eventing-operator:
-    - continuous: true
-      dot-dev: true
-    - branch-ci: true
-      release: "0.11"
-      dot-dev: true
-    - branch-ci: true
-      release: "0.12"
-      dot-dev: true
-    - branch-ci: true
-      release: "0.13"
-      dot-dev: true
-    - branch-ci: true
-      release: "0.14"
-      dot-dev: true
-    - branch-ci: true
-      release: "0.15"
-      dot-dev: true
-    - nightly: true
-      dot-dev: true
-    - dot-release: true
-      dot-dev: true
-      release: "0.11"
-    - dot-release: true
-      dot-dev: true
-      release: "0.12"
-    - dot-release: true
-      dot-dev: true
-      release: "0.13"
-    - dot-release: true
-      dot-dev: true
-      release: "0.14"
-    - dot-release: true
-      dot-dev: true
-      release: "0.15"
-#    - dot-release: true
-#      dot-dev: true
-    - auto-release: true
       dot-dev: true
 
   google/knative-gcp:
@@ -986,7 +810,6 @@ periodics:
       env-vars:
       - ORG_NAME=google
     - dot-release: true
-      release: "0.15"
       resources:
         requests:
           memory: 12Gi
@@ -994,9 +817,6 @@ periodics:
           memory: 16Gi
       env-vars:
       - ORG_NAME=google
-#    - dot-release: true
-#      env-vars:
-#      - ORG_NAME=google
     - auto-release: true
       resources:
         requests:
@@ -1059,6 +879,13 @@ periodics:
   knative/operator:
     - continuous: true
       dot-dev: true
+    - branch-ci: true
+      release: "0.15"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     - nightly: true
       dot-dev: true
     - dot-release: true
