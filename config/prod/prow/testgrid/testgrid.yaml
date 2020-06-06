@@ -708,6 +708,9 @@ test_groups:
 - name: ci-knative-sandbox-eventing-kafka-go-coverage-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-kafka-go-coverage-beta-prow-tests
   short_text_metric: "coverage"
+- name: ci-knative-networking-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-networking-go-coverage-beta-prow-tests
+  short_text_metric: "coverage"
 dashboards:
 - name: serving
   dashboard_tab:
@@ -1565,6 +1568,9 @@ dashboards:
     base_options: "sort-by-failures="
   - name: ci-knative-sandbox-eventing-kafka-go-coverage
     test_group_name: ci-knative-sandbox-eventing-kafka-go-coverage-beta-prow-tests
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+  - name: ci-knative-networking-go-coverage
+    test_group_name: ci-knative-networking-go-coverage-beta-prow-tests
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 dashboard_groups:
 - name: knative
