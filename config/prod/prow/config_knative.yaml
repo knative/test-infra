@@ -284,6 +284,16 @@ presubmits:
       - "./test/e2e-wi-tests.sh"
     - go-coverage: true
 
+  knative/networking:
+    - build-tests: true
+      dot-dev: true
+    - unit-tests: true
+      dot-dev: true
+    - integration-tests: true
+      dot-dev: true
+    - go-coverage: true
+      dot-dev: true
+
   knative/net-certmanager:
     - build-tests: true
       dot-dev: true
