@@ -16,10 +16,10 @@ require (
 	google.golang.org/api v0.20.0
 	gopkg.in/yaml.v2 v2.2.8
 	k8s.io/apimachinery v0.17.6
-	knative.dev/pkg v0.0.0-20200601184204-18c577c87d4f
+	knative.dev/pkg v0.0.0-20200603222317-b79e4a24ca50
 )
 
 replace (
-	k8s.io/apimachinery => k8s.io/apimachinery v0.16.4
-	k8s.io/client-go => k8s.io/client-go v0.16.4
+	k8s.io/apimachinery => k8s.io/apimachinery v0.17.6
+	k8s.io/client-go => k8s.io/client-go v0.17.6
 )

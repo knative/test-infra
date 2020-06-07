@@ -67,7 +67,11 @@ var (
 	// configPaths are the list of paths where the configuration files are saved
 	// It only updates staging-prow configs as prow-config-updater tool will roll out the changes
 	// to production after tests for staging-prow pass.
-	configPaths = []string{config.StagingProwConfigRoot, config.StagingProwConfigTemplatesPath}
+	configPaths = []string{
+		config.ProdProwConfigRoot,
+		config.ProdProwConfigTemplatesPath,
+		config.ProdProwBuildclusterConfigRoot,
+	}
 	// Whitelist of files to be scanned by this tool
 	fileFilters = []*regexp.Regexp{regexp.MustCompile(`\.yaml$`)}
 	// Matching            gcr.io /k8s-(prow|testimage)/(kubekin-e2e|boskos|.*) (/janitor|/reaper|/.*)?        :vYYYYMMDD-HASH-VARIANT

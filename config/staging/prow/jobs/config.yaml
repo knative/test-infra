@@ -45,8 +45,6 @@ presubmits:
           mountPath: /etc/test-account
           readOnly: true
         env:
-        - name: GO_VERSION
-          value: go1.14
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
@@ -84,8 +82,6 @@ presubmits:
           mountPath: /etc/test-account
           readOnly: true
         env:
-        - name: GO_VERSION
-          value: go1.14
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
@@ -123,8 +119,6 @@ presubmits:
           mountPath: /etc/test-account
           readOnly: true
         env:
-        - name: GO_VERSION
-          value: go1.14
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
@@ -163,8 +157,6 @@ presubmits:
           mountPath: /etc/test-account
           readOnly: true
         env:
-        - name: GO_VERSION
-          value: go1.14
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
@@ -202,8 +194,6 @@ presubmits:
           mountPath: /etc/test-account
           readOnly: true
         env:
-        - name: GO_VERSION
-          value: go1.14
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
@@ -241,8 +231,6 @@ presubmits:
           mountPath: /etc/test-account
           readOnly: true
         env:
-        - name: GO_VERSION
-          value: go1.14
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION

@@ -23,7 +23,7 @@ import (
 
 	"github.com/google/go-github/v27/github"
 	"knative.dev/pkg/test/ghutil/fakeghutil"
-	"knative.dev/test-infra/tools/monitoring/prowapi"
+	"knative.dev/test-infra/tools/flaky-test-retryer/prowapi"
 )
 
 var (

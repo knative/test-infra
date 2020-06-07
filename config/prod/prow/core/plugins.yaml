@@ -1,4 +1,4 @@
-# Copyright 2019 The Knative Authors
+# Copyright 2020 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -70,11 +70,16 @@ label:
   - source/github
   - source/kafka
   - source/prometheus
+# Settings for the "config-updater" plugin.
 config_updater:
   maps:
     config/prod/prow/jobs/*.yaml:
       name: job-config
       gzip: true
+    config/prod/prow/core/config.yaml:
+      name: config
+    config/prod/prow/core/plugins.yaml:
+      name: plugins
 # Plugins enabled for each repo.
 plugins:
   knative:

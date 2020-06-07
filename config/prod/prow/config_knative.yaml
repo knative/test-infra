@@ -1,4 +1,4 @@
-# Copyright 2018 The Knative Authors
+# Copyright 2020 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,11 +20,6 @@ presubmits:
   knative/serving:
     - repo-settings:
       performance: true
-      go113-branches:
-      - "release-0.11"
-      - "release-0.12"
-      - "release-0.13"
-      - "release-0.14"
     - build-tests: true
       dot-dev: true
       resources:
@@ -139,12 +134,6 @@ presubmits:
       - "./test/e2e-auto-tls-tests.sh --https"
 
   knative/client:
-    - repo-settings:
-      go113-branches:
-      - "release-0.11"
-      - "release-0.12"
-      - "release-0.13"
-      - "release-0.14"
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -170,11 +159,6 @@ presubmits:
   knative/eventing:
     - repo-settings:
       performance: true
-      go113-branches:
-      - "release-0.11"
-      - "release-0.12"
-      - "release-0.13"
-      - "release-0.14"
     - build-tests: true
       dot-dev: true
       resources:
@@ -186,16 +170,20 @@ presubmits:
       dot-dev: true
     - integration-tests: true
       dot-dev: true
+      needs-monitor: true
+      args:
+        - "--run-test"
+        - "./test/e2e-tests.sh"
+    - custom-test: upgrade-tests
+      dot-dev: true
+      needs-monitor: true
+      args:
+        - "--run-test"
+        - "./test/e2e-upgrade-tests.sh"
     - go-coverage: true
       dot-dev: true
 
   knative/eventing-contrib:
-    - repo-settings:
-      go113-branches:
-      - "release-0.11"
-      - "release-0.12"
-      - "release-0.13"
-      - "release-0.14"
     - build-tests: true
       dot-dev: true
       resources:
@@ -223,12 +211,6 @@ presubmits:
         - "./test/presubmit-link-check.sh"
 
   knative/pkg:
-    - repo-settings:
-      go113-branches:
-      - "release-0.11"
-      - "release-0.12"
-      - "release-0.13"
-      - "release-0.14"
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -239,12 +221,6 @@ presubmits:
       dot-dev: true
 
   knative/test-infra:
-    - repo-settings:
-      go113-branches:
-      - "release-0.11"
-      - "release-0.12"
-      - "release-0.13"
-      - "release-0.14"
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -279,11 +255,6 @@ presubmits:
   google/knative-gcp:
     - repo-settings:
       performance: true
-      go113-branches:
-      - "release-0.11"
-      - "release-0.12"
-      - "release-0.13"
-      - "release-0.14"
     - build-tests: true
       resources:
         requests:
@@ -292,24 +263,38 @@ presubmits:
           memory: 16Gi
     - unit-tests: true
     - integration-tests: true
+      resources:
+        requests:
+          memory: 12Gi # Real request for this pod is 16 as sidecar requests 4
+        limits:
+          memory: 16Gi
       needs-monitor: true
       args:
       - "--run-test"
       - "./test/e2e-tests.sh"
     - custom-test: wi-tests
+      resources:
+        requests:
+          memory: 12Gi # Real request for this pod is 16 as sidecar requests 4
+        limits:
+          memory: 16Gi
       needs-monitor: true
       args:
       - "--run-test"
       - "./test/e2e-wi-tests.sh"
     - go-coverage: true
 
+  knative/networking:
+    - build-tests: true
+      dot-dev: true
+    - unit-tests: true
+      dot-dev: true
+    - integration-tests: true
+      dot-dev: true
+    - go-coverage: true
+      dot-dev: true
+
   knative/net-certmanager:
-    - repo-settings:
-      go113-branches:
-      - "release-0.11"
-      - "release-0.12"
-      - "release-0.13"
-      - "release-0.14"
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -320,12 +305,6 @@ presubmits:
       dot-dev: true
 
   knative/net-contour:
-    - repo-settings:
-      go113-branches:
-      - "release-0.11"
-      - "release-0.12"
-      - "release-0.13"
-      - "release-0.14"
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -336,12 +315,6 @@ presubmits:
       dot-dev: true
 
   knative/net-http01:
-    - repo-settings:
-      go113-branches:
-      - "release-0.11"
-      - "release-0.12"
-      - "release-0.13"
-      - "release-0.14"
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -352,12 +325,6 @@ presubmits:
       dot-dev: true
 
   knative/net-istio:
-    - repo-settings:
-      go113-branches:
-      - "release-0.11"
-      - "release-0.12"
-      - "release-0.13"
-      - "release-0.14"
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -374,12 +341,6 @@ presubmits:
       - "./test/e2e-tests.sh --istio-version latest"
 
   knative/net-kourier:
-    - repo-settings:
-      go113-branches:
-      - "release-0.11"
-      - "release-0.12"
-      - "release-0.13"
-      - "release-0.14"
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -388,48 +349,6 @@ presubmits:
       dot-dev: true
     - go-coverage: true
       dot-dev: true
-
-  knative/serving-operator:
-    - repo-settings:
-      go113-branches:
-      - "release-0.11"
-      - "release-0.12"
-      - "release-0.13"
-      - "release-0.14"
-    - build-tests: true
-      dot-dev: true
-    - unit-tests: true
-      dot-dev: true
-    - integration-tests: true
-      dot-dev: true
-    - go-coverage: true
-      dot-dev: true
-    - custom-test: upgrade-tests
-      dot-dev: true
-      args:
-        - "--run-test"
-        - "./test/e2e-upgrade-tests.sh"
-
-  knative/eventing-operator:
-    - repo-settings:
-      go113-branches:
-      - "release-0.11"
-      - "release-0.12"
-      - "release-0.13"
-      - "release-0.14"
-    - build-tests: true
-      dot-dev: true
-    - unit-tests: true
-      dot-dev: true
-    - integration-tests: true
-      dot-dev: true
-    - go-coverage: true
-      dot-dev: true
-    - custom-test: upgrade-tests
-      dot-dev: true
-      args:
-        - "--run-test"
-        - "./test/e2e-upgrade-tests.sh"
 
   knative/website:
     # This repo only uses Tide
@@ -487,15 +406,11 @@ periodics:
     - continuous: true
       timeout: 100
       dot-dev: true
-      go114: true
       resources:
         requests:
           memory: 12Gi
         limits:
           memory: 16Gi
-    - branch-ci: true
-      release: "0.11"
-      dot-dev: true
     - branch-ci: true
       release: "0.12"
       dot-dev: true
@@ -504,6 +419,9 @@ periodics:
       dot-dev: true
     - branch-ci: true
       release: "0.14"
+      dot-dev: true
+    - branch-ci: true
+      release: "0.15"
       dot-dev: true
     - custom-job: istio-1.5-mesh
       command:
@@ -514,7 +432,6 @@ periodics:
       - "--run-test"
       - "./test/e2e-auto-tls-tests.sh --istio-version 1.5-latest --mesh"
       dot-dev: true
-      go114: true
     - custom-job: istio-1.5-no-mesh
       command:
       - "./test/presubmit-tests.sh"
@@ -524,7 +441,6 @@ periodics:
       - "--run-test"
       - "./test/e2e-auto-tls-tests.sh --istio-version 1.5-latest --no-mesh"
       dot-dev: true
-      go114: true
     - custom-job: istio-1.4-mesh
       command:
       - "./test/presubmit-tests.sh"
@@ -534,7 +450,6 @@ periodics:
       - "--run-test"
       - "./test/e2e-auto-tls-tests.sh --istio-version 1.4-latest --mesh"
       dot-dev: true
-      go114: true
     - custom-job: istio-1.4-no-mesh
       command:
       - "./test/presubmit-tests.sh"
@@ -544,7 +459,6 @@ periodics:
       - "--run-test"
       - "./test/e2e-auto-tls-tests.sh --istio-version 1.4-latest --no-mesh"
       dot-dev: true
-      go114: true
     - custom-job: gloo-0.17.1
       command:
       - "./test/presubmit-tests.sh"
@@ -554,7 +468,6 @@ periodics:
       - "--run-test"
       - "./test/e2e-auto-tls-tests.sh --gloo-version 0.17.1"
       dot-dev: true
-      go114: true
     - custom-job: kourier-stable
       command:
       - "./test/presubmit-tests.sh"
@@ -564,7 +477,6 @@ periodics:
       - "--run-test"
       - "./test/e2e-auto-tls-tests.sh --kourier-version stable"
       dot-dev: true
-      go114: true
     - custom-job: contour-latest
       command:
       - "./test/presubmit-tests.sh"
@@ -574,7 +486,6 @@ periodics:
       - "--run-test"
       - "./test/e2e-auto-tls-tests.sh --contour-version latest"
       dot-dev: true
-      go114: true
     - custom-job: ambassador-latest
       command:
       - "./test/presubmit-tests.sh"
@@ -584,7 +495,6 @@ periodics:
       - "--run-test"
       - "./test/e2e-auto-tls-tests.sh --ambassador-version latest"
       dot-dev: true
-      go114: true
     - custom-job: https
       command:
       - "./test/presubmit-tests.sh"
@@ -594,18 +504,8 @@ periodics:
       - "--run-test"
       - "./test/e2e-auto-tls-tests.sh --https"
       dot-dev: true
-      go114: true
     - nightly: true
       dot-dev: true
-      go114: true
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - dot-release: true
-      dot-dev: true
-      release: "0.11"
       resources:
         requests:
           memory: 12Gi
@@ -635,17 +535,15 @@ periodics:
           memory: 12Gi
         limits:
           memory: 16Gi
-#    - dot-release: true
-#      dot-dev: true
-#      go114: true
-#      resources:
-#        requests:
-#          memory: 12Gi
-#        limits:
-#          memory: 16Gi
+    - dot-release: true
+      dot-dev: true
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     - auto-release: true
       dot-dev: true
-      go114: true
       resources:
         requests:
           memory: 12Gi
@@ -653,14 +551,9 @@ periodics:
           memory: 16Gi
     - webhook-apicoverage: true
       dot-dev: true
-      go114: true
 
   knative/client:
     - continuous: true
-      dot-dev: true
-      go114: true
-    - branch-ci: true
-      release: "0.11"
       dot-dev: true
     - branch-ci: true
       release: "0.12"
@@ -671,9 +564,11 @@ periodics:
     - branch-ci: true
       release: "0.14"
       dot-dev: true
+    - branch-ci: true
+      release: "0.15"
+      dot-dev: true
     - nightly: true
       dot-dev: true
-      go114: true
     - custom-job: tekton
       # This job must run after the nightly job so it uses the latest nightly.
       # Nightly jobs run between 1AM and 3AM PST.
@@ -681,10 +576,6 @@ periodics:
       cron: "0 13 * * *"
       command: "./test/tekton-tests.sh"
       dot-dev: true
-      go114: true
-    - dot-release: true
-      dot-dev: true
-      release: "0.11"
     - dot-release: true
       dot-dev: true
       release: "0.12"
@@ -694,17 +585,14 @@ periodics:
     - dot-release: true
       dot-dev: true
       release: "0.14"
-#    - dot-release: true
-#      dot-dev: true
-#      go114: true
+    - dot-release: true
+      dot-dev: true
     - auto-release: true
       dot-dev: true
-      go114: true
 
   knative/client-contrib:
     - continuous: true
       dot-dev: true
-      go114: true
 
   knative/docs:
     - continuous: true
@@ -719,10 +607,6 @@ periodics:
           memory: 12Gi
         limits:
           memory: 16Gi
-      go114: true
-    - branch-ci: true
-      release: "0.11"
-      dot-dev: true
     - branch-ci: true
       release: "0.12"
       dot-dev: true
@@ -731,18 +615,12 @@ periodics:
       dot-dev: true
     - branch-ci: true
       release: "0.14"
+      dot-dev: true
+    - branch-ci: true
+      release: "0.15"
       dot-dev: true
     - nightly: true
       dot-dev: true
-      go114: true
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - dot-release: true
-      dot-dev: true
-      release: "0.11"
       resources:
         requests:
           memory: 12Gi
@@ -772,17 +650,15 @@ periodics:
           memory: 12Gi
         limits:
           memory: 16Gi
-#    - dot-release: true
-#      dot-dev: true
-#      go114: true
-#      resources:
-#        requests:
-#          memory: 12Gi
-#        limits:
-#          memory: 16Gi
+    - dot-release: true
+      dot-dev: true
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     - auto-release: true
       dot-dev: true
-      go114: true
       resources:
         requests:
           memory: 12Gi
@@ -792,15 +668,11 @@ periodics:
   knative/eventing-contrib:
     - continuous: true
       dot-dev: true
-      go114: true
       resources:
         requests:
           memory: 12Gi
         limits:
           memory: 16Gi
-    - branch-ci: true
-      release: "0.11"
-      dot-dev: true
     - branch-ci: true
       release: "0.12"
       dot-dev: true
@@ -809,18 +681,12 @@ periodics:
       dot-dev: true
     - branch-ci: true
       release: "0.14"
+      dot-dev: true
+    - branch-ci: true
+      release: "0.15"
       dot-dev: true
     - nightly: true
       dot-dev: true
-      go114: true
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    - dot-release: true
-      dot-dev: true
-      release: "0.11"
       resources:
         requests:
           memory: 12Gi
@@ -850,17 +716,15 @@ periodics:
           memory: 12Gi
         limits:
           memory: 16Gi
-#    - dot-release: true
-#      dot-dev: true
-#      go114: true
-#      resources:
-#        requests:
-#          memory: 12Gi
-#        limits:
-#          memory: 16Gi
+    - dot-release: true
+      dot-dev: true
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     - auto-release: true
       dot-dev: true
-      go114: true
       resources:
         requests:
           memory: 12Gi
@@ -870,107 +734,25 @@ periodics:
   knative/pkg:
     - continuous: true
       dot-dev: true
-      go114: true
 
   knative/caching:
     - continuous: true
       dot-dev: true
-      go114: true
 
   knative/sample-controller:
     - continuous: true
       dot-dev: true
-      go114: true
 
   knative/sample-source:
     - continuous: true
       dot-dev: true
-      go114: true
 
   knative/test-infra:
     - continuous: true
       dot-dev: true
-      go114: true
-
-  knative/serving-operator:
-    - continuous: true
-      dot-dev: true
-      go114: true
-    - branch-ci: true
-      release: "0.11"
-      dot-dev: true
-    - branch-ci: true
-      release: "0.12"
-      dot-dev: true
-    - branch-ci: true
-      release: "0.13"
-      dot-dev: true
-    - branch-ci: true
-      release: "0.14"
-      dot-dev: true
-    - nightly: true
-      dot-dev: true
-      go114: true
-    - dot-release: true
-      dot-dev: true
-      release: "0.11"
-    - dot-release: true
-      dot-dev: true
-      release: "0.12"
-    - dot-release: true
-      dot-dev: true
-      release: "0.13"
-    - dot-release: true
-      dot-dev: true
-      release: "0.14"
-#    - dot-release: true
-#      dot-dev: true
-#      go114: true
-    - auto-release: true
-      dot-dev: true
-      go114: true
-
-  knative/eventing-operator:
-    - continuous: true
-      dot-dev: true
-      go114: true
-    - branch-ci: true
-      release: "0.11"
-      dot-dev: true
-    - branch-ci: true
-      release: "0.12"
-      dot-dev: true
-    - branch-ci: true
-      release: "0.13"
-      dot-dev: true
-    - branch-ci: true
-      release: "0.14"
-      dot-dev: true
-    - nightly: true
-      dot-dev: true
-      go114: true
-    - dot-release: true
-      dot-dev: true
-      release: "0.11"
-    - dot-release: true
-      dot-dev: true
-      release: "0.12"
-    - dot-release: true
-      dot-dev: true
-      release: "0.13"
-    - dot-release: true
-      dot-dev: true
-      release: "0.14"
-#    - dot-release: true
-#      dot-dev: true
-#      go114: true
-    - auto-release: true
-      dot-dev: true
-      go114: true
 
   google/knative-gcp:
     - continuous: true
-      go114: true
       resources:
         requests:
           memory: 12Gi
@@ -997,8 +779,14 @@ periodics:
           memory: 12Gi
         limits:
           memory: 16Gi
+    - branch-ci: true
+      release: "0.15"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     - nightly: true
-      go114: true
       resources:
         requests:
           memory: 12Gi
@@ -1031,12 +819,15 @@ periodics:
           memory: 16Gi
       env-vars:
       - ORG_NAME=google
-#    - dot-release: true
-#      go114: true
-#      env-vars:
-#      - ORG_NAME=google
+    - dot-release: true
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+      env-vars:
+      - ORG_NAME=google
     - auto-release: true
-      go114: true
       resources:
         requests:
           memory: 12Gi
@@ -1048,109 +839,88 @@ periodics:
   knative/net-certmanager:
     - continuous: true
       dot-dev: true
-      go114: true
     - nightly: true
       dot-dev: true
-      go114: true
     - dot-release: true
       dot-dev: true
-      go114: true
     - auto-release: true
       dot-dev: true
-      go114: true
 
   knative/net-contour:
     - continuous: true
       dot-dev: true
-      go114: true
     - nightly: true
       dot-dev: true
-      go114: true
     - dot-release: true
       dot-dev: true
-      go114: true
     - auto-release: true
       dot-dev: true
-      go114: true
 
   knative/net-http01:
     - continuous: true
       dot-dev: true
-      go114: true
     - nightly: true
       dot-dev: true
-      go114: true
     - dot-release: true
       dot-dev: true
-      go114: true
     - auto-release: true
       dot-dev: true
-      go114: true
 
   knative/net-istio:
     - continuous: true
       dot-dev: true
-      go114: true
     - nightly: true
       dot-dev: true
-      go114: true
     - dot-release: true
       dot-dev: true
-      go114: true
     - auto-release: true
       dot-dev: true
-      go114: true
 
   knative/net-kourier:
     - continuous: true
       dot-dev: true
-      go114: true
     - nightly: true
       dot-dev: true
-      go114: true
     - dot-release: true
       dot-dev: true
-      go114: true
     - auto-release: true
       dot-dev: true
-      go114: true
 
   knative/operator:
     - continuous: true
       dot-dev: true
-      go114: true
+    - branch-ci: true
+      release: "0.15"
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     - nightly: true
       dot-dev: true
-      go114: true
     - dot-release: true
       dot-dev: true
-      go114: true
       env-vars:
       - ORG_NAME=knative-sandbox
     - auto-release: true
       dot-dev: true
-      go114: true
       env-vars:
       - ORG_NAME=knative-sandbox
 
   knative-sandbox/eventing-kafka:
     - continuous: true
       dot-dev: true
-      go114: true
       needs-dind: true
     - nightly: true
       dot-dev: true
-      go114: true
       needs-dind: true
     - dot-release: true
       dot-dev: true
-      go114: true
       needs-dind: true
       env-vars:
       - ORG_NAME=knative-sandbox
     - auto-release: true
       dot-dev: true
-      go114: true
       needs-dind: true
       env-vars:
       - ORG_NAME=knative-sandbox
