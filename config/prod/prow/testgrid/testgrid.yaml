@@ -473,6 +473,12 @@ test_groups:
     alert_mail_to_addresses: "prime-engprod-sea@google.com"
   alert_stale_results_hours: 170
   num_failures_to_alert: 1
+- name: ci-knative-net-istio-0.14-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-net-istio-0.14-dot-release
+  alert_options:
+    alert_mail_to_addresses: "prime-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
 - name: ci-knative-serving-0.15-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.15-continuous
   alert_options:
@@ -1313,6 +1319,12 @@ dashboards:
     num_failures_to_alert: 3
   - name: eventing-contrib-dot-release
     test_group_name: ci-knative-eventing-contrib-0.14-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "prime-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: net-istio-dot-release
+    test_group_name: ci-knative-net-istio-0.14-dot-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "prime-engprod-sea@google.com"
