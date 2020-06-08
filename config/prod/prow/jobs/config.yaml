@@ -9509,6 +9509,54 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
+- cron: "34 9 * * 2"
+  name: ci-knative-net-istio-0.14-dot-release
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-net-istio-0.14-dot-release
+  decorate: true
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: net-istio
+    base_ref: release-0.14
+    path_alias: knative.dev/net-istio
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--dot-release"
+      - "--release-gcs knative-releases/net-istio"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      - "--branch release-0.14"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.14
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
 - cron: "26 */2 * * *"
   name: ci-knative-net-istio-auto-release
   agent: kubernetes
