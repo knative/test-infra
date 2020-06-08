@@ -109,7 +109,8 @@ RUN go install knative.dev/test-infra/tools/coverage
 # TODO: Prow jobs run `runner.sh coverage` instead `/coverage`
 COPY images/prow-tests/coverage.sh /coverage
 
-# RUN go install knative.dev/test-infra/kntest/cmd/kntest # Uncomment when you wish to have kntest installed
+# Install kntest
+RUN go install knative.dev/test-infra/kntest/cmd/kntest
 
 # reset --hard doesn't care about dirty working copy
 # This must be the last install
