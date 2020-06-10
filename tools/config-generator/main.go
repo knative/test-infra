@@ -155,6 +155,7 @@ var (
 	presubmitScript            string
 	releaseScript              string
 	webhookAPICoverageScript   string
+	upgradeReleaseBranches     bool
 
 	// #########################################################################
 	// ############## data used for generating prow configuration ##############
@@ -943,6 +944,7 @@ func main() {
 	flag.IntVar(&timeoutOverride, "timeout-override", 0, "Timeout (in minutes) to use instead for a job")
 	flag.StringVar(&jobNameFilter, "job-filter", "", "Generate only this job, instead of all jobs")
 	flag.StringVar(&preCommand, "pre-command", "", "Executable for running instead of the real command of a job")
+	flag.BoolVar(&upgradeReleaseBranches, "upgrade-release-branches", false, "Update release branches jobs based on active branches")
 	flag.Var(&extraEnvVars, "extra-env", "Extra environment variables (key=value) to add to a job")
 	flag.Parse()
 	if len(flag.Args()) != 1 {
@@ -956,6 +958,12 @@ func main() {
 
 	// Read input config.
 	name := flag.Arg(0)
+	if upgradeReleaseBranches {
+		if err := upgradeReleaseBranchesTemplate(name); err != nil {
+			log.Fatalf("Failed upgrade based on release branch: '%v'", err)
+		}
+	}
+
 	content, err := ioutil.ReadFile(name)
 	if err != nil {
 		log.Fatalf("Cannot read file %q: %v", name, err)
