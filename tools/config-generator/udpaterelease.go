@@ -57,6 +57,7 @@ func upgradeReleaseBranchesTemplate(name string) error {
 	}
 
 	updated, err := yaml.Marshal(&config)
+	// This shouldn't happen, just catch it in case
 	if err != nil {
 		return fmt.Errorf("failed marshal modified content: %w", err)
 	}
