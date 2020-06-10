@@ -510,10 +510,7 @@ k8s.io/client-go/util/keyutil
 k8s.io/client-go/util/retry
 # k8s.io/klog v1.0.0
 k8s.io/klog
-# k8s.io/test-infra v0.0.0-20200407001919-bc7f71ef65b8
-k8s.io/test-infra/boskos/client
-k8s.io/test-infra/boskos/common
-k8s.io/test-infra/boskos/storage
+# k8s.io/test-infra v0.0.0-20200514184223-ba32c8aae783
 k8s.io/test-infra/prow/config/secret
 k8s.io/test-infra/prow/logrusutil
 k8s.io/test-infra/prow/version
@@ -521,7 +518,7 @@ k8s.io/test-infra/prow/version
 k8s.io/utils/buffer
 k8s.io/utils/integer
 k8s.io/utils/trace
-# knative.dev/pkg v0.0.0-20200603222317-b79e4a24ca50
+# knative.dev/pkg v0.0.0-20200609184032-fef70cc2616b
 ## explicit
 knative.dev/pkg/kmeta
 knative.dev/pkg/test
@@ -547,6 +544,10 @@ knative.dev/pkg/testutils/clustermanager/prow-cluster-operation/actions
 knative.dev/pkg/testutils/clustermanager/prow-cluster-operation/options
 knative.dev/pkg/testutils/metahelper
 knative.dev/pkg/testutils/metahelper/client
+# sigs.k8s.io/boskos v0.0.0-20200530174753-71e795271860
+sigs.k8s.io/boskos/client
+sigs.k8s.io/boskos/common
+sigs.k8s.io/boskos/storage
 # sigs.k8s.io/yaml v1.2.0
 sigs.k8s.io/yaml
 # k8s.io/apimachinery => k8s.io/apimachinery v0.17.6
