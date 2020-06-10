@@ -22,6 +22,9 @@ CUR_DIR="$(realpath $(dirname $0))"
 
 for dir in ${CUR_DIR}/*; do
     if [[ -d "${dir}" && -f "${dir}/Makefile" ]]; then
+        echo "RUNNING: make -C '${dir}' push"
         make -C "${dir}" push
+    else
+        echo "Skipping '${dir}'"
     fi
 done
