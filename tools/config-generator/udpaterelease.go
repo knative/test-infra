@@ -1,3 +1,19 @@
+/*
+Copyright 2020 The Knative Authors
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 package main
 
 import (
@@ -14,7 +30,9 @@ import (
 
 const (
 	maxReleaseBranches = 4
-	latest             = "0.15"
+	// Assuming all repo with 0.14 branch also has 0.15 branch, this will be
+	// derived from the branch in following PR
+	latest = "0.15"
 )
 
 func upgradeReleaseBranchesTemplate(name string) error {
@@ -76,16 +94,16 @@ func getReposMap(val interface{}, latest string) interface{} {
 		if !skipCiUpdate && len(ciBranches) > 0 {
 			repoConfigs = updateConfigForJob(repoConfigs, ciBranches, latest,
 				func(jobConfig yaml.MapSlice) string {
-					ciBranch, _ := getBranch(jobConfig)
-					return ciBranch
+					branch, _ := getBranch(jobConfig)
+					return branch
 				})
 		}
 
 		if !skipReleaseUpdate && len(releaseBranches) > 0 {
 			repoConfigs = updateConfigForJob(repoConfigs, releaseBranches, latest,
 				func(jobConfig yaml.MapSlice) string {
-					ciBranch, _ := getBranch(jobConfig)
-					return ciBranch
+					_, branch := getBranch(jobConfig)
+					return branch
 				})
 		}
 
@@ -99,34 +117,35 @@ func updateConfigForJob(repoConfigs []interface{}, branches []string, latest str
 
 	var oldestBranchToSupport = "0.0"
 	sortFunc(branches)
-	log.Print(branches)
 	if len(branches) >= maxReleaseBranches-1 {
 		oldestBranchToSupport = branches[maxReleaseBranches-2]
 	}
 	var updatedRepoConfigs []interface{}
 	for _, repoConfig := range repoConfigs {
 		jobConfig := getMapSlice(repoConfig)
-		branch, _ := getBranch(jobConfig)
+		branch := getBranchForJob(jobConfig)
 		if branch == "" {
-			updatedRepoConfigs = append(updatedRepoConfigs, repoConfig)
+			updatedRepoConfigs = append(updatedRepoConfigs, jobConfig)
 			continue
 		}
 		if versionComp(branch, oldestBranchToSupport) < 0 {
+			log.Printf("Skipping %q for %q", branch, oldestBranchToSupport)
 			continue
 		}
+		updatedRepoConfigs = append(updatedRepoConfigs, jobConfig)
 		if branch == branches[0] {
-			updatedRepoConfigs = append(updatedRepoConfigs, repoConfig)
 			var next yaml.MapSlice
 			for _, item := range jobConfig {
 				val := item.Value
 				if item.Key == "release" {
 					val = latest
 				}
-				next = append(next, yaml.MapItem{item.Key, val})
+				next = append(next, yaml.MapItem{Key: item.Key, Value: val})
 			}
 			updatedRepoConfigs = append(updatedRepoConfigs, next)
 		}
 	}
+
 	return updatedRepoConfigs
 }
 

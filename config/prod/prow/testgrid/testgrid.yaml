@@ -90,12 +90,6 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "prime-engprod-sea@google.com"
   num_failures_to_alert: 1
-- name: ci-knative-serving-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-serving-dot-release
-  alert_options:
-    alert_mail_to_addresses: "prime-engprod-sea@google.com"
-  alert_stale_results_hours: 170
-  num_failures_to_alert: 1
 - name: ci-knative-serving-auto-release
   gcs_prefix: knative-prow/logs/ci-knative-serving-auto-release
   alert_options:
@@ -118,12 +112,6 @@ test_groups:
 - name: ci-knative-client-tekton
   gcs_prefix: knative-prow/logs/ci-knative-client-tekton
   alert_stale_results_hours: 3
-- name: ci-knative-client-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-client-dot-release
-  alert_options:
-    alert_mail_to_addresses: "prime-engprod-sea@google.com"
-  alert_stale_results_hours: 170
-  num_failures_to_alert: 1
 - name: ci-knative-client-auto-release
   gcs_prefix: knative-prow/logs/ci-knative-client-auto-release
   alert_options:
@@ -149,12 +137,6 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "prime-engprod-sea@google.com"
   num_failures_to_alert: 1
-- name: ci-knative-eventing-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-dot-release
-  alert_options:
-    alert_mail_to_addresses: "prime-engprod-sea@google.com"
-  alert_stale_results_hours: 170
-  num_failures_to_alert: 1
 - name: ci-knative-eventing-auto-release
   gcs_prefix: knative-prow/logs/ci-knative-eventing-auto-release
   alert_options:
@@ -170,12 +152,6 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-nightly-release
   alert_options:
     alert_mail_to_addresses: "prime-engprod-sea@google.com"
-  num_failures_to_alert: 1
-- name: ci-knative-eventing-contrib-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-dot-release
-  alert_options:
-    alert_mail_to_addresses: "prime-engprod-sea@google.com"
-  alert_stale_results_hours: 170
   num_failures_to_alert: 1
 - name: ci-knative-eventing-contrib-auto-release
   gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-auto-release
@@ -282,12 +258,6 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-net-istio-nightly-release
   alert_options:
     alert_mail_to_addresses: "prime-engprod-sea@google.com"
-  num_failures_to_alert: 1
-- name: ci-knative-net-istio-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-net-istio-dot-release
-  alert_options:
-    alert_mail_to_addresses: "prime-engprod-sea@google.com"
-  alert_stale_results_hours: 170
   num_failures_to_alert: 1
 - name: ci-knative-net-istio-auto-release
   gcs_prefix: knative-prow/logs/ci-knative-net-istio-auto-release
@@ -484,21 +454,51 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "prime-engprod-sea@google.com"
   num_failures_to_alert: 3
+- name: ci-knative-serving-0.15-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-serving-0.15-dot-release
+  alert_options:
+    alert_mail_to_addresses: "prime-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
 - name: ci-knative-client-0.15-continuous
   gcs_prefix: knative-prow/logs/ci-knative-client-0.15-continuous
   alert_options:
     alert_mail_to_addresses: "prime-engprod-sea@google.com"
   num_failures_to_alert: 3
+- name: ci-knative-client-0.15-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-client-0.15-dot-release
+  alert_options:
+    alert_mail_to_addresses: "prime-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
 - name: ci-knative-eventing-0.15-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-0.15-continuous
   alert_options:
     alert_mail_to_addresses: "prime-engprod-sea@google.com"
   num_failures_to_alert: 3
+- name: ci-knative-eventing-0.15-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-0.15-dot-release
+  alert_options:
+    alert_mail_to_addresses: "prime-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
 - name: ci-knative-eventing-contrib-0.15-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-0.15-continuous
   alert_options:
     alert_mail_to_addresses: "prime-engprod-sea@google.com"
   num_failures_to_alert: 3
+- name: ci-knative-eventing-contrib-0.15-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-0.15-dot-release
+  alert_options:
+    alert_mail_to_addresses: "prime-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-net-istio-0.15-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-net-istio-0.15-dot-release
+  alert_options:
+    alert_mail_to_addresses: "prime-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
 - name: ci-knative-operator-0.15-continuous
   gcs_prefix: knative-prow/logs/ci-knative-operator-0.15-continuous
   alert_options:
@@ -511,12 +511,6 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-google-knative-gcp-nightly-release
   alert_options:
     alert_mail_to_addresses: "prime-engprod-sea@google.com"
-  num_failures_to_alert: 1
-- name: ci-google-knative-gcp-dot-release
-  gcs_prefix: knative-prow/logs/ci-google-knative-gcp-dot-release
-  alert_options:
-    alert_mail_to_addresses: "prime-engprod-sea@google.com"
-  alert_stale_results_hours: 170
   num_failures_to_alert: 1
 - name: ci-google-knative-gcp-auto-release
   gcs_prefix: knative-prow/logs/ci-google-knative-gcp-auto-release
@@ -564,6 +558,12 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "prime-engprod-sea@google.com"
   num_failures_to_alert: 3
+- name: ci-google-knative-gcp-0.15-dot-release
+  gcs_prefix: knative-prow/logs/ci-google-knative-gcp-0.15-dot-release
+  alert_options:
+    alert_mail_to_addresses: "prime-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
 - name: ci-knative-eventing-kafka-sandbox-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-kafka-sandbox-continuous
   alert_stale_results_hours: 3
@@ -765,12 +765,6 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "prime-engprod-sea@google.com"
     num_failures_to_alert: 1
-  - name: dot-release
-    test_group_name: ci-knative-serving-dot-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "prime-engprod-sea@google.com"
-    num_failures_to_alert: 1
   - name: auto-release
     test_group_name: ci-knative-serving-auto-release
     base_options: "sort-by-name="
@@ -800,12 +794,6 @@ dashboards:
   - name: tekton
     test_group_name: ci-knative-client-tekton
     base_options: "sort-by-name="
-  - name: dot-release
-    test_group_name: ci-knative-client-dot-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "prime-engprod-sea@google.com"
-    num_failures_to_alert: 1
   - name: auto-release
     test_group_name: ci-knative-client-auto-release
     base_options: "sort-by-name="
@@ -848,12 +836,6 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "prime-engprod-sea@google.com"
     num_failures_to_alert: 1
-  - name: dot-release
-    test_group_name: ci-knative-eventing-dot-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "prime-engprod-sea@google.com"
-    num_failures_to_alert: 1
   - name: auto-release
     test_group_name: ci-knative-eventing-auto-release
     base_options: "sort-by-name="
@@ -873,12 +855,6 @@ dashboards:
     num_failures_to_alert: 3
   - name: nightly
     test_group_name: ci-knative-eventing-contrib-nightly-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "prime-engprod-sea@google.com"
-    num_failures_to_alert: 1
-  - name: dot-release
-    test_group_name: ci-knative-eventing-contrib-dot-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "prime-engprod-sea@google.com"
@@ -1042,12 +1018,6 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "prime-engprod-sea@google.com"
     num_failures_to_alert: 1
-  - name: dot-release
-    test_group_name: ci-knative-net-istio-dot-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "prime-engprod-sea@google.com"
-    num_failures_to_alert: 1
   - name: auto-release
     test_group_name: ci-knative-net-istio-auto-release
     base_options: "sort-by-name="
@@ -1125,12 +1095,6 @@ dashboards:
     num_failures_to_alert: 3
   - name: nightly
     test_group_name: ci-google-knative-gcp-nightly-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "prime-engprod-sea@google.com"
-    num_failures_to_alert: 1
-  - name: dot-release
-    test_group_name: ci-google-knative-gcp-dot-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "prime-engprod-sea@google.com"
@@ -1337,8 +1301,20 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "prime-engprod-sea@google.com"
     num_failures_to_alert: 3
+  - name: serving-dot-release
+    test_group_name: ci-knative-serving-0.15-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "prime-engprod-sea@google.com"
+    num_failures_to_alert: 3
   - name: client-continuous
     test_group_name: ci-knative-client-0.15-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "prime-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: client-dot-release
+    test_group_name: ci-knative-client-0.15-dot-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "prime-engprod-sea@google.com"
@@ -1349,8 +1325,26 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "prime-engprod-sea@google.com"
     num_failures_to_alert: 3
+  - name: eventing-dot-release
+    test_group_name: ci-knative-eventing-0.15-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "prime-engprod-sea@google.com"
+    num_failures_to_alert: 3
   - name: eventing-contrib-continuous
     test_group_name: ci-knative-eventing-contrib-0.15-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "prime-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: eventing-contrib-dot-release
+    test_group_name: ci-knative-eventing-contrib-0.15-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "prime-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: net-istio-dot-release
+    test_group_name: ci-knative-net-istio-0.15-dot-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "prime-engprod-sea@google.com"
@@ -1407,6 +1401,12 @@ dashboards:
   dashboard_tab:
   - name: knative-gcp-continuous
     test_group_name: ci-google-knative-gcp-0.15-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "prime-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: knative-gcp-dot-release
+    test_group_name: ci-google-knative-gcp-0.15-dot-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "prime-engprod-sea@google.com"
