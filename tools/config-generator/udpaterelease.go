@@ -33,7 +33,7 @@ const (
 	maxReleaseBranches = 4
 )
 
-func upgradeReleaseBranchesTemplate(configfileName, tokenPath string) error {
+func upgradeReleaseBranchesTemplate(configfileName string, gc ghutil.GithubOperations) error {
 	config := yaml.MapSlice{}
 	info, err := os.Lstat(configfileName)
 	if err != nil {
@@ -45,10 +45,6 @@ func upgradeReleaseBranchesTemplate(configfileName, tokenPath string) error {
 	}
 	if err = yaml.Unmarshal(content, &config); err != nil {
 		return fmt.Errorf("Cannot parse config %q: %w", configfileName, err)
-	}
-	gc, err := ghutil.NewGithubClient(tokenPath)
-	if err != nil {
-		return fmt.Errorf("failed creating github client from %q: %w", tokenPath, err)
 	}
 	for i, repos := range config {
 		if repos.Key != "presubmits" {
@@ -67,7 +63,7 @@ func upgradeReleaseBranchesTemplate(configfileName, tokenPath string) error {
 	return ioutil.WriteFile(configfileName, updated, info.Mode())
 }
 
-func getReposMap(gc *ghutil.GithubClient, val interface{}) (interface{}, error) {
+func getReposMap(gc ghutil.GithubOperations, val interface{}) (interface{}, error) {
 	reposMap := getMapSlice(val)
 	for j, repo := range reposMap {
 		var (

@@ -25,7 +25,7 @@ import (
 	"knative.dev/pkg/test/ghutil"
 )
 
-func latestReleaseBranch(gc *ghutil.GithubClient, repo string) (string, error) {
+func latestReleaseBranch(gc ghutil.GithubOperations, repo string) (string, error) {
 	parts := strings.Split(repo, "/")
 	if len(parts) != 2 {
 		return "", fmt.Errorf("repo name %q should be in the form of [ORG]/[REPO]", repo)

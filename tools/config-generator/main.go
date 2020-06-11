@@ -39,6 +39,7 @@ import (
 
 	"gopkg.in/yaml.v2"
 	"k8s.io/apimachinery/pkg/util/sets"
+	"knative.dev/pkg/test/ghutil"
 )
 
 const (
@@ -961,7 +962,11 @@ func main() {
 	// Read input config.
 	name := flag.Arg(0)
 	if upgradeReleaseBranches {
-		if err := upgradeReleaseBranchesTemplate(name, githubTokenPath); err != nil {
+		gc, err := ghutil.NewGithubClient(githubTokenPath)
+		if err != nil {
+			log.Fatalf("failed creating github client from %q: %v", githubTokenPath, err)
+		}
+		if err := upgradeReleaseBranchesTemplate(name, gc); err != nil {
 			log.Fatalf("Failed upgrade based on release branch: '%v'", err)
 		}
 	}

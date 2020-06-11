@@ -24,12 +24,15 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-github/v27/github"
 	"gopkg.in/yaml.v2"
+	"knative.dev/pkg/test/ghutil/fakeghutil"
 )
 
 var (
 	// errUnwrappable: Some errors not wrappable
 	errUnwrappable = errors.New("unwrappable")
+	latest         = "release-0.6"
 )
 
 func TestUpgradeReleaseBranchesTemplate(t *testing.T) {
@@ -44,28 +47,28 @@ func TestUpgradeReleaseBranchesTemplate(t *testing.T) {
 			"Change",
 			true,
 			`periodics:
-  repo1:
+  org1/repo1:
   - branch-ci: true
     release: "0.5"`,
 			`periodics:
-  repo1:
+  org1/repo1:
   - branch-ci: true
     release: "0.5"
   - branch-ci: true
-    release: "0.15"
+    release: "0.6"
 `,
 			nil,
 		}, {
 			"No_op",
 			true,
 			`periodics:
-  repo1:
+  org1/repo1:
   - branch-ci: true
-    release: "0.15"`,
+    release: "0.6"`,
 			`periodics:
-  repo1:
+  org1/repo1:
   - branch-ci: true
-    release: "0.15"
+    release: "0.6"
 `,
 			nil,
 		}, {
@@ -85,6 +88,11 @@ func TestUpgradeReleaseBranchesTemplate(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			fgc := fakeghutil.NewFakeGithubClient()
+			fgc.Branches = make(map[string][]*github.Branch)
+			fgc.Branches["org1/repo1"] = []*github.Branch{
+				&github.Branch{Name: &latest},
+			}
 			var fn string
 			fn = "file_not_exist"
 			if tt.fileExist {
@@ -98,7 +106,7 @@ func TestUpgradeReleaseBranchesTemplate(t *testing.T) {
 				}
 				t.Logf("Temp file created at %q", fi.Name())
 			}
-			err := upgradeReleaseBranchesTemplate(fn)
+			err := upgradeReleaseBranchesTemplate(fn, fgc)
 			if !errors.Is(err, tt.wantErr) && (err != nil && tt.wantErr != errUnwrappable) {
 				t.Fatalf("Error not expected. Want: '%v', got: '%v'", tt.wantErr, err)
 			}
@@ -118,9 +126,6 @@ func TestUpgradeReleaseBranchesTemplate(t *testing.T) {
 }
 
 func TestGetReposMap(t *testing.T) {
-	const (
-		latest = "0.6"
-	)
 	tests := []struct {
 		name string
 		in   string
@@ -128,10 +133,10 @@ func TestGetReposMap(t *testing.T) {
 	}{
 		{
 			"Simple_update_case",
-			`repo1:
+			`org1/repo1:
 - branch-ci: true
   release: "0.5"`,
-			`repo1:
+			`org1/repo1:
 - branch-ci: true
   release: "0.5"
 - branch-ci: true
@@ -139,10 +144,10 @@ func TestGetReposMap(t *testing.T) {
 `,
 		}, {
 			"Simple_update_case2",
-			`repo1:
+			`org1/repo1:
 - branch-ci: true
   release: "0.1"`,
-			`repo1:
+			`org1/repo1:
 - branch-ci: true
   release: "0.1"
 - branch-ci: true
@@ -150,12 +155,12 @@ func TestGetReposMap(t *testing.T) {
 `,
 		}, {
 			"Simple_update_case3",
-			`repo1:
+			`org1/repo1:
 - branch-ci: true
   release: "0.1"
 - branch-ci: true
   release: "0.3"`,
-			`repo1:
+			`org1/repo1:
 - branch-ci: true
   release: "0.1"
 - branch-ci: true
@@ -165,10 +170,10 @@ func TestGetReposMap(t *testing.T) {
 `,
 		}, {
 			"Simple_update_case4",
-			`repo1:
+			`org1/repo1:
 - dot-release: true
   release: "0.5"`,
-			`repo1:
+			`org1/repo1:
 - dot-release: true
   release: "0.5"
 - dot-release: true
@@ -176,7 +181,7 @@ func TestGetReposMap(t *testing.T) {
 `,
 		}, {
 			"Delete_old_branches",
-			`repo1:
+			`org1/repo1:
 - branch-ci: true
   release: "0.2"
 - branch-ci: true
@@ -185,7 +190,7 @@ func TestGetReposMap(t *testing.T) {
   release: "0.4"
 - branch-ci: true
   release: "0.5"`,
-			`repo1:
+			`org1/repo1:
 - branch-ci: true
   release: "0.3"
 - branch-ci: true
@@ -197,7 +202,7 @@ func TestGetReposMap(t *testing.T) {
 `,
 		}, {
 			"No_op",
-			`repo1:
+			`org1/repo1:
 - branch-ci: true
   release: "0.3"
 - branch-ci: true
@@ -206,7 +211,7 @@ func TestGetReposMap(t *testing.T) {
   release: "0.5"
 - branch-ci: true
   release: "0.6"`,
-			`repo1:
+			`org1/repo1:
 - branch-ci: true
   release: "0.3"
 - branch-ci: true
@@ -218,7 +223,7 @@ func TestGetReposMap(t *testing.T) {
 `,
 		}, {
 			"No_delete",
-			`repo1:
+			`org1/repo1:
 - branch-ci: true
   release: "0.2"
 - branch-ci: true
@@ -229,7 +234,7 @@ func TestGetReposMap(t *testing.T) {
   release: "0.5"
 - branch-ci: true
   release: "0.6"`,
-			`repo1:
+			`org1/repo1:
 - branch-ci: true
   release: "0.2"
 - branch-ci: true
@@ -246,11 +251,19 @@ func TestGetReposMap(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			fgc := fakeghutil.NewFakeGithubClient()
+			fgc.Branches = make(map[string][]*github.Branch)
+			fgc.Branches["org1/repo1"] = []*github.Branch{
+				&github.Branch{Name: &latest},
+			}
 			inStruct := yaml.MapSlice{}
 			if err := yaml.Unmarshal([]byte(tt.in), &inStruct); err != nil {
 				t.Fatalf("Failed unmarshal %q: %v", tt.in, err)
 			}
-			gotStruct := getReposMap(inStruct, latest)
+			gotStruct, err := getReposMap(fgc, inStruct)
+			if err != nil {
+				t.Fatalf("Failed get repos map: %v", err)
+			}
 			gotBytes, err := yaml.Marshal(gotStruct)
 			if err != nil {
 				t.Fatalf("Failed marshal: %v", err)
