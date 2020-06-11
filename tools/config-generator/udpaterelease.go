@@ -35,25 +35,23 @@ const (
 	latest = "0.15"
 )
 
-func upgradeReleaseBranchesTemplate(name string) error {
+func upgradeReleaseBranchesTemplate(configfileName string) error {
 	config := yaml.MapSlice{}
-	info, err := os.Lstat(name)
+	info, err := os.Lstat(configfileName)
 	if err != nil {
-		return fmt.Errorf("failed stats file %q: %w", name, err)
+		return fmt.Errorf("failed stats file %q: %w", configfileName, err)
 	}
-	content, err := ioutil.ReadFile(name)
+	content, err := ioutil.ReadFile(configfileName)
 	if err != nil {
-		return fmt.Errorf("Cannot read file %q: %w", name, err)
+		return fmt.Errorf("Cannot read file %q: %w", configfileName, err)
 	}
 	if err = yaml.Unmarshal(content, &config); err != nil {
-		return fmt.Errorf("Cannot parse config %q: %w", name, err)
+		return fmt.Errorf("Cannot parse config %q: %w", configfileName, err)
 	}
 	for i, repos := range config {
-		if repos.Key == "presubmits" {
-			continue
+		if repos.Key != "presubmits" {
+			config[i].Value = getReposMap(repos.Value, latest)
 		}
-
-		config[i].Value = getReposMap(repos.Value, latest)
 	}
 
 	updated, err := yaml.Marshal(&config)
@@ -61,7 +59,7 @@ func upgradeReleaseBranchesTemplate(name string) error {
 	if err != nil {
 		return fmt.Errorf("failed marshal modified content: %w", err)
 	}
-	return ioutil.WriteFile(name, updated, info.Mode())
+	return ioutil.WriteFile(configfileName, updated, info.Mode())
 }
 
 func getReposMap(val interface{}, latest string) interface{} {
@@ -187,20 +185,13 @@ func sortFunc(strSlice []string) {
 func versionComp(v1, v2 string) int {
 	leftMajor, leftMinor := majorMinor(v1)
 	rightMajor, rightMinor := majorMinor(v2)
-	if leftMajor == rightMajor && leftMinor == rightMinor {
-		return 0
+	if leftMajor != rightMajor {
+		return leftMajor - rightMajor
 	}
-	if leftMajor > rightMajor {
-		return 1
+	if leftMinor != rightMinor {
+		return leftMinor - rightMinor
 	}
-	if leftMajor < rightMajor {
-		return -1
-	}
-	// same major version
-	if leftMinor > rightMinor {
-		return 1
-	}
-	return -1
+	return 0
 }
 
 func mustInt(s string) int {
