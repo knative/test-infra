@@ -26,16 +26,14 @@ import (
 	"strings"
 
 	"gopkg.in/yaml.v2"
+	"knative.dev/pkg/test/ghutil"
 )
 
 const (
 	maxReleaseBranches = 4
-	// Assuming all repo with 0.14 branch also has 0.15 branch, this will be
-	// derived from the branch in following PR
-	latest = "0.15"
 )
 
-func upgradeReleaseBranchesTemplate(configfileName string) error {
+func upgradeReleaseBranchesTemplate(configfileName, tokenPath string) error {
 	config := yaml.MapSlice{}
 	info, err := os.Lstat(configfileName)
 	if err != nil {
@@ -48,9 +46,16 @@ func upgradeReleaseBranchesTemplate(configfileName string) error {
 	if err = yaml.Unmarshal(content, &config); err != nil {
 		return fmt.Errorf("Cannot parse config %q: %w", configfileName, err)
 	}
+	gc, err := ghutil.NewGithubClient(tokenPath)
+	if err != nil {
+		return fmt.Errorf("failed creating github client from %q: %w", tokenPath, err)
+	}
 	for i, repos := range config {
 		if repos.Key != "presubmits" {
-			config[i].Value = getReposMap(repos.Value, latest)
+			config[i].Value, err = getReposMap(gc, repos.Value)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
@@ -62,7 +67,7 @@ func upgradeReleaseBranchesTemplate(configfileName string) error {
 	return ioutil.WriteFile(configfileName, updated, info.Mode())
 }
 
-func getReposMap(val interface{}, latest string) interface{} {
+func getReposMap(gc *ghutil.GithubClient, val interface{}) (interface{}, error) {
 	reposMap := getMapSlice(val)
 	for j, repo := range reposMap {
 		var (
@@ -71,6 +76,13 @@ func getReposMap(val interface{}, latest string) interface{} {
 			skipCiUpdate      bool
 			skipReleaseUpdate bool
 		)
+		repoName := getString(repo.Key)
+		latest, err := latestReleaseBranch(gc, repoName)
+		if err != nil {
+			return nil, fmt.Errorf("failed getting latest release branches: %w", err)
+		}
+
+		log.Printf("latest branch for repo %q is %q", repoName, latest)
 
 		repoConfigs := getInterfaceArray(repo.Value)
 		for _, repoConfig := range repoConfigs {
@@ -108,7 +120,7 @@ func getReposMap(val interface{}, latest string) interface{} {
 
 		reposMap[j].Value = repoConfigs
 	}
-	return reposMap
+	return reposMap, nil
 }
 
 func updateConfigForJob(repoConfigs []interface{}, branches []string, latest string,
