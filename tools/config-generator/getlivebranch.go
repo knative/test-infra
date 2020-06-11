@@ -34,10 +34,13 @@ func latestReleaseBranch(gc *ghutil.GithubClient, repo string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("failed listing branches for repo %q: %w", repo, err)
 	}
-	return latestReleaseBranches(branches), nil
+	return filterLatest(branches), nil
 }
 
-func latestReleaseBranches(branches []*github.Branch) string {
+// filterLatest returns latest release branch in the form of
+// [MAJOR].[MINOR], if there is no valid release branch exist in the form of
+// `release-[MAJOR]-[MINOR]`, then it returns "0.0"
+func filterLatest(branches []*github.Branch) string {
 	var (
 		reReleaseBranch = regexp.MustCompile(`^release\-(\d+\.\d+)$`)
 		latest          = "0.0"
