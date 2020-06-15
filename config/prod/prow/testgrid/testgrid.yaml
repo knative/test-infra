@@ -717,6 +717,46 @@ test_groups:
 - name: ci-knative-networking-go-coverage-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-networking-go-coverage-beta-prow-tests
   short_text_metric: "coverage"
+- name: ci-knative-backup-artifacts
+  gcs_prefix: knative-prow/logs/ci-knative-backup-artifacts
+  alert_options:
+      alert_mail_to_addresses: "prime-engprod-sea@google.com"
+  num_failures_to_alert: 3
+- name: ci-knative-cleanup
+  gcs_prefix: knative-prow/logs/ci-knative-cleanup
+  alert_options:
+      alert_mail_to_addresses: "prime-engprod-sea@google.com"
+  num_failures_to_alert: 3
+- name: ci-knative-cleanup-performance-tests
+  gcs_prefix: knative-prow/logs/ci-knative-cleanup-performance-tests
+  alert_options:
+      alert_mail_to_addresses: "prime-engprod-sea@google.com"
+  num_failures_to_alert: 3
+- name: ci-knative-flakes-reporter
+  gcs_prefix: knative-prow/logs/ci-knative-flakes-reporter
+  alert_options:
+      alert_mail_to_addresses: "prime-engprod-sea@google.com"
+  num_failures_to_alert: 3
+- name: ci-knative-flakes-resultsrecorder
+  gcs_prefix: knative-prow/logs/ci-knative-flakes-resultsrecorder
+  alert_options:
+      alert_mail_to_addresses: "prime-engprod-sea@google.com"
+  num_failures_to_alert: 3
+- name: ci-knative-prow-auto-bumper
+  gcs_prefix: knative-prow/logs/ci-knative-prow-auto-bumper
+  alert_options:
+      alert_mail_to_addresses: "prime-engprod-sea@google.com"
+  num_failures_to_alert: 3
+- name: post-knative-prow-cluster-config-updater
+  gcs_prefix: knative-prow/logs/post-knative-prow-cluster-config-updater
+  alert_options:
+      alert_mail_to_addresses: "prime-engprod-sea@google.com"
+  num_failures_to_alert: 3
+- name: post-knative-test-infra-image-push
+  gcs_prefix: knative-prow/logs/post-knative-test-infra-image-push
+  alert_options:
+      alert_mail_to_addresses: "prime-engprod-sea@google.com"
+  num_failures_to_alert: 3
 dashboards:
 - name: serving
   dashboard_tab:
@@ -1584,6 +1624,32 @@ dashboards:
   - name: ci-knative-networking-go-coverage
     test_group_name: ci-knative-networking-go-coverage-beta-prow-tests
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+- name: unitilies
+  dashboard_tab:
+  - name: ci-knative-backup-artifacts
+    test_group_name: ci-knative-backup-artifacts
+    base_options: ""
+  - name: ci-knative-cleanup
+    test_group_name: ci-knative-cleanup
+    base_options: ""
+  - name: ci-knative-cleanup-performance-tests
+    test_group_name: ci-knative-cleanup-performance-tests
+    base_options: ""
+  - name: ci-knative-flakes-reporter
+    test_group_name: ci-knative-flakes-reporter
+    base_options: ""
+  - name: ci-knative-flakes-resultsrecorder
+    test_group_name: ci-knative-flakes-resultsrecorder
+    base_options: ""
+  - name: ci-knative-prow-auto-bumper
+    test_group_name: ci-knative-prow-auto-bumper
+    base_options: ""
+  - name: post-knative-prow-cluster-config-updater
+    test_group_name: post-knative-prow-cluster-config-updater
+    base_options: ""
+  - name: post-knative-test-infra-image-push
+    test_group_name: post-knative-test-infra-image-push
+    base_options: ""
 dashboard_groups:
 - name: knative
   dashboard_names:
@@ -1613,3 +1679,6 @@ dashboard_groups:
 - name: prow-tests
   dashboard_names:
   - "beta-prow-tests"
+- name: utilities
+  dashboard_names:
+  - "unitilies"
