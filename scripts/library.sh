@@ -390,7 +390,7 @@ function mktemp_with_extension() {
 #             $3 - failure message (can contain newlines), optional (means success)
 function create_junit_xml() {
   local xml="$(mktemp_with_extension "${ARTIFACTS}"/junit_XXXXXXXX xml)"
-  kntest junit --suite="$1" --name="$2" --err-msg="$3" --dest="${xml}" || return 1
+  run_kntest junit --suite="$1" --name="$2" --err-msg="$3" --dest="${xml}" || return 1
 }
 
 # Runs a go test and generate a junit summary.
@@ -523,6 +523,15 @@ function run_go_tool() {
   (( install_failed )) && return ${install_failed}
   shift 2
   ${tool} "$@"
+}
+
+# Run kntest tool, error out and ask users to install it if it's not currently installed.
+# Parameters: $1..$n - parameters passed to the tool.
+function run_kntest() {
+  if [[ -z "$(which kntest)" ]]; then
+    echo "--- FAIL: kntest not installed, please clone test-infra repo and run \`go install ./kntest/cmd/kntest\` to install it"; return 1;
+  fi
+  kntest "$@"
 }
 
 # Run go-licenses to update licenses.
