@@ -322,14 +322,20 @@ postsubmits:
         - runner.sh
         args:
         - "./images/push-all.sh"
+        securityContext:
+          privileged: true
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
         env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
       volumes:
+      - name: docker-graph
+        emptyDir: {}
       - name: test-account
         secret:
           secretName: test-account
