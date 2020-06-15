@@ -277,15 +277,18 @@ func getTestGroupName(repoName string, jobName string) string {
 // generateNonAlignedDashboards generates some of the content under "dashboards:"
 func (t *TestGridMetaData) generateNonAlignedDashboards() {
 	// Collect them by DashboardName
+	var keys []string
 	dn := make(map[string][]NonAlignedTestGroup)
 	for _, tg := range t.nonAligned {
 		_, exists := dn[tg.DashboardName]
 		if !exists {
 			dn[tg.DashboardName] = make([]NonAlignedTestGroup, 0)
+			keys = append(keys, tg.DashboardName)
 		}
 		dn[tg.DashboardName] = append(dn[tg.DashboardName], tg)
 	}
-	for name, tgs := range dn {
+	for _, name := range keys {
+		tgs := dn[name]
 		outputConfig("- name: " + name + "\n" + baseIndent + "dashboard_tab:")
 		for _, tg := range tgs {
 			executeDashboardTabTemplate(tg.HumanTabName, tg.CIJobName, tg.BaseOptions, nil)
@@ -319,17 +322,20 @@ func (t *TestGridMetaData) generateDashboardsForReleases() {
 // generateNonAlignedDashboardGroups generates some of the content under "dashboards:"
 func (t *TestGridMetaData) generateNonAlignedDashboardGroups() {
 	// Collect Dashboards by DashboardGroup
+	var keys []string
 	dg := make(map[string][]string)
 	for _, tg := range t.nonAligned {
 		_, exists := dg[tg.DashboardGroup]
 		if !exists {
 			dg[tg.DashboardGroup] = make([]string, 0)
+			keys = append(keys, tg.DashboardName)
 		}
 		if !strExists(dg[tg.DashboardGroup], tg.DashboardName) {
 			dg[tg.DashboardGroup] = append(dg[tg.DashboardGroup], tg.DashboardName)
 		}
 	}
-	for group, names := range dg {
+	for _, group := range keys {
+		names := dg[group]
 		executeDashboardGroupTemplate(group, names)
 	}
 }

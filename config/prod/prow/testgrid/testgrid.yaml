@@ -1676,9 +1676,7 @@ dashboard_groups:
 - name: knative-sandbox
   dashboard_names:
   - "eventing-kafka"
-- name: prow-tests
+- name: beta-prow-tests
   dashboard_names:
-  - "beta-prow-tests"
-- name: utilities
+- name: unitilies
   dashboard_names:
-  - "unitilies"
