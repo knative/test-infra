@@ -19,24 +19,27 @@ limitations under the License.
 
 package main
 
+var (
+	customJobnames = []string{
+		"ci-knative-backup-artifacts",
+		"ci-knative-cleanup",
+		"ci-knative-cleanup-performance-tests",
+		"ci-knative-flakes-reporter",
+		"ci-knative-flakes-resultsrecorder",
+		"ci-knative-prow-auto-bumper",
+		"post-knative-prow-cluster-config-updater",
+		"post-knative-test-infra-image-push",
+	}
+)
+
 func addCustomJobsTestgrid() {
 	var (
-		jobnames = []string{
-			"ci-knative-backup-artifacts",
-			"ci-knative-cleanup",
-			"ci-knative-cleanup-performance-tests",
-			"ci-knative-flakes-reporter",
-			"ci-knative-flakes-resultsrecorder",
-			"ci-knative-prow-auto-bumper",
-			"post-knative-prow-cluster-config-updater",
-			"post-knative-test-infra-image-push",
-		}
 		extras = map[string]string{
 			"num_failures_to_alert": "3",
-			"alert_options":         "\n      alert_mail_to_addresses: \"prime-engprod-sea@google.com\"",
+			"alert_options":         "\n      alert_mail_to_addresses: \"serverless-engprod-sea@google.com\"",
 		}
 	)
-	for _, job := range jobnames {
+	for _, job := range customJobnames {
 		metaData.AddNonAlignedTest(NonAlignedTestGroup{
 			DashboardGroup: "utilities",
 			DashboardName:  "unitilies",
