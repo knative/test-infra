@@ -1030,6 +1030,7 @@ func main() {
 
 		periodicJobData := parseJob(config, "periodics")
 		collectMetaData(periodicJobData)
+		addCustomJobsTestgrid()
 
 		// log.Print(spew.Sdump(metaData))
 
