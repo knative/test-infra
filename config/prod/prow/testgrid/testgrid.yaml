@@ -1679,6 +1679,6 @@ dashboard_groups:
 - name: prow-tests
   dashboard_names:
   - "beta-prow-tests"
-- name: utilities
+- name: maintenance
   dashboard_names:
   - "utilities"
