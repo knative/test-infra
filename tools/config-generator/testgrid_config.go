@@ -184,13 +184,13 @@ func (t *TestGridMetaData) generateTestGroup(projName string, repoName string, j
 			// does not mix releases with the master branch
 			if releaseRegex.FindString(projName) != "" {
 				extras["num_failures_to_alert"] = "3"
-				extras["alert_options"] = "\n    alert_mail_to_addresses: \"serverless-engprod-sea@google.com\""
+				extras["alert_options"] = "\n    alert_mail_to_addresses: \"prime-engprod-sea@google.com\""
 			} else {
 				extras["alert_stale_results_hours"] = "3"
 			}
 		case "dot-release", "auto-release", "nightly":
 			extras["num_failures_to_alert"] = "1"
-			extras["alert_options"] = "\n    alert_mail_to_addresses: \"serverless-engprod-sea@google.com\""
+			extras["alert_options"] = "\n    alert_mail_to_addresses: \"prime-engprod-sea@google.com\""
 			if jobName == "dot-release" {
 				extras["alert_stale_results_hours"] = "170" // 1 week + 2h
 			}
@@ -226,7 +226,7 @@ func generateDashboard(projName string, repoName string, jobNames []string) {
 		case "continuous":
 			extras := make(map[string]string)
 			extras["num_failures_to_alert"] = "3"
-			extras["alert_options"] = "\n      alert_mail_to_addresses: \"serverless-engprod-sea@google.com\""
+			extras["alert_options"] = "\n      alert_mail_to_addresses: \"prime-engprod-sea@google.com\""
 			executeDashboardTabTemplate("continuous", testGroupName, testgridTabSortByName, extras)
 			// This is a special case for knative/serving, as conformance tab is just a filtered view of the continuous tab.
 			if projRepoStr == "knative-serving" {
@@ -235,7 +235,7 @@ func generateDashboard(projName string, repoName string, jobNames []string) {
 		case "dot-release", "auto-release":
 			extras := make(map[string]string)
 			extras["num_failures_to_alert"] = "1"
-			extras["alert_options"] = "\n      alert_mail_to_addresses: \"serverless-engprod-sea@google.com\""
+			extras["alert_options"] = "\n      alert_mail_to_addresses: \"prime-engprod-sea@google.com\""
 			baseOptions := testgridTabSortByName
 			executeDashboardTabTemplate(jobName, testGroupName, baseOptions, extras)
 		case "webhook-apicoverage":
@@ -244,7 +244,7 @@ func generateDashboard(projName string, repoName string, jobNames []string) {
 		case "nightly":
 			extras := make(map[string]string)
 			extras["num_failures_to_alert"] = "1"
-			extras["alert_options"] = "\n      alert_mail_to_addresses: \"serverless-engprod-sea@google.com\""
+			extras["alert_options"] = "\n      alert_mail_to_addresses: \"prime-engprod-sea@google.com\""
 			executeDashboardTabTemplate("nightly", testGroupName, testgridTabSortByName, extras)
 		case "test-coverage":
 			executeDashboardTabTemplate("coverage", testGroupName, testgridTabGroupByDir, noExtras)
@@ -277,18 +277,15 @@ func getTestGroupName(repoName string, jobName string) string {
 // generateNonAlignedDashboards generates some of the content under "dashboards:"
 func (t *TestGridMetaData) generateNonAlignedDashboards() {
 	// Collect them by DashboardName
-	var keys []string
 	dn := make(map[string][]NonAlignedTestGroup)
 	for _, tg := range t.nonAligned {
 		_, exists := dn[tg.DashboardName]
 		if !exists {
 			dn[tg.DashboardName] = make([]NonAlignedTestGroup, 0)
-			keys = append(keys, tg.DashboardName)
 		}
 		dn[tg.DashboardName] = append(dn[tg.DashboardName], tg)
 	}
-	for _, name := range keys {
-		tgs := dn[name]
+	for name, tgs := range dn {
 		outputConfig("- name: " + name + "\n" + baseIndent + "dashboard_tab:")
 		for _, tg := range tgs {
 			executeDashboardTabTemplate(tg.HumanTabName, tg.CIJobName, tg.BaseOptions, nil)
@@ -310,7 +307,7 @@ func (t *TestGridMetaData) generateDashboardsForReleases() {
 				for _, jobName := range jobNames {
 					extras := make(map[string]string)
 					extras["num_failures_to_alert"] = "3"
-					extras["alert_options"] = "\n      alert_mail_to_addresses: \"serverless-engprod-sea@google.com\""
+					extras["alert_options"] = "\n      alert_mail_to_addresses: \"prime-engprod-sea@google.com\""
 					testGroupName := getTestGroupName(buildProjRepoStr(projName, repoName), jobName)
 					executeDashboardTabTemplate(repoName+"-"+jobName, testGroupName, testgridTabSortByName, extras)
 				}
@@ -322,20 +319,17 @@ func (t *TestGridMetaData) generateDashboardsForReleases() {
 // generateNonAlignedDashboardGroups generates some of the content under "dashboards:"
 func (t *TestGridMetaData) generateNonAlignedDashboardGroups() {
 	// Collect Dashboards by DashboardGroup
-	var keys []string
 	dg := make(map[string][]string)
 	for _, tg := range t.nonAligned {
 		_, exists := dg[tg.DashboardGroup]
 		if !exists {
 			dg[tg.DashboardGroup] = make([]string, 0)
-			keys = append(keys, tg.DashboardName)
 		}
 		if !strExists(dg[tg.DashboardGroup], tg.DashboardName) {
 			dg[tg.DashboardGroup] = append(dg[tg.DashboardGroup], tg.DashboardName)
 		}
 	}
-	for _, group := range keys {
-		names := dg[group]
+	for group, names := range dg {
 		executeDashboardGroupTemplate(group, names)
 	}
 }
