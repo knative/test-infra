@@ -314,7 +314,7 @@ periodics:
       - "go"
       args:
       - "run"
-      - "./tools/prow-jobs/syncer/."
+      - "./tools/prow-jobs-syncer"
       - "--github-account=/etc/prow-auto-bumper-github-token/token"
       - "--git-userid=knative-prow-updater-robot"
       - "--git-username='Knative Prow Updater Robot'"
