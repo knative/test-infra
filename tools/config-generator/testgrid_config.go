@@ -328,7 +328,7 @@ func (t *TestGridMetaData) generateNonAlignedDashboardGroups() {
 		_, exists := dg[tg.DashboardGroup]
 		if !exists {
 			dg[tg.DashboardGroup] = make([]string, 0)
-			keys = append(keys, tg.DashboardName)
+			keys = append(keys, tg.DashboardGroup)
 		}
 		if !strExists(dg[tg.DashboardGroup], tg.DashboardName) {
 			dg[tg.DashboardGroup] = append(dg[tg.DashboardGroup], tg.DashboardName)
