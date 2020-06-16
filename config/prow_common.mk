@@ -33,8 +33,6 @@ PROW_PLUGINS                    ?= prow/core/plugins.yaml
 PROW_CONFIG                     ?= prow/core/config.yaml
 PROW_JOB_CONFIG                 ?= prow/jobs
 
-PROW_DEPLOYS                    ?= prow/cluster
-BUILD_CLUSTER_PROW_DEPLOYS      ?= build-cluster/cluster
 PROW_GCS                        ?= knative-prow
 PROW_CONFIG_GCS                 ?= gs://$(PROW_GCS)/configs
 
@@ -66,7 +64,7 @@ unset-cluster-credentials:
 get-build-cluster-credentials:
 	$(SET_BUILD_CLUSTER_CONTEXT)
 
-.PHONY: update-prow-config update-boskos-resource update-all-cluster-deployments test update-testgrid-config confirm-master
+.PHONY: update-prow-config update-boskos-resource test update-testgrid-config confirm-master
 
 # Update prow config
 update-prow-config: confirm-master
@@ -85,24 +83,11 @@ update-boskos-resource: confirm-master
 	kubectl create configmap resources --from-file=config=$(BOSKOS_RESOURCES) --dry-run --save-config -o yaml | kubectl --namespace="$(JOB_NAMESPACE)" apply -f -
 	$(UNSET_CONTEXT)
 
-# Update all deployments of cluster except Boskos
-# Boskos is separate because of patching done in staging Makefile
-# Double-colon because staging Makefile piggy-backs on this
-update-all-cluster-deployments:: confirm-master
-	$(SET_CONTEXT)
-	kubectl apply -f $(PROW_DEPLOYS)
-	$(UNSET_CONTEXT)
-
-update-all-build-cluster-deployments:: confirm-master
-	$(SET_BUILD_CLUSTER_CONTEXT)
-	kubectl apply -f $(BUILD_CLUSTER_PROW_DEPLOYS)
-	$(UNSET_CONTEXT)
-
 # Update all resources on Prow cluster
-update-prow-cluster: update-all-cluster-deployments update-all-build-cluster-deployments update-boskos-resource update-prow-config
+update-prow-cluster: update-boskos-resource update-prow-config
 
 # Update everything
-update-all: update-all-cluster-deployments update-all-build-cluster-deployments update-boskos-resource update-prow-config update-testgrid-config
+update-all: update-boskos-resource update-prow-config update-testgrid-config
 
 # Update TestGrid config.
 # Application Default Credentials must be set, otherwise the upload will fail.
