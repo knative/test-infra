@@ -41,7 +41,7 @@ func addCustomJobsTestgrid() {
 	)
 	for _, job := range customJobnames {
 		metaData.AddNonAlignedTest(NonAlignedTestGroup{
-			DashboardGroup: "utilities",
+			DashboardGroup: "maintenance",
 			DashboardName:  "utilities",
 			HumanTabName:   job,
 			CIJobName:      job,
