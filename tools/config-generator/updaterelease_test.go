@@ -91,7 +91,7 @@ func TestUpgradeReleaseBranchesTemplate(t *testing.T) {
 			fgc := fakeghutil.NewFakeGithubClient()
 			fgc.Branches = make(map[string][]*github.Branch)
 			fgc.Branches["org1/repo1"] = []*github.Branch{
-				&github.Branch{Name: &latest},
+				{Name: &latest},
 			}
 			var fn string
 			fn = "file_not_exist"
@@ -254,7 +254,7 @@ func TestGetReposMap(t *testing.T) {
 			fgc := fakeghutil.NewFakeGithubClient()
 			fgc.Branches = make(map[string][]*github.Branch)
 			fgc.Branches["org1/repo1"] = []*github.Branch{
-				&github.Branch{Name: &latest},
+				{Name: &latest},
 			}
 			inStruct := yaml.MapSlice{}
 			if err := yaml.Unmarshal([]byte(tt.in), &inStruct); err != nil {
