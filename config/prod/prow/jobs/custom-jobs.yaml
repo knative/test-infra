@@ -30,6 +30,37 @@ presubmits:
         - "--prow-yaml-repo-name=$(REPO_OWNER)/$(REPO_NAME)"
         - "--strict"
         - "--exclude-warning=mismatched-tide"
+  - name: pull-test-infra-validate-testgrid-yaml
+    decorate: true
+    run_if_changed: "^config/prod/prow/testgrid/testgrid.yaml$"
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        command:
+        - "runner.sh"
+        args:
+        - "make"
+        - "-C"
+        - "./config/prod"
+        - "verify-testgrid-config"
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+      volumes:
+      - name: docker-graph
+        emptyDir: {}
+      - name: test-account
+        secret:
+          secretName: test-account
   - name: pull-test-infra-validate-staging-prow-yaml
     decorate: true
     run_if_changed: "^config/staging/prow/(cluster|core|jobs)/.*.yaml$"
