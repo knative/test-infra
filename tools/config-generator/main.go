@@ -39,6 +39,7 @@ import (
 
 	"gopkg.in/yaml.v2"
 	"k8s.io/apimachinery/pkg/util/sets"
+	"knative.dev/pkg/test/ghutil"
 )
 
 const (
@@ -156,6 +157,7 @@ var (
 	releaseScript              string
 	webhookAPICoverageScript   string
 	upgradeReleaseBranches     bool
+	githubTokenPath            string
 
 	// #########################################################################
 	// ############## data used for generating prow configuration ##############
@@ -945,6 +947,7 @@ func main() {
 	flag.StringVar(&jobNameFilter, "job-filter", "", "Generate only this job, instead of all jobs")
 	flag.StringVar(&preCommand, "pre-command", "", "Executable for running instead of the real command of a job")
 	flag.BoolVar(&upgradeReleaseBranches, "upgrade-release-branches", false, "Update release branches jobs based on active branches")
+	flag.StringVar(&githubTokenPath, "github-token-path", "", "Token path for authenticating with github, used only when --upgrade-release-branches is on")
 	flag.Var(&extraEnvVars, "extra-env", "Extra environment variables (key=value) to add to a job")
 	flag.Parse()
 	if len(flag.Args()) != 1 {
@@ -959,7 +962,11 @@ func main() {
 	// Read input config.
 	name := flag.Arg(0)
 	if upgradeReleaseBranches {
-		if err := upgradeReleaseBranchesTemplate(name); err != nil {
+		gc, err := ghutil.NewGithubClient(githubTokenPath)
+		if err != nil {
+			log.Fatalf("Failed creating github client from %q: %v", githubTokenPath, err)
+		}
+		if err := upgradeReleaseBranchesTemplate(name, gc); err != nil {
 			log.Fatalf("Failed upgrade based on release branch: '%v'", err)
 		}
 	}
