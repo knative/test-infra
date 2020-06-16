@@ -77,8 +77,11 @@ func getReposMap(gc ghutil.GithubOperations, val interface{}) (interface{}, erro
 		if err != nil {
 			return nil, fmt.Errorf("failed getting latest release branches: %w", err)
 		}
+		if latest == "" {
+			continue
+		}
 
-		log.Printf("latest branch for repo %q is %q", repoName, latest)
+		log.Printf("Latest branch for repo %q is %q", repoName, latest)
 
 		repoConfigs := getInterfaceArray(repo.Value)
 		for _, repoConfig := range repoConfigs {

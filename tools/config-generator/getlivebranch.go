@@ -39,17 +39,17 @@ func latestReleaseBranch(gc ghutil.GithubOperations, repo string) (string, error
 
 // filterLatest returns latest release branch in the form of
 // [MAJOR].[MINOR], if there is no valid release branch exist in the form of
-// `release-[MAJOR]-[MINOR]`, then it returns "0.0"
+// `release-[MAJOR]-[MINOR]`, then it returns ""
 func filterLatest(branches []*github.Branch) string {
 	var (
 		reReleaseBranch = regexp.MustCompile(`^release\-(\d+\.\d+)$`)
-		latest          = "0.0"
+		latest          = ""
 	)
 
 	for _, branch := range branches {
 		if matches := reReleaseBranch.FindStringSubmatch(*branch.Name); len(matches) > 1 {
 			release := matches[1]
-			if versionComp(release, latest) > 0 {
+			if latest == "" || versionComp(release, latest) > 0 {
 				latest = release
 			}
 		}

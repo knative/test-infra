@@ -964,7 +964,7 @@ func main() {
 	if upgradeReleaseBranches {
 		gc, err := ghutil.NewGithubClient(githubTokenPath)
 		if err != nil {
-			log.Fatalf("failed creating github client from %q: %v", githubTokenPath, err)
+			log.Fatalf("Failed creating github client from %q: %v", githubTokenPath, err)
 		}
 		if err := upgradeReleaseBranchesTemplate(name, gc); err != nil {
 			log.Fatalf("Failed upgrade based on release branch: '%v'", err)
