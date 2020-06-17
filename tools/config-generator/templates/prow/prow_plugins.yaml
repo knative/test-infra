@@ -90,9 +90,6 @@ config_updater:
       name: config
     [[.PluginConfigPath]]:
       name: plugins
-    label_sync/labels.yaml:
-      name: label-config
-      namespace: test-pods
 
 # Plugins enabled for each repo.
 

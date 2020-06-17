@@ -172,7 +172,7 @@ default:
       addedBy: prow
 
 repos:
-  chizhg-org/test:
+  knative/test-infra:
     labels:
     - color: c5def5
       description: Parked issue that required triaging/revisit in a near future
