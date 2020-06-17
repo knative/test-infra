@@ -35,14 +35,7 @@ This will ensure that:
 
 ## Usage
 
-```sh
-# add or migrate labels on all repos in the knative org
-# Under kubernetes/test-infra/label_sync, run:
-bazel run //label_sync -- \
-  --config /path/to/labels.yaml \
-  --token /path/to/github_oauth_token \
-  --orgs knative
-```
+To learn more about how to run this tool locally, please check [kubernetes/test-infra](https://github.com/kubernetes/test-infra/blob/master/label_sync/README.md#usage).
 
 ## Prow job
 

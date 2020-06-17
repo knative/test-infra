@@ -36,9 +36,9 @@ default:
       prowPlugin: help
       addedBy: anyone
 
-    ##########################################################################
-    # These labels are modified by automation and should not be added manually
-    ##########################################################################
+    #############################################################################
+    # These labels are important for automation so normally should not be changed
+    #############################################################################
 
     - color: abea59
       description: Indicates a PR has been approved by an approver from all required OWNERS files.
