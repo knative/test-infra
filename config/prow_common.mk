@@ -120,26 +120,3 @@ update-testgrid-config: confirm-master
 		"--oneshot" \
 		"--output=gs://$(TESTGRID_GCS)/config" \
 		"--yaml=$(realpath $(TESTGRID_CONFIG))"
-
-.PHONY: verify-testgrid-config
-verify-testgrid-config:
-	docker run -i --rm \
-		-v "$(PWD):$(PWD)" \
-		-v "$(realpath $(TESTGRID_CONFIG)):$(realpath $(TESTGRID_CONFIG))" \
-		-v "$(GOOGLE_APPLICATION_CREDENTIALS):$(GOOGLE_APPLICATION_CREDENTIALS)" \
-		-e "GOOGLE_APPLICATION_CREDENTIALS" \
-		-w "$(PWD)" \
-		gcr.io/k8s-prow/configurator:v20200519-00d052e16 \
-		--validate-config-file \
-		"--yaml=$(realpath $(TESTGRID_CONFIG))"
-
-	docker run -i --rm \
-		-v "$(PWD):$(PWD)" \
-		-v "$(realpath $(TESTGRID_CONFIG)):$(realpath $(TESTGRID_CONFIG))" \
-		-v "$(GOOGLE_APPLICATION_CREDENTIALS):$(GOOGLE_APPLICATION_CREDENTIALS)" \
-		-e "GOOGLE_APPLICATION_CREDENTIALS" \
-		-w "$(PWD)" \
-		gcr.io/k8s-prow/configurator:v20200519-00d052e16 \
-		--oneshot \
-		--output=/dev/null \
-		"--yaml=$(realpath $(TESTGRID_CONFIG))"

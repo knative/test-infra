@@ -77,6 +77,33 @@ presubmits:
         - "--prow-yaml-repo-name=$(REPO_OWNER)/$(REPO_NAME)"
         - "--strict"
         - "--exclude-warning=mismatched-tide"
+  - name: pull-test-infra-validate-testgrid-yaml
+    decorate: true
+    run_if_changed: "^config/prod/prow/testgrid/testgrid.yaml$"
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/k8s-prow/configurator:v20200519-00d052e16
+        imagePullPolicy: Always
+        command:
+        - "/app/testgrid/cmd/configurator/app.binary"
+        args:
+        - "--validate-config-file"
+        - "--yaml=config/prod/prow/testgrid/testgrid.yaml"
+  - name: pull-test-infra-validate-testgrid-yaml-to-binary
+    decorate: true
+    run_if_changed: "^config/prod/prow/testgrid/testgrid.yaml$"
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/k8s-prow/configurator:v20200519-00d052e16
+        imagePullPolicy: Always
+        command:
+        - "/app/testgrid/cmd/configurator/app.binary"
+        args:
+        - "--oneshot"
+        - "--output=/dev/null"
+        - "--yaml=config/prod/prow/testgrid/testgrid.yaml"
 
 periodics:
 - cron: "15 9 * * *"
