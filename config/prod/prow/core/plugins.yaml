@@ -80,6 +80,9 @@ config_updater:
       name: config
     config/prod/prow/core/plugins.yaml:
       name: plugins
+    label_sync/labels.yaml:
+      name: label-config
+      namespace: test-pods
 # Plugins enabled for each repo.
 plugins:
   knative:
