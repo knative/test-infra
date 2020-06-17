@@ -354,7 +354,7 @@ postsubmits:
     path_alias: knative.dev/test-infra
     max_concurrency: 1
     cluster: "prow-trusted"
-    run_if_changed: "^config/prod/(prow/cluster/.*.yaml|build-cluster/(cluster|boskos)/.*.yaml|prow/testgrid/testgrid.yaml)$"
+    run_if_changed: "^config/prod/(build-cluster/boskos/.*.yaml|prow/testgrid/testgrid.yaml)$"
     branches:
     - "master"
     spec:
