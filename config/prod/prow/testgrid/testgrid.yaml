@@ -747,6 +747,11 @@ test_groups:
   alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
+- name: ci-knative-prow-jobs-syncer
+  gcs_prefix: knative-prow/logs/ci-knative-prow-jobs-syncer
+  alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
 - name: post-knative-prow-cluster-config-updater
   gcs_prefix: knative-prow/logs/post-knative-prow-cluster-config-updater
   alert_options:
@@ -1643,6 +1648,9 @@ dashboards:
     base_options: ""
   - name: ci-knative-prow-auto-bumper
     test_group_name: ci-knative-prow-auto-bumper
+    base_options: ""
+  - name: ci-knative-prow-jobs-syncer
+    test_group_name: ci-knative-prow-jobs-syncer
     base_options: ""
   - name: post-knative-prow-cluster-config-updater
     test_group_name: post-knative-prow-cluster-config-updater
