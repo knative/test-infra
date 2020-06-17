@@ -21,6 +21,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strings"
 
 	"knative.dev/pkg/test/cmd"
 	"knative.dev/pkg/test/helpers"
@@ -41,7 +42,7 @@ func MakeCommit(gi Info, message string, dryrun bool) error {
 	var (
 		statusCmd = "git status --porcelain"
 		addCmd    = "git add -A"
-		commitCmd = fmt.Sprintf("git commit -m %s", message)
+		commitCmd = fmt.Sprintf("git commit -m %q", message)
 		pushCmd   = fmt.Sprintf("git push -f git@github.com:%s/%s.git HEAD:%s",
 			gi.UserID, gi.Repo, gi.Head)
 	)
@@ -64,11 +65,14 @@ func MakeCommit(gi Info, message string, dryrun bool) error {
 	cmds := []string{addCmd, commitCmd, pushCmd}
 
 	return helpers.Run(
-		fmt.Sprintf("Running '%v'", cmds),
+		fmt.Sprintf("Running %q", strings.Join(cmds, "; ")),
 		func() error {
 			out, err := cmd.RunCommands(cmds...)
-			return fmt.Errorf("Failed running %v:\nOutput: %q\nError: %v",
-				cmds, out, err)
+			if err != nil {
+				return fmt.Errorf("Failed running %q:\nOutput: %q\nError: %v",
+					strings.Join(cmds, "; "), out, err)
+			}
+			return nil
 		},
 		dryrun,
 	)
