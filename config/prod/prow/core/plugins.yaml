@@ -73,7 +73,7 @@ label:
 # Settings for the "config-updater" plugin.
 config_updater:
   maps:
-    config/prod/prow/jobs/*.yaml:
+    config/prod/prow/jobs/**/*.yaml:
       name: job-config
       gzip: true
     config/prod/prow/core/config.yaml:

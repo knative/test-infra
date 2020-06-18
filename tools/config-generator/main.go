@@ -549,7 +549,7 @@ func getProwConfigData(config yaml.MapSlice) prowConfigTemplateData {
 	if isProd {
 		data.ManagedOrgs = []string{"knative", "knative-sandbox"}
 		data.ManagedRepos = []string{"google/knative-gcp"}
-		data.JobConfigPath = "config/prod/prow/jobs/*.yaml"
+		data.JobConfigPath = "config/prod/prow/jobs/**/*.yaml"
 		data.CoreConfigPath = "config/prod/prow/core/config.yaml"
 		data.PluginConfigPath = "config/prod/prow/core/plugins.yaml"
 	} else {
