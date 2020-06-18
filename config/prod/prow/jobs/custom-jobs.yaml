@@ -449,3 +449,35 @@ postsubmits:
       - name: oauth
         secret:
           secretName: oauth-token
+  GoogleCloudPlatform/oss-test-infra:
+  - name: post-knative-prow-cluster-deployment-updater
+    agent: kubernetes
+    decorate: true
+    max_concurrency: 1
+    cluster: "prow-trusted"
+    run_if_changed: "^prow/knative/cluster/"
+    branches:
+    - "master"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "make"
+        - "-C"
+        - "prow/knative"
+        - "deploy"
+        - "deploy-build"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
