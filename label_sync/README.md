@@ -35,7 +35,8 @@ This will ensure that:
 
 ## Usage
 
-To learn more about how to run this tool locally, please check [kubernetes/test-infra](https://github.com/kubernetes/test-infra/blob/master/label_sync/README.md#usage).
+To learn more about how to run this tool locally, please check
+[kubernetes/test-infra](https://github.com/kubernetes/test-infra/blob/master/label_sync/README.md#usage).
 
 ## Prow job
 
