@@ -96,7 +96,7 @@ func createOrUpdatePR(gcw *GHClientWrapper, gi git.Info, dryrun bool) error {
 		return fmt.Errorf("failed git commit: '%v'", err)
 	}
 	if !hasUpdates {
-		log.Print("There is nothing commited, skip PR")
+		log.Print("There is nothing committed, skip PR")
 		return nil
 	}
 	existPR, err := getExistingPR(gcw, gi, matchTitle)
