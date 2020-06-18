@@ -22,15 +22,9 @@ presubmits:
       containers:
       - image: gcr.io/k8s-prow/checkconfig:v20200413-65958d4a8
         command:
-        - "/checkconfig"
+        - "./config/prod/prow/check_config.sh"
         args:
-        - "--config-path=config/prod/prow/core/config.yaml"
-        - "--job-config-path=config/prod/prow/jobs"
-        - "--plugin-config=config/prod/prow/core/plugins.yaml"
-        - "--prow-yaml-repo-name=$(REPO_OWNER)/$(REPO_NAME)"
-        - "--strict"
-        - "--exclude-warning=mismatched-tide"
-        - "--exclude-warning=long-job-names"
+        - "$(REPO_OWNER)/$(REPO_NAME)"
   - name: pull-test-infra-validate-testgrid-yaml
     decorate: true
     run_if_changed: "^config/prod/prow/testgrid/testgrid.yaml$"
