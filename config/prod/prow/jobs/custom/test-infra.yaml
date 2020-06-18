@@ -390,7 +390,7 @@ postsubmits:
     decorate: true
     path_alias: knative.dev/test-infra
     max_concurrency: 1
-    cluster: "prow-trusted"
+    cluster: "build-knative"
     run_if_changed: "^(images/.*|tools/(coverage|flaky-test-reporter|flaky-test-retryer)/.*|go.mod)$"
     branches:
     - "master"
