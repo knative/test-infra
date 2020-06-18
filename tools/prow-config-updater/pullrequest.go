@@ -164,7 +164,7 @@ func (gc *GitHubMainHandler) createAutoMergePullRequest(title, body string) (*gi
 				return fmt.Errorf("failed git commit: '%v'", err)
 			}
 			if !hasUpdates {
-				log.Print("There is nothing commited, skip PR")
+				log.Print("There is nothing committed, skip PR")
 				return nil
 			}
 			pr, err = gc.client.CreatePullRequest(gi.Org, gi.Repo, gi.GetHeadRef(), gi.Base, title, body)
