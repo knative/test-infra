@@ -762,6 +762,11 @@ test_groups:
   alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
+- name: post-knative-sandbox-peribolos
+  gcs_prefix: knative-prow/logs/post-knative-sandbox-peribolos
+  alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
 dashboards:
 - name: serving
   dashboard_tab:
@@ -1657,6 +1662,9 @@ dashboards:
     base_options: ""
   - name: post-knative-test-infra-image-push
     test_group_name: post-knative-test-infra-image-push
+    base_options: ""
+  - name: post-knative-sandbox-peribolos
+    test_group_name: post-knative-sandbox-peribolos
     base_options: ""
 dashboard_groups:
 - name: knative

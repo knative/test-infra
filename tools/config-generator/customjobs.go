@@ -30,6 +30,7 @@ var (
 		"ci-knative-prow-jobs-syncer",
 		"post-knative-prow-cluster-config-updater",
 		"post-knative-test-infra-image-push",
+		"post-knative-sandbox-peribolos",
 	}
 )
 

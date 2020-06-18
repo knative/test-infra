@@ -18,6 +18,9 @@ package main
 
 import (
 	"io/ioutil"
+	"os"
+	"path/filepath"
+	"strings"
 	"testing"
 
 	"gopkg.in/yaml.v2"
@@ -25,7 +28,7 @@ import (
 )
 
 var (
-	defaultTemplateConfigpath = "../../config/prod/prow/jobs/custom-jobs.yaml"
+	defaultTemplateConfigPath = "../../config/prod/prow/jobs/custom"
 )
 
 type customJobStruct struct {
@@ -39,31 +42,38 @@ type singleCustomJob struct {
 }
 
 func TestEnsureCustomJob(t *testing.T) {
-	content, err := ioutil.ReadFile(defaultTemplateConfigpath)
-	if err != nil {
-		t.Fatalf("Failed reading template file %q: %v", defaultTemplateConfigpath, err)
-	}
-	allCustomJobs := customJobStruct{}
-	if err = yaml.Unmarshal(content, &allCustomJobs); err != nil {
-		t.Fatalf("Failed unmarshalling: %v", err)
-	}
 	validJobs := sets.NewString()
-	for _, sjs := range allCustomJobs.Presubmits {
-		for _, sj := range sjs {
-			validJobs.Insert(sj.Name)
+	filepath.Walk(defaultTemplateConfigPath, func(path string, info os.FileInfo, err error) error {
+		if strings.HasSuffix(path, ".yaml") {
+			content, err := ioutil.ReadFile(path)
+			if err != nil {
+				t.Fatalf("Failed reading template file %q: %v", path, err)
+			}
+
+			allCustomJobs := customJobStruct{}
+			if err = yaml.Unmarshal(content, &allCustomJobs); err != nil {
+				t.Fatalf("Failed unmarshalling: %v", err)
+			}
+			for _, sjs := range allCustomJobs.Presubmits {
+				for _, sj := range sjs {
+					validJobs.Insert(sj.Name)
+				}
+			}
+			for _, sjs := range allCustomJobs.Postsubmits {
+				for _, sj := range sjs {
+					validJobs.Insert(sj.Name)
+				}
+			}
+			for _, sj := range allCustomJobs.Periodics {
+				validJobs.Insert(sj.Name)
+			}
 		}
-	}
-	for _, sjs := range allCustomJobs.Postsubmits {
-		for _, sj := range sjs {
-			validJobs.Insert(sj.Name)
-		}
-	}
-	for _, sj := range allCustomJobs.Periodics {
-		validJobs.Insert(sj.Name)
-	}
+		return nil
+	})
+
 	for _, job := range customJobnames {
 		if !validJobs.Has(job) {
-			t.Fatalf("Job %q doesn't exist in %q", job, defaultTemplateConfigpath)
+			t.Fatalf("Job %q doesn't exist in %q", job, defaultTemplateConfigPath)
 		}
 	}
 }
