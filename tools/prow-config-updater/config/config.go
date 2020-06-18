@@ -87,7 +87,6 @@ var (
 		filepath.Join(ProdProwConfigRoot, core),
 		filepath.Join(ProdProwConfigRoot, jobs),
 		filepath.Join(ProdProwConfigRoot, cluster),
-		filepath.Join(ProdProwConfigRoot, boskos),
 		// Build cluster has only cluster and boskos
 		filepath.Join(ProdProwBuildclusterConfigRoot, cluster),
 		filepath.Join(ProdProwBuildclusterConfigRoot, boskos),
@@ -96,7 +95,6 @@ var (
 		filepath.Join(StagingProwConfigRoot, core),
 		filepath.Join(StagingProwConfigRoot, jobs),
 		filepath.Join(StagingProwConfigRoot, cluster),
-		filepath.Join(StagingProwConfigRoot, boskos),
 		filepath.Join(StagingProwBuildclusterConfigRoot, cluster),
 		filepath.Join(StagingProwBuildclusterConfigRoot, boskos),
 	}

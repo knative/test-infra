@@ -1,4 +1,6 @@
-# Copyright 2018 The Knative Authors
+#!/usr/bin/env bash
+
+# Copyright 2020 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,6 +14,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-resources:
-  state: dirty
-  type: gke-project
+# This script pushes all images under current directory
+
+set -e
+
+CUR_DIR="$(realpath $(dirname $0))"
+
+for dir in ${CUR_DIR}/*; do
+    if [[ -d "${dir}" && -f "${dir}/Makefile" ]]; then
+        echo "RUNNING: make -C '${dir}' push"
+        make -C "${dir}" push
+    else
+        echo "Skipping '${dir}'"
+    fi
+done

@@ -1,5 +1,5 @@
 /*
-Copyright 2019 The Knative Authors
+Copyright 2020 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,26 +26,15 @@ import (
 	"strings"
 
 	"github.com/google/go-github/v27/github"
-	"k8s.io/apimachinery/pkg/util/sets"
 	"knative.dev/pkg/test/ghutil"
 	"knative.dev/pkg/test/helpers"
 
 	"knative.dev/test-infra/pkg/git"
 )
 
-func generatePRBody(extraMsgs []string) string {
+func generatePRBody() string {
 	var body string
-	if len(extraMsgs) > 0 {
-		body += "Info:\n"
-		for _, msg := range sets.NewString(extraMsgs...).List() {
-			body += fmt.Sprintf("%s\n", msg)
-		}
-		body += "\n"
-	}
-
-	body += "\nPlease check [Prow release notes]" +
-		"(https://github.com/kubernetes/test-infra/blob/master/prow/ANNOUNCEMENTS.md) " +
-		"to make sure there are no breaking changes.\n"
+	body = "PR created for syncing release branches changes\n"
 
 	oncaller, err := getOncaller()
 	var assignment string
@@ -97,12 +86,11 @@ func getExistingPR(gcw *GHClientWrapper, gi git.Info, matchTitle string) (*githu
 	return res, err
 }
 
-func createOrUpdatePR(gcw *GHClientWrapper, pv *PRVersions, gi git.Info, extraMsgs []string, dryrun bool) error {
-	vs := pv.getDominantVersions()
-	commitMsg := fmt.Sprintf("Update prow from %s to %s, and other images as necessary.", vs.oldVersion, vs.newVersion)
-	matchTitle := "Update prow to"
-	title := fmt.Sprintf("%s %s", matchTitle, vs.newVersion)
-	body := generatePRBody(extraMsgs)
+func createOrUpdatePR(gcw *GHClientWrapper, gi git.Info, dryrun bool) error {
+	matchTitle := "[Auto] Update prow jobs for release branches"
+	commitMsg := matchTitle
+	title := commitMsg
+	body := generatePRBody()
 	hasUpdates, err := git.MakeCommit(gi, commitMsg, dryrun)
 	if err != nil {
 		return fmt.Errorf("failed git commit: '%v'", err)

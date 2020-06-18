@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -158,8 +159,13 @@ func (gc *GitHubMainHandler) createAutoMergePullRequest(title, body string) (*gi
 	err = helpers.Run(
 		fmt.Sprintf("Committing the local changes and creating an auto-merge pull request %q", title),
 		func() error {
-			if err = git.MakeCommit(gi, title, gc.dryrun); err != nil {
-				return fmt.Errorf("error creating a new Git commit: %v", err)
+			hasUpdates, err := git.MakeCommit(gi, title, gc.dryrun)
+			if err != nil {
+				return fmt.Errorf("failed git commit: '%v'", err)
+			}
+			if !hasUpdates {
+				log.Print("There is nothing committed, skip PR")
+				return nil
 			}
 			pr, err = gc.client.CreatePullRequest(gi.Org, gi.Repo, gi.GetHeadRef(), gi.Base, title, body)
 			if err != nil {
