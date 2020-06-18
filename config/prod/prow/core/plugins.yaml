@@ -157,6 +157,8 @@ plugins:
   - welcome
   - wip
   - yuks
+  GoogleCloudPlatform/oss-test-infra:
+  - trigger
   knative/test-infra:
   - config-updater
 external_plugins:

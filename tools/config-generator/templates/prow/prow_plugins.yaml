@@ -152,6 +152,8 @@ plugins:
   - yuks
 [[end]]
 [[end]]
+  GoogleCloudPlatform/oss-test-infra:
+  - trigger
   [[.TestInfraRepo]]:
   - config-updater
 
