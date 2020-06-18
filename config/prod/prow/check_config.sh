@@ -15,7 +15,7 @@
 # limitations under the License.
 
 # This script checks for consistency among prow core config, plugins, and job
-# config, it assumes existence of `/checkconfig` installed as in gcr.io/k8s-prow/checkconfig
+# configs
 
 source $(dirname $0)/../../../scripts/library.sh
 
@@ -36,16 +36,19 @@ PLUGINS_YAML="$(mktemp)"
 JOB_YAML="${REPO_ROOT_DIR}/config/prod/prow/jobs"
 
 kubectl get configmaps config -o "jsonpath={.data['config\.yaml']}" >"${CONFIG_YAML}"
+echo "Prow core config downloaded at ${CONFIG_YAML}"
 kubectl get configmaps plugins -o "jsonpath={.data['plugins\.yaml']}" > "${PLUGINS_YAML}"
+echo "Prow plugins downloaded at ${PLUGINS_YAML}"
 
-CHECKCONFIG_COMMAND="/checkconfig
-    --config-path="${CONFIG_YAML}"
-    --job-config-path="${JOB_YAML}"
-    --plugin-config="${PLUGINS_YAML}"
-    --strict
-    --exclude-warning=mismatched-tide"
+REPO_NAME_ARG=""
+REPO_YAML_PATH_ARG=""
+[[ -n "${REPO_NAME_TO_CHECK}" ]] && REPO_NAME_ARG="--prow-yaml-repo-name=${REPO_NAME_TO_CHECK}"
+[[ -n "${REPO_YAML_PATH_TO_CHECK}" ]] && REPO_YAML_PATH_ARG="--prow-yaml-repo-path=${REPO_YAML_PATH_TO_CHECK}"
 
-[[ -n "${REPO_NAME_TO_CHECK}" ]] && CHECKCONFIG_COMMAND="${CHECKCONFIG_COMMAND} --prow-yaml-repo-name=${REPO_NAME_TO_CHECK}"
-[[ -n "${REPO_YAML_PATH_TO_CHECK}" ]] && CHECKCONFIG_COMMAND="${CHECKCONFIG_COMMAND} --prow-yaml-repo-path=${REPO_YAML_PATH_TO_CHECK}"
-
-"${CHECKCONFIG_COMMAND}"
+docker run -i --rm \
+    -v "${PWD}:${PWD}" -v "${CONFIG_YAML}:${CONFIG_YAML}" -v "${PLUGINS_YAML}:${PLUGINS_YAML}" -v "${JOB_CONFIG_YAML}:${JOB_CONFIG_YAML}" \
+    -w "${PWD}" \
+    gcr.io/k8s-prow/checkconfig:v20200603-4badfd9f37 \
+    "--config-path=${CONFIG_YAML}" "--job-config-path=${JOB_CONFIG_YAML}" \
+    "--plugin-config=${PLUGINS_YAML}" "--strict" "--exclude-warning=mismatched-tide" \
+    "${REPO_NAME_ARG}" "${REPO_YAML_PATH_ARG}"
