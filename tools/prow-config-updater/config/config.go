@@ -104,12 +104,10 @@ var (
 	ProdProwKeyConfigPaths = []string{
 		filepath.Join(ProdProwConfigRoot, cluster),
 		filepath.Join(ProdProwBuildclusterConfigRoot, cluster),
-		ProdProwConfigTemplatesPath,
 	}
 	StagingProwKeyConfigPaths = []string{
 		filepath.Join(StagingProwConfigRoot, cluster),
 		filepath.Join(StagingProwBuildclusterConfigRoot, cluster),
-		StagingProwConfigTemplatesPath,
 	}
 )
 

@@ -21,14 +21,12 @@ package main
 
 import (
 	"bytes"
-	"errors"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"path"
-	"path/filepath"
 	"regexp"
 	"runtime"
 	"sort"
@@ -53,9 +51,6 @@ const (
 
 	// generalProwConfig contains config-wide definitions.
 	generalProwConfig = "prow_config.yaml"
-
-	// pluginsConfig is the template for the plugins YAML file.
-	pluginsConfig = "prow_plugins.yaml"
 )
 
 // repositoryData contains basic data about each Knative repository.
@@ -694,23 +689,13 @@ func setOutput(fileName string) {
 // main is the script entry point.
 func main() {
 	// Parse flags and sanity check them.
-	prowConfigOutput := ""
 	prowJobsConfigOutput := ""
 	testgridConfigOutput := ""
-	var env = flag.String("env", "prow", "The name of the environment, can be prow or prow-staging")
-	var generateProwConfig = flag.Bool("generate-prow-config", true, "Whether to generate the prow configuration file from the template")
-	var generatePluginsConfig = flag.Bool("generate-plugins-config", true, "Whether to generate the plugins configuration file from the template")
 	var generateTestgridConfig = flag.Bool("generate-testgrid-config", true, "Whether to generate the testgrid config from the template file")
 	var generateMaintenanceJobs = flag.Bool("generate-maintenance-jobs", true, "Whether to generate the maintenance periodic jobs (e.g. backup)")
-	// TODO: remove these options and just generate everything
-	if !(*generateProwConfig && *generatePluginsConfig && *generateTestgridConfig && *generateMaintenanceJobs) {
-		panic(errors.New("Must enable all generators"))
-	}
 	var includeConfig = flag.Bool("include-config", true, "Whether to include general configuration (e.g., plank) in the generated config")
 	var dockerImagesBase = flag.String("image-docker", "gcr.io/knative-tests/test-infra", "Default registry for the docker images used by the jobs")
-	flag.StringVar(&prowConfigOutput, "prow-config-output", "", "The destination for the prow config output, default to be stdout")
 	flag.StringVar(&prowJobsConfigOutput, "prow-jobs-config-output", "", "The destination for the prow jobs config output, default to be stdout")
-	var pluginsConfigOutput = flag.String("plugins-config-output", "", "The destination for the plugins config output, default to be stdout")
 	flag.StringVar(&testgridConfigOutput, "testgrid-config-output", "", "The destination for the testgrid config output, default to be stdout")
 	flag.StringVar(&prowHost, "prow-host", "https://prow.knative.dev", "Prow host, including HTTP protocol")
 	flag.StringVar(&testGridHost, "testgrid-host", "https://testgrid.knative.dev", "TestGrid host, including HTTP protocol")
@@ -766,41 +751,28 @@ func main() {
 
 	prowConfigData := getProwConfigData(config)
 
-	if *generatePluginsConfig {
-		setOutput(*pluginsConfigOutput)
-		executeTemplate("plugins config", readTemplate(filepath.Join(*env, pluginsConfig)), prowConfigData)
-	}
-
 	// Generate Prow config.
-	if *generateProwConfig {
-		setOutput(prowConfigOutput)
-		repositories = make([]repositoryData, 0)
-		sectionMap = make(map[string]bool)
-		if *includeConfig {
-			executeTemplate("general header", readTemplate(commonHeaderConfig), prowConfigData)
-			executeTemplate("general config", readTemplate(filepath.Join(*env, generalProwConfig)), prowConfigData)
+	repositories = make([]repositoryData, 0)
+	sectionMap = make(map[string]bool)
+	setOutput(prowJobsConfigOutput)
+	executeTemplate("general header", readTemplate(commonHeaderConfig), prowConfigData)
+	parseSection(config, "presubmits", generatePresubmit, nil)
+	parseSection(config, "periodics", generatePeriodic, generateGoCoveragePeriodic)
+	for _, repo := range repositories { // Keep order for predictable output.
+		if !repo.Processed && repo.EnableGoCoverage {
+			generateGoCoveragePeriodic("periodics", repo.Name, nil)
 		}
-
-		setOutput(prowJobsConfigOutput)
-		executeTemplate("general header", readTemplate(commonHeaderConfig), prowConfigData)
-		parseSection(config, "presubmits", generatePresubmit, nil)
-		parseSection(config, "periodics", generatePeriodic, generateGoCoveragePeriodic)
-		for _, repo := range repositories { // Keep order for predictable output.
-			if !repo.Processed && repo.EnableGoCoverage {
-				generateGoCoveragePeriodic("periodics", repo.Name, nil)
-			}
+	}
+	generatePerfClusterUpdatePeriodicJobs()
+	if *generateMaintenanceJobs {
+		generateIssueTrackerPeriodicJobs()
+	}
+	for _, repo := range repositories {
+		if repo.EnableGoCoverage {
+			generateGoCoveragePostsubmit("postsubmits", repo.Name, nil)
 		}
-		generatePerfClusterUpdatePeriodicJobs()
-		if *generateMaintenanceJobs {
-			generateIssueTrackerPeriodicJobs()
-		}
-		for _, repo := range repositories {
-			if repo.EnableGoCoverage {
-				generateGoCoveragePostsubmit("postsubmits", repo.Name, nil)
-			}
-			if repo.EnablePerformanceTests {
-				generatePerfClusterPostsubmitJob(repo)
-			}
+		if repo.EnablePerformanceTests {
+			generatePerfClusterPostsubmitJob(repo)
 		}
 	}
 
