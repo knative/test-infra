@@ -138,7 +138,7 @@ github.com/sirupsen/logrus
 github.com/spf13/cobra
 # github.com/spf13/pflag v1.0.5
 github.com/spf13/pflag
-# go.opencensus.io v0.22.3
+# go.opencensus.io v0.22.4
 go.opencensus.io
 go.opencensus.io/internal
 go.opencensus.io/internal/tagencoding
@@ -518,7 +518,7 @@ k8s.io/test-infra/prow/version
 k8s.io/utils/buffer
 k8s.io/utils/integer
 k8s.io/utils/trace
-# knative.dev/pkg v0.0.0-20200618002824-96c250871fac
+# knative.dev/pkg v0.0.0-20200619020725-7df8fc5d7743
 ## explicit
 knative.dev/pkg/kmeta
 knative.dev/pkg/test
