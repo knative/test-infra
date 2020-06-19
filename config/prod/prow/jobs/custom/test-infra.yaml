@@ -30,6 +30,7 @@ presubmits:
         - "--prow-yaml-repo-name=$(REPO_OWNER)/$(REPO_NAME)"
         - "--strict"
         - "--exclude-warning=mismatched-tide"
+        - "--exclude-warning=long-job-names"
   - name: pull-test-infra-validate-testgrid-yaml
     decorate: true
     run_if_changed: "^config/prod/prow/testgrid/testgrid.yaml$"

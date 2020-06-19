@@ -41,10 +41,10 @@ func upgradeReleaseBranchesTemplate(configfileName string, gc ghutil.GithubOpera
 	}
 	content, err := ioutil.ReadFile(configfileName)
 	if err != nil {
-		return fmt.Errorf("Cannot read file %q: %w", configfileName, err)
+		return fmt.Errorf("cannot read file %q: %w", configfileName, err)
 	}
 	if err = yaml.Unmarshal(content, &config); err != nil {
-		return fmt.Errorf("Cannot parse config %q: %w", configfileName, err)
+		return fmt.Errorf("cannot parse config %q: %w", configfileName, err)
 	}
 	for i, repos := range config {
 		if repos.Key != "presubmits" {
