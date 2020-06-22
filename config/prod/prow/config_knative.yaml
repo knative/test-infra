@@ -213,7 +213,7 @@ presubmits:
     dot-dev: true
   - go-coverage: true
     dot-dev: true
-  knative/sample-controller:
+  knative-sandbox/sample-controller:
   - build-tests: true
     dot-dev: true
   - unit-tests: true
@@ -689,7 +689,7 @@ periodics:
   knative/caching:
   - continuous: true
     dot-dev: true
-  knative/sample-controller:
+  knative-sandbox/sample-controller:
   - continuous: true
     dot-dev: true
   knative/sample-source:
