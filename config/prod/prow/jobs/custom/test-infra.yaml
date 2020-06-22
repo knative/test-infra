@@ -20,17 +20,24 @@ presubmits:
     cluster: "build-knative"
     spec:
       containers:
-      - image: gcr.io/k8s-prow/checkconfig:v20200413-65958d4a8
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         command:
-        - "/checkconfig"
+        - "./config/prod/prow/check_config.sh"
         args:
-        - "--config-path=config/prod/prow/core/config.yaml"
-        - "--job-config-path=config/prod/prow/jobs"
-        - "--plugin-config=config/prod/prow/core/plugins.yaml"
-        - "--prow-yaml-repo-name=$(REPO_OWNER)/$(REPO_NAME)"
-        - "--strict"
-        - "--exclude-warning=mismatched-tide"
-        - "--exclude-warning=long-job-names"
+        - "$(REPO_OWNER)/$(REPO_NAME)"
+        securityContext:
+          privileged: true
+        env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+      volumes:
+      - name: docker-graph
+        emptyDir: {}
+      - name: test-account
+        secret:
+          secretName: test-account
   - name: pull-test-infra-validate-testgrid-yaml
     decorate: true
     run_if_changed: "^config/prod/prow/testgrid/testgrid.yaml$"
