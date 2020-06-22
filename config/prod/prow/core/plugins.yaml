@@ -97,6 +97,7 @@ plugins:
   - lgtm
   - lifecycle
   - milestone
+  - override
   - owners-label
   - project
   - shrug
@@ -122,6 +123,7 @@ plugins:
   - lgtm
   - lifecycle
   - milestone
+  - override
   - owners-label
   - project
   - shrug
@@ -147,6 +149,7 @@ plugins:
   - lgtm
   - lifecycle
   - milestone
+  - override
   - owners-label
   - project
   - shrug
