@@ -36,8 +36,13 @@ postsubmits:
         - "--github-endpoint=http://ghproxy.default.svc.cluster.local"
         - "--github-endpoint=https://api.github.com"
         - "--github-token-path=/etc/github/oauth"
+        - "--min-admins=5"
         - "--fix-org=true"
         - "--fix-org-members=true"
+        - "--fix-teams=true"
+        - "--fix-team-members=true"
+        - "--fix-team-repos=true"
+        - "--fix-repos=true"
         - "--confirm=true"
         volumeMounts:
         - name: oauth
