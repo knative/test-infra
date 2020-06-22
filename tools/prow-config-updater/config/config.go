@@ -23,8 +23,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"knative.dev/pkg/test/cmd"
-	"knative.dev/pkg/test/helpers"
+	"knative.dev/test-infra/pkg/cmd"
+	"knative.dev/test-infra/pkg/helpers"
 )
 
 type ProwEnv string

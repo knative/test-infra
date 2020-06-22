@@ -21,7 +21,7 @@ import (
 	"log"
 	"strings"
 
-	"knative.dev/pkg/test/cmd"
+	"knative.dev/test-infra/pkg/cmd"
 	"knative.dev/pkg/testutils/clustermanager/e2e-tests/common"
 )
 

@@ -25,7 +25,7 @@ import (
 	"os"
 	"path"
 
-	"knative.dev/pkg/test/prow"
+	"knative.dev/test-infra/pkg/prow"
 )
 
 const (

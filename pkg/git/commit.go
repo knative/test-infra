@@ -23,8 +23,8 @@ import (
 	"os/exec"
 	"strings"
 
-	"knative.dev/pkg/test/cmd"
-	"knative.dev/pkg/test/helpers"
+	"knative.dev/test-infra/pkg/cmd"
+	"knative.dev/test-infra/pkg/helpers"
 )
 
 func call(cmd string, args ...string) error {

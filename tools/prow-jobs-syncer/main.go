@@ -27,8 +27,8 @@ import (
 	"path"
 	"strings"
 
-	"knative.dev/pkg/test/cmd"
-	"knative.dev/pkg/test/ghutil"
+	"knative.dev/test-infra/pkg/cmd"
+	"knative.dev/test-infra/pkg/ghutil"
 
 	"knative.dev/test-infra/pkg/git"
 )

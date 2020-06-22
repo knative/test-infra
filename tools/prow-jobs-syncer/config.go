@@ -17,7 +17,7 @@ limitations under the License.
 package main
 
 import (
-	"knative.dev/pkg/test/ghutil"
+	"knative.dev/test-infra/pkg/ghutil"
 )
 
 const (

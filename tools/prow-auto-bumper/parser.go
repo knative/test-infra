@@ -25,7 +25,7 @@ import (
 	"strings"
 	"time"
 
-	"knative.dev/pkg/test/ghutil"
+	"knative.dev/test-infra/pkg/ghutil"
 
 	"knative.dev/test-infra/pkg/git"
 )

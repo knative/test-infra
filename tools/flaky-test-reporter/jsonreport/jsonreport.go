@@ -25,8 +25,8 @@ import (
 	"strings"
 	"time"
 
-	"knative.dev/pkg/test/helpers"
-	"knative.dev/pkg/test/prow"
+	"knative.dev/test-infra/pkg/helpers"
+	"knative.dev/test-infra/pkg/prow"
 )
 
 const (

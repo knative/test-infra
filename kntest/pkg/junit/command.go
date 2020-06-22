@@ -21,7 +21,7 @@ import (
 	"log"
 
 	"github.com/spf13/cobra"
-	"knative.dev/pkg/test/junit"
+	"knative.dev/test-infra/pkg/junit"
 )
 
 type option struct {

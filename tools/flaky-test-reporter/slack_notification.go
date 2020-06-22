@@ -24,8 +24,8 @@ import (
 	"sync"
 	"time"
 
-	"knative.dev/pkg/test/helpers"
 	"knative.dev/pkg/test/slackutil"
+	"knative.dev/test-infra/pkg/helpers"
 	"knative.dev/test-infra/pkg/testgrid"
 )
 

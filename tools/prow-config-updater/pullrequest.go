@@ -27,9 +27,9 @@ import (
 
 	"github.com/google/go-github/v27/github"
 	"k8s.io/apimachinery/pkg/util/wait"
-	"knative.dev/pkg/test/cmd"
-	"knative.dev/pkg/test/ghutil"
-	"knative.dev/pkg/test/helpers"
+	"knative.dev/test-infra/pkg/cmd"
+	"knative.dev/test-infra/pkg/ghutil"
+	"knative.dev/test-infra/pkg/helpers"
 
 	"knative.dev/test-infra/pkg/git"
 	"knative.dev/test-infra/tools/prow-config-updater/config"

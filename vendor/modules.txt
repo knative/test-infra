@@ -522,17 +522,17 @@ k8s.io/utils/trace
 ## explicit
 knative.dev/pkg/kmeta
 knative.dev/pkg/test
-knative.dev/pkg/test/cmd
+knative.dev/test-infra/pkg/cmd
 knative.dev/pkg/test/gcs
-knative.dev/pkg/test/ghutil
-knative.dev/pkg/test/ghutil/fakeghutil
+knative.dev/test-infra/pkg/ghutil
+knative.dev/test-infra/pkg/ghutil/fakeghutil
 knative.dev/pkg/test/gke
-knative.dev/pkg/test/helpers
+knative.dev/test-infra/pkg/helpers
 knative.dev/pkg/test/ingress
-knative.dev/pkg/test/junit
+knative.dev/test-infra/pkg/junit
 knative.dev/pkg/test/logging
 knative.dev/pkg/test/monitoring
-knative.dev/pkg/test/prow
+knative.dev/test-infra/pkg/prow
 knative.dev/pkg/test/slackutil
 knative.dev/pkg/test/spoof
 knative.dev/pkg/test/zipkin
