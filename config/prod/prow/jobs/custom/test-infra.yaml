@@ -32,6 +32,10 @@ presubmits:
           value: "true"
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
       volumes:
       - name: docker-graph
         emptyDir: {}
