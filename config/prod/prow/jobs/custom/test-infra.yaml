@@ -17,13 +17,14 @@ presubmits:
   - name: pull-test-infra-validate-prow-yaml
     decorate: true
     run_if_changed: "^config/prod/prow/(cluster|core|jobs)/.*.yaml$"
-    cluster: "build-knative"
+    cluster: "prow-trusted"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         command:
-        - "./config/prod/prow/check_config.sh"
+        - "runner.sh"
         args:
+        - "./config/prod/prow/check_config.sh"
         - "$(REPO_OWNER)/$(REPO_NAME)"
         securityContext:
           privileged: true
