@@ -526,6 +526,28 @@ test_groups:
 - name: ci-knative-eventing-kafka-sandbox-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-eventing-kafka-sandbox-go-coverage
   short_text_metric: "coverage"
+- name: ci-knative-eventing-kafka-broker-sandbox-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-kafka-broker-sandbox-continuous
+  alert_stale_results_hours: 3
+- name: ci-knative-eventing-kafka-broker-sandbox-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-kafka-broker-sandbox-nightly-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-eventing-kafka-broker-sandbox-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-kafka-broker-sandbox-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-eventing-kafka-broker-sandbox-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-kafka-broker-sandbox-auto-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-eventing-kafka-broker-sandbox-test-coverage
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-kafka-broker-sandbox-go-coverage
+  short_text_metric: "coverage"
 - name: ci-google-knative-gcp-continuous
   gcs_prefix: knative-prow/logs/ci-google-knative-gcp-continuous
   alert_stale_results_hours: 3
@@ -713,6 +735,11 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-kafka-continuous-beta-prow-tests
 - name: ci-knative-sandbox-eventing-kafka-go-coverage-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-kafka-go-coverage-beta-prow-tests
+  short_text_metric: "coverage"
+- name: ci-knative-sandbox-eventing-kafka-broker-continuous-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-kafka-broker-continuous-beta-prow-tests
+- name: ci-knative-sandbox-eventing-kafka-broker-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-kafka-broker-go-coverage-beta-prow-tests
   short_text_metric: "coverage"
 - name: ci-knative-networking-go-coverage-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-networking-go-coverage-beta-prow-tests
@@ -1163,6 +1190,35 @@ dashboards:
     num_failures_to_alert: 1
   - name: coverage
     test_group_name: ci-knative-eventing-kafka-sandbox-test-coverage
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+- name: eventing-kafka-broker
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-eventing-kafka-broker-sandbox-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: nightly
+    test_group_name: ci-knative-eventing-kafka-broker-sandbox-nightly-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: dot-release
+    test_group_name: ci-knative-eventing-kafka-broker-sandbox-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: auto-release
+    test_group_name: ci-knative-eventing-kafka-broker-sandbox-auto-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: coverage
+    test_group_name: ci-knative-eventing-kafka-broker-sandbox-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: knative-gcp
   dashboard_tab:
@@ -1631,6 +1687,12 @@ dashboards:
   - name: ci-knative-sandbox-eventing-kafka-go-coverage
     test_group_name: ci-knative-sandbox-eventing-kafka-go-coverage-beta-prow-tests
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+  - name: ci-knative-sandbox-eventing-kafka-broker-continuous
+    test_group_name: ci-knative-sandbox-eventing-kafka-broker-continuous-beta-prow-tests
+    base_options: "sort-by-failures="
+  - name: ci-knative-sandbox-eventing-kafka-broker-go-coverage
+    test_group_name: ci-knative-sandbox-eventing-kafka-broker-go-coverage-beta-prow-tests
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
   - name: ci-knative-networking-go-coverage
     test_group_name: ci-knative-networking-go-coverage-beta-prow-tests
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
@@ -1689,6 +1751,7 @@ dashboard_groups:
   dashboard_names:
   - "sample-controller"
   - "eventing-kafka"
+  - "eventing-kafka-broker"
 - name: google
   dashboard_names:
   - "knative-gcp"
