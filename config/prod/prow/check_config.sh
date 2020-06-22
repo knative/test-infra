@@ -51,4 +51,5 @@ docker run -i --rm \
     gcr.io/k8s-prow/checkconfig:v20200603-4badfd9f37 \
     "--config-path=${CONFIG_YAML}" "--job-config-path=${JOB_CONFIG_YAML}" \
     "--plugin-config=${PLUGINS_YAML}" "--strict" "--exclude-warning=mismatched-tide" \
+    "--exclude-warning=long-job-names" \
     "${REPO_NAME_ARG}" "${REPO_YAML_PATH_ARG}"
