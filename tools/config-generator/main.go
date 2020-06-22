@@ -32,13 +32,11 @@ import (
 	"regexp"
 	"runtime"
 	"sort"
-	"strconv"
 	"strings"
 	"text/template"
 	"time"
 
 	"gopkg.in/yaml.v2"
-	"k8s.io/apimachinery/pkg/util/sets"
 	"knative.dev/pkg/test/ghutil"
 )
 
@@ -201,114 +199,6 @@ func readTemplate(fp string) string {
 		templatesCache[fp] = string(content)
 	}
 	return templatesCache[fp]
-}
-
-// getString casts the given interface (expected string) as string.
-// An array of length 1 is also considered a single string.
-func getString(s interface{}) string {
-	if _, ok := s.([]interface{}); ok {
-		values := getStringArray(s)
-		if len(values) == 1 {
-			return values[0]
-		}
-		log.Fatalf("Entry %v is not a string or string array of size 1", s)
-	}
-	if str, ok := s.(string); ok {
-		return str
-	}
-	log.Fatalf("Entry %v is not a string", s)
-	return ""
-}
-
-// getInt casts the given interface (expected int) as int.
-func getInt(s interface{}) int {
-	if value, ok := s.(int); ok {
-		return value
-	}
-	log.Fatalf("Entry %v is not an integer", s)
-	return 0
-}
-
-// getBool casts the given interface (expected bool) as bool.
-func getBool(s interface{}) bool {
-	if value, ok := s.(bool); ok {
-		return value
-	}
-	log.Fatalf("Entry %v is not a boolean", s)
-	return false
-}
-
-// getInterfaceArray casts the given interface (expected interface array) as interface array.
-func getInterfaceArray(s interface{}) []interface{} {
-	if interfaceArray, ok := s.([]interface{}); ok {
-		return interfaceArray
-	}
-	log.Fatalf("Entry %v is not an interface array", s)
-	return nil
-}
-
-// getStringArray casts the given interface (expected string array) as string array.
-func getStringArray(s interface{}) []string {
-	interfaceArray := getInterfaceArray(s)
-	strArray := make([]string, len(interfaceArray))
-	for i := range interfaceArray {
-		strArray[i] = getString(interfaceArray[i])
-	}
-	return strArray
-}
-
-// getMapSlice casts the given interface (expected MapSlice) as MapSlice.
-func getMapSlice(m interface{}) yaml.MapSlice {
-	if mm, ok := m.(yaml.MapSlice); ok {
-		return mm
-	}
-	log.Fatalf("Entry %v is not a yaml.MapSlice", m)
-	return nil
-}
-
-// appendIfUnique appends an element to an array of strings, unless it's already present.
-func appendIfUnique(a1 []string, e2 string) []string {
-	var res []string
-	res = append(res, a1...)
-	for _, e1 := range a1 {
-		if e1 == e2 {
-			return res
-		}
-	}
-	return append(res, e2)
-}
-
-func combineSlices(a1 []string, a2 []string) []string {
-	var res []string
-	res = append(res, a1...)
-	for _, e2 := range a2 {
-		res = appendIfUnique(res, e2)
-	}
-	return res
-}
-
-// intersectSlices returns intersect of 2 slices
-func intersectSlices(a1, a2 []string) []string {
-	var res []string
-	s1 := sets.NewString(a1...)
-	for _, e2 := range a2 {
-		if s1.Has(e2) {
-			res = append(res, e2)
-		}
-	}
-	return res
-}
-
-// exclusiveSlices returns elements in a1 but not in a2
-func exclusiveSlices(a1, a2 []string) []string {
-	var res []string
-	s2 := sets.NewString(a2...)
-	for _, e1 := range a1 {
-		if !s2.Has(e1) {
-			res = append(res, e1)
-		}
-	}
-	return res
 }
 
 // Config generation functions.
@@ -597,120 +487,12 @@ func gitHubRepo(data baseProwJobTemplateData) string {
 	return s
 }
 
-// isNum checks if the given string is a valid number
-func isNum(s string) bool {
-	_, err := strconv.ParseFloat(s, 64)
-	return err == nil
-}
-
-// quote returns the given string quoted if it's not a number, or not a key/value pair, or already quoted.
-func quote(s string) string {
-	if isNum(s) {
-		return s
-	}
-	if strings.HasPrefix(s, "'") || strings.HasPrefix(s, "\"") || strings.Contains(s, ": ") || strings.HasSuffix(s, ":") {
-		return s
-	}
-	return "\"" + s + "\""
-}
-
-// indentBase is a helper function which returns the given array indented.
-func indentBase(indentation int, prefix string, indentFirstLine bool, array []string) string {
-	s := ""
-	if len(array) == 0 {
-		return s
-	}
-	indent := strings.Repeat(" ", indentation)
-	for i := 0; i < len(array); i++ {
-		if i > 0 || indentFirstLine {
-			s += indent
-		}
-		s += prefix + quote(array[i]) + "\n"
-	}
-	return s
-}
-
-// indentArray returns the given array indented, prefixed by "-".
-func indentArray(indentation int, array []string) string {
-	return indentBase(indentation, "- ", false, array)
-}
-
-// indentKeys returns the given array of key/value pairs indented.
-func indentKeys(indentation int, array []string) string {
-	return indentBase(indentation, "", false, array)
-}
-
-// indentSectionBase is a helper function which returns the given array of key/value pairs indented inside a section.
-func indentSectionBase(indentation int, title string, prefix string, array []string) string {
-	keys := indentBase(indentation, prefix, true, array)
-	if keys == "" {
-		return keys
-	}
-	return title + ":\n" + keys
-}
-
-// indentArraySection returns the given array indented inside a section.
-func indentArraySection(indentation int, title string, array []string) string {
-	return indentSectionBase(indentation, title, "- ", array)
-}
-
-// indentSection returns the given array of key/value pairs indented inside a section.
-func indentSection(indentation int, title string, array []string) string {
-	return indentSectionBase(indentation, title, "", array)
-}
-
-// indentMap returns the given map indented, with each key/value separated by ": "
-func indentMap(indentation int, mp map[string]string) string {
-	// Extract map keys to keep order consistent.
-	keys := make([]string, 0, len(mp))
-	for key := range mp {
-		keys = append(keys, key)
-	}
-	sort.Strings(keys)
-	arr := make([]string, len(mp))
-	for i := 0; i < len(mp); i++ {
-		arr[i] = keys[i] + ": " + quote(mp[keys[i]])
-	}
-	return indentBase(indentation, "", false, arr)
-}
-
 // outputConfig outputs the given line, if not empty, to stdout.
 func outputConfig(line string) {
 	if strings.TrimSpace(line) != "" {
 		fmt.Fprintln(output, strings.TrimRight(line, " "))
 		emittedOutput = true
 	}
-}
-
-// strExists checks if the given string exists in the array
-func strExists(arr []string, str string) bool {
-	for _, s := range arr {
-		if str == s {
-			return true
-		}
-	}
-	return false
-}
-
-type specialBranchLogic struct {
-	branches []string
-	// create new job data based on branches
-	opsNew  func(*baseProwJobTemplateData)
-	restore func(*baseProwJobTemplateData)
-}
-
-// getBase casts data into baseProwJobTemplateData and returns it
-func getBase(data interface{}) *baseProwJobTemplateData {
-	var base *baseProwJobTemplateData
-	switch v := data.(type) {
-	case *presubmitJobTemplateData:
-		base = &data.(*presubmitJobTemplateData).Base
-	case *postsubmitJobTemplateData:
-		base = &data.(*postsubmitJobTemplateData).Base
-	default:
-		log.Fatalf("Unrecognized job template type: '%v'", v)
-	}
-	return base
 }
 
 // executeTemplate outputs the given job template with the given data, respecting any filtering.

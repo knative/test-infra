@@ -1812,13 +1812,13 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
-  knative/sample-controller:
-  - name: pull-knative-sample-controller-build-tests
+  knative-sandbox/sample-controller:
+  - name: pull-knative-sandbox-sample-controller-build-tests
     agent: kubernetes
-    context: pull-knative-sample-controller-build-tests
+    context: pull-knative-sandbox-sample-controller-build-tests
     always_run: true
-    rerun_command: "/test pull-knative-sample-controller-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-sample-controller-build-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-sample-controller-build-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-sample-controller-build-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/sample-controller
     cluster: "build-knative"
@@ -1850,12 +1850,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-sample-controller-unit-tests
+  - name: pull-knative-sandbox-sample-controller-unit-tests
     agent: kubernetes
-    context: pull-knative-sample-controller-unit-tests
+    context: pull-knative-sandbox-sample-controller-unit-tests
     always_run: true
-    rerun_command: "/test pull-knative-sample-controller-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-sample-controller-unit-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-sample-controller-unit-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-sample-controller-unit-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/sample-controller
     cluster: "build-knative"
@@ -7665,17 +7665,17 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "43 * * * *"
-  name: ci-knative-sample-controller-continuous
+- cron: "5 * * * *"
+  name: ci-knative-sandbox-sample-controller-continuous
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sample-controller-continuous
+    prow.k8s.io/pubsub.runID: ci-knative-sandbox-sample-controller-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: sample-controller
     base_ref: master
     path_alias: knative.dev/sample-controller
@@ -7701,17 +7701,17 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "31 8,11,22 * * *"
-  name: ci-knative-sample-controller-continuous-beta-prow-tests
+- cron: "21 8,11,22 * * *"
+  name: ci-knative-sandbox-sample-controller-continuous-beta-prow-tests
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sample-controller-continuous
+    prow.k8s.io/pubsub.runID: ci-knative-sandbox-sample-controller-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: sample-controller
     base_ref: master
     path_alias: knative.dev/sample-controller
