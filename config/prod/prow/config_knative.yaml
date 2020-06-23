@@ -354,12 +354,16 @@ presubmits:
   knative-sandbox/eventing-kafka-broker:
   - build-tests: true
     dot-dev: true
+    needs-dind: true
   - unit-tests: true
     dot-dev: true
+    needs-dind: true
   - integration-tests: true
     dot-dev: true
+    needs-dind: true
   - go-coverage: true
     dot-dev: true
+    needs-dind: true
   knative-sandbox/eventing-rabbitmq:
   - build-tests: true
     dot-dev: true
@@ -881,13 +885,17 @@ periodics:
   knative-sandbox/eventing-kafka-broker:
   - continuous: true
     dot-dev: true
+    needs-dind: true
   - nightly: true
     dot-dev: true
+    needs-dind: true
   - dot-release: true
     dot-dev: true
+    needs-dind: true
     env-vars:
     - ORG_NAME=knative-sandbox
   - auto-release: true
     dot-dev: true
+    needs-dind: true
     env-vars:
     - ORG_NAME=knative-sandbox
