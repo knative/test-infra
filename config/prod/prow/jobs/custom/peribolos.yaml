@@ -56,7 +56,7 @@ postsubmits:
 periodics:
 # Run at 10AM PST.
 - cron: "0 17 * * *"
-  name: post-knative-sandbox-peribolos
+  name: ci-knative-sandbox-peribolos
   agent: kubernetes
   decorate: true
   extra_refs:
