@@ -426,6 +426,11 @@ postsubmits:
           value: "true"
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
       volumes:
       - name: docker-graph
         emptyDir: {}
