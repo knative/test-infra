@@ -518,7 +518,7 @@ k8s.io/test-infra/prow/version
 k8s.io/utils/buffer
 k8s.io/utils/integer
 k8s.io/utils/trace
-# knative.dev/pkg v0.0.0-20200619020725-7df8fc5d7743
+# knative.dev/pkg v0.0.0-20200623024526-fb0320d9287e
 ## explicit
 knative.dev/pkg/kmeta
 knative.dev/pkg/test
