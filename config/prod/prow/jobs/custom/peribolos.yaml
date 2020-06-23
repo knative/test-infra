@@ -52,3 +52,41 @@ postsubmits:
       - name: oauth
         secret:
           secretName: oauth-token
+
+periodics:
+# Run at 10AM PST.
+- cron: "0 17 * * *"
+  name: post-knative-sandbox-peribolos
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: community
+    base_ref: master
+    path_alias: knative.dev/community
+  spec:
+    containers:
+    - image: gcr.io/k8s-prow/peribolos:v20200512-5bf6c1ac3
+      command:
+      - "/peribolos"
+      args:
+      - "--config-path=peribolos/knative-sandbox.yaml"
+      - "--github-endpoint=http://ghproxy.default.svc.cluster.local"
+      - "--github-endpoint=https://api.github.com"
+      - "--github-token-path=/etc/github/oauth"
+      - "--min-admins=5"
+      - "--fix-org=true"
+      - "--fix-org-members=true"
+      - "--fix-teams=true"
+      - "--fix-team-members=true"
+      - "--fix-team-repos=true"
+      - "--fix-repos=true"
+      - "--confirm=true"
+      volumeMounts:
+      - name: oauth
+        mountPath: /etc/github
+        readOnly: true
+    volumes:
+    - name: oauth
+      secret:
+        secretName: oauth-token
