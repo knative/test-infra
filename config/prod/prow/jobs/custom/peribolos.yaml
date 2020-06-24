@@ -18,6 +18,41 @@
 postsubmits:
   knative/community:
   # Run on the Prow deployment cluster as it needs access to the github oauth token.
+  - name: post-knative-peribolos
+    agent: kubernetes
+    decorate: true
+    path_alias: knative.dev/community
+    max_concurrency: 1
+    run_if_changed: "^peribolos/knative.yaml$"
+    branches:
+    - "master"
+    spec:
+      containers:
+      - image: gcr.io/k8s-prow/peribolos:v20200624-6fad05ae06
+        command:
+        - "/peribolos"
+        args:
+        - "--config-path=peribolos/knative.yaml"
+        - "--github-endpoint=http://ghproxy.default.svc.cluster.local"
+        - "--github-endpoint=https://api.github.com"
+        - "--github-token-path=/etc/github/oauth"
+        - "--min-admins=5"
+        - "--fix-org=true"
+        - "--fix-org-members=true"
+        - "--fix-teams=true"
+        - "--fix-team-members=true"
+        - "--fix-team-repos=true"
+        - "--fix-repos=true"
+        - "--confirm=true"
+        volumeMounts:
+        - name: oauth
+          mountPath: /etc/github
+          readOnly: true
+      volumes:
+      - name: oauth
+        secret:
+          secretName: oauth-token
+  # Run on the Prow deployment cluster as it needs access to the github oauth token.
   - name: post-knative-sandbox-peribolos
     agent: kubernetes
     decorate: true
@@ -54,6 +89,42 @@ postsubmits:
           secretName: oauth-token
 
 periodics:
+# Run at 9AM PST.
+- cron: "0 17 * * *"
+  name: ci-knative-peribolos
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: community
+    base_ref: master
+    path_alias: knative.dev/community
+  spec:
+    containers:
+    - image: gcr.io/k8s-prow/peribolos:v20200624-6fad05ae06
+      command:
+      - "/peribolos"
+      args:
+      - "--config-path=peribolos/knative.yaml"
+      - "--github-endpoint=http://ghproxy.default.svc.cluster.local"
+      - "--github-endpoint=https://api.github.com"
+      - "--github-token-path=/etc/github/oauth"
+      - "--min-admins=5"
+      - "--fix-org=true"
+      - "--fix-org-members=true"
+      - "--fix-teams=true"
+      - "--fix-team-members=true"
+      - "--fix-team-repos=true"
+      - "--fix-repos=true"
+      - "--confirm=true"
+      volumeMounts:
+      - name: oauth
+        mountPath: /etc/github
+        readOnly: true
+    volumes:
+    - name: oauth
+      secret:
+        secretName: oauth-token
 # Run at 10AM PST.
 - cron: "0 17 * * *"
   name: ci-knative-sandbox-peribolos
