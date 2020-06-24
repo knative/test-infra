@@ -428,9 +428,9 @@ postsubmits:
           value: /etc/test-account/service-account.json
         resources:
           requests:
-            memory: 12Gi
+            memory: 28Gi
           limits:
-            memory: 16Gi
+            memory: 32Gi
       volumes:
       - name: docker-graph
         emptyDir: {}
