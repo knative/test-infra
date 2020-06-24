@@ -18,7 +18,7 @@
 periodics:
 # Run at 8AM PST.
 - cron: "0 15 * * *"
-  name: post-knative-test-infra-label-sync
+  name: ci-knative-test-infra-label-sync
   agent: kubernetes
   decorate: true
   extra_refs:
