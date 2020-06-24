@@ -1,0 +1,83 @@
+# Copyright 2020 The Knative Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# label-sync is a tool implemented by k8s sig-testing.
+# It can update or migrate github labels on repos in a github org based on a YAML file.
+
+periodics:
+# Run at 8AM PST.
+- cron: "0 15 * * *"
+  name: post-knative-test-infra-label-sync
+  agent: kubernetes
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: master
+    path_alias: knative.dev/test-infra
+  spec:
+    containers:
+    - name: label-sync
+      image: gcr.io/k8s-prow/label_sync:v20200615-5d59425fc2
+      command:
+      - /app/label_sync/app.binary
+      args:
+      - --config=label_sync/labels.yaml
+      - --confirm=true
+      - --orgs=knative-sandbox,knative
+      - --token=/etc/github/oauth
+      - --endpoint=http://ghproxy.default.svc.cluster.local
+      - --endpoint=https://api.github.com
+      - --debug
+      volumeMounts:
+      - name: oauth
+        mountPath: /etc/github
+        readOnly: true
+    volumes:
+    - name: oauth
+      secret:
+        secretName: oauth-token
+
+postsubmits:
+  knative/test-infra:
+  - name: post-knative-test-infra-label-sync
+    agent: kubernetes
+    decorate: true
+    path_alias: knative.dev/test-infra
+    max_concurrency: 1
+    run_if_changed: "^label_sync/labels.yaml$"
+    branches:
+    - "master"
+    spec:
+      containers:
+      - name: label-sync
+        image: gcr.io/k8s-prow/label_sync:v20200615-5d59425fc2
+        command:
+        - /app/label_sync/app.binary
+        args:
+        - --config=label_sync/labels.yaml
+        - --confirm=true
+        - --orgs=knative-sandbox,knative
+        - --token=/etc/github/oauth
+        - --endpoint=http://ghproxy.default.svc.cluster.local
+        - --endpoint=https://api.github.com
+        - --debug
+        volumeMounts:
+        - name: oauth
+          mountPath: /etc/github
+          readOnly: true
+      volumes:
+      - name: oauth
+        secret:
+          secretName: oauth-token
