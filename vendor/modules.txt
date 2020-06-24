@@ -147,6 +147,7 @@ go.opencensus.io/metric/metricproducer
 go.opencensus.io/plugin/ocgrpc
 go.opencensus.io/plugin/ochttp
 go.opencensus.io/plugin/ochttp/propagation/b3
+go.opencensus.io/plugin/ochttp/propagation/tracecontext
 go.opencensus.io/resource
 go.opencensus.io/stats
 go.opencensus.io/stats/internal
@@ -518,7 +519,7 @@ k8s.io/test-infra/prow/version
 k8s.io/utils/buffer
 k8s.io/utils/integer
 k8s.io/utils/trace
-# knative.dev/pkg v0.0.0-20200623024526-fb0320d9287e
+# knative.dev/pkg v0.0.0-20200623204627-e0a0d63a9e86
 ## explicit
 knative.dev/pkg/kmeta
 knative.dev/pkg/test
@@ -544,6 +545,8 @@ knative.dev/pkg/testutils/clustermanager/prow-cluster-operation/actions
 knative.dev/pkg/testutils/clustermanager/prow-cluster-operation/options
 knative.dev/pkg/testutils/metahelper
 knative.dev/pkg/testutils/metahelper/client
+knative.dev/pkg/tracing/propagation
+knative.dev/pkg/tracing/propagation/tracecontextb3
 # sigs.k8s.io/boskos v0.0.0-20200530174753-71e795271860
 sigs.k8s.io/boskos/client
 sigs.k8s.io/boskos/common
