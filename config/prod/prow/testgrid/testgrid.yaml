@@ -173,9 +173,6 @@ test_groups:
 - name: ci-knative-caching-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-caching-go-coverage
   short_text_metric: "coverage"
-- name: ci-knative-sample-source-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-sample-source-continuous
-  alert_stale_results_hours: 3
 - name: ci-knative-test-infra-continuous
   gcs_prefix: knative-prow/logs/ci-knative-test-infra-continuous
   alert_stale_results_hours: 3
@@ -504,6 +501,9 @@ test_groups:
 - name: ci-knative-sample-controller-sandbox-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sample-controller-sandbox-continuous
   alert_stale_results_hours: 3
+- name: ci-knative-sample-source-sandbox-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-sample-source-sandbox-continuous
+  alert_stale_results_hours: 3
 - name: ci-knative-eventing-kafka-sandbox-continuous
   gcs_prefix: knative-prow/logs/ci-knative-eventing-kafka-sandbox-continuous
   alert_stale_results_hours: 3
@@ -679,8 +679,8 @@ test_groups:
   short_text_metric: "coverage"
 - name: ci-knative-sandbox-sample-controller-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-sample-controller-continuous-beta-prow-tests
-- name: ci-knative-sample-source-continuous-beta-prow-tests
-  gcs_prefix: knative-prow/logs/ci-knative-sample-source-continuous-beta-prow-tests
+- name: ci-knative-sandbox-sample-source-continuous-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-sample-source-continuous-beta-prow-tests
 - name: ci-knative-test-infra-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-test-infra-continuous-beta-prow-tests
 - name: ci-knative-test-infra-go-coverage-beta-prow-tests
@@ -967,14 +967,6 @@ dashboards:
   - name: coverage
     test_group_name: ci-knative-caching-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: sample-source
-  dashboard_tab:
-  - name: continuous
-    test_group_name: ci-knative-sample-source-continuous
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 3
 - name: test-infra
   dashboard_tab:
   - name: continuous
@@ -1158,6 +1150,14 @@ dashboards:
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-sample-controller-sandbox-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+- name: sample-source
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-sample-source-sandbox-continuous
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
@@ -1615,8 +1615,8 @@ dashboards:
   - name: ci-knative-sandbox-sample-controller-continuous
     test_group_name: ci-knative-sandbox-sample-controller-continuous-beta-prow-tests
     base_options: "sort-by-failures="
-  - name: ci-knative-sample-source-continuous
-    test_group_name: ci-knative-sample-source-continuous-beta-prow-tests
+  - name: ci-knative-sandbox-sample-source-continuous
+    test_group_name: ci-knative-sandbox-sample-source-continuous-beta-prow-tests
     base_options: "sort-by-failures="
   - name: ci-knative-test-infra-continuous
     test_group_name: ci-knative-test-infra-continuous-beta-prow-tests
@@ -1739,7 +1739,6 @@ dashboard_groups:
   - "eventing-contrib"
   - "pkg"
   - "caching"
-  - "sample-source"
   - "test-infra"
   - "net-certmanager"
   - "net-contour"
@@ -1750,6 +1749,7 @@ dashboard_groups:
 - name: knative-sandbox
   dashboard_names:
   - "sample-controller"
+  - "sample-source"
   - "eventing-kafka"
   - "eventing-kafka-broker"
 - name: google
