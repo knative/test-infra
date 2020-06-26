@@ -655,10 +655,10 @@ func addRemainingTestCoverageJobs() {
 // buildProjRepoStr builds the projRepoStr used in the config file with projName and repoName
 func buildProjRepoStr(projName string, repoName string) string {
 	projVersion := ""
-	if strings.Contains(projName, "-") {
+	if releaseRegex.MatchString(projName) {
 		projNameAndVersion := strings.Split(projName, "-")
-		projName = projNameAndVersion[0]
-		projVersion = projNameAndVersion[1]
+		projVersion = projNameAndVersion[len(projNameAndVersion)-1]
+		projName = strings.TrimRight(projName, "-"+projVersion)
 	}
 	projRepoStr := repoName
 	if projVersion != "" {
