@@ -20,7 +20,7 @@ import (
 	"context"
 	"fmt"
 
-	"knative.dev/test-infra/pkg/gcs"
+	"knative.dev/pkg/test/gcs"
 )
 
 // Example on how to override errors

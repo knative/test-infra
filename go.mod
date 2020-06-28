@@ -19,7 +19,7 @@ require (
 	google.golang.org/api v0.20.0
 	gopkg.in/yaml.v2 v2.2.8
 	k8s.io/apimachinery v0.17.6
-	knative.dev/pkg v0.0.0-20200619020725-7df8fc5d7743
+	knative.dev/pkg v0.0.0-20200624210428-eb05e8dd5b5b
 )
 
 replace (

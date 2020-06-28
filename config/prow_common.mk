@@ -44,7 +44,7 @@ SET_CONTEXT                     := gcloud container clusters get-credentials "$(
 SET_BUILD_CLUSTER_CONTEXT       := gcloud container clusters get-credentials "$(BUILD_CLUSTER)" --project="$(PROJECT)" --zone="$(ZONE)"
 UNSET_CONTEXT                   := kubectl config unset current-context
 
-.PHONY: help get-cluster-credentials unset-cluster-credentials
+.PHONY: help activate-serviceaccount get-cluster-credentials unset-cluster-credentials
 help:
 	@echo "Help"
 	@echo "'Update' means updating the servers and can only be run by oncall staff."
@@ -55,13 +55,18 @@ help:
 	@echo " make unset-cluster-credentials: Clear kubectl context"
 
 # Useful general targets.
-get-cluster-credentials:
+activate-serviceaccount:
+ifdef GOOGLE_APPLICATION_CREDENTIALS
+	gcloud auth activate-service-account --key-file="$(GOOGLE_APPLICATION_CREDENTIALS)"
+endif
+
+get-cluster-credentials: activate-serviceaccount
 	$(SET_CONTEXT)
 
 unset-cluster-credentials:
 	$(UNSET_CONTEXT)
 
-get-build-cluster-credentials:
+get-build-cluster-credentials: activate-serviceaccount
 	$(SET_BUILD_CLUSTER_CONTEXT)
 
 .PHONY: update-prow-config update-boskos-resource test update-testgrid-config confirm-master

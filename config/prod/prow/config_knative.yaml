@@ -213,12 +213,12 @@ presubmits:
     dot-dev: true
   - go-coverage: true
     dot-dev: true
-  knative/sample-controller:
+  knative-sandbox/sample-controller:
   - build-tests: true
     dot-dev: true
   - unit-tests: true
     dot-dev: true
-  knative/sample-source:
+  knative-sandbox/sample-source:
   - build-tests: true
     dot-dev: true
   - unit-tests: true
@@ -338,7 +338,27 @@ presubmits:
     args:
     - --run-test
     - ./test/e2e-upgrade-tests.sh
+  knative-sandbox/discovery:
+  - build-tests: true
+    dot-dev: true
+  - unit-tests: true
+    dot-dev: true
+  - integration-tests: true
+    dot-dev: true
   knative-sandbox/eventing-kafka:
+  - build-tests: true
+    dot-dev: true
+    needs-dind: true
+  - unit-tests: true
+    dot-dev: true
+    needs-dind: true
+  - integration-tests: true
+    dot-dev: true
+    needs-dind: true
+  - go-coverage: true
+    dot-dev: true
+    needs-dind: true
+  knative-sandbox/eventing-kafka-broker:
   - build-tests: true
     dot-dev: true
     needs-dind: true
@@ -689,10 +709,10 @@ periodics:
   knative/caching:
   - continuous: true
     dot-dev: true
-  knative/sample-controller:
+  knative-sandbox/sample-controller:
   - continuous: true
     dot-dev: true
-  knative/sample-source:
+  knative-sandbox/sample-source:
   - continuous: true
     dot-dev: true
   knative/test-infra:
@@ -852,7 +872,37 @@ periodics:
     dot-dev: true
     env-vars:
     - ORG_NAME=knative-sandbox
+  knative-sandbox/discovery:
+  - continuous: true
+    dot-dev: true
+  - nightly: true
+    dot-dev: true
+  - dot-release: true
+    dot-dev: true
+    env-vars:
+    - ORG_NAME=knative-sandbox
+  - auto-release: true
+    dot-dev: true
+    env-vars:
+    - ORG_NAME=knative-sandbox
   knative-sandbox/eventing-kafka:
+  - continuous: true
+    dot-dev: true
+    needs-dind: true
+  - nightly: true
+    dot-dev: true
+    needs-dind: true
+  - dot-release: true
+    dot-dev: true
+    needs-dind: true
+    env-vars:
+    - ORG_NAME=knative-sandbox
+  - auto-release: true
+    dot-dev: true
+    needs-dind: true
+    env-vars:
+    - ORG_NAME=knative-sandbox
+  knative-sandbox/eventing-kafka-broker:
   - continuous: true
     dot-dev: true
     needs-dind: true
