@@ -22,10 +22,10 @@ import (
 	"strconv"
 
 	container "google.golang.org/api/container/v1beta1"
-	"knative.dev/pkg/test/gke"
 	clm "knative.dev/pkg/testutils/clustermanager/e2e-tests"
 	mhclient "knative.dev/pkg/testutils/metahelper/client"
 	"knative.dev/test-infra/pkg/cmd"
+	"knative.dev/test-infra/pkg/gke"
 )
 
 const (

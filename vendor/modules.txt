@@ -113,8 +113,10 @@ github.com/jstemmer/go-junit-report
 github.com/jstemmer/go-junit-report/formatter
 github.com/jstemmer/go-junit-report/parser
 # github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
+## explicit
 github.com/kballard/go-shellquote
 # github.com/kelseyhightower/envconfig v1.4.0
+## explicit
 github.com/kelseyhightower/envconfig
 # github.com/konsorten/go-windows-terminal-sequences v1.0.2
 github.com/konsorten/go-windows-terminal-sequences
@@ -183,6 +185,7 @@ golang.org/x/lint/golint
 golang.org/x/mod/module
 golang.org/x/mod/semver
 # golang.org/x/net v0.0.0-20200324143707-d3edc9973b7e
+## explicit
 golang.org/x/net/context
 golang.org/x/net/context/ctxhttp
 golang.org/x/net/http/httpguts
@@ -522,18 +525,14 @@ k8s.io/utils/trace
 ## explicit
 knative.dev/pkg/kmeta
 knative.dev/pkg/test
-knative.dev/test-infra/pkg/cmd
+knative.dev/pkg/test/cmd
 knative.dev/pkg/test/gcs
-knative.dev/test-infra/pkg/ghutil
-knative.dev/test-infra/pkg/ghutil/fakeghutil
 knative.dev/pkg/test/gke
-knative.dev/test-infra/pkg/helpers
+knative.dev/pkg/test/helpers
 knative.dev/pkg/test/ingress
-knative.dev/test-infra/pkg/junit
 knative.dev/pkg/test/logging
 knative.dev/pkg/test/monitoring
-knative.dev/test-infra/pkg/prow
-knative.dev/pkg/test/slackutil
+knative.dev/pkg/test/prow
 knative.dev/pkg/test/spoof
 knative.dev/pkg/test/zipkin
 knative.dev/pkg/testutils/clustermanager/e2e-tests

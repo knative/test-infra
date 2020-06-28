@@ -39,8 +39,8 @@ import (
 	"github.com/google/go-containerregistry/pkg/v1/remote"
 	"github.com/pkg/errors"
 	"google.golang.org/api/option"
-	"knative.dev/pkg/test/gke"
 	"knative.dev/test-infra/pkg/cmd"
+	"knative.dev/test-infra/pkg/gke"
 	"knative.dev/test-infra/pkg/helpers"
 )
 
