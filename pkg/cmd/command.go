@@ -18,6 +18,7 @@ package cmd
 
 import (
 	"bytes"
+	"os"
 	"os/exec"
 	"strings"
 	"sync"
@@ -54,6 +55,15 @@ func WithEnvs(envs []string) Option {
 func WithDir(dir string) Option {
 	return func(c *exec.Cmd) {
 		c.Dir = dir
+	}
+}
+
+// WithStdout returns an option that sets the cmd output to stdout.
+// This redirects output to stdout, should not use this option if you
+// need the return value of the command.
+func WithStdout() Option {
+	return func(c *exec.Cmd) {
+		c.Stdout = os.Stdout
 	}
 }
 
