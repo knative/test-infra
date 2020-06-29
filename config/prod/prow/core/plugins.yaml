@@ -76,10 +76,6 @@ config_updater:
     config/prod/prow/jobs/**/*.yaml:
       name: job-config
       gzip: true
-    config/prod/prow/core/config.yaml:
-      name: config
-    config/prod/prow/core/plugins.yaml:
-      name: plugins
 # Plugins enabled for each repo.
 plugins:
   knative:
