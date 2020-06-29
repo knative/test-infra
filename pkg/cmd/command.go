@@ -69,6 +69,7 @@ func WithStdout() Option {
 
 // RunCommand will run the command and return the standard output, plus error if there is one.
 func runCommand(cmdLine string, options ...Option) (string, error) {
+	var err error
 	cmdSplit, err := shell.Split(cmdLine)
 	if len(cmdSplit) == 0 || err != nil {
 		return "", &CommandLineError{
@@ -88,7 +89,12 @@ func runCommand(cmdLine string, options ...Option) (string, error) {
 	var eb bytes.Buffer
 	cmd.Stderr = &eb
 
-	out, err := cmd.Output()
+	var out []byte
+	if cmd.Stdout != nil {
+		err = cmd.Run()
+	} else {
+		out, err = cmd.Output()
+	}
 	if err != nil {
 		return string(out), &CommandLineError{
 			Command:     cmdLine,
