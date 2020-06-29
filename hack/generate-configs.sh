@@ -25,30 +25,12 @@ readonly CONFIG_DIR="${REPO_ROOT_DIR}/config"
 
 # Generate config for production Prow
 go run "${CONFIG_GENERATOR_DIR}" \
-    --env="prow" \
     --gcs-bucket="knative-prow" \
     --generate-testgrid-config=true \
     --generate-maintenance-jobs=true \
     --image-docker=gcr.io/knative-tests/test-infra \
     --prow-host=https://prow.knative.dev \
     --testgrid-gcs-bucket="knative-testgrid" \
-    --plugins-config-output="${CONFIG_DIR}/prod/prow/core/plugins.yaml" \
-    --prow-config-output="${CONFIG_DIR}/prod/prow/core/config.yaml" \
     --prow-jobs-config-output="${CONFIG_DIR}/prod/prow/jobs/config.yaml" \
     --testgrid-config-output="${CONFIG_DIR}/prod/prow/testgrid/testgrid.yaml" \
     "${CONFIG_DIR}/prod/prow/config_knative.yaml"
-
-# Generate config for staging Prow
-go run "${CONFIG_GENERATOR_DIR}" \
-    --env="prow-staging" \
-    --gcs-bucket="knative-prow-staging" \
-    --generate-testgrid-config=false \
-    --generate-maintenance-jobs=false \
-    --image-docker=gcr.io/knative-tests/test-infra \
-    --prow-host=https://prow-staging.knative.dev \
-    --testgrid-gcs-bucket="knative-testgrid-staging" \
-    --plugins-config-output="${CONFIG_DIR}/staging/prow/core/plugins.yaml" \
-    --prow-config-output="${CONFIG_DIR}/staging/prow/core/config.yaml" \
-    --prow-jobs-config-output="${CONFIG_DIR}/staging/prow/jobs/config.yaml" \
-    --testgrid-config-output="${CONFIG_DIR}/staging/prow/testgrid/testgrid.yaml" \
-    "${CONFIG_DIR}/staging/prow/config_staging.yaml"

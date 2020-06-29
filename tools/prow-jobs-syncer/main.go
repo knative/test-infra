@@ -48,12 +48,8 @@ func main() {
 	gopath := os.Getenv("GOPATH")
 
 	configgenArgs := []string{
-		"--prow-config-output",
-		path.Join(gopath, repoPath, coreConfigPath),
 		"--prow-jobs-config-output",
 		path.Join(gopath, repoPath, jobConfigPath),
-		"--plugins-config-output",
-		path.Join(gopath, repoPath, pluginPath),
 		"--testgrid-config-output",
 		path.Join(gopath, repoPath, testgridConfigPath),
 		"--upgrade-release-branches",
