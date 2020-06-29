@@ -22,7 +22,7 @@ import (
 	"cloud.google.com/go/storage"
 )
 
-type Client interface {
+type Interface interface {
 	// NewStorageBucket creates a new bucket in GCS with uniform access policy
 	NewStorageBucket(ctx context.Context, bkt, project string) error
 	// DeleteStorageBucket removes all children objects, force if not empty

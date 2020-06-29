@@ -21,6 +21,7 @@ import (
 	"log"
 
 	"github.com/spf13/cobra"
+
 	"knative.dev/test-infra/pkg/junit"
 )
 

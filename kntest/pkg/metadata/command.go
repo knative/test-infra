@@ -17,10 +17,12 @@ limitations under the License.
 package metadata
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/spf13/cobra"
-	"knative.dev/pkg/testutils/metahelper/client"
+
+	"knative.dev/test-infra/pkg/metautil"
 )
 
 func AddCommands(topLevel *cobra.Command) {
@@ -35,7 +37,7 @@ func AddCommands(topLevel *cobra.Command) {
 	// Create with default path of metahelper/client, so that the path is
 	// consistent with all other consumers of metahelper/client that run within
 	// the same context of this tool
-	c, err := client.New("")
+	c, err := metautil.NewClient("")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -44,7 +46,7 @@ func AddCommands(topLevel *cobra.Command) {
 	topLevel.AddCommand(metadataCmd)
 }
 
-func addSetCommand(metadataCmd *cobra.Command, c *client.Client, key *string) {
+func addSetCommand(metadataCmd *cobra.Command, c *metautil.Client, key *string) {
 	var value string
 
 	var setCmd = &cobra.Command{
@@ -64,7 +66,7 @@ func addSetCommand(metadataCmd *cobra.Command, c *client.Client, key *string) {
 	metadataCmd.AddCommand(setCmd)
 }
 
-func addGetCommand(metadataCmd *cobra.Command, c *client.Client, key *string) {
+func addGetCommand(metadataCmd *cobra.Command, c *metautil.Client, key *string) {
 	var getCmd = &cobra.Command{
 		Use:   "get",
 		Short: "Get the meta info value for the given key.",
@@ -78,7 +80,7 @@ func addGetCommand(metadataCmd *cobra.Command, c *client.Client, key *string) {
 				log.Fatalf("error getting meta info for %q: %v", *key, err)
 			}
 
-			log.Print(res)
+			fmt.Print(res)
 		},
 	}
 	metadataCmd.AddCommand(getCmd)

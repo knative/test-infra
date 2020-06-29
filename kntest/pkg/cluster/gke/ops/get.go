@@ -17,7 +17,7 @@ limitations under the License.
 package ops
 
 import (
-	clm "knative.dev/pkg/testutils/clustermanager/e2e-tests"
+	clm "knative.dev/test-infra/pkg/clustermanager/e2e-tests"
 )
 
 // Get gets a GKE cluster

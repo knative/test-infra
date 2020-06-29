@@ -20,7 +20,7 @@ import (
 	"context"
 	"fmt"
 
-	"knative.dev/pkg/test/gcs"
+	"knative.dev/test-infra/pkg/gcs"
 )
 
 // Example on how to override errors
@@ -29,7 +29,7 @@ const (
 	proj = "NewProject"
 )
 
-func topFunction(c gcs.Client) error {
+func topFunction(c gcs.Interface) error {
 	ctx := context.Background()
 	if err := c.NewStorageBucket(ctx, bkt, proj); err != nil {
 		return err

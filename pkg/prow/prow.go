@@ -60,7 +60,7 @@ const (
 // defined here so that it can be mocked for unit testing
 var logFatalf = log.Fatalf
 var ctx = context.Background()
-var client *gcs.GCSClient
+var client *gcs.Client
 
 // Job struct represents a job directory in gcs.
 // gcs job StoragePath will be derived from Type if it's defined,
