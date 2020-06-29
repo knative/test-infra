@@ -27,7 +27,6 @@ readonly CONFIG_DIR="${REPO_ROOT_DIR}/config"
 go run "${CONFIG_GENERATOR_DIR}" \
     --gcs-bucket="knative-prow" \
     --generate-testgrid-config=true \
-    --generate-maintenance-jobs=true \
     --image-docker=gcr.io/knative-tests/test-infra \
     --prow-host=https://prow.knative.dev \
     --testgrid-gcs-bucket="knative-testgrid" \
