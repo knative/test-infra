@@ -29,9 +29,9 @@ import (
 	"strings"
 
 	"k8s.io/apimachinery/pkg/util/sets"
-	"knative.dev/pkg/test/helpers"
-	"knative.dev/pkg/test/junit"
-	"knative.dev/pkg/test/prow"
+	"knative.dev/test-infra/pkg/helpers"
+	"knative.dev/test-infra/pkg/junit"
+	"knative.dev/test-infra/pkg/prow"
 	"knative.dev/test-infra/tools/flaky-test-reporter/config"
 )
 

@@ -28,9 +28,9 @@ import (
 
 	"github.com/google/go-github/v27/github"
 
-	"knative.dev/pkg/test/ghutil"
-	"knative.dev/pkg/test/helpers"
-	"knative.dev/pkg/test/junit"
+	"knative.dev/test-infra/pkg/ghutil"
+	"knative.dev/test-infra/pkg/helpers"
+	"knative.dev/test-infra/pkg/junit"
 )
 
 const (

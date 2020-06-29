@@ -22,10 +22,11 @@ import (
 	"strconv"
 
 	container "google.golang.org/api/container/v1beta1"
-	"knative.dev/pkg/test/cmd"
-	"knative.dev/pkg/test/gke"
-	clm "knative.dev/pkg/testutils/clustermanager/e2e-tests"
-	mhclient "knative.dev/pkg/testutils/metahelper/client"
+
+	clm "knative.dev/test-infra/pkg/clustermanager/e2e-tests"
+	"knative.dev/test-infra/pkg/cmd"
+	"knative.dev/test-infra/pkg/gke"
+	"knative.dev/test-infra/pkg/metautil"
 )
 
 const (
@@ -69,7 +70,7 @@ func (rw *RequestWrapper) Create() (*clm.GKECluster, error) {
 // after the cluster operation is finished
 func writeMetaData(cluster *container.Cluster, project string) {
 	// Set up metadata client for saving metadata
-	c, err := mhclient.New("")
+	c, err := metautil.NewClient("")
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -19,7 +19,7 @@ package ops
 import (
 	"fmt"
 
-	clm "knative.dev/pkg/testutils/clustermanager/e2e-tests"
+	clm "knative.dev/test-infra/pkg/clustermanager/e2e-tests"
 )
 
 // RequestWrapper is a wrapper of the GKERequest.

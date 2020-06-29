@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"knative.dev/pkg/test/junit"
+	"knative.dev/test-infra/pkg/junit"
 )
 
 func Test_filterOutParentTests(t *testing.T) {

@@ -22,8 +22,8 @@ import (
 	"strings"
 
 	"github.com/google/go-github/v27/github"
-	"knative.dev/pkg/test/ghutil"
-	"knative.dev/pkg/test/prow"
+	"knative.dev/test-infra/pkg/ghutil"
+	"knative.dev/test-infra/pkg/prow"
 
 	"knative.dev/test-infra/tools/prow-config-updater/config"
 )

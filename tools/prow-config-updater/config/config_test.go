@@ -23,7 +23,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 
-	"knative.dev/pkg/test/helpers"
+	"knative.dev/test-infra/pkg/helpers"
 )
 
 func TestProwConfigPathsExist(t *testing.T) {

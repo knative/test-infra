@@ -37,7 +37,7 @@ import (
 	"time"
 
 	"gopkg.in/yaml.v2"
-	"knative.dev/pkg/test/ghutil"
+	"knative.dev/test-infra/pkg/ghutil"
 )
 
 const (

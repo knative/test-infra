@@ -20,8 +20,8 @@ import (
 	"fmt"
 	"strings"
 
-	"knative.dev/pkg/test/ghutil"
-	"knative.dev/pkg/test/helpers"
+	"knative.dev/test-infra/pkg/ghutil"
+	"knative.dev/test-infra/pkg/helpers"
 
 	"knative.dev/test-infra/tools/prow-config-updater/config"
 )

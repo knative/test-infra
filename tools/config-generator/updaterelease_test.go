@@ -26,7 +26,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-github/v27/github"
 	"gopkg.in/yaml.v2"
-	"knative.dev/pkg/test/ghutil/fakeghutil"
+	"knative.dev/test-infra/pkg/ghutil/fakeghutil"
 )
 
 var (

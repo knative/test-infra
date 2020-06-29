@@ -26,7 +26,7 @@ import (
 	"path/filepath"
 	"regexp"
 
-	"knative.dev/pkg/test/helpers"
+	"knative.dev/test-infra/pkg/helpers"
 )
 
 // Update all tags in a byte slice

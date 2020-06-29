@@ -22,7 +22,7 @@ import (
 	"strings"
 
 	"github.com/google/go-github/v27/github"
-	"knative.dev/pkg/test/ghutil"
+	"knative.dev/test-infra/pkg/ghutil"
 )
 
 func latestReleaseBranch(gc ghutil.GithubOperations, repo string) (string, error) {

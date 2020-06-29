@@ -25,7 +25,7 @@ import (
 	"fmt"
 	"log"
 
-	"knative.dev/pkg/test/ghutil"
+	"knative.dev/test-infra/pkg/ghutil"
 
 	"knative.dev/test-infra/tools/flaky-test-retryer/subscriber"
 	// TODO: remove this import once "k8s.io/test-infra" import problems are fixed

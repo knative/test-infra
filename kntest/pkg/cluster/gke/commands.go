@@ -20,7 +20,8 @@ import (
 	"log"
 
 	"github.com/spf13/cobra"
-	clm "knative.dev/pkg/testutils/clustermanager/e2e-tests"
+
+	clm "knative.dev/test-infra/pkg/clustermanager/e2e-tests"
 
 	"knative.dev/test-infra/kntest/pkg/cluster/gke/ops"
 )
