@@ -19,7 +19,6 @@ package main
 import (
 	"fmt"
 	"regexp"
-	"strconv"
 )
 
 var (
@@ -89,16 +88,6 @@ func NewTestGridMetaData() TestGridMetaData {
 		repoNames:  make([]string, 0),
 		nonAligned: make([]NonAlignedTestGroup, 0),
 	}
-}
-
-func NewGoVersion(version string) GoVersion {
-	matches := goVersionMatcher.FindStringSubmatch(version)
-	if matches == nil || len(matches) != 3 {
-		panic(fmt.Errorf("bad version string to NewGoVersion: %q", version))
-	}
-	a, _ := strconv.Atoi(matches[1])
-	b, _ := strconv.Atoi(matches[2])
-	return GoVersion{a, b}
 }
 
 func (v GoVersion) String() string {

@@ -655,14 +655,17 @@ func addRemainingTestCoverageJobs() {
 // buildProjRepoStr builds the projRepoStr used in the config file with projName and repoName
 func buildProjRepoStr(projName string, repoName string) string {
 	projVersion := ""
-	if strings.Contains(projName, "-") {
+	if releaseRegex.MatchString(projName) {
 		projNameAndVersion := strings.Split(projName, "-")
-		projName = projNameAndVersion[0]
-		projVersion = projNameAndVersion[1]
+		// The project name can possibly contain "-" as well, so we need to consider the last part as the version,
+		// and the rest be the project name.
+		// For example, "knative-sandbox-0.15" will be split into "knative-sandbox" and "0.15"
+		projVersion = projNameAndVersion[len(projNameAndVersion)-1]
+		projName = strings.TrimRight(projName, "-"+projVersion)
 	}
 	projRepoStr := repoName
 	if projVersion != "" {
-		projRepoStr += ("-" + projVersion)
+		projRepoStr += "-" + projVersion
 	}
 	projRepoStr = projName + "-" + projRepoStr
 	return strings.ToLower(projRepoStr)

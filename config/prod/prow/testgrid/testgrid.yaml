@@ -498,74 +498,74 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 3
-- name: ci-knative-sample-controller-sandbox-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-sample-controller-sandbox-continuous
+- name: ci-knative-sandbox-sample-controller-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-sample-controller-continuous
   alert_stale_results_hours: 3
-- name: ci-knative-sample-source-sandbox-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-sample-source-sandbox-continuous
+- name: ci-knative-sandbox-sample-source-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-sample-source-continuous
   alert_stale_results_hours: 3
-- name: ci-knative-discovery-sandbox-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-discovery-sandbox-continuous
+- name: ci-knative-sandbox-discovery-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-discovery-continuous
   alert_stale_results_hours: 3
-- name: ci-knative-discovery-sandbox-nightly-release
-  gcs_prefix: knative-prow/logs/ci-knative-discovery-sandbox-nightly-release
+- name: ci-knative-sandbox-discovery-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-discovery-nightly-release
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
-- name: ci-knative-discovery-sandbox-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-discovery-sandbox-dot-release
+- name: ci-knative-sandbox-discovery-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-discovery-dot-release
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   alert_stale_results_hours: 170
   num_failures_to_alert: 1
-- name: ci-knative-discovery-sandbox-auto-release
-  gcs_prefix: knative-prow/logs/ci-knative-discovery-sandbox-auto-release
+- name: ci-knative-sandbox-discovery-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-discovery-auto-release
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
-- name: ci-knative-eventing-kafka-sandbox-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-kafka-sandbox-continuous
+- name: ci-knative-sandbox-eventing-kafka-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-kafka-continuous
   alert_stale_results_hours: 3
-- name: ci-knative-eventing-kafka-sandbox-nightly-release
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-kafka-sandbox-nightly-release
+- name: ci-knative-sandbox-eventing-kafka-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-kafka-nightly-release
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
-- name: ci-knative-eventing-kafka-sandbox-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-kafka-sandbox-dot-release
+- name: ci-knative-sandbox-eventing-kafka-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-kafka-dot-release
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   alert_stale_results_hours: 170
   num_failures_to_alert: 1
-- name: ci-knative-eventing-kafka-sandbox-auto-release
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-kafka-sandbox-auto-release
+- name: ci-knative-sandbox-eventing-kafka-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-kafka-auto-release
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
-- name: ci-knative-eventing-kafka-sandbox-test-coverage
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-kafka-sandbox-go-coverage
+- name: ci-knative-sandbox-eventing-kafka-test-coverage
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-kafka-go-coverage
   short_text_metric: "coverage"
-- name: ci-knative-eventing-kafka-broker-sandbox-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-kafka-broker-sandbox-continuous
+- name: ci-knative-sandbox-eventing-kafka-broker-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-kafka-broker-continuous
   alert_stale_results_hours: 3
-- name: ci-knative-eventing-kafka-broker-sandbox-nightly-release
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-kafka-broker-sandbox-nightly-release
+- name: ci-knative-sandbox-eventing-kafka-broker-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-kafka-broker-nightly-release
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
-- name: ci-knative-eventing-kafka-broker-sandbox-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-kafka-broker-sandbox-dot-release
+- name: ci-knative-sandbox-eventing-kafka-broker-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-kafka-broker-dot-release
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   alert_stale_results_hours: 170
   num_failures_to_alert: 1
-- name: ci-knative-eventing-kafka-broker-sandbox-auto-release
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-kafka-broker-sandbox-auto-release
+- name: ci-knative-sandbox-eventing-kafka-broker-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-kafka-broker-auto-release
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
-- name: ci-knative-eventing-kafka-broker-sandbox-test-coverage
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-kafka-broker-sandbox-go-coverage
+- name: ci-knative-sandbox-eventing-kafka-broker-test-coverage
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-kafka-broker-go-coverage
   short_text_metric: "coverage"
 - name: ci-google-knative-gcp-continuous
   gcs_prefix: knative-prow/logs/ci-google-knative-gcp-continuous
@@ -1170,7 +1170,7 @@ dashboards:
 - name: sample-controller
   dashboard_tab:
   - name: continuous
-    test_group_name: ci-knative-sample-controller-sandbox-continuous
+    test_group_name: ci-knative-sandbox-sample-controller-continuous
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
@@ -1178,7 +1178,7 @@ dashboards:
 - name: sample-source
   dashboard_tab:
   - name: continuous
-    test_group_name: ci-knative-sample-source-sandbox-continuous
+    test_group_name: ci-knative-sandbox-sample-source-continuous
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
@@ -1186,25 +1186,25 @@ dashboards:
 - name: discovery
   dashboard_tab:
   - name: continuous
-    test_group_name: ci-knative-discovery-sandbox-continuous
+    test_group_name: ci-knative-sandbox-discovery-continuous
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 3
   - name: nightly
-    test_group_name: ci-knative-discovery-sandbox-nightly-release
+    test_group_name: ci-knative-sandbox-discovery-nightly-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 1
   - name: dot-release
-    test_group_name: ci-knative-discovery-sandbox-dot-release
+    test_group_name: ci-knative-sandbox-discovery-dot-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 1
   - name: auto-release
-    test_group_name: ci-knative-discovery-sandbox-auto-release
+    test_group_name: ci-knative-sandbox-discovery-auto-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
@@ -1212,60 +1212,60 @@ dashboards:
 - name: eventing-kafka
   dashboard_tab:
   - name: continuous
-    test_group_name: ci-knative-eventing-kafka-sandbox-continuous
+    test_group_name: ci-knative-sandbox-eventing-kafka-continuous
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 3
   - name: nightly
-    test_group_name: ci-knative-eventing-kafka-sandbox-nightly-release
+    test_group_name: ci-knative-sandbox-eventing-kafka-nightly-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 1
   - name: dot-release
-    test_group_name: ci-knative-eventing-kafka-sandbox-dot-release
+    test_group_name: ci-knative-sandbox-eventing-kafka-dot-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 1
   - name: auto-release
-    test_group_name: ci-knative-eventing-kafka-sandbox-auto-release
+    test_group_name: ci-knative-sandbox-eventing-kafka-auto-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 1
   - name: coverage
-    test_group_name: ci-knative-eventing-kafka-sandbox-test-coverage
+    test_group_name: ci-knative-sandbox-eventing-kafka-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: eventing-kafka-broker
   dashboard_tab:
   - name: continuous
-    test_group_name: ci-knative-eventing-kafka-broker-sandbox-continuous
+    test_group_name: ci-knative-sandbox-eventing-kafka-broker-continuous
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 3
   - name: nightly
-    test_group_name: ci-knative-eventing-kafka-broker-sandbox-nightly-release
+    test_group_name: ci-knative-sandbox-eventing-kafka-broker-nightly-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 1
   - name: dot-release
-    test_group_name: ci-knative-eventing-kafka-broker-sandbox-dot-release
+    test_group_name: ci-knative-sandbox-eventing-kafka-broker-dot-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 1
   - name: auto-release
-    test_group_name: ci-knative-eventing-kafka-broker-sandbox-auto-release
+    test_group_name: ci-knative-sandbox-eventing-kafka-broker-auto-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 1
   - name: coverage
-    test_group_name: ci-knative-eventing-kafka-broker-sandbox-test-coverage
+    test_group_name: ci-knative-sandbox-eventing-kafka-broker-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: knative-gcp
   dashboard_tab:
