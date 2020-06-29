@@ -18,6 +18,7 @@ package cmd
 
 import (
 	"bytes"
+	"os"
 	"os/exec"
 	"strings"
 	"sync"
@@ -57,8 +58,18 @@ func WithDir(dir string) Option {
 	}
 }
 
+// WithStdout returns an option that sets the cmd output to stdout.
+// This redirects output to stdout, should not use this option if you
+// need the return value of the command.
+func WithStdout() Option {
+	return func(c *exec.Cmd) {
+		c.Stdout = os.Stdout
+	}
+}
+
 // RunCommand will run the command and return the standard output, plus error if there is one.
 func runCommand(cmdLine string, options ...Option) (string, error) {
+	var err error
 	cmdSplit, err := shell.Split(cmdLine)
 	if len(cmdSplit) == 0 || err != nil {
 		return "", &CommandLineError{
@@ -78,7 +89,12 @@ func runCommand(cmdLine string, options ...Option) (string, error) {
 	var eb bytes.Buffer
 	cmd.Stderr = &eb
 
-	out, err := cmd.Output()
+	var out []byte
+	if cmd.Stdout != nil {
+		err = cmd.Run()
+	} else {
+		out, err = cmd.Output()
+	}
 	if err != nil {
 		return string(out), &CommandLineError{
 			Command:     cmdLine,
