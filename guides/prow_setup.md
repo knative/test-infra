@@ -1,7 +1,8 @@
 # Prow setup
 
 Prow is a collection of microservices that are deployed on a Kubernetes cluster.
-All the Kubernetes object `.yaml` files (except secrets) for Knative prow are under
+All the Kubernetes object `.yaml` files (except secrets) for Knative prow are
+under
 [oss-test-infra repo](https://github.com/GoogleCloudPlatform/oss-test-infra/tree/master/prow/knative),
 and managed by [oss oncall](go.k8s.io/oncall).
 
