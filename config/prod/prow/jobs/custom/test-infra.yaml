@@ -12,6 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Add a fake plank image here so that autobump.sh can bump only job configs
+# image: gcr.io/k8s-prow/plank:v20200602-f3683752b8
+# See
+# https://github.com/kubernetes/test-infra/blob/5815354584709c3f436e3d682110c673d224d7b1/prow/cmd/autobump/autobump.sh#L164
+
 presubmits:
   knative/test-infra:
   - name: pull-test-infra-validate-prow-yaml
@@ -270,7 +275,7 @@ periodics:
         secretName: flaky-test-reporter-slack-token
 - cron: "15 15-23 * * 1-5"  # Run at 7:15-15:15 PST (15:15 UTC) Mon-Fri
   name: ci-knative-prow-auto-bumper
-  cluster: prow-trusted
+  cluster: "build-knative"
   decorate: true
   extra_refs:
   - org: knative
