@@ -692,7 +692,6 @@ func main() {
 	prowJobsConfigOutput := ""
 	testgridConfigOutput := ""
 	var generateTestgridConfig = flag.Bool("generate-testgrid-config", true, "Whether to generate the testgrid config from the template file")
-	var generateMaintenanceJobs = flag.Bool("generate-maintenance-jobs", true, "Whether to generate the maintenance periodic jobs (e.g. backup)")
 	var includeConfig = flag.Bool("include-config", true, "Whether to include general configuration (e.g., plank) in the generated config")
 	var dockerImagesBase = flag.String("image-docker", "gcr.io/knative-tests/test-infra", "Default registry for the docker images used by the jobs")
 	flag.StringVar(&prowJobsConfigOutput, "prow-jobs-config-output", "", "The destination for the prow jobs config output, default to be stdout")
@@ -708,7 +707,6 @@ func main() {
 	flag.StringVar(&nightlyAccount, "nightly-account", "/etc/nightly-account/service-account.json", "Path to the service account JSON for nightly release jobs")
 	flag.StringVar(&releaseAccount, "release-account", "/etc/release-account/service-account.json", "Path to the service account JSON for release jobs")
 	var prowTestsDockerImageName = flag.String("prow-tests-docker", "prow-tests:stable", "prow-tests docker image")
-	flag.StringVar(&githubCommenterDockerImage, "github-commenter-docker", "gcr.io/k8s-prow/commenter:v20190731-e3f7b9853", "github commenter docker image")
 	flag.StringVar(&presubmitScript, "presubmit-script", "./test/presubmit-tests.sh", "Executable for running presubmit tests")
 	flag.StringVar(&releaseScript, "release-script", "./hack/release.sh", "Executable for creating releases")
 	flag.StringVar(&webhookAPICoverageScript, "webhook-api-coverage-script", "./test/apicoverage.sh", "Executable for running webhook apicoverage tool")
@@ -764,9 +762,7 @@ func main() {
 		}
 	}
 	generatePerfClusterUpdatePeriodicJobs()
-	if *generateMaintenanceJobs {
-		generateIssueTrackerPeriodicJobs()
-	}
+
 	for _, repo := range repositories {
 		if repo.EnableGoCoverage {
 			generateGoCoveragePostsubmit("postsubmits", repo.Name, nil)
