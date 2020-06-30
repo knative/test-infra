@@ -69,18 +69,7 @@ unset-cluster-credentials:
 get-build-cluster-credentials: activate-serviceaccount
 	$(SET_BUILD_CLUSTER_CONTEXT)
 
-.PHONY: update-prow-config update-boskos-resource test update-testgrid-config confirm-master
-
-# Update prow config
-update-prow-config: confirm-master
-	$(SET_CONTEXT)
-	python3 <(curl -sSfL https://raw.githubusercontent.com/istio/test-infra/master/prow/recreate_prow_configmaps.py) \
-		--prow-config-path=$(realpath $(PROW_CONFIG)) \
-		--plugins-config-path=$(realpath $(PROW_PLUGINS)) \
-		--job-config-dir=$(realpath $(PROW_JOB_CONFIG)) \
-		--wet \
-		--silent
-	$(UNSET_CONTEXT)
+.PHONY: update-boskos-resource test update-testgrid-config confirm-master
 
 # Update the list of resources for Boskos
 update-boskos-resource: confirm-master
@@ -89,10 +78,10 @@ update-boskos-resource: confirm-master
 	$(UNSET_CONTEXT)
 
 # Update all resources on Prow cluster
-update-prow-cluster: update-boskos-resource update-prow-config
+update-prow-cluster: update-boskos-resource
 
 # Update everything
-update-all: update-boskos-resource update-prow-config update-testgrid-config
+update-all: update-boskos-resource update-testgrid-config
 
 # Update TestGrid config.
 # Application Default Credentials must be set, otherwise the upload will fail.
