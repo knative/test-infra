@@ -37,7 +37,7 @@ IMG = $(REGISTRY)/$(PROJECT)/test-infra/$(IMAGE_NAME)
 TAG := $(shell date +v%Y%m%d)-$(shell git describe --always --dirty --match '^$$')
 
 build:
-	docker build --pull -t $(IMG):$(TAG) -f $(DOCKERFILE) $(DOCKERBUILDARGS) ../..
+	docker build --no-cache --pull -t $(IMG):$(TAG) -f $(DOCKERFILE) $(DOCKERBUILDARGS) ../..
 
 # You can build locally without --no-cache to save time
 iterative-build:

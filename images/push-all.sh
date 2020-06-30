@@ -16,14 +16,17 @@
 
 # This script pushes all images under current directory
 
+# prow-tests image crashes prow job, don't build it here
+EXCLUDED="prow-tests"
+
 set -e
 
 CUR_DIR="$(realpath $(dirname $0))"
 
 for dir in ${CUR_DIR}/*; do
-    if [[ -d "${dir}" && -f "${dir}/Makefile" ]]; then
+    if [[ -d "${dir}" && -f "${dir}/Makefile" && "${dir}" != "${CUR_DIR}/${EXCLUDED}" ]]; then
         echo "RUNNING: make -C '${dir}' push"
-        make -C "${dir}" push
+        # make -C "${dir}" push
     else
         echo "Skipping '${dir}'"
     fi
