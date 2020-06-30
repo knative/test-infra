@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Add a fake plank image here so that autobump.sh can bump only job configs
-# image: gcr.io/k8s-prow/plank:v20200602-f3683752b8
+# image: gcr.io/k8s-prow/plank:v20200628-cc1c099dad
 # See
 # https://github.com/kubernetes/test-infra/blob/5815354584709c3f436e3d682110c673d224d7b1/prow/cmd/autobump/autobump.sh#L164
 
@@ -85,7 +85,7 @@ presubmits:
     cluster: "build-knative"
     spec:
       containers:
-      - image: gcr.io/k8s-prow/checkconfig:v20200413-65958d4a8
+      - image: gcr.io/k8s-prow/checkconfig:v20200628-cc1c099dad
         command:
         - "/checkconfig"
         args:
@@ -284,7 +284,7 @@ periodics:
     path_alias: knative.dev/test-infra
   spec:
     containers:
-    - image: gcr.io/k8s-prow/autobump:v20200622-168a90f1b0
+    - image: gcr.io/k8s-prow/autobump:v20200628-cc1c099dad
       command:
       - /autobump.sh
       args:

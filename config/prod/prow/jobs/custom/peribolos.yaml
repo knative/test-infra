@@ -28,7 +28,7 @@ postsubmits:
     - "master"
     spec:
       containers:
-      - image: gcr.io/k8s-prow/peribolos:v20200624-6fad05ae06
+      - image: gcr.io/k8s-prow/peribolos:v20200628-cc1c099dad
         command:
         - "/peribolos"
         args:
@@ -63,7 +63,7 @@ postsubmits:
     - "master"
     spec:
       containers:
-      - image: gcr.io/k8s-prow/peribolos:v20200624-6fad05ae06
+      - image: gcr.io/k8s-prow/peribolos:v20200628-cc1c099dad
         command:
         - "/peribolos"
         args:
@@ -101,7 +101,7 @@ periodics:
     path_alias: knative.dev/community
   spec:
     containers:
-    - image: gcr.io/k8s-prow/peribolos:v20200624-6fad05ae06
+    - image: gcr.io/k8s-prow/peribolos:v20200628-cc1c099dad
       command:
       - "/peribolos"
       args:
@@ -137,7 +137,7 @@ periodics:
     path_alias: knative.dev/community
   spec:
     containers:
-    - image: gcr.io/k8s-prow/peribolos:v20200624-6fad05ae06
+    - image: gcr.io/k8s-prow/peribolos:v20200628-cc1c099dad
       command:
       - "/peribolos"
       args:
