@@ -1,0 +1,2 @@
+ok  	knative.dev/test-infra/tools/coverage/testTarget/subPkg1	0.035s	coverage: 66.7% of statements
+ok  	knative.dev/test-infra/tools/coverage/testTarget/subPkg2	0.044s	coverage: 66.7% of statements

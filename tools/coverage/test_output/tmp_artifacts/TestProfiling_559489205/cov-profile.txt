@@ -1,0 +1,7 @@
+mode: count
+knative.dev/test-infra/tools/coverage/testTarget/subPkg1/common.go:19.19,21.2 0 2
+knative.dev/test-infra/tools/coverage/testTarget/subPkg1/onlySrcChange.go:20.20,23.2 2 1
+knative.dev/test-infra/tools/coverage/testTarget/subPkg1/onlySrcChange.go:25.20,27.2 1 0
+knative.dev/test-infra/tools/coverage/testTarget/subPkg2/common.go:20.19,22.2 0 2
+knative.dev/test-infra/tools/coverage/testTarget/subPkg2/onlySrcChange.go:21.20,24.2 2 1
+knative.dev/test-infra/tools/coverage/testTarget/subPkg2/onlySrcChange.go:26.20,28.2 1 0
