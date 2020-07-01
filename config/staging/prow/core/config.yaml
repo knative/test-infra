@@ -85,6 +85,16 @@ deck:
           - 'Please run .*hack/update-codegen.sh'
           # Metrics are logged only for Pods in a failed test.
           - 'Metrics logs'
+          # Compile error - unused import.
+          - "imported and not used:"
+          # Compile error - unused variable.
+          - "declared but not used"
+          # Compile error - undefined variable.
+          - "undefined:"
+          # Compile error - not enough arguments.
+          - "not enough arguments in call to "
+          # Compile error - incorrect argument type.
+          - "cannot use .* \\(type .*\\) as type .* in argument to"
       required_files:
       - build-log.txt
     - lens:
