@@ -19,7 +19,7 @@ set -o nounset
 set -o pipefail
 
 export GO111MODULE=on
-export GOFLAGS=-mod=vendor
+export GOFLAGS=""
 
 source $(dirname $0)/../scripts/library.sh
 
@@ -48,12 +48,15 @@ readonly GO_GET
 
 if (( GO_GET )); then
   go get -d ${FLOATING_DEPS[@]}
+  go get -u ./...
 fi
 
 
 # Prune modules.
 go mod tidy
 go mod vendor
+
+export GOFLAGS=-mod=vendor
 
 rm -rf $(find vendor/ -name 'OWNERS')
 rm -rf $(find vendor/ -name 'OWNERS_ALIASES')
