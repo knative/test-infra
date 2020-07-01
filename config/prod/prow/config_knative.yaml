@@ -24,6 +24,11 @@ presubmits:
     args:
     - --run-test
     - ./test/e2e-upgrade-tests.sh
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
   - custom-test: autotls-tests
     dot-dev: true
     needs-monitor: true
