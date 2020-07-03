@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package clustermanager
+package gke
 
 import (
 	"errors"
@@ -28,8 +28,8 @@ import (
 	container "google.golang.org/api/container/v1beta1"
 	boskoscommon "sigs.k8s.io/boskos/common"
 
-	boskosFake "knative.dev/test-infra/pkg/clustermanager/e2e-tests/boskos/fake"
-	"knative.dev/test-infra/pkg/clustermanager/e2e-tests/common"
+	boskosFake "knative.dev/test-infra/pkg/clustermanager/boskos/fake"
+	"knative.dev/test-infra/pkg/clustermanager/common"
 
 	"knative.dev/test-infra/pkg/gke"
 

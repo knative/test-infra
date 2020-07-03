@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package ops
+package clustermanager
 
 import (
 	"fmt"
@@ -23,7 +23,7 @@ import (
 
 	container "google.golang.org/api/container/v1beta1"
 
-	clm "knative.dev/test-infra/pkg/clustermanager/e2e-tests"
+	clm "knative.dev/test-infra/pkg/clustermanager/gke"
 	"knative.dev/test-infra/pkg/cmd"
 	"knative.dev/test-infra/pkg/gke"
 	"knative.dev/test-infra/pkg/metautil"

@@ -21,9 +21,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	clm "knative.dev/test-infra/pkg/clustermanager/e2e-tests"
-
-	"knative.dev/test-infra/kntest/pkg/cluster/gke/ops"
+	"knative.dev/test-infra/pkg/clustermanager"
+	clm "knative.dev/test-infra/pkg/clustermanager/gke"
 )
 
 // AddCommands adds gke subcommands.
@@ -33,7 +32,7 @@ func AddCommands(clusterCmd *cobra.Command) {
 		Short: "gke related commands.",
 	}
 
-	rw := &ops.RequestWrapper{
+	rw := &clustermanager.RequestWrapper{
 		Request: clm.GKERequest{},
 	}
 	addCommonOptions(gkeCmd, rw)
@@ -43,7 +42,7 @@ func AddCommands(clusterCmd *cobra.Command) {
 	clusterCmd.AddCommand(gkeCmd)
 }
 
-func addCreate(cc *cobra.Command, rw *ops.RequestWrapper) {
+func addCreate(cc *cobra.Command, rw *clustermanager.RequestWrapper) {
 	var createCmd = &cobra.Command{
 		Use:   "create",
 		Short: "Create a GKE cluster.",
@@ -65,7 +64,7 @@ func addCreate(cc *cobra.Command, rw *ops.RequestWrapper) {
 	cc.AddCommand(createCmd)
 }
 
-func addDelete(clusterCmd *cobra.Command, rw *ops.RequestWrapper) {
+func addDelete(clusterCmd *cobra.Command, rw *clustermanager.RequestWrapper) {
 	var deleteCmd = &cobra.Command{
 		Use:   "delete",
 		Short: "Delete the current GKE cluster.",
@@ -78,7 +77,7 @@ func addDelete(clusterCmd *cobra.Command, rw *ops.RequestWrapper) {
 	clusterCmd.AddCommand(deleteCmd)
 }
 
-func addGet(clusterCmd *cobra.Command, rw *ops.RequestWrapper) {
+func addGet(clusterCmd *cobra.Command, rw *clustermanager.RequestWrapper) {
 	var getCmd = &cobra.Command{
 		Use:   "get",
 		Short: "Get the existing cluster from kubeconfig or gcloud.",

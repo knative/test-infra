@@ -14,13 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package clustermanager
+package gke
 
 import (
 	"strings"
 	"testing"
 
-	"knative.dev/test-infra/pkg/clustermanager/e2e-tests/common"
+	"knative.dev/test-infra/pkg/clustermanager/common"
 	"knative.dev/test-infra/pkg/cmd"
 )
 
