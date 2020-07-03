@@ -19,12 +19,29 @@ set -o nounset
 set -o pipefail
 
 export GO111MODULE=on
-export GOFLAGS=-mod=vendor
+export GOFLAGS=""
 
 source $(dirname $0)/../scripts/library.sh
 
 cd ${REPO_ROOT_DIR}
 
+# Parse flags to determine any we should pass to dep.
+GO_GET=0
+while [[ $# -ne 0 ]]; do
+  parameter=$1
+  case ${parameter} in
+    --upgrade) GO_GET=1 ;;
+    *) abort "unknown option ${parameter}" ;;
+  esac
+  shift
+done
+readonly GO_GET
+
+
+if (( GO_GET )); then
+  # We track the latest minor of all dependencies.
+  go get -u ./...
+fi
 # Prune modules.
 go mod tidy
 go mod vendor

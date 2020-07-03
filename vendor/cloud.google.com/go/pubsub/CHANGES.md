@@ -1,5 +1,18 @@
 # Changes
 
+## v1.4.0
+
+- Add support for upcoming ordering keys feature.
+
+## v1.3.1
+
+- Fix bug with removing dead letter policy from a subscription
+- Set default value of MaxExtensionPeriod to 0, which is functionally equivalent
+
+## v1.3.0
+
+- Update cloud.google.com/go to v0.54.0
+
 ## v1.2.0
 
 - Add support for upcoming dead letter topics feature
