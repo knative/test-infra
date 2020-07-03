@@ -14,9 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-/*
-Package clustermanager provides support for managing clusters for e2e tests,
-responsible for creating/deleting cluster, and cluster life cycle management if
-running in Prow
-*/
-package clustermanager
+package gke
+
+// Client is the entrypoint
+type Client interface {
+	Setup(...interface{}) (ClusterOperations, error)
+}
+
+// ClusterOperations contains all provider specific logics
+type ClusterOperations interface {
+	Provider() string
+	Acquire() error
+	Delete() error
+}

@@ -14,16 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package ops
-
-import (
-	clm "knative.dev/test-infra/pkg/clustermanager/e2e-tests"
-)
-
-// Get gets a GKE cluster
-func (rw *RequestWrapper) Get() (*clm.GKECluster, error) {
-	rw.Request.SkipCreation = true
-	// Reuse `Create` for getting operation, so that we can reuse the same logic
-	// such as protected project/cluster etc.
-	return rw.Create()
-}
+/*
+Package clustermanager provides support for managing clusters for e2e tests,
+responsible for creating/deleting cluster, and cluster life cycle management if
+running in Prow
+*/
+package gke

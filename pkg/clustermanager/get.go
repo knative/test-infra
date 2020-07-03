@@ -16,14 +16,14 @@ limitations under the License.
 
 package clustermanager
 
-// Client is the entrypoint
-type Client interface {
-	Setup(...interface{}) (ClusterOperations, error)
-}
+import (
+	clm "knative.dev/test-infra/pkg/clustermanager/gke"
+)
 
-// ClusterOperations contains all provider specific logics
-type ClusterOperations interface {
-	Provider() string
-	Acquire() error
-	Delete() error
+// Get gets a GKE cluster
+func (rw *RequestWrapper) Get() (*clm.GKECluster, error) {
+	rw.Request.SkipCreation = true
+	// Reuse `Create` for getting operation, so that we can reuse the same logic
+	// such as protected project/cluster etc.
+	return rw.Create()
 }

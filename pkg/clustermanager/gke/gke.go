@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package clustermanager
+package gke
 
 import (
 	"errors"
@@ -26,7 +26,7 @@ import (
 	container "google.golang.org/api/container/v1beta1"
 	"google.golang.org/api/option"
 
-	"knative.dev/test-infra/pkg/clustermanager/e2e-tests/common"
+	"knative.dev/test-infra/pkg/clustermanager/common"
 	"knative.dev/test-infra/pkg/gke"
 )
 

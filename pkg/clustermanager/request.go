@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package ops
+package clustermanager
 
 import (
 	"fmt"
 
-	clm "knative.dev/test-infra/pkg/clustermanager/e2e-tests"
+	clm "knative.dev/test-infra/pkg/clustermanager/gke"
 )
 
 // RequestWrapper is a wrapper of the GKERequest.
