@@ -14,16 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package clustermanager
+package e2e_tests
 
 import (
-	clm "knative.dev/test-infra/pkg/clustermanager/gke"
+	clm "knative.dev/test-infra/pkg/clustermanager/e2e-tests/gke"
 )
 
 // Get gets a GKE cluster
-func (rw *RequestWrapper) Get() (*clm.GKECluster, error) {
+func Get(rw *RequestWrapper) (*clm.GKECluster, error) {
 	rw.Request.SkipCreation = true
 	// Reuse `Create` for getting operation, so that we can reuse the same logic
 	// such as protected project/cluster etc.
-	return rw.Create()
+	return Create(rw)
 }

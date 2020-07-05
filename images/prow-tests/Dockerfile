@@ -119,6 +119,9 @@ COPY images/prow-tests/coverage.sh /coverage
 
 # Install kntest
 RUN go install knative.dev/test-infra/kntest/cmd/kntest
+# Install perf-tests tool
+# TODO(chizhg): maybe also move perf-tests tool to be part of kntest?
+RUN go install knative.dev/test-infra/pkg/clustermanager/perf-tests
 
 # reset --hard doesn't care about dirty working copy
 # This must be the last install
