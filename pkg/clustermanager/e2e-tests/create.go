@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package clustermanager
+package e2e_tests
 
 import (
 	"fmt"
@@ -23,7 +23,7 @@ import (
 
 	container "google.golang.org/api/container/v1beta1"
 
-	clm "knative.dev/test-infra/pkg/clustermanager/gke"
+	clm "knative.dev/test-infra/pkg/clustermanager/e2e-tests/gke"
 	"knative.dev/test-infra/pkg/cmd"
 	"knative.dev/test-infra/pkg/gke"
 	"knative.dev/test-infra/pkg/metautil"
@@ -41,7 +41,7 @@ const (
 )
 
 // Create creates a GKE cluster and configures gcloud after successful GKE create request
-func (rw *RequestWrapper) Create() (*clm.GKECluster, error) {
+func Create(rw *RequestWrapper) (*clm.GKECluster, error) {
 	gkeOps, err := rw.acquire()
 	if err != nil {
 		return nil, err

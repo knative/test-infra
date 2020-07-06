@@ -29,7 +29,7 @@ const (
 	proj = "NewProject"
 )
 
-func topFunction(c gcs.Interface) error {
+func topFunction(c gcs.Client) error {
 	ctx := context.Background()
 	if err := c.NewStorageBucket(ctx, bkt, proj); err != nil {
 		return err

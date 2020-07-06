@@ -18,6 +18,7 @@ package mock
 
 import (
 	"context"
+	"errors"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -305,6 +306,11 @@ func (c *clientMocker) CopyObject(ctx context.Context, srcBkt, srcObjPath, dstBk
 	}
 	copy(dstBktRoot.obj[dstMockPath].content, srcBktRoot.obj[srcMockPath].content)
 	return nil
+}
+
+// NewReader creates a new Reader of a gcs file.
+func (c *clientMocker) NewReader(ctx context.Context, bucketName, objPath string) (*storage.Reader, error) {
+	return nil, errors.New("not implemented")
 }
 
 // ReadObject mocks reading from an object

@@ -31,21 +31,21 @@ import (
 	"google.golang.org/api/option"
 )
 
-type Client struct {
+type storageClient struct {
 	*storage.Client
 }
 
 // NewClient creates new GCS client with given service account
-func NewClient(ctx context.Context, serviceAccount string) (*Client, error) {
+func NewClient(ctx context.Context, serviceAccount string) (Client, error) {
 	client, err := storage.NewClient(ctx, option.WithCredentialsFile(serviceAccount))
 	if err != nil {
 		return nil, err
 	}
-	return &Client{Client: client}, nil
+	return &storageClient{Client: client}, nil
 }
 
 // NewStorageBucket creates a new bucket in GCS with uniform access policy
-func (g *Client) NewStorageBucket(ctx context.Context, bucketName, project string) error {
+func (g *storageClient) NewStorageBucket(ctx context.Context, bucketName, project string) error {
 	if project == "" {
 		return errors.New("a project must be provided")
 	}
@@ -69,7 +69,7 @@ func (g *Client) NewStorageBucket(ctx context.Context, bucketName, project strin
 }
 
 // DeleteStorageBucket removes all children objects and then deletes the bucket
-func (g *Client) DeleteStorageBucket(ctx context.Context, bucketName string, force bool) error {
+func (g *storageClient) DeleteStorageBucket(ctx context.Context, bucketName string, force bool) error {
 	children, err := g.ListChildrenFiles(ctx, bucketName, "")
 	if err != nil {
 		return err
@@ -88,7 +88,7 @@ func (g *Client) DeleteStorageBucket(ctx context.Context, bucketName string, for
 }
 
 // get objects iterator under given storagePath and bucketName, use exclusionFilter to eliminate some files.
-func (g *Client) getObjectsIter(ctx context.Context, bucketName, storagePath, exclusionFilter string) *storage.ObjectIterator {
+func (g *storageClient) getObjectsIter(ctx context.Context, bucketName, storagePath, exclusionFilter string) *storage.ObjectIterator {
 	return g.Bucket(bucketName).Objects(ctx, &storage.Query{
 		Prefix:    storagePath,
 		Delimiter: exclusionFilter,
@@ -96,7 +96,7 @@ func (g *Client) getObjectsIter(ctx context.Context, bucketName, storagePath, ex
 }
 
 // Exists check if an object exists under a bucket, assuming bucket exists
-func (g *Client) Exists(ctx context.Context, bucketName, objPath string) bool {
+func (g *storageClient) Exists(ctx context.Context, bucketName, objPath string) bool {
 	// Check if this is a file
 	objHandle := g.Bucket(bucketName).Object(objPath)
 	if _, err := objHandle.Attrs(ctx); err == nil {
@@ -115,7 +115,7 @@ func (g *Client) Exists(ctx context.Context, bucketName, objPath string) bool {
 // If exclusionFilter is empty string, returns all files but not directories,
 // if exclusionFilter is "/", returns all direct children, including both files and directories.
 // see https://godoc.org/cloud.google.com/go/storage#Query
-func (g *Client) list(ctx context.Context, bucketName, storagePath, exclusionFilter string) ([]string, error) {
+func (g *storageClient) list(ctx context.Context, bucketName, storagePath, exclusionFilter string) ([]string, error) {
 	objsAttrs, err := g.getObjectsAttrs(ctx, bucketName, storagePath, exclusionFilter)
 	if err != nil {
 		return nil, err
@@ -128,7 +128,7 @@ func (g *Client) list(ctx context.Context, bucketName, storagePath, exclusionFil
 }
 
 // Query items under given gcs storagePath, use exclusionFilter to eliminate some files.
-func (g *Client) getObjectsAttrs(ctx context.Context, bucketName, storagePath,
+func (g *storageClient) getObjectsAttrs(ctx context.Context, bucketName, storagePath,
 	exclusionFilter string) ([]*storage.ObjectAttrs, error) {
 	var allAttrs []*storage.ObjectAttrs
 	it := g.getObjectsIter(ctx, bucketName, storagePath, exclusionFilter)
@@ -146,7 +146,7 @@ func (g *Client) getObjectsAttrs(ctx context.Context, bucketName, storagePath,
 	return allAttrs, nil
 }
 
-func (g *Client) listChildren(ctx context.Context, bucketName, dirPath, exclusionFilter string) ([]string, error) {
+func (g *storageClient) listChildren(ctx context.Context, bucketName, dirPath, exclusionFilter string) ([]string, error) {
 	if dirPath != "" {
 		dirPath = strings.TrimRight(dirPath, " /") + "/"
 	}
@@ -155,12 +155,12 @@ func (g *Client) listChildren(ctx context.Context, bucketName, dirPath, exclusio
 }
 
 // ListChildrenFiles recursively lists all children files.
-func (g *Client) ListChildrenFiles(ctx context.Context, bucketName, dirPath string) ([]string, error) {
+func (g *storageClient) ListChildrenFiles(ctx context.Context, bucketName, dirPath string) ([]string, error) {
 	return g.listChildren(ctx, bucketName, dirPath, "")
 }
 
 // ListDirectChildren lists direct children paths (including files and directories).
-func (g *Client) ListDirectChildren(ctx context.Context, bucketName, dirPath string) ([]string, error) {
+func (g *storageClient) ListDirectChildren(ctx context.Context, bucketName, dirPath string) ([]string, error) {
 	// If there are 2 directories named "foo" and "foobar",
 	// then given storagePath "foo" will get files both under "foo" and "foobar".
 	// Add trailling slash to storagePath, so that only gets children under given directory.
@@ -168,7 +168,7 @@ func (g *Client) ListDirectChildren(ctx context.Context, bucketName, dirPath str
 }
 
 // CopyObject copies objects from one location to another. Assumes both source and destination buckets exist.
-func (g *Client) CopyObject(ctx context.Context, srcBucketName, srcPath, dstBucketName, dstPath string) error {
+func (g *storageClient) CopyObject(ctx context.Context, srcBucketName, srcPath, dstBucketName, dstPath string) error {
 	src := g.Bucket(srcBucketName).Object(srcPath)
 	dst := g.Bucket(dstBucketName).Object(dstPath)
 
@@ -177,7 +177,7 @@ func (g *Client) CopyObject(ctx context.Context, srcBucketName, srcPath, dstBuck
 }
 
 // Download gcs object to a file
-func (g *Client) Download(ctx context.Context, bucketName, objPath, dstPath string) error {
+func (g *storageClient) Download(ctx context.Context, bucketName, objPath, dstPath string) error {
 	handle := g.Bucket(bucketName).Object(objPath)
 	if _, err := handle.Attrs(ctx); err != nil {
 		return err
@@ -197,7 +197,7 @@ func (g *Client) Download(ctx context.Context, bucketName, objPath, dstPath stri
 }
 
 // Upload file to gcs object
-func (g *Client) Upload(ctx context.Context, bucketName, objPath, srcPath string) error {
+func (g *storageClient) Upload(ctx context.Context, bucketName, objPath, srcPath string) error {
 	src, err := os.Open(srcPath)
 	if err != nil {
 		return err
@@ -209,13 +209,13 @@ func (g *Client) Upload(ctx context.Context, bucketName, objPath, srcPath string
 }
 
 // AttrObject returns the object attributes
-func (g *Client) AttrObject(ctx context.Context, bucketName, objPath string) (*storage.ObjectAttrs, error) {
+func (g *storageClient) AttrObject(ctx context.Context, bucketName, objPath string) (*storage.ObjectAttrs, error) {
 	objHandle := g.Bucket(bucketName).Object(objPath)
 	return objHandle.Attrs(ctx)
 }
 
 // ReadObject reads the content of a gcs object
-func (g *Client) ReadObject(ctx context.Context, bucketName, objPath string) ([]byte, error) {
+func (g *storageClient) ReadObject(ctx context.Context, bucketName, objPath string) ([]byte, error) {
 	var contents []byte
 	f, err := g.NewReader(ctx, bucketName, objPath)
 	if err != nil {
@@ -227,7 +227,7 @@ func (g *Client) ReadObject(ctx context.Context, bucketName, objPath string) ([]
 
 // NewReader creates a new Reader of a gcs file.
 // Important: caller must call Close on the returned Reader when done reading
-func (g *Client) NewReader(ctx context.Context, bucketName, objPath string) (*storage.Reader, error) {
+func (g *storageClient) NewReader(ctx context.Context, bucketName, objPath string) (*storage.Reader, error) {
 	o := g.Bucket(bucketName).Object(objPath)
 	if _, err := o.Attrs(ctx); err != nil {
 		return nil, err
@@ -236,13 +236,13 @@ func (g *Client) NewReader(ctx context.Context, bucketName, objPath string) (*st
 }
 
 // DeleteObject deletes an object
-func (g *Client) DeleteObject(ctx context.Context, bucketName, objPath string) error {
+func (g *storageClient) DeleteObject(ctx context.Context, bucketName, objPath string) error {
 	objHandle := g.Bucket(bucketName).Object(objPath)
 	return objHandle.Delete(ctx)
 }
 
 // WriteObject writes the content to a gcs object
-func (g *Client) WriteObject(ctx context.Context, bucketName, objPath string,
+func (g *storageClient) WriteObject(ctx context.Context, bucketName, objPath string,
 	content []byte) (n int, err error) {
 	objWriter := g.Bucket(bucketName).Object(objPath).NewWriter(ctx)
 	defer func() {
@@ -257,7 +257,7 @@ func (g *Client) WriteObject(ctx context.Context, bucketName, objPath string,
 }
 
 // ReadURL reads from a gsUrl and return a log structure
-func (g *Client) ReadURL(ctx context.Context, gcsURL string) ([]byte, error) {
+func (g *storageClient) ReadURL(ctx context.Context, gcsURL string) ([]byte, error) {
 	bucket, obj, err := linkToBucketAndObject(gcsURL)
 	if err != nil {
 		return nil, err

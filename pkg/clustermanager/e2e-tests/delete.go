@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package clustermanager
+package e2e_tests
 
 import (
 	"fmt"
@@ -24,7 +24,7 @@ import (
 )
 
 // Delete deletes a GKE cluster
-func (rw *RequestWrapper) Delete() error {
+func Delete(rw *RequestWrapper) error {
 	rw.Request.SkipCreation = true
 
 	gkeOps, err := rw.acquire()

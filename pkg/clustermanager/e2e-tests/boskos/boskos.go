@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"time"
 
-	"knative.dev/test-infra/pkg/clustermanager/common"
+	"knative.dev/test-infra/pkg/clustermanager/e2e-tests/common"
 
 	boskosclient "sigs.k8s.io/boskos/client"
 	boskoscommon "sigs.k8s.io/boskos/common"

@@ -24,7 +24,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 
-	"knative.dev/test-infra/pkg/clustermanager/common"
+	"knative.dev/test-infra/pkg/clustermanager/e2e-tests/common"
 	"knative.dev/test-infra/pkg/gke"
 )
 

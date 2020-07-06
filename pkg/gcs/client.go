@@ -22,7 +22,8 @@ import (
 	"cloud.google.com/go/storage"
 )
 
-type Interface interface {
+// Client defines the interface for GCS operations.
+type Client interface {
 	// NewStorageBucket creates a new bucket in GCS with uniform access policy
 	NewStorageBucket(ctx context.Context, bkt, project string) error
 	// DeleteStorageBucket removes all children objects, force if not empty
@@ -38,6 +39,8 @@ type Interface interface {
 	// CopyObject copies objects from one location to another, assuming both src and dst
 	// buckets both exist
 	CopyObject(ctx context.Context, srcBkt, srcObjPath, dstBkt, dstObjPath string) error
+	// NewReader creates a new Reader of a gcs file.
+	NewReader(ctx context.Context, bucketName, objPath string) (*storage.Reader, error)
 	// ReadObject reads a GCS object and returns then contents in []byte
 	ReadObject(ctx context.Context, bkt, objPath string) ([]byte, error)
 	// WriteObject writes []byte content to a GCS object
