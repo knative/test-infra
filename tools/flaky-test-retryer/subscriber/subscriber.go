@@ -20,6 +20,7 @@ import (
 	"context"
 	"encoding/json"
 	"log"
+	"time"
 
 	"cloud.google.com/go/pubsub"
 	"knative.dev/test-infra/tools/flaky-test-retryer/prowapi"
@@ -54,12 +55,12 @@ func NewSubscriberClient(subName string) (*Client, error) {
 
 // ReceiveMessageAckAll acknowledges all incoming pusub messages and convert the pubsub message to ReportMessage.
 // It executes `f` only if the pubsub message can be converted to ReportMessage. Otherwise, ignore the message.
-func (c *Client) ReceiveMessageAckAll(ctx context.Context, f func(*prowapi.ReportMessage)) error {
+func (c *Client) ReceiveMessageAckAll(ctx context.Context, f func(*prowapi.ReportMessage, time.time)) error {
 	return c.Receive(ctx, func(ctx context.Context, msg *pubsub.Message) {
 		if rmsg, err := c.toReportMessage(msg); err != nil {
 			log.Printf("Cannot convert pubsub message (%v) to Report message %v", msg, err)
 		} else if rmsg != nil {
-			f(rmsg)
+			f(rmsg,msg.PublishTime)
 		}
 		msg.Ack()
 		log.Printf("Message acked: %q", msg.ID)
