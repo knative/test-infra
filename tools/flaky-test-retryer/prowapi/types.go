@@ -117,5 +117,5 @@ type ReportMessage struct {
 	Refs    []Refs       `json:"refs,omitempty"`
 	JobType ProwJobType  `json:"job_type"`
 	JobName string       `json:"job_name"`
-	Timestamp int64       `json:"timestamp"`
+	Timestamp int64      `json:"timestamp"`
 }
