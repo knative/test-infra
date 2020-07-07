@@ -33,3 +33,8 @@ continuous integration, code coverage, nightly release, conformance and etc.
 Our E2E testing uses
 [kubetest](https://github.com/kubernetes/test-infra/blob/master/kubetest) to
 build/deploy/test Knative clusters.
+
+## Contributing
+
+If you are interested in contributing, see [CONTRIBUTING.md](./CONTRIBUTING.md)
+and [DEVELOPMENT.md](./DEVELOPMENT.md).
