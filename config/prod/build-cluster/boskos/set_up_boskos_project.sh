@@ -77,6 +77,7 @@ readonly RESOURCES=(
     "compute.googleapis.com"
     "container.googleapis.com"
     "cloudscheduler.googleapis.com"
+    "cloudbuild.googleapis.com"
     # For Workload Identity testing
     "iamcredentials.googleapis.com"
 )
