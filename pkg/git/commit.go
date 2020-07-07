@@ -60,7 +60,7 @@ func MakeCommit(gi Info, message string, dryrun bool) (bool, error) {
 
 	if gi.UserName != "" && gi.Email != "" {
 		commitCmd = fmt.Sprintf("%s --author '%s <%s>'",
-			commitCmd, gi.UserName, gi.Email)
+			commitCmd, strings.Trim(gi.UserName, "'"), gi.Email)
 	}
 
 	cmds := []string{addCmd, commitCmd, pushCmd}
