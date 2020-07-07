@@ -394,9 +394,6 @@ periodics:
       limits:
         memory: 16Gi
   - branch-ci: true
-    release: "0.12"
-    dot-dev: true
-  - branch-ci: true
     release: "0.13"
     dot-dev: true
   - branch-ci: true
@@ -404,6 +401,9 @@ periodics:
     dot-dev: true
   - branch-ci: true
     release: "0.15"
+    dot-dev: true
+  - branch-ci: true
+    release: "0.16"
     dot-dev: true
   - custom-job: istio-1.5-mesh
     command:
@@ -495,14 +495,6 @@ periodics:
         memory: 16Gi
   - dot-release: true
     dot-dev: true
-    release: "0.12"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - dot-release: true
-    dot-dev: true
     release: "0.13"
     resources:
       requests:
@@ -520,6 +512,14 @@ periodics:
   - dot-release: true
     dot-dev: true
     release: "0.15"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    dot-dev: true
+    release: "0.16"
     resources:
       requests:
         memory: 12Gi
@@ -585,9 +585,6 @@ periodics:
       limits:
         memory: 16Gi
   - branch-ci: true
-    release: "0.12"
-    dot-dev: true
-  - branch-ci: true
     release: "0.13"
     dot-dev: true
   - branch-ci: true
@@ -595,6 +592,9 @@ periodics:
     dot-dev: true
   - branch-ci: true
     release: "0.15"
+    dot-dev: true
+  - branch-ci: true
+    release: "0.16"
     dot-dev: true
   - nightly: true
     dot-dev: true
@@ -605,14 +605,6 @@ periodics:
         memory: 16Gi
   - dot-release: true
     dot-dev: true
-    release: "0.12"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - dot-release: true
-    dot-dev: true
     release: "0.13"
     resources:
       requests:
@@ -630,6 +622,14 @@ periodics:
   - dot-release: true
     dot-dev: true
     release: "0.15"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    dot-dev: true
+    release: "0.16"
     resources:
       requests:
         memory: 12Gi
@@ -651,9 +651,6 @@ periodics:
       limits:
         memory: 16Gi
   - branch-ci: true
-    release: "0.12"
-    dot-dev: true
-  - branch-ci: true
     release: "0.13"
     dot-dev: true
   - branch-ci: true
@@ -661,6 +658,9 @@ periodics:
     dot-dev: true
   - branch-ci: true
     release: "0.15"
+    dot-dev: true
+  - branch-ci: true
+    release: "0.16"
     dot-dev: true
   - nightly: true
     dot-dev: true
@@ -671,14 +671,6 @@ periodics:
         memory: 16Gi
   - dot-release: true
     dot-dev: true
-    release: "0.12"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - dot-release: true
-    dot-dev: true
     release: "0.13"
     resources:
       requests:
@@ -696,6 +688,14 @@ periodics:
   - dot-release: true
     dot-dev: true
     release: "0.15"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    dot-dev: true
+    release: "0.16"
     resources:
       requests:
         memory: 12Gi
@@ -846,6 +846,9 @@ periodics:
   - dot-release: true
     dot-dev: true
     release: "0.15"
+  - dot-release: true
+    dot-dev: true
+    release: "0.16"
   - auto-release: true
     dot-dev: true
   knative/net-kourier:
