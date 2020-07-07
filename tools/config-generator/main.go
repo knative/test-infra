@@ -223,9 +223,6 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.ExtraRefs = []string{"- org: " + data.OrgName, "  repo: " + data.RepoName}
 	data.Labels = make([]string, 0)
 	data.Optional = ""
-
-	// The build cluster for prod and staging Prow are both named
-	// `build-knative` in kubeconfig in the cluster
 	data.Cluster = "cluster: \"build-knative\""
 	return data
 }
@@ -413,7 +410,6 @@ func getProwConfigData(config yaml.MapSlice) prowConfigTemplateData {
 	data.ManagedRepos = make([]string, 0)
 	data.ManagedOrgs = make([]string, 0)
 	// Repos enabled for tide are all those that have presubmit jobs.
-	var isProd bool
 	for _, section := range config {
 		if section.Key != "presubmits" {
 			continue
@@ -424,25 +420,9 @@ func getProwConfigData(config yaml.MapSlice) prowConfigTemplateData {
 			if strings.HasSuffix(orgRepoName, "test-infra") {
 				data.TestInfraRepo = orgRepoName
 			}
-			if strings.HasPrefix(orgRepoName, "knative/") {
-				isProd = true
-			}
 		}
 	}
-	// TODO: Remove all of these once prow core and plugins configs are not
-	// generated any more
-	if isProd {
-		data.ManagedOrgs = []string{"knative", "knative-sandbox"}
-		data.ManagedRepos = []string{"google/knative-gcp"}
-		data.JobConfigPath = "config/prod/prow/jobs/**/*.yaml"
-		data.CoreConfigPath = "config/prod/prow/core/config.yaml"
-		data.PluginConfigPath = "config/prod/prow/core/plugins.yaml"
-	} else {
-		data.ManagedOrgs = []string{"knative-prow-robot"}
-		data.JobConfigPath = "config/prod/staging/jobs/*.yaml"
-		data.CoreConfigPath = "config/prod/staging/core/config.yaml"
-		data.PluginConfigPath = "config/prod/staging/core/plugins.yaml"
-	}
+
 	// Sort repos to make output stable.
 	sort.Strings(data.TideRepos)
 	sort.Strings(data.ManagedOrgs)

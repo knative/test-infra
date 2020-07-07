@@ -27,12 +27,12 @@ import (
 )
 
 func TestProwConfigPathsExist(t *testing.T) {
-	pathsToCheck := [][]string{ProdProwConfigPaths, {ProdTestgridConfigPath}}
+	pathsToCheck := [][]string{{ProdTestgridConfigPath}}
 	checkPaths(pathsToCheck, t)
 }
 
 func TestProwKeyConfigPathsExist(t *testing.T) {
-	pathsToCheck := [][]string{ProdProwKeyConfigPaths}
+	pathsToCheck := [][]string{}
 	checkPaths(pathsToCheck, t)
 }
 

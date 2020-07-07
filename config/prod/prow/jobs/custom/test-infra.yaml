@@ -79,22 +79,6 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-test-infra-validate-staging-prow-yaml
-    decorate: true
-    run_if_changed: "^config/staging/prow/(cluster|core|jobs)/.*.yaml$"
-    cluster: "build-knative"
-    spec:
-      containers:
-      - image: gcr.io/k8s-prow/checkconfig:v20200628-cc1c099dad
-        command:
-        - "/checkconfig"
-        args:
-        - "--config-path=config/staging/prow/core/config.yaml"
-        - "--job-config-path=config/staging/prow/jobs"
-        - "--plugin-config=config/staging/prow/core/plugins.yaml"
-        - "--prow-yaml-repo-name=$(REPO_OWNER)/$(REPO_NAME)"
-        - "--strict"
-        - "--exclude-warning=mismatched-tide"
 
 periodics:
 - cron: "15 9 * * *"
