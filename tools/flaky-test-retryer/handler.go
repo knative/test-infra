@@ -24,6 +24,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"knative.dev/test-infra/pkg/ghutil"
 
@@ -70,9 +71,9 @@ func (hc *HandlerClient) Listen() {
 	log.Printf("Listening for failed jobs...\n")
 	for {
 		log.Println("Starting ReceiveMessageAckAll")
-		hc.pubsub.ReceiveMessageAckAll(context.Background(), func(msg *prowapi.ReportMessage) {
+		hc.pubsub.ReceiveMessageAckAll(context.Background(), func(msg *prowapi.ReportMessage, timestamp time.Time) {
 			log.Printf("Message received for %q", msg.URL)
-			data := &JobData{msg, nil, nil}
+			data := &JobData{msg, timestamp, nil, nil}
 			if data.IsSupported() {
 				go hc.HandleJob(data)
 			}

@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/google/go-github/v27/github"
 	"knative.dev/test-infra/pkg/ghutil/fakeghutil"
@@ -42,7 +43,7 @@ The following jobs failed:
 
 Test name | Triggers | Retries
 --- | --- | ---
-fakejob0 | []() | 1/3
+fakejob0 | [2009-11-10 23:00:00 +0000 UTC]() | 1/3
 
 Automatically retrying due to test flakiness...
 /test fakejob0`
@@ -51,7 +52,7 @@ The following jobs failed:
 
 Test name | Triggers | Retries
 --- | --- | ---
-fakejob0 | []() | 1/3
+fakejob0 | [2009-11-10 23:00:00 +0000 UTC]() | 1/3
 
 Automatically retrying due to test flakiness...
 /test fakejob0`
@@ -61,7 +62,7 @@ The following jobs failed:
 Test name | Triggers | Retries
 --- | --- | ---
 fakejob0 |  | 0/3
-fakejob1 | []() | 1/3
+fakejob1 | [2009-11-10 23:00:00 +0000 UTC]() | 1/3
 
 Automatically retrying due to test flakiness...
 /test fakejob1`
@@ -70,8 +71,8 @@ The following jobs failed:
 
 Test name | Triggers | Retries
 --- | --- | ---
-fakejob0 | []() | 1/3
-fakejob1 | []() | 1/3
+fakejob0 | [2009-11-10 23:00:00 +0000 UTC]() | 1/3
+fakejob1 | [2009-11-10 23:00:00 +0000 UTC]() | 1/3
 
 Automatically retrying due to test flakiness...
 /test fakejob0`
@@ -80,8 +81,8 @@ The following jobs failed:
 
 Test name | Triggers | Retries
 --- | --- | ---
-fakejob0 | []()<br>[]()<br>[]()<br>[]() | 3/3
-fakejob1 | []() | 1/3
+fakejob0 | [2009-11-10 23:00:00 +0000 UTC]()<br>[2009-11-10 23:00:00 +0000 UTC]()<br>[2009-11-10 23:00:00 +0000 UTC]()<br>[2009-11-10 23:00:00 +0000 UTC]() | 3/3
+fakejob1 | [2009-11-10 23:00:00 +0000 UTC]() | 1/3
 
 Job fakejob0 expended all 3 retries without success.`
 	failedShortCommentBody = `<!--[AUTOMATED-FLAKY-RETRYER]fakeSha[AUTOMATED-FLAKY-RETRYER]-->
@@ -90,7 +91,7 @@ The following jobs failed:
 Test name | Triggers | Retries
 --- | --- | ---
 fakejob0 |  | 0/3
-fakejob1 | []() | 1/3
+fakejob1 | [2009-11-10 23:00:00 +0000 UTC]() | 1/3
 
 Failed non-flaky tests preventing automatic retry of fakejob0:
 
@@ -101,7 +102,7 @@ The following jobs failed:
 Test name | Triggers | Retries
 --- | --- | ---
 fakejob0 |  | 0/3
-fakejob1 | []() | 1/3
+fakejob1 | [2009-11-10 23:00:00 +0000 UTC]() | 1/3
 
 Failed non-flaky tests preventing automatic retry of fakejob0:
 
@@ -140,6 +141,7 @@ Failed non-flaky tests preventing automatic retry of fakejob0:
 				}},
 			}},
 		},
+		time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC),
 		nil,
 		nil,
 	}
@@ -201,7 +203,7 @@ func TestParseEntries(t *testing.T) {
 		input *github.IssueComment
 		want  map[string]*entry
 	}{
-		{fakeOldComment, map[string]*entry{"fakejob0": {"", "", 0}, "fakejob1": {"", "[]()", 1}}},
+		{fakeOldComment, map[string]*entry{"fakejob0": {"", "", 0}, "fakejob1": {"", "[2009-11-10 23:00:00 +0000 UTC]()", 1}}},
 	}
 	for _, data := range cases {
 		actual, _ := parseEntries(data.input.GetBody())
@@ -222,28 +224,28 @@ func TestBuildNewComment(t *testing.T) {
 			&fakeJob,
 			map[string]*entry{
 				"fakejob0": {"fakejob0", "", 0},
-				"fakejob1": {"fakejob1", "[]()", 1}},
+				"fakejob1": {"fakejob1", "[2009-11-10 23:00:00 +0000 UTC]()", 1}},
 			nil,
 			retryCommentBody,
 		}, {
 			&fakeJob,
 			map[string]*entry{
-				"fakejob0": {"fakejob0", "[]()<br>[]()<br>[]()", 3},
-				"fakejob1": {"fakejob1", "[]()", 1}},
+				"fakejob0": {"fakejob0", "[2009-11-10 23:00:00 +0000 UTC]()<br>[2009-11-10 23:00:00 +0000 UTC]()<br>[2009-11-10 23:00:00 +0000 UTC]()", 3},
+				"fakejob1": {"fakejob1", "[2009-11-10 23:00:00 +0000 UTC]()", 1}},
 			nil,
 			noMoreRetriesCommentBody,
 		}, {
 			&fakeJob,
 			map[string]*entry{
 				"fakejob0": {"fakejob0", "", 0},
-				"fakejob1": {"fakejob1", "[]()", 1}},
+				"fakejob1": {"fakejob1", "[2009-11-10 23:00:00 +0000 UTC]()", 1}},
 			fakeFailedTests[:4],
 			failedShortCommentBody,
 		}, {
 			&fakeJob,
 			map[string]*entry{
 				"fakejob0": {"fakejob0", "", 0},
-				"fakejob1": {"fakejob1", "[]()", 1}},
+				"fakejob1": {"fakejob1", "[2009-11-10 23:00:00 +0000 UTC]()", 1}},
 			fakeFailedTests,
 			failedLongCommentBody,
 		},

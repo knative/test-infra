@@ -24,6 +24,7 @@ import (
 	"log"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"knative.dev/test-infra/pkg/junit"
 	"knative.dev/test-infra/pkg/prow"
@@ -47,6 +48,7 @@ func InitLogParser(serviceAccount string) error {
 // and a cached flaky report it is referencing.
 type JobData struct {
 	*prowapi.ReportMessage
+	Timestamp    time.Time
 	failedTests  []string
 	flakyReports []jsonreport.Report
 }
