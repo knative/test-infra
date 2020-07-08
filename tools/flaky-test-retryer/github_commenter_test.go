@@ -224,28 +224,28 @@ func TestBuildNewComment(t *testing.T) {
 			&fakeJob,
 			map[string]*entry{
 				"fakejob0": {"fakejob0", "", 0},
-				"fakejob1": {"fakejob1", "[]()", 1}},
+				"fakejob1": {"fakejob1", "[2009-11-10 23:00:00 +0000 UTC]()", 1}},
 			nil,
 			retryCommentBody,
 		}, {
 			&fakeJob,
 			map[string]*entry{
-				"fakejob0": {"fakejob0", "[]()<br>[]()<br>[]()", 3},
-				"fakejob1": {"fakejob1", "[]()", 1}},
+				"fakejob0": {"fakejob0", "[]()<br>[]()<br>[2009-11-10 23:00:00 +0000 UTC]()", 3},
+				"fakejob1": {"fakejob1", "[2009-11-10 23:00:00 +0000 UTC]()", 1}},
 			nil,
 			noMoreRetriesCommentBody,
 		}, {
 			&fakeJob,
 			map[string]*entry{
 				"fakejob0": {"fakejob0", "", 0},
-				"fakejob1": {"fakejob1", "[]()", 1}},
+				"fakejob1": {"fakejob1", "[2009-11-10 23:00:00 +0000 UTC]()", 1}},
 			fakeFailedTests[:4],
 			failedShortCommentBody,
 		}, {
 			&fakeJob,
 			map[string]*entry{
 				"fakejob0": {"fakejob0", "", 0},
-				"fakejob1": {"fakejob1", "[]()", 1}},
+				"fakejob1": {"fakejob1", "[2009-11-10 23:00:00 +0000 UTC]()", 1}},
 			fakeFailedTests,
 			failedLongCommentBody,
 		},
