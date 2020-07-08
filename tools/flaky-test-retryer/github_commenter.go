@@ -26,6 +26,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/google/go-github/v27/github"
 	"knative.dev/test-infra/pkg/ghutil"
