@@ -102,7 +102,7 @@ func testIsSupported(t *testing.T) {
 				Repo:  fakeRepo,
 				Pulls: nil,
 			}},
-		}, time.Now(),nil, nil}, false},
+		}, time.Now(), nil, nil}, false},
 		{&JobData{fakeInvalidRepo, time.Now(), nil, nil}, false}, // invalid repo
 		{&JobData{fakeValidMessage, time.Now(), nil, nil}, true}, // valid message
 	}
