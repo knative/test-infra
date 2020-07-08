@@ -140,6 +140,7 @@ Failed non-flaky tests preventing automatic retry of fakejob0:
 				}},
 			}},
 		},
+		time.Now(),
 		nil,
 		nil,
 	}
