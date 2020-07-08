@@ -82,7 +82,7 @@ The following jobs failed:
 Test name | Triggers | Retries
 --- | --- | ---
 fakejob0 | []()<br>[]()<br>[]()<br>[2009-11-10 23:00:00 +0000 UTC]() | 3/3
-fakejob1 | []() | 1/3
+fakejob1 | [2009-11-10 23:00:00 +0000 UTC]() | 1/3
 
 Job fakejob0 expended all 3 retries without success.`
 	failedShortCommentBody = `<!--[AUTOMATED-FLAKY-RETRYER]fakeSha[AUTOMATED-FLAKY-RETRYER]-->
