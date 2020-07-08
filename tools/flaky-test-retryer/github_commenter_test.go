@@ -72,7 +72,7 @@ The following jobs failed:
 Test name | Triggers | Retries
 --- | --- | ---
 fakejob0 | [2009-11-10 23:00:00 +0000 UTC]() | 1/3
-fakejob1 | []() | 1/3
+fakejob1 | [2009-11-10 23:00:00 +0000 UTC]() | 1/3
 
 Automatically retrying due to test flakiness...
 /test fakejob0`
