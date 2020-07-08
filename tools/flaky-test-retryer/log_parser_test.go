@@ -19,6 +19,7 @@ package main
 import (
 	"reflect"
 	"testing"
+	"time"
 
 	"knative.dev/test-infra/tools/flaky-test-reporter/jsonreport/fakejsonreport"
 	"knative.dev/test-infra/tools/flaky-test-retryer/prowapi"
