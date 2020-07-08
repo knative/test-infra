@@ -43,7 +43,7 @@ The following jobs failed:
 
 Test name | Triggers | Retries
 --- | --- | ---
-fakejob0 | []() | 1/3
+fakejob0 | [2009-11-10 23:00:00 +0000 UTC]() | 1/3
 
 Automatically retrying due to test flakiness...
 /test fakejob0`
@@ -52,7 +52,7 @@ The following jobs failed:
 
 Test name | Triggers | Retries
 --- | --- | ---
-fakejob0 | []() | 1/3
+fakejob0 | [2009-11-10 23:00:00 +0000 UTC]() | 1/3
 
 Automatically retrying due to test flakiness...
 /test fakejob0`
@@ -62,7 +62,7 @@ The following jobs failed:
 Test name | Triggers | Retries
 --- | --- | ---
 fakejob0 |  | 0/3
-fakejob1 | []() | 1/3
+fakejob1 | [2009-11-10 23:00:00 +0000 UTC]() | 1/3
 
 Automatically retrying due to test flakiness...
 /test fakejob1`
@@ -71,8 +71,8 @@ The following jobs failed:
 
 Test name | Triggers | Retries
 --- | --- | ---
-fakejob0 | []() | 1/3
-fakejob1 | []() | 1/3
+fakejob0 | [2009-11-10 23:00:00 +0000 UTC]() | 1/3
+fakejob1 | [2009-11-10 23:00:00 +0000 UTC]() | 1/3
 
 Automatically retrying due to test flakiness...
 /test fakejob0`
@@ -91,7 +91,7 @@ The following jobs failed:
 Test name | Triggers | Retries
 --- | --- | ---
 fakejob0 |  | 0/3
-fakejob1 | []() | 1/3
+fakejob1 | [2009-11-10 23:00:00 +0000 UTC]() | 1/3
 
 Failed non-flaky tests preventing automatic retry of fakejob0:
 
@@ -102,7 +102,7 @@ The following jobs failed:
 Test name | Triggers | Retries
 --- | --- | ---
 fakejob0 |  | 0/3
-fakejob1 | []() | 1/3
+fakejob1 | [2009-11-10 23:00:00 +0000 UTC]() | 1/3
 
 Failed non-flaky tests preventing automatic retry of fakejob0:
 
@@ -141,7 +141,7 @@ Failed non-flaky tests preventing automatic retry of fakejob0:
 				}},
 			}},
 		},
-		time.Now(),
+		time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC),
 		nil,
 		nil,
 	}
