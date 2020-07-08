@@ -24,6 +24,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"knative.dev/test-infra/pkg/ghutil"
 
