@@ -48,11 +48,7 @@ func InitLogParser(serviceAccount string) error {
 // and a cached flaky report it is referencing.
 type JobData struct {
 	*prowapi.ReportMessage
-<<<<<<< HEAD
-	Timestamp time.time
-=======
-	timestamp time.time
->>>>>>> 5bfdc15d39c746e3607583670383cbe1e06720c0
+	Timestamp	time.Time
 	failedTests  []string
 	flakyReports []jsonreport.Report
 }
