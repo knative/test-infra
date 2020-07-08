@@ -203,7 +203,7 @@ func TestParseEntries(t *testing.T) {
 		input *github.IssueComment
 		want  map[string]*entry
 	}{
-		{fakeOldComment, map[string]*entry{"fakejob0": {"", "", 0}, "fakejob1": {"", "[]()", 1}}},
+		{fakeOldComment, map[string]*entry{"fakejob0": {"", "", 0}, "fakejob1": {"", "[2009-11-10 23:00:00 +0000 UTC]()", 1}}},
 	}
 	for _, data := range cases {
 		actual, _ := parseEntries(data.input.GetBody())
