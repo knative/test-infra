@@ -60,7 +60,7 @@ func (c *Client) ReceiveMessageAckAll(ctx context.Context, f func(*prowapi.Repor
 		if rmsg, err := c.toReportMessage(msg); err != nil {
 			log.Printf("Cannot convert pubsub message (%v) to Report message %v", msg, err)
 		} else if rmsg != nil {
-			f(rmsg,msg.PublishTime)
+			f(rmsg, msg.PublishTime)
 		}
 		msg.Ack()
 		log.Printf("Message acked: %q", msg.ID)
