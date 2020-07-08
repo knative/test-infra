@@ -70,7 +70,7 @@ func (hc *HandlerClient) Listen() {
 	log.Printf("Listening for failed jobs...\n")
 	for {
 		log.Println("Starting ReceiveMessageAckAll")
-		hc.pubsub.ReceiveMessageAckAll(context.Background(), func(msg *prowapi.ReportMessage, timestamp time.time) {
+		hc.pubsub.ReceiveMessageAckAll(context.Background(), func(msg *prowapi.ReportMessage, timestamp time.Time) {
 			log.Printf("Message received for %q", msg.URL)
 			data := &JobData{msg, timestamp, nil, nil}
 			if data.IsSupported() {
