@@ -121,8 +121,8 @@ func testGetFlakyTests(t *testing.T) {
 		wantArray []string
 		wantErr   error
 	}{
-		{&JobData{fakeValidMessage, nil, nil}, fakeFlakyTests, nil},
-		{&JobData{fakeInvalidRepo, nil, nil}, []string{}, nil},
+		{&JobData{fakeValidMessage, time.Now(), nil, nil}, fakeFlakyTests, nil},
+		{&JobData{fakeInvalidRepo, time.Now(), nil, nil}, []string{}, nil},
 	}
 	setup()
 	for _, test := range data {
