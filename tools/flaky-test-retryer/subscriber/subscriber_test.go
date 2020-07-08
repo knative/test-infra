@@ -49,7 +49,7 @@ func TestSubscriberClient_ReceiveMessageAckAll(t *testing.T) {
 
 	type arguments struct {
 		ctx context.Context
-		f   func(*prowapi.ReportMessage, timestamp time.Time)
+		f   func(*prowapi.ReportMessage, time.Time)
 	}
 	tests := []struct {
 		name string
