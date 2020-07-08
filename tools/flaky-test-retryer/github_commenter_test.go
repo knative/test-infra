@@ -81,7 +81,7 @@ The following jobs failed:
 
 Test name | Triggers | Retries
 --- | --- | ---
-fakejob0 | []()<br>[]()<br>[]()<br>[2009-11-10 23:00:00 +0000 UTC]() | 3/3
+fakejob0 | [2009-11-10 23:00:00 +0000 UTC]()<br>[2009-11-10 23:00:00 +0000 UTC]()<br>[2009-11-10 23:00:00 +0000 UTC]()<br>[2009-11-10 23:00:00 +0000 UTC]() | 3/3
 fakejob1 | [2009-11-10 23:00:00 +0000 UTC]() | 1/3
 
 Job fakejob0 expended all 3 retries without success.`
@@ -230,7 +230,7 @@ func TestBuildNewComment(t *testing.T) {
 		}, {
 			&fakeJob,
 			map[string]*entry{
-				"fakejob0": {"fakejob0", "[]()<br>[]()<br>[2009-11-10 23:00:00 +0000 UTC]()", 3},
+				"fakejob0": {"fakejob0", "[2009-11-10 23:00:00 +0000 UTC]()<br>[2009-11-10 23:00:00 +0000 UTC]()<br>[2009-11-10 23:00:00 +0000 UTC]()", 3},
 				"fakejob1": {"fakejob1", "[2009-11-10 23:00:00 +0000 UTC]()", 1}},
 			nil,
 			noMoreRetriesCommentBody,
