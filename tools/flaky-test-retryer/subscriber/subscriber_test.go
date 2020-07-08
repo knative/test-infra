@@ -21,6 +21,7 @@ import (
 	"errors"
 	"reflect"
 	"testing"
+	"time"
 
 	"cloud.google.com/go/pubsub"
 	"knative.dev/test-infra/tools/flaky-test-retryer/prowapi"
@@ -59,7 +60,7 @@ func TestSubscriberClient_ReceiveMessageAckAll(t *testing.T) {
 			name: "Message Received",
 			args: arguments{
 				ctx: context.Background(),
-				f: func(message *prowapi.ReportMessage) {
+				f: func(message *prowapi.ReportMessage, timestamp time.Time) {
 					receivedMsgs[0] = message
 				},
 			},
@@ -69,7 +70,7 @@ func TestSubscriberClient_ReceiveMessageAckAll(t *testing.T) {
 			name: "ReceiveError",
 			args: arguments{
 				ctx: context.WithValue(context.Background(), keyError, errors.New("code = NotFound desc = Resource not found")),
-				f: func(message *prowapi.ReportMessage) {
+				f: func(message *prowapi.ReportMessage, timestamp time.Time) {
 					receivedMsgs[0] = message
 				},
 			},
