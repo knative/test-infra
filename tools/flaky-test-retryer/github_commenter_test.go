@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/google/go-github/v27/github"
 	"knative.dev/test-infra/pkg/ghutil/fakeghutil"
