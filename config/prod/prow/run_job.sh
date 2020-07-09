@@ -30,8 +30,14 @@ GITHUB_TOKEN_PATH="$2"
 
 set -e
 
+# Download prow core config from prow
+CONFIG_YAML="$(mktemp)"
+make -C "${REPO_ROOT_DIR}/config/prod" get-cluster-credentials
+trap "make -C '${REPO_ROOT_DIR}/config/prod' unset-cluster-credentials" EXIT
+kubectl get configmaps config -o "jsonpath={.data['config\.yaml']}" >"${CONFIG_YAML}"
+echo "Prow core config downloaded at ${CONFIG_YAML}"
+
 JOB_YAML=$(mktemp)
-CONFIG_YAML=${REPO_ROOT_DIR}/config/prod/prow/core/config.yaml
 JOB_CONFIG_YAML=${REPO_ROOT_DIR}/config/prod/prow/jobs
 
 if [[ -n "${GITHUB_TOKEN_PATH}" ]]; then
