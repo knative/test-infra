@@ -2586,13 +2586,13 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
-  knative/net-http01:
-  - name: pull-knative-net-http01-build-tests
+  knative-sandbox/net-http01:
+  - name: pull-knative-sandbox-net-http01-build-tests
     agent: kubernetes
-    context: pull-knative-net-http01-build-tests
+    context: pull-knative-sandbox-net-http01-build-tests
     always_run: true
-    rerun_command: "/test pull-knative-net-http01-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-net-http01-build-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-net-http01-build-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-net-http01-build-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-http01
     cluster: "build-knative"
@@ -2624,12 +2624,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-net-http01-unit-tests
+  - name: pull-knative-sandbox-net-http01-unit-tests
     agent: kubernetes
-    context: pull-knative-net-http01-unit-tests
+    context: pull-knative-sandbox-net-http01-unit-tests
     always_run: true
-    rerun_command: "/test pull-knative-net-http01-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-net-http01-unit-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-net-http01-unit-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-net-http01-unit-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-http01
     cluster: "build-knative"
@@ -2661,12 +2661,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-net-http01-integration-tests
+  - name: pull-knative-sandbox-net-http01-integration-tests
     agent: kubernetes
-    context: pull-knative-net-http01-integration-tests
+    context: pull-knative-sandbox-net-http01-integration-tests
     always_run: true
-    rerun_command: "/test pull-knative-net-http01-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-net-http01-integration-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-net-http01-integration-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-net-http01-integration-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-http01
     cluster: "build-knative"
@@ -2698,12 +2698,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-net-http01-go-coverage
+  - name: pull-knative-sandbox-net-http01-go-coverage
     agent: kubernetes
-    context: pull-knative-net-http01-go-coverage
+    context: pull-knative-sandbox-net-http01-go-coverage
     always_run: true
-    rerun_command: "/test pull-knative-net-http01-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-net-http01-go-coverage),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-net-http01-go-coverage"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-net-http01-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
     path_alias: knative.dev/net-http01
@@ -2716,7 +2716,7 @@ presubmits:
         - runner.sh
         args:
         - "coverage"
-        - "--postsubmit-job-name=post-knative-net-http01-go-coverage"
+        - "--postsubmit-job-name=post-knative-sandbox-net-http01-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
         - "--github-token=/etc/covbot-token/token"
@@ -9413,17 +9413,17 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "31 * * * *"
-  name: ci-knative-net-http01-continuous
+- cron: "9 * * * *"
+  name: ci-knative-sandbox-net-http01-continuous
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-net-http01-continuous
+    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-http01-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: net-http01
     base_ref: master
     path_alias: knative.dev/net-http01
@@ -9449,17 +9449,17 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "7 8,11,22 * * *"
-  name: ci-knative-net-http01-continuous-beta-prow-tests
+- cron: "45 8,11,22 * * *"
+  name: ci-knative-sandbox-net-http01-continuous-beta-prow-tests
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-net-http01-continuous
+    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-http01-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: net-http01
     base_ref: master
     path_alias: knative.dev/net-http01
@@ -9485,17 +9485,17 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "29 9 * * *"
-  name: ci-knative-net-http01-nightly-release
+- cron: "59 9 * * *"
+  name: ci-knative-sandbox-net-http01-nightly-release
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-net-http01-nightly-release
+    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-http01-nightly-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: net-http01
     base_ref: master
     path_alias: knative.dev/net-http01
@@ -9522,17 +9522,17 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "13 9 * * 2"
-  name: ci-knative-net-http01-dot-release
+- cron: "7 9 * * 2"
+  name: ci-knative-sandbox-net-http01-dot-release
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-net-http01-dot-release
+    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-http01-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: net-http01
     base_ref: master
     path_alias: knative.dev/net-http01
@@ -9567,17 +9567,17 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "7 */2 * * *"
-  name: ci-knative-net-http01-auto-release
+- cron: "5 */2 * * *"
+  name: ci-knative-sandbox-net-http01-auto-release
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-net-http01-auto-release
+    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-http01-auto-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: net-http01
     base_ref: master
     path_alias: knative.dev/net-http01
@@ -9613,16 +9613,16 @@ periodics:
       secret:
         secretName: release-account
 - cron: "0 1 * * *"
-  name: ci-knative-net-http01-go-coverage
+  name: ci-knative-sandbox-net-http01-go-coverage
   labels:
       prow.k8s.io/pubsub.project: knative-tests
       prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-net-http01-go-coverage
+      prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-http01-go-coverage
   agent: kubernetes
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: net-http01
     base_ref: master
     path_alias: knative.dev/net-http01
@@ -9636,17 +9636,17 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "45 7 * * *"
-  name: ci-knative-net-http01-go-coverage-beta-prow-tests
+- cron: "31 7 * * *"
+  name: ci-knative-sandbox-net-http01-go-coverage-beta-prow-tests
   labels:
       prow.k8s.io/pubsub.project: knative-tests
       prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-net-http01-go-coverage
+      prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-http01-go-coverage
   agent: kubernetes
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: net-http01
     base_ref: master
     path_alias: knative.dev/net-http01
@@ -12022,8 +12022,8 @@ postsubmits:
         - "coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
-  knative/net-http01:
-  - name: post-knative-net-http01-go-coverage
+  knative-sandbox/net-http01:
+  - name: post-knative-sandbox-net-http01-go-coverage
     branches:
     - master
     agent: kubernetes

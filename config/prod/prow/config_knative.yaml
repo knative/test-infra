@@ -286,7 +286,7 @@ presubmits:
     dot-dev: true
   - go-coverage: true
     dot-dev: true
-  knative/net-http01:
+  knative-sandbox/net-http01:
   - build-tests: true
     dot-dev: true
   - unit-tests: true
@@ -826,7 +826,7 @@ periodics:
     dot-dev: true
   - auto-release: true
     dot-dev: true
-  knative/net-http01:
+  knative-sandbox/net-http01:
   - continuous: true
     dot-dev: true
   - nightly: true
