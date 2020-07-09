@@ -27,7 +27,7 @@ periodics:
     base_ref: master
   spec:
     containers:
-    - image: gcr.io/k8s-prow/commenter:v20200628-cc1c099dad
+    - image: gcr.io/k8s-prow/commenter:v20200708-1254fdd37f
       imagePullPolicy: Always
       command:
       - "/app/robots/commenter/app.binary"
@@ -64,7 +64,7 @@ periodics:
     base_ref: master
   spec:
     containers:
-    - image: gcr.io/k8s-prow/commenter:v20200628-cc1c099dad
+    - image: gcr.io/k8s-prow/commenter:v20200708-1254fdd37f
       imagePullPolicy: Always
       command:
       - "/app/robots/commenter/app.binary"
@@ -100,7 +100,7 @@ periodics:
     base_ref: master
   spec:
     containers:
-    - image: gcr.io/k8s-prow/commenter:v20200628-cc1c099dad
+    - image: gcr.io/k8s-prow/commenter:v20200708-1254fdd37f
       imagePullPolicy: Always
       command:
       - "/app/robots/commenter/app.binary"
