@@ -45,6 +45,9 @@ type GKERequest struct {
 
 	// ResourceType: the boskos resource type to acquire to hold the cluster in create
 	ResourceType string
+
+	// SaveMetaData: save the meta data for the created cluster into a file
+	SaveMetaData bool
 }
 
 // GKECluster implements ClusterOperations

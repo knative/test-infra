@@ -68,7 +68,7 @@ function create_test_cluster() {
 
   header "Creating test cluster"
 
-  local creation_args=""
+  local creation_args="--save-meta-data"
   (( SKIP_ISTIO_ADDON )) || creation_args+=" --addons istio"
   [[ -n "${GCP_PROJECT}" ]] && creation_args+=" --project ${GCP_PROJECT}"
   echo "Creating cluster with args ${creation_args}"
@@ -95,14 +95,10 @@ function setup_test_cluster() {
   set -o errexit
   set -o pipefail
 
-  header "Test cluster setup"
-  kubectl get nodes
-
   header "Setting up test cluster"
-
   # Run cluster-creator for acquiring existing test cluster, will fail if
   # kubeconfig isn't set or cluster doesn't exist
-  run_kntest cluster gke get || fail_test "failed getting test cluster" # NA
+  run_kntest cluster gke get --save-meta-data || fail_test "failed getting test cluster" # NA
   # The step above collects cluster metadata and writes to
   # ${ARTIFACTS}/metadata.json file, use this information
   echo "Cluster used for running tests: $(cat "${ARTIFACTS}"/metadata.json)"
@@ -137,9 +133,6 @@ function setup_test_cluster() {
   echo "- gcloud user is ${k8s_user}"
   echo "- Cluster is ${k8s_cluster}"
   echo "- Docker repository is ${KO_DOCKER_REPO}"
-
-  # Use default namespace for all subsequent kubectl commands in this context
-  kubectl config set-context "${k8s_cluster}" --namespace=default
 
   export KO_DATA_PATH="${REPO_ROOT_DIR}/.git"
 

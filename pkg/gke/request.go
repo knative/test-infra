@@ -26,6 +26,9 @@ const defaultGKEVersion = "latest"
 
 // Request contains all settings collected for cluster creation
 type Request struct {
+	// GCPCredentialFile: the GCP credential file to use for the cluster operations
+	GCPCredentialFile string
+
 	// Project: name of the gcloud project for the cluster
 	Project string
 
@@ -142,11 +145,11 @@ func NewCreateClusterRequest(request *Request) (*container.CreateClusterRequest,
 		},
 	}
 	if request.EnableWorkloadIdentity {
-		// Equivalent to --identity-namespace=[PROJECT_ID].svc.id.goog, then
+		// Equivalent to --workload-pool=[PROJECT_ID].svc.id.goog, then
 		// we can configure a Kubernetes service account to act as a Google
 		// service account.
 		ccr.Cluster.WorkloadIdentityConfig = &container.WorkloadIdentityConfig{
-			IdentityNamespace: request.Project + ".svc.id.goog",
+			WorkloadPool: request.Project + ".svc.id.goog",
 		}
 	}
 	if request.ServiceAccount != "" {
