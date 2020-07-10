@@ -8,7 +8,8 @@ cluster
 This tool can be invoked from command line. The following parameters are common
 for all subcommands:
 
-- `--gcp-credential-file`: the GCP credential file that will be used in the cluster operations \
+- `--gcp-credential-file`: the GCP credential file that will be used in the
+  cluster operations \
   Will fall back to `GOOGLE_APPLICATION_CREDENTIALS` if it's not set.
 - `--project`: GCP project, default empty
 - `--name`: cluster name, default empty
