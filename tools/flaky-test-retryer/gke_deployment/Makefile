@@ -15,6 +15,9 @@
 SELF_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 include $(SELF_DIR)../../../common.mk
 
+# Hardcode the cluster information instead of making them parameter, as there
+# can only be a single instance of this tool, otherwise there will be N times
+# comments left on PRs
 CLUSTER := monitoring
 PROJECT := knative-tests
 ZONE := us-central1-a
