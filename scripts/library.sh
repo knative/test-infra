@@ -500,6 +500,7 @@ function start_latest_knative_eventing() {
 
 # Install Knative Eventing extension in the current cluster.
 # Parameters: $1 - Knative Eventing extension manifest.
+#             $2 - Namespace to look for ready pods into
 function start_knative_eventing_extension() {
   header "Starting Knative Eventing Extension"
   echo "Installing Extension CRDs from $1"
