@@ -21,9 +21,9 @@ set -o pipefail
 export GO111MODULE=on
 export GOFLAGS=""
 
-source $(dirname $0)/../scripts/library.sh
+source $(dirname "$0")/../scripts/library.sh
 
-cd ${REPO_ROOT_DIR}
+cd "${REPO_ROOT_DIR}"
 
 # Parse flags to determine any we should pass to dep.
 GO_GET=0

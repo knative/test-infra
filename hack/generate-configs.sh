@@ -17,7 +17,7 @@
 set -o errexit
 set -o nounset
 
-source $(dirname $0)/../scripts/library.sh
+source $(dirname "$0")/../scripts/library.sh
 
 # Generate Prow configs since we are using generator
 readonly CONFIG_GENERATOR_DIR="${REPO_ROOT_DIR}/tools/config-generator"

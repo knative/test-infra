@@ -113,7 +113,6 @@ test_function ${SUCCESS} ":foo::" call_function_post "echo :\$RELEASE_GCS_BUCKET
 echo ">> Testing publishing to GitHub"
 
 test_function ${SUCCESS} "" publish_to_github
-test_function 129 "usage: git tag" call_function_pre PUBLISH_TO_GITHUB=1 publish_to_github
 test_function ${FAILURE} "No such file" call_function_pre PUBLISH_TO_GITHUB=1 publish_to_github a.yaml b.yaml
 test_function ${SUCCESS} "release create" mock_publish_to_github $(mktemp) $(mktemp)
 test_function ${FAILURE} "Cannot publish release to GitHub" mock_publish_to_github_fails $(mktemp) $(mktemp)
