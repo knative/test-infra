@@ -28,10 +28,12 @@ func addCommonOptions(clusterCmd *cobra.Command, rw *clm.RequestWrapper) {
 	// The default values set here are not used in the final operations,
 	// they will further be defaulted in
 	// https://github.com/knative/pkg/blob/7727cb37e05d6c6dd2abadbc3ab01ab748f12561/testutils/clustermanager/e2e-tests/gke.go#L73-L114
+	pf.StringVar(&req.GCPCredentialFile, "gcp-credential-file", "", "the GCP credential file that will be used in the cluster operations")
 	pf.StringVar(&req.Project, "project", "", "GCP project")
 	pf.StringVar(&req.ClusterName, "name", "", "cluster name")
 	pf.StringSliceVar(&rw.Regions, "region", []string{}, "GCP regions, separated by comma or multiple args")
 	pf.StringVar(&req.ResourceType, "resource-type", "", "Boskos Resource Type")
+	pf.BoolVar(&req.SaveMetaData, "save-meta-data", false, "save meta data for the created cluster into a file")
 }
 
 func addCreateOptions(clusterCmd *cobra.Command, rw *clm.RequestWrapper) {

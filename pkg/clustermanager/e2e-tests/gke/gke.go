@@ -67,7 +67,7 @@ func (gc *GKECluster) Acquire() error {
 	gc.ensureProtected()
 	log.Printf("Identified project %s for cluster creation", gc.Project)
 
-	client, err := gc.newGKEClient(gc.Project)
+	client, err := gc.newGKEClient(gc.Project, gc.Request.GCPCredentialFile)
 	if err != nil {
 		return fmt.Errorf("failed creating the GKE client: '%w'", err)
 	}
@@ -161,7 +161,7 @@ func (gc *GKECluster) Delete() error {
 	}
 
 	log.Printf("Deleting cluster %q in %q", gc.Cluster.Name, gc.Cluster.Location)
-	client, err := gc.newGKEClient(gc.Project)
+	client, err := gc.newGKEClient(gc.Project, gc.Request.GCPCredentialFile)
 	if err != nil {
 		return fmt.Errorf("failed creating the GKE client: '%w'", err)
 	}
@@ -232,7 +232,7 @@ func (gc *GKECluster) checkEnvironment() error {
 				region, zone := gke.RegionZoneFromLoc(location)
 				// Use the cluster only if project and clustername match
 				if (gc.Request.Project == "" || gc.Request.Project == project) && (gc.Request.ClusterName == "" || gc.Request.ClusterName == clusterName) {
-					client, err := gc.newGKEClient(project)
+					client, err := gc.newGKEClient(project, gc.Request.GCPCredentialFile)
 					if err != nil {
 						return fmt.Errorf("failed creating the GKE client: '%v'", err)
 					}
@@ -269,14 +269,18 @@ func (gc *GKECluster) checkEnvironment() error {
 	return nil
 }
 
-// newGKEClient returns a new GKE client. project and environment must be provided.
-func (gc *GKECluster) newGKEClient(project string) (gke.SDKOperations, error) {
+// newGKEClient returns a new GKE client. project must be provided.
+func (gc *GKECluster) newGKEClient(project, credentialFile string) (gke.SDKOperations, error) {
 	// HACK: this is merely used for unit tests.
 	// Return the operation directly if it's already initialize.
 	if gc.operations != nil {
 		return gc.operations, nil
 	}
 
-	return gke.NewSDKClient(
-		option.WithQuotaProject(project))
+	options := []option.ClientOption{option.WithQuotaProject(project)}
+	if credentialFile != "" {
+		options = append(options, option.WithCredentialsFile(credentialFile))
+	}
+
+	return gke.NewSDKClient(options...)
 }

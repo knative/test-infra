@@ -3,20 +3,20 @@
 `kntest cluster gke` command is used for creating, deleting or getting a GKE
 cluster
 
-## Prerequisite
-
-- `GOOGLE_APPLICATION_CREDENTIALS` set
-
 ## Usage
 
 This tool can be invoked from command line. The following parameters are common
 for all subcommands:
 
+- `--gcp-credential-file`: the GCP credential file that will be used in the cluster operations \
+  Will fall back to `GOOGLE_APPLICATION_CREDENTIALS` if it's not set.
 - `--project`: GCP project, default empty
 - `--name`: cluster name, default empty
 - `--region`: GKE region, default "us-central1". \
   Can be more than one to set as backup regions.
 - `--resource-type`: Boskos resource type, default "gke-project"
+- `--save-meta-data`: whether or not save the meta data for the current cluster into `metadata.json`,
+  default to be false.
 
 ## Subcommands
 

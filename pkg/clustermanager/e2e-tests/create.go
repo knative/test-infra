@@ -47,10 +47,12 @@ func Create(rw *RequestWrapper) (*clm.GKECluster, error) {
 		return nil, err
 	}
 
-	// At this point we should have a cluster ready to run test. Need to save
-	// metadata so that following flow can understand the context of cluster, as
-	// well as for Prow usage later
-	writeMetaData(gkeOps.Cluster, gkeOps.Project)
+	if rw.Request.SaveMetaData {
+		// At this point we should have a cluster ready to run test. Need to save
+		// metadata so that following flow can understand the context of cluster, as
+		// well as for Prow usage later
+		writeMetaData(gkeOps.Cluster, gkeOps.Project)
+	}
 
 	// set up kube config points to cluster
 	clusterAuthCmd := fmt.Sprintf(
@@ -60,7 +62,7 @@ func Create(rw *RequestWrapper) (*clm.GKECluster, error) {
 		return nil, fmt.Errorf("failed connecting to cluster: %q, %w", out, err)
 	}
 	if out, err := cmd.RunCommand("gcloud config set project " + gkeOps.Project); err != nil {
-		return nil, fmt.Errorf("failed setting gcloud: %q, %w", out, err)
+		return nil, fmt.Errorf("failed setting project: %q, %w", out, err)
 	}
 
 	return gkeOps, nil
