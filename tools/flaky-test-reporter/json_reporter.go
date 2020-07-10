@@ -21,7 +21,7 @@ import (
 	"log"
 	"sync"
 
-	"knative.dev/pkg/test/helpers"
+	"knative.dev/test-infra/pkg/helpers"
 	"knative.dev/test-infra/tools/flaky-test-reporter/jsonreport"
 )
 

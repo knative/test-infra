@@ -19,9 +19,10 @@ package main
 import (
 	"reflect"
 	"testing"
+	"time"
 
 	"knative.dev/test-infra/tools/flaky-test-reporter/jsonreport/fakejsonreport"
-	"knative.dev/test-infra/tools/monitoring/prowapi"
+	"knative.dev/test-infra/tools/flaky-test-retryer/prowapi"
 )
 
 var (
@@ -73,7 +74,7 @@ func testIsSupported(t *testing.T) {
 					Number: 111,
 				}},
 			}},
-		}, nil, nil}, false},
+		}, time.Now(), nil, nil}, false},
 		{&JobData{&prowapi.ReportMessage{ // wrong job type
 			JobName: "fakejob",
 			JobType: prowapi.PeriodicJob,
@@ -85,13 +86,13 @@ func testIsSupported(t *testing.T) {
 					Number: 111,
 				}},
 			}},
-		}, nil, nil}, false},
+		}, time.Now(), nil, nil}, false},
 		{&JobData{&prowapi.ReportMessage{ // no refs
 			JobName: "fakejob",
 			JobType: prowapi.PresubmitJob,
 			Status:  prowapi.FailureState,
 			Refs:    nil,
-		}, nil, nil}, false},
+		}, time.Now(), nil, nil}, false},
 		{&JobData{&prowapi.ReportMessage{ // no pulls
 			JobName: "fakejob",
 			JobType: prowapi.PresubmitJob,
@@ -101,9 +102,9 @@ func testIsSupported(t *testing.T) {
 				Repo:  fakeRepo,
 				Pulls: nil,
 			}},
-		}, nil, nil}, false},
-		{&JobData{fakeInvalidRepo, nil, nil}, false}, // invalid repo
-		{&JobData{fakeValidMessage, nil, nil}, true}, // valid message
+		}, time.Now(), nil, nil}, false},
+		{&JobData{fakeInvalidRepo, time.Now(), nil, nil}, false}, // invalid repo
+		{&JobData{fakeValidMessage, time.Now(), nil, nil}, true}, // valid message
 	}
 	setup()
 	for _, test := range cases {
@@ -120,8 +121,8 @@ func testGetFlakyTests(t *testing.T) {
 		wantArray []string
 		wantErr   error
 	}{
-		{&JobData{fakeValidMessage, nil, nil}, fakeFlakyTests, nil},
-		{&JobData{fakeInvalidRepo, nil, nil}, []string{}, nil},
+		{&JobData{fakeValidMessage, time.Now(), nil, nil}, fakeFlakyTests, nil},
+		{&JobData{fakeInvalidRepo, time.Now(), nil, nil}, []string{}, nil},
 	}
 	setup()
 	for _, test := range data {

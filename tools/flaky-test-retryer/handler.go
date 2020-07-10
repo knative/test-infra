@@ -24,13 +24,14 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
-	"knative.dev/pkg/test/ghutil"
+	"knative.dev/test-infra/pkg/ghutil"
 
-	"knative.dev/test-infra/tools/monitoring/subscriber"
+	"knative.dev/test-infra/tools/flaky-test-retryer/subscriber"
 	// TODO: remove this import once "k8s.io/test-infra" import problems are fixed
 	// https://github.com/test-infra/test-infra/issues/912
-	"knative.dev/test-infra/tools/monitoring/prowapi"
+	"knative.dev/test-infra/tools/flaky-test-retryer/prowapi"
 )
 
 const pubsubTopic = "flaky-test-retryer"
@@ -70,9 +71,9 @@ func (hc *HandlerClient) Listen() {
 	log.Printf("Listening for failed jobs...\n")
 	for {
 		log.Println("Starting ReceiveMessageAckAll")
-		hc.pubsub.ReceiveMessageAckAll(context.Background(), func(msg *prowapi.ReportMessage) {
+		hc.pubsub.ReceiveMessageAckAll(context.Background(), func(msg *prowapi.ReportMessage, timestamp time.Time) {
 			log.Printf("Message received for %q", msg.URL)
-			data := &JobData{msg, nil, nil}
+			data := &JobData{msg, timestamp, nil, nil}
 			if data.IsSupported() {
 				go hc.HandleJob(data)
 			}

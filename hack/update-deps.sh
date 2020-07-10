@@ -19,20 +19,11 @@ set -o nounset
 set -o pipefail
 
 export GO111MODULE=on
-export GOFLAGS=-mod=vendor
+export GOFLAGS=""
 
 source $(dirname "$0")/../scripts/library.sh
 
 cd "${REPO_ROOT_DIR}"
-
-# This controls the release branch we track.
-VERSION="master"
-
-# The list of dependencies that we track at HEAD and periodically
-# float forward in this repository.
-FLOATING_DEPS=(
-  "knative.dev/pkg@${VERSION}"
-)
 
 # Parse flags to determine any we should pass to dep.
 GO_GET=0
@@ -46,11 +37,11 @@ while [[ $# -ne 0 ]]; do
 done
 readonly GO_GET
 
+
 if (( GO_GET )); then
-  go get -d ${FLOATING_DEPS[@]}
+  # We track the latest minor of all dependencies.
+  go get -u ./...
 fi
-
-
 # Prune modules.
 go mod tidy
 go mod vendor

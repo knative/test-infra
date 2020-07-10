@@ -59,7 +59,7 @@ func updateConcernedFiles(concernedFiles map[string]bool, filePath string, isPre
 	// If true => needs to be skipped for coverage.
 	isConcerned, ok := concernedFiles[filePath]
 	if ok {
-		return true
+		return isConcerned
 	}
 
 	// presubmit already have concerned files defined.

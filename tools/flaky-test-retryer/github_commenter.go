@@ -28,7 +28,7 @@ import (
 	"strings"
 
 	"github.com/google/go-github/v27/github"
-	"knative.dev/pkg/test/ghutil"
+	"knative.dev/test-infra/pkg/ghutil"
 )
 
 const (
@@ -220,7 +220,7 @@ func buildNewComment(jd *JobData, entries map[string]*entry, outliers []string) 
 	sort.Strings(keys)
 	for _, test := range keys {
 		if test == jd.JobName && appendLog {
-			entries[test].addLink(fmt.Sprintf("[%s](%s)", jd.RunID, jd.URL))
+			entries[test].addLink(fmt.Sprintf("[%s](%s)", jd.Timestamp, jd.URL))
 		}
 		entryString = append(entryString, entries[test].toString())
 	}

@@ -23,7 +23,8 @@ import (
 	"os/exec"
 	"strings"
 
-	"knative.dev/pkg/test/helpers"
+	"knative.dev/test-infra/pkg/cmd"
+	"knative.dev/test-infra/pkg/helpers"
 )
 
 func call(cmd string, args ...string) error {
@@ -34,36 +35,46 @@ func call(cmd string, args ...string) error {
 }
 
 // MakeCommit adds the changed files and create a new Git commit.
-func MakeCommit(gi Info, message string, dryrun bool) error {
+func MakeCommit(gi Info, message string, dryrun bool) (bool, error) {
 	if gi.Head == "" {
 		log.Fatal("pushing to empty branch ref is not allowed")
 	}
-	if err := helpers.Run(
-		"Running 'git add -A'",
-		func() error { return call("git", "add", "-A") },
-		dryrun,
-	); err != nil {
-		return fmt.Errorf("failed to git add: %v", err)
+	var (
+		statusCmd = "git status --porcelain"
+		addCmd    = "git add -A"
+		commitCmd = fmt.Sprintf("git commit -m %q", message)
+		pushCmd   = fmt.Sprintf("git push -f git@github.com:%s/%s.git HEAD:%s",
+			gi.UserID, gi.Repo, gi.Head)
+	)
+
+	changes, err := cmd.RunCommand(statusCmd)
+	if err != nil {
+		return false, fmt.Errorf("Failed running %q:\nOutput: %q\nError: %v",
+			statusCmd, changes, err)
 	}
-	commitArgs := []string{"commit", "-m", message}
+	log.Print("diff output:", changes)
+	if strings.TrimSpace(changes) == "" {
+		log.Print("No changes to commit, skipping")
+		return false, nil
+	}
+
 	if gi.UserName != "" && gi.Email != "" {
-		commitArgs = append(commitArgs, "--author", fmt.Sprintf("%s <%s>", gi.UserName, gi.Email))
+		commitCmd = fmt.Sprintf("%s --author '%s <%s>'",
+			commitCmd, strings.Trim(gi.UserName, "'"), gi.Email)
 	}
-	if err := helpers.Run(
-		fmt.Sprintf("Running 'git %s'", strings.Join(commitArgs, " ")),
-		func() error { return call("git", commitArgs...) },
+
+	cmds := []string{addCmd, commitCmd, pushCmd}
+
+	return true, helpers.Run(
+		fmt.Sprintf("Running %q", strings.Join(cmds, "; ")),
+		func() error {
+			out, err := cmd.RunCommands(cmds...)
+			if err != nil {
+				return fmt.Errorf("Failed running %q:\nOutput: %q\nError: %v",
+					strings.Join(cmds, "; "), out, err)
+			}
+			return nil
+		},
 		dryrun,
-	); err != nil {
-		return fmt.Errorf("failed to git commit: %v", err)
-	}
-	pushArgs := []string{"push", "-f", fmt.Sprintf("git@github.com:%s/%s.git", gi.UserID, gi.Repo),
-		fmt.Sprintf("HEAD:%s", gi.Head)}
-	if err := helpers.Run(
-		fmt.Sprintf("Running 'git %s'", strings.Join(pushArgs, " ")),
-		func() error { return call("git", pushArgs...) },
-		dryrun,
-	); err != nil {
-		return fmt.Errorf("failed to git push: %v", err)
-	}
-	return nil
+	)
 }

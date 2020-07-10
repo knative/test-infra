@@ -1,0 +1,428 @@
+# Copyright 2020 The Knative Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Add a fake plank image here so that autobump.sh can bump only job configs
+# image: gcr.io/k8s-prow/plank:v20200708-1254fdd37f
+# See
+# https://github.com/kubernetes/test-infra/blob/5815354584709c3f436e3d682110c673d224d7b1/prow/cmd/autobump/autobump.sh#L164
+
+presubmits:
+  knative/test-infra:
+  - name: pull-test-infra-validate-prow-yaml
+    decorate: true
+    run_if_changed: "^config/prod/prow/(cluster|core|jobs)/.*.yaml$"
+    cluster: "prow-trusted"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        command:
+        - "runner.sh"
+        args:
+        - "./config/prod/prow/check_config.sh"
+        - "$(REPO_OWNER)/$(REPO_NAME)"
+        securityContext:
+          privileged: true
+        env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+      volumes:
+      - name: docker-graph
+        emptyDir: {}
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-test-infra-validate-testgrid-yaml
+    decorate: true
+    run_if_changed: "^config/prod/prow/testgrid/testgrid.yaml$"
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        command:
+        - "runner.sh"
+        args:
+        - "make"
+        - "-C"
+        - "./config/prod"
+        - "verify-testgrid-config"
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+      volumes:
+      - name: docker-graph
+        emptyDir: {}
+      - name: test-account
+        secret:
+          secretName: test-account
+
+periodics:
+- cron: "15 9 * * *"
+  name: ci-knative-backup-artifacts
+  agent: kubernetes
+  decorate: true
+  cluster: "build-knative"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/backups:latest
+      imagePullPolicy: Always
+      command:
+      - "/backup.sh"
+      args:
+      - "/etc/backup-account/service-account.json"
+      volumeMounts:
+      - name: backup-account
+        mountPath: /etc/backup-account
+        readOnly: true
+    volumes:
+    - name: backup-account
+      secret:
+        secretName: backup-account
+- cron: "0 19 * * *"
+  name: ci-knative-cleanup
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-cleanup
+  agent: kubernetes
+  decorate: true
+  cluster: "build-knative"
+  decoration_config:
+    timeout: 6h
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: master
+    path_alias: knative.dev/test-infra
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - "runner.sh"
+      args:
+      - "go"
+      - "run"
+      - "./tools/cleanup/cleanup.go"
+      - "--project-resource-yaml=config/prod/build-cluster/boskos/boskos_resources.yaml"
+      - "--days-to-keep-images=30"
+      - "--hours-to-keep-clusters=24"
+      - "--concurrent-operations=50"
+      - "--service-account=/etc/test-account/service-account.json"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "0 19 * * 1,3,5"
+  name: ci-knative-cleanup-performance-tests
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-cleanup-performance-tests
+  agent: kubernetes
+  decorate: true
+  cluster: "build-knative"
+  decoration_config:
+    timeout: 6h
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: master
+    path_alias: knative.dev/test-infra
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - "runner.sh"
+      args:
+      - "go"
+      - "run"
+      - "./tools/cleanup/cleanup.go"
+      - "--project=knative-performance"
+      - "--project=knative-eventing-performance"
+      - "--days-to-keep-images=30"
+      - "--service-account=/etc/performance-test/service-account.json"
+      volumeMounts:
+      - name: performance-test
+        mountPath: /etc/performance-test
+        readOnly: true
+    volumes:
+    - name: performance-test
+      secret:
+        secretName: performance-test
+- cron: "0 12 * * *"
+  name: ci-knative-flakes-reporter
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-flakes-reporter
+  agent: kubernetes
+  decorate: true
+  cluster: "build-knative"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/flaky-test-reporter:latest
+      imagePullPolicy: Always
+      command:
+      - "/flaky-test-reporter"
+      args:
+      - "--service-account=/etc/test-account/service-account.json"
+      - "--github-account=/etc/flaky-test-reporter-github-token/token"
+      - "--slack-account=/etc/flaky-test-reporter-slack-token/token"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      - name: flaky-test-reporter-github-token
+        mountPath: /etc/flaky-test-reporter-github-token
+        readOnly: true
+      - name: flaky-test-reporter-slack-token
+        mountPath: /etc/flaky-test-reporter-slack-token
+        readOnly: true
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+    - name: flaky-test-reporter-github-token
+      secret:
+        secretName: flaky-test-reporter-github-token
+    - name: flaky-test-reporter-slack-token
+      secret:
+        secretName: flaky-test-reporter-slack-token
+- cron: "0 * * * *"
+  name: ci-knative-flakes-resultsrecorder
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-flakes-reporter
+  agent: kubernetes
+  decorate: true
+  cluster: "build-knative"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/flaky-test-reporter:latest
+      imagePullPolicy: Always
+      command:
+      - "/flaky-test-reporter"
+      args:
+      - "--service-account=/etc/test-account/service-account.json"
+      - "--skip-report"
+      - "--build-count=20"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      - name: flaky-test-reporter-github-token
+        mountPath: /etc/flaky-test-reporter-github-token
+        readOnly: true
+      - name: flaky-test-reporter-slack-token
+        mountPath: /etc/flaky-test-reporter-slack-token
+        readOnly: true
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+    - name: flaky-test-reporter-github-token
+      secret:
+        secretName: flaky-test-reporter-github-token
+    - name: flaky-test-reporter-slack-token
+      secret:
+        secretName: flaky-test-reporter-slack-token
+- cron: "15 15-23 * * 1-5"  # Run at 7:15-15:15 PST (15:15 UTC) Mon-Fri
+  name: ci-knative-prow-auto-bumper
+  cluster: "build-knative"
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: master
+    path_alias: knative.dev/test-infra
+  spec:
+    containers:
+    - image: gcr.io/k8s-prow/autobump:v20200708-1254fdd37f
+      command:
+      - /autobump.sh
+      args:
+      - /etc/prow-auto-bumper-github-token/token
+      - "Knative Prow Updater Robot"
+      - knative-prow-updater-robot@google.com
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      - name: prow-auto-bumper-github-token
+        mountPath: /etc/prow-auto-bumper-github-token
+        readOnly: true
+      env:
+      - name: GH_ORG
+        value: knative
+      - name: GH_REPO
+        value: test-infra
+      - name: PLANK_DEPLOYMENT_FILE # Just need a file contains an image tag
+        value: config/prod/prow/jobs/custom/test-infra.yaml
+      - name: COMPONENT_FILE_DIR
+        value: config/prod/prow/jobs # Let it bump twice is fine
+      - name: CONFIG_PATH
+        value: config/prod/prow/jobs/custom/test-infra.yaml # Trick autobump as this is required
+      - name: JOB_CONFIG_PATH
+        value: config/prod/prow/jobs
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+    - name: prow-auto-bumper-github-token
+      secret:
+        secretName: prow-auto-bumper-github-token
+- cron: "0 */2 * * *" # Every other hour
+  name: ci-knative-prow-jobs-syncer
+  agent: kubernetes
+  decorate: true
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: master
+    path_alias: knative.dev/test-infra
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - "runner.sh"
+      args:
+      - "go"
+      - "run"
+      - "./tools/prow-jobs-syncer"
+      - "--github-account=/etc/prow-auto-bumper-github-token/token"
+      - "--git-userid=knative-prow-updater-robot"
+      - "--git-username='Knative Prow Updater Robot'"
+      - "--git-email=knative-prow-updater-robot@google.com"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      - name: prow-auto-bumper-github-token
+        mountPath: /etc/prow-auto-bumper-github-token
+        readOnly: true
+      - name: prow-updater-robot-ssh-key
+        mountPath: /root/.ssh
+        readOnly: true
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+    - name: prow-auto-bumper-github-token
+      secret:
+        secretName: prow-auto-bumper-github-token
+    - name: prow-updater-robot-ssh-key
+      secret:
+        secretName: prow-updater-robot-ssh-key
+        defaultMode: 0400
+
+postsubmits:
+  knative/test-infra:
+  - name: post-knative-prow-cluster-config-updater
+    agent: kubernetes
+    decorate: true
+    path_alias: knative.dev/test-infra
+    max_concurrency: 1
+    cluster: "prow-trusted"
+    run_if_changed: "^config/prod/(build-cluster/boskos/.*.yaml|prow/testgrid/testgrid.yaml)$"
+    branches:
+    - "master"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "make"
+        - "-C"
+        - "./config/prod"
+        - "update-all"
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+      volumes:
+      - name: docker-graph
+        emptyDir: {}
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: post-knative-test-infra-image-push
+    agent: kubernetes
+    decorate: true
+    path_alias: knative.dev/test-infra
+    max_concurrency: 1
+    cluster: "build-knative"
+    run_if_changed: "^(images/.*|tools/(coverage|flaky-test-reporter|flaky-test-retryer)/.*|go.mod)$"
+    branches:
+    - "master"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./images/push-all.sh"
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        resources:
+          requests:
+            memory: 28Gi
+          limits:
+            memory: 32Gi
+      volumes:
+      - name: docker-graph
+        emptyDir: {}
+      - name: test-account
+        secret:
+          secretName: test-account

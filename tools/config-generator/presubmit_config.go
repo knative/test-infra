@@ -27,7 +27,7 @@ const (
 	presubmitJob = "prow_presubmit_job.yaml"
 
 	// presubmitGoCoverageJob is the template for go coverage presubmit jobs.
-	presubmitGoCoverageJob = "prow_presubmit_gocoverate_job.yaml"
+	presubmitGoCoverageJob = "prow_presubmit_gocoverage_job.yaml"
 )
 
 // presubmitJobTemplateData contains data about a presubmit Prow job.
@@ -40,6 +40,10 @@ type presubmitJobTemplateData struct {
 }
 
 // generatePresubmit generates all presubmit job configs for the given repo and configuration.
+// While this function is designed to only make one "logical" presubmit, it does generate multiple separate jobs when different branches need different settings
+//  i.e. it creates all jobs pull-knative-serving-build-tests per single invocation
+// For coverage jobs, it also generates a matching postsubmit for each presubmit (because the coverage tool itself requires it? because we like them?)
+// It outputs straight to standard out
 func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSlice) {
 	var data presubmitJobTemplateData
 	data.Base = newbaseProwJobTemplateData(repoName)
@@ -67,7 +71,6 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 			}
 			jobTemplate = readTemplate(presubmitGoCoverageJob)
 			data.PresubmitJobName = data.Base.RepoNameForJob + "-go-coverage"
-			data.Base.Image = coverageDockerImage
 			data.Base.ServiceAccount = ""
 			repoData.EnableGoCoverage = true
 			addVolumeToJob(&data.Base, "/etc/covbot-token", "covbot-token", true, "")
@@ -93,8 +96,8 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	data.PresubmitPullJobName = "pull-" + data.PresubmitJobName
 	data.PresubmitPostJobName = "post-" + data.PresubmitJobName
 	if data.Base.ServiceAccount != "" {
-		addEnvToJob(&data.Base, "GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
-		addEnvToJob(&data.Base, "E2E_CLUSTER_REGION", "us-central1")
+		data.Base.addEnvToJob("GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
+		data.Base.addEnvToJob("E2E_CLUSTER_REGION", "us-central1")
 	}
 	if data.Base.NeedsMonitor {
 		addMonitoringPubsubLabelsToJob(&data.Base, data.PresubmitPullJobName)
@@ -102,16 +105,16 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 	configureServiceAccountForJob(&data.Base)
 	jobName := data.PresubmitPullJobName
-	executeJobTemplateWrapper(repoName, &data, func(data interface{}) {
-		executeJobTemplate("presubmit", jobTemplate, title, repoName, jobName, true, data)
-	})
+
+	// This is where the data actually gets written out
+	executeJobTemplate("presubmit", jobTemplate, title, repoName, jobName, true, data)
+
 	// Generate config for pull-knative-serving-go-coverage-dev right after pull-knative-serving-go-coverage,
 	// this job is mainly for debugging purpose.
 	if data.PresubmitPullJobName == "pull-knative-serving-go-coverage" {
 		data.PresubmitPullJobName += "-dev"
 		data.Base.AlwaysRun = false
-		data.Base.Image = strings.Replace(data.Base.Image, "coverage:latest", "coverage-dev:latest", -1)
-		data.Base.Image = strings.Replace(data.Base.Image, "coverage-go112:latest", "coverage-dev:latest", -1)
+		data.Base.Image = strings.ReplaceAll(data.Base.Image, ":stable", ":coverage-dev")
 		template := strings.Replace(readTemplate(presubmitGoCoverageJob), "(all|", "(", 1)
 		executeJobTemplate("presubmit", template, title, repoName, data.PresubmitPullJobName, true, data)
 	}

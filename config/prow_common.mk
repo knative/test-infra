@@ -33,8 +33,6 @@ PROW_PLUGINS                    ?= prow/core/plugins.yaml
 PROW_CONFIG                     ?= prow/core/config.yaml
 PROW_JOB_CONFIG                 ?= prow/jobs
 
-PROW_DEPLOYS                    ?= prow/cluster
-BUILD_CLUSTER_PROW_DEPLOYS      ?= build-cluster/cluster
 PROW_GCS                        ?= knative-prow
 PROW_CONFIG_GCS                 ?= gs://$(PROW_GCS)/configs
 
@@ -46,7 +44,7 @@ SET_CONTEXT                     := gcloud container clusters get-credentials "$(
 SET_BUILD_CLUSTER_CONTEXT       := gcloud container clusters get-credentials "$(BUILD_CLUSTER)" --project="$(PROJECT)" --zone="$(ZONE)"
 UNSET_CONTEXT                   := kubectl config unset current-context
 
-.PHONY: help get-cluster-credentials unset-cluster-credentials
+.PHONY: help activate-serviceaccount get-cluster-credentials unset-cluster-credentials
 help:
 	@echo "Help"
 	@echo "'Update' means updating the servers and can only be run by oncall staff."
@@ -57,35 +55,21 @@ help:
 	@echo " make unset-cluster-credentials: Clear kubectl context"
 
 # Useful general targets.
-get-cluster-credentials:
+activate-serviceaccount:
+ifdef GOOGLE_APPLICATION_CREDENTIALS
+	gcloud auth activate-service-account --key-file="$(GOOGLE_APPLICATION_CREDENTIALS)"
+endif
+
+get-cluster-credentials: activate-serviceaccount
 	$(SET_CONTEXT)
 
 unset-cluster-credentials:
 	$(UNSET_CONTEXT)
 
-get-build-cluster-credentials:
+get-build-cluster-credentials: activate-serviceaccount
 	$(SET_BUILD_CLUSTER_CONTEXT)
 
-.PHONY: update-prow-config update-all-boskos-deployments update-boskos-resource update-almost-all-cluster-deployments update-single-cluster-deployment test update-testgrid-config confirm-master
-
-# Update prow config
-update-prow-config: confirm-master
-	$(SET_CONTEXT)
-	python3 <(curl -sSfL https://raw.githubusercontent.com/istio/test-infra/master/prow/recreate_prow_configmaps.py) \
-		--prow-config-path=$(realpath $(PROW_CONFIG)) \
-		--plugins-config-path=$(realpath $(PROW_PLUGINS)) \
-		--job-config-dir=$(realpath $(PROW_JOB_CONFIG)) \
-		--wet \
-		--silent
-	$(UNSET_CONTEXT)
-
-# Update all deployments of boskos
-# Boskos is separate because of patching done in staging Makefile
-# Double-colon because staging Makefile piggy-backs on this
-update-all-boskos-deployments:: confirm-master
-	$(SET_BUILD_CLUSTER_CONTEXT)
-	@for f in $(wildcard $(BUILD_CLUSTER_PROW_DEPLOYS)/*boskos*.yaml); do kubectl apply -f $${f}; done
-	$(UNSET_CONTEXT)
+.PHONY: update-boskos-resource test update-testgrid-config confirm-master
 
 # Update the list of resources for Boskos
 update-boskos-resource: confirm-master
@@ -93,28 +77,11 @@ update-boskos-resource: confirm-master
 	kubectl create configmap resources --from-file=config=$(BOSKOS_RESOURCES) --dry-run --save-config -o yaml | kubectl --namespace="$(JOB_NAMESPACE)" apply -f -
 	$(UNSET_CONTEXT)
 
-# Update all deployments of cluster except Boskos
-# Boskos is separate because of patching done in staging Makefile
-# Double-colon because staging Makefile piggy-backs on this
-update-almost-all-cluster-deployments:: confirm-master
-	$(SET_CONTEXT)
-	@for f in $(filter-out $(wildcard $(PROW_DEPLOYS)/*boskos*.yaml),$(wildcard $(PROW_DEPLOYS)/*.yaml)); do kubectl apply -f $${f}; done
-	$(UNSET_CONTEXT)
-	$(SET_BUILD_CLUSTER_CONTEXT)
-	@for f in $(filter-out $(wildcard $(BUILD_CLUSTER_PROW_DEPLOYS)/*boskos*.yaml),$(wildcard $(BUILD_CLUSTER_PROW_DEPLOYS)/*.yaml)); do kubectl apply -f $${f}; done
-	$(UNSET_CONTEXT)
-
-# Update single deployment of cluster, expect passing in ${NAME} like `make update-single-cluster-deployment NAME=crier_deployment`
-update-single-cluster-deployment: confirm-master
-	$(SET_CONTEXT)
-	kubectl apply -f $(PROW_DEPLOYS)/$(NAME).yaml
-	$(UNSET_CONTEXT)
-	$(SET_BUILD_CLUSTER_CONTEXT)
-	kubectl apply -f $(BUILD_CLUSTER_PROW_DEPLOYS)/$(NAME).yaml
-	$(UNSET_CONTEXT)
-
 # Update all resources on Prow cluster
-update-prow-cluster: update-almost-all-cluster-deployments update-all-boskos-deployments update-boskos-resource update-prow-config
+update-prow-cluster: update-boskos-resource
+
+# Update everything
+update-all: update-boskos-resource update-testgrid-config
 
 # Update TestGrid config.
 # Application Default Credentials must be set, otherwise the upload will fail.
@@ -122,7 +89,36 @@ update-prow-cluster: update-almost-all-cluster-deployments update-all-boskos-dep
 # account key, or temporarily use your own credentials by running
 # gcloud auth application-default login
 update-testgrid-config: confirm-master
-	bazel run @k8s//testgrid/cmd/configurator -- \
+	docker run -i --rm \
+		-v "$(PWD):$(PWD)" \
+		-v "$(realpath $(TESTGRID_CONFIG)):$(realpath $(TESTGRID_CONFIG))" \
+		-v "$(GOOGLE_APPLICATION_CREDENTIALS):$(GOOGLE_APPLICATION_CREDENTIALS)" \
+		-e "GOOGLE_APPLICATION_CREDENTIALS" \
+		-w "$(PWD)" \
+		gcr.io/k8s-prow/configurator:v20200519-00d052e16 \
+		"--oneshot" \
+		"--output=gs://$(TESTGRID_GCS)/config" \
+		"--yaml=$(realpath $(TESTGRID_CONFIG))"
+
+.PHONY: verify-testgrid-config
+verify-testgrid-config:
+	docker run -i --rm \
+		-v "$(PWD):$(PWD)" \
+		-v "$(realpath $(TESTGRID_CONFIG)):$(realpath $(TESTGRID_CONFIG))" \
+		-v "$(GOOGLE_APPLICATION_CREDENTIALS):$(GOOGLE_APPLICATION_CREDENTIALS)" \
+		-e "GOOGLE_APPLICATION_CREDENTIALS" \
+		-w "$(PWD)" \
+		gcr.io/k8s-prow/configurator:v20200519-00d052e16 \
+		--validate-config-file \
+		"--yaml=$(realpath $(TESTGRID_CONFIG))"
+
+	docker run -i --rm \
+		-v "$(PWD):$(PWD)" \
+		-v "$(realpath $(TESTGRID_CONFIG)):$(realpath $(TESTGRID_CONFIG))" \
+		-v "$(GOOGLE_APPLICATION_CREDENTIALS):$(GOOGLE_APPLICATION_CREDENTIALS)" \
+		-e "GOOGLE_APPLICATION_CREDENTIALS" \
+		-w "$(PWD)" \
+		gcr.io/k8s-prow/configurator:v20200519-00d052e16 \
 		--oneshot \
-		--output=gs://$(TESTGRID_GCS)/config \
-		--yaml=$(realpath $(TESTGRID_CONFIG))
+		--output=/dev/null \
+		"--yaml=$(realpath $(TESTGRID_CONFIG))"

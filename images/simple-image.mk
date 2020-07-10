@@ -22,8 +22,13 @@
 #  must be a direct child of the images directory. If someone wanted to change
 #  this, they'd need to write a little shell to calculate the repo root dir.
 
-REGISTRY ?= gcr.io
-PROJECT  ?= knative-tests
+# Optional variables:
+#  DOCKERBUILDARGS: arguments for `docker build`
+#  DOCKERFILE: use a different Dockerfile, relative to starting subdirectory
+
+REGISTRY   ?= gcr.io
+PROJECT    ?= knative-tests
+DOCKERFILE ?= Dockerfile
 
 SELF_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 include $(SELF_DIR)../common.mk
@@ -32,11 +37,11 @@ IMG = $(REGISTRY)/$(PROJECT)/test-infra/$(IMAGE_NAME)
 TAG := $(shell date +v%Y%m%d)-$(shell git describe --always --dirty --match '^$$')
 
 build:
-	docker build --no-cache --pull -t $(IMG):$(TAG) -f Dockerfile ../..
+	docker build --no-cache --pull -t $(IMG):$(TAG) -f $(DOCKERFILE) $(DOCKERBUILDARGS) ../..
 
 # You can build locally without --no-cache to save time
 iterative-build:
-	docker build --pull -t $(IMG):local -f Dockerfile ../..
+	docker build --pull -t $(IMG):local -f $(DOCKERFILE) $(DOCKERBUILDARGS) ../..
 
 # And get a shell in the container
 iterative-shell:
@@ -49,4 +54,4 @@ push_latest: confirm-master build
 	docker tag $(IMG):$(TAG) $(IMG):latest
 	docker push $(IMG):latest
 
-push: push_versioned push_latest
+push:: push_versioned push_latest

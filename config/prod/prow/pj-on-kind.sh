@@ -24,8 +24,16 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-prowdir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
-export CONFIG_PATH="${prowdir}/core/config.yaml"
-export JOB_CONFIG_PATH="${prowdir}/jobs"
+PROW_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+
+# Download prow core config from prow
+CONFIG_YAML="$(mktemp)"
+make -C "${PROW_DIR}/.." get-cluster-credentials
+trap "make -C '${PROW_DIR}/..' unset-cluster-credentials" EXIT
+kubectl get configmaps config -o "jsonpath={.data['config\.yaml']}" >"${CONFIG_YAML}"
+echo "Prow core config downloaded at ${CONFIG_YAML}"
+
+export CONFIG_YAML
+export JOB_CONFIG_PATH="${PROW_DIR}/jobs"
 
 bash <(curl -sSfL https://raw.githubusercontent.com/kubernetes/test-infra/master/prow/pj-on-kind.sh) "$@"

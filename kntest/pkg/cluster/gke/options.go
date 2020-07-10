@@ -19,10 +19,10 @@ package gke
 import (
 	"github.com/spf13/cobra"
 
-	"knative.dev/test-infra/kntest/pkg/cluster/gke/ops"
+	clm "knative.dev/test-infra/pkg/clustermanager/e2e-tests"
 )
 
-func addCommonOptions(clusterCmd *cobra.Command, rw *ops.RequestWrapper) {
+func addCommonOptions(clusterCmd *cobra.Command, rw *clm.RequestWrapper) {
 	pf := clusterCmd.PersistentFlags()
 	req := &rw.Request
 	// The default values set here are not used in the final operations,
@@ -34,7 +34,7 @@ func addCommonOptions(clusterCmd *cobra.Command, rw *ops.RequestWrapper) {
 	pf.StringVar(&req.ResourceType, "resource-type", "", "Boskos Resource Type")
 }
 
-func addCreateOptions(clusterCmd *cobra.Command, rw *ops.RequestWrapper) {
+func addCreateOptions(clusterCmd *cobra.Command, rw *clm.RequestWrapper) {
 	pf := clusterCmd.Flags()
 	req := &rw.Request
 	// The default values set here are not used in the final operations,

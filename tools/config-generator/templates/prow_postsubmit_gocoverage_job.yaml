@@ -11,8 +11,10 @@
       - image: [[.Base.Image]]
         imagePullPolicy: Always
         command:
-        - "/coverage"
+        - runner.sh
         args:
+        - "coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
         [[indent_section 8 "resources" .Base.Resources]]
+        [[indent_section 8 "env" .Base.Env]]
