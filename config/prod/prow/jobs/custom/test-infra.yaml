@@ -426,3 +426,34 @@ postsubmits:
       - name: test-account
         secret:
           secretName: test-account
+  - name: post-knative-test-infra-deploy-tools
+    agent: kubernetes
+    decorate: true
+    path_alias: knative.dev/test-infra
+    max_concurrency: 1
+    cluster: "prow-trusted"
+    run_if_changed: "^tools/flaky-test-retryer/gke_deployment/retryer_service.yaml$"
+    branches:
+    - "master"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "make"
+        - "-C"
+        - "./tools/flaky-test-retryer/gke_deployment"
+        - "deploy"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
