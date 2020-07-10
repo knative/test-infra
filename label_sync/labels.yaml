@@ -209,3 +209,50 @@ repos:
       name: kind/refactoring
       target: issues
       addedBy: humans
+  knative-sandbox/eventing-kafka-broker:
+    labels:
+      - color: ff0000
+        name: kind/bug
+        target: issues
+        addedBy: humans
+      - color: 030ba0
+        name: kind/cleanup
+        target: issues
+        addedBy: humans
+      - color: f9d0c4
+        name: kind/documentation
+        target: issues
+        addedBy: humans
+      - color: f9d7c4
+        name: kind/feature-request
+        target: issues
+        addedBy: humans
+      - color: f9d3c4
+        name: kind/proposal
+        target: issues
+        addedBy: humans
+      - color: a2eeef
+        description: New feature or request
+        name: kind/enhancement
+        target: issues
+        addedBy: humans
+      - color: bfd4f2
+        name: kind/performance
+        target: issues
+        addedBy: humans
+      - color: 1d76db
+        name: kind/refactoring
+        target: issues
+        addedBy: humans
+      - color: 782b90
+        name: area/data-plane
+        target: issues
+        addedBy: humans
+      - color: 7fd5ea
+        name: area/control-plane
+        target: issues
+        addedBy: humans
+      - color: 72d5e0
+        name: area/api
+        target: issues
+        addedBy: humans
