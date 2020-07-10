@@ -16,8 +16,8 @@ for all subcommands:
 - `--region`: GKE region, default "us-central1". \
   Can be more than one to set as backup regions.
 - `--resource-type`: Boskos resource type, default "gke-project"
-- `--save-meta-data`: whether or not save the meta data for the current cluster into `metadata.json`,
-  default to be false.
+- `--save-meta-data`: whether or not save the meta data for the current cluster
+  into `metadata.json`, default to be false.
 
 ## Subcommands
 
