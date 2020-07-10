@@ -504,20 +504,18 @@ function start_knative_eventing_extension() {
   header "Starting Knative Eventing Extension"
   echo "Installing Extension CRDs from $1"
   kubectl apply -f "$1"
-  # do the wait for running pods in specific extension function as the namespace could differ
+  wait_until_pods_running "$2" || return 1
 }
 
 # Install the stable release of eventing extension sugar controller in the current cluster.
 # Parameters: $1 - Knative Eventing release version, e.g. 0.16.0
 function start_release_eventing_sugar_controller() {
-    start_knative_eventing_extension "https://storage.googleapis.com/knative-releases/eventing/previous/v$1/eventing-sugar-controller.yaml"
-  wait_until_pods_running knative-eventing || return 1
+  start_knative_eventing_extension "https://storage.googleapis.com/knative-releases/eventing/previous/v$1/eventing-sugar-controller.yaml" "knative-eventing"
 }
 
 # Install the sugar cotroller eventing extension
 function start_latest_eventing_sugar_controller() {
-  start_knative_eventing_extension "${KNATIVE_EVENTING_SUGAR_CONTROLLER_RELEASE}"
-  wait_until_pods_running knative-eventing || return 1
+  start_knative_eventing_extension "${KNATIVE_EVENTING_SUGAR_CONTROLLER_RELEASE}" "knative-eventing"
 }
 
 # Run a go tool, installing it first if necessary.
