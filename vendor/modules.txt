@@ -1,5 +1,4 @@
 # cloud.google.com/go v0.60.0
-## explicit
 cloud.google.com/go
 cloud.google.com/go/compute/metadata
 cloud.google.com/go/iam
@@ -7,7 +6,7 @@ cloud.google.com/go/internal
 cloud.google.com/go/internal/optional
 cloud.google.com/go/internal/trace
 cloud.google.com/go/internal/version
-# cloud.google.com/go/pubsub v1.4.0
+# cloud.google.com/go/pubsub v1.5.0
 ## explicit
 cloud.google.com/go/pubsub
 cloud.google.com/go/pubsub/apiv1
@@ -71,7 +70,7 @@ github.com/google/go-containerregistry/pkg/v1/v1util
 github.com/google/go-github/v27/github
 # github.com/google/go-querystring v1.0.0
 github.com/google/go-querystring/query
-# github.com/google/licenseclassifier v0.0.0-20200402202327-879cb1424de0
+# github.com/google/licenseclassifier v0.0.0-20200708223521-3d09a0ea2f39
 ## explicit
 github.com/google/licenseclassifier
 github.com/google/licenseclassifier/internal/sets
@@ -136,7 +135,8 @@ go.opencensus.io/trace
 go.opencensus.io/trace/internal
 go.opencensus.io/trace/propagation
 go.opencensus.io/trace/tracestate
-# golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
+# golang.org/x/crypto v0.0.0-20200709230013-948cd5f35899
+## explicit
 golang.org/x/crypto/cast5
 golang.org/x/crypto/openpgp
 golang.org/x/crypto/openpgp/armor
@@ -150,7 +150,7 @@ golang.org/x/lint/golint
 # golang.org/x/mod v0.3.0
 golang.org/x/mod/module
 golang.org/x/mod/semver
-# golang.org/x/net v0.0.0-20200625001655-4c5254603344
+# golang.org/x/net v0.0.0-20200707034311-ab3426394381
 ## explicit
 golang.org/x/net/context
 golang.org/x/net/context/ctxhttp
@@ -168,7 +168,6 @@ golang.org/x/oauth2/internal
 golang.org/x/oauth2/jws
 golang.org/x/oauth2/jwt
 # golang.org/x/sync v0.0.0-20200625203802-6e8e738ad208
-## explicit
 golang.org/x/sync/errgroup
 golang.org/x/sync/semaphore
 # golang.org/x/sys v0.0.0-20200625212154-ddb9806d33ae
@@ -181,7 +180,7 @@ golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
-# golang.org/x/tools v0.0.0-20200701000337-a32c0cb1d5b2
+# golang.org/x/tools v0.0.0-20200710042808-f1c4188a97a1
 ## explicit
 golang.org/x/tools/cmd/goimports
 golang.org/x/tools/go/ast/astutil
@@ -198,7 +197,7 @@ golang.org/x/tools/internal/imports
 # golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543
 golang.org/x/xerrors
 golang.org/x/xerrors/internal
-# google.golang.org/api v0.28.0
+# google.golang.org/api v0.29.0
 ## explicit
 google.golang.org/api/container/v1beta1
 google.golang.org/api/googleapi
@@ -228,7 +227,7 @@ google.golang.org/appengine/internal/socket
 google.golang.org/appengine/internal/urlfetch
 google.golang.org/appengine/socket
 google.golang.org/appengine/urlfetch
-# google.golang.org/genproto v0.0.0-20200701001935-0939c5918c31
+# google.golang.org/genproto v0.0.0-20200710124503-20a17af7bd0e
 ## explicit
 google.golang.org/genproto/googleapis/api/annotations
 google.golang.org/genproto/googleapis/iam/v1
@@ -336,7 +335,7 @@ k8s.io/apimachinery/pkg/util/errors
 k8s.io/apimachinery/pkg/util/sets
 k8s.io/apimachinery/pkg/util/validation
 k8s.io/apimachinery/pkg/util/validation/field
-# k8s.io/test-infra v0.0.0-20200630233406-1dca6122872e
+# k8s.io/test-infra v0.0.0-20200710134549-5891a1a4cc17
 ## explicit
 k8s.io/test-infra/prow/config/secret
 k8s.io/test-infra/prow/logrusutil
