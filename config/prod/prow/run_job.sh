@@ -31,7 +31,13 @@ GITHUB_TOKEN_PATH="$2"
 set -e
 
 # Download prow core config from prow
-CONFIG_YAML="$(mktemp)"
+if [[ $IS_OSX ]]; then
+  # On OS X, the file has to be under /private other it cannot be mounted by the container.
+  # See https://stackoverflow.com/questions/45122459/docker-mounts-denied-the-paths-are-not-shared-from-os-x-and-are-not-known/45123074
+  CONFIG_YAML="/private"$(mktemp)
+else
+  CONFIG_YAML=$(mktemp)
+fi
 make -C "${REPO_ROOT_DIR}/config/prod" get-cluster-credentials
 trap "make -C '${REPO_ROOT_DIR}/config/prod' unset-cluster-credentials" EXIT
 kubectl get configmaps config -o "jsonpath={.data['config\.yaml']}" >"${CONFIG_YAML}"
