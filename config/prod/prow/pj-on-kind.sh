@@ -27,7 +27,7 @@ set -o pipefail
 PROW_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 
 # Download prow core config from prow
-if [[ $IS_OSX ]]; then
+if (( IS_OSX )); then
   # On OS X, the file has to be under /private other it cannot be mounted by the container.
   # See https://stackoverflow.com/questions/45122459/docker-mounts-denied-the-paths-are-not-shared-from-os-x-and-are-not-known/45123074
   CONFIG_YAML="/private"$(mktemp)
