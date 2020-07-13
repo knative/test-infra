@@ -30,7 +30,7 @@ PROW_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 if (( IS_OSX )); then
   # On OS X, the file has to be under /private other it cannot be mounted by the container.
   # See https://stackoverflow.com/questions/45122459/docker-mounts-denied-the-paths-are-not-shared-from-os-x-and-are-not-known/45123074
-  CONFIG_YAML="/private"$(mktemp)
+  CONFIG_YAML="/private$(mktemp)"
 else
   CONFIG_YAML=$(mktemp)
 fi
