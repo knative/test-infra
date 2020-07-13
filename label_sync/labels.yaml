@@ -22,19 +22,56 @@
 ---
 default:
   labels:
-    # Signals to other contributors
+    # Common labels for triaging
+    - color: c5def5
+      description: Parked issue that required triaging/revisit in a near future
+      name: kind/TBD
+      target: issues
+      addedBy: humans
     - color: 7057ff
       description: Denotes an issue ready for a new contributor, according to the "help wanted" guidelines.
-      name: 'good first issue'
+      name: kind/good-first-issue
       target: issues
       prowPlugin: help
       addedBy: anyone
-    - color: "008672"
+    - color: 008672
       description: Denotes an issue that needs help from a contributor. Must meet "help wanted" guidelines.
-      name: 'help wanted'
+      name: kind/help-wanted
       target: issues
       prowPlugin: help
       addedBy: anyone
+    - color: ff0000
+      name: kind/bug
+      target: issues
+      addedBy: humans
+    - color: f9d3c4
+      name: kind/proposal
+      target: issues
+      addedBy: humans
+    - color: 030ba0
+      name: kind/cleanup
+      target: issues
+      addedBy: humans
+    - color: f9d7c4
+      name: kind/feature-request
+      target: issues
+      addedBy: humans
+    - color: f9d0c4
+      name: kind/documentation
+      target: issues
+      addedBy: humans
+    - color: a2eeef
+      name: kind/enhancement
+      target: issues
+      addedBy: humans
+    - color: bfd4f2
+      name: kind/performance
+      target: issues
+      addedBy: humans
+    - color: 1d76db
+      name: kind/refactoring
+      target: issues
+      addedBy: humans
 
     #############################################################################
     # These labels are important for automation so normally should not be changed
@@ -174,85 +211,21 @@ default:
 repos:
   knative/test-infra:
     labels:
-    - color: c5def5
-      description: Parked issue that required triaging/revisit in a near future
-      name: TBD
-      target: issues
-      addedBy: humans
-    - color: 030ba0
-      name: kind/cleanup
-      target: issues
-      addedBy: humans
-    - color: f9d0c4
-      name: kind/documentation
-      target: issues
-      addedBy: humans
-    - color: a2eeef
-      description: New feature or request
-      name: kind/enhancement
-      target: issues
-      addedBy: humans
-    - color: 7057ff
-      description: Good for newcomers
-      name: kind/good-first-issue
-      target: issues
-      addedBy: humans
-    - color: bfd4f2
-      name: kind/performance
-      target: issues
-      addedBy: humans
     - color: f9d0c4
       name: kind/project-support
       target: issues
       addedBy: humans
-    - color: 1d76db
-      name: kind/refactoring
-      target: issues
-      addedBy: humans
   knative-sandbox/eventing-kafka-broker:
     labels:
-      - color: ff0000
-        name: kind/bug
-        target: issues
-        addedBy: humans
-      - color: 030ba0
-        name: kind/cleanup
-        target: issues
-        addedBy: humans
-      - color: f9d0c4
-        name: kind/documentation
-        target: issues
-        addedBy: humans
-      - color: f9d7c4
-        name: kind/feature-request
-        target: issues
-        addedBy: humans
-      - color: f9d3c4
-        name: kind/proposal
-        target: issues
-        addedBy: humans
-      - color: a2eeef
-        description: New feature or request
-        name: kind/enhancement
-        target: issues
-        addedBy: humans
-      - color: bfd4f2
-        name: kind/performance
-        target: issues
-        addedBy: humans
-      - color: 1d76db
-        name: kind/refactoring
-        target: issues
-        addedBy: humans
-      - color: 782b90
-        name: area/data-plane
-        target: issues
-        addedBy: humans
-      - color: 7fd5ea
-        name: area/control-plane
-        target: issues
-        addedBy: humans
-      - color: 72d5e0
-        name: area/api
-        target: issues
-        addedBy: humans
+    - color: 782b90
+      name: area/data-plane
+      target: issues
+      addedBy: humans
+    - color: 7fd5ea
+      name: area/control-plane
+      target: issues
+      addedBy: humans
+    - color: 72d5e0
+      name: area/api
+      target: issues
+      addedBy: humans

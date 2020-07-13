@@ -15,6 +15,67 @@
 # Peribolos is a tool implemented by k8s sig-testing.
 # It allows the org settings, teams and memberships to be declared in a yaml file, and get GitHub updated to match the declared configuration.
 
+presubmits:
+  knative/community:
+  # Run on the Prow deployment cluster as it needs access to the github oauth token.
+  - name: pull-knative-peribolos
+    agent: kubernetes
+    decorate: true
+    path_alias: knative.dev/community
+    run_if_changed: "^peribolos/knative.yaml$"
+    branches:
+    - "master"
+    spec:
+      containers:
+      - image: gcr.io/k8s-prow/peribolos:v20200708-1254fdd37f
+        command:
+        - "/peribolos"
+        args:
+        - "--config-path=peribolos/knative.yaml"
+        - "--github-endpoint=http://ghproxy.default.svc.cluster.local"
+        - "--github-endpoint=https://api.github.com"
+        - "--github-token-path=/etc/github/oauth"
+        - "--min-admins=5"
+        # Set --confirm=false to only validate the configuration file.
+        - "--confirm=false"
+        volumeMounts:
+        - name: oauth
+          mountPath: /etc/github
+          readOnly: true
+      volumes:
+      - name: oauth
+        secret:
+          secretName: oauth-token
+  # Run on the Prow deployment cluster as it needs access to the github oauth token.
+  - name: pull-knative-sandbox-peribolos
+    agent: kubernetes
+    decorate: true
+    path_alias: knative.dev/community
+    run_if_changed: "^peribolos/knative-sandbox.yaml$"
+    branches:
+    - "master"
+    spec:
+      containers:
+      - image: gcr.io/k8s-prow/peribolos:v20200708-1254fdd37f
+        command:
+        - "/peribolos"
+        args:
+        - "--config-path=peribolos/knative-sandbox.yaml"
+        - "--github-endpoint=http://ghproxy.default.svc.cluster.local"
+        - "--github-endpoint=https://api.github.com"
+        - "--github-token-path=/etc/github/oauth"
+        - "--min-admins=5"
+        # Set --confirm=false to only validate the configuration file.
+        - "--confirm=false"
+        volumeMounts:
+        - name: oauth
+          mountPath: /etc/github
+          readOnly: true
+      volumes:
+      - name: oauth
+        secret:
+          secretName: oauth-token
+
 postsubmits:
   knative/community:
   # Run on the Prow deployment cluster as it needs access to the github oauth token.
