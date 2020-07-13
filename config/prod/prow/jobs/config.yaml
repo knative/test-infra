@@ -137,6 +137,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
       volumes:
       - name: repoview-token
         secret:
@@ -217,6 +222,11 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
           value: us-central1
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
       volumes:
       - name: test-account
         secret:

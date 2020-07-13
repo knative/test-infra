@@ -4,7 +4,7 @@ presubmits:
     performance: true
   - build-tests: true
     dot-dev: true
-    resources:
+    resources: &serving_resources
       requests:
         memory: 12Gi
       limits:
@@ -18,23 +18,21 @@ presubmits:
     args:
     - --run-test
     - ./test/e2e-tests.sh
+    resources: *serving_resources
   - custom-test: upgrade-tests
     dot-dev: true
     needs-monitor: true
     args:
     - --run-test
     - ./test/e2e-upgrade-tests.sh
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
+    resources: *serving_resources
   - custom-test: autotls-tests
     dot-dev: true
     needs-monitor: true
     args:
     - --run-test
     - ./test/e2e-auto-tls-tests.sh
+    resources: *serving_resources
   - go-coverage: true
     go-coverage-threshold: 80
     dot-dev: true
