@@ -41,8 +41,10 @@ postsubmits:
         - "--fix-org-members=true"
         - "--fix-teams=true"
         - "--fix-team-members=true"
-        - "--fix-team-repos=true"
+#      TODO(chizhg): reenable it after https://github.com/knative/test-infra/issues/2289 is fixed.
+#      - "--fix-team-repos=true"
         - "--fix-repos=true"
+        - "--tokens=1200"
         - "--confirm=true"
         volumeMounts:
         - name: oauth
@@ -76,8 +78,10 @@ postsubmits:
         - "--fix-org-members=true"
         - "--fix-teams=true"
         - "--fix-team-members=true"
-        - "--fix-team-repos=true"
+#      TODO(chizhg): reenable it after https://github.com/knative/test-infra/issues/2289 is fixed.
+#      - "--fix-team-repos=true"
         - "--fix-repos=true"
+        - "--tokens=1200"
         - "--confirm=true"
         volumeMounts:
         - name: oauth
@@ -114,8 +118,10 @@ periodics:
       - "--fix-org-members=true"
       - "--fix-teams=true"
       - "--fix-team-members=true"
-      - "--fix-team-repos=true"
+#      TODO(chizhg): reenable it after https://github.com/knative/test-infra/issues/2289 is fixed.
+#      - "--fix-team-repos=true"
       - "--fix-repos=true"
+      - "--tokens=1200"
       - "--confirm=true"
       volumeMounts:
       - name: oauth
@@ -150,8 +156,10 @@ periodics:
       - "--fix-org-members=true"
       - "--fix-teams=true"
       - "--fix-team-members=true"
-      - "--fix-team-repos=true"
+#      TODO(chizhg): reenable it after https://github.com/knative/test-infra/issues/2289 is fixed.
+#      - "--fix-team-repos=true"
       - "--fix-repos=true"
+      - "--tokens=1200"
       - "--confirm=true"
       volumeMounts:
       - name: oauth
