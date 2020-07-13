@@ -15,6 +15,39 @@
 # label-sync is a tool implemented by k8s sig-testing.
 # It can update or migrate github labels on repos in a github org based on a YAML file.
 
+presubmits:
+  knative/test-infra:
+  - name: pull-knative-test-infra-label-sync
+    agent: kubernetes
+    decorate: true
+    path_alias: knative.dev/test-infra
+    run_if_changed: "^label_sync/labels.yaml$"
+    branches:
+    - "master"
+    spec:
+      containers:
+      - name: label-sync
+        image: gcr.io/k8s-prow/label_sync:v20200708-1254fdd37f
+        command:
+        - /app/label_sync/app.binary
+        args:
+        - --config=label_sync/labels.yaml
+        # Set --confirm=false to only validate the configuration file.
+        - --confirm=false
+        - --orgs=knative-sandbox,knative
+        - --token=/etc/github/oauth
+        - --endpoint=http://ghproxy.default.svc.cluster.local
+        - --endpoint=https://api.github.com
+        - --debug
+        volumeMounts:
+        - name: oauth
+          mountPath: /etc/github
+          readOnly: true
+      volumes:
+      - name: oauth
+        secret:
+          secretName: oauth-token
+
 periodics:
 # Run at 8AM PST.
 - cron: "0 15 * * *"
