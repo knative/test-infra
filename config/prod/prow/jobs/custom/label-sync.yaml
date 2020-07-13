@@ -29,7 +29,7 @@ periodics:
   spec:
     containers:
     - name: label-sync
-      image: gcr.io/k8s-prow/label_sync:v20200708-1254fdd37f
+      image: gcr.io/k8s-prow/label_sync:v20200710-7fa016752a
       command:
       - /app/label_sync/app.binary
       args:
@@ -62,7 +62,7 @@ postsubmits:
     spec:
       containers:
       - name: label-sync
-        image: gcr.io/k8s-prow/label_sync:v20200708-1254fdd37f
+        image: gcr.io/k8s-prow/label_sync:v20200710-7fa016752a
         command:
         - /app/label_sync/app.binary
         args:
