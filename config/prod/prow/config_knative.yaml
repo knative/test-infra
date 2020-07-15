@@ -287,7 +287,7 @@ presubmits:
     dot-dev: true
   - go-coverage: true
     dot-dev: true
-  knative/net-contour:
+  knative-sandbox/net-contour:
   - build-tests: true
     dot-dev: true
   - unit-tests: true
@@ -818,7 +818,7 @@ periodics:
         memory: 16Gi
     env-vars:
     - ORG_NAME=google
-  knative/net-certmanager:
+  knative-sandbox/net-certmanager:
   - continuous: true
     dot-dev: true
   - nightly: true
@@ -827,7 +827,7 @@ periodics:
     dot-dev: true
   - auto-release: true
     dot-dev: true
-  knative/net-contour:
+  knative-sandbox/net-contour:
   - continuous: true
     dot-dev: true
   - nightly: true

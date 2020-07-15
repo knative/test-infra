@@ -179,50 +179,6 @@ test_groups:
 - name: ci-knative-test-infra-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-test-infra-go-coverage
   short_text_metric: "coverage"
-- name: ci-knative-net-certmanager-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-net-certmanager-continuous
-  alert_stale_results_hours: 3
-- name: ci-knative-net-certmanager-nightly-release
-  gcs_prefix: knative-prow/logs/ci-knative-net-certmanager-nightly-release
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  num_failures_to_alert: 1
-- name: ci-knative-net-certmanager-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-net-certmanager-dot-release
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  alert_stale_results_hours: 170
-  num_failures_to_alert: 1
-- name: ci-knative-net-certmanager-auto-release
-  gcs_prefix: knative-prow/logs/ci-knative-net-certmanager-auto-release
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  num_failures_to_alert: 1
-- name: ci-knative-net-certmanager-test-coverage
-  gcs_prefix: knative-prow/logs/ci-knative-net-certmanager-go-coverage
-  short_text_metric: "coverage"
-- name: ci-knative-net-contour-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-net-contour-continuous
-  alert_stale_results_hours: 3
-- name: ci-knative-net-contour-nightly-release
-  gcs_prefix: knative-prow/logs/ci-knative-net-contour-nightly-release
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  num_failures_to_alert: 1
-- name: ci-knative-net-contour-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-net-contour-dot-release
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  alert_stale_results_hours: 170
-  num_failures_to_alert: 1
-- name: ci-knative-net-contour-auto-release
-  gcs_prefix: knative-prow/logs/ci-knative-net-contour-auto-release
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  num_failures_to_alert: 1
-- name: ci-knative-net-contour-test-coverage
-  gcs_prefix: knative-prow/logs/ci-knative-net-contour-go-coverage
-  short_text_metric: "coverage"
 - name: ci-knative-net-istio-continuous
   gcs_prefix: knative-prow/logs/ci-knative-net-istio-continuous
   alert_stale_results_hours: 3
@@ -488,6 +444,50 @@ test_groups:
 - name: ci-knative-sandbox-sample-source-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-sample-source-continuous
   alert_stale_results_hours: 3
+- name: ci-knative-sandbox-net-certmanager-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-certmanager-continuous
+  alert_stale_results_hours: 3
+- name: ci-knative-sandbox-net-certmanager-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-certmanager-nightly-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-net-certmanager-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-certmanager-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-net-certmanager-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-certmanager-auto-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-net-certmanager-test-coverage
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-certmanager-go-coverage
+  short_text_metric: "coverage"
+- name: ci-knative-sandbox-net-contour-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-contour-continuous
+  alert_stale_results_hours: 3
+- name: ci-knative-sandbox-net-contour-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-contour-nightly-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-net-contour-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-contour-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-net-contour-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-contour-auto-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-net-contour-test-coverage
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-contour-go-coverage
+  short_text_metric: "coverage"
 - name: ci-knative-sandbox-net-http01-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-http01-continuous
   alert_stale_results_hours: 3
@@ -724,15 +724,12 @@ test_groups:
 - name: ci-google-knative-gcp-go-coverage-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-google-knative-gcp-go-coverage-beta-prow-tests
   short_text_metric: "coverage"
-- name: ci-knative-net-certmanager-continuous-beta-prow-tests
-  gcs_prefix: knative-prow/logs/ci-knative-net-certmanager-continuous-beta-prow-tests
-- name: ci-knative-net-certmanager-go-coverage-beta-prow-tests
-  gcs_prefix: knative-prow/logs/ci-knative-net-certmanager-go-coverage-beta-prow-tests
-  short_text_metric: "coverage"
-- name: ci-knative-net-contour-continuous-beta-prow-tests
-  gcs_prefix: knative-prow/logs/ci-knative-net-contour-continuous-beta-prow-tests
-- name: ci-knative-net-contour-go-coverage-beta-prow-tests
-  gcs_prefix: knative-prow/logs/ci-knative-net-contour-go-coverage-beta-prow-tests
+- name: ci-knative-sandbox-net-certmanager-continuous-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-certmanager-continuous-beta-prow-tests
+- name: ci-knative-sandbox-net-contour-continuous-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-contour-continuous-beta-prow-tests
+- name: ci-knative-sandbox-net-contour-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-contour-go-coverage-beta-prow-tests
   short_text_metric: "coverage"
 - name: ci-knative-sandbox-net-http01-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-http01-continuous-beta-prow-tests
@@ -770,6 +767,9 @@ test_groups:
   short_text_metric: "coverage"
 - name: ci-knative-networking-go-coverage-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-networking-go-coverage-beta-prow-tests
+  short_text_metric: "coverage"
+- name: ci-knative-net-certmanager-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-net-certmanager-go-coverage-beta-prow-tests
   short_text_metric: "coverage"
 - name: ci-knative-backup-artifacts
   gcs_prefix: knative-prow/logs/ci-knative-backup-artifacts
@@ -1010,64 +1010,6 @@ dashboards:
   - name: coverage
     test_group_name: ci-knative-test-infra-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: net-certmanager
-  dashboard_tab:
-  - name: continuous
-    test_group_name: ci-knative-net-certmanager-continuous
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 3
-  - name: nightly
-    test_group_name: ci-knative-net-certmanager-nightly-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 1
-  - name: dot-release
-    test_group_name: ci-knative-net-certmanager-dot-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 1
-  - name: auto-release
-    test_group_name: ci-knative-net-certmanager-auto-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 1
-  - name: coverage
-    test_group_name: ci-knative-net-certmanager-test-coverage
-    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: net-contour
-  dashboard_tab:
-  - name: continuous
-    test_group_name: ci-knative-net-contour-continuous
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 3
-  - name: nightly
-    test_group_name: ci-knative-net-contour-nightly-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 1
-  - name: dot-release
-    test_group_name: ci-knative-net-contour-dot-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 1
-  - name: auto-release
-    test_group_name: ci-knative-net-contour-auto-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 1
-  - name: coverage
-    test_group_name: ci-knative-net-contour-test-coverage
-    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: net-istio
   dashboard_tab:
   - name: continuous
@@ -1165,6 +1107,64 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 3
+- name: net-certmanager
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-sandbox-net-certmanager-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: nightly
+    test_group_name: ci-knative-sandbox-net-certmanager-nightly-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: dot-release
+    test_group_name: ci-knative-sandbox-net-certmanager-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: auto-release
+    test_group_name: ci-knative-sandbox-net-certmanager-auto-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: coverage
+    test_group_name: ci-knative-sandbox-net-certmanager-test-coverage
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+- name: net-contour
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-sandbox-net-contour-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: nightly
+    test_group_name: ci-knative-sandbox-net-contour-nightly-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: dot-release
+    test_group_name: ci-knative-sandbox-net-contour-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: auto-release
+    test_group_name: ci-knative-sandbox-net-contour-auto-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: coverage
+    test_group_name: ci-knative-sandbox-net-contour-test-coverage
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: net-http01
   dashboard_tab:
   - name: continuous
@@ -1706,17 +1706,14 @@ dashboards:
   - name: ci-google-knative-gcp-go-coverage
     test_group_name: ci-google-knative-gcp-go-coverage-beta-prow-tests
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-  - name: ci-knative-net-certmanager-continuous
-    test_group_name: ci-knative-net-certmanager-continuous-beta-prow-tests
+  - name: ci-knative-sandbox-net-certmanager-continuous
+    test_group_name: ci-knative-sandbox-net-certmanager-continuous-beta-prow-tests
     base_options: "sort-by-failures="
-  - name: ci-knative-net-certmanager-go-coverage
-    test_group_name: ci-knative-net-certmanager-go-coverage-beta-prow-tests
-    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-  - name: ci-knative-net-contour-continuous
-    test_group_name: ci-knative-net-contour-continuous-beta-prow-tests
+  - name: ci-knative-sandbox-net-contour-continuous
+    test_group_name: ci-knative-sandbox-net-contour-continuous-beta-prow-tests
     base_options: "sort-by-failures="
-  - name: ci-knative-net-contour-go-coverage
-    test_group_name: ci-knative-net-contour-go-coverage-beta-prow-tests
+  - name: ci-knative-sandbox-net-contour-go-coverage
+    test_group_name: ci-knative-sandbox-net-contour-go-coverage-beta-prow-tests
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
   - name: ci-knative-sandbox-net-http01-continuous
     test_group_name: ci-knative-sandbox-net-http01-continuous-beta-prow-tests
@@ -1762,6 +1759,9 @@ dashboards:
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
   - name: ci-knative-networking-go-coverage
     test_group_name: ci-knative-networking-go-coverage-beta-prow-tests
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+  - name: ci-knative-net-certmanager-go-coverage
+    test_group_name: ci-knative-net-certmanager-go-coverage-beta-prow-tests
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: utilities
   dashboard_tab:
@@ -1810,8 +1810,6 @@ dashboard_groups:
   - "pkg"
   - "caching"
   - "test-infra"
-  - "net-certmanager"
-  - "net-contour"
   - "net-istio"
   - "net-kourier"
   - "operator"
@@ -1819,6 +1817,8 @@ dashboard_groups:
   dashboard_names:
   - "sample-controller"
   - "sample-source"
+  - "net-certmanager"
+  - "net-contour"
   - "net-http01"
   - "discovery"
   - "eventing-kafka"
