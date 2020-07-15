@@ -4,7 +4,7 @@ presubmits:
     performance: true
   - build-tests: true
     dot-dev: true
-    resources: &serving_resources
+    resources:
       requests:
         memory: 12Gi
       limits:
@@ -18,21 +18,33 @@ presubmits:
     args:
     - --run-test
     - ./test/e2e-tests.sh
-    resources: *serving_resources
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
   - custom-test: upgrade-tests
     dot-dev: true
     needs-monitor: true
     args:
     - --run-test
     - ./test/e2e-upgrade-tests.sh
-    resources: *serving_resources
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
   - custom-test: autotls-tests
     dot-dev: true
     needs-monitor: true
     args:
     - --run-test
     - ./test/e2e-auto-tls-tests.sh
-    resources: *serving_resources
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
   - go-coverage: true
     go-coverage-threshold: 80
     dot-dev: true
@@ -536,9 +548,6 @@ periodics:
   - continuous: true
     dot-dev: true
   - branch-ci: true
-    release: "0.12"
-    dot-dev: true
-  - branch-ci: true
     release: "0.13"
     dot-dev: true
   - branch-ci: true
@@ -546,6 +555,9 @@ periodics:
     dot-dev: true
   - branch-ci: true
     release: "0.15"
+    dot-dev: true
+  - branch-ci: true
+    release: "0.16"
     dot-dev: true
   - nightly: true
     dot-dev: true
@@ -555,9 +567,6 @@ periodics:
     dot-dev: true
   - dot-release: true
     dot-dev: true
-    release: "0.12"
-  - dot-release: true
-    dot-dev: true
     release: "0.13"
   - dot-release: true
     dot-dev: true
@@ -565,6 +574,9 @@ periodics:
   - dot-release: true
     dot-dev: true
     release: "0.15"
+  - dot-release: true
+    dot-dev: true
+    release: "0.16"
   - auto-release: true
     dot-dev: true
   knative/client-contrib:
