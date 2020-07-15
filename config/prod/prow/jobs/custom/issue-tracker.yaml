@@ -32,8 +32,7 @@ periodics:
       command:
       - "/app/robots/commenter/app.binary"
       args:
-      - "--query=repo:knative/test-infra
-      repo:knative/serving
+      - "--query=repo:knative/serving
       repo:knative/docs
       is:open
       -label:lifecycle/frozen
@@ -69,8 +68,7 @@ periodics:
       command:
       - "/app/robots/commenter/app.binary"
       args:
-      - "--query=repo:knative/test-infra
-      repo:knative/serving
+      - "--query=repo:knative/serving
       repo:knative/docs
       is:open
       -label:lifecycle/frozen
@@ -105,8 +103,7 @@ periodics:
       command:
       - "/app/robots/commenter/app.binary"
       args:
-      - "--query=repo:knative/test-infra
-      repo:knative/serving
+      - "--query=repo:repo:knative/serving
       repo:knative/docs
       is:open
       -label:lifecycle/frozen
