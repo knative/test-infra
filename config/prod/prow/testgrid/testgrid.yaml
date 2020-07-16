@@ -726,6 +726,9 @@ test_groups:
   short_text_metric: "coverage"
 - name: ci-knative-sandbox-net-certmanager-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-certmanager-continuous-beta-prow-tests
+- name: ci-knative-sandbox-net-certmanager-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-certmanager-go-coverage-beta-prow-tests
+  short_text_metric: "coverage"
 - name: ci-knative-sandbox-net-contour-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-contour-continuous-beta-prow-tests
 - name: ci-knative-sandbox-net-contour-go-coverage-beta-prow-tests
@@ -767,9 +770,6 @@ test_groups:
   short_text_metric: "coverage"
 - name: ci-knative-networking-go-coverage-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-networking-go-coverage-beta-prow-tests
-  short_text_metric: "coverage"
-- name: ci-knative-net-certmanager-go-coverage-beta-prow-tests
-  gcs_prefix: knative-prow/logs/ci-knative-net-certmanager-go-coverage-beta-prow-tests
   short_text_metric: "coverage"
 - name: ci-knative-backup-artifacts
   gcs_prefix: knative-prow/logs/ci-knative-backup-artifacts
@@ -1709,6 +1709,9 @@ dashboards:
   - name: ci-knative-sandbox-net-certmanager-continuous
     test_group_name: ci-knative-sandbox-net-certmanager-continuous-beta-prow-tests
     base_options: "sort-by-failures="
+  - name: ci-knative-sandbox-net-certmanager-go-coverage
+    test_group_name: ci-knative-sandbox-net-certmanager-go-coverage-beta-prow-tests
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
   - name: ci-knative-sandbox-net-contour-continuous
     test_group_name: ci-knative-sandbox-net-contour-continuous-beta-prow-tests
     base_options: "sort-by-failures="
@@ -1759,9 +1762,6 @@ dashboards:
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
   - name: ci-knative-networking-go-coverage
     test_group_name: ci-knative-networking-go-coverage-beta-prow-tests
-    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-  - name: ci-knative-net-certmanager-go-coverage
-    test_group_name: ci-knative-net-certmanager-go-coverage-beta-prow-tests
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: utilities
   dashboard_tab:

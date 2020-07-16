@@ -278,7 +278,7 @@ presubmits:
     dot-dev: true
   - go-coverage: true
     dot-dev: true
-  knative/net-certmanager:
+  knative-sandbox/net-certmanager:
   - build-tests: true
     dot-dev: true
   - unit-tests: true

@@ -2312,13 +2312,13 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
-  knative/net-certmanager:
-  - name: pull-knative-net-certmanager-build-tests
+  knative-sandbox/net-certmanager:
+  - name: pull-knative-sandbox-net-certmanager-build-tests
     agent: kubernetes
-    context: pull-knative-net-certmanager-build-tests
+    context: pull-knative-sandbox-net-certmanager-build-tests
     always_run: true
-    rerun_command: "/test pull-knative-net-certmanager-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-net-certmanager-build-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-net-certmanager-build-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-net-certmanager-build-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-certmanager
     cluster: "build-knative"
@@ -2350,12 +2350,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-net-certmanager-unit-tests
+  - name: pull-knative-sandbox-net-certmanager-unit-tests
     agent: kubernetes
-    context: pull-knative-net-certmanager-unit-tests
+    context: pull-knative-sandbox-net-certmanager-unit-tests
     always_run: true
-    rerun_command: "/test pull-knative-net-certmanager-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-net-certmanager-unit-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-net-certmanager-unit-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-net-certmanager-unit-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-certmanager
     cluster: "build-knative"
@@ -2387,12 +2387,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-net-certmanager-integration-tests
+  - name: pull-knative-sandbox-net-certmanager-integration-tests
     agent: kubernetes
-    context: pull-knative-net-certmanager-integration-tests
+    context: pull-knative-sandbox-net-certmanager-integration-tests
     always_run: true
-    rerun_command: "/test pull-knative-net-certmanager-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-net-certmanager-integration-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-net-certmanager-integration-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-net-certmanager-integration-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-certmanager
     cluster: "build-knative"
@@ -2424,12 +2424,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-net-certmanager-go-coverage
+  - name: pull-knative-sandbox-net-certmanager-go-coverage
     agent: kubernetes
-    context: pull-knative-net-certmanager-go-coverage
+    context: pull-knative-sandbox-net-certmanager-go-coverage
     always_run: true
-    rerun_command: "/test pull-knative-net-certmanager-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-net-certmanager-go-coverage),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-net-certmanager-go-coverage"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-net-certmanager-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
     path_alias: knative.dev/net-certmanager
@@ -2442,7 +2442,7 @@ presubmits:
         - runner.sh
         args:
         - "coverage"
-        - "--postsubmit-job-name=post-knative-net-certmanager-go-coverage"
+        - "--postsubmit-job-name=post-knative-sandbox-net-certmanager-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
         - "--github-token=/etc/covbot-token/token"
@@ -9128,6 +9128,54 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
+- cron: "0 1 * * *"
+  name: ci-knative-sandbox-net-certmanager-go-coverage
+  labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-certmanager-go-coverage
+  agent: kubernetes
+  decorate: true
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: net-certmanager
+    base_ref: master
+    path_alias: knative.dev/net-certmanager
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - "runner.sh"
+      args:
+      - "coverage"
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=50"
+- cron: "49 7 * * *"
+  name: ci-knative-sandbox-net-certmanager-go-coverage-beta-prow-tests
+  labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-certmanager-go-coverage
+  agent: kubernetes
+  decorate: true
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: net-certmanager
+    base_ref: master
+    path_alias: knative.dev/net-certmanager
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
+      imagePullPolicy: Always
+      command:
+      - "runner.sh"
+      args:
+      - "coverage"
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=50"
 - cron: "38 * * * *"
   name: ci-knative-sandbox-net-contour-continuous
   agent: kubernetes
@@ -11401,54 +11449,6 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "0 1 * * *"
-  name: ci-knative-net-certmanager-go-coverage
-  labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-net-certmanager-go-coverage
-  agent: kubernetes
-  decorate: true
-  cluster: "build-knative"
-  extra_refs:
-  - org: knative
-    repo: net-certmanager
-    base_ref: master
-    path_alias: knative.dev/net-certmanager
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      command:
-      - "runner.sh"
-      args:
-      - "coverage"
-      - "--artifacts=$(ARTIFACTS)"
-      - "--cov-threshold-percentage=50"
-- cron: "31 7 * * *"
-  name: ci-knative-net-certmanager-go-coverage-beta-prow-tests
-  labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-net-certmanager-go-coverage
-  agent: kubernetes
-  decorate: true
-  cluster: "build-knative"
-  extra_refs:
-  - org: knative
-    repo: net-certmanager
-    base_ref: master
-    path_alias: knative.dev/net-certmanager
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
-      imagePullPolicy: Always
-      command:
-      - "runner.sh"
-      args:
-      - "coverage"
-      - "--artifacts=$(ARTIFACTS)"
-      - "--cov-threshold-percentage=50"
 - cron: "30 07 * * *"
   name: ci-knative-serving-recreate-clusters
   agent: kubernetes
@@ -11996,8 +11996,8 @@ postsubmits:
         - "coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
-  knative/net-certmanager:
-  - name: post-knative-net-certmanager-go-coverage
+  knative-sandbox/net-certmanager:
+  - name: post-knative-sandbox-net-certmanager-go-coverage
     branches:
     - master
     agent: kubernetes
