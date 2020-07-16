@@ -2738,13 +2738,13 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
-  knative/net-istio:
-  - name: pull-knative-net-istio-build-tests
+  knative-sandbox/net-istio:
+  - name: pull-knative-sandbox-net-istio-build-tests
     agent: kubernetes
-    context: pull-knative-net-istio-build-tests
+    context: pull-knative-sandbox-net-istio-build-tests
     always_run: true
-    rerun_command: "/test pull-knative-net-istio-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-net-istio-build-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-net-istio-build-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-net-istio-build-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-istio
     cluster: "build-knative"
@@ -2776,12 +2776,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-net-istio-unit-tests
+  - name: pull-knative-sandbox-net-istio-unit-tests
     agent: kubernetes
-    context: pull-knative-net-istio-unit-tests
+    context: pull-knative-sandbox-net-istio-unit-tests
     always_run: true
-    rerun_command: "/test pull-knative-net-istio-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-net-istio-unit-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-net-istio-unit-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-net-istio-unit-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-istio
     cluster: "build-knative"
@@ -2813,12 +2813,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-net-istio-integration-tests
+  - name: pull-knative-sandbox-net-istio-integration-tests
     agent: kubernetes
-    context: pull-knative-net-istio-integration-tests
+    context: pull-knative-sandbox-net-istio-integration-tests
     always_run: true
-    rerun_command: "/test pull-knative-net-istio-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-net-istio-integration-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-net-istio-integration-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-net-istio-integration-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-istio
     cluster: "build-knative"
@@ -2850,12 +2850,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-net-istio-go-coverage
+  - name: pull-knative-sandbox-net-istio-go-coverage
     agent: kubernetes
-    context: pull-knative-net-istio-go-coverage
+    context: pull-knative-sandbox-net-istio-go-coverage
     always_run: true
-    rerun_command: "/test pull-knative-net-istio-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-net-istio-go-coverage),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-net-istio-go-coverage"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-net-istio-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
     path_alias: knative.dev/net-istio
@@ -2868,7 +2868,7 @@ presubmits:
         - runner.sh
         args:
         - "coverage"
-        - "--postsubmit-job-name=post-knative-net-istio-go-coverage"
+        - "--postsubmit-job-name=post-knative-sandbox-net-istio-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
         - "--github-token=/etc/covbot-token/token"
@@ -2880,12 +2880,12 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
-  - name: pull-knative-net-istio-latest
+  - name: pull-knative-sandbox-net-istio-latest
     agent: kubernetes
-    context: pull-knative-net-istio-latest
+    context: pull-knative-sandbox-net-istio-latest
     always_run: true
-    rerun_command: "/test pull-knative-net-istio-latest"
-    trigger: "(?m)^/test (all|pull-knative-net-istio-latest),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-net-istio-latest"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-net-istio-latest),?(\\s+|$)"
     decorate: true
     optional: true
     path_alias: knative.dev/net-istio
@@ -2913,13 +2913,13 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  knative/net-kourier:
-  - name: pull-knative-net-kourier-build-tests
+  knative-sandbox/net-kourier:
+  - name: pull-knative-sandbox-net-kourier-build-tests
     agent: kubernetes
-    context: pull-knative-net-kourier-build-tests
+    context: pull-knative-sandbox-net-kourier-build-tests
     always_run: true
-    rerun_command: "/test pull-knative-net-kourier-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-net-kourier-build-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-net-kourier-build-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-net-kourier-build-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-kourier
     cluster: "build-knative"
@@ -2951,12 +2951,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-net-kourier-unit-tests
+  - name: pull-knative-sandbox-net-kourier-unit-tests
     agent: kubernetes
-    context: pull-knative-net-kourier-unit-tests
+    context: pull-knative-sandbox-net-kourier-unit-tests
     always_run: true
-    rerun_command: "/test pull-knative-net-kourier-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-net-kourier-unit-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-net-kourier-unit-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-net-kourier-unit-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-kourier
     cluster: "build-knative"
@@ -2988,12 +2988,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-net-kourier-integration-tests
+  - name: pull-knative-sandbox-net-kourier-integration-tests
     agent: kubernetes
-    context: pull-knative-net-kourier-integration-tests
+    context: pull-knative-sandbox-net-kourier-integration-tests
     always_run: true
-    rerun_command: "/test pull-knative-net-kourier-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-net-kourier-integration-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-net-kourier-integration-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-net-kourier-integration-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/net-kourier
     cluster: "build-knative"
@@ -3025,12 +3025,12 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-net-kourier-go-coverage
+  - name: pull-knative-sandbox-net-kourier-go-coverage
     agent: kubernetes
-    context: pull-knative-net-kourier-go-coverage
+    context: pull-knative-sandbox-net-kourier-go-coverage
     always_run: true
-    rerun_command: "/test pull-knative-net-kourier-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-net-kourier-go-coverage),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-net-kourier-go-coverage"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-net-kourier-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
     path_alias: knative.dev/net-kourier
@@ -3043,7 +3043,7 @@ presubmits:
         - runner.sh
         args:
         - "coverage"
-        - "--postsubmit-job-name=post-knative-net-kourier-go-coverage"
+        - "--postsubmit-job-name=post-knative-sandbox-net-kourier-go-coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=50"
         - "--github-token=/etc/covbot-token/token"
@@ -9622,17 +9622,17 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "18 * * * *"
-  name: ci-knative-net-istio-continuous
+- cron: "8 * * * *"
+  name: ci-knative-sandbox-net-istio-continuous
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-net-istio-continuous
+    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-istio-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: net-istio
     base_ref: master
     path_alias: knative.dev/net-istio
@@ -9658,17 +9658,17 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "50 8,11,22 * * *"
-  name: ci-knative-net-istio-continuous-beta-prow-tests
+- cron: "48 8,11,22 * * *"
+  name: ci-knative-sandbox-net-istio-continuous-beta-prow-tests
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-net-istio-continuous
+    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-istio-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: net-istio
     base_ref: master
     path_alias: knative.dev/net-istio
@@ -9694,17 +9694,17 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "58 9 * * *"
-  name: ci-knative-net-istio-nightly-release
+- cron: "8 9 * * *"
+  name: ci-knative-sandbox-net-istio-nightly-release
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-net-istio-nightly-release
+    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-istio-nightly-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: net-istio
     base_ref: master
     path_alias: knative.dev/net-istio
@@ -9731,17 +9731,17 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "34 9 * * 2"
-  name: ci-knative-net-istio-0.14-dot-release
+- cron: "24 9 * * 2"
+  name: ci-knative-sandbox-net-istio-0.14-dot-release
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-net-istio-0.14-dot-release
+    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-istio-0.14-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: net-istio
     base_ref: release-0.14
     path_alias: knative.dev/net-istio
@@ -9779,17 +9779,17 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "33 9 * * 2"
-  name: ci-knative-net-istio-0.15-dot-release
+- cron: "59 9 * * 2"
+  name: ci-knative-sandbox-net-istio-0.15-dot-release
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-net-istio-0.15-dot-release
+    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-istio-0.15-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: net-istio
     base_ref: release-0.15
     path_alias: knative.dev/net-istio
@@ -9827,17 +9827,17 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "4 9 * * 2"
-  name: ci-knative-net-istio-0.16-dot-release
+- cron: "10 9 * * 2"
+  name: ci-knative-sandbox-net-istio-0.16-dot-release
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-net-istio-0.16-dot-release
+    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-istio-0.16-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: net-istio
     base_ref: release-0.16
     path_alias: knative.dev/net-istio
@@ -9875,17 +9875,17 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "26 */2 * * *"
-  name: ci-knative-net-istio-auto-release
+- cron: "12 */2 * * *"
+  name: ci-knative-sandbox-net-istio-auto-release
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-net-istio-auto-release
+    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-istio-auto-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: net-istio
     base_ref: master
     path_alias: knative.dev/net-istio
@@ -9921,16 +9921,16 @@ periodics:
       secret:
         secretName: release-account
 - cron: "0 1 * * *"
-  name: ci-knative-net-istio-go-coverage
+  name: ci-knative-sandbox-net-istio-go-coverage
   labels:
       prow.k8s.io/pubsub.project: knative-tests
       prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-net-istio-go-coverage
+      prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-istio-go-coverage
   agent: kubernetes
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: net-istio
     base_ref: master
     path_alias: knative.dev/net-istio
@@ -9944,17 +9944,17 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "22 7 * * *"
-  name: ci-knative-net-istio-go-coverage-beta-prow-tests
+- cron: "12 7 * * *"
+  name: ci-knative-sandbox-net-istio-go-coverage-beta-prow-tests
   labels:
       prow.k8s.io/pubsub.project: knative-tests
       prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-net-istio-go-coverage
+      prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-istio-go-coverage
   agent: kubernetes
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: net-istio
     base_ref: master
     path_alias: knative.dev/net-istio
@@ -9968,17 +9968,17 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "3 * * * *"
-  name: ci-knative-net-kourier-continuous
+- cron: "17 * * * *"
+  name: ci-knative-sandbox-net-kourier-continuous
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-net-kourier-continuous
+    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-kourier-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: net-kourier
     base_ref: master
     path_alias: knative.dev/net-kourier
@@ -10004,17 +10004,17 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "15 8,11,22 * * *"
-  name: ci-knative-net-kourier-continuous-beta-prow-tests
+- cron: "17 8,11,22 * * *"
+  name: ci-knative-sandbox-net-kourier-continuous-beta-prow-tests
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-net-kourier-continuous
+    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-kourier-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: net-kourier
     base_ref: master
     path_alias: knative.dev/net-kourier
@@ -10040,17 +10040,17 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "49 9 * * *"
-  name: ci-knative-net-kourier-nightly-release
+- cron: "3 9 * * *"
+  name: ci-knative-sandbox-net-kourier-nightly-release
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-net-kourier-nightly-release
+    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-kourier-nightly-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: net-kourier
     base_ref: master
     path_alias: knative.dev/net-kourier
@@ -10077,17 +10077,17 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "37 9 * * 2"
-  name: ci-knative-net-kourier-dot-release
+- cron: "27 9 * * 2"
+  name: ci-knative-sandbox-net-kourier-dot-release
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-net-kourier-dot-release
+    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-kourier-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: net-kourier
     base_ref: master
     path_alias: knative.dev/net-kourier
@@ -10122,17 +10122,17 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "11 */2 * * *"
-  name: ci-knative-net-kourier-auto-release
+- cron: "53 */2 * * *"
+  name: ci-knative-sandbox-net-kourier-auto-release
   agent: kubernetes
   labels:
     prow.k8s.io/pubsub.project: knative-tests
     prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-net-kourier-auto-release
+    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-kourier-auto-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: net-kourier
     base_ref: master
     path_alias: knative.dev/net-kourier
@@ -10168,16 +10168,16 @@ periodics:
       secret:
         secretName: release-account
 - cron: "0 1 * * *"
-  name: ci-knative-net-kourier-go-coverage
+  name: ci-knative-sandbox-net-kourier-go-coverage
   labels:
       prow.k8s.io/pubsub.project: knative-tests
       prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-net-kourier-go-coverage
+      prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-kourier-go-coverage
   agent: kubernetes
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: net-kourier
     base_ref: master
     path_alias: knative.dev/net-kourier
@@ -10191,17 +10191,17 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "5 7 * * *"
-  name: ci-knative-net-kourier-go-coverage-beta-prow-tests
+- cron: "3 7 * * *"
+  name: ci-knative-sandbox-net-kourier-go-coverage-beta-prow-tests
   labels:
       prow.k8s.io/pubsub.project: knative-tests
       prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-net-kourier-go-coverage
+      prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-kourier-go-coverage
   agent: kubernetes
   decorate: true
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: net-kourier
     base_ref: master
     path_alias: knative.dev/net-kourier
@@ -12050,8 +12050,8 @@ postsubmits:
         - "coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
-  knative/net-istio:
-  - name: post-knative-net-istio-go-coverage
+  knative-sandbox/net-istio:
+  - name: post-knative-sandbox-net-istio-go-coverage
     branches:
     - master
     agent: kubernetes
@@ -12068,8 +12068,8 @@ postsubmits:
         - "coverage"
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
-  knative/net-kourier:
-  - name: post-knative-net-kourier-go-coverage
+  knative-sandbox/net-kourier:
+  - name: post-knative-sandbox-net-kourier-go-coverage
     branches:
     - master
     agent: kubernetes
