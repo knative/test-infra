@@ -305,7 +305,7 @@ presubmits:
     dot-dev: true
   - go-coverage: true
     dot-dev: true
-  knative/net-istio:
+  knative-sandbox/net-istio:
   - build-tests: true
     dot-dev: true
   - unit-tests: true
@@ -320,7 +320,7 @@ presubmits:
     args:
     - --run-test
     - ./test/e2e-tests.sh --istio-version latest
-  knative/net-kourier:
+  knative-sandbox/net-kourier:
   - build-tests: true
     dot-dev: true
   - unit-tests: true
@@ -845,7 +845,7 @@ periodics:
     dot-dev: true
   - auto-release: true
     dot-dev: true
-  knative/net-istio:
+  knative-sandbox/net-istio:
   - continuous: true
     dot-dev: true
   - nightly: true
@@ -861,7 +861,7 @@ periodics:
     release: "0.16"
   - auto-release: true
     dot-dev: true
-  knative/net-kourier:
+  knative-sandbox/net-kourier:
   - continuous: true
     dot-dev: true
   - nightly: true

@@ -179,44 +179,6 @@ test_groups:
 - name: ci-knative-test-infra-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-test-infra-go-coverage
   short_text_metric: "coverage"
-- name: ci-knative-net-istio-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-net-istio-continuous
-  alert_stale_results_hours: 3
-- name: ci-knative-net-istio-nightly-release
-  gcs_prefix: knative-prow/logs/ci-knative-net-istio-nightly-release
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  num_failures_to_alert: 1
-- name: ci-knative-net-istio-auto-release
-  gcs_prefix: knative-prow/logs/ci-knative-net-istio-auto-release
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  num_failures_to_alert: 1
-- name: ci-knative-net-istio-test-coverage
-  gcs_prefix: knative-prow/logs/ci-knative-net-istio-go-coverage
-  short_text_metric: "coverage"
-- name: ci-knative-net-kourier-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-net-kourier-continuous
-  alert_stale_results_hours: 3
-- name: ci-knative-net-kourier-nightly-release
-  gcs_prefix: knative-prow/logs/ci-knative-net-kourier-nightly-release
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  num_failures_to_alert: 1
-- name: ci-knative-net-kourier-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-net-kourier-dot-release
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  alert_stale_results_hours: 170
-  num_failures_to_alert: 1
-- name: ci-knative-net-kourier-auto-release
-  gcs_prefix: knative-prow/logs/ci-knative-net-kourier-auto-release
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  num_failures_to_alert: 1
-- name: ci-knative-net-kourier-test-coverage
-  gcs_prefix: knative-prow/logs/ci-knative-net-kourier-go-coverage
-  short_text_metric: "coverage"
 - name: ci-knative-operator-continuous
   gcs_prefix: knative-prow/logs/ci-knative-operator-continuous
   alert_stale_results_hours: 3
@@ -327,12 +289,6 @@ test_groups:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   alert_stale_results_hours: 170
   num_failures_to_alert: 1
-- name: ci-knative-net-istio-0.14-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-net-istio-0.14-dot-release
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  alert_stale_results_hours: 170
-  num_failures_to_alert: 1
 - name: ci-knative-serving-0.15-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.15-continuous
   alert_options:
@@ -373,12 +329,6 @@ test_groups:
   num_failures_to_alert: 3
 - name: ci-knative-eventing-contrib-0.15-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-0.15-dot-release
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  alert_stale_results_hours: 170
-  num_failures_to_alert: 1
-- name: ci-knative-net-istio-0.15-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-net-istio-0.15-dot-release
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   alert_stale_results_hours: 170
@@ -428,12 +378,6 @@ test_groups:
   num_failures_to_alert: 3
 - name: ci-knative-eventing-contrib-0.16-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-0.16-dot-release
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  alert_stale_results_hours: 170
-  num_failures_to_alert: 1
-- name: ci-knative-net-istio-0.16-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-net-istio-0.16-dot-release
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   alert_stale_results_hours: 170
@@ -509,6 +453,44 @@ test_groups:
   num_failures_to_alert: 1
 - name: ci-knative-sandbox-net-http01-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-http01-go-coverage
+  short_text_metric: "coverage"
+- name: ci-knative-sandbox-net-istio-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-istio-continuous
+  alert_stale_results_hours: 3
+- name: ci-knative-sandbox-net-istio-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-istio-nightly-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-net-istio-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-istio-auto-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-net-istio-test-coverage
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-istio-go-coverage
+  short_text_metric: "coverage"
+- name: ci-knative-sandbox-net-kourier-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-kourier-continuous
+  alert_stale_results_hours: 3
+- name: ci-knative-sandbox-net-kourier-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-kourier-nightly-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-net-kourier-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-kourier-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-net-kourier-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-kourier-auto-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-net-kourier-test-coverage
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-kourier-go-coverage
   short_text_metric: "coverage"
 - name: ci-knative-sandbox-discovery-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-discovery-continuous
@@ -633,6 +615,24 @@ test_groups:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   alert_stale_results_hours: 170
   num_failures_to_alert: 1
+- name: ci-knative-sandbox-net-istio-0.14-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-istio-0.14-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-net-istio-0.15-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-istio-0.15-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-net-istio-0.16-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-istio-0.16-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
 - name: ci-knative-serving-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-serving-continuous-beta-prow-tests
 - name: ci-knative-serving-0.13-continuous-beta-prow-tests
@@ -739,15 +739,15 @@ test_groups:
 - name: ci-knative-sandbox-net-http01-go-coverage-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-http01-go-coverage-beta-prow-tests
   short_text_metric: "coverage"
-- name: ci-knative-net-istio-continuous-beta-prow-tests
-  gcs_prefix: knative-prow/logs/ci-knative-net-istio-continuous-beta-prow-tests
-- name: ci-knative-net-istio-go-coverage-beta-prow-tests
-  gcs_prefix: knative-prow/logs/ci-knative-net-istio-go-coverage-beta-prow-tests
+- name: ci-knative-sandbox-net-istio-continuous-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-istio-continuous-beta-prow-tests
+- name: ci-knative-sandbox-net-istio-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-istio-go-coverage-beta-prow-tests
   short_text_metric: "coverage"
-- name: ci-knative-net-kourier-continuous-beta-prow-tests
-  gcs_prefix: knative-prow/logs/ci-knative-net-kourier-continuous-beta-prow-tests
-- name: ci-knative-net-kourier-go-coverage-beta-prow-tests
-  gcs_prefix: knative-prow/logs/ci-knative-net-kourier-go-coverage-beta-prow-tests
+- name: ci-knative-sandbox-net-kourier-continuous-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-kourier-continuous-beta-prow-tests
+- name: ci-knative-sandbox-net-kourier-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-kourier-go-coverage-beta-prow-tests
   short_text_metric: "coverage"
 - name: ci-knative-operator-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-operator-continuous-beta-prow-tests
@@ -1010,58 +1010,6 @@ dashboards:
   - name: coverage
     test_group_name: ci-knative-test-infra-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: net-istio
-  dashboard_tab:
-  - name: continuous
-    test_group_name: ci-knative-net-istio-continuous
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 3
-  - name: nightly
-    test_group_name: ci-knative-net-istio-nightly-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 1
-  - name: auto-release
-    test_group_name: ci-knative-net-istio-auto-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 1
-  - name: coverage
-    test_group_name: ci-knative-net-istio-test-coverage
-    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: net-kourier
-  dashboard_tab:
-  - name: continuous
-    test_group_name: ci-knative-net-kourier-continuous
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 3
-  - name: nightly
-    test_group_name: ci-knative-net-kourier-nightly-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 1
-  - name: dot-release
-    test_group_name: ci-knative-net-kourier-dot-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 1
-  - name: auto-release
-    test_group_name: ci-knative-net-kourier-auto-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 1
-  - name: coverage
-    test_group_name: ci-knative-net-kourier-test-coverage
-    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: operator
   dashboard_tab:
   - name: continuous
@@ -1193,6 +1141,58 @@ dashboards:
     num_failures_to_alert: 1
   - name: coverage
     test_group_name: ci-knative-sandbox-net-http01-test-coverage
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+- name: net-istio
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-sandbox-net-istio-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: nightly
+    test_group_name: ci-knative-sandbox-net-istio-nightly-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: auto-release
+    test_group_name: ci-knative-sandbox-net-istio-auto-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: coverage
+    test_group_name: ci-knative-sandbox-net-istio-test-coverage
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+- name: net-kourier
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-sandbox-net-kourier-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: nightly
+    test_group_name: ci-knative-sandbox-net-kourier-nightly-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: dot-release
+    test_group_name: ci-knative-sandbox-net-kourier-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: auto-release
+    test_group_name: ci-knative-sandbox-net-kourier-auto-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: coverage
+    test_group_name: ci-knative-sandbox-net-kourier-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: discovery
   dashboard_tab:
@@ -1401,12 +1401,6 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 3
-  - name: net-istio-dot-release
-    test_group_name: ci-knative-net-istio-0.14-dot-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 3
 - name: knative-0.15
   dashboard_tab:
   - name: serving-continuous
@@ -1453,12 +1447,6 @@ dashboards:
     num_failures_to_alert: 3
   - name: eventing-contrib-dot-release
     test_group_name: ci-knative-eventing-contrib-0.15-dot-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 3
-  - name: net-istio-dot-release
-    test_group_name: ci-knative-net-istio-0.15-dot-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
@@ -1519,12 +1507,6 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 3
-  - name: net-istio-dot-release
-    test_group_name: ci-knative-net-istio-0.16-dot-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 3
 - name: google-0.13
   dashboard_tab:
   - name: knative-gcp-continuous
@@ -1577,6 +1559,30 @@ dashboards:
     num_failures_to_alert: 3
   - name: knative-gcp-dot-release
     test_group_name: ci-google-knative-gcp-0.16-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+- name: knative-sandbox-0.14
+  dashboard_tab:
+  - name: net-istio-dot-release
+    test_group_name: ci-knative-sandbox-net-istio-0.14-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+- name: knative-sandbox-0.15
+  dashboard_tab:
+  - name: net-istio-dot-release
+    test_group_name: ci-knative-sandbox-net-istio-0.15-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+- name: knative-sandbox-0.16
+  dashboard_tab:
+  - name: net-istio-dot-release
+    test_group_name: ci-knative-sandbox-net-istio-0.16-dot-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
@@ -1724,17 +1730,17 @@ dashboards:
   - name: ci-knative-sandbox-net-http01-go-coverage
     test_group_name: ci-knative-sandbox-net-http01-go-coverage-beta-prow-tests
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-  - name: ci-knative-net-istio-continuous
-    test_group_name: ci-knative-net-istio-continuous-beta-prow-tests
+  - name: ci-knative-sandbox-net-istio-continuous
+    test_group_name: ci-knative-sandbox-net-istio-continuous-beta-prow-tests
     base_options: "sort-by-failures="
-  - name: ci-knative-net-istio-go-coverage
-    test_group_name: ci-knative-net-istio-go-coverage-beta-prow-tests
+  - name: ci-knative-sandbox-net-istio-go-coverage
+    test_group_name: ci-knative-sandbox-net-istio-go-coverage-beta-prow-tests
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-  - name: ci-knative-net-kourier-continuous
-    test_group_name: ci-knative-net-kourier-continuous-beta-prow-tests
+  - name: ci-knative-sandbox-net-kourier-continuous
+    test_group_name: ci-knative-sandbox-net-kourier-continuous-beta-prow-tests
     base_options: "sort-by-failures="
-  - name: ci-knative-net-kourier-go-coverage
-    test_group_name: ci-knative-net-kourier-go-coverage-beta-prow-tests
+  - name: ci-knative-sandbox-net-kourier-go-coverage
+    test_group_name: ci-knative-sandbox-net-kourier-go-coverage-beta-prow-tests
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
   - name: ci-knative-operator-continuous
     test_group_name: ci-knative-operator-continuous-beta-prow-tests
@@ -1810,8 +1816,6 @@ dashboard_groups:
   - "pkg"
   - "caching"
   - "test-infra"
-  - "net-istio"
-  - "net-kourier"
   - "operator"
 - name: knative-sandbox
   dashboard_names:
@@ -1820,6 +1824,8 @@ dashboard_groups:
   - "net-certmanager"
   - "net-contour"
   - "net-http01"
+  - "net-istio"
+  - "net-kourier"
   - "discovery"
   - "eventing-kafka"
   - "eventing-kafka-broker"
