@@ -24,21 +24,14 @@ default:
   labels:
     # Common labels for triaging
     - color: c5def5
-      description: Parked issue that required triaging/revisit in a near future
+      description: Parked issue that required triaging/revisit in a near future.
       name: kind/TBD
       target: issues
       addedBy: humans
     - color: 7057ff
-      description: Denotes an issue ready for a new contributor, according to the "help wanted" guidelines.
+      description: Denotes an issue ready for a new contributor.
       name: kind/good-first-issue
       target: issues
-      prowPlugin: help
-      addedBy: anyone
-    - color: 008672
-      description: Denotes an issue that needs help from a contributor. Must meet "help wanted" guidelines.
-      name: kind/help-wanted
-      target: issues
-      prowPlugin: help
       addedBy: anyone
     - color: ff0000
       name: kind/bug
@@ -66,10 +59,6 @@ default:
       addedBy: humans
     - color: bfd4f2
       name: kind/performance
-      target: issues
-      addedBy: humans
-    - color: 1d76db
-      name: kind/refactoring
       target: issues
       addedBy: humans
 
