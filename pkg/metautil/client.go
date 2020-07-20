@@ -47,7 +47,6 @@ func NewClient(dir string) (*Client, error) {
 		metadata: make(map[string]string),
 	}
 	if dir == "" {
-		log.Println("Getting artifacts dir from prow")
 		dir = prow.GetLocalArtifactsDir()
 	}
 	c.Path = path.Join(dir, filename)
