@@ -16,7 +16,7 @@
 
 # Fake we're in a Prow job, if running locally.
 [[ ! -v PROW_JOB_ID ]] && PROW_JOB_ID=123
-[[ ! -v PULL_PULL_SHA ]] && PULL_PULL_SHA=456
+[[ ! -v JOB_TYPE ]] && JOB_TYPE="presubmit"
 [[ ! -v ARTIFACTS ]] && ARTIFACTS=/tmp
 
 source $(dirname $0)/test-helper.sh
