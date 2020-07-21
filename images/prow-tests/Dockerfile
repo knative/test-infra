@@ -70,6 +70,9 @@ RUN go get -u github.com/golang/dep/cmd/dep
 RUN go get -u github.com/jstemmer/go-junit-report
 RUN GO111MODULE=on go get -u github.com/raviqqe/liche@v0.0.0-20200229003944-f57a5d1c5be4  # stable liche version for checking md links
 RUN GO111MODULE=on go get -u github.com/google/go-licenses
+RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2
+RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2/kubetest2-gke
+RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2/kubetest2-kind
 
 # protoc and required golang tooling
 ARG PROTOC_VERSION=3.12.3
@@ -88,6 +91,7 @@ RUN ko version > /ko_version
 RUN mv "$(which runner.sh)" "$(dirname "$(which runner.sh)")/kubekins-runner.sh"
 COPY images/prow-tests/runner.sh /usr/local/bin
 
+# TODO(chizhg): remove it once we replace with kntest in the places where this tool is used
 # Install our own tools
 RUN go get knative.dev/pkg/testutils/junithelper
 
