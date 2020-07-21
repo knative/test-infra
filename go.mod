@@ -22,13 +22,14 @@ require (
 	golang.org/x/crypto v0.0.0-20200709230013-948cd5f35899 // indirect
 	golang.org/x/net v0.0.0-20200707034311-ab3426394381
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
-	golang.org/x/tools v0.0.0-20200714190737-9048b464a08d // indirect
+	golang.org/x/sys v0.0.0-20200720211630-cb9d2d5c5666 // indirect
+	golang.org/x/tools v0.0.0-20200721032237-77f530d86f9a // indirect
 	google.golang.org/api v0.29.0
-	google.golang.org/genproto v0.0.0-20200715011427-11fb19a81f2c // indirect
+	google.golang.org/genproto v0.0.0-20200721032028-5044d0edf986 // indirect
 	gopkg.in/yaml.v2 v2.3.0
-	k8s.io/apimachinery v0.18.5
-	k8s.io/test-infra v0.0.0-20200715094037-cc150f5ae724 // indirect
-	sigs.k8s.io/boskos v0.0.0-20200710214748-f5935686c7fc
+	k8s.io/apimachinery v0.18.6
+	k8s.io/test-infra v0.0.0-20200721115715-1af01ef6b4c8 // indirect
+	sigs.k8s.io/boskos v0.0.0-20200717180850-7299d535c033
 )
 
 replace (
