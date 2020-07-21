@@ -33,7 +33,6 @@ periodics:
       - "/app/robots/commenter/app.binary"
       args:
       - "--query=repo:knative/serving
-      repo:knative/docs
       is:open
       -label:lifecycle/frozen
       -label:lifecycle/stale
@@ -69,7 +68,6 @@ periodics:
       - "/app/robots/commenter/app.binary"
       args:
       - "--query=repo:knative/serving
-      repo:knative/docs
       is:open
       -label:lifecycle/frozen
       label:lifecycle/stale
@@ -104,7 +102,6 @@ periodics:
       - "/app/robots/commenter/app.binary"
       args:
       - "--query=repo:repo:knative/serving
-      repo:knative/docs
       is:open
       -label:lifecycle/frozen
       -label:lifecycle/stale
