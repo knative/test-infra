@@ -9,7 +9,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1
 	github.com/docker/docker v1.13.1 // indirect
 	github.com/go-sql-driver/mysql v1.5.0
-	github.com/google/go-cmp v0.5.0
+	github.com/google/go-cmp v0.5.1
 	github.com/google/go-containerregistry v0.1.1
 	github.com/google/go-github/v27 v27.0.6
 	github.com/google/licenseclassifier v0.0.0-20200708223521-3d09a0ea2f39
@@ -23,12 +23,12 @@ require (
 	golang.org/x/net v0.0.0-20200707034311-ab3426394381
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 	golang.org/x/sys v0.0.0-20200720211630-cb9d2d5c5666 // indirect
-	golang.org/x/tools v0.0.0-20200721032237-77f530d86f9a // indirect
+	golang.org/x/tools v0.0.0-20200721223218-6123e77877b2 // indirect
 	google.golang.org/api v0.29.0
-	google.golang.org/genproto v0.0.0-20200721032028-5044d0edf986 // indirect
+	google.golang.org/genproto v0.0.0-20200722002428-88e341933a54 // indirect
 	gopkg.in/yaml.v2 v2.3.0
 	k8s.io/apimachinery v0.18.6
-	k8s.io/test-infra v0.0.0-20200721115715-1af01ef6b4c8 // indirect
+	k8s.io/test-infra v0.0.0-20200722010006-526277bee528 // indirect
 	sigs.k8s.io/boskos v0.0.0-20200717180850-7299d535c033
 )
 
