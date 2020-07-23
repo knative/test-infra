@@ -4,7 +4,7 @@ go 1.14
 
 require (
 	cloud.google.com/go v0.61.0 // indirect
-	cloud.google.com/go/pubsub v1.5.0
+	cloud.google.com/go/pubsub v1.6.0
 	cloud.google.com/go/storage v1.10.0
 	github.com/davecgh/go-spew v1.1.1
 	github.com/docker/docker v1.13.1 // indirect
@@ -22,13 +22,12 @@ require (
 	golang.org/x/crypto v0.0.0-20200709230013-948cd5f35899 // indirect
 	golang.org/x/net v0.0.0-20200707034311-ab3426394381
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
-	golang.org/x/sys v0.0.0-20200720211630-cb9d2d5c5666 // indirect
-	golang.org/x/tools v0.0.0-20200721223218-6123e77877b2 // indirect
+	golang.org/x/sys v0.0.0-20200722175500-76b94024e4b6 // indirect
+	golang.org/x/tools v0.0.0-20200723000907-a7c6fd066f6d // indirect
 	google.golang.org/api v0.29.0
-	google.golang.org/genproto v0.0.0-20200722002428-88e341933a54 // indirect
 	gopkg.in/yaml.v2 v2.3.0
 	k8s.io/apimachinery v0.18.6
-	k8s.io/test-infra v0.0.0-20200722010006-526277bee528 // indirect
+	k8s.io/test-infra v0.0.0-20200723132140-b02d194a2d64 // indirect
 	sigs.k8s.io/boskos v0.0.0-20200717180850-7299d535c033
 )
 
