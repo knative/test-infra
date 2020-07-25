@@ -168,6 +168,12 @@ presubmits:
     args:
     - --run-test
     - ./test/e2e-tests.sh
+  - custom-test: conformance-tests
+    dot-dev: true
+    needs-monitor: true
+    args:
+    - --run-test
+    - ./test/e2e-conformance-tests.sh
   - custom-test: upgrade-tests
     dot-dev: true
     needs-monitor: true
