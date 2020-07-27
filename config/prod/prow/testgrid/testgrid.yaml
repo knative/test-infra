@@ -382,6 +382,11 @@ test_groups:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   alert_stale_results_hours: 170
   num_failures_to_alert: 1
+- name: ci-knative-operator-0.16-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-operator-0.16-continuous
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 3
 - name: ci-knative-sandbox-sample-controller-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-sample-controller-continuous
   alert_stale_results_hours: 3
@@ -753,6 +758,8 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-operator-continuous-beta-prow-tests
 - name: ci-knative-operator-0.15-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-operator-0.15-continuous-beta-prow-tests
+- name: ci-knative-operator-0.16-continuous-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-operator-0.16-continuous-beta-prow-tests
 - name: ci-knative-operator-go-coverage-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-operator-go-coverage-beta-prow-tests
   short_text_metric: "coverage"
@@ -1507,6 +1514,12 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 3
+  - name: operator-continuous
+    test_group_name: ci-knative-operator-0.16-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
 - name: google-0.13
   dashboard_tab:
   - name: knative-gcp-continuous
@@ -1747,6 +1760,9 @@ dashboards:
     base_options: "sort-by-failures="
   - name: ci-knative-operator-0.15-continuous
     test_group_name: ci-knative-operator-0.15-continuous-beta-prow-tests
+    base_options: "sort-by-failures="
+  - name: ci-knative-operator-0.16-continuous
+    test_group_name: ci-knative-operator-0.16-continuous-beta-prow-tests
     base_options: "sort-by-failures="
   - name: ci-knative-operator-go-coverage
     test_group_name: ci-knative-operator-go-coverage-beta-prow-tests
