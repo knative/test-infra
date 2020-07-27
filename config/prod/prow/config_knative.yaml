@@ -880,6 +880,13 @@ periodics:
         memory: 12Gi
       limits:
         memory: 16Gi
+  - branch-ci: true
+    release: "0.16"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
   - nightly: true
     dot-dev: true
   - dot-release: true
