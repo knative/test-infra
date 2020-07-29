@@ -15,9 +15,11 @@
 # limitations under the License.
 
 # Fake we're in a Prow job, if running locally.
-[[ ! -v PROW_JOB_ID ]] && PROW_JOB_ID=123
-[[ ! -v JOB_TYPE ]] && JOB_TYPE="presubmit"
-[[ ! -v ARTIFACTS ]] && ARTIFACTS=/tmp
+# Only overwrite the env vars within the scope of this script.
+# shellcheck disable=SC2034
+PROW_JOB_ID=123
+JOB_TYPE="presubmit"
+ARTIFACTS=/tmp
 
 source $(dirname $0)/test-helper.sh
 
