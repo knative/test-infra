@@ -104,6 +104,8 @@ type baseProwJobTemplateData struct {
 	Volumes             []string
 	VolumeMounts        []string
 	Resources           []string
+	ReporterConfig      []string
+	JobStatesToReport   []string
 	Timeout             int
 	AlwaysRun           bool
 	TestAccount         string
@@ -330,6 +332,21 @@ func setResourcesReqForJob(res yaml.MapSlice, data *baseProwJobTemplateData) {
 	}
 }
 
+// setReporterConfigReqForJob sets reporter requirement for job
+func setReporterConfigReqForJob(res yaml.MapSlice, data *baseProwJobTemplateData) {
+	data.ReporterConfig = nil
+	for _, val := range res {
+		data.ReporterConfig = append(data.ReporterConfig, fmt.Sprintf("  %s:", getString(val.Key)))
+		for _, item := range getMapSlice(val.Value) {
+			if arr, ok := item.Value.([]interface{}); ok {
+				data.JobStatesToReport = getStringArray(arr)
+			} else {
+				data.ReporterConfig = append(data.ReporterConfig, fmt.Sprintf("    %s: %s", getString(item.Key), getString(item.Value)))
+			}
+		}
+	}
+}
+
 // Config parsers.
 
 // parseBasicJobConfigOverrides updates the given baseProwJobTemplateData with any base option present in the given config.
@@ -375,6 +392,8 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 			(*data).Optional = "optional: true"
 		case "resources":
 			setResourcesReqForJob(getMapSlice(item.Value), data)
+		case "reporter_config":
+			setReporterConfigReqForJob(getMapSlice(item.Value), data)
 		case nil: // already processed
 			continue
 		default:

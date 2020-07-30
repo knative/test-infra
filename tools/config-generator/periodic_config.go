@@ -133,7 +133,6 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	jobNameSuffix := ""
 	jobTemplate := readTemplate(periodicTestJob)
 	jobType := ""
-	isMonitoredJob := false
 	isContinuousJob := false
 
 	// Parse the input yaml and set values data based on them
@@ -146,7 +145,6 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			jobType = getString(item.Key)
 			jobNameSuffix = "continuous"
 			isContinuousJob = true
-			isMonitoredJob = true
 			// Use default command and arguments if none given.
 			if data.Base.Command == "" {
 				data.Base.Command = presubmitScript
@@ -164,7 +162,6 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			data.Base.Command = releaseScript
 			data.Base.Args = releaseNightly
 			data.Base.Timeout = 90
-			isMonitoredJob = true
 		case "branch-ci":
 			if !getBool(item.Value) {
 				return
@@ -177,7 +174,6 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			setupDockerInDockerForJob(&data.Base)
 			// TODO(adrcunha): Consider reducing the timeout in the future.
 			data.Base.Timeout = 180
-			isMonitoredJob = true
 		case "dot-release", "auto-release":
 			if !getBool(item.Value) {
 				return
@@ -193,7 +189,6 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 				"--github-token /etc/hub-token/token"}
 			addVolumeToJob(&data.Base, "/etc/hub-token", "hub-token", true, "")
 			data.Base.Timeout = 90
-			isMonitoredJob = true
 		case "custom-job":
 			jobType = getString(item.Key)
 			jobNameSuffix = getString(item.Value)
@@ -207,7 +202,6 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			if jobType == "dot-release" {
 				data.Base.Args = append(data.Base.Args, "--branch release-"+version)
 			}
-			isMonitoredJob = true
 		case "webhook-apicoverage":
 			if !getBool(item.Value) {
 				return
@@ -226,9 +220,6 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	data.PeriodicJobName = fmt.Sprintf("ci-%s", data.Base.RepoNameForJob)
 	if jobNameSuffix != "" {
 		data.PeriodicJobName += "-" + jobNameSuffix
-	}
-	if isMonitoredJob {
-		addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
 	}
 	if data.CronString == "" {
 		data.CronString = generateCron(jobType, data.PeriodicJobName, data.Base.RepoName, data.Base.Timeout)
