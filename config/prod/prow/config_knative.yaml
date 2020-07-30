@@ -614,6 +614,12 @@ periodics:
     dot-dev: true
   - nightly: true
     dot-dev: true
+    reporter_config:
+      slack:
+        channel: "eventing"
+        job_states_to_report:
+        - failure
+        report_template: "\"The nightly release job fails, check the log: <{{.Status.URL}}|View logs>\""
     resources:
       requests:
         memory: 12Gi

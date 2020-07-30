@@ -3839,10 +3839,6 @@ periodics:
 - cron: "0 */2 * * *"
   name: ci-knative-serving-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-serving-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -3880,10 +3876,6 @@ periodics:
 - cron: "4 8,11,22 * * *"
   name: ci-knative-serving-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-serving-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -3921,10 +3913,6 @@ periodics:
 - cron: "45 8 * * *"
   name: ci-knative-serving-0.13-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-serving-0.13-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -3968,10 +3956,6 @@ periodics:
 - cron: "37 8,11 * * *"
   name: ci-knative-serving-0.13-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-serving-0.13-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -4015,10 +3999,6 @@ periodics:
 - cron: "42 8 * * *"
   name: ci-knative-serving-0.14-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-serving-0.14-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -4062,10 +4042,6 @@ periodics:
 - cron: "58 8,11 * * *"
   name: ci-knative-serving-0.14-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-serving-0.14-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -4109,10 +4085,6 @@ periodics:
 - cron: "43 8 * * *"
   name: ci-knative-serving-0.15-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-serving-0.15-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -4156,10 +4128,6 @@ periodics:
 - cron: "11 8,11 * * *"
   name: ci-knative-serving-0.15-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-serving-0.15-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -4203,10 +4171,6 @@ periodics:
 - cron: "52 8 * * *"
   name: ci-knative-serving-0.16-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-serving-0.16-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -4250,10 +4214,6 @@ periodics:
 - cron: "24 8,11 * * *"
   name: ci-knative-serving-0.16-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-serving-0.16-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -4612,10 +4572,6 @@ periodics:
 - cron: "20 9 * * *"
   name: ci-knative-serving-nightly-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-serving-nightly-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -4654,10 +4610,6 @@ periodics:
 - cron: "57 9 * * 2"
   name: ci-knative-serving-0.13-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-serving-0.13-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -4707,10 +4659,6 @@ periodics:
 - cron: "32 9 * * 2"
   name: ci-knative-serving-0.14-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-serving-0.14-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -4760,10 +4708,6 @@ periodics:
 - cron: "23 9 * * 2"
   name: ci-knative-serving-0.15-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-serving-0.15-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -4813,10 +4757,6 @@ periodics:
 - cron: "42 9 * * 2"
   name: ci-knative-serving-0.16-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-serving-0.16-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -4866,10 +4806,6 @@ periodics:
 - cron: "20 */2 * * *"
   name: ci-knative-serving-auto-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-serving-auto-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -4997,10 +4933,6 @@ periodics:
 - cron: "53 * * * *"
   name: ci-knative-client-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-client-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -5033,10 +4965,6 @@ periodics:
 - cron: "13 8,11,22 * * *"
   name: ci-knative-client-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-client-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -5069,10 +4997,6 @@ periodics:
 - cron: "14 8 * * *"
   name: ci-knative-client-0.13-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-client-0.13-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -5116,10 +5040,6 @@ periodics:
 - cron: "42 8,11 * * *"
   name: ci-knative-client-0.13-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-client-0.13-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -5163,10 +5083,6 @@ periodics:
 - cron: "49 8 * * *"
   name: ci-knative-client-0.14-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-client-0.14-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -5210,10 +5126,6 @@ periodics:
 - cron: "5 8,11 * * *"
   name: ci-knative-client-0.14-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-client-0.14-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -5257,10 +5169,6 @@ periodics:
 - cron: "52 8 * * *"
   name: ci-knative-client-0.15-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-client-0.15-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -5304,10 +5212,6 @@ periodics:
 - cron: "8 8,11 * * *"
   name: ci-knative-client-0.15-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-client-0.15-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -5351,10 +5255,6 @@ periodics:
 - cron: "3 8 * * *"
   name: ci-knative-client-0.16-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-client-0.16-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -5398,10 +5298,6 @@ periodics:
 - cron: "11 8,11 * * *"
   name: ci-knative-client-0.16-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-client-0.16-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -5445,10 +5341,6 @@ periodics:
 - cron: "59 9 * * *"
   name: ci-knative-client-nightly-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-client-nightly-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -5513,10 +5405,6 @@ periodics:
 - cron: "4 9 * * 2"
   name: ci-knative-client-0.13-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-client-0.13-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -5561,10 +5449,6 @@ periodics:
 - cron: "5 9 * * 2"
   name: ci-knative-client-0.14-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-client-0.14-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -5609,10 +5493,6 @@ periodics:
 - cron: "26 9 * * 2"
   name: ci-knative-client-0.15-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-client-0.15-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -5657,10 +5537,6 @@ periodics:
 - cron: "47 9 * * 2"
   name: ci-knative-client-0.16-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-client-0.16-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -5705,10 +5581,6 @@ periodics:
 - cron: "29 */2 * * *"
   name: ci-knative-client-auto-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-client-auto-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -5798,10 +5670,6 @@ periodics:
 - cron: "49 * * * *"
   name: ci-knative-client-contrib-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-client-contrib-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -5834,10 +5702,6 @@ periodics:
 - cron: "21 8,11,22 * * *"
   name: ci-knative-client-contrib-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-client-contrib-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -5870,10 +5734,6 @@ periodics:
 - cron: "45 * * * *"
   name: ci-knative-docs-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-docs-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -5913,10 +5773,6 @@ periodics:
 - cron: "33 8,11,22 * * *"
   name: ci-knative-docs-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-docs-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -6002,10 +5858,6 @@ periodics:
 - cron: "52 */2 * * *"
   name: ci-knative-eventing-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -6043,10 +5895,6 @@ periodics:
 - cron: "8 8,11,22 * * *"
   name: ci-knative-eventing-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -6084,10 +5932,6 @@ periodics:
 - cron: "37 8 * * *"
   name: ci-knative-eventing-0.13-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-0.13-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -6131,10 +5975,6 @@ periodics:
 - cron: "53 8,11 * * *"
   name: ci-knative-eventing-0.13-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-0.13-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -6178,10 +6018,6 @@ periodics:
 - cron: "14 8 * * *"
   name: ci-knative-eventing-0.14-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-0.14-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -6225,10 +6061,6 @@ periodics:
 - cron: "30 8,11 * * *"
   name: ci-knative-eventing-0.14-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-0.14-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -6272,10 +6104,6 @@ periodics:
 - cron: "39 8 * * *"
   name: ci-knative-eventing-0.15-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-0.15-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -6319,10 +6147,6 @@ periodics:
 - cron: "15 8,11 * * *"
   name: ci-knative-eventing-0.15-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-0.15-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -6366,10 +6190,6 @@ periodics:
 - cron: "48 8 * * *"
   name: ci-knative-eventing-0.16-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-0.16-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -6413,10 +6233,6 @@ periodics:
 - cron: "56 8,11 * * *"
   name: ci-knative-eventing-0.16-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-0.16-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -6460,11 +6276,13 @@ periodics:
 - cron: "12 9 * * *"
   name: ci-knative-eventing-nightly-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-nightly-release
   decorate: true
+  reporter_config:
+    slack:
+      channel: eventing
+      report_template: "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
+      job_states_to_report:
+      - "failure"
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6502,10 +6320,6 @@ periodics:
 - cron: "41 9 * * 2"
   name: ci-knative-eventing-0.13-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-0.13-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -6555,10 +6369,6 @@ periodics:
 - cron: "36 9 * * 2"
   name: ci-knative-eventing-0.14-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-0.14-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -6608,10 +6418,6 @@ periodics:
 - cron: "23 9 * * 2"
   name: ci-knative-eventing-0.15-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-0.15-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -6661,10 +6467,6 @@ periodics:
 - cron: "50 9 * * 2"
   name: ci-knative-eventing-0.16-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-0.16-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -6714,10 +6516,6 @@ periodics:
 - cron: "52 */2 * * *"
   name: ci-knative-eventing-auto-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-auto-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -6812,10 +6610,6 @@ periodics:
 - cron: "36 * * * *"
   name: ci-knative-eventing-contrib-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-contrib-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -6853,10 +6647,6 @@ periodics:
 - cron: "52 8,11,22 * * *"
   name: ci-knative-eventing-contrib-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-contrib-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -6894,10 +6684,6 @@ periodics:
 - cron: "17 8 * * *"
   name: ci-knative-eventing-contrib-0.13-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-contrib-0.13-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -6941,10 +6727,6 @@ periodics:
 - cron: "49 8,11 * * *"
   name: ci-knative-eventing-contrib-0.13-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-contrib-0.13-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -6988,10 +6770,6 @@ periodics:
 - cron: "54 8 * * *"
   name: ci-knative-eventing-contrib-0.14-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-contrib-0.14-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -7035,10 +6813,6 @@ periodics:
 - cron: "42 8,11 * * *"
   name: ci-knative-eventing-contrib-0.14-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-contrib-0.14-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -7082,10 +6856,6 @@ periodics:
 - cron: "19 8 * * *"
   name: ci-knative-eventing-contrib-0.15-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-contrib-0.15-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -7129,10 +6899,6 @@ periodics:
 - cron: "11 8,11 * * *"
   name: ci-knative-eventing-contrib-0.15-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-contrib-0.15-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -7176,10 +6942,6 @@ periodics:
 - cron: "28 8 * * *"
   name: ci-knative-eventing-contrib-0.16-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-contrib-0.16-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -7223,10 +6985,6 @@ periodics:
 - cron: "8 8,11 * * *"
   name: ci-knative-eventing-contrib-0.16-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-contrib-0.16-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -7270,10 +7028,6 @@ periodics:
 - cron: "40 9 * * *"
   name: ci-knative-eventing-contrib-nightly-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-contrib-nightly-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -7312,10 +7066,6 @@ periodics:
 - cron: "53 9 * * 2"
   name: ci-knative-eventing-contrib-0.13-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-contrib-0.13-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -7365,10 +7115,6 @@ periodics:
 - cron: "36 9 * * 2"
   name: ci-knative-eventing-contrib-0.14-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-contrib-0.14-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -7418,10 +7164,6 @@ periodics:
 - cron: "11 9 * * 2"
   name: ci-knative-eventing-contrib-0.15-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-contrib-0.15-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -7471,10 +7213,6 @@ periodics:
 - cron: "34 9 * * 2"
   name: ci-knative-eventing-contrib-0.16-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-contrib-0.16-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -7524,10 +7262,6 @@ periodics:
 - cron: "32 */2 * * *"
   name: ci-knative-eventing-contrib-auto-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-eventing-contrib-auto-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -7622,10 +7356,6 @@ periodics:
 - cron: "2 * * * *"
   name: ci-knative-pkg-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-pkg-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -7658,10 +7388,6 @@ periodics:
 - cron: "18 8,11,22 * * *"
   name: ci-knative-pkg-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-pkg-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -7742,10 +7468,6 @@ periodics:
 - cron: "47 * * * *"
   name: ci-knative-caching-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-caching-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -7778,10 +7500,6 @@ periodics:
 - cron: "43 8,11,22 * * *"
   name: ci-knative-caching-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-caching-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -7862,10 +7580,6 @@ periodics:
 - cron: "5 * * * *"
   name: ci-knative-sandbox-sample-controller-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-sample-controller-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -7898,10 +7612,6 @@ periodics:
 - cron: "21 8,11,22 * * *"
   name: ci-knative-sandbox-sample-controller-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-sample-controller-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -7934,10 +7644,6 @@ periodics:
 - cron: "50 * * * *"
   name: ci-knative-sandbox-sample-source-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-sample-source-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -7970,10 +7676,6 @@ periodics:
 - cron: "6 8,11,22 * * *"
   name: ci-knative-sandbox-sample-source-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-sample-source-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -8006,10 +7708,6 @@ periodics:
 - cron: "49 * * * *"
   name: ci-knative-test-infra-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-test-infra-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -8042,10 +7740,6 @@ periodics:
 - cron: "57 8,11,22 * * *"
   name: ci-knative-test-infra-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-test-infra-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -8126,10 +7820,6 @@ periodics:
 - cron: "18 * * * *"
   name: ci-google-knative-gcp-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -8166,10 +7856,6 @@ periodics:
 - cron: "14 8,11,22 * * *"
   name: ci-google-knative-gcp-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -8206,10 +7892,6 @@ periodics:
 - cron: "59 8 * * *"
   name: ci-google-knative-gcp-0.13-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-0.13-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -8257,10 +7939,6 @@ periodics:
 - cron: "35 8,11 * * *"
   name: ci-google-knative-gcp-0.13-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-0.13-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -8308,10 +7986,6 @@ periodics:
 - cron: "28 8 * * *"
   name: ci-google-knative-gcp-0.14-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-0.14-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -8359,10 +8033,6 @@ periodics:
 - cron: "36 8,11 * * *"
   name: ci-google-knative-gcp-0.14-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-0.14-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -8410,10 +8080,6 @@ periodics:
 - cron: "41 8 * * *"
   name: ci-google-knative-gcp-0.15-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-0.15-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -8461,10 +8127,6 @@ periodics:
 - cron: "33 8,11 * * *"
   name: ci-google-knative-gcp-0.15-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-0.15-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -8512,10 +8174,6 @@ periodics:
 - cron: "50 8 * * *"
   name: ci-google-knative-gcp-0.16-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-0.16-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -8563,10 +8221,6 @@ periodics:
 - cron: "30 8,11 * * *"
   name: ci-google-knative-gcp-0.16-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-0.16-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -8614,10 +8268,6 @@ periodics:
 - cron: "34 9 * * *"
   name: ci-google-knative-gcp-nightly-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-nightly-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -8655,10 +8305,6 @@ periodics:
 - cron: "47 9 * * 2"
   name: ci-google-knative-gcp-0.13-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-0.13-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -8709,10 +8355,6 @@ periodics:
 - cron: "10 9 * * 2"
   name: ci-google-knative-gcp-0.14-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-0.14-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -8763,10 +8405,6 @@ periodics:
 - cron: "41 9 * * 2"
   name: ci-google-knative-gcp-0.15-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-0.15-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -8817,10 +8455,6 @@ periodics:
 - cron: "52 9 * * 2"
   name: ci-google-knative-gcp-0.16-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-0.16-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -8871,10 +8505,6 @@ periodics:
 - cron: "42 */2 * * *"
   name: ci-google-knative-gcp-auto-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-auto-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -8968,10 +8598,6 @@ periodics:
 - cron: "59 * * * *"
   name: ci-knative-sandbox-net-certmanager-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-certmanager-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -9004,10 +8630,6 @@ periodics:
 - cron: "31 8,11,22 * * *"
   name: ci-knative-sandbox-net-certmanager-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-certmanager-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -9040,10 +8662,6 @@ periodics:
 - cron: "45 9 * * *"
   name: ci-knative-sandbox-net-certmanager-nightly-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-certmanager-nightly-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -9077,10 +8695,6 @@ periodics:
 - cron: "9 9 * * 2"
   name: ci-knative-sandbox-net-certmanager-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-certmanager-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -9122,10 +8736,6 @@ periodics:
 - cron: "27 */2 * * *"
   name: ci-knative-sandbox-net-certmanager-auto-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-certmanager-auto-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -9215,10 +8825,6 @@ periodics:
 - cron: "38 * * * *"
   name: ci-knative-sandbox-net-contour-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-contour-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -9251,10 +8857,6 @@ periodics:
 - cron: "38 8,11,22 * * *"
   name: ci-knative-sandbox-net-contour-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-contour-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -9287,10 +8889,6 @@ periodics:
 - cron: "42 9 * * *"
   name: ci-knative-sandbox-net-contour-nightly-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-contour-nightly-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -9324,10 +8922,6 @@ periodics:
 - cron: "58 9 * * 2"
   name: ci-knative-sandbox-net-contour-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-contour-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -9369,10 +8963,6 @@ periodics:
 - cron: "42 */2 * * *"
   name: ci-knative-sandbox-net-contour-auto-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-contour-auto-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -9462,10 +9052,6 @@ periodics:
 - cron: "9 * * * *"
   name: ci-knative-sandbox-net-http01-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-http01-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -9498,10 +9084,6 @@ periodics:
 - cron: "45 8,11,22 * * *"
   name: ci-knative-sandbox-net-http01-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-http01-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -9534,10 +9116,6 @@ periodics:
 - cron: "59 9 * * *"
   name: ci-knative-sandbox-net-http01-nightly-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-http01-nightly-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -9571,10 +9149,6 @@ periodics:
 - cron: "7 9 * * 2"
   name: ci-knative-sandbox-net-http01-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-http01-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -9616,10 +9190,6 @@ periodics:
 - cron: "5 */2 * * *"
   name: ci-knative-sandbox-net-http01-auto-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-http01-auto-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -9709,10 +9279,6 @@ periodics:
 - cron: "8 * * * *"
   name: ci-knative-sandbox-net-istio-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-istio-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -9745,10 +9311,6 @@ periodics:
 - cron: "48 8,11,22 * * *"
   name: ci-knative-sandbox-net-istio-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-istio-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -9781,10 +9343,6 @@ periodics:
 - cron: "8 9 * * *"
   name: ci-knative-sandbox-net-istio-nightly-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-istio-nightly-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -9818,10 +9376,6 @@ periodics:
 - cron: "24 9 * * 2"
   name: ci-knative-sandbox-net-istio-0.14-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-istio-0.14-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -9866,10 +9420,6 @@ periodics:
 - cron: "59 9 * * 2"
   name: ci-knative-sandbox-net-istio-0.15-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-istio-0.15-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -9914,10 +9464,6 @@ periodics:
 - cron: "10 9 * * 2"
   name: ci-knative-sandbox-net-istio-0.16-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-istio-0.16-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -9962,10 +9508,6 @@ periodics:
 - cron: "12 */2 * * *"
   name: ci-knative-sandbox-net-istio-auto-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-istio-auto-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -10055,10 +9597,6 @@ periodics:
 - cron: "17 * * * *"
   name: ci-knative-sandbox-net-kourier-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-kourier-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -10091,10 +9629,6 @@ periodics:
 - cron: "17 8,11,22 * * *"
   name: ci-knative-sandbox-net-kourier-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-kourier-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -10127,10 +9661,6 @@ periodics:
 - cron: "3 9 * * *"
   name: ci-knative-sandbox-net-kourier-nightly-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-kourier-nightly-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -10164,10 +9694,6 @@ periodics:
 - cron: "27 9 * * 2"
   name: ci-knative-sandbox-net-kourier-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-kourier-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -10209,10 +9735,6 @@ periodics:
 - cron: "53 */2 * * *"
   name: ci-knative-sandbox-net-kourier-auto-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-kourier-auto-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -10302,10 +9824,6 @@ periodics:
 - cron: "0 * * * *"
   name: ci-knative-operator-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-operator-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -10338,10 +9856,6 @@ periodics:
 - cron: "40 8,11,22 * * *"
   name: ci-knative-operator-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-operator-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -10374,10 +9888,6 @@ periodics:
 - cron: "15 8 * * *"
   name: ci-knative-operator-0.15-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-operator-0.15-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -10425,10 +9935,6 @@ periodics:
 - cron: "35 8,11 * * *"
   name: ci-knative-operator-0.15-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-operator-0.15-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -10476,10 +9982,6 @@ periodics:
 - cron: "36 8 * * *"
   name: ci-knative-operator-0.16-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-operator-0.16-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -10527,10 +10029,6 @@ periodics:
 - cron: "12 8,11 * * *"
   name: ci-knative-operator-0.16-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-operator-0.16-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -10578,10 +10076,6 @@ periodics:
 - cron: "48 9 * * *"
   name: ci-knative-operator-nightly-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-operator-nightly-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -10615,10 +10109,6 @@ periodics:
 - cron: "4 9 * * 2"
   name: ci-knative-operator-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-operator-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -10662,10 +10152,6 @@ periodics:
 - cron: "32 */2 * * *"
   name: ci-knative-operator-auto-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-operator-auto-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -10757,10 +10243,6 @@ periodics:
 - cron: "32 * * * *"
   name: ci-knative-sandbox-discovery-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-discovery-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -10793,10 +10275,6 @@ periodics:
 - cron: "8 8,11,22 * * *"
   name: ci-knative-sandbox-discovery-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-discovery-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -10829,10 +10307,6 @@ periodics:
 - cron: "24 9 * * *"
   name: ci-knative-sandbox-discovery-nightly-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-discovery-nightly-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -10866,10 +10340,6 @@ periodics:
 - cron: "32 9 * * 2"
   name: ci-knative-sandbox-discovery-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-discovery-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -10913,10 +10383,6 @@ periodics:
 - cron: "28 */2 * * *"
   name: ci-knative-sandbox-discovery-auto-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-discovery-auto-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -10960,10 +10426,6 @@ periodics:
 - cron: "31 * * * *"
   name: ci-knative-sandbox-eventing-kafka-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-eventing-kafka-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -11004,10 +10466,6 @@ periodics:
 - cron: "15 8,11,22 * * *"
   name: ci-knative-sandbox-eventing-kafka-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-eventing-kafka-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -11048,10 +10506,6 @@ periodics:
 - cron: "37 9 * * *"
   name: ci-knative-sandbox-eventing-kafka-nightly-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-eventing-kafka-nightly-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -11093,10 +10547,6 @@ periodics:
 - cron: "29 9 * * 2"
   name: ci-knative-sandbox-eventing-kafka-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-eventing-kafka-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -11148,10 +10598,6 @@ periodics:
 - cron: "31 */2 * * *"
   name: ci-knative-sandbox-eventing-kafka-auto-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-eventing-kafka-auto-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -11251,10 +10697,6 @@ periodics:
 - cron: "59 * * * *"
   name: ci-knative-sandbox-eventing-kafka-broker-continuous
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-eventing-kafka-broker-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -11295,10 +10737,6 @@ periodics:
 - cron: "19 8,11,22 * * *"
   name: ci-knative-sandbox-eventing-kafka-broker-continuous-beta-prow-tests
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-eventing-kafka-broker-continuous
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -11339,10 +10777,6 @@ periodics:
 - cron: "49 9 * * *"
   name: ci-knative-sandbox-eventing-kafka-broker-nightly-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-eventing-kafka-broker-nightly-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -11384,10 +10818,6 @@ periodics:
 - cron: "45 9 * * 2"
   name: ci-knative-sandbox-eventing-kafka-broker-dot-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-eventing-kafka-broker-dot-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
@@ -11439,10 +10869,6 @@ periodics:
 - cron: "11 */2 * * *"
   name: ci-knative-sandbox-eventing-kafka-broker-auto-release
   agent: kubernetes
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-sandbox-eventing-kafka-broker-auto-release
   decorate: true
   cluster: "build-knative"
   extra_refs:
