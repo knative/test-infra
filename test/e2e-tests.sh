@@ -28,7 +28,7 @@ source $(dirname "${BASH_SOURCE[0]}")/../scripts/e2e-tests.sh
 # Read metadata.json and get value for key
 # Parameters: $1 - Key for metadata
 function get_meta_value() {
-  run_kntest metadata get --key "$1"
+  run_kntest metadata get --key="$1"
 }
 
 function knative_setup() {
@@ -68,12 +68,12 @@ function create_test_cluster() {
 
   header "Creating test cluster"
 
-  local creation_args="--save-meta-data"
-  (( SKIP_ISTIO_ADDON )) || creation_args+=" --addons istio"
-  [[ -n "${GCP_PROJECT}" ]] && creation_args+=" --project ${GCP_PROJECT}"
-  echo "Creating cluster with args ${creation_args}"
+  local creation_args=("--save-meta-data")
+  (( SKIP_ISTIO_ADDON )) || creation_args+=("--addons=istio")
+  [[ -n "${GCP_PROJECT}" ]] && creation_args+=("--project=${GCP_PROJECT}")
+  echo "Creating cluster with args ${creation_args[*]}"
   # TODO(chizhg): support parameterizing "gke" so that we can create other types of clusters
-  run_kntest cluster gke create "${creation_args}" || fail_test "failed creating test cluster"
+  run_kntest cluster gke create "${creation_args[@]}" || fail_test "failed creating test cluster"
   # Should have kubeconfig set already
   local k8s_cluster
   k8s_cluster=$(get_e2e_test_cluster)

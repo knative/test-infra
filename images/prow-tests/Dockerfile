@@ -67,7 +67,9 @@ RUN source-gvm-and-run.sh install go1.14.6 --prefer-binary
 RUN GO111MODULE=on go get github.com/google/ko/cmd/ko@v0.5.1
 RUN GO111MODULE=on go get github.com/boz/kail/cmd/kail
 RUN go get -u github.com/golang/dep/cmd/dep
+# TODO(chizhg): remove once all repos have been updated to use gotestsum.
 RUN go get -u github.com/jstemmer/go-junit-report
+RUN GO111MODULE=on go get -u gotest.tools/gotestsum
 RUN GO111MODULE=on go get -u github.com/raviqqe/liche@v0.0.0-20200229003944-f57a5d1c5be4  # stable liche version for checking md links
 RUN GO111MODULE=on go get -u github.com/google/go-licenses
 RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2
