@@ -18,6 +18,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"testing"
 
 	"knative.dev/test-infra/tools/coverage/artifacts/artsTest"
@@ -140,5 +141,5 @@ func TestK8sGcsAddress(t *testing.T) {
 	if got != want {
 		t.Fatal(test.StrFailure("", want, got))
 	}
-	fmt.Printf("line cov link=%s", got)
+	log.Printf("line cov link=%s", got)
 }
