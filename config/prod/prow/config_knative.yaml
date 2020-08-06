@@ -57,6 +57,11 @@ presubmits:
     - ./test/e2e-tests.sh --istio-version 1.5-latest --mesh
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --istio-version 1.5-latest --mesh
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
   - custom-test: istio-1.5-no-mesh
     dot-dev: true
     always_run: false
@@ -66,6 +71,11 @@ presubmits:
     - ./test/e2e-tests.sh --istio-version 1.5-latest --no-mesh
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --istio-version 1.5-latest --no-mesh
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
   - custom-test: istio-1.4-mesh
     dot-dev: true
     always_run: false
@@ -75,6 +85,11 @@ presubmits:
     - ./test/e2e-tests.sh --istio-version 1.4-latest --mesh
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --istio-version 1.4-latest --mesh
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
   - custom-test: istio-1.4-no-mesh
     dot-dev: true
     always_run: false
@@ -84,6 +99,11 @@ presubmits:
     - ./test/e2e-tests.sh --istio-version 1.4-latest --no-mesh
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --istio-version 1.4-latest --no-mesh
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
   - custom-test: gloo-0.17.1
     dot-dev: true
     always_run: false
@@ -93,6 +113,11 @@ presubmits:
     - ./test/e2e-tests.sh --gloo-version 0.17.1
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --gloo-version 0.17.1
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
   - custom-test: kourier-stable
     dot-dev: true
     always_run: false
@@ -102,6 +127,11 @@ presubmits:
     - ./test/e2e-tests.sh --kourier-version stable
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --kourier-version stable
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
   - custom-test: contour-latest
     dot-dev: true
     always_run: false
@@ -111,6 +141,11 @@ presubmits:
     - ./test/e2e-tests.sh --contour-version latest
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --contour-version latest
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
   - custom-test: ambassador-latest
     dot-dev: true
     always_run: false
@@ -120,6 +155,11 @@ presubmits:
     - ./test/e2e-tests.sh --ambassador-version latest
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --ambassador-version latest
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
   - custom-test: https
     dot-dev: true
     always_run: false
