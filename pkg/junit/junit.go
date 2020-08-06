@@ -91,6 +91,9 @@ func (testCase *TestCase) GetTestStatus() TestStatusEnum {
 
 // AddProperty adds property to testcase
 func (testCase *TestCase) AddProperty(name, val string) {
+	if testCase.Properties == nil {
+		testCase.Properties = &TestProperties{}
+	}
 	property := TestProperty{Name: name, Value: val}
 	testCase.Properties.Properties = append(testCase.Properties.Properties, property)
 }
