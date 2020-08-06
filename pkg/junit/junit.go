@@ -56,14 +56,14 @@ type TestSuite struct {
 
 // TestCase holds <testcase/> results
 type TestCase struct {
-	Name       string         `xml:"name,attr"`
-	Time       float64        `xml:"time,attr"` // Seconds
-	ClassName  string         `xml:"classname,attr"`
-	Failure    *string        `xml:"failure,omitempty"`
-	Output     *string        `xml:"system-out,omitempty"`
-	Error      *string        `xml:"system-err,omitempty"`
-	Skipped    *string        `xml:"skipped,omitempty"`
-	Properties TestProperties `xml:"properties"`
+	Name       string          `xml:"name,attr"`
+	Time       float64         `xml:"time,attr"` // Seconds
+	ClassName  string          `xml:"classname,attr"`
+	Failure    *string         `xml:"failure,omitempty"`
+	Output     *string         `xml:"system-out,omitempty"`
+	Error      *string         `xml:"system-err,omitempty"`
+	Skipped    *string         `xml:"skipped,omitempty"`
+	Properties *TestProperties `xml:"properties,omitempty"`
 }
 
 // TestProperties is an array of test properties
@@ -91,6 +91,9 @@ func (testCase *TestCase) GetTestStatus() TestStatusEnum {
 
 // AddProperty adds property to testcase
 func (testCase *TestCase) AddProperty(name, val string) {
+	if testCase.Properties == nil {
+		testCase.Properties = &TestProperties{}
+	}
 	property := TestProperty{Name: name, Value: val}
 	testCase.Properties.Properties = append(testCase.Properties.Properties, property)
 }
