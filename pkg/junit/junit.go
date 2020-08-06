@@ -56,14 +56,14 @@ type TestSuite struct {
 
 // TestCase holds <testcase/> results
 type TestCase struct {
-	Name       string         `xml:"name,attr"`
-	Time       float64        `xml:"time,attr"` // Seconds
-	ClassName  string         `xml:"classname,attr"`
-	Failure    *string        `xml:"failure,omitempty"`
-	Output     *string        `xml:"system-out,omitempty"`
-	Error      *string        `xml:"system-err,omitempty"`
-	Skipped    *string        `xml:"skipped,omitempty"`
-	Properties TestProperties `xml:"properties,omitempty"`
+	Name       string          `xml:"name,attr"`
+	Time       float64         `xml:"time,attr"` // Seconds
+	ClassName  string          `xml:"classname,attr"`
+	Failure    *string         `xml:"failure,omitempty"`
+	Output     *string         `xml:"system-out,omitempty"`
+	Error      *string         `xml:"system-err,omitempty"`
+	Skipped    *string         `xml:"skipped,omitempty"`
+	Properties *TestProperties `xml:"properties,omitempty"`
 }
 
 // TestProperties is an array of test properties
