@@ -63,7 +63,7 @@ type TestCase struct {
 	Output     *string        `xml:"system-out,omitempty"`
 	Error      *string        `xml:"system-err,omitempty"`
 	Skipped    *string        `xml:"skipped,omitempty"`
-	Properties TestProperties `xml:"properties"`
+	Properties TestProperties `xml:"properties,omitempty"`
 }
 
 // TestProperties is an array of test properties
