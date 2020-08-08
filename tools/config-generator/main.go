@@ -115,7 +115,6 @@ type baseProwJobTemplateData struct {
 	Image               string
 	Labels              []string
 	PathAlias           string
-	RunIfChanged        string
 	Cluster             string
 	Optional            string
 	NeedsMonitor        bool
@@ -371,7 +370,7 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 			if getBool(item.Value) {
 				setupDockerInDockerForJob(data)
 			}
-		case "always_run":
+		case "always-run":
 			(*data).AlwaysRun = getBool(item.Value)
 		case "dot-dev":
 			needDotdev = true

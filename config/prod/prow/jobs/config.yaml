@@ -535,6 +535,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-serving-contour-latest
     always_run: false
+    run_if_changed: "^third_party/contour-latest/*"
     rerun_command: "/test pull-knative-serving-contour-latest"
     trigger: "(?m)^/test (all|pull-knative-serving-contour-latest),?(\\s+|$)"
     decorate: true

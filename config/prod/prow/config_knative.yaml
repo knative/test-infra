@@ -50,7 +50,7 @@ presubmits:
     dot-dev: true
   - custom-test: istio-1.5-mesh
     dot-dev: true
-    always_run: false
+    always-run: false
     optional: true
     args:
     - --run-test
@@ -64,7 +64,7 @@ presubmits:
         memory: 16Gi
   - custom-test: istio-1.5-no-mesh
     dot-dev: true
-    always_run: false
+    always-run: false
     optional: true
     args:
     - --run-test
@@ -78,7 +78,7 @@ presubmits:
         memory: 16Gi
   - custom-test: istio-1.4-mesh
     dot-dev: true
-    always_run: false
+    always-run: false
     optional: true
     args:
     - --run-test
@@ -92,7 +92,7 @@ presubmits:
         memory: 16Gi
   - custom-test: istio-1.4-no-mesh
     dot-dev: true
-    always_run: false
+    always-run: false
     optional: true
     args:
     - --run-test
@@ -106,7 +106,7 @@ presubmits:
         memory: 16Gi
   - custom-test: gloo-0.17.1
     dot-dev: true
-    always_run: false
+    always-run: false
     optional: true
     args:
     - --run-test
@@ -120,7 +120,7 @@ presubmits:
         memory: 16Gi
   - custom-test: kourier-stable
     dot-dev: true
-    always_run: false
+    always-run: false
     optional: true
     args:
     - --run-test
@@ -134,7 +134,8 @@ presubmits:
         memory: 16Gi
   - custom-test: contour-latest
     dot-dev: true
-    always_run: false
+    always-run: false
+    run-if-changed: "^third_party/contour-latest/*"
     optional: true
     args:
     - --run-test
@@ -148,7 +149,7 @@ presubmits:
         memory: 16Gi
   - custom-test: ambassador-latest
     dot-dev: true
-    always_run: false
+    always-run: false
     optional: true
     args:
     - --run-test
@@ -162,7 +163,7 @@ presubmits:
         memory: 16Gi
   - custom-test: https
     dot-dev: true
-    always_run: false
+    always-run: false
     optional: true
     args:
     - --run-test
@@ -179,7 +180,7 @@ presubmits:
   - go-coverage: true
     dot-dev: true
   - custom-test: integration-tests-latest-release
-    always_run: true
+    always-run: true
     command:
     - ./test/presubmit-integration-tests-latest-release.sh
     dot-dev: true
@@ -243,7 +244,7 @@ presubmits:
     needs-dind: true
   - go-coverage: true
   - custom-test: markdown-link-check
-    always_run: true
+    always-run: true
     optional: true
     command:
     - ./test/presubmit-link-check.sh
