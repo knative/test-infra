@@ -544,6 +544,12 @@ periodics:
     dot-dev: true
   - nightly: true
     dot-dev: true
+    reporter_config:
+      slack:
+        channel: serving-api
+        job_states_to_report:
+        - failure
+        report_template: '"The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"'
     resources:
       requests:
         memory: 12Gi
@@ -875,6 +881,12 @@ periodics:
     dot-dev: true
   - nightly: true
     dot-dev: true
+    reporter_config:
+      slack:
+        channel: net-certmanager
+        job_states_to_report:
+        - failure
+        report_template: '"The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"'
   - dot-release: true
     dot-dev: true
   - auto-release: true
@@ -884,6 +896,12 @@ periodics:
     dot-dev: true
   - nightly: true
     dot-dev: true
+    reporter_config:
+      slack:
+        channel: net-contour
+        job_states_to_report:
+        - failure
+        report_template: '"The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"'
   - dot-release: true
     dot-dev: true
   - auto-release: true
@@ -893,6 +911,12 @@ periodics:
     dot-dev: true
   - nightly: true
     dot-dev: true
+    reporter_config:
+      slack:
+        channel: net-http01
+        job_states_to_report:
+        - failure
+        report_template: '"The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"'
   - dot-release: true
     dot-dev: true
   - auto-release: true
@@ -902,6 +926,12 @@ periodics:
     dot-dev: true
   - nightly: true
     dot-dev: true
+    reporter_config:
+      slack:
+        channel: net-istio
+        job_states_to_report:
+        - failure
+        report_template: '"The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"'
   - dot-release: true
     dot-dev: true
     release: "0.14"
@@ -918,6 +948,12 @@ periodics:
     dot-dev: true
   - nightly: true
     dot-dev: true
+    reporter_config:
+      slack:
+        channel: net-kourier
+        job_states_to_report:
+        - failure
+        report_template: '"The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"'
   - dot-release: true
     dot-dev: true
   - auto-release: true
