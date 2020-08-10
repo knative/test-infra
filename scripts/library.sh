@@ -21,10 +21,6 @@
 # GCP project where all tests related resources live
 readonly KNATIVE_TESTS_PROJECT=knative-tests
 
-# Default GKE version to be used with Knative Serving
-readonly SERVING_GKE_VERSION=gke-latest
-readonly SERVING_GKE_IMAGE=cos
-
 # Conveniently set GOPATH if unset
 if [[ ! -v GOPATH ]]; then
   export GOPATH="$(go env GOPATH)"
@@ -551,6 +547,21 @@ function run_go_tool() {
   (( install_failed )) && return ${install_failed}
   shift 2
   ${tool} "$@"
+}
+
+# Add function call to trap
+# Parameters: $1 - Function to call
+#             $2...$n - Signals for trap
+function add_trap {
+  local cmd=$1
+  shift
+  for trap_signal in "$@"; do
+    local current_trap
+    current_trap="$(trap -p "$trap_signal" | cut -d\' -f2)"
+    local new_cmd="($cmd)"
+    [[ -n "${current_trap}" ]] && new_cmd="${current_trap};${new_cmd}"
+    trap -- "${new_cmd}" "$trap_signal"
+  done
 }
 
 # Run kntest tool, error out and ask users to install it if it's not currently installed.

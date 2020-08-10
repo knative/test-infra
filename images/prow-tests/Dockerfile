@@ -75,6 +75,7 @@ RUN GO111MODULE=on go get -u github.com/google/go-licenses
 RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2
 RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2/kubetest2-gke
 RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2/kubetest2-kind
+RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2/kubetest2-tester-exec
 
 # protoc and required golang tooling
 ARG PROTOC_VERSION=3.12.3
