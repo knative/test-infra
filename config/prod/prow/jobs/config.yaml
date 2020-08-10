@@ -4614,6 +4614,12 @@ periodics:
   name: ci-knative-serving-nightly-release
   agent: kubernetes
   decorate: true
+  reporter_config:
+    slack:
+      channel: serving-api
+      report_template: "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
+      job_states_to_report:
+      - "failure"
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -8704,6 +8710,12 @@ periodics:
   name: ci-knative-sandbox-net-certmanager-nightly-release
   agent: kubernetes
   decorate: true
+  reporter_config:
+    slack:
+      channel: net-certmanager
+      report_template: "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
+      job_states_to_report:
+      - "failure"
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -8931,6 +8943,12 @@ periodics:
   name: ci-knative-sandbox-net-contour-nightly-release
   agent: kubernetes
   decorate: true
+  reporter_config:
+    slack:
+      channel: net-contour
+      report_template: "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
+      job_states_to_report:
+      - "failure"
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9158,6 +9176,12 @@ periodics:
   name: ci-knative-sandbox-net-http01-nightly-release
   agent: kubernetes
   decorate: true
+  reporter_config:
+    slack:
+      channel: net-http01
+      report_template: "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
+      job_states_to_report:
+      - "failure"
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9385,6 +9409,12 @@ periodics:
   name: ci-knative-sandbox-net-istio-nightly-release
   agent: kubernetes
   decorate: true
+  reporter_config:
+    slack:
+      channel: net-istio
+      report_template: "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
+      job_states_to_report:
+      - "failure"
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9703,6 +9733,12 @@ periodics:
   name: ci-knative-sandbox-net-kourier-nightly-release
   agent: kubernetes
   decorate: true
+  reporter_config:
+    slack:
+      channel: net-kourier
+      report_template: "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
+      job_states_to_report:
+      - "failure"
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
