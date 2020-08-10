@@ -95,6 +95,11 @@ jobConfigs:
         identity: CQBKVH4QY
       - name: eventing-channels
         identity: CR2141CGY
+  - name: ci-knative-sandbox-eventing-kafka-broker-continuous
+    org: knative-sandbox
+    repo: eventing-kafka-broker
+    type: postsubmit
+    issueRepo: eventing-kafka-broker
   - name: ci-knative-test-infra-continuous
     org: knative
     repo: test-infra
