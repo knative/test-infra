@@ -3,6 +3,7 @@
     [[indent_section 6 "labels" .Base.Labels]]
     context: [[.PresubmitPullJobName]]
     always_run: [[.Base.AlwaysRun]]
+    [[.RunIfChanged]]
     rerun_command: "/test [[.PresubmitPullJobName]]"
     trigger: "(?m)^/test (all|[[.PresubmitPullJobName]]),?(\\s+|$)"
     decorate: true

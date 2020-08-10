@@ -37,6 +37,7 @@ type presubmitJobTemplateData struct {
 	PresubmitPullJobName string
 	PresubmitPostJobName string
 	PresubmitCommand     []string
+	RunIfChanged         string
 }
 
 // generatePresubmit generates all presubmit job configs for the given repo and configuration.
@@ -81,6 +82,8 @@ func generatePresubmit(title string, repoName string, presubmitConfig yaml.MapSl
 			repoData.GoCoverageThreshold = data.Base.GoCoverageThreshold
 		case "repo-settings":
 			generateJob = false
+		case "run-if-changed":
+			data.RunIfChanged = "run_if_changed: \"" + getString(item.Value) + "\""
 		default:
 			continue
 		}
