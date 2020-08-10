@@ -47,7 +47,7 @@ type TestSuites struct {
 type TestSuite struct {
 	XMLName    xml.Name       `xml:"testsuite"`
 	Name       string         `xml:"name,attr"`
-	Time       float64        `xml:"time,attr"` // Seconds
+	Time       string         `xml:"time,attr"` // Seconds
 	Failures   int            `xml:"failures,attr"`
 	Tests      int            `xml:"tests,attr"`
 	TestCases  []TestCase     `xml:"testcase"`
@@ -57,7 +57,7 @@ type TestSuite struct {
 // TestCase holds <testcase/> results
 type TestCase struct {
 	Name       string          `xml:"name,attr"`
-	Time       float64         `xml:"time,attr"` // Seconds
+	Time       string          `xml:"time,attr"` // Seconds
 	ClassName  string          `xml:"classname,attr"`
 	Failure    *string         `xml:"failure,omitempty"`
 	Output     *string         `xml:"system-out,omitempty"`
