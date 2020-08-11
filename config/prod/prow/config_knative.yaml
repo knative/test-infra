@@ -135,7 +135,7 @@ presubmits:
   - custom-test: contour-latest
     dot-dev: true
     always-run: false
-    run-if-changed: "^third_party/contour-latest/*"
+    run-if-changed: ^third_party/contour-latest/*
     optional: true
     args:
     - --run-test
