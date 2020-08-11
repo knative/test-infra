@@ -4615,7 +4615,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "44 */2 * * *"
+- cron: "20 */2 * * *"
   name: ci-knative-serving-kong-latest
   agent: kubernetes
   decorate: true
