@@ -161,6 +161,20 @@ presubmits:
         memory: 12Gi
       limits:
         memory: 16Gi
+  - custom-test: kong-latest
+    dot-dev: true
+    always-run: false
+    optional: true
+    args:
+    - --run-test
+    - ./test/e2e-tests.sh --kong-version latest
+    - --run-test
+    - ./test/e2e-auto-tls-tests.sh --kong-version latest
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
   - custom-test: https
     dot-dev: true
     always-run: false
@@ -533,6 +547,15 @@ periodics:
     - ./test/e2e-tests.sh --ambassador-version latest
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --ambassador-version latest
+    dot-dev: true
+  - custom-job: kong-latest
+    command:
+    - ./test/presubmit-tests.sh
+    args:
+    - --run-test
+    - ./test/e2e-tests.sh --kong-version latest
+    - --run-test
+    - ./test/e2e-auto-tls-tests.sh --kong-version latest
     dot-dev: true
   - custom-job: https
     command:
