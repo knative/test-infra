@@ -82,6 +82,9 @@ test_groups:
 - name: ci-knative-serving-ambassador-latest
   gcs_prefix: knative-prow/logs/ci-knative-serving-ambassador-latest
   alert_stale_results_hours: 3
+- name: ci-knative-serving-kong-latest
+  gcs_prefix: knative-prow/logs/ci-knative-serving-kong-latest
+  alert_stale_results_hours: 3
 - name: ci-knative-serving-https
   gcs_prefix: knative-prow/logs/ci-knative-serving-https
   alert_stale_results_hours: 3
@@ -871,6 +874,9 @@ dashboards:
     base_options: "sort-by-name="
   - name: ambassador-latest
     test_group_name: ci-knative-serving-ambassador-latest
+    base_options: "sort-by-name="
+  - name: kong-latest
+    test_group_name: ci-knative-serving-kong-latest
     base_options: "sort-by-name="
   - name: https
     test_group_name: ci-knative-serving-https
