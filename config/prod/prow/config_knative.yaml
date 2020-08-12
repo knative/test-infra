@@ -48,57 +48,57 @@ presubmits:
   - go-coverage: true
     go-coverage-threshold: 80
     dot-dev: true
-  - custom-test: istio-1.5-mesh
+  - custom-test: istio-latest-mesh
     dot-dev: true
     always-run: false
     optional: true
     args:
     - --run-test
-    - ./test/e2e-tests.sh --istio-version 1.5-latest --mesh
+    - ./test/e2e-tests.sh --istio-version latest --mesh
     - --run-test
-    - ./test/e2e-auto-tls-tests.sh --istio-version 1.5-latest --mesh
+    - ./test/e2e-auto-tls-tests.sh --istio-version latest --mesh
     resources:
       requests:
         memory: 12Gi
       limits:
         memory: 16Gi
-  - custom-test: istio-1.5-no-mesh
+  - custom-test: istio-latest-no-mesh
     dot-dev: true
     always-run: false
     optional: true
     args:
     - --run-test
-    - ./test/e2e-tests.sh --istio-version 1.5-latest --no-mesh
+    - ./test/e2e-tests.sh --istio-version latest --no-mesh
     - --run-test
-    - ./test/e2e-auto-tls-tests.sh --istio-version 1.5-latest --no-mesh
+    - ./test/e2e-auto-tls-tests.sh --istio-version latest --no-mesh
     resources:
       requests:
         memory: 12Gi
       limits:
         memory: 16Gi
-  - custom-test: istio-1.4-mesh
+  - custom-test: istio-stable-mesh
     dot-dev: true
     always-run: false
     optional: true
     args:
     - --run-test
-    - ./test/e2e-tests.sh --istio-version 1.4-latest --mesh
+    - ./test/e2e-tests.sh --istio-version stable --mesh
     - --run-test
-    - ./test/e2e-auto-tls-tests.sh --istio-version 1.4-latest --mesh
+    - ./test/e2e-auto-tls-tests.sh --istio-version stable --mesh
     resources:
       requests:
         memory: 12Gi
       limits:
         memory: 16Gi
-  - custom-test: istio-1.4-no-mesh
+  - custom-test: istio-stable-no-mesh
     dot-dev: true
     always-run: false
     optional: true
     args:
     - --run-test
-    - ./test/e2e-tests.sh --istio-version 1.4-latest --no-mesh
+    - ./test/e2e-tests.sh --istio-version stable --no-mesh
     - --run-test
-    - ./test/e2e-auto-tls-tests.sh --istio-version 1.4-latest --no-mesh
+    - ./test/e2e-auto-tls-tests.sh --istio-version stable --no-mesh
     resources:
       requests:
         memory: 12Gi
@@ -476,41 +476,41 @@ periodics:
   - branch-ci: true
     release: "0.16"
     dot-dev: true
-  - custom-job: istio-1.5-mesh
+  - custom-job: istio-latest-mesh
     command:
     - ./test/presubmit-tests.sh
     args:
     - --run-test
-    - ./test/e2e-tests.sh --istio-version 1.5-latest --mesh
+    - ./test/e2e-tests.sh --istio-version latest --mesh
     - --run-test
-    - ./test/e2e-auto-tls-tests.sh --istio-version 1.5-latest --mesh
+    - ./test/e2e-auto-tls-tests.sh --istio-version latest --mesh
     dot-dev: true
-  - custom-job: istio-1.5-no-mesh
+  - custom-job: istio-latest-no-mesh
     command:
     - ./test/presubmit-tests.sh
     args:
     - --run-test
-    - ./test/e2e-tests.sh --istio-version 1.5-latest --no-mesh
+    - ./test/e2e-tests.sh --istio-version latest --no-mesh
     - --run-test
-    - ./test/e2e-auto-tls-tests.sh --istio-version 1.5-latest --no-mesh
+    - ./test/e2e-auto-tls-tests.sh --istio-version latest --no-mesh
     dot-dev: true
-  - custom-job: istio-1.4-mesh
+  - custom-job: istio-stable-mesh
     command:
     - ./test/presubmit-tests.sh
     args:
     - --run-test
-    - ./test/e2e-tests.sh --istio-version 1.4-latest --mesh
+    - ./test/e2e-tests.sh --istio-version stable --mesh
     - --run-test
-    - ./test/e2e-auto-tls-tests.sh --istio-version 1.4-latest --mesh
+    - ./test/e2e-auto-tls-tests.sh --istio-version stable --mesh
     dot-dev: true
-  - custom-job: istio-1.4-no-mesh
+  - custom-job: istio-stable-no-mesh
     command:
     - ./test/presubmit-tests.sh
     args:
     - --run-test
-    - ./test/e2e-tests.sh --istio-version 1.4-latest --no-mesh
+    - ./test/e2e-tests.sh --istio-version stable --no-mesh
     - --run-test
-    - ./test/e2e-auto-tls-tests.sh --istio-version 1.4-latest --no-mesh
+    - ./test/e2e-auto-tls-tests.sh --istio-version stable --no-mesh
     dot-dev: true
   - custom-job: gloo-0.17.1
     command:
