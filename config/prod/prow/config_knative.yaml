@@ -136,7 +136,6 @@ presubmits:
     dot-dev: true
     always-run: false
     run-if-changed: ^third_party/contour-latest/*
-    optional: true
     args:
     - --run-test
     - ./test/e2e-tests.sh --contour-version latest
