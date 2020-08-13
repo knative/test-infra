@@ -539,7 +539,6 @@ presubmits:
     rerun_command: "/test pull-knative-serving-contour-latest"
     trigger: "(?m)^/test (all|pull-knative-serving-contour-latest),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
