@@ -17,50 +17,9 @@
 # This is a helper script for Knative E2E test scripts.
 # See README.md for instructions on how to use it.
 
-source $(dirname "${BASH_SOURCE[0]}")/library.sh
+source $(dirname "${BASH_SOURCE[0]}")/infra-library.sh
 
-# Build a resource name based on $E2E_BASE_NAME, a suffix and $BUILD_NUMBER.
-# Restricts the name length to 40 chars (the limit for resource names in GCP).
-# Name will have the form $E2E_BASE_NAME-<PREFIX>$BUILD_NUMBER.
-# Parameters: $1 - name suffix
-function build_resource_name() {
-  local prefix=${E2E_BASE_NAME}-$1
-  local suffix=${BUILD_NUMBER}
-  # Restrict suffix length to 20 chars
-  if [[ -n "${suffix}" ]]; then
-    suffix=${suffix:${#suffix}<20?0:-20}
-  fi
-  local name="${prefix:0:20}${suffix}"
-  # Ensure name doesn't end with "-"
-  echo "${name%-}"
-}
-
-# Test cluster parameters
-
-# Configurable parameters
-# export E2E_CLUSTER_REGION and E2E_CLUSTER_ZONE as they're used in the cluster setup subprocess
-export E2E_CLUSTER_REGION=${E2E_CLUSTER_REGION:-us-central1}
-# By default we use regional clusters.
-export E2E_CLUSTER_ZONE=${E2E_CLUSTER_ZONE:-}
-
-# Default backup regions in case of stockouts; by default we don't fall back to a different zone in the same region
-readonly E2E_CLUSTER_BACKUP_REGIONS=${E2E_CLUSTER_BACKUP_REGIONS:-us-west1 us-east1}
-readonly E2E_CLUSTER_BACKUP_ZONES=${E2E_CLUSTER_BACKUP_ZONES:-}
-
-readonly E2E_GKE_ENVIRONMENT=${E2E_GKE_ENVIRONMENT:-prod}
-readonly E2E_GKE_COMMAND_GROUP=${E2E_GKE_COMMAND_GROUP:-beta}
-
-# Each knative repository may have a different cluster size requirement here,
-# so we allow calling code to set these parameters.  If they are not set we
-# use some sane defaults.
-readonly E2E_MIN_CLUSTER_NODES=${E2E_MIN_CLUSTER_NODES:-1}
-readonly E2E_MAX_CLUSTER_NODES=${E2E_MAX_CLUSTER_NODES:-3}
-readonly E2E_CLUSTER_MACHINE=${E2E_CLUSTER_MACHINE:-e2-standard-4}
-
-readonly E2E_BASE_NAME="k${REPO_NAME}"
-readonly E2E_CLUSTER_NAME=$(build_resource_name e2e-cls)
-readonly E2E_NETWORK_NAME=$(build_resource_name e2e-net)
-readonly TEST_RESULT_FILE=/tmp/${E2E_BASE_NAME}-e2e-result
+readonly TEST_RESULT_FILE=/tmp/${REPO_NAME}-e2e-result
 
 # Flag whether test is using a boskos GCP project
 IS_BOSKOS=0
@@ -71,7 +30,7 @@ function teardown_test_resources() {
   (( IS_BOSKOS )) && return
   header "Tearing down test environment"
   function_exists test_teardown && test_teardown
-  (( ! SKIP_KNATIVE_SETUP )) && function_exists knative_teardown && knative_teardown
+  function_exists knative_teardown && knative_teardown
 }
 
 # Run the given E2E tests. Assume tests are tagged e2e, unless `-tags=XXX` is passed.
@@ -99,13 +58,10 @@ function setup_test_cluster() {
 
   # Set the actual project the test cluster resides in
   # It will be a project assigned by Boskos if test is running on Prow,
-  # otherwise will be ${GCP_PROJECT} set up by user.
+  # otherwise will be ${E2E_GCP_PROJECT_ID} set up by user.
   E2E_PROJECT_ID="$(gcloud config get-value project)"
   export E2E_PROJECT_ID
   readonly E2E_PROJECT_ID
-
-  # Save some metadata about cluster creation for using in prow and testgrid
-  save_metadata
 
   local k8s_user
   k8s_user=$(gcloud config get-value core/account)
@@ -118,9 +74,9 @@ function setup_test_cluster() {
   # If cluster admin role isn't set, this is a brand new cluster
   # Setup the admin role and also KO_DOCKER_REPO if it is a GKE cluster
   if [[ -z "$(kubectl get clusterrolebinding cluster-admin-binding 2> /dev/null)" && "${k8s_cluster}" =~ ^gke_.* ]]; then
-    acquire_cluster_admin_role "${k8s_user}" "${E2E_CLUSTER_NAME}" "${E2E_CLUSTER_REGION}" "${E2E_CLUSTER_ZONE}"
+    acquire_cluster_admin_role "${k8s_user}" "${E2E_CLUSTER_NAME}" "${E2E_GKE_CLUSTER_REGION}" "${E2E_GKE_CLUSTER_ZONE}"
     # Incorporate an element of randomness to ensure that each run properly publishes images.
-    export KO_DOCKER_REPO=gcr.io/${E2E_PROJECT_ID}/${E2E_BASE_NAME}-e2e-img/${RANDOM}
+    export KO_DOCKER_REPO=gcr.io/${E2E_PROJECT_ID}/${REPO_NAME}-e2e-img/${RANDOM}
   fi
 
   # Safety checks
@@ -130,8 +86,6 @@ function setup_test_cluster() {
   # Use default namespace for all subsequent kubectl commands in this context
   kubectl config set-context "${k8s_cluster}" --namespace=default
 
-  echo "- gcloud project is ${E2E_PROJECT_ID}"
-  echo "- gcloud user is ${k8s_user}"
   echo "- Cluster is ${k8s_cluster}"
   echo "- Docker is ${KO_DOCKER_REPO}"
 
@@ -144,9 +98,10 @@ function setup_test_cluster() {
   set +o errexit
   set +o pipefail
 
-  if (( ! SKIP_KNATIVE_SETUP )) && function_exists knative_setup; then
-    # Wait for Istio installation to complete, if necessary, before calling knative_setup.
-    (( ! SKIP_ISTIO_ADDON )) && (wait_until_batch_job_complete istio-system || return 1)
+  # Wait for Istio installation to complete, if necessary, before calling knative_setup.
+  # TODO(chizhg): is it really needed?
+  (( ! SKIP_ISTIO_ADDON )) && (wait_until_batch_job_complete istio-system || return 1)
+  if function_exists knative_setup; then
     knative_setup || fail_test "Knative setup failed"
   fi
   if function_exists test_setup; then
@@ -172,33 +127,30 @@ function fail_test() {
   exit 1
 }
 
-RUN_TESTS=0
-SKIP_KNATIVE_SETUP=0
-SKIP_ISTIO_ADDON=0
 SKIP_TEARDOWNS=0
-GCP_PROJECT=""
-E2E_SCRIPT=""
-E2E_CLUSTER_VERSION="latest"
-GKE_ADDONS=""
-EXTRA_CLUSTER_CREATION_FLAGS=()
-E2E_SCRIPT_CUSTOM_FLAGS=()
+SKIP_ISTIO_ADDON=0
 
 # Parse flags and initialize the test cluster.
 function initialize() {
-  E2E_SCRIPT="$(get_canonical_path "$0")"
+  local run_tests=0
+  local extra_kubetest2_flags=()
+  local extra_cluster_creation_flags=()
+  local e2e_script
+  e2e_script="$(get_canonical_path "$0")"
+  local e2e_script_command=( "${e2e_script}" "--run-tests" )
 
   cd "${REPO_ROOT_DIR}"
   while [[ $# -ne 0 ]]; do
     local parameter=$1
     # Try parsing flag as a custom one.
     if function_exists parse_flags; then
-      parse_flags $@
+      parse_flags "$@"
       local skip=$?
       if [[ ${skip} -ne 0 ]]; then
         # Skip parsed flag (and possibly argument) and continue
         # Also save it to it's passed through to the test script
         for ((i=1;i<=skip;i++)); do
-          E2E_SCRIPT_CUSTOM_FLAGS+=("$1")
+          e2e_script_command+=("$1")
           shift
         done
         continue
@@ -206,17 +158,16 @@ function initialize() {
     fi
     # Try parsing flag as a standard one.
     case ${parameter} in
-      --run-tests) RUN_TESTS=1 ;;
-      --skip-knative-setup) SKIP_KNATIVE_SETUP=1 ;;
+      --run-tests) run_tests=1 ;;
       --skip-teardowns) SKIP_TEARDOWNS=1 ;;
+      # TODO(chizhg): remove this flag once the addons is defined as an env var.
       --skip-istio-addon) SKIP_ISTIO_ADDON=1 ;;
       *)
         [[ $# -ge 2 ]] || abort "missing parameter after $1"
         shift
         case ${parameter} in
-          --gcp-project) GCP_PROJECT=$1 ;;
-          --cluster-version) E2E_CLUSTER_VERSION=$1 ;;
-          --cluster-creation-flag) EXTRA_CLUSTER_CREATION_FLAGS+=("$1") ;;
+          --kubetest2-flag) extra_kubetest2_flags+=("$1") ;;
+          --cluster-creation-flag) extra_cluster_creation_flags+=("$1") ;;
           *) abort "unknown option ${parameter}" ;;
         esac
     esac
@@ -225,18 +176,17 @@ function initialize() {
 
   (( IS_PROW )) && [[ -z "${GCP_PROJECT_ID:-}" ]] && IS_BOSKOS=1
 
-  (( SKIP_ISTIO_ADDON )) || GKE_ADDONS="--addons=Istio"
+  if (( SKIP_ISTIO_ADDON )); then
+    extra_cluster_creation_flags+=("--addons=NodeLocalDNS")
+  else
+    extra_cluster_creation_flags+=("--addons=Istio,NodeLocalDNS")
+  fi
 
-  readonly RUN_TESTS
-  readonly GCP_PROJECT
   readonly IS_BOSKOS
-  readonly EXTRA_CLUSTER_CREATION_FLAGS
-  readonly SKIP_KNATIVE_SETUP
   readonly SKIP_TEARDOWNS
-  readonly GKE_ADDONS
 
-  if (( ! RUN_TESTS )); then
-    create_test_cluster
+  if (( ! run_tests )); then
+    create_gke_test_cluster extra_kubetest2_flags extra_cluster_creation_flags e2e_script_command
   else
     setup_test_cluster
   fi

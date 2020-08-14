@@ -137,4 +137,3 @@ RUN cd /go/src/knative.dev/test-infra && git reset --hard upstream/release-0.14 
 # Cleanup
 RUN rm -fr /go/src/knative.dev/test-infra
 RUN rm -f /usr/local/bin/source-gvm-and-run.sh
-RUN rm -f /usr/local/bin/in-gvm-env.sh
