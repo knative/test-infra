@@ -413,6 +413,11 @@ presubmits:
     args:
     - --run-test
     - ./test/e2e-upgrade-tests.sh
+  knative-sandbox/.github:
+  - build-tests: false
+  - unit-tests: false
+  - integration-tests: false
+  - go-coverage: false
   knative-sandbox/discovery:
   - build-tests: true
     dot-dev: true
