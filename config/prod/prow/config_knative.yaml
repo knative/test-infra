@@ -912,8 +912,12 @@ periodics:
         report_template: '"The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"'
   - dot-release: true
     dot-dev: true
+    env-vars:
+    - ORG_NAME=knative-sandbox
   - auto-release: true
     dot-dev: true
+    env-vars:
+    - ORG_NAME=knative-sandbox
   knative-sandbox/net-contour:
   - continuous: true
     dot-dev: true
@@ -927,8 +931,12 @@ periodics:
         report_template: '"The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"'
   - dot-release: true
     dot-dev: true
+    env-vars:
+    - ORG_NAME=knative-sandbox
   - auto-release: true
     dot-dev: true
+    env-vars:
+    - ORG_NAME=knative-sandbox
   knative-sandbox/net-http01:
   - continuous: true
     dot-dev: true
@@ -942,8 +950,12 @@ periodics:
         report_template: '"The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"'
   - dot-release: true
     dot-dev: true
+    env-vars:
+    - ORG_NAME=knative-sandbox
   - auto-release: true
     dot-dev: true
+    env-vars:
+    - ORG_NAME=knative-sandbox
   knative-sandbox/net-istio:
   - continuous: true
     dot-dev: true
@@ -965,14 +977,22 @@ periodics:
   - dot-release: true
     dot-dev: true
     release: "0.14"
+    env-vars:
+    - ORG_NAME=knative-sandbox
   - dot-release: true
     dot-dev: true
     release: "0.15"
+    env-vars:
+    - ORG_NAME=knative-sandbox
   - dot-release: true
     dot-dev: true
     release: "0.16"
+    env-vars:
+    - ORG_NAME=knative-sandbox
   - auto-release: true
     dot-dev: true
+    env-vars:
+    - ORG_NAME=knative-sandbox
   knative-sandbox/net-kourier:
   - continuous: true
     dot-dev: true
@@ -986,8 +1006,12 @@ periodics:
         report_template: '"The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"'
   - dot-release: true
     dot-dev: true
+    env-vars:
+    - ORG_NAME=knative-sandbox
   - auto-release: true
     dot-dev: true
+    env-vars:
+    - ORG_NAME=knative-sandbox
   knative/operator:
   - continuous: true
     dot-dev: true
@@ -1009,12 +1033,8 @@ periodics:
     dot-dev: true
   - dot-release: true
     dot-dev: true
-    env-vars:
-    - ORG_NAME=knative-sandbox
   - auto-release: true
     dot-dev: true
-    env-vars:
-    - ORG_NAME=knative-sandbox
   knative-sandbox/discovery:
   - continuous: true
     dot-dev: true
