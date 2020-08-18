@@ -464,9 +464,6 @@ periodics:
       limits:
         memory: 16Gi
   - branch-ci: true
-    release: "0.13"
-    dot-dev: true
-  - branch-ci: true
     release: "0.14"
     dot-dev: true
   - branch-ci: true
@@ -474,6 +471,9 @@ periodics:
     dot-dev: true
   - branch-ci: true
     release: "0.16"
+    dot-dev: true
+  - branch-ci: true
+    release: "0.17"
     dot-dev: true
   - custom-job: istio-latest-mesh
     command:
@@ -580,14 +580,6 @@ periodics:
         memory: 16Gi
   - dot-release: true
     dot-dev: true
-    release: "0.13"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - dot-release: true
-    dot-dev: true
     release: "0.14"
     resources:
       requests:
@@ -605,6 +597,14 @@ periodics:
   - dot-release: true
     dot-dev: true
     release: "0.16"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    dot-dev: true
+    release: "0.17"
     resources:
       requests:
         memory: 12Gi
@@ -670,9 +670,6 @@ periodics:
       limits:
         memory: 16Gi
   - branch-ci: true
-    release: "0.13"
-    dot-dev: true
-  - branch-ci: true
     release: "0.14"
     dot-dev: true
   - branch-ci: true
@@ -680,6 +677,9 @@ periodics:
     dot-dev: true
   - branch-ci: true
     release: "0.16"
+    dot-dev: true
+  - branch-ci: true
+    release: "0.17"
     dot-dev: true
   - nightly: true
     dot-dev: true
@@ -696,14 +696,6 @@ periodics:
         memory: 16Gi
   - dot-release: true
     dot-dev: true
-    release: "0.13"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - dot-release: true
-    dot-dev: true
     release: "0.14"
     resources:
       requests:
@@ -721,6 +713,14 @@ periodics:
   - dot-release: true
     dot-dev: true
     release: "0.16"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    dot-dev: true
+    release: "0.17"
     resources:
       requests:
         memory: 12Gi
