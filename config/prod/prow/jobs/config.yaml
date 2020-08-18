@@ -375,6 +375,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-serving-istio-stable-mesh
     always_run: false
+    run_if_changed: "^third_party/net-istio.yaml"
     rerun_command: "/test pull-knative-serving-istio-stable-mesh"
     trigger: "(?m)^/test (all|pull-knative-serving-istio-stable-mesh),?(\\s+|$)"
     decorate: true
