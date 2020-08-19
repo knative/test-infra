@@ -1,13 +1,20 @@
-package main
+package mainservice
 
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"net/url"
 	"strconv"
 	"time"
 )
+
+type Options struct {
+	Region        string
+	BackupRegions []string
+	XXTimeout     time.Time
+}
 
 type requestInfo struct {
 	minNodes int
@@ -94,8 +101,17 @@ func handleProw(w http.ResponseWriter, req *http.Request) {
 
 }
 
-func main() {
-	http.HandleFunc("/createcluster", handleProw)
-	http.HandleFunc("/getcluster", handleProw)
-	http.ListenAndServe(":8090", nil)
+func Start(o *Options) {
+	log.Printf("Start running the main service with options: %v", o)
+
+	// clustercli, _ := cluster.NewClient()
+	// clustercli.Boskos.Release("", "")
+	// clerkcli := clerk.NewClient()
 }
+
+// func main() {
+//
+// 	http.HandleFunc("/createcluster", handleProw)
+// 	http.HandleFunc("/getcluster", handleProw)
+// 	http.ListenAndServe(":8090", nil)
+// }

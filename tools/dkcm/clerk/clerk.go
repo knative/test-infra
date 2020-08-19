@@ -4,8 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-
-	_ "github.com/lib/pq"
+	// _ "github.com/lib/pq"
 )
 
 type Cluster struct {

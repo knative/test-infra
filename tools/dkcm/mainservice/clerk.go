@@ -1,4 +1,4 @@
-package main
+package mainservice
 
 import (
 	"database/sql"
@@ -7,8 +7,7 @@ import (
 	"math/rand"
 	"strings"
 	"time"
-
-	_ "github.com/lib/pq"
+	// _ "github.com/lib/pq"
 )
 
 type Cluster struct {
@@ -29,6 +28,7 @@ var (
 		rand.NewSource(time.Now().UnixNano()))
 )
 
+/*
 func init() {
 	var err error
 	db, err = sql.Open("postgres", "user=postgres dbname=postgres sslmode=disable password=newPassword")
@@ -40,7 +40,7 @@ func init() {
 		log.Fatal(err)
 	}
 
-}
+} */
 
 func generateID(idSize int) string {
 	bytes := make([]byte, idSize)
