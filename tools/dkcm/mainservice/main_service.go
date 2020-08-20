@@ -54,15 +54,4 @@ func handleProw(w http.ResponseWriter, req *http.Request) {
 
 func Start(o *Options) {
 	log.Printf("Start running the main service with options: %v", o)
-
-	// clustercli, _ := cluster.NewClient()
-	// clustercli.Boskos.Release("", "")
-	// clerkcli := clerk.NewClient()
 }
-
-// func main() {
-//
-// 	http.HandleFunc("/createcluster", handleProw)
-// 	http.HandleFunc("/getcluster", handleProw)
-// 	http.ListenAndServe(":8090", nil)
-// }

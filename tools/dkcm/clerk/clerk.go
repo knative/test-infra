@@ -40,20 +40,6 @@ var (
 		rand.NewSource(time.Now().UnixNano()))
 )
 
-/*
-func init() {
-	var err error
-	db, err = sql.Open("postgres", "user=postgres dbname=postgres sslmode=disable password=newPassword")
-	if err != nil {
-		log.Fatal(err)
-	}
-	// check connection
-	if err = db.Ping(); err != nil {
-		log.Fatal(err)
-	}
-
-} */
-
 func generateID(idSize int) string {
 	bytes := make([]byte, idSize)
 	for i := range bytes {
