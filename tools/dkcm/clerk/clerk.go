@@ -17,8 +17,8 @@ package clerk
 
 import (
 	"database/sql"
-	"math/rand"
-	"time"
+
+	"k8s.io/apimachinery/pkg/util/uuid"
 	// _ "github.com/lib/pq"
 )
 
@@ -31,28 +31,15 @@ type Cluster struct {
 	zone        string
 }
 
-const charset = "abcdefghijklmnopqrstuvwxyz" +
-	"ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-
 var (
-	db        *sql.DB
-	randomGen *rand.Rand = rand.New(
-		rand.NewSource(time.Now().UnixNano()))
+	db *sql.DB
 )
-
-func generateID(idSize int) string {
-	bytes := make([]byte, idSize)
-	for i := range bytes {
-		bytes[i] = charset[randomGen.Intn(len(charset))]
-	}
-	return string(bytes)
-}
 
 func generateUnique(idSize int, key string) string {
 	var randomid string
 	var count int
 	for {
-		randomid = generateID(idSize)
+		randomid = uuid.NewUUID()
 		db.QueryRow("SELECT count(*) FROM table Where $1 = $2", key, randomid).Scan(&count)
 		if count == 0 {
 			return randomid
@@ -60,21 +47,21 @@ func generateUnique(idSize int, key string) string {
 	}
 }
 
-func clerkInfo() {
+func info() {
 	// print the database
 }
 
-func clerkQuery() (bool, string, string) {
+func query() (bool, string, string) {
 	// check whether available cluster exists
 	return true, "", ""
 }
 
-func getWithToken(token string, status chan string, errc chan string) {
+func getWithToken(token string, status chan string, errChan chan string) {
 	// check in with token
 
 }
 
-func updateCluster(zone string, prowid string, boskosid string, infoChan chan string) {
+func updateCluster(zone, prowid, boskosid string, infoChan chan string) {
 	// assign cluster if available
 
 }
