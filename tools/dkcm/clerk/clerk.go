@@ -74,7 +74,7 @@ func getWithToken(token string, status chan string, errc chan string) {
 
 }
 
-func updateCluster(zone string, prowid string, boskosid string, infoChan chan string) {
+func updateCluster(zone, prowid, boskosid string, infoChan chan string) {
 	// assign cluster if available
 
 }
