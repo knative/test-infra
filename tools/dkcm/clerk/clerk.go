@@ -18,7 +18,7 @@ package clerk
 import (
 	"database/sql"
 
-	"k8s.io/apimachinery/pkg/util/uuid"
+	"github.com/google/uuid"
 	// _ "github.com/lib/pq"
 )
 
@@ -39,7 +39,7 @@ func generateUnique(idSize int, key string) string {
 	var randomid string
 	var count int
 	for {
-		randomid = uuid.NewUUID()
+		randomid = uuid.New().String()
 		db.QueryRow("SELECT count(*) FROM table Where $1 = $2", key, randomid).Scan(&count)
 		if count == 0 {
 			return randomid
