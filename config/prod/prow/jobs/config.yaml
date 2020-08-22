@@ -1350,6 +1350,7 @@ presubmits:
     rerun_command: "/test pull-knative-docs-build-tests"
     trigger: "(?m)^/test (all|pull-knative-docs-build-tests),?(\\s+|$)"
     decorate: true
+    path_alias: knative.dev/docs
     cluster: "build-knative"
     spec:
       containers:
@@ -1386,6 +1387,7 @@ presubmits:
     rerun_command: "/test pull-knative-docs-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-docs-unit-tests),?(\\s+|$)"
     decorate: true
+    path_alias: knative.dev/docs
     cluster: "build-knative"
     spec:
       containers:
@@ -1422,6 +1424,7 @@ presubmits:
     rerun_command: "/test pull-knative-docs-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-docs-integration-tests),?(\\s+|$)"
     decorate: true
+    path_alias: knative.dev/docs
     cluster: "build-knative"
     spec:
       containers:
@@ -1467,6 +1470,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-docs-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
+    path_alias: knative.dev/docs
     cluster: "build-knative"
     spec:
       containers:
@@ -1496,6 +1500,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-docs-markdown-link-check),?(\\s+|$)"
     decorate: true
     optional: true
+    path_alias: knative.dev/docs
     cluster: "build-knative"
     spec:
       containers:
@@ -3925,8 +3930,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: master
     path_alias: knative.dev/serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -3962,8 +3967,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: master
     path_alias: knative.dev/serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -3999,8 +4004,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: release-0.14
     path_alias: knative.dev/serving
+    base_ref: release-0.14
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4042,8 +4047,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: release-0.14
     path_alias: knative.dev/serving
+    base_ref: release-0.14
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -4085,8 +4090,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: release-0.15
     path_alias: knative.dev/serving
+    base_ref: release-0.15
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4128,8 +4133,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: release-0.15
     path_alias: knative.dev/serving
+    base_ref: release-0.15
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -4171,8 +4176,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: release-0.16
     path_alias: knative.dev/serving
+    base_ref: release-0.16
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4214,8 +4219,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: release-0.16
     path_alias: knative.dev/serving
+    base_ref: release-0.16
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -4257,8 +4262,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: release-0.17
     path_alias: knative.dev/serving
+    base_ref: release-0.17
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4300,8 +4305,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: release-0.17
     path_alias: knative.dev/serving
+    base_ref: release-0.17
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -4343,8 +4348,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: master
     path_alias: knative.dev/serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4378,8 +4383,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: master
     path_alias: knative.dev/serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4413,8 +4418,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: master
     path_alias: knative.dev/serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4448,8 +4453,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: master
     path_alias: knative.dev/serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4483,8 +4488,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: master
     path_alias: knative.dev/serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4518,8 +4523,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: master
     path_alias: knative.dev/serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4553,8 +4558,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: master
     path_alias: knative.dev/serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4588,8 +4593,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: master
     path_alias: knative.dev/serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4623,8 +4628,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: master
     path_alias: knative.dev/serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4658,8 +4663,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: master
     path_alias: knative.dev/serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4699,8 +4704,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: master
     path_alias: knative.dev/serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4737,8 +4742,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: release-0.14
     path_alias: knative.dev/serving
+    base_ref: release-0.14
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4786,8 +4791,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: release-0.15
     path_alias: knative.dev/serving
+    base_ref: release-0.15
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4835,8 +4840,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: release-0.16
     path_alias: knative.dev/serving
+    base_ref: release-0.16
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4884,8 +4889,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: release-0.17
     path_alias: knative.dev/serving
+    base_ref: release-0.17
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4933,8 +4938,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: master
     path_alias: knative.dev/serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4979,8 +4984,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: master
     path_alias: knative.dev/serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5016,8 +5021,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: master
     path_alias: knative.dev/serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5040,8 +5045,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: master
     path_alias: knative.dev/serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -5060,8 +5065,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: client
-    base_ref: master
     path_alias: knative.dev/client
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5092,8 +5097,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: client
-    base_ref: master
     path_alias: knative.dev/client
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -5124,8 +5129,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: client
-    base_ref: release-0.13
     path_alias: knative.dev/client
+    base_ref: release-0.13
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5167,8 +5172,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: client
-    base_ref: release-0.13
     path_alias: knative.dev/client
+    base_ref: release-0.13
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -5210,8 +5215,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: client
-    base_ref: release-0.14
     path_alias: knative.dev/client
+    base_ref: release-0.14
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5253,8 +5258,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: client
-    base_ref: release-0.14
     path_alias: knative.dev/client
+    base_ref: release-0.14
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -5296,8 +5301,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: client
-    base_ref: release-0.15
     path_alias: knative.dev/client
+    base_ref: release-0.15
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5339,8 +5344,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: client
-    base_ref: release-0.15
     path_alias: knative.dev/client
+    base_ref: release-0.15
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -5382,8 +5387,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: client
-    base_ref: release-0.16
     path_alias: knative.dev/client
+    base_ref: release-0.16
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5425,8 +5430,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: client
-    base_ref: release-0.16
     path_alias: knative.dev/client
+    base_ref: release-0.16
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -5468,8 +5473,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: client
-    base_ref: master
     path_alias: knative.dev/client
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5501,8 +5506,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: client
-    base_ref: master
     path_alias: knative.dev/client
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5532,8 +5537,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: client
-    base_ref: release-0.13
     path_alias: knative.dev/client
+    base_ref: release-0.13
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5576,8 +5581,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: client
-    base_ref: release-0.14
     path_alias: knative.dev/client
+    base_ref: release-0.14
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5620,8 +5625,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: client
-    base_ref: release-0.15
     path_alias: knative.dev/client
+    base_ref: release-0.15
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5664,8 +5669,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: client
-    base_ref: release-0.16
     path_alias: knative.dev/client
+    base_ref: release-0.16
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5708,8 +5713,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: client
-    base_ref: master
     path_alias: knative.dev/client
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5753,8 +5758,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: client
-    base_ref: master
     path_alias: knative.dev/client
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5777,8 +5782,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: client
-    base_ref: master
     path_alias: knative.dev/client
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -5797,8 +5802,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: client-contrib
-    base_ref: master
     path_alias: knative.dev/client-contrib
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5829,8 +5834,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: client-contrib
-    base_ref: master
     path_alias: knative.dev/client-contrib
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -5861,6 +5866,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: docs
+    path_alias: knative.dev/docs
     base_ref: master
   spec:
     containers:
@@ -5900,6 +5906,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: docs
+    path_alias: knative.dev/docs
     base_ref: master
   spec:
     containers:
@@ -5943,6 +5950,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: docs
+    path_alias: knative.dev/docs
     base_ref: master
   spec:
     containers:
@@ -5966,6 +5974,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: docs
+    path_alias: knative.dev/docs
     base_ref: master
   spec:
     containers:
@@ -5985,8 +5994,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing
-    base_ref: master
     path_alias: knative.dev/eventing
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6022,8 +6031,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing
-    base_ref: master
     path_alias: knative.dev/eventing
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6059,8 +6068,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing
-    base_ref: release-0.14
     path_alias: knative.dev/eventing
+    base_ref: release-0.14
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6102,8 +6111,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing
-    base_ref: release-0.14
     path_alias: knative.dev/eventing
+    base_ref: release-0.14
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6145,8 +6154,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing
-    base_ref: release-0.15
     path_alias: knative.dev/eventing
+    base_ref: release-0.15
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6188,8 +6197,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing
-    base_ref: release-0.15
     path_alias: knative.dev/eventing
+    base_ref: release-0.15
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6231,8 +6240,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing
-    base_ref: release-0.16
     path_alias: knative.dev/eventing
+    base_ref: release-0.16
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6274,8 +6283,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing
-    base_ref: release-0.16
     path_alias: knative.dev/eventing
+    base_ref: release-0.16
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6317,8 +6326,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing
-    base_ref: release-0.17
     path_alias: knative.dev/eventing
+    base_ref: release-0.17
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6360,8 +6369,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing
-    base_ref: release-0.17
     path_alias: knative.dev/eventing
+    base_ref: release-0.17
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6409,8 +6418,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing
-    base_ref: master
     path_alias: knative.dev/eventing
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6447,8 +6456,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing
-    base_ref: release-0.14
     path_alias: knative.dev/eventing
+    base_ref: release-0.14
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6496,8 +6505,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing
-    base_ref: release-0.15
     path_alias: knative.dev/eventing
+    base_ref: release-0.15
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6545,8 +6554,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing
-    base_ref: release-0.16
     path_alias: knative.dev/eventing
+    base_ref: release-0.16
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6594,8 +6603,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing
-    base_ref: release-0.17
     path_alias: knative.dev/eventing
+    base_ref: release-0.17
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6643,8 +6652,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing
-    base_ref: master
     path_alias: knative.dev/eventing
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6693,8 +6702,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing
-    base_ref: master
     path_alias: knative.dev/eventing
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6717,8 +6726,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing
-    base_ref: master
     path_alias: knative.dev/eventing
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6737,8 +6746,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing-contrib
-    base_ref: master
     path_alias: knative.dev/eventing-contrib
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6774,8 +6783,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing-contrib
-    base_ref: master
     path_alias: knative.dev/eventing-contrib
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6811,8 +6820,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing-contrib
-    base_ref: release-0.13
     path_alias: knative.dev/eventing-contrib
+    base_ref: release-0.13
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6854,8 +6863,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing-contrib
-    base_ref: release-0.13
     path_alias: knative.dev/eventing-contrib
+    base_ref: release-0.13
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6897,8 +6906,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing-contrib
-    base_ref: release-0.14
     path_alias: knative.dev/eventing-contrib
+    base_ref: release-0.14
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6940,8 +6949,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing-contrib
-    base_ref: release-0.14
     path_alias: knative.dev/eventing-contrib
+    base_ref: release-0.14
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6983,8 +6992,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing-contrib
-    base_ref: release-0.15
     path_alias: knative.dev/eventing-contrib
+    base_ref: release-0.15
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7026,8 +7035,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing-contrib
-    base_ref: release-0.15
     path_alias: knative.dev/eventing-contrib
+    base_ref: release-0.15
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7069,8 +7078,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing-contrib
-    base_ref: release-0.16
     path_alias: knative.dev/eventing-contrib
+    base_ref: release-0.16
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7112,8 +7121,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing-contrib
-    base_ref: release-0.16
     path_alias: knative.dev/eventing-contrib
+    base_ref: release-0.16
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7155,8 +7164,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing-contrib
-    base_ref: master
     path_alias: knative.dev/eventing-contrib
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7193,8 +7202,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing-contrib
-    base_ref: release-0.13
     path_alias: knative.dev/eventing-contrib
+    base_ref: release-0.13
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7242,8 +7251,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing-contrib
-    base_ref: release-0.14
     path_alias: knative.dev/eventing-contrib
+    base_ref: release-0.14
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7291,8 +7300,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing-contrib
-    base_ref: release-0.15
     path_alias: knative.dev/eventing-contrib
+    base_ref: release-0.15
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7340,8 +7349,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing-contrib
-    base_ref: release-0.16
     path_alias: knative.dev/eventing-contrib
+    base_ref: release-0.16
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7389,8 +7398,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing-contrib
-    base_ref: master
     path_alias: knative.dev/eventing-contrib
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7439,8 +7448,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing-contrib
-    base_ref: master
     path_alias: knative.dev/eventing-contrib
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7463,8 +7472,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing-contrib
-    base_ref: master
     path_alias: knative.dev/eventing-contrib
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7483,8 +7492,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: pkg
-    base_ref: master
     path_alias: knative.dev/pkg
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7515,8 +7524,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: pkg
-    base_ref: master
     path_alias: knative.dev/pkg
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7551,8 +7560,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: pkg
-    base_ref: master
     path_alias: knative.dev/pkg
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7575,8 +7584,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: pkg
-    base_ref: master
     path_alias: knative.dev/pkg
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7595,8 +7604,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: caching
-    base_ref: master
     path_alias: knative.dev/caching
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7627,8 +7636,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: caching
-    base_ref: master
     path_alias: knative.dev/caching
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7663,8 +7672,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: caching
-    base_ref: master
     path_alias: knative.dev/caching
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7687,8 +7696,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: caching
-    base_ref: master
     path_alias: knative.dev/caching
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7707,8 +7716,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: sample-controller
-    base_ref: master
     path_alias: knative.dev/sample-controller
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7739,8 +7748,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: sample-controller
-    base_ref: master
     path_alias: knative.dev/sample-controller
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7771,8 +7780,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: sample-source
-    base_ref: master
     path_alias: knative.dev/sample-source
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7803,8 +7812,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: sample-source
-    base_ref: master
     path_alias: knative.dev/sample-source
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7835,8 +7844,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: test-infra
-    base_ref: master
     path_alias: knative.dev/test-infra
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7867,8 +7876,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: test-infra
-    base_ref: master
     path_alias: knative.dev/test-infra
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7903,8 +7912,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: test-infra
-    base_ref: master
     path_alias: knative.dev/test-infra
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7927,8 +7936,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: test-infra
-    base_ref: master
     path_alias: knative.dev/test-infra
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -8725,8 +8734,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-certmanager
-    base_ref: master
     path_alias: knative.dev/net-certmanager
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8757,8 +8766,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-certmanager
-    base_ref: master
     path_alias: knative.dev/net-certmanager
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -8795,8 +8804,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-certmanager
-    base_ref: master
     path_alias: knative.dev/net-certmanager
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8828,8 +8837,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-certmanager
-    base_ref: master
     path_alias: knative.dev/net-certmanager
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8871,8 +8880,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-certmanager
-    base_ref: master
     path_alias: knative.dev/net-certmanager
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8918,8 +8927,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-certmanager
-    base_ref: master
     path_alias: knative.dev/net-certmanager
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8942,8 +8951,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-certmanager
-    base_ref: master
     path_alias: knative.dev/net-certmanager
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -8962,8 +8971,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-contour
-    base_ref: master
     path_alias: knative.dev/net-contour
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8994,8 +9003,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-contour
-    base_ref: master
     path_alias: knative.dev/net-contour
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9032,8 +9041,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-contour
-    base_ref: master
     path_alias: knative.dev/net-contour
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9065,8 +9074,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-contour
-    base_ref: master
     path_alias: knative.dev/net-contour
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9108,8 +9117,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-contour
-    base_ref: master
     path_alias: knative.dev/net-contour
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9155,8 +9164,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-contour
-    base_ref: master
     path_alias: knative.dev/net-contour
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9179,8 +9188,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-contour
-    base_ref: master
     path_alias: knative.dev/net-contour
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9199,8 +9208,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-http01
-    base_ref: master
     path_alias: knative.dev/net-http01
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9231,8 +9240,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-http01
-    base_ref: master
     path_alias: knative.dev/net-http01
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9269,8 +9278,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-http01
-    base_ref: master
     path_alias: knative.dev/net-http01
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9302,8 +9311,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-http01
-    base_ref: master
     path_alias: knative.dev/net-http01
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9345,8 +9354,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-http01
-    base_ref: master
     path_alias: knative.dev/net-http01
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9392,8 +9401,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-http01
-    base_ref: master
     path_alias: knative.dev/net-http01
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9416,8 +9425,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-http01
-    base_ref: master
     path_alias: knative.dev/net-http01
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9436,8 +9445,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-istio
-    base_ref: master
     path_alias: knative.dev/net-istio
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9468,8 +9477,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-istio
-    base_ref: master
     path_alias: knative.dev/net-istio
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9506,8 +9515,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-istio
-    base_ref: master
     path_alias: knative.dev/net-istio
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9539,8 +9548,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-istio
-    base_ref: master
     path_alias: knative.dev/net-istio
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9572,8 +9581,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-istio
-    base_ref: release-0.14
     path_alias: knative.dev/net-istio
+    base_ref: release-0.14
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9618,8 +9627,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-istio
-    base_ref: release-0.15
     path_alias: knative.dev/net-istio
+    base_ref: release-0.15
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9664,8 +9673,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-istio
-    base_ref: release-0.16
     path_alias: knative.dev/net-istio
+    base_ref: release-0.16
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9710,8 +9719,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-istio
-    base_ref: master
     path_alias: knative.dev/net-istio
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9757,8 +9766,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-istio
-    base_ref: master
     path_alias: knative.dev/net-istio
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9781,8 +9790,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-istio
-    base_ref: master
     path_alias: knative.dev/net-istio
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9801,8 +9810,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-kourier
-    base_ref: master
     path_alias: knative.dev/net-kourier
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9833,8 +9842,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-kourier
-    base_ref: master
     path_alias: knative.dev/net-kourier
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9871,8 +9880,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-kourier
-    base_ref: master
     path_alias: knative.dev/net-kourier
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9904,8 +9913,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-kourier
-    base_ref: master
     path_alias: knative.dev/net-kourier
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9947,8 +9956,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-kourier
-    base_ref: master
     path_alias: knative.dev/net-kourier
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9994,8 +10003,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-kourier
-    base_ref: master
     path_alias: knative.dev/net-kourier
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10018,8 +10027,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: net-kourier
-    base_ref: master
     path_alias: knative.dev/net-kourier
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -10038,8 +10047,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: operator
-    base_ref: master
     path_alias: knative.dev/operator
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10070,8 +10079,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: operator
-    base_ref: master
     path_alias: knative.dev/operator
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -10102,6 +10111,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: operator
+    path_alias: knative.dev/operator
     base_ref: release-0.15
   spec:
     containers:
@@ -10149,6 +10159,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: operator
+    path_alias: knative.dev/operator
     base_ref: release-0.15
   spec:
     containers:
@@ -10196,6 +10207,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: operator
+    path_alias: knative.dev/operator
     base_ref: release-0.16
   spec:
     containers:
@@ -10243,6 +10255,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: operator
+    path_alias: knative.dev/operator
     base_ref: release-0.16
   spec:
     containers:
@@ -10290,8 +10303,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: operator
-    base_ref: master
     path_alias: knative.dev/operator
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10323,8 +10336,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: operator
-    base_ref: master
     path_alias: knative.dev/operator
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10364,8 +10377,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: operator
-    base_ref: master
     path_alias: knative.dev/operator
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10409,8 +10422,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: operator
-    base_ref: master
     path_alias: knative.dev/operator
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10433,8 +10446,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: operator
-    base_ref: master
     path_alias: knative.dev/operator
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -10453,8 +10466,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: discovery
-    base_ref: master
     path_alias: knative.dev/discovery
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10485,8 +10498,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: discovery
-    base_ref: master
     path_alias: knative.dev/discovery
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -10517,8 +10530,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: discovery
-    base_ref: master
     path_alias: knative.dev/discovery
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10550,8 +10563,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: discovery
-    base_ref: master
     path_alias: knative.dev/discovery
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10593,8 +10606,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: discovery
-    base_ref: master
     path_alias: knative.dev/discovery
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10636,8 +10649,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka
-    base_ref: master
     path_alias: knative.dev/eventing-kafka
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10676,8 +10689,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka
-    base_ref: master
     path_alias: knative.dev/eventing-kafka
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -10716,8 +10729,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka
-    base_ref: master
     path_alias: knative.dev/eventing-kafka
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10757,8 +10770,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka
-    base_ref: master
     path_alias: knative.dev/eventing-kafka
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10783,10 +10796,10 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
-      - name: DOCKER_IN_DOCKER_ENABLED
-        value: "true"
       - name: ORG_NAME
         value: knative-sandbox
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -10808,8 +10821,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka
-    base_ref: master
     path_alias: knative.dev/eventing-kafka
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10834,10 +10847,10 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
-      - name: DOCKER_IN_DOCKER_ENABLED
-        value: "true"
       - name: ORG_NAME
         value: knative-sandbox
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -10863,8 +10876,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka
-    base_ref: master
     path_alias: knative.dev/eventing-kafka
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10887,8 +10900,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka
-    base_ref: master
     path_alias: knative.dev/eventing-kafka
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -10907,8 +10920,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka-broker
-    base_ref: master
     path_alias: knative.dev/eventing-kafka-broker
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10947,8 +10960,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka-broker
-    base_ref: master
     path_alias: knative.dev/eventing-kafka-broker
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -10987,8 +11000,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka-broker
-    base_ref: master
     path_alias: knative.dev/eventing-kafka-broker
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11028,8 +11041,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka-broker
-    base_ref: master
     path_alias: knative.dev/eventing-kafka-broker
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11054,10 +11067,10 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
-      - name: DOCKER_IN_DOCKER_ENABLED
-        value: "true"
       - name: ORG_NAME
         value: knative-sandbox
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -11079,8 +11092,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka-broker
-    base_ref: master
     path_alias: knative.dev/eventing-kafka-broker
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11105,10 +11118,10 @@ periodics:
         mountPath: /etc/release-account
         readOnly: true
       env:
-      - name: DOCKER_IN_DOCKER_ENABLED
-        value: "true"
       - name: ORG_NAME
         value: knative-sandbox
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -11134,8 +11147,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka-broker
-    base_ref: master
     path_alias: knative.dev/eventing-kafka-broker
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11158,8 +11171,8 @@ periodics:
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka-broker
-    base_ref: master
     path_alias: knative.dev/eventing-kafka-broker
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -11182,8 +11195,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: networking
-    base_ref: master
     path_alias: knative.dev/networking
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11206,8 +11219,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: networking
-    base_ref: master
     path_alias: knative.dev/networking
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -11230,8 +11243,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: master
     path_alias: knative.dev/serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11270,8 +11283,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: serving
-    base_ref: master
     path_alias: knative.dev/serving
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11310,8 +11323,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing
-    base_ref: master
     path_alias: knative.dev/eventing
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11350,8 +11363,8 @@ periodics:
   extra_refs:
   - org: knative
     repo: eventing
-    base_ref: master
     path_alias: knative.dev/eventing
+    base_ref: master
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11629,6 +11642,7 @@ postsubmits:
     agent: kubernetes
     decorate: true
     cluster: "build-knative"
+    path_alias: knative.dev/docs
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable

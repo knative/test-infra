@@ -60,7 +60,6 @@ type repositoryData struct {
 	EnableGoCoverage       bool
 	GoCoverageThreshold    int
 	Processed              bool
-	DotDev                 bool
 }
 
 // prowConfigTemplateData contains basic data about Prow.
@@ -205,6 +204,11 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.Timeout = 50
 	data.OrgName = strings.Split(repo, "/")[0]
 	data.RepoName = strings.Replace(repo, data.OrgName+"/", "", 1)
+	data.ExtraRefs = []string{"- org: " + data.OrgName, "  repo: " + data.RepoName}
+	if data.OrgName == "knative" || data.OrgName == "knative-sandbox" {
+		data.PathAlias = "path_alias: knative.dev/" + data.RepoName
+		data.ExtraRefs = append(data.ExtraRefs, "  "+data.PathAlias)
+	}
 	data.RepoNameForJob = strings.ToLower(strings.Replace(repo, "/", "-", -1))
 	data.RepoBranch = "master" // Default to be master, will override later for other branches
 	data.GcsBucket = GCSBucket
@@ -221,7 +225,6 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.Volumes = make([]string, 0)
 	data.VolumeMounts = make([]string, 0)
 	data.Env = make([]string, 0)
-	data.ExtraRefs = []string{"- org: " + data.OrgName, "  repo: " + data.RepoName}
 	data.Labels = make([]string, 0)
 	data.Optional = ""
 	data.Cluster = "cluster: \"build-knative\""
@@ -351,7 +354,6 @@ func setReporterConfigReqForJob(res yaml.MapSlice, data *baseProwJobTemplateData
 // parseBasicJobConfigOverrides updates the given baseProwJobTemplateData with any base option present in the given config.
 func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.MapSlice) {
 	(*data).ExtraRefs = append((*data).ExtraRefs, "  base_ref: "+(*data).RepoBranch)
-	var needDotdev bool
 	for i, item := range config {
 		switch item.Key {
 		case "skip_branches":
@@ -372,13 +374,6 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 			}
 		case "always-run":
 			(*data).AlwaysRun = getBool(item.Value)
-		case "dot-dev":
-			needDotdev = true
-			for i, repo := range repositories {
-				if path.Base(repo.Name) == (*data).RepoName {
-					repositories[i].DotDev = true
-				}
-			}
 		case "performance":
 			for i, repo := range repositories {
 				if path.Base(repo.Name) == (*data).RepoName {
@@ -397,16 +392,11 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 			continue
 		default:
 			log.Fatalf("Unknown entry %q for job", item.Key)
-			continue
 		}
 		// Knock-out the item, signalling it was already parsed.
 		config[i] = yaml.MapItem{}
 	}
 
-	if needDotdev {
-		(*data).PathAlias = "path_alias: knative.dev/" + (*data).RepoName
-		(*data).ExtraRefs = append((*data).ExtraRefs, "  "+(*data).PathAlias)
-	}
 	// Override any values if provided by command-line flags.
 	if timeoutOverride > 0 {
 		(*data).Timeout = timeoutOverride

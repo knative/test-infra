@@ -24,7 +24,6 @@ import (
 	"fmt"
 	"hash/fnv"
 	"log"
-	"path"
 	"strings"
 
 	"gopkg.in/yaml.v2"
@@ -188,6 +187,10 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 				"--release-gcr gcr.io/knative-releases",
 				"--github-token /etc/hub-token/token"}
 			addVolumeToJob(&data.Base, "/etc/hub-token", "hub-token", true, "")
+			// For dot-release and auto-release jobs, set ORG_NAME env var if the org name is not knative, as it's needed by release.sh
+			if data.Base.OrgName != "knative" {
+				data.Base.addEnvToJob("ORG_NAME", data.Base.OrgName)
+			}
 			data.Base.Timeout = 90
 		case "custom-job":
 			jobType = getString(item.Key)
@@ -319,9 +322,6 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 			fmt.Sprintf("--cov-threshold-percentage=%d", data.Base.GoCoverageThreshold)}
 		data.Base.ServiceAccount = ""
 		data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
-		if repo.DotDev {
-			data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  path_alias: knative.dev/"+path.Base(repoName))
-		}
 		addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 		addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
 		configureServiceAccountForJob(&data.Base)

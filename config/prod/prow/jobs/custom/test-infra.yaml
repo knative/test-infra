@@ -302,6 +302,7 @@ periodics:
     - name: prow-auto-bumper-github-token
       secret:
         secretName: prow-auto-bumper-github-token
+
 - cron: "0 */2 * * *" # Every other hour
   name: ci-knative-prow-jobs-syncer
   agent: kubernetes
