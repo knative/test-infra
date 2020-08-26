@@ -1350,7 +1350,6 @@ presubmits:
     rerun_command: "/test pull-knative-docs-build-tests"
     trigger: "(?m)^/test (all|pull-knative-docs-build-tests),?(\\s+|$)"
     decorate: true
-    path_alias: knative.dev/docs
     cluster: "build-knative"
     spec:
       containers:
@@ -1387,7 +1386,6 @@ presubmits:
     rerun_command: "/test pull-knative-docs-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-docs-unit-tests),?(\\s+|$)"
     decorate: true
-    path_alias: knative.dev/docs
     cluster: "build-knative"
     spec:
       containers:
@@ -1424,7 +1422,6 @@ presubmits:
     rerun_command: "/test pull-knative-docs-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-docs-integration-tests),?(\\s+|$)"
     decorate: true
-    path_alias: knative.dev/docs
     cluster: "build-knative"
     spec:
       containers:
@@ -1470,7 +1467,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-docs-go-coverage),?(\\s+|$)"
     optional: true
     decorate: true
-    path_alias: knative.dev/docs
     cluster: "build-knative"
     spec:
       containers:
@@ -1500,7 +1496,6 @@ presubmits:
     trigger: "(?m)^/test (all|pull-knative-docs-markdown-link-check),?(\\s+|$)"
     decorate: true
     optional: true
-    path_alias: knative.dev/docs
     cluster: "build-knative"
     spec:
       containers:
@@ -5866,7 +5861,6 @@ periodics:
   extra_refs:
   - org: knative
     repo: docs
-    path_alias: knative.dev/docs
     base_ref: master
   spec:
     containers:
@@ -5906,7 +5900,6 @@ periodics:
   extra_refs:
   - org: knative
     repo: docs
-    path_alias: knative.dev/docs
     base_ref: master
   spec:
     containers:
@@ -5950,7 +5943,6 @@ periodics:
   extra_refs:
   - org: knative
     repo: docs
-    path_alias: knative.dev/docs
     base_ref: master
   spec:
     containers:
@@ -5974,7 +5966,6 @@ periodics:
   extra_refs:
   - org: knative
     repo: docs
-    path_alias: knative.dev/docs
     base_ref: master
   spec:
     containers:
@@ -11642,7 +11633,6 @@ postsubmits:
     agent: kubernetes
     decorate: true
     cluster: "build-knative"
-    path_alias: knative.dev/docs
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable

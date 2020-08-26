@@ -35,6 +35,8 @@ import (
 	"time"
 
 	"gopkg.in/yaml.v2"
+	"k8s.io/apimachinery/pkg/util/sets"
+
 	"knative.dev/test-infra/pkg/ghutil"
 )
 
@@ -48,9 +50,13 @@ const (
 	// ##########################################################
 	// commonHeaderConfig contains common header definitions.
 	commonHeaderConfig = "common_header.yaml"
+)
 
-	// generalProwConfig contains config-wide definitions.
-	generalProwConfig = "prow_config.yaml"
+var (
+	// GitHub orgs that are using knative.dev path alias.
+	pathAliasOrgs = sets.NewString("knative", "knative-sandbox")
+	// GitHub repos that are not using knative.dev path alias.
+	nonPathAliasRepos = sets.NewString("knative/docs")
 )
 
 // repositoryData contains basic data about each Knative repository.
@@ -205,7 +211,7 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.OrgName = strings.Split(repo, "/")[0]
 	data.RepoName = strings.Replace(repo, data.OrgName+"/", "", 1)
 	data.ExtraRefs = []string{"- org: " + data.OrgName, "  repo: " + data.RepoName}
-	if data.OrgName == "knative" || data.OrgName == "knative-sandbox" {
+	if pathAliasOrgs.Has(data.OrgName) && !nonPathAliasRepos.Has(repo) {
 		data.PathAlias = "path_alias: knative.dev/" + data.RepoName
 		data.ExtraRefs = append(data.ExtraRefs, "  "+data.PathAlias)
 	}
