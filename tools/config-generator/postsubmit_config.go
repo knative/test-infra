@@ -18,7 +18,6 @@ package main
 
 import (
 	"fmt"
-	"path"
 	"strings"
 
 	"gopkg.in/yaml.v2"
@@ -45,11 +44,6 @@ func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
 	var data postsubmitJobTemplateData
 	data.Base = newbaseProwJobTemplateData(repoName)
 	data.PostsubmitJobName = fmt.Sprintf("post-%s-go-coverage", data.Base.RepoNameForJob)
-	for _, repo := range repositories {
-		if repo.Name == repoName && repo.DotDev {
-			data.Base.PathAlias = "path_alias: knative.dev/" + path.Base(repoName)
-		}
-	}
 	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 	configureServiceAccountForJob(&data.Base)
 	jobName := data.PostsubmitJobName

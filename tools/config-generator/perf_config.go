@@ -69,9 +69,6 @@ func perfClusterPeriodicJob(jobNamePostFix, cronString, command string, args []s
 	var data periodicJobTemplateData
 	data.Base = perfClusterBaseProwJob(command, args, repo.Name, sa)
 	data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
-	if repo.DotDev {
-		data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  path_alias: knative.dev/"+data.Base.RepoName)
-	}
 	data.PeriodicJobName = fmt.Sprintf("ci-%s-%s", data.Base.RepoNameForJob, jobNamePostFix)
 	data.CronString = cronString
 	data.PeriodicCommand = createCommand(data.Base)
@@ -83,9 +80,6 @@ func perfClusterPeriodicJob(jobNamePostFix, cronString, command string, args []s
 func perfClusterReconcilePostsubmitJob(jobNamePostFix, command string, args []string, repo repositoryData, sa string) {
 	var data postsubmitJobTemplateData
 	data.Base = perfClusterBaseProwJob(command, args, repo.Name, sa)
-	if repo.DotDev {
-		data.Base.PathAlias = "path_alias: knative.dev/" + data.Base.RepoName
-	}
 	data.PostsubmitJobName = fmt.Sprintf("post-%s-%s", data.Base.RepoNameForJob, jobNamePostFix)
 	data.PostsubmitCommand = createCommand(data.Base)
 	addMonitoringPubsubLabelsToJob(&data.Base, data.PostsubmitJobName)
