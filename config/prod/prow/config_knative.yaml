@@ -507,25 +507,25 @@ periodics:
   knative/client:
   - continuous: true
   - branch-ci: true
-    release: "0.13"
-  - branch-ci: true
     release: "0.14"
   - branch-ci: true
     release: "0.15"
   - branch-ci: true
     release: "0.16"
+  - branch-ci: true
+    release: "0.17"
   - nightly: true
   - custom-job: tekton
     cron: 0 13 * * *
     command: ./test/tekton-tests.sh
   - dot-release: true
-    release: "0.13"
-  - dot-release: true
     release: "0.14"
   - dot-release: true
     release: "0.15"
   - dot-release: true
     release: "0.16"
+  - dot-release: true
+    release: "0.17"
   - auto-release: true
   knative/client-contrib:
   - continuous: true
@@ -602,13 +602,13 @@ periodics:
       limits:
         memory: 16Gi
   - branch-ci: true
-    release: "0.13"
-  - branch-ci: true
     release: "0.14"
   - branch-ci: true
     release: "0.15"
   - branch-ci: true
     release: "0.16"
+  - branch-ci: true
+    release: "0.17"
   - nightly: true
     resources:
       requests:
@@ -616,13 +616,6 @@ periodics:
       limits:
         memory: 16Gi
   - dot-release: true
-    release: "0.13"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - dot-release: true
     release: "0.14"
     resources:
       requests:
@@ -638,6 +631,13 @@ periodics:
         memory: 16Gi
   - dot-release: true
     release: "0.16"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    release: "0.17"
     resources:
       requests:
         memory: 12Gi
@@ -667,13 +667,6 @@ periodics:
       limits:
         memory: 16Gi
   - branch-ci: true
-    release: "0.13"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - branch-ci: true
     release: "0.14"
     resources:
       requests:
@@ -689,6 +682,13 @@ periodics:
         memory: 16Gi
   - branch-ci: true
     release: "0.16"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - branch-ci: true
+    release: "0.17"
     resources:
       requests:
         memory: 12Gi
@@ -701,13 +701,6 @@ periodics:
       limits:
         memory: 16Gi
   - dot-release: true
-    release: "0.13"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - dot-release: true
     release: "0.14"
     resources:
       requests:
@@ -723,6 +716,13 @@ periodics:
         memory: 16Gi
   - dot-release: true
     release: "0.16"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    release: "0.17"
     resources:
       requests:
         memory: 12Gi
@@ -788,6 +788,8 @@ periodics:
     release: "0.15"
   - dot-release: true
     release: "0.16"
+  - dot-release: true
+    release: "0.17"
   - auto-release: true
   knative-sandbox/net-kourier:
   - continuous: true
@@ -811,6 +813,13 @@ periodics:
         memory: 16Gi
   - branch-ci: true
     release: "0.16"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - branch-ci: true
+    release: "0.17"
     resources:
       requests:
         memory: 12Gi
