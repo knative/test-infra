@@ -833,7 +833,7 @@ periodics:
   - nightly: true
   - dot-release: true
   - auto-release: true
-  knative-sandbox/discovery:
+  knative-sandbox/async-component:
   - continuous: true
   - nightly: true
   - dot-release: true

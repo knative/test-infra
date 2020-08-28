@@ -10659,15 +10659,15 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "32 * * * *"
-  name: ci-knative-sandbox-discovery-continuous
+- cron: "36 * * * *"
+  name: ci-knative-sandbox-async-component-continuous
   agent: kubernetes
   decorate: true
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
-    repo: discovery
-    path_alias: knative.dev/discovery
+    repo: async-component
+    path_alias: knative.dev/async-component
     base_ref: master
   spec:
     containers:
@@ -10691,15 +10691,15 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "8 8,11,22 * * *"
-  name: ci-knative-sandbox-discovery-continuous-beta-prow-tests
+- cron: "16 8,11,22 * * *"
+  name: ci-knative-sandbox-async-component-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
-    repo: discovery
-    path_alias: knative.dev/discovery
+    repo: async-component
+    path_alias: knative.dev/async-component
     base_ref: master
   spec:
     containers:
@@ -10723,15 +10723,15 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "24 9 * * *"
-  name: ci-knative-sandbox-discovery-nightly-release
+- cron: "0 9 * * *"
+  name: ci-knative-sandbox-async-component-nightly-release
   agent: kubernetes
   decorate: true
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
-    repo: discovery
-    path_alias: knative.dev/discovery
+    repo: async-component
+    path_alias: knative.dev/async-component
     base_ref: master
   spec:
     containers:
@@ -10756,15 +10756,15 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "32 9 * * 2"
-  name: ci-knative-sandbox-discovery-dot-release
+- cron: "8 9 * * 2"
+  name: ci-knative-sandbox-async-component-dot-release
   agent: kubernetes
   decorate: true
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
-    repo: discovery
-    path_alias: knative.dev/discovery
+    repo: async-component
+    path_alias: knative.dev/async-component
     base_ref: master
   spec:
     containers:
@@ -10775,7 +10775,7 @@ periodics:
       args:
       - "./hack/release.sh"
       - "--dot-release"
-      - "--release-gcs knative-releases/discovery"
+      - "--release-gcs knative-releases/async-component"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
       volumeMounts:
@@ -10799,15 +10799,15 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "28 */2 * * *"
-  name: ci-knative-sandbox-discovery-auto-release
+- cron: "24 */2 * * *"
+  name: ci-knative-sandbox-async-component-auto-release
   agent: kubernetes
   decorate: true
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
-    repo: discovery
-    path_alias: knative.dev/discovery
+    repo: async-component
+    path_alias: knative.dev/async-component
     base_ref: master
   spec:
     containers:
@@ -10818,7 +10818,7 @@ periodics:
       args:
       - "./hack/release.sh"
       - "--auto-release"
-      - "--release-gcs knative-releases/discovery"
+      - "--release-gcs knative-releases/async-component"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
       volumeMounts:
@@ -10842,6 +10842,54 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
+- cron: "0 1 * * *"
+  name: ci-knative-sandbox-async-component-go-coverage
+  labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-sandbox-async-component-go-coverage
+  agent: kubernetes
+  decorate: true
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: async-component
+    path_alias: knative.dev/async-component
+    base_ref: master
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - "runner.sh"
+      args:
+      - "coverage"
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=50"
+- cron: "36 7 * * *"
+  name: ci-knative-sandbox-async-component-go-coverage-beta-prow-tests
+  labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-sandbox-async-component-go-coverage
+  agent: kubernetes
+  decorate: true
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: async-component
+    path_alias: knative.dev/async-component
+    base_ref: master
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
+      imagePullPolicy: Always
+      command:
+      - "runner.sh"
+      args:
+      - "coverage"
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=50"
 - cron: "32 * * * *"
   name: ci-knative-sandbox-discovery-continuous
   agent: kubernetes
@@ -11604,54 +11652,6 @@ periodics:
   - org: knative
     repo: networking
     path_alias: knative.dev/networking
-    base_ref: master
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
-      imagePullPolicy: Always
-      command:
-      - "runner.sh"
-      args:
-      - "coverage"
-      - "--artifacts=$(ARTIFACTS)"
-      - "--cov-threshold-percentage=50"
-- cron: "0 1 * * *"
-  name: ci-knative-sandbox-async-component-go-coverage
-  labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-sandbox-async-component-go-coverage
-  agent: kubernetes
-  decorate: true
-  cluster: "build-knative"
-  extra_refs:
-  - org: knative-sandbox
-    repo: async-component
-    path_alias: knative.dev/async-component
-    base_ref: master
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      command:
-      - "runner.sh"
-      args:
-      - "coverage"
-      - "--artifacts=$(ARTIFACTS)"
-      - "--cov-threshold-percentage=50"
-- cron: "36 7 * * *"
-  name: ci-knative-sandbox-async-component-go-coverage-beta-prow-tests
-  labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-sandbox-async-component-go-coverage
-  agent: kubernetes
-  decorate: true
-  cluster: "build-knative"
-  extra_refs:
-  - org: knative-sandbox
-    repo: async-component
-    path_alias: knative.dev/async-component
     base_ref: master
   spec:
     containers:
