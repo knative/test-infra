@@ -199,6 +199,10 @@ func getCombinedResultsForBuild(build *prow.Build) ([]*junit.TestSuites, error) 
 		if err != nil {
 			return nil, err
 		}
+		// Empty file failed junit unmarshal
+		if len(contents) == 0 || strings.TrimSpace(string(contents)) == "" {
+			continue
+		}
 		if suites, err := junit.UnMarshal(contents); err != nil {
 			return nil, err
 		} else {
@@ -281,11 +285,6 @@ func getLatestFinishedBuilds(job *prow.Job, count int) []prow.Build {
 			}
 			builds = append(builds, *build)
 		}
-	}
-	if !sort.SliceIsSorted(builds, func(i, j int) bool {
-		return *builds[i].StartTime > *builds[j].StartTime
-	}) {
-		log.Fatalf("Error: found build with smaller buildID started later than one with larger buildID")
 	}
 	return builds
 }
