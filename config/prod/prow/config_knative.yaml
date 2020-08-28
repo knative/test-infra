@@ -348,6 +348,8 @@ presubmits:
   - go-coverage: true
     needs-dind: true
   knative-sandbox/eventing-kafka-broker:
+  - repo-settings: null
+    performance: true
   - build-tests: true
     needs-dind: true
   - unit-tests: true
