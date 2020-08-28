@@ -24,6 +24,13 @@ RUN gcloud components update
 RUN gcloud components install docker-credential-gcr
 RUN docker-credential-gcr configure-docker
 
+# Replace kubectl with a working version
+# TODO(chizhg): remove once https://github.com/knative/test-infra/issues/1858 is fixed in releases <= 0.15 or those releases are no longer supported
+ARG KUBECTL_VERSION=v1.17.4
+RUN rm -f "$(which kubectl)" && \
+    wget "https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -O /usr/local/bin/kubectl && \
+    chmod +x /usr/local/bin/kubectl
+
 # Extra tools through apt-get
 RUN apt-get install -y uuid-runtime  # for uuidgen
 RUN apt-get install -y rubygems      # for mdl
