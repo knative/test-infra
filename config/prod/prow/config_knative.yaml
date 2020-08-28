@@ -334,6 +334,11 @@ presubmits:
     args:
     - --run-test
     - ./test/e2e-upgrade-tests.sh
+  knative-sandbox/async-component:
+  - build-tests: false
+  - unit-tests: true
+  - integration-tests: false
+  - go-coverage: true
   knative-sandbox/discovery:
   - build-tests: true
   - unit-tests: true
@@ -825,6 +830,11 @@ periodics:
         memory: 12Gi
       limits:
         memory: 16Gi
+  - nightly: true
+  - dot-release: true
+  - auto-release: true
+  knative-sandbox/discovery:
+  - continuous: true
   - nightly: true
   - dot-release: true
   - auto-release: true
