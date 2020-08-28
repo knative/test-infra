@@ -335,9 +335,9 @@ presubmits:
     - --run-test
     - ./test/e2e-upgrade-tests.sh
   knative-sandbox/async-component:
-  - build-tests: false
+  - build-tests: true
   - unit-tests: true
-  - integration-tests: false
+  - integration-tests: true
   - go-coverage: true
   knative-sandbox/discovery:
   - build-tests: true
