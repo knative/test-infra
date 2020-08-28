@@ -127,6 +127,15 @@ presubmits:
     args:
     - --run-test
     - ./test/e2e-tests.sh --contour-version latest
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - custom-test: contour-tls
+    always-run: false
+    run-if-changed: ^third_party/contour-latest/*
+    args:
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --contour-version latest
     resources:
