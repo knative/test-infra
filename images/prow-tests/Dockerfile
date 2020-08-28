@@ -12,12 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This is the base Dockerfile for knative-tests images, please remember to also
-# do `make push` in `../prow-tests-*` directories to make sure these images are in
-# sync
-
-# TODO(chizhg): probably build the image from scratch?
-FROM gcr.io/k8s-testimages/kubekins-e2e:v20200326-e946722-master
+FROM gcr.io/k8s-testimages/kubekins-e2e:v20200827-e0bb92b-master
 
 # Install extras on top of base image
 
@@ -30,7 +25,7 @@ RUN gcloud components install docker-credential-gcr
 RUN docker-credential-gcr configure-docker
 
 # Replace kubectl with a working version
-# TODO(chizhg): remove once https://github.com/knative/test-infra/issues/1858 is fixed
+# TODO(chizhg): remove once https://github.com/knative/test-infra/issues/1858 is fixed in releases <= 0.15 or those releases are no longer supported
 ARG KUBECTL_VERSION=v1.17.4
 RUN rm -f "$(which kubectl)" && \
     wget "https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -O /usr/local/bin/kubectl && \
@@ -122,8 +117,6 @@ RUN cp "$(which githubhelper)" .
 # Install coverage tool:
 RUN go install knative.dev/test-infra/tools/coverage
 # This runs "runner.sh coverage" so coverage can be used with any installed Go
-# TODO: Prow jobs run `runner.sh coverage` instead `/coverage`
-COPY images/prow-tests/coverage.sh /coverage
 
 # Install kntest
 RUN go install knative.dev/test-infra/kntest/cmd/kntest
