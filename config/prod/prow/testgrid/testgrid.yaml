@@ -527,6 +527,25 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
+- name: ci-knative-sandbox-discovery-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-discovery-continuous
+  alert_stale_results_hours: 3
+- name: ci-knative-sandbox-discovery-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-discovery-nightly-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-discovery-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-discovery-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-discovery-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-discovery-auto-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
 - name: ci-knative-sandbox-eventing-kafka-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-kafka-continuous
   alert_stale_results_hours: 3
@@ -784,6 +803,8 @@ test_groups:
   short_text_metric: "coverage"
 - name: ci-knative-sandbox-discovery-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-discovery-continuous-beta-prow-tests
+- name: ci-knative-sandbox-discovery-continuous-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-discovery-continuous-beta-prow-tests
 - name: ci-knative-sandbox-eventing-kafka-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-kafka-continuous-beta-prow-tests
 - name: ci-knative-sandbox-eventing-kafka-go-coverage-beta-prow-tests
@@ -796,6 +817,9 @@ test_groups:
   short_text_metric: "coverage"
 - name: ci-knative-networking-go-coverage-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-networking-go-coverage-beta-prow-tests
+  short_text_metric: "coverage"
+- name: ci-knative-sandbox-async-component-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-async-component-go-coverage-beta-prow-tests
   short_text_metric: "coverage"
 - name: ci-knative-backup-artifacts
   gcs_prefix: knative-prow/logs/ci-knative-backup-artifacts
@@ -1228,6 +1252,30 @@ dashboards:
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: discovery
   dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-sandbox-discovery-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: nightly
+    test_group_name: ci-knative-sandbox-discovery-nightly-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: dot-release
+    test_group_name: ci-knative-sandbox-discovery-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: auto-release
+    test_group_name: ci-knative-sandbox-discovery-auto-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
   - name: continuous
     test_group_name: ci-knative-sandbox-discovery-continuous
     base_options: "sort-by-name="
@@ -1812,6 +1860,9 @@ dashboards:
   - name: ci-knative-sandbox-discovery-continuous
     test_group_name: ci-knative-sandbox-discovery-continuous-beta-prow-tests
     base_options: "sort-by-failures="
+  - name: ci-knative-sandbox-discovery-continuous
+    test_group_name: ci-knative-sandbox-discovery-continuous-beta-prow-tests
+    base_options: "sort-by-failures="
   - name: ci-knative-sandbox-eventing-kafka-continuous
     test_group_name: ci-knative-sandbox-eventing-kafka-continuous-beta-prow-tests
     base_options: "sort-by-failures="
@@ -1826,6 +1877,9 @@ dashboards:
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
   - name: ci-knative-networking-go-coverage
     test_group_name: ci-knative-networking-go-coverage-beta-prow-tests
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+  - name: ci-knative-sandbox-async-component-go-coverage
+    test_group_name: ci-knative-sandbox-async-component-go-coverage-beta-prow-tests
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: utilities
   dashboard_tab:
