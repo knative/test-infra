@@ -371,9 +371,9 @@ presubmits:
   - go-coverage: true
     needs-dind: true
   knative-sandbox/eventing-rabbitmq:
-  - build-tests: true
-  - unit-tests: true
-  - integration-tests: true
+  - build-tests: false
+  - unit-tests: false
+  - integration-tests: false
 periodics:
   knative/serving:
   - continuous: true
