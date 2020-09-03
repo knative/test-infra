@@ -36,8 +36,6 @@ periodics:
       - "./test/presubmit-tests.sh"
       - "--run-test"
       - "./test/e2e-tests.sh --contour-version latest"
-      - "--run-test"
-      - "./test/e2e-auto-tls-tests.sh --contour-version latest"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
