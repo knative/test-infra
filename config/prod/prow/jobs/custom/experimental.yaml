@@ -47,6 +47,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: GO_VERSION
+        value: devel
   volumes:
   - name: test-account
     secret:
