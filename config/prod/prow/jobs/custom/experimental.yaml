@@ -47,8 +47,8 @@ periodics:
         value: us-central1
       - name: GO_VERSION
         value: devel
-  volumes:
-  - name: test-account
-    secret:
-      secretName: test-account
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
 
