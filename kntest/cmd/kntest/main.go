@@ -23,6 +23,7 @@ import (
 
 	"knative.dev/test-infra/kntest/pkg/cluster"
 	"knative.dev/test-infra/kntest/pkg/junit"
+	"knative.dev/test-infra/kntest/pkg/kubetest2"
 	"knative.dev/test-infra/kntest/pkg/metadata"
 )
 
@@ -40,6 +41,7 @@ func main() {
 	cluster.AddCommands(cmds)
 	junit.AddCommands(cmds)
 	metadata.AddCommands(cmds)
+	kubetest2.AddCommands(cmds)
 
 	if err := cmds.Execute(); err != nil {
 		log.Fatalf("Error during command execution: %v", err)

@@ -30,7 +30,7 @@ function knative_setup() {
 }
 
 # Script entry point.
-initialize "$@"
+initialize "$@" --kubetest2-flag "--enable-workload-identity=true" --max-nodes=1
 
 go_test_e2e ./test/e2e || fail_test
 
