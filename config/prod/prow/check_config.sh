@@ -46,10 +46,10 @@ REPO_YAML_PATH_ARG=""
 [[ -n "${REPO_YAML_PATH_TO_CHECK}" ]] && REPO_YAML_PATH_ARG="--prow-yaml-repo-path=${REPO_YAML_PATH_TO_CHECK}"
 
 docker run -i --rm \
-    -v "${PWD}:${PWD}" -v "${CONFIG_YAML}:${CONFIG_YAML}" -v "${PLUGINS_YAML}:${PLUGINS_YAML}" -v "${JOB_CONFIG_YAML}:${JOB_CONFIG_YAML}" \
+    -v "${PWD}:${PWD}" -v "${CONFIG_YAML}:${CONFIG_YAML}" -v "${PLUGINS_YAML}:${PLUGINS_YAML}" -v "${JOB_YAML}:${JOB_YAML}" \
     -w "${PWD}" \
     gcr.io/k8s-prow/checkconfig:v20200904-8d0a527a58 \
-    "--config-path=${CONFIG_YAML}" "--job-config-path=${JOB_CONFIG_YAML}" \
+    "--config-path=${CONFIG_YAML}" "--job-config-path=${JOB_YAML}" \
     "--plugin-config=${PLUGINS_YAML}" "--strict" "--exclude-warning=mismatched-tide" \
     "--exclude-warning=long-job-names" \
     "${REPO_NAME_ARG}" "${REPO_YAML_PATH_ARG}"
