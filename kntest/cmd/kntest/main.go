@@ -41,7 +41,7 @@ func main() {
 	cluster.AddCommands(cmds)
 	junit.AddCommands(cmds)
 	metadata.AddCommands(cmds)
-	kubetest2.AddCommands(cmds)
+	kubetest2.AddCommand(cmds)
 
 	if err := cmds.Execute(); err != nil {
 		log.Fatalf("Error during command execution: %v", err)
