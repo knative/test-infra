@@ -14,36 +14,31 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package main
+package gke
 
 import (
 	"log"
 
 	"github.com/spf13/cobra"
 
-	"knative.dev/test-infra/kntest/pkg/cluster"
-	"knative.dev/test-infra/kntest/pkg/junit"
-	"knative.dev/test-infra/kntest/pkg/kubetest2"
-	"knative.dev/test-infra/kntest/pkg/metadata"
+	"knative.dev/test-infra/pkg/clustermanager/kubetest2"
 )
 
-func main() {
-	// Parent command to which all subcommands are added.
-	cmds := &cobra.Command{
-		Use:   "kntest",
-		Short: "Tool used in Knative testing, implemented with Go.",
+// AddCommand adds gke subcommands.
+func AddCommand(kubetest2Cmd *cobra.Command, kubetest2Opts *kubetest2.Options) {
+	clusterConfig := &kubetest2.GKEClusterConfig{}
+
+	var gkeCmd = &cobra.Command{
+		Use:   "gke",
+		Short: "gke related commands for kubetest2.",
+		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
-			// Print out help info if parent command is run.
-			cmd.Help()
+			if err := kubetest2.Run(kubetest2Opts, clusterConfig); err != nil {
+				log.Fatalf("Failed to run tests with kubetest2: %v", err)
+			}
 		},
 	}
+	addOptions(gkeCmd, clusterConfig)
 
-	cluster.AddCommands(cmds)
-	junit.AddCommands(cmds)
-	metadata.AddCommands(cmds)
-	kubetest2.AddCommand(cmds)
-
-	if err := cmds.Execute(); err != nil {
-		log.Fatalf("Error during command execution: %v", err)
-	}
+	kubetest2Cmd.AddCommand(gkeCmd)
 }

@@ -30,7 +30,7 @@ function knative_setup() {
 }
 
 # Script entry point.
-initialize "$@"
+initialize "$@" --max-nodes=1 --machine=e2-standard-2 --enable-workload-identity=true
 
 go_test_e2e ./test/e2e || fail_test
 
