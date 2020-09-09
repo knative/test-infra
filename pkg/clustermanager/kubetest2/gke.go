@@ -49,22 +49,23 @@ var (
 
 // GKEClusterConfig are the supported configurations for creating a GKE cluster.
 type GKEClusterConfig struct {
-	GCPProjectID                string
-	BoskosAcquireTimeoutSeconds int
-	Name                        string
-	Region                      string
-	BackupRegions               []string
-	Machine                     string
-	MinNodes                    int
-	MaxNodes                    int
-	Network                     string
-	Version                     string
-	Scopes                      string
-	Addons                      string
-	Environment                 string
-	CommandGroup                string
-	PrivateClusterAccessLevel   string
-	PrivateClusterMasterIPRange string
+	GCPProjectID                      string
+	BoskosAcquireTimeoutSeconds       int
+	Name                              string
+	Region                            string
+	BackupRegions                     []string
+	Machine                           string
+	MinNodes                          int
+	MaxNodes                          int
+	Network                           string
+	Version                           string
+	Scopes                            string
+	Addons                            string
+	Environment                       string
+	CommandGroup                      string
+	PrivateClusterAccessLevel         string
+	PrivateClusterMasterIPSubnetRange string
+	PrivateClusterMasterIPSubnetMask  string
 }
 
 // Run will run the `kubetest2 gke` command with the provided parameters,
@@ -109,7 +110,8 @@ func createGKEClusterWithRetries(kubetest2Flags []string, opts *Options, cc *GKE
 		kubetest2Flags = append(kubetest2Flags, "--region="+region)
 		if cc.PrivateClusterAccessLevel != "" {
 			kubetest2Flags = append(kubetest2Flags, "--private-cluster-access-level="+cc.PrivateClusterAccessLevel)
-			kubetest2Flags = append(kubetest2Flags, "--private-cluster-master-ip-range="+fmt.Sprintf(cc.PrivateClusterMasterIPRange, i))
+			masterIPRange := fmt.Sprintf("%s.%d/%s", cc.PrivateClusterMasterIPSubnetRange, i, cc.PrivateClusterMasterIPSubnetMask)
+			kubetest2Flags = append(kubetest2Flags, "--private-cluster-master-ip-range="+masterIPRange)
 		}
 
 		if opts.TestCommand != "" {
