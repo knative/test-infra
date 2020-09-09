@@ -30,8 +30,7 @@ function knative_setup() {
 }
 
 # Script entry point.
-initialize "$@" --kubetest2-flag "--enable-workload-identity=true --gcp-service-account=${GOOGLE_APPLICATION_CREDENTIALS}" \
-  --max-nodes=1 --machine=e2-standard-2
+initialize "$@" --max-nodes=1 --machine=e2-standard-2 --enable-workload-identity=true
 
 go_test_e2e ./test/e2e || fail_test
 

@@ -93,9 +93,8 @@ function acquire_cluster_admin_role() {
 
 # Create a test cluster and run the tests if provided.
 # Parameters: $1 - cluster provider name, e.g. gke
-#             $2 - custom flags supported by kntest kubetest2-wrapper
-#             $3 - extra kubetest2 flags
-#             $4 - test command to run by the kubetest2 tester
+#             $2 - custom flags supported by kntest
+#             $3 - test command to run after cluster is created
 function create_test_cluster() {
   # Fail fast during setup.
   set -o errexit
@@ -122,24 +121,19 @@ function create_test_cluster() {
 }
 
 # Create a KIND test cluster with kubetest2 and run the test command.
-# Parameters: $1 - extra kubetest2 flags
-#             $2 - extra cluster creation flags
-#             $3 - test command to run by the kubetest2 tester
+# Parameters: $1 - extra cluster creation flags
+#             $2 - test command to run by the kubetest2 tester
 function create_kind_test_cluster() {
   # TODO(chizhg): implement with kubetest2
   return 0
 }
 
 # Create a GKE test cluster with kubetest2 and run the test command.
-# Parameters: $1 - custom flags defined in kntest kubetest2-wrapper
-#             $2 - extra kubetest2 flags
-#             $3 - test command to run by the kubetest2 tester after the cluster is created (optional)
+# Parameters: $1 - custom flags defined in kntest
+#             $2 - test command to run after the cluster is created (optional)
 function create_gke_test_cluster() {
   local -n _custom_flags=$1
-  local -n _extra_kubetest2_flags=$2
-  local -n _test_command=$3
+  local -n _test_command=$2
 
-  run_kntest kubetest2 gke --extra-kubetest2-flags="${_extra_kubetest2_flags[*]}" \
-    --test-command="${_test_command[*]}" \
-    "${_custom_flags[@]}"
+  run_kntest kubetest2 gke "${_custom_flags[@]}" --test-command="${_test_command[*]}"
 }

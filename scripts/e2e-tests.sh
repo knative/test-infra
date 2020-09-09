@@ -129,7 +129,6 @@ CLOUD_PROVIDER="gke"
 function initialize() {
   local run_tests=0
   local custom_flags=()
-  local extra_kubetest2_flags=()
   E2E_SCRIPT="$(get_canonical_path "$0")"
   local e2e_script_command=( "${E2E_SCRIPT}" "--run-tests" )
 
@@ -160,7 +159,6 @@ function initialize() {
       *)
         case ${parameter} in
           --cloud-provider) shift; CLOUD_PROVIDER="$1" ;;
-          --kubetest2-flag) shift; extra_kubetest2_flags+=("$1") ;;
           *) custom_flags+=("$parameter") ;;
         esac
     esac
@@ -179,7 +177,7 @@ function initialize() {
   readonly SKIP_TEARDOWNS
 
   if (( ! run_tests )); then
-    create_test_cluster "${CLOUD_PROVIDER}" custom_flags extra_kubetest2_flags e2e_script_command
+    create_test_cluster "${CLOUD_PROVIDER}" custom_flags e2e_script_command
   else
     setup_test_cluster
   fi

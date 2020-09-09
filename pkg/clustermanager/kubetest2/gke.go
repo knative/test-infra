@@ -62,6 +62,7 @@ type GKEClusterConfig struct {
 	Version                           string
 	Scopes                            string
 	Addons                            string
+	EnableWorkloadIdentity            bool
 	Environment                       string
 	CommandGroup                      string
 	PrivateClusterAccessLevel         string
@@ -79,7 +80,8 @@ func Run(opts *Options, cc *GKEClusterConfig) error {
 	kubetest2Flags := append(baseKubetest2Flags, "--create-command="+createCommand)
 
 	kubetest2Flags = append(kubetest2Flags, "--cluster-name="+cc.Name, "--environment="+cc.Environment,
-		"--num-nodes="+strconv.Itoa(cc.MinNodes), "--machine-type="+cc.Machine, "--network="+cc.Network)
+		"--num-nodes="+strconv.Itoa(cc.MinNodes), "--machine-type="+cc.Machine, "--network="+cc.Network,
+		"--enable-workload-identity="+strconv.FormatBool(cc.EnableWorkloadIdentity))
 
 	if prow.IsCI() && cc.GCPProjectID == "" {
 		log.Println("Will use boskos to provision the GCP project")
@@ -95,7 +97,6 @@ func Run(opts *Options, cc *GKEClusterConfig) error {
 		log.Printf("Will use the GCP project %q for creating the cluster", cc.GCPProjectID)
 		kubetest2Flags = append(kubetest2Flags, "--project="+cc.GCPProjectID)
 	}
-	kubetest2Flags = append(kubetest2Flags, strings.Split(opts.ExtraKubetest2Flags, " ")...)
 
 	return createGKEClusterWithRetries(kubetest2Flags, opts, cc)
 }

@@ -18,7 +18,6 @@ package kubetest2
 
 // Options are the common options for running kubetest2 command.
 type Options struct {
-	ExtraKubetest2Flags string
-	TestCommand         string
-	SaveMetaData        bool
+	TestCommand  string
+	SaveMetaData bool
 }
