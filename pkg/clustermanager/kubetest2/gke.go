@@ -17,6 +17,7 @@ limitations under the License.
 package kubetest2
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"os/exec"
@@ -89,11 +90,7 @@ func Run(opts *Options, cc *GKEClusterConfig) error {
 		kubetest2Flags = append(kubetest2Flags, "--boskos-acquire-timeout-seconds="+strconv.Itoa(timeout))
 	} else {
 		if cc.GCPProjectID == "" {
-			var err error
-			cc.GCPProjectID, err = cmd.RunCommand("gcloud config get-value project")
-			if err != nil {
-				return fmt.Errorf("error getting the current GCP project: %v", err)
-			}
+			return errors.New("GCP project must be provided in non-CI environment")
 		}
 		log.Printf("Will use the GCP project %q for creating the cluster", cc.GCPProjectID)
 		kubetest2Flags = append(kubetest2Flags, "--project="+cc.GCPProjectID)
