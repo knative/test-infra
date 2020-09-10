@@ -18,7 +18,6 @@ package main
 
 import (
 	"bytes"
-	"testing"
 )
 
 func ResetOutput() {
@@ -27,11 +26,4 @@ func ResetOutput() {
 
 func GetOutput() string {
 	return output.(*bytes.Buffer).String()
-}
-
-func AssertOutput(t *testing.T, expected string) {
-	s := GetOutput()
-	if s != expected {
-		t.Fatalf("\nExpected: \n[%s]\nGot: \n[%s]\n", expected, s)
-	}
 }

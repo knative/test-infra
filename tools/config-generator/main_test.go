@@ -19,6 +19,8 @@ package main
 import (
 	"os"
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestMain(m *testing.M) {
@@ -27,19 +29,23 @@ func TestMain(m *testing.M) {
 }
 func TestOutputConfig(t *testing.T) {
 	outputConfig("")
-	AssertOutput(t, "")
+	if diff := cmp.Diff(GetOutput(), ""); diff != "" {
+		t.Errorf("Incorrect output for empty string: (-got +want)\n%s", diff)
+	}
 
 	outputConfig(" \t\n")
-	AssertOutput(t, "")
-
+	if diff := cmp.Diff(GetOutput(), ""); diff != "" {
+		t.Errorf("Incorrect output for whitespace string: (-got +want)\n%s", diff)
+	}
 	if emittedOutput {
 		t.Fatal("emittedOutput was incorrectly set")
 	}
 
 	inputLine := "some-key: some-value"
 	outputConfig(inputLine)
-	AssertOutput(t, inputLine + "\n")
-
+	if diff := cmp.Diff(GetOutput(), inputLine + "\n"); diff != "" {
+		t.Errorf("Incorrect output for whitespace string: (-got +want)\n%s", diff)
+	}
 	if !emittedOutput {
 		t.Fatal("emittedOutput should have been set, but wasn't")
 	}
