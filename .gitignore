@@ -6,3 +6,4 @@ bazel-*
 *.swp
 pj.yaml
 pod.yaml
+tools/coverage/test_output/
