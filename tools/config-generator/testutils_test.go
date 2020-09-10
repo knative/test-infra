@@ -19,9 +19,12 @@ package main
 import (
 	"bytes"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 	"testing"
 >>>>>>> 6252f6f9 (Add unit test for outputConfig)
+=======
+>>>>>>> 8dfe4822 (Fix PR comments)
 )
 
 func ResetOutput() {
@@ -32,6 +35,7 @@ func GetOutput() string {
 	return output.(*bytes.Buffer).String()
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 func AssertOutput(t *testing.T, expected string) {
@@ -41,3 +45,5 @@ func AssertOutput(t *testing.T, expected string) {
 	}
 }
 >>>>>>> 6252f6f9 (Add unit test for outputConfig)
+=======
+>>>>>>> 8dfe4822 (Fix PR comments)
