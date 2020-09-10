@@ -23,6 +23,7 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
@@ -139,7 +140,7 @@ var (
 	// Values used in the jobs that can be changed through command-line flags.
 	// TODO: these should be CapsCase
 	// ... until they are not global
-	output                     *os.File
+	output                     io.Writer
 	prowHost                   string
 	testGridHost               string
 	gubernatorHost             string
