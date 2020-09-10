@@ -101,13 +101,7 @@ func AddStatus(status string) ClusterOption {
 	}
 }
 
-func AddaccessToken(accessToken string) RequestOption {
-	return func(r *Request) {
-		r.accessToken = accessToken
-	}
-}
-
-func AddrequestTime(requestTime time.Time) RequestOption {
+func AddRequestTime(requestTime time.Time) RequestOption {
 	return func(r *Request) {
 		r.requestTime = requestTime
 	}
