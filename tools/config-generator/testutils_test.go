@@ -18,6 +18,10 @@ package main
 
 import (
 	"bytes"
+<<<<<<< HEAD
+=======
+	"testing"
+>>>>>>> 6252f6f9 (Add unit test for outputConfig)
 )
 
 func ResetOutput() {
@@ -27,3 +31,13 @@ func ResetOutput() {
 func GetOutput() string {
 	return output.(*bytes.Buffer).String()
 }
+<<<<<<< HEAD
+=======
+
+func AssertOutput(t *testing.T, expected string) {
+	s := GetOutput()
+	if s != expected {
+		t.Fatalf("\nExpected: \n[%s]\nGot: \n[%s]\n", expected, s)
+	}
+}
+>>>>>>> 6252f6f9 (Add unit test for outputConfig)
