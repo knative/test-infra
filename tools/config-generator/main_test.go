@@ -43,7 +43,7 @@ func TestOutputConfig(t *testing.T) {
 
 	inputLine := "some-key: some-value"
 	outputConfig(inputLine)
-	if diff := cmp.Diff(GetOutput(), inputLine + "\n"); diff != "" {
+	if diff := cmp.Diff(GetOutput(), inputLine+"\n"); diff != "" {
 		t.Errorf("Incorrect output for whitespace string: (-got +want)\n%s", diff)
 	}
 	if !emittedOutput {
