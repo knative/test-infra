@@ -32,7 +32,7 @@ import (
 
 const (
 	createCommandTmpl = "%s container clusters create --quiet --enable-autoscaling --min-nodes=%d --max-nodes=%d " +
-		"--cluster-version=%s --scopes=%s --no-enable-autoupgrade"
+		"--scopes=%s"
 	boskosAcquireDefaultTimeoutSeconds = 1200
 )
 
@@ -50,6 +50,7 @@ var (
 
 // GKEClusterConfig are the supported configurations for creating a GKE cluster.
 type GKEClusterConfig struct {
+	GCPServiceAccount                 string
 	GCPProjectID                      string
 	BoskosAcquireTimeoutSeconds       int
 	Name                              string
@@ -59,10 +60,12 @@ type GKEClusterConfig struct {
 	MinNodes                          int
 	MaxNodes                          int
 	Network                           string
+	ReleaseChannel                    string
 	Version                           string
 	Scopes                            string
 	Addons                            string
 	EnableWorkloadIdentity            bool
+	EnableStackdriverKubernetes       bool
 	Environment                       string
 	CommandGroup                      string
 	PrivateClusterAccessLevel         string
@@ -73,15 +76,30 @@ type GKEClusterConfig struct {
 // Run will run the `kubetest2 gke` command with the provided parameters,
 // it will also handle the logic that is only used for Knative integration testing, like retrying cluster creation.
 func Run(opts *Options, cc *GKEClusterConfig) error {
-	createCommand := fmt.Sprintf(createCommandTmpl, cc.CommandGroup, cc.MinNodes, cc.MaxNodes, cc.Version, cc.Scopes)
+	createCommand := fmt.Sprintf(createCommandTmpl, cc.CommandGroup, cc.MinNodes, cc.MaxNodes, cc.Scopes)
+	// --cluster-version must be a valid version number when --release-channel is not empty,
+	// so normally we do not use them together.
+	if cc.ReleaseChannel != "" {
+		createCommand += " --release-channel=" + cc.ReleaseChannel
+	} else {
+		createCommand += " --cluster-version=" + cc.Version
+	}
 	if cc.Addons != "" {
 		createCommand += " --addons=" + cc.Addons
+	}
+	if cc.EnableStackdriverKubernetes {
+		createCommand += " --enable-stackdriver-kubernetes"
 	}
 	kubetest2Flags := append(baseKubetest2Flags, "--create-command="+createCommand)
 
 	kubetest2Flags = append(kubetest2Flags, "--cluster-name="+cc.Name, "--environment="+cc.Environment,
-		"--num-nodes="+strconv.Itoa(cc.MinNodes), "--machine-type="+cc.Machine, "--network="+cc.Network,
-		"--enable-workload-identity="+strconv.FormatBool(cc.EnableWorkloadIdentity))
+		"--num-nodes="+strconv.Itoa(cc.MinNodes), "--machine-type="+cc.Machine, "--network="+cc.Network)
+	if cc.GCPServiceAccount != "" {
+		kubetest2Flags = append(kubetest2Flags, "--gcp-service-account="+cc.GCPServiceAccount)
+	}
+	if cc.EnableWorkloadIdentity {
+		kubetest2Flags = append(kubetest2Flags, "--enable-workload-identity")
+	}
 
 	if prow.IsCI() && cc.GCPProjectID == "" {
 		log.Println("Will use boskos to provision the GCP project")
@@ -105,20 +123,20 @@ func createGKEClusterWithRetries(kubetest2Flags []string, opts *Options, cc *GKE
 	var err error
 	regions := append([]string{cc.Region}, cc.BackupRegions...)
 	for i, region := range regions {
-		kubetest2Flags = append(kubetest2Flags, "--region="+region)
+		flags := append(kubetest2Flags, "--region="+region)
 		if cc.PrivateClusterAccessLevel != "" {
-			kubetest2Flags = append(kubetest2Flags, "--private-cluster-access-level="+cc.PrivateClusterAccessLevel)
+			flags = append(flags, "--private-cluster-access-level="+cc.PrivateClusterAccessLevel)
 			masterIPRange := fmt.Sprintf("%s.%d/%s", cc.PrivateClusterMasterIPSubnetRange, i, cc.PrivateClusterMasterIPSubnetMask)
-			kubetest2Flags = append(kubetest2Flags, "--private-cluster-master-ip-range="+masterIPRange)
+			flags = append(flags, "--private-cluster-master-ip-range="+masterIPRange)
 		}
 
 		if opts.TestCommand != "" {
-			kubetest2Flags = append(kubetest2Flags, "--test=exec", "--")
-			kubetest2Flags = append(kubetest2Flags, strings.Split(opts.TestCommand, " ")...)
+			flags = append(flags, "--test=exec", "--")
+			flags = append(flags, strings.Split(opts.TestCommand, " ")...)
 		}
 
-		log.Printf("Running kubetest2 with flags: %q", kubetest2Flags)
-		command := exec.Command("kubetest2", kubetest2Flags...)
+		log.Printf("Running kubetest2 with flags: %q", flags)
+		command := exec.Command("kubetest2", flags...)
 		var out string
 		out, err = runWithOutput(command)
 		if err != nil {
