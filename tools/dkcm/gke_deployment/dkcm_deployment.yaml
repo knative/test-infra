@@ -41,8 +41,9 @@ spec:
         imagePullPolicy: Always
         command: ["/dkcm"]
         args:
-        - "--service-account=/etc/google-app-credential/service-account.json"
-        - "--dry-run=false"
+        - "--database-user=/etc/db-secrets/username"
+        - "--database-password=/etc/db-secrets/password"
+        - "--database-host=/etc/db-secrets/host"
         env:
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/google-app-credential/service-account.json
