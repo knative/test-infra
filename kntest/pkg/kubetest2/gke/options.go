@@ -35,8 +35,9 @@ func addOptions(gkeCmd *cobra.Command, cfg *kubetest2.GKEClusterConfig) {
 	f.IntVar(&cfg.MinNodes, "min-nodes", 1, "The minimum number of nodes.")
 	f.IntVar(&cfg.MaxNodes, "max-nodes", 3, "The maximum number of nodes.")
 	f.StringVar(&cfg.Network, "network", "e2e-network", "The network name for the GKE cluster.")
-	f.StringVar(&cfg.ReleaseChannel, "release-channel", "", "The release channel of the GKE cluster.")
-	f.StringVar(&cfg.Version, "cluster-version", "latest", "The version of the GKE cluster.")
+	f.StringVar(&cfg.ReleaseChannel, "release-channel", "", "The release channel of the GKE cluster, can be one of (empty, rapid, regular, stable). When it's used, --cluster-version must be empty or a valid version in the channel."+
+		"Reference: https://cloud.google.com/kubernetes-engine/docs/concepts/release-channels")
+	f.StringVar(&cfg.Version, "cluster-version", "latest", "The version of the GKE cluster. If --release-channel is not empty, it must be empty or a valid version in the channel")
 	f.StringVar(&cfg.Scopes, "scopes", "cloud-platform", "Scopes for the GKE cluster, should be comma-separated.")
 	f.StringVar(&cfg.Addons, "addons", "", "Addons for the GKE cluster, should be comma-separated.")
 	f.BoolVar(&cfg.EnableWorkloadIdentity, "enable-workload-identity", false, "Whether to enable workload identity for this cluster or not.")
