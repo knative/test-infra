@@ -27,7 +27,7 @@
 #  DOCKERFILE: use a different Dockerfile, relative to starting subdirectory
 
 REGISTRY   ?= gcr.io
-PROJECT    ?= knative-tests
+PROJECT    ?= cris-intern-demo-project
 DOCKERFILE ?= Dockerfile
 
 SELF_DIR := $(dir $(lastword $(MAKEFILE_LIST)))

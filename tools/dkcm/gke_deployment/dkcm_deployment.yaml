@@ -37,7 +37,7 @@ spec:
     spec:
       containers:
       - name: dkcm-bot
-        image: gcr.io/knative-tests/test-infra/dkcm:v20200708-2cd92276
+        image: gcr.io/cris-intern-demo-project/test-infra/dkcm:v20200708-2cd92276
         imagePullPolicy: Always
         command: ["/dkcm"]
         args:
