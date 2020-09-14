@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 CREATE TABLE Clusters (
   ID int NOT NULL AUTO_INCREMENT,
   ProjectID varchar(1023) NOT NULL,
@@ -21,7 +22,6 @@ CREATE TABLE Clusters (
   Nodes int NOT NULL,
   NodeType varchar(1023) NOT NULL,
   PRIMARY KEY (ID)
-
 );
 
 CREATE TABLE Requests (
@@ -32,12 +32,6 @@ CREATE TABLE Requests (
   Nodes varchar(1023) NOT NULL,
   NodeType varchar(1023) NOT NULL,
   ProwJobID varchar(1023) NOT NULL,
-  ClusterID int,
-  CONSTRAINT FkCluster 
-  FOREIGN KEY (ClusterID) 
-      REFERENCES Clusters(ID)
-      ON DELETE CASCADE
-      ON UPDATE CASCADE,
+  ClusterID int DEFAULT 0,
   PRIMARY KEY (ID)
-
 );

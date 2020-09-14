@@ -50,6 +50,7 @@ var (
 
 // GKEClusterConfig are the supported configurations for creating a GKE cluster.
 type GKEClusterConfig struct {
+	GCPServiceAccount                 string
 	GCPProjectID                      string
 	BoskosAcquireTimeoutSeconds       int
 	Name                              string

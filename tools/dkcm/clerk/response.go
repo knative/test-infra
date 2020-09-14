@@ -13,28 +13,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 package clerk
 
-func NewCluster(opts ...ClusterOption) *Cluster {
-	c := &Cluster{}
-	for _, opt := range opts {
-		opt(c)
-	}
-	return c
-}
-
-func NewRequest(opts ...RequestOption) *Request {
-	r := &Request{}
-	for _, opt := range opts {
-		opt(r)
-	}
-	return r
-}
-
-func NewClusterParams(opts ...ClusterParamsOption) *ClusterParams {
-	cp := &ClusterParams{}
-	for _, opt := range opts {
-		opt(cp)
-	}
-	return cp
+// Response is the struct to return(end product) to Prow once the cluster is available
+type Response struct {
+	ClusterName string `json:"clusterName"`
+	ProjectID   string `json:"projectID"`
+	Zone        string `json:"zone"`
 }

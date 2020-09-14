@@ -24,6 +24,7 @@ import (
 
 func addOptions(gkeCmd *cobra.Command, cfg *kubetest2.GKEClusterConfig) {
 	f := gkeCmd.Flags()
+	f.StringVar(&cfg.GCPServiceAccount, "gcp-service-account", "", "The GCP service account used for creating the cluster.")
 	f.StringVar(&cfg.Environment, "environment", "prod", "The GKE environment, must be one of prod, staging, staging2 and test.")
 	f.StringVar(&cfg.CommandGroup, "command-group", "beta", "The gcloud command group, must be alpha, beta or empty.")
 	f.StringVar(&cfg.GCPProjectID, "gcp-project-id", "", "GCP project ID for creating the cluster")
