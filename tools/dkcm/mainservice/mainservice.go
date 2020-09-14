@@ -18,6 +18,7 @@ package mainservice
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -25,30 +26,37 @@ import (
 	"time"
 
 	"knative.dev/test-infra/pkg/clustermanager/e2e-tests/boskos"
+	"knative.dev/test-infra/pkg/clustermanager/kubetest2"
 	"knative.dev/test-infra/pkg/mysql"
 	"knative.dev/test-infra/tools/dkcm/clerk"
 )
 
 var (
 	boskosClient         *boskos.Client
-	dbConfig             *mysql.DBConfig
 	dbClient             *clerk.DBClient
+	serviceAccount       string
 	DefaultClusterParams = clerk.ClusterParams{Zone: DefaultZone, Nodes: DefaultNodesCount, NodeType: DefaultNodeType}
 )
 
 // Reponse to Prow
 type ServiceResponse struct {
-	isReady  bool
-	message  string
-	response *clerk.Response
+	IsReady     bool            `json:"isReady"`
+	Message     string          `json:"message"`
+	ClusterInfo *clerk.Response `json:"clusterInfo"`
 }
 
-func Start() {
+func Start(dbConfig *mysql.DBConfig, boskosClientHost, gcpServiceAccount string) error {
 	var err error
-	boskosClient, err = boskos.NewClient("", "", "")
+	boskosClient, err = boskos.NewClient(boskosClientHost, "", "")
 	if err != nil {
-		log.Fatalf("Failed to create Boskos Client %v", err)
+		return fmt.Errorf("failed to create Boskos client: %v", err)
 	}
+	dbClient, err = clerk.NewDB(dbConfig)
+	if err != nil {
+		return fmt.Errorf("failed to create Clerk client: %v", err)
+	}
+	serviceAccount = gcpServiceAccount
+
 	server := http.NewServeMux()
 	server.HandleFunc("/request-cluster", handleNewClusterRequest)
 	server.HandleFunc("/get-cluster", handleGetCluster)
@@ -60,12 +68,12 @@ func Start() {
 	}
 	// start the web server on port and accept requests
 	log.Printf("Server listening on port %s", port)
-	err = http.ListenAndServe(":"+port, server)
-	log.Fatal(err)
+	return http.ListenAndServe(":"+port, server)
 }
 
 // handle cleaning cluster request after usage
 func handleCleanCluster(w http.ResponseWriter, r *http.Request) {
+	// add project name
 	err := boskosClient.ReleaseGKEProject("")
 	if err != nil {
 		http.Error(w, "there is an error releasing Boskos's project. Please try again.", http.StatusInternalServerError)
@@ -79,28 +87,48 @@ func checkPoolCap(cp *clerk.ClusterParams) {
 	numWIP := dbClient.CheckNumStatus(cp, "WIP")
 	if numAvail+numWIP < DefaultOverProvision {
 		// create cluster if not meeting overprovisioning criteria
+		log.Printf("Creating a new cluster: %v", cp)
 		CreateCluster(cp)
 	}
 }
 
 // assign clusters if available upon request
-func CreateCluster(cp *clerk.ClusterParams) error {
-	// TODO: kubetest2 create cluster
-	name, err := GetProject()
+func CreateCluster(cp *clerk.ClusterParams) {
+	project, err := boskosClient.AcquireGKEProject(boskos.GKEProjectResource)
 	if err != nil {
-		return err
+		log.Printf("Failed to acquire a project from boskos: %v", err)
+		return
 	}
-	c := clerk.NewCluster(clerk.AddProjectID(name))
+	projectName := project.Name
+	// projectName := "test-project-chizhg"
+	if err := kubetest2.Run(&kubetest2.Options{}, &kubetest2.GKEClusterConfig{
+		GCPServiceAccount: serviceAccount,
+		GCPProjectID:      projectName,
+		Name:              DefaultClusterName,
+		Region:            cp.Zone,
+		Machine:           cp.NodeType,
+		MinNodes:          int(cp.Nodes),
+		MaxNodes:          int(cp.Nodes),
+		Network:           DefaultNetworkName,
+		Environment:       "prod",
+		Version:           "latest",
+		Scopes:            "cloud-platform",
+	}); err != nil {
+		log.Printf("Failed to create a cluster: %v", err)
+		return
+	}
+	c := clerk.NewCluster(clerk.AddProjectID(projectName), clerk.AddStatus("Ready"))
 	c.ClusterParams = cp
-	err = dbClient.InsertCluster(c)
-	return err
+	if err := dbClient.InsertCluster(c); err != nil {
+		log.Printf("Failed to insert a new Cluster entry: %v", err)
+	}
 }
 
 // assign clusters if available upon request
 func AssignCluster(token string, w http.ResponseWriter) {
 	r, err := dbClient.GetRequest(token)
 	if err != nil {
-		http.Error(w, "there is an error getting the request with the token. Please try again.", http.StatusForbidden)
+		http.Error(w, fmt.Sprintf("there is an error getting the request with the token: %v, please try again", err), http.StatusForbidden)
 		return
 	}
 	// check if the Prow job has enough priority to get an existing cluster
@@ -111,41 +139,28 @@ func AssignCluster(token string, w http.ResponseWriter) {
 	if available && ranking <= numAvail {
 		response, err := dbClient.GetCluster(clusterID)
 		if err != nil {
-			http.Error(w, "there is an error getting available clusters. Please try again.", http.StatusInternalServerError)
+			http.Error(w, fmt.Sprintf("there is an error getting available clusters: %v, please try again", err), http.StatusInternalServerError)
 			return
 		}
-		dbClient.UpdateRequest(r.RequestID, clerk.UpdateNumField("ClusterID", clusterID))
-		checkPoolCap(&DefaultClusterParams)
-		serviceResponse = &ServiceResponse{isReady: true, message: "Your cluster is ready!", response: response}
+		dbClient.UpdateRequest(r.ID, clerk.UpdateNumField("ClusterID", clusterID))
+		// checkPoolCap(&DefaultClusterParams)
+		serviceResponse = &ServiceResponse{IsReady: true, Message: "Your cluster is ready!", ClusterInfo: response}
 	} else {
-		serviceResponse = &ServiceResponse{isReady: false, message: "Your cluster isn't ready yet! Please check back later."}
+		serviceResponse = &ServiceResponse{IsReady: false, Message: "Your cluster isn't ready yet! Please check back later."}
 	}
 	responseJson, err := json.Marshal(serviceResponse)
 	if err != nil {
-		http.Error(w, "there is an error getting parsing response. Please try again.", http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("there is an error getting parsing response: %v, please try again", err), http.StatusInternalServerError)
 		return
 	}
-	w.Write([]byte(responseJson))
-}
-
-// main go
-func LoadDB() {
-
-}
-
-func GetProject() (string, error) {
-	resource, err := boskosClient.AcquireGKEProject(boskos.GKEProjectResource)
-	if err != nil {
-		return "", err
-	}
-	return resource.Name, err
+	w.Write(responseJson)
 }
 
 // handle new cluster request
 func handleNewClusterRequest(w http.ResponseWriter, req *http.Request) {
 	prowJobID := req.PostFormValue("prowjobid")
 	nodesCount, err := strconv.Atoi(req.PostFormValue("nodes"))
-	if err != nil {
+	if err != nil || nodesCount <= 0 {
 		nodesCount = DefaultNodesCount
 	}
 	nodesType := req.PostFormValue("nodeType")
@@ -160,12 +175,12 @@ func handleNewClusterRequest(w http.ResponseWriter, req *http.Request) {
 	r := clerk.NewRequest(clerk.AddProwJobID(prowJobID), clerk.AddRequestTime(time.Now()))
 	r.ClusterParams = cp
 	accessToken, err := dbClient.InsertRequest(r)
-	if err != nil || nodesCount <= 0 {
-		http.Error(w, "there is an error creating new request. Please try again.", http.StatusInternalServerError)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("there is an error creating new request: %v. Please try again.", err), http.StatusInternalServerError)
 		return
 	}
+	go checkPoolCap(cp)
 	w.Write([]byte(accessToken))
-	checkPoolCap(cp)
 }
 
 // handle get cluster request

@@ -13,53 +13,24 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 package clerk
 
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"math"
 	"strings"
 	"time"
 
 	"k8s.io/apimachinery/pkg/util/uuid"
+
 	"knative.dev/test-infra/pkg/mysql"
 )
 
-// ClusterParams is a struct for common cluster parameters shared by both Cluster and Request
-type ClusterParams struct {
-	Zone     string
-	Nodes    int64
-	NodeType string
-}
-
-// Cluster stores a row in the "Cluster" db table
-type Cluster struct {
-	*ClusterParams
-	ClusterID int64
-	ProjectID string
-	Status    string
-}
-
-// Request stores a request for the "Request" table
-type Request struct {
-	*ClusterParams
-	accessToken string
-	requestTime time.Time
-	ProwJobID   string
-	ClusterID   int64
-	RequestID   int64
-}
-
-// Response is the struct to return(end product) to Prow once the cluster is available
-type Response struct {
-	ClusterName string
-	ProjectID   string
-	Zone        string
-}
-
-type ClerkOperations interface {
-	//check cluster available, if available, return cluster id and access token
+type Operations interface {
+	// check cluster available, if available, return cluster id and access token
 	CheckAvail(cp ClusterParams) (bool, int64)
 	// check number of clusters of a status specific configurations
 	CheckNumStatus(cp *ClusterParams, status string) int64
@@ -94,19 +65,14 @@ type scannable interface {
 	Scan(dest ...interface{}) error
 }
 
-// DBClient holds an active database connection. This implements all the fuunctions of ClerkOperations.
+// DBClient holds an active database connection. This implements all the fuunctions of Operations.
 type DBClient struct {
 	*sql.DB
 }
 
-func (c Cluster) String() string {
-	return fmt.Sprintf("Cluster Info: (ProjectID: %s, NodesCount: %d, NodeType: %s, Status: %s, Zone: %s)",
-		c.ProjectID, c.Nodes, c.NodeType, c.Status, c.Zone)
-}
-
 func (r Request) String() string {
-	return fmt.Sprintf("Request Info: (RequestTime: %v, NodesCount: %v, NodeType: %s, ProwJobID: %s, ClusterID: %d,Zone: %s)",
-		r.requestTime, r.Nodes, r.NodeType, r.ProwJobID, r.ClusterID, r.Zone)
+	return fmt.Sprintf("Request Info: (RequestTime: %v, NodesCount: %v, NodeType: %s, ProwJobID: %s, Zone: %s)",
+		r.requestTime, r.Nodes, r.NodeType, r.ProwJobID, r.Zone)
 }
 
 // generate a list of strings that could be used in a query for ClusterParams
@@ -124,15 +90,15 @@ func generateAND(fieldStatements []string) string {
 
 // Populate fields of Cluster
 func populateCluster(sc scannable) (*Cluster, error) {
-	c := &Cluster{}
-	err := sc.Scan(&c.ClusterID, &c.ProjectID, &c.Nodes, &c.NodeType, &c.Status, &c.Zone)
+	c := &Cluster{ClusterParams: &ClusterParams{}}
+	err := sc.Scan(&c.ID, &c.ProjectID, &c.Status, &c.Zone, &c.Nodes, &c.NodeType)
 	return c, err
 }
 
 // Populate fields of Request
 func populateRequest(sc scannable) (*Request, error) {
-	r := &Request{}
-	err := sc.Scan(&r.RequestID, &r.accessToken, &r.requestTime, &r.Nodes, &r.NodeType, &r.ProwJobID, &r.ClusterID, &r.Zone)
+	r := &Request{ClusterParams: &ClusterParams{}}
+	err := sc.Scan(&r.ID, &r.accessToken, &r.requestTime, &r.Zone, &r.Nodes, &r.NodeType, &r.ProwJobID, &r.ClusterID)
 	return r, err
 }
 
@@ -146,7 +112,7 @@ func NewDB(c *mysql.DBConfig) (*DBClient, error) {
 func (db *DBClient) CheckAvail(cp *ClusterParams) (bool, int64) {
 	// getting query string ready
 	conditions := generateAND(cp.generateParamsConditions(QueryZone(), QueryNodes(), QueryNodeType()))
-	queryString := fmt.Sprintf("SELECT * FROM Cluster WHERE Status = 'Ready' AND %s", conditions)
+	queryString := fmt.Sprintf("SELECT * FROM Clusters WHERE Status = 'Ready' AND %s", conditions)
 	// check whether available cluster exists
 	row := db.QueryRow(queryString)
 	c, err := populateCluster(row)
@@ -154,16 +120,18 @@ func (db *DBClient) CheckAvail(cp *ClusterParams) (bool, int64) {
 	if err != nil {
 		return false, -1
 	}
-	return true, c.ClusterID
+	return true, c.ID
 }
 
 func (db *DBClient) CheckNumStatus(cp *ClusterParams, status string) int64 {
 	var count int64
 	// getting query string ready
 	conditions := generateAND(cp.generateParamsConditions(QueryZone(), QueryNodes(), QueryNodeType()))
-	queryString := fmt.Sprintf("SELECT COUNT(*) FROM Cluster WHERE Status = %s AND %s", status, conditions)
+	queryString := fmt.Sprintf("SELECT COUNT(*) FROM Clusters WHERE Status = '%s' AND %s", status, conditions)
+	log.Printf("query string is: %s", queryString)
 	err := db.QueryRow(queryString).Scan(&count)
 	if err != nil {
+		log.Printf("error is: %v", err)
 		return 0
 	}
 	return count
@@ -171,7 +139,7 @@ func (db *DBClient) CheckNumStatus(cp *ClusterParams, status string) int64 {
 
 // insert a cluster entry into db
 func (db *DBClient) InsertCluster(c *Cluster) error {
-	stmt, err := db.Prepare(`INSERT INTO Cluster(Nodes, NodeType, Zone, ProjectID, Status)
+	stmt, err := db.Prepare(`INSERT INTO Clusters(Nodes, NodeType, Zone, ProjectID, Status)
 							VALUES (?,?,?,?,?)`)
 	if err != nil {
 		return err
@@ -191,7 +159,7 @@ func updateQueryString(dbName string, id int64, opts ...UpdateOption) string {
 
 // Update a cluster entry on different fields len(fields) == len(values)
 func (db *DBClient) UpdateCluster(clusterID int64, opts ...UpdateOption) error {
-	queryString := updateQueryString("Cluster", clusterID, opts...)
+	queryString := updateQueryString("Clusters", clusterID, opts...)
 	_, err := db.Exec(queryString)
 	return err
 }
@@ -240,7 +208,7 @@ func (db *DBClient) generateToken() string {
 // assumption: get cluster only when it is ready, the clusterid that shows up on request db
 func (db *DBClient) GetCluster(clusterID int64) (*Response, error) {
 	// check in with token
-	queryString := "SELECT * FROM Cluster WHERE ID = ?"
+	queryString := "SELECT * FROM Clusters WHERE ID = ?"
 	row := db.QueryRow(queryString, clusterID)
 	c, err := populateCluster(row)
 	if err != nil {
@@ -249,19 +217,18 @@ func (db *DBClient) GetCluster(clusterID int64) (*Response, error) {
 	clusterName := nameCluster(clusterID)
 	cc := &Response{ClusterName: clusterName, ProjectID: c.ProjectID, Zone: c.Zone}
 	return cc, err
-
 }
 
 // checkRowAffected expects a certain number of rows in the db to be affected.
 func checkAffected(stmt *sql.Stmt, numRows int64, args ...interface{}) error {
 	res, err := stmt.Exec(args...)
 	if err != nil {
-		return fmt.Errorf("Statement not executable: %v ", err)
+		return fmt.Errorf("statement not executable: %v ", err)
 	}
 	if rowsAffected, err := res.RowsAffected(); err != nil {
-		return fmt.Errorf("Fail to get rows affected: %v ", err)
+		return fmt.Errorf("fail to get rows affected: %v ", err)
 	} else if rowsAffected != numRows {
-		return fmt.Errorf("Expected %d row affected, got %d", numRows, rowsAffected)
+		return fmt.Errorf("expected %d row affected, got %d", numRows, rowsAffected)
 	}
 	return nil
 }
@@ -286,7 +253,7 @@ func (db *DBClient) InsertRequest(r *Request) (string, error) {
 
 // Update a request entry
 func (db *DBClient) UpdateRequest(requestID int64, opts ...UpdateOption) error {
-	queryString := updateQueryString("Request", requestID, opts...)
+	queryString := updateQueryString("Requests", requestID, opts...)
 	_, err := db.Exec(queryString)
 	return err
 }
@@ -294,13 +261,13 @@ func (db *DBClient) UpdateRequest(requestID int64, opts ...UpdateOption) error {
 // Get a request row in Request db by accessToken
 func (db *DBClient) GetRequest(accessToken string) (*Request, error) {
 	// check in with token
-	queryString := "SELECT * FROM Request WHERE AccessToken = ?"
+	queryString := "SELECT * FROM Requests WHERE AccessToken = ?"
 	row := db.QueryRow(queryString, accessToken)
 	r, err := populateRequest(row)
 	if err != nil {
 		return &Request{}, err
 	}
-	return r, err
+	return r, nil
 }
 
 // List requests within a time interval (use for checking after downtime to see stale requests)
@@ -308,8 +275,8 @@ func (db *DBClient) ListRequests(window time.Duration) ([]Request, error) {
 	var result []Request
 	startTime := time.Now().Add(-1 * window)
 	rows, err := db.Query(`
-	SELECT ID, RequestTime, Nodes, NodeType, ProwJobID, Zone, ClusterID
-	FROM Request
+	SELECT *
+	FROM Requests
 	WHERE RequestTime > ?`, startTime)
 	if err != nil {
 		return result, err
@@ -330,9 +297,11 @@ func (db *DBClient) PriorityRanking(r *Request) int64 {
 	// getting query string ready
 	conditions := generateAND(r.ClusterParams.generateParamsConditions(QueryZone(), QueryNodes(), QueryNodeType()))
 	// query only rows that haven't been assigned a cluster and of the same config
-	queryString := fmt.Sprintf("Select Rnk From (SELECT ID, RANK() OVER (ORDER BY RequestTime) Rnk FROM Request WHERE ClusterID = 0 AND %s) Ranking WHERE Ranking.ID = %d", conditions, r.RequestID)
+	queryString := fmt.Sprintf("Select Rnk From (SELECT ID, RANK() OVER (ORDER BY RequestTime) Rnk FROM Requests WHERE ClusterID = 0 AND %s) Ranking WHERE Ranking.ID = %d", conditions, r.ID)
+	log.Printf("query string is: %s", queryString)
 	err := db.QueryRow(queryString).Scan(&rank)
 	if err != nil {
+		log.Printf("Got an error in the query: %v", err)
 		return math.MaxInt64
 	}
 	return rank
@@ -341,7 +310,7 @@ func (db *DBClient) PriorityRanking(r *Request) int64 {
 // disable request due to timeout
 func (db *DBClient) ClearTimeOut(timeOut time.Duration) error {
 	startTime := time.Now().Add(-1 * timeOut)
-	queryString := "UPDATE Request SET ClusterID = -1 WHERE RequestTime <= ? AND ClusterID = 0"
+	queryString := "UPDATE Requests SET ClusterID = -1 WHERE RequestTime <= ? AND ClusterID = 0"
 	_, err := db.Exec(queryString, startTime)
 	return err
 }

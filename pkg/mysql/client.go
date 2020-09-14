@@ -21,6 +21,7 @@ import (
 	"database/sql/driver"
 	"fmt"
 	"io/ioutil"
+	"strings"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -55,9 +56,9 @@ func ConfigureDB(userSecret, passSecret, hostSecret, dbPort, dbName string) (*DB
 	}
 
 	config := DBConfig{
-		Username:     string(user),
-		Password:     string(pass),
-		Host:         string(host),
+		Username:     strings.TrimSpace(string(user)),
+		Password:     strings.TrimSpace(string(pass)),
+		Host:         strings.TrimSpace(string(host)),
 		Port:         dbPort,
 		DatabaseName: dbName,
 	}
