@@ -50,7 +50,13 @@ spec:
         - name: google-app-credentials
           mountPath: /etc/google-app-credential/
           readOnly: true
+        - name: db-secrets
+          mountPath: /etc/db-secrets
+          readOnly: true
       volumes:
       - name: google-app-credentials
         secret:
           secretName: google-app-credentials
+      - name: db-secrets
+        secret:
+          secretName: db-secrets
