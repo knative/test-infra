@@ -146,7 +146,7 @@ func (o *outputter) init(writer io.Writer) {
 func (o *outputter) outputConfig(line string) {
 	if strings.TrimSpace(line) != "" {
 		fmt.Fprintln(o.sink, strings.TrimRight(line, " "))
-		o.count += 1
+		o.count++
 	}
 }
 
