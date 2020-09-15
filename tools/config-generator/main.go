@@ -132,20 +132,18 @@ type baseProwJobTemplateData struct {
 
 // outputter is a struct that directs program output and counts the number of write calls.
 type outputter struct {
-	sink  io.Writer
+	io.Writer
 	count int
 }
 
-// init initializes an outputter with a writer object and sets the write count to 0.
-func (o *outputter) init(writer io.Writer) {
-	o.sink = writer
-	o.count = 0
+func newOutputter(writer io.Writer) outputter {
+	return outputter{writer, 0}
 }
 
-// outputConfig outputs the given line, if not empty, to the output sink (e.g. stdout).
+// outputConfig outputs the given line, if not empty, to the output writer (e.g. stdout).
 func (o *outputter) outputConfig(line string) {
 	if strings.TrimSpace(line) != "" {
-		fmt.Fprintln(o.sink, strings.TrimRight(line, " "))
+		fmt.Fprintln(o, strings.TrimRight(line, " "))
 		o.count++
 	}
 }
@@ -677,8 +675,7 @@ func isReleased(projName string) bool {
 
 // setOutput set the given file as the output target, then all the output will be written to this file
 func setOutput(fileName string) {
-	output = outputter{}
-	output.init(os.Stdout)
+	output = newOutputter(os.Stdout)
 	if fileName == "" {
 		return
 	}
@@ -688,7 +685,7 @@ func setOutput(fileName string) {
 	}
 	configFile.Truncate(0)
 	configFile.Seek(0, 0)
-	output.init(configFile)
+	output = newOutputter(configFile)
 }
 
 // main is the script entry point.

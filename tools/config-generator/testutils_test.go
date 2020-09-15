@@ -17,11 +17,13 @@ import (
 	"bytes"
 )
 
+var outputBuffer bytes.Buffer
+
 func ResetOutput() {
-	output = outputter{}
-	output.init(&bytes.Buffer{})
+	outputBuffer = bytes.Buffer{}
+	output = newOutputter(&outputBuffer)
 }
 
 func GetOutput() string {
-	return output.sink.(*bytes.Buffer).String()
+	return outputBuffer.String()
 }
