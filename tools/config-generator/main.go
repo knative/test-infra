@@ -160,7 +160,7 @@ var (
 	// Values used in the jobs that can be changed through command-line flags.
 	// TODO: these should be CapsCase
 	// ... until they are not global
-	output                     *outputter
+	output                     outputter
 	prowHost                   string
 	testGridHost               string
 	gubernatorHost             string
@@ -677,7 +677,7 @@ func isReleased(projName string) bool {
 
 // setOutput set the given file as the output target, then all the output will be written to this file
 func setOutput(fileName string) {
-	output = &outputter{}
+	output = outputter{}
 	output.init(os.Stdout)
 	if fileName == "" {
 		return

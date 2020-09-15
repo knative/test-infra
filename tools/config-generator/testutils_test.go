@@ -18,7 +18,7 @@ import (
 )
 
 func ResetOutput() {
-	output = &outputter{}
+	output = outputter{}
 	output.init(&bytes.Buffer{})
 }
 
