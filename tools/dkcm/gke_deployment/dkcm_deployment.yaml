@@ -19,9 +19,10 @@ metadata:
   labels:
     app: dkcm-bot
 spec:
-  type: NodePort
   ports:
-  - port: 8000
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
   selector:
     app: dkcm-bot
 ---
