@@ -606,6 +606,38 @@ test_groups:
 - name: ci-knative-sandbox-eventing-kafka-broker-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-kafka-broker-go-coverage
   short_text_metric: "coverage"
+- name: ci-knative-sandbox-eventing-rabbitmq-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-rabbitmq-nightly-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-rabbitmq-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-rabbitmq-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-rabbitmq-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-rabbitmq-auto-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-natss-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-natss-nightly-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-natss-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-natss-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-natss-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-natss-auto-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
 - name: ci-google-knative-gcp-continuous
   gcs_prefix: knative-prow/logs/ci-google-knative-gcp-continuous
   alert_stale_results_hours: 3
@@ -1401,6 +1433,46 @@ dashboards:
   - name: coverage
     test_group_name: ci-knative-sandbox-eventing-kafka-broker-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+- name: eventing-rabbitmq
+  dashboard_tab:
+  - name: nightly
+    test_group_name: ci-knative-sandbox-eventing-rabbitmq-nightly-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: dot-release
+    test_group_name: ci-knative-sandbox-eventing-rabbitmq-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: auto-release
+    test_group_name: ci-knative-sandbox-eventing-rabbitmq-auto-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+- name: eventing-natss
+  dashboard_tab:
+  - name: nightly
+    test_group_name: ci-knative-sandbox-eventing-natss-nightly-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: dot-release
+    test_group_name: ci-knative-sandbox-eventing-natss-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: auto-release
+    test_group_name: ci-knative-sandbox-eventing-natss-auto-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
 - name: knative-gcp
   dashboard_tab:
   - name: continuous
@@ -1989,6 +2061,8 @@ dashboard_groups:
   - "discovery"
   - "eventing-kafka"
   - "eventing-kafka-broker"
+  - "eventing-rabbitmq"
+  - "eventing-natss"
 - name: google
   dashboard_names:
   - "knative-gcp"

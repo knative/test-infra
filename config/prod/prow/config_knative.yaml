@@ -374,6 +374,10 @@ presubmits:
   - build-tests: false
   - unit-tests: false
   - integration-tests: false
+  knative-sandbox/eventing-natss:
+  - build-tests: false
+  - unit-tests: false
+  - integration-tests: false
 periodics:
   knative/serving:
   - continuous: true
@@ -471,7 +475,7 @@ periodics:
     - ./test/e2e-tests.sh --https
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --https
-  - nightly: true
+  - 'nightly': true
     reporter_config:
       slack:
         channel: serving-api
@@ -874,3 +878,23 @@ periodics:
     needs-dind: true
   - auto-release: true
     needs-dind: true
+  knative-sandbox/eventing-rabbitmq:
+  - nightly: true
+    reporter_config:
+      slack:
+        channel: eventing
+        job_states_to_report:
+        - failure
+        report_template: '"The nightly release job for eventing-rabbitmq failed, check the log: <{{.Status.URL}}|View logs>"'
+  - dot-release: true
+  - auto-release: true
+  knative-sandbox/eventing-natss:
+  - nightly: true
+    reporter_config:
+      slack:
+        channel: eventing
+        job_states_to_report:
+        - failure
+        report_template: '"The nightly release job for eventing-natss failed, check the log: <{{.Status.URL}}|View logs>"'
+  - dot-release: true
+  - auto-release: true
