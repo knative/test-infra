@@ -116,6 +116,7 @@ func CreateCluster(cp *clerk.ClusterParams) {
 	clusterID, err := dbClient.InsertCluster(c)
 	if err != nil {
 		log.Printf("Failed to insert a new Cluster entry: %v", err)
+		return
 	}
 	if err := kubetest2.Run(&kubetest2.Options{}, &kubetest2.GKEClusterConfig{
 		GCPServiceAccount: serviceAccount,

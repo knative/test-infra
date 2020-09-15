@@ -141,8 +141,10 @@ func (db *DBClient) CheckNumStatus(cp *ClusterParams, status string) int64 {
 func (db *DBClient) InsertCluster(c *Cluster) (int64, error) {
 	var clusterID int64
 	// query only rows that haven't been assigned a cluster and of the same config
-	queryString := fmt.Sprintf("INSERT INTO Clusters(Nodes, NodeType, Zone, ProjectID, Status) VALUES (%d,%s,%s,%s,%s) RETURNING id", c.Nodes, c.NodeType, c.Zone, c.ProjectID, c.Status)
+	queryString := fmt.Sprintf("INSERT INTO Clusters(Nodes, NodeType, Zone, ProjectID, Status) VALUES (%d,%s,%s,%s,%s) RETURNING ID", c.Nodes, c.NodeType, c.Zone, c.ProjectID, c.Status)
 	err := db.QueryRow(queryString).Scan(&clusterID)
+	log.Printf("query string is: %s", queryString)
+	log.Printf("cluster id : %d, error is %v", clusterID, err)
 	if err != nil {
 		return 0, err
 	}
