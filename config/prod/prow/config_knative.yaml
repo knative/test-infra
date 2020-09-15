@@ -663,6 +663,10 @@ periodics:
         memory: 12Gi
       limits:
         memory: 16Gi
+  knative-sandbox/eventing-github:
+  - continuous: true
+  - nightly: true
+  - auto-release: true
   knative/pkg:
   - continuous: true
   knative/caching:
