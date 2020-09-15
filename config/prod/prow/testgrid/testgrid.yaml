@@ -395,6 +395,19 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 3
+- name: ci-knative-sandbox-eventing-github-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-github-continuous
+  alert_stale_results_hours: 3
+- name: ci-knative-sandbox-eventing-github-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-github-nightly-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-github-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-github-auto-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
 - name: ci-knative-sandbox-sample-controller-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-sample-controller-continuous
   alert_stale_results_hours: 3
@@ -736,6 +749,8 @@ test_groups:
 - name: ci-knative-eventing-contrib-go-coverage-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-go-coverage-beta-prow-tests
   short_text_metric: "coverage"
+- name: ci-knative-sandbox-eventing-github-continuous-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-github-continuous-beta-prow-tests
 - name: ci-knative-pkg-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-pkg-continuous-beta-prow-tests
 - name: ci-knative-pkg-go-coverage-beta-prow-tests
@@ -1095,6 +1110,26 @@ dashboards:
   - name: coverage
     test_group_name: ci-knative-operator-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+- name: eventing-github
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-sandbox-eventing-github-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: nightly
+    test_group_name: ci-knative-sandbox-eventing-github-nightly-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: auto-release
+    test_group_name: ci-knative-sandbox-eventing-github-auto-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
 - name: sample-controller
   dashboard_tab:
   - name: continuous
@@ -1778,6 +1813,9 @@ dashboards:
   - name: ci-knative-eventing-contrib-go-coverage
     test_group_name: ci-knative-eventing-contrib-go-coverage-beta-prow-tests
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+  - name: ci-knative-sandbox-eventing-github-continuous
+    test_group_name: ci-knative-sandbox-eventing-github-continuous-beta-prow-tests
+    base_options: "sort-by-failures="
   - name: ci-knative-pkg-continuous
     test_group_name: ci-knative-pkg-continuous-beta-prow-tests
     base_options: "sort-by-failures="
@@ -1939,6 +1977,7 @@ dashboard_groups:
   - "operator"
 - name: knative-sandbox
   dashboard_names:
+  - "eventing-github"
   - "sample-controller"
   - "sample-source"
   - "net-certmanager"
