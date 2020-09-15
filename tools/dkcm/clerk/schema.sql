@@ -29,14 +29,9 @@ CREATE TABLE Requests (
   AccessToken varchar(1023) NOT NULL,
   RequestTime timestamp,
   Zone varchar(1023) NOT NULL,
-  Nodes varchar(1023) NOT NULL,
+  Nodes int NOT NULL,
   NodeType varchar(1023) NOT NULL,
   ProwJobID varchar(1023) NOT NULL,
   ClusterID int DEFAULT 0,
-  CONSTRAINT FkCluster 
-  FOREIGN KEY (ClusterID) 
-      REFERENCES Clusters(ID)
-      ON DELETE CASCADE
-      ON UPDATE CASCADE,
   PRIMARY KEY (ID)
 );

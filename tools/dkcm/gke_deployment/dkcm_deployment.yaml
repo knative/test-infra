@@ -19,9 +19,10 @@ metadata:
   labels:
     app: dkcm-bot
 spec:
-  type: NodePort
   ports:
-  - port: 8000
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
   selector:
     app: dkcm-bot
 ---
@@ -37,7 +38,7 @@ spec:
     spec:
       containers:
       - name: dkcm-bot
-        image: gcr.io/cris-intern-demo-project/test-infra/dkcm:v20200708-2cd92276
+        image: gcr.io/cris-intern-demo-project/test-infra/dkcm:v20200914-e301d1d5
         imagePullPolicy: Always
         command: ["/dkcm"]
         args:

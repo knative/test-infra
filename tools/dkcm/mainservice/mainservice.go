@@ -72,9 +72,20 @@ func Start(dbConfig *mysql.DBConfig, boskosClientHost, gcpServiceAccount string)
 }
 
 // handle cleaning cluster request after usage
-func handleCleanCluster(w http.ResponseWriter, r *http.Request) {
+func handleCleanCluster(w http.ResponseWriter, req *http.Request) {
 	// add project name
-	err := boskosClient.ReleaseGKEProject("")
+	token := req.URL.Query().Get("token")
+	r, err := dbClient.GetRequest(token)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("there is an error getting the request with the token: %v, please try again", err), http.StatusForbidden)
+		return
+	}
+	c, err := dbClient.GetCluster(r.ClusterID)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("there is an error getting the cluster with the token: %v, please try again", err), http.StatusForbidden)
+		return
+	}
+	err = boskosClient.ReleaseGKEProject(c.ProjectID)
 	if err != nil {
 		http.Error(w, "there is an error releasing Boskos's project. Please try again.", http.StatusInternalServerError)
 		return
@@ -100,7 +111,12 @@ func CreateCluster(cp *clerk.ClusterParams) {
 		return
 	}
 	projectName := project.Name
-	// projectName := "test-project-chizhg"
+	c := clerk.NewCluster(clerk.AddProjectID(projectName))
+	c.ClusterParams = cp
+	clusterID, err := dbClient.InsertCluster(c)
+	if err != nil {
+		log.Printf("Failed to insert a new Cluster entry: %v", err)
+	}
 	if err := kubetest2.Run(&kubetest2.Options{}, &kubetest2.GKEClusterConfig{
 		GCPServiceAccount: serviceAccount,
 		GCPProjectID:      projectName,
@@ -117,9 +133,7 @@ func CreateCluster(cp *clerk.ClusterParams) {
 		log.Printf("Failed to create a cluster: %v", err)
 		return
 	}
-	c := clerk.NewCluster(clerk.AddProjectID(projectName), clerk.AddStatus("Ready"))
-	c.ClusterParams = cp
-	if err := dbClient.InsertCluster(c); err != nil {
+	if err := dbClient.UpdateCluster(clusterID, clerk.UpdateStringField("Status", "Ready")); err != nil {
 		log.Printf("Failed to insert a new Cluster entry: %v", err)
 	}
 }

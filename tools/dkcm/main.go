@@ -11,7 +11,7 @@ import (
 
 func main() {
 	dbName := flag.String("database-name", "dkcm", "The dkcm database name")
-	dbPort := flag.String("database-port", "3307", "The dkcm database port")
+	dbPort := flag.String("database-port", "3306", "The dkcm database port")
 
 	dbUserSF := flag.String("database-user", "/secrets/cloudsql/dkcmdb/username", "Database user secret file")
 	dbPassSF := flag.String("database-password", "/secrets/cloudsql/dkcmdb/password", "Database password secret file")

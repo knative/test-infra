@@ -39,7 +39,7 @@ type Operations interface {
 	// delete a cluster entry
 	DeleteCluster(clusterID int64) error
 	// Insert a cluster entry
-	InsertCluster(c *Cluster) (string, error)
+	InsertCluster(c *Cluster) (int64, error)
 	// Update a cluster entry
 	UpdateCluster(clusterID int64, opts ...UpdateOption) error
 	// List clutsers (use for checking after downtime to see stale clusters)
@@ -138,15 +138,15 @@ func (db *DBClient) CheckNumStatus(cp *ClusterParams, status string) int64 {
 }
 
 // insert a cluster entry into db
-func (db *DBClient) InsertCluster(c *Cluster) error {
-	stmt, err := db.Prepare(`INSERT INTO Clusters(Nodes, NodeType, Zone, ProjectID, Status)
-							VALUES (?,?,?,?,?)`)
+func (db *DBClient) InsertCluster(c *Cluster) (int64, error) {
+	var clusterID int64
+	// query only rows that haven't been assigned a cluster and of the same config
+	queryString := fmt.Sprintf("INSERT INTO Clusters(Nodes, NodeType, Zone, ProjectID, Status) VALUES (%d,%s,%s,%s,%s) RETURNING id", c.Nodes, c.NodeType, c.Zone, c.ProjectID, c.Status)
+	err := db.QueryRow(queryString).Scan(&clusterID)
 	if err != nil {
-		return err
+		return 0, err
 	}
-	defer stmt.Close()
-	_, err = stmt.Exec(c.Nodes, c.NodeType, c.Zone, c.ProjectID, c.Status)
-	return err
+	return clusterID, err
 }
 
 func updateQueryString(dbName string, id int64, opts ...UpdateOption) string {
@@ -157,7 +157,7 @@ func updateQueryString(dbName string, id int64, opts ...UpdateOption) string {
 	return fmt.Sprintf("UPDATE %s SET %s WHERE ID = %d", dbName, strings.Join(fieldStatements, ","), id)
 }
 
-// Update a cluster entry on different fields len(fields) == len(values)
+// Update a cluster entry on different fields
 func (db *DBClient) UpdateCluster(clusterID int64, opts ...UpdateOption) error {
 	queryString := updateQueryString("Clusters", clusterID, opts...)
 	_, err := db.Exec(queryString)

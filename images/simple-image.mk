@@ -37,21 +37,21 @@ IMG = $(REGISTRY)/$(PROJECT)/test-infra/$(IMAGE_NAME)
 TAG := $(shell date +v%Y%m%d)-$(shell git describe --always --dirty --match '^$$')
 
 build:
-	docker build --no-cache --pull -t $(IMG):$(TAG) -f $(DOCKERFILE) $(DOCKERBUILDARGS) ../..
+	sudo docker build --pull -t $(IMG):$(TAG) -f $(DOCKERFILE) $(DOCKERBUILDARGS) ../..
 
 # You can build locally without --no-cache to save time
 iterative-build:
-	docker build --pull -t $(IMG):local -f $(DOCKERFILE) $(DOCKERBUILDARGS) ../..
+	sudo docker build --pull -t $(IMG):local -f $(DOCKERFILE) $(DOCKERBUILDARGS) ../..
 
 # And get a shell in the container
 iterative-shell:
-	docker run -it --entrypoint bash $(IMG):local
+	sudo docker run -it --entrypoint bash $(IMG):local
 
 push_versioned: confirm-master build
-	docker push $(IMG):$(TAG)
+	sudo docker push $(IMG):$(TAG)
 
 push_latest: confirm-master build
-	docker tag $(IMG):$(TAG) $(IMG):latest
-	docker push $(IMG):latest
+	sudo docker tag $(IMG):$(TAG) $(IMG):latest
+	sudo docker push $(IMG):latest
 
 push:: push_versioned push_latest
