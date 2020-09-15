@@ -1,12 +1,9 @@
 /*
 Copyright 2020 The Knative Authors
-
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-
     http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,32 +15,13 @@ package main
 
 import (
 	"bytes"
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-	"testing"
->>>>>>> 6252f6f9 (Add unit test for outputConfig)
-=======
->>>>>>> 8dfe4822 (Fix PR comments)
 )
 
 func ResetOutput() {
-	output = &bytes.Buffer{}
+	output = &outputter{}
+	output.init(&bytes.Buffer{})
 }
 
 func GetOutput() string {
-	return output.(*bytes.Buffer).String()
+	return output.sink.(*bytes.Buffer).String()
 }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
-func AssertOutput(t *testing.T, expected string) {
-	s := GetOutput()
-	if s != expected {
-		t.Fatalf("\nExpected: \n[%s]\nGot: \n[%s]\n", expected, s)
-	}
-}
->>>>>>> 6252f6f9 (Add unit test for outputConfig)
-=======
->>>>>>> 8dfe4822 (Fix PR comments)

@@ -130,6 +130,26 @@ type baseProwJobTemplateData struct {
 // ################ data definitions that are used for the prow config file generation ################
 // ####################################################################################################
 
+// outputter is a struct that directs program output and counts the number of write calls.
+type outputter struct {
+	sink  io.Writer
+	count int
+}
+
+// init initializes an outputter with a writer object and sets the write count to 0.
+func (o *outputter) init(writer io.Writer) {
+	o.sink = writer
+	o.count = 0
+}
+
+// outputConfig outputs the given line, if not empty, to the output sink (e.g. stdout).
+func (o *outputter) outputConfig(line string) {
+	if strings.TrimSpace(line) != "" {
+		fmt.Fprintln(o.sink, strings.TrimRight(line, " "))
+		o.count += 1
+	}
+}
+
 // sectionGenerator is a function that generates Prow job configs given a slice of a yaml file with configs.
 type sectionGenerator func(string, string, yaml.MapSlice)
 
@@ -140,7 +160,7 @@ var (
 	// Values used in the jobs that can be changed through command-line flags.
 	// TODO: these should be CapsCase
 	// ... until they are not global
-	output                     io.Writer
+	output                     *outputter
 	prowHost                   string
 	testGridHost               string
 	gubernatorHost             string
@@ -180,9 +200,6 @@ var (
 
 	// Map which sections of the config.yaml were written to stdout.
 	sectionMap map[string]bool
-
-	// To be used to flag that outputConfig() emitted data.
-	emittedOutput bool
 
 	releaseRegex = regexp.MustCompile(`.+-[0-9\.]+$`)
 )
@@ -477,26 +494,18 @@ func gitHubRepo(data baseProwJobTemplateData) string {
 	return s
 }
 
-// outputConfig outputs the given line, if not empty, to stdout.
-func outputConfig(line string) {
-	if strings.TrimSpace(line) != "" {
-		fmt.Fprintln(output, strings.TrimRight(line, " "))
-		emittedOutput = true
-	}
-}
-
 // executeTemplate outputs the given job template with the given data, respecting any filtering.
 func executeJobTemplate(name, templ, title, repoName, jobName string, groupByRepo bool, data interface{}) {
 	if jobNameFilter != "" && jobNameFilter != jobName {
 		return
 	}
 	if !sectionMap[title] {
-		outputConfig(title + ":")
+		output.outputConfig(title + ":")
 		sectionMap[title] = true
 	}
 	if groupByRepo {
 		if !sectionMap[title+repoName] {
-			outputConfig(baseIndent + repoName + ":")
+			output.outputConfig(baseIndent + repoName + ":")
 			sectionMap[title+repoName] = true
 		}
 	}
@@ -519,7 +528,7 @@ func executeTemplate(name, templ string, data interface{}) {
 		log.Fatalf("Error in template %s: %v", name, err)
 	}
 	for _, line := range strings.Split(res.String(), "\n") {
-		outputConfig(line)
+		output.outputConfig(line)
 	}
 }
 
@@ -668,7 +677,8 @@ func isReleased(projName string) bool {
 
 // setOutput set the given file as the output target, then all the output will be written to this file
 func setOutput(fileName string) {
-	output = os.Stdout
+	output = &outputter{}
+	output.init(os.Stdout)
 	if fileName == "" {
 		return
 	}
@@ -678,7 +688,7 @@ func setOutput(fileName string) {
 	}
 	configFile.Truncate(0)
 	configFile.Seek(0, 0)
-	output = configFile
+	output.init(configFile)
 }
 
 // main is the script entry point.

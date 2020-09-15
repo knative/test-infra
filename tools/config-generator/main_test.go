@@ -1,12 +1,9 @@
 /*
 Copyright 2020 The Knative Authors
-
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-
     http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,16 +16,8 @@ package main
 import (
 	"os"
 	"testing"
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 	"github.com/google/go-cmp/cmp"
-=======
->>>>>>> 6252f6f9 (Add unit test for outputConfig)
-=======
-
-	"github.com/google/go-cmp/cmp"
->>>>>>> 8dfe4822 (Fix PR comments)
 )
 
 func TestMain(m *testing.M) {
@@ -36,55 +25,25 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 func TestOutputConfig(t *testing.T) {
-	outputConfig("")
-<<<<<<< HEAD
-<<<<<<< HEAD
+	output.outputConfig("")
 	if diff := cmp.Diff(GetOutput(), ""); diff != "" {
 		t.Errorf("Incorrect output for empty string: (-got +want)\n%s", diff)
 	}
 
-	outputConfig(" \t\n")
+	output.outputConfig(" \t\n")
 	if diff := cmp.Diff(GetOutput(), ""); diff != "" {
 		t.Errorf("Incorrect output for whitespace string: (-got +want)\n%s", diff)
 	}
-=======
-	AssertOutput(t, "")
-
-	outputConfig(" \t\n")
-	AssertOutput(t, "")
-
->>>>>>> 6252f6f9 (Add unit test for outputConfig)
-=======
-	if diff := cmp.Diff(GetOutput(), ""); diff != "" {
-		t.Errorf("Incorrect output for empty string: (-got +want)\n%s", diff)
-	}
-
-	outputConfig(" \t\n")
-	if diff := cmp.Diff(GetOutput(), ""); diff != "" {
-		t.Errorf("Incorrect output for whitespace string: (-got +want)\n%s", diff)
-	}
->>>>>>> 8dfe4822 (Fix PR comments)
-	if emittedOutput {
-		t.Fatal("emittedOutput was incorrectly set")
+	if output.count != 0 {
+		t.Fatalf("Output count should have been 0, but was %d", output.count)
 	}
 
 	inputLine := "some-key: some-value"
-	outputConfig(inputLine)
-<<<<<<< HEAD
-<<<<<<< HEAD
+	output.outputConfig(inputLine)
 	if diff := cmp.Diff(GetOutput(), inputLine+"\n"); diff != "" {
 		t.Errorf("Incorrect output for whitespace string: (-got +want)\n%s", diff)
 	}
-=======
-	AssertOutput(t, inputLine + "\n")
-
->>>>>>> 6252f6f9 (Add unit test for outputConfig)
-=======
-	if diff := cmp.Diff(GetOutput(), inputLine + "\n"); diff != "" {
-		t.Errorf("Incorrect output for whitespace string: (-got +want)\n%s", diff)
-	}
->>>>>>> 8dfe4822 (Fix PR comments)
-	if !emittedOutput {
-		t.Fatal("emittedOutput should have been set, but wasn't")
+	if output.count != 1 {
+		t.Fatalf("Output count should have been exactly 1, but was %d", output.count)
 	}
 }

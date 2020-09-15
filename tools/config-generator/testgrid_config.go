@@ -1,12 +1,9 @@
 /*
 Copyright 2019 The Knative Authors
-
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-
     http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -132,8 +129,8 @@ func (t *TestGridMetaData) EnsureRepo(projName, repoName string) bool {
 
 // generateTestGridSection generates the configs for a TestGrid section using the given generator
 func (t *TestGridMetaData) generateTestGridSection(sectionName string, generator testgridEntityGenerator, skipReleasedProj bool) {
-	outputConfig(sectionName + ":")
-	emittedOutput = false
+	oldCount := output.count
+	output.outputConfig(sectionName + ":")
 	for _, projName := range t.projNames {
 		// Do not handle the project if it is released and we want to skip it.
 		if skipReleasedProj && isReleased(projName) {
@@ -148,8 +145,8 @@ func (t *TestGridMetaData) generateTestGridSection(sectionName string, generator
 	}
 	// A TestGrid config cannot have an empty section, so add a bogus entry
 	// if nothing was generated, thus the config is semantically valid.
-	if !emittedOutput {
-		outputConfig(baseIndent + "- name: empty")
+	if output.count == oldCount {
+		output.outputConfig(baseIndent + "- name: empty")
 	}
 }
 
@@ -218,7 +215,7 @@ func executeTestGroupTemplate(testGroupName string, gcsLogDir string, extras map
 // generateDashboard generates the dashboard configuration
 func generateDashboard(projName string, repoName string, jobNames []string) {
 	projRepoStr := buildProjRepoStr(projName, repoName)
-	outputConfig("- name: " + strings.ToLower(repoName) + "\n" + baseIndent + "dashboard_tab:")
+	output.outputConfig("- name: " + strings.ToLower(repoName) + "\n" + baseIndent + "dashboard_tab:")
 	noExtras := make(map[string]string)
 	for _, jobName := range jobNames {
 		testGroupName := getTestGroupName(projRepoStr, jobName)
@@ -289,7 +286,7 @@ func (t *TestGridMetaData) generateNonAlignedDashboards() {
 	}
 	for _, name := range keys {
 		tgs := dn[name]
-		outputConfig("- name: " + name + "\n" + baseIndent + "dashboard_tab:")
+		output.outputConfig("- name: " + name + "\n" + baseIndent + "dashboard_tab:")
 		for _, tg := range tgs {
 			executeDashboardTabTemplate(tg.HumanTabName, tg.CIJobName, tg.BaseOptions, nil)
 		}
@@ -304,7 +301,7 @@ func (t *TestGridMetaData) generateDashboardsForReleases() {
 			continue
 		}
 		repos := t.md[projName]
-		outputConfig("- name: " + projName + "\n" + baseIndent + "dashboard_tab:")
+		output.outputConfig("- name: " + projName + "\n" + baseIndent + "dashboard_tab:")
 		for _, repoName := range t.repoNames {
 			if jobNames, exists := repos[repoName]; exists {
 				for _, jobName := range jobNames {
@@ -342,7 +339,7 @@ func (t *TestGridMetaData) generateNonAlignedDashboardGroups() {
 
 // generateDashboardGroups generates the stuff in dashboard_groups:
 func (t *TestGridMetaData) generateDashboardGroups() {
-	outputConfig("dashboard_groups:")
+	output.outputConfig("dashboard_groups:")
 	for _, projName := range t.projNames {
 		// there is only one dashboard for each released project, so we do not need to group them
 		if isReleased(projName) {
