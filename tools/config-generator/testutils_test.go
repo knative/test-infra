@@ -21,9 +21,10 @@ import (
 )
 
 func ResetOutput() {
-	output = &bytes.Buffer{}
+	output = &outputter{}
+	output.init(&bytes.Buffer{})
 }
 
 func GetOutput() string {
-	return output.(*bytes.Buffer).String()
+	return output.sink.(*bytes.Buffer).String()
 }

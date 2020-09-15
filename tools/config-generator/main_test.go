@@ -28,25 +28,25 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 func TestOutputConfig(t *testing.T) {
-	outputConfig("")
+	output.outputConfig("")
 	if diff := cmp.Diff(GetOutput(), ""); diff != "" {
 		t.Errorf("Incorrect output for empty string: (-got +want)\n%s", diff)
 	}
 
-	outputConfig(" \t\n")
+	output.outputConfig(" \t\n")
 	if diff := cmp.Diff(GetOutput(), ""); diff != "" {
 		t.Errorf("Incorrect output for whitespace string: (-got +want)\n%s", diff)
 	}
-	if emittedOutput {
-		t.Fatal("emittedOutput was incorrectly set")
+	if output.count != 0 {
+		t.Fatalf("Output count should have been 0, but was %d", output.count)
 	}
 
 	inputLine := "some-key: some-value"
-	outputConfig(inputLine)
-	if diff := cmp.Diff(GetOutput(), inputLine + "\n"); diff != "" {
+	output.outputConfig(inputLine)
+	if diff := cmp.Diff(GetOutput(), inputLine+"\n"); diff != "" {
 		t.Errorf("Incorrect output for whitespace string: (-got +want)\n%s", diff)
 	}
-	if !emittedOutput {
-		t.Fatal("emittedOutput should have been set, but wasn't")
+	if output.count != 1 {
+		t.Fatalf("Output count should have been exactly 1, but was %d", output.count)
 	}
 }
