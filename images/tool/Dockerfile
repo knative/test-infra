@@ -30,6 +30,8 @@ RUN cp "$(which ${TOOL_NAME})" /
 
 RUN if [ "${TOOL_NAME}" = flaky-test-reporter ]; then mkdir -p /config && cp /go/src/knative.dev/test-infra/tools/flaky-test-reporter/config/config.yaml /config/config.yaml; fi
 
+RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2
+
 # Remove test-infra from the container
 RUN rm -fr /go/src/knative.dev/test-infra
 
