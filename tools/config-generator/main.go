@@ -161,7 +161,7 @@ var (
 	// TODO: these should be CapsCase
 	// ... until they are not global
 	output                     outputter
-	logFatalf				   logFatalfFunc
+	logFatalf                  logFatalfFunc
 	prowHost                   string
 	testGridHost               string
 	gubernatorHost             string

@@ -15,9 +15,18 @@ package main
 
 import (
 	"bytes"
+	"os"
+	"testing"
 )
 
 var outputBuffer bytes.Buffer
+
+// logFatalCalls tracks the number of logFatalf calls that occurred within a test
+var logFatalCalls int
+
+func logFatalfMock(format string, v ...interface{}) {
+	logFatalCalls++
+}
 
 func ResetOutput() {
 	outputBuffer = bytes.Buffer{}
@@ -26,4 +35,11 @@ func ResetOutput() {
 
 func GetOutput() string {
 	return outputBuffer.String()
+}
+
+func TestMain(m *testing.M) {
+	ResetOutput() // Redirect output prior to each test.
+	logFatalf = logFatalfMock
+	logFatalCalls = 0
+	os.Exit(m.Run())
 }
