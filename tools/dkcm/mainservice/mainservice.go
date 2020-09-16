@@ -162,7 +162,7 @@ func AssignCluster(token string, w http.ResponseWriter) {
 		}
 		dbClient.UpdateRequest(r.ID, clerk.UpdateNumField("ClusterID", clusterID))
 		dbClient.UpdateCluster(clusterID, clerk.UpdateStringField("Status", "In Use"))
-		checkPoolCap(&DefaultClusterParams)
+		go checkPoolCap(&DefaultClusterParams)
 		serviceResponse = &ServiceResponse{IsReady: true, Message: "Your cluster is ready!", ClusterInfo: response}
 	} else {
 		serviceResponse = &ServiceResponse{IsReady: false, Message: "Your cluster isn't ready yet! Please check back later."}
