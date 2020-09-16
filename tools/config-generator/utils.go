@@ -17,7 +17,6 @@ limitations under the License.
 package main
 
 import (
-	"log"
 	"sort"
 	"strconv"
 	"strings"
@@ -33,12 +32,12 @@ func getString(s interface{}) string {
 		if len(values) == 1 {
 			return values[0]
 		}
-		log.Fatalf("Entry %v is not a string or string array of size 1", s)
+		logFatalf("Entry %v is not a string or string array of size 1", s)
 	}
 	if str, ok := s.(string); ok {
 		return str
 	}
-	log.Fatalf("Entry %v is not a string", s)
+	logFatalf("Entry %v is not a string", s)
 	return ""
 }
 
@@ -47,7 +46,7 @@ func getInt(s interface{}) int {
 	if value, ok := s.(int); ok {
 		return value
 	}
-	log.Fatalf("Entry %v is not an integer", s)
+	logFatalf("Entry %v is not an integer", s)
 	return 0
 }
 
@@ -56,7 +55,7 @@ func getBool(s interface{}) bool {
 	if value, ok := s.(bool); ok {
 		return value
 	}
-	log.Fatalf("Entry %v is not a boolean", s)
+	logFatalf("Entry %v is not a boolean", s)
 	return false
 }
 
@@ -65,7 +64,7 @@ func getInterfaceArray(s interface{}) []interface{} {
 	if interfaceArray, ok := s.([]interface{}); ok {
 		return interfaceArray
 	}
-	log.Fatalf("Entry %v is not an interface array", s)
+	logFatalf("Entry %v is not an interface array", s)
 	return nil
 }
 
@@ -84,7 +83,7 @@ func getMapSlice(m interface{}) yaml.MapSlice {
 	if mm, ok := m.(yaml.MapSlice); ok {
 		return mm
 	}
-	log.Fatalf("Entry %v is not a yaml.MapSlice", m)
+	logFatalf("Entry %v is not a yaml.MapSlice", m)
 	return nil
 }
 

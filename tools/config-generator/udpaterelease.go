@@ -208,7 +208,7 @@ func versionComp(v1, v2 string) int {
 func mustInt(s string) int {
 	r, err := strconv.Atoi(s)
 	if err != nil {
-		log.Fatalf("Failed to parse int %q: %v", s, err)
+		logFatalf("Failed to parse int %q: %v", s, err)
 	}
 	return r
 }
@@ -216,7 +216,7 @@ func mustInt(s string) int {
 func majorMinor(s string) (int, int) {
 	parts := strings.Split(s, ".")
 	if len(parts) != 2 {
-		log.Fatalf("Version string has to be in the form of [MAJOR].[MINOR]: %q", s)
+		logFatalf("Version string has to be in the form of [MAJOR].[MINOR]: %q", s)
 	}
 	return mustInt(parts[0]), mustInt(parts[1])
 }
