@@ -1476,6 +1476,10 @@ presubmits:
           readOnly: true
         - name: docker-graph
           mountPath: /docker-graph
+        - name: modules
+          mountPath: /lib/modules
+        - name: cgroup
+          mountPath: /sys/fs/cgroup
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -1492,6 +1496,14 @@ presubmits:
           secretName: repoview-token
       - name: docker-graph
         emptyDir: {}
+      - name: modules
+        hostPath:
+          path: /lib/modules
+          type: Directory
+      - name: cgroup
+        hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
       - name: test-account
         secret:
           secretName: test-account
@@ -1788,7 +1800,8 @@ presubmits:
         - runner.sh
         args:
         - "./test/presubmit-tests.sh"
-        - "--integration-tests"
+        - "--run-test"
+        - "./test/e2e-tests.sh"
         volumeMounts:
         - name: repoview-token
           mountPath: /etc/repoview-token
@@ -1838,6 +1851,58 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
+  - name: pull-knative-test-infra-kind-tests
+    agent: kubernetes
+    context: pull-knative-test-infra-kind-tests
+    always_run: false
+    rerun_command: "/test pull-knative-test-infra-kind-tests"
+    trigger: "(?m)^/test (all|pull-knative-test-infra-kind-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/test-infra
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-kind.sh"
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: docker-graph
+          mountPath: /docker-graph
+        - name: modules
+          mountPath: /lib/modules
+        - name: cgroup
+          mountPath: /sys/fs/cgroup
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: docker-graph
+        emptyDir: {}
+      - name: modules
+        hostPath:
+          path: /lib/modules
+          type: Directory
+      - name: cgroup
+        hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+      - name: test-account
+        secret:
+          secretName: test-account
   knative/caching:
   - name: pull-knative-caching-build-tests
     agent: kubernetes
@@ -3663,6 +3728,10 @@ presubmits:
           readOnly: true
         - name: docker-graph
           mountPath: /docker-graph
+        - name: modules
+          mountPath: /lib/modules
+        - name: cgroup
+          mountPath: /sys/fs/cgroup
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -3679,6 +3748,14 @@ presubmits:
           secretName: repoview-token
       - name: docker-graph
         emptyDir: {}
+      - name: modules
+        hostPath:
+          path: /lib/modules
+          type: Directory
+      - name: cgroup
+        hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
       - name: test-account
         secret:
           secretName: test-account
@@ -3708,6 +3785,10 @@ presubmits:
           readOnly: true
         - name: docker-graph
           mountPath: /docker-graph
+        - name: modules
+          mountPath: /lib/modules
+        - name: cgroup
+          mountPath: /sys/fs/cgroup
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -3724,6 +3805,14 @@ presubmits:
           secretName: repoview-token
       - name: docker-graph
         emptyDir: {}
+      - name: modules
+        hostPath:
+          path: /lib/modules
+          type: Directory
+      - name: cgroup
+        hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
       - name: test-account
         secret:
           secretName: test-account
@@ -3753,6 +3842,10 @@ presubmits:
           readOnly: true
         - name: docker-graph
           mountPath: /docker-graph
+        - name: modules
+          mountPath: /lib/modules
+        - name: cgroup
+          mountPath: /sys/fs/cgroup
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -3769,6 +3862,14 @@ presubmits:
           secretName: repoview-token
       - name: docker-graph
         emptyDir: {}
+      - name: modules
+        hostPath:
+          path: /lib/modules
+          type: Directory
+      - name: cgroup
+        hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
       - name: test-account
         secret:
           secretName: test-account
@@ -3800,6 +3901,10 @@ presubmits:
           readOnly: true
         - name: docker-graph
           mountPath: /docker-graph
+        - name: modules
+          mountPath: /lib/modules
+        - name: cgroup
+          mountPath: /sys/fs/cgroup
         env:
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
@@ -3809,6 +3914,14 @@ presubmits:
           secretName: covbot-token
       - name: docker-graph
         emptyDir: {}
+      - name: modules
+        hostPath:
+          path: /lib/modules
+          type: Directory
+      - name: cgroup
+        hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
   knative-sandbox/eventing-kafka-broker:
   - name: pull-knative-sandbox-eventing-kafka-broker-build-tests
     agent: kubernetes
@@ -3836,6 +3949,10 @@ presubmits:
           readOnly: true
         - name: docker-graph
           mountPath: /docker-graph
+        - name: modules
+          mountPath: /lib/modules
+        - name: cgroup
+          mountPath: /sys/fs/cgroup
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -3852,6 +3969,14 @@ presubmits:
           secretName: repoview-token
       - name: docker-graph
         emptyDir: {}
+      - name: modules
+        hostPath:
+          path: /lib/modules
+          type: Directory
+      - name: cgroup
+        hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
       - name: test-account
         secret:
           secretName: test-account
@@ -3881,6 +4006,10 @@ presubmits:
           readOnly: true
         - name: docker-graph
           mountPath: /docker-graph
+        - name: modules
+          mountPath: /lib/modules
+        - name: cgroup
+          mountPath: /sys/fs/cgroup
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -3897,6 +4026,14 @@ presubmits:
           secretName: repoview-token
       - name: docker-graph
         emptyDir: {}
+      - name: modules
+        hostPath:
+          path: /lib/modules
+          type: Directory
+      - name: cgroup
+        hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
       - name: test-account
         secret:
           secretName: test-account
@@ -3926,6 +4063,10 @@ presubmits:
           readOnly: true
         - name: docker-graph
           mountPath: /docker-graph
+        - name: modules
+          mountPath: /lib/modules
+        - name: cgroup
+          mountPath: /sys/fs/cgroup
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
@@ -3942,6 +4083,14 @@ presubmits:
           secretName: repoview-token
       - name: docker-graph
         emptyDir: {}
+      - name: modules
+        hostPath:
+          path: /lib/modules
+          type: Directory
+      - name: cgroup
+        hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
       - name: test-account
         secret:
           secretName: test-account
@@ -3973,6 +4122,10 @@ presubmits:
           readOnly: true
         - name: docker-graph
           mountPath: /docker-graph
+        - name: modules
+          mountPath: /lib/modules
+        - name: cgroup
+          mountPath: /sys/fs/cgroup
         env:
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
@@ -3982,6 +4135,14 @@ presubmits:
           secretName: covbot-token
       - name: docker-graph
         emptyDir: {}
+      - name: modules
+        hostPath:
+          path: /lib/modules
+          type: Directory
+      - name: cgroup
+        hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
 periodics:
 - cron: "0 */2 * * *"
   name: ci-knative-serving-continuous
@@ -4082,6 +4243,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -4097,6 +4262,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -4125,6 +4298,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -4140,6 +4317,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -4168,6 +4353,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -4183,6 +4372,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -4211,6 +4408,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -4226,6 +4427,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -4254,6 +4463,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -4269,6 +4482,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -4297,6 +4518,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -4312,6 +4537,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -4340,6 +4573,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -4355,6 +4592,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -4383,6 +4628,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -4398,6 +4647,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -5207,6 +5464,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -5222,6 +5483,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -5250,6 +5519,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -5265,6 +5538,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -5293,6 +5574,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -5308,6 +5593,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -5336,6 +5629,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -5351,6 +5648,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -5379,6 +5684,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -5394,6 +5703,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -5422,6 +5739,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -5437,6 +5758,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -5465,6 +5794,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -5480,6 +5813,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -5508,6 +5849,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -5523,6 +5868,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -5942,6 +6295,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -5955,6 +6312,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -5981,6 +6346,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -5994,6 +6363,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -6142,6 +6519,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -6157,6 +6538,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -6185,6 +6574,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -6200,6 +6593,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -6228,6 +6629,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -6243,6 +6648,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -6271,6 +6684,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -6286,6 +6703,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -6314,6 +6739,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -6329,6 +6758,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -6357,6 +6794,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -6372,6 +6813,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -6400,6 +6849,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -6415,6 +6868,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -6443,6 +6904,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -6458,6 +6923,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -6894,6 +7367,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -6909,6 +7386,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -6937,6 +7422,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -6952,6 +7441,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -6980,6 +7477,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -6995,6 +7496,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -7023,6 +7532,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -7038,6 +7551,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -7066,6 +7587,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -7081,6 +7606,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -7109,6 +7642,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -7124,6 +7661,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -7152,6 +7697,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -7167,6 +7716,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -7195,6 +7752,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -7210,6 +7771,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -8052,16 +8621,36 @@ periodics:
       args:
       - "./test/presubmit-tests.sh"
       - "--all-tests"
+      securityContext:
+        privileged: true
       volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
     volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -8084,16 +8673,36 @@ periodics:
       args:
       - "./test/presubmit-tests.sh"
       - "--all-tests"
+      securityContext:
+        privileged: true
       volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
     volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -8241,6 +8850,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -8261,6 +8874,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -8288,6 +8909,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -8308,6 +8933,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -8335,6 +8968,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -8355,6 +8992,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -8382,6 +9027,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -8402,6 +9051,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -8429,6 +9086,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -8449,6 +9110,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -8476,6 +9145,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -8496,6 +9169,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -8523,6 +9204,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -8543,6 +9228,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -8570,6 +9263,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -8590,6 +9287,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -10371,6 +11076,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -10391,6 +11100,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -10419,6 +11136,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -10439,6 +11160,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -10467,6 +11196,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -10487,6 +11220,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -10515,6 +11256,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -10535,6 +11280,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -10563,6 +11316,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -10583,6 +11340,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -10611,6 +11376,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -10631,6 +11400,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -11235,6 +12012,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -11248,6 +12029,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -11275,6 +12064,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -11288,6 +12081,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -11316,6 +12117,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: nightly-account
         mountPath: /etc/nightly-account
         readOnly: true
@@ -11329,6 +12134,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: nightly-account
       secret:
         secretName: nightly-account
@@ -11362,6 +12175,10 @@ periodics:
         readOnly: true
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: release-account
         mountPath: /etc/release-account
         readOnly: true
@@ -11380,6 +12197,14 @@ periodics:
         secretName: hub-token
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: release-account
       secret:
         secretName: release-account
@@ -11413,6 +12238,10 @@ periodics:
         readOnly: true
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: release-account
         mountPath: /etc/release-account
         readOnly: true
@@ -11431,6 +12260,14 @@ periodics:
         secretName: hub-token
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: release-account
       secret:
         secretName: release-account
@@ -11506,6 +12343,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -11519,6 +12360,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -11546,6 +12395,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
@@ -11559,6 +12412,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -11587,6 +12448,10 @@ periodics:
       volumeMounts:
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: nightly-account
         mountPath: /etc/nightly-account
         readOnly: true
@@ -11600,6 +12465,14 @@ periodics:
     volumes:
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: nightly-account
       secret:
         secretName: nightly-account
@@ -11633,6 +12506,10 @@ periodics:
         readOnly: true
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: release-account
         mountPath: /etc/release-account
         readOnly: true
@@ -11651,6 +12528,14 @@ periodics:
         secretName: hub-token
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: release-account
       secret:
         secretName: release-account
@@ -11684,6 +12569,10 @@ periodics:
         readOnly: true
       - name: docker-graph
         mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: release-account
         mountPath: /etc/release-account
         readOnly: true
@@ -11702,6 +12591,14 @@ periodics:
         secretName: hub-token
     - name: docker-graph
       emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: release-account
       secret:
         secretName: release-account

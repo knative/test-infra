@@ -246,7 +246,16 @@ presubmits:
   - build-tests: true
   - unit-tests: true
   - integration-tests: true
+    args:
+    - --run-test
+    - ./test/e2e-tests.sh
   - go-coverage: true
+  - custom-test: kind-tests
+    always-run: false
+    needs-dind: true
+    args:
+    - --run-test
+    - ./test/e2e-kind.sh
   knative/caching:
   - build-tests: true
   - unit-tests: true
@@ -681,6 +690,7 @@ periodics:
   - continuous: true
   knative/test-infra:
   - continuous: true
+    needs-dind: true
   google/knative-gcp:
   - continuous: true
     resources:
