@@ -96,10 +96,13 @@ func handleCleanCluster(w http.ResponseWriter, req *http.Request) {
 func checkPoolCap(cp *clerk.ClusterParams) {
 	numAvail := dbClient.CheckNumStatus(cp, "Ready")
 	numWIP := dbClient.CheckNumStatus(cp, "WIP")
-	if numAvail+numWIP < DefaultOverProvision {
+	diff := DefaultOverProvision - numAvail - numWIP
+	if diff > 0 {
 		// create cluster if not meeting overprovisioning criteria
-		log.Printf("Creating a new cluster: %v", cp)
-		CreateCluster(cp)
+		for i := int64(0); i < diff; i++ {
+			log.Printf("Creating a new cluster: %v", cp)
+			CreateCluster(cp)
+		}
 	}
 }
 
@@ -158,7 +161,8 @@ func AssignCluster(token string, w http.ResponseWriter) {
 			return
 		}
 		dbClient.UpdateRequest(r.ID, clerk.UpdateNumField("ClusterID", clusterID))
-		// checkPoolCap(&DefaultClusterParams)
+		dbClient.UpdateCluster(clusterID, clerk.UpdateStringField("Status", "In Use"))
+		checkPoolCap(&DefaultClusterParams)
 		serviceResponse = &ServiceResponse{IsReady: true, Message: "Your cluster is ready!", ClusterInfo: response}
 	} else {
 		serviceResponse = &ServiceResponse{IsReady: false, Message: "Your cluster isn't ready yet! Please check back later."}

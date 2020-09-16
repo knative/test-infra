@@ -140,13 +140,13 @@ func (db *DBClient) CheckNumStatus(cp *ClusterParams, status string) int64 {
 // insert a cluster entry into db
 func (db *DBClient) InsertCluster(c *Cluster) (int64, error) {
 	// query only rows that haven't been assigned a cluster and of the same config
-	stmt, err := db.Prepare(`INSERT INTO Clusters(Nodes, NodeType, Zone, ProjectID, Status)
-							VALUES (?,?,?,?,?)`)
+	stmt, err := db.Prepare(`INSERT INTO Clusters(Nodes, NodeType, Zone, ProjectID)
+							VALUES (?,?,?,?)`)
 	if err != nil {
 		return 0, err
 	}
 	defer stmt.Close()
-	res, err := stmt.Exec(c.Nodes, c.NodeType, c.Zone, c.ProjectID, c.Status)
+	res, err := stmt.Exec(c.Nodes, c.NodeType, c.Zone, c.ProjectID)
 	if err != nil {
 		return 0, err
 	}
