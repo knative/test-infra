@@ -484,7 +484,7 @@ periodics:
     - ./test/e2e-tests.sh --https
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --https
-  - 'nightly': true
+  - nightly: true
     reporter_config:
       slack:
         channel: serving-api
