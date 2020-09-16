@@ -323,6 +323,8 @@ func addExtraEnvVarsToJob(envVars []string, data *baseProwJobTemplateData) {
 
 // setupDockerInDockerForJob enables docker-in-docker for the given job.
 func setupDockerInDockerForJob(data *baseProwJobTemplateData) {
+	// These volumes are required for running docker command and creating kind clusters.
+	// Reference: https://github.com/kubernetes-sigs/kind/issues/303
 	addVolumeToJob(data, "/docker-graph", "docker-graph", false, []string{"emptyDir: {}"})
 	addVolumeToJob(data, "/lib/modules", "modules", false, []string{"hostPath:", "  path: /lib/modules", "  type: Directory"})
 	addVolumeToJob(data, "/sys/fs/cgroup", "cgroup", false, []string{"hostPath:", "  path: /sys/fs/cgroup", "  type: Directory"})
