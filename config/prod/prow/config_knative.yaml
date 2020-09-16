@@ -676,7 +676,15 @@ periodics:
         memory: 12Gi
       limits:
         memory: 16Gi
+  knative-sandbox/eventing-couchdb:
+  - continuous: true
+  - nightly: true
+  - auto-release: true
   knative-sandbox/eventing-github:
+  - continuous: true
+  - nightly: true
+  - auto-release: true
+  knative-sandbox/eventing-gitlab:
   - continuous: true
   - nightly: true
   - auto-release: true
