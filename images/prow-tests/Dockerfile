@@ -57,6 +57,7 @@ COPY images/prow-tests/source-gvm-and-run.sh /usr/local/bin
 RUN source-gvm-and-run.sh install go1.13.14 --prefer-binary
 RUN source-gvm-and-run.sh install go1.14.6 --prefer-binary
 RUN source-gvm-and-run.sh install go1.15 --prefer-binary
+RUN source-gvm-and-run.sh install master --source=https://github.com/golang/go --name=devel
 
 # Extra tools through go get
 # These run using the kubekins version of Go, not any defined by `gvm`
