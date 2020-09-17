@@ -680,6 +680,8 @@ periodics:
   - continuous: true
   - nightly: true
   - auto-release: true
+  knative-sandbox/eventing-ceph:
+  - continuous: true
   knative-sandbox/eventing-couchdb:
   - continuous: true
   - nightly: true
@@ -689,6 +691,10 @@ periodics:
   - nightly: true
   - auto-release: true
   knative-sandbox/eventing-gitlab:
+  - continuous: true
+  - nightly: true
+  - auto-release: true
+  knative-sandbox/eventing-prometheus:
   - continuous: true
   - nightly: true
   - auto-release: true
