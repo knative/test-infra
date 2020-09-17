@@ -60,6 +60,8 @@ var (
 	nonPathAliasRepos = sets.NewString("knative/docs")
 )
 
+type logFatalfFunc func(string, ...interface{})
+
 // repositoryData contains basic data about each Knative repository.
 type repositoryData struct {
 	Name                   string
@@ -159,6 +161,7 @@ var (
 	// TODO: these should be CapsCase
 	// ... until they are not global
 	output                     outputter
+	logFatalf                  logFatalfFunc
 	prowHost                   string
 	testGridHost               string
 	gubernatorHost             string
@@ -211,7 +214,7 @@ func readTemplate(fp string) string {
 		_, f, _, _ := runtime.Caller(0)
 		content, err := ioutil.ReadFile(path.Join(path.Dir(f), templateDir, fp))
 		if err != nil {
-			log.Fatalf("Failed read file '%s': '%v'", fp, err)
+			logFatalf("Failed read file '%s': '%v'", fp, err)
 		}
 		templatesCache[fp] = string(content)
 	}
@@ -319,7 +322,7 @@ func configureServiceAccountForJob(data *baseProwJobTemplateData) {
 	}
 	p := strings.Split(data.ServiceAccount, "/")
 	if len(p) != 4 || p[0] != "" || p[1] != "etc" || p[3] != "service-account.json" {
-		log.Fatalf("Service account path %q is expected to be \"/etc/<name>/service-account.json\"", data.ServiceAccount)
+		logFatalf("Service account path %q is expected to be \"/etc/<name>/service-account.json\"", data.ServiceAccount)
 	}
 	name := p[2]
 	addVolumeToJob(data, "/etc/"+name, name, true, nil)
@@ -330,7 +333,7 @@ func addExtraEnvVarsToJob(envVars []string, data *baseProwJobTemplateData) {
 	for _, env := range envVars {
 		pair := strings.SplitN(env, "=", 2)
 		if len(pair) != 2 {
-			log.Fatalf("Environment variable %q is expected to be \"key=value\"", env)
+			logFatalf("Environment variable %q is expected to be \"key=value\"", env)
 		}
 		data.addEnvToJob(pair[0], pair[1])
 	}
@@ -415,7 +418,7 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 		case nil: // already processed
 			continue
 		default:
-			log.Fatalf("Unknown entry %q for job", item.Key)
+			logFatalf("Unknown entry %q for job", item.Key)
 		}
 		// Knock-out the item, signalling it was already parsed.
 		config[i] = yaml.MapItem{}
@@ -525,7 +528,7 @@ func executeTemplate(name, templ string, data interface{}) {
 	}
 	t := template.Must(template.New(name).Funcs(funcMap).Delims("[[", "]]").Parse(templ))
 	if err := t.Execute(&res, data); err != nil {
-		log.Fatalf("Error in template %s: %v", name, err)
+		logFatalf("Error in template %s: %v", name, err)
 	}
 	for _, line := range strings.Split(res.String(), "\n") {
 		output.outputConfig(line)
@@ -551,7 +554,7 @@ func parseJob(config yaml.MapSlice, jobName string) yaml.MapSlice {
 		}
 	}
 
-	log.Fatalf("The metadata misses %s configuration, cannot continue.", jobName)
+	logFatalf("The metadata misses %s configuration, cannot continue.", jobName)
 	return nil
 }
 
@@ -683,7 +686,7 @@ func setOutput(fileName string) {
 	}
 	configFile, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE, 0666)
 	if err != nil {
-		log.Fatalf("Cannot create the configuration file %q: %v", fileName, err)
+		logFatalf("Cannot create the configuration file %q: %v", fileName, err)
 	}
 	configFile.Truncate(0)
 	configFile.Seek(0, 0)
@@ -692,6 +695,7 @@ func setOutput(fileName string) {
 
 // main is the script entry point.
 func main() {
+	logFatalf = log.Fatalf
 	// Parse flags and sanity check them.
 	prowJobsConfigOutput := ""
 	testgridConfigOutput := ""
@@ -736,19 +740,19 @@ func main() {
 	if upgradeReleaseBranches {
 		gc, err := ghutil.NewGithubClient(githubTokenPath)
 		if err != nil {
-			log.Fatalf("Failed creating github client from %q: %v", githubTokenPath, err)
+			logFatalf("Failed creating github client from %q: %v", githubTokenPath, err)
 		}
 		if err := upgradeReleaseBranchesTemplate(name, gc); err != nil {
-			log.Fatalf("Failed upgrade based on release branch: '%v'", err)
+			logFatalf("Failed upgrade based on release branch: '%v'", err)
 		}
 	}
 
 	content, err := ioutil.ReadFile(name)
 	if err != nil {
-		log.Fatalf("Cannot read file %q: %v", name, err)
+		logFatalf("Cannot read file %q: %v", name, err)
 	}
 	if err = yaml.Unmarshal(content, &config); err != nil {
-		log.Fatalf("Cannot parse config %q: %v", name, err)
+		logFatalf("Cannot parse config %q: %v", name, err)
 	}
 
 	prowConfigData := getProwConfigData(config)
@@ -778,7 +782,7 @@ func main() {
 
 	// config object is modified when we generate prow config, so we'll need to reload it here
 	if err = yaml.Unmarshal(content, &config); err != nil {
-		log.Fatalf("Cannot parse config %q: %v", name, err)
+		logFatalf("Cannot parse config %q: %v", name, err)
 	}
 	// Generate Testgrid config.
 	if *generateTestgridConfig {

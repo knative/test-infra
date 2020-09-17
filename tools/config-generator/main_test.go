@@ -14,17 +14,13 @@ limitations under the License.
 package main
 
 import (
-	"os"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
 )
 
-func TestMain(m *testing.M) {
-	ResetOutput() // Redirect output prior to each test.
-	os.Exit(m.Run())
-}
 func TestOutputConfig(t *testing.T) {
+	SetupForTesting()
 	output.outputConfig("")
 	if diff := cmp.Diff(GetOutput(), ""); diff != "" {
 		t.Errorf("Incorrect output for empty string: (-got +want)\n%s", diff)

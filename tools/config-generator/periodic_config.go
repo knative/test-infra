@@ -229,13 +229,13 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	}
 	// Ensure required data exist.
 	if data.CronString == "" {
-		log.Fatalf("Job %q is missing cron string", data.PeriodicJobName)
+		logFatalf("Job %q is missing cron string", data.PeriodicJobName)
 	}
 	if len(data.Base.Args) == 0 && data.Base.Command == "" {
-		log.Fatalf("Job %q is missing command", data.PeriodicJobName)
+		logFatalf("Job %q is missing command", data.PeriodicJobName)
 	}
 	if jobType == "branch-ci" && data.Base.RepoBranch == "" {
-		log.Fatalf("%q jobs are intended to be used on release branches", jobType)
+		logFatalf("%q jobs are intended to be used on release branches", jobType)
 	}
 
 	// Generate config itself.
