@@ -186,7 +186,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 				"--release-gcs " + data.Base.ReleaseGcs,
 				"--release-gcr gcr.io/knative-releases",
 				"--github-token /etc/hub-token/token"}
-			addVolumeToJob(&data.Base, "/etc/hub-token", "hub-token", true, "")
+			addVolumeToJob(&data.Base, "/etc/hub-token", "hub-token", true, nil)
 			// For dot-release and auto-release jobs, set ORG_NAME env var if the org name is not knative, as it's needed by release.sh
 			if data.Base.OrgName != "knative" {
 				data.Base.addEnvToJob("ORG_NAME", data.Base.OrgName)

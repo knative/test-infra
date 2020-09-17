@@ -246,7 +246,16 @@ presubmits:
   - build-tests: true
   - unit-tests: true
   - integration-tests: true
+    args:
+    - --run-test
+    - ./test/e2e-tests.sh
   - go-coverage: true
+  - custom-test: kind-tests
+    always-run: false
+    needs-dind: true
+    args:
+    - --run-test
+    - ./test/e2e-kind.sh
   knative/caching:
   - build-tests: true
   - unit-tests: true
@@ -371,6 +380,10 @@ presubmits:
   - go-coverage: true
     needs-dind: true
   knative-sandbox/eventing-rabbitmq:
+  - build-tests: false
+  - unit-tests: false
+  - integration-tests: false
+  knative-sandbox/eventing-natss:
   - build-tests: false
   - unit-tests: false
   - integration-tests: false
@@ -663,6 +676,22 @@ periodics:
         memory: 12Gi
       limits:
         memory: 16Gi
+  knative-sandbox/eventing-awssqs:
+  - continuous: true
+  - nightly: true
+  - auto-release: true
+  knative-sandbox/eventing-couchdb:
+  - continuous: true
+  - nightly: true
+  - auto-release: true
+  knative-sandbox/eventing-github:
+  - continuous: true
+  - nightly: true
+  - auto-release: true
+  knative-sandbox/eventing-gitlab:
+  - continuous: true
+  - nightly: true
+  - auto-release: true
   knative/pkg:
   - continuous: true
   knative/caching:
@@ -673,6 +702,7 @@ periodics:
   - continuous: true
   knative/test-infra:
   - continuous: true
+    needs-dind: true
   google/knative-gcp:
   - continuous: true
     resources:
@@ -870,3 +900,23 @@ periodics:
     needs-dind: true
   - auto-release: true
     needs-dind: true
+  knative-sandbox/eventing-rabbitmq:
+  - nightly: true
+    reporter_config:
+      slack:
+        channel: eventing
+        job_states_to_report:
+        - failure
+        report_template: '"The nightly release job for eventing-rabbitmq failed, check the log: <{{.Status.URL}}|View logs>"'
+  - dot-release: true
+  - auto-release: true
+  knative-sandbox/eventing-natss:
+  - nightly: true
+    reporter_config:
+      slack:
+        channel: eventing
+        job_states_to_report:
+        - failure
+        report_template: '"The nightly release job for eventing-natss failed, check the log: <{{.Status.URL}}|View logs>"'
+  - dot-release: true
+  - auto-release: true

@@ -299,7 +299,7 @@ func addMonitoringPubsubLabelsToJob(data *baseProwJobTemplateData, runID string)
 }
 
 // addVolumeToJob adds the given mount path as volume for the job.
-func addVolumeToJob(data *baseProwJobTemplateData, mountPath, name string, isSecret bool, defaultMode string) {
+func addVolumeToJob(data *baseProwJobTemplateData, mountPath, name string, isSecret bool, content []string) {
 	(*data).VolumeMounts = append((*data).VolumeMounts, []string{"- name: " + name, "  mountPath: " + mountPath}...)
 	if isSecret {
 		(*data).VolumeMounts = append((*data).VolumeMounts, "  readOnly: true")
@@ -307,12 +307,10 @@ func addVolumeToJob(data *baseProwJobTemplateData, mountPath, name string, isSec
 	s := []string{"- name: " + name}
 	if isSecret {
 		arr := []string{"  secret:", "    secretName: " + name}
-		if len(defaultMode) > 0 {
-			arr = append(arr, "    defaultMode: "+defaultMode)
-		}
 		s = append(s, arr...)
-	} else {
-		s = append(s, "  emptyDir: {}")
+	}
+	for _, line := range content {
+		s = append(s, "  "+line)
 	}
 	(*data).Volumes = append((*data).Volumes, s...)
 }
@@ -327,7 +325,7 @@ func configureServiceAccountForJob(data *baseProwJobTemplateData) {
 		logFatalf("Service account path %q is expected to be \"/etc/<name>/service-account.json\"", data.ServiceAccount)
 	}
 	name := p[2]
-	addVolumeToJob(data, "/etc/"+name, name, true, "")
+	addVolumeToJob(data, "/etc/"+name, name, true, nil)
 }
 
 // addExtraEnvVarsToJob adds extra environment variables to a job.
@@ -343,7 +341,11 @@ func addExtraEnvVarsToJob(envVars []string, data *baseProwJobTemplateData) {
 
 // setupDockerInDockerForJob enables docker-in-docker for the given job.
 func setupDockerInDockerForJob(data *baseProwJobTemplateData) {
-	addVolumeToJob(data, "/docker-graph", "docker-graph", false, "")
+	// These volumes are required for running docker command and creating kind clusters.
+	// Reference: https://github.com/kubernetes-sigs/kind/issues/303
+	addVolumeToJob(data, "/docker-graph", "docker-graph", false, []string{"emptyDir: {}"})
+	addVolumeToJob(data, "/lib/modules", "modules", false, []string{"hostPath:", "  path: /lib/modules", "  type: Directory"})
+	addVolumeToJob(data, "/sys/fs/cgroup", "cgroup", false, []string{"hostPath:", "  path: /sys/fs/cgroup", "  type: Directory"})
 	data.addEnvToJob("DOCKER_IN_DOCKER_ENABLED", "\"true\"")
 	(*data).SecurityContext = []string{"privileged: true"}
 }
