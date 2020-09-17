@@ -25,6 +25,7 @@ import (
 )
 
 func TestGetString(t *testing.T) {
+	SetupForTesting()
 	var in interface{} = "abcdefg"
 	out := getString(in)
 	if diff := cmp.Diff(out, "abcdefg"); diff != "" {
@@ -41,6 +42,7 @@ func TestGetString(t *testing.T) {
 }
 
 func TestGetInt(t *testing.T) {
+	SetupForTesting()
 	var in interface{} = 123
 	out := getInt(in)
 	if logFatalCalls != 0 {
@@ -57,6 +59,7 @@ func TestGetInt(t *testing.T) {
 }
 
 func TestGetBool(t *testing.T) {
+	SetupForTesting()
 	var in interface{} = true
 	out := getBool(in)
 	if logFatalCalls != 0 {
@@ -73,6 +76,7 @@ func TestGetBool(t *testing.T) {
 }
 
 func TestGetInterfaceArray(t *testing.T) {
+	SetupForTesting()
 	in1 := []interface{}{"foo", "bar", "baz"}
 	out1 := getInterfaceArray(in1)
 	if fmt.Sprint(in1) != fmt.Sprint(out1) {
@@ -90,6 +94,7 @@ func TestGetInterfaceArray(t *testing.T) {
 }
 
 func TestGetStringArray(t *testing.T) {
+	SetupForTesting()
 	in := []interface{}{"foo", "bar", "baz"}
 	out := getStringArray(in)
 	if logFatalCalls != 0 {
@@ -101,6 +106,7 @@ func TestGetStringArray(t *testing.T) {
 }
 
 func TestGetMapSlice(t *testing.T) {
+	SetupForTesting()
 	var in interface{} = yaml.MapSlice{
 		yaml.MapItem{Key: "abc", Value: 123},
 		yaml.MapItem{Key: "def", Value: 456},
@@ -115,6 +121,7 @@ func TestGetMapSlice(t *testing.T) {
 }
 
 func TestAppendIfUnique(t *testing.T) {
+	SetupForTesting()
 	arr := []string{"foo", "bar"}
 	arr = appendIfUnique(arr, "foo")
 	if len(arr) != 2 {
@@ -127,6 +134,7 @@ func TestAppendIfUnique(t *testing.T) {
 }
 
 func TestIsNum(t *testing.T) {
+	SetupForTesting()
 	nums := []string{"-123456.789", "-123", "0", "0.0", ".0", "123", "123456.789"}
 	for _, n := range nums {
 		if !isNum(n) {
@@ -142,6 +150,7 @@ func TestIsNum(t *testing.T) {
 }
 
 func TestQuote(t *testing.T) {
+	SetupForTesting()
 	tests := []struct {
 		in           string
 		expectQuotes bool
@@ -168,6 +177,7 @@ func TestQuote(t *testing.T) {
 }
 
 func TestIndentBase(t *testing.T) {
+	SetupForTesting()
 	tests := []struct {
 		input           []string
 		indentation     int
@@ -217,6 +227,7 @@ func TestIndentBase(t *testing.T) {
 }
 
 func TestIndentArray(t *testing.T) {
+	SetupForTesting()
 	input := []string{"'foo'", "42", "key: value", "bar"}
 	indentation := 2
 	expected := "- 'foo'\n  - 42\n  - key: value\n  - \"bar\"\n"
@@ -227,6 +238,7 @@ func TestIndentArray(t *testing.T) {
 }
 
 func TestIndentKeys(t *testing.T) {
+	SetupForTesting()
 	input := []string{"abc: def", "foo: bar"}
 	indentation := 2
 	expected := "abc: def\n  foo: bar\n"
@@ -237,6 +249,7 @@ func TestIndentKeys(t *testing.T) {
 }
 
 func TestIndentSectionBase(t *testing.T) {
+	SetupForTesting()
 	indentation := 2
 	title := "foo"
 	prefix := "__"
@@ -255,6 +268,7 @@ func TestIndentSectionBase(t *testing.T) {
 }
 
 func TestIndentArraySection(t *testing.T) {
+	SetupForTesting()
 	indentation := 2
 	title := "foo"
 	input := []string{"abc: def", "bar", "42"}
@@ -272,6 +286,7 @@ func TestIndentArraySection(t *testing.T) {
 }
 
 func TestIndentSection(t *testing.T) {
+	SetupForTesting()
 	indentation := 2
 	title := "foo"
 	input := []string{"abc: def", "bar: baz", "magic_num: 42"}
@@ -289,6 +304,7 @@ func TestIndentSection(t *testing.T) {
 }
 
 func TestIndentMap(t *testing.T) {
+	SetupForTesting()
 	indentation := 2
 	input := map[string]string{
 		"foo": "bar",
@@ -304,6 +320,7 @@ func TestIndentMap(t *testing.T) {
 }
 
 func TestStrExists(t *testing.T) {
+	SetupForTesting()
 	sArray := []string{"foo", "bar", "baz"}
 
 	if strExists(sArray, "abc") {

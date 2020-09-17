@@ -20,6 +20,7 @@ import (
 )
 
 func TestOutputConfig(t *testing.T) {
+	SetupForTesting()
 	output.outputConfig("")
 	if diff := cmp.Diff(GetOutput(), ""); diff != "" {
 		t.Errorf("Incorrect output for empty string: (-got +want)\n%s", diff)
