@@ -30,6 +30,7 @@ type Cluster struct {
 // Function option that modify a field of Cluster
 type ClusterOption func(*Cluster)
 
+// Initialize a new Cluster
 func NewCluster(opts ...ClusterOption) *Cluster {
 	c := &Cluster{}
 	for _, opt := range opts {
@@ -38,17 +39,20 @@ func NewCluster(opts ...ClusterOption) *Cluster {
 	return c
 }
 
+// consumer facing cluster display
 func (c Cluster) String() string {
 	return fmt.Sprintf("Cluster Info: (ProjectID: %s, NodesCount: %d, NodeType: %s, Status: %s, Zone: %s)",
 		c.ProjectID, c.Nodes, c.NodeType, c.Status, c.Zone)
 }
 
+// add projectID to cluster struct
 func AddProjectID(projectID string) ClusterOption {
 	return func(c *Cluster) {
 		c.ProjectID = projectID
 	}
 }
 
+// add status to cluster struct
 func AddStatus(status string) ClusterOption {
 	return func(c *Cluster) {
 		c.Status = status

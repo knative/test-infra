@@ -26,30 +26,35 @@ type QueryClusterParamsOption func(*ClusterParams) string
 // Function option that returns as a key value pair for database update
 type UpdateOption func() string
 
+// update query for changing string attributes
 func UpdateStringField(key string, value string) UpdateOption {
 	return func() string {
 		return fmt.Sprintf("%s = '%s'", key, value)
 	}
 }
 
+// update query for changing numeric attributes
 func UpdateNumField(key string, value int64) UpdateOption {
 	return func() string {
 		return fmt.Sprintf("%s = %d", key, value)
 	}
 }
 
+// return a query string of zone
 func QueryZone() QueryClusterParamsOption {
 	return func(cp *ClusterParams) string {
 		return fmt.Sprintf("Zone = '%s'", cp.Zone)
 	}
 }
 
+// return a query string of number of nodes
 func QueryNodes() QueryClusterParamsOption {
 	return func(cp *ClusterParams) string {
 		return fmt.Sprintf("Nodes = %d", cp.Nodes)
 	}
 }
 
+// return a query string of node type
 func QueryNodeType() QueryClusterParamsOption {
 	return func(cp *ClusterParams) string {
 		return fmt.Sprintf("NodeType = '%s'", cp.NodeType)

@@ -32,6 +32,7 @@ type Request struct {
 // Function option that modify a field of Request
 type RequestOption func(*Request)
 
+// Initialize a new request
 func NewRequest(opts ...RequestOption) *Request {
 	r := &Request{}
 	for _, opt := range opts {
@@ -40,12 +41,14 @@ func NewRequest(opts ...RequestOption) *Request {
 	return r
 }
 
+// add request time to request struct
 func AddRequestTime(requestTime time.Time) RequestOption {
 	return func(r *Request) {
 		r.requestTime = requestTime
 	}
 }
 
+// add ProwID to request struct
 func AddProwJobID(prowJobID string) RequestOption {
 	return func(r *Request) {
 		r.ProwJobID = prowJobID

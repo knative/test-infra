@@ -30,26 +30,6 @@ RUN cp "$(which ${TOOL_NAME})" /
 
 RUN if [ "${TOOL_NAME}" = flaky-test-reporter ]; then mkdir -p /config && cp /go/src/knative.dev/test-infra/tools/flaky-test-reporter/config/config.yaml /config/config.yaml; fi
 
-RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2
-RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2/kubetest2-gke
-RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2/kubetest2-kind
-RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2/kubetest2-tester-exec
-
-ENV PATH=/google-cloud-sdk/bin:/workspace:${PATH} \
-    CLOUDSDK_CORE_DISABLE_PROMPTS=1
-
-WORKDIR /workspace
-
-RUN wget -q https://dl.google.com/dl/cloudsdk/channels/rapid/google-cloud-sdk.tar.gz && \
-    tar xzf google-cloud-sdk.tar.gz -C / && \
-    rm google-cloud-sdk.tar.gz && \
-    /google-cloud-sdk/install.sh \
-        --disable-installation-options \
-        --bash-completion=false \
-        --path-update=false \
-        --usage-reporting=false && \
-    gcloud components install alpha beta kubectl
-
 # Remove test-infra from the container
 RUN rm -fr /go/src/knative.dev/test-infra
 

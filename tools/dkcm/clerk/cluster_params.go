@@ -27,6 +27,7 @@ type ClusterParams struct {
 // Function option that modify a field of ClusterParams
 type ClusterParamsOption func(*ClusterParams)
 
+// Initialize a new ClusterParams
 func NewClusterParams(opts ...ClusterParamsOption) *ClusterParams {
 	cp := &ClusterParams{}
 	for _, opt := range opts {
@@ -35,18 +36,21 @@ func NewClusterParams(opts ...ClusterParamsOption) *ClusterParams {
 	return cp
 }
 
+// add zone to cluster params
 func AddZone(zone string) ClusterParamsOption {
 	return func(cp *ClusterParams) {
 		cp.Zone = zone
 	}
 }
 
+// add node to cluster params
 func AddNodes(nodes int64) ClusterParamsOption {
 	return func(cp *ClusterParams) {
 		cp.Nodes = nodes
 	}
 }
 
+// add node type to cluster params
 func AddNodeType(nodeType string) ClusterParamsOption {
 	return func(cp *ClusterParams) {
 		cp.NodeType = nodeType

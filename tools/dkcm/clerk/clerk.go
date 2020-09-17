@@ -70,6 +70,7 @@ type DBClient struct {
 	*sql.DB
 }
 
+// consumer facing request display
 func (r Request) String() string {
 	return fmt.Sprintf("Request Info: (RequestTime: %v, NodesCount: %v, NodeType: %s, ProwJobID: %s, Zone: %s)",
 		r.requestTime, r.Nodes, r.NodeType, r.ProwJobID, r.Zone)
@@ -123,6 +124,7 @@ func (db *DBClient) CheckAvail(cp *ClusterParams) (bool, int64) {
 	return true, c.ID
 }
 
+// check number of available clusters of a certain config
 func (db *DBClient) CheckNumStatus(cp *ClusterParams, status string) int64 {
 	var count int64
 	// getting query string ready
@@ -163,7 +165,7 @@ func updateQueryString(dbName string, id int64, opts ...UpdateOption) string {
 
 // Update a cluster entry on different fields
 func (db *DBClient) UpdateCluster(clusterID int64, opts ...UpdateOption) error {
-	queryString := updateQueryString("Clusters", clusterID, opts...)
+	queryString := updateQueryString(ClusterDB, clusterID, opts...)
 	_, err := db.Exec(queryString)
 	return err
 }
@@ -173,7 +175,7 @@ func (db *DBClient) ListClusters() ([]Cluster, error) {
 	var result []Cluster
 	rows, err := db.Query(`
 	SELECT ID, Nodes, NodeType, ProjectID, Status, Zone
-	FROM Cluster`)
+	FROM Clusters`)
 	if err != nil {
 		return result, err
 	}
@@ -195,7 +197,7 @@ func (db *DBClient) DeleteCluster(clusterID int64) error {
 	if err != nil {
 		return err
 	}
-	delString := "DELETE FROM Cluster WHERE ID = ?"
+	delString := "DELETE FROM Clusters WHERE ID = ?"
 	stmt, err := db.Prepare(delString)
 	if err == nil {
 		// check exactly one row is deleted
@@ -227,10 +229,10 @@ func (db *DBClient) GetCluster(clusterID int64) (*Response, error) {
 func checkAffected(stmt *sql.Stmt, numRows int64, args ...interface{}) error {
 	res, err := stmt.Exec(args...)
 	if err != nil {
-		return fmt.Errorf("statement not executable: %v ", err)
+		return fmt.Errorf("statement not executable: %w ", err)
 	}
 	if rowsAffected, err := res.RowsAffected(); err != nil {
-		return fmt.Errorf("fail to get rows affected: %v ", err)
+		return fmt.Errorf("fail to get rows affected: %w ", err)
 	} else if rowsAffected != numRows {
 		return fmt.Errorf("expected %d row affected, got %d", numRows, rowsAffected)
 	}
@@ -257,7 +259,7 @@ func (db *DBClient) InsertRequest(r *Request) (string, error) {
 
 // Update a request entry
 func (db *DBClient) UpdateRequest(requestID int64, opts ...UpdateOption) error {
-	queryString := updateQueryString("Requests", requestID, opts...)
+	queryString := updateQueryString(RequestDB, requestID, opts...)
 	_, err := db.Exec(queryString)
 	return err
 }

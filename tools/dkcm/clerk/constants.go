@@ -14,29 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package mainservice
+package clerk
 
 const (
-	// default parameters for mainservice server
-	DefaultClusterName   = "e2e-cls"
-	DefaultNetworkName   = "e2e-network"
-	DefaultZone          = "us-west1"
-	DefaultNodeType      = "e2-standard-4"
-	DefaultOverProvision = 5
-	DefaultNodesCount    = 4
-	DefaultTimeOut       = 60
-	DefaultPort          = "8080"
-
-	// four statuses of cluster
-	Ready = "Ready"
-	WIP   = "WIP"
-	InUse = "In Use"
-	Fail  = "Failed"
-
-	// Field for use when query Cluster db
-	Status    = "Status"
-	ClusterID = "ClusterID"
-
-	// time interval to examine timeout requests
-	CheckInterval = 2
+	RequestDB = "Requests"
+	ClusterDB = "Clusters"
 )

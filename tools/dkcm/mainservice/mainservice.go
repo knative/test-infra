@@ -23,6 +23,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"sync"
 	"time"
 
 	"knative.dev/test-infra/pkg/clustermanager/e2e-tests/boskos"
@@ -32,13 +33,15 @@ import (
 )
 
 var (
+	// channel serves as a lock for go routine
+	chanLock             = make(chan struct{})
 	boskosClient         *boskos.Client
 	dbClient             *clerk.DBClient
 	serviceAccount       string
 	DefaultClusterParams = clerk.ClusterParams{Zone: DefaultZone, Nodes: DefaultNodesCount, NodeType: DefaultNodeType}
 )
 
-// Reponse to Prow
+// Response to Prow
 type ServiceResponse struct {
 	IsReady     bool            `json:"isReady"`
 	Message     string          `json:"message"`
@@ -49,26 +52,25 @@ func Start(dbConfig *mysql.DBConfig, boskosClientHost, gcpServiceAccount string)
 	var err error
 	boskosClient, err = boskos.NewClient(boskosClientHost, "", "")
 	if err != nil {
-		return fmt.Errorf("failed to create Boskos client: %v", err)
+		return fmt.Errorf("failed to create Boskos client: %w", err)
 	}
 	dbClient, err = clerk.NewDB(dbConfig)
 	if err != nil {
-		return fmt.Errorf("failed to create Clerk client: %v", err)
+		return fmt.Errorf("failed to create Clerk client: %w", err)
 	}
 	serviceAccount = gcpServiceAccount
-
 	server := http.NewServeMux()
 	server.HandleFunc("/request-cluster", handleNewClusterRequest)
 	server.HandleFunc("/get-cluster", handleGetCluster)
 	server.HandleFunc("/clean-cluster", handleCleanCluster)
 	// use PORT environment variable, or default to 8080
-	port := "8080"
+	port := DefaultPort
 	if fromEnv := os.Getenv("PORT"); fromEnv != "" {
 		port = fromEnv
 	}
 	// start the web server on port and accept requests
-	log.Printf("Server listening on port %s", port)
-	return http.ListenAndServe(":"+port, server)
+	log.Printf("Server listening on port %q", port)
+	return http.ListenAndServe(fmt.Sprintf(":%v", port), server)
 }
 
 // handle cleaning cluster request after usage
@@ -85,6 +87,11 @@ func handleCleanCluster(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, fmt.Sprintf("there is an error getting the cluster with the token: %v, please try again", err), http.StatusForbidden)
 		return
 	}
+	err = dbClient.DeleteCluster(r.ClusterID)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("there is an error deleting the cluster with the token: %v, please try again", err), http.StatusForbidden)
+		return
+	}
 	err = boskosClient.ReleaseGKEProject(c.ProjectID)
 	if err != nil {
 		http.Error(w, "there is an error releasing Boskos's project. Please try again.", http.StatusInternalServerError)
@@ -92,22 +99,25 @@ func handleCleanCluster(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-// check the pool capacity
+// check the pool capacity and create clusters if necessary
 func checkPoolCap(cp *clerk.ClusterParams) {
-	numAvail := dbClient.CheckNumStatus(cp, "Ready")
-	numWIP := dbClient.CheckNumStatus(cp, "WIP")
+	chanLock <- struct{}{}
+	numAvail := dbClient.CheckNumStatus(cp, Ready)
+	numWIP := dbClient.CheckNumStatus(cp, WIP)
 	diff := DefaultOverProvision - numAvail - numWIP
-	if diff > 0 {
-		// create cluster if not meeting overprovisioning criteria
-		for i := int64(0); i < diff; i++ {
-			log.Printf("Creating a new cluster: %v", cp)
-			go CreateCluster(cp)
-		}
+	var wg sync.WaitGroup
+	// create cluster if not meeting overprovisioning criteria
+	for i := int64(0); i < diff; i++ {
+		wg.Add(1)
+		log.Printf("Creating a new cluster: %v", cp)
+		go CreateCluster(cp, &wg)
 	}
+	wg.Wait()
+	<-chanLock
 }
 
 // assign clusters if available upon request
-func CreateCluster(cp *clerk.ClusterParams) {
+func CreateCluster(cp *clerk.ClusterParams, wg *sync.WaitGroup) {
 	project, err := boskosClient.AcquireGKEProject(boskos.GKEProjectResource)
 	if err != nil {
 		log.Printf("Failed to acquire a project from boskos: %v", err)
@@ -117,6 +127,7 @@ func CreateCluster(cp *clerk.ClusterParams) {
 	c := clerk.NewCluster(clerk.AddProjectID(projectName))
 	c.ClusterParams = cp
 	clusterID, err := dbClient.InsertCluster(c)
+	wg.Done()
 	if err != nil {
 		log.Printf("Failed to insert a new Cluster entry: %v", err)
 		return
@@ -134,11 +145,20 @@ func CreateCluster(cp *clerk.ClusterParams) {
 		Version:           "latest",
 		Scopes:            "cloud-platform",
 	}); err != nil {
-		log.Printf("Failed to create a cluster: %v", err)
+		if err := dbClient.UpdateCluster(clusterID, clerk.UpdateStringField(Status, Fail)); err != nil {
+			log.Printf("Failed to insert delete new Cluster entry: %v", err)
+			return
+		}
+		err = boskosClient.ReleaseGKEProject(c.ProjectID)
+		if err != nil {
+			log.Printf("Failed to release Boskos Project: %v", err)
+			return
+		}
 		return
 	}
-	if err := dbClient.UpdateCluster(clusterID, clerk.UpdateStringField("Status", "Ready")); err != nil {
+	if err := dbClient.UpdateCluster(clusterID, clerk.UpdateStringField(Status, Ready)); err != nil {
 		log.Printf("Failed to insert a new Cluster entry: %v", err)
+		return
 	}
 }
 
@@ -151,7 +171,7 @@ func AssignCluster(token string, w http.ResponseWriter) {
 	}
 	// check if the Prow job has enough priority to get an existing cluster
 	ranking := dbClient.PriorityRanking(r)
-	numAvail := dbClient.CheckNumStatus(r.ClusterParams, "Ready")
+	numAvail := dbClient.CheckNumStatus(r.ClusterParams, Ready)
 	available, clusterID := dbClient.CheckAvail(r.ClusterParams)
 	var serviceResponse *ServiceResponse
 	if available && ranking <= numAvail {
@@ -160,9 +180,8 @@ func AssignCluster(token string, w http.ResponseWriter) {
 			http.Error(w, fmt.Sprintf("there is an error getting available clusters: %v, please try again", err), http.StatusInternalServerError)
 			return
 		}
-		dbClient.UpdateRequest(r.ID, clerk.UpdateNumField("ClusterID", clusterID))
-		dbClient.UpdateCluster(clusterID, clerk.UpdateStringField("Status", "In Use"))
-		go checkPoolCap(&DefaultClusterParams)
+		dbClient.UpdateRequest(r.ID, clerk.UpdateNumField(ClusterID, clusterID))
+		dbClient.UpdateCluster(clusterID, clerk.UpdateStringField(Status, InUse))
 		serviceResponse = &ServiceResponse{IsReady: true, Message: "Your cluster is ready!", ClusterInfo: response}
 	} else {
 		serviceResponse = &ServiceResponse{IsReady: false, Message: "Your cluster isn't ready yet! Please check back later."}
@@ -212,6 +231,6 @@ func handleGetCluster(w http.ResponseWriter, req *http.Request) {
 func runTimeOut() {
 	for {
 		dbClient.ClearTimeOut(DefaultTimeOut)
-		time.Sleep(2 * time.Second)
+		time.Sleep(CheckInterval * time.Second)
 	}
 }
