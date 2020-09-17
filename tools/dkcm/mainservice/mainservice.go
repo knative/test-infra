@@ -101,7 +101,7 @@ func checkPoolCap(cp *clerk.ClusterParams) {
 		// create cluster if not meeting overprovisioning criteria
 		for i := int64(0); i < diff; i++ {
 			log.Printf("Creating a new cluster: %v", cp)
-			CreateCluster(cp)
+			go CreateCluster(cp)
 		}
 	}
 }
