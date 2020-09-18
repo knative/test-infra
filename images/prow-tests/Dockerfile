@@ -25,7 +25,7 @@ RUN gcloud components install docker-credential-gcr
 RUN docker-credential-gcr configure-docker
 
 # Replace kubectl with a working version
-# TODO(chizhg): remove once https://github.com/knative/test-infra/issues/1858 is fixed in releases <= 0.15 or those releases are no longer supported
+# TODO(chizhg): https://github.com/knative/test-infra/issues/1858 was fixed in release-0.16, remove the pin after Knative release-0.19 is cut.
 ARG KUBECTL_VERSION=v1.17.4
 RUN rm -f "$(which kubectl)" && \
     wget "https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -O /usr/local/bin/kubectl && \
@@ -64,7 +64,7 @@ RUN source-gvm-and-run.sh install master --source=https://github.com/golang/go -
 RUN GO111MODULE=on go get github.com/google/ko/cmd/ko@v0.5.1
 RUN GO111MODULE=on go get github.com/boz/kail/cmd/kail
 RUN go get -u github.com/golang/dep/cmd/dep
-# TODO(chizhg): remove once all repos have been updated to use gotestsum.
+# TODO(chizhg): we started using gotestsum from release-0.17, remove go-junit-report after Knative release-0.20 is cut.
 RUN go get -u github.com/jstemmer/go-junit-report
 RUN GO111MODULE=on go get -u gotest.tools/gotestsum
 RUN GO111MODULE=on go get -u github.com/raviqqe/liche@v0.0.0-20200229003944-f57a5d1c5be4  # stable liche version for checking md links
@@ -94,7 +94,7 @@ COPY images/prow-tests/runner.sh /usr/local/bin
 
 # TODO(chizhg): remove it once we replace with kntest in the places where this tool is used
 # Install our own tools
-RUN go get knative.dev/pkg/testutils/junithelper
+RUN GO111MODULE=on go get knative.dev/pkg/testutils/junithelper@release-0.17
 
 # And our scripts
 ENV SCRIPTS /scripts
@@ -105,8 +105,8 @@ COPY images/prow-tests/in-gvm-env.sh /usr/local/bin
 COPY . /go/src/knative.dev/test-infra
 
 # Build custom tools in the container
-# TODO: githubhelper is obsolete and no longer used in current test-infra (only old release branch scripts)
-#       it should be deleted from the repo when those releases are no longer supported
+# TODO: githubhelper is obsolete and no longer used in current test-infra (only old release branch scripts),
+#       it should be removed after Knative release-0.18 is cut.
 RUN go install /go/src/knative.dev/test-infra/tools/githubhelper
 # Because githubhelper was previously installed in a stupid way, it was used as `/workspace/githubhelper` so copy it
 RUN cp "$(which githubhelper)" .
