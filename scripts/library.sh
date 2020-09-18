@@ -129,13 +129,18 @@ function wait_until_object_does_not_exist() {
 function wait_until_pods_running() {
   echo "Waiting until all pods in namespace $1 are up"
   kubectl wait pod --for=condition=Ready -n "$1" -l '!job-name' --timeout=5m || return 1
+  # Also wait for all the job pods to be completed.
+  # This is mainly for maintaining backward compatibility.
+  if [[ $(kubectl get jobs --ignore-not-found=true -n "$1") ]]; then
+    kubectl wait job --for=condition=Complete --all -n "$1" --timeout=5m || return 1
+  fi
 }
 
 # Waits until all batch jobs complete in the given namespace.
 # Parameters: $1 - namespace.
 function wait_until_batch_job_complete() {
   echo "Waiting until all batch jobs in namespace $1 run to completion."
-  kubectl wait job --for=condition=Complete --all -n "$1" || return 1
+  kubectl wait job --for=condition=Complete --all -n "$1" --timeout=5m || return 1
 }
 
 # Waits until the given service has an external address (IP/hostname).
