@@ -57,6 +57,9 @@ readonly RESOURCES=(
     "prow-job@knative-nightly.iam.gserviceaccount.com"
     "prow-job@knative-releases.iam.gserviceaccount.com"
 
+    "roles/cloudtrace.agent"
+    "cloud-run-events-source@prow-build-crgke.iam.gserviceaccount.com"
+
     "roles/container.admin"
     "prow-job@knative-tests.iam.gserviceaccount.com"
     "prow-job@knative-nightly.iam.gserviceaccount.com"
@@ -67,10 +70,16 @@ readonly RESOURCES=(
     "prow-job@knative-nightly.iam.gserviceaccount.com"
     "prow-job@knative-releases.iam.gserviceaccount.com"
 
+    "roles/monitoring.editor"
+    "cloud-run-events-source@prow-build-crgke.iam.gserviceaccount.com"
+
     "roles/pubsub.admin"
     "prow-job@knative-tests.iam.gserviceaccount.com"
     "prow-job@knative-nightly.iam.gserviceaccount.com"
     "prow-job@knative-releases.iam.gserviceaccount.com"
+
+    "roles/pubsub.editor"
+    "cloud-run-events-source@prow-build-crgke.iam.gserviceaccount.com"
 
     "roles/storage.admin"
     "prow-job@knative-tests.iam.gserviceaccount.com"
