@@ -1,4 +1,4 @@
-# Copyright 2019 The Knative Authors
+# Copyright 2020 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,10 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-IMAGE_NAME = prow-tests
-include ../simple-image.mk
-
-cloud_build:
-	gcloud builds submit --config=./cloudbuild.yaml --substitutions=_TAG=$(TAG),_IMG=$(IMG) \
-		--machine-type=n1-highcpu-32 \
-		--project=$(PROJECT) --timeout=1h ./../..
+steps:
+- name: gcr.io/cloud-builders/docker
+  args: ['build', '--no-cache', '--pull', '-t',
+         '${_IMG}:${_TAG}',
+         '-f', 'images/prow-tests/Dockerfile', '.']
+- name: gcr.io/cloud-builders/docker
+  args: [ 'tag',
+          '${_IMG}:${_TAG}',
+          '${_IMG}:beta']
+- name: gcr.io/cloud-builders/docker
+  args: [ 'tag',
+          '${_IMG}:${_TAG}',
+          '${_IMG}:latest']
+images:
+- '${_IMG}:${_TAG}'
+- '${_IMG}:beta'
+- '${_IMG}:latest'

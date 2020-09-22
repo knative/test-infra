@@ -427,6 +427,37 @@ postsubmits:
       - name: test-account
         secret:
           secretName: test-account
+  - name: post-knative-test-infra-prow-tests-image-push
+    agent: kubernetes
+    decorate: true
+    path_alias: knative.dev/test-infra
+    max_concurrency: 1
+    cluster: "build-knative"
+    run_if_changed: "^(images/prow-tests/.*|kntest/.*|pkg/.*|go.mod)$"
+    branches:
+    - "master"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "make"
+        - "-C"
+        - "images/prow-tests"
+        - "cloud_build"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
   - name: post-knative-test-infra-deploy-tools
     agent: kubernetes
     decorate: true

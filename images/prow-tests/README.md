@@ -14,7 +14,7 @@ See parent README.md
 
 ## Testing and Deploying Images
 
-When `make push` is run for `prow-tests`, it publishes your image with the
+When `make cloud_build` is run for `prow-tests`, it publishes your image with the
 `:beta` label. At night Pacific time, a set of duplicate jobs are run using this
 new image and viewable at https://testgrid.knative.dev/beta-prow-tests
 
@@ -29,7 +29,7 @@ something complicated, do some rudimentary exploration in the image by running
 
 With an image you feel comfortable with deploying, create a PR to
 knative/test-infra and get approval. Once merged, pull upstream into your master
-branch and run `make push`. This will upload your image to the registry at
+branch and run `make cloud_build`. This will upload your image to the registry at
 http://gcr.io/knative-tests/test-infra/prow-tests with a date-commit_hash,
 `latest`, and `beta` tags. Let the image run at least a single overnight and
 ensure the jobs in the https://testgrid.knative.dev/beta-prow-tests testgrid are
