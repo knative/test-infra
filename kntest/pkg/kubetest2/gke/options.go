@@ -28,6 +28,7 @@ func addOptions(gkeCmd *cobra.Command, cfg *kubetest2.GKEClusterConfig) {
 	f.StringVar(&cfg.Environment, "environment", "prod", "The GKE environment, must be one of prod, staging, staging2 and test.")
 	f.StringVar(&cfg.CommandGroup, "command-group", "beta", "The gcloud command group, must be alpha, beta or empty.")
 	f.StringVar(&cfg.GCPProjectID, "gcp-project-id", "", "GCP project ID for creating the cluster")
+
 	f.StringVar(&cfg.Name, "name", "e2e-cls", "The GKE cluster name.")
 	f.StringVar(&cfg.Region, "region", "us-central1", "The region to create the GKE cluster.")
 	f.StringSliceVar(&cfg.BackupRegions, "backup-regions", []string{"us-west1", "us-east1"}, "The backup regions if the cluster creation runs into stockout issue in the primary region.")
@@ -41,8 +42,9 @@ func addOptions(gkeCmd *cobra.Command, cfg *kubetest2.GKEClusterConfig) {
 	f.StringVar(&cfg.Scopes, "scopes", "cloud-platform", "Scopes for the GKE cluster, should be comma-separated.")
 	f.StringVar(&cfg.Addons, "addons", "", "Addons for the GKE cluster, should be comma-separated.")
 	f.BoolVar(&cfg.EnableWorkloadIdentity, "enable-workload-identity", false, "Whether to enable workload identity for this cluster or not.")
-	f.BoolVar(&cfg.EnableStackdriverKubernetes, "enable-stackdriver-kubernetes", false, "Whether to enable Stackdriver Kubernetes monitoring and logging or not.")
 	f.StringVar(&cfg.PrivateClusterAccessLevel, "private-cluster-access-level", "", "Private cluster access level, if not empty, must be one of 'no', 'limited' or 'unrestricted'")
 	f.StringVar(&cfg.PrivateClusterMasterIPSubnetRange, "private-cluster-master-ip-subnet-range", "172.16.0", "The master IP subnet range for the private cluster. The last digit must be left empty to allow retrying cluster creation in the backup regions.")
 	f.StringVar(&cfg.PrivateClusterMasterIPSubnetMask, "private-cluster-master-ip-subnet-mask", "28", "The master IP subnet mask for the private cluster.")
+
+	f.StringVar(&cfg.ExtraGcloudFlags, "extra-gcloud-flags", "", "The extra gcloud flags that will be used for cluster creation.")
 }

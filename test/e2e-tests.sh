@@ -31,8 +31,8 @@ function knative_setup() {
 
 # Script entry point.
 initialize "$@" --max-nodes=1 --machine=e2-standard-2 \
-  --enable-workload-identity --enable-stackdriver-kubernetes \
-  --cluster-version=latest
+  --enable-workload-identity --cluster-version=latest \
+  --extra-gcloud-flags "--enable-stackdriver-kubernetes --no-enable-ip-alias --no-enable-autoupgrade"
 
 go_test_e2e ./test/e2e || fail_test
 
