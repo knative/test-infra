@@ -10,31 +10,12 @@ presubmits:
         memory: 16Gi
   - unit-tests: true
     needs-monitor: true
-  - integration-tests: true
-    needs-monitor: true
-    args:
-    - --run-test
-    - ./test/e2e-tests.sh
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
+  - integration-tests: false # We explicitly enable istio-stable-no-mesh below
   - custom-test: upgrade-tests
     needs-monitor: true
     args:
     - --run-test
     - ./test/e2e-upgrade-tests.sh
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - custom-test: autotls-tests
-    needs-monitor: true
-    args:
-    - --run-test
-    - ./test/e2e-auto-tls-tests.sh
     resources:
       requests:
         memory: 12Gi
@@ -118,8 +99,8 @@ presubmits:
         memory: 16Gi
   - custom-test: istio-stable-no-mesh
     needs-monitor: true
-    always-run: false
-    optional: true
+    always-run: true
+    optional: false
     args:
     - --run-test
     - ./test/e2e-tests.sh --istio-version stable --no-mesh
@@ -130,7 +111,8 @@ presubmits:
         memory: 16Gi
   - custom-test: istio-stable-no-mesh-tls
     needs-monitor: true
-    always-run: false
+    always-run: true
+    optional: false
     optional: true
     args:
     - --run-test
