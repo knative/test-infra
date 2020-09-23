@@ -43,11 +43,22 @@ presubmits:
   - go-coverage: true
     go-coverage-threshold: 80
   - custom-test: istio-latest-mesh
+    needs-monitor: true
     always-run: false
     optional: true
     args:
     - --run-test
     - ./test/e2e-tests.sh --istio-version latest --mesh
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - custom-test: istio-latest-mesh-tls
+    needs-monitor: true
+    always-run: false
+    optional: true
+    args:
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --istio-version latest --mesh
     resources:
@@ -56,11 +67,22 @@ presubmits:
       limits:
         memory: 16Gi
   - custom-test: istio-latest-no-mesh
+    needs-monitor: true
     always-run: false
     optional: true
     args:
     - --run-test
     - ./test/e2e-tests.sh --istio-version latest --no-mesh
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - custom-test: istio-latest-no-mesh-tls
+    needs-monitor: true
+    always-run: false
+    optional: true
+    args:
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --istio-version latest --no-mesh
     resources:
@@ -69,12 +91,24 @@ presubmits:
       limits:
         memory: 16Gi
   - custom-test: istio-stable-mesh
+    needs-monitor: true
     always-run: false
     optional: true
     run-if-changed: ^third_party/net-istio.yaml
     args:
     - --run-test
     - ./test/e2e-tests.sh --istio-version stable --mesh
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - custom-test: istio-stable-mesh-tls
+    needs-monitor: true
+    always-run: false
+    optional: true
+    run-if-changed: ^third_party/net-istio.yaml
+    args:
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --istio-version stable --mesh
     resources:
@@ -83,11 +117,22 @@ presubmits:
       limits:
         memory: 16Gi
   - custom-test: istio-stable-no-mesh
+    needs-monitor: true
     always-run: false
     optional: true
     args:
     - --run-test
     - ./test/e2e-tests.sh --istio-version stable --no-mesh
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - custom-test: istio-stable-no-mesh-tls
+    needs-monitor: true
+    always-run: false
+    optional: true
+    args:
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --istio-version stable --no-mesh
     resources:
@@ -96,11 +141,24 @@ presubmits:
       limits:
         memory: 16Gi
   - custom-test: gloo-0.17.1
+    needs-monitor: true
     always-run: false
+    run-if-changed: ^third_party/gloo-latest/*
     optional: true
     args:
     - --run-test
     - ./test/e2e-tests.sh --gloo-version 0.17.1
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - custom-test: gloo-0.17.1-tls
+    needs-monitor: true
+    always-run: false
+    run-if-changed: ^third_party/gloo-latest/*
+    optional: true
+    args:
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --gloo-version 0.17.1
     resources:
@@ -109,11 +167,24 @@ presubmits:
       limits:
         memory: 16Gi
   - custom-test: kourier-stable
+    needs-monitor: true
     always-run: false
+    run-if-changed: ^third_party/kourier-latest/*
     optional: true
     args:
     - --run-test
     - ./test/e2e-tests.sh --kourier-version stable
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - custom-test: kourier-stable-tls
+    needs-monitor: true
+    always-run: false
+    run-if-changed: ^third_party/kourier-latest/*
+    optional: true
+    args:
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --kourier-version stable
     resources:
@@ -122,6 +193,7 @@ presubmits:
       limits:
         memory: 16Gi
   - custom-test: contour-latest
+    needs-monitor: true
     always-run: false
     run-if-changed: ^third_party/contour-latest/*
     args:
@@ -133,6 +205,7 @@ presubmits:
       limits:
         memory: 16Gi
   - custom-test: contour-tls
+    needs-monitor: true
     always-run: false
     run-if-changed: ^third_party/contour-latest/*
     args:
@@ -144,11 +217,24 @@ presubmits:
       limits:
         memory: 16Gi
   - custom-test: ambassador-latest
+    needs-monitor: true
     always-run: false
+    run-if-changed: ^third_party/ambassador-latest/*
     optional: true
     args:
     - --run-test
     - ./test/e2e-tests.sh --ambassador-version latest
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - custom-test: ambassador-latest-tls
+    needs-monitor: true
+    always-run: false
+    run-if-changed: ^third_party/ambassador-latest/*
+    optional: true
+    args:
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --ambassador-version latest
     resources:
@@ -157,11 +243,24 @@ presubmits:
       limits:
         memory: 16Gi
   - custom-test: kong-latest
+    needs-monitor: true
     always-run: false
+    run-if-changed: ^third_party/kong-latest/*
     optional: true
     args:
     - --run-test
     - ./test/e2e-tests.sh --kong-version latest
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - custom-test: kong-latest-tls
+    needs-monitor: true
+    always-run: false
+    run-if-changed: ^third_party/kong-latest/*
+    optional: true
+    args:
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --kong-version latest
     resources:
