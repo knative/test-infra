@@ -50,9 +50,14 @@ var (
 
 // GKEClusterConfig are the supported configurations for creating a GKE cluster.
 type GKEClusterConfig struct {
-	GCPServiceAccount                 string
-	GCPProjectID                      string
-	BoskosAcquireTimeoutSeconds       int
+	GCPServiceAccount string
+	GCPProjectID      string
+
+	BoskosAcquireTimeoutSeconds int
+
+	Environment  string
+	CommandGroup string
+
 	Name                              string
 	Region                            string
 	BackupRegions                     []string
@@ -65,12 +70,11 @@ type GKEClusterConfig struct {
 	Scopes                            string
 	Addons                            string
 	EnableWorkloadIdentity            bool
-	EnableStackdriverKubernetes       bool
-	Environment                       string
-	CommandGroup                      string
 	PrivateClusterAccessLevel         string
 	PrivateClusterMasterIPSubnetRange string
 	PrivateClusterMasterIPSubnetMask  string
+
+	ExtraGcloudFlags string
 }
 
 // Run will run the `kubetest2 gke` command with the provided parameters,
@@ -87,8 +91,8 @@ func Run(opts *Options, cc *GKEClusterConfig) error {
 	if cc.Addons != "" {
 		createCommand += " --addons=" + cc.Addons
 	}
-	if cc.EnableStackdriverKubernetes {
-		createCommand += " --enable-stackdriver-kubernetes"
+	if cc.ExtraGcloudFlags != "" {
+		createCommand += " " + cc.ExtraGcloudFlags
 	}
 	kubetest2Flags := append(baseKubetest2Flags, "--create-command="+createCommand)
 
