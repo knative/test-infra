@@ -14,9 +14,9 @@ See parent README.md
 
 ## Testing and Deploying Images
 
-When `make cloud_build` is run for `prow-tests`, it publishes your image with the
-`:beta` label. At night Pacific time, a set of duplicate jobs are run using this
-new image and viewable at https://testgrid.knative.dev/beta-prow-tests
+When `make cloud_build` is run for `prow-tests`, it publishes your image with
+the `:beta` label. At night Pacific time, a set of duplicate jobs are run using
+this new image and viewable at https://testgrid.knative.dev/beta-prow-tests
 
 A normal release process would involve first editing Dockerfile and/or programs
 it installs from test-infra, then running `make iterative-build` to build a
