@@ -541,7 +541,7 @@ func TestParseSection(t *testing.T) {
 	title := "pet-store"
 	dogs := []interface{}{
 		yaml.MapSlice{
-			yaml.MapItem{Key: "Spot", Value: "Dalmation"},
+			yaml.MapItem{Key: "Spot", Value: "Dalmatian"},
 			yaml.MapItem{Key: "Fido", Value: "Terrier"},
 		},
 		yaml.MapSlice{
@@ -564,7 +564,7 @@ func TestParseSection(t *testing.T) {
 	parseSection(config, title, generate, finalize)
 
 	expected := []string{
-		"pet-store, dogs, Spot, Dalmation",
+		"pet-store, dogs, Spot, Dalmatian",
 		"pet-store, dogs, Fido, Terrier",
 		"pet-store, dogs, Remy, Retriever",
 		"pet-store, cats, Whiskers, Calico",
@@ -726,7 +726,7 @@ func TestStringArrayFlagSet(t *testing.T) {
 func TestParseJob(t *testing.T) {
 	SetupForTesting()
 	dogs := yaml.MapSlice{
-		yaml.MapItem{Key: "Spot", Value: "Dalmation"},
+		yaml.MapItem{Key: "Spot", Value: "Dalmatian"},
 		yaml.MapItem{Key: "Fido", Value: "Terrier"},
 	}
 	cats := yaml.MapSlice{
@@ -739,7 +739,7 @@ func TestParseJob(t *testing.T) {
 	}
 
 	out := parseJob(pets, "dogs")
-	expected := "[{Spot Dalmation} {Fido Terrier}]"
+	expected := "[{Spot Dalmatian} {Fido Terrier}]"
 	if diff := cmp.Diff(fmt.Sprintf("%v", out), expected); diff != "" {
 		t.Errorf("ParseJob did not return expected slice. (-got +want)\n%s", diff)
 	}
@@ -754,7 +754,7 @@ func TestParseGoCoverageMap(t *testing.T) {
 	SetupForTesting()
 	dogs := []interface{}{
 		yaml.MapSlice{
-			yaml.MapItem{Key: "Spot", Value: "Dalmation"},
+			yaml.MapItem{Key: "Spot", Value: "Dalmatian"},
 			yaml.MapItem{Key: "Fido", Value: "Terrier"},
 		},
 		yaml.MapSlice{
