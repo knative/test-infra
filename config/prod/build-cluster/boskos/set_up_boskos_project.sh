@@ -49,17 +49,18 @@ readonly RESOURCES=(
     "prow-job@knative-nightly.iam.gserviceaccount.com"
     "prow-job@knative-releases.iam.gserviceaccount.com"
 
+    "roles/viewer"
+    "knative-dev@googlegroups.com"
+
+    "roles/cloudscheduler.admin"
+    "prow-job@knative-tests.iam.gserviceaccount.com"
+    "prow-job@knative-nightly.iam.gserviceaccount.com"
+    "prow-job@knative-releases.iam.gserviceaccount.com"
+
+    "roles/cloudtrace.agent"
+    "cloud-run-events-source@prow-build-crgke.iam.gserviceaccount.com"
+
     "roles/container.admin"
-    "prow-job@knative-tests.iam.gserviceaccount.com"
-    "prow-job@knative-nightly.iam.gserviceaccount.com"
-    "prow-job@knative-releases.iam.gserviceaccount.com"
-
-    "roles/storage.admin"
-    "prow-job@knative-tests.iam.gserviceaccount.com"
-    "prow-job@knative-nightly.iam.gserviceaccount.com"
-    "prow-job@knative-releases.iam.gserviceaccount.com"
-
-    "roles/pubsub.admin"
     "prow-job@knative-tests.iam.gserviceaccount.com"
     "prow-job@knative-nightly.iam.gserviceaccount.com"
     "prow-job@knative-releases.iam.gserviceaccount.com"
@@ -69,13 +70,21 @@ readonly RESOURCES=(
     "prow-job@knative-nightly.iam.gserviceaccount.com"
     "prow-job@knative-releases.iam.gserviceaccount.com"
 
-    "roles/cloudscheduler.admin"
+    "roles/monitoring.editor"
+    "cloud-run-events-source@prow-build-crgke.iam.gserviceaccount.com"
+
+    "roles/pubsub.admin"
     "prow-job@knative-tests.iam.gserviceaccount.com"
     "prow-job@knative-nightly.iam.gserviceaccount.com"
     "prow-job@knative-releases.iam.gserviceaccount.com"
 
-    "roles/viewer"
-    "knative-dev@googlegroups.com"
+    "roles/pubsub.editor"
+    "cloud-run-events-source@prow-build-crgke.iam.gserviceaccount.com"
+
+    "roles/storage.admin"
+    "prow-job@knative-tests.iam.gserviceaccount.com"
+    "prow-job@knative-nightly.iam.gserviceaccount.com"
+    "prow-job@knative-releases.iam.gserviceaccount.com"
 
     # APIs to enable
     "cloudresourcemanager.googleapis.com"
