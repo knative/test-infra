@@ -12778,6 +12778,12 @@ periodics:
   name: ci-knative-sandbox-discovery-nightly-release
   agent: kubernetes
   decorate: true
+  reporter_config:
+    slack:
+      channel: eventing-sources
+      report_template: "The nightly release job for discovery failed, check the log: <{{.Status.URL}}|View logs>"
+      job_states_to_report:
+      - "failure"
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
