@@ -764,6 +764,10 @@ periodics:
   - continuous: true
   - nightly: true
   - auto-release: true
+  knative-sandbox/eventing-camel:
+  - continuous: true
+  - nightly: true
+  - auto-release: true
   knative-sandbox/eventing-ceph:
   - continuous: true
   - nightly: true
