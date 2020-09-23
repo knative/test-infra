@@ -293,6 +293,10 @@ presubmits:
           secretName: covbot-token
   - name: pull-knative-serving-istio-latest-mesh
     agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-knative-serving-istio-latest-mesh
     context: pull-knative-serving-istio-latest-mesh
     always_run: false
     rerun_command: "/test pull-knative-serving-istio-latest-mesh"
@@ -311,6 +315,46 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-tests.sh --istio-version latest --mesh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-istio-latest-mesh-tls
+    agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-knative-serving-istio-latest-mesh-tls
+    context: pull-knative-serving-istio-latest-mesh-tls
+    always_run: false
+    rerun_command: "/test pull-knative-serving-istio-latest-mesh-tls"
+    trigger: "(?m)^/test (all|pull-knative-serving-istio-latest-mesh-tls),?(\\s+|$)"
+    decorate: true
+    optional: true
+    path_alias: knative.dev/serving
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-auto-tls-tests.sh --istio-version latest --mesh"
         volumeMounts:
@@ -333,6 +377,10 @@ presubmits:
           secretName: test-account
   - name: pull-knative-serving-istio-latest-no-mesh
     agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-knative-serving-istio-latest-no-mesh
     context: pull-knative-serving-istio-latest-no-mesh
     always_run: false
     rerun_command: "/test pull-knative-serving-istio-latest-no-mesh"
@@ -351,6 +399,46 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-tests.sh --istio-version latest --no-mesh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-istio-latest-no-mesh-tls
+    agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-knative-serving-istio-latest-no-mesh-tls
+    context: pull-knative-serving-istio-latest-no-mesh-tls
+    always_run: false
+    rerun_command: "/test pull-knative-serving-istio-latest-no-mesh-tls"
+    trigger: "(?m)^/test (all|pull-knative-serving-istio-latest-no-mesh-tls),?(\\s+|$)"
+    decorate: true
+    optional: true
+    path_alias: knative.dev/serving
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-auto-tls-tests.sh --istio-version latest --no-mesh"
         volumeMounts:
@@ -373,6 +461,10 @@ presubmits:
           secretName: test-account
   - name: pull-knative-serving-istio-stable-mesh
     agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-knative-serving-istio-stable-mesh
     context: pull-knative-serving-istio-stable-mesh
     always_run: false
     run_if_changed: "^third_party/net-istio.yaml"
@@ -392,6 +484,47 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-tests.sh --istio-version stable --mesh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-istio-stable-mesh-tls
+    agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-knative-serving-istio-stable-mesh-tls
+    context: pull-knative-serving-istio-stable-mesh-tls
+    always_run: false
+    run_if_changed: "^third_party/net-istio.yaml"
+    rerun_command: "/test pull-knative-serving-istio-stable-mesh-tls"
+    trigger: "(?m)^/test (all|pull-knative-serving-istio-stable-mesh-tls),?(\\s+|$)"
+    decorate: true
+    optional: true
+    path_alias: knative.dev/serving
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-auto-tls-tests.sh --istio-version stable --mesh"
         volumeMounts:
@@ -414,6 +547,10 @@ presubmits:
           secretName: test-account
   - name: pull-knative-serving-istio-stable-no-mesh
     agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-knative-serving-istio-stable-no-mesh
     context: pull-knative-serving-istio-stable-no-mesh
     always_run: false
     rerun_command: "/test pull-knative-serving-istio-stable-no-mesh"
@@ -432,6 +569,46 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-tests.sh --istio-version stable --no-mesh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-istio-stable-no-mesh-tls
+    agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-knative-serving-istio-stable-no-mesh-tls
+    context: pull-knative-serving-istio-stable-no-mesh-tls
+    always_run: false
+    rerun_command: "/test pull-knative-serving-istio-stable-no-mesh-tls"
+    trigger: "(?m)^/test (all|pull-knative-serving-istio-stable-no-mesh-tls),?(\\s+|$)"
+    decorate: true
+    optional: true
+    path_alias: knative.dev/serving
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-auto-tls-tests.sh --istio-version stable --no-mesh"
         volumeMounts:
@@ -454,8 +631,13 @@ presubmits:
           secretName: test-account
   - name: pull-knative-serving-gloo-0.17.1
     agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-knative-serving-gloo-0.17.1
     context: pull-knative-serving-gloo-0.17.1
     always_run: false
+    run_if_changed: "^third_party/gloo-latest/*"
     rerun_command: "/test pull-knative-serving-gloo-0.17.1"
     trigger: "(?m)^/test (all|pull-knative-serving-gloo-0.17.1),?(\\s+|$)"
     decorate: true
@@ -472,6 +654,47 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-tests.sh --gloo-version 0.17.1"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-gloo-0.17.1-tls
+    agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-knative-serving-gloo-0.17.1-tls
+    context: pull-knative-serving-gloo-0.17.1-tls
+    always_run: false
+    run_if_changed: "^third_party/gloo-latest/*"
+    rerun_command: "/test pull-knative-serving-gloo-0.17.1-tls"
+    trigger: "(?m)^/test (all|pull-knative-serving-gloo-0.17.1-tls),?(\\s+|$)"
+    decorate: true
+    optional: true
+    path_alias: knative.dev/serving
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-auto-tls-tests.sh --gloo-version 0.17.1"
         volumeMounts:
@@ -494,8 +717,13 @@ presubmits:
           secretName: test-account
   - name: pull-knative-serving-kourier-stable
     agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-knative-serving-kourier-stable
     context: pull-knative-serving-kourier-stable
     always_run: false
+    run_if_changed: "^third_party/kourier-latest/*"
     rerun_command: "/test pull-knative-serving-kourier-stable"
     trigger: "(?m)^/test (all|pull-knative-serving-kourier-stable),?(\\s+|$)"
     decorate: true
@@ -512,6 +740,47 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-tests.sh --kourier-version stable"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-kourier-stable-tls
+    agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-knative-serving-kourier-stable-tls
+    context: pull-knative-serving-kourier-stable-tls
+    always_run: false
+    run_if_changed: "^third_party/kourier-latest/*"
+    rerun_command: "/test pull-knative-serving-kourier-stable-tls"
+    trigger: "(?m)^/test (all|pull-knative-serving-kourier-stable-tls),?(\\s+|$)"
+    decorate: true
+    optional: true
+    path_alias: knative.dev/serving
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-auto-tls-tests.sh --kourier-version stable"
         volumeMounts:
@@ -534,6 +803,10 @@ presubmits:
           secretName: test-account
   - name: pull-knative-serving-contour-latest
     agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-knative-serving-contour-latest
     context: pull-knative-serving-contour-latest
     always_run: false
     run_if_changed: "^third_party/contour-latest/*"
@@ -572,6 +845,10 @@ presubmits:
           secretName: test-account
   - name: pull-knative-serving-contour-tls
     agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-knative-serving-contour-tls
     context: pull-knative-serving-contour-tls
     always_run: false
     run_if_changed: "^third_party/contour-latest/*"
@@ -610,8 +887,13 @@ presubmits:
           secretName: test-account
   - name: pull-knative-serving-ambassador-latest
     agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-knative-serving-ambassador-latest
     context: pull-knative-serving-ambassador-latest
     always_run: false
+    run_if_changed: "^third_party/ambassador-latest/*"
     rerun_command: "/test pull-knative-serving-ambassador-latest"
     trigger: "(?m)^/test (all|pull-knative-serving-ambassador-latest),?(\\s+|$)"
     decorate: true
@@ -628,6 +910,47 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-tests.sh --ambassador-version latest"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-ambassador-latest-tls
+    agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-knative-serving-ambassador-latest-tls
+    context: pull-knative-serving-ambassador-latest-tls
+    always_run: false
+    run_if_changed: "^third_party/ambassador-latest/*"
+    rerun_command: "/test pull-knative-serving-ambassador-latest-tls"
+    trigger: "(?m)^/test (all|pull-knative-serving-ambassador-latest-tls),?(\\s+|$)"
+    decorate: true
+    optional: true
+    path_alias: knative.dev/serving
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-auto-tls-tests.sh --ambassador-version latest"
         volumeMounts:
@@ -650,8 +973,13 @@ presubmits:
           secretName: test-account
   - name: pull-knative-serving-kong-latest
     agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-knative-serving-kong-latest
     context: pull-knative-serving-kong-latest
     always_run: false
+    run_if_changed: "^third_party/kong-latest/*"
     rerun_command: "/test pull-knative-serving-kong-latest"
     trigger: "(?m)^/test (all|pull-knative-serving-kong-latest),?(\\s+|$)"
     decorate: true
@@ -668,6 +996,47 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-tests.sh --kong-version latest"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-kong-latest-tls
+    agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-knative-serving-kong-latest-tls
+    context: pull-knative-serving-kong-latest-tls
+    always_run: false
+    run_if_changed: "^third_party/kong-latest/*"
+    rerun_command: "/test pull-knative-serving-kong-latest-tls"
+    trigger: "(?m)^/test (all|pull-knative-serving-kong-latest-tls),?(\\s+|$)"
+    decorate: true
+    optional: true
+    path_alias: knative.dev/serving
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-auto-tls-tests.sh --kong-version latest"
         volumeMounts:
