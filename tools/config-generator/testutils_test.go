@@ -39,4 +39,5 @@ func SetupForTesting() {
 	ResetOutput() // Redirect output prior to each test.
 	logFatalf = logFatalfMock
 	logFatalCalls = 0
+	sectionMap = make(map[string]bool)
 }
