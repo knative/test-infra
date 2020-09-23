@@ -29,8 +29,8 @@ something complicated, do some rudimentary exploration in the image by running
 
 With an image you feel comfortable with deploying, create a PR to
 knative/test-infra and get approval. Once merged, pull upstream into your master
-branch and run `make cloud_build`. This will upload your image to the registry at
-http://gcr.io/knative-tests/test-infra/prow-tests with a date-commit_hash,
+branch and run `make cloud_build`. This will upload your image to the registry
+at http://gcr.io/knative-tests/test-infra/prow-tests with a date-commit_hash,
 `latest`, and `beta` tags. Let the image run at least a single overnight and
 ensure the jobs in the https://testgrid.knative.dev/beta-prow-tests testgrid are
 as good as the jobs at https://testgrid.knative.dev/knative for master branch
