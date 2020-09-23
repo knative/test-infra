@@ -126,10 +126,6 @@ RUN go install knative.dev/test-infra/kntest/cmd/kntest
 # TODO(chizhg): maybe also move perf-tests tool to be part of kntest?
 RUN go install knative.dev/test-infra/pkg/clustermanager/perf-tests
 
-# reset --hard doesn't care about dirty working copy
-# This must be the last install
-RUN cd /go/src/knative.dev/test-infra && git reset --hard upstream/release-0.14 && go install knative.dev/test-infra/tools/dep-collector
-
 # Cleanup
 RUN rm -fr /go/src/knative.dev/test-infra
 RUN rm -f /usr/local/bin/source-gvm-and-run.sh
