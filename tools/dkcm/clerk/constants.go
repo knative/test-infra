@@ -14,24 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-CREATE TABLE Clusters (
-  ID int NOT NULL AUTO_INCREMENT,
-  ProjectID varchar(1023) NOT NULL,
-  Status varchar(1023) DEFAULT 'WIP',
-  Zone varchar(1023) NOT NULL,
-  Nodes int NOT NULL,
-  NodeType varchar(1023) NOT NULL,
-  PRIMARY KEY (ID)
-);
+package clerk
 
-CREATE TABLE Requests (
-  ID int NOT NULL AUTO_INCREMENT,
-  AccessToken varchar(1023) NOT NULL,
-  RequestTime timestamp,
-  Zone varchar(1023) NOT NULL,
-  Nodes int NOT NULL,
-  NodeType varchar(1023) NOT NULL,
-  ProwJobID varchar(1023) NOT NULL,
-  ClusterID int DEFAULT 0,
-  PRIMARY KEY (ID)
-);
+const (
+	RequestDB = "Requests"
+	ClusterDB = "Clusters"
+)
