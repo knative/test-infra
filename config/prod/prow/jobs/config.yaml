@@ -102,53 +102,6 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-serving-integration-tests
-    agent: kubernetes
-    labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: pull-knative-serving-integration-tests
-    context: pull-knative-serving-integration-tests
-    always_run: true
-    rerun_command: "/test pull-knative-serving-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-serving-integration-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/serving
-    cluster: "build-knative"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--run-test"
-        - "./test/e2e-tests.sh"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-        resources:
-          requests:
-            memory: 12Gi
-          limits:
-            memory: 16Gi
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
   - name: pull-knative-serving-upgrade-tests
     agent: kubernetes
     labels:
@@ -172,47 +125,6 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-upgrade-tests.sh"
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-        resources:
-          requests:
-            memory: 12Gi
-          limits:
-            memory: 16Gi
-      volumes:
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-serving-autotls-tests
-    agent: kubernetes
-    labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: pull-knative-serving-autotls-tests
-    context: pull-knative-serving-autotls-tests
-    always_run: true
-    rerun_command: "/test pull-knative-serving-autotls-tests"
-    trigger: "(?m)^/test (all|pull-knative-serving-autotls-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/serving
-    cluster: "build-knative"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--run-test"
-        - "./test/e2e-auto-tls-tests.sh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -552,7 +464,7 @@ presubmits:
       prow.k8s.io/pubsub.topic: knative-monitoring
       prow.k8s.io/pubsub.runID: pull-knative-serving-istio-stable-no-mesh
     context: pull-knative-serving-istio-stable-no-mesh
-    always_run: false
+    always_run: true
     rerun_command: "/test pull-knative-serving-istio-stable-no-mesh"
     trigger: "(?m)^/test (all|pull-knative-serving-istio-stable-no-mesh),?(\\s+|$)"
     decorate: true
@@ -594,7 +506,7 @@ presubmits:
       prow.k8s.io/pubsub.topic: knative-monitoring
       prow.k8s.io/pubsub.runID: pull-knative-serving-istio-stable-no-mesh-tls
     context: pull-knative-serving-istio-stable-no-mesh-tls
-    always_run: false
+    always_run: true
     rerun_command: "/test pull-knative-serving-istio-stable-no-mesh-tls"
     trigger: "(?m)^/test (all|pull-knative-serving-istio-stable-no-mesh-tls),?(\\s+|$)"
     decorate: true
