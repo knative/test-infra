@@ -332,10 +332,11 @@ func configureServiceAccountForJob(data *baseProwJobTemplateData) {
 func addExtraEnvVarsToJob(envVars []string, data *baseProwJobTemplateData) {
 	for _, env := range envVars {
 		pair := strings.SplitN(env, "=", 2)
-		if len(pair) != 2 {
+		if len(pair) == 2 {
+			data.addEnvToJob(pair[0], pair[1])
+		} else {
 			logFatalf("Environment variable %q is expected to be \"key=value\"", env)
 		}
-		data.addEnvToJob(pair[0], pair[1])
 	}
 }
 
@@ -687,6 +688,7 @@ func setOutput(fileName string) {
 	configFile, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE, 0666)
 	if err != nil {
 		logFatalf("Cannot create the configuration file %q: %v", fileName, err)
+		return
 	}
 	configFile.Truncate(0)
 	configFile.Seek(0, 0)
