@@ -14,17 +14,25 @@
 
 steps:
 - name: gcr.io/cloud-builders/docker
-  args: ['build', '--no-cache', '--pull', '-t',
-         '${_IMG}:${_TAG}',
-         '-f', 'images/prow-tests/Dockerfile', '.']
+  args:
+  - 'build'
+  - '--no-cache'
+  - '--pull'
+  - '-t'
+  - '${_IMG}:${_TAG}'
+  - '-f'
+  - 'images/prow-tests/Dockerfile'
+  - '.'
 - name: gcr.io/cloud-builders/docker
-  args: [ 'tag',
-          '${_IMG}:${_TAG}',
-          '${_IMG}:beta']
+  args:
+  - 'tag'
+  - '${_IMG}:${_TAG}'
+  - '${_IMG}:beta'
 - name: gcr.io/cloud-builders/docker
-  args: [ 'tag',
-          '${_IMG}:${_TAG}',
-          '${_IMG}:latest']
+  args:
+  - 'tag'
+  - '${_IMG}:${_TAG}'
+  - '${_IMG}:latest'
 images:
 - '${_IMG}:${_TAG}'
 - '${_IMG}:beta'
