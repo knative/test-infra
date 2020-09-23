@@ -397,10 +397,10 @@ func TestParseBasicJobConfigOverrides(t *testing.T) {
 
 	repoName := "foo_repo"
 	repositories = []repositoryData{
-		{Name: repo_name, EnablePerformanceTests: false},
+		{Name: repoName, EnablePerformanceTests: false},
 	}
 
-	job := baseProwJobTemplateData{RepoBranch: "my_repo_branch", RepoName: repo_name}
+	job := baseProwJobTemplateData{RepoBranch: "my_repo_branch", RepoName: repoName}
 	config := yaml.MapSlice{
 		yaml.MapItem{Key: "skip_branches", Value: []interface{}{"skip", "branches"}},
 		yaml.MapItem{Key: "branches", Value: []interface{}{"branch1", "branch2"}},
@@ -414,7 +414,7 @@ func TestParseBasicJobConfigOverrides(t *testing.T) {
 		yaml.MapItem{Key: "env-vars", Value: []interface{}{"foo=bar"}},
 		yaml.MapItem{Key: "optional"},
 		yaml.MapItem{Key: "resources", Value: resources},
-		yaml.MapItem{Key: "reporter_config", Value: reporter_config},
+		yaml.MapItem{Key: "reporter_config", Value: reporterConfig},
 	}
 
 	parseBasicJobConfigOverrides(&job, config)
