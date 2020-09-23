@@ -391,7 +391,7 @@ func TestParseBasicJobConfigOverrides(t *testing.T) {
 		yaml.MapItem{Key: "report_template", Value: "Report Template"},
 		yaml.MapItem{Key: "foo", Value: []interface{}{"bar", "baz"}},
 	}
-	reporter_config := yaml.MapSlice{
+	reporterConfig := yaml.MapSlice{
 		yaml.MapItem{Key: "slack", Value: slack},
 	}
 
