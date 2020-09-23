@@ -397,7 +397,7 @@ func TestParseBasicJobConfigOverrides(t *testing.T) {
 
 	repoName := "foo_repo"
 	repositories = []repositoryData{
-		repositoryData{Name: repo_name, EnablePerformanceTests: false},
+		{Name: repo_name, EnablePerformanceTests: false},
 	}
 
 	job := baseProwJobTemplateData{RepoBranch: "my_repo_branch", RepoName: repo_name}
