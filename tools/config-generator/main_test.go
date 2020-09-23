@@ -395,7 +395,7 @@ func TestParseBasicJobConfigOverrides(t *testing.T) {
 		yaml.MapItem{Key: "slack", Value: slack},
 	}
 
-	repo_name := "foo_repo"
+	repoName := "foo_repo"
 	repositories = []repositoryData{
 		repositoryData{Name: repo_name, EnablePerformanceTests: false},
 	}
