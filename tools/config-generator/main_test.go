@@ -170,10 +170,8 @@ func TestAddMonitoringPubsubLabelsToJob(t *testing.T) {
 		"prow.k8s.io/pubsub.topic: knative-monitoring",
 		"prow.k8s.io/pubsub.runID: foobar",
 	}
-	for i := range expected {
-		if diff := cmp.Diff(job.Labels[i], expected[i]); diff != "" {
-			t.Errorf("Unexpected pubsub label: (-got +want)\n%s", diff)
-		}
+	if diff := cmp.Diff(job.Labels, expected); diff != "" {
+		t.Errorf("Unexpected pubsub label: (-got +want)\n%s", diff)
 	}
 }
 
@@ -190,10 +188,8 @@ func TestAddVolumeToJob(t *testing.T) {
 		"- name: foo",
 		"  mountPath: somePath",
 	}
-	for i := range expectedVolumeMounts {
-		if diff := cmp.Diff(job.VolumeMounts[i], expectedVolumeMounts[i]); diff != "" {
-			t.Errorf("Unexpected volume mount: (-got +want)\n%s", diff)
-		}
+	if diff := cmp.Diff(job.VolumeMounts, expectedVolumeMounts); diff != "" {
+		t.Errorf("Unexpected volume mount: (-got +want)\n%s", diff)
 	}
 	expectedVolumes := []string{
 		"- name: foo",
@@ -214,10 +210,8 @@ func TestAddVolumeToJob(t *testing.T) {
 		"  mountPath: somePath",
 		"  readOnly: true",
 	}
-	for i := range expectedVolumeMounts {
-		if diff := cmp.Diff(job.VolumeMounts[i], expectedVolumeMounts[i]); diff != "" {
-			t.Errorf("Unexpected volume mount: (-got +want)\n%s", diff)
-		}
+	if diff := cmp.Diff(job.VolumeMounts, expectedVolumeMounts); diff != "" {
+		t.Errorf("Unexpected volume mount: (-got +want)\n%s", diff)
 	}
 	expectedVolumes = []string{
 		"- name: foo",
@@ -226,10 +220,8 @@ func TestAddVolumeToJob(t *testing.T) {
 		"  bar",
 		"  baz",
 	}
-	for i := range expectedVolumes {
-		if diff := cmp.Diff(job.Volumes[i], expectedVolumes[i]); diff != "" {
-			t.Errorf("Unexpected volume: (-got +want)\n%s", diff)
-		}
+	if diff := cmp.Diff(job.Volumes, expectedVolumes); diff != "" {
+		t.Errorf("Unexpected volume: (-got +want)\n%s", diff)
 	}
 }
 
@@ -263,20 +255,16 @@ func TestConfigureServiceAccountForJob(t *testing.T) {
 		"  mountPath: /etc/foo",
 		"  readOnly: true",
 	}
-	for i := range expectedVolumeMounts {
-		if diff := cmp.Diff(job.VolumeMounts[i], expectedVolumeMounts[i]); diff != "" {
-			t.Errorf("Unexpected volume mount: (-got +want)\n%s", diff)
-		}
+	if diff := cmp.Diff(job.VolumeMounts, expectedVolumeMounts); diff != "" {
+		t.Errorf("Unexpected volume mount: (-got +want)\n%s", diff)
 	}
 	expectedVolumes := []string{
 		"- name: foo",
 		"  secret:",
 		"    secretName: foo",
 	}
-	for i := range expectedVolumes {
-		if diff := cmp.Diff(job.Volumes[i], expectedVolumes[i]); diff != "" {
-			t.Errorf("Unexpected volume: (-got +want)\n%s", diff)
-		}
+	if diff := cmp.Diff(job.Volumes, expectedVolumes); diff != "" {
+		t.Errorf("Unexpected volume: (-got +want)\n%s", diff)
 	}
 }
 
