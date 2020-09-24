@@ -100,15 +100,15 @@ func TestCreateCommand(t *testing.T) {
 	preCommand = "" // global
 	in := baseProwJobTemplateData{Command: "foo", Args: []string{"bar", "baz"}}
 	out := createCommand(in)
-	expected := "[foo bar baz]"
-	if diff := cmp.Diff(fmt.Sprintf("%v", out), expected); diff != "" {
+	expected := []string{"foo", "bar", "baz"}
+	if diff := cmp.Diff(out, expected); diff != "" {
 		t.Errorf("Unexpected command & args list: (-got +want)\n%s", diff)
 	}
 
 	preCommand = "expelliarmus"
 	out = createCommand(in)
-	expected = "[expelliarmus foo bar baz]"
-	if diff := cmp.Diff(fmt.Sprintf("%v", out), expected); diff != "" {
+	expected = []string{"expelliarmus", "foo", "bar", "baz"}
+	if diff := cmp.Diff(out, expected); diff != "" {
 		t.Errorf("Unexpected command & args list: (-got +want)\n%s", diff)
 	}
 
@@ -154,9 +154,9 @@ func TestAddLabelToJob(t *testing.T) {
 	SetupForTesting()
 	job := baseProwJobTemplateData{}
 	addLabelToJob(&job, "foo", "bar")
-	labelString := fmt.Sprintf("%v", job.Labels)
-	expected := "[foo: bar]"
-	if diff := cmp.Diff(labelString, expected); diff != "" {
+
+	expected := []string{"foo: bar"}
+	if diff := cmp.Diff(job.Labels, expected); diff != "" {
 		t.Errorf("Unexpected label string: (-got +want)\n%s", diff)
 	}
 }
@@ -336,10 +336,8 @@ func TestSetResourcesReqForJob(t *testing.T) {
 		"    memory: 16Gi",
 		"    disk: 16Ti",
 	}
-	for i := range expectedResources {
-		if diff := cmp.Diff(job.Resources[i], expectedResources[i]); diff != "" {
-			t.Errorf("Unexpected volume mount: (-got +want)\n%s", diff)
-		}
+	if diff := cmp.Diff(job.Resources, expectedResources); diff != "" {
+		t.Errorf("Unexpected volume mount: (-got +want)\n%s", diff)
 	}
 }
 
@@ -361,13 +359,11 @@ func TestSetReporterConfigReqForJob(t *testing.T) {
 		"    channel: serving-api",
 		"    report_template: Report Template",
 	}
-	for i := range expectedConfig {
-		if diff := cmp.Diff(job.ReporterConfig[i], expectedConfig[i]); diff != "" {
-			t.Errorf("Unexpected reporter config: (-got +want)\n%s", diff)
-		}
+	if diff := cmp.Diff(job.ReporterConfig, expectedConfig); diff != "" {
+		t.Errorf("Unexpected reporter config: (-got +want)\n%s", diff)
 	}
-	expectedJobStates := "[bar baz]"
-	if diff := cmp.Diff(fmt.Sprintf("%v", job.JobStatesToReport), expectedJobStates); diff != "" {
+	expectedJobStates := []string{"bar", "baz"}
+	if diff := cmp.Diff(job.JobStatesToReport, expectedJobStates); diff != "" {
 		t.Errorf("Unexpected job states: (-got +want)\n%s", diff)
 	}
 }
@@ -419,24 +415,20 @@ func TestParseBasicJobConfigOverrides(t *testing.T) {
 
 	parseBasicJobConfigOverrides(&job, config)
 
-	expected := "[  base_ref: my_repo_branch]"
-	actual := fmt.Sprintf("%v", job.ExtraRefs)
-	if diff := cmp.Diff(actual, expected); diff != "" {
+	expected := []string{"  base_ref: my_repo_branch"}
+	if diff := cmp.Diff(job.ExtraRefs, expected); diff != "" {
 		t.Errorf("Unexpected base ref: (-got +want)\n%s", diff)
 	}
-	expected = "[skip branches]"
-	actual = fmt.Sprintf("%v", job.SkipBranches)
-	if diff := cmp.Diff(actual, expected); diff != "" {
+	expected = []string{"skip", "branches"}
+	if diff := cmp.Diff(job.SkipBranches, expected); diff != "" {
 		t.Errorf("Unexpected skip branches: (-got +want)\n%s", diff)
 	}
-	expected = "[branch1 branch2]"
-	actual = fmt.Sprintf("%v", job.Branches)
-	if diff := cmp.Diff(actual, expected); diff != "" {
+	expected = []string{"branch1", "branch2"}
+	if diff := cmp.Diff(job.Branches, expected); diff != "" {
 		t.Errorf("Unexpected branches: (-got +want)\n%s", diff)
 	}
-	expected = "[arg1 arg2]"
-	actual = fmt.Sprintf("%v", job.Args)
-	if diff := cmp.Diff(actual, expected); diff != "" {
+	expected = []string{"arg1", "arg2"}
+	if diff := cmp.Diff(job.Args, expected); diff != "" {
 		t.Errorf("Unexpected args: (-got +want)\n%s", diff)
 	}
 	if job.Timeout != 42 {
@@ -475,23 +467,20 @@ func TestParseBasicJobConfigOverrides(t *testing.T) {
 		"    memory: 16Gi",
 		"    disk: 16Ti",
 	}
-	for i := range expectedResources {
-		if diff := cmp.Diff(job.Resources[i], expectedResources[i]); diff != "" {
-			t.Errorf("Unexpected volume mount: (-got +want)\n%s", diff)
-		}
+	if diff := cmp.Diff(job.Resources, expectedResources); diff != "" {
+		t.Errorf("Unexpected volume mount: (-got +want)\n%s", diff)
 	}
+
 	expectedReporterConfig := []string{
 		"  slack:",
 		"    channel: serving-api",
 		"    report_template: Report Template",
 	}
-	for i := range expectedReporterConfig {
-		if diff := cmp.Diff(job.ReporterConfig[i], expectedReporterConfig[i]); diff != "" {
-			t.Errorf("Unexpected reporter config: (-got +want)\n%s", diff)
-		}
+	if diff := cmp.Diff(job.ReporterConfig, expectedReporterConfig); diff != "" {
+		t.Errorf("Unexpected reporter config: (-got +want)\n%s", diff)
 	}
-	expectedJobStates := "[bar baz]"
-	if diff := cmp.Diff(fmt.Sprintf("%v", job.JobStatesToReport), expectedJobStates); diff != "" {
+	expectedJobStates := []string{"bar", "baz"}
+	if diff := cmp.Diff(job.JobStatesToReport, expectedJobStates); diff != "" {
 		t.Errorf("Unexpected job states: (-got +want)\n%s", diff)
 	}
 
@@ -518,8 +507,8 @@ func TestGetProwConfigData(t *testing.T) {
 
 	out := getProwConfigData(config)
 
-	expectedRepos := "[bar-repo bar-repo-test-infra dup-repo foo-repo]"
-	if diff := cmp.Diff(fmt.Sprintf("%v", out.TideRepos), expectedRepos); diff != "" {
+	expectedRepos := []string{"bar-repo", "bar-repo-test-infra", "dup-repo", "foo-repo"}
+	if diff := cmp.Diff(out.TideRepos, expectedRepos); diff != "" {
 		t.Errorf("Unexpected TideRepos: (-got +want)\n%s", diff)
 	}
 	if diff := cmp.Diff(out.TestInfraRepo, "bar-repo-test-infra"); diff != "" {
@@ -570,19 +559,15 @@ func TestParseSection(t *testing.T) {
 		"pet-store, cats, Whiskers, Calico",
 		"pet-store, cats, Twitch, Siamese",
 	}
-	for i := range expected {
-		if diff := cmp.Diff(generated[i], expected[i]); diff != "" {
-			t.Errorf("Unexpected generated output: (-got +want)\n%s", diff)
-		}
+	if diff := cmp.Diff(generated, expected); diff != "" {
+		t.Errorf("Unexpected generated output: (-got +want)\n%s", diff)
 	}
 	expected = []string{
 		"pet-store, dogs",
 		"pet-store, cats",
 	}
-	for i := range expected {
-		if diff := cmp.Diff(finalized[i], expected[i]); diff != "" {
-			t.Errorf("Unexpected finalized output: (-got +want)\n%s", diff)
-		}
+	if diff := cmp.Diff(finalized, expected); diff != "" {
+		t.Errorf("Unexpected finalized output: (-got +want)\n%s", diff)
 	}
 }
 
@@ -818,21 +803,18 @@ func TestCollectMetaData(t *testing.T) {
 
 	collectMetaData(config)
 
-	expected := "[red-a red-b dot-release continuous]"
-	actual := fmt.Sprintf("%v", metaData.md["red-proj"]["red-repo"])
-	if diff := cmp.Diff(actual, expected); diff != "" {
+	expected := []string{"red-a", "red-b", "dot-release", "continuous"}
+	if diff := cmp.Diff(metaData.md["red-proj"]["red-repo"], expected); diff != "" {
 		t.Errorf("Unexpected metadata for red proj/repo. (-got +want)\n%s", diff)
 	}
 
-	expected = "[custom-job-name]"
-	actual = fmt.Sprintf("%v", metaData.md["blu-proj-0.1.2"]["blu-repo"])
-	if diff := cmp.Diff(actual, expected); diff != "" {
+	expected = []string{"custom-job-name"}
+	if diff := cmp.Diff(metaData.md["blu-proj-0.1.2"]["blu-repo"], expected); diff != "" {
 		t.Errorf("Unexpected metadata for blu proj/repo. (-got +want)\n%s", diff)
 	}
 
-	expected = "[red-proj blu-proj blu-proj-0.1.2]"
-	actual = fmt.Sprintf("%v", metaData.projNames)
-	if diff := cmp.Diff(actual, expected); diff != "" {
+	expected = []string{"red-proj", "blu-proj", "blu-proj-0.1.2"}
+	if diff := cmp.Diff(metaData.projNames, expected); diff != "" {
 		t.Errorf("Unexpected list of project names. (-got +want)\n%s", diff)
 	}
 }
@@ -848,9 +830,8 @@ func TestUpdateTestCoverageJobDataIfNeeded(t *testing.T) {
 	if len(goCoverageMap) != 0 {
 		t.Errorf("foo-repo was not deleted from goCoverageMap")
 	}
-	expected := "[test-coverage]"
-	actual := fmt.Sprintf("%v", jobDetailMap[repoName])
-	if diff := cmp.Diff(actual, expected); diff != "" {
+	expected := []string{"test-coverage"}
+	if diff := cmp.Diff(jobDetailMap[repoName], expected); diff != "" {
 		t.Errorf("Unexpected entry for repoName in job detail map (-got +want)\n%s", diff)
 	}
 }
@@ -870,9 +851,8 @@ func TestAddRemainingTestCoverageJobs(t *testing.T) {
 
 	addRemainingTestCoverageJobs()
 
-	expected := "[test-coverage]"
-	actual := fmt.Sprintf("%v", jobDetailMap["bar-repo"])
-	if diff := cmp.Diff(actual, expected); diff != "" {
+	expected := []string{"test-coverage"}
+	if diff := cmp.Diff(jobDetailMap["bar-repo"], expected); diff != "" {
 		t.Errorf("Unexpected entry for bar-repo in job detail map (-got +want)\n%s", diff)
 	}
 }
