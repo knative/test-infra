@@ -37,7 +37,7 @@ const (
 )
 
 var (
-	baseKubetest2Flags = []string{"gke", "--ignore-gcp-ssh-key=true", "--up"}
+	baseKubetest2Flags = []string{"gke", "--ignore-gcp-ssh-key=true", "--up", "-v=1"}
 
 	// If one of the error patterns below is matched, it would be recommended to
 	// retry creating the cluster in a different region.
@@ -80,13 +80,15 @@ type GKEClusterConfig struct {
 // Run will run the `kubetest2 gke` command with the provided parameters,
 // it will also handle the logic that is only used for Knative integration testing, like retrying cluster creation.
 func Run(opts *Options, cc *GKEClusterConfig) error {
+	kubetest2Flags := baseKubetest2Flags
+
 	createCommand := fmt.Sprintf(createCommandTmpl, cc.CommandGroup, cc.MinNodes, cc.MaxNodes, cc.Scopes)
 	// --cluster-version must be a valid version number when --release-channel is not empty,
 	// so normally we do not use them together.
 	if cc.ReleaseChannel != "" {
 		createCommand += " --release-channel=" + cc.ReleaseChannel
 	} else {
-		createCommand += " --cluster-version=" + cc.Version
+		kubetest2Flags = append(kubetest2Flags, "--version="+cc.Version)
 	}
 	if cc.Addons != "" {
 		createCommand += " --addons=" + cc.Addons
@@ -94,7 +96,7 @@ func Run(opts *Options, cc *GKEClusterConfig) error {
 	if cc.ExtraGcloudFlags != "" {
 		createCommand += " " + cc.ExtraGcloudFlags
 	}
-	kubetest2Flags := append(baseKubetest2Flags, "--create-command="+createCommand)
+	kubetest2Flags = append(kubetest2Flags, "--create-command="+createCommand)
 
 	kubetest2Flags = append(kubetest2Flags, "--cluster-name="+cc.Name, "--environment="+cc.Environment,
 		"--num-nodes="+strconv.Itoa(cc.MinNodes), "--machine-type="+cc.Machine, "--network="+cc.Network)
