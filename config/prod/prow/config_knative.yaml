@@ -21,8 +21,7 @@ presubmits:
         memory: 12Gi
       limits:
         memory: 16Gi
-  - go-coverage: true
-    go-coverage-threshold: 80
+  - go-coverage: false
   - custom-test: istio-latest-mesh
     needs-monitor: true
     always-run: false
@@ -322,7 +321,7 @@ presubmits:
   - build-tests: true
   - unit-tests: true
   - integration-tests: true
-  - go-coverage: true
+  - go-coverage: false
   knative/test-infra:
   - build-tests: true
   - unit-tests: true
@@ -341,7 +340,7 @@ presubmits:
   - build-tests: true
   - unit-tests: true
   - integration-tests: true
-  - go-coverage: true
+  - go-coverage: false
   knative-sandbox/sample-controller:
   - build-tests: true
   - unit-tests: true
@@ -383,7 +382,7 @@ presubmits:
   - build-tests: true
   - unit-tests: true
   - integration-tests: true
-  - go-coverage: true
+  - go-coverage: false
   knative-sandbox/net-certmanager:
   - build-tests: true
   - unit-tests: true
@@ -393,12 +392,12 @@ presubmits:
   - build-tests: true
   - unit-tests: true
   - integration-tests: true
-  - go-coverage: true
+  - go-coverage: false
   knative-sandbox/net-http01:
   - build-tests: true
   - unit-tests: true
   - integration-tests: true
-  - go-coverage: true
+  - go-coverage: false
   knative-sandbox/net-istio:
   - build-tests: true
   - unit-tests: true
