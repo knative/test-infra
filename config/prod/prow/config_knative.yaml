@@ -10,7 +10,7 @@ presubmits:
         memory: 16Gi
   - unit-tests: true
     needs-monitor: true
-  - integration-tests: false # We explicitly enable istio-stable-no-mesh below
+  - integration-tests: false
   - custom-test: upgrade-tests
     needs-monitor: true
     args:
