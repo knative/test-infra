@@ -15,7 +15,7 @@
 # limitations under the License.
 
 # Runs create-build-cluster.sh with config arguments specific to the prow.knative.dev instance.
-# Requries gcloud and kubectl.
+# Requires gcloud and kubectl.
 
 # Example usage:
 # ./create-build-cluster.sh

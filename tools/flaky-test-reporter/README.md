@@ -58,7 +58,7 @@ go run [REPO_ROOT]/tools/flaky-test-reporter --service-account "[PATH_OF_GCP_TOK
 
 ## Considerations
 
-### Criterias for a test to be considered flaky/passed
+### Criteria for a test to be considered flaky/passed
 
 This tool scans latest 10 runs. A test is considered flaky if it failed in some
 but not all runs. For a test to be considered pass, it has to pass in all runs.
