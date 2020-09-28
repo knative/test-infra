@@ -14,7 +14,7 @@
 # limitations under the License.
 
 # Runs prow/pj-on-kind.sh with config arguments specific to the prow.knative.dev instance.
-# Requries go, docker, and kubectl.
+# Requires go, docker, and kubectl.
 
 # Documentation: https://github.com/kubernetes/test-infra/blob/master/prow/build_test_update.md#using-pj-on-kindsh
 # Example usage:
