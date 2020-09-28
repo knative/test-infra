@@ -762,6 +762,8 @@ periodics:
   - auto-release: true
   knative-sandbox/eventing-ceph:
   - continuous: true
+  - nightly: true
+  - auto-release: true
   knative-sandbox/eventing-couchdb:
   - continuous: true
   - nightly: true
