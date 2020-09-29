@@ -441,6 +441,10 @@ presubmits:
   - build-tests: true
   - unit-tests: true
   - integration-tests: true
+  knative-sandbox/discovery:
+  - build-tests: false
+  - unit-tests: false
+  - integration-tests: false
   knative-sandbox/eventing-kafka:
   - build-tests: true
     needs-dind: true
@@ -974,6 +978,17 @@ periodics:
         job_states_to_report:
         - failure
         report_template: '"The nightly release job for discovery failed, check the log: <{{.Status.URL}}|View logs>"'
+  - dot-release: true
+  - auto-release: true
+  knative-sandbox/eventing-camel:
+  - continuous: true
+  - nightly: true
+    reporter_config:
+      slack:
+        channel: eventing-sources
+        job_states_to_report:
+        - failure
+        report_template: '"The nightly release job for camel failed, check the log: <{{.Status.URL}}|View logs>"'
   - dot-release: true
   - auto-release: true
   knative-sandbox/eventing-kafka:
