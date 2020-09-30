@@ -61,7 +61,7 @@ RUN source-gvm-and-run.sh install master --source=https://github.com/golang/go -
 
 # Extra tools through go get
 # These run using the kubekins version of Go, not any defined by `gvm`
-RUN GO111MODULE=on go get github.com/google/ko/cmd/ko@v0.5.1
+RUN GO111MODULE=on go get github.com/google/ko/cmd/ko@v0.6.0
 RUN GO111MODULE=on go get github.com/boz/kail/cmd/kail
 RUN go get -u github.com/golang/dep/cmd/dep
 # TODO(chizhg): we started using gotestsum from release-0.17, remove go-junit-report after Knative release-0.20 is cut.
