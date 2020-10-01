@@ -42,6 +42,7 @@ type singleCustomJob struct {
 }
 
 func TestEnsureCustomJob(t *testing.T) {
+	SetupForTesting()
 	validJobs := sets.NewString()
 	filepath.Walk(defaultTemplateConfigPath, func(path string, info os.FileInfo, err error) error {
 		if strings.HasSuffix(path, ".yaml") {
@@ -75,5 +76,15 @@ func TestEnsureCustomJob(t *testing.T) {
 		if !validJobs.Has(job) {
 			t.Fatalf("Job %q doesn't exist in %q", job, defaultTemplateConfigPath)
 		}
+	}
+}
+
+func TestAddCustomJobsTestgrid(t *testing.T) {
+	SetupForTesting()
+	addCustomJobsTestgrid()
+	if len(metaData.nonAligned) != len(customJobnames) {
+		t.Errorf("Mismatch in number of nonaligned jobs: expected %d, Actual %d",
+			len(customJobnames),
+			len(metaData.nonAligned))
 	}
 }
