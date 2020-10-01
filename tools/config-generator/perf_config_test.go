@@ -25,7 +25,7 @@ import (
 func TestGeneratePerfClusterUpdatePeriodicJobs(t *testing.T) {
 	SetupForTesting()
 	repositories = []repositoryData{
-		repositoryData{
+		{
 			Name:                   "enabled-repo",
 			EnablePerformanceTests: true,
 		},
@@ -37,7 +37,7 @@ func TestGeneratePerfClusterUpdatePeriodicJobs(t *testing.T) {
 
 	SetupForTesting()
 	repositories = []repositoryData{
-		repositoryData{
+		{
 			Name:                   "disabled-repo",
 			EnablePerformanceTests: false,
 		},

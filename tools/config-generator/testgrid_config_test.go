@@ -107,7 +107,7 @@ func TestTestGridMetaDataGenerateNonAlignedTestGroups(t *testing.T) {
 	SetupForTesting()
 	data := NewTestGridMetaData()
 	data.nonAligned = []NonAlignedTestGroup{
-		NonAlignedTestGroup{
+		{
 			CIJobName: "ci-job-name",
 			Extra:     map[string]string{},
 		},
@@ -249,7 +249,7 @@ func TestGenerateNonAlignedDashboardGroups(t *testing.T) {
 	SetupForTesting()
 	data := NewTestGridMetaData()
 	data.nonAligned = []NonAlignedTestGroup{
-		NonAlignedTestGroup{
+		{
 			DashboardName:  "dashboard-name",
 			DashboardGroup: "dashboard-group",
 		},

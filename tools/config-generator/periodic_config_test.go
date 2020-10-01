@@ -156,7 +156,7 @@ func TestGeneratePeriodic(t *testing.T) {
 func TestGenerateGoCoveragePeriodic(t *testing.T) {
 	SetupForTesting()
 	repositories = []repositoryData{
-		repositoryData{
+		{
 			Name:                "repo-name",
 			EnableGoCoverage:    true,
 			GoCoverageThreshold: 80,
