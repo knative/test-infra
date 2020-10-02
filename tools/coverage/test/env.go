@@ -16,15 +16,19 @@ limitations under the License.
 package test
 
 import (
-	"os"
 	"path"
+
+	"knative.dev/test-infra/pkg/helpers"
 )
 
-const projectPathLessGoPath = "src/knative.dev/test-infra/tools/coverage"
+const projectPathLessGoPath = "tools/coverage"
 
 func ProjDir() string {
-	gopath := os.Getenv("GOPATH")
-	return path.Join(gopath, projectPathLessGoPath)
+	root, err := helpers.GetRootDir()
+	if err != nil {
+		return ""
+	}
+	return path.Join(root, projectPathLessGoPath)
 }
 
 func AbsPath(pathRelToProj string) string {

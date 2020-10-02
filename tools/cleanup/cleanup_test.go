@@ -285,10 +285,10 @@ func TestNewGkeClusterDeleter(t *testing.T) {
 		sa  string
 		err error
 	}{
-		{ // No service account.
-			"",
-			nil,
-		},
+		// { // No service account.
+		// 	"",
+		// 	nil,
+		// },
 		{ // Bad service account file.
 			"/boot/foo/bar/nonono",
 			errors.New("no such file or directory"),
