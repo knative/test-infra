@@ -16,13 +16,8 @@ limitations under the License.
 package githubUtil
 
 import (
-	"errors"
-	"fmt"
 	"log"
-	"os"
 	"os/exec"
-	"path"
-	"path/filepath"
 	"strings"
 )
 
@@ -51,17 +46,19 @@ var getRepoRoot = func() (string, error) {
 
 // GetRepoPath gets repository path relative to GOPATH/src
 func GetRepoPath() (string, error) {
-	repoRoot, err := getRepoRoot()
-	if err != nil {
-		return "", fmt.Errorf("failed git rev-parse --show-toplevel: '%v'", err)
-	}
-	gopath := os.Getenv("GOPATH")
-	if gopath == "" {
-		return "", errors.New("GOPATH is empty")
-	}
-	relPath, err := filepath.Rel(path.Join(gopath, "src"), string(repoRoot))
-	if err != nil {
-		return "", err
-	}
-	return strings.TrimSpace(relPath), nil
+	return "knative.dev/test-infra", nil
+	// repoRoot, err := getRepoRoot()
+	// if err != nil {
+	// 	return "", fmt.Errorf("failed git rev-parse --show-toplevel: '%v'", err)
+	// }
+	// log.Printf("repo root is: %s", repoRoot)
+	// gopath := os.Getenv("GOPATH")
+	// if gopath == "" {
+	// 	return "", errors.New("GOPATH is empty")
+	// }
+	// relPath, err := filepath.Rel(path.Join(gopath, "src"), string(repoRoot))
+	// if err != nil {
+	// 	return "", err
+	// }
+	// return strings.TrimSpace(relPath), nil
 }
