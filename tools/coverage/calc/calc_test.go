@@ -14,21 +14,3 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 package calc
-
-import (
-	"testing"
-
-	"knative.dev/test-infra/tools/coverage/artifacts/artsTest"
-	"knative.dev/test-infra/tools/coverage/test"
-)
-
-func TestReadLocalProfile(t *testing.T) {
-	arts := artsTest.LocalInputArtsForTest()
-	covList := CovList(arts.ProfileReader(), nil, nil, 50)
-	covList.Report(false)
-	expected := "56.5%"
-	actual := covList.Percentage()
-	if actual != expected {
-		test.Fail(t, "", expected, actual)
-	}
-}
