@@ -481,13 +481,13 @@ periodics:
       limits:
         memory: 16Gi
   - branch-ci: true
-    release: "0.14"
-  - branch-ci: true
     release: "0.15"
   - branch-ci: true
     release: "0.16"
   - branch-ci: true
     release: "0.17"
+  - branch-ci: true
+    release: "0.18"
   - custom-job: istio-latest-mesh
     command:
     - ./test/presubmit-tests.sh
@@ -581,13 +581,6 @@ periodics:
       limits:
         memory: 16Gi
   - dot-release: true
-    release: "0.14"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - dot-release: true
     release: "0.15"
     resources:
       requests:
@@ -603,6 +596,13 @@ periodics:
         memory: 16Gi
   - dot-release: true
     release: "0.17"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    release: "0.18"
     resources:
       requests:
         memory: 12Gi
@@ -652,13 +652,13 @@ periodics:
       limits:
         memory: 16Gi
   - branch-ci: true
-    release: "0.14"
-  - branch-ci: true
     release: "0.15"
   - branch-ci: true
     release: "0.16"
   - branch-ci: true
     release: "0.17"
+  - branch-ci: true
+    release: "0.18"
   - nightly: true
     reporter_config:
       slack:
@@ -672,13 +672,6 @@ periodics:
       limits:
         memory: 16Gi
   - dot-release: true
-    release: "0.14"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - dot-release: true
     release: "0.15"
     resources:
       requests:
@@ -694,6 +687,13 @@ periodics:
         memory: 16Gi
   - dot-release: true
     release: "0.17"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    release: "0.18"
     resources:
       requests:
         memory: 12Gi
@@ -713,13 +713,13 @@ periodics:
       limits:
         memory: 16Gi
   - branch-ci: true
-    release: "0.14"
-  - branch-ci: true
     release: "0.15"
   - branch-ci: true
     release: "0.16"
   - branch-ci: true
     release: "0.17"
+  - branch-ci: true
+    release: "0.18"
   - nightly: true
     resources:
       requests:
@@ -727,13 +727,6 @@ periodics:
       limits:
         memory: 16Gi
   - dot-release: true
-    release: "0.14"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - dot-release: true
     release: "0.15"
     resources:
       requests:
@@ -749,6 +742,13 @@ periodics:
         memory: 16Gi
   - dot-release: true
     release: "0.17"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    release: "0.18"
     resources:
       requests:
         memory: 12Gi
@@ -803,13 +803,6 @@ periodics:
       limits:
         memory: 16Gi
   - branch-ci: true
-    release: "0.14"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - branch-ci: true
     release: "0.15"
     resources:
       requests:
@@ -825,6 +818,13 @@ periodics:
         memory: 16Gi
   - branch-ci: true
     release: "0.17"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - branch-ci: true
+    release: "0.18"
     resources:
       requests:
         memory: 12Gi
@@ -837,13 +837,6 @@ periodics:
       limits:
         memory: 16Gi
   - dot-release: true
-    release: "0.14"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - dot-release: true
     release: "0.15"
     resources:
       requests:
@@ -859,6 +852,13 @@ periodics:
         memory: 16Gi
   - dot-release: true
     release: "0.17"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    release: "0.18"
     resources:
       requests:
         memory: 12Gi
@@ -919,13 +919,13 @@ periodics:
     - --run-test
     - ./test/e2e-tests.sh --istio-version latest
   - dot-release: true
-    release: "0.14"
-  - dot-release: true
     release: "0.15"
   - dot-release: true
     release: "0.16"
   - dot-release: true
     release: "0.17"
+  - dot-release: true
+    release: "0.18"
   - auto-release: true
   knative-sandbox/net-kourier:
   - continuous: true
