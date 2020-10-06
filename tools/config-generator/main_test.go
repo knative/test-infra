@@ -34,12 +34,12 @@ func TestOutputConfig(t *testing.T) {
 	SetupForTesting()
 	output.outputConfig("")
 	if diff := cmp.Diff(GetOutput(), ""); diff != "" {
-		t.Errorf("Incorrect output for empty string: (-got +want)\n%s", diff)
+		t.Fatalf("Incorrect output for empty string: (-got +want)\n%s", diff)
 	}
 
 	output.outputConfig(" \t\n")
 	if diff := cmp.Diff(GetOutput(), ""); diff != "" {
-		t.Errorf("Incorrect output for whitespace string: (-got +want)\n%s", diff)
+		t.Fatalf("Incorrect output for whitespace string: (-got +want)\n%s", diff)
 	}
 	if output.count != 0 {
 		t.Fatalf("Output count should have been 0, but was %d", output.count)
@@ -48,7 +48,7 @@ func TestOutputConfig(t *testing.T) {
 	inputLine := "some-key: some-value"
 	output.outputConfig(inputLine)
 	if diff := cmp.Diff(GetOutput(), inputLine+"\n"); diff != "" {
-		t.Errorf("Incorrect output for whitespace string: (-got +want)\n%s", diff)
+		t.Fatalf("Incorrect output for whitespace string: (-got +want)\n%s", diff)
 	}
 	if output.count != 1 {
 		t.Fatalf("Output count should have been exactly 1, but was %d", output.count)
@@ -59,12 +59,12 @@ func TestReadTemplate(t *testing.T) {
 	SetupForTesting()
 	templatesCache["foo"] = "bar"
 	if diff := cmp.Diff(readTemplate("foo"), "bar"); diff != "" {
-		t.Errorf("Cached template was not returned: (-got +want)\n%s", diff)
+		t.Fatalf("Cached template was not returned: (-got +want)\n%s", diff)
 	}
 
 	readTemplate("non/existent/file/path")
 	if logFatalCalls != 1 {
-		t.Errorf("Non existent file should have caused error")
+		t.Fatalf("Non existent file should have caused error")
 	}
 
 	delete(templatesCache, "foo")
@@ -74,20 +74,20 @@ func TestNewbaseProwJobTemplateData(t *testing.T) {
 	SetupForTesting()
 	out := newbaseProwJobTemplateData("foo/subrepo")
 	if diff := cmp.Diff(out.PathAlias, ""); diff != "" {
-		t.Errorf("Unexpected path alias: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected path alias: (-got +want)\n%s", diff)
 	}
 
 	pathAliasOrgs.Insert("foo")
 	out = newbaseProwJobTemplateData("foo/subrepo")
 	expected := "path_alias: knative.dev/subrepo"
 	if diff := cmp.Diff(out.PathAlias, expected); diff != "" {
-		t.Errorf("Unexpected path alias: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected path alias: (-got +want)\n%s", diff)
 	}
 
 	nonPathAliasRepos.Insert("foo/subrepo")
 	out = newbaseProwJobTemplateData("foo/subrepo")
 	if diff := cmp.Diff(out.PathAlias, ""); diff != "" {
-		t.Errorf("Unexpected path alias: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected path alias: (-got +want)\n%s", diff)
 	}
 
 	// don't pollute the global setup
@@ -102,14 +102,14 @@ func TestCreateCommand(t *testing.T) {
 	out := createCommand(in)
 	expected := []string{"foo", "bar", "baz"}
 	if diff := cmp.Diff(out, expected); diff != "" {
-		t.Errorf("Unexpected command & args list: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected command & args list: (-got +want)\n%s", diff)
 	}
 
 	preCommand = "expelliarmus"
 	out = createCommand(in)
 	expected = []string{"expelliarmus", "foo", "bar", "baz"}
 	if diff := cmp.Diff(out, expected); diff != "" {
-		t.Errorf("Unexpected command & args list: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected command & args list: (-got +want)\n%s", diff)
 	}
 
 	preCommand = ""
@@ -118,14 +118,14 @@ func TestCreateCommand(t *testing.T) {
 func TestEnvNameToKey(t *testing.T) {
 	SetupForTesting()
 	if diff := cmp.Diff(envNameToKey("foo"), "- name: foo"); diff != "" {
-		t.Errorf("Unexpected name to key conversion: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected name to key conversion: (-got +want)\n%s", diff)
 	}
 }
 
 func TestEnvValueToValue(t *testing.T) {
 	SetupForTesting()
 	if diff := cmp.Diff(envValueToValue("bar"), "  value: bar"); diff != "" {
-		t.Errorf("Unexpected env value conversion: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected env value conversion: (-got +want)\n%s", diff)
 	}
 }
 
@@ -134,19 +134,19 @@ func TestAddEnvToJob(t *testing.T) {
 	job := baseProwJobTemplateData{}
 	job.addEnvToJob("foo", "bar")
 	if diff := cmp.Diff(job.Env[0], "- name: foo"); diff != "" {
-		t.Errorf("Unexpected env name: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected env name: (-got +want)\n%s", diff)
 	}
 	if diff := cmp.Diff(job.Env[1], "  value: bar"); diff != "" {
-		t.Errorf("Unexpected env value: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected env value: (-got +want)\n%s", diff)
 	}
 
 	job = baseProwJobTemplateData{}
 	job.addEnvToJob("num", "42")
 	if diff := cmp.Diff(job.Env[0], "- name: num"); diff != "" {
-		t.Errorf("Unexpected env name: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected env name: (-got +want)\n%s", diff)
 	}
 	if diff := cmp.Diff(job.Env[1], "  value: \"42\""); diff != "" {
-		t.Errorf("Unexpected env value: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected env value: (-got +want)\n%s", diff)
 	}
 }
 
@@ -157,7 +157,7 @@ func TestAddLabelToJob(t *testing.T) {
 
 	expected := []string{"foo: bar"}
 	if diff := cmp.Diff(job.Labels, expected); diff != "" {
-		t.Errorf("Unexpected label string: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected label string: (-got +want)\n%s", diff)
 	}
 }
 
@@ -171,7 +171,7 @@ func TestAddMonitoringPubsubLabelsToJob(t *testing.T) {
 		"prow.k8s.io/pubsub.runID: foobar",
 	}
 	if diff := cmp.Diff(job.Labels, expected); diff != "" {
-		t.Errorf("Unexpected pubsub label: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected pubsub label: (-got +want)\n%s", diff)
 	}
 }
 
@@ -189,7 +189,7 @@ func TestAddVolumeToJob(t *testing.T) {
 		"  mountPath: somePath",
 	}
 	if diff := cmp.Diff(job.VolumeMounts, expectedVolumeMounts); diff != "" {
-		t.Errorf("Unexpected volume mount: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected volume mount: (-got +want)\n%s", diff)
 	}
 	expectedVolumes := []string{
 		"- name: foo",
@@ -198,7 +198,7 @@ func TestAddVolumeToJob(t *testing.T) {
 	}
 	for i := range expectedVolumes {
 		if diff := cmp.Diff(job.Volumes[i], expectedVolumes[i]); diff != "" {
-			t.Errorf("Unexpected volume: (-got +want)\n%s", diff)
+			t.Fatalf("Unexpected volume: (-got +want)\n%s", diff)
 		}
 	}
 
@@ -211,7 +211,7 @@ func TestAddVolumeToJob(t *testing.T) {
 		"  readOnly: true",
 	}
 	if diff := cmp.Diff(job.VolumeMounts, expectedVolumeMounts); diff != "" {
-		t.Errorf("Unexpected volume mount: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected volume mount: (-got +want)\n%s", diff)
 	}
 	expectedVolumes = []string{
 		"- name: foo",
@@ -221,7 +221,7 @@ func TestAddVolumeToJob(t *testing.T) {
 		"  baz",
 	}
 	if diff := cmp.Diff(job.Volumes, expectedVolumes); diff != "" {
-		t.Errorf("Unexpected volume: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected volume: (-got +want)\n%s", diff)
 	}
 }
 
@@ -230,7 +230,7 @@ func TestConfigureServiceAccountForJob(t *testing.T) {
 	job := baseProwJobTemplateData{ServiceAccount: ""}
 	configureServiceAccountForJob(&job)
 	if logFatalCalls != 0 || len(job.Volumes) != 0 {
-		t.Errorf("Service Account was not specified, but action was performed")
+		t.Fatalf("Service Account was not specified, but action was performed")
 	}
 
 	badAccounts := []string{
@@ -243,7 +243,7 @@ func TestConfigureServiceAccountForJob(t *testing.T) {
 		job = baseProwJobTemplateData{ServiceAccount: acct}
 		configureServiceAccountForJob(&job)
 		if logFatalCalls != 1 {
-			t.Errorf("Service account %v did not cause error", acct)
+			t.Fatalf("Service account %v did not cause error", acct)
 		}
 		logFatalCalls = 0
 	}
@@ -256,7 +256,7 @@ func TestConfigureServiceAccountForJob(t *testing.T) {
 		"  readOnly: true",
 	}
 	if diff := cmp.Diff(job.VolumeMounts, expectedVolumeMounts); diff != "" {
-		t.Errorf("Unexpected volume mount: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected volume mount: (-got +want)\n%s", diff)
 	}
 	expectedVolumes := []string{
 		"- name: foo",
@@ -264,7 +264,7 @@ func TestConfigureServiceAccountForJob(t *testing.T) {
 		"    secretName: foo",
 	}
 	if diff := cmp.Diff(job.Volumes, expectedVolumes); diff != "" {
-		t.Errorf("Unexpected volume: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected volume: (-got +want)\n%s", diff)
 	}
 }
 
@@ -275,16 +275,16 @@ func TestAddExtraEnvVarsToJob(t *testing.T) {
 	in := []string{"foo=bar"}
 	addExtraEnvVarsToJob(in, &job)
 	if diff := cmp.Diff(job.Env[0], "- name: foo"); diff != "" {
-		t.Errorf("Unexpected env name: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected env name: (-got +want)\n%s", diff)
 	}
 	if diff := cmp.Diff(job.Env[1], "  value: bar"); diff != "" {
-		t.Errorf("Unexpected env value: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected env value: (-got +want)\n%s", diff)
 	}
 
 	in = []string{"foobar"}
 	addExtraEnvVarsToJob(in, &job)
 	if logFatalCalls != 1 {
-		t.Errorf("Invalid string 'foobar' should have caused error")
+		t.Fatalf("Invalid string 'foobar' should have caused error")
 	}
 }
 
@@ -293,10 +293,10 @@ func TestSetupDockerInDockerForJob(t *testing.T) {
 	job := baseProwJobTemplateData{}
 	setupDockerInDockerForJob(&job)
 	if len(job.Volumes) == 0 || len(job.VolumeMounts) == 0 {
-		t.Errorf("Docker in Docker setup did not create volumes and/or mounts")
+		t.Fatalf("Docker in Docker setup did not create volumes and/or mounts")
 	}
 	if len(job.Env) == 0 || len(job.SecurityContext) == 0 {
-		t.Errorf("Docker in Docker setup did not add env and/or set security context")
+		t.Fatalf("Docker in Docker setup did not add env and/or set security context")
 	}
 }
 
@@ -325,7 +325,7 @@ func TestSetResourcesReqForJob(t *testing.T) {
 		"    disk: 16Ti",
 	}
 	if diff := cmp.Diff(job.Resources, expectedResources); diff != "" {
-		t.Errorf("Unexpected volume mount: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected volume mount: (-got +want)\n%s", diff)
 	}
 }
 
@@ -348,11 +348,11 @@ func TestSetReporterConfigReqForJob(t *testing.T) {
 		"    report_template: Report Template",
 	}
 	if diff := cmp.Diff(job.ReporterConfig, expectedConfig); diff != "" {
-		t.Errorf("Unexpected reporter config: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected reporter config: (-got +want)\n%s", diff)
 	}
 	expectedJobStates := []string{"bar", "baz"}
 	if diff := cmp.Diff(job.JobStatesToReport, expectedJobStates); diff != "" {
-		t.Errorf("Unexpected job states: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected job states: (-got +want)\n%s", diff)
 	}
 }
 
@@ -405,47 +405,47 @@ func TestParseBasicJobConfigOverrides(t *testing.T) {
 
 	expected := []string{"  base_ref: my_repo_branch"}
 	if diff := cmp.Diff(job.ExtraRefs, expected); diff != "" {
-		t.Errorf("Unexpected base ref: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected base ref: (-got +want)\n%s", diff)
 	}
 	expected = []string{"skip", "branches"}
 	if diff := cmp.Diff(job.SkipBranches, expected); diff != "" {
-		t.Errorf("Unexpected skip branches: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected skip branches: (-got +want)\n%s", diff)
 	}
 	expected = []string{"branch1", "branch2"}
 	if diff := cmp.Diff(job.Branches, expected); diff != "" {
-		t.Errorf("Unexpected branches: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected branches: (-got +want)\n%s", diff)
 	}
 	expected = []string{"arg1", "arg2"}
 	if diff := cmp.Diff(job.Args, expected); diff != "" {
-		t.Errorf("Unexpected args: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected args: (-got +want)\n%s", diff)
 	}
 	if job.Timeout != 42 {
-		t.Errorf("Unexpected timeout: %v", job.Timeout)
+		t.Fatalf("Unexpected timeout: %v", job.Timeout)
 	}
 	if diff := cmp.Diff(job.Command, "foo_command"); diff != "" {
-		t.Errorf("Unexpected command: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected command: (-got +want)\n%s", diff)
 	}
 	if !job.NeedsMonitor {
-		t.Errorf("Expected job.NeedsMonitor to be true")
+		t.Fatalf("Expected job.NeedsMonitor to be true")
 	}
 	if len(job.Volumes) == 0 || len(job.VolumeMounts) == 0 || len(job.SecurityContext) == 0 {
-		t.Errorf("Error in Docker in Docker setup")
+		t.Fatalf("Error in Docker in Docker setup")
 	}
 	if !job.AlwaysRun {
-		t.Errorf("Expected job.AlwaysRun to be true")
+		t.Fatalf("Expected job.AlwaysRun to be true")
 	}
 	if !repositories[0].EnablePerformanceTests {
-		t.Errorf("Repository performance test should have been enabled")
+		t.Fatalf("Repository performance test should have been enabled")
 	}
 	// Note that the first 2 Env variables are from the Docker in Docker setup
 	if diff := cmp.Diff(job.Env[2], "- name: foo"); diff != "" {
-		t.Errorf("Unexpected env name: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected env name: (-got +want)\n%s", diff)
 	}
 	if diff := cmp.Diff(job.Env[3], "  value: bar"); diff != "" {
-		t.Errorf("Unexpected env value: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected env value: (-got +want)\n%s", diff)
 	}
 	if diff := cmp.Diff(job.Optional, "optional: true"); diff != "" {
-		t.Errorf("Unexpected job.Optional value: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected job.Optional value: (-got +want)\n%s", diff)
 	}
 	expectedResources := []string{
 		"  requests:",
@@ -456,7 +456,7 @@ func TestParseBasicJobConfigOverrides(t *testing.T) {
 		"    disk: 16Ti",
 	}
 	if diff := cmp.Diff(job.Resources, expectedResources); diff != "" {
-		t.Errorf("Unexpected volume mount: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected volume mount: (-got +want)\n%s", diff)
 	}
 
 	expectedReporterConfig := []string{
@@ -465,17 +465,17 @@ func TestParseBasicJobConfigOverrides(t *testing.T) {
 		"    report_template: Report Template",
 	}
 	if diff := cmp.Diff(job.ReporterConfig, expectedReporterConfig); diff != "" {
-		t.Errorf("Unexpected reporter config: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected reporter config: (-got +want)\n%s", diff)
 	}
 	expectedJobStates := []string{"bar", "baz"}
 	if diff := cmp.Diff(job.JobStatesToReport, expectedJobStates); diff != "" {
-		t.Errorf("Unexpected job states: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected job states: (-got +want)\n%s", diff)
 	}
 
 	timeoutOverride = 999
 	parseBasicJobConfigOverrides(&job, config)
 	if job.Timeout != 999 {
-		t.Errorf("Timeout override did not work")
+		t.Fatalf("Timeout override did not work")
 	}
 }
 
@@ -497,10 +497,10 @@ func TestGetProwConfigData(t *testing.T) {
 
 	expectedRepos := []string{"bar-repo", "bar-repo-test-infra", "dup-repo", "foo-repo"}
 	if diff := cmp.Diff(out.TideRepos, expectedRepos); diff != "" {
-		t.Errorf("Unexpected TideRepos: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected TideRepos: (-got +want)\n%s", diff)
 	}
 	if diff := cmp.Diff(out.TestInfraRepo, "bar-repo-test-infra"); diff != "" {
-		t.Errorf("Unexpected test-infra repo: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected test-infra repo: (-got +want)\n%s", diff)
 	}
 }
 func TestParseSection(t *testing.T) {
@@ -548,14 +548,14 @@ func TestParseSection(t *testing.T) {
 		"pet-store, cats, Twitch, Siamese",
 	}
 	if diff := cmp.Diff(generated, expected); diff != "" {
-		t.Errorf("Unexpected generated output: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected generated output: (-got +want)\n%s", diff)
 	}
 	expected = []string{
 		"pet-store, dogs",
 		"pet-store, cats",
 	}
 	if diff := cmp.Diff(finalized, expected); diff != "" {
-		t.Errorf("Unexpected finalized output: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected finalized output: (-got +want)\n%s", diff)
 	}
 }
 
@@ -565,17 +565,17 @@ func TestGitHubRepo(t *testing.T) {
 	in := baseProwJobTemplateData{RepoURI: "repoURI"}
 
 	if diff := cmp.Diff(gitHubRepo(in), "repoURI"); diff != "" {
-		t.Errorf("Bad output when RepoBranch unset and no override: (-got +want)\n%s", diff)
+		t.Fatalf("Bad output when RepoBranch unset and no override: (-got +want)\n%s", diff)
 	}
 
 	in = baseProwJobTemplateData{RepoURI: "repoURI", RepoBranch: "repoBranch"}
 	if diff := cmp.Diff(gitHubRepo(in), "repoURI=repoBranch"); diff != "" {
-		t.Errorf("Bad output when RepoBranch set and no override: (-got +want)\n%s", diff)
+		t.Fatalf("Bad output when RepoBranch set and no override: (-got +want)\n%s", diff)
 	}
 
 	repositoryOverride = "repoOverride"
 	if diff := cmp.Diff(gitHubRepo(in), "repoOverride"); diff != "" {
-		t.Errorf("Bad output when override set: (-got +want)\n%s", diff)
+		t.Fatalf("Bad output when override set: (-got +want)\n%s", diff)
 	}
 }
 
@@ -601,21 +601,21 @@ func TestExecuteJobTemplate(t *testing.T) {
 	jobNameFilter = "xyz"
 	executeJobTemplate(name, templ, title, repoName, jobName, groupByRepo, data)
 	if logFatalCalls != 0 {
-		t.Errorf("Fatal log call recorded")
+		t.Fatalf("Fatal log call recorded")
 	}
 	expected := ""
 	if diff := cmp.Diff(GetOutput(), expected); diff != "" {
-		t.Errorf("Expected job to be filtered: (-got +want)\n%s", diff)
+		t.Fatalf("Expected job to be filtered: (-got +want)\n%s", diff)
 	}
 
 	ResetOutput()
 	jobNameFilter = "my-job-name"
 	executeJobTemplate(name, templ, title, repoName, jobName, groupByRepo, data)
 	if logFatalCalls != 0 {
-		t.Errorf("Fatal log call recorded")
+		t.Fatalf("Fatal log call recorded")
 	}
 	if GetOutput() == "" {
-		t.Errorf("Job should not have been filtered")
+		t.Fatalf("Job should not have been filtered")
 	}
 
 	ResetOutput()
@@ -623,22 +623,22 @@ func TestExecuteJobTemplate(t *testing.T) {
 	sectionMap[title] = false
 	executeJobTemplate(name, templ, title, repoName, jobName, groupByRepo, data)
 	if logFatalCalls != 0 {
-		t.Errorf("Fatal log call recorded")
+		t.Fatalf("Fatal log call recorded")
 	}
 	expected = "my-title:\n- foo: Foo\nbar:\n  \"Bar\"\n  \"Baz\"\n"
 	if diff := cmp.Diff(GetOutput(), expected); diff != "" {
-		t.Errorf("Bad execute job template output: (-got +want)\n%s", diff)
+		t.Fatalf("Bad execute job template output: (-got +want)\n%s", diff)
 	}
 
 	ResetOutput()
 	sectionMap[title] = true
 	executeJobTemplate(name, templ, title, repoName, jobName, groupByRepo, data)
 	if logFatalCalls != 0 {
-		t.Errorf("Fatal log call recorded")
+		t.Fatalf("Fatal log call recorded")
 	}
 	expected = "- foo: Foo\nbar:\n  \"Bar\"\n  \"Baz\"\n"
 	if diff := cmp.Diff(GetOutput(), expected); diff != "" {
-		t.Errorf("Bad execute job template output: (-got +want)\n%s", diff)
+		t.Fatalf("Bad execute job template output: (-got +want)\n%s", diff)
 	}
 
 	ResetOutput()
@@ -646,11 +646,11 @@ func TestExecuteJobTemplate(t *testing.T) {
 	sectionMap[title+repoName] = false
 	executeJobTemplate(name, templ, title, repoName, jobName, groupByRepo, data)
 	if logFatalCalls != 0 {
-		t.Errorf("Fatal log call recorded")
+		t.Fatalf("Fatal log call recorded")
 	}
 	expected = "  my-repo-name:\n- foo: Foo\nbar:\n  \"Bar\"\n  \"Baz\"\n"
 	if diff := cmp.Diff(GetOutput(), expected); diff != "" {
-		t.Errorf("Bad execute job template output: (-got +want)\n%s", diff)
+		t.Fatalf("Bad execute job template output: (-got +want)\n%s", diff)
 	}
 }
 
@@ -671,20 +671,20 @@ func TestExecuteTemplate(t *testing.T) {
 	executeTemplate(name, templ, data)
 
 	if logFatalCalls != 0 {
-		t.Errorf("Fatal log call recorded")
+		t.Fatalf("Fatal log call recorded")
 	}
 	expected :=
 		"- foo: Foo\nbar:\n  \"Bar\"\n  \"Baz\"\n"
 
 	if diff := cmp.Diff(GetOutput(), expected); diff != "" {
-		t.Errorf("Bad execute template output: (-got +want)\n%s", diff)
+		t.Fatalf("Bad execute template output: (-got +want)\n%s", diff)
 	}
 }
 func TestStringArrayFlagString(t *testing.T) {
 	SetupForTesting()
 	arr := stringArrayFlag{"a", "b", "c"}
 	if diff := cmp.Diff(arr.String(), "a, b, c"); diff != "" {
-		t.Errorf("(-got +want)\n%s", diff)
+		t.Fatalf("(-got +want)\n%s", diff)
 	}
 }
 func TestStringArrayFlagSet(t *testing.T) {
@@ -692,7 +692,7 @@ func TestStringArrayFlagSet(t *testing.T) {
 	arr := stringArrayFlag{"a", "b", "c"}
 	arr.Set("d")
 	if diff := cmp.Diff(arr.String(), "a, b, c, d"); diff != "" {
-		t.Errorf("(-got +want)\n%s", diff)
+		t.Fatalf("(-got +want)\n%s", diff)
 	}
 }
 
@@ -714,12 +714,12 @@ func TestParseJob(t *testing.T) {
 	out := parseJob(pets, "dogs")
 	expected := "[{Spot Dalmatian} {Fido Terrier}]"
 	if diff := cmp.Diff(fmt.Sprintf("%v", out), expected); diff != "" {
-		t.Errorf("ParseJob did not return expected slice. (-got +want)\n%s", diff)
+		t.Fatalf("ParseJob did not return expected slice. (-got +want)\n%s", diff)
 	}
 
 	out = parseJob(pets, "hamsters")
 	if logFatalCalls != 1 {
-		t.Errorf("ParseJob did not return error as expected.")
+		t.Fatalf("ParseJob did not return error as expected.")
 	}
 }
 
@@ -747,10 +747,10 @@ func TestParseGoCoverageMap(t *testing.T) {
 
 	out := parseGoCoverageMap(config)
 	if out["cat-repo"] {
-		t.Errorf("Go coverage should not have been enabled for cat-repo")
+		t.Fatalf("Go coverage should not have been enabled for cat-repo")
 	}
 	if !out["dog-repo"] {
-		t.Errorf("Go coverage should have been enabled for dog-repo")
+		t.Fatalf("Go coverage should have been enabled for dog-repo")
 	}
 }
 
@@ -793,17 +793,17 @@ func TestCollectMetaData(t *testing.T) {
 
 	expected := []string{"red-a", "red-b", "dot-release", "continuous"}
 	if diff := cmp.Diff(metaData.md["red-proj"]["red-repo"], expected); diff != "" {
-		t.Errorf("Unexpected metadata for red proj/repo. (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected metadata for red proj/repo. (-got +want)\n%s", diff)
 	}
 
 	expected = []string{"custom-job-name"}
 	if diff := cmp.Diff(metaData.md["blu-proj-0.1.2"]["blu-repo"], expected); diff != "" {
-		t.Errorf("Unexpected metadata for blu proj/repo. (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected metadata for blu proj/repo. (-got +want)\n%s", diff)
 	}
 
 	expected = []string{"red-proj", "blu-proj", "blu-proj-0.1.2"}
 	if diff := cmp.Diff(metaData.projNames, expected); diff != "" {
-		t.Errorf("Unexpected list of project names. (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected list of project names. (-got +want)\n%s", diff)
 	}
 }
 
@@ -816,11 +816,11 @@ func TestUpdateTestCoverageJobDataIfNeeded(t *testing.T) {
 	}
 	updateTestCoverageJobDataIfNeeded(jobDetailMap, repoName)
 	if len(goCoverageMap) != 0 {
-		t.Errorf("foo-repo was not deleted from goCoverageMap")
+		t.Fatalf("foo-repo was not deleted from goCoverageMap")
 	}
 	expected := []string{"test-coverage"}
 	if diff := cmp.Diff(jobDetailMap[repoName], expected); diff != "" {
-		t.Errorf("Unexpected entry for repoName in job detail map (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected entry for repoName in job detail map (-got +want)\n%s", diff)
 	}
 }
 
@@ -841,7 +841,7 @@ func TestAddRemainingTestCoverageJobs(t *testing.T) {
 
 	expected := []string{"test-coverage"}
 	if diff := cmp.Diff(jobDetailMap["bar-repo"], expected); diff != "" {
-		t.Errorf("Unexpected entry for bar-repo in job detail map (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected entry for bar-repo in job detail map (-got +want)\n%s", diff)
 	}
 }
 func TestBuildProjRepoStr(t *testing.T) {
@@ -852,7 +852,7 @@ func TestBuildProjRepoStr(t *testing.T) {
 	expected := "project-name-repo-name"
 	actual := buildProjRepoStr(projName, repoName)
 	if diff := cmp.Diff(actual, expected); diff != "" {
-		t.Errorf("Unexpected project repo string: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected project repo string: (-got +want)\n%s", diff)
 	}
 
 	projName = "knative-sandbox-0.15"
@@ -860,7 +860,7 @@ func TestBuildProjRepoStr(t *testing.T) {
 	expected = "knative-sandbox-repo-name-0.15"
 	actual = buildProjRepoStr(projName, repoName)
 	if diff := cmp.Diff(actual, expected); diff != "" {
-		t.Errorf("Unexpected project repo string: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected project repo string: (-got +want)\n%s", diff)
 	}
 }
 func TestIsReleased(t *testing.T) {
@@ -869,12 +869,12 @@ func TestIsReleased(t *testing.T) {
 	invalid := []string{"-4.5.6", "abc-1.2.3g"}
 	for _, v := range valid {
 		if !isReleased(v) {
-			t.Errorf("Should be valid: %v", v)
+			t.Fatalf("Should be valid: %v", v)
 		}
 	}
 	for _, v := range invalid {
 		if isReleased(v) {
-			t.Errorf("Should be invalid: %v", v)
+			t.Fatalf("Should be invalid: %v", v)
 		}
 	}
 }
@@ -883,7 +883,7 @@ func TestSetOutput(t *testing.T) {
 	SetupForTesting()
 	setOutput("")
 	if logFatalCalls != 0 {
-		t.Errorf("Fatal log call recorded")
+		t.Fatalf("Fatal log call recorded")
 	}
 	// don't test setting an output file since this will create
 	// a local file system change
