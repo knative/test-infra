@@ -93,7 +93,7 @@ func TestPerfClusterBaseProwJob(t *testing.T) {
 	if diff := cmp.Diff(res.Command, command); diff != "" {
 		t.Errorf("Incorrect command: (-got +want)\n%s", diff)
 	}
-	if len(res.Env) != 8 {
+	if want, got := 8, len(res.Env); want != got {
 		t.Errorf("Expected 8 environments, got %d", len(res.Env))
 	}
 }

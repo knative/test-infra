@@ -34,7 +34,7 @@ func TestClone(t *testing.T) {
 		PeriodicCommand: []string{"string-a", "string-b"},
 	}
 	if diff := cmp.Diff(data.Clone(), data); diff != "" {
-		t.Errorf("Incorrect output for empty string: (-got +want)\n%s", diff)
+		t.Fatalf("Incorrect output for empty string: (-got +want)\n%s", diff)
 	}
 }
 
@@ -44,7 +44,7 @@ func TestGetUTCtime(t *testing.T) {
 		utcTime := getUTCtime(i)
 		expected := (i + 7) % 24
 		if utcTime != expected {
-			t.Errorf("Expected %d, got %d", expected, utcTime)
+			t.Fatalf("Expected %d, got %d", expected, utcTime)
 		}
 	}
 }
@@ -53,8 +53,8 @@ func TestCalculateMinuteOffset(t *testing.T) {
 	SetupForTesting()
 	out1 := calculateMinuteOffset("foo")
 	out2 := calculateMinuteOffset("foo")
-	if out1 != out2 {
-		t.Errorf("Same input should always yield same offset")
+	if diff := cmp.Diff(out1, out2); diff != "" {
+		t.Fatalf("Same input should always yield same offset")
 	}
 }
 
@@ -122,7 +122,7 @@ func TestGenerateCron(t *testing.T) {
 	for _, tc := range tests {
 		out := generateCron(tc.jobType, jobName, tc.repoName, tc.timeout)
 		if diff := cmp.Diff(out, tc.expected); diff != "" {
-			t.Errorf("For jobType %v and timeout %d: (-got +want)\n%s", tc.jobType, tc.timeout, diff)
+			t.Fatalf("For jobType %v and timeout %d: (-got +want)\n%s", tc.jobType, tc.timeout, diff)
 		}
 	}
 }
@@ -144,10 +144,10 @@ func TestGeneratePeriodic(t *testing.T) {
 		generatePeriodic(title, repoName, periodicConfig)
 		outputLen := len(GetOutput())
 		if outputLen == 0 {
-			t.Errorf("Failure for key %d: No output", outputLen)
+			t.Fatalf("Failure for key %d: No output", outputLen)
 		}
 		if logFatalCalls != 0 {
-			t.Errorf("Failure for key %s: LogFatal was called.", item.Key)
+			t.Fatalf("Failure for key %s: LogFatal was called.", item.Key)
 		}
 		SetupForTesting()
 	}
@@ -164,9 +164,9 @@ func TestGenerateGoCoveragePeriodic(t *testing.T) {
 	}
 	generateGoCoveragePeriodic("title", "repo-name", nil)
 	if len(GetOutput()) == 0 {
-		t.Errorf("No output")
+		t.Fatalf("No output")
 	}
 	if logFatalCalls != 0 {
-		t.Errorf("LogFatal was called.")
+		t.Fatalf("LogFatal was called.")
 	}
 }

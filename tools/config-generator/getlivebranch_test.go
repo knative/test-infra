@@ -46,11 +46,11 @@ func TestLatestReleaseBranch(t *testing.T) {
 
 	_, err := latestReleaseBranch(fgc, "no slash")
 	if err == nil {
-		t.Errorf("Format was not ORG/REPO, expected error.")
+		t.Fatalf("Format was not ORG/REPO, expected error.")
 	}
 	latest, _ := latestReleaseBranch(fgc, "my-org/my-repo")
 	if diff := cmp.Diff(latest, "3.4"); diff != "" {
-		t.Errorf("Did not find latest version (-got +want)\n%s", diff)
+		t.Fatalf("Did not find latest version (-got +want)\n%s", diff)
 	}
 }
 
@@ -70,6 +70,6 @@ func TestFilterLatest(t *testing.T) {
 
 	res := filterLatest(branches)
 	if diff := cmp.Diff(res, "3.4"); diff != "" {
-		t.Errorf("Did not find latest version (-got +want)\n%s", diff)
+		t.Fatalf("Did not find latest version (-got +want)\n%s", diff)
 	}
 }
