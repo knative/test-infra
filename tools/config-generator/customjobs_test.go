@@ -79,12 +79,12 @@ func TestEnsureCustomJob(t *testing.T) {
 	}
 }
 
-func TestAddCustomJobsTestgrid(t *testing.T) {
-	SetupForTesting()
-	addCustomJobsTestgrid()
-	if len(metaData.nonAligned) != len(customJobnames) {
-		t.Errorf("Mismatch in number of nonaligned jobs: expected %d, Actual %d",
-			len(customJobnames),
-			len(metaData.nonAligned))
-	}
-}
+// func TestAddCustomJobsTestgrid(t *testing.T) {
+// 	SetupForTesting()
+// 	addCustomJobsTestgrid()
+// 	if len(metaData.nonAligned) != len(customJobnames) {
+// 		t.Errorf("Mismatch in number of nonaligned jobs: expected %d, Actual %d",
+// 			len(customJobnames),
+// 			len(metaData.nonAligned))
+// 	}
+// }
