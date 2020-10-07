@@ -6,7 +6,10 @@ require (
 	cloud.google.com/go v0.62.0 // indirect
 	cloud.google.com/go/pubsub v1.6.1
 	cloud.google.com/go/storage v1.10.0
+	github.com/blang/semver/v4 v4.0.0
 	github.com/davecgh/go-spew v1.1.1
+	github.com/go-git/go-git-fixtures/v4 v4.0.1
+	github.com/go-git/go-git/v5 v5.1.0
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/google/go-cmp v0.5.1
 	github.com/google/go-containerregistry v0.1.1
