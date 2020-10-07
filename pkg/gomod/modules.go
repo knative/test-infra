@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
 Copyright 2020 The Knative Authors
 
@@ -64,6 +65,7 @@ func Module(gomod string, domain string) (string, []string, error) {
 	if err != nil {
 		return "", nil, err
 	}
+
 
 	file, err := modfile.Parse(gomod, b /*VersionFixer func*/, nil)
 	if err != nil {
