@@ -89,7 +89,6 @@ func (rt RefType) String() string {
 // BestRefFor Returns module@ref, isRelease based on the provided ruleset for
 // a this release.
 func (r *Repo) BestRefFor(this semver.Version, ruleset RulesetType) (string, RefType) {
-
 	switch ruleset {
 	case AnyRule, ReleaseOrReleaseBranchRule, ReleaseRule:
 		var largest *semver.Version
