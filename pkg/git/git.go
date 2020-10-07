@@ -63,9 +63,13 @@ func GetRepo(ref, url string) (*Repo, error) {
 type RefType int
 
 const (
+	// DefaultBranchRef - default branch
 	DefaultBranchRef RefType = iota
+	// ReleaseBranchRef - release branch
 	ReleaseBranchRef
+	// ReleaseRef - tagged release
 	ReleaseRef
+	// NoRef - ref not found
 	NoRef
 )
 

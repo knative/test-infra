@@ -21,15 +21,25 @@ import "strings"
 type RulesetType int
 
 const (
+	// AnyRule - release tag, release branch, or default branch
 	AnyRule RulesetType = iota
+	// ReleaseOrReleaseBranchRule - only release tag or release branch
 	ReleaseOrReleaseBranchRule
+	// ReleaseRule - only release tag
 	ReleaseRule
+	// ReleaseBranchRule - only release branch
 	ReleaseBranchRule
+	// InvalidRule - unable to parse
 	InvalidRule
 )
 
+var rtString = []string{"Any", "ReleaseOrBranch", "Release", "Branch", "Invalid"}
+
 func (rt RulesetType) String() string {
-	return [...]string{"Any", "ReleaseOrBranch", "Release", "Branch", "Invalid"}[rt]
+	if rt >= AnyRule && rt <= InvalidRule {
+		return rtString[rt]
+	}
+	return ""
 }
 
 func Ruleset(rule string) RulesetType {
