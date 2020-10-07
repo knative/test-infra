@@ -1,14 +1,18 @@
 # Aliases for approvers and reviewers in test-infra
 
 aliases:
+  technical-oversight-committee:
+    - evankanderson
+    - grantr
+    - markusthoemmes
+    - mattmoor
+    - tcnghia
   productivity-approvers:
-  - chaodaiG
-  - chizhg
-  - coryrc
+    - chaodaiG
+    - chizhg
+    - coryrc
+    - n3wscott
   productivity-reviewers:
-  - chaodaiG
-  - coryrc
-  - chizhg
-  - steuhs
-  - peterfeifanchen
-  - efiturri
+    - steuhs
+    - peterfeifanchen
+    - efiturri
