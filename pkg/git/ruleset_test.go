@@ -46,6 +46,10 @@ func TestRuleset(t *testing.T) {
 			rule: "Invalid",
 			want: InvalidRule,
 		},
+		"Garbage": {
+			rule: "dasddasdsa",
+			want: InvalidRule,
+		},
 
 		"any": {
 			rule: "any",
@@ -65,6 +69,10 @@ func TestRuleset(t *testing.T) {
 		},
 		"invalid": {
 			rule: "invalid",
+			want: InvalidRule,
+		},
+		"garbage": {
+			rule: "adsdsaasd",
 			want: InvalidRule,
 		},
 	}
@@ -101,6 +109,10 @@ func TestRulesetType_String(t *testing.T) {
 		"Invalid": {
 			rt:   InvalidRule,
 			want: "Invalid",
+		},
+		"Garbage": {
+			rt:   RulesetType(999),
+			want: "",
 		},
 	}
 	for name, tt := range tests {

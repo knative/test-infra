@@ -18,6 +18,7 @@ package git
 
 import "strings"
 
+// RulesetType defines the rules to use for calculating repo.BestRefFor.
 type RulesetType int
 
 const (
@@ -33,35 +34,41 @@ const (
 	InvalidRule
 )
 
-var rtString = []string{"Any", "ReleaseOrBranch", "Release", "Branch", "Invalid"}
+var rulesetTypeString = []string{"Any", "ReleaseOrBranch", "Release", "Branch", "Invalid"}
+var rulesetLookup map[string]RulesetType
 
+// init will produce a ruleset lookup map to help with ruleset string conversion.
+func init() {
+	rulesetLookup = make(map[string]RulesetType, len(rulesetTypeString))
+	for i, rt := range rulesetTypeString {
+		rule := RulesetType(i)
+		rulesetLookup[strings.ToLower(rt)] = rule
+	}
+}
+
+// String returns the string represented by the Ruleset.
 func (rt RulesetType) String() string {
 	if rt >= AnyRule && rt <= InvalidRule {
-		return rtString[rt]
+		return rulesetTypeString[rt]
 	}
 	return ""
 }
 
+// Ruleset converts a rule string into a RulesetType.
 func Ruleset(rule string) RulesetType {
-	switch strings.ToLower(rule) {
-	case strings.ToLower(AnyRule.String()):
-		return AnyRule
-	case strings.ToLower(ReleaseOrReleaseBranchRule.String()):
-		return ReleaseOrReleaseBranchRule
-	case strings.ToLower(ReleaseRule.String()):
-		return ReleaseRule
-	case strings.ToLower(ReleaseBranchRule.String()):
-		return ReleaseBranchRule
-	default:
-		return InvalidRule
+	if r, found := rulesetLookup[strings.ToLower(rule)]; found {
+		return r
 	}
+	return InvalidRule
 }
 
+// Rulesets returns the valid strings to use to parse into a RulesetType.
 func Rulesets() []string {
 	return []string{
 		AnyRule.String(),
 		ReleaseOrReleaseBranchRule.String(),
 		ReleaseRule.String(),
 		ReleaseBranchRule.String(),
+		// Invalid is omitted.
 	}
 }

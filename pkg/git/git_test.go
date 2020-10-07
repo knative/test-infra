@@ -23,7 +23,7 @@ import (
 	fixtures "github.com/go-git/go-git-fixtures/v4"
 )
 
-func Test_GetRepo_BasicOne(t *testing.T) {
+func TestGetRepo_BasicOne(t *testing.T) {
 	f := fixtures.Basic().One()
 	repoURL := f.DotGit().Root()
 
@@ -45,14 +45,14 @@ func Test_GetRepo_BasicOne(t *testing.T) {
 	}
 }
 
-func Test_GetRepo_Error(t *testing.T) {
+func TestGetRepo_Error(t *testing.T) {
 	_, err := GetRepo("foo", "invalid")
 	if err == nil {
 		t.Error("expected to get an error from GetRepo but did not")
 	}
 }
 
-func Test_Repo_BestRefFor(t *testing.T) {
+func TestRepo_BestRefFor(t *testing.T) {
 	repo := &Repo{
 		Ref:           "ref",
 		DefaultBranch: "main",
@@ -196,7 +196,7 @@ func Test_Repo_BestRefFor(t *testing.T) {
 	}
 }
 
-func Test_normalizeTagVersion(t *testing.T) {
+func TestNormalizeTagVersion(t *testing.T) {
 	tests := map[string]struct {
 		version string
 		want    string
@@ -232,7 +232,7 @@ func Test_normalizeTagVersion(t *testing.T) {
 	}
 }
 
-func Test_tagVersion(t *testing.T) {
+func TestTagVersion(t *testing.T) {
 	tests := map[string]struct {
 		version semver.Version
 		want    string
@@ -264,7 +264,7 @@ func Test_tagVersion(t *testing.T) {
 	}
 }
 
-func Test_normalizeBranchVersion(t *testing.T) {
+func TestNormalizeBranchVersion(t *testing.T) {
 	tests := map[string]struct {
 		version string
 		want    string
@@ -300,7 +300,7 @@ func Test_normalizeBranchVersion(t *testing.T) {
 	}
 }
 
-func Test_branchVersion(t *testing.T) {
+func TestBranchVersion(t *testing.T) {
 	tests := map[string]struct {
 		version semver.Version
 		want    string

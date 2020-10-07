@@ -26,6 +26,8 @@ import (
 	"github.com/go-git/go-git/v5/storage/memory"
 )
 
+// Repo is a simplified git remote, containing only the list of tags, default
+// branch and branches.
 type Repo struct {
 	Ref           string
 	DefaultBranch string
@@ -33,6 +35,7 @@ type Repo struct {
 	Branches      []string
 }
 
+// GetRepo will fetch a git repo and process it into a Repo object.
 func GetRepo(ref, url string) (*Repo, error) {
 	repo := new(Repo)
 	repo.Ref = ref
@@ -73,14 +76,18 @@ const (
 	NoRef
 )
 
+var refTypeString = []string{"Default Branch", "Release Branch", "Release", "No Ref"}
+
+// String returns the string of RefType in human readable form.
 func (rt RefType) String() string {
 	if rt >= DefaultBranchRef && rt <= NoRef {
-		return [...]string{"Default Branch", "Release Branch", "Release", "No Ref"}[rt]
+		return refTypeString[rt]
 	}
 	return ""
 }
 
-// BestRefFor Returns module@ref, isRelease
+// BestRefFor Returns module@ref, isRelease based on the provided ruleset for
+// a this release.
 func (r *Repo) BestRefFor(this semver.Version, ruleset RulesetType) (string, RefType) {
 
 	switch ruleset {
