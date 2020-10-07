@@ -66,7 +66,7 @@ func TestMetaImport_OrgRepo(t *testing.T) {
 	}
 }
 
-func TestMetaImport_OrgRepo_unknownCVS(t *testing.T) {
+func TestMetaImport_OrgRepo_UnknownVCS(t *testing.T) {
 	meta := &MetaImport{
 		RepoRoot: "https://github.com",
 	}
@@ -84,7 +84,7 @@ func TestMetaImport_OrgRepo_unknownCVS(t *testing.T) {
 	t.Errorf("Expected OrgRepo to panic, got: %s, %s", org, repo)
 }
 
-func Test_metaContent(t *testing.T) {
+func TestMetaContent(t *testing.T) {
 	tests := map[string]struct {
 		meta    string
 		doc     *html.Node
