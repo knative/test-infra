@@ -37,7 +37,7 @@ func (m *MetaImport) OrgRepo() (string, string) {
 	if len(parts) >= 2 {
 		return parts[len(parts)-2], parts[len(parts)-1]
 	}
-	panic(fmt.Errorf("unknown repo root: %s", m.RepoRoot))
+	panic(fmt.Sprint("unknown repo root: ", m.RepoRoot))
 }
 
 func metaContent(doc *html.Node, name string) (string, error) {
