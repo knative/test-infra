@@ -25,8 +25,8 @@ import (
 	"golang.org/x/mod/modfile"
 )
 
-// Modules returns a map of given given modules to their dependencies, and a
-// list of unique dependencies.
+// Modules returns a map of given given modules to their direct dependencies,
+// and a list of unique dependencies.
 func Modules(gomod []string, domain string) (map[string][]string, []string, error) {
 	if len(gomod) == 0 {
 		return nil, nil, errors.New("no go module files provided")
@@ -51,7 +51,7 @@ func Modules(gomod []string, domain string) (map[string][]string, []string, erro
 	return packages, cache.List(), nil
 }
 
-// Module returns the name and a list of dependencies for a given module.
+// Module returns the name and a list of direct dependencies for a given module.
 // TODO: support url and gopath at some point for the gomod string.
 func Module(gomod string, domain string) (string, []string, error) {
 	domain = strings.TrimSpace(domain)
@@ -71,6 +71,10 @@ func Module(gomod string, domain string) (string, []string, error) {
 
 	packages := make(sets.String, 0)
 	for _, r := range file.Require {
+		// Do not include indirect dependencies.
+		if r.Indirect {
+			continue
+		}
 		// Look for requirements that have the prefix of domain.
 		if strings.HasPrefix(r.Mod.Path, domain) && !packages.Has(r.Mod.Path) {
 			packages.Insert(r.Mod.Path)
