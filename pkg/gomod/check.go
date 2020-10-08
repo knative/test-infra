@@ -25,6 +25,13 @@ import (
 	"knative.dev/test-infra/pkg/git"
 )
 
+// Check examines a go mod file for dependencies and  determines if each have a release artifact
+// based on the ruleset provided.
+//
+// See Also
+//
+// Check leverages the same rules used by
+// knative.dev/test-infra/pkg/git.Repo().BestRefFor
 func Check(gomod, release, domain string, ruleset git.RulesetType, verbose bool) error {
 	modulePkgs, _, err := Modules([]string{gomod}, domain)
 	if err != nil {
@@ -79,6 +86,7 @@ func check(module string, packages []string, release string, ruleset git.Ruleset
 	return nil
 }
 
+// DependencyErr is a Dependency Error instance. For use with with error.Is.
 var DependencyErr = &Error{}
 
 // Error holds the result of a failed check.
@@ -89,13 +97,16 @@ type Error struct {
 
 var _ error = (*Error)(nil)
 
+// Is implements error.Is(target)
 func (e *Error) Is(target error) bool {
 	_, is := target.(*Error)
 	return is
 }
 
+// Error implements error.Error()
 func (e *Error) Error() string {
 	return fmt.Sprintf("%s not ready for release because of the following dependencies [%s]",
 		e.Module,
 		strings.Join(e.Dependencies, ", "))
+
 }

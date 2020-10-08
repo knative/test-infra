@@ -22,6 +22,15 @@ import (
 	"knative.dev/test-infra/pkg/git"
 )
 
+// Float examines a go mod file for dependencies and then discovers the best
+// go mod refs to use for a given release based on the provided ruleset.
+// Returns the set of module refs that were found. If no ref is found for a
+// dependency, Float omits that ref from the returned list.
+//
+// See Also
+//
+// Float leverages the same rules used by
+// knative.dev/test-infra/pkg/git.Repo().BestRefFor
 func Float(gomod, release, domain string, ruleset git.RulesetType) ([]string, error) {
 	_, packages, err := Modules([]string{gomod}, domain)
 	if err != nil {
