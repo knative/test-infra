@@ -36,7 +36,7 @@ func addFloatCmd(root *cobra.Command) {
 		Use:   "float go.mod",
 		Short: "Find latest versions of dependencies based on a release.",
 		Long: `
-The goal of the float command is to find the best reference for a given release. 
+The goal of the float command is to find the best reference for a given release.
 Float will select a ref for found dependencies, in this order (for the Any
 ruleset, default):
 
@@ -45,7 +45,7 @@ ruleset, default):
 2. If no tags, choose the release branch, ex: "release-0.1"
 3. Finally, the default branch, ex: "master"
 
-The selection process for float can be modified by providing a ruleset. 
+The selection process for float can be modified by providing a ruleset.
 
 Rulesets,
   Any              tagged releases, release branches, default branch
@@ -53,7 +53,7 @@ Rulesets,
   Branch           release branches
   ReleaseOrBranch  tagged releases, release branch
 
-For rulesets that that restrict the selection process, no ref is selected. 
+For rulesets that that restrict the selection process, no ref is selected.
 `,
 		Args: cobra.ExactArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

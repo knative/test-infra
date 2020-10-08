@@ -163,7 +163,7 @@ Flags:
 Example,
 
 ```
-$ buoy needs $HOME/go/src/knative.dev/eventing-github/go.mod --domain knative.dev 
+$ buoy needs $HOME/go/src/knative.dev/eventing-github/go.mod --domain knative.dev
 knative.dev/eventing
 knative.dev/pkg
 knative.dev/serving
