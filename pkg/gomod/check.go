@@ -65,11 +65,11 @@ func check(module string, packages []string, release string, ruleset git.Ruleset
 		case git.NoRef:
 			nonReady = append(nonReady, ref)
 			if out != nil {
-				_, _ = fmt.Fprintf(out, "✘ %s\n", ref)
+				_, _ = fmt.Fprintln(out, "✘ ", ref)
 			}
 		default:
 			if out != nil {
-				_, _ = fmt.Fprintf(out, "✘ %s\n", ref)
+				_, _ = fmt.Fprintln(out, "✔ ", ref)
 			}
 		}
 	}
