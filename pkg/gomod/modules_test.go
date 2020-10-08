@@ -17,6 +17,7 @@ limitations under the License.
 package gomod
 
 import (
+	"github.com/google/go-cmp/cmp"
 	"testing"
 )
 
@@ -88,14 +89,8 @@ func TestModule(t *testing.T) {
 			if name != tt.wantName {
 				t.Errorf("Module() name incorrect; got %q, want: %q", name, tt.wantName)
 			}
-			if len(deps) != len(tt.wantDeps) {
-				t.Errorf("Module() []deps length mismatch; got %v, want: %v", deps, tt.wantDeps)
-				return
-			}
-			for i, got := range deps {
-				if want := tt.wantDeps[i]; got != want {
-					t.Errorf("unexpected dep[%d]; got %q, want: %q", i, got, want)
-				}
+			if diff := cmp.Diff(tt.wantDeps, deps); diff != "" {
+				t.Error("Module() deps diff(-want,+got):\n", diff)
 			}
 		})
 	}
@@ -116,7 +111,7 @@ func TestModules(t *testing.T) {
 				"knative.dev/test-demo1": {"knative.dev/eventing", "knative.dev/pkg", "knative.dev/serving", "knative.dev/test-infra"},
 				"knative.dev/test-demo2": {"knative.dev/discovery", "knative.dev/pkg", "knative.dev/test-infra"},
 			},
-			wantDeps: []string{"knative.dev/eventing", "knative.dev/pkg", "knative.dev/serving", "knative.dev/test-infra", "knative.dev/discovery"},
+			wantDeps: []string{"knative.dev/discovery", "knative.dev/eventing", "knative.dev/pkg", "knative.dev/serving", "knative.dev/test-infra"},
 		},
 		"example1, example2, k8s.io": {
 			files:  []string{"testdata/gomod.example1", "testdata/gomod.example2"},
@@ -161,31 +156,12 @@ func TestModules(t *testing.T) {
 				t.Errorf("unexpected error state, want error == %t, got %v", tt.wantErr, err)
 				return
 			}
-			if len(pkgs) != len(tt.wantPkgs) {
-				t.Errorf("Modules() []pkgs length mismatch; got %v, want: %v", pkgs, tt.wantPkgs)
-				return
+			if diff := cmp.Diff(tt.wantPkgs, pkgs); diff != "" {
+				t.Error("Modules() pkgs diff(-want,+got):\n", diff)
 			}
-			for name, gots := range pkgs {
-				if want, found := tt.wantPkgs[name]; !found {
-				} else if len(gots) != len(want) {
-					t.Errorf("unexpected pkgs[%q].dep length mismatch; got %v, want: %v", name, gots, want)
-					continue
-				} else {
-					for i, got := range gots {
-						if want := tt.wantPkgs[name][i]; got != want {
-							t.Errorf("unexpected pkgs[%q].dep[%d]; got %q, want: %q", name, i, got, want)
-						}
-					}
-				}
-			}
-			if len(deps) != len(tt.wantDeps) {
-				t.Errorf("Modules() []deps length mismatch; got %v, want: %v", deps, tt.wantDeps)
-				return
-			}
-			for i, got := range deps {
-				if want := tt.wantDeps[i]; got != want {
-					t.Errorf("unexpected dep[%d]; got %q, want: %q", i, got, want)
-				}
+
+			if diff := cmp.Diff(tt.wantDeps, deps); diff != "" {
+				t.Error("Modules() deps diff(-want,+got):\n", diff)
 			}
 		})
 	}
