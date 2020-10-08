@@ -1,12 +1,25 @@
-package needs
+/*
+Copyright 2020 The Knative Authors
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+package gomod
 
 import (
-	"fmt"
+	"errors"
 	"io/ioutil"
-	"regexp"
 	"strings"
-
-	"tableflip.dev/buoy/pkg/golang"
 
 	"golang.org/x/mod/modfile"
 )
@@ -14,15 +27,19 @@ import (
 // Modules returns a map of given given modules to their dependencies, and a
 // list of unique dependencies.
 func Modules(gomod []string, domain string) (map[string][]string, []string, error) {
+	if len(gomod) == 0 {
+		return nil, nil, errors.New("no go module files provided")
+	}
+
 	packages := make(map[string][]string, 0)
 	dependencies := make([]string, 0)
 	cache := make(map[string]bool)
 	for _, gm := range gomod {
-		module, pkgs, err := needs(gm, domain)
+		name, pkgs, err := Module(gm, domain)
 		if err != nil {
 			return nil, nil, err
 		}
-		packages[module] = pkgs
+		packages[name] = pkgs
 		for _, pkg := range pkgs {
 			if _, seen := cache[pkg]; seen {
 				continue
@@ -34,7 +51,15 @@ func Modules(gomod []string, domain string) (map[string][]string, []string, erro
 
 	return packages, dependencies, nil
 }
-func needs(gomod string, domain string) (string, []string, error) {
+
+// Module returns the name and a list of dependencies for a given module.
+// TODO: support url and gopath at some point for the gomod string.
+func Module(gomod string, domain string) (string, []string, error) {
+	domain = strings.TrimSpace(domain)
+	if len(domain) == 0 {
+		return "", nil, errors.New("no domain provided")
+	}
+
 	b, err := ioutil.ReadFile(gomod)
 	if err != nil {
 		return "", nil, err
@@ -54,67 +79,4 @@ func needs(gomod string, domain string) (string, []string, error) {
 	}
 
 	return file.Module.Mod.Path, packages, nil
-}
-
-func Dot(gomods []string, domain string) (string, error) {
-	dot := new(strings.Builder)
-	dot.WriteString("digraph G { \n")
-
-	for _, gomod := range gomods {
-		b, err := ioutil.ReadFile(gomod)
-		if err != nil {
-			return "", err
-		}
-
-		file, err := modfile.Parse(gomod, b, nil)
-		if err != nil {
-			return "", err
-		}
-
-		if node, err := infoString(file.Module.Mod.Path); err != nil {
-			return "", err
-		} else {
-			dot.WriteString(node)
-		}
-
-		for _, pkg := range file.Require {
-			// Look for requirements that have the prefix of domain.
-			if strings.HasPrefix(pkg.Mod.Path, domain) {
-				if node, err := infoString(pkg.Mod.Path); err != nil {
-					return "", err
-				} else {
-					dot.WriteString(node)
-				}
-
-				dot.WriteString(fmt.Sprintf(" %s -> %s;\n", toKey(file.Module.Mod.Path), toKey(pkg.Mod.Path)))
-			}
-		}
-	}
-	dot.WriteString("}\n")
-	return dot.String(), nil
-}
-
-func infoString(pkg string) (string, error) {
-	url := fmt.Sprintf("https://%s?go-get=1", pkg)
-	meta, err := golang.GetMetaImport(url)
-	if err != nil {
-		return "", fmt.Errorf("unable to fetch go import %s: %v", url, err)
-	}
-
-	return fmt.Sprintf(" %s [label=\"%s\", URL=\"%s\", tooltip=\"%s --> %s\"];\n",
-		toKey(pkg), pkg, meta.RepoRoot, pkg, meta.RepoRoot), nil
-}
-
-func toKey(pkg string) string {
-	return alphaNum.ReplaceAllString(strings.ToLower(pkg), "")
-}
-
-var alphaNum *regexp.Regexp
-
-func init() {
-	reg, err := regexp.Compile("[^a-zA-Z0-9]+")
-	if err != nil {
-		panic(err)
-	}
-	alphaNum = reg
 }
