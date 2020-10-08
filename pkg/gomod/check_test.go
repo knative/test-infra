@@ -49,7 +49,7 @@ func TestError(t *testing.T) {
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
 			if errors.Is(tt.err, DependencyErr) != tt.isDependencyErr {
-				t.Errorf("expected errors.Is(err, DependencyErr) to be %t", tt.isDependencyErr)
+				t.Error("expected errors.Is(err, DependencyErr) to be ", tt.isDependencyErr)
 			}
 		})
 	}
