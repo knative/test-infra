@@ -72,10 +72,14 @@ func Modules(gomod []string, domain string) (map[string][]string, []string, erro
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 // Module returns the name and a list of direct dependencies for a given module.
 =======
 // Module returns the name and a list of dependencies for a given module.
 >>>>>>> adding go mod parsing
+=======
+// Module returns the name and a list of direct dependencies for a given module.
+>>>>>>> only report direct dependencies
 // TODO: support url and gopath at some point for the gomod string.
 func Module(gomod string, domain string) (string, []string, error) {
 	domain = strings.TrimSpace(domain)
@@ -100,10 +104,14 @@ func Module(gomod string, domain string) (string, []string, error) {
 	packages := make(sets.String, 0)
 	for _, r := range file.Require {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> only report direct dependencies
 		// Do not include indirect dependencies.
 		if r.Indirect {
 			continue
 		}
+<<<<<<< HEAD
 		// Look for requirements that have the prefix of domain.
 		if strings.HasPrefix(r.Mod.Path, domain) && !packages.Has(r.Mod.Path) {
 			packages.Insert(r.Mod.Path)
@@ -112,6 +120,8 @@ func Module(gomod string, domain string) (string, []string, error) {
 
 	return file.Module.Mod.Path, packages.List(), nil
 =======
+=======
+>>>>>>> only report direct dependencies
 		// Look for requirements that have the prefix of domain.
 		if strings.HasPrefix(r.Mod.Path, domain) && !packages.Has(r.Mod.Path) {
 			packages.Insert(r.Mod.Path)
