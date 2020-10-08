@@ -18,8 +18,9 @@ package gomod
 
 import (
 	"fmt"
-	"github.com/blang/semver/v4"
 	"io"
+
+	"github.com/blang/semver/v4"
 
 	"knative.dev/test-infra/pkg/git"
 )
