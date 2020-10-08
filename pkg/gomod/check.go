@@ -27,11 +27,7 @@ import (
 )
 
 // Check examines a go mod file for dependencies and  determines if each have a release artifact
-// based on the ruleset provided.
-//
-// See Also
-//
-// Check leverages the same rules used by
+// based on the ruleset provided. Check leverages the same rules used by
 // knative.dev/test-infra/pkg/git.Repo().BestRefFor
 func Check(gomod, release, domain string, ruleset git.RulesetType, out io.Writer) error {
 	modulePkgs, _, err := Modules([]string{gomod}, domain)
