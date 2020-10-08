@@ -19,6 +19,7 @@ package gomod
 import (
 	"fmt"
 	"io"
+	"strings"
 
 	"github.com/blang/semver/v4"
 
@@ -108,6 +109,5 @@ func (e *Error) Is(target error) bool {
 func (e *Error) Error() string {
 	return fmt.Sprintf("%s failed because of the following dependencies [%s]",
 		e.Module,
-		e.Dependencies)
-
+		strings.Join(e.Dependencies, ", "))
 }
