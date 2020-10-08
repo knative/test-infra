@@ -17,6 +17,7 @@ limitations under the License.
 package gomod
 
 import (
+	"github.com/google/go-cmp/cmp"
 	"testing"
 <<<<<<< HEAD
 
@@ -94,6 +95,7 @@ func TestModule(t *testing.T) {
 				t.Errorf("Module() name incorrect; got %q, want: %q", name, tt.wantName)
 			}
 <<<<<<< HEAD
+<<<<<<< HEAD
 			if diff := cmp.Diff(tt.wantDeps, deps); diff != "" {
 				t.Error("Module() deps diff(-want,+got):\n", diff)
 =======
@@ -106,6 +108,10 @@ func TestModule(t *testing.T) {
 					t.Errorf("unexpected dep[%d]; got %q, want: %q", i, got, want)
 				}
 >>>>>>> adding go mod parsing
+=======
+			if diff := cmp.Diff(tt.wantDeps, deps); diff != "" {
+				t.Error("Module() deps diff(-want,+got):\n", diff)
+>>>>>>> feedback, use sets.
 			}
 		})
 	}
@@ -127,10 +133,14 @@ func TestModules(t *testing.T) {
 				"knative.dev/test-demo2": {"knative.dev/discovery", "knative.dev/pkg", "knative.dev/test-infra"},
 			},
 <<<<<<< HEAD
+<<<<<<< HEAD
 			wantDeps: []string{"knative.dev/discovery", "knative.dev/eventing", "knative.dev/pkg", "knative.dev/serving", "knative.dev/test-infra"},
 =======
 			wantDeps: []string{"knative.dev/eventing", "knative.dev/pkg", "knative.dev/serving", "knative.dev/test-infra", "knative.dev/discovery"},
 >>>>>>> adding go mod parsing
+=======
+			wantDeps: []string{"knative.dev/discovery", "knative.dev/eventing", "knative.dev/pkg", "knative.dev/serving", "knative.dev/test-infra"},
+>>>>>>> feedback, use sets.
 		},
 		"example1, example2, k8s.io": {
 			files:  []string{"testdata/gomod.example1", "testdata/gomod.example2"},
@@ -176,6 +186,7 @@ func TestModules(t *testing.T) {
 				return
 			}
 <<<<<<< HEAD
+<<<<<<< HEAD
 			if diff := cmp.Diff(tt.wantPkgs, pkgs); diff != "" {
 				t.Error("Modules() pkgs diff(-want,+got):\n", diff)
 			}
@@ -209,6 +220,14 @@ func TestModules(t *testing.T) {
 					t.Errorf("unexpected dep[%d]; got %q, want: %q", i, got, want)
 				}
 >>>>>>> adding go mod parsing
+=======
+			if diff := cmp.Diff(tt.wantPkgs, pkgs); diff != "" {
+				t.Error("Modules() pkgs diff(-want,+got):\n", diff)
+			}
+
+			if diff := cmp.Diff(tt.wantDeps, deps); diff != "" {
+				t.Error("Modules() deps diff(-want,+got):\n", diff)
+>>>>>>> feedback, use sets.
 			}
 		})
 	}
