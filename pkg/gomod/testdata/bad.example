@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 This is not a go.mod file.
+=======
+This is not a go.mod file.
+>>>>>>> adding go mod parsing
