@@ -105,7 +105,7 @@ func (e *Error) Is(target error) bool {
 
 // Error implements error.Error()
 func (e *Error) Error() string {
-	return fmt.Sprintf("%s not ready for release because of the following dependencies [%s]",
+	return fmt.Sprintf("%s failed because of the following dependencies [%s]",
 		e.Module,
 		strings.Join(e.Dependencies, ", "))
 
