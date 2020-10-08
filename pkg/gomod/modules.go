@@ -92,11 +92,11 @@ func moduleToRepo(module string) (*git.Repo, error) {
 	url := fmt.Sprintf("https://%s?go-get=1", module)
 	meta, err := golang.GetMetaImport(url)
 	if err != nil {
-		return nil, fmt.Errorf("unable to fetch go import %s: %v", url, err)
+		return nil, fmt.Errorf("unable to fetch go import %s: %w", url, err)
 	}
 
 	if meta.VCS != "git" {
-		return nil, fmt.Errorf("unknown VCS: %s", meta.VCS)
+		return nil, errors.New("unknown VCS: " + meta.VCS)
 	}
 
 	return git.GetRepo(module, meta.RepoRoot)

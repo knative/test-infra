@@ -18,9 +18,8 @@ package gomod
 
 import (
 	"fmt"
-	"strings"
-
 	"github.com/blang/semver/v4"
+	"io"
 
 	"knative.dev/test-infra/pkg/git"
 )
@@ -32,29 +31,30 @@ import (
 //
 // Check leverages the same rules used by
 // knative.dev/test-infra/pkg/git.Repo().BestRefFor
-func Check(gomod, release, domain string, ruleset git.RulesetType, verbose bool) error {
+func Check(gomod, release, domain string, ruleset git.RulesetType, out io.Writer) error {
 	modulePkgs, _, err := Modules([]string{gomod}, domain)
 	if err != nil {
 		return err
 	}
 
 	for module, packages := range modulePkgs {
-		if err := check(module, packages, release, ruleset, verbose); err != nil {
+		if err := check(module, packages, release, ruleset, out); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
-func check(module string, packages []string, release string, ruleset git.RulesetType, verbose bool) error {
+func check(module string, packages []string, release string, ruleset git.RulesetType, out io.Writer) error {
 	this, err := semver.ParseTolerant(release)
 	if err != nil {
 		return err
 	}
 
-	if verbose {
-		fmt.Printf("%s\n", module)
+	if out != nil {
+		_, _ = fmt.Fprintln(out, module)
 	}
+
 	nonReady := make([]string, 0)
 	for _, pkg := range packages {
 		repo, err := moduleToRepo(pkg)
@@ -66,12 +66,12 @@ func check(module string, packages []string, release string, ruleset git.Ruleset
 		switch refType {
 		case git.NoRef:
 			nonReady = append(nonReady, ref)
-			if verbose {
-				fmt.Printf("✘ %s\n", ref)
+			if out != nil {
+				_, _ = fmt.Fprintf(out, "✘ %s\n", ref)
 			}
 		default:
-			if verbose {
-				fmt.Printf("✔ %s\n", ref)
+			if out != nil {
+				_, _ = fmt.Fprintf(out, "✘ %s\n", ref)
 			}
 		}
 	}
@@ -107,6 +107,6 @@ func (e *Error) Is(target error) bool {
 func (e *Error) Error() string {
 	return fmt.Sprintf("%s failed because of the following dependencies [%s]",
 		e.Module,
-		strings.Join(e.Dependencies, ", "))
+		e.Dependencies)
 
 }
