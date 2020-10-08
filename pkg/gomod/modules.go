@@ -18,12 +18,15 @@ package gomod
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"strings"
 
+	"golang.org/x/mod/modfile"
 	"k8s.io/apimachinery/pkg/util/sets"
 
-	"golang.org/x/mod/modfile"
+	"knative.dev/test-infra/pkg/git"
+	"knative.dev/test-infra/pkg/golang"
 )
 
 // Modules returns a map of given given modules to their direct dependencies,
@@ -83,4 +86,18 @@ func Module(gomod string, domain string) (string, []string, error) {
 	}
 
 	return file.Module.Mod.Path, packages.List(), nil
+}
+
+func moduleToRepo(module string) (*git.Repo, error) {
+	url := fmt.Sprintf("https://%s?go-get=1", module)
+	meta, err := golang.GetMetaImport(url)
+	if err != nil {
+		return nil, fmt.Errorf("unable to fetch go import %s: %v", url, err)
+	}
+
+	if meta.VCS != "git" {
+		return nil, fmt.Errorf("unknown VCS: %s", meta.VCS)
+	}
+
+	return git.GetRepo(module, meta.RepoRoot)
 }
