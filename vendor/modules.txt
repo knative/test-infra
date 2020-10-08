@@ -240,6 +240,9 @@ golang.org/x/crypto/ssh/knownhosts
 golang.org/x/lint
 golang.org/x/lint/golint
 # golang.org/x/mod v0.3.0
+## explicit
+golang.org/x/mod/internal/lazyregexp
+golang.org/x/mod/modfile
 golang.org/x/mod/module
 golang.org/x/mod/semver
 # golang.org/x/net v0.0.0-20200707034311-ab3426394381
