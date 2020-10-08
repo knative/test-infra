@@ -19,8 +19,9 @@ package gomod
 import (
 	"errors"
 	"io/ioutil"
-	"k8s.io/apimachinery/pkg/util/sets"
 	"strings"
+
+	"k8s.io/apimachinery/pkg/util/sets"
 
 	"golang.org/x/mod/modfile"
 )

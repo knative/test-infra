@@ -17,8 +17,9 @@ limitations under the License.
 package gomod
 
 import (
-	"github.com/google/go-cmp/cmp"
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestModule(t *testing.T) {
