@@ -111,7 +111,7 @@ func TestFloat(t *testing.T) {
 						t.Errorf("Float() %s; got %q, want: %q", module, got, want)
 					}
 				} else {
-					t.Errorf("untested float dep: %s", dep)
+					t.Error("untested float dep: ", dep)
 				}
 			}
 		})

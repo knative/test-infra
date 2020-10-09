@@ -71,9 +71,8 @@ Rulesets,
 
 			err := gomod.Check(gomodFile, release, domain, ruleset, out)
 			if errors.Is(err, gomod.DependencyErr) {
-				_, _ = fmt.Fprintln(os.Stderr, err.Error())
+				fmt.Fprintln(os.Stderr, err.Error())
 				os.Exit(1)
-				return nil
 			}
 
 			return err
