@@ -24,6 +24,6 @@ import (
 
 func main() {
 	if err := commands.New().Execute(); err != nil {
-		log.Fatal("error during command execution: ", err)
+		log.Fatal("Error during command execution: ", err)
 	}
 }
