@@ -1,4 +1,28 @@
 {
+  "cloud.google.com/go/analytics/admin/apiv1alpha": {
+    "distribution_name": "cloud.google.com/go/analytics/admin/apiv1alpha",
+    "description": "",
+    "language": "Go",
+    "client_library_type": "generated",
+    "docs_url": "https://pkg.go.dev/cloud.google.com/go/analytics/admin/apiv1alpha",
+    "release_level": "alpha"
+  },
+  "cloud.google.com/go/analytics/data/apiv1alpha": {
+    "distribution_name": "cloud.google.com/go/analytics/data/apiv1alpha",
+    "description": "",
+    "language": "Go",
+    "client_library_type": "generated",
+    "docs_url": "https://pkg.go.dev/cloud.google.com/go/analytics/data/apiv1alpha",
+    "release_level": "alpha"
+  },
+  "cloud.google.com/go/area120/tables/apiv1alpha1": {
+    "distribution_name": "cloud.google.com/go/area120/tables/apiv1alpha1",
+    "description": "",
+    "language": "Go",
+    "client_library_type": "generated",
+    "docs_url": "https://pkg.go.dev/cloud.google.com/go/area120/tables/apiv1alpha1",
+    "release_level": "alpha"
+  },
   "cloud.google.com/go/asset/apiv1": {
     "distribution_name": "cloud.google.com/go/asset/apiv1",
     "description": "Cloud Asset API",
@@ -29,6 +53,14 @@
     "language": "Go",
     "client_library_type": "generated",
     "docs_url": "https://pkg.go.dev/cloud.google.com/go/asset/apiv1p5beta1",
+    "release_level": "beta"
+  },
+  "cloud.google.com/go/assuredworkloads/apiv1beta1": {
+    "distribution_name": "cloud.google.com/go/assuredworkloads/apiv1beta1",
+    "description": "",
+    "language": "Go",
+    "client_library_type": "generated",
+    "docs_url": "https://pkg.go.dev/cloud.google.com/go/assuredworkloads/apiv1beta1",
     "release_level": "beta"
   },
   "cloud.google.com/go/automl/apiv1": {
@@ -263,6 +295,14 @@
     "docs_url": "https://pkg.go.dev/cloud.google.com/go/dialogflow/apiv2",
     "release_level": "ga"
   },
+  "cloud.google.com/go/dialogflow/cx/apiv3beta1": {
+    "distribution_name": "cloud.google.com/go/dialogflow/cx/apiv3beta1",
+    "description": "Dialogflow API",
+    "language": "Go",
+    "client_library_type": "generated",
+    "docs_url": "https://pkg.go.dev/cloud.google.com/go/dialogflow/cx/apiv3beta1",
+    "release_level": "beta"
+  },
   "cloud.google.com/go/dlp/apiv2": {
     "distribution_name": "cloud.google.com/go/dlp/apiv2",
     "description": "Cloud Data Loss Prevention (DLP) API",
@@ -317,6 +357,14 @@
     "language": "Go",
     "client_library_type": "generated",
     "docs_url": "https://pkg.go.dev/cloud.google.com/go/functions/apiv1",
+    "release_level": "beta"
+  },
+  "cloud.google.com/go/gaming/apiv1": {
+    "distribution_name": "cloud.google.com/go/gaming/apiv1",
+    "description": "",
+    "language": "Go",
+    "client_library_type": "generated",
+    "docs_url": "https://pkg.go.dev/cloud.google.com/go/gaming/apiv1",
     "release_level": "beta"
   },
   "cloud.google.com/go/gaming/apiv1beta": {
@@ -495,6 +543,14 @@
     "docs_url": "https://pkg.go.dev/cloud.google.com/go/policytroubleshooter/apiv1",
     "release_level": "beta"
   },
+  "cloud.google.com/go/profiler": {
+    "distribution_name": "cloud.google.com/go/profiler",
+    "description": "Cloud Profiler",
+    "language": "Go",
+    "client_library_type": "manual",
+    "docs_url": "https://pkg.go.dev/cloud.google.com/go/profiler",
+    "release_level": "ga"
+  },
   "cloud.google.com/go/pubsub": {
     "distribution_name": "cloud.google.com/go/pubsub",
     "description": "Cloud PubSub",
@@ -510,6 +566,14 @@
     "client_library_type": "generated",
     "docs_url": "https://pkg.go.dev/cloud.google.com/go/pubsub/apiv1",
     "release_level": "ga"
+  },
+  "cloud.google.com/go/pubsublite/apiv1": {
+    "distribution_name": "cloud.google.com/go/pubsublite/apiv1",
+    "description": "",
+    "language": "Go",
+    "client_library_type": "generated",
+    "docs_url": "https://pkg.go.dev/cloud.google.com/go/pubsublite/apiv1",
+    "release_level": "beta"
   },
   "cloud.google.com/go/recaptchaenterprise/apiv1": {
     "distribution_name": "cloud.google.com/go/recaptchaenterprise/apiv1",
@@ -597,6 +661,14 @@
     "language": "Go",
     "client_library_type": "generated",
     "docs_url": "https://pkg.go.dev/cloud.google.com/go/secretmanager/apiv1beta1",
+    "release_level": "beta"
+  },
+  "cloud.google.com/go/security/privateca/apiv1beta1": {
+    "distribution_name": "cloud.google.com/go/security/privateca/apiv1beta1",
+    "description": "",
+    "language": "Go",
+    "client_library_type": "generated",
+    "docs_url": "https://pkg.go.dev/cloud.google.com/go/security/privateca/apiv1beta1",
     "release_level": "beta"
   },
   "cloud.google.com/go/securitycenter/apiv1": {
@@ -695,6 +767,14 @@
     "docs_url": "https://pkg.go.dev/cloud.google.com/go/storage",
     "release_level": "ga"
   },
+  "cloud.google.com/go/talent/apiv4": {
+    "distribution_name": "cloud.google.com/go/talent/apiv4",
+    "description": "",
+    "language": "Go",
+    "client_library_type": "generated",
+    "docs_url": "https://pkg.go.dev/cloud.google.com/go/talent/apiv4",
+    "release_level": "beta"
+  },
   "cloud.google.com/go/talent/apiv4beta1": {
     "distribution_name": "cloud.google.com/go/talent/apiv4beta1",
     "description": "Cloud Talent Solution API",
@@ -743,6 +823,14 @@
     "docs_url": "https://pkg.go.dev/cloud.google.com/go/translate/apiv3",
     "release_level": "ga"
   },
+  "cloud.google.com/go/video/transcoder/apiv1beta1": {
+    "distribution_name": "cloud.google.com/go/video/transcoder/apiv1beta1",
+    "description": "",
+    "language": "Go",
+    "client_library_type": "generated",
+    "docs_url": "https://pkg.go.dev/cloud.google.com/go/video/transcoder/apiv1beta1",
+    "release_level": "beta"
+  },
   "cloud.google.com/go/videointelligence/apiv1": {
     "distribution_name": "cloud.google.com/go/videointelligence/apiv1",
     "description": "Cloud Video Intelligence API",
@@ -789,6 +877,22 @@
     "language": "Go",
     "client_library_type": "generated",
     "docs_url": "https://pkg.go.dev/cloud.google.com/go/webrisk/apiv1beta1",
+    "release_level": "beta"
+  },
+  "cloud.google.com/go/workflows/apiv1beta": {
+    "distribution_name": "cloud.google.com/go/workflows/apiv1beta",
+    "description": "",
+    "language": "Go",
+    "client_library_type": "generated",
+    "docs_url": "https://pkg.go.dev/cloud.google.com/go/workflows/apiv1beta",
+    "release_level": "beta"
+  },
+  "cloud.google.com/go/workflows/executions/apiv1beta": {
+    "distribution_name": "cloud.google.com/go/workflows/executions/apiv1beta",
+    "description": "",
+    "language": "Go",
+    "client_library_type": "generated",
+    "docs_url": "https://pkg.go.dev/cloud.google.com/go/workflows/executions/apiv1beta",
     "release_level": "beta"
   }
 }
