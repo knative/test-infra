@@ -17,7 +17,9 @@ limitations under the License.
 package golang
 
 import (
+	"errors"
 	"fmt"
+	"knative.dev/test-infra/pkg/git"
 	"net/http"
 	"strings"
 
@@ -68,6 +70,8 @@ func metaContent(doc *html.Node, name string) (string, error) {
 	return "", fmt.Errorf("missing <meta name=%s> in the node tree", name)
 }
 
+// GetMetaImport fetches and parses header tags named go-import into a
+// MetaImport object.
 func GetMetaImport(url string) (*MetaImport, error) {
 	resp, err := http.Get(url)
 	if err != nil {
@@ -90,4 +94,19 @@ func GetMetaImport(url string) (*MetaImport, error) {
 		VCS:      f[1],
 		RepoRoot: f[2],
 	}, nil
+}
+
+// ModuleToRepo resolves a go module name to a remote git repo.
+func ModuleToRepo(module string) (*git.Repo, error) {
+	url := fmt.Sprintf("https://%s?go-get=1", module)
+	meta, err := GetMetaImport(url)
+	if err != nil {
+		return nil, fmt.Errorf("unable to fetch go import %s: %w", url, err)
+	}
+
+	if meta.VCS != "git" {
+		return nil, errors.New("unknown VCS: " + meta.VCS)
+	}
+
+	return git.GetRepo(module, meta.RepoRoot)
 }

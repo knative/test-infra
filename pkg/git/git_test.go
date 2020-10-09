@@ -367,3 +367,51 @@ func TestRefType_String(t *testing.T) {
 		})
 	}
 }
+
+func TestParseRef(t *testing.T) {
+	tests := []struct {
+		ref         string
+		wantModule  string
+		wantRef     string
+		wantRefType RefType
+	}{{
+		ref:         "foo@v0.1.1",
+		wantModule:  "foo",
+		wantRef:     "v0.1.1",
+		wantRefType: ReleaseRef,
+	}, {
+		ref:         "foo@release-v0.1",
+		wantModule:  "foo",
+		wantRef:     "release-v0.1",
+		wantRefType: ReleaseBranchRef,
+	}, {
+		ref:         "foo@default",
+		wantModule:  "foo",
+		wantRef:     "default",
+		wantRefType: BranchRef,
+	}, {
+		ref:         "invalid",
+		wantModule:  "invalid",
+		wantRef:     "",
+		wantRefType: UndefinedRef,
+	}, {
+		ref:         "",
+		wantModule:  "",
+		wantRef:     "",
+		wantRefType: UndefinedRef,
+	}}
+	for _, tt := range tests {
+		t.Run(tt.ref, func(t *testing.T) {
+			gotModule, gotRef, gotRefType := ParseRef(tt.ref)
+			if gotModule != tt.wantModule {
+				t.Errorf("ParseRef() module got = %v, want %v", gotModule, tt.wantModule)
+			}
+			if gotRef != tt.wantRef {
+				t.Errorf("ParseRef() ref got = %v, want %v", gotRef, tt.wantRef)
+			}
+			if gotRefType != tt.wantRefType {
+				t.Errorf("ParseRef() refType got = %v, want %v", gotRefType, tt.wantRefType)
+			}
+		})
+	}
+}
