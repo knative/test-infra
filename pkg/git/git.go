@@ -66,17 +66,21 @@ func GetRepo(ref, url string) (*Repo, error) {
 type RefType int
 
 const (
+	// BranchRef - branch
+	BranchRef RefType = iota
 	// DefaultBranchRef - default branch
-	DefaultBranchRef RefType = iota
+	DefaultBranchRef
 	// ReleaseBranchRef - release branch
 	ReleaseBranchRef
 	// ReleaseRef - tagged release
 	ReleaseRef
 	// NoRef - ref not found
 	NoRef
+	// UndefinedRef is not defined
+	UndefinedRef
 )
 
-var refTypeString = []string{"Default Branch", "Release Branch", "Release", "No Ref"}
+var refTypeString = []string{"Branch", "Default Branch", "Release Branch", "Release", "No Ref"}
 
 // String returns the string of RefType in human readable form.
 func (rt RefType) String() string {
@@ -164,4 +168,28 @@ func normalizeBranchVersion(v string) (string, bool) {
 
 func branchVersion(v semver.Version) string {
 	return fmt.Sprintf("release-%d.%d", v.Major, v.Minor)
+}
+
+// ParseRef takes a go module ref and converts it to the module name and RefType.
+// ParseRef expects ref to be in the form "module@ref".
+// Only release branches and
+func ParseRef(ref string) (string, string, RefType) {
+	parts := strings.Split(ref, "@")
+	if len(parts) != 2 {
+		return ref, "", UndefinedRef
+	}
+
+	// Try ref as a tag.
+	if _, ok := normalizeTagVersion(parts[1]); ok {
+		return parts[0], parts[1], ReleaseRef
+	}
+
+	// Try ref as a release branch.
+	if _, ok := normalizeBranchVersion(parts[1]); ok {
+		return parts[0], parts[1], ReleaseBranchRef
+	}
+
+	// At this point we have to assume it is a branch.
+	return parts[0], parts[1], BranchRef
+
 }

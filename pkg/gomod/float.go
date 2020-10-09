@@ -20,6 +20,7 @@ import (
 	"github.com/blang/semver/v4"
 
 	"knative.dev/test-infra/pkg/git"
+	"knative.dev/test-infra/pkg/golang"
 )
 
 // Float examines a go mod file for dependencies and then discovers the best
@@ -37,7 +38,7 @@ func Float(gomod, release, domain string, ruleset git.RulesetType) ([]string, er
 
 	refs := make([]string, 0)
 	for _, pkg := range packages {
-		repo, err := moduleToRepo(pkg)
+		repo, err := golang.ModuleToRepo(pkg)
 		if err != nil {
 			return nil, err
 		}

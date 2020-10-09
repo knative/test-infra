@@ -24,6 +24,7 @@ import (
 	"github.com/blang/semver/v4"
 
 	"knative.dev/test-infra/pkg/git"
+	"knative.dev/test-infra/pkg/golang"
 )
 
 // Check examines a go mod file for dependencies and  determines if each have a release artifact
@@ -55,7 +56,7 @@ func check(module string, packages []string, release string, ruleset git.Ruleset
 
 	nonReady := make([]string, 0)
 	for _, pkg := range packages {
-		repo, err := moduleToRepo(pkg)
+		repo, err := golang.ModuleToRepo(pkg)
 		if err != nil {
 			return err
 		}
