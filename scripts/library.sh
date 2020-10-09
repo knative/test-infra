@@ -519,6 +519,8 @@ function add_trap {
 #   "--release <version>" used with upgrade. The release version to upgrade
 #                         Knative components. ex: --release v0.18. Defaults to
 #                         "master".
+# Additional dependencies can be included in the upgrade by providing them in a
+# global env var: FLOATING_DEPS
 function go_update_deps() {
   cd "${REPO_ROOT_DIR}" || return 1
 
@@ -541,9 +543,9 @@ function go_update_deps() {
 
   if (( UPGRADE )); then
     echo "--- Upgrading to ${VERSION}"
-    FLOATING_DEPS=( $(run_go_tool knative.dev/test-infra/buoy buoy float ${REPO_ROOT_DIR}/go.mod --release ${VERSION} --domain knative.dev) )
+    FLOATING_DEPS+=( $(run_go_tool knative.dev/test-infra/buoy buoy float ${REPO_ROOT_DIR}/go.mod --release ${VERSION} --domain knative.dev) )
     if (( ${#FLOATING_DEPS[@]} )); then
-      echo "floating deps to ${FLOATING_DEPS[@]}"
+      echo "Floating deps to ${FLOATING_DEPS[@]}"
       go get -d ${FLOATING_DEPS[@]}
     else
       echo "Nothing to upgrade."
