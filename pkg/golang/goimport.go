@@ -19,9 +19,10 @@ package golang
 import (
 	"errors"
 	"fmt"
-	"knative.dev/test-infra/pkg/git"
 	"net/http"
 	"strings"
+
+	"knative.dev/test-infra/pkg/git"
 
 	"golang.org/x/net/html"
 )

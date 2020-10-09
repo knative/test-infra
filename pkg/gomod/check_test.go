@@ -18,9 +18,10 @@ package gomod
 
 import (
 	"errors"
-	"knative.dev/test-infra/pkg/git"
 	"os"
 	"testing"
+
+	"knative.dev/test-infra/pkg/git"
 )
 
 // TestCheck - This is an integration test, it will make a call out to the internet.
