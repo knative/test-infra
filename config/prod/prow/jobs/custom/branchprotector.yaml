@@ -12,33 +12,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# label-sync is a tool implemented by k8s sig-testing.
-# It can update or migrate github labels on repos in a github org based on a YAML file.
+# branchprotector is a tool implemented by k8s sig-testing.
+# It can configures github branch protection rules according to the specified policy in a YAML file.
 
 presubmits:
   knative/test-infra:
-  - name: pull-knative-test-infra-label-sync
+  - name: pull-knative-test-infra-branchprotector
     agent: kubernetes
     decorate: true
     path_alias: knative.dev/test-infra
-    run_if_changed: "^config/label_sync/labels.yaml$"
+    run_if_changed: "^config/branch_protector/rules.yaml$"
     branches:
     - "master"
     spec:
       containers:
-      - name: label-sync
-        image: gcr.io/k8s-prow/label_sync:v20200910-8c70361b39
+      - name: branchprotector
+        image: gcr.io/k8s-prow/branchprotector:v20200910-8c70361b39
         command:
-        - /app/label_sync/app.binary
+        - /app/prow/cmd/branchprotector/app.binary
         args:
-        - --config=config/label_sync/labels.yaml
-        # Set --confirm=false to only validate the configuration file.
+        - --config-path=config/branch_protector/rules.yaml
+        - --github-token-path=/etc/github/oauth
+        - --github-endpoint=http://ghproxy.default.svc.cluster.local
+        - --github-endpoint=https://api.github.com
         - --confirm=false
-        - --orgs=knative-sandbox,knative
-        - --token=/etc/github/oauth
-        - --endpoint=http://ghproxy.default.svc.cluster.local
-        - --endpoint=https://api.github.com
-        - --debug
         volumeMounts:
         - name: oauth
           mountPath: /etc/github
@@ -49,9 +46,9 @@ presubmits:
           secretName: oauth-token
 
 periodics:
-# Run at 8AM PST.
-- cron: "0 15 * * *"
-  name: ci-knative-test-infra-label-sync
+# Run at 10AM PST.
+- cron: "2 15 * * *"
+  name: ci-knative-test-infra-branchprotector
   agent: kubernetes
   decorate: true
   extra_refs:
@@ -61,18 +58,16 @@ periodics:
     path_alias: knative.dev/test-infra
   spec:
     containers:
-    - name: label-sync
-      image: gcr.io/k8s-prow/label_sync:v20200910-8c70361b39
+    - name: branchprotector
+      image: gcr.io/k8s-prow/branchprotector:v20200910-8c70361b39
       command:
-      - /app/label_sync/app.binary
+      - /app/prow/cmd/branchprotector/app.binary
       args:
-      - --config=config/label_sync/labels.yaml
-      - --confirm=true
-      - --orgs=knative-sandbox,knative
-      - --token=/etc/github/oauth
-      - --endpoint=http://ghproxy.default.svc.cluster.local
-      - --endpoint=https://api.github.com
-      - --debug
+      - --config-path=config/branch_protector/rules.yaml
+      - --github-token-path=/etc/github/oauth
+      - --github-endpoint=http://ghproxy.default.svc.cluster.local
+      - --github-endpoint=https://api.github.com
+      - --confirm
       volumeMounts:
       - name: oauth
         mountPath: /etc/github
@@ -84,28 +79,26 @@ periodics:
 
 postsubmits:
   knative/test-infra:
-  - name: post-knative-test-infra-label-sync
+  - name: post-knative-test-infra-branchprotector
     agent: kubernetes
     decorate: true
     path_alias: knative.dev/test-infra
     max_concurrency: 1
-    run_if_changed: "^config/label_sync/labels.yaml$"
+    run_if_changed: "^config/branch_protector/rules.yaml$"
     branches:
     - "master"
     spec:
       containers:
-      - name: label-sync
-        image: gcr.io/k8s-prow/label_sync:v20200910-8c70361b39
+      - name: branchprotector
+        image: gcr.io/k8s-prow/branchprotector:v20200910-8c70361b39
         command:
-        - /app/label_sync/app.binary
+        - /app/prow/cmd/branchprotector/app.binary
         args:
-        - --config=config/label_sync/labels.yaml
-        - --confirm=true
-        - --orgs=knative-sandbox,knative
-        - --token=/etc/github/oauth
-        - --endpoint=http://ghproxy.default.svc.cluster.local
-        - --endpoint=https://api.github.com
-        - --debug
+        - --config-path=config/branch_protector/rules.yaml
+        - --github-token-path=/etc/github/oauth
+        - --github-endpoint=http://ghproxy.default.svc.cluster.local
+        - --github-endpoint=https://api.github.com
+        - --confirm
         volumeMounts:
         - name: oauth
           mountPath: /etc/github
