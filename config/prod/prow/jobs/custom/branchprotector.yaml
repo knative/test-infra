@@ -22,6 +22,7 @@ presubmits:
     decorate: true
     path_alias: knative.dev/test-infra
     run_if_changed: "^config/branch_protector/rules.yaml$"
+    cluster: "prow-trusted"
     branches:
     - "master"
     spec:
@@ -32,9 +33,7 @@ presubmits:
         - /app/prow/cmd/branchprotector/app.binary
         args:
         - --config-path=config/branch_protector/rules.yaml
-        - --github-token-path=/etc/github/oauth
-        - --github-endpoint=http://ghproxy.default.svc.cluster.local
-        - --github-endpoint=https://api.github.com
+        - --github-token-path=/etc/github/token
         - --confirm=false
         volumeMounts:
         - name: oauth
@@ -43,7 +42,7 @@ presubmits:
       volumes:
       - name: oauth
         secret:
-          secretName: oauth-token
+          secretName: github-token-for-branchprotector
 
 periodics:
 # Run at 10AM PST.
@@ -51,10 +50,11 @@ periodics:
   name: ci-knative-test-infra-branchprotector
   agent: kubernetes
   decorate: true
+  cluster: "prow-trusted"
   extra_refs:
-  - org: knative
+  - org: chizhg
     repo: test-infra
-    base_ref: master
+    base_ref: configure-branch-protector
     path_alias: knative.dev/test-infra
   spec:
     containers:
@@ -64,9 +64,7 @@ periodics:
       - /app/prow/cmd/branchprotector/app.binary
       args:
       - --config-path=config/branch_protector/rules.yaml
-      - --github-token-path=/etc/github/oauth
-      - --github-endpoint=http://ghproxy.default.svc.cluster.local
-      - --github-endpoint=https://api.github.com
+      - --github-token-path=/etc/github/token
       - --confirm
       volumeMounts:
       - name: oauth
@@ -75,7 +73,7 @@ periodics:
     volumes:
     - name: oauth
       secret:
-        secretName: oauth-token
+        secretName: github-token-for-branchprotector
 
 postsubmits:
   knative/test-infra:
@@ -85,6 +83,7 @@ postsubmits:
     path_alias: knative.dev/test-infra
     max_concurrency: 1
     run_if_changed: "^config/branch_protector/rules.yaml$"
+    cluster: "prow-trusted"
     branches:
     - "master"
     spec:
@@ -95,9 +94,7 @@ postsubmits:
         - /app/prow/cmd/branchprotector/app.binary
         args:
         - --config-path=config/branch_protector/rules.yaml
-        - --github-token-path=/etc/github/oauth
-        - --github-endpoint=http://ghproxy.default.svc.cluster.local
-        - --github-endpoint=https://api.github.com
+        - --github-token-path=/etc/github/token
         - --confirm
         volumeMounts:
         - name: oauth
@@ -106,4 +103,4 @@ postsubmits:
       volumes:
       - name: oauth
         secret:
-          secretName: oauth-token
+          secretName: github-token-for-branchprotector
