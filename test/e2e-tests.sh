@@ -36,4 +36,7 @@ initialize "$@" --max-nodes=1 --machine=e2-standard-2 \
 
 go_test_e2e ./test/e2e || fail_test
 
+echo ">>>>>>>> In kubetest2"
+echo ">>>>>>>> ARTIFACTS=${ARTIFACTS}"
+
 success

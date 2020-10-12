@@ -179,6 +179,8 @@ function initialize() {
   readonly SKIP_TEARDOWNS
 
   if (( ! run_tests )); then
+    echo ">>>>>>>> Before kubetest2"
+    echo ">>>>>>>> ARTIFACTS=${ARTIFACTS}"
     create_test_cluster "${CLOUD_PROVIDER}" custom_flags e2e_script_command
   else
     setup_test_cluster
