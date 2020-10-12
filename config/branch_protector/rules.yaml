@@ -14,15 +14,6 @@
 
 branch-protection:
   orgs:
-    knative:
-      # Protect all branches in knative
-      protect: true
-      required_status_checks:
-        contexts:
-        - cla/google
-        - tide
-      # Enforce all configured restrictions above for administrators.
-      enforce_admins: true
     knative-sandbox:
       # Protect all branches in knative-sandbox
       protect: true

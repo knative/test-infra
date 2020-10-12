@@ -47,7 +47,7 @@ presubmits:
 
 periodics:
 # Run at 10AM PST.
-- cron: "2 15 * * *"
+- cron: "0 17 * * *"
   name: ci-knative-test-infra-branchprotector
   agent: kubernetes
   decorate: true
