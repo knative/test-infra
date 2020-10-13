@@ -26,9 +26,8 @@ import (
 	"knative.dev/test-infra/pkg/gomod"
 )
 
-func addNextCmd(root *cobra.Command) {
+func addExistsCmd(root *cobra.Command) {
 	var (
-		domain  string
 		release string
 		verbose bool
 		tag     bool
@@ -46,7 +45,7 @@ func addNextCmd(root *cobra.Command) {
 				out = cmd.OutOrStderr()
 			}
 
-			meta, err := gomod.ReleaseStatus(gomodFile, release, domain, out)
+			meta, err := gomod.ReleaseStatus(gomodFile, release, out)
 			if err != nil {
 				return err
 			}
@@ -63,8 +62,6 @@ func addNextCmd(root *cobra.Command) {
 		},
 	}
 
-	cmd.Flags().StringVarP(&domain, "domain", "d", "", "domain filter (i.e. knative.dev) [required]")
-	_ = cmd.MarkFlagRequired("domain")
 	cmd.Flags().StringVarP(&release, "release", "r", "", "release should be '<major>.<minor>' (i.e.: 1.23 or v1.23) [required]")
 	_ = cmd.MarkFlagRequired("release")
 	cmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "Print verbose output (stderr)")

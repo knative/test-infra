@@ -189,7 +189,6 @@ Usage:
   buoy exists go.mod [flags]
 
 Flags:
-  -d, --domain string    domain filter (i.e. knative.dev) [required]
   -h, --help             help for next
   -r, --release string   release should be '<major>.<minor>' (i.e.: 1.23 or v1.23) [required]
   -t, --next             Print the next release tag (stdout)

@@ -23,19 +23,17 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-// ReleaseStatusNext - This is an integration test, it will make a call out to the internet.
+// TestReleaseStatus - This is an integration test, it will make a call out to the internet.
 func TestReleaseStatus(t *testing.T) {
 	tests := map[string]struct {
 		gomod   string
 		release string
-		domain  string
 		want    *ReleaseMeta
 		wantErr bool
 	}{
 		"demo1, v0.12, knative.dev": {
 			gomod:   "./testdata/gomod.next1",
 			release: "v0.12",
-			domain:  "knative.dev",
 			want: &ReleaseMeta{
 				Module:              "knative.dev/serving",
 				ReleaseBranchExists: true,
@@ -46,7 +44,6 @@ func TestReleaseStatus(t *testing.T) {
 		"demo1, v99.99, knative.dev": {
 			gomod:   "./testdata/gomod.next1",
 			release: "v99.88",
-			domain:  "knative.dev",
 			want: &ReleaseMeta{
 				Module:              "knative.dev/serving",
 				ReleaseBranchExists: false,
@@ -57,25 +54,22 @@ func TestReleaseStatus(t *testing.T) {
 		"bad release": {
 			gomod:   "./testdata/gomod.next1",
 			release: "not gonna work",
-			domain:  "knative.dev",
 			wantErr: true,
 		},
 		"bad go module": {
-			gomod:   "./testdata/gomod.float1",
+			gomod:   "./testdata/gomod.float1", // the module does not exist
 			release: "v0.15",
-			domain:  "does-not-exist.nope",
 			wantErr: true,
 		},
 		"bad go mod file": {
 			gomod:   "./testdata/bad.example",
 			release: "v0.15",
-			domain:  "knative.dev",
 			wantErr: true,
 		},
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			got, err := ReleaseStatus(tt.gomod, tt.release, tt.domain, os.Stdout)
+			got, err := ReleaseStatus(tt.gomod, tt.release, os.Stdout)
 			if (tt.wantErr && err == nil) || (!tt.wantErr && err != nil) {
 				t.Errorf("unexpected error state, want error == %t, got %v", tt.wantErr, err)
 			}

@@ -36,13 +36,13 @@ type ReleaseMeta struct {
 
 // ReleaseStatus collects meta data about release branch status and next released
 // version tags for a given module.
-func ReleaseStatus(gomod, release, domain string, out io.Writer) (*ReleaseMeta, error) {
+func ReleaseStatus(gomod, release string, out io.Writer) (*ReleaseMeta, error) {
 	this, err := semver.ParseTolerant(release)
 	if err != nil {
 		return nil, err
 	}
 
-	module, _, err := Module(gomod, domain)
+	module, _, err := Module(gomod, "domain filter ignored")
 	if err != nil {
 		return nil, err
 	}
