@@ -779,6 +779,10 @@ periodics:
   - continuous: true
   - nightly: true
   - auto-release: true
+  knative-sandbox/eventing-redis:
+  - continuous: true
+  - nightly: true
+  - auto-release: true
   knative/pkg:
   - continuous: true
   knative/caching:

@@ -469,6 +469,19 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-redis-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-redis-continuous
+  alert_stale_results_hours: 3
+- name: ci-knative-sandbox-eventing-redis-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-redis-nightly-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-redis-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-redis-auto-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
 - name: ci-knative-sandbox-sample-controller-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-sample-controller-continuous
   alert_stale_results_hours: 3
@@ -864,6 +877,8 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-gitlab-continuous-beta-prow-tests
 - name: ci-knative-sandbox-eventing-prometheus-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-prometheus-continuous-beta-prow-tests
+- name: ci-knative-sandbox-eventing-redis-continuous-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-redis-continuous-beta-prow-tests
 - name: ci-knative-pkg-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-pkg-continuous-beta-prow-tests
 - name: ci-knative-caching-continuous-beta-prow-tests
@@ -1319,6 +1334,26 @@ dashboards:
     num_failures_to_alert: 1
   - name: auto-release
     test_group_name: ci-knative-sandbox-eventing-prometheus-auto-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+- name: eventing-redis
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-sandbox-eventing-redis-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: nightly
+    test_group_name: ci-knative-sandbox-eventing-redis-nightly-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: auto-release
+    test_group_name: ci-knative-sandbox-eventing-redis-auto-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
@@ -2087,6 +2122,9 @@ dashboards:
   - name: ci-knative-sandbox-eventing-prometheus-continuous
     test_group_name: ci-knative-sandbox-eventing-prometheus-continuous-beta-prow-tests
     base_options: "sort-by-failures="
+  - name: ci-knative-sandbox-eventing-redis-continuous
+    test_group_name: ci-knative-sandbox-eventing-redis-continuous-beta-prow-tests
+    base_options: "sort-by-failures="
   - name: ci-knative-pkg-continuous
     test_group_name: ci-knative-pkg-continuous-beta-prow-tests
     base_options: "sort-by-failures="
@@ -2245,6 +2283,7 @@ dashboard_groups:
   - "eventing-github"
   - "eventing-gitlab"
   - "eventing-prometheus"
+  - "eventing-redis"
   - "sample-controller"
   - "sample-source"
   - "net-certmanager"
