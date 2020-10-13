@@ -29,14 +29,14 @@ func TestNext(t *testing.T) {
 		gomod   string
 		release string
 		domain  string
-		want    *NextType
+		want    *ReleaseMeta
 		wantErr bool
 	}{
 		"demo1, v0.12, knative.dev": {
 			gomod:   "./testdata/gomod.next1",
 			release: "v0.12",
 			domain:  "knative.dev",
-			want: &NextType{
+			want: &ReleaseMeta{
 				Module:              "knative.dev/serving",
 				ReleaseBranchExists: true,
 				ReleaseBranch:       "release-0.12",
@@ -47,7 +47,7 @@ func TestNext(t *testing.T) {
 			gomod:   "./testdata/gomod.next1",
 			release: "v99.88",
 			domain:  "knative.dev",
-			want: &NextType{
+			want: &ReleaseMeta{
 				Module:              "knative.dev/serving",
 				ReleaseBranchExists: false,
 				ReleaseBranch:       "release-99.88",
@@ -75,7 +75,7 @@ func TestNext(t *testing.T) {
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			got, err := Next(tt.gomod, tt.release, tt.domain, os.Stdout)
+			got, err := ReleaseStatus(tt.gomod, tt.release, tt.domain, os.Stdout)
 			if (tt.wantErr && err == nil) || (!tt.wantErr && err != nil) {
 				t.Errorf("unexpected error state, want error == %t, got %v", tt.wantErr, err)
 			}

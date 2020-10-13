@@ -33,7 +33,7 @@ func addNextCmd(root *cobra.Command) {
 	var tag bool
 
 	var cmd = &cobra.Command{
-		Use:   "next go.mod",
+		Use:   "exists go.mod",
 		Short: "Determine if the release branch exists for a given module.",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -44,16 +44,16 @@ func addNextCmd(root *cobra.Command) {
 				out = os.Stderr
 			}
 
-			next, err := gomod.Next(gomodFile, release, domain, out)
+			meta, err := gomod.ReleaseStatus(gomodFile, release, domain, out)
 			if err != nil {
 				return err
 			}
 
 			if tag {
-				fmt.Printf(next.Release)
+				fmt.Printf(meta.Release)
 			}
 
-			if !next.ReleaseBranchExists {
+			if !meta.ReleaseBranchExists {
 				os.Exit(1)
 			}
 
@@ -66,7 +66,7 @@ func addNextCmd(root *cobra.Command) {
 	cmd.Flags().StringVarP(&release, "release", "r", "", "release should be '<major>.<minor>' (i.e.: 1.23 or v1.23) [required]")
 	_ = cmd.MarkFlagRequired("release")
 	cmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "Print verbose output (stderr)")
-	cmd.Flags().BoolVarP(&tag, "tag", "t", false, "Print the next release tag (stdout)")
+	cmd.Flags().BoolVarP(&tag, "next", "t", false, "Print the next release tag (stdout)")
 
 	root.AddCommand(cmd)
 }

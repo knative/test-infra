@@ -26,8 +26,8 @@ import (
 	"knative.dev/test-infra/pkg/golang"
 )
 
-// NextType holds metadata important to module release status.
-type NextType struct {
+// ReleaseMeta holds metadata important to module release status.
+type ReleaseMeta struct {
 	Module              string
 	ReleaseBranchExists bool
 	ReleaseBranch       string
@@ -36,7 +36,7 @@ type NextType struct {
 
 // Next collects meta data about release branch status and next released
 // version tags for a given module.
-func Next(gomod, release, domain string, out io.Writer) (*NextType, error) {
+func ReleaseStatus(gomod, release, domain string, out io.Writer) (*ReleaseMeta, error) {
 	this, err := semver.ParseTolerant(release)
 	if err != nil {
 		return nil, err
@@ -51,7 +51,7 @@ func Next(gomod, release, domain string, out io.Writer) (*NextType, error) {
 		_, _ = fmt.Fprintln(out, module)
 	}
 
-	next := &NextType{Module: module}
+	next := &ReleaseMeta{Module: module}
 
 	repo, err := golang.ModuleToRepo(module)
 	if err != nil {
