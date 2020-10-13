@@ -34,7 +34,7 @@ type ReleaseMeta struct {
 	Release             string
 }
 
-// Next collects meta data about release branch status and next released
+// ReleaseStatus collects meta data about release branch status and next released
 // version tags for a given module.
 func ReleaseStatus(gomod, release, domain string, out io.Writer) (*ReleaseMeta, error) {
 	this, err := semver.ParseTolerant(release)

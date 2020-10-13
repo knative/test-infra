@@ -23,8 +23,8 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-// TestNext - This is an integration test, it will make a call out to the internet.
-func TestNext(t *testing.T) {
+// ReleaseStatusNext - This is an integration test, it will make a call out to the internet.
+func TestReleaseStatus(t *testing.T) {
 	tests := map[string]struct {
 		gomod   string
 		release string
