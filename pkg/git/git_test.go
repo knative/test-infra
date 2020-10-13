@@ -256,9 +256,9 @@ func TestTagVersion(t *testing.T) {
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			got := tagVersion(tt.version)
+			got := ReleaseVersion(tt.version)
 			if got != tt.want {
-				t.Errorf("tagVersion() got = %v, want %v", got, tt.want)
+				t.Errorf("ReleaseVersion() got = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -324,9 +324,9 @@ func TestBranchVersion(t *testing.T) {
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			got := branchVersion(tt.version)
+			got := ReleaseBranchVersion(tt.version)
 			if got != tt.want {
-				t.Errorf("branchVersion() got = %v, want %v", got, tt.want)
+				t.Errorf("ReleaseBranchVersion() got = %v, want %v", got, tt.want)
 			}
 		})
 	}

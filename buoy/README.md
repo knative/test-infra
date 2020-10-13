@@ -21,6 +21,7 @@ Available Commands:
   float       Find latest versions of dependencies based on a release.
   help        Help about any command
   needs       Find dependencies based on a base import domain.
+  exists      Determine if the release branch exists for a given module.
 
 Flags:
   -h, --help   help for buoy
@@ -177,6 +178,21 @@ $ buoy needs $HOME/go/src/knative.dev/eventing-github/go.mod --domain k8s.io
 k8s.io/api
 k8s.io/apimachinery
 k8s.io/client-go
+```
+
+## Exists
+
+```
+Determine if the release branch exists for a given module.
+
+Usage:
+  buoy exists go.mod [flags]
+
+Flags:
+  -h, --help             help for next
+  -r, --release string   release should be '<major>.<minor>' (i.e.: 1.23 or v1.23) [required]
+  -t, --next             Print the next release tag (stdout)
+  -v, --verbose          Print verbose output (stderr)
 ```
 
 ## TODO:
