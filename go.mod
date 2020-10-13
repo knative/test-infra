@@ -34,8 +34,6 @@ require (
 )
 
 replace (
-	github.com/google/go-containerregistry => github.com/google/go-containerregistry v0.1.3
-
 	k8s.io/apimachinery => k8s.io/apimachinery v0.17.6
 	k8s.io/client-go => k8s.io/client-go v0.17.6
 )
