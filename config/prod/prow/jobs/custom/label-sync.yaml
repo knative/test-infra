@@ -21,7 +21,7 @@ presubmits:
     agent: kubernetes
     decorate: true
     path_alias: knative.dev/test-infra
-    run_if_changed: "^label_sync/labels.yaml$"
+    run_if_changed: "^config/label_sync/labels.yaml$"
     branches:
     - "master"
     spec:
@@ -31,7 +31,7 @@ presubmits:
         command:
         - /app/label_sync/app.binary
         args:
-        - --config=label_sync/labels.yaml
+        - --config=config/label_sync/labels.yaml
         # Set --confirm=false to only validate the configuration file.
         - --confirm=false
         - --orgs=knative-sandbox,knative
@@ -66,7 +66,7 @@ periodics:
       command:
       - /app/label_sync/app.binary
       args:
-      - --config=label_sync/labels.yaml
+      - --config=config/label_sync/labels.yaml
       - --confirm=true
       - --orgs=knative-sandbox,knative
       - --token=/etc/github/oauth
@@ -89,7 +89,7 @@ postsubmits:
     decorate: true
     path_alias: knative.dev/test-infra
     max_concurrency: 1
-    run_if_changed: "^label_sync/labels.yaml$"
+    run_if_changed: "^config/label_sync/labels.yaml$"
     branches:
     - "master"
     spec:
@@ -99,7 +99,7 @@ postsubmits:
         command:
         - /app/label_sync/app.binary
         args:
-        - --config=label_sync/labels.yaml
+        - --config=config/label_sync/labels.yaml
         - --confirm=true
         - --orgs=knative-sandbox,knative
         - --token=/etc/github/oauth
