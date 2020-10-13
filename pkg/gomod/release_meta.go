@@ -26,7 +26,7 @@ import (
 	"knative.dev/test-infra/pkg/golang"
 )
 
-// ReleaseMeta holds meta data important to module release status.
+// ReleaseMeta holds metadata important to module release status.
 type ReleaseMeta struct {
 	Module              string
 	ReleaseBranchExists bool
@@ -34,7 +34,7 @@ type ReleaseMeta struct {
 	Release             string
 }
 
-// ReleaseStatus collects meta data about release branch status and next released
+// ReleaseStatus collects metadata about release branch status and next released
 // version tags for a given module.
 func ReleaseStatus(gomod, release string, out io.Writer) (*ReleaseMeta, error) {
 	this, err := semver.ParseTolerant(release)
