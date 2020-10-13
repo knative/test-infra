@@ -28,6 +28,7 @@ func New() *cobra.Command {
 	addFloatCmd(buoyCmd)
 	addNeedsCmd(buoyCmd)
 	addCheckCmd(buoyCmd)
+	addNextCmd(buoyCmd)
 
 	return buoyCmd
 }

@@ -112,7 +112,7 @@ func (r *Repo) BestRefFor(this semver.Version, ruleset RulesetType) (string, Ref
 			}
 		}
 		if largest != nil {
-			return fmt.Sprintf("%s@%s", r.Ref, tagVersion(*largest)), ReleaseRef
+			return fmt.Sprintf("%s@%s", r.Ref, ReleaseVersion(*largest)), ReleaseRef
 		}
 	}
 
@@ -132,7 +132,7 @@ func (r *Repo) BestRefFor(this semver.Version, ruleset RulesetType) (string, Ref
 			}
 		}
 		if largest != nil {
-			return fmt.Sprintf("%s@%s", r.Ref, branchVersion(*largest)), ReleaseBranchRef
+			return fmt.Sprintf("%s@%s", r.Ref, ReleaseBranchVersion(*largest)), ReleaseBranchRef
 		}
 	}
 
@@ -154,7 +154,8 @@ func normalizeTagVersion(v string) (string, bool) {
 	return v, false
 }
 
-func tagVersion(v semver.Version) string {
+// ReleaseVersion returns a formatted release tag for a given version.
+func ReleaseVersion(v semver.Version) string {
 	return fmt.Sprintf("v%d.%d.%d", v.Major, v.Minor, v.Patch)
 }
 
@@ -166,7 +167,8 @@ func normalizeBranchVersion(v string) (string, bool) {
 	return v, false
 }
 
-func branchVersion(v semver.Version) string {
+// ReleaseBranchVersion returns a formatted release branch for a given version.
+func ReleaseBranchVersion(v semver.Version) string {
 	return fmt.Sprintf("release-%d.%d", v.Major, v.Minor)
 }
 
