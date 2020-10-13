@@ -50,7 +50,7 @@ func addNextCmd(root *cobra.Command) {
 			}
 
 			if tag {
-				fmt.Printf(meta.Release)
+				fmt.Print(meta.Release)
 			}
 
 			if !meta.ReleaseBranchExists {
