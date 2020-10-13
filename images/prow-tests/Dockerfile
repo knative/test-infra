@@ -96,20 +96,12 @@ COPY images/prow-tests/runner.sh /usr/local/bin
 # Install our own tools
 RUN GO111MODULE=on go get knative.dev/pkg/testutils/junithelper@release-0.17
 
-# And our scripts
-ENV SCRIPTS /scripts
-COPY scripts /scripts
 COPY images/prow-tests/in-gvm-env.sh /usr/local/bin
 
 # Temporarily add test-infra to the image to build custom tools
 COPY . /go/src/knative.dev/test-infra
 
 # Build custom tools in the container
-# TODO: githubhelper is obsolete and no longer used in current test-infra (only old release branch scripts),
-#       it should be removed after Knative release-0.18 is cut.
-RUN go install /go/src/knative.dev/test-infra/tools/githubhelper
-# Because githubhelper was previously installed in a stupid way, it was used as `/workspace/githubhelper` so copy it
-RUN cp "$(which githubhelper)" .
 
 # If you needed to compile and install different tools for different version of Go,
 #  you could do it like:
