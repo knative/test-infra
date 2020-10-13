@@ -66,12 +66,12 @@ Rulesets,
 
 			var out io.Writer
 			if verbose {
-				out = os.Stdout
+				out = cmd.OutOrStderr()
 			}
 
 			err := gomod.Check(gomodFile, release, domain, ruleset, out)
 			if errors.Is(err, gomod.DependencyErr) {
-				fmt.Fprintln(os.Stderr, err.Error())
+				_, _ = fmt.Fprintln(cmd.OutOrStdout(), err.Error())
 				os.Exit(1)
 			}
 

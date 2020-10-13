@@ -26,7 +26,7 @@ import (
 	"knative.dev/test-infra/pkg/golang"
 )
 
-// ReleaseMeta holds metadata important to module release status.
+// ReleaseMeta holds meta data important to module release status.
 type ReleaseMeta struct {
 	Module              string
 	ReleaseBranchExists bool

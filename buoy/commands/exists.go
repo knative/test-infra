@@ -27,10 +27,12 @@ import (
 )
 
 func addNextCmd(root *cobra.Command) {
-	var domain string
-	var release string
-	var verbose bool
-	var tag bool
+	var (
+		domain  string
+		release string
+		verbose bool
+		tag     bool
+	)
 
 	var cmd = &cobra.Command{
 		Use:   "exists go.mod",
@@ -41,7 +43,7 @@ func addNextCmd(root *cobra.Command) {
 
 			var out io.Writer
 			if verbose {
-				out = os.Stderr
+				out = cmd.OutOrStderr()
 			}
 
 			meta, err := gomod.ReleaseStatus(gomodFile, release, domain, out)
@@ -50,7 +52,7 @@ func addNextCmd(root *cobra.Command) {
 			}
 
 			if tag {
-				fmt.Print(meta.Release)
+				_, _ = fmt.Fprintln(cmd.OutOrStdout(), meta.Release)
 			}
 
 			if !meta.ReleaseBranchExists {

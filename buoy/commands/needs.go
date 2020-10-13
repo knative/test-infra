@@ -41,7 +41,7 @@ func addNeedsCmd(root *cobra.Command) {
 
 			for _, p := range packages {
 				if p != "" {
-					fmt.Println(p)
+					_, _ = fmt.Fprintln(cmd.OutOrStdout(), p)
 				}
 			}
 			return nil

@@ -27,10 +27,12 @@ import (
 )
 
 func addFloatCmd(root *cobra.Command) {
-	var domain string
-	var release string
-	var rulesetFlag string
-	var ruleset git.RulesetType
+	var (
+		domain      string
+		release     string
+		rulesetFlag string
+		ruleset     git.RulesetType
+	)
 
 	var cmd = &cobra.Command{
 		Use:   "float go.mod",
@@ -75,7 +77,7 @@ For rulesets that that restrict the selection process, no ref is selected.
 
 			for _, r := range refs {
 				if r != "" {
-					fmt.Println(r)
+					_, _ = fmt.Fprintln(cmd.OutOrStdout(), r)
 				}
 			}
 			return nil
