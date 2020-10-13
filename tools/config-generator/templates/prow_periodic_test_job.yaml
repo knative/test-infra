@@ -9,6 +9,7 @@
   [[indent_section 2 "extra_refs" .Base.ExtraRefs]]
   [[indent_array_section 4 "branches" .Base.Branches]]
   [[indent_array_section 4 "skip_branches" .Base.SkipBranches]]
+  [[indent_section 2 "annotations" .Base.Annotations]]
   spec:
     containers:
     - image: [[.Base.Image]]

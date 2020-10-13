@@ -126,6 +126,7 @@ type baseProwJobTemplateData struct {
 	Cluster             string
 	Optional            string
 	NeedsMonitor        bool
+	Annotations         []string
 }
 
 // ####################################################################################################
@@ -251,6 +252,7 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.VolumeMounts = make([]string, 0)
 	data.Env = make([]string, 0)
 	data.Labels = make([]string, 0)
+	data.Annotations = make([]string, 0)
 	data.Optional = ""
 	data.Cluster = "cluster: \"build-knative\""
 	return data
