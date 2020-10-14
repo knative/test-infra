@@ -40,5 +40,5 @@ To learn more about how to run this tool locally, please check
 
 ## Prow job
 
-We currently run a postsubmit Prow job and a daily periodic Prow job that synchronizes these labels
-based on the latest `label_sync/labels.yaml` file.
+We currently run a postsubmit Prow job and a daily periodic Prow job that
+synchronizes these labels based on the latest `label_sync/labels.yaml` file.
