@@ -200,18 +200,18 @@ func getTestgroupExtras(projName, jobName string) map[string]string {
 
 func generateProwJobAnnotations(repoName, jobName string, tgExtras map[string]string) []string {
 	annotations := []string{
-		fmt.Sprintf("  testgrid-dashboards: %s", repoName),
-		fmt.Sprintf("  testgrid-tab-name: %s", jobName),
+		"  testgrid-dashboards: " + repoName,
+		"  testgrid-tab-name: " + jobName,
 	}
 
 	v, ok := tgExtras["alert_stale_results_hours"]
 	if ok {
-		res := fmt.Sprintf("  testgrid-alert-stale-results-hours: %s", v)
+		res := "  testgrid-alert-stale-results-hours: " + v
 		annotations = append(annotations, res)
 	}
 	v, ok = tgExtras["short_text_metric"]
 	if ok {
-		res := fmt.Sprintf("  testgrid-short-text-metric: %s", v)
+		res := "  testgrid-short-text-metric: " + v
 		annotations = append(annotations, res)
 	}
 	v, ok = tgExtras["alert_options"]
@@ -222,7 +222,7 @@ func generateProwJobAnnotations(repoName, jobName string, tgExtras map[string]st
 	}
 	v, ok = tgExtras["num_failures_to_alert"]
 	if ok {
-		res := fmt.Sprintf("  testgrid-num-failures-to-alert: %s", v)
+		res := "  testgrid-num-failures-to-alert: " + v
 		annotations = append(annotations, res)
 	}
 	return annotations

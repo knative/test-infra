@@ -129,7 +129,6 @@ func generateCron(jobType, jobName, repoName string, timeout int) string {
 func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlice) {
 	var data periodicJobTemplateData
 	data.Base = newbaseProwJobTemplateData(repoName)
-	// data.Base.Annotations = []string{"  foo: foofoo", "  bar: barbar"}
 	jobNameSuffix := ""
 	jobTemplate := readTemplate(periodicTestJob)
 	jobType := ""
