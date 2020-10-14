@@ -791,6 +791,8 @@ periodics:
   - continuous: true
   knative-sandbox/sample-source:
   - continuous: true
+  - nightly: true
+  - auto-release: true
   knative/test-infra:
   - continuous: true
     needs-dind: true

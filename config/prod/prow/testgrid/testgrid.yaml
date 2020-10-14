@@ -488,6 +488,16 @@ test_groups:
 - name: ci-knative-sandbox-sample-source-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-sample-source-continuous
   alert_stale_results_hours: 3
+- name: ci-knative-sandbox-sample-source-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-sample-source-nightly-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-sample-source-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-sample-source-auto-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
 - name: ci-knative-sandbox-net-certmanager-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-certmanager-continuous
   alert_stale_results_hours: 3
@@ -1374,6 +1384,18 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 3
+  - name: nightly
+    test_group_name: ci-knative-sandbox-sample-source-nightly-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: auto-release
+    test_group_name: ci-knative-sandbox-sample-source-auto-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
 - name: net-certmanager
   dashboard_tab:
   - name: continuous
