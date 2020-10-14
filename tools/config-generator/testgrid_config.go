@@ -209,14 +209,14 @@ func generateProwJobAnnotations(repoName, jobName string, tgExtras map[string]st
 		res := fmt.Sprintf("  testgrid-alert-stale-results-hours: %s", v)
 		annotations = append(annotations, res)
 	}
-	// v, ok = tgExtras["short_text_metric"]
-	// if ok {
-	// 	res := fmt.Sprintf("  testgrid-alert-stale-results-hours: %s", v)
-	// 	annotations = append(annotations, res)
-	// }
+	v, ok = tgExtras["short_text_metric"]
+	if ok {
+		res := fmt.Sprintf("  testgrid-short-text-metric: %s", v)
+		annotations = append(annotations, res)
+	}
 	v, ok = tgExtras["alert_options"]
 	if ok {
-		email := quotedEmailPattern.FindStringSubmatch(v)[1]
+		email := quotedEmailPattern.FindStringSubmatch(v)[1] //index 1 is first capture group
 		res := fmt.Sprintf("  testgrid-alert-email: \"%s\"", email)
 		annotations = append(annotations, res)
 	}

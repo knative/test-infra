@@ -4195,6 +4195,10 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4232,6 +4236,10 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -4269,6 +4277,10 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4324,6 +4336,10 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -4379,6 +4395,10 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4434,6 +4454,10 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -4489,6 +4513,10 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4544,6 +4572,10 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -4599,6 +4631,10 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4654,6 +4690,10 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -4709,6 +4749,10 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: custom-job
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4744,6 +4788,10 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: custom-job
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4779,6 +4827,10 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: custom-job
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4814,6 +4866,10 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: custom-job
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4849,6 +4905,10 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: custom-job
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4884,6 +4944,10 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: custom-job
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4919,6 +4983,10 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: custom-job
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4954,6 +5022,10 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: custom-job
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4989,6 +5061,10 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: custom-job
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5024,6 +5100,10 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: custom-job
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5065,6 +5145,11 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5103,6 +5188,10 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5152,6 +5241,10 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5201,6 +5294,10 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5250,6 +5347,10 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5299,6 +5400,11 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5345,6 +5451,10 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: webhook-apicoverage
+    testgrid-alert-stale-results-hours: 48
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5378,6 +5488,10 @@ periodics:
     repo: client
     path_alias: knative.dev/client
     base_ref: master
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5410,6 +5524,10 @@ periodics:
     repo: client
     path_alias: knative.dev/client
     base_ref: master
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -5442,6 +5560,10 @@ periodics:
     repo: client
     path_alias: knative.dev/client
     base_ref: release-0.14
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5497,6 +5619,10 @@ periodics:
     repo: client
     path_alias: knative.dev/client
     base_ref: release-0.14
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -5552,6 +5678,10 @@ periodics:
     repo: client
     path_alias: knative.dev/client
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5607,6 +5737,10 @@ periodics:
     repo: client
     path_alias: knative.dev/client
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -5662,6 +5796,10 @@ periodics:
     repo: client
     path_alias: knative.dev/client
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5717,6 +5855,10 @@ periodics:
     repo: client
     path_alias: knative.dev/client
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -5772,6 +5914,10 @@ periodics:
     repo: client
     path_alias: knative.dev/client
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5827,6 +5973,10 @@ periodics:
     repo: client
     path_alias: knative.dev/client
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -5882,6 +6032,11 @@ periodics:
     repo: client
     path_alias: knative.dev/client
     base_ref: master
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5915,6 +6070,10 @@ periodics:
     repo: client
     path_alias: knative.dev/client
     base_ref: master
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: cron
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5946,6 +6105,10 @@ periodics:
     repo: client
     path_alias: knative.dev/client
     base_ref: release-0.14
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5990,6 +6153,10 @@ periodics:
     repo: client
     path_alias: knative.dev/client
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6034,6 +6201,10 @@ periodics:
     repo: client
     path_alias: knative.dev/client
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6078,6 +6249,10 @@ periodics:
     repo: client
     path_alias: knative.dev/client
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6122,6 +6297,11 @@ periodics:
     repo: client
     path_alias: knative.dev/client
     base_ref: master
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6211,6 +6391,10 @@ periodics:
     repo: client-contrib
     path_alias: knative.dev/client-contrib
     base_ref: master
+  annotations:
+    testgrid-dashboards: client-contrib
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6243,6 +6427,10 @@ periodics:
     repo: client-contrib
     path_alias: knative.dev/client-contrib
     base_ref: master
+  annotations:
+    testgrid-dashboards: client-contrib
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6274,6 +6462,10 @@ periodics:
   - org: knative
     repo: docs
     base_ref: master
+  annotations:
+    testgrid-dashboards: docs
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6325,6 +6517,10 @@ periodics:
   - org: knative
     repo: docs
     base_ref: master
+  annotations:
+    testgrid-dashboards: docs
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6423,6 +6619,10 @@ periodics:
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6460,6 +6660,10 @@ periodics:
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6497,6 +6701,10 @@ periodics:
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6552,6 +6760,10 @@ periodics:
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6607,6 +6819,10 @@ periodics:
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6662,6 +6878,10 @@ periodics:
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6717,6 +6937,10 @@ periodics:
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6772,6 +6996,10 @@ periodics:
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6827,6 +7055,10 @@ periodics:
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6882,6 +7114,10 @@ periodics:
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6943,6 +7179,11 @@ periodics:
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6981,6 +7222,10 @@ periodics:
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7030,6 +7275,10 @@ periodics:
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7079,6 +7328,10 @@ periodics:
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7128,6 +7381,10 @@ periodics:
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7177,6 +7434,11 @@ periodics:
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7271,6 +7533,10 @@ periodics:
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7308,6 +7574,10 @@ periodics:
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7345,6 +7615,10 @@ periodics:
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7400,6 +7674,10 @@ periodics:
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7455,6 +7733,10 @@ periodics:
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7510,6 +7792,10 @@ periodics:
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7565,6 +7851,10 @@ periodics:
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7620,6 +7910,10 @@ periodics:
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7675,6 +7969,10 @@ periodics:
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7730,6 +8028,10 @@ periodics:
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7785,6 +8087,11 @@ periodics:
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7823,6 +8130,10 @@ periodics:
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7872,6 +8183,10 @@ periodics:
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7921,6 +8236,10 @@ periodics:
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7970,6 +8289,10 @@ periodics:
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8019,6 +8342,11 @@ periodics:
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8113,6 +8441,10 @@ periodics:
     repo: eventing-awssqs
     path_alias: knative.dev/eventing-awssqs
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-awssqs
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8145,6 +8477,10 @@ periodics:
     repo: eventing-awssqs
     path_alias: knative.dev/eventing-awssqs
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-awssqs
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -8177,6 +8513,11 @@ periodics:
     repo: eventing-awssqs
     path_alias: knative.dev/eventing-awssqs
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-awssqs
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8210,6 +8551,11 @@ periodics:
     repo: eventing-awssqs
     path_alias: knative.dev/eventing-awssqs
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-awssqs
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8253,6 +8599,10 @@ periodics:
     repo: eventing-ceph
     path_alias: knative.dev/eventing-ceph
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-ceph
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8285,6 +8635,10 @@ periodics:
     repo: eventing-ceph
     path_alias: knative.dev/eventing-ceph
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-ceph
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -8317,6 +8671,11 @@ periodics:
     repo: eventing-ceph
     path_alias: knative.dev/eventing-ceph
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-ceph
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8350,6 +8709,11 @@ periodics:
     repo: eventing-ceph
     path_alias: knative.dev/eventing-ceph
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-ceph
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8393,6 +8757,10 @@ periodics:
     repo: eventing-couchdb
     path_alias: knative.dev/eventing-couchdb
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-couchdb
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8425,6 +8793,10 @@ periodics:
     repo: eventing-couchdb
     path_alias: knative.dev/eventing-couchdb
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-couchdb
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -8457,6 +8829,11 @@ periodics:
     repo: eventing-couchdb
     path_alias: knative.dev/eventing-couchdb
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-couchdb
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8490,6 +8867,11 @@ periodics:
     repo: eventing-couchdb
     path_alias: knative.dev/eventing-couchdb
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-couchdb
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8533,6 +8915,10 @@ periodics:
     repo: eventing-github
     path_alias: knative.dev/eventing-github
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-github
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8565,6 +8951,10 @@ periodics:
     repo: eventing-github
     path_alias: knative.dev/eventing-github
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-github
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -8597,6 +8987,11 @@ periodics:
     repo: eventing-github
     path_alias: knative.dev/eventing-github
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-github
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8630,6 +9025,11 @@ periodics:
     repo: eventing-github
     path_alias: knative.dev/eventing-github
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-github
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8673,6 +9073,10 @@ periodics:
     repo: eventing-gitlab
     path_alias: knative.dev/eventing-gitlab
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-gitlab
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8705,6 +9109,10 @@ periodics:
     repo: eventing-gitlab
     path_alias: knative.dev/eventing-gitlab
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-gitlab
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -8737,6 +9145,11 @@ periodics:
     repo: eventing-gitlab
     path_alias: knative.dev/eventing-gitlab
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-gitlab
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8770,6 +9183,11 @@ periodics:
     repo: eventing-gitlab
     path_alias: knative.dev/eventing-gitlab
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-gitlab
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8813,6 +9231,10 @@ periodics:
     repo: eventing-prometheus
     path_alias: knative.dev/eventing-prometheus
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-prometheus
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8845,6 +9267,10 @@ periodics:
     repo: eventing-prometheus
     path_alias: knative.dev/eventing-prometheus
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-prometheus
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -8877,6 +9303,11 @@ periodics:
     repo: eventing-prometheus
     path_alias: knative.dev/eventing-prometheus
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-prometheus
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8910,6 +9341,11 @@ periodics:
     repo: eventing-prometheus
     path_alias: knative.dev/eventing-prometheus
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-prometheus
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8953,6 +9389,10 @@ periodics:
     repo: pkg
     path_alias: knative.dev/pkg
     base_ref: master
+  annotations:
+    testgrid-dashboards: pkg
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8985,6 +9425,10 @@ periodics:
     repo: pkg
     path_alias: knative.dev/pkg
     base_ref: master
+  annotations:
+    testgrid-dashboards: pkg
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9017,6 +9461,10 @@ periodics:
     repo: caching
     path_alias: knative.dev/caching
     base_ref: master
+  annotations:
+    testgrid-dashboards: caching
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9049,6 +9497,10 @@ periodics:
     repo: caching
     path_alias: knative.dev/caching
     base_ref: master
+  annotations:
+    testgrid-dashboards: caching
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9081,6 +9533,10 @@ periodics:
     repo: sample-controller
     path_alias: knative.dev/sample-controller
     base_ref: master
+  annotations:
+    testgrid-dashboards: sample-controller
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9113,6 +9569,10 @@ periodics:
     repo: sample-controller
     path_alias: knative.dev/sample-controller
     base_ref: master
+  annotations:
+    testgrid-dashboards: sample-controller
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9145,6 +9605,10 @@ periodics:
     repo: sample-source
     path_alias: knative.dev/sample-source
     base_ref: master
+  annotations:
+    testgrid-dashboards: sample-source
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9177,6 +9641,10 @@ periodics:
     repo: sample-source
     path_alias: knative.dev/sample-source
     base_ref: master
+  annotations:
+    testgrid-dashboards: sample-source
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9209,6 +9677,10 @@ periodics:
     repo: test-infra
     path_alias: knative.dev/test-infra
     base_ref: master
+  annotations:
+    testgrid-dashboards: test-infra
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9261,6 +9733,10 @@ periodics:
     repo: test-infra
     path_alias: knative.dev/test-infra
     base_ref: master
+  annotations:
+    testgrid-dashboards: test-infra
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9360,6 +9836,10 @@ periodics:
   - org: google
     repo: knative-gcp
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9396,6 +9876,10 @@ periodics:
   - org: google
     repo: knative-gcp
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9432,6 +9916,10 @@ periodics:
   - org: google
     repo: knative-gcp
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9491,6 +9979,10 @@ periodics:
   - org: google
     repo: knative-gcp
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9550,6 +10042,10 @@ periodics:
   - org: google
     repo: knative-gcp
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9609,6 +10105,10 @@ periodics:
   - org: google
     repo: knative-gcp
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9668,6 +10168,10 @@ periodics:
   - org: google
     repo: knative-gcp
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9727,6 +10231,10 @@ periodics:
   - org: google
     repo: knative-gcp
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9786,6 +10294,10 @@ periodics:
   - org: google
     repo: knative-gcp
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9845,6 +10357,10 @@ periodics:
   - org: google
     repo: knative-gcp
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9904,6 +10420,11 @@ periodics:
   - org: google
     repo: knative-gcp
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9941,6 +10462,10 @@ periodics:
   - org: google
     repo: knative-gcp
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9991,6 +10516,10 @@ periodics:
   - org: google
     repo: knative-gcp
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10041,6 +10570,10 @@ periodics:
   - org: google
     repo: knative-gcp
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10091,6 +10624,10 @@ periodics:
   - org: google
     repo: knative-gcp
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10141,6 +10678,11 @@ periodics:
   - org: google
     repo: knative-gcp
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10235,6 +10777,10 @@ periodics:
     repo: net-certmanager
     path_alias: knative.dev/net-certmanager
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-certmanager
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10267,6 +10813,10 @@ periodics:
     repo: net-certmanager
     path_alias: knative.dev/net-certmanager
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-certmanager
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -10305,6 +10855,11 @@ periodics:
     repo: net-certmanager
     path_alias: knative.dev/net-certmanager
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-certmanager
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10338,6 +10893,12 @@ periodics:
     repo: net-certmanager
     path_alias: knative.dev/net-certmanager
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-certmanager
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: 170
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10381,6 +10942,11 @@ periodics:
     repo: net-certmanager
     path_alias: knative.dev/net-certmanager
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-certmanager
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10472,6 +11038,10 @@ periodics:
     repo: net-contour
     path_alias: knative.dev/net-contour
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-contour
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10504,6 +11074,10 @@ periodics:
     repo: net-contour
     path_alias: knative.dev/net-contour
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-contour
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -10542,6 +11116,11 @@ periodics:
     repo: net-contour
     path_alias: knative.dev/net-contour
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-contour
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10575,6 +11154,12 @@ periodics:
     repo: net-contour
     path_alias: knative.dev/net-contour
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-contour
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: 170
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10618,6 +11203,11 @@ periodics:
     repo: net-contour
     path_alias: knative.dev/net-contour
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-contour
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10661,6 +11251,10 @@ periodics:
     repo: net-http01
     path_alias: knative.dev/net-http01
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-http01
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10693,6 +11287,10 @@ periodics:
     repo: net-http01
     path_alias: knative.dev/net-http01
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-http01
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -10731,6 +11329,11 @@ periodics:
     repo: net-http01
     path_alias: knative.dev/net-http01
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-http01
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10764,6 +11367,12 @@ periodics:
     repo: net-http01
     path_alias: knative.dev/net-http01
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-http01
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: 170
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10807,6 +11416,11 @@ periodics:
     repo: net-http01
     path_alias: knative.dev/net-http01
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-http01
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10850,6 +11464,10 @@ periodics:
     repo: net-istio
     path_alias: knative.dev/net-istio
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-istio
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10882,6 +11500,10 @@ periodics:
     repo: net-istio
     path_alias: knative.dev/net-istio
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-istio
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -10920,6 +11542,11 @@ periodics:
     repo: net-istio
     path_alias: knative.dev/net-istio
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-istio
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10953,6 +11580,10 @@ periodics:
     repo: net-istio
     path_alias: knative.dev/net-istio
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-istio
+    testgrid-tab-name: custom-job
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10986,6 +11617,10 @@ periodics:
     repo: net-istio
     path_alias: knative.dev/net-istio
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: net-istio
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11032,6 +11667,10 @@ periodics:
     repo: net-istio
     path_alias: knative.dev/net-istio
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: net-istio
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11078,6 +11717,10 @@ periodics:
     repo: net-istio
     path_alias: knative.dev/net-istio
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: net-istio
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11124,6 +11767,10 @@ periodics:
     repo: net-istio
     path_alias: knative.dev/net-istio
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: net-istio
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11170,6 +11817,11 @@ periodics:
     repo: net-istio
     path_alias: knative.dev/net-istio
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-istio
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11261,6 +11913,10 @@ periodics:
     repo: net-kourier
     path_alias: knative.dev/net-kourier
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-kourier
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11293,6 +11949,10 @@ periodics:
     repo: net-kourier
     path_alias: knative.dev/net-kourier
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-kourier
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -11331,6 +11991,11 @@ periodics:
     repo: net-kourier
     path_alias: knative.dev/net-kourier
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-kourier
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11364,6 +12029,12 @@ periodics:
     repo: net-kourier
     path_alias: knative.dev/net-kourier
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-kourier
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: 170
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11407,6 +12078,11 @@ periodics:
     repo: net-kourier
     path_alias: knative.dev/net-kourier
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-kourier
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11498,6 +12174,10 @@ periodics:
     repo: operator
     path_alias: knative.dev/operator
     base_ref: master
+  annotations:
+    testgrid-dashboards: operator
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11530,6 +12210,10 @@ periodics:
     repo: operator
     path_alias: knative.dev/operator
     base_ref: master
+  annotations:
+    testgrid-dashboards: operator
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -11562,6 +12246,10 @@ periodics:
     repo: operator
     path_alias: knative.dev/operator
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: operator
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11622,6 +12310,10 @@ periodics:
     repo: operator
     path_alias: knative.dev/operator
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: operator
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -11682,6 +12374,10 @@ periodics:
     repo: operator
     path_alias: knative.dev/operator
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: operator
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11742,6 +12438,10 @@ periodics:
     repo: operator
     path_alias: knative.dev/operator
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: operator
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -11802,6 +12502,10 @@ periodics:
     repo: operator
     path_alias: knative.dev/operator
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: operator
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11862,6 +12566,10 @@ periodics:
     repo: operator
     path_alias: knative.dev/operator
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: operator
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -11922,6 +12630,11 @@ periodics:
     repo: operator
     path_alias: knative.dev/operator
     base_ref: master
+  annotations:
+    testgrid-dashboards: operator
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11955,6 +12668,12 @@ periodics:
     repo: operator
     path_alias: knative.dev/operator
     base_ref: master
+  annotations:
+    testgrid-dashboards: operator
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: 170
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11996,6 +12715,11 @@ periodics:
     repo: operator
     path_alias: knative.dev/operator
     base_ref: master
+  annotations:
+    testgrid-dashboards: operator
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12085,6 +12809,10 @@ periodics:
     repo: async-component
     path_alias: knative.dev/async-component
     base_ref: master
+  annotations:
+    testgrid-dashboards: async-component
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12117,6 +12845,10 @@ periodics:
     repo: async-component
     path_alias: knative.dev/async-component
     base_ref: master
+  annotations:
+    testgrid-dashboards: async-component
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -12149,6 +12881,11 @@ periodics:
     repo: async-component
     path_alias: knative.dev/async-component
     base_ref: master
+  annotations:
+    testgrid-dashboards: async-component
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12182,6 +12919,12 @@ periodics:
     repo: async-component
     path_alias: knative.dev/async-component
     base_ref: master
+  annotations:
+    testgrid-dashboards: async-component
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: 170
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12225,6 +12968,11 @@ periodics:
     repo: async-component
     path_alias: knative.dev/async-component
     base_ref: master
+  annotations:
+    testgrid-dashboards: async-component
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12316,6 +13064,10 @@ periodics:
     repo: discovery
     path_alias: knative.dev/discovery
     base_ref: master
+  annotations:
+    testgrid-dashboards: discovery
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12348,6 +13100,10 @@ periodics:
     repo: discovery
     path_alias: knative.dev/discovery
     base_ref: master
+  annotations:
+    testgrid-dashboards: discovery
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -12386,6 +13142,11 @@ periodics:
     repo: discovery
     path_alias: knative.dev/discovery
     base_ref: master
+  annotations:
+    testgrid-dashboards: discovery
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12419,6 +13180,12 @@ periodics:
     repo: discovery
     path_alias: knative.dev/discovery
     base_ref: master
+  annotations:
+    testgrid-dashboards: discovery
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: 170
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12462,6 +13229,11 @@ periodics:
     repo: discovery
     path_alias: knative.dev/discovery
     base_ref: master
+  annotations:
+    testgrid-dashboards: discovery
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12505,6 +13277,10 @@ periodics:
     repo: eventing-camel
     path_alias: knative.dev/eventing-camel
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-camel
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12537,6 +13313,10 @@ periodics:
     repo: eventing-camel
     path_alias: knative.dev/eventing-camel
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-camel
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -12575,6 +13355,11 @@ periodics:
     repo: eventing-camel
     path_alias: knative.dev/eventing-camel
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-camel
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12608,6 +13393,12 @@ periodics:
     repo: eventing-camel
     path_alias: knative.dev/eventing-camel
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-camel
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: 170
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12651,6 +13442,11 @@ periodics:
     repo: eventing-camel
     path_alias: knative.dev/eventing-camel
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-camel
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12694,6 +13490,10 @@ periodics:
     repo: eventing-kafka
     path_alias: knative.dev/eventing-kafka
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-kafka
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12746,6 +13546,10 @@ periodics:
     repo: eventing-kafka
     path_alias: knative.dev/eventing-kafka
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-kafka
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -12798,6 +13602,11 @@ periodics:
     repo: eventing-kafka
     path_alias: knative.dev/eventing-kafka
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-kafka
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12851,6 +13660,12 @@ periodics:
     repo: eventing-kafka
     path_alias: knative.dev/eventing-kafka
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-kafka
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: 170
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12914,6 +13729,11 @@ periodics:
     repo: eventing-kafka
     path_alias: knative.dev/eventing-kafka
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-kafka
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13025,6 +13845,10 @@ periodics:
     repo: eventing-kafka-broker
     path_alias: knative.dev/eventing-kafka-broker
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-kafka-broker
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13077,6 +13901,10 @@ periodics:
     repo: eventing-kafka-broker
     path_alias: knative.dev/eventing-kafka-broker
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-kafka-broker
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: 3
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -13129,6 +13957,11 @@ periodics:
     repo: eventing-kafka-broker
     path_alias: knative.dev/eventing-kafka-broker
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-kafka-broker
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13182,6 +14015,12 @@ periodics:
     repo: eventing-kafka-broker
     path_alias: knative.dev/eventing-kafka-broker
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-kafka-broker
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: 170
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13245,6 +14084,11 @@ periodics:
     repo: eventing-kafka-broker
     path_alias: knative.dev/eventing-kafka-broker
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-kafka-broker
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13362,6 +14206,11 @@ periodics:
     repo: eventing-rabbitmq
     path_alias: knative.dev/eventing-rabbitmq
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-rabbitmq
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13395,6 +14244,12 @@ periodics:
     repo: eventing-rabbitmq
     path_alias: knative.dev/eventing-rabbitmq
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-rabbitmq
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: 170
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13438,6 +14293,11 @@ periodics:
     repo: eventing-rabbitmq
     path_alias: knative.dev/eventing-rabbitmq
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-rabbitmq
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13487,6 +14347,11 @@ periodics:
     repo: eventing-natss
     path_alias: knative.dev/eventing-natss
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-natss
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13520,6 +14385,12 @@ periodics:
     repo: eventing-natss
     path_alias: knative.dev/eventing-natss
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-natss
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: 170
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13563,6 +14434,11 @@ periodics:
     repo: eventing-natss
     path_alias: knative.dev/eventing-natss
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-natss
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: 1
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
