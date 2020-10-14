@@ -613,25 +613,25 @@ periodics:
   knative/client:
   - continuous: true
   - branch-ci: true
-    release: "0.14"
-  - branch-ci: true
     release: "0.15"
   - branch-ci: true
     release: "0.16"
   - branch-ci: true
     release: "0.17"
+  - branch-ci: true
+    release: "0.18"
   - nightly: true
   - custom-job: tekton
     cron: 0 13 * * *
     command: ./test/tekton-tests.sh
   - dot-release: true
-    release: "0.14"
-  - dot-release: true
     release: "0.15"
   - dot-release: true
     release: "0.16"
   - dot-release: true
     release: "0.17"
+  - dot-release: true
+    release: "0.18"
   - auto-release: true
   knative/client-contrib:
   - continuous: true
@@ -779,6 +779,10 @@ periodics:
   - continuous: true
   - nightly: true
   - auto-release: true
+  knative-sandbox/eventing-redis:
+  - continuous: true
+  - nightly: true
+  - auto-release: true
   knative/pkg:
   - continuous: true
   knative/caching:
@@ -787,6 +791,8 @@ periodics:
   - continuous: true
   knative-sandbox/sample-source:
   - continuous: true
+  - nightly: true
+  - auto-release: true
   knative/test-infra:
   - continuous: true
     needs-dind: true
@@ -951,6 +957,13 @@ periodics:
         memory: 16Gi
   - branch-ci: true
     release: "0.17"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - branch-ci: true
+    release: "0.18"
     resources:
       requests:
         memory: 12Gi

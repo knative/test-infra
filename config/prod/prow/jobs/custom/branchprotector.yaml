@@ -1,0 +1,106 @@
+# Copyright 2020 The Knative Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# branchprotector is a tool implemented by k8s sig-testing.
+# It can configures github branch protection rules according to the specified policy in a YAML file.
+
+presubmits:
+  knative/test-infra:
+  - name: pull-knative-test-infra-branchprotector
+    agent: kubernetes
+    decorate: true
+    path_alias: knative.dev/test-infra
+    run_if_changed: "^config/branch_protector/rules.yaml$"
+    cluster: "prow-trusted"
+    branches:
+    - "master"
+    spec:
+      containers:
+      - name: branchprotector
+        image: gcr.io/k8s-prow/branchprotector:v20200910-8c70361b39
+        command:
+        - /app/prow/cmd/branchprotector/app.binary
+        args:
+        - --config-path=config/branch_protector/rules.yaml
+        - --github-token-path=/etc/github/token
+        - --confirm=false
+        volumeMounts:
+        - name: oauth
+          mountPath: /etc/github
+          readOnly: true
+      volumes:
+      - name: oauth
+        secret:
+          secretName: github-token-for-branchprotector
+
+periodics:
+# Run at 10AM PST.
+- cron: "0 17 * * *"
+  name: ci-knative-test-infra-branchprotector
+  agent: kubernetes
+  decorate: true
+  cluster: "prow-trusted"
+  extra_refs:
+  - org: chizhg
+    repo: test-infra
+    base_ref: configure-branch-protector
+    path_alias: knative.dev/test-infra
+  spec:
+    containers:
+    - name: branchprotector
+      image: gcr.io/k8s-prow/branchprotector:v20200910-8c70361b39
+      command:
+      - /app/prow/cmd/branchprotector/app.binary
+      args:
+      - --config-path=config/branch_protector/rules.yaml
+      - --github-token-path=/etc/github/token
+      - --confirm
+      volumeMounts:
+      - name: oauth
+        mountPath: /etc/github
+        readOnly: true
+    volumes:
+    - name: oauth
+      secret:
+        secretName: github-token-for-branchprotector
+
+postsubmits:
+  knative/test-infra:
+  - name: post-knative-test-infra-branchprotector
+    agent: kubernetes
+    decorate: true
+    path_alias: knative.dev/test-infra
+    max_concurrency: 1
+    run_if_changed: "^config/branch_protector/rules.yaml$"
+    cluster: "prow-trusted"
+    branches:
+    - "master"
+    spec:
+      containers:
+      - name: branchprotector
+        image: gcr.io/k8s-prow/branchprotector:v20200910-8c70361b39
+        command:
+        - /app/prow/cmd/branchprotector/app.binary
+        args:
+        - --config-path=config/branch_protector/rules.yaml
+        - --github-token-path=/etc/github/token
+        - --confirm
+        volumeMounts:
+        - name: oauth
+          mountPath: /etc/github
+          readOnly: true
+      volumes:
+      - name: oauth
+        secret:
+          secretName: github-token-for-branchprotector
