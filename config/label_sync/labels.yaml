@@ -218,3 +218,11 @@ repos:
       name: area/api
       target: issues
       addedBy: humans
+    - color: bfe5bf
+      name: area/release
+      target: issues
+      addedBy: humans
+    - color: bfe5bf
+      name: area/test
+      target: issues
+      addedBy: humans
