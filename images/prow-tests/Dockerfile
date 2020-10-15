@@ -55,9 +55,8 @@ RUN curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscript
 COPY images/prow-tests/source-gvm-and-run.sh /usr/local/bin
 # Install our versions of Go
 RUN source-gvm-and-run.sh install go1.13.14 --prefer-binary
-RUN source-gvm-and-run.sh install go1.14.6 --prefer-binary
-RUN source-gvm-and-run.sh install go1.15 --prefer-binary
-RUN source-gvm-and-run.sh install master --source=https://github.com/golang/go --name=devel
+RUN source-gvm-and-run.sh install go1.14.10 --prefer-binary
+RUN source-gvm-and-run.sh install go1.15.3 --prefer-binary
 
 # Extra tools through go get
 # These run using the kubekins version of Go, not any defined by `gvm`
