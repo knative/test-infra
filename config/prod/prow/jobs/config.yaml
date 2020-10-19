@@ -2450,52 +2450,6 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-google-knative-gcp-conformance-tests
-    agent: kubernetes
-    labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: pull-google-knative-gcp-conformance-tests
-    context: pull-google-knative-gcp-conformance-tests
-    always_run: true
-    rerun_command: "/test pull-google-knative-gcp-conformance-tests"
-    trigger: "(?m)^/test (all|pull-google-knative-gcp-conformance-tests),?(\\s+|$)"
-    decorate: true
-    cluster: "build-knative"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--run-test"
-        - "./test/e2e-conformance-tests.sh"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-        resources:
-          requests:
-            memory: 12Gi
-          limits:
-            memory: 16Gi
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
   - name: pull-google-knative-gcp-wi-tests
     agent: kubernetes
     labels:
@@ -2532,6 +2486,41 @@ presubmits:
             memory: 12Gi
           limits:
             memory: 16Gi
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-google-knative-gcp-conformance-tests
+    agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-google-knative-gcp-conformance-tests
+    context: pull-google-knative-gcp-conformance-tests
+    always_run: true
+    rerun_command: "/test pull-google-knative-gcp-conformance-tests"
+    trigger: "(?m)^/test (all|pull-google-knative-gcp-conformance-tests),?(\\s+|$)"
+    decorate: true
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-conformance-tests.sh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
       volumes:
       - name: test-account
         secret:
