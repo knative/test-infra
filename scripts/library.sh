@@ -521,6 +521,7 @@ function add_trap {
 #                         "master".
 # Additional dependencies can be included in the upgrade by providing them in a
 # global env var: FLOATING_DEPS
+# --upgrade will set GOPROXY to direct unless it is already set.
 function go_update_deps() {
   cd "${REPO_ROOT_DIR}" || return 1
 
@@ -543,6 +544,12 @@ function go_update_deps() {
 
   if (( UPGRADE )); then
     echo "--- Upgrading to ${VERSION}"
+    if [ -z ${GOPROXY+x} ]; then
+      export GOPROXY=direct
+      echo "Using 'GOPROXY=direct'."
+    else
+      echo "Respecting 'GOPROXY=${GOPROXY}'."
+    fi
     FLOATING_DEPS+=( $(run_go_tool knative.dev/test-infra/buoy buoy float ${REPO_ROOT_DIR}/go.mod --release ${VERSION} --domain knative.dev) )
     if (( ${#FLOATING_DEPS[@]} )); then
       echo "Floating deps to ${FLOATING_DEPS[@]}"
