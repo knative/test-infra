@@ -373,6 +373,11 @@ presubmits:
     - --run-test
     - ./test/e2e-wi-tests.sh
   - custom-test: conformance-tests
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
     needs-monitor: true
     args:
     - --run-test
