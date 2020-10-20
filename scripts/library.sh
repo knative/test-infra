@@ -542,16 +542,20 @@ function go_update_deps() {
     shift
   done
 
-  if (( UPGRADE )); then
+  if [[ $UPGRADE == 1 ]]; then
     echo "--- Upgrading to ${VERSION}"
-    if [ -z ${GOPROXY+x} ]; then
+    # From shell parameter expeansion:
+    # ${parameter:+word}
+    # If parameter is null or unset, nothing is substituted, otherwise the expansion of word is substituted.
+    # -z is if the length of the string, so skip setting GOPROXY if GOPROXY is already set.
+    if [[ -z ${GOPROXY:+skip} ]]; then
       export GOPROXY=direct
       echo "Using 'GOPROXY=direct'."
     else
       echo "Respecting 'GOPROXY=${GOPROXY}'."
     fi
     FLOATING_DEPS+=( $(run_go_tool knative.dev/test-infra/buoy buoy float ${REPO_ROOT_DIR}/go.mod --release ${VERSION} --domain knative.dev) )
-    if (( ${#FLOATING_DEPS[@]} )); then
+    if [[ ${FLOATING_DEPS[@]} ]]; then
       echo "Floating deps to ${FLOATING_DEPS[@]}"
       go get -d ${FLOATING_DEPS[@]}
     else
