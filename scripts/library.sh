@@ -544,7 +544,7 @@ function go_update_deps() {
 
   if [[ $UPGRADE == 1 ]]; then
     echo "--- Upgrading to ${VERSION}"
-    # From shell parameter expeansion:
+    # From shell parameter expansion:
     # ${parameter:+word}
     # If parameter is null or unset, nothing is substituted, otherwise the expansion of word is substituted.
     # -z is if the length of the string, so skip setting GOPROXY if GOPROXY is already set.
