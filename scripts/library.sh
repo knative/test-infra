@@ -555,7 +555,7 @@ function go_update_deps() {
       echo "Respecting 'GOPROXY=${GOPROXY}'."
     fi
     FLOATING_DEPS+=( $(run_go_tool knative.dev/test-infra/buoy buoy float ${REPO_ROOT_DIR}/go.mod --release ${VERSION} --domain knative.dev) )
-    if [[ ${FLOATING_DEPS[@]} ]]; then
+    if [[ ${#FLOATING_DEPS[@]} > 0 ]]; then
       echo "Floating deps to ${FLOATING_DEPS[@]}"
       go get -d ${FLOATING_DEPS[@]}
     else
