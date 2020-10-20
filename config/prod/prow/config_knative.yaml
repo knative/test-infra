@@ -372,6 +372,11 @@ presubmits:
     args:
     - --run-test
     - ./test/e2e-wi-tests.sh
+  - custom-test: conformance-tests
+    needs-monitor: true
+    args:
+    - --run-test
+    - ./test/e2e-conformance-tests.sh
   - go-coverage: true
   knative/networking:
   - build-tests: true
