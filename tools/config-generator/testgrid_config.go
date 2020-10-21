@@ -211,7 +211,7 @@ func generateProwJobAnnotations(repoName, jobName string, tgExtras map[string]st
 	}
 	v, ok = tgExtras["short_text_metric"]
 	if ok {
-		res := "  testgrid-short-text-metric: " + v
+		res := "  testgrid-in-cell-metric: " + v
 		annotations = append(annotations, res)
 	}
 	v, ok = tgExtras["alert_options"]
