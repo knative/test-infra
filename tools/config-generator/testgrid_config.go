@@ -206,7 +206,7 @@ func generateProwJobAnnotations(repoName, jobName string, tgExtras map[string]st
 
 	v, ok := tgExtras["alert_stale_results_hours"]
 	if ok {
-		res := "  testgrid-alert-stale-results-hours: " + v
+		res := fmt.Sprintf("  testgrid-alert-stale-results-hours: \"%s\"", v)
 		annotations = append(annotations, res)
 	}
 	v, ok = tgExtras["short_text_metric"]
@@ -222,7 +222,7 @@ func generateProwJobAnnotations(repoName, jobName string, tgExtras map[string]st
 	}
 	v, ok = tgExtras["num_failures_to_alert"]
 	if ok {
-		res := "  testgrid-num-failures-to-alert: " + v
+		res := fmt.Sprintf("  testgrid-num-failures-to-alert: \"%s\"", v)
 		annotations = append(annotations, res)
 	}
 	return annotations

@@ -4198,7 +4198,7 @@ periodics:
   annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4239,7 +4239,7 @@ periodics:
   annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -4280,7 +4280,7 @@ periodics:
   annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4339,7 +4339,7 @@ periodics:
   annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -4398,7 +4398,7 @@ periodics:
   annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4457,7 +4457,7 @@ periodics:
   annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -4516,7 +4516,7 @@ periodics:
   annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4575,7 +4575,7 @@ periodics:
   annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -4634,7 +4634,7 @@ periodics:
   annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4693,7 +4693,7 @@ periodics:
   annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -4752,7 +4752,7 @@ periodics:
   annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: custom-job
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4791,7 +4791,7 @@ periodics:
   annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: custom-job
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4830,7 +4830,7 @@ periodics:
   annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: custom-job
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4869,7 +4869,7 @@ periodics:
   annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: custom-job
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4908,7 +4908,7 @@ periodics:
   annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: custom-job
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4947,7 +4947,7 @@ periodics:
   annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: custom-job
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4986,7 +4986,7 @@ periodics:
   annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: custom-job
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5025,7 +5025,7 @@ periodics:
   annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: custom-job
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5064,7 +5064,7 @@ periodics:
   annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: custom-job
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5103,7 +5103,7 @@ periodics:
   annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: custom-job
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5149,7 +5149,7 @@ periodics:
     testgrid-dashboards: serving
     testgrid-tab-name: nightly
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5191,7 +5191,7 @@ periodics:
   annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5244,7 +5244,7 @@ periodics:
   annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5297,7 +5297,7 @@ periodics:
   annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5350,7 +5350,7 @@ periodics:
   annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5404,7 +5404,7 @@ periodics:
     testgrid-dashboards: serving
     testgrid-tab-name: auto-release
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5454,7 +5454,7 @@ periodics:
   annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: webhook-apicoverage
-    testgrid-alert-stale-results-hours: 48
+    testgrid-alert-stale-results-hours: "48"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5491,7 +5491,7 @@ periodics:
   annotations:
     testgrid-dashboards: client
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5527,7 +5527,7 @@ periodics:
   annotations:
     testgrid-dashboards: client
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -5563,7 +5563,7 @@ periodics:
   annotations:
     testgrid-dashboards: client
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5622,7 +5622,7 @@ periodics:
   annotations:
     testgrid-dashboards: client
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -5681,7 +5681,7 @@ periodics:
   annotations:
     testgrid-dashboards: client
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5740,7 +5740,7 @@ periodics:
   annotations:
     testgrid-dashboards: client
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -5799,7 +5799,7 @@ periodics:
   annotations:
     testgrid-dashboards: client
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5858,7 +5858,7 @@ periodics:
   annotations:
     testgrid-dashboards: client
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -5917,7 +5917,7 @@ periodics:
   annotations:
     testgrid-dashboards: client
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5976,7 +5976,7 @@ periodics:
   annotations:
     testgrid-dashboards: client
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6036,7 +6036,7 @@ periodics:
     testgrid-dashboards: client
     testgrid-tab-name: nightly
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6073,7 +6073,7 @@ periodics:
   annotations:
     testgrid-dashboards: client
     testgrid-tab-name: cron
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6108,7 +6108,7 @@ periodics:
   annotations:
     testgrid-dashboards: client
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6156,7 +6156,7 @@ periodics:
   annotations:
     testgrid-dashboards: client
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6204,7 +6204,7 @@ periodics:
   annotations:
     testgrid-dashboards: client
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6252,7 +6252,7 @@ periodics:
   annotations:
     testgrid-dashboards: client
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6301,7 +6301,7 @@ periodics:
     testgrid-dashboards: client
     testgrid-tab-name: auto-release
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6394,7 +6394,7 @@ periodics:
   annotations:
     testgrid-dashboards: client-contrib
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6430,7 +6430,7 @@ periodics:
   annotations:
     testgrid-dashboards: client-contrib
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6465,7 +6465,7 @@ periodics:
   annotations:
     testgrid-dashboards: docs
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6520,7 +6520,7 @@ periodics:
   annotations:
     testgrid-dashboards: docs
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6622,7 +6622,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6663,7 +6663,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6704,7 +6704,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6763,7 +6763,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6822,7 +6822,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6881,7 +6881,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6940,7 +6940,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6999,7 +6999,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7058,7 +7058,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7117,7 +7117,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7183,7 +7183,7 @@ periodics:
     testgrid-dashboards: eventing
     testgrid-tab-name: nightly
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7225,7 +7225,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7278,7 +7278,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7331,7 +7331,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7384,7 +7384,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7438,7 +7438,7 @@ periodics:
     testgrid-dashboards: eventing
     testgrid-tab-name: auto-release
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7536,7 +7536,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-contrib
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7577,7 +7577,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-contrib
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7618,7 +7618,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-contrib
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7677,7 +7677,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-contrib
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7736,7 +7736,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-contrib
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7795,7 +7795,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-contrib
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7854,7 +7854,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-contrib
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7913,7 +7913,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-contrib
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7972,7 +7972,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-contrib
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8031,7 +8031,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-contrib
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -8091,7 +8091,7 @@ periodics:
     testgrid-dashboards: eventing-contrib
     testgrid-tab-name: nightly
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8133,7 +8133,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-contrib
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8186,7 +8186,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-contrib
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8239,7 +8239,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-contrib
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8292,7 +8292,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-contrib
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8346,7 +8346,7 @@ periodics:
     testgrid-dashboards: eventing-contrib
     testgrid-tab-name: auto-release
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8444,7 +8444,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-awssqs
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8480,7 +8480,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-awssqs
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -8517,7 +8517,7 @@ periodics:
     testgrid-dashboards: eventing-awssqs
     testgrid-tab-name: nightly
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8555,7 +8555,7 @@ periodics:
     testgrid-dashboards: eventing-awssqs
     testgrid-tab-name: auto-release
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8602,7 +8602,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-ceph
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8638,7 +8638,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-ceph
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -8675,7 +8675,7 @@ periodics:
     testgrid-dashboards: eventing-ceph
     testgrid-tab-name: nightly
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8713,7 +8713,7 @@ periodics:
     testgrid-dashboards: eventing-ceph
     testgrid-tab-name: auto-release
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8760,7 +8760,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-couchdb
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8796,7 +8796,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-couchdb
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -8833,7 +8833,7 @@ periodics:
     testgrid-dashboards: eventing-couchdb
     testgrid-tab-name: nightly
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8871,7 +8871,7 @@ periodics:
     testgrid-dashboards: eventing-couchdb
     testgrid-tab-name: auto-release
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8918,7 +8918,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-github
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8954,7 +8954,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-github
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -8991,7 +8991,7 @@ periodics:
     testgrid-dashboards: eventing-github
     testgrid-tab-name: nightly
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9029,7 +9029,7 @@ periodics:
     testgrid-dashboards: eventing-github
     testgrid-tab-name: auto-release
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9076,7 +9076,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-gitlab
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9112,7 +9112,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-gitlab
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9149,7 +9149,7 @@ periodics:
     testgrid-dashboards: eventing-gitlab
     testgrid-tab-name: nightly
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9187,7 +9187,7 @@ periodics:
     testgrid-dashboards: eventing-gitlab
     testgrid-tab-name: auto-release
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9234,7 +9234,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-prometheus
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9270,7 +9270,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-prometheus
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9307,7 +9307,7 @@ periodics:
     testgrid-dashboards: eventing-prometheus
     testgrid-tab-name: nightly
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9345,7 +9345,7 @@ periodics:
     testgrid-dashboards: eventing-prometheus
     testgrid-tab-name: auto-release
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9392,7 +9392,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-redis
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9428,7 +9428,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-redis
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9465,7 +9465,7 @@ periodics:
     testgrid-dashboards: eventing-redis
     testgrid-tab-name: nightly
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9503,7 +9503,7 @@ periodics:
     testgrid-dashboards: eventing-redis
     testgrid-tab-name: auto-release
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9550,7 +9550,7 @@ periodics:
   annotations:
     testgrid-dashboards: pkg
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9586,7 +9586,7 @@ periodics:
   annotations:
     testgrid-dashboards: pkg
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9622,7 +9622,7 @@ periodics:
   annotations:
     testgrid-dashboards: caching
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9658,7 +9658,7 @@ periodics:
   annotations:
     testgrid-dashboards: caching
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9694,7 +9694,7 @@ periodics:
   annotations:
     testgrid-dashboards: sample-controller
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9730,7 +9730,7 @@ periodics:
   annotations:
     testgrid-dashboards: sample-controller
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9766,7 +9766,7 @@ periodics:
   annotations:
     testgrid-dashboards: sample-source
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9802,7 +9802,7 @@ periodics:
   annotations:
     testgrid-dashboards: sample-source
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9839,7 +9839,7 @@ periodics:
     testgrid-dashboards: sample-source
     testgrid-tab-name: nightly
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9877,7 +9877,7 @@ periodics:
     testgrid-dashboards: sample-source
     testgrid-tab-name: auto-release
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9924,7 +9924,7 @@ periodics:
   annotations:
     testgrid-dashboards: test-infra
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9980,7 +9980,7 @@ periodics:
   annotations:
     testgrid-dashboards: test-infra
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -10083,7 +10083,7 @@ periodics:
   annotations:
     testgrid-dashboards: knative-gcp
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10123,7 +10123,7 @@ periodics:
   annotations:
     testgrid-dashboards: knative-gcp
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -10163,7 +10163,7 @@ periodics:
   annotations:
     testgrid-dashboards: knative-gcp
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10226,7 +10226,7 @@ periodics:
   annotations:
     testgrid-dashboards: knative-gcp
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -10289,7 +10289,7 @@ periodics:
   annotations:
     testgrid-dashboards: knative-gcp
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10352,7 +10352,7 @@ periodics:
   annotations:
     testgrid-dashboards: knative-gcp
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -10415,7 +10415,7 @@ periodics:
   annotations:
     testgrid-dashboards: knative-gcp
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10478,7 +10478,7 @@ periodics:
   annotations:
     testgrid-dashboards: knative-gcp
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -10541,7 +10541,7 @@ periodics:
   annotations:
     testgrid-dashboards: knative-gcp
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10604,7 +10604,7 @@ periodics:
   annotations:
     testgrid-dashboards: knative-gcp
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -10668,7 +10668,7 @@ periodics:
     testgrid-dashboards: knative-gcp
     testgrid-tab-name: nightly
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10709,7 +10709,7 @@ periodics:
   annotations:
     testgrid-dashboards: knative-gcp
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10763,7 +10763,7 @@ periodics:
   annotations:
     testgrid-dashboards: knative-gcp
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10817,7 +10817,7 @@ periodics:
   annotations:
     testgrid-dashboards: knative-gcp
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10871,7 +10871,7 @@ periodics:
   annotations:
     testgrid-dashboards: knative-gcp
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10926,7 +10926,7 @@ periodics:
     testgrid-dashboards: knative-gcp
     testgrid-tab-name: auto-release
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11024,7 +11024,7 @@ periodics:
   annotations:
     testgrid-dashboards: net-certmanager
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11060,7 +11060,7 @@ periodics:
   annotations:
     testgrid-dashboards: net-certmanager
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -11103,7 +11103,7 @@ periodics:
     testgrid-dashboards: net-certmanager
     testgrid-tab-name: nightly
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11140,9 +11140,9 @@ periodics:
   annotations:
     testgrid-dashboards: net-certmanager
     testgrid-tab-name: dot-release
-    testgrid-alert-stale-results-hours: 170
+    testgrid-alert-stale-results-hours: "170"
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11190,7 +11190,7 @@ periodics:
     testgrid-dashboards: net-certmanager
     testgrid-tab-name: auto-release
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11285,7 +11285,7 @@ periodics:
   annotations:
     testgrid-dashboards: net-contour
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11321,7 +11321,7 @@ periodics:
   annotations:
     testgrid-dashboards: net-contour
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -11364,7 +11364,7 @@ periodics:
     testgrid-dashboards: net-contour
     testgrid-tab-name: nightly
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11401,9 +11401,9 @@ periodics:
   annotations:
     testgrid-dashboards: net-contour
     testgrid-tab-name: dot-release
-    testgrid-alert-stale-results-hours: 170
+    testgrid-alert-stale-results-hours: "170"
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11451,7 +11451,7 @@ periodics:
     testgrid-dashboards: net-contour
     testgrid-tab-name: auto-release
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11498,7 +11498,7 @@ periodics:
   annotations:
     testgrid-dashboards: net-http01
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11534,7 +11534,7 @@ periodics:
   annotations:
     testgrid-dashboards: net-http01
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -11577,7 +11577,7 @@ periodics:
     testgrid-dashboards: net-http01
     testgrid-tab-name: nightly
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11614,9 +11614,9 @@ periodics:
   annotations:
     testgrid-dashboards: net-http01
     testgrid-tab-name: dot-release
-    testgrid-alert-stale-results-hours: 170
+    testgrid-alert-stale-results-hours: "170"
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11664,7 +11664,7 @@ periodics:
     testgrid-dashboards: net-http01
     testgrid-tab-name: auto-release
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11711,7 +11711,7 @@ periodics:
   annotations:
     testgrid-dashboards: net-istio
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11747,7 +11747,7 @@ periodics:
   annotations:
     testgrid-dashboards: net-istio
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -11790,7 +11790,7 @@ periodics:
     testgrid-dashboards: net-istio
     testgrid-tab-name: nightly
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11827,7 +11827,7 @@ periodics:
   annotations:
     testgrid-dashboards: net-istio
     testgrid-tab-name: custom-job
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11864,7 +11864,7 @@ periodics:
   annotations:
     testgrid-dashboards: net-istio
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11914,7 +11914,7 @@ periodics:
   annotations:
     testgrid-dashboards: net-istio
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11964,7 +11964,7 @@ periodics:
   annotations:
     testgrid-dashboards: net-istio
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12014,7 +12014,7 @@ periodics:
   annotations:
     testgrid-dashboards: net-istio
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12065,7 +12065,7 @@ periodics:
     testgrid-dashboards: net-istio
     testgrid-tab-name: auto-release
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12160,7 +12160,7 @@ periodics:
   annotations:
     testgrid-dashboards: net-kourier
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12196,7 +12196,7 @@ periodics:
   annotations:
     testgrid-dashboards: net-kourier
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -12239,7 +12239,7 @@ periodics:
     testgrid-dashboards: net-kourier
     testgrid-tab-name: nightly
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12276,9 +12276,9 @@ periodics:
   annotations:
     testgrid-dashboards: net-kourier
     testgrid-tab-name: dot-release
-    testgrid-alert-stale-results-hours: 170
+    testgrid-alert-stale-results-hours: "170"
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12326,7 +12326,7 @@ periodics:
     testgrid-dashboards: net-kourier
     testgrid-tab-name: auto-release
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12421,7 +12421,7 @@ periodics:
   annotations:
     testgrid-dashboards: operator
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12457,7 +12457,7 @@ periodics:
   annotations:
     testgrid-dashboards: operator
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -12493,7 +12493,7 @@ periodics:
   annotations:
     testgrid-dashboards: operator
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12557,7 +12557,7 @@ periodics:
   annotations:
     testgrid-dashboards: operator
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -12621,7 +12621,7 @@ periodics:
   annotations:
     testgrid-dashboards: operator
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12685,7 +12685,7 @@ periodics:
   annotations:
     testgrid-dashboards: operator
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -12749,7 +12749,7 @@ periodics:
   annotations:
     testgrid-dashboards: operator
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12813,7 +12813,7 @@ periodics:
   annotations:
     testgrid-dashboards: operator
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -12877,7 +12877,7 @@ periodics:
   annotations:
     testgrid-dashboards: operator
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12941,7 +12941,7 @@ periodics:
   annotations:
     testgrid-dashboards: operator
     testgrid-tab-name: release
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -13006,7 +13006,7 @@ periodics:
     testgrid-dashboards: operator
     testgrid-tab-name: nightly
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13043,9 +13043,9 @@ periodics:
   annotations:
     testgrid-dashboards: operator
     testgrid-tab-name: dot-release
-    testgrid-alert-stale-results-hours: 170
+    testgrid-alert-stale-results-hours: "170"
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13091,7 +13091,7 @@ periodics:
     testgrid-dashboards: operator
     testgrid-tab-name: auto-release
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13184,7 +13184,7 @@ periodics:
   annotations:
     testgrid-dashboards: async-component
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13220,7 +13220,7 @@ periodics:
   annotations:
     testgrid-dashboards: async-component
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -13257,7 +13257,7 @@ periodics:
     testgrid-dashboards: async-component
     testgrid-tab-name: nightly
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13294,9 +13294,9 @@ periodics:
   annotations:
     testgrid-dashboards: async-component
     testgrid-tab-name: dot-release
-    testgrid-alert-stale-results-hours: 170
+    testgrid-alert-stale-results-hours: "170"
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13344,7 +13344,7 @@ periodics:
     testgrid-dashboards: async-component
     testgrid-tab-name: auto-release
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13439,7 +13439,7 @@ periodics:
   annotations:
     testgrid-dashboards: discovery
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13475,7 +13475,7 @@ periodics:
   annotations:
     testgrid-dashboards: discovery
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -13518,7 +13518,7 @@ periodics:
     testgrid-dashboards: discovery
     testgrid-tab-name: nightly
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13555,9 +13555,9 @@ periodics:
   annotations:
     testgrid-dashboards: discovery
     testgrid-tab-name: dot-release
-    testgrid-alert-stale-results-hours: 170
+    testgrid-alert-stale-results-hours: "170"
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13605,7 +13605,7 @@ periodics:
     testgrid-dashboards: discovery
     testgrid-tab-name: auto-release
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13652,7 +13652,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-camel
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13688,7 +13688,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-camel
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -13731,7 +13731,7 @@ periodics:
     testgrid-dashboards: eventing-camel
     testgrid-tab-name: nightly
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13768,9 +13768,9 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-camel
     testgrid-tab-name: dot-release
-    testgrid-alert-stale-results-hours: 170
+    testgrid-alert-stale-results-hours: "170"
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13818,7 +13818,7 @@ periodics:
     testgrid-dashboards: eventing-camel
     testgrid-tab-name: auto-release
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13865,7 +13865,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-kafka
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13921,7 +13921,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-kafka
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -13978,7 +13978,7 @@ periodics:
     testgrid-dashboards: eventing-kafka
     testgrid-tab-name: nightly
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -14035,9 +14035,9 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-kafka
     testgrid-tab-name: dot-release
-    testgrid-alert-stale-results-hours: 170
+    testgrid-alert-stale-results-hours: "170"
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -14105,7 +14105,7 @@ periodics:
     testgrid-dashboards: eventing-kafka
     testgrid-tab-name: auto-release
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -14220,7 +14220,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-kafka-broker
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -14276,7 +14276,7 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-kafka-broker
     testgrid-tab-name: continuous
-    testgrid-alert-stale-results-hours: 3
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -14333,7 +14333,7 @@ periodics:
     testgrid-dashboards: eventing-kafka-broker
     testgrid-tab-name: nightly
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -14390,9 +14390,9 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-kafka-broker
     testgrid-tab-name: dot-release
-    testgrid-alert-stale-results-hours: 170
+    testgrid-alert-stale-results-hours: "170"
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -14460,7 +14460,7 @@ periodics:
     testgrid-dashboards: eventing-kafka-broker
     testgrid-tab-name: auto-release
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -14582,7 +14582,7 @@ periodics:
     testgrid-dashboards: eventing-rabbitmq
     testgrid-tab-name: nightly
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -14619,9 +14619,9 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-rabbitmq
     testgrid-tab-name: dot-release
-    testgrid-alert-stale-results-hours: 170
+    testgrid-alert-stale-results-hours: "170"
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -14669,7 +14669,7 @@ periodics:
     testgrid-dashboards: eventing-rabbitmq
     testgrid-tab-name: auto-release
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -14723,7 +14723,7 @@ periodics:
     testgrid-dashboards: eventing-natss
     testgrid-tab-name: nightly
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -14760,9 +14760,9 @@ periodics:
   annotations:
     testgrid-dashboards: eventing-natss
     testgrid-tab-name: dot-release
-    testgrid-alert-stale-results-hours: 170
+    testgrid-alert-stale-results-hours: "170"
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -14810,7 +14810,7 @@ periodics:
     testgrid-dashboards: eventing-natss
     testgrid-tab-name: auto-release
     testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: 1
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
