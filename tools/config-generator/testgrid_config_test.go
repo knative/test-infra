@@ -226,10 +226,10 @@ func TestGenerateProwJobAnnotations(t *testing.T) {
 	expected := []string{
 		"  testgrid-dashboards: repo-name",
 		"  testgrid-tab-name: job-name",
-		"  testgrid-alert-stale-results-hours: 48",
+		"  testgrid-alert-stale-results-hours: \"48\"",
 		"  testgrid-short-text-metric: coverage",
 		"  testgrid-alert-email: \"foo-bar@google.com\"",
-		"  testgrid-num-failures-to-alert: 3",
+		"  testgrid-num-failures-to-alert: \"3\"",
 	}
 	annotations := generateProwJobAnnotations("repo-name", "job-name", tgExtras)
 	if diff := cmp.Diff(annotations, expected); diff != "" {
