@@ -140,6 +140,103 @@ func TestGetGcsLogDir(t *testing.T) {
 	}
 }
 
+func TestGetTestgroupExtras(t *testing.T) {
+	SetupForTesting()
+	defaultProjectName := "project-name"
+	tests := []struct {
+		ProjName string
+		JobName  string
+		Expected map[string]string
+	}{
+		{
+			ProjName: "proj-name-1.2.3",
+			JobName:  "continuous",
+			Expected: map[string]string{
+				"num_failures_to_alert": "3",
+				"alert_options":         "\n    alert_mail_to_addresses: \"serverless-engprod-sea@google.com\"",
+			},
+		},
+		{
+			JobName: "continuous",
+			Expected: map[string]string{
+				"alert_stale_results_hours": "3",
+			},
+		},
+		{
+			JobName: "dot-release",
+			Expected: map[string]string{
+				"num_failures_to_alert":     "1",
+				"alert_options":             "\n    alert_mail_to_addresses: \"serverless-engprod-sea@google.com\"",
+				"alert_stale_results_hours": "170",
+			},
+		},
+		{
+			JobName: "auto-release",
+			Expected: map[string]string{
+				"num_failures_to_alert": "1",
+				"alert_options":         "\n    alert_mail_to_addresses: \"serverless-engprod-sea@google.com\"",
+			},
+		},
+		{
+			JobName: "nightly",
+			Expected: map[string]string{
+				"num_failures_to_alert": "1",
+				"alert_options":         "\n    alert_mail_to_addresses: \"serverless-engprod-sea@google.com\"",
+			},
+		},
+		{
+			JobName: "webhook-apicoverage",
+			Expected: map[string]string{
+				"alert_stale_results_hours": "48",
+			},
+		},
+		{
+			JobName: "test-coverage",
+			Expected: map[string]string{
+				"short_text_metric": "coverage",
+			},
+		},
+		{
+			JobName:  "some-other-job-name",
+			Expected: map[string]string{"alert_stale_results_hours": "3"},
+		},
+	}
+
+	for _, test := range tests {
+		projName := test.ProjName
+		if projName == "" {
+			projName = defaultProjectName
+		}
+
+		out := getTestgroupExtras(test.ProjName, test.JobName)
+		if diff := cmp.Diff(out, test.Expected); diff != "" {
+			t.Errorf("(-got +want): \n%s", diff)
+		}
+	}
+}
+
+func TestGenerateProwJobAnnotations(t *testing.T) {
+	SetupForTesting()
+	tgExtras := map[string]string{
+		"alert_stale_results_hours": "48",
+		"alert_options":             "\n    alert_mail_to_addresses: \"foo-bar@google.com\"",
+		"num_failures_to_alert":     "3",
+		"short_text_metric":         "coverage",
+	}
+	expected := []string{
+		"  testgrid-dashboards: repo-name",
+		"  testgrid-tab-name: job-name",
+		"  testgrid-alert-stale-results-hours: \"48\"",
+		"  testgrid-short-text-metric: coverage",
+		"  testgrid-alert-email: \"foo-bar@google.com\"",
+		"  testgrid-num-failures-to-alert: \"3\"",
+	}
+	annotations := generateProwJobAnnotations("repo-name", "job-name", tgExtras)
+	if diff := cmp.Diff(annotations, expected); diff != "" {
+		t.Errorf("(-got +want): \n%s", diff)
+	}
+}
+
 func TestTestGridMetaDataGenerateTestGroup(t *testing.T) {
 	SetupForTesting()
 	data := NewTestGridMetaData()

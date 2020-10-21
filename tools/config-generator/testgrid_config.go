@@ -17,6 +17,7 @@ package main
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 	"time"
 )
@@ -48,7 +49,8 @@ var (
 	metaData = NewTestGridMetaData()
 
 	// templatesCache caches templates in memory to avoid I/O
-	templatesCache = make(map[string]string)
+	templatesCache        = make(map[string]string)
+	quotedEmailPattern, _ = regexp.Compile("\"(.+@.+\\..+)\"")
 )
 
 // baseTestgridTemplateData contains basic data about the testgrid config file.
@@ -168,37 +170,75 @@ func getGcsLogDir(testGroupName string) string {
 	return fmt.Sprintf("%s/%s/%s", GCSBucket, LogsDir, testGroupName)
 }
 
+func getTestgroupExtras(projName, jobName string) map[string]string {
+	extras := make(map[string]string)
+	switch jobName {
+	case "continuous":
+		// projName has the release encoded into it, so the main page at http://testgrid.knative.dev
+		// does not mix releases with the master branch
+		if releaseRegex.FindString(projName) != "" {
+			extras["num_failures_to_alert"] = "3"
+			extras["alert_options"] = "\n    alert_mail_to_addresses: \"serverless-engprod-sea@google.com\""
+		} else {
+			extras["alert_stale_results_hours"] = "3"
+		}
+	case "dot-release", "auto-release", "nightly":
+		extras["num_failures_to_alert"] = "1"
+		extras["alert_options"] = "\n    alert_mail_to_addresses: \"serverless-engprod-sea@google.com\""
+		if jobName == "dot-release" {
+			extras["alert_stale_results_hours"] = "170" // 1 week + 2h
+		}
+	case "webhook-apicoverage":
+		extras["alert_stale_results_hours"] = "48" // 2 days
+	case "test-coverage":
+		extras["short_text_metric"] = "coverage"
+	default:
+		extras["alert_stale_results_hours"] = "3"
+	}
+	return extras
+}
+
+func generateProwJobAnnotations(repoName, jobName string, tgExtras map[string]string) []string {
+	annotations := []string{
+		"  testgrid-dashboards: " + repoName,
+		"  testgrid-tab-name: " + jobName,
+	}
+
+	v, ok := tgExtras["alert_stale_results_hours"]
+	if ok {
+		res := fmt.Sprintf("  testgrid-alert-stale-results-hours: \"%s\"", v)
+		annotations = append(annotations, res)
+	}
+	v, ok = tgExtras["short_text_metric"]
+	if ok {
+		res := "  testgrid-short-text-metric: " + v
+		annotations = append(annotations, res)
+	}
+	v, ok = tgExtras["alert_options"]
+	if ok {
+		email := quotedEmailPattern.FindStringSubmatch(v)[1] //index 1 is first capture group
+		res := fmt.Sprintf("  testgrid-alert-email: \"%s\"", email)
+		annotations = append(annotations, res)
+	}
+	v, ok = tgExtras["num_failures_to_alert"]
+	if ok {
+		res := fmt.Sprintf("  testgrid-num-failures-to-alert: \"%s\"", v)
+		annotations = append(annotations, res)
+	}
+	return annotations
+}
+
 // generateTestGroup generates the test group configuration
 func (t *TestGridMetaData) generateTestGroup(projName string, repoName string, jobNames []string) {
 	projRepoStr := buildProjRepoStr(projName, repoName)
 	for _, jobName := range jobNames {
 		testGroupName := getTestGroupName(projRepoStr, jobName)
-		gcsLogDir := getGcsLogDir(testGroupName)
-		extras := make(map[string]string)
-		switch jobName {
-		case "continuous":
-			// projName has the release encoded into it, so the main page at http://testgrid.knative.dev
-			// does not mix releases with the master branch
-			if releaseRegex.FindString(projName) != "" {
-				extras["num_failures_to_alert"] = "3"
-				extras["alert_options"] = "\n    alert_mail_to_addresses: \"serverless-engprod-sea@google.com\""
-			} else {
-				extras["alert_stale_results_hours"] = "3"
-			}
-		case "dot-release", "auto-release", "nightly":
-			extras["num_failures_to_alert"] = "1"
-			extras["alert_options"] = "\n    alert_mail_to_addresses: \"serverless-engprod-sea@google.com\""
-			if jobName == "dot-release" {
-				extras["alert_stale_results_hours"] = "170" // 1 week + 2h
-			}
-		case "webhook-apicoverage":
-			extras["alert_stale_results_hours"] = "48" // 2 days
-		case "test-coverage":
-			gcsLogDir = getGcsLogDir(fmt.Sprintf("ci-%s-%s", projRepoStr, "go-coverage"))
-			extras["short_text_metric"] = "coverage"
-		default:
-			extras["alert_stale_results_hours"] = "3"
+		testGroupNameForGCSLogDir := testGroupName
+		if jobName == "test-coverage" {
+			testGroupNameForGCSLogDir = fmt.Sprintf("ci-%s-%s", projRepoStr, "go-coverage")
 		}
+		gcsLogDir := getGcsLogDir(testGroupNameForGCSLogDir)
+		extras := getTestgroupExtras(projName, jobName)
 		executeTestGroupTemplate(testGroupName, gcsLogDir, extras)
 	}
 }
