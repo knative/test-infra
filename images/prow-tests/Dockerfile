@@ -18,11 +18,8 @@ ENV DEBIAN_FRONTEND noninteractive
 # If we don't run update, the apt-get install below don't work
 RUN apt-get update
 
-# TODO: do we have to do this?
-# https://github.com/kubernetes/test-infra/blob/master/images/bootstrap/Dockerfile#L67
-# Is where it is installed, using rapid channel
+# If you wanted to update gcloud without changing the kubekins-e2e image, uncomment this
 # RUN gcloud components update
-# Keeping this commented until the next revision just in case we need to deploy quickly
 
 # Docker
 RUN gcloud components install docker-credential-gcr
