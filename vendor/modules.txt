@@ -121,7 +121,7 @@ github.com/google/go-cmp/cmp/internal/diff
 github.com/google/go-cmp/cmp/internal/flags
 github.com/google/go-cmp/cmp/internal/function
 github.com/google/go-cmp/cmp/internal/value
-# github.com/google/go-containerregistry v0.1.3
+# github.com/google/go-containerregistry v0.1.4
 ## explicit
 github.com/google/go-containerregistry/pkg/authn
 github.com/google/go-containerregistry/pkg/internal/retry
@@ -216,8 +216,7 @@ go.opencensus.io/trace
 go.opencensus.io/trace/internal
 go.opencensus.io/trace/propagation
 go.opencensus.io/trace/tracestate
-# golang.org/x/crypto v0.0.0-20200728195943-123391ffb6de
-## explicit
+# golang.org/x/crypto v0.0.0-20201002170205-7f63de1d35b0
 golang.org/x/crypto/blowfish
 golang.org/x/crypto/cast5
 golang.org/x/crypto/chacha20
@@ -433,7 +432,7 @@ gopkg.in/warnings.v0
 # gopkg.in/yaml.v2 v2.3.0
 ## explicit
 gopkg.in/yaml.v2
-# k8s.io/apimachinery v0.18.8 => k8s.io/apimachinery v0.17.6
+# k8s.io/apimachinery v0.18.8 => k8s.io/apimachinery v0.18.8
 ## explicit
 k8s.io/apimachinery/pkg/types
 k8s.io/apimachinery/pkg/util/errors
@@ -453,5 +452,6 @@ sigs.k8s.io/boskos/common
 sigs.k8s.io/boskos/storage
 # sigs.k8s.io/yaml v1.2.0
 sigs.k8s.io/yaml
-# k8s.io/apimachinery => k8s.io/apimachinery v0.17.6
-# k8s.io/client-go => k8s.io/client-go v0.17.6
+# k8s.io/apimachinery => k8s.io/apimachinery v0.18.8
+# k8s.io/client-go => k8s.io/client-go v0.18.8
+# k8s.io/code-generator => k8s.io/code-generator v0.18.8
