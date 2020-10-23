@@ -112,7 +112,6 @@ presubmits:
     needs-monitor: true
     always-run: true
     optional: false
-    optional: true
     args:
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --istio-version stable --no-mesh

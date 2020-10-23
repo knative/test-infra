@@ -23,6 +23,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-serving-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-serving-build-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-build-tests),?(\\s+|$)"
     decorate: true
@@ -69,6 +70,7 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-unit-tests
     context: pull-knative-serving-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-serving-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-unit-tests),?(\\s+|$)"
     decorate: true
@@ -110,6 +112,7 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-upgrade-tests
     context: pull-knative-serving-upgrade-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-serving-upgrade-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-upgrade-tests),?(\\s+|$)"
     decorate: true
@@ -151,10 +154,10 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-istio-latest-mesh
     context: pull-knative-serving-istio-latest-mesh
     always_run: false
+    optional: true
     rerun_command: "/test pull-knative-serving-istio-latest-mesh"
     trigger: "(?m)^/test (all|pull-knative-serving-istio-latest-mesh),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -193,10 +196,10 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-istio-latest-mesh-tls
     context: pull-knative-serving-istio-latest-mesh-tls
     always_run: false
+    optional: true
     rerun_command: "/test pull-knative-serving-istio-latest-mesh-tls"
     trigger: "(?m)^/test (all|pull-knative-serving-istio-latest-mesh-tls),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -235,10 +238,10 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-istio-latest-no-mesh
     context: pull-knative-serving-istio-latest-no-mesh
     always_run: false
+    optional: true
     rerun_command: "/test pull-knative-serving-istio-latest-no-mesh"
     trigger: "(?m)^/test (all|pull-knative-serving-istio-latest-no-mesh),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -277,10 +280,10 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-istio-latest-no-mesh-tls
     context: pull-knative-serving-istio-latest-no-mesh-tls
     always_run: false
+    optional: true
     rerun_command: "/test pull-knative-serving-istio-latest-no-mesh-tls"
     trigger: "(?m)^/test (all|pull-knative-serving-istio-latest-no-mesh-tls),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -319,11 +322,11 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-istio-stable-mesh
     context: pull-knative-serving-istio-stable-mesh
     always_run: false
+    optional: true
     run_if_changed: "^third_party/net-istio.yaml"
     rerun_command: "/test pull-knative-serving-istio-stable-mesh"
     trigger: "(?m)^/test (all|pull-knative-serving-istio-stable-mesh),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -362,11 +365,11 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-istio-stable-mesh-tls
     context: pull-knative-serving-istio-stable-mesh-tls
     always_run: false
+    optional: true
     run_if_changed: "^third_party/net-istio.yaml"
     rerun_command: "/test pull-knative-serving-istio-stable-mesh-tls"
     trigger: "(?m)^/test (all|pull-knative-serving-istio-stable-mesh-tls),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -405,10 +408,10 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-istio-stable-no-mesh
     context: pull-knative-serving-istio-stable-no-mesh
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-serving-istio-stable-no-mesh"
     trigger: "(?m)^/test (all|pull-knative-serving-istio-stable-no-mesh),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -447,10 +450,10 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-istio-stable-no-mesh-tls
     context: pull-knative-serving-istio-stable-no-mesh-tls
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-serving-istio-stable-no-mesh-tls"
     trigger: "(?m)^/test (all|pull-knative-serving-istio-stable-no-mesh-tls),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -489,11 +492,11 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-gloo-0.17.1
     context: pull-knative-serving-gloo-0.17.1
     always_run: false
+    optional: true
     run_if_changed: "^third_party/gloo-latest/*"
     rerun_command: "/test pull-knative-serving-gloo-0.17.1"
     trigger: "(?m)^/test (all|pull-knative-serving-gloo-0.17.1),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -532,11 +535,11 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-gloo-0.17.1-tls
     context: pull-knative-serving-gloo-0.17.1-tls
     always_run: false
+    optional: true
     run_if_changed: "^third_party/gloo-latest/*"
     rerun_command: "/test pull-knative-serving-gloo-0.17.1-tls"
     trigger: "(?m)^/test (all|pull-knative-serving-gloo-0.17.1-tls),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -575,11 +578,11 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-kourier-stable
     context: pull-knative-serving-kourier-stable
     always_run: false
+    optional: true
     run_if_changed: "^third_party/kourier-latest/*"
     rerun_command: "/test pull-knative-serving-kourier-stable"
     trigger: "(?m)^/test (all|pull-knative-serving-kourier-stable),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -618,11 +621,11 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-kourier-stable-tls
     context: pull-knative-serving-kourier-stable-tls
     always_run: false
+    optional: true
     run_if_changed: "^third_party/kourier-latest/*"
     rerun_command: "/test pull-knative-serving-kourier-stable-tls"
     trigger: "(?m)^/test (all|pull-knative-serving-kourier-stable-tls),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -661,6 +664,7 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-contour-latest
     context: pull-knative-serving-contour-latest
     always_run: false
+    optional: false
     run_if_changed: "^third_party/contour-latest/*"
     rerun_command: "/test pull-knative-serving-contour-latest"
     trigger: "(?m)^/test (all|pull-knative-serving-contour-latest),?(\\s+|$)"
@@ -703,6 +707,7 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-contour-tls
     context: pull-knative-serving-contour-tls
     always_run: false
+    optional: false
     run_if_changed: "^third_party/contour-latest/*"
     rerun_command: "/test pull-knative-serving-contour-tls"
     trigger: "(?m)^/test (all|pull-knative-serving-contour-tls),?(\\s+|$)"
@@ -745,11 +750,11 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-ambassador-latest
     context: pull-knative-serving-ambassador-latest
     always_run: false
+    optional: true
     run_if_changed: "^third_party/ambassador-latest/*"
     rerun_command: "/test pull-knative-serving-ambassador-latest"
     trigger: "(?m)^/test (all|pull-knative-serving-ambassador-latest),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -788,11 +793,11 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-ambassador-latest-tls
     context: pull-knative-serving-ambassador-latest-tls
     always_run: false
+    optional: true
     run_if_changed: "^third_party/ambassador-latest/*"
     rerun_command: "/test pull-knative-serving-ambassador-latest-tls"
     trigger: "(?m)^/test (all|pull-knative-serving-ambassador-latest-tls),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -831,11 +836,11 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-kong-latest
     context: pull-knative-serving-kong-latest
     always_run: false
+    optional: true
     run_if_changed: "^third_party/kong-latest/*"
     rerun_command: "/test pull-knative-serving-kong-latest"
     trigger: "(?m)^/test (all|pull-knative-serving-kong-latest),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -874,11 +879,11 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-kong-latest-tls
     context: pull-knative-serving-kong-latest-tls
     always_run: false
+    optional: true
     run_if_changed: "^third_party/kong-latest/*"
     rerun_command: "/test pull-knative-serving-kong-latest-tls"
     trigger: "(?m)^/test (all|pull-knative-serving-kong-latest-tls),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -913,10 +918,10 @@ presubmits:
     agent: kubernetes
     context: pull-knative-serving-https
     always_run: false
+    optional: true
     rerun_command: "/test pull-knative-serving-https"
     trigger: "(?m)^/test (all|pull-knative-serving-https),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -949,6 +954,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-client-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-client-build-tests"
     trigger: "(?m)^/test (all|pull-knative-client-build-tests),?(\\s+|$)"
     decorate: true
@@ -986,6 +992,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-client-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-client-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-client-unit-tests),?(\\s+|$)"
     decorate: true
@@ -1023,6 +1030,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-client-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-client-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-client-integration-tests),?(\\s+|$)"
     decorate: true
@@ -1090,6 +1098,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-client-integration-tests-latest-release
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-client-integration-tests-latest-release"
     trigger: "(?m)^/test (all|pull-knative-client-integration-tests-latest-release),?(\\s+|$)"
     decorate: true
@@ -1121,6 +1130,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-client-contrib-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-client-contrib-build-tests"
     trigger: "(?m)^/test (all|pull-knative-client-contrib-build-tests),?(\\s+|$)"
     decorate: true
@@ -1158,6 +1168,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-client-contrib-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-client-contrib-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-client-contrib-unit-tests),?(\\s+|$)"
     decorate: true
@@ -1195,6 +1206,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-client-contrib-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-client-contrib-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-client-contrib-integration-tests),?(\\s+|$)"
     decorate: true
@@ -1233,6 +1245,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-eventing-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-eventing-build-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-build-tests),?(\\s+|$)"
     decorate: true
@@ -1275,6 +1288,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-eventing-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-eventing-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-unit-tests),?(\\s+|$)"
     decorate: true
@@ -1316,6 +1330,7 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-eventing-integration-tests
     context: pull-knative-eventing-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-eventing-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-integration-tests),?(\\s+|$)"
     decorate: true
@@ -1358,6 +1373,7 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-eventing-conformance-tests
     context: pull-knative-eventing-conformance-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-eventing-conformance-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-conformance-tests),?(\\s+|$)"
     decorate: true
@@ -1394,6 +1410,7 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-eventing-upgrade-tests
     context: pull-knative-eventing-upgrade-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-eventing-upgrade-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-upgrade-tests),?(\\s+|$)"
     decorate: true
@@ -1457,6 +1474,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-eventing-contrib-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-eventing-contrib-build-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-contrib-build-tests),?(\\s+|$)"
     decorate: true
@@ -1499,6 +1517,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-eventing-contrib-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-eventing-contrib-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-contrib-unit-tests),?(\\s+|$)"
     decorate: true
@@ -1536,6 +1555,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-eventing-contrib-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-eventing-contrib-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-contrib-integration-tests),?(\\s+|$)"
     decorate: true
@@ -1604,6 +1624,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-docs-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-docs-build-tests"
     trigger: "(?m)^/test (all|pull-knative-docs-build-tests),?(\\s+|$)"
     decorate: true
@@ -1640,6 +1661,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-docs-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-docs-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-docs-unit-tests),?(\\s+|$)"
     decorate: true
@@ -1676,6 +1698,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-docs-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-docs-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-docs-integration-tests),?(\\s+|$)"
     decorate: true
@@ -1762,6 +1785,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-pkg-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-pkg-build-tests"
     trigger: "(?m)^/test (all|pull-knative-pkg-build-tests),?(\\s+|$)"
     decorate: true
@@ -1799,6 +1823,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-pkg-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-pkg-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-pkg-unit-tests),?(\\s+|$)"
     decorate: true
@@ -1836,6 +1861,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-pkg-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-pkg-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-pkg-integration-tests),?(\\s+|$)"
     decorate: true
@@ -1874,6 +1900,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-test-infra-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-test-infra-build-tests"
     trigger: "(?m)^/test (all|pull-knative-test-infra-build-tests),?(\\s+|$)"
     decorate: true
@@ -1911,6 +1938,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-test-infra-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-test-infra-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-test-infra-unit-tests),?(\\s+|$)"
     decorate: true
@@ -1948,6 +1976,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-test-infra-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-test-infra-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-test-infra-integration-tests),?(\\s+|$)"
     decorate: true
@@ -2016,6 +2045,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-test-infra-kind-tests
     always_run: false
+    optional: false
     rerun_command: "/test pull-knative-test-infra-kind-tests"
     trigger: "(?m)^/test (all|pull-knative-test-infra-kind-tests),?(\\s+|$)"
     decorate: true
@@ -2069,6 +2099,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-caching-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-caching-build-tests"
     trigger: "(?m)^/test (all|pull-knative-caching-build-tests),?(\\s+|$)"
     decorate: true
@@ -2106,6 +2137,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-caching-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-caching-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-caching-unit-tests),?(\\s+|$)"
     decorate: true
@@ -2143,6 +2175,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-caching-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-caching-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-caching-integration-tests),?(\\s+|$)"
     decorate: true
@@ -2181,6 +2214,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-sample-controller-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-sample-controller-build-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-sample-controller-build-tests),?(\\s+|$)"
     decorate: true
@@ -2218,6 +2252,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-sample-controller-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-sample-controller-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-sample-controller-unit-tests),?(\\s+|$)"
     decorate: true
@@ -2256,6 +2291,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-sample-source-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-sample-source-build-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-sample-source-build-tests),?(\\s+|$)"
     decorate: true
@@ -2293,6 +2329,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-sample-source-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-sample-source-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-sample-source-unit-tests),?(\\s+|$)"
     decorate: true
@@ -2331,6 +2368,7 @@ presubmits:
     agent: kubernetes
     context: pull-google-knative-gcp-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-google-knative-gcp-build-tests"
     trigger: "(?m)^/test (all|pull-google-knative-gcp-build-tests),?(\\s+|$)"
     decorate: true
@@ -2372,6 +2410,7 @@ presubmits:
     agent: kubernetes
     context: pull-google-knative-gcp-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-google-knative-gcp-unit-tests"
     trigger: "(?m)^/test (all|pull-google-knative-gcp-unit-tests),?(\\s+|$)"
     decorate: true
@@ -2412,6 +2451,7 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-google-knative-gcp-integration-tests
     context: pull-google-knative-gcp-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-google-knative-gcp-integration-tests"
     trigger: "(?m)^/test (all|pull-google-knative-gcp-integration-tests),?(\\s+|$)"
     decorate: true
@@ -2458,6 +2498,7 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-google-knative-gcp-wi-tests
     context: pull-google-knative-gcp-wi-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-google-knative-gcp-wi-tests"
     trigger: "(?m)^/test (all|pull-google-knative-gcp-wi-tests),?(\\s+|$)"
     decorate: true
@@ -2498,6 +2539,7 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-google-knative-gcp-conformance-tests
     context: pull-google-knative-gcp-conformance-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-google-knative-gcp-conformance-tests"
     trigger: "(?m)^/test (all|pull-google-knative-gcp-conformance-tests),?(\\s+|$)"
     decorate: true
@@ -2564,6 +2606,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-networking-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-networking-build-tests"
     trigger: "(?m)^/test (all|pull-knative-networking-build-tests),?(\\s+|$)"
     decorate: true
@@ -2601,6 +2644,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-networking-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-networking-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-networking-unit-tests),?(\\s+|$)"
     decorate: true
@@ -2638,6 +2682,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-networking-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-networking-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-networking-integration-tests),?(\\s+|$)"
     decorate: true
@@ -2676,6 +2721,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-certmanager-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-certmanager-build-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-certmanager-build-tests),?(\\s+|$)"
     decorate: true
@@ -2713,6 +2759,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-certmanager-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-certmanager-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-certmanager-unit-tests),?(\\s+|$)"
     decorate: true
@@ -2750,6 +2797,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-certmanager-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-certmanager-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-certmanager-integration-tests),?(\\s+|$)"
     decorate: true
@@ -2818,6 +2866,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-contour-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-contour-build-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-contour-build-tests),?(\\s+|$)"
     decorate: true
@@ -2855,6 +2904,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-contour-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-contour-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-contour-unit-tests),?(\\s+|$)"
     decorate: true
@@ -2892,6 +2942,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-contour-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-contour-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-contour-integration-tests),?(\\s+|$)"
     decorate: true
@@ -2930,6 +2981,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-http01-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-http01-build-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-http01-build-tests),?(\\s+|$)"
     decorate: true
@@ -2967,6 +3019,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-http01-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-http01-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-http01-unit-tests),?(\\s+|$)"
     decorate: true
@@ -3004,6 +3057,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-http01-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-http01-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-http01-integration-tests),?(\\s+|$)"
     decorate: true
@@ -3042,6 +3096,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-istio-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-istio-build-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-istio-build-tests),?(\\s+|$)"
     decorate: true
@@ -3079,6 +3134,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-istio-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-istio-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-istio-unit-tests),?(\\s+|$)"
     decorate: true
@@ -3116,6 +3172,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-istio-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-istio-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-istio-integration-tests),?(\\s+|$)"
     decorate: true
@@ -3183,10 +3240,10 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-istio-latest
     always_run: true
+    optional: true
     rerun_command: "/test pull-knative-sandbox-net-istio-latest"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-istio-latest),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/net-istio
     cluster: "build-knative"
     spec:
@@ -3217,6 +3274,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-kourier-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-kourier-build-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-kourier-build-tests),?(\\s+|$)"
     decorate: true
@@ -3254,6 +3312,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-kourier-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-kourier-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-kourier-unit-tests),?(\\s+|$)"
     decorate: true
@@ -3291,6 +3350,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-kourier-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-kourier-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-kourier-integration-tests),?(\\s+|$)"
     decorate: true
@@ -3359,6 +3419,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-operator-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-operator-build-tests"
     trigger: "(?m)^/test (all|pull-knative-operator-build-tests),?(\\s+|$)"
     decorate: true
@@ -3396,6 +3457,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-operator-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-operator-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-operator-unit-tests),?(\\s+|$)"
     decorate: true
@@ -3433,6 +3495,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-operator-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-operator-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-operator-integration-tests),?(\\s+|$)"
     decorate: true
@@ -3500,6 +3563,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-operator-upgrade-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-operator-upgrade-tests"
     trigger: "(?m)^/test (all|pull-knative-operator-upgrade-tests),?(\\s+|$)"
     decorate: true
@@ -3533,6 +3597,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-async-component-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-async-component-build-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-async-component-build-tests),?(\\s+|$)"
     decorate: true
@@ -3570,6 +3635,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-async-component-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-async-component-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-async-component-unit-tests),?(\\s+|$)"
     decorate: true
@@ -3607,6 +3673,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-async-component-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-async-component-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-async-component-integration-tests),?(\\s+|$)"
     decorate: true
@@ -3675,6 +3742,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-discovery-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-discovery-build-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-discovery-build-tests),?(\\s+|$)"
     decorate: true
@@ -3712,6 +3780,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-discovery-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-discovery-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-discovery-unit-tests),?(\\s+|$)"
     decorate: true
@@ -3749,6 +3818,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-discovery-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-discovery-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-discovery-integration-tests),?(\\s+|$)"
     decorate: true
@@ -3787,6 +3857,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-eventing-kafka-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-eventing-kafka-build-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-build-tests),?(\\s+|$)"
     decorate: true
@@ -3844,6 +3915,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-eventing-kafka-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-eventing-kafka-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-unit-tests),?(\\s+|$)"
     decorate: true
@@ -3901,6 +3973,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-eventing-kafka-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-eventing-kafka-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-integration-tests),?(\\s+|$)"
     decorate: true
@@ -4008,6 +4081,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-eventing-kafka-broker-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-eventing-kafka-broker-build-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-broker-build-tests),?(\\s+|$)"
     decorate: true
@@ -4065,6 +4139,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-eventing-kafka-broker-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-eventing-kafka-broker-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-broker-unit-tests),?(\\s+|$)"
     decorate: true
@@ -4122,6 +4197,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-eventing-kafka-broker-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-eventing-kafka-broker-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-broker-integration-tests),?(\\s+|$)"
     decorate: true
