@@ -25,11 +25,12 @@ github.com/blang/semver/v4
 ## explicit
 github.com/davecgh/go-spew/spew
 # github.com/docker/cli v0.0.0-20200210162036-a4bedce16568
+## explicit
 github.com/docker/cli/cli/config
 github.com/docker/cli/cli/config/configfile
 github.com/docker/cli/cli/config/credentials
 github.com/docker/cli/cli/config/types
-# github.com/docker/docker v1.13.1
+# github.com/docker/docker v1.4.2-0.20200203170920-46ec8731fbce
 github.com/docker/docker/pkg/homedir
 # github.com/docker/docker-credential-helpers v0.6.3
 github.com/docker/docker-credential-helpers/client
@@ -121,7 +122,7 @@ github.com/google/go-cmp/cmp/internal/diff
 github.com/google/go-cmp/cmp/internal/flags
 github.com/google/go-cmp/cmp/internal/function
 github.com/google/go-cmp/cmp/internal/value
-# github.com/google/go-containerregistry v0.1.3
+# github.com/google/go-containerregistry v0.1.4
 ## explicit
 github.com/google/go-containerregistry/pkg/authn
 github.com/google/go-containerregistry/pkg/internal/retry
@@ -155,6 +156,7 @@ github.com/googleapis/gax-go/v2
 # github.com/hashicorp/errwrap v1.0.0
 github.com/hashicorp/errwrap
 # github.com/hashicorp/go-multierror v1.1.0
+## explicit
 github.com/hashicorp/go-multierror
 # github.com/imdario/mergo v0.3.9
 github.com/imdario/mergo
@@ -182,8 +184,6 @@ github.com/kr/text
 github.com/mitchellh/go-homedir
 # github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e
 github.com/niemeyer/pretty
-# github.com/opencontainers/runc v0.1.1
-github.com/opencontainers/runc/libcontainer/user
 # github.com/pkg/errors v0.9.1
 ## explicit
 github.com/pkg/errors
@@ -216,8 +216,7 @@ go.opencensus.io/trace
 go.opencensus.io/trace/internal
 go.opencensus.io/trace/propagation
 go.opencensus.io/trace/tracestate
-# golang.org/x/crypto v0.0.0-20200728195943-123391ffb6de
-## explicit
+# golang.org/x/crypto v0.0.0-20201002170205-7f63de1d35b0
 golang.org/x/crypto/blowfish
 golang.org/x/crypto/cast5
 golang.org/x/crypto/chacha20
@@ -441,12 +440,11 @@ k8s.io/apimachinery/pkg/util/sets
 k8s.io/apimachinery/pkg/util/uuid
 k8s.io/apimachinery/pkg/util/validation
 k8s.io/apimachinery/pkg/util/validation/field
-# k8s.io/test-infra v0.0.0-20200803112140-d8aa4e063646
-## explicit
+# k8s.io/test-infra v0.0.0-20200617221206-ea73eaeab7ff
 k8s.io/test-infra/prow/config/secret
 k8s.io/test-infra/prow/logrusutil
 k8s.io/test-infra/prow/version
-# sigs.k8s.io/boskos v0.0.0-20200729174948-794df80db9c9
+# sigs.k8s.io/boskos v0.0.0-20201002225104-ae3497d24cd7
 ## explicit
 sigs.k8s.io/boskos/client
 sigs.k8s.io/boskos/common
