@@ -92,7 +92,6 @@ RUN go get -u github.com/golang/dep/cmd/dep
 RUN go get -u github.com/jstemmer/go-junit-report
 RUN GO111MODULE=on go get -u gotest.tools/gotestsum
 RUN GO111MODULE=on go get -u github.com/raviqqe/liche@v0.0.0-20200229003944-f57a5d1c5be4  # stable liche version for checking md links
-RUN GO111MODULE=on go get -u github.com/google/go-licenses
 RUN GO111MODULE=on go get sigs.k8s.io/kind@v0.9.0
 RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2
 RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2/kubetest2-gke
@@ -127,6 +126,9 @@ COPY --from=test-infra-builds /go/bin/* /go/bin/
 
 # Only needed in this Dockerfile
 RUN rm -f /usr/local/bin/source-gvm-and-run.sh
+
+# This tool is poorly written and requires its mod cache to be present to function!
+RUN GO111MODULE=on go get -u github.com/google/go-licenses
 
 # Extract versions
 RUN bazel version > /bazel_version
