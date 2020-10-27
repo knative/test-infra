@@ -4346,6 +4346,8 @@ periodics:
   name: ci-knative-serving-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -4387,6 +4389,8 @@ periodics:
   name: ci-knative-serving-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -5639,6 +5643,8 @@ periodics:
   name: ci-knative-client-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -5675,6 +5681,8 @@ periodics:
   name: ci-knative-client-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6542,6 +6550,8 @@ periodics:
   name: ci-knative-client-contrib-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6578,6 +6588,8 @@ periodics:
   name: ci-knative-client-contrib-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6614,6 +6626,8 @@ periodics:
   name: ci-knative-docs-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6669,6 +6683,8 @@ periodics:
   name: ci-knative-docs-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6770,6 +6786,8 @@ periodics:
   name: ci-knative-eventing-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6811,6 +6829,8 @@ periodics:
   name: ci-knative-eventing-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -7684,6 +7704,8 @@ periodics:
   name: ci-knative-eventing-contrib-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -7725,6 +7747,8 @@ periodics:
   name: ci-knative-eventing-contrib-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -8592,6 +8616,8 @@ periodics:
   name: ci-knative-sandbox-eventing-awssqs-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -8628,6 +8654,8 @@ periodics:
   name: ci-knative-sandbox-eventing-awssqs-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -8750,6 +8778,8 @@ periodics:
   name: ci-knative-sandbox-eventing-ceph-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -8786,6 +8816,8 @@ periodics:
   name: ci-knative-sandbox-eventing-ceph-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -8908,6 +8940,8 @@ periodics:
   name: ci-knative-sandbox-eventing-couchdb-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -8944,6 +8978,8 @@ periodics:
   name: ci-knative-sandbox-eventing-couchdb-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9066,6 +9102,8 @@ periodics:
   name: ci-knative-sandbox-eventing-github-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9102,6 +9140,8 @@ periodics:
   name: ci-knative-sandbox-eventing-github-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9224,6 +9264,8 @@ periodics:
   name: ci-knative-sandbox-eventing-gitlab-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9260,6 +9302,8 @@ periodics:
   name: ci-knative-sandbox-eventing-gitlab-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9382,6 +9426,8 @@ periodics:
   name: ci-knative-sandbox-eventing-prometheus-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9418,6 +9464,8 @@ periodics:
   name: ci-knative-sandbox-eventing-prometheus-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9540,6 +9588,8 @@ periodics:
   name: ci-knative-sandbox-eventing-redis-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9576,6 +9626,8 @@ periodics:
   name: ci-knative-sandbox-eventing-redis-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9698,6 +9750,8 @@ periodics:
   name: ci-knative-pkg-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -9734,6 +9788,8 @@ periodics:
   name: ci-knative-pkg-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -9770,6 +9826,8 @@ periodics:
   name: ci-knative-caching-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -9806,6 +9864,8 @@ periodics:
   name: ci-knative-caching-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -9842,6 +9902,8 @@ periodics:
   name: ci-knative-sandbox-sample-controller-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9878,6 +9940,8 @@ periodics:
   name: ci-knative-sandbox-sample-controller-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9914,6 +9978,8 @@ periodics:
   name: ci-knative-sandbox-sample-source-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9950,6 +10016,8 @@ periodics:
   name: ci-knative-sandbox-sample-source-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -10072,6 +10140,8 @@ periodics:
   name: ci-knative-test-infra-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -10128,6 +10198,8 @@ periodics:
   name: ci-knative-test-infra-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -10232,6 +10304,8 @@ periodics:
   name: ci-google-knative-gcp-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: google
@@ -10272,6 +10346,8 @@ periodics:
   name: ci-google-knative-gcp-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: google
@@ -11172,6 +11248,8 @@ periodics:
   name: ci-knative-sandbox-net-certmanager-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -11208,6 +11286,8 @@ periodics:
   name: ci-knative-sandbox-net-certmanager-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -11433,6 +11513,8 @@ periodics:
   name: ci-knative-sandbox-net-contour-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -11469,6 +11551,8 @@ periodics:
   name: ci-knative-sandbox-net-contour-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -11646,6 +11730,8 @@ periodics:
   name: ci-knative-sandbox-net-http01-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -11682,6 +11768,8 @@ periodics:
   name: ci-knative-sandbox-net-http01-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -11859,6 +11947,8 @@ periodics:
   name: ci-knative-sandbox-net-istio-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -11895,6 +11985,8 @@ periodics:
   name: ci-knative-sandbox-net-istio-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -12308,6 +12400,8 @@ periodics:
   name: ci-knative-sandbox-net-kourier-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -12344,6 +12438,8 @@ periodics:
   name: ci-knative-sandbox-net-kourier-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -12569,6 +12665,8 @@ periodics:
   name: ci-knative-operator-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -12605,6 +12703,8 @@ periodics:
   name: ci-knative-operator-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -13332,6 +13432,8 @@ periodics:
   name: ci-knative-sandbox-async-component-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -13368,6 +13470,8 @@ periodics:
   name: ci-knative-sandbox-async-component-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -13587,6 +13691,8 @@ periodics:
   name: ci-knative-sandbox-discovery-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -13623,6 +13729,8 @@ periodics:
   name: ci-knative-sandbox-discovery-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -13800,6 +13908,8 @@ periodics:
   name: ci-knative-sandbox-eventing-camel-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -13836,6 +13946,8 @@ periodics:
   name: ci-knative-sandbox-eventing-camel-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -14013,6 +14125,8 @@ periodics:
   name: ci-knative-sandbox-eventing-kafka-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -14069,6 +14183,8 @@ periodics:
   name: ci-knative-sandbox-eventing-kafka-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -14368,6 +14484,8 @@ periodics:
   name: ci-knative-sandbox-eventing-kafka-broker-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -14424,6 +14542,8 @@ periodics:
   name: ci-knative-sandbox-eventing-kafka-broker-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox

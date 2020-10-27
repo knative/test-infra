@@ -153,6 +153,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			if len(data.Base.Args) == 0 {
 				data.Base.Args = allPresubmitTests
 			}
+			data.Base.DecorationConfig = []string{"timeout: 3h"}
 		case "nightly":
 			if !getBool(item.Value) {
 				return

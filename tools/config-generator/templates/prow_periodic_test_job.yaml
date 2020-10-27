@@ -5,6 +5,7 @@
   decorate: true
   [[indent_section 2 "reporter_config" .Base.ReporterConfig]]
       [[indent_array_section 6 "job_states_to_report" .Base.JobStatesToReport]]
+  [[indent_section 4 "decoration_config" .Base.DecorationConfig]]
   [[.Base.Cluster]]
   [[indent_section 2 "extra_refs" .Base.ExtraRefs]]
   [[indent_array_section 4 "branches" .Base.Branches]]
