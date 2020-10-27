@@ -26,6 +26,7 @@ import (
 	"strings"
 
 	"knative.dev/test-infra/pkg/cmd"
+	"knative.dev/test-infra/pkg/helpers"
 	"knative.dev/test-infra/pkg/metautil"
 	"knative.dev/test-infra/pkg/prow"
 )
@@ -33,6 +34,7 @@ import (
 const (
 	createCommandTmpl = "%s container clusters create --quiet --enable-autoscaling --min-nodes=%d --max-nodes=%d " +
 		"--scopes=%s"
+	clusterNamePrefix                  = "e2e-cls"
 	boskosAcquireDefaultTimeoutSeconds = 1200
 )
 
@@ -83,13 +85,10 @@ func Run(opts *Options, cc *GKEClusterConfig) error {
 	kubetest2Flags := baseKubetest2Flags
 
 	createCommand := fmt.Sprintf(createCommandTmpl, cc.CommandGroup, cc.MinNodes, cc.MaxNodes, cc.Scopes)
-	// --cluster-version must be a valid version number when --release-channel is not empty,
-	// so normally we do not use them together.
 	if cc.ReleaseChannel != "" {
 		createCommand += " --release-channel=" + cc.ReleaseChannel
-	} else {
-		kubetest2Flags = append(kubetest2Flags, "--version="+cc.Version)
 	}
+	kubetest2Flags = append(kubetest2Flags, "--version="+cc.Version)
 	if cc.Addons != "" {
 		createCommand += " --addons=" + cc.Addons
 	}
@@ -98,6 +97,10 @@ func Run(opts *Options, cc *GKEClusterConfig) error {
 	}
 	kubetest2Flags = append(kubetest2Flags, "--create-command="+createCommand)
 
+	// If cluster name is not provided, generate a random name.
+	if cc.Name == "" {
+		cc.Name = helpers.AppendRandomString(clusterNamePrefix)
+	}
 	kubetest2Flags = append(kubetest2Flags, "--cluster-name="+cc.Name, "--environment="+cc.Environment,
 		"--num-nodes="+strconv.Itoa(cc.MinNodes), "--machine-type="+cc.Machine, "--network="+cc.Network)
 	if cc.GCPServiceAccount != "" {

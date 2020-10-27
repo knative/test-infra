@@ -116,6 +116,7 @@ type baseProwJobTemplateData struct {
 	JobStatesToReport   []string
 	Timeout             int
 	AlwaysRun           bool
+	Optional            bool
 	TestAccount         string
 	ServiceAccount      string
 	ReleaseGcs          string
@@ -124,7 +125,6 @@ type baseProwJobTemplateData struct {
 	Labels              []string
 	PathAlias           string
 	Cluster             string
-	Optional            string
 	NeedsMonitor        bool
 	Annotations         []string
 }
@@ -161,25 +161,24 @@ var (
 	// Values used in the jobs that can be changed through command-line flags.
 	// TODO: these should be CapsCase
 	// ... until they are not global
-	output                     outputter
-	logFatalf                  logFatalfFunc
-	prowHost                   string
-	testGridHost               string
-	gubernatorHost             string
-	GCSBucket                  string
-	testGridGcsBucket          string
-	LogsDir                    string
-	presubmitLogsDir           string
-	testAccount                string
-	nightlyAccount             string
-	releaseAccount             string
-	githubCommenterDockerImage string
-	prowTestsDockerImage       string
-	presubmitScript            string
-	releaseScript              string
-	webhookAPICoverageScript   string
-	upgradeReleaseBranches     bool
-	githubTokenPath            string
+	output                   outputter
+	logFatalf                logFatalfFunc
+	prowHost                 string
+	testGridHost             string
+	gubernatorHost           string
+	GCSBucket                string
+	testGridGcsBucket        string
+	LogsDir                  string
+	presubmitLogsDir         string
+	testAccount              string
+	nightlyAccount           string
+	releaseAccount           string
+	prowTestsDockerImage     string
+	presubmitScript          string
+	releaseScript            string
+	webhookAPICoverageScript string
+	upgradeReleaseBranches   bool
+	githubTokenPath          string
 
 	// #########################################################################
 	// ############## data used for generating prow configuration ##############
@@ -244,6 +243,7 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.GcsPresubmitLogDir = fmt.Sprintf("gs://%s/%s", GCSBucket, presubmitLogsDir)
 	data.ReleaseGcs = strings.Replace(repo, data.OrgName+"/", "knative-releases/", 1)
 	data.AlwaysRun = true
+	data.Optional = false
 	data.Image = prowTestsDockerImage
 	data.ServiceAccount = testAccount
 	data.Command = ""
@@ -253,7 +253,6 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.Env = make([]string, 0)
 	data.Labels = make([]string, 0)
 	data.Annotations = make([]string, 0)
-	data.Optional = ""
 	data.Cluster = "cluster: \"build-knative\""
 	return data
 }
@@ -397,7 +396,7 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 		case "command":
 			(*data).Command = getString(item.Value)
 		case "needs-monitor":
-			(*data).NeedsMonitor = true
+			(*data).NeedsMonitor = getBool(item.Value)
 		case "needs-dind":
 			if getBool(item.Value) {
 				setupDockerInDockerForJob(data)
@@ -407,13 +406,13 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 		case "performance":
 			for i, repo := range repositories {
 				if path.Base(repo.Name) == (*data).RepoName {
-					repositories[i].EnablePerformanceTests = true
+					repositories[i].EnablePerformanceTests = getBool(item.Value)
 				}
 			}
 		case "env-vars":
 			addExtraEnvVarsToJob(getStringArray(item.Value), data)
 		case "optional":
-			(*data).Optional = "optional: true"
+			(*data).Optional = getBool(item.Value)
 		case "resources":
 			setResourcesReqForJob(getMapSlice(item.Value), data)
 		case "reporter_config":

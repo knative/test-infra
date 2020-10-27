@@ -112,7 +112,6 @@ presubmits:
     needs-monitor: true
     always-run: true
     optional: false
-    optional: true
     args:
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --istio-version stable --no-mesh
@@ -372,6 +371,17 @@ presubmits:
     args:
     - --run-test
     - ./test/e2e-wi-tests.sh
+  - custom-test: upgrade-tests
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+    needs-monitor: true
+    optional: true
+    args:
+    - --run-test
+    - ./test/e2e-upgrade-tests.sh
   - custom-test: conformance-tests
     resources:
       requests:
