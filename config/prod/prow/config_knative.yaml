@@ -319,13 +319,16 @@ presubmits:
   knative/test-infra:
   - build-tests: true
   - unit-tests: true
+  - go-coverage: true
+  knative/hack:
+  - build-tests: true
+  - unit-tests: true
   - integration-tests: true
     args:
     - --run-test
     - ./test/e2e-tests.sh
-  - go-coverage: true
   - custom-test: kind-tests
-    always-run: false
+    always-run: true
     needs-dind: true
     args:
     - --run-test

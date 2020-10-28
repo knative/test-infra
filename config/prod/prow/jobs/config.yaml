@@ -1972,45 +1972,6 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-test-infra-integration-tests
-    agent: kubernetes
-    context: pull-knative-test-infra-integration-tests
-    always_run: true
-    optional: false
-    rerun_command: "/test pull-knative-test-infra-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-test-infra-integration-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/test-infra
-    cluster: "build-knative"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--run-test"
-        - "./test/e2e-tests.sh"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
   - name: pull-knative-test-infra-go-coverage
     agent: kubernetes
     context: pull-knative-test-infra-go-coverage
@@ -2041,15 +2002,131 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
-  - name: pull-knative-test-infra-kind-tests
+  knative/hack:
+  - name: pull-knative-hack-build-tests
     agent: kubernetes
-    context: pull-knative-test-infra-kind-tests
-    always_run: false
+    context: pull-knative-hack-build-tests
+    always_run: true
     optional: false
-    rerun_command: "/test pull-knative-test-infra-kind-tests"
-    trigger: "(?m)^/test (all|pull-knative-test-infra-kind-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-hack-build-tests"
+    trigger: "(?m)^/test (all|pull-knative-hack-build-tests),?(\\s+|$)"
     decorate: true
-    path_alias: knative.dev/test-infra
+    path_alias: knative.dev/hack
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--build-tests"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-hack-unit-tests
+    agent: kubernetes
+    context: pull-knative-hack-unit-tests
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-hack-unit-tests"
+    trigger: "(?m)^/test (all|pull-knative-hack-unit-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/hack
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--unit-tests"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-hack-integration-tests
+    agent: kubernetes
+    context: pull-knative-hack-integration-tests
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-hack-integration-tests"
+    trigger: "(?m)^/test (all|pull-knative-hack-integration-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/hack
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-hack-kind-tests
+    agent: kubernetes
+    context: pull-knative-hack-kind-tests
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-hack-kind-tests"
+    trigger: "(?m)^/test (all|pull-knative-hack-kind-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/hack
     cluster: "build-knative"
     spec:
       containers:
