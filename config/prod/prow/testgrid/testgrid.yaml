@@ -98,9 +98,6 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
-- name: ci-knative-serving-webhook-apicoverage
-  gcs_prefix: knative-prow/logs/ci-knative-serving-webhook-apicoverage
-  alert_stale_results_hours: 48
 - name: ci-knative-client-continuous
   gcs_prefix: knative-prow/logs/ci-knative-client-continuous
   alert_stale_results_hours: 3
@@ -1078,9 +1075,6 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 1
-  - name: webhook-apicoverage
-    test_group_name: ci-knative-serving-webhook-apicoverage
-    base_options: "sort-by-name="
 - name: client
   dashboard_tab:
   - name: continuous

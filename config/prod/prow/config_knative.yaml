@@ -489,7 +489,6 @@ presubmits:
 periodics:
   knative/serving:
   - continuous: true
-    timeout: 100
     resources:
       requests:
         memory: 12Gi
@@ -629,7 +628,6 @@ periodics:
         memory: 12Gi
       limits:
         memory: 16Gi
-  - webhook-apicoverage: true
   knative/client:
   - continuous: true
   - branch-ci: true

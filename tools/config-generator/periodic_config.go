@@ -115,8 +115,6 @@ func generateCron(jobType, jobName, repoName string, timeout int) string {
 			// Every Tuesday 2 AM
 			res = weekly(2, 2)
 		}
-	case "webhook-apicoverage":
-		res = daily(2) // 2 AM
 	default:
 		log.Printf("job type not supported for cron generation '%s'", jobName)
 	}
@@ -153,7 +151,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			if len(data.Base.Args) == 0 {
 				data.Base.Args = allPresubmitTests
 			}
-			data.Base.DecorationConfig = []string{"timeout: 3h"}
+			data.Base.Timeout = 180
 		case "nightly":
 			if !getBool(item.Value) {
 				return
@@ -163,7 +161,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			data.Base.ServiceAccount = nightlyAccount
 			data.Base.Command = releaseScript
 			data.Base.Args = releaseNightly
-			data.Base.Timeout = 90
+			data.Base.Timeout = 180
 		case "branch-ci":
 			if !getBool(item.Value) {
 				return
@@ -174,7 +172,6 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			data.Base.Command = releaseScript
 			data.Base.Args = releaseLocal
 			setupDockerInDockerForJob(&data.Base)
-			// TODO(adrcunha): Consider reducing the timeout in the future.
 			data.Base.Timeout = 180
 		case "dot-release", "auto-release":
 			if !getBool(item.Value) {
@@ -194,11 +191,11 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			if data.Base.OrgName != "knative" {
 				data.Base.addEnvToJob("ORG_NAME", data.Base.OrgName)
 			}
-			data.Base.Timeout = 90
+			data.Base.Timeout = 180
 		case "custom-job":
 			jobType = getString(item.Key)
 			jobNameSuffix = getString(item.Value)
-			data.Base.Timeout = 100
+			data.Base.Timeout = 120
 		case "cron":
 			data.CronString = getString(item.Value)
 		case "release":
@@ -208,14 +205,6 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			if jobType == "dot-release" {
 				data.Base.Args = append(data.Base.Args, "--branch release-"+version)
 			}
-		case "webhook-apicoverage":
-			if !getBool(item.Value) {
-				return
-			}
-			jobType = getString(item.Key)
-			jobNameSuffix = "webhook-apicoverage"
-			data.Base.Command = webhookAPICoverageScript
-			data.Base.addEnvToJob("SYSTEM_NAMESPACE", data.Base.RepoNameForJob)
 		default:
 			continue
 		}
@@ -257,6 +246,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	}
 	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 	configureServiceAccountForJob(&data.Base)
+	data.Base.DecorationConfig = []string{fmt.Sprintf("timeout: %dm", data.Base.Timeout)}
 
 	// This is where the data actually gets written out
 	executeJobTemplate("periodic", jobTemplate, title, repoName, data.PeriodicJobName, false, data)
