@@ -1,7 +1,7 @@
-// +build e2e
+// +build tools
 
 /*
-Copyright 2019 The Knative Authors
+Copyright 2020 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,14 +16,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package e2e
+package tools
 
+// This package imports things required by this repository, to force `go mod` to see them as dependencies
 import (
-	"testing"
+	_ "knative.dev/hack"
 )
-
-// This is actually a unit test, but it does exercise the necessary helper functions.
-
-func TestE2ESucceeds(t *testing.T) {
-	// Always succeed.
-}

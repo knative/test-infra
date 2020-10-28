@@ -21,17 +21,9 @@
 # Use the flags --build-tests, --unit-tests and --integration-tests
 # to run a specific set of tests.
 
-# markdown linting is too picky, disabling it for now.
-DISABLE_MD_LINTING=1
-
-# Some links under third_party/VENDOR-LICENSE are dead and it's not something
-# we can control, so disable it for now.
-# TODO(chizhg): reenable it after we can do this check more properly with kntest.
-DISABLE_MD_LINK_CHECK=1
-
 export GO111MODULE=on
 
-source $(dirname "${BASH_SOURCE[0]}")/../scripts/presubmit-tests.sh
+source $(dirname "${BASH_SOURCE[0]}")/../vendor/knative.dev/hack/presubmit-tests.sh
 
 # Run our custom build tests after the standard build tests.
 
@@ -41,21 +33,6 @@ function post_build_tests() {
   for makefile in $(find . -name Makefile | grep -v /vendor/); do
     echo "*** Checking ${makefile}"
     make -n -C $(dirname "${makefile}") || { failed=1; echo "--- FAIL: ${makefile}"; }
-  done
-  for script in scripts/*.sh; do
-    subheader "Checking integrity of ${script}"
-    bash -c "source ${script}" || { failed=1; echo "--- FAIL: ${script}"; }
-  done
-  return ${failed}
-}
-
-# Run our custom unit tests after the standard unit tests.
-
-function post_unit_tests() {
-  local failed=0
-  for test in ./test/unit/*-tests.sh; do
-    subheader "Running tests in ${test}"
-    ${test} || { failed=1; echo "--- FAIL: ${test}"; }
   done
   return ${failed}
 }
