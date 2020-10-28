@@ -128,6 +128,7 @@ COPY --from=test-infra-builds /go/bin/* /go/bin/
 RUN rm -f /usr/local/bin/source-gvm-and-run.sh
 
 # This tool is poorly written and requires its mod cache to be present to function!
+# (The purpose of the multiple stages is to keep the mod cache out of the final image)
 RUN GO111MODULE=on go get -u github.com/google/go-licenses
 
 # Extract versions
