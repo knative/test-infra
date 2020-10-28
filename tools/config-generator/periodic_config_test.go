@@ -114,10 +114,6 @@ func TestGenerateCron(t *testing.T) {
 			repoName: "foo-operator",
 			expected: fmt.Sprintf("%d 19 * * 2", calculateMinuteOffset("dot-release", jobName)),
 		},
-		{
-			jobType:  "webhook-apicoverage",
-			expected: fmt.Sprintf("%d 9 * * *", calculateMinuteOffset("webhook-apicoverage", jobName)),
-		},
 	}
 	for _, tc := range tests {
 		out := generateCron(tc.jobType, jobName, tc.repoName, tc.timeout)

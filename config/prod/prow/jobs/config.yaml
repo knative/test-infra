@@ -4342,12 +4342,12 @@ presubmits:
           path: /sys/fs/cgroup
           type: Directory
 periodics:
-- cron: "0 */2 * * *"
+- cron: "0 */4 * * *"
   name: ci-knative-serving-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -4390,7 +4390,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -4432,6 +4432,8 @@ periodics:
   name: ci-knative-serving-0.15-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -4491,6 +4493,8 @@ periodics:
   name: ci-knative-serving-0.15-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -4550,6 +4554,8 @@ periodics:
   name: ci-knative-serving-0.16-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -4609,6 +4615,8 @@ periodics:
   name: ci-knative-serving-0.16-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -4668,6 +4676,8 @@ periodics:
   name: ci-knative-serving-0.17-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -4727,6 +4737,8 @@ periodics:
   name: ci-knative-serving-0.17-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -4786,6 +4798,8 @@ periodics:
   name: ci-knative-serving-0.18-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -4845,6 +4859,8 @@ periodics:
   name: ci-knative-serving-0.18-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -4900,10 +4916,12 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "5 */2 * * *"
+- cron: "5 */3 * * *"
   name: ci-knative-serving-istio-latest-mesh
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 120m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -4939,10 +4957,12 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "31 */2 * * *"
+- cron: "31 */3 * * *"
   name: ci-knative-serving-istio-latest-no-mesh
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 120m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -4978,10 +4998,12 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "57 */2 * * *"
+- cron: "57 */3 * * *"
   name: ci-knative-serving-istio-stable-mesh
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 120m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -5017,10 +5039,12 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "47 */2 * * *"
+- cron: "47 */3 * * *"
   name: ci-knative-serving-istio-stable-no-mesh
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 120m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -5056,10 +5080,12 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "12 */2 * * *"
+- cron: "12 */3 * * *"
   name: ci-knative-serving-gloo-0.17.1
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 120m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -5095,10 +5121,12 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "24 */2 * * *"
+- cron: "24 */3 * * *"
   name: ci-knative-serving-kourier-stable
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 120m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -5134,10 +5162,12 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "43 */2 * * *"
+- cron: "43 */3 * * *"
   name: ci-knative-serving-contour-latest
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 120m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -5173,10 +5203,12 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "44 */2 * * *"
+- cron: "44 */3 * * *"
   name: ci-knative-serving-ambassador-latest
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 120m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -5212,10 +5244,12 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "20 */2 * * *"
+- cron: "20 */3 * * *"
   name: ci-knative-serving-kong-latest
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 120m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -5251,10 +5285,12 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "42 */2 * * *"
+- cron: "42 */3 * * *"
   name: ci-knative-serving-https
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 120m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -5300,6 +5336,8 @@ periodics:
       report_template: "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
       job_states_to_report:
       - "failure"
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -5343,6 +5381,8 @@ periodics:
   name: ci-knative-serving-0.15-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -5396,6 +5436,8 @@ periodics:
   name: ci-knative-serving-0.16-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -5449,6 +5491,8 @@ periodics:
   name: ci-knative-serving-0.17-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -5502,6 +5546,8 @@ periodics:
   name: ci-knative-serving-0.18-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -5551,10 +5597,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "20 */2 * * *"
+- cron: "20 */4 * * *"
   name: ci-knative-serving-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -5602,49 +5650,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "12 9 * * *"
-  name: ci-knative-serving-webhook-apicoverage
-  agent: kubernetes
-  decorate: true
-  cluster: "build-knative"
-  extra_refs:
-  - org: knative
-    repo: serving
-    path_alias: knative.dev/serving
-    base_ref: master
-  annotations:
-    testgrid-dashboards: serving
-    testgrid-tab-name: webhook-apicoverage
-    testgrid-alert-stale-results-hours: "48"
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      command:
-      - runner.sh
-      args:
-      - "./test/apicoverage.sh"
-      volumeMounts:
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
-      env:
-      - name: SYSTEM_NAMESPACE
-        value: knative-serving
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-    volumes:
-    - name: test-account
-      secret:
-        secretName: test-account
-- cron: "53 * * * *"
+- cron: "53 */4 * * *"
   name: ci-knative-client-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -5682,7 +5693,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -5719,6 +5730,8 @@ periodics:
   name: ci-knative-client-0.15-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -5778,6 +5791,8 @@ periodics:
   name: ci-knative-client-0.15-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -5837,6 +5852,8 @@ periodics:
   name: ci-knative-client-0.16-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -5896,6 +5913,8 @@ periodics:
   name: ci-knative-client-0.16-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -5955,6 +5974,8 @@ periodics:
   name: ci-knative-client-0.17-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6014,6 +6035,8 @@ periodics:
   name: ci-knative-client-0.17-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6073,6 +6096,8 @@ periodics:
   name: ci-knative-client-0.18-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6132,6 +6157,8 @@ periodics:
   name: ci-knative-client-0.18-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6191,6 +6218,8 @@ periodics:
   name: ci-knative-client-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6229,6 +6258,8 @@ periodics:
   name: ci-knative-client-tekton
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 120m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6264,6 +6295,8 @@ periodics:
   name: ci-knative-client-0.15-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6312,6 +6345,8 @@ periodics:
   name: ci-knative-client-0.16-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6360,6 +6395,8 @@ periodics:
   name: ci-knative-client-0.17-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6408,6 +6445,8 @@ periodics:
   name: ci-knative-client-0.18-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6452,10 +6491,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "29 */2 * * *"
+- cron: "29 */4 * * *"
   name: ci-knative-client-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6546,12 +6587,12 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "49 * * * *"
+- cron: "49 */4 * * *"
   name: ci-knative-client-contrib-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6589,7 +6630,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6622,12 +6663,12 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "45 * * * *"
+- cron: "45 */4 * * *"
   name: ci-knative-docs-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6684,7 +6725,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6787,7 +6828,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 90m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6830,7 +6871,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 90m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6872,6 +6913,8 @@ periodics:
   name: ci-knative-eventing-0.15-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6931,6 +6974,8 @@ periodics:
   name: ci-knative-eventing-0.15-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6990,6 +7035,8 @@ periodics:
   name: ci-knative-eventing-0.16-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -7049,6 +7096,8 @@ periodics:
   name: ci-knative-eventing-0.16-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -7108,6 +7157,8 @@ periodics:
   name: ci-knative-eventing-0.17-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -7167,6 +7218,8 @@ periodics:
   name: ci-knative-eventing-0.17-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -7226,6 +7279,8 @@ periodics:
   name: ci-knative-eventing-0.18-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -7285,6 +7340,8 @@ periodics:
   name: ci-knative-eventing-0.18-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -7350,6 +7407,8 @@ periodics:
       report_template: "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
       job_states_to_report:
       - "failure"
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -7393,6 +7452,8 @@ periodics:
   name: ci-knative-eventing-0.15-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -7446,6 +7507,8 @@ periodics:
   name: ci-knative-eventing-0.16-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -7499,6 +7562,8 @@ periodics:
   name: ci-knative-eventing-0.17-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -7552,6 +7617,8 @@ periodics:
   name: ci-knative-eventing-0.18-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -7601,10 +7668,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "52 */2 * * *"
+- cron: "52 */4 * * *"
   name: ci-knative-eventing-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -7700,12 +7769,12 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "36 * * * *"
+- cron: "36 */4 * * *"
   name: ci-knative-eventing-contrib-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -7748,7 +7817,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -7790,6 +7859,8 @@ periodics:
   name: ci-knative-eventing-contrib-0.15-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -7849,6 +7920,8 @@ periodics:
   name: ci-knative-eventing-contrib-0.15-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -7908,6 +7981,8 @@ periodics:
   name: ci-knative-eventing-contrib-0.16-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -7967,6 +8042,8 @@ periodics:
   name: ci-knative-eventing-contrib-0.16-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -8026,6 +8103,8 @@ periodics:
   name: ci-knative-eventing-contrib-0.17-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -8085,6 +8164,8 @@ periodics:
   name: ci-knative-eventing-contrib-0.17-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -8144,6 +8225,8 @@ periodics:
   name: ci-knative-eventing-contrib-0.18-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -8203,6 +8286,8 @@ periodics:
   name: ci-knative-eventing-contrib-0.18-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -8262,6 +8347,8 @@ periodics:
   name: ci-knative-eventing-contrib-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -8305,6 +8392,8 @@ periodics:
   name: ci-knative-eventing-contrib-0.15-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -8358,6 +8447,8 @@ periodics:
   name: ci-knative-eventing-contrib-0.16-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -8411,6 +8502,8 @@ periodics:
   name: ci-knative-eventing-contrib-0.17-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -8464,6 +8557,8 @@ periodics:
   name: ci-knative-eventing-contrib-0.18-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -8513,10 +8608,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "32 */2 * * *"
+- cron: "32 */4 * * *"
   name: ci-knative-eventing-contrib-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -8612,12 +8709,12 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "21 * * * *"
+- cron: "21 */4 * * *"
   name: ci-knative-sandbox-eventing-awssqs-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -8655,7 +8752,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -8692,6 +8789,8 @@ periodics:
   name: ci-knative-sandbox-eventing-awssqs-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -8726,10 +8825,12 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "21 */2 * * *"
+- cron: "21 */4 * * *"
   name: ci-knative-sandbox-eventing-awssqs-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -8774,12 +8875,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "27 * * * *"
+- cron: "27 */4 * * *"
   name: ci-knative-sandbox-eventing-ceph-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -8817,7 +8918,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -8854,6 +8955,8 @@ periodics:
   name: ci-knative-sandbox-eventing-ceph-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -8888,10 +8991,12 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "47 */2 * * *"
+- cron: "47 */4 * * *"
   name: ci-knative-sandbox-eventing-ceph-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -8936,12 +9041,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "37 * * * *"
+- cron: "37 */4 * * *"
   name: ci-knative-sandbox-eventing-couchdb-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -8979,7 +9084,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9016,6 +9121,8 @@ periodics:
   name: ci-knative-sandbox-eventing-couchdb-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9050,10 +9157,12 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "33 */2 * * *"
+- cron: "33 */4 * * *"
   name: ci-knative-sandbox-eventing-couchdb-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9098,12 +9207,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "46 * * * *"
+- cron: "46 */4 * * *"
   name: ci-knative-sandbox-eventing-github-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9141,7 +9250,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9178,6 +9287,8 @@ periodics:
   name: ci-knative-sandbox-eventing-github-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9212,10 +9323,12 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "42 */2 * * *"
+- cron: "42 */4 * * *"
   name: ci-knative-sandbox-eventing-github-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9260,12 +9373,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "38 * * * *"
+- cron: "38 */4 * * *"
   name: ci-knative-sandbox-eventing-gitlab-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9303,7 +9416,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9340,6 +9453,8 @@ periodics:
   name: ci-knative-sandbox-eventing-gitlab-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9374,10 +9489,12 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "6 */2 * * *"
+- cron: "6 */4 * * *"
   name: ci-knative-sandbox-eventing-gitlab-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9422,12 +9539,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "7 * * * *"
+- cron: "7 */4 * * *"
   name: ci-knative-sandbox-eventing-prometheus-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9465,7 +9582,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9502,6 +9619,8 @@ periodics:
   name: ci-knative-sandbox-eventing-prometheus-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9536,10 +9655,12 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "11 */2 * * *"
+- cron: "11 */4 * * *"
   name: ci-knative-sandbox-eventing-prometheus-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9584,12 +9705,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "0 * * * *"
+- cron: "0 */4 * * *"
   name: ci-knative-sandbox-eventing-redis-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9627,7 +9748,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9664,6 +9785,8 @@ periodics:
   name: ci-knative-sandbox-eventing-redis-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9698,10 +9821,12 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "48 */2 * * *"
+- cron: "48 */4 * * *"
   name: ci-knative-sandbox-eventing-redis-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9746,12 +9871,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "2 * * * *"
+- cron: "2 */4 * * *"
   name: ci-knative-pkg-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -9789,7 +9914,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -9822,12 +9947,12 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "47 * * * *"
+- cron: "47 */4 * * *"
   name: ci-knative-caching-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -9865,7 +9990,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -9898,12 +10023,12 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "5 * * * *"
+- cron: "5 */4 * * *"
   name: ci-knative-sandbox-sample-controller-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9941,7 +10066,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -9974,12 +10099,12 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "50 * * * *"
+- cron: "50 */4 * * *"
   name: ci-knative-sandbox-sample-source-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -10017,7 +10142,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -10054,6 +10179,8 @@ periodics:
   name: ci-knative-sandbox-sample-source-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -10088,10 +10215,12 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "54 */2 * * *"
+- cron: "54 */4 * * *"
   name: ci-knative-sandbox-sample-source-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -10136,12 +10265,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "49 * * * *"
+- cron: "49 */4 * * *"
   name: ci-knative-test-infra-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -10199,7 +10328,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -10300,12 +10429,12 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "18 * * * *"
+- cron: "18 */4 * * *"
   name: ci-google-knative-gcp-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
@@ -10347,7 +10476,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
@@ -10388,6 +10517,8 @@ periodics:
   name: ci-google-knative-gcp-0.15-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
@@ -10451,6 +10582,8 @@ periodics:
   name: ci-google-knative-gcp-0.15-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
@@ -10514,6 +10647,8 @@ periodics:
   name: ci-google-knative-gcp-0.16-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
@@ -10577,6 +10712,8 @@ periodics:
   name: ci-google-knative-gcp-0.16-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
@@ -10640,6 +10777,8 @@ periodics:
   name: ci-google-knative-gcp-0.17-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
@@ -10703,6 +10842,8 @@ periodics:
   name: ci-google-knative-gcp-0.17-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
@@ -10766,6 +10907,8 @@ periodics:
   name: ci-google-knative-gcp-0.18-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
@@ -10829,6 +10972,8 @@ periodics:
   name: ci-google-knative-gcp-0.18-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
@@ -10892,6 +11037,8 @@ periodics:
   name: ci-google-knative-gcp-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
@@ -10934,6 +11081,8 @@ periodics:
   name: ci-google-knative-gcp-0.15-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
@@ -10988,6 +11137,8 @@ periodics:
   name: ci-google-knative-gcp-0.16-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
@@ -11042,6 +11193,8 @@ periodics:
   name: ci-google-knative-gcp-0.17-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
@@ -11096,6 +11249,8 @@ periodics:
   name: ci-google-knative-gcp-0.18-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
@@ -11146,10 +11301,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "42 */2 * * *"
+- cron: "42 */4 * * *"
   name: ci-google-knative-gcp-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
@@ -11244,12 +11401,12 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "59 * * * *"
+- cron: "59 */4 * * *"
   name: ci-knative-sandbox-net-certmanager-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -11287,7 +11444,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -11330,6 +11487,8 @@ periodics:
       report_template: "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
       job_states_to_report:
       - "failure"
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -11368,6 +11527,8 @@ periodics:
   name: ci-knative-sandbox-net-certmanager-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -11413,10 +11574,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "27 */2 * * *"
+- cron: "27 */4 * * *"
   name: ci-knative-sandbox-net-certmanager-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -11509,12 +11672,12 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "38 * * * *"
+- cron: "38 */4 * * *"
   name: ci-knative-sandbox-net-contour-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -11552,7 +11715,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -11595,6 +11758,8 @@ periodics:
       report_template: "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
       job_states_to_report:
       - "failure"
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -11633,6 +11798,8 @@ periodics:
   name: ci-knative-sandbox-net-contour-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -11678,10 +11845,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "42 */2 * * *"
+- cron: "42 */4 * * *"
   name: ci-knative-sandbox-net-contour-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -11726,12 +11895,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "9 * * * *"
+- cron: "9 */4 * * *"
   name: ci-knative-sandbox-net-http01-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -11769,7 +11938,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -11812,6 +11981,8 @@ periodics:
       report_template: "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
       job_states_to_report:
       - "failure"
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -11850,6 +12021,8 @@ periodics:
   name: ci-knative-sandbox-net-http01-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -11895,10 +12068,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "5 */2 * * *"
+- cron: "5 */4 * * *"
   name: ci-knative-sandbox-net-http01-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -11943,12 +12118,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "8 * * * *"
+- cron: "8 */4 * * *"
   name: ci-knative-sandbox-net-istio-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -11986,7 +12161,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -12029,6 +12204,8 @@ periodics:
       report_template: "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
       job_states_to_report:
       - "failure"
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -12063,10 +12240,12 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "34 */2 * * *"
+- cron: "34 */3 * * *"
   name: ci-knative-sandbox-net-istio-latest
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 120m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -12104,6 +12283,8 @@ periodics:
   name: ci-knative-sandbox-net-istio-0.15-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -12154,6 +12335,8 @@ periodics:
   name: ci-knative-sandbox-net-istio-0.16-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -12204,6 +12387,8 @@ periodics:
   name: ci-knative-sandbox-net-istio-0.17-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -12254,6 +12439,8 @@ periodics:
   name: ci-knative-sandbox-net-istio-0.18-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -12300,10 +12487,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "12 */2 * * *"
+- cron: "12 */4 * * *"
   name: ci-knative-sandbox-net-istio-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -12396,12 +12585,12 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "17 * * * *"
+- cron: "17 */4 * * *"
   name: ci-knative-sandbox-net-kourier-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -12439,7 +12628,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -12482,6 +12671,8 @@ periodics:
       report_template: "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
       job_states_to_report:
       - "failure"
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -12520,6 +12711,8 @@ periodics:
   name: ci-knative-sandbox-net-kourier-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -12565,10 +12758,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "53 */2 * * *"
+- cron: "53 */4 * * *"
   name: ci-knative-sandbox-net-kourier-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -12661,12 +12856,12 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "0 * * * *"
+- cron: "0 */4 * * *"
   name: ci-knative-operator-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -12704,7 +12899,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -12741,6 +12936,8 @@ periodics:
   name: ci-knative-operator-0.15-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -12805,6 +13002,8 @@ periodics:
   name: ci-knative-operator-0.15-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -12869,6 +13068,8 @@ periodics:
   name: ci-knative-operator-0.16-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -12933,6 +13134,8 @@ periodics:
   name: ci-knative-operator-0.16-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -12997,6 +13200,8 @@ periodics:
   name: ci-knative-operator-0.17-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -13061,6 +13266,8 @@ periodics:
   name: ci-knative-operator-0.17-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -13125,6 +13332,8 @@ periodics:
   name: ci-knative-operator-0.18-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -13189,6 +13398,8 @@ periodics:
   name: ci-knative-operator-0.18-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -13253,6 +13464,8 @@ periodics:
   name: ci-knative-operator-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -13291,6 +13504,8 @@ periodics:
   name: ci-knative-operator-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -13334,10 +13549,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "32 */2 * * *"
+- cron: "32 */4 * * *"
   name: ci-knative-operator-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -13428,12 +13645,12 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "36 * * * *"
+- cron: "36 */4 * * *"
   name: ci-knative-sandbox-async-component-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -13471,7 +13688,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -13508,6 +13725,8 @@ periodics:
   name: ci-knative-sandbox-async-component-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -13546,6 +13765,8 @@ periodics:
   name: ci-knative-sandbox-async-component-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -13591,10 +13812,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "24 */2 * * *"
+- cron: "24 */4 * * *"
   name: ci-knative-sandbox-async-component-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -13687,12 +13910,12 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "32 * * * *"
+- cron: "32 */4 * * *"
   name: ci-knative-sandbox-discovery-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -13730,7 +13953,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -13773,6 +13996,8 @@ periodics:
       report_template: "The nightly release job for discovery failed, check the log: <{{.Status.URL}}|View logs>"
       job_states_to_report:
       - "failure"
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -13811,6 +14036,8 @@ periodics:
   name: ci-knative-sandbox-discovery-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -13856,10 +14083,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "28 */2 * * *"
+- cron: "28 */4 * * *"
   name: ci-knative-sandbox-discovery-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -13904,12 +14133,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "23 * * * *"
+- cron: "23 */4 * * *"
   name: ci-knative-sandbox-eventing-camel-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -13947,7 +14176,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -13990,6 +14219,8 @@ periodics:
       report_template: "The nightly release job for camel failed, check the log: <{{.Status.URL}}|View logs>"
       job_states_to_report:
       - "failure"
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -14028,6 +14259,8 @@ periodics:
   name: ci-knative-sandbox-eventing-camel-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -14073,10 +14306,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "55 */2 * * *"
+- cron: "55 */4 * * *"
   name: ci-knative-sandbox-eventing-camel-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -14121,12 +14356,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "31 * * * *"
+- cron: "31 */4 * * *"
   name: ci-knative-sandbox-eventing-kafka-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -14184,7 +14419,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -14241,6 +14476,8 @@ periodics:
   name: ci-knative-sandbox-eventing-kafka-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -14299,6 +14536,8 @@ periodics:
   name: ci-knative-sandbox-eventing-kafka-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -14364,10 +14603,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "31 */2 * * *"
+- cron: "31 */4 * * *"
   name: ci-knative-sandbox-eventing-kafka-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -14480,12 +14721,12 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "59 * * * *"
+- cron: "59 */4 * * *"
   name: ci-knative-sandbox-eventing-kafka-broker-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -14543,7 +14784,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -14600,6 +14841,8 @@ periodics:
   name: ci-knative-sandbox-eventing-kafka-broker-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -14658,6 +14901,8 @@ periodics:
   name: ci-knative-sandbox-eventing-kafka-broker-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -14723,10 +14968,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "11 */2 * * *"
+- cron: "11 */4 * * *"
   name: ci-knative-sandbox-eventing-kafka-broker-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -14849,6 +15096,8 @@ periodics:
       report_template: "The nightly release job for eventing-rabbitmq failed, check the log: <{{.Status.URL}}|View logs>"
       job_states_to_report:
       - "failure"
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -14887,6 +15136,8 @@ periodics:
   name: ci-knative-sandbox-eventing-rabbitmq-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -14932,10 +15183,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "9 */2 * * *"
+- cron: "9 */4 * * *"
   name: ci-knative-sandbox-eventing-rabbitmq-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -14990,6 +15243,8 @@ periodics:
       report_template: "The nightly release job for eventing-natss failed, check the log: <{{.Status.URL}}|View logs>"
       job_states_to_report:
       - "failure"
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -15028,6 +15283,8 @@ periodics:
   name: ci-knative-sandbox-eventing-natss-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
@@ -15073,10 +15330,12 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "2 */2 * * *"
+- cron: "2 */4 * * *"
   name: ci-knative-sandbox-eventing-natss-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox

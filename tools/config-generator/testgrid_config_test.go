@@ -185,12 +185,6 @@ func TestGetTestgroupExtras(t *testing.T) {
 			},
 		},
 		{
-			JobName: "webhook-apicoverage",
-			Expected: map[string]string{
-				"alert_stale_results_hours": "48",
-			},
-		},
-		{
 			JobName: "test-coverage",
 			Expected: map[string]string{
 				"short_text_metric": "coverage",
