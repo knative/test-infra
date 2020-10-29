@@ -81,6 +81,22 @@ presubmits:
           secretName: test-account
 
 periodics:
+- cron: "*/3 * * * *" # Every 3 minutes
+  name: ci-knative-heartbeat
+  agent: kubernetes
+  decorate: true
+  cluster: "default"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - "runner.sh"
+      args:
+      - "go"
+      - "test"
+      - "-v"
+      - "./..."
 - cron: "15 9 * * *"
   name: ci-knative-backup-artifacts
   agent: kubernetes
