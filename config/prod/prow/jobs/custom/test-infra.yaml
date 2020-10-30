@@ -104,6 +104,7 @@ periodics:
       - "Everything is fine!"
       resources:
         requests:
+          cpu: 100m
           memory: 1Gi
 - cron: "15 9 * * *"
   name: ci-knative-backup-artifacts
