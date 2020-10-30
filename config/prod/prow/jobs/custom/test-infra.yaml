@@ -81,6 +81,30 @@ presubmits:
           secretName: test-account
 
 periodics:
+# ci-knative-heartbeat is used for prometheus, alert(s) will be sent
+# if this job hadn't been succeeded for some time
+- cron: "*/3 * * * *" # Every 3 minutes
+  name: ci-knative-heartbeat
+  agent: kubernetes
+  decorate: true
+  cluster: "default"
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: master
+    path_alias: knative.dev/test-infra
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - "runner.sh"
+      args:
+      - "echo"
+      - "Everything is fine!"
+      resources:
+        requests:
+          memory: 1Gi
 - cron: "15 9 * * *"
   name: ci-knative-backup-artifacts
   agent: kubernetes
