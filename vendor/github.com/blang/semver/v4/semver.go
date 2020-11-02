@@ -263,7 +263,6 @@ func ParseTolerant(s string) (Version, error) {
 		}
 	}
 	s = strings.Join(parts, ".")
-	fmt.Println("#### ", s)
 
 	return Parse(s)
 }
