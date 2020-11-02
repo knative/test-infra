@@ -19,20 +19,11 @@ package git
 import (
 	"fmt"
 	"log"
-	"os"
-	"os/exec"
 	"strings"
 
 	"knative.dev/test-infra/pkg/cmd"
 	"knative.dev/test-infra/pkg/helpers"
 )
-
-func call(cmd string, args ...string) error {
-	c := exec.Command(cmd, args...)
-	c.Stdout = os.Stdout
-	c.Stderr = os.Stderr
-	return c.Run()
-}
 
 // MakeCommit adds the changed files and create a new Git commit.
 func MakeCommit(gi Info, message string, dryrun bool) (bool, error) {

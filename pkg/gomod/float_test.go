@@ -118,8 +118,8 @@ func TestFloat(t *testing.T) {
 	}
 }
 
-// TestFloat_unhappy - This is an integration test, it will make a call out to the internet.
-func TestFloat_unhappy(t *testing.T) {
+// TestFloatUnhappy - This is an integration test, it will make a call out to the internet.
+func TestFloatUnhappy(t *testing.T) {
 	tests := map[string]struct {
 		gomod   string
 		release string
@@ -129,6 +129,12 @@ func TestFloat_unhappy(t *testing.T) {
 		"bad go mod file": {
 			gomod:   "./testdata/bad.example",
 			release: "v0.15",
+			domain:  "knative.dev",
+			rule:    git.AnyRule,
+		},
+		"bad version": {
+			gomod:   "./testdata/gomod.float1",
+			release: "jupiter/is/angry",
 			domain:  "knative.dev",
 			rule:    git.AnyRule,
 		},
@@ -143,7 +149,7 @@ func TestFloat_unhappy(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			_, err := Float(tt.gomod, tt.release, tt.domain, tt.rule)
 			if err == nil {
-				t.Errorf("expected to error")
+				t.Error("Expected an error")
 			}
 		})
 	}
