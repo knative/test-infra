@@ -150,7 +150,3 @@ func slackOperations(slackToken string, repoData []RepoData, flakyIssues map[str
 
 	return sendSlackNotifications(repoData, client, flakyIssues, dryrun)
 }
-
-func jsonOperations(repoData []RepoData, dryrun bool) error {
-	return writeFlakyTestsToJSON(repoData, dryrun)
-}
