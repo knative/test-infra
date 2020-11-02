@@ -77,19 +77,13 @@ func setup(image string, mounts, mandatoryEnvVars, optionalEnvVars []string) (in
 	// Copy and mount source code dir
 	// Add overlay mount over the user's git repo, so the flow doesn't mess it
 	// up
-	cleanup, err := cmd.CopyAndAddMount("bind", tmpDir, repoRoot, filepath.Dir(repoRoot))
-	if err != nil {
-		log.Fatal("Error setting up mount of repo's root directory to the container: ", err)
-	}
+	cleanup := cmd.CopyAndAddMount("bind", tmpDir, repoRoot, filepath.Dir(repoRoot))
 	builtUpDefers = append(builtUpDefers, cleanup)
 
 	// Copy and mount for kube context to be available (if reusing an existing cluster)
 	// If future use needs other directories, mounting the whole home directory could be a pain
 	//  because our prow-tests image will be installing Go in /root/.gvm
-	cleanup, err = cmd.CopyAndAddMount("bind", tmpDir, path.Join(os.Getenv("HOME"), ".kube"), "/root/.kube")
-	if err != nil {
-		log.Fatal("Error setting up mount of kubeconfig to the container: ", err)
-	}
+	cleanup = cmd.CopyAndAddMount("bind", tmpDir, path.Join(os.Getenv("HOME"), ".kube"), "/root/.kube")
 	builtUpDefers = append(builtUpDefers, cleanup)
 
 	cmd.LogFile = path.Join(tmpDir, "build-log.txt")

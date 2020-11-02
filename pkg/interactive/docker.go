@@ -79,19 +79,19 @@ func (d *Docker) AddMount(typeStr, source, target string, optAdditionalArgs ...s
 // CopyAndAddMount copies the source files into a temp directory, and then
 // mounts them as the target. It also returns a function to remove the temp
 // directory for cleaning up.
-func (d *Docker) CopyAndAddMount(typeStr, parentDir, source, target string, optAdditionalArgs ...string) (func(), error) {
+func (d *Docker) CopyAndAddMount(typeStr, parentDir, source, target string, optAdditionalArgs ...string) func() {
 	fi, err := os.Stat(source)
 	if err != nil {
-		return nil, fmt.Errorf("error getting the FileInfo for %q: %w", source, err)
+		log.Fatalf("Error getting the FileInfo for %q: %v", source, err)
+		return nil
 	}
 
 	tempDir, err := ioutil.TempDir(parentDir, fi.Name())
 	if err != nil {
-		return nil, fmt.Errorf("error creating a temporary directory: %w", err)
+		log.Fatal("error creating a temporary directory: ", err)
+		return nil
 	}
-	if err := os.Chmod(tempDir, 0777); err != nil {
-		return nil, fmt.Errorf("error changing file mode for %q: %w", tempDir, err)
-	}
+
 	cleanup := func() {
 		log.Printf("Removing the temp directory %q", tempDir)
 		if err := os.RemoveAll(tempDir); err != nil {
@@ -99,9 +99,15 @@ func (d *Docker) CopyAndAddMount(typeStr, parentDir, source, target string, optA
 		}
 	}
 
+	if err := os.Chmod(tempDir, 0777); err != nil {
+		cleanup()
+		log.Fatalf("error changing file mode for %q: %v", tempDir, err)
+	}
+
 	cmd := NewCommand("cp", "-r", source, tempDir)
 	if err := cmd.Run(); err != nil {
-		return cleanup, fmt.Errorf("error copying %q to %q: %w", source, tempDir, err)
+		cleanup()
+		log.Fatalf("error copying %q to %q: %v", source, tempDir, err)
 	}
 
 	if fi.IsDir() {
@@ -110,7 +116,7 @@ func (d *Docker) CopyAndAddMount(typeStr, parentDir, source, target string, optA
 		d.AddMount(typeStr, tempDir+string(os.PathSeparator)+fi.Name(), target, optAdditionalArgs...)
 	}
 
-	return cleanup, nil
+	return cleanup
 }
 
 // AddRWOverlay mounts a directory into the image at the desired location, but with an overlay
