@@ -3,6 +3,13 @@
 `rundk` is a tool to run a test command from the test image, by using it
 developers can reproduce the test flow as run in the CI environment.
 
+## Prerequisites
+
+- [Docker](https://docs.docker.com/get-docker/) must be installed
+- If you run this tool on MAC, `/tmp` directory must be added to Docker's File
+  Sharing settings to allow Docker accessing the temporary files created for
+  mount, see the [comment](https://github.com/docker/docker.github.io/issues/4709#issuecomment-639596451).
+
 ## Installation
 
 `rundk` can be installed and upgraded by running:
@@ -34,10 +41,6 @@ export GOOGLE_APPLICATION_CREDENTIALS=/temp/gcloud-secret-key.json
 rundk ./test/e2e-tests.sh
 ```
 
-> Note: the `rundk` command must be run under the root or sub directory of the
+> Note: the `rundk` command must be run under the root or sub directory of your
 > local Knative repository.
 
-### Limitations
-
-Currently this tool cannot be run on macOS since it uses
-[OverlayFS](https://en.wikipedia.org/wiki/OverlayFS), which is not supported on macOS.

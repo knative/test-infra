@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Helper functions for running interactive CLI sessions from Go
+// Helper functions for running interactive docker CLI sessions from Go
 package interactive
 
 import (

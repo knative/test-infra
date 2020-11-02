@@ -2,11 +2,11 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -31,16 +31,24 @@ func main() {
 func setup(image string, mounts, mandatoryEnvVars, optionalEnvVars []string) (interactive.Docker, func()) {
 	var err error
 
+	// Until everyone is using 20.xx version of docker (see https://github.com/docker/cli/pull/1498) adding the --pull flag,
+	//  need to separately pull the image first to be sure we have the latest
+	pull := interactive.NewCommand("docker", "pull", image)
+	if err = pull.Run(); err != nil {
+		log.Fatal("Error pulling the test image: ", err)
+	}
+
 	builtUpDefers := make([]func(), 0)
 
+	// Setup command
+	cmd := interactive.NewDocker()
+
+	// Setup args to promote env vars from local to the Docker container
 	envs := interactive.Env{}
 	if err = envs.PromoteFromEnv(mandatoryEnvVars...); err != nil {
 		log.Fatal("Missing mandatory argument: ", err)
 	}
 	envs.PromoteFromEnv(optionalEnvVars...) // Optional, so don't check error
-
-	// Setup command
-	cmd := interactive.NewDocker()
 
 	gcloudKey := os.Getenv("GOOGLE_APPLICATION_CREDENTIALS")
 	// If GOOGLE_APPLICATION_CREDENTIALS is not empty, also mount the key file
@@ -59,27 +67,33 @@ func setup(image string, mounts, mandatoryEnvVars, optionalEnvVars []string) (in
 	if err != nil {
 		log.Fatal("Error getting the repo's root directory: ", err)
 	}
-	// Mount source code dir
-	// Add overlay mount over the user's git repo, so the flow doesn't mess it up
-	cancel := cmd.AddRWOverlay(repoRoot, repoRoot)
-	builtUpDefers = append(builtUpDefers, cancel)
-
-	// Add overlay mount for kube context to be available (if reusing an existing cluster)
-	// If future use needs other directories, mounting the whole home directory could be a pain
-	//  because our prow-tests image will be installing Go in /root/.gvm
-	cancel = cmd.AddRWOverlay(path.Join(os.Getenv("HOME"), ".kube"), "/root/.kube")
-	builtUpDefers = append(builtUpDefers, cancel)
-
-	// Starting directory
-	cmd.AddArgs("-w=" + repoRoot)
 
 	// Setup temporary directory
-	tmpDir, err := ioutil.TempDir("", "prow-docker.")
+	tmpDir, err := ioutil.TempDir("/tmp", "prow-docker.")
 	if err != nil {
 		log.Fatal("Error setting up the temporary directory: ", err)
 	}
-	log.Print("Logging to ", tmpDir)
+
+	// Copy and mount source code dir
+	// Add overlay mount over the user's git repo, so the flow doesn't mess it
+	// up
+	cleanup, err := cmd.CopyAndAddMount("bind", tmpDir, repoRoot, filepath.Dir(repoRoot))
+	if err != nil {
+		log.Fatal("Error setting up mount of repo's root directory to the container: ", err)
+	}
+	builtUpDefers = append(builtUpDefers, cleanup)
+
+	// Copy and mount for kube context to be available (if reusing an existing cluster)
+	// If future use needs other directories, mounting the whole home directory could be a pain
+	//  because our prow-tests image will be installing Go in /root/.gvm
+	cleanup, err = cmd.CopyAndAddMount("bind", tmpDir, path.Join(os.Getenv("HOME"), ".kube"), "/root/.kube")
+	if err != nil {
+		log.Fatal("Error setting up mount of kubeconfig to the container: ", err)
+	}
+	builtUpDefers = append(builtUpDefers, cleanup)
+
 	cmd.LogFile = path.Join(tmpDir, "build-log.txt")
+	log.Print("Logging to ", cmd.LogFile)
 
 	extArtifacts := os.Getenv("ARTIFACTS")
 	// Artifacts directory
@@ -90,18 +104,18 @@ func setup(image string, mounts, mandatoryEnvVars, optionalEnvVars []string) (in
 	cmd.AddMount("bind", extArtifacts, extArtifacts)
 	envs["ARTIFACTS"] = extArtifacts
 	builtUpDefers = append(builtUpDefers, func() {
-		log.Print("Artifacts found at ", extArtifacts)
+		log.Print("💡 Artifacts can be found at ", extArtifacts)
 	})
 	cmd.AddEnv(envs)
 
-	// Until everyone is using 20.xx version of docker (see https://github.com/docker/cli/pull/1498) adding the --pull flag,
-	//  need to separately pull the image first to be sure we have the latest
-	pull := interactive.NewCommand("docker", "pull", image)
-	pull.Run()
+	// Starting directory
+	cmd.AddArgs("-w=" + repoRoot)
 
 	return cmd, func() {
 		for _, ff := range builtUpDefers {
-			ff()
+			if ff != nil {
+				ff()
+			}
 		}
 	}
 }
@@ -111,8 +125,8 @@ func run(cmd interactive.Docker, image string, commandAndArgsOpt ...string) erro
 	cmd.AddArgs(image)
 	cmd.AddArgs("runner.sh")
 	cmd.AddArgs(commandAndArgsOpt...)
-	fmt.Println(cmd)
-	fmt.Println("Starting in 3 seconds, ^C to abort!")
+	log.Println(cmd)
+	log.Println("👆 Starting in 3 seconds, ^C to abort!")
 	time.Sleep(time.Second * 3)
 	return cmd.Run()
 }
