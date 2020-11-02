@@ -6823,12 +6823,12 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "52 */2 * * *"
+- cron: "52 */4 * * *"
   name: ci-knative-eventing-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 90m
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -6871,7 +6871,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 90m
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
