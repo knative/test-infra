@@ -14,13 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Helper functions for running interactive docker CLI sessions from Go
+// Helper functions for running interactive CLI sessions from Go
 package interactive
 
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
+	"path"
 	"strings"
 )
 
@@ -91,7 +93,10 @@ func (d *Docker) CopyAndAddMount(typeStr, parentDir, source, target string, optA
 		return nil, fmt.Errorf("error changing file mode for %q: %w", tempDir, err)
 	}
 	cleanup := func() {
-		os.RemoveAll(tempDir)
+		log.Printf("Removing the temp directory %q", tempDir)
+		if err := os.RemoveAll(tempDir); err != nil {
+			log.Printf("Warning: error removing the temp directory %q: %v", tempDir, err)
+		}
 	}
 
 	cmd := NewCommand("cp", "-r", source, tempDir)
@@ -106,4 +111,41 @@ func (d *Docker) CopyAndAddMount(typeStr, parentDir, source, target string, optA
 	}
 
 	return cleanup, nil
+}
+
+// AddRWOverlay mounts a directory into the image at the desired location, but with an overlay
+//  so internal changes do not modify the external directory.
+// externalDirectory probably needs to be an absolute path
+// Returns a function to clean up the mount (but does not delete the directory).
+// Uses sudo and probably only works on Linux
+func (d *Docker) AddRWOverlay(externalDirectory, internalDirectory string) func() {
+	tmpDir, err := ioutil.TempDir("", "overlay")
+	if err != nil {
+		log.Fatal(err)
+	}
+	subDirs := []string{"upper", "work", "overlay"}
+	for _, d := range subDirs {
+		err = os.Mkdir(path.Join(tmpDir, d), 0777)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+	overlayDir := path.Join(tmpDir, "overlay")
+	// The options for overlay mount are confusing
+	// You need empty directories for upper and work (and overlay, though you can mount over directories that have files in them if you *want* to...)
+	mount := NewCommand("sudo", "mount", "-t", "overlay", "-o",
+		fmt.Sprintf("lowerdir=%s,upperdir=%s/upper,workdir=%s/work", externalDirectory, tmpDir, tmpDir),
+		"none", overlayDir)
+	// Print command to run so user knows why it is asking for sudo password (if it does)
+	log.Println(mount)
+	if err = mount.Run(); err != nil {
+		log.Fatalf("Unable to create overlay mount, so giving up: %v", err)
+	}
+	d.AddMount("bind", overlayDir, internalDirectory)
+	return func() {
+		// Print command to run so user knows why it is asking for sudo password (if it does)
+		umount := NewCommand("sudo", "umount", overlayDir)
+		log.Println(umount)
+		umount.Run()
+	}
 }
