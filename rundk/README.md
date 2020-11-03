@@ -27,9 +27,10 @@ Usage of rundk:
   -mounts string
         A list of extra folders or files separated by comma that need to be mounted to run the test flow.
   -mandatory-env-vars string
-        A list of env vars separated by comma that must be set on local. (default "GOOGLE_APPLICATION_CREDENTIALS")
+        A list of env vars separated by comma that must be set on local, which will be promoted to the image.
+        (default "GOOGLE_APPLICATION_CREDENTIALS")
   -optional-env-vars string
-        A list of env vars separated by comma that optionally need to be set on local.
+        A list of env vars separated by comma that optionally need to be set on local, which will be promoted to the image.
 ```
 
 ### Example
@@ -43,4 +44,3 @@ rundk ./test/e2e-tests.sh
 
 > Note: the `rundk` command must be run under the root or sub directory of your
 > local Knative repository.
-
