@@ -465,10 +465,12 @@ presubmits:
   - integration-tests: false
   knative-sandbox/eventing-kafka:
   - custom-test: integration-test-channel-consolidated
+    needs-dind: true
     args:
     - --run-test
     - ./test/e2e-tests.sh --consolidated
   - custom-test: integration-test-channel-distributed
+    needs-dind: true
     args:
     - --run-test
     - ./test/e2e-tests.sh --distributed
