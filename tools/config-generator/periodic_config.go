@@ -131,7 +131,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	jobTemplate := readTemplate(periodicTestJob)
 	jobType := ""
 	isContinuousJob := false
-	project := data.Base.OrgName // this is where to get the knative/knative-sandbox switch
+	project := data.Base.OrgName
 	repo := data.Base.RepoName
 	// Parse the input yaml and set values data based on them
 	for i, item := range periodicConfig {
