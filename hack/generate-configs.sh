@@ -33,5 +33,5 @@ go run "${CONFIG_GENERATOR_DIR}" \
     --testgrid-gcs-bucket="knative-testgrid" \
     --prow-jobs-config-output="${CONFIG_DIR}/prod/prow/jobs/config.yaml" \
     --testgrid-config-output="${CONFIG_DIR}/prod/prow/testgrid/testgrid.yaml" \
-    --k8s-testgrid-config-output="${CONFIG_DIR}/prod/prow/testgrid/k8s-testgrid.yaml" \
+    --k8s-testgrid-config-output="${CONFIG_DIR}/prod/prow/k8s-testgrid/k8s-testgrid.yaml" \
     "${CONFIG_DIR}/prod/prow/config_knative.yaml"
