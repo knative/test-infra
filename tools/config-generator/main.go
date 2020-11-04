@@ -702,11 +702,14 @@ func main() {
 	// Parse flags and sanity check them.
 	prowJobsConfigOutput := ""
 	testgridConfigOutput := ""
+	k8sTestgridConfigOutput := ""
 	var generateTestgridConfig = flag.Bool("generate-testgrid-config", true, "Whether to generate the testgrid config from the template file")
+	var generateK8sTestgridConfig = flag.Bool("generate-k8s-testgrid-config", true, "Whether to generate the k8s testgrid config from the template file")
 	var includeConfig = flag.Bool("include-config", true, "Whether to include general configuration (e.g., plank) in the generated config")
 	var dockerImagesBase = flag.String("image-docker", "gcr.io/knative-tests/test-infra", "Default registry for the docker images used by the jobs")
 	flag.StringVar(&prowJobsConfigOutput, "prow-jobs-config-output", "", "The destination for the prow jobs config output, default to be stdout")
 	flag.StringVar(&testgridConfigOutput, "testgrid-config-output", "", "The destination for the testgrid config output, default to be stdout")
+	flag.StringVar(&k8sTestgridConfigOutput, "k8s-testgrid-config-output", "", "The destination for the k8s testgrid config output, default to be stdout")
 	flag.StringVar(&prowHost, "prow-host", "https://prow.knative.dev", "Prow host, including HTTP protocol")
 	flag.StringVar(&testGridHost, "testgrid-host", "https://testgrid.knative.dev", "TestGrid host, including HTTP protocol")
 	flag.StringVar(&gubernatorHost, "gubernator-host", "https://gubernator.knative.dev", "Gubernator host, including HTTP protocol")
@@ -787,6 +790,34 @@ func main() {
 	if err = yaml.Unmarshal(content, &config); err != nil {
 		logFatalf("Cannot parse config %q: %v", name, err)
 	}
+
+	if *generateK8sTestgridConfig {
+		setOutput(k8sTestgridConfigOutput)
+		periodicJobData := parseJob(config, "periodics")
+		collectMetaData(periodicJobData)
+		var knativeDashboardsSet = make(map[string]struct{})
+		var sandboxDashboardsSet = make(map[string]struct{})
+		var googleDashboardsSet = make(map[string]struct{})
+
+		for _, project := range metaData.projNames {
+			var jobDetailMap JobDetailMap = metaData.Get(project)
+			for repo, _ := range jobDetailMap {
+				if strings.Contains(project, "google") {
+					googleDashboardsSet[repo] = struct{}{}
+				} else if strings.Contains(project, "sandbox") {
+					sandboxDashboardsSet[repo] = struct{}{}
+				} else {
+					knativeDashboardsSet[repo] = struct{}{}
+				}
+			}
+		}
+		googleDashboards := stringSetToSlice(googleDashboardsSet)
+		sandboxDashboards := stringSetToSlice(sandboxDashboardsSet)
+		knativeDashboards := stringSetToSlice(knativeDashboardsSet)
+
+		generateK8sTestgrid(knativeDashboards, sandboxDashboards, googleDashboards)
+	}
+
 	// Generate Testgrid config.
 	if *generateTestgridConfig {
 		setOutput(testgridConfigOutput)
