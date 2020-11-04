@@ -1,0 +1,74 @@
+# Dashboards need to be specified here to be created on TestGrid
+# A prow annotation will be invalid if it references a dashboard that doesn't exist
+dashboards:
+- name: serving
+- name: eventing-kafka-broker
+- name: eventing-ceph
+- name: discovery
+- name: test-infra
+- name: sample-controller
+- name: eventing-camel
+- name: eventing-github
+- name: sample-source
+- name: eventing-redis
+- name: knative-gcp
+- name: docs
+- name: client-contrib
+- name: eventing-awssqs
+- name: async-component
+- name: pkg
+- name: caching
+- name: eventing-prometheus
+- name: eventing-gitlab
+- name: net-http01
+- name: eventing-kafka
+- name: eventing-natss
+- name: eventing-contrib
+- name: client
+- name: net-istio
+- name: operator
+- name: eventing
+- name: net-certmanager
+- name: net-kourier
+- name: eventing-rabbitmq
+- name: net-contour
+- name: eventing-couchdb
+dashboard_groups:
+  - name: knative
+    dashboard_names:
+    - "eventing-contrib"
+    - "client"
+    - "test-infra"
+    - "operator"
+    - "docs"
+    - "pkg"
+    - "caching"
+    - "serving"
+    - "client-contrib"
+    - "eventing"
+  - name: knative-sandbox
+    dashboard_names:
+    - "sample-controller"
+    - "net-certmanager"
+    - "net-kourier"
+    - "eventing-rabbitmq"
+    - "net-contour"
+    - "eventing-camel"
+    - "eventing-kafka-broker"
+    - "eventing-ceph"
+    - "eventing-prometheus"
+    - "eventing-gitlab"
+    - "discovery"
+    - "eventing-kafka"
+    - "eventing-github"
+    - "eventing-awssqs"
+    - "net-http01"
+    - "net-istio"
+    - "sample-source"
+    - "async-component"
+    - "eventing-couchdb"
+    - "eventing-redis"
+    - "eventing-natss"
+  - name: google
+    dashboard_names:
+    - "knative-gcp"
