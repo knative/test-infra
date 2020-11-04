@@ -14,7 +14,6 @@ require (
 	github.com/google/go-cmp v0.5.1
 	github.com/google/go-containerregistry v0.1.4
 	github.com/google/go-github/v27 v27.0.6
-	github.com/google/licenseclassifier v0.0.0-20200708223521-3d09a0ea2f39
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/pkg/errors v0.9.1
@@ -29,6 +28,7 @@ require (
 	gopkg.in/yaml.v2 v2.3.0
 	k8s.io/apimachinery v0.18.8
 	k8s.io/test-infra v0.0.0-20200803112140-d8aa4e063646 // indirect
+	knative.dev/hack v0.0.0-20201103151104-3d5abc3a0075
 	sigs.k8s.io/boskos v0.0.0-20200729174948-794df80db9c9
 )
 

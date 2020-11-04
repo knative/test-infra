@@ -226,11 +226,3 @@ func handleGetCluster(w http.ResponseWriter, req *http.Request) {
 	token := req.URL.Query().Get("token")
 	AssignCluster(token, w)
 }
-
-// run timeout check
-func runTimeOut() {
-	for {
-		dbClient.ClearTimeOut(DefaultTimeOut)
-		time.Sleep(CheckInterval * time.Second)
-	}
-}

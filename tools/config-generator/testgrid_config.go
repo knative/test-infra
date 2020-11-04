@@ -188,8 +188,6 @@ func getTestgroupExtras(projName, jobName string) map[string]string {
 		if jobName == "dot-release" {
 			extras["alert_stale_results_hours"] = "170" // 1 week + 2h
 		}
-	case "webhook-apicoverage":
-		extras["alert_stale_results_hours"] = "48" // 2 days
 	case "test-coverage":
 		extras["short_text_metric"] = "coverage"
 	default:
@@ -275,9 +273,6 @@ func generateDashboard(projName string, repoName string, jobNames []string) {
 			extras["alert_options"] = "\n      alert_mail_to_addresses: \"serverless-engprod-sea@google.com\""
 			baseOptions := testgridTabSortByName
 			executeDashboardTabTemplate(jobName, testGroupName, baseOptions, extras)
-		case "webhook-apicoverage":
-			baseOptions := testgridTabSortByName
-			executeDashboardTabTemplate(jobName, testGroupName, baseOptions, noExtras)
 		case "nightly":
 			extras := make(map[string]string)
 			extras["num_failures_to_alert"] = "1"

@@ -377,7 +377,7 @@ func cleanup(o options.Options) error {
 		deleter.ShowStats(deleter.Delete(o.HoursToKeepClusters, o.ConcurrentOperations, o.DryRun))
 	}
 
-	log.Printf("All operations finished in %s", time.Now().Sub(start))
+	log.Printf("All operations finished in %s", time.Since(start))
 	return nil
 }
 

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Add a fake plank image here so that autobump.sh can bump only job configs
-# image: gcr.io/k8s-prow/plank:v20201012-f0efae8e46
+# image: gcr.io/k8s-prow/plank:v20201103-bb494c0354
 # See
 # https://github.com/kubernetes/test-infra/blob/5815354584709c3f436e3d682110c673d224d7b1/prow/cmd/autobump/autobump.sh#L164
 
@@ -81,6 +81,31 @@ presubmits:
           secretName: test-account
 
 periodics:
+# ci-knative-heartbeat is used for prometheus, alert(s) will be sent
+# if this job hadn't been succeeded for some time
+- cron: "*/3 * * * *" # Every 3 minutes
+  name: ci-knative-heartbeat
+  agent: kubernetes
+  decorate: true
+  cluster: "default"
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: master
+    path_alias: knative.dev/test-infra
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - "runner.sh"
+      args:
+      - "echo"
+      - "Everything is fine!"
+      resources:
+        requests:
+          cpu: 100m
+          memory: 1Gi
 - cron: "15 9 * * *"
   name: ci-knative-backup-artifacts
   agent: kubernetes
@@ -268,7 +293,7 @@ periodics:
     path_alias: knative.dev/test-infra
   spec:
     containers:
-    - image: gcr.io/k8s-prow/autobump:v20201012-f0efae8e46
+    - image: gcr.io/k8s-prow/autobump:v20201103-bb494c0354
       command:
       - /autobump.sh
       args:

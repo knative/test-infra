@@ -33,16 +33,12 @@ import (
 )
 
 func generatePRBody() string {
-	var body string
-	body = "PR created for syncing release branches changes\n"
-
+	body := "PR created for syncing release branches changes\n"
 	oncaller, err := getOncaller()
-	var assignment string
+	assignment := "Nobody is currently oncall."
 	if err == nil {
 		if oncaller != "" {
 			assignment = fmt.Sprintf("/assign @%s\n/cc @%s\n", oncaller, oncaller)
-		} else {
-			assignment = "Nobody is currently oncall."
 		}
 	} else {
 		assignment = fmt.Sprintf("An error occurred while finding an assignee: `%v`.", err)
@@ -87,13 +83,13 @@ func getExistingPR(gcw *GHClientWrapper, gi git.Info, matchTitle string) (*githu
 }
 
 func createOrUpdatePR(gcw *GHClientWrapper, gi git.Info, dryrun bool) error {
-	matchTitle := "[Auto] Update prow jobs for release branches"
+	const matchTitle = "[Auto] Update prow jobs for release branches"
 	commitMsg := matchTitle
 	title := commitMsg
 	body := generatePRBody()
 	hasUpdates, err := git.MakeCommit(gi, commitMsg, dryrun)
 	if err != nil {
-		return fmt.Errorf("failed git commit: '%v'", err)
+		return fmt.Errorf("failed git commit: %w", err)
 	}
 	if !hasUpdates {
 		log.Print("There is nothing committed, skip PR")
@@ -101,15 +97,15 @@ func createOrUpdatePR(gcw *GHClientWrapper, gi git.Info, dryrun bool) error {
 	}
 	existPR, err := getExistingPR(gcw, gi, matchTitle)
 	if err != nil {
-		return fmt.Errorf("failed querying existing pullrequests: '%v'", err)
+		return fmt.Errorf("failed querying existing pullrequests: %w", err)
 	}
 	if existPR != nil {
-		log.Printf("Found open PR '%d'", *existPR.Number)
+		log.Printf("Found open PR %d", *existPR.Number)
 		return helpers.Run(
-			fmt.Sprintf("Updating PR '%d', title: '%s', body: '%s'", *existPR.Number, title, body),
+			fmt.Sprintf("Updating PR %d, title: %q, body: %q", *existPR.Number, title, body),
 			func() error {
 				if _, err := gcw.EditPullRequest(gi.Org, gi.Repo, *existPR.Number, title, body); err != nil {
-					return fmt.Errorf("failed updating pullrequest: '%v'", err)
+					return fmt.Errorf("failed updating pullrequest: %w", err)
 				}
 				return nil
 			},
@@ -117,10 +113,10 @@ func createOrUpdatePR(gcw *GHClientWrapper, gi git.Info, dryrun bool) error {
 		)
 	}
 	return helpers.Run(
-		fmt.Sprintf("Creating PR, title: '%s', body: '%s'", title, body),
+		fmt.Sprintf("Creating PR, title: %q, body: %q", title, body),
 		func() error {
 			if _, err := gcw.CreatePullRequest(gi.Org, gi.Repo, gi.GetHeadRef(), gi.Base, title, body); err != nil {
-				return fmt.Errorf("failed creating pullrequest: '%v'", err)
+				return fmt.Errorf("failed creating pullrequest: %w", err)
 			}
 			return nil
 		},

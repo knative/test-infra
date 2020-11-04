@@ -69,7 +69,7 @@ func Module(gomod string, domain string) (string, []string, error) {
 		return "", nil, err
 	}
 
-	packages := make(sets.String, 0)
+	packages := sets.NewString()
 	for _, r := range file.Require {
 		// Do not include indirect dependencies.
 		if r.Indirect {
