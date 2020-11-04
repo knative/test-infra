@@ -816,6 +816,7 @@ func main() {
 		knativeDashboards := stringSetToSlice(knativeDashboardsSet)
 
 		generateK8sTestgrid(knativeDashboards, sandboxDashboards, googleDashboards)
+		metaData = NewTestGridMetaData() // reset the global data structure
 	}
 
 	// Generate Testgrid config.
