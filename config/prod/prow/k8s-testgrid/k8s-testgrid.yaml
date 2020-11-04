@@ -1,74 +1,74 @@
 # Dashboards need to be specified here to be created on TestGrid
 # A prow annotation will be invalid if it references a dashboard that doesn't exist
 dashboards:
-- name: eventing-contrib
-- name: async-component
-- name: eventing-redis
-- name: eventing-kafka
-- name: serving
+- name: pkg
 - name: client-contrib
-- name: net-certmanager
-- name: eventing-ceph
+- name: eventing-contrib
+- name: serving
+- name: sample-source
 - name: net-kourier
-- name: eventing-gitlab
-- name: net-istio
-- name: eventing-natss
-- name: eventing-awssqs
-- name: eventing-kafka-broker
-- name: knative-gcp
+- name: eventing-kafka
+- name: net-http01
+- name: sample-controller
 - name: caching
 - name: net-contour
-- name: sample-source
-- name: eventing-couchdb
-- name: eventing-rabbitmq
-- name: client
-- name: eventing
-- name: docs
-- name: pkg
-- name: net-http01
-- name: eventing-camel
-- name: eventing-prometheus
-- name: discovery
-- name: sample-controller
-- name: test-infra
 - name: operator
+- name: async-component
+- name: eventing-gitlab
+- name: docs
+- name: eventing-camel
+- name: net-istio
+- name: eventing-ceph
+- name: eventing-natss
+- name: eventing-prometheus
+- name: knative-gcp
+- name: client
+- name: test-infra
+- name: eventing-kafka-broker
+- name: eventing-couchdb
+- name: eventing-redis
+- name: net-certmanager
 - name: eventing-github
+- name: eventing-awssqs
+- name: eventing
+- name: eventing-rabbitmq
+- name: discovery
 dashboard_groups:
   - name: knative
     dashboard_names:
+    - "caching"
     - "client"
-    - "eventing"
-    - "test-infra"
-    - "serving"
     - "docs"
     - "eventing-contrib"
-    - "pkg"
-    - "caching"
     - "client-contrib"
+    - "eventing"
+    - "pkg"
     - "operator"
+    - "serving"
+    - "test-infra"
   - name: knative-sandbox
     dashboard_names:
+    - "eventing-natss"
+    - "sample-source"
+    - "discovery"
+    - "eventing-kafka-broker"
+    - "eventing-couchdb"
+    - "eventing-redis"
+    - "eventing-prometheus"
+    - "eventing-camel"
+    - "net-istio"
+    - "net-kourier"
+    - "eventing-rabbitmq"
+    - "eventing-kafka"
     - "async-component"
     - "net-certmanager"
-    - "eventing-camel"
-    - "eventing-redis"
-    - "eventing-gitlab"
-    - "net-istio"
-    - "net-contour"
     - "eventing-github"
-    - "sample-source"
-    - "eventing-couchdb"
-    - "eventing-prometheus"
-    - "eventing-rabbitmq"
-    - "eventing-kafka-broker"
-    - "eventing-natss"
-    - "eventing-ceph"
-    - "net-kourier"
-    - "eventing-kafka"
-    - "discovery"
     - "net-http01"
     - "eventing-awssqs"
+    - "eventing-ceph"
     - "sample-controller"
+    - "net-contour"
+    - "eventing-gitlab"
   - name: google
     dashboard_names:
     - "knative-gcp"
