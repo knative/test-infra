@@ -18,6 +18,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -342,7 +343,7 @@ func TestStringSetToSlice(t *testing.T) {
 
 	output := stringSetToSlice(strSet)
 	if len(output) != 3 {
-		t.Errorf("Expected len 3, was %d", len(output))
+		t.Error("Expected len 3, was " + strconv.Itoa(len(output)))
 	}
 	for _, str := range output {
 		delete(strSet, str)
