@@ -801,7 +801,7 @@ func main() {
 
 		for _, project := range metaData.projNames {
 			var jobDetailMap JobDetailMap = metaData.Get(project)
-			for repo, _ := range jobDetailMap {
+			for repo := range jobDetailMap {
 				if strings.Contains(project, "google") {
 					googleDashboardsSet[repo] = struct{}{}
 				} else if strings.Contains(project, "sandbox") {
