@@ -18,6 +18,10 @@ limitations under the License.
 
 package main
 
+import (
+	"sort"
+)
+
 const (
 	k8sTestgridTempl = "k8s_testgrid.yaml"
 )
@@ -41,6 +45,10 @@ func generateK8sTestgrid(knativeDashboards, sandboxDashboards, googleDashboards 
 		namedDashboardsSet["name: "+dashboard] = struct{}{}
 	}
 	namedDashboards := stringSetToSlice(namedDashboardsSet)
+	sort.Strings(knativeDashboards)
+	sort.Strings(sandboxDashboards)
+	sort.Strings(googleDashboards)
+	sort.Strings(namedDashboards)
 	data := k8sTestgridData{
 		KnativeDashboards:        knativeDashboards,
 		KnativeSandboxDashboards: sandboxDashboards,
