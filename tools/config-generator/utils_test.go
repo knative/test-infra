@@ -335,9 +335,9 @@ func TestStrExists(t *testing.T) {
 func TestStringSetToSlice(t *testing.T) {
 	SetupForTesting()
 	strSet := map[string]struct{}{
-		"Harry":    struct{}{},
-		"Ron":      struct{}{},
-		"Hermione": struct{}{},
+		"Harry":    {},
+		"Ron":      {},
+		"Hermione": {},
 	}
 
 	output := stringSetToSlice(strSet)
