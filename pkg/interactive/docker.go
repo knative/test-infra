@@ -24,6 +24,8 @@ import (
 	"os"
 	"path"
 	"strings"
+
+	"knative.dev/test-infra/pkg/cmd"
 )
 
 var defaultDockerCommands []string
@@ -93,7 +95,7 @@ func (d *Docker) CopyAndAddMount(typeStr, parentDir, source, target string, optA
 	}
 
 	cleanup := func() {
-		log.Printf("Removing the temp directory %q", tempDir)
+		log.Printf("🧹 Removing the temp directory %q", tempDir)
 		if err := os.RemoveAll(tempDir); err != nil {
 			log.Printf("Warning: error removing the temp directory %q: %v", tempDir, err)
 		}
@@ -104,8 +106,11 @@ func (d *Docker) CopyAndAddMount(typeStr, parentDir, source, target string, optA
 		log.Fatalf("error changing file mode for %q: %v", tempDir, err)
 	}
 
-	cmd := NewCommand("cp", "-r", source, tempDir)
-	if err := cmd.Run(); err != nil {
+	// Copy all the content if it's a directory
+	if fi.IsDir() {
+		source += "/."
+	}
+	if _, err := cmd.RunCommand(fmt.Sprintf("cp -r %s %s", source, tempDir), cmd.WithStdout()); err != nil {
 		cleanup()
 		log.Fatalf("error copying %q to %q: %v", source, tempDir, err)
 	}

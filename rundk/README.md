@@ -22,15 +22,26 @@ go get knative.dev/test-infra/rundk
 
 ```shell
 Usage of rundk:
-  -test-image string
-        The image we use to run the test flow. (default "gcr.io/knative-tests/test-infra/prow-tests:stable")
-  -mounts string
-        A list of extra folders or files separated by comma that need to be mounted to run the test flow.
-  -mandatory-env-vars string
-        A list of env vars separated by comma that must be set on local, which will be promoted to the image.
-        (default "GOOGLE_APPLICATION_CREDENTIALS")
-  -optional-env-vars string
-        A list of env vars separated by comma that optionally need to be set on local, which will be promoted to the image.
+  --test-image string
+      The image we use to run the test flow. (default "gcr.io/knative-tests/test-infra/prow-tests:stable")
+  --entrypoint string
+      The entrypoint executable that runs the test commands. (default "runner.sh")
+  --enable-docker-in-docker
+      Enable running docker commands in the test fllow.
+      By enabling this the container will share the same docker daemon in the host machine, so be careful when using it.
+  --use-local-gcloud-credentials
+      Use the same gcloud credentials as local.
+      It can be set either by setting env var GOOGLE_CLOUD_APPLICATION_CREDENTIALS or from ~/.config/gcloud
+  --use-local-kubeconfig
+      Use the same kubeconfig as local.
+      It can be set either by setting env var KUBECONFIG or from ~/.kube/config
+  --mounts source1:target1,source2:target2,source3:target3
+      A list of extra folders or files separated by comma that need to be mounted to run the test flow.
+      It must be in the format of source1:target1,source2:target2,source3:target3.
+  --mandatory-env-vars string
+      A list of env vars separated by comma that must be set on local, which will then be promoted to the container.
+  --optional-env-vars string
+      A list of env vars separated by comma that optionally need to be set on local, which will then be promoted to the container.
 ```
 
 ### Example
@@ -38,8 +49,11 @@ Usage of rundk:
 Run E2E tests for a Knative repository:
 
 ```shell
-export GOOGLE_APPLICATION_CREDENTIALS=/temp/gcloud-secret-key.json
-rundk ./test/e2e-tests.sh
+rundk --use-local-gcloud-credentials ./test/e2e-tests.sh --gcp-project-id=one-project-for-testing
+```
+
+```shell
+rundk --use-local-kubeconfig ./test/e2e-tests.sh --run-tests
 ```
 
 > Note: the `rundk` command must be run under the root or sub directory of your
