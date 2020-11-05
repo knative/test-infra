@@ -792,6 +792,11 @@ func main() {
 	}
 
 	if *generateK8sTestgridConfig {
+		// Store a copy of the global variable
+		// and make a new one just for this section.
+		var storedMetaData = metaData
+		metaData = NewTestGridMetaData()
+
 		setOutput(k8sTestgridConfigOutput)
 		periodicJobData := parseJob(config, "periodics")
 		collectMetaData(periodicJobData)
@@ -816,7 +821,7 @@ func main() {
 		knativeDashboards := stringSetToSlice(knativeDashboardsSet)
 
 		generateK8sTestgrid(knativeDashboards, sandboxDashboards, googleDashboards)
-		metaData = NewTestGridMetaData() // reset the global data structure
+		metaData = storedMetaData // Restore the global variable.
 	}
 
 	// Generate Testgrid config.
