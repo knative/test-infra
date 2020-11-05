@@ -798,6 +798,9 @@ func main() {
 		metaData = NewTestGridMetaData()
 
 		setOutput(k8sTestgridConfigOutput)
+
+		executeTemplate("general header", readTemplate(commonHeaderConfig), newBaseTestgridTemplateData(""))
+
 		periodicJobData := parseJob(config, "periodics")
 		collectMetaData(periodicJobData)
 		var knativeDashboardsSet = make(map[string]struct{})
