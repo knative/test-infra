@@ -739,37 +739,37 @@ func main() {
 	prowTestsDockerImage = path.Join(*dockerImagesBase, *prowTestsDockerImageName)
 
 	// We use MapSlice instead of maps to keep key order and create predictable output.
-	config := yaml.MapSlice{}
+	configYaml := yaml.MapSlice{}
 
 	// Read input config.
-	name := flag.Arg(0)
+	configFileName := flag.Arg(0)
 	if upgradeReleaseBranches {
 		gc, err := ghutil.NewGithubClient(githubTokenPath)
 		if err != nil {
 			logFatalf("Failed creating github client from %q: %v", githubTokenPath, err)
 		}
-		if err := upgradeReleaseBranchesTemplate(name, gc); err != nil {
+		if err := upgradeReleaseBranchesTemplate(configFileName, gc); err != nil {
 			logFatalf("Failed upgrade based on release branch: '%v'", err)
 		}
 	}
 
-	content, err := ioutil.ReadFile(name)
+	configFileContent, err := ioutil.ReadFile(configFileName)
 	if err != nil {
-		logFatalf("Cannot read file %q: %v", name, err)
+		logFatalf("Cannot read file %q: %v", configFileName, err)
 	}
-	if err = yaml.Unmarshal(content, &config); err != nil {
-		logFatalf("Cannot parse config %q: %v", name, err)
+	if err = yaml.Unmarshal(configFileContent, &configYaml); err != nil {
+		logFatalf("Cannot parse config %q: %v", configFileName, err)
 	}
 
-	prowConfigData := getProwConfigData(config)
+	prowConfigData := getProwConfigData(configYaml)
 
 	// Generate Prow config.
 	repositories = make([]repositoryData, 0)
 	sectionMap = make(map[string]bool)
 	setOutput(prowJobsConfigOutput)
 	executeTemplate("general header", readTemplate(commonHeaderConfig), prowConfigData)
-	parseSection(config, "presubmits", generatePresubmit, nil)
-	parseSection(config, "periodics", generatePeriodic, generateGoCoveragePeriodic)
+	parseSection(configYaml, "presubmits", generatePresubmit, nil)
+	parseSection(configYaml, "periodics", generatePeriodic, generateGoCoveragePeriodic)
 	for _, repo := range repositories { // Keep order for predictable output.
 		if !repo.Processed && repo.EnableGoCoverage {
 			generateGoCoveragePeriodic("periodics", repo.Name, nil)
@@ -787,44 +787,22 @@ func main() {
 	}
 
 	// config object is modified when we generate prow config, so we'll need to reload it here
-	if err = yaml.Unmarshal(content, &config); err != nil {
-		logFatalf("Cannot parse config %q: %v", name, err)
+	if err = yaml.Unmarshal(configFileContent, &configYaml); err != nil {
+		logFatalf("Cannot parse config %q: %v", configFileName, err)
 	}
 
 	if *generateK8sTestgridConfig {
-		// Store a copy of the global variable
-		// and make a new one just for this section.
-		var storedMetaData = metaData
-		metaData = NewTestGridMetaData()
-
 		setOutput(k8sTestgridConfigOutput)
-
 		executeTemplate("general header", readTemplate(commonHeaderConfig), newBaseTestgridTemplateData(""))
-
-		periodicJobData := parseJob(config, "periodics")
-		collectMetaData(periodicJobData)
-		var knativeDashboardsSet = make(map[string]struct{})
-		var sandboxDashboardsSet = make(map[string]struct{})
-		var googleDashboardsSet = make(map[string]struct{})
-
-		for _, project := range metaData.projNames {
-			var jobDetailMap JobDetailMap = metaData.Get(project)
-			for repo := range jobDetailMap {
-				if strings.Contains(project, "google") {
-					googleDashboardsSet[repo] = struct{}{}
-				} else if strings.Contains(project, "sandbox") {
-					sandboxDashboardsSet[repo] = struct{}{}
-				} else {
-					knativeDashboardsSet[repo] = struct{}{}
-				}
-			}
+		periodicJobData := parseJob(configYaml, "periodics")
+		orgsAndRepos := make(map[string][]string)
+		for _, mapItem := range periodicJobData {
+			orgAndRepo := strings.Split(mapItem.Key.(string), "/")
+			org := orgAndRepo[0]
+			repo := orgAndRepo[1]
+			orgsAndRepos[org] = append(orgsAndRepos[org], repo)
 		}
-		googleDashboards := stringSetToSlice(googleDashboardsSet)
-		sandboxDashboards := stringSetToSlice(sandboxDashboardsSet)
-		knativeDashboards := stringSetToSlice(knativeDashboardsSet)
-
-		generateK8sTestgrid(knativeDashboards, sandboxDashboards, googleDashboards)
-		metaData = storedMetaData // Restore the global variable.
+		generateK8sTestgrid(orgsAndRepos)
 	}
 
 	// Generate Testgrid config.
@@ -836,10 +814,10 @@ func main() {
 			executeTemplate("general config", readTemplate(generalTestgridConfig), newBaseTestgridTemplateData(""))
 		}
 
-		presubmitJobData := parseJob(config, "presubmits")
+		presubmitJobData := parseJob(configYaml, "presubmits")
 		goCoverageMap = parseGoCoverageMap(presubmitJobData)
 
-		periodicJobData := parseJob(config, "periodics")
+		periodicJobData := parseJob(configYaml, "periodics")
 		collectMetaData(periodicJobData)
 		addCustomJobsTestgrid()
 

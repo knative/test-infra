@@ -1,11 +1,4 @@
 # Dashboards need to be specified here to be created on TestGrid
 # A prow annotation will be invalid if it references a dashboard that doesn't exist
-[[indent_array_section 0 "dashboards" .NamedDashboards]]
-
+[[indent_array_section 0 "dashboards" .AllRepos]]
 dashboard_groups:
-  - name: knative
-    [[indent_array_section 4 "dashboard_names" .KnativeDashboards]]
-  - name: knative-sandbox
-    [[indent_array_section 4 "dashboard_names" .KnativeSandboxDashboards]]
-  - name: google
-    [[indent_array_section 4 "dashboard_names" .GoogleDashboards]]

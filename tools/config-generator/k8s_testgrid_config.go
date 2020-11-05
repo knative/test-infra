@@ -18,42 +18,39 @@ limitations under the License.
 
 package main
 
-import (
-	"sort"
-)
+import "sort"
 
 const (
-	k8sTestgridTempl = "k8s_testgrid.yaml"
+	k8sTestgridTempl      = "k8s_testgrid.yaml"
+	k8sTestgridGroupTempl = "k8s_testgrid_testgroup.yaml"
 )
 
 type k8sTestgridData struct {
-	NamedDashboards          []string
-	KnativeDashboards        []string
-	KnativeSandboxDashboards []string
-	GoogleDashboards         []string
+	AllRepos     []string
+	OrgsAndRepos map[string][]string
 }
 
-func generateK8sTestgrid(knativeDashboards, sandboxDashboards, googleDashboards []string) {
-	namedDashboardsSet := make(map[string]struct{})
-	for _, dashboard := range knativeDashboards {
-		namedDashboardsSet["name: "+dashboard] = struct{}{}
+func generateK8sTestgrid(orgsAndRepos map[string][]string) {
+	allReposSet := make(map[string]struct{})
+	for _, repos := range orgsAndRepos {
+		for _, repo := range repos {
+			allReposSet["name: "+repo] = struct{}{}
+		}
 	}
-	for _, dashboard := range sandboxDashboards {
-		namedDashboardsSet["name: "+dashboard] = struct{}{}
+	allRepos := stringSetToSlice(allReposSet)
+	sort.Strings(allRepos)
+
+	executeTemplate("k8s testgrid",
+		readTemplate(k8sTestgridTempl),
+		struct{ AllRepos []string }{allRepos})
+
+	for org, repos := range orgsAndRepos {
+		sort.Strings(repos)
+		executeTemplate("k8s testgrid group",
+			readTemplate(k8sTestgridGroupTempl),
+			struct {
+				Org   string
+				Repos []string
+			}{org, repos})
 	}
-	for _, dashboard := range googleDashboards {
-		namedDashboardsSet["name: "+dashboard] = struct{}{}
-	}
-	namedDashboards := stringSetToSlice(namedDashboardsSet)
-	sort.Strings(knativeDashboards)
-	sort.Strings(sandboxDashboards)
-	sort.Strings(googleDashboards)
-	sort.Strings(namedDashboards)
-	data := k8sTestgridData{
-		KnativeDashboards:        knativeDashboards,
-		KnativeSandboxDashboards: sandboxDashboards,
-		GoogleDashboards:         googleDashboards,
-		NamedDashboards:          namedDashboards,
-	}
-	executeTemplate("k8s testgrid", readTemplate(k8sTestgridTempl), data)
 }
