@@ -17,16 +17,69 @@ Usage:
   buoy [command]
 
 Available Commands:
+  actions     Interact with GitHub Actions.
   check       Determine if this module has release branches or releases available from each dependency for a given release.
   float       Find latest versions of dependencies based on a release.
   help        Help about any command
   needs       Find dependencies based on a base import domain.
   exists      Determine if the release branch exists for a given module.
+  repos       List the repos for a list of GitHub organizations.
 
 Flags:
   -h, --help   help for buoy
 
 Use "buoy [command] --help" for more information about a command.
+```
+
+### Actions
+
+```
+Interact with GitHub Actions.
+
+Usage:
+  buoy actions [command]
+
+Available Commands:
+  list        List GitHub Actions workflows for a given repository.
+  run         Run a GitHub Actions workflow for a given repository.
+
+Flags:
+  -h, --help   help for actions
+
+Use "buoy actions [command] --help" for more information about a command.
+```
+
+#### Actions List
+
+```
+List GitHub Actions workflows for a given repository.
+
+Usage:
+  buoy actions list org/repo [flags]
+
+Flags:
+  -h, --help                help for list
+  -w, --only-workflow-id    Only output the workflow ID.
+  -q, --query string        Search for a workflow by name.
+      --short               Short output will only print the workflow url.
+  -t, --token-path string   GitHub token file path.
+```
+
+#### Actions Run
+
+```
+Run a GitHub Actions workflow for a given repository.
+
+Usage:
+  buoy actions run org/repo --query OneResult [flags]
+
+Flags:
+  -h, --help                help for run
+      --id int              Workflow ID.
+      --inputs string       Workflow inputs.
+  -q, --query string        Search for a workflow by name.
+      --ref string          Ref to run workflow from. (default "master")
+  -t, --token-path string   GitHub token file path.
 ```
 
 ### Check
@@ -148,7 +201,7 @@ Note: the following are equivalent releases:
 - `0.1`
 - `0.1.0`
 
-## Needs
+### Needs
 
 ```
 Find dependencies based on a base import domain.
@@ -180,7 +233,7 @@ k8s.io/apimachinery
 k8s.io/client-go
 ```
 
-## Exists
+### Exists
 
 ```
 Determine if the release branch exists for a given module.
@@ -193,6 +246,19 @@ Flags:
   -r, --release string   release should be '<major>.<minor>' (i.e.: 1.23 or v1.23) [required]
   -t, --next             Print the next release tag (stdout)
   -v, --verbose          Print verbose output (stderr)
+```
+
+### Repos
+
+```
+List the repos for a list of GitHub organizations.
+
+Usage:
+  buoy repos org1 [org2 org3...] [flags]
+
+Flags:
+  -h, --help                help for repos
+  -t, --token-path string   GitHub token file path.
 ```
 
 ## TODO:

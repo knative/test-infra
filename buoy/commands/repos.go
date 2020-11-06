@@ -28,7 +28,7 @@ func addReposCmd(root *cobra.Command) {
 
 	var cmd = &cobra.Command{
 		Use:   "repos org1 [org2 org3...]",
-		Short: "List the repos for a given org.",
+		Short: "List the repos for a list of GitHub organizations.",
 		Args:  cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			orgs := args

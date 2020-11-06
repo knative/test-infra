@@ -50,7 +50,7 @@ func addActionsListCmd(root *cobra.Command) {
 
 	var cmd = &cobra.Command{
 		Use:   "list org/repo",
-		Short: "List GitHub Actions workflows for a given repo.",
+		Short: "List GitHub Actions workflows for a given repository.",
 		Args:  cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			repos := args
@@ -113,7 +113,7 @@ func addActionsRunCmd(root *cobra.Command) {
 
 	var cmd = &cobra.Command{
 		Use:   "run org/repo --query OneResult",
-		Short: "Run a GitHub Actions workflow for a given repo.",
+		Short: "Run a GitHub Actions workflow for a given repository.",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			or := strings.Split(args[0], "/")
