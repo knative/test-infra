@@ -23,7 +23,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/google/go-github/v27/github"
+	"github.com/google/go-github/v32/github"
 
 	"knative.dev/test-infra/pkg/ghutil"
 )
@@ -181,7 +181,7 @@ func (fgc *FakeGithubClient) AddLabelsToIssue(org, repo string, issueNumber int,
 		return fmt.Errorf("cannot find issue")
 	}
 	for _, label := range labels {
-		targetIssue.Labels = append(targetIssue.Labels, github.Label{
+		targetIssue.Labels = append(targetIssue.Labels, &github.Label{
 			Name: &label,
 		})
 	}

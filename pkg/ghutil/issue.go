@@ -21,7 +21,7 @@ package ghutil
 import (
 	"fmt"
 
-	"github.com/google/go-github/v27/github"
+	"github.com/google/go-github/v32/github"
 )
 
 const (
@@ -35,31 +35,6 @@ const (
 
 // IssueStateEnum represents different states of Github Issues
 type IssueStateEnum string
-
-// ListRepos lists repos under org
-func (gc *GithubClient) ListRepos(org string) ([]string, error) {
-	repoListOptions := &github.RepositoryListOptions{}
-	genericList, err := gc.depaginate(
-		"listing repos",
-		maxRetryCount,
-		&repoListOptions.ListOptions,
-		func() ([]interface{}, *github.Response, error) {
-			page, resp, err := gc.Client.Repositories.List(ctx, org, repoListOptions)
-			var interfaceList []interface{}
-			if nil == err {
-				for _, repo := range page {
-					interfaceList = append(interfaceList, repo)
-				}
-			}
-			return interfaceList, resp, err
-		},
-	)
-	res := make([]string, len(genericList))
-	for i, elem := range genericList {
-		res[i] = elem.(*github.Repository).GetName()
-	}
-	return res, err
-}
 
 // ListIssuesByRepo lists issues within given repo, filters by labels if provided
 func (gc *GithubClient) ListIssuesByRepo(org, repo string, labels []string) ([]*github.Issue, error) {

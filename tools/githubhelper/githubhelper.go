@@ -25,7 +25,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/google/go-github/v27/github"
+	"github.com/google/go-github/v32/github"
 	"knative.dev/test-infra/pkg/ghutil"
 )
 
