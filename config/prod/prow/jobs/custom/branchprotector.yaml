@@ -15,7 +15,8 @@
 # branchprotector is a tool implemented by k8s sig-testing.
 # It can configures github branch protection rules according to the specified policy in a YAML file.
 
-# Do not enable presubmit tests for now since it's taking extra long time.
+# Do not enable presubmit test for now since it's taking extra long time.
+# TODO(chizhg): reenable it if we can run it in a more lightweight mode - https://github.com/knative/test-infra/pull/2555
 #presubmits:
 #  knative/test-infra:
 #  - name: pull-knative-test-infra-branchprotector
