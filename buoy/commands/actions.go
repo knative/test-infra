@@ -19,11 +19,13 @@ package commands
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"strings"
+
 	"github.com/google/go-github/v32/github"
 	"github.com/spf13/cobra"
 	"knative.dev/test-infra/pkg/ghutil"
-	"strings"
 )
 
 func addActionsCmd(root *cobra.Command) {
@@ -149,6 +151,10 @@ func addActionsRunCmd(root *cobra.Command) {
 						return fmt.Errorf("query %q matched more than one workflow, cancelling", query)
 					}
 				}
+			}
+
+			if workflowID == 0 {
+				return errors.New("unable to locate the workflow requested")
 			}
 
 			opts := github.CreateWorkflowDispatchEventRequest{
