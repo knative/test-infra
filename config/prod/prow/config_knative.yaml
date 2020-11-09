@@ -269,6 +269,11 @@ presubmits:
   - build-tests: true
   - unit-tests: true
   - integration-tests: true
+  knative-sandbox/kn-plugin-diag:
+  - build-tests: true
+  - unit-tests: true
+  - integration-tests: true
+  - go-coverage: true  
   knative/eventing:
   - repo-settings: null
     performance: true
@@ -663,6 +668,8 @@ periodics:
   - auto-release: true
   knative/client-contrib:
   - continuous: true
+  knative/kn-plugin-diag:
+  - continuous: true  
   knative/docs:
   - continuous: true
     needs-dind: true
