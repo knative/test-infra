@@ -54,22 +54,6 @@ dashboards:
 - name: serving
 - name: test-infra
 dashboard_groups:
-  - name: google
-    dashboard_names:
-      - "knative-gcp"
-  - name: knative
-    dashboard_names:
-      - "caching"
-      - "client"
-      - "client-contrib"
-      - "docs"
-      - "eventing"
-      - "eventing-contrib"
-      - "kn-plugin-diag"
-      - "operator"
-      - "pkg"
-      - "serving"
-      - "test-infra"
   - name: knative-sandbox
     dashboard_names:
       - "async-component"
@@ -93,3 +77,19 @@ dashboard_groups:
       - "net-kourier"
       - "sample-controller"
       - "sample-source"
+  - name: google
+    dashboard_names:
+      - "knative-gcp"
+  - name: knative
+    dashboard_names:
+      - "caching"
+      - "client"
+      - "client-contrib"
+      - "docs"
+      - "eventing"
+      - "eventing-contrib"
+      - "kn-plugin-diag"
+      - "operator"
+      - "pkg"
+      - "serving"
+      - "test-infra"
