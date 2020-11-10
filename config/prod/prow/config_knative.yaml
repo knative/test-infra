@@ -112,7 +112,6 @@ presubmits:
     needs-monitor: true
     always-run: true
     optional: false
-    optional: true
     args:
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --istio-version stable --no-mesh
@@ -325,13 +324,16 @@ presubmits:
   knative/test-infra:
   - build-tests: true
   - unit-tests: true
+  - go-coverage: true
+  knative/hack:
+  - build-tests: true
+  - unit-tests: true
   - integration-tests: true
     args:
     - --run-test
     - ./test/e2e-tests.sh
-  - go-coverage: true
   - custom-test: kind-tests
-    always-run: false
+    always-run: true
     needs-dind: true
     args:
     - --run-test
@@ -377,6 +379,27 @@ presubmits:
     args:
     - --run-test
     - ./test/e2e-wi-tests.sh
+  - custom-test: upgrade-tests
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+    needs-monitor: true
+    optional: true
+    args:
+    - --run-test
+    - ./test/e2e-upgrade-tests.sh
+  - custom-test: conformance-tests
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+    needs-monitor: true
+    args:
+    - --run-test
+    - ./test/e2e-conformance-tests.sh
   - go-coverage: true
   knative/networking:
   - build-tests: true
@@ -446,11 +469,18 @@ presubmits:
   - unit-tests: false
   - integration-tests: false
   knative-sandbox/eventing-kafka:
+  - custom-test: integration-test-channel-consolidated
+    args:
+    - --run-test
+    - ./test/e2e-tests.sh --consolidated
+  - custom-test: integration-test-channel-distributed
+    args:
+    - --run-test
+    - ./test/e2e-tests.sh --distributed
+  - integration-tests: false
   - build-tests: true
     needs-dind: true
   - unit-tests: true
-    needs-dind: true
-  - integration-tests: true
     needs-dind: true
   - go-coverage: true
     needs-dind: true
@@ -471,10 +501,14 @@ presubmits:
   - build-tests: false
   - unit-tests: false
   - integration-tests: false
+  knative-sandbox/kperf:
+  - build-tests: true
+  - unit-tests: true
+  - integration-tests: true
+  - go-coverage: true
 periodics:
   knative/serving:
   - continuous: true
-    timeout: 100
     resources:
       requests:
         memory: 12Gi
@@ -614,7 +648,6 @@ periodics:
         memory: 12Gi
       limits:
         memory: 16Gi
-  - webhook-apicoverage: true
   knative/client:
   - continuous: true
   - branch-ci: true
@@ -647,7 +680,6 @@ periodics:
     needs-dind: true
   knative/eventing:
   - continuous: true
-    timeout: 90
     resources:
       requests:
         memory: 12Gi
@@ -790,6 +822,8 @@ periodics:
   - continuous: true
   - nightly: true
   - auto-release: true
+  knative-sandbox/kperf:
+  - continuous: true
   knative/pkg:
   - continuous: true
   knative/caching:

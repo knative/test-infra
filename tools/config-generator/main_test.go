@@ -391,12 +391,12 @@ func TestParseBasicJobConfigOverrides(t *testing.T) {
 		yaml.MapItem{Key: "args", Value: []interface{}{"arg1", "arg2"}},
 		yaml.MapItem{Key: "timeout", Value: 42},
 		yaml.MapItem{Key: "command", Value: "foo_command"},
-		yaml.MapItem{Key: "needs-monitor"},
+		yaml.MapItem{Key: "needs-monitor", Value: true},
 		yaml.MapItem{Key: "needs-dind", Value: true},
 		yaml.MapItem{Key: "always-run", Value: true},
-		yaml.MapItem{Key: "performance"},
+		yaml.MapItem{Key: "performance", Value: true},
 		yaml.MapItem{Key: "env-vars", Value: []interface{}{"foo=bar"}},
-		yaml.MapItem{Key: "optional"},
+		yaml.MapItem{Key: "optional", Value: true},
 		yaml.MapItem{Key: "resources", Value: resources},
 		yaml.MapItem{Key: "reporter_config", Value: reporterConfig},
 	}
@@ -434,6 +434,9 @@ func TestParseBasicJobConfigOverrides(t *testing.T) {
 	if !job.AlwaysRun {
 		t.Fatalf("Expected job.AlwaysRun to be true")
 	}
+	if !job.Optional {
+		t.Fatalf("Expected job.Optional to be true")
+	}
 	if !repositories[0].EnablePerformanceTests {
 		t.Fatalf("Repository performance test should have been enabled")
 	}
@@ -443,9 +446,6 @@ func TestParseBasicJobConfigOverrides(t *testing.T) {
 	}
 	if diff := cmp.Diff(job.Env[3], "  value: bar"); diff != "" {
 		t.Fatalf("Unexpected env value: (-got +want)\n%s", diff)
-	}
-	if diff := cmp.Diff(job.Optional, "optional: true"); diff != "" {
-		t.Fatalf("Unexpected job.Optional value: (-got +want)\n%s", diff)
 	}
 	expectedResources := []string{
 		"  requests:",

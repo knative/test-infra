@@ -23,6 +23,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-serving-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-serving-build-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-build-tests),?(\\s+|$)"
     decorate: true
@@ -69,6 +70,7 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-unit-tests
     context: pull-knative-serving-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-serving-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-unit-tests),?(\\s+|$)"
     decorate: true
@@ -110,6 +112,7 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-upgrade-tests
     context: pull-knative-serving-upgrade-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-serving-upgrade-tests"
     trigger: "(?m)^/test (all|pull-knative-serving-upgrade-tests),?(\\s+|$)"
     decorate: true
@@ -151,10 +154,10 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-istio-latest-mesh
     context: pull-knative-serving-istio-latest-mesh
     always_run: false
+    optional: true
     rerun_command: "/test pull-knative-serving-istio-latest-mesh"
     trigger: "(?m)^/test (all|pull-knative-serving-istio-latest-mesh),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -193,10 +196,10 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-istio-latest-mesh-tls
     context: pull-knative-serving-istio-latest-mesh-tls
     always_run: false
+    optional: true
     rerun_command: "/test pull-knative-serving-istio-latest-mesh-tls"
     trigger: "(?m)^/test (all|pull-knative-serving-istio-latest-mesh-tls),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -235,10 +238,10 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-istio-latest-no-mesh
     context: pull-knative-serving-istio-latest-no-mesh
     always_run: false
+    optional: true
     rerun_command: "/test pull-knative-serving-istio-latest-no-mesh"
     trigger: "(?m)^/test (all|pull-knative-serving-istio-latest-no-mesh),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -277,10 +280,10 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-istio-latest-no-mesh-tls
     context: pull-knative-serving-istio-latest-no-mesh-tls
     always_run: false
+    optional: true
     rerun_command: "/test pull-knative-serving-istio-latest-no-mesh-tls"
     trigger: "(?m)^/test (all|pull-knative-serving-istio-latest-no-mesh-tls),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -319,11 +322,11 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-istio-stable-mesh
     context: pull-knative-serving-istio-stable-mesh
     always_run: false
+    optional: true
     run_if_changed: "^third_party/net-istio.yaml"
     rerun_command: "/test pull-knative-serving-istio-stable-mesh"
     trigger: "(?m)^/test (all|pull-knative-serving-istio-stable-mesh),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -362,11 +365,11 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-istio-stable-mesh-tls
     context: pull-knative-serving-istio-stable-mesh-tls
     always_run: false
+    optional: true
     run_if_changed: "^third_party/net-istio.yaml"
     rerun_command: "/test pull-knative-serving-istio-stable-mesh-tls"
     trigger: "(?m)^/test (all|pull-knative-serving-istio-stable-mesh-tls),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -405,10 +408,10 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-istio-stable-no-mesh
     context: pull-knative-serving-istio-stable-no-mesh
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-serving-istio-stable-no-mesh"
     trigger: "(?m)^/test (all|pull-knative-serving-istio-stable-no-mesh),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -447,10 +450,10 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-istio-stable-no-mesh-tls
     context: pull-knative-serving-istio-stable-no-mesh-tls
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-serving-istio-stable-no-mesh-tls"
     trigger: "(?m)^/test (all|pull-knative-serving-istio-stable-no-mesh-tls),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -489,11 +492,11 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-gloo-0.17.1
     context: pull-knative-serving-gloo-0.17.1
     always_run: false
+    optional: true
     run_if_changed: "^third_party/gloo-latest/*"
     rerun_command: "/test pull-knative-serving-gloo-0.17.1"
     trigger: "(?m)^/test (all|pull-knative-serving-gloo-0.17.1),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -532,11 +535,11 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-gloo-0.17.1-tls
     context: pull-knative-serving-gloo-0.17.1-tls
     always_run: false
+    optional: true
     run_if_changed: "^third_party/gloo-latest/*"
     rerun_command: "/test pull-knative-serving-gloo-0.17.1-tls"
     trigger: "(?m)^/test (all|pull-knative-serving-gloo-0.17.1-tls),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -575,11 +578,11 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-kourier-stable
     context: pull-knative-serving-kourier-stable
     always_run: false
+    optional: true
     run_if_changed: "^third_party/kourier-latest/*"
     rerun_command: "/test pull-knative-serving-kourier-stable"
     trigger: "(?m)^/test (all|pull-knative-serving-kourier-stable),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -618,11 +621,11 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-kourier-stable-tls
     context: pull-knative-serving-kourier-stable-tls
     always_run: false
+    optional: true
     run_if_changed: "^third_party/kourier-latest/*"
     rerun_command: "/test pull-knative-serving-kourier-stable-tls"
     trigger: "(?m)^/test (all|pull-knative-serving-kourier-stable-tls),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -661,6 +664,7 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-contour-latest
     context: pull-knative-serving-contour-latest
     always_run: false
+    optional: false
     run_if_changed: "^third_party/contour-latest/*"
     rerun_command: "/test pull-knative-serving-contour-latest"
     trigger: "(?m)^/test (all|pull-knative-serving-contour-latest),?(\\s+|$)"
@@ -703,6 +707,7 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-contour-tls
     context: pull-knative-serving-contour-tls
     always_run: false
+    optional: false
     run_if_changed: "^third_party/contour-latest/*"
     rerun_command: "/test pull-knative-serving-contour-tls"
     trigger: "(?m)^/test (all|pull-knative-serving-contour-tls),?(\\s+|$)"
@@ -745,11 +750,11 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-ambassador-latest
     context: pull-knative-serving-ambassador-latest
     always_run: false
+    optional: true
     run_if_changed: "^third_party/ambassador-latest/*"
     rerun_command: "/test pull-knative-serving-ambassador-latest"
     trigger: "(?m)^/test (all|pull-knative-serving-ambassador-latest),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -788,11 +793,11 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-ambassador-latest-tls
     context: pull-knative-serving-ambassador-latest-tls
     always_run: false
+    optional: true
     run_if_changed: "^third_party/ambassador-latest/*"
     rerun_command: "/test pull-knative-serving-ambassador-latest-tls"
     trigger: "(?m)^/test (all|pull-knative-serving-ambassador-latest-tls),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -831,11 +836,11 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-kong-latest
     context: pull-knative-serving-kong-latest
     always_run: false
+    optional: true
     run_if_changed: "^third_party/kong-latest/*"
     rerun_command: "/test pull-knative-serving-kong-latest"
     trigger: "(?m)^/test (all|pull-knative-serving-kong-latest),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -874,11 +879,11 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-kong-latest-tls
     context: pull-knative-serving-kong-latest-tls
     always_run: false
+    optional: true
     run_if_changed: "^third_party/kong-latest/*"
     rerun_command: "/test pull-knative-serving-kong-latest-tls"
     trigger: "(?m)^/test (all|pull-knative-serving-kong-latest-tls),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -913,10 +918,10 @@ presubmits:
     agent: kubernetes
     context: pull-knative-serving-https
     always_run: false
+    optional: true
     rerun_command: "/test pull-knative-serving-https"
     trigger: "(?m)^/test (all|pull-knative-serving-https),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
     spec:
@@ -949,6 +954,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-client-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-client-build-tests"
     trigger: "(?m)^/test (all|pull-knative-client-build-tests),?(\\s+|$)"
     decorate: true
@@ -986,6 +992,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-client-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-client-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-client-unit-tests),?(\\s+|$)"
     decorate: true
@@ -1023,6 +1030,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-client-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-client-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-client-integration-tests),?(\\s+|$)"
     decorate: true
@@ -1090,6 +1098,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-client-integration-tests-latest-release
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-client-integration-tests-latest-release"
     trigger: "(?m)^/test (all|pull-knative-client-integration-tests-latest-release),?(\\s+|$)"
     decorate: true
@@ -1121,6 +1130,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-client-contrib-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-client-contrib-build-tests"
     trigger: "(?m)^/test (all|pull-knative-client-contrib-build-tests),?(\\s+|$)"
     decorate: true
@@ -1158,6 +1168,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-client-contrib-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-client-contrib-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-client-contrib-unit-tests),?(\\s+|$)"
     decorate: true
@@ -1195,6 +1206,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-client-contrib-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-client-contrib-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-client-contrib-integration-tests),?(\\s+|$)"
     decorate: true
@@ -1233,6 +1245,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-eventing-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-eventing-build-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-build-tests),?(\\s+|$)"
     decorate: true
@@ -1275,6 +1288,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-eventing-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-eventing-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-unit-tests),?(\\s+|$)"
     decorate: true
@@ -1316,6 +1330,7 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-eventing-integration-tests
     context: pull-knative-eventing-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-eventing-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-integration-tests),?(\\s+|$)"
     decorate: true
@@ -1358,6 +1373,7 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-eventing-conformance-tests
     context: pull-knative-eventing-conformance-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-eventing-conformance-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-conformance-tests),?(\\s+|$)"
     decorate: true
@@ -1394,6 +1410,7 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-eventing-upgrade-tests
     context: pull-knative-eventing-upgrade-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-eventing-upgrade-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-upgrade-tests),?(\\s+|$)"
     decorate: true
@@ -1457,6 +1474,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-eventing-contrib-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-eventing-contrib-build-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-contrib-build-tests),?(\\s+|$)"
     decorate: true
@@ -1499,6 +1517,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-eventing-contrib-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-eventing-contrib-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-contrib-unit-tests),?(\\s+|$)"
     decorate: true
@@ -1536,6 +1555,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-eventing-contrib-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-eventing-contrib-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-contrib-integration-tests),?(\\s+|$)"
     decorate: true
@@ -1604,6 +1624,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-docs-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-docs-build-tests"
     trigger: "(?m)^/test (all|pull-knative-docs-build-tests),?(\\s+|$)"
     decorate: true
@@ -1640,6 +1661,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-docs-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-docs-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-docs-unit-tests),?(\\s+|$)"
     decorate: true
@@ -1676,6 +1698,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-docs-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-docs-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-docs-integration-tests),?(\\s+|$)"
     decorate: true
@@ -1762,6 +1785,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-pkg-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-pkg-build-tests"
     trigger: "(?m)^/test (all|pull-knative-pkg-build-tests),?(\\s+|$)"
     decorate: true
@@ -1799,6 +1823,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-pkg-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-pkg-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-pkg-unit-tests),?(\\s+|$)"
     decorate: true
@@ -1836,6 +1861,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-pkg-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-pkg-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-pkg-integration-tests),?(\\s+|$)"
     decorate: true
@@ -1874,6 +1900,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-test-infra-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-test-infra-build-tests"
     trigger: "(?m)^/test (all|pull-knative-test-infra-build-tests),?(\\s+|$)"
     decorate: true
@@ -1911,6 +1938,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-test-infra-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-test-infra-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-test-infra-unit-tests),?(\\s+|$)"
     decorate: true
@@ -1925,44 +1953,6 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-test-infra-integration-tests
-    agent: kubernetes
-    context: pull-knative-test-infra-integration-tests
-    always_run: true
-    rerun_command: "/test pull-knative-test-infra-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-test-infra-integration-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/test-infra
-    cluster: "build-knative"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--run-test"
-        - "./test/e2e-tests.sh"
         volumeMounts:
         - name: repoview-token
           mountPath: /etc/repoview-token
@@ -2012,14 +2002,131 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
-  - name: pull-knative-test-infra-kind-tests
+  knative/hack:
+  - name: pull-knative-hack-build-tests
     agent: kubernetes
-    context: pull-knative-test-infra-kind-tests
-    always_run: false
-    rerun_command: "/test pull-knative-test-infra-kind-tests"
-    trigger: "(?m)^/test (all|pull-knative-test-infra-kind-tests),?(\\s+|$)"
+    context: pull-knative-hack-build-tests
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-hack-build-tests"
+    trigger: "(?m)^/test (all|pull-knative-hack-build-tests),?(\\s+|$)"
     decorate: true
-    path_alias: knative.dev/test-infra
+    path_alias: knative.dev/hack
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--build-tests"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-hack-unit-tests
+    agent: kubernetes
+    context: pull-knative-hack-unit-tests
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-hack-unit-tests"
+    trigger: "(?m)^/test (all|pull-knative-hack-unit-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/hack
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--unit-tests"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-hack-integration-tests
+    agent: kubernetes
+    context: pull-knative-hack-integration-tests
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-hack-integration-tests"
+    trigger: "(?m)^/test (all|pull-knative-hack-integration-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/hack
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-hack-kind-tests
+    agent: kubernetes
+    context: pull-knative-hack-kind-tests
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-hack-kind-tests"
+    trigger: "(?m)^/test (all|pull-knative-hack-kind-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/hack
     cluster: "build-knative"
     spec:
       containers:
@@ -2069,6 +2176,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-caching-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-caching-build-tests"
     trigger: "(?m)^/test (all|pull-knative-caching-build-tests),?(\\s+|$)"
     decorate: true
@@ -2106,6 +2214,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-caching-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-caching-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-caching-unit-tests),?(\\s+|$)"
     decorate: true
@@ -2143,6 +2252,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-caching-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-caching-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-caching-integration-tests),?(\\s+|$)"
     decorate: true
@@ -2181,6 +2291,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-sample-controller-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-sample-controller-build-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-sample-controller-build-tests),?(\\s+|$)"
     decorate: true
@@ -2218,6 +2329,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-sample-controller-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-sample-controller-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-sample-controller-unit-tests),?(\\s+|$)"
     decorate: true
@@ -2256,6 +2368,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-sample-source-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-sample-source-build-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-sample-source-build-tests),?(\\s+|$)"
     decorate: true
@@ -2293,6 +2406,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-sample-source-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-sample-source-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-sample-source-unit-tests),?(\\s+|$)"
     decorate: true
@@ -2331,6 +2445,7 @@ presubmits:
     agent: kubernetes
     context: pull-google-knative-gcp-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-google-knative-gcp-build-tests"
     trigger: "(?m)^/test (all|pull-google-knative-gcp-build-tests),?(\\s+|$)"
     decorate: true
@@ -2372,6 +2487,7 @@ presubmits:
     agent: kubernetes
     context: pull-google-knative-gcp-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-google-knative-gcp-unit-tests"
     trigger: "(?m)^/test (all|pull-google-knative-gcp-unit-tests),?(\\s+|$)"
     decorate: true
@@ -2412,6 +2528,7 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-google-knative-gcp-integration-tests
     context: pull-google-knative-gcp-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-google-knative-gcp-integration-tests"
     trigger: "(?m)^/test (all|pull-google-knative-gcp-integration-tests),?(\\s+|$)"
     decorate: true
@@ -2458,6 +2575,7 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-google-knative-gcp-wi-tests
     context: pull-google-knative-gcp-wi-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-google-knative-gcp-wi-tests"
     trigger: "(?m)^/test (all|pull-google-knative-gcp-wi-tests),?(\\s+|$)"
     decorate: true
@@ -2472,6 +2590,88 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-wi-tests.sh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-google-knative-gcp-upgrade-tests
+    agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-google-knative-gcp-upgrade-tests
+    context: pull-google-knative-gcp-upgrade-tests
+    always_run: true
+    optional: true
+    rerun_command: "/test pull-google-knative-gcp-upgrade-tests"
+    trigger: "(?m)^/test (all|pull-google-knative-gcp-upgrade-tests),?(\\s+|$)"
+    decorate: true
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-upgrade-tests.sh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-google-knative-gcp-conformance-tests
+    agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-google-knative-gcp-conformance-tests
+    context: pull-google-knative-gcp-conformance-tests
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-google-knative-gcp-conformance-tests"
+    trigger: "(?m)^/test (all|pull-google-knative-gcp-conformance-tests),?(\\s+|$)"
+    decorate: true
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-conformance-tests.sh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -2524,6 +2724,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-networking-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-networking-build-tests"
     trigger: "(?m)^/test (all|pull-knative-networking-build-tests),?(\\s+|$)"
     decorate: true
@@ -2561,6 +2762,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-networking-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-networking-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-networking-unit-tests),?(\\s+|$)"
     decorate: true
@@ -2598,6 +2800,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-networking-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-networking-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-networking-integration-tests),?(\\s+|$)"
     decorate: true
@@ -2636,6 +2839,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-certmanager-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-certmanager-build-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-certmanager-build-tests),?(\\s+|$)"
     decorate: true
@@ -2673,6 +2877,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-certmanager-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-certmanager-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-certmanager-unit-tests),?(\\s+|$)"
     decorate: true
@@ -2710,6 +2915,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-certmanager-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-certmanager-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-certmanager-integration-tests),?(\\s+|$)"
     decorate: true
@@ -2778,6 +2984,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-contour-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-contour-build-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-contour-build-tests),?(\\s+|$)"
     decorate: true
@@ -2815,6 +3022,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-contour-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-contour-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-contour-unit-tests),?(\\s+|$)"
     decorate: true
@@ -2852,6 +3060,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-contour-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-contour-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-contour-integration-tests),?(\\s+|$)"
     decorate: true
@@ -2890,6 +3099,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-http01-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-http01-build-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-http01-build-tests),?(\\s+|$)"
     decorate: true
@@ -2927,6 +3137,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-http01-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-http01-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-http01-unit-tests),?(\\s+|$)"
     decorate: true
@@ -2964,6 +3175,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-http01-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-http01-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-http01-integration-tests),?(\\s+|$)"
     decorate: true
@@ -3002,6 +3214,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-istio-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-istio-build-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-istio-build-tests),?(\\s+|$)"
     decorate: true
@@ -3039,6 +3252,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-istio-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-istio-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-istio-unit-tests),?(\\s+|$)"
     decorate: true
@@ -3076,6 +3290,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-istio-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-istio-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-istio-integration-tests),?(\\s+|$)"
     decorate: true
@@ -3143,10 +3358,10 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-istio-latest
     always_run: true
+    optional: true
     rerun_command: "/test pull-knative-sandbox-net-istio-latest"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-istio-latest),?(\\s+|$)"
     decorate: true
-    optional: true
     path_alias: knative.dev/net-istio
     cluster: "build-knative"
     spec:
@@ -3177,6 +3392,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-kourier-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-kourier-build-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-kourier-build-tests),?(\\s+|$)"
     decorate: true
@@ -3214,6 +3430,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-kourier-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-kourier-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-kourier-unit-tests),?(\\s+|$)"
     decorate: true
@@ -3251,6 +3468,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-net-kourier-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-net-kourier-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-net-kourier-integration-tests),?(\\s+|$)"
     decorate: true
@@ -3319,6 +3537,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-operator-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-operator-build-tests"
     trigger: "(?m)^/test (all|pull-knative-operator-build-tests),?(\\s+|$)"
     decorate: true
@@ -3356,6 +3575,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-operator-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-operator-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-operator-unit-tests),?(\\s+|$)"
     decorate: true
@@ -3393,6 +3613,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-operator-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-operator-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-operator-integration-tests),?(\\s+|$)"
     decorate: true
@@ -3460,6 +3681,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-operator-upgrade-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-operator-upgrade-tests"
     trigger: "(?m)^/test (all|pull-knative-operator-upgrade-tests),?(\\s+|$)"
     decorate: true
@@ -3493,6 +3715,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-async-component-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-async-component-build-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-async-component-build-tests),?(\\s+|$)"
     decorate: true
@@ -3530,6 +3753,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-async-component-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-async-component-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-async-component-unit-tests),?(\\s+|$)"
     decorate: true
@@ -3567,6 +3791,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-async-component-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-async-component-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-async-component-integration-tests),?(\\s+|$)"
     decorate: true
@@ -3635,6 +3860,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-discovery-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-discovery-build-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-discovery-build-tests),?(\\s+|$)"
     decorate: true
@@ -3672,6 +3898,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-discovery-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-discovery-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-discovery-unit-tests),?(\\s+|$)"
     decorate: true
@@ -3709,6 +3936,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-discovery-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-discovery-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-discovery-integration-tests),?(\\s+|$)"
     decorate: true
@@ -3743,10 +3971,77 @@ presubmits:
         secret:
           secretName: test-account
   knative-sandbox/eventing-kafka:
+  - name: pull-knative-sandbox-eventing-kafka-integration-test-channel-consolidated
+    agent: kubernetes
+    context: pull-knative-sandbox-eventing-kafka-integration-test-channel-consolidated
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-sandbox-eventing-kafka-integration-test-channel-consolidated"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-integration-test-channel-consolidated),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/eventing-kafka
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --consolidated"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-sandbox-eventing-kafka-integration-test-channel-distributed
+    agent: kubernetes
+    context: pull-knative-sandbox-eventing-kafka-integration-test-channel-distributed
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-sandbox-eventing-kafka-integration-test-channel-distributed"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-integration-test-channel-distributed),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/eventing-kafka
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --distributed"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
   - name: pull-knative-sandbox-eventing-kafka-build-tests
     agent: kubernetes
     context: pull-knative-sandbox-eventing-kafka-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-eventing-kafka-build-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-build-tests),?(\\s+|$)"
     decorate: true
@@ -3804,6 +4099,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-eventing-kafka-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-eventing-kafka-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-unit-tests),?(\\s+|$)"
     decorate: true
@@ -3818,63 +4114,6 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
-        securityContext:
-          privileged: true
-        volumeMounts:
-        - name: repoview-token
-          mountPath: /etc/repoview-token
-          readOnly: true
-        - name: docker-graph
-          mountPath: /docker-graph
-        - name: modules
-          mountPath: /lib/modules
-        - name: cgroup
-          mountPath: /sys/fs/cgroup
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: DOCKER_IN_DOCKER_ENABLED
-          value: "true"
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: repoview-token
-        secret:
-          secretName: repoview-token
-      - name: docker-graph
-        emptyDir: {}
-      - name: modules
-        hostPath:
-          path: /lib/modules
-          type: Directory
-      - name: cgroup
-        hostPath:
-          path: /sys/fs/cgroup
-          type: Directory
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: pull-knative-sandbox-eventing-kafka-integration-tests
-    agent: kubernetes
-    context: pull-knative-sandbox-eventing-kafka-integration-tests
-    always_run: true
-    rerun_command: "/test pull-knative-sandbox-eventing-kafka-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-integration-tests),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/eventing-kafka
-    cluster: "build-knative"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./test/presubmit-tests.sh"
-        - "--integration-tests"
         securityContext:
           privileged: true
         volumeMounts:
@@ -3968,6 +4207,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-eventing-kafka-broker-build-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-eventing-kafka-broker-build-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-broker-build-tests),?(\\s+|$)"
     decorate: true
@@ -4025,6 +4265,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-eventing-kafka-broker-unit-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-eventing-kafka-broker-unit-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-broker-unit-tests),?(\\s+|$)"
     decorate: true
@@ -4082,6 +4323,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-eventing-kafka-broker-integration-tests
     always_run: true
+    optional: false
     rerun_command: "/test pull-knative-sandbox-eventing-kafka-broker-integration-tests"
     trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-broker-integration-tests),?(\\s+|$)"
     decorate: true
@@ -4184,17 +4426,168 @@ presubmits:
         hostPath:
           path: /sys/fs/cgroup
           type: Directory
+  knative-sandbox/kperf:
+  - name: pull-knative-sandbox-kperf-build-tests
+    agent: kubernetes
+    context: pull-knative-sandbox-kperf-build-tests
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-sandbox-kperf-build-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-kperf-build-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/kperf
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--build-tests"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-sandbox-kperf-unit-tests
+    agent: kubernetes
+    context: pull-knative-sandbox-kperf-unit-tests
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-sandbox-kperf-unit-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-kperf-unit-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/kperf
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--unit-tests"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-sandbox-kperf-integration-tests
+    agent: kubernetes
+    context: pull-knative-sandbox-kperf-integration-tests
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-sandbox-kperf-integration-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-kperf-integration-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/kperf
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--integration-tests"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-sandbox-kperf-go-coverage
+    agent: kubernetes
+    context: pull-knative-sandbox-kperf-go-coverage
+    always_run: true
+    rerun_command: "/test pull-knative-sandbox-kperf-go-coverage"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-kperf-go-coverage),?(\\s+|$)"
+    optional: true
+    decorate: true
+    path_alias: knative.dev/kperf
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "coverage"
+        - "--postsubmit-job-name=post-knative-sandbox-kperf-go-coverage"
+        - "--artifacts=$(ARTIFACTS)"
+        - "--cov-threshold-percentage=50"
+        - "--github-token=/etc/covbot-token/token"
+        volumeMounts:
+        - name: covbot-token
+          mountPath: /etc/covbot-token
+          readOnly: true
+      volumes:
+      - name: covbot-token
+        secret:
+          secretName: covbot-token
 periodics:
-- cron: "0 */2 * * *"
+- cron: "0 */4 * * *"
   name: ci-knative-serving-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4226,12 +4619,18 @@ periodics:
   name: ci-knative-serving-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -4263,12 +4662,18 @@ periodics:
   name: ci-knative-serving-0.15-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4318,12 +4723,18 @@ periodics:
   name: ci-knative-serving-0.15-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -4373,12 +4784,18 @@ periodics:
   name: ci-knative-serving-0.16-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4428,12 +4845,18 @@ periodics:
   name: ci-knative-serving-0.16-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -4483,12 +4906,18 @@ periodics:
   name: ci-knative-serving-0.17-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4538,12 +4967,18 @@ periodics:
   name: ci-knative-serving-0.17-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -4593,12 +5028,18 @@ periodics:
   name: ci-knative-serving-0.18-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4648,12 +5089,18 @@ periodics:
   name: ci-knative-serving-0.18-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -4699,16 +5146,22 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "5 */2 * * *"
+- cron: "5 */3 * * *"
   name: ci-knative-serving-istio-latest-mesh
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 120m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: custom-job
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4734,16 +5187,22 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "31 */2 * * *"
+- cron: "31 */3 * * *"
   name: ci-knative-serving-istio-latest-no-mesh
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 120m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: custom-job
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4769,16 +5228,22 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "57 */2 * * *"
+- cron: "57 */3 * * *"
   name: ci-knative-serving-istio-stable-mesh
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 120m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: custom-job
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4804,16 +5269,22 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "47 */2 * * *"
+- cron: "47 */3 * * *"
   name: ci-knative-serving-istio-stable-no-mesh
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 120m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: custom-job
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4839,16 +5310,22 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "12 */2 * * *"
+- cron: "12 */3 * * *"
   name: ci-knative-serving-gloo-0.17.1
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 120m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: custom-job
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4874,16 +5351,22 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "24 */2 * * *"
+- cron: "24 */3 * * *"
   name: ci-knative-serving-kourier-stable
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 120m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: custom-job
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4909,16 +5392,22 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "43 */2 * * *"
+- cron: "43 */3 * * *"
   name: ci-knative-serving-contour-latest
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 120m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: custom-job
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4944,16 +5433,22 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "44 */2 * * *"
+- cron: "44 */3 * * *"
   name: ci-knative-serving-ambassador-latest
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 120m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: custom-job
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -4979,16 +5474,22 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "20 */2 * * *"
+- cron: "20 */3 * * *"
   name: ci-knative-serving-kong-latest
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 120m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: custom-job
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5014,16 +5515,22 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "42 */2 * * *"
+- cron: "42 */3 * * *"
   name: ci-knative-serving-https
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 120m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: custom-job
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5059,12 +5566,19 @@ periodics:
       report_template: "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
       job_states_to_report:
       - "failure"
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5097,12 +5611,18 @@ periodics:
   name: ci-knative-serving-0.15-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5146,12 +5666,18 @@ periodics:
   name: ci-knative-serving-0.16-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5195,12 +5721,18 @@ periodics:
   name: ci-knative-serving-0.17-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5244,12 +5776,18 @@ periodics:
   name: ci-knative-serving-0.18-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5289,16 +5827,23 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "20 */2 * * *"
+- cron: "20 */4 * * *"
   name: ci-knative-serving-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5335,49 +5880,22 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "12 9 * * *"
-  name: ci-knative-serving-webhook-apicoverage
-  agent: kubernetes
-  decorate: true
-  cluster: "build-knative"
-  extra_refs:
-  - org: knative
-    repo: serving
-    path_alias: knative.dev/serving
-    base_ref: master
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      command:
-      - runner.sh
-      args:
-      - "./test/apicoverage.sh"
-      volumeMounts:
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
-      env:
-      - name: SYSTEM_NAMESPACE
-        value: knative-serving
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-    volumes:
-    - name: test-account
-      secret:
-        secretName: test-account
-- cron: "53 * * * *"
+- cron: "53 */4 * * *"
   name: ci-knative-client-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: client
     path_alias: knative.dev/client
     base_ref: master
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5404,12 +5922,18 @@ periodics:
   name: ci-knative-client-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: client
     path_alias: knative.dev/client
     base_ref: master
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -5436,12 +5960,18 @@ periodics:
   name: ci-knative-client-0.15-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: client
     path_alias: knative.dev/client
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5491,12 +6021,18 @@ periodics:
   name: ci-knative-client-0.15-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: client
     path_alias: knative.dev/client
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -5546,12 +6082,18 @@ periodics:
   name: ci-knative-client-0.16-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: client
     path_alias: knative.dev/client
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5601,12 +6143,18 @@ periodics:
   name: ci-knative-client-0.16-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: client
     path_alias: knative.dev/client
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -5656,12 +6204,18 @@ periodics:
   name: ci-knative-client-0.17-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: client
     path_alias: knative.dev/client
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5711,12 +6265,18 @@ periodics:
   name: ci-knative-client-0.17-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: client
     path_alias: knative.dev/client
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -5766,12 +6326,18 @@ periodics:
   name: ci-knative-client-0.18-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: client
     path_alias: knative.dev/client
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5821,12 +6387,18 @@ periodics:
   name: ci-knative-client-0.18-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: client
     path_alias: knative.dev/client
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -5876,12 +6448,19 @@ periodics:
   name: ci-knative-client-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: client
     path_alias: knative.dev/client
     base_ref: master
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5909,12 +6488,18 @@ periodics:
   name: ci-knative-client-tekton
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 120m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: client
     path_alias: knative.dev/client
     base_ref: master
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: cron
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5940,12 +6525,18 @@ periodics:
   name: ci-knative-client-0.15-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: client
     path_alias: knative.dev/client
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -5984,12 +6575,18 @@ periodics:
   name: ci-knative-client-0.16-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: client
     path_alias: knative.dev/client
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6028,12 +6625,18 @@ periodics:
   name: ci-knative-client-0.17-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: client
     path_alias: knative.dev/client
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6072,12 +6675,18 @@ periodics:
   name: ci-knative-client-0.18-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: client
     path_alias: knative.dev/client
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6112,16 +6721,23 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "29 */2 * * *"
+- cron: "29 */4 * * *"
   name: ci-knative-client-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: client
     path_alias: knative.dev/client
     base_ref: master
+  annotations:
+    testgrid-dashboards: client
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6201,16 +6817,22 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "49 * * * *"
+- cron: "49 */4 * * *"
   name: ci-knative-client-contrib-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: client-contrib
     path_alias: knative.dev/client-contrib
     base_ref: master
+  annotations:
+    testgrid-dashboards: client-contrib
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6237,12 +6859,18 @@ periodics:
   name: ci-knative-client-contrib-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: client-contrib
     path_alias: knative.dev/client-contrib
     base_ref: master
+  annotations:
+    testgrid-dashboards: client-contrib
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6265,15 +6893,21 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "45 * * * *"
+- cron: "45 */4 * * *"
   name: ci-knative-docs-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: docs
     base_ref: master
+  annotations:
+    testgrid-dashboards: docs
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6320,11 +6954,17 @@ periodics:
   name: ci-knative-docs-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: docs
     base_ref: master
+  annotations:
+    testgrid-dashboards: docs
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6413,16 +7053,22 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "52 */2 * * *"
+- cron: "52 */4 * * *"
   name: ci-knative-eventing-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6454,12 +7100,18 @@ periodics:
   name: ci-knative-eventing-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6491,12 +7143,18 @@ periodics:
   name: ci-knative-eventing-0.15-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6546,12 +7204,18 @@ periodics:
   name: ci-knative-eventing-0.15-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6601,12 +7265,18 @@ periodics:
   name: ci-knative-eventing-0.16-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6656,12 +7326,18 @@ periodics:
   name: ci-knative-eventing-0.16-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6711,12 +7387,18 @@ periodics:
   name: ci-knative-eventing-0.17-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6766,12 +7448,18 @@ periodics:
   name: ci-knative-eventing-0.17-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6821,12 +7509,18 @@ periodics:
   name: ci-knative-eventing-0.18-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6876,12 +7570,18 @@ periodics:
   name: ci-knative-eventing-0.18-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -6937,12 +7637,19 @@ periodics:
       report_template: "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
       job_states_to_report:
       - "failure"
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6975,12 +7682,18 @@ periodics:
   name: ci-knative-eventing-0.15-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7024,12 +7737,18 @@ periodics:
   name: ci-knative-eventing-0.16-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7073,12 +7792,18 @@ periodics:
   name: ci-knative-eventing-0.17-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7122,12 +7847,18 @@ periodics:
   name: ci-knative-eventing-0.18-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7167,16 +7898,23 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "52 */2 * * *"
+- cron: "52 */4 * * *"
   name: ci-knative-eventing-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7261,16 +7999,22 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "36 * * * *"
+- cron: "36 */4 * * *"
   name: ci-knative-eventing-contrib-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7302,12 +8046,18 @@ periodics:
   name: ci-knative-eventing-contrib-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7339,12 +8089,18 @@ periodics:
   name: ci-knative-eventing-contrib-0.15-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7394,12 +8150,18 @@ periodics:
   name: ci-knative-eventing-contrib-0.15-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7449,12 +8211,18 @@ periodics:
   name: ci-knative-eventing-contrib-0.16-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7504,12 +8272,18 @@ periodics:
   name: ci-knative-eventing-contrib-0.16-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7559,12 +8333,18 @@ periodics:
   name: ci-knative-eventing-contrib-0.17-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7614,12 +8394,18 @@ periodics:
   name: ci-knative-eventing-contrib-0.17-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7669,12 +8455,18 @@ periodics:
   name: ci-knative-eventing-contrib-0.18-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7724,12 +8516,18 @@ periodics:
   name: ci-knative-eventing-contrib-0.18-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7779,12 +8577,19 @@ periodics:
   name: ci-knative-eventing-contrib-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7817,12 +8622,18 @@ periodics:
   name: ci-knative-eventing-contrib-0.15-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7866,12 +8677,18 @@ periodics:
   name: ci-knative-eventing-contrib-0.16-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7915,12 +8732,18 @@ periodics:
   name: ci-knative-eventing-contrib-0.17-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7964,12 +8787,18 @@ periodics:
   name: ci-knative-eventing-contrib-0.18-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8009,16 +8838,23 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "32 */2 * * *"
+- cron: "32 */4 * * *"
   name: ci-knative-eventing-contrib-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-contrib
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8103,16 +8939,22 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "21 * * * *"
+- cron: "21 */4 * * *"
   name: ci-knative-sandbox-eventing-awssqs-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-awssqs
     path_alias: knative.dev/eventing-awssqs
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-awssqs
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8139,12 +8981,18 @@ periodics:
   name: ci-knative-sandbox-eventing-awssqs-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-awssqs
     path_alias: knative.dev/eventing-awssqs
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-awssqs
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -8171,12 +9019,19 @@ periodics:
   name: ci-knative-sandbox-eventing-awssqs-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-awssqs
     path_alias: knative.dev/eventing-awssqs
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-awssqs
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8200,16 +9055,23 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "21 */2 * * *"
+- cron: "21 */4 * * *"
   name: ci-knative-sandbox-eventing-awssqs-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-awssqs
     path_alias: knative.dev/eventing-awssqs
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-awssqs
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8243,16 +9105,22 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "27 * * * *"
+- cron: "27 */4 * * *"
   name: ci-knative-sandbox-eventing-ceph-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-ceph
     path_alias: knative.dev/eventing-ceph
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-ceph
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8279,12 +9147,18 @@ periodics:
   name: ci-knative-sandbox-eventing-ceph-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-ceph
     path_alias: knative.dev/eventing-ceph
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-ceph
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -8311,12 +9185,19 @@ periodics:
   name: ci-knative-sandbox-eventing-ceph-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-ceph
     path_alias: knative.dev/eventing-ceph
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-ceph
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8340,16 +9221,23 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "47 */2 * * *"
+- cron: "47 */4 * * *"
   name: ci-knative-sandbox-eventing-ceph-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-ceph
     path_alias: knative.dev/eventing-ceph
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-ceph
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8383,16 +9271,22 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "37 * * * *"
+- cron: "37 */4 * * *"
   name: ci-knative-sandbox-eventing-couchdb-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-couchdb
     path_alias: knative.dev/eventing-couchdb
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-couchdb
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8419,12 +9313,18 @@ periodics:
   name: ci-knative-sandbox-eventing-couchdb-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-couchdb
     path_alias: knative.dev/eventing-couchdb
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-couchdb
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -8451,12 +9351,19 @@ periodics:
   name: ci-knative-sandbox-eventing-couchdb-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-couchdb
     path_alias: knative.dev/eventing-couchdb
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-couchdb
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8480,16 +9387,23 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "33 */2 * * *"
+- cron: "33 */4 * * *"
   name: ci-knative-sandbox-eventing-couchdb-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-couchdb
     path_alias: knative.dev/eventing-couchdb
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-couchdb
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8523,16 +9437,22 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "46 * * * *"
+- cron: "46 */4 * * *"
   name: ci-knative-sandbox-eventing-github-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-github
     path_alias: knative.dev/eventing-github
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-github
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8559,12 +9479,18 @@ periodics:
   name: ci-knative-sandbox-eventing-github-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-github
     path_alias: knative.dev/eventing-github
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-github
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -8591,12 +9517,19 @@ periodics:
   name: ci-knative-sandbox-eventing-github-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-github
     path_alias: knative.dev/eventing-github
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-github
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8620,16 +9553,23 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "42 */2 * * *"
+- cron: "42 */4 * * *"
   name: ci-knative-sandbox-eventing-github-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-github
     path_alias: knative.dev/eventing-github
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-github
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8663,16 +9603,22 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "38 * * * *"
+- cron: "38 */4 * * *"
   name: ci-knative-sandbox-eventing-gitlab-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-gitlab
     path_alias: knative.dev/eventing-gitlab
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-gitlab
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8699,12 +9645,18 @@ periodics:
   name: ci-knative-sandbox-eventing-gitlab-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-gitlab
     path_alias: knative.dev/eventing-gitlab
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-gitlab
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -8731,12 +9683,19 @@ periodics:
   name: ci-knative-sandbox-eventing-gitlab-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-gitlab
     path_alias: knative.dev/eventing-gitlab
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-gitlab
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8760,16 +9719,23 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "6 */2 * * *"
+- cron: "6 */4 * * *"
   name: ci-knative-sandbox-eventing-gitlab-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-gitlab
     path_alias: knative.dev/eventing-gitlab
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-gitlab
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8803,16 +9769,22 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "7 * * * *"
+- cron: "7 */4 * * *"
   name: ci-knative-sandbox-eventing-prometheus-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-prometheus
     path_alias: knative.dev/eventing-prometheus
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-prometheus
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8839,12 +9811,18 @@ periodics:
   name: ci-knative-sandbox-eventing-prometheus-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-prometheus
     path_alias: knative.dev/eventing-prometheus
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-prometheus
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -8871,12 +9849,19 @@ periodics:
   name: ci-knative-sandbox-eventing-prometheus-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-prometheus
     path_alias: knative.dev/eventing-prometheus
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-prometheus
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8900,16 +9885,23 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "11 */2 * * *"
+- cron: "11 */4 * * *"
   name: ci-knative-sandbox-eventing-prometheus-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-prometheus
     path_alias: knative.dev/eventing-prometheus
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-prometheus
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8943,16 +9935,22 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "0 * * * *"
+- cron: "0 */4 * * *"
   name: ci-knative-sandbox-eventing-redis-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-redis
     path_alias: knative.dev/eventing-redis
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-redis
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8979,12 +9977,18 @@ periodics:
   name: ci-knative-sandbox-eventing-redis-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-redis
     path_alias: knative.dev/eventing-redis
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-redis
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9011,12 +10015,19 @@ periodics:
   name: ci-knative-sandbox-eventing-redis-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-redis
     path_alias: knative.dev/eventing-redis
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-redis
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9040,16 +10051,23 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "48 */2 * * *"
+- cron: "48 */4 * * *"
   name: ci-knative-sandbox-eventing-redis-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-redis
     path_alias: knative.dev/eventing-redis
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-redis
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9083,16 +10101,146 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "2 * * * *"
+- cron: "16 */4 * * *"
+  name: ci-knative-sandbox-kperf-continuous
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: kperf
+    path_alias: knative.dev/kperf
+    base_ref: master
+  annotations:
+    testgrid-dashboards: kperf
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/presubmit-tests.sh"
+      - "--all-tests"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "32 8,11,22 * * *"
+  name: ci-knative-sandbox-kperf-continuous-beta-prow-tests
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: kperf
+    path_alias: knative.dev/kperf
+    base_ref: master
+  annotations:
+    testgrid-dashboards: kperf
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/presubmit-tests.sh"
+      - "--all-tests"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "0 1 * * *"
+  name: ci-knative-sandbox-kperf-go-coverage
+  labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-sandbox-kperf-go-coverage
+  agent: kubernetes
+  decorate: true
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: kperf
+    path_alias: knative.dev/kperf
+    base_ref: master
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - "runner.sh"
+      args:
+      - "coverage"
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=50"
+- cron: "56 7 * * *"
+  name: ci-knative-sandbox-kperf-go-coverage-beta-prow-tests
+  labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-sandbox-kperf-go-coverage
+  agent: kubernetes
+  decorate: true
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: kperf
+    path_alias: knative.dev/kperf
+    base_ref: master
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
+      imagePullPolicy: Always
+      command:
+      - "runner.sh"
+      args:
+      - "coverage"
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=50"
+- cron: "2 */4 * * *"
   name: ci-knative-pkg-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: pkg
     path_alias: knative.dev/pkg
     base_ref: master
+  annotations:
+    testgrid-dashboards: pkg
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9119,12 +10267,18 @@ periodics:
   name: ci-knative-pkg-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: pkg
     path_alias: knative.dev/pkg
     base_ref: master
+  annotations:
+    testgrid-dashboards: pkg
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9147,16 +10301,22 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "47 * * * *"
+- cron: "47 */4 * * *"
   name: ci-knative-caching-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: caching
     path_alias: knative.dev/caching
     base_ref: master
+  annotations:
+    testgrid-dashboards: caching
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9183,12 +10343,18 @@ periodics:
   name: ci-knative-caching-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: caching
     path_alias: knative.dev/caching
     base_ref: master
+  annotations:
+    testgrid-dashboards: caching
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9211,16 +10377,22 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "5 * * * *"
+- cron: "5 */4 * * *"
   name: ci-knative-sandbox-sample-controller-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: sample-controller
     path_alias: knative.dev/sample-controller
     base_ref: master
+  annotations:
+    testgrid-dashboards: sample-controller
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9247,12 +10419,18 @@ periodics:
   name: ci-knative-sandbox-sample-controller-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: sample-controller
     path_alias: knative.dev/sample-controller
     base_ref: master
+  annotations:
+    testgrid-dashboards: sample-controller
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9275,16 +10453,22 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "50 * * * *"
+- cron: "50 */4 * * *"
   name: ci-knative-sandbox-sample-source-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: sample-source
     path_alias: knative.dev/sample-source
     base_ref: master
+  annotations:
+    testgrid-dashboards: sample-source
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9311,12 +10495,18 @@ periodics:
   name: ci-knative-sandbox-sample-source-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: sample-source
     path_alias: knative.dev/sample-source
     base_ref: master
+  annotations:
+    testgrid-dashboards: sample-source
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9343,12 +10533,19 @@ periodics:
   name: ci-knative-sandbox-sample-source-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: sample-source
     path_alias: knative.dev/sample-source
     base_ref: master
+  annotations:
+    testgrid-dashboards: sample-source
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9372,16 +10569,23 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "54 */2 * * *"
+- cron: "54 */4 * * *"
   name: ci-knative-sandbox-sample-source-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: sample-source
     path_alias: knative.dev/sample-source
     base_ref: master
+  annotations:
+    testgrid-dashboards: sample-source
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9415,16 +10619,22 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "49 * * * *"
+- cron: "49 */4 * * *"
   name: ci-knative-test-infra-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: test-infra
     path_alias: knative.dev/test-infra
     base_ref: master
+  annotations:
+    testgrid-dashboards: test-infra
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9471,12 +10681,18 @@ periodics:
   name: ci-knative-test-infra-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: test-infra
     path_alias: knative.dev/test-infra
     base_ref: master
+  annotations:
+    testgrid-dashboards: test-infra
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9567,15 +10783,21 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "18 * * * *"
+- cron: "18 */4 * * *"
   name: ci-google-knative-gcp-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
     repo: knative-gcp
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9607,11 +10829,17 @@ periodics:
   name: ci-google-knative-gcp-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
     repo: knative-gcp
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9643,11 +10871,17 @@ periodics:
   name: ci-google-knative-gcp-0.15-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
     repo: knative-gcp
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9702,11 +10936,17 @@ periodics:
   name: ci-google-knative-gcp-0.15-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
     repo: knative-gcp
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9761,11 +11001,17 @@ periodics:
   name: ci-google-knative-gcp-0.16-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
     repo: knative-gcp
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9820,11 +11066,17 @@ periodics:
   name: ci-google-knative-gcp-0.16-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
     repo: knative-gcp
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9879,11 +11131,17 @@ periodics:
   name: ci-google-knative-gcp-0.17-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
     repo: knative-gcp
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9938,11 +11196,17 @@ periodics:
   name: ci-google-knative-gcp-0.17-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
     repo: knative-gcp
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9997,11 +11261,17 @@ periodics:
   name: ci-google-knative-gcp-0.18-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
     repo: knative-gcp
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10056,11 +11326,17 @@ periodics:
   name: ci-google-knative-gcp-0.18-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
     repo: knative-gcp
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -10115,11 +11391,18 @@ periodics:
   name: ci-google-knative-gcp-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
     repo: knative-gcp
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10152,11 +11435,17 @@ periodics:
   name: ci-google-knative-gcp-0.15-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
     repo: knative-gcp
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10202,11 +11491,17 @@ periodics:
   name: ci-google-knative-gcp-0.16-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
     repo: knative-gcp
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10252,11 +11547,17 @@ periodics:
   name: ci-google-knative-gcp-0.17-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
     repo: knative-gcp
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10302,11 +11603,17 @@ periodics:
   name: ci-google-knative-gcp-0.18-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
     repo: knative-gcp
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10348,15 +11655,22 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "42 */2 * * *"
+- cron: "42 */4 * * *"
   name: ci-google-knative-gcp-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: google
     repo: knative-gcp
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-gcp
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10441,16 +11755,22 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "59 * * * *"
+- cron: "59 */4 * * *"
   name: ci-knative-sandbox-net-certmanager-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-certmanager
     path_alias: knative.dev/net-certmanager
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-certmanager
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10477,12 +11797,18 @@ periodics:
   name: ci-knative-sandbox-net-certmanager-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-certmanager
     path_alias: knative.dev/net-certmanager
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-certmanager
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -10515,12 +11841,19 @@ periodics:
       report_template: "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
       job_states_to_report:
       - "failure"
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-certmanager
     path_alias: knative.dev/net-certmanager
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-certmanager
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10548,12 +11881,20 @@ periodics:
   name: ci-knative-sandbox-net-certmanager-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-certmanager
     path_alias: knative.dev/net-certmanager
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-certmanager
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: "170"
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10587,16 +11928,23 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "27 */2 * * *"
+- cron: "27 */4 * * *"
   name: ci-knative-sandbox-net-certmanager-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-certmanager
     path_alias: knative.dev/net-certmanager
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-certmanager
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10678,16 +12026,22 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "38 * * * *"
+- cron: "38 */4 * * *"
   name: ci-knative-sandbox-net-contour-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-contour
     path_alias: knative.dev/net-contour
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-contour
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10714,12 +12068,18 @@ periodics:
   name: ci-knative-sandbox-net-contour-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-contour
     path_alias: knative.dev/net-contour
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-contour
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -10752,12 +12112,19 @@ periodics:
       report_template: "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
       job_states_to_report:
       - "failure"
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-contour
     path_alias: knative.dev/net-contour
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-contour
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10785,12 +12152,20 @@ periodics:
   name: ci-knative-sandbox-net-contour-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-contour
     path_alias: knative.dev/net-contour
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-contour
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: "170"
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10824,16 +12199,23 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "42 */2 * * *"
+- cron: "42 */4 * * *"
   name: ci-knative-sandbox-net-contour-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-contour
     path_alias: knative.dev/net-contour
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-contour
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10867,16 +12249,22 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "9 * * * *"
+- cron: "9 */4 * * *"
   name: ci-knative-sandbox-net-http01-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-http01
     path_alias: knative.dev/net-http01
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-http01
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10903,12 +12291,18 @@ periodics:
   name: ci-knative-sandbox-net-http01-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-http01
     path_alias: knative.dev/net-http01
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-http01
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -10941,12 +12335,19 @@ periodics:
       report_template: "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
       job_states_to_report:
       - "failure"
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-http01
     path_alias: knative.dev/net-http01
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-http01
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10974,12 +12375,20 @@ periodics:
   name: ci-knative-sandbox-net-http01-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-http01
     path_alias: knative.dev/net-http01
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-http01
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: "170"
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11013,16 +12422,23 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "5 */2 * * *"
+- cron: "5 */4 * * *"
   name: ci-knative-sandbox-net-http01-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-http01
     path_alias: knative.dev/net-http01
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-http01
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11056,16 +12472,22 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "8 * * * *"
+- cron: "8 */4 * * *"
   name: ci-knative-sandbox-net-istio-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-istio
     path_alias: knative.dev/net-istio
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-istio
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11092,12 +12514,18 @@ periodics:
   name: ci-knative-sandbox-net-istio-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-istio
     path_alias: knative.dev/net-istio
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-istio
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -11130,12 +12558,19 @@ periodics:
       report_template: "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
       job_states_to_report:
       - "failure"
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-istio
     path_alias: knative.dev/net-istio
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-istio
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11159,16 +12594,22 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "34 */2 * * *"
+- cron: "34 */3 * * *"
   name: ci-knative-sandbox-net-istio-latest
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 120m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-istio
     path_alias: knative.dev/net-istio
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-istio
+    testgrid-tab-name: custom-job
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11196,12 +12637,18 @@ periodics:
   name: ci-knative-sandbox-net-istio-0.15-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-istio
     path_alias: knative.dev/net-istio
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: net-istio
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11242,12 +12689,18 @@ periodics:
   name: ci-knative-sandbox-net-istio-0.16-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-istio
     path_alias: knative.dev/net-istio
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: net-istio
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11288,12 +12741,18 @@ periodics:
   name: ci-knative-sandbox-net-istio-0.17-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-istio
     path_alias: knative.dev/net-istio
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: net-istio
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11334,12 +12793,18 @@ periodics:
   name: ci-knative-sandbox-net-istio-0.18-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-istio
     path_alias: knative.dev/net-istio
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: net-istio
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11376,16 +12841,23 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "12 */2 * * *"
+- cron: "12 */4 * * *"
   name: ci-knative-sandbox-net-istio-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-istio
     path_alias: knative.dev/net-istio
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-istio
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11467,16 +12939,22 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "17 * * * *"
+- cron: "17 */4 * * *"
   name: ci-knative-sandbox-net-kourier-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-kourier
     path_alias: knative.dev/net-kourier
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-kourier
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11503,12 +12981,18 @@ periodics:
   name: ci-knative-sandbox-net-kourier-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-kourier
     path_alias: knative.dev/net-kourier
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-kourier
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -11541,12 +13025,19 @@ periodics:
       report_template: "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
       job_states_to_report:
       - "failure"
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-kourier
     path_alias: knative.dev/net-kourier
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-kourier
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11574,12 +13065,20 @@ periodics:
   name: ci-knative-sandbox-net-kourier-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-kourier
     path_alias: knative.dev/net-kourier
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-kourier
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: "170"
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11613,16 +13112,23 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "53 */2 * * *"
+- cron: "53 */4 * * *"
   name: ci-knative-sandbox-net-kourier-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: net-kourier
     path_alias: knative.dev/net-kourier
     base_ref: master
+  annotations:
+    testgrid-dashboards: net-kourier
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11704,16 +13210,22 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "0 * * * *"
+- cron: "0 */4 * * *"
   name: ci-knative-operator-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: operator
     path_alias: knative.dev/operator
     base_ref: master
+  annotations:
+    testgrid-dashboards: operator
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11740,12 +13252,18 @@ periodics:
   name: ci-knative-operator-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: operator
     path_alias: knative.dev/operator
     base_ref: master
+  annotations:
+    testgrid-dashboards: operator
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -11772,12 +13290,18 @@ periodics:
   name: ci-knative-operator-0.15-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: operator
     path_alias: knative.dev/operator
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: operator
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11832,12 +13356,18 @@ periodics:
   name: ci-knative-operator-0.15-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: operator
     path_alias: knative.dev/operator
     base_ref: release-0.15
+  annotations:
+    testgrid-dashboards: operator
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -11892,12 +13422,18 @@ periodics:
   name: ci-knative-operator-0.16-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: operator
     path_alias: knative.dev/operator
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: operator
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11952,12 +13488,18 @@ periodics:
   name: ci-knative-operator-0.16-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: operator
     path_alias: knative.dev/operator
     base_ref: release-0.16
+  annotations:
+    testgrid-dashboards: operator
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -12012,12 +13554,18 @@ periodics:
   name: ci-knative-operator-0.17-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: operator
     path_alias: knative.dev/operator
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: operator
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12072,12 +13620,18 @@ periodics:
   name: ci-knative-operator-0.17-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: operator
     path_alias: knative.dev/operator
     base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: operator
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -12132,12 +13686,18 @@ periodics:
   name: ci-knative-operator-0.18-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: operator
     path_alias: knative.dev/operator
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: operator
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12192,12 +13752,18 @@ periodics:
   name: ci-knative-operator-0.18-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: operator
     path_alias: knative.dev/operator
     base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: operator
+    testgrid-tab-name: release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -12252,12 +13818,19 @@ periodics:
   name: ci-knative-operator-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: operator
     path_alias: knative.dev/operator
     base_ref: master
+  annotations:
+    testgrid-dashboards: operator
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12285,12 +13858,20 @@ periodics:
   name: ci-knative-operator-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: operator
     path_alias: knative.dev/operator
     base_ref: master
+  annotations:
+    testgrid-dashboards: operator
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: "170"
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12322,16 +13903,23 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "32 */2 * * *"
+- cron: "32 */4 * * *"
   name: ci-knative-operator-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative
     repo: operator
     path_alias: knative.dev/operator
     base_ref: master
+  annotations:
+    testgrid-dashboards: operator
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12411,16 +13999,22 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "36 * * * *"
+- cron: "36 */4 * * *"
   name: ci-knative-sandbox-async-component-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: async-component
     path_alias: knative.dev/async-component
     base_ref: master
+  annotations:
+    testgrid-dashboards: async-component
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12447,12 +14041,18 @@ periodics:
   name: ci-knative-sandbox-async-component-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: async-component
     path_alias: knative.dev/async-component
     base_ref: master
+  annotations:
+    testgrid-dashboards: async-component
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -12479,12 +14079,19 @@ periodics:
   name: ci-knative-sandbox-async-component-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: async-component
     path_alias: knative.dev/async-component
     base_ref: master
+  annotations:
+    testgrid-dashboards: async-component
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12512,12 +14119,20 @@ periodics:
   name: ci-knative-sandbox-async-component-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: async-component
     path_alias: knative.dev/async-component
     base_ref: master
+  annotations:
+    testgrid-dashboards: async-component
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: "170"
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12551,16 +14166,23 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "24 */2 * * *"
+- cron: "24 */4 * * *"
   name: ci-knative-sandbox-async-component-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: async-component
     path_alias: knative.dev/async-component
     base_ref: master
+  annotations:
+    testgrid-dashboards: async-component
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12642,16 +14264,22 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "32 * * * *"
+- cron: "32 */4 * * *"
   name: ci-knative-sandbox-discovery-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: discovery
     path_alias: knative.dev/discovery
     base_ref: master
+  annotations:
+    testgrid-dashboards: discovery
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12678,12 +14306,18 @@ periodics:
   name: ci-knative-sandbox-discovery-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: discovery
     path_alias: knative.dev/discovery
     base_ref: master
+  annotations:
+    testgrid-dashboards: discovery
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -12716,12 +14350,19 @@ periodics:
       report_template: "The nightly release job for discovery failed, check the log: <{{.Status.URL}}|View logs>"
       job_states_to_report:
       - "failure"
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: discovery
     path_alias: knative.dev/discovery
     base_ref: master
+  annotations:
+    testgrid-dashboards: discovery
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12749,12 +14390,20 @@ periodics:
   name: ci-knative-sandbox-discovery-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: discovery
     path_alias: knative.dev/discovery
     base_ref: master
+  annotations:
+    testgrid-dashboards: discovery
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: "170"
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12788,16 +14437,23 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "28 */2 * * *"
+- cron: "28 */4 * * *"
   name: ci-knative-sandbox-discovery-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: discovery
     path_alias: knative.dev/discovery
     base_ref: master
+  annotations:
+    testgrid-dashboards: discovery
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12831,16 +14487,22 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "23 * * * *"
+- cron: "23 */4 * * *"
   name: ci-knative-sandbox-eventing-camel-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-camel
     path_alias: knative.dev/eventing-camel
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-camel
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12867,12 +14529,18 @@ periodics:
   name: ci-knative-sandbox-eventing-camel-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-camel
     path_alias: knative.dev/eventing-camel
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-camel
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -12905,12 +14573,19 @@ periodics:
       report_template: "The nightly release job for camel failed, check the log: <{{.Status.URL}}|View logs>"
       job_states_to_report:
       - "failure"
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-camel
     path_alias: knative.dev/eventing-camel
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-camel
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12938,12 +14613,20 @@ periodics:
   name: ci-knative-sandbox-eventing-camel-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-camel
     path_alias: knative.dev/eventing-camel
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-camel
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: "170"
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12977,16 +14660,23 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "55 */2 * * *"
+- cron: "55 */4 * * *"
   name: ci-knative-sandbox-eventing-camel-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-camel
     path_alias: knative.dev/eventing-camel
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-camel
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13020,16 +14710,22 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "31 * * * *"
+- cron: "31 */4 * * *"
   name: ci-knative-sandbox-eventing-kafka-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka
     path_alias: knative.dev/eventing-kafka
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-kafka
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13076,12 +14772,18 @@ periodics:
   name: ci-knative-sandbox-eventing-kafka-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka
     path_alias: knative.dev/eventing-kafka
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-kafka
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -13128,12 +14830,19 @@ periodics:
   name: ci-knative-sandbox-eventing-kafka-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka
     path_alias: knative.dev/eventing-kafka
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-kafka
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13181,12 +14890,20 @@ periodics:
   name: ci-knative-sandbox-eventing-kafka-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka
     path_alias: knative.dev/eventing-kafka
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-kafka
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: "170"
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13240,16 +14957,23 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "31 */2 * * *"
+- cron: "31 */4 * * *"
   name: ci-knative-sandbox-eventing-kafka-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka
     path_alias: knative.dev/eventing-kafka
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-kafka
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13351,16 +15075,22 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "59 * * * *"
+- cron: "59 */4 * * *"
   name: ci-knative-sandbox-eventing-kafka-broker-continuous
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka-broker
     path_alias: knative.dev/eventing-kafka-broker
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-kafka-broker
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13407,12 +15137,18 @@ periodics:
   name: ci-knative-sandbox-eventing-kafka-broker-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka-broker
     path_alias: knative.dev/eventing-kafka-broker
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-kafka-broker
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -13459,12 +15195,19 @@ periodics:
   name: ci-knative-sandbox-eventing-kafka-broker-nightly-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka-broker
     path_alias: knative.dev/eventing-kafka-broker
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-kafka-broker
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13512,12 +15255,20 @@ periodics:
   name: ci-knative-sandbox-eventing-kafka-broker-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka-broker
     path_alias: knative.dev/eventing-kafka-broker
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-kafka-broker
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: "170"
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13571,16 +15322,23 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "11 */2 * * *"
+- cron: "11 */4 * * *"
   name: ci-knative-sandbox-eventing-kafka-broker-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-kafka-broker
     path_alias: knative.dev/eventing-kafka-broker
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-kafka-broker
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13692,12 +15450,19 @@ periodics:
       report_template: "The nightly release job for eventing-rabbitmq failed, check the log: <{{.Status.URL}}|View logs>"
       job_states_to_report:
       - "failure"
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-rabbitmq
     path_alias: knative.dev/eventing-rabbitmq
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-rabbitmq
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13725,12 +15490,20 @@ periodics:
   name: ci-knative-sandbox-eventing-rabbitmq-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-rabbitmq
     path_alias: knative.dev/eventing-rabbitmq
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-rabbitmq
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: "170"
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13764,16 +15537,23 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "9 */2 * * *"
+- cron: "9 */4 * * *"
   name: ci-knative-sandbox-eventing-rabbitmq-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-rabbitmq
     path_alias: knative.dev/eventing-rabbitmq
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-rabbitmq
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13817,12 +15597,19 @@ periodics:
       report_template: "The nightly release job for eventing-natss failed, check the log: <{{.Status.URL}}|View logs>"
       job_states_to_report:
       - "failure"
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-natss
     path_alias: knative.dev/eventing-natss
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-natss
+    testgrid-tab-name: nightly
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13850,12 +15637,20 @@ periodics:
   name: ci-knative-sandbox-eventing-natss-dot-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-natss
     path_alias: knative.dev/eventing-natss
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-natss
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: "170"
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13889,16 +15684,23 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "2 */2 * * *"
+- cron: "2 */4 * * *"
   name: ci-knative-sandbox-eventing-natss-auto-release
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 180m
   cluster: "build-knative"
   extra_refs:
   - org: knative-sandbox
     repo: eventing-natss
     path_alias: knative.dev/eventing-natss
     base_ref: master
+  annotations:
+    testgrid-dashboards: eventing-natss
+    testgrid-tab-name: auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -14507,6 +16309,24 @@ postsubmits:
     decorate: true
     cluster: "build-knative"
     path_alias: knative.dev/eventing-kafka-broker
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "coverage"
+        - "--artifacts=$(ARTIFACTS)"
+        - "--cov-threshold-percentage=0"
+  knative-sandbox/kperf:
+  - name: post-knative-sandbox-kperf-go-coverage
+    branches:
+    - master
+    agent: kubernetes
+    decorate: true
+    cluster: "build-knative"
+    path_alias: knative.dev/kperf
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable

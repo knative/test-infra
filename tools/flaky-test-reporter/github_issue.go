@@ -79,8 +79,6 @@ var (
 	// expect an argument of history Unicode from previous comment
 	historyPattern = fmt.Sprintf("\n%s%%s%s\n%s Passed\t%s Failed\t%s Skipped\n",
 		beforeHistoryToken, afterHistoryToken, passedUnicode, failedUnicode, skippedUnicode)
-	// reHistory is for identifying history from comment
-	reHistory = fmt.Sprintf("(?s)%s(.*?)%s", beforeHistoryToken, afterHistoryToken)
 	// regex for identifying each single record
 	reSingleRecordRegex = regexp.MustCompile(`[0-9]{4}\-[0-9]{2}\-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} [+\-][0-9]{4} [A-Z]{3}:.*`)
 

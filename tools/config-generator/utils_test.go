@@ -331,3 +331,23 @@ func TestStrExists(t *testing.T) {
 		t.Fatalf("String bar should exist in %v", sArray)
 	}
 }
+
+func TestStringSetToSlice(t *testing.T) {
+	SetupForTesting()
+	strSet := map[string]struct{}{
+		"Harry":    {},
+		"Ron":      {},
+		"Hermione": {},
+	}
+
+	output := stringSetToSlice(strSet)
+	if len(output) != 3 {
+		t.Error("Expected len 3, was ", len(output))
+	}
+	for _, str := range output {
+		delete(strSet, str)
+	}
+	if len(strSet) > 0 {
+		t.Errorf("Output %v did not include every key in input %v", output, strSet)
+	}
+}

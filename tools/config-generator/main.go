@@ -116,6 +116,7 @@ type baseProwJobTemplateData struct {
 	JobStatesToReport   []string
 	Timeout             int
 	AlwaysRun           bool
+	Optional            bool
 	TestAccount         string
 	ServiceAccount      string
 	ReleaseGcs          string
@@ -124,8 +125,8 @@ type baseProwJobTemplateData struct {
 	Labels              []string
 	PathAlias           string
 	Cluster             string
-	Optional            string
 	NeedsMonitor        bool
+	Annotations         []string
 }
 
 // ####################################################################################################
@@ -160,25 +161,24 @@ var (
 	// Values used in the jobs that can be changed through command-line flags.
 	// TODO: these should be CapsCase
 	// ... until they are not global
-	output                     outputter
-	logFatalf                  logFatalfFunc
-	prowHost                   string
-	testGridHost               string
-	gubernatorHost             string
-	GCSBucket                  string
-	testGridGcsBucket          string
-	LogsDir                    string
-	presubmitLogsDir           string
-	testAccount                string
-	nightlyAccount             string
-	releaseAccount             string
-	githubCommenterDockerImage string
-	prowTestsDockerImage       string
-	presubmitScript            string
-	releaseScript              string
-	webhookAPICoverageScript   string
-	upgradeReleaseBranches     bool
-	githubTokenPath            string
+	output                   outputter
+	logFatalf                logFatalfFunc
+	prowHost                 string
+	testGridHost             string
+	gubernatorHost           string
+	GCSBucket                string
+	testGridGcsBucket        string
+	LogsDir                  string
+	presubmitLogsDir         string
+	testAccount              string
+	nightlyAccount           string
+	releaseAccount           string
+	prowTestsDockerImage     string
+	presubmitScript          string
+	releaseScript            string
+	webhookAPICoverageScript string
+	upgradeReleaseBranches   bool
+	githubTokenPath          string
 
 	// #########################################################################
 	// ############## data used for generating prow configuration ##############
@@ -243,6 +243,7 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.GcsPresubmitLogDir = fmt.Sprintf("gs://%s/%s", GCSBucket, presubmitLogsDir)
 	data.ReleaseGcs = strings.Replace(repo, data.OrgName+"/", "knative-releases/", 1)
 	data.AlwaysRun = true
+	data.Optional = false
 	data.Image = prowTestsDockerImage
 	data.ServiceAccount = testAccount
 	data.Command = ""
@@ -251,7 +252,7 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	data.VolumeMounts = make([]string, 0)
 	data.Env = make([]string, 0)
 	data.Labels = make([]string, 0)
-	data.Optional = ""
+	data.Annotations = make([]string, 0)
 	data.Cluster = "cluster: \"build-knative\""
 	return data
 }
@@ -395,7 +396,7 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 		case "command":
 			(*data).Command = getString(item.Value)
 		case "needs-monitor":
-			(*data).NeedsMonitor = true
+			(*data).NeedsMonitor = getBool(item.Value)
 		case "needs-dind":
 			if getBool(item.Value) {
 				setupDockerInDockerForJob(data)
@@ -405,13 +406,13 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 		case "performance":
 			for i, repo := range repositories {
 				if path.Base(repo.Name) == (*data).RepoName {
-					repositories[i].EnablePerformanceTests = true
+					repositories[i].EnablePerformanceTests = getBool(item.Value)
 				}
 			}
 		case "env-vars":
 			addExtraEnvVarsToJob(getStringArray(item.Value), data)
 		case "optional":
-			(*data).Optional = "optional: true"
+			(*data).Optional = getBool(item.Value)
 		case "resources":
 			setResourcesReqForJob(getMapSlice(item.Value), data)
 		case "reporter_config":
@@ -701,11 +702,14 @@ func main() {
 	// Parse flags and sanity check them.
 	prowJobsConfigOutput := ""
 	testgridConfigOutput := ""
+	k8sTestgridConfigOutput := ""
 	var generateTestgridConfig = flag.Bool("generate-testgrid-config", true, "Whether to generate the testgrid config from the template file")
+	var generateK8sTestgridConfig = flag.Bool("generate-k8s-testgrid-config", true, "Whether to generate the k8s testgrid config from the template file")
 	var includeConfig = flag.Bool("include-config", true, "Whether to include general configuration (e.g., plank) in the generated config")
 	var dockerImagesBase = flag.String("image-docker", "gcr.io/knative-tests/test-infra", "Default registry for the docker images used by the jobs")
 	flag.StringVar(&prowJobsConfigOutput, "prow-jobs-config-output", "", "The destination for the prow jobs config output, default to be stdout")
 	flag.StringVar(&testgridConfigOutput, "testgrid-config-output", "", "The destination for the testgrid config output, default to be stdout")
+	flag.StringVar(&k8sTestgridConfigOutput, "k8s-testgrid-config-output", "", "The destination for the k8s testgrid config output, default to be stdout")
 	flag.StringVar(&prowHost, "prow-host", "https://prow.knative.dev", "Prow host, including HTTP protocol")
 	flag.StringVar(&testGridHost, "testgrid-host", "https://testgrid.knative.dev", "TestGrid host, including HTTP protocol")
 	flag.StringVar(&gubernatorHost, "gubernator-host", "https://gubernator.knative.dev", "Gubernator host, including HTTP protocol")
@@ -735,37 +739,37 @@ func main() {
 	prowTestsDockerImage = path.Join(*dockerImagesBase, *prowTestsDockerImageName)
 
 	// We use MapSlice instead of maps to keep key order and create predictable output.
-	config := yaml.MapSlice{}
+	configYaml := yaml.MapSlice{}
 
 	// Read input config.
-	name := flag.Arg(0)
+	configFileName := flag.Arg(0)
 	if upgradeReleaseBranches {
 		gc, err := ghutil.NewGithubClient(githubTokenPath)
 		if err != nil {
 			logFatalf("Failed creating github client from %q: %v", githubTokenPath, err)
 		}
-		if err := upgradeReleaseBranchesTemplate(name, gc); err != nil {
+		if err := upgradeReleaseBranchesTemplate(configFileName, gc); err != nil {
 			logFatalf("Failed upgrade based on release branch: '%v'", err)
 		}
 	}
 
-	content, err := ioutil.ReadFile(name)
+	configFileContent, err := ioutil.ReadFile(configFileName)
 	if err != nil {
-		logFatalf("Cannot read file %q: %v", name, err)
+		logFatalf("Cannot read file %q: %v", configFileName, err)
 	}
-	if err = yaml.Unmarshal(content, &config); err != nil {
-		logFatalf("Cannot parse config %q: %v", name, err)
+	if err = yaml.Unmarshal(configFileContent, &configYaml); err != nil {
+		logFatalf("Cannot parse config %q: %v", configFileName, err)
 	}
 
-	prowConfigData := getProwConfigData(config)
+	prowConfigData := getProwConfigData(configYaml)
 
 	// Generate Prow config.
 	repositories = make([]repositoryData, 0)
 	sectionMap = make(map[string]bool)
 	setOutput(prowJobsConfigOutput)
 	executeTemplate("general header", readTemplate(commonHeaderConfig), prowConfigData)
-	parseSection(config, "presubmits", generatePresubmit, nil)
-	parseSection(config, "periodics", generatePeriodic, generateGoCoveragePeriodic)
+	parseSection(configYaml, "presubmits", generatePresubmit, nil)
+	parseSection(configYaml, "periodics", generatePeriodic, generateGoCoveragePeriodic)
 	for _, repo := range repositories { // Keep order for predictable output.
 		if !repo.Processed && repo.EnableGoCoverage {
 			generateGoCoveragePeriodic("periodics", repo.Name, nil)
@@ -783,9 +787,24 @@ func main() {
 	}
 
 	// config object is modified when we generate prow config, so we'll need to reload it here
-	if err = yaml.Unmarshal(content, &config); err != nil {
-		logFatalf("Cannot parse config %q: %v", name, err)
+	if err = yaml.Unmarshal(configFileContent, &configYaml); err != nil {
+		logFatalf("Cannot parse config %q: %v", configFileName, err)
 	}
+
+	if *generateK8sTestgridConfig {
+		setOutput(k8sTestgridConfigOutput)
+		executeTemplate("general header", readTemplate(commonHeaderConfig), newBaseTestgridTemplateData(""))
+		periodicJobData := parseJob(configYaml, "periodics")
+		orgsAndRepos := make(map[string][]string)
+		for _, mapItem := range periodicJobData {
+			orgAndRepo := strings.Split(mapItem.Key.(string), "/")
+			org := orgAndRepo[0]
+			repo := orgAndRepo[1]
+			orgsAndRepos[org] = append(orgsAndRepos[org], repo)
+		}
+		generateK8sTestgrid(orgsAndRepos)
+	}
+
 	// Generate Testgrid config.
 	if *generateTestgridConfig {
 		setOutput(testgridConfigOutput)
@@ -795,10 +814,10 @@ func main() {
 			executeTemplate("general config", readTemplate(generalTestgridConfig), newBaseTestgridTemplateData(""))
 		}
 
-		presubmitJobData := parseJob(config, "presubmits")
+		presubmitJobData := parseJob(configYaml, "presubmits")
 		goCoverageMap = parseGoCoverageMap(presubmitJobData)
 
-		periodicJobData := parseJob(config, "periodics")
+		periodicJobData := parseJob(configYaml, "periodics")
 		collectMetaData(periodicJobData)
 		addCustomJobsTestgrid()
 

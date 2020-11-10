@@ -19,7 +19,6 @@ limitations under the License.
 package main
 
 import (
-	"context"
 	"flag"
 	"fmt"
 	"log"
@@ -37,7 +36,6 @@ var (
 	pullNumber = atoi(os.Getenv("PULL_NUMBER"), "pull number")
 
 	// Shared useful variables
-	ctx     = context.Background()
 	verbose = false
 	client  *ghutil.GithubClient
 )

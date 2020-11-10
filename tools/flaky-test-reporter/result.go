@@ -243,7 +243,7 @@ func collectTestResultsForRepo(jc config.JobConfig) (*RepoData, error) {
 }
 
 func (rd *RepoData) getResultSliceForTest(testName string) []junit.TestStatusEnum {
-	res := make([]junit.TestStatusEnum, len(rd.BuildIDs), len(rd.BuildIDs))
+	res := make([]junit.TestStatusEnum, len(rd.BuildIDs))
 	ts := rd.TestStats[testName]
 	for i, buildID := range rd.BuildIDs {
 		switch {

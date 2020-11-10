@@ -12,13 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM gcr.io/k8s-testimages/kubekins-e2e:v20200827-e0bb92b-master
-
-# Install extras on top of base image
+FROM gcr.io/k8s-testimages/kubekins-e2e:v20200827-e0bb92b-master AS stable-stuff
 
 ENV DEBIAN_FRONTEND noninteractive
+# If we don't run update, the apt-get install below don't work
 RUN apt-get update
-RUN gcloud components update
+
+# If you wanted to update gcloud without changing the kubekins-e2e image, uncomment this
+# RUN gcloud components update
 
 # Docker
 RUN gcloud components install docker-credential-gcr
@@ -34,11 +35,11 @@ RUN rm -f "$(which kubectl)" && \
 # Extra tools through apt-get
 RUN apt-get install -y uuid-runtime  # for uuidgen
 RUN apt-get install -y rubygems      # for mdl
-RUN apt-get install -y shellcheck    # for presubmit
+RUN apt-get install -y shellcheck    # for shellcheck presubmit
 
 # Extra tools through gem
-RUN gem install mixlib-config -v 2.2.4  # required because ruby is 2.1
-RUN gem install mdl -v 0.5  # required because later version of mdl requires ruby >= 2.4
+# TODO: this tool isn't used anymore, remove when release-0.22 is cut; and don't install rubygems above either
+RUN gem install mdl
 
 # Install go 1.12, 1.13, and 1.14 using https://github.com/moovweb/gvm
 # To use this, in Prow jobs set env var GO_VERSION="go1.14" (or go1.13, go1.12, etc)
@@ -55,9 +56,32 @@ RUN curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscript
 COPY images/prow-tests/source-gvm-and-run.sh /usr/local/bin
 # Install our versions of Go
 RUN source-gvm-and-run.sh install go1.13.14 --prefer-binary
-RUN source-gvm-and-run.sh install go1.14.6 --prefer-binary
-RUN source-gvm-and-run.sh install go1.15 --prefer-binary
-RUN source-gvm-and-run.sh install master --source=https://github.com/golang/go --name=devel
+RUN source-gvm-and-run.sh install go1.14.10 --prefer-binary
+RUN source-gvm-and-run.sh install go1.15.3 --prefer-binary
+
+# protoc and required golang tooling
+ARG PROTOC_VERSION=3.12.3
+RUN wget "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip" -O protoc.zip \
+    && unzip -p protoc.zip bin/protoc > /usr/local/bin/protoc \
+    && chmod +x /usr/local/bin/protoc \
+    && rm protoc.zip
+# protoc-gen-gogofaster is installed in below section
+
+# Note, it's pointless to run `source-gvm-and-run.sh use go1.13` in this Dockerfile because the PATH changes it makes won't stay in effect
+# We wrap the runner with our own which will run `gvm use $GO_VERSION` for us.
+RUN mv "$(which runner.sh)" "$(dirname "$(which runner.sh)")/kubekins-runner.sh"
+COPY images/prow-tests/runner.sh /usr/local/bin
+
+# Used if you want to install different programs for different versions of Go
+COPY images/prow-tests/in-gvm-env.sh /usr/local/bin
+# If you needed to compile and install different tools for different version of Go,
+#  you could do it like:
+#  RUN GO_VERSION=go1.13 in-gvm-env.sh go install knative.dev/test-infra/tools/coverage
+#  RUN GO_VERSION=go1.14 in-gvm-env.sh go install knative.dev/test-infra/tools/coverage
+# But it must be done in stable-stuff or the last FROM, because it does not install to /go/bin
+
+############################################################
+FROM stable-stuff AS external-go-gets
 
 # Extra tools through go get
 # These run using the kubekins version of Go, not any defined by `gvm`
@@ -68,56 +92,46 @@ RUN go get -u github.com/golang/dep/cmd/dep
 RUN go get -u github.com/jstemmer/go-junit-report
 RUN GO111MODULE=on go get -u gotest.tools/gotestsum
 RUN GO111MODULE=on go get -u github.com/raviqqe/liche@v0.0.0-20200229003944-f57a5d1c5be4  # stable liche version for checking md links
-RUN GO111MODULE=on go get -u github.com/google/go-licenses
 RUN GO111MODULE=on go get sigs.k8s.io/kind@v0.9.0
 RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2
 RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2/kubetest2-gke
 RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2/kubetest2-kind
 RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2/kubetest2-tester-exec
 
-# protoc and required golang tooling
-ARG PROTOC_VERSION=3.12.3
-RUN wget "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip" -O protoc.zip \
-    && unzip -p protoc.zip bin/protoc > /usr/local/bin/protoc \
-    && chmod +x /usr/local/bin/protoc \
-    && rm protoc.zip
 RUN GO111MODULE=on go get github.com/gogo/protobuf/protoc-gen-gogofaster@v1.3.1
-
-# Extract versions
-RUN bazel version > /bazel_version
-RUN ko version > /ko_version
-
-# Note, it's pointless to run `source-gvm-and-run.sh use go1.13` in this Dockerfile because the PATH changes it makes won't stay in effect
-# We wrap the runner with our own which will run `gvm use $GO_VERSION` for us.
-RUN mv "$(which runner.sh)" "$(dirname "$(which runner.sh)")/kubekins-runner.sh"
-COPY images/prow-tests/runner.sh /usr/local/bin
 
 # TODO(chizhg): remove it once we replace with kntest in the places where this tool is used
 # Install our own tools
 RUN GO111MODULE=on go get knative.dev/pkg/testutils/junithelper@release-0.17
 
-COPY images/prow-tests/in-gvm-env.sh /usr/local/bin
+############################################################
+FROM stable-stuff AS test-infra-builds
 
-# Temporarily add test-infra to the image to build custom tools
+# We do this instead of `go get` so the tools are locked to the Dockerfile's commit
 COPY . /go/src/knative.dev/test-infra
 
 # Build custom tools in the container
 
-# If you needed to compile and install different tools for different version of Go,
-#  you could do it like:
-#  RUN GO_VERSION=go1.13 in-gvm-env.sh go install knative.dev/test-infra/tools/coverage
-#  RUN GO_VERSION=go1.14 in-gvm-env.sh go install knative.dev/test-infra/tools/coverage
-
-# Install coverage tool:
 RUN go install knative.dev/test-infra/tools/coverage
-# This runs "runner.sh coverage" so coverage can be used with any installed Go
-
-# Install kntest
 RUN go install knative.dev/test-infra/kntest/cmd/kntest
-# Install perf-tests tool
+
 # TODO(chizhg): maybe also move perf-tests tool to be part of kntest?
 RUN go install knative.dev/test-infra/pkg/clustermanager/perf-tests
 
-# Cleanup
-RUN rm -fr /go/src/knative.dev/test-infra
+############################################################
+FROM stable-stuff
+
+COPY --from=external-go-gets /go/bin/* /go/bin/
+COPY --from=test-infra-builds /go/bin/* /go/bin/
+
+# Only needed in this Dockerfile
 RUN rm -f /usr/local/bin/source-gvm-and-run.sh
+
+# This tool is poorly written and requires its mod cache to be present to function!
+# (The purpose of the multiple stages is to keep the mod cache out of the final image)
+RUN GO111MODULE=on go get -u github.com/google/go-licenses
+
+# Extract versions
+RUN bazel version > /bazel_version
+RUN ko version > /ko_version
+
