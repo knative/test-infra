@@ -64,6 +64,7 @@ default:
       target: both
       addedBy: humans
     - color: 6103a0
+      description: Categorizes issue or PR as related to removing dead code, or a feature that had been marked deprecation.
       name: kind/removal
       target: both
       prowPlugin: label
