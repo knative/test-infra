@@ -806,6 +806,13 @@ periodics:
   knative-sandbox/eventing-gitlab:
   - continuous: true
   - nightly: true
+  - dot-release: true
+    release: "0.18"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
   - auto-release: true
   knative-sandbox/eventing-prometheus:
   - continuous: true
