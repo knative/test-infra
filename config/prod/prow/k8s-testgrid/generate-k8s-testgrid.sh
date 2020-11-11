@@ -28,4 +28,4 @@ docker run -i --rm \
     "${CONFIG_YAML}" \
     "config/prod/prow/jobs/config.yaml" \
     "config/prod/prow/k8s-testgrid/k8s-testgrid.yaml" \
-    "knative" 
+    "knative"
