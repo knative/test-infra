@@ -27,39 +27,66 @@ default:
       description: Parked issue that required triaging/revisit in a near future.
       name: kind/TBD
       target: issues
+      prowPlugin: label
       addedBy: humans
     - color: 7057ff
       description: Denotes an issue ready for a new contributor.
       name: kind/good-first-issue
       target: issues
+      prowPlugin: label
+      addedBy: anyone
+    - color: e11d21
+      description: Categorizes issue or PR as related to adding, removing, or otherwise changing an API
+      name: kind/api-change
+      target: both
+      prowPlugin: label
       addedBy: anyone
     - color: ff0000
+      description: Categorizes issue or PR as related to a bug.
       name: kind/bug
-      target: issues
+      target: both
+      prowPlugin: label
       addedBy: humans
     - color: f9d3c4
       name: kind/proposal
+      description: Issues or PRs related to proposals.
       target: issues
+      prowPlugin: label
       addedBy: humans
     - color: 030ba0
+      description: Categorizes issue or PR as related to cleaning up code, process, or technical debt.
       name: kind/cleanup
-      target: issues
+      target: both
+      addedBy: humans
+    - color: e11d21
+      description: Categorizes issue or PR as related to a feature/enhancement marked for deprecation.
+      name: kind/deprecation
+      target: both
+      addedBy: humans
+    - color: 6103a0
+      name: kind/removal
+      target: both
+      prowPlugin: label
       addedBy: humans
     - color: f9d7c4
       name: kind/feature-request
       target: issues
+      prowPlugin: label
       addedBy: humans
     - color: f9d0c4
       name: kind/documentation
-      target: issues
+      target: both
+      prowPlugin: label
       addedBy: humans
     - color: a2eeef
       name: kind/enhancement
       target: issues
+      prowPlugin: both
       addedBy: humans
     - color: bfd4f2
       name: kind/performance
-      target: issues
+      target: both
+      prowPlugin: label
       addedBy: humans
 
     #############################################################################
