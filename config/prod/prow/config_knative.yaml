@@ -496,6 +496,11 @@ presubmits:
   - build-tests: false
   - unit-tests: false
   - integration-tests: false
+  knative-sandbox/kperf:
+  - build-tests: true
+  - unit-tests: true
+  - integration-tests: true
+  - go-coverage: true
 periodics:
   knative/serving:
   - continuous: true
@@ -801,6 +806,13 @@ periodics:
   knative-sandbox/eventing-gitlab:
   - continuous: true
   - nightly: true
+  - dot-release: true
+    release: "0.18"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
   - auto-release: true
   knative-sandbox/eventing-prometheus:
   - continuous: true
@@ -810,6 +822,8 @@ periodics:
   - continuous: true
   - nightly: true
   - auto-release: true
+  knative-sandbox/kperf:
+  - continuous: true
   knative/pkg:
   - continuous: true
   knative/caching:

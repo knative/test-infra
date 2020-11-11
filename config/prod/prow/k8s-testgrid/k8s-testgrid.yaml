@@ -41,6 +41,7 @@ dashboards:
 - name: eventing-rabbitmq
 - name: eventing-redis
 - name: knative-gcp
+- name: kperf
 - name: net-certmanager
 - name: net-contour
 - name: net-http01
@@ -53,6 +54,9 @@ dashboards:
 - name: serving
 - name: test-infra
 dashboard_groups:
+  - name: google
+    dashboard_names:
+      - "knative-gcp"
   - name: knative
     dashboard_names:
       - "caching"
@@ -81,6 +85,7 @@ dashboard_groups:
       - "eventing-prometheus"
       - "eventing-rabbitmq"
       - "eventing-redis"
+      - "kperf"
       - "net-certmanager"
       - "net-contour"
       - "net-http01"
@@ -88,6 +93,3 @@ dashboard_groups:
       - "net-kourier"
       - "sample-controller"
       - "sample-source"
-  - name: google
-    dashboard_names:
-      - "knative-gcp"
