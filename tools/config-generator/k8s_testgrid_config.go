@@ -32,8 +32,14 @@ type k8sTestgridData struct {
 
 func generateK8sTestgrid(orgsAndRepos map[string][]string) {
 	allReposSet := make(map[string]struct{})
-	for _, repos := range orgsAndRepos {
-		for _, repo := range repos {
+	// Sort orgsAndRepos to maintain the output order
+	var orgs []string
+	for org := range orgsAndRepos {
+		orgs = append(orgs, org)
+	}
+	sort.Strings(orgs)
+	for _, org := range orgs {
+		for _, repo := range orgsAndRepos[org] {
 			allReposSet["name: "+repo] = struct{}{}
 		}
 	}
@@ -44,7 +50,8 @@ func generateK8sTestgrid(orgsAndRepos map[string][]string) {
 		readTemplate(k8sTestgridTempl),
 		struct{ AllRepos []string }{allRepos})
 
-	for org, repos := range orgsAndRepos {
+	for _, org := range orgs {
+		repos := orgsAndRepos[org]
 		sort.Strings(repos)
 		executeTemplate("k8s testgrid group",
 			readTemplate(k8sTestgridGroupTempl),
