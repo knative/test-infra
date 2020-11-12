@@ -30,8 +30,8 @@ import (
 
 func TestSetError(t *testing.T) {
 	ctx := context.Background()
-	bkt := "dummy"
-	project := "dummy"
+	bkt := "test"
+	project := "test"
 	dirPath := "/"
 
 	testCases := []struct {
@@ -216,8 +216,8 @@ func TestSetError(t *testing.T) {
 
 func TestClearError(t *testing.T) {
 	ctx := context.Background()
-	bkt := "dummy"
-	project := "dummy"
+	bkt := "test"
+	project := "test"
 	dirPath := "/"
 
 	testCases := []struct {

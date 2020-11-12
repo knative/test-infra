@@ -699,7 +699,7 @@ func setOutput(fileName string) {
 // main is the script entry point.
 func main() {
 	logFatalf = log.Fatalf
-	// Parse flags and sanity check them.
+	// Parse flags and check them.
 	prowJobsConfigOutput := ""
 	testgridConfigOutput := ""
 	k8sTestgridConfigOutput := ""
