@@ -121,7 +121,7 @@ func NewGkeClusterDeleter(projects []string, serviceAccount string) (*GkeCluster
 
 // selectProjects returns the list of projects to iterate over.
 func selectProjects(projects []string, resourceFiles []string, regex string) ([]string, error) {
-	// Sanity check flags
+	// Check flags
 	if len(projects) == 0 && len(resourceFiles) == 0 {
 		return nil, errors.New("neither project nor resource file provided")
 	}

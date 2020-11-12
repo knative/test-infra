@@ -15,34 +15,36 @@
 # branchprotector is a tool implemented by k8s sig-testing.
 # It can configures github branch protection rules according to the specified policy in a YAML file.
 
-presubmits:
-  knative/test-infra:
-  - name: pull-knative-test-infra-branchprotector
-    agent: kubernetes
-    decorate: true
-    path_alias: knative.dev/test-infra
-    run_if_changed: "^config/branch_protector/rules.yaml$"
-    cluster: "prow-trusted"
-    branches:
-    - "master"
-    spec:
-      containers:
-      - name: branchprotector
-        image: gcr.io/k8s-prow/branchprotector:v20201103-bb494c0354
-        command:
-        - /app/prow/cmd/branchprotector/app.binary
-        args:
-        - --config-path=config/branch_protector/rules.yaml
-        - --github-token-path=/etc/github/token
-        - --confirm=false
-        volumeMounts:
-        - name: oauth
-          mountPath: /etc/github
-          readOnly: true
-      volumes:
-      - name: oauth
-        secret:
-          secretName: github-token-for-branchprotector
+# Do not enable presubmit test for now since it's taking extra long time.
+# TODO(chizhg): reenable it if we can run it in a more lightweight mode - https://github.com/knative/test-infra/pull/2555
+#presubmits:
+#  knative/test-infra:
+#  - name: pull-knative-test-infra-branchprotector
+#    agent: kubernetes
+#    decorate: true
+#    path_alias: knative.dev/test-infra
+#    run_if_changed: "^config/branch_protector/rules.yaml$"
+#    cluster: "prow-trusted"
+#    branches:
+#    - "master"
+#    spec:
+#      containers:
+#      - name: branchprotector
+#        image: gcr.io/k8s-prow/branchprotector:v20201103-bb494c0354
+#        command:
+#        - /app/prow/cmd/branchprotector/app.binary
+#        args:
+#        - --config-path=config/branch_protector/rules.yaml
+#        - --github-token-path=/etc/github/token
+#        - --confirm=false
+#        volumeMounts:
+#        - name: oauth
+#          mountPath: /etc/github
+#          readOnly: true
+#      volumes:
+#      - name: oauth
+#        secret:
+#          secretName: github-token-for-branchprotector
 
 periodics:
 # Run at 10AM PST.
@@ -52,9 +54,9 @@ periodics:
   decorate: true
   cluster: "prow-trusted"
   extra_refs:
-  - org: chizhg
+  - org: knative
     repo: test-infra
-    base_ref: configure-branch-protector
+    base_ref: master
     path_alias: knative.dev/test-infra
   spec:
     containers:
