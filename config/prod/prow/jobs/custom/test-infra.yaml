@@ -82,6 +82,8 @@ presubmits:
   - name: pull-test-infra-validate-k8s-testgrid-yaml
     decorate: true
     run_if_changed: "^config/prod/prow/(jobs|k8s-testgrid)/.*.yaml"
+    branches:
+    - "master"
     extra_refs:
     - org: GoogleCloudPlatform
       repo: oss-test-infra
@@ -535,6 +537,8 @@ postsubmits:
   - name: post-test-infra-validate-k8s-testgrid-yaml
     decorate: true
     run_if_changed: "^config/prod/prow/(jobs|k8s-testgrid)/.*.yaml"
+    branches:
+    - "master"
     extra_refs:
     - org: GoogleCloudPlatform
       repo: oss-test-infra
