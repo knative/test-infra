@@ -160,8 +160,8 @@ func TestCreateXMLErrorMsg(t *testing.T) {
 	}
 	defer os.RemoveAll(testDir) // clean up
 	dest := path.Join(testDir, "TestCreateXMLErrorTestFile")
-	CreateXMLErrorMsg("dummySuite", "dummyTest", "dummyError has occurred", dest)
-	expected := `<testsuites><testsuite name="dummySuite" time="" failures="1" tests="1"><testcase name="dummyTest" time="" classname=""><failure>dummyError has occurred</failure></testcase><properties></properties></testsuite></testsuites>`
+	CreateXMLErrorMsg("testSuite", "testTest", "testError has occurred", dest)
+	expected := `<testsuites><testsuite name="testSuite" time="" failures="1" tests="1"><testcase name="testTest" time="" classname=""><failure>testError has occurred</failure></testcase><properties></properties></testsuite></testsuites>`
 
 	got, err := ioutil.ReadFile(dest)
 	if err != nil {
