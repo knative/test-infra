@@ -24,18 +24,20 @@ trap "make -C '${REPO_ROOT_DIR}/config/prod' unset-cluster-credentials" EXIT
 PROW_CONFIG="$(mktemp)"
 PROW_JOB_CONFIG="${REPO_ROOT_DIR}/config/prod/prow/jobs/config.yaml"
 TESTGRID_YAML="${REPO_ROOT_DIR}/config/prod/prow/k8s-testgrid/k8s-testgrid.yaml"
+AUTH_TOKEN="/etc/prow-auto-bumper-github-token/token"
 
-kubectl get configmaps config -o "jsonpath={.data['config\.yaml']}" >"${CONFIG_YAML}"
-echo "Prow core config downloaded at ${CONFIG_YAML}"
+kubectl get configmaps config -o "jsonpath={.data['config\.yaml']}" >"${PROW_CONFIG}"
+echo "Prow core config downloaded at ${PROW_CONFIG}"
 
 docker run -i --rm \
     -v "${PWD}:${PWD}" \
     -v "${PROW_CONFIG}:${PROW_CONFIG}" \
     -v "${PROW_JOB_CONFIG}:${PROW_JOB_CONFIG}" \
     -v "${TESTGRID_YAML}:${TESTGRID_YAML}" \
+    -v "${AUTH_TOKEN}:${AUTH_TOKEN}" \
     -w "${PWD}" \
     gcr.io/k8s-prow/transfigure:v20201110-9e512b5af0 \
-    "/etc/github-token/oauth" \
+    "${AUTH_TOKEN}" \
     "${PROW_CONFIG}" \
     "${PROW_JOB_CONFIG}" \
     "${TESTGRID_YAML}" \
