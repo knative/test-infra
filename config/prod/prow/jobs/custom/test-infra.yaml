@@ -84,6 +84,7 @@ presubmits:
     run_if_changed: "^config/prod/prow/(jobs|k8s-testgrid)/.*.yaml"
     branches:
     - "master"
+    cluster: "knative-prow-build-cluster"
     extra_refs:
     - org: GoogleCloudPlatform
       repo: oss-test-infra
@@ -539,6 +540,7 @@ postsubmits:
     run_if_changed: "^config/prod/prow/(jobs|k8s-testgrid)/.*.yaml"
     branches:
     - "master"
+    cluster: "knative-prow-build-cluster"
     extra_refs:
     - org: GoogleCloudPlatform
       repo: oss-test-infra
