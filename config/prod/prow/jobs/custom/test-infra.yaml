@@ -81,6 +81,8 @@ presubmits:
           secretName: test-account
   - name: pull-test-infra-validate-k8s-testgrid-yaml
     decorate: true
+    always_run: false
+    optional: false
     run_if_changed: "^config/prod/prow/(jobs|k8s-testgrid)/.*.yaml"
     branches:
     - "master"
@@ -540,6 +542,7 @@ postsubmits:
     run_if_changed: "^config/prod/prow/(jobs|k8s-testgrid)/.*.yaml"
     branches:
     - "master"
+    cluster: "build-knative"
     extra_refs:
     - org: GoogleCloudPlatform
       repo: oss-test-infra
