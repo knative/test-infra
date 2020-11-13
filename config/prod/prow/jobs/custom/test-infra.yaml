@@ -84,6 +84,7 @@ presubmits:
     run_if_changed: "^config/prod/prow/(jobs|k8s-testgrid)/.*.yaml"
     branches:
     - "master"
+    cluster: "build-knative"
     extra_refs:
     - org: GoogleCloudPlatform
       repo: oss-test-infra
