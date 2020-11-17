@@ -131,7 +131,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	jobTemplate := readTemplate(periodicTestJob)
 	jobType := ""
 	isContinuousJob := false
-	project := data.Base.OrgName
+	org := data.Base.OrgName
 	repo := data.Base.RepoName
 	// Parse the input yaml and set values data based on them
 	for i, item := range periodicConfig {
@@ -211,8 +211,13 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		// Knock-out the item, signalling it was already parsed.
 		periodicConfig[i] = yaml.MapItem{}
 
-		testgroupExtras := getTestgroupExtras(project, jobName)
-		data.Base.Annotations = generateProwJobAnnotations(repo, jobName, testgroupExtras)
+		dashboardName := org + "-" + repo
+		tabName := data.Base.RepoNameForJob
+		if jobNameSuffix != "" {
+			tabName += "-" + jobNameSuffix
+		}
+		testgroupExtras := getTestgroupExtras(org, jobName)
+		data.Base.Annotations = generateProwJobAnnotations(dashboardName, tabName, testgroupExtras)
 	}
 	parseBasicJobConfigOverrides(&data.Base, periodicConfig)
 	data.PeriodicJobName = fmt.Sprintf("ci-%s", data.Base.RepoNameForJob)
@@ -258,6 +263,9 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 
 		// Change the name and image
 		betaData.PeriodicJobName += "-beta-prow-tests"
+		var tabName = betaData.Base.Annotations[1]
+		tabName += "-beta-prow-tests"
+		betaData.Base.Annotations[1] = tabName
 		betaData.Base.Image = strings.ReplaceAll(betaData.Base.Image, ":stable", ":beta")
 
 		// Run 2 or 3 times a day because prow-tests beta testing has different desired interval than the underlying job
