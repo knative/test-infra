@@ -468,6 +468,10 @@ presubmits:
     args:
     - --run-test
     - ./test/e2e-tests.sh --consolidated
+  - custom-test: integration-test-channel-consolidated-tls
+    args:
+    - --run-test
+    - ./test/e2e-tests.sh --consolidated-tls
   - custom-test: integration-test-channel-distributed
     args:
     - --run-test
