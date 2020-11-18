@@ -55,9 +55,9 @@ RUN curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscript
 # So have created "source-gvm-and-run.sh" to source the above then run gvm
 COPY images/prow-tests/source-gvm-and-run.sh /usr/local/bin
 # Install our versions of Go
-RUN source-gvm-and-run.sh install go1.13.14 --prefer-binary
-RUN source-gvm-and-run.sh install go1.14.10 --prefer-binary
-RUN source-gvm-and-run.sh install go1.15.3 --prefer-binary
+RUN source-gvm-and-run.sh install go1.13.15 --prefer-binary
+RUN source-gvm-and-run.sh install go1.14.12 --prefer-binary
+RUN source-gvm-and-run.sh install go1.15.5 --prefer-binary
 
 # protoc and required golang tooling
 ARG PROTOC_VERSION=3.12.3
