@@ -990,13 +990,6 @@ periodics:
   knative/operator:
   - continuous: true
   - branch-ci: true
-    release: "0.15"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - branch-ci: true
     release: "0.16"
     resources:
       requests:
@@ -1012,6 +1005,13 @@ periodics:
         memory: 16Gi
   - branch-ci: true
     release: "0.18"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - branch-ci: true
+    release: "0.19"
     resources:
       requests:
         memory: 12Gi
