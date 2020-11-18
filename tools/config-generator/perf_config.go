@@ -72,6 +72,7 @@ func perfClusterPeriodicJob(jobNamePostFix, cronString, command string, args []s
 	data.PeriodicJobName = fmt.Sprintf("ci-%s-%s", data.Base.RepoNameForJob, jobNamePostFix)
 	data.CronString = cronString
 	data.PeriodicCommand = createCommand(data.Base)
+	data.Base.Annotations = []string{"  testgrid-create-test-group: \"false\""}
 	addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
 	executeJobTemplate("performance tests periodic", readTemplate(periodicTestJob),
 		"periodics", repo.Name, data.PeriodicJobName, false, data)

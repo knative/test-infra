@@ -6928,6 +6928,9 @@ periodics:
     repo: client
     path_alias: knative.dev/client
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-client
+    testgrid-tab-name: knative-client-go-coverage
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -6952,6 +6955,9 @@ periodics:
     repo: client
     path_alias: knative.dev/client
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-client
+    testgrid-tab-name: knative-client-go-coverage-beta-prow-tests
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -7241,6 +7247,9 @@ periodics:
   - org: knative
     repo: docs
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-docs
+    testgrid-tab-name: knative-docs-go-coverage
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -7264,6 +7273,9 @@ periodics:
   - org: knative
     repo: docs
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-docs
+    testgrid-tab-name: knative-docs-go-coverage-beta-prow-tests
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -8186,6 +8198,9 @@ periodics:
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-eventing
+    testgrid-tab-name: knative-eventing-go-coverage
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -8210,6 +8225,9 @@ periodics:
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-eventing
+    testgrid-tab-name: knative-eventing-go-coverage-beta-prow-tests
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -9126,6 +9144,9 @@ periodics:
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-eventing-contrib
+    testgrid-tab-name: knative-eventing-contrib-go-coverage
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -9150,6 +9171,9 @@ periodics:
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-eventing-contrib
+    testgrid-tab-name: knative-eventing-contrib-go-coverage-beta-prow-tests
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -10526,6 +10550,9 @@ periodics:
     repo: kperf
     path_alias: knative.dev/kperf
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-sandbox-kperf
+    testgrid-tab-name: knative-sandbox-kperf-go-coverage
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -10550,6 +10577,9 @@ periodics:
     repo: kperf
     path_alias: knative.dev/kperf
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-sandbox-kperf
+    testgrid-tab-name: knative-sandbox-kperf-go-coverage-beta-prow-tests
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -11084,6 +11114,9 @@ periodics:
     repo: test-infra
     path_alias: knative.dev/test-infra
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-test-infra
+    testgrid-tab-name: knative-test-infra-go-coverage
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -11108,6 +11141,9 @@ periodics:
     repo: test-infra
     path_alias: knative.dev/test-infra
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-test-infra
+    testgrid-tab-name: knative-test-infra-go-coverage-beta-prow-tests
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -12057,6 +12093,9 @@ periodics:
   - org: google
     repo: knative-gcp
     base_ref: master
+  annotations:
+    testgrid-dashboards: google-knative-gcp
+    testgrid-tab-name: google-knative-gcp-go-coverage
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12080,6 +12119,9 @@ periodics:
   - org: google
     repo: knative-gcp
     base_ref: master
+  annotations:
+    testgrid-dashboards: google-knative-gcp
+    testgrid-tab-name: google-knative-gcp-go-coverage-beta-prow-tests
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -12327,6 +12369,9 @@ periodics:
     repo: net-certmanager
     path_alias: knative.dev/net-certmanager
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-sandbox-net-certmanager
+    testgrid-tab-name: knative-sandbox-net-certmanager-go-coverage
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12351,6 +12396,9 @@ periodics:
     repo: net-certmanager
     path_alias: knative.dev/net-certmanager
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-sandbox-net-certmanager
+    testgrid-tab-name: knative-sandbox-net-certmanager-go-coverage-beta-prow-tests
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -13240,6 +13288,9 @@ periodics:
     repo: net-istio
     path_alias: knative.dev/net-istio
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-sandbox-net-istio
+    testgrid-tab-name: knative-sandbox-net-istio-go-coverage
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13264,6 +13315,9 @@ periodics:
     repo: net-istio
     path_alias: knative.dev/net-istio
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-sandbox-net-istio
+    testgrid-tab-name: knative-sandbox-net-istio-go-coverage-beta-prow-tests
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -13511,6 +13565,9 @@ periodics:
     repo: net-kourier
     path_alias: knative.dev/net-kourier
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-sandbox-net-kourier
+    testgrid-tab-name: knative-sandbox-net-kourier-go-coverage
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13535,6 +13592,9 @@ periodics:
     repo: net-kourier
     path_alias: knative.dev/net-kourier
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-sandbox-net-kourier
+    testgrid-tab-name: knative-sandbox-net-kourier-go-coverage-beta-prow-tests
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -14300,6 +14360,9 @@ periodics:
     repo: operator
     path_alias: knative.dev/operator
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-operator
+    testgrid-tab-name: knative-operator-go-coverage
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -14324,6 +14387,9 @@ periodics:
     repo: operator
     path_alias: knative.dev/operator
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-operator
+    testgrid-tab-name: knative-operator-go-coverage-beta-prow-tests
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -14565,6 +14631,9 @@ periodics:
     repo: async-component
     path_alias: knative.dev/async-component
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-sandbox-async-component
+    testgrid-tab-name: knative-sandbox-async-component-go-coverage
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -14589,6 +14658,9 @@ periodics:
     repo: async-component
     path_alias: knative.dev/async-component
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-sandbox-async-component
+    testgrid-tab-name: knative-sandbox-async-component-go-coverage-beta-prow-tests
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -15376,6 +15448,9 @@ periodics:
     repo: eventing-kafka
     path_alias: knative.dev/eventing-kafka
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-sandbox-eventing-kafka
+    testgrid-tab-name: knative-sandbox-eventing-kafka-go-coverage
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -15400,6 +15475,9 @@ periodics:
     repo: eventing-kafka
     path_alias: knative.dev/eventing-kafka
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-sandbox-eventing-kafka
+    testgrid-tab-name: knative-sandbox-eventing-kafka-go-coverage-beta-prow-tests
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -15741,6 +15819,9 @@ periodics:
     repo: eventing-kafka-broker
     path_alias: knative.dev/eventing-kafka-broker
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-sandbox-eventing-kafka-broker
+    testgrid-tab-name: knative-sandbox-eventing-kafka-broker-go-coverage
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -15765,6 +15846,9 @@ periodics:
     repo: eventing-kafka-broker
     path_alias: knative.dev/eventing-kafka-broker
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-sandbox-eventing-kafka-broker
+    testgrid-tab-name: knative-sandbox-eventing-kafka-broker-go-coverage-beta-prow-tests
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -16083,6 +16167,9 @@ periodics:
     repo: kn-plugin-diag
     path_alias: knative.dev/kn-plugin-diag
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-sandbox-kn-plugin-diag
+    testgrid-tab-name: knative-sandbox-kn-plugin-diag-go-coverage
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -16107,6 +16194,9 @@ periodics:
     repo: kn-plugin-diag
     path_alias: knative.dev/kn-plugin-diag
     base_ref: master
+  annotations:
+    testgrid-dashboards: knative-sandbox-kn-plugin-diag
+    testgrid-tab-name: knative-sandbox-kn-plugin-diag-go-coverage-beta-prow-tests
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:beta
@@ -16131,6 +16221,8 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-create-test-group: "false"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -16171,6 +16263,8 @@ periodics:
     repo: serving
     path_alias: knative.dev/serving
     base_ref: master
+  annotations:
+    testgrid-create-test-group: "false"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -16211,6 +16305,8 @@ periodics:
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: master
+  annotations:
+    testgrid-create-test-group: "false"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -16251,6 +16347,8 @@ periodics:
     repo: eventing
     path_alias: knative.dev/eventing
     base_ref: master
+  annotations:
+    testgrid-create-test-group: "false"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -16290,6 +16388,8 @@ periodics:
   - org: google
     repo: knative-gcp
     base_ref: master
+  annotations:
+    testgrid-create-test-group: "false"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -16329,6 +16429,8 @@ periodics:
   - org: google
     repo: knative-gcp
     base_ref: master
+  annotations:
+    testgrid-create-test-group: "false"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -16360,6 +16462,8 @@ postsubmits:
   - name: post-knative-serving-reconcile-clusters
     branches:
     - master
+    annotations:
+      testgrid-create-test-group: "false"
     agent: kubernetes
     decorate: true
     max_concurrency: 1
@@ -16399,6 +16503,8 @@ postsubmits:
   - name: post-knative-client-go-coverage
     branches:
     - master
+    annotations:
+      testgrid-create-test-group: "false"
     agent: kubernetes
     decorate: true
     cluster: "build-knative"
@@ -16417,6 +16523,8 @@ postsubmits:
   - name: post-knative-sandbox-kn-plugin-diag-go-coverage
     branches:
     - master
+    annotations:
+      testgrid-create-test-group: "false"
     agent: kubernetes
     decorate: true
     cluster: "build-knative"
@@ -16435,6 +16543,8 @@ postsubmits:
   - name: post-knative-eventing-reconcile-clusters
     branches:
     - master
+    annotations:
+      testgrid-create-test-group: "false"
     agent: kubernetes
     decorate: true
     max_concurrency: 1
@@ -16473,6 +16583,8 @@ postsubmits:
   - name: post-knative-eventing-go-coverage
     branches:
     - master
+    annotations:
+      testgrid-create-test-group: "false"
     agent: kubernetes
     decorate: true
     cluster: "build-knative"
@@ -16491,6 +16603,8 @@ postsubmits:
   - name: post-knative-eventing-contrib-go-coverage
     branches:
     - master
+    annotations:
+      testgrid-create-test-group: "false"
     agent: kubernetes
     decorate: true
     cluster: "build-knative"
@@ -16509,6 +16623,8 @@ postsubmits:
   - name: post-knative-docs-go-coverage
     branches:
     - master
+    annotations:
+      testgrid-create-test-group: "false"
     agent: kubernetes
     decorate: true
     cluster: "build-knative"
@@ -16526,6 +16642,8 @@ postsubmits:
   - name: post-knative-test-infra-go-coverage
     branches:
     - master
+    annotations:
+      testgrid-create-test-group: "false"
     agent: kubernetes
     decorate: true
     cluster: "build-knative"
@@ -16544,6 +16662,8 @@ postsubmits:
   - name: post-google-knative-gcp-reconcile-clusters
     branches:
     - master
+    annotations:
+      testgrid-create-test-group: "false"
     agent: kubernetes
     decorate: true
     max_concurrency: 1
@@ -16581,6 +16701,8 @@ postsubmits:
   - name: post-google-knative-gcp-go-coverage
     branches:
     - master
+    annotations:
+      testgrid-create-test-group: "false"
     agent: kubernetes
     decorate: true
     cluster: "build-knative"
@@ -16598,6 +16720,8 @@ postsubmits:
   - name: post-knative-sandbox-net-certmanager-go-coverage
     branches:
     - master
+    annotations:
+      testgrid-create-test-group: "false"
     agent: kubernetes
     decorate: true
     cluster: "build-knative"
@@ -16616,6 +16740,8 @@ postsubmits:
   - name: post-knative-sandbox-net-istio-go-coverage
     branches:
     - master
+    annotations:
+      testgrid-create-test-group: "false"
     agent: kubernetes
     decorate: true
     cluster: "build-knative"
@@ -16634,6 +16760,8 @@ postsubmits:
   - name: post-knative-sandbox-net-kourier-go-coverage
     branches:
     - master
+    annotations:
+      testgrid-create-test-group: "false"
     agent: kubernetes
     decorate: true
     cluster: "build-knative"
@@ -16652,6 +16780,8 @@ postsubmits:
   - name: post-knative-operator-go-coverage
     branches:
     - master
+    annotations:
+      testgrid-create-test-group: "false"
     agent: kubernetes
     decorate: true
     cluster: "build-knative"
@@ -16670,6 +16800,8 @@ postsubmits:
   - name: post-knative-sandbox-async-component-go-coverage
     branches:
     - master
+    annotations:
+      testgrid-create-test-group: "false"
     agent: kubernetes
     decorate: true
     cluster: "build-knative"
@@ -16688,6 +16820,8 @@ postsubmits:
   - name: post-knative-sandbox-eventing-kafka-go-coverage
     branches:
     - master
+    annotations:
+      testgrid-create-test-group: "false"
     agent: kubernetes
     decorate: true
     cluster: "build-knative"
@@ -16706,6 +16840,8 @@ postsubmits:
   - name: post-knative-sandbox-eventing-kafka-broker-go-coverage
     branches:
     - master
+    annotations:
+      testgrid-create-test-group: "false"
     agent: kubernetes
     decorate: true
     cluster: "build-knative"
@@ -16724,6 +16860,8 @@ postsubmits:
   - name: post-knative-sandbox-kperf-go-coverage
     branches:
     - master
+    annotations:
+      testgrid-create-test-group: "false"
     agent: kubernetes
     decorate: true
     cluster: "build-knative"
