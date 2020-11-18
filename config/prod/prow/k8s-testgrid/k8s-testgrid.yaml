@@ -40,6 +40,7 @@ dashboards:
 - name: eventing-prometheus
 - name: eventing-rabbitmq
 - name: eventing-redis
+- name: kn-plugin-diag
 - name: knative-gcp
 - name: kperf
 - name: net-certmanager
@@ -65,6 +66,7 @@ dashboard_groups:
       - "docs"
       - "eventing"
       - "eventing-contrib"
+      - "kn-plugin-diag"
       - "operator"
       - "pkg"
       - "serving"
