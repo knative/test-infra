@@ -7051,8 +7051,8 @@ periodics:
     path_alias: knative.dev/kn-plugin-diag
     base_ref: master
   annotations:
-    testgrid-dashboards: kn-plugin-diag
-    testgrid-tab-name: continuous
+    testgrid-dashboards: knative-kn-plugin-diag
+    testgrid-tab-name: knative-kn-plugin-diag-continuous
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -7089,8 +7089,8 @@ periodics:
     path_alias: knative.dev/kn-plugin-diag
     base_ref: master
   annotations:
-    testgrid-dashboards: kn-plugin-diag
-    testgrid-tab-name: continuous
+    testgrid-dashboards: knative-kn-plugin-diag
+    testgrid-tab-name: knative-kn-plugin-diag-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -13635,7 +13635,7 @@ periodics:
     base_ref: release-0.16
   annotations:
     testgrid-dashboards: knative-operator
-    testgrid-tab-name: knative-operator-0.15-continuous
+    testgrid-tab-name: knative-operator-0.16-continuous
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -13701,7 +13701,7 @@ periodics:
     base_ref: release-0.16
   annotations:
     testgrid-dashboards: knative-operator
-    testgrid-tab-name: knative-operator-0.15-continuous-beta-prow-tests
+    testgrid-tab-name: knative-operator-0.16-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -13767,7 +13767,7 @@ periodics:
     base_ref: release-0.17
   annotations:
     testgrid-dashboards: knative-operator
-    testgrid-tab-name: knative-operator-0.16-continuous
+    testgrid-tab-name: knative-operator-0.17-continuous
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -13833,7 +13833,7 @@ periodics:
     base_ref: release-0.17
   annotations:
     testgrid-dashboards: knative-operator
-    testgrid-tab-name: knative-operator-0.16-continuous-beta-prow-tests
+    testgrid-tab-name: knative-operator-0.17-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -13899,7 +13899,7 @@ periodics:
     base_ref: release-0.18
   annotations:
     testgrid-dashboards: knative-operator
-    testgrid-tab-name: knative-operator-0.17-continuous
+    testgrid-tab-name: knative-operator-0.18-continuous
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -13965,7 +13965,7 @@ periodics:
     base_ref: release-0.18
   annotations:
     testgrid-dashboards: knative-operator
-    testgrid-tab-name: knative-operator-0.17-continuous-beta-prow-tests
+    testgrid-tab-name: knative-operator-0.18-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -14031,7 +14031,7 @@ periodics:
     base_ref: release-0.19
   annotations:
     testgrid-dashboards: knative-operator
-    testgrid-tab-name: knative-operator-0.18-continuous
+    testgrid-tab-name: knative-operator-0.19-continuous
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -14097,7 +14097,7 @@ periodics:
     base_ref: release-0.19
   annotations:
     testgrid-dashboards: knative-operator
-    testgrid-tab-name: knative-operator-0.18-continuous-beta-prow-tests
+    testgrid-tab-name: knative-operator-0.19-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:

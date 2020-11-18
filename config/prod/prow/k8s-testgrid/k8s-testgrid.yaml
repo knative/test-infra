@@ -27,6 +27,7 @@ dashboards:
 - name: knative-docs
 - name: knative-eventing
 - name: knative-eventing-contrib
+- name: knative-kn-plugin-diag
 - name: knative-operator
 - name: knative-pkg
 - name: knative-sandbox-async-component
@@ -65,6 +66,7 @@ dashboard_groups:
       - "knative-docs"
       - "knative-eventing"
       - "knative-eventing-contrib"
+      - "knative-kn-plugin-diag"
       - "knative-operator"
       - "knative-pkg"
       - "knative-serving"
