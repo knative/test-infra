@@ -578,7 +578,7 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-kourier-stable
     context: pull-knative-serving-kourier-stable
     always_run: false
-    optional: true
+    optional: false
     run_if_changed: "^third_party/kourier-latest/*"
     rerun_command: "/test pull-knative-serving-kourier-stable"
     trigger: "(?m)^/test (all|pull-knative-serving-kourier-stable),?(\\s+|$)"
@@ -621,7 +621,7 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-kourier-stable-tls
     context: pull-knative-serving-kourier-stable-tls
     always_run: false
-    optional: true
+    optional: false
     run_if_changed: "^third_party/kourier-latest/*"
     rerun_command: "/test pull-knative-serving-kourier-stable-tls"
     trigger: "(?m)^/test (all|pull-knative-serving-kourier-stable-tls),?(\\s+|$)"
@@ -1240,6 +1240,151 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+  knative-sandbox/kn-plugin-diag:
+  - name: pull-knative-sandbox-kn-plugin-diag-build-tests
+    agent: kubernetes
+    context: pull-knative-sandbox-kn-plugin-diag-build-tests
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-sandbox-kn-plugin-diag-build-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-kn-plugin-diag-build-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/kn-plugin-diag
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--build-tests"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-sandbox-kn-plugin-diag-unit-tests
+    agent: kubernetes
+    context: pull-knative-sandbox-kn-plugin-diag-unit-tests
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-sandbox-kn-plugin-diag-unit-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-kn-plugin-diag-unit-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/kn-plugin-diag
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--unit-tests"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-sandbox-kn-plugin-diag-integration-tests
+    agent: kubernetes
+    context: pull-knative-sandbox-kn-plugin-diag-integration-tests
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-sandbox-kn-plugin-diag-integration-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-kn-plugin-diag-integration-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/kn-plugin-diag
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--integration-tests"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-sandbox-kn-plugin-diag-go-coverage
+    agent: kubernetes
+    context: pull-knative-sandbox-kn-plugin-diag-go-coverage
+    always_run: true
+    rerun_command: "/test pull-knative-sandbox-kn-plugin-diag-go-coverage"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-kn-plugin-diag-go-coverage),?(\\s+|$)"
+    optional: true
+    decorate: true
+    path_alias: knative.dev/kn-plugin-diag
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "coverage"
+        - "--postsubmit-job-name=post-knative-sandbox-kn-plugin-diag-go-coverage"
+        - "--artifacts=$(ARTIFACTS)"
+        - "--cov-threshold-percentage=50"
+        - "--github-token=/etc/covbot-token/token"
+        volumeMounts:
+        - name: covbot-token
+          mountPath: /etc/covbot-token
+          readOnly: true
+      volumes:
+      - name: covbot-token
+        secret:
+          secretName: covbot-token
   knative/eventing:
   - name: pull-knative-eventing-build-tests
     agent: kubernetes
@@ -6870,6 +7015,82 @@ periodics:
   annotations:
     testgrid-dashboards: knative-client-contrib
     testgrid-tab-name: knative-client-contrib-continuous-beta-prow-tests
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/presubmit-tests.sh"
+      - "--all-tests"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "51 */4 * * *"
+  name: ci-knative-kn-plugin-diag-continuous
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: kn-plugin-diag
+    path_alias: knative.dev/kn-plugin-diag
+    base_ref: master
+  annotations:
+    testgrid-dashboards: kn-plugin-diag
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/presubmit-tests.sh"
+      - "--all-tests"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "27 8,11,22 * * *"
+  name: ci-knative-kn-plugin-diag-continuous-beta-prow-tests
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: kn-plugin-diag
+    path_alias: knative.dev/kn-plugin-diag
+    base_ref: master
+  annotations:
+    testgrid-dashboards: kn-plugin-diag
+    testgrid-tab-name: continuous
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -13400,138 +13621,6 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "15 8 * * *"
-  name: ci-knative-operator-0.15-continuous
-  agent: kubernetes
-  decorate: true
-  decoration_config:
-    timeout: 180m
-  cluster: "build-knative"
-  extra_refs:
-  - org: knative
-    repo: operator
-    path_alias: knative.dev/operator
-    base_ref: release-0.15
-  annotations:
-    testgrid-dashboards: knative-operator
-    testgrid-tab-name: knative-operator-0.15-continuous
-    testgrid-alert-stale-results-hours: "3"
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      command:
-      - runner.sh
-      args:
-      - "./hack/release.sh"
-      - "--nopublish"
-      - "--notag-release"
-      securityContext:
-        privileged: true
-      volumeMounts:
-      - name: docker-graph
-        mountPath: /docker-graph
-      - name: modules
-        mountPath: /lib/modules
-      - name: cgroup
-        mountPath: /sys/fs/cgroup
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
-      env:
-      - name: DOCKER_IN_DOCKER_ENABLED
-        value: "true"
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-      - name: PULL_BASE_REF
-        value: release-0.15
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    volumes:
-    - name: docker-graph
-      emptyDir: {}
-    - name: modules
-      hostPath:
-        path: /lib/modules
-        type: Directory
-    - name: cgroup
-      hostPath:
-        path: /sys/fs/cgroup
-        type: Directory
-    - name: test-account
-      secret:
-        secretName: test-account
-- cron: "35 8,11 * * *"
-  name: ci-knative-operator-0.15-continuous-beta-prow-tests
-  agent: kubernetes
-  decorate: true
-  decoration_config:
-    timeout: 180m
-  cluster: "build-knative"
-  extra_refs:
-  - org: knative
-    repo: operator
-    path_alias: knative.dev/operator
-    base_ref: release-0.15
-  annotations:
-    testgrid-dashboards: knative-operator
-    testgrid-tab-name: knative-operator-0.15-continuous-beta-prow-tests
-    testgrid-alert-stale-results-hours: "3"
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
-      imagePullPolicy: Always
-      command:
-      - runner.sh
-      args:
-      - "./hack/release.sh"
-      - "--nopublish"
-      - "--notag-release"
-      securityContext:
-        privileged: true
-      volumeMounts:
-      - name: docker-graph
-        mountPath: /docker-graph
-      - name: modules
-        mountPath: /lib/modules
-      - name: cgroup
-        mountPath: /sys/fs/cgroup
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
-      env:
-      - name: DOCKER_IN_DOCKER_ENABLED
-        value: "true"
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-      - name: PULL_BASE_REF
-        value: release-0.15
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    volumes:
-    - name: docker-graph
-      emptyDir: {}
-    - name: modules
-      hostPath:
-        path: /lib/modules
-        type: Directory
-    - name: cgroup
-      hostPath:
-        path: /sys/fs/cgroup
-        type: Directory
-    - name: test-account
-      secret:
-        secretName: test-account
 - cron: "36 8 * * *"
   name: ci-knative-operator-0.16-continuous
   agent: kubernetes
@@ -13546,7 +13635,7 @@ periodics:
     base_ref: release-0.16
   annotations:
     testgrid-dashboards: knative-operator
-    testgrid-tab-name: knative-operator-0.16-continuous
+    testgrid-tab-name: knative-operator-0.15-continuous
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -13612,7 +13701,7 @@ periodics:
     base_ref: release-0.16
   annotations:
     testgrid-dashboards: knative-operator
-    testgrid-tab-name: knative-operator-0.16-continuous-beta-prow-tests
+    testgrid-tab-name: knative-operator-0.15-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -13678,7 +13767,7 @@ periodics:
     base_ref: release-0.17
   annotations:
     testgrid-dashboards: knative-operator
-    testgrid-tab-name: knative-operator-0.17-continuous
+    testgrid-tab-name: knative-operator-0.16-continuous
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -13744,7 +13833,7 @@ periodics:
     base_ref: release-0.17
   annotations:
     testgrid-dashboards: knative-operator
-    testgrid-tab-name: knative-operator-0.17-continuous-beta-prow-tests
+    testgrid-tab-name: knative-operator-0.16-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -13810,7 +13899,7 @@ periodics:
     base_ref: release-0.18
   annotations:
     testgrid-dashboards: knative-operator
-    testgrid-tab-name: knative-operator-0.18-continuous
+    testgrid-tab-name: knative-operator-0.17-continuous
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -13876,7 +13965,7 @@ periodics:
     base_ref: release-0.18
   annotations:
     testgrid-dashboards: knative-operator
-    testgrid-tab-name: knative-operator-0.18-continuous-beta-prow-tests
+    testgrid-tab-name: knative-operator-0.17-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -13909,6 +13998,138 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.18
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "7 8 * * *"
+  name: ci-knative-operator-0.19-continuous
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: operator
+    path_alias: knative.dev/operator
+    base_ref: release-0.19
+  annotations:
+    testgrid-dashboards: knative-operator
+    testgrid-tab-name: knative-operator-0.18-continuous
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.19
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "35 8,11 * * *"
+  name: ci-knative-operator-0.19-continuous-beta-prow-tests
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: operator
+    path_alias: knative.dev/operator
+    base_ref: release-0.19
+  annotations:
+    testgrid-dashboards: knative-operator
+    testgrid-tab-name: knative-operator-0.18-continuous-beta-prow-tests
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.19
       resources:
         requests:
           memory: 12Gi
@@ -15848,6 +16069,54 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
+- cron: "0 1 * * *"
+  name: ci-knative-sandbox-kn-plugin-diag-go-coverage
+  labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-sandbox-kn-plugin-diag-go-coverage
+  agent: kubernetes
+  decorate: true
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: kn-plugin-diag
+    path_alias: knative.dev/kn-plugin-diag
+    base_ref: master
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - "runner.sh"
+      args:
+      - "coverage"
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=50"
+- cron: "47 7 * * *"
+  name: ci-knative-sandbox-kn-plugin-diag-go-coverage-beta-prow-tests
+  labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-sandbox-kn-plugin-diag-go-coverage
+  agent: kubernetes
+  decorate: true
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: kn-plugin-diag
+    path_alias: knative.dev/kn-plugin-diag
+    base_ref: master
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
+      imagePullPolicy: Always
+      command:
+      - "runner.sh"
+      args:
+      - "coverage"
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=50"
 - cron: "30 07 * * *"
   name: ci-knative-serving-recreate-clusters
   agent: kubernetes
@@ -16134,6 +16403,24 @@ postsubmits:
     decorate: true
     cluster: "build-knative"
     path_alias: knative.dev/client
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "coverage"
+        - "--artifacts=$(ARTIFACTS)"
+        - "--cov-threshold-percentage=0"
+  knative-sandbox/kn-plugin-diag:
+  - name: post-knative-sandbox-kn-plugin-diag-go-coverage
+    branches:
+    - master
+    agent: kubernetes
+    decorate: true
+    cluster: "build-knative"
+    path_alias: knative.dev/kn-plugin-diag
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
