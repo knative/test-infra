@@ -150,7 +150,7 @@ presubmits:
     needs-monitor: true
     always-run: false
     run-if-changed: ^third_party/kourier-latest/*
-    optional: true
+    optional: false
     args:
     - --run-test
     - ./test/e2e-tests.sh --kourier-version stable
@@ -163,7 +163,7 @@ presubmits:
     needs-monitor: true
     always-run: false
     run-if-changed: ^third_party/kourier-latest/*
-    optional: true
+    optional: false
     args:
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --kourier-version stable

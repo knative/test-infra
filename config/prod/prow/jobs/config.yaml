@@ -578,7 +578,7 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-kourier-stable
     context: pull-knative-serving-kourier-stable
     always_run: false
-    optional: true
+    optional: false
     run_if_changed: "^third_party/kourier-latest/*"
     rerun_command: "/test pull-knative-serving-kourier-stable"
     trigger: "(?m)^/test (all|pull-knative-serving-kourier-stable),?(\\s+|$)"
@@ -621,7 +621,7 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-serving-kourier-stable-tls
     context: pull-knative-serving-kourier-stable-tls
     always_run: false
-    optional: true
+    optional: false
     run_if_changed: "^third_party/kourier-latest/*"
     rerun_command: "/test pull-knative-serving-kourier-stable-tls"
     trigger: "(?m)^/test (all|pull-knative-serving-kourier-stable-tls),?(\\s+|$)"
