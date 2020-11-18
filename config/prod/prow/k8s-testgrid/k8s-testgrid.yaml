@@ -54,7 +54,7 @@ dashboards:
 - name: knative-serving
 - name: knative-test-infra
 dashboard_groups:
-  - name: google
+  - name: google-knative
     dashboard_names:
       - "google-knative-gcp"
   - name: knative

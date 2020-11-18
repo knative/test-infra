@@ -30,6 +30,8 @@ type k8sTestgridData struct {
 	OrgsAndRepos map[string][]string
 }
 
+var orgDashboardRenameMap = map[string]string{"google": "google-knative"}
+
 func generateK8sTestgrid(orgsAndRepos map[string][]string) {
 	allReposSet := make(map[string]struct{})
 	// Sort orgsAndRepos to maintain the output order
@@ -57,11 +59,15 @@ func generateK8sTestgrid(orgsAndRepos map[string][]string) {
 	for _, org := range allOrgs {
 		repos := orgsAndRepos[org]
 		sort.Strings(repos)
+		groupName := org
+		if nameOverride, ok := orgDashboardRenameMap[org]; ok {
+			groupName = nameOverride
+		}
 		executeTemplate("k8s testgrid group",
 			readTemplate(k8sTestgridGroupTempl),
 			struct {
 				Org   string
 				Repos []string
-			}{org, repos})
+			}{groupName, repos})
 	}
 }
