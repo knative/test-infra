@@ -794,13 +794,23 @@ func main() {
 	if *generateK8sTestgridConfig {
 		setOutput(k8sTestgridConfigOutput)
 		executeTemplate("general header", readTemplate(commonHeaderConfig), newBaseTestgridTemplateData(""))
+		presubmitJobData := parseJob(configYaml, "presubmits")
 		periodicJobData := parseJob(configYaml, "periodics")
+		orgsAndRepoSet := make(map[string]map[string]struct{})
+		for _, jobData := range []yaml.MapSlice{presubmitJobData, periodicJobData} {
+			for _, mapItem := range jobData {
+				orgAndRepo := strings.Split(mapItem.Key.(string), "/")
+				org := orgAndRepo[0]
+				repo := orgAndRepo[1]
+				if _, exists := orgsAndRepoSet[org]; !exists {
+					orgsAndRepoSet[org] = make(map[string]struct{})
+				}
+				orgsAndRepoSet[org][repo] = struct{}{}
+			}
+		}
 		orgsAndRepos := make(map[string][]string)
-		for _, mapItem := range periodicJobData {
-			orgAndRepo := strings.Split(mapItem.Key.(string), "/")
-			org := orgAndRepo[0]
-			repo := orgAndRepo[1]
-			orgsAndRepos[org] = append(orgsAndRepos[org], repo)
+		for org, repoSet := range orgsAndRepoSet {
+			orgsAndRepos[org] = stringSetToSlice(repoSet)
 		}
 		generateK8sTestgrid(orgsAndRepos)
 	}
