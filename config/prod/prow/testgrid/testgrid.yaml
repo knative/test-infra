@@ -488,9 +488,6 @@ test_groups:
 - name: ci-knative-sandbox-kperf-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kperf-continuous
   alert_stale_results_hours: 3
-- name: ci-knative-sandbox-kperf-test-coverage
-  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kperf-go-coverage
-  short_text_metric: "coverage"
 - name: ci-knative-sandbox-sample-controller-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-sample-controller-continuous
   alert_stale_results_hours: 3
@@ -914,9 +911,6 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-redis-continuous-beta-prow-tests
 - name: ci-knative-sandbox-kperf-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kperf-continuous-beta-prow-tests
-- name: ci-knative-sandbox-kperf-go-coverage-beta-prow-tests
-  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kperf-go-coverage-beta-prow-tests
-  short_text_metric: "coverage"
 - name: ci-knative-pkg-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-pkg-continuous-beta-prow-tests
 - name: ci-knative-caching-continuous-beta-prow-tests
@@ -1415,9 +1409,6 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 3
-  - name: coverage
-    test_group_name: ci-knative-sandbox-kperf-test-coverage
-    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: sample-controller
   dashboard_tab:
   - name: continuous
@@ -2217,9 +2208,6 @@ dashboards:
   - name: ci-knative-sandbox-kperf-continuous
     test_group_name: ci-knative-sandbox-kperf-continuous-beta-prow-tests
     base_options: "sort-by-failures="
-  - name: ci-knative-sandbox-kperf-go-coverage
-    test_group_name: ci-knative-sandbox-kperf-go-coverage-beta-prow-tests
-    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
   - name: ci-knative-pkg-continuous
     test_group_name: ci-knative-pkg-continuous-beta-prow-tests
     base_options: "sort-by-failures="
