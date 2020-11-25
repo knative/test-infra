@@ -40,4 +40,5 @@ If you are interested in contributing, see [CONTRIBUTING.md](./CONTRIBUTING.md)
 and [DEVELOPMENT.md](./DEVELOPMENT.md).
 
 ## Guides
+
 To setup the CI/CD flow for a knative project, see [guides](./guides/README.md).
