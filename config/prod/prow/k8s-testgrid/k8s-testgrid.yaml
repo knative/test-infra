@@ -41,6 +41,7 @@ dashboards:
 - name: eventing-rabbitmq
 - name: eventing-redis
 - name: kn-plugin-diag
+- name: kn-plugin-source-kafka
 - name: knative-gcp
 - name: kperf
 - name: net-certmanager
@@ -67,6 +68,7 @@ dashboard_groups:
       - "eventing"
       - "eventing-contrib"
       - "kn-plugin-diag"
+      - "kn-plugin-source-kafka"
       - "operator"
       - "pkg"
       - "serving"

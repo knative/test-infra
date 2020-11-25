@@ -274,6 +274,11 @@ presubmits:
   - unit-tests: true
   - integration-tests: true
   - go-coverage: true
+  knative-sandbox/kn-plugin-source-kafka:
+  - build-tests: true
+  - unit-tests: true
+  - integration-tests: true
+  - go-coverage: true
   knative/eventing:
   - repo-settings: null
     performance: true
@@ -682,6 +687,8 @@ periodics:
   knative/client-contrib:
   - continuous: true
   knative/kn-plugin-diag:
+  - continuous: true
+  knative/kn-plugin-source-kafka:
   - continuous: true
   knative/docs:
   - continuous: true
