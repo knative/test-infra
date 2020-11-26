@@ -17,3 +17,5 @@ DOCKERBUILDARGS = --build-arg TOOL_NAME=flaky-test-retryer
 DOCKERFILE = ../tool/Dockerfile
 
 include ../simple-image.mk
+
+push: push_versioned push_latest

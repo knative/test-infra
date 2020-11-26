@@ -53,5 +53,3 @@ push_versioned: confirm-master build
 push_latest: confirm-master build
 	docker tag $(IMG):$(TAG) $(IMG):latest
 	docker push $(IMG):latest
-
-push:: push_versioned push_latest

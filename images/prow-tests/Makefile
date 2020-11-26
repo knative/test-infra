@@ -15,7 +15,7 @@
 IMAGE_NAME = prow-tests
 include ../simple-image.mk
 
-cloud_build:
+push: confirm-master
 	gcloud builds submit --config=./cloudbuild.yaml --substitutions=_TAG=$(TAG),_IMG=$(IMG) \
 		--machine-type=n1-highcpu-8 \
 		--project=$(PROJECT) --timeout=1h ./../..
