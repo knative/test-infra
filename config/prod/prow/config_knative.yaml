@@ -518,7 +518,6 @@ presubmits:
   - build-tests: true
   - unit-tests: true
   - integration-tests: true
-  - go-coverage: true
 periodics:
   knative/serving:
   - continuous: true
