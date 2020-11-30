@@ -14,3 +14,5 @@
 
 IMAGE_NAME = backups
 include ../simple-image.mk
+
+push: push_versioned push_latest
