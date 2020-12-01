@@ -794,23 +794,33 @@ func main() {
 	if *generateK8sTestgridConfig {
 		setOutput(k8sTestgridConfigOutput)
 		executeTemplate("general header", readTemplate(commonHeaderConfig), newBaseTestgridTemplateData(""))
-		presubmitJobData := parseJob(configYaml, "presubmits")
+
 		periodicJobData := parseJob(configYaml, "periodics")
-		orgsAndRepoSet := make(map[string]map[string]struct{})
-		for _, jobData := range []yaml.MapSlice{presubmitJobData, periodicJobData} {
-			for _, mapItem := range jobData {
-				orgAndRepo := strings.Split(mapItem.Key.(string), "/")
-				org := orgAndRepo[0]
-				repo := orgAndRepo[1]
+		orgsAndRepoSet := make(map[string]sets.String)
+		// All periodics should be included in Testgrid.
+		for _, mapItem := range periodicJobData {
+			org, repo := parseOrgAndRepoFromMapItem(mapItem)
+			if _, exists := orgsAndRepoSet[org]; !exists {
+				orgsAndRepoSet[org] = sets.NewString()
+			}
+			orgsAndRepoSet[org].Insert(repo)
+		}
+
+		// Only presubmits with Go Coverage should be included in Testgrid.
+		presubmitJobData := parseJob(configYaml, "presubmits")
+		goCoverageMap = parseGoCoverageMap(presubmitJobData)
+		for _, mapItem := range presubmitJobData {
+			org, repo := parseOrgAndRepoFromMapItem(mapItem)
+			if goCoverageMap[repo] {
 				if _, exists := orgsAndRepoSet[org]; !exists {
-					orgsAndRepoSet[org] = make(map[string]struct{})
+					orgsAndRepoSet[org] = sets.NewString()
 				}
-				orgsAndRepoSet[org][repo] = struct{}{}
+				orgsAndRepoSet[org].Insert(repo)
 			}
 		}
 		orgsAndRepos := make(map[string][]string)
 		for org, repoSet := range orgsAndRepoSet {
-			orgsAndRepos[org] = stringSetToSlice(repoSet)
+			orgsAndRepos[org] = repoSet.List()
 		}
 		generateK8sTestgrid(orgsAndRepos)
 	}
@@ -846,4 +856,32 @@ func main() {
 		metaData.generateDashboardGroups()
 		metaData.generateNonAlignedDashboardGroups()
 	}
+}
+
+// parseGoCoverageMap constructs a map, indicating which repo is enabled for go coverage check
+func myParseGoCoverageMap(presubmitJob yaml.MapSlice) map[string]bool {
+	goCoverageMap := make(map[string]bool)
+	for _, repo := range presubmitJob {
+		repoName := strings.Split(getString(repo.Key), "/")[1]
+		goCoverageMap[repoName] = false
+		for _, jobConfig := range getInterfaceArray(repo.Value) {
+			for _, item := range getMapSlice(jobConfig) {
+				if item.Key == "go-coverage" {
+					goCoverageMap[repoName] = getBool(item.Value)
+					break
+				}
+			}
+		}
+	}
+
+	return goCoverageMap
+}
+
+// parseOrgAndRepoFromMapItem splits the "org/repo" string of a yaml.MapItem
+// into "org" and "repo" return values.
+func parseOrgAndRepoFromMapItem(mapItem yaml.MapItem) (string, string) {
+	orgAndRepo := strings.Split(mapItem.Key.(string), "/")
+	org := orgAndRepo[0]
+	repo := orgAndRepo[1]
+	return org, repo
 }

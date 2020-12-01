@@ -18,7 +18,11 @@ limitations under the License.
 
 package main
 
-import "sort"
+import (
+	"sort"
+
+	"k8s.io/apimachinery/pkg/util/sets"
+)
 
 const (
 	k8sTestgridTempl      = "k8s_testgrid.yaml"
@@ -33,7 +37,7 @@ type k8sTestgridData struct {
 var orgDashboardRenameMap = map[string]string{"google": "google-knative"}
 
 func generateK8sTestgrid(orgsAndRepos map[string][]string) {
-	allReposSet := make(map[string]struct{})
+	allReposSet := sets.NewString()
 	// Sort orgsAndRepos to maintain the output order
 	var allOrgs []string
 	for org := range orgsAndRepos {
@@ -45,12 +49,11 @@ func generateK8sTestgrid(orgsAndRepos map[string][]string) {
 		for _, repo := range orgsAndRepos[org] {
 			orgRepoComb := org + "-" + repo
 			renamedReposForOrg = append(renamedReposForOrg, orgRepoComb)
-			allReposSet["name: "+orgRepoComb] = struct{}{}
+			allReposSet.Insert("name: " + orgRepoComb)
 		}
 		orgsAndRepos[org] = renamedReposForOrg
 	}
-	allRepos := stringSetToSlice(allReposSet)
-	sort.Strings(allRepos)
+	allRepos := allReposSet.List() // Returns in sorted order.
 
 	executeTemplate("k8s testgrid",
 		readTemplate(k8sTestgridTempl),

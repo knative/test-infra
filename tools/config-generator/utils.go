@@ -185,13 +185,3 @@ func strExists(arr []string, str string) bool {
 	}
 	return false
 }
-
-// stringSetToSlice converts a set of strings to a slice of strings
-func stringSetToSlice(inputSet map[string]struct{}) []string {
-	outputSlice := make([]string, 0, len(inputSet))
-
-	for item := range inputSet {
-		outputSlice = append(outputSlice, item)
-	}
-	return outputSlice
-}

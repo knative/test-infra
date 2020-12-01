@@ -24,14 +24,11 @@ dashboards:
 - name: knative-caching
 - name: knative-client
 - name: knative-client-contrib
-- name: knative-community
 - name: knative-docs
 - name: knative-eventing
 - name: knative-eventing-contrib
-- name: knative-hack
 - name: knative-kn-plugin-diag
 - name: knative-kn-plugin-source-kafka
-- name: knative-networking
 - name: knative-operator
 - name: knative-pkg
 - name: knative-sandbox-async-component
@@ -49,7 +46,6 @@ dashboards:
 - name: knative-sandbox-eventing-rabbitmq
 - name: knative-sandbox-eventing-redis
 - name: knative-sandbox-kn-plugin-diag
-- name: knative-sandbox-kn-plugin-source-kafka
 - name: knative-sandbox-kperf
 - name: knative-sandbox-net-certmanager
 - name: knative-sandbox-net-contour
@@ -60,7 +56,6 @@ dashboards:
 - name: knative-sandbox-sample-source
 - name: knative-serving
 - name: knative-test-infra
-- name: knative-website
 dashboard_groups:
   - name: google-knative
     dashboard_names:
@@ -70,19 +65,15 @@ dashboard_groups:
       - "knative-caching"
       - "knative-client"
       - "knative-client-contrib"
-      - "knative-community"
       - "knative-docs"
       - "knative-eventing"
       - "knative-eventing-contrib"
-      - "knative-hack"
       - "knative-kn-plugin-diag"
       - "knative-kn-plugin-source-kafka"
-      - "knative-networking"
       - "knative-operator"
       - "knative-pkg"
       - "knative-serving"
       - "knative-test-infra"
-      - "knative-website"
   - name: knative-sandbox
     dashboard_names:
       - "knative-sandbox-async-component"
@@ -100,7 +91,6 @@ dashboard_groups:
       - "knative-sandbox-eventing-rabbitmq"
       - "knative-sandbox-eventing-redis"
       - "knative-sandbox-kn-plugin-diag"
-      - "knative-sandbox-kn-plugin-source-kafka"
       - "knative-sandbox-kperf"
       - "knative-sandbox-net-certmanager"
       - "knative-sandbox-net-contour"
