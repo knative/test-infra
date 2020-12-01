@@ -858,25 +858,6 @@ func main() {
 	}
 }
 
-// parseGoCoverageMap constructs a map, indicating which repo is enabled for go coverage check
-func myParseGoCoverageMap(presubmitJob yaml.MapSlice) map[string]bool {
-	goCoverageMap := make(map[string]bool)
-	for _, repo := range presubmitJob {
-		repoName := strings.Split(getString(repo.Key), "/")[1]
-		goCoverageMap[repoName] = false
-		for _, jobConfig := range getInterfaceArray(repo.Value) {
-			for _, item := range getMapSlice(jobConfig) {
-				if item.Key == "go-coverage" {
-					goCoverageMap[repoName] = getBool(item.Value)
-					break
-				}
-			}
-		}
-	}
-
-	return goCoverageMap
-}
-
 // parseOrgAndRepoFromMapItem splits the "org/repo" string of a yaml.MapItem
 // into "org" and "repo" return values.
 func parseOrgAndRepoFromMapItem(mapItem yaml.MapItem) (string, string) {
