@@ -7284,8 +7284,8 @@ periodics:
     path_alias: knative.dev/kn-plugin-source-kafka
     base_ref: master
   annotations:
-    testgrid-dashboards: kn-plugin-source-kafka
-    testgrid-tab-name: continuous
+    testgrid-dashboards: knative-kn-plugin-source-kafka
+    testgrid-tab-name: knative-kn-plugin-source-kafka-continuous
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -7322,8 +7322,8 @@ periodics:
     path_alias: knative.dev/kn-plugin-source-kafka
     base_ref: master
   annotations:
-    testgrid-dashboards: kn-plugin-source-kafka
-    testgrid-tab-name: continuous
+    testgrid-dashboards: knative-kn-plugin-source-kafka
+    testgrid-tab-name: knative-kn-plugin-source-kafka-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:

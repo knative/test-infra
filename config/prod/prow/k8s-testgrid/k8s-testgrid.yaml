@@ -20,59 +20,69 @@
 # Dashboards need to be specified here to be created on TestGrid
 # A prow annotation will be invalid if it references a dashboard that doesn't exist
 dashboards:
-- name: async-component
-- name: caching
-- name: client
-- name: client-contrib
-- name: discovery
-- name: docs
-- name: eventing
-- name: eventing-awssqs
-- name: eventing-camel
-- name: eventing-ceph
-- name: eventing-contrib
-- name: eventing-couchdb
-- name: eventing-github
-- name: eventing-gitlab
-- name: eventing-kafka
-- name: eventing-kafka-broker
-- name: eventing-natss
-- name: eventing-prometheus
-- name: eventing-rabbitmq
-- name: eventing-redis
-- name: kn-plugin-diag
-- name: kn-plugin-source-kafka
-- name: knative-gcp
-- name: kperf
-- name: net-certmanager
-- name: net-contour
-- name: net-http01
-- name: net-istio
-- name: net-kourier
-- name: operator
-- name: pkg
-- name: sample-controller
-- name: sample-source
-- name: serving
-- name: test-infra
+- name: google-knative-gcp
+- name: knative-caching
+- name: knative-client
+- name: knative-client-contrib
+- name: knative-community
+- name: knative-docs
+- name: knative-eventing
+- name: knative-eventing-contrib
+- name: knative-hack
+- name: knative-kn-plugin-diag
+- name: knative-kn-plugin-source-kafka
+- name: knative-networking
+- name: knative-operator
+- name: knative-pkg
+- name: knative-sandbox-async-component
+- name: knative-sandbox-discovery
+- name: knative-sandbox-eventing-awssqs
+- name: knative-sandbox-eventing-camel
+- name: knative-sandbox-eventing-ceph
+- name: knative-sandbox-eventing-couchdb
+- name: knative-sandbox-eventing-github
+- name: knative-sandbox-eventing-gitlab
+- name: knative-sandbox-eventing-kafka
+- name: knative-sandbox-eventing-kafka-broker
+- name: knative-sandbox-eventing-natss
+- name: knative-sandbox-eventing-prometheus
+- name: knative-sandbox-eventing-rabbitmq
+- name: knative-sandbox-eventing-redis
+- name: knative-sandbox-kn-plugin-diag
+- name: knative-sandbox-kn-plugin-source-kafka
+- name: knative-sandbox-kperf
+- name: knative-sandbox-net-certmanager
+- name: knative-sandbox-net-contour
+- name: knative-sandbox-net-http01
+- name: knative-sandbox-net-istio
+- name: knative-sandbox-net-kourier
+- name: knative-sandbox-sample-controller
+- name: knative-sandbox-sample-source
+- name: knative-serving
+- name: knative-test-infra
+- name: knative-website
 dashboard_groups:
   - name: google-knative
     dashboard_names:
       - "google-knative-gcp"
   - name: knative
     dashboard_names:
-      - "caching"
-      - "client"
-      - "client-contrib"
-      - "docs"
-      - "eventing"
-      - "eventing-contrib"
-      - "kn-plugin-diag"
-      - "kn-plugin-source-kafka"
-      - "operator"
-      - "pkg"
-      - "serving"
-      - "test-infra"
+      - "knative-caching"
+      - "knative-client"
+      - "knative-client-contrib"
+      - "knative-community"
+      - "knative-docs"
+      - "knative-eventing"
+      - "knative-eventing-contrib"
+      - "knative-hack"
+      - "knative-kn-plugin-diag"
+      - "knative-kn-plugin-source-kafka"
+      - "knative-networking"
+      - "knative-operator"
+      - "knative-pkg"
+      - "knative-serving"
+      - "knative-test-infra"
+      - "knative-website"
   - name: knative-sandbox
     dashboard_names:
       - "knative-sandbox-async-component"
@@ -90,6 +100,7 @@ dashboard_groups:
       - "knative-sandbox-eventing-rabbitmq"
       - "knative-sandbox-eventing-redis"
       - "knative-sandbox-kn-plugin-diag"
+      - "knative-sandbox-kn-plugin-source-kafka"
       - "knative-sandbox-kperf"
       - "knative-sandbox-net-certmanager"
       - "knative-sandbox-net-contour"
