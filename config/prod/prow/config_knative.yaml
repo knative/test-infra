@@ -274,6 +274,11 @@ presubmits:
   - unit-tests: true
   - integration-tests: true
   - go-coverage: true
+  knative-sandbox/kn-plugin-source-kafka:
+  - build-tests: true
+  - unit-tests: true
+  - integration-tests: true
+  - go-coverage: false
   knative/eventing:
   - repo-settings: null
     performance: true
@@ -386,7 +391,7 @@ presubmits:
       limits:
         memory: 16Gi
     needs-monitor: true
-    optional: true
+    optional: false
     args:
     - --run-test
     - ./test/e2e-upgrade-tests.sh
@@ -473,6 +478,14 @@ presubmits:
     args:
     - --run-test
     - ./test/e2e-tests.sh --consolidated
+  - custom-test: integration-test-channel-consolidated-tls
+    args:
+    - --run-test
+    - ./test/e2e-tests.sh --consolidated-tls
+  - custom-test: integration-test-channel-consolidated-sasl
+    args:
+    - --run-test
+    - ./test/e2e-tests.sh --consolidated-sasl
   - custom-test: integration-test-channel-distributed
     args:
     - --run-test
@@ -505,7 +518,6 @@ presubmits:
   - build-tests: true
   - unit-tests: true
   - integration-tests: true
-  - go-coverage: true
 periodics:
   knative/serving:
   - continuous: true
@@ -674,6 +686,8 @@ periodics:
   knative/client-contrib:
   - continuous: true
   knative/kn-plugin-diag:
+  - continuous: true
+  knative/kn-plugin-source-kafka:
   - continuous: true
   knative/docs:
   - continuous: true

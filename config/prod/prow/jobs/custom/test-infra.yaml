@@ -494,7 +494,7 @@ postsubmits:
         - "make"
         - "-C"
         - "images/prow-tests"
-        - "cloud_build"
+        - "push"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account

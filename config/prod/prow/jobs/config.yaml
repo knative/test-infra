@@ -1385,6 +1385,121 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
+  knative-sandbox/kn-plugin-source-kafka:
+  - name: pull-knative-sandbox-kn-plugin-source-kafka-build-tests
+    agent: kubernetes
+    context: pull-knative-sandbox-kn-plugin-source-kafka-build-tests
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-sandbox-kn-plugin-source-kafka-build-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-kn-plugin-source-kafka-build-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/kn-plugin-source-kafka
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--build-tests"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-sandbox-kn-plugin-source-kafka-unit-tests
+    agent: kubernetes
+    context: pull-knative-sandbox-kn-plugin-source-kafka-unit-tests
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-sandbox-kn-plugin-source-kafka-unit-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-kn-plugin-source-kafka-unit-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/kn-plugin-source-kafka
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--unit-tests"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-sandbox-kn-plugin-source-kafka-integration-tests
+    agent: kubernetes
+    context: pull-knative-sandbox-kn-plugin-source-kafka-integration-tests
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-sandbox-kn-plugin-source-kafka-integration-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-kn-plugin-source-kafka-integration-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/kn-plugin-source-kafka
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--integration-tests"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
   knative/eventing:
   - name: pull-knative-eventing-build-tests
     agent: kubernetes
@@ -2761,7 +2876,7 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-google-knative-gcp-upgrade-tests
     context: pull-google-knative-gcp-upgrade-tests
     always_run: true
-    optional: true
+    optional: false
     rerun_command: "/test pull-google-knative-gcp-upgrade-tests"
     trigger: "(?m)^/test (all|pull-google-knative-gcp-upgrade-tests),?(\\s+|$)"
     decorate: true
@@ -4149,6 +4264,72 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+  - name: pull-knative-sandbox-eventing-kafka-integration-test-channel-consolidated-tls
+    agent: kubernetes
+    context: pull-knative-sandbox-eventing-kafka-integration-test-channel-consolidated-tls
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-sandbox-eventing-kafka-integration-test-channel-consolidated-tls"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-integration-test-channel-consolidated-tls),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/eventing-kafka
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --consolidated-tls"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-sandbox-eventing-kafka-integration-test-channel-consolidated-sasl
+    agent: kubernetes
+    context: pull-knative-sandbox-eventing-kafka-integration-test-channel-consolidated-sasl
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-sandbox-eventing-kafka-integration-test-channel-consolidated-sasl"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-integration-test-channel-consolidated-sasl),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/eventing-kafka
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --consolidated-sasl"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
   - name: pull-knative-sandbox-eventing-kafka-integration-test-channel-distributed
     agent: kubernetes
     context: pull-knative-sandbox-eventing-kafka-integration-test-channel-distributed
@@ -4686,36 +4867,6 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-sandbox-kperf-go-coverage
-    agent: kubernetes
-    context: pull-knative-sandbox-kperf-go-coverage
-    always_run: true
-    rerun_command: "/test pull-knative-sandbox-kperf-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-sandbox-kperf-go-coverage),?(\\s+|$)"
-    optional: true
-    decorate: true
-    path_alias: knative.dev/kperf
-    cluster: "build-knative"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "coverage"
-        - "--postsubmit-job-name=post-knative-sandbox-kperf-go-coverage"
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=50"
-        - "--github-token=/etc/covbot-token/token"
-        volumeMounts:
-        - name: covbot-token
-          mountPath: /etc/covbot-token
-          readOnly: true
-      volumes:
-      - name: covbot-token
-        secret:
-          secretName: covbot-token
 periodics:
 - cron: "0 */4 * * *"
   name: ci-knative-serving-continuous
@@ -7097,6 +7248,82 @@ periodics:
   annotations:
     testgrid-dashboards: knative-kn-plugin-diag
     testgrid-tab-name: knative-kn-plugin-diag-continuous-beta-prow-tests
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/presubmit-tests.sh"
+      - "--all-tests"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "56 */4 * * *"
+  name: ci-knative-kn-plugin-source-kafka-continuous
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: kn-plugin-source-kafka
+    path_alias: knative.dev/kn-plugin-source-kafka
+    base_ref: master
+  annotations:
+    testgrid-dashboards: kn-plugin-source-kafka
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/presubmit-tests.sh"
+      - "--all-tests"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "4 8,11,22 * * *"
+  name: ci-knative-kn-plugin-source-kafka-continuous-beta-prow-tests
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: kn-plugin-source-kafka
+    path_alias: knative.dev/kn-plugin-source-kafka
+    base_ref: master
+  annotations:
+    testgrid-dashboards: kn-plugin-source-kafka
+    testgrid-tab-name: continuous
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -10536,60 +10763,6 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 1 * * *"
-  name: ci-knative-sandbox-kperf-go-coverage
-  labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-sandbox-kperf-go-coverage
-  agent: kubernetes
-  decorate: true
-  cluster: "build-knative"
-  extra_refs:
-  - org: knative-sandbox
-    repo: kperf
-    path_alias: knative.dev/kperf
-    base_ref: master
-  annotations:
-    testgrid-dashboards: knative-sandbox-kperf
-    testgrid-tab-name: knative-sandbox-kperf-go-coverage
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      command:
-      - "runner.sh"
-      args:
-      - "coverage"
-      - "--artifacts=$(ARTIFACTS)"
-      - "--cov-threshold-percentage=50"
-- cron: "56 7 * * *"
-  name: ci-knative-sandbox-kperf-go-coverage-beta-prow-tests
-  labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-sandbox-kperf-go-coverage
-  agent: kubernetes
-  decorate: true
-  cluster: "build-knative"
-  extra_refs:
-  - org: knative-sandbox
-    repo: kperf
-    path_alias: knative.dev/kperf
-    base_ref: master
-  annotations:
-    testgrid-dashboards: knative-sandbox-kperf
-    testgrid-tab-name: knative-sandbox-kperf-go-coverage-beta-prow-tests
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
-      imagePullPolicy: Always
-      command:
-      - "runner.sh"
-      args:
-      - "coverage"
-      - "--artifacts=$(ARTIFACTS)"
-      - "--cov-threshold-percentage=50"
 - cron: "2 */4 * * *"
   name: ci-knative-pkg-continuous
   agent: kubernetes
@@ -16846,26 +17019,6 @@ postsubmits:
     decorate: true
     cluster: "build-knative"
     path_alias: knative.dev/eventing-kafka-broker
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "coverage"
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=0"
-  knative-sandbox/kperf:
-  - name: post-knative-sandbox-kperf-go-coverage
-    branches:
-    - master
-    annotations:
-      testgrid-create-test-group: "false"
-    agent: kubernetes
-    decorate: true
-    cluster: "build-knative"
-    path_alias: knative.dev/kperf
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable

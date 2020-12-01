@@ -15,36 +15,29 @@
 FROM gcr.io/k8s-testimages/kubekins-e2e:v20200827-e0bb92b-master AS stable-stuff
 
 ENV DEBIAN_FRONTEND noninteractive
+ARG GCLOUD_VERSION=317.0.0
+
 # If we don't run update, the apt-get install below don't work
 RUN apt-get update
 
-# If you wanted to update gcloud without changing the kubekins-e2e image, uncomment this
-# RUN gcloud components update
+# gcloud
+RUN gcloud components update --version=${GCLOUD_VERSION}
 
 # Docker
 RUN gcloud components install docker-credential-gcr
 RUN docker-credential-gcr configure-docker
 
-# Replace kubectl with a working version
-# TODO(chizhg): https://github.com/knative/test-infra/issues/1858 was fixed in release-0.16, remove the pin after Knative release-0.19 is cut.
-ARG KUBECTL_VERSION=v1.17.4
-RUN rm -f "$(which kubectl)" && \
-    wget "https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -O /usr/local/bin/kubectl && \
-    chmod +x /usr/local/bin/kubectl
-
 # Extra tools through apt-get
-RUN apt-get install -y uuid-runtime  # for uuidgen
-RUN apt-get install -y rubygems      # for mdl
-RUN apt-get install -y shellcheck    # for shellcheck presubmit
+RUN apt-get install -y uuid-runtime   # for uuidgen
+RUN apt-get install -y rubygems       # for mdl
+RUN gem install chef-utils -v 16.6.14 # for mdl, this is required for running the `gem install mdl` command below
+RUN apt-get install -y shellcheck     # for shellcheck presubmit
 
 # Extra tools through gem
 # TODO: this tool isn't used anymore, remove when release-0.22 is cut; and don't install rubygems above either
 RUN gem install mdl
 
-# Install go 1.12, 1.13, and 1.14 using https://github.com/moovweb/gvm
-# To use this, in Prow jobs set env var GO_VERSION="go1.14" (or go1.13, go1.12, etc)
-# You can use e.g. "go1.14" even if we install a specific version here like "go1.14.2"
-# (Obviously the version of Go must be installed on the image to be available -- we don't want to be downloading and installing it on every test iteration)
+# Install go 1.13, 1.14, and 1.15 using https://github.com/moovweb/gvm
 # Missing prerequisite:
 RUN apt-get install -y bison
 # GVM_NO_UPDATE_PROFILE=true means do not alter /root/.bashrc to automatically source gvm config, so when not using runner.sh, image works normally
@@ -83,6 +76,8 @@ COPY images/prow-tests/in-gvm-env.sh /usr/local/bin
 ############################################################
 FROM stable-stuff AS external-go-gets
 
+ARG KUBETEST2_VERSION=ec3b910313a8c9b22d61372930e32dc99f2a7482
+
 # Extra tools through go get
 # These run using the kubekins version of Go, not any defined by `gvm`
 RUN GO111MODULE=on go get github.com/google/ko/cmd/ko@v0.6.0
@@ -93,10 +88,10 @@ RUN go get -u github.com/jstemmer/go-junit-report
 RUN GO111MODULE=on go get -u gotest.tools/gotestsum
 RUN GO111MODULE=on go get -u github.com/raviqqe/liche@v0.0.0-20200229003944-f57a5d1c5be4  # stable liche version for checking md links
 RUN GO111MODULE=on go get sigs.k8s.io/kind@v0.9.0
-RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2
-RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2/kubetest2-gke
-RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2/kubetest2-kind
-RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2/kubetest2-tester-exec
+RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2@${KUBETEST2_VERSION}
+RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2/kubetest2-gke@${KUBETEST2_VERSION}
+RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2/kubetest2-kind@${KUBETEST2_VERSION}
+RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2/kubetest2-tester-exec@${KUBETEST2_VERSION}
 
 RUN GO111MODULE=on go get github.com/gogo/protobuf/protoc-gen-gogofaster@v1.3.1
 
