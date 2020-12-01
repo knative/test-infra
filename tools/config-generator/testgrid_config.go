@@ -196,10 +196,10 @@ func getTestgroupExtras(projName, jobName string) map[string]string {
 	return extras
 }
 
-func generateProwJobAnnotations(repoName, jobName string, tgExtras map[string]string) []string {
+func generateProwJobAnnotations(dashboardName, tabName string, tgExtras map[string]string) []string {
 	annotations := []string{
-		"  testgrid-dashboards: " + repoName,
-		"  testgrid-tab-name: " + jobName,
+		"  testgrid-dashboards: " + dashboardName,
+		"  testgrid-tab-name: " + tabName,
 	}
 
 	v, ok := tgExtras["alert_stale_results_hours"]

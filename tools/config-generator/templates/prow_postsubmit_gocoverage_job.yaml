@@ -1,6 +1,8 @@
   - name: [[.PostsubmitJobName]]
     branches:
     - master
+    annotations:
+      testgrid-create-test-group: "false"
     agent: kubernetes
     decorate: true
     [[.Base.Cluster]]

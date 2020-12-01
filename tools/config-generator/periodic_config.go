@@ -131,7 +131,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	jobTemplate := readTemplate(periodicTestJob)
 	jobType := ""
 	isContinuousJob := false
-	project := data.Base.OrgName
+	org := data.Base.OrgName
 	repo := data.Base.RepoName
 	// Parse the input yaml and set values data based on them
 	for i, item := range periodicConfig {
@@ -211,8 +211,13 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		// Knock-out the item, signalling it was already parsed.
 		periodicConfig[i] = yaml.MapItem{}
 
-		testgroupExtras := getTestgroupExtras(project, jobName)
-		data.Base.Annotations = generateProwJobAnnotations(repo, jobName, testgroupExtras)
+		dashboardName := org + "-" + repo
+		tabName := data.Base.RepoNameForJob
+		if jobNameSuffix != "" {
+			tabName += "-" + jobNameSuffix
+		}
+		testgroupExtras := getTestgroupExtras(org, jobName)
+		data.Base.Annotations = generateProwJobAnnotations(dashboardName, tabName, testgroupExtras)
 	}
 	parseBasicJobConfigOverrides(&data.Base, periodicConfig)
 	data.PeriodicJobName = fmt.Sprintf("ci-%s", data.Base.RepoNameForJob)
@@ -258,6 +263,9 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 
 		// Change the name and image
 		betaData.PeriodicJobName += "-beta-prow-tests"
+		var tabName = betaData.Base.Annotations[1]
+		tabName += "-beta-prow-tests"
+		betaData.Base.Annotations[1] = tabName
 		betaData.Base.Image = strings.ReplaceAll(betaData.Base.Image, ":stable", ":beta")
 
 		// Run 2 or 3 times a day because prow-tests beta testing has different desired interval than the underlying job
@@ -308,7 +316,8 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 		repo.Processed = true
 		var data periodicJobTemplateData
 		data.Base = newbaseProwJobTemplateData(repoName)
-		data.PeriodicJobName = fmt.Sprintf("ci-%s-go-coverage", data.Base.RepoNameForJob)
+		jobNameSuffix := "go-coverage"
+		data.PeriodicJobName = fmt.Sprintf("ci-%s-%s", data.Base.RepoNameForJob, jobNameSuffix)
 		data.CronString = goCoveragePeriodicJobCron
 		data.Base.GoCoverageThreshold = repo.GoCoverageThreshold
 		data.Base.Command = "runner.sh"
@@ -318,15 +327,22 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 			fmt.Sprintf("--cov-threshold-percentage=%d", data.Base.GoCoverageThreshold)}
 		data.Base.ServiceAccount = ""
 		data.Base.ExtraRefs = append(data.Base.ExtraRefs, "  base_ref: "+data.Base.RepoBranch)
+
 		addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 		addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
 		configureServiceAccountForJob(&data.Base)
+		dashboardName := data.Base.OrgName + "-" + data.Base.RepoName
+		tabName := data.Base.RepoNameForJob + "-" + jobNameSuffix
+		testgroupExtras := map[string]string{"short-text-metric": "coverage"}
+		data.Base.Annotations = generateProwJobAnnotations(dashboardName, tabName, testgroupExtras)
 		executeJobTemplate("periodic go coverage", readTemplate(periodicCustomJob), title, repoName, data.PeriodicJobName, false, data)
 
 		betaData := data.Clone()
 
 		// Change the name and image
 		betaData.PeriodicJobName += "-beta-prow-tests"
+		tabName += "-beta-prow-tests"
+		betaData.Base.Annotations = generateProwJobAnnotations(dashboardName, tabName, testgroupExtras)
 		betaData.Base.Image = strings.ReplaceAll(betaData.Base.Image, ":stable", ":beta")
 
 		// Run once a day because prow-tests beta testing has different desired interval than the underlying job

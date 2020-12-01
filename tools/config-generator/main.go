@@ -794,13 +794,33 @@ func main() {
 	if *generateK8sTestgridConfig {
 		setOutput(k8sTestgridConfigOutput)
 		executeTemplate("general header", readTemplate(commonHeaderConfig), newBaseTestgridTemplateData(""))
+
 		periodicJobData := parseJob(configYaml, "periodics")
-		orgsAndRepos := make(map[string][]string)
+		orgsAndRepoSet := make(map[string]sets.String)
+		// All periodics should be included in Testgrid.
 		for _, mapItem := range periodicJobData {
-			orgAndRepo := strings.Split(mapItem.Key.(string), "/")
-			org := orgAndRepo[0]
-			repo := orgAndRepo[1]
-			orgsAndRepos[org] = append(orgsAndRepos[org], repo)
+			org, repo := parseOrgAndRepoFromMapItem(mapItem)
+			if _, exists := orgsAndRepoSet[org]; !exists {
+				orgsAndRepoSet[org] = sets.NewString()
+			}
+			orgsAndRepoSet[org].Insert(repo)
+		}
+
+		// Only presubmits with Go Coverage should be included in Testgrid.
+		presubmitJobData := parseJob(configYaml, "presubmits")
+		goCoverageMap = parseGoCoverageMap(presubmitJobData)
+		for _, mapItem := range presubmitJobData {
+			org, repo := parseOrgAndRepoFromMapItem(mapItem)
+			if goCoverageMap[repo] {
+				if _, exists := orgsAndRepoSet[org]; !exists {
+					orgsAndRepoSet[org] = sets.NewString()
+				}
+				orgsAndRepoSet[org].Insert(repo)
+			}
+		}
+		orgsAndRepos := make(map[string][]string)
+		for org, repoSet := range orgsAndRepoSet {
+			orgsAndRepos[org] = repoSet.List()
 		}
 		generateK8sTestgrid(orgsAndRepos)
 	}
@@ -836,4 +856,13 @@ func main() {
 		metaData.generateDashboardGroups()
 		metaData.generateNonAlignedDashboardGroups()
 	}
+}
+
+// parseOrgAndRepoFromMapItem splits the "org/repo" string of a yaml.MapItem
+// into "org" and "repo" return values.
+func parseOrgAndRepoFromMapItem(mapItem yaml.MapItem) (string, string) {
+	orgAndRepo := strings.Split(mapItem.Key.(string), "/")
+	org := orgAndRepo[0]
+	repo := orgAndRepo[1]
+	return org, repo
 }

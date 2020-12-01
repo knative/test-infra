@@ -18,7 +18,11 @@ limitations under the License.
 
 package main
 
-import "sort"
+import (
+	"sort"
+
+	"k8s.io/apimachinery/pkg/util/sets"
+)
 
 const (
 	k8sTestgridTempl      = "k8s_testgrid.yaml"
@@ -30,34 +34,43 @@ type k8sTestgridData struct {
 	OrgsAndRepos map[string][]string
 }
 
+var orgDashboardRenameMap = map[string]string{"google": "google-knative"}
+
 func generateK8sTestgrid(orgsAndRepos map[string][]string) {
-	allReposSet := make(map[string]struct{})
+	allReposSet := sets.NewString()
 	// Sort orgsAndRepos to maintain the output order
-	var orgs []string
+	var allOrgs []string
 	for org := range orgsAndRepos {
-		orgs = append(orgs, org)
+		allOrgs = append(allOrgs, org)
 	}
-	sort.Strings(orgs)
-	for _, org := range orgs {
+	sort.Strings(allOrgs)
+	for _, org := range allOrgs {
+		renamedReposForOrg := []string{}
 		for _, repo := range orgsAndRepos[org] {
-			allReposSet["name: "+repo] = struct{}{}
+			orgRepoComb := org + "-" + repo
+			renamedReposForOrg = append(renamedReposForOrg, orgRepoComb)
+			allReposSet.Insert("name: " + orgRepoComb)
 		}
+		orgsAndRepos[org] = renamedReposForOrg
 	}
-	allRepos := stringSetToSlice(allReposSet)
-	sort.Strings(allRepos)
+	allRepos := allReposSet.List() // Returns in sorted order.
 
 	executeTemplate("k8s testgrid",
 		readTemplate(k8sTestgridTempl),
 		struct{ AllRepos []string }{allRepos})
 
-	for _, org := range orgs {
+	for _, org := range allOrgs {
 		repos := orgsAndRepos[org]
 		sort.Strings(repos)
+		groupName := org
+		if nameOverride, ok := orgDashboardRenameMap[org]; ok {
+			groupName = nameOverride
+		}
 		executeTemplate("k8s testgrid group",
 			readTemplate(k8sTestgridGroupTempl),
 			struct {
 				Org   string
 				Repos []string
-			}{org, repos})
+			}{groupName, repos})
 	}
 }
