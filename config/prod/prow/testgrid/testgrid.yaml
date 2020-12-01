@@ -129,6 +129,9 @@ test_groups:
 - name: ci-knative-kn-plugin-source-kafka-continuous
   gcs_prefix: knative-prow/logs/ci-knative-kn-plugin-source-kafka-continuous
   alert_stale_results_hours: 3
+- name: ci-knative-kn-plugin-admin-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-kn-plugin-admin-continuous
+  alert_stale_results_hours: 3
 - name: ci-knative-docs-continuous
   gcs_prefix: knative-prow/logs/ci-knative-docs-continuous
   alert_stale_results_hours: 3
@@ -869,6 +872,8 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-kn-plugin-diag-continuous-beta-prow-tests
 - name: ci-knative-kn-plugin-source-kafka-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-kn-plugin-source-kafka-continuous-beta-prow-tests
+- name: ci-knative-kn-plugin-admin-continuous-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-kn-plugin-admin-continuous-beta-prow-tests
 - name: ci-knative-docs-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-docs-continuous-beta-prow-tests
 - name: ci-knative-docs-go-coverage-beta-prow-tests
@@ -1157,6 +1162,14 @@ dashboards:
   dashboard_tab:
   - name: continuous
     test_group_name: ci-knative-kn-plugin-source-kafka-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+- name: kn-plugin-admin
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-kn-plugin-admin-continuous
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
@@ -2158,6 +2171,9 @@ dashboards:
   - name: ci-knative-kn-plugin-source-kafka-continuous
     test_group_name: ci-knative-kn-plugin-source-kafka-continuous-beta-prow-tests
     base_options: "sort-by-failures="
+  - name: ci-knative-kn-plugin-admin-continuous
+    test_group_name: ci-knative-kn-plugin-admin-continuous-beta-prow-tests
+    base_options: "sort-by-failures="
   - name: ci-knative-docs-continuous
     test_group_name: ci-knative-docs-continuous-beta-prow-tests
     base_options: "sort-by-failures="
@@ -2372,6 +2388,7 @@ dashboard_groups:
   - "client-contrib"
   - "kn-plugin-diag"
   - "kn-plugin-source-kafka"
+  - "kn-plugin-admin"
   - "docs"
   - "eventing"
   - "eventing-contrib"

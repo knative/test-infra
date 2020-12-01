@@ -27,6 +27,7 @@ dashboards:
 - name: knative-docs
 - name: knative-eventing
 - name: knative-eventing-contrib
+- name: knative-kn-plugin-admin
 - name: knative-kn-plugin-diag
 - name: knative-kn-plugin-source-kafka
 - name: knative-operator
@@ -68,6 +69,7 @@ dashboard_groups:
       - "knative-docs"
       - "knative-eventing"
       - "knative-eventing-contrib"
+      - "knative-kn-plugin-admin"
       - "knative-kn-plugin-diag"
       - "knative-kn-plugin-source-kafka"
       - "knative-operator"
