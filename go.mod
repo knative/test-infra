@@ -28,7 +28,7 @@ require (
 	gopkg.in/yaml.v2 v2.3.0
 	k8s.io/apimachinery v0.18.8
 	k8s.io/test-infra v0.0.0-20200803112140-d8aa4e063646 // indirect
-	knative.dev/hack v0.0.0-20201125230335-c46a6498e9ed
+	knative.dev/hack v0.0.0-20201201234937-fddbf732e450
 	sigs.k8s.io/boskos v0.0.0-20200729174948-794df80db9c9
 )
 
