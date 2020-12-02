@@ -27,7 +27,6 @@ dashboards:
 - name: knative-docs
 - name: knative-eventing
 - name: knative-eventing-contrib
-- name: knative-kn-plugin-admin
 - name: knative-kn-plugin-diag
 - name: knative-kn-plugin-source-kafka
 - name: knative-operator
@@ -46,6 +45,7 @@ dashboards:
 - name: knative-sandbox-eventing-prometheus
 - name: knative-sandbox-eventing-rabbitmq
 - name: knative-sandbox-eventing-redis
+- name: knative-sandbox-kn-plugin-admin
 - name: knative-sandbox-kn-plugin-diag
 - name: knative-sandbox-kperf
 - name: knative-sandbox-net-certmanager
@@ -69,7 +69,6 @@ dashboard_groups:
       - "knative-docs"
       - "knative-eventing"
       - "knative-eventing-contrib"
-      - "knative-kn-plugin-admin"
       - "knative-kn-plugin-diag"
       - "knative-kn-plugin-source-kafka"
       - "knative-operator"
@@ -92,6 +91,7 @@ dashboard_groups:
       - "knative-sandbox-eventing-prometheus"
       - "knative-sandbox-eventing-rabbitmq"
       - "knative-sandbox-eventing-redis"
+      - "knative-sandbox-kn-plugin-admin"
       - "knative-sandbox-kn-plugin-diag"
       - "knative-sandbox-kperf"
       - "knative-sandbox-net-certmanager"

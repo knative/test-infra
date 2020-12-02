@@ -279,7 +279,7 @@ presubmits:
   - unit-tests: true
   - integration-tests: true
   - go-coverage: false
-  knative-sandbox/kn-admin:
+  knative-sandbox/kn-plugin-admin:
   - build-tests: true
   - unit-tests: true
   - integration-tests: true
@@ -694,7 +694,7 @@ periodics:
   - continuous: true
   knative/kn-plugin-source-kafka:
   - continuous: true
-  knative/kn-plugin-admin:
+  knative-sandbox/kn-plugin-admin:
   - continuous: true
   knative/docs:
   - continuous: true
