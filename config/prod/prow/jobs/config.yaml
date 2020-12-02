@@ -1500,16 +1500,16 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  knative-sandbox/kn-admin:
-  - name: pull-knative-sandbox-kn-admin-build-tests
+  knative-sandbox/kn-plugin-admin:
+  - name: pull-knative-sandbox-kn-plugin-admin-build-tests
     agent: kubernetes
-    context: pull-knative-sandbox-kn-admin-build-tests
+    context: pull-knative-sandbox-kn-plugin-admin-build-tests
     always_run: true
     optional: false
-    rerun_command: "/test pull-knative-sandbox-kn-admin-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-sandbox-kn-admin-build-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-kn-plugin-admin-build-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-kn-plugin-admin-build-tests),?(\\s+|$)"
     decorate: true
-    path_alias: knative.dev/kn-admin
+    path_alias: knative.dev/kn-plugin-admin
     cluster: "build-knative"
     spec:
       containers:
@@ -1539,15 +1539,15 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-sandbox-kn-admin-unit-tests
+  - name: pull-knative-sandbox-kn-plugin-admin-unit-tests
     agent: kubernetes
-    context: pull-knative-sandbox-kn-admin-unit-tests
+    context: pull-knative-sandbox-kn-plugin-admin-unit-tests
     always_run: true
     optional: false
-    rerun_command: "/test pull-knative-sandbox-kn-admin-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-sandbox-kn-admin-unit-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-kn-plugin-admin-unit-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-kn-plugin-admin-unit-tests),?(\\s+|$)"
     decorate: true
-    path_alias: knative.dev/kn-admin
+    path_alias: knative.dev/kn-plugin-admin
     cluster: "build-knative"
     spec:
       containers:
@@ -1577,15 +1577,15 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-sandbox-kn-admin-integration-tests
+  - name: pull-knative-sandbox-kn-plugin-admin-integration-tests
     agent: kubernetes
-    context: pull-knative-sandbox-kn-admin-integration-tests
+    context: pull-knative-sandbox-kn-plugin-admin-integration-tests
     always_run: true
     optional: false
-    rerun_command: "/test pull-knative-sandbox-kn-admin-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-sandbox-kn-admin-integration-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-kn-plugin-admin-integration-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-kn-plugin-admin-integration-tests),?(\\s+|$)"
     decorate: true
-    path_alias: knative.dev/kn-admin
+    path_alias: knative.dev/kn-plugin-admin
     cluster: "build-knative"
     spec:
       containers:
@@ -7462,21 +7462,21 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "39 */4 * * *"
-  name: ci-knative-kn-plugin-admin-continuous
+- cron: "33 */4 * * *"
+  name: ci-knative-sandbox-kn-plugin-admin-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
     timeout: 180m
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: kn-plugin-admin
     path_alias: knative.dev/kn-plugin-admin
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-kn-plugin-admin
-    testgrid-tab-name: knative-kn-plugin-admin-continuous
+    testgrid-dashboards: knative-sandbox-kn-plugin-admin
+    testgrid-tab-name: knative-sandbox-kn-plugin-admin-continuous
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -7500,21 +7500,21 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "59 8,11,22 * * *"
-  name: ci-knative-kn-plugin-admin-continuous-beta-prow-tests
+- cron: "25 8,11,22 * * *"
+  name: ci-knative-sandbox-kn-plugin-admin-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
   decoration_config:
     timeout: 180m
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: kn-plugin-admin
     path_alias: knative.dev/kn-plugin-admin
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-kn-plugin-admin
-    testgrid-tab-name: knative-kn-plugin-admin-continuous-beta-prow-tests
+    testgrid-dashboards: knative-sandbox-kn-plugin-admin
+    testgrid-tab-name: knative-sandbox-kn-plugin-admin-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
