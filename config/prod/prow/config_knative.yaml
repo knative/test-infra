@@ -1047,6 +1047,33 @@ periodics:
         memory: 16Gi
   - nightly: true
   - dot-release: true
+    release: "0.16"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    release: "0.17"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    release: "0.18"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    release: "0.19"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
   - auto-release: true
   knative-sandbox/async-component:
   - continuous: true

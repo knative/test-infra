@@ -187,12 +187,6 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
-- name: ci-knative-operator-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-operator-dot-release
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  alert_stale_results_hours: 170
-  num_failures_to_alert: 1
 - name: ci-knative-operator-auto-release
   gcs_prefix: knative-prow/logs/ci-knative-operator-auto-release
   alert_options:
@@ -250,6 +244,12 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 3
+- name: ci-knative-operator-0.16-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-operator-0.16-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
 - name: ci-knative-serving-0.17-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.17-continuous
   alert_options:
@@ -299,6 +299,12 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 3
+- name: ci-knative-operator-0.17-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-operator-0.17-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
 - name: ci-knative-serving-0.18-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.18-continuous
   alert_options:
@@ -348,6 +354,12 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 3
+- name: ci-knative-operator-0.18-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-operator-0.18-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
 - name: ci-knative-serving-0.19-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-0.19-continuous
   alert_options:
@@ -386,6 +398,12 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 3
+- name: ci-knative-operator-0.19-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-operator-0.19-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
 - name: ci-knative-sandbox-kn-plugin-admin-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-admin-continuous
   alert_stale_results_hours: 3
@@ -1264,12 +1282,6 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 1
-  - name: dot-release
-    test_group_name: ci-knative-operator-dot-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 1
   - name: auto-release
     test_group_name: ci-knative-operator-auto-release
     base_options: "sort-by-name="
@@ -1857,6 +1869,12 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 3
+  - name: operator-dot-release
+    test_group_name: ci-knative-operator-0.16-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
 - name: knative-0.17
   dashboard_tab:
   - name: serving-continuous
@@ -1909,6 +1927,12 @@ dashboards:
     num_failures_to_alert: 3
   - name: operator-continuous
     test_group_name: ci-knative-operator-0.17-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: operator-dot-release
+    test_group_name: ci-knative-operator-0.17-dot-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
@@ -1969,6 +1993,12 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 3
+  - name: operator-dot-release
+    test_group_name: ci-knative-operator-0.18-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
 - name: knative-0.19
   dashboard_tab:
   - name: serving-continuous
@@ -2009,6 +2039,12 @@ dashboards:
     num_failures_to_alert: 3
   - name: operator-continuous
     test_group_name: ci-knative-operator-0.19-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: operator-dot-release
+    test_group_name: ci-knative-operator-0.19-dot-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"

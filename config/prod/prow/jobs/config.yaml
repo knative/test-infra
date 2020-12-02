@@ -14613,8 +14613,8 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "4 9 * * 2"
-  name: ci-knative-operator-dot-release
+- cron: "58 9 * * 2"
+  name: ci-knative-operator-0.16-dot-release
   agent: kubernetes
   decorate: true
   decoration_config:
@@ -14624,13 +14624,11 @@ periodics:
   - org: knative
     repo: operator
     path_alias: knative.dev/operator
-    base_ref: master
+    base_ref: release-0.16
   annotations:
     testgrid-dashboards: knative-operator
-    testgrid-tab-name: knative-operator-dot-release
-    testgrid-alert-stale-results-hours: "170"
-    testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: "1"
+    testgrid-tab-name: knative-operator-0.16-dot-release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -14643,6 +14641,7 @@ periodics:
       - "--release-gcs knative-releases/operator"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
+      - "--branch release-0.16"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -14655,6 +14654,178 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.16
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
+- cron: "1 9 * * 2"
+  name: ci-knative-operator-0.17-dot-release
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: operator
+    path_alias: knative.dev/operator
+    base_ref: release-0.17
+  annotations:
+    testgrid-dashboards: knative-operator
+    testgrid-tab-name: knative-operator-0.17-dot-release
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--dot-release"
+      - "--release-gcs knative-releases/operator"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      - "--branch release-0.17"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.17
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
+- cron: "56 9 * * 2"
+  name: ci-knative-operator-0.18-dot-release
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: operator
+    path_alias: knative.dev/operator
+    base_ref: release-0.18
+  annotations:
+    testgrid-dashboards: knative-operator
+    testgrid-tab-name: knative-operator-0.18-dot-release
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--dot-release"
+      - "--release-gcs knative-releases/operator"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      - "--branch release-0.18"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.18
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
+- cron: "27 9 * * 2"
+  name: ci-knative-operator-0.19-dot-release
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: operator
+    path_alias: knative.dev/operator
+    base_ref: release-0.19
+  annotations:
+    testgrid-dashboards: knative-operator
+    testgrid-tab-name: knative-operator-0.19-dot-release
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--dot-release"
+      - "--release-gcs knative-releases/operator"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      - "--branch release-0.19"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.19
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     volumes:
     - name: hub-token
       secret:
