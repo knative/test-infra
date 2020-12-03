@@ -102,7 +102,6 @@ presubmits:
         - config/prod/prow/jobs/config.yaml
         - config/prod/prow/k8s-testgrid/k8s-testgrid.yaml
         - knative
-        - k8s-test-infra
 
 periodics:
 # ci-knative-heartbeat is used for prometheus, alert(s) will be sent
