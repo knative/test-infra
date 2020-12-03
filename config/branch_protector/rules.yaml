@@ -32,6 +32,9 @@ branch-protection:
         - tide
       # Enforce all configured restrictions above for administrators.
       enforce_admins: true
+      repos:
+        .github:
+          protect: false
     google:
       repos:
         # Protect all branches in google/knative-gcp
