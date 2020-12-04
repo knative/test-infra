@@ -120,15 +120,6 @@ test_groups:
 - name: ci-knative-client-contrib-continuous
   gcs_prefix: knative-prow/logs/ci-knative-client-contrib-continuous
   alert_stale_results_hours: 3
-- name: ci-knative-kn-plugin-diag-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-kn-plugin-diag-continuous
-  alert_stale_results_hours: 3
-- name: ci-knative-kn-plugin-diag-test-coverage
-  gcs_prefix: knative-prow/logs/ci-knative-kn-plugin-diag-go-coverage
-  short_text_metric: "coverage"
-- name: ci-knative-kn-plugin-source-kafka-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-kn-plugin-source-kafka-continuous
-  alert_stale_results_hours: 3
 - name: ci-knative-docs-continuous
   gcs_prefix: knative-prow/logs/ci-knative-docs-continuous
   alert_stale_results_hours: 3
@@ -404,6 +395,15 @@ test_groups:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   alert_stale_results_hours: 170
   num_failures_to_alert: 1
+- name: ci-knative-sandbox-kn-plugin-diag-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-diag-continuous
+  alert_stale_results_hours: 3
+- name: ci-knative-sandbox-kn-plugin-diag-test-coverage
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-diag-go-coverage
+  short_text_metric: "coverage"
+- name: ci-knative-sandbox-kn-plugin-source-kafka-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-source-kafka-continuous
+  alert_stale_results_hours: 3
 - name: ci-knative-sandbox-kn-plugin-admin-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-admin-continuous
   alert_stale_results_hours: 3
@@ -886,10 +886,13 @@ test_groups:
   short_text_metric: "coverage"
 - name: ci-knative-client-contrib-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-client-contrib-continuous-beta-prow-tests
-- name: ci-knative-kn-plugin-diag-continuous-beta-prow-tests
-  gcs_prefix: knative-prow/logs/ci-knative-kn-plugin-diag-continuous-beta-prow-tests
-- name: ci-knative-kn-plugin-source-kafka-continuous-beta-prow-tests
-  gcs_prefix: knative-prow/logs/ci-knative-kn-plugin-source-kafka-continuous-beta-prow-tests
+- name: ci-knative-sandbox-kn-plugin-diag-continuous-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-diag-continuous-beta-prow-tests
+- name: ci-knative-sandbox-kn-plugin-diag-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-diag-go-coverage-beta-prow-tests
+  short_text_metric: "coverage"
+- name: ci-knative-sandbox-kn-plugin-source-kafka-continuous-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-source-kafka-continuous-beta-prow-tests
 - name: ci-knative-sandbox-kn-plugin-admin-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-admin-continuous-beta-prow-tests
 - name: ci-knative-docs-continuous-beta-prow-tests
@@ -1015,9 +1018,6 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-kafka-broker-continuous-beta-prow-tests
 - name: ci-knative-sandbox-eventing-kafka-broker-go-coverage-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-kafka-broker-go-coverage-beta-prow-tests
-  short_text_metric: "coverage"
-- name: ci-knative-sandbox-kn-plugin-diag-go-coverage-beta-prow-tests
-  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-diag-go-coverage-beta-prow-tests
   short_text_metric: "coverage"
 - name: ci-knative-backup-artifacts
   gcs_prefix: knative-prow/logs/ci-knative-backup-artifacts
@@ -1165,25 +1165,6 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 3
-- name: kn-plugin-diag
-  dashboard_tab:
-  - name: continuous
-    test_group_name: ci-knative-kn-plugin-diag-continuous
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 3
-  - name: coverage
-    test_group_name: ci-knative-kn-plugin-diag-test-coverage
-    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-- name: kn-plugin-source-kafka
-  dashboard_tab:
-  - name: continuous
-    test_group_name: ci-knative-kn-plugin-source-kafka-continuous
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 3
 - name: docs
   dashboard_tab:
   - name: continuous
@@ -1291,6 +1272,25 @@ dashboards:
   - name: coverage
     test_group_name: ci-knative-operator-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+- name: kn-plugin-diag
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-sandbox-kn-plugin-diag-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: coverage
+    test_group_name: ci-knative-sandbox-kn-plugin-diag-test-coverage
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+- name: kn-plugin-source-kafka
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-sandbox-kn-plugin-source-kafka-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
 - name: kn-plugin-admin
   dashboard_tab:
   - name: continuous
@@ -2201,11 +2201,14 @@ dashboards:
   - name: ci-knative-client-contrib-continuous
     test_group_name: ci-knative-client-contrib-continuous-beta-prow-tests
     base_options: "sort-by-failures="
-  - name: ci-knative-kn-plugin-diag-continuous
-    test_group_name: ci-knative-kn-plugin-diag-continuous-beta-prow-tests
+  - name: ci-knative-sandbox-kn-plugin-diag-continuous
+    test_group_name: ci-knative-sandbox-kn-plugin-diag-continuous-beta-prow-tests
     base_options: "sort-by-failures="
-  - name: ci-knative-kn-plugin-source-kafka-continuous
-    test_group_name: ci-knative-kn-plugin-source-kafka-continuous-beta-prow-tests
+  - name: ci-knative-sandbox-kn-plugin-diag-go-coverage
+    test_group_name: ci-knative-sandbox-kn-plugin-diag-go-coverage-beta-prow-tests
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+  - name: ci-knative-sandbox-kn-plugin-source-kafka-continuous
+    test_group_name: ci-knative-sandbox-kn-plugin-source-kafka-continuous-beta-prow-tests
     base_options: "sort-by-failures="
   - name: ci-knative-sandbox-kn-plugin-admin-continuous
     test_group_name: ci-knative-sandbox-kn-plugin-admin-continuous-beta-prow-tests
@@ -2378,9 +2381,6 @@ dashboards:
   - name: ci-knative-sandbox-eventing-kafka-broker-go-coverage
     test_group_name: ci-knative-sandbox-eventing-kafka-broker-go-coverage-beta-prow-tests
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-  - name: ci-knative-sandbox-kn-plugin-diag-go-coverage
-    test_group_name: ci-knative-sandbox-kn-plugin-diag-go-coverage-beta-prow-tests
-    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: utilities
   dashboard_tab:
   - name: ci-knative-backup-artifacts
@@ -2422,8 +2422,6 @@ dashboard_groups:
   - "serving"
   - "client"
   - "client-contrib"
-  - "kn-plugin-diag"
-  - "kn-plugin-source-kafka"
   - "docs"
   - "eventing"
   - "eventing-contrib"
@@ -2433,6 +2431,8 @@ dashboard_groups:
   - "operator"
 - name: knative-sandbox
   dashboard_names:
+  - "kn-plugin-diag"
+  - "kn-plugin-source-kafka"
   - "kn-plugin-admin"
   - "eventing-awssqs"
   - "eventing-ceph"
