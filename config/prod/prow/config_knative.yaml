@@ -694,6 +694,10 @@ periodics:
   - continuous: true
   knative-sandbox/kn-plugin-source-kafka:
   - continuous: true
+  - auto-release: true
+  - nightly: true
+  - dot-release: true
+    release: "0.18"
   knative-sandbox/kn-plugin-admin:
   - continuous: true
   knative/docs:

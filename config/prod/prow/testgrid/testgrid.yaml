@@ -404,6 +404,16 @@ test_groups:
 - name: ci-knative-sandbox-kn-plugin-source-kafka-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-source-kafka-continuous
   alert_stale_results_hours: 3
+- name: ci-knative-sandbox-kn-plugin-source-kafka-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-source-kafka-auto-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-kn-plugin-source-kafka-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-source-kafka-nightly-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
 - name: ci-knative-sandbox-kn-plugin-admin-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-admin-continuous
   alert_stale_results_hours: 3
@@ -754,13 +764,8 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
-- name: ci-knative-eventing-contrib-0.15-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-0.15-continuous
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  num_failures_to_alert: 3
-- name: ci-knative-eventing-contrib-0.15-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-0.15-dot-release
+- name: ci-knative-sandbox-kn-plugin-source-kafka-0.18-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-source-kafka-0.18-dot-release
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   alert_stale_results_hours: 170
@@ -773,6 +778,17 @@ test_groups:
   num_failures_to_alert: 1
 - name: ci-knative-sandbox-net-istio-0.18-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-istio-0.18-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-eventing-contrib-0.15-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-0.15-continuous
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 3
+- name: ci-knative-eventing-contrib-0.15-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-contrib-0.15-dot-release
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   alert_stale_results_hours: 170
@@ -1291,6 +1307,18 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 3
+  - name: auto-release
+    test_group_name: ci-knative-sandbox-kn-plugin-source-kafka-auto-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: nightly
+    test_group_name: ci-knative-sandbox-kn-plugin-source-kafka-nightly-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
 - name: kn-plugin-admin
   dashboard_tab:
   - name: continuous
@@ -2049,6 +2077,26 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 3
+- name: knative-sandbox-0.18
+  dashboard_tab:
+  - name: kn-plugin-source-kafka-dot-release
+    test_group_name: ci-knative-sandbox-kn-plugin-source-kafka-0.18-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: eventing-gitlab-dot-release
+    test_group_name: ci-knative-sandbox-eventing-gitlab-0.18-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: net-istio-dot-release
+    test_group_name: ci-knative-sandbox-net-istio-0.18-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
 - name: knative-0.15
   dashboard_tab:
   - name: eventing-contrib-continuous
@@ -2059,20 +2107,6 @@ dashboards:
     num_failures_to_alert: 3
   - name: eventing-contrib-dot-release
     test_group_name: ci-knative-eventing-contrib-0.15-dot-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 3
-- name: knative-sandbox-0.18
-  dashboard_tab:
-  - name: eventing-gitlab-dot-release
-    test_group_name: ci-knative-sandbox-eventing-gitlab-0.18-dot-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 3
-  - name: net-istio-dot-release
-    test_group_name: ci-knative-sandbox-net-istio-0.18-dot-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
