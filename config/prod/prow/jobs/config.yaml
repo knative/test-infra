@@ -7310,21 +7310,21 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "51 */4 * * *"
-  name: ci-knative-kn-plugin-diag-continuous
+- cron: "1 */4 * * *"
+  name: ci-knative-sandbox-kn-plugin-diag-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
     timeout: 180m
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: kn-plugin-diag
     path_alias: knative.dev/kn-plugin-diag
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-kn-plugin-diag
-    testgrid-tab-name: knative-kn-plugin-diag-continuous
+    testgrid-dashboards: knative-sandbox-kn-plugin-diag
+    testgrid-tab-name: knative-sandbox-kn-plugin-diag-continuous
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -7348,21 +7348,21 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "27 8,11,22 * * *"
-  name: ci-knative-kn-plugin-diag-continuous-beta-prow-tests
+- cron: "37 8,11,22 * * *"
+  name: ci-knative-sandbox-kn-plugin-diag-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
   decoration_config:
     timeout: 180m
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: kn-plugin-diag
     path_alias: knative.dev/kn-plugin-diag
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-kn-plugin-diag
-    testgrid-tab-name: knative-kn-plugin-diag-continuous-beta-prow-tests
+    testgrid-dashboards: knative-sandbox-kn-plugin-diag
+    testgrid-tab-name: knative-sandbox-kn-plugin-diag-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -7386,21 +7386,75 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "56 */4 * * *"
-  name: ci-knative-kn-plugin-source-kafka-continuous
+- cron: "0 1 * * *"
+  name: ci-knative-sandbox-kn-plugin-diag-go-coverage
+  labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-sandbox-kn-plugin-diag-go-coverage
+  agent: kubernetes
+  decorate: true
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: kn-plugin-diag
+    path_alias: knative.dev/kn-plugin-diag
+    base_ref: master
+  annotations:
+    testgrid-dashboards: knative-sandbox-kn-plugin-diag
+    testgrid-tab-name: knative-sandbox-kn-plugin-diag-go-coverage
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - "runner.sh"
+      args:
+      - "coverage"
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=50"
+- cron: "47 7 * * *"
+  name: ci-knative-sandbox-kn-plugin-diag-go-coverage-beta-prow-tests
+  labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-sandbox-kn-plugin-diag-go-coverage
+  agent: kubernetes
+  decorate: true
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: kn-plugin-diag
+    path_alias: knative.dev/kn-plugin-diag
+    base_ref: master
+  annotations:
+    testgrid-dashboards: knative-sandbox-kn-plugin-diag
+    testgrid-tab-name: knative-sandbox-kn-plugin-diag-go-coverage-beta-prow-tests
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
+      imagePullPolicy: Always
+      command:
+      - "runner.sh"
+      args:
+      - "coverage"
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=50"
+- cron: "14 */4 * * *"
+  name: ci-knative-sandbox-kn-plugin-source-kafka-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
     timeout: 180m
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: kn-plugin-source-kafka
     path_alias: knative.dev/kn-plugin-source-kafka
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-kn-plugin-source-kafka
-    testgrid-tab-name: knative-kn-plugin-source-kafka-continuous
+    testgrid-dashboards: knative-sandbox-kn-plugin-source-kafka
+    testgrid-tab-name: knative-sandbox-kn-plugin-source-kafka-continuous
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -7424,21 +7478,21 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "4 8,11,22 * * *"
-  name: ci-knative-kn-plugin-source-kafka-continuous-beta-prow-tests
+- cron: "58 8,11,22 * * *"
+  name: ci-knative-sandbox-kn-plugin-source-kafka-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
   decoration_config:
     timeout: 180m
   cluster: "build-knative"
   extra_refs:
-  - org: knative
+  - org: knative-sandbox
     repo: kn-plugin-source-kafka
     path_alias: knative.dev/kn-plugin-source-kafka
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-kn-plugin-source-kafka
-    testgrid-tab-name: knative-kn-plugin-source-kafka-continuous-beta-prow-tests
+    testgrid-dashboards: knative-sandbox-kn-plugin-source-kafka
+    testgrid-tab-name: knative-sandbox-kn-plugin-source-kafka-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -16688,60 +16742,6 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "0 1 * * *"
-  name: ci-knative-sandbox-kn-plugin-diag-go-coverage
-  labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-sandbox-kn-plugin-diag-go-coverage
-  agent: kubernetes
-  decorate: true
-  cluster: "build-knative"
-  extra_refs:
-  - org: knative-sandbox
-    repo: kn-plugin-diag
-    path_alias: knative.dev/kn-plugin-diag
-    base_ref: master
-  annotations:
-    testgrid-dashboards: knative-sandbox-kn-plugin-diag
-    testgrid-tab-name: knative-sandbox-kn-plugin-diag-go-coverage
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      command:
-      - "runner.sh"
-      args:
-      - "coverage"
-      - "--artifacts=$(ARTIFACTS)"
-      - "--cov-threshold-percentage=50"
-- cron: "47 7 * * *"
-  name: ci-knative-sandbox-kn-plugin-diag-go-coverage-beta-prow-tests
-  labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-sandbox-kn-plugin-diag-go-coverage
-  agent: kubernetes
-  decorate: true
-  cluster: "build-knative"
-  extra_refs:
-  - org: knative-sandbox
-    repo: kn-plugin-diag
-    path_alias: knative.dev/kn-plugin-diag
-    base_ref: master
-  annotations:
-    testgrid-dashboards: knative-sandbox-kn-plugin-diag
-    testgrid-tab-name: knative-sandbox-kn-plugin-diag-go-coverage-beta-prow-tests
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
-      imagePullPolicy: Always
-      command:
-      - "runner.sh"
-      args:
-      - "coverage"
-      - "--artifacts=$(ARTIFACTS)"
-      - "--cov-threshold-percentage=50"
 - cron: "30 07 * * *"
   name: ci-knative-serving-recreate-clusters
   agent: kubernetes

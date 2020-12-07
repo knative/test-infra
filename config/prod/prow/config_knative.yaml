@@ -690,9 +690,9 @@ periodics:
   - auto-release: true
   knative/client-contrib:
   - continuous: true
-  knative/kn-plugin-diag:
+  knative-sandbox/kn-plugin-diag:
   - continuous: true
-  knative/kn-plugin-source-kafka:
+  knative-sandbox/kn-plugin-source-kafka:
   - continuous: true
   knative-sandbox/kn-plugin-admin:
   - continuous: true
