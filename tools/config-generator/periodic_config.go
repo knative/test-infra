@@ -263,10 +263,14 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 
 		// Change the name and image
 		betaData.PeriodicJobName += "-beta-prow-tests"
-		var tabName = betaData.Base.Annotations[1]
-		tabName += "-beta-prow-tests"
-		betaData.Base.Annotations[1] = tabName
 		betaData.Base.Image = strings.ReplaceAll(betaData.Base.Image, ":stable", ":beta")
+
+		// These jobs all get lumped together in a single Testgrid dashboard
+
+		dashboardAnnotation := fmtDashboardAnnotation("knative-prow-tests")
+		tabAnnotation := betaData.Base.Annotations[1] + "-beta-prow-tests"
+		betaData.Base.Annotations[0] = dashboardAnnotation
+		betaData.Base.Annotations[1] = tabAnnotation
 
 		// Run 2 or 3 times a day because prow-tests beta testing has different desired interval than the underlying job
 		hours := []int{getUTCtime(1), getUTCtime(4)}

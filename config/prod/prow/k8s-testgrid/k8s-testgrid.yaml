@@ -29,6 +29,7 @@ dashboards:
 - name: knative-eventing-contrib
 - name: knative-operator
 - name: knative-pkg
+- name: knative-prow-tests
 - name: knative-sandbox-async-component
 - name: knative-sandbox-discovery
 - name: knative-sandbox-eventing-awssqs
@@ -70,6 +71,7 @@ dashboard_groups:
       - "knative-eventing-contrib"
       - "knative-operator"
       - "knative-pkg"
+      - "knative-prow-tests"
       - "knative-serving"
       - "knative-test-infra"
   - name: knative-sandbox
