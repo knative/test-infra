@@ -797,6 +797,7 @@ func main() {
 
 		periodicJobData := parseJob(configYaml, "periodics")
 		orgsAndRepoSet := make(map[string]sets.String)
+
 		// All periodics should be included in Testgrid.
 		for _, mapItem := range periodicJobData {
 			org, repo := parseOrgAndRepoFromMapItem(mapItem)
@@ -806,18 +807,9 @@ func main() {
 			orgsAndRepoSet[org].Insert(repo)
 		}
 
-		// Only presubmits with Go Coverage should be included in Testgrid.
-		presubmitJobData := parseJob(configYaml, "presubmits")
-		goCoverageMap = parseGoCoverageMap(presubmitJobData)
-		for _, mapItem := range presubmitJobData {
-			org, repo := parseOrgAndRepoFromMapItem(mapItem)
-			if goCoverageMap[repo] {
-				if _, exists := orgsAndRepoSet[org]; !exists {
-					orgsAndRepoSet[org] = sets.NewString()
-				}
-				orgsAndRepoSet[org].Insert(repo)
-			}
-		}
+		// Do a special insert for the beta prow test jobs.
+		orgsAndRepoSet["knative"].Insert("prow-tests")
+
 		orgsAndRepos := make(map[string][]string)
 		for org, repoSet := range orgsAndRepoSet {
 			orgsAndRepos[org] = repoSet.List()

@@ -5039,7 +5039,7 @@ periodics:
     path_alias: knative.dev/serving
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-serving
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-serving-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -5143,7 +5143,7 @@ periodics:
     path_alias: knative.dev/serving
     base_ref: release-0.16
   annotations:
-    testgrid-dashboards: knative-serving
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-serving-0.16-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -5265,7 +5265,7 @@ periodics:
     path_alias: knative.dev/serving
     base_ref: release-0.17
   annotations:
-    testgrid-dashboards: knative-serving
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-serving-0.17-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -5387,7 +5387,7 @@ periodics:
     path_alias: knative.dev/serving
     base_ref: release-0.18
   annotations:
-    testgrid-dashboards: knative-serving
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-serving-0.18-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -5509,7 +5509,7 @@ periodics:
     path_alias: knative.dev/serving
     base_ref: release-0.19
   annotations:
-    testgrid-dashboards: knative-serving
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-serving-0.19-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -6342,7 +6342,7 @@ periodics:
     path_alias: knative.dev/client
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-client
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-client-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -6441,7 +6441,7 @@ periodics:
     path_alias: knative.dev/client
     base_ref: release-0.16
   annotations:
-    testgrid-dashboards: knative-client
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-client-0.16-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -6563,7 +6563,7 @@ periodics:
     path_alias: knative.dev/client
     base_ref: release-0.17
   annotations:
-    testgrid-dashboards: knative-client
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-client-0.17-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -6685,7 +6685,7 @@ periodics:
     path_alias: knative.dev/client
     base_ref: release-0.18
   annotations:
-    testgrid-dashboards: knative-client
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-client-0.18-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -6807,7 +6807,7 @@ periodics:
     path_alias: knative.dev/client
     base_ref: release-0.19
   annotations:
-    testgrid-dashboards: knative-client
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-client-0.19-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -7285,7 +7285,7 @@ periodics:
     path_alias: knative.dev/client-contrib
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-client-contrib
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-client-contrib-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -7361,7 +7361,7 @@ periodics:
     path_alias: knative.dev/kn-plugin-diag
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-kn-plugin-diag
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-kn-plugin-diag-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -7491,7 +7491,7 @@ periodics:
     path_alias: knative.dev/kn-plugin-source-kafka
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-kn-plugin-source-kafka
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-kn-plugin-source-kafka-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -7709,7 +7709,7 @@ periodics:
     path_alias: knative.dev/kn-plugin-admin
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-kn-plugin-admin
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-kn-plugin-admin-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -7803,7 +7803,7 @@ periodics:
     repo: docs
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-docs
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-docs-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -7956,7 +7956,7 @@ periodics:
     path_alias: knative.dev/eventing
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-eventing
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-eventing-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -8060,7 +8060,7 @@ periodics:
     path_alias: knative.dev/eventing
     base_ref: release-0.16
   annotations:
-    testgrid-dashboards: knative-eventing
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-eventing-0.16-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -8182,7 +8182,7 @@ periodics:
     path_alias: knative.dev/eventing
     base_ref: release-0.17
   annotations:
-    testgrid-dashboards: knative-eventing
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-eventing-0.17-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -8304,7 +8304,7 @@ periodics:
     path_alias: knative.dev/eventing
     base_ref: release-0.18
   annotations:
-    testgrid-dashboards: knative-eventing
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-eventing-0.18-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -8426,7 +8426,7 @@ periodics:
     path_alias: knative.dev/eventing
     base_ref: release-0.19
   annotations:
-    testgrid-dashboards: knative-eventing
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-eventing-0.19-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -8908,7 +8908,7 @@ periodics:
     path_alias: knative.dev/eventing-contrib
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-eventing-contrib
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-eventing-contrib-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -9012,7 +9012,7 @@ periodics:
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.15
   annotations:
-    testgrid-dashboards: knative-eventing-contrib
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-eventing-contrib-0.15-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -9134,7 +9134,7 @@ periodics:
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.16
   annotations:
-    testgrid-dashboards: knative-eventing-contrib
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-eventing-contrib-0.16-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -9256,7 +9256,7 @@ periodics:
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.17
   annotations:
-    testgrid-dashboards: knative-eventing-contrib
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-eventing-contrib-0.17-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -9378,7 +9378,7 @@ periodics:
     path_alias: knative.dev/eventing-contrib
     base_ref: release-0.18
   annotations:
-    testgrid-dashboards: knative-eventing-contrib
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-eventing-contrib-0.18-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -9849,7 +9849,7 @@ periodics:
     path_alias: knative.dev/eventing-awssqs
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-eventing-awssqs
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-eventing-awssqs-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -10015,7 +10015,7 @@ periodics:
     path_alias: knative.dev/eventing-ceph
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-eventing-ceph
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-eventing-ceph-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -10181,7 +10181,7 @@ periodics:
     path_alias: knative.dev/eventing-couchdb
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-eventing-couchdb
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-eventing-couchdb-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -10347,7 +10347,7 @@ periodics:
     path_alias: knative.dev/eventing-github
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-eventing-github
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-eventing-github-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -10513,7 +10513,7 @@ periodics:
     path_alias: knative.dev/eventing-gitlab
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-eventing-gitlab
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-eventing-gitlab-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -10793,7 +10793,7 @@ periodics:
     path_alias: knative.dev/eventing-prometheus
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-eventing-prometheus
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-eventing-prometheus-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -10959,7 +10959,7 @@ periodics:
     path_alias: knative.dev/eventing-redis
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-eventing-redis
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-eventing-redis-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -11125,7 +11125,7 @@ periodics:
     path_alias: knative.dev/kperf
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-kperf
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-kperf-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -11201,7 +11201,7 @@ periodics:
     path_alias: knative.dev/pkg
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-pkg
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-pkg-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -11277,7 +11277,7 @@ periodics:
     path_alias: knative.dev/caching
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-caching
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-caching-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -11353,7 +11353,7 @@ periodics:
     path_alias: knative.dev/sample-controller
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-sample-controller
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-sample-controller-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -11429,7 +11429,7 @@ periodics:
     path_alias: knative.dev/sample-source
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-sample-source
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-sample-source-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -11615,7 +11615,7 @@ periodics:
     path_alias: knative.dev/test-infra
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-test-infra
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-test-infra-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -11768,7 +11768,7 @@ periodics:
     repo: knative-gcp
     base_ref: master
   annotations:
-    testgrid-dashboards: google-knative-gcp
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: google-knative-gcp-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -11875,7 +11875,7 @@ periodics:
     repo: knative-gcp
     base_ref: release-0.16
   annotations:
-    testgrid-dashboards: google-knative-gcp
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: google-knative-gcp-0.16-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -12005,7 +12005,7 @@ periodics:
     repo: knative-gcp
     base_ref: release-0.17
   annotations:
-    testgrid-dashboards: google-knative-gcp
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: google-knative-gcp-0.17-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -12135,7 +12135,7 @@ periodics:
     repo: knative-gcp
     base_ref: release-0.18
   annotations:
-    testgrid-dashboards: google-knative-gcp
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: google-knative-gcp-0.18-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -12265,7 +12265,7 @@ periodics:
     repo: knative-gcp
     base_ref: release-0.19
   annotations:
-    testgrid-dashboards: google-knative-gcp
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: google-knative-gcp-0.19-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -12743,7 +12743,7 @@ periodics:
     path_alias: knative.dev/net-certmanager
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-net-certmanager
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-net-certmanager-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -13020,7 +13020,7 @@ periodics:
     path_alias: knative.dev/net-contour
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-net-contour
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-net-contour-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -13243,7 +13243,7 @@ periodics:
     path_alias: knative.dev/net-http01
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-net-http01
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-net-http01-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -13466,7 +13466,7 @@ periodics:
     path_alias: knative.dev/net-istio
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-net-istio
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-net-istio-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -13939,7 +13939,7 @@ periodics:
     path_alias: knative.dev/net-kourier
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-net-kourier
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-net-kourier-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -14216,7 +14216,7 @@ periodics:
     path_alias: knative.dev/operator
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-operator
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-operator-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -14320,7 +14320,7 @@ periodics:
     path_alias: knative.dev/operator
     base_ref: release-0.16
   annotations:
-    testgrid-dashboards: knative-operator
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-operator-0.16-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -14452,7 +14452,7 @@ periodics:
     path_alias: knative.dev/operator
     base_ref: release-0.17
   annotations:
-    testgrid-dashboards: knative-operator
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-operator-0.17-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -14584,7 +14584,7 @@ periodics:
     path_alias: knative.dev/operator
     base_ref: release-0.18
   annotations:
-    testgrid-dashboards: knative-operator
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-operator-0.18-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -14716,7 +14716,7 @@ periodics:
     path_alias: knative.dev/operator
     base_ref: release-0.19
   annotations:
-    testgrid-dashboards: knative-operator
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-operator-0.19-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -15182,7 +15182,7 @@ periodics:
     path_alias: knative.dev/async-component
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-async-component
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-async-component-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -15453,7 +15453,7 @@ periodics:
     path_alias: knative.dev/discovery
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-discovery
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-discovery-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -15676,7 +15676,7 @@ periodics:
     path_alias: knative.dev/eventing-camel
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-eventing-camel
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-eventing-camel-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -15919,7 +15919,7 @@ periodics:
     path_alias: knative.dev/eventing-kafka
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-eventing-kafka
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-eventing-kafka-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -16290,7 +16290,7 @@ periodics:
     path_alias: knative.dev/eventing-kafka-broker
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-eventing-kafka-broker
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-eventing-kafka-broker-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:

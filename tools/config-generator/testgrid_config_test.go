@@ -231,6 +231,18 @@ func TestGenerateProwJobAnnotations(t *testing.T) {
 	}
 }
 
+func TestFmtDashboardAnnotation(t *testing.T) {
+	if diff := cmp.Diff(fmtDashboardAnnotation("dashboardName"), "  testgrid-dashboards: dashboardName"); diff != "" {
+		t.Errorf("(-got +want): \n%s", diff)
+	}
+}
+
+func TestFmtTabAnnotation(t *testing.T) {
+	if diff := cmp.Diff(fmtTabAnnotation("tabName"), "  testgrid-tab-name: tabName"); diff != "" {
+		t.Errorf("(-got +want): \n%s", diff)
+	}
+}
+
 func TestTestGridMetaDataGenerateTestGroup(t *testing.T) {
 	SetupForTesting()
 	data := NewTestGridMetaData()

@@ -197,10 +197,7 @@ func getTestgroupExtras(projName, jobName string) map[string]string {
 }
 
 func generateProwJobAnnotations(dashboardName, tabName string, tgExtras map[string]string) []string {
-	annotations := []string{
-		"  testgrid-dashboards: " + dashboardName,
-		"  testgrid-tab-name: " + tabName,
-	}
+	annotations := []string{fmtDashboardAnnotation(dashboardName), fmtTabAnnotation(tabName)}
 
 	v, ok := tgExtras["alert_stale_results_hours"]
 	if ok {
@@ -224,6 +221,14 @@ func generateProwJobAnnotations(dashboardName, tabName string, tgExtras map[stri
 		annotations = append(annotations, res)
 	}
 	return annotations
+}
+
+func fmtDashboardAnnotation(dashboardName string) string {
+	return fmt.Sprintf("  testgrid-dashboards: " + dashboardName)
+}
+
+func fmtTabAnnotation(tabName string) string {
+	return fmt.Sprintf("  testgrid-tab-name: " + tabName)
 }
 
 // generateTestGroup generates the test group configuration
