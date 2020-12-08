@@ -266,7 +266,6 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		betaData.Base.Image = strings.ReplaceAll(betaData.Base.Image, ":stable", ":beta")
 
 		// These jobs all get lumped together in a single Testgrid dashboard
-
 		dashboardAnnotation := fmtDashboardAnnotation("knative-prow-tests")
 		tabAnnotation := betaData.Base.Annotations[1] + "-beta-prow-tests"
 		betaData.Base.Annotations[0] = dashboardAnnotation
@@ -345,9 +344,12 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 
 		// Change the name and image
 		betaData.PeriodicJobName += "-beta-prow-tests"
+		betaData.Base.Image = strings.ReplaceAll(betaData.Base.Image, ":stable", ":beta")
+
+		// Ensure the beta-prow-tests go to the correct Testgrid dashboard and tab
+		dashboardName = "knative-prow-tests"
 		tabName += "-beta-prow-tests"
 		betaData.Base.Annotations = generateProwJobAnnotations(dashboardName, tabName, testgroupExtras)
-		betaData.Base.Image = strings.ReplaceAll(betaData.Base.Image, ":stable", ":beta")
 
 		// Run once a day because prow-tests beta testing has different desired interval than the underlying job
 		betaData.CronString = fmt.Sprintf("%d %s * * *",
