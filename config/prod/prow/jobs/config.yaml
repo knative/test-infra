@@ -7222,7 +7222,7 @@ periodics:
     path_alias: knative.dev/client
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-client
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-client-go-coverage-beta-prow-tests
   spec:
     containers:
@@ -7428,7 +7428,7 @@ periodics:
     path_alias: knative.dev/kn-plugin-diag
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-kn-plugin-diag
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-kn-plugin-diag-go-coverage-beta-prow-tests
   spec:
     containers:
@@ -7888,7 +7888,7 @@ periodics:
     repo: docs
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-docs
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-docs-go-coverage-beta-prow-tests
   spec:
     containers:
@@ -8840,7 +8840,7 @@ periodics:
     path_alias: knative.dev/eventing
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-eventing
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-eventing-go-coverage-beta-prow-tests
   spec:
     containers:
@@ -9786,7 +9786,7 @@ periodics:
     path_alias: knative.dev/eventing-contrib
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-eventing-contrib
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-eventing-contrib-go-coverage-beta-prow-tests
   spec:
     containers:
@@ -11702,7 +11702,7 @@ periodics:
     path_alias: knative.dev/test-infra
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-test-infra
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-test-infra-go-coverage-beta-prow-tests
   spec:
     containers:
@@ -12680,7 +12680,7 @@ periodics:
     repo: knative-gcp
     base_ref: master
   annotations:
-    testgrid-dashboards: google-knative-gcp
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: google-knative-gcp-go-coverage-beta-prow-tests
   spec:
     containers:
@@ -12957,7 +12957,7 @@ periodics:
     path_alias: knative.dev/net-certmanager
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-net-certmanager
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-net-certmanager-go-coverage-beta-prow-tests
   spec:
     containers:
@@ -13876,7 +13876,7 @@ periodics:
     path_alias: knative.dev/net-istio
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-net-istio
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-net-istio-go-coverage-beta-prow-tests
   spec:
     containers:
@@ -14153,7 +14153,7 @@ periodics:
     path_alias: knative.dev/net-kourier
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-net-kourier
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-net-kourier-go-coverage-beta-prow-tests
   spec:
     containers:
@@ -15119,7 +15119,7 @@ periodics:
     path_alias: knative.dev/operator
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-operator
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-operator-go-coverage-beta-prow-tests
   spec:
     containers:
@@ -15390,7 +15390,7 @@ periodics:
     path_alias: knative.dev/async-component
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-async-component
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-async-component-go-coverage-beta-prow-tests
   spec:
     containers:
@@ -16207,7 +16207,7 @@ periodics:
     path_alias: knative.dev/eventing-kafka
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-eventing-kafka
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-eventing-kafka-go-coverage-beta-prow-tests
   spec:
     containers:
@@ -16578,7 +16578,7 @@ periodics:
     path_alias: knative.dev/eventing-kafka-broker
     base_ref: master
   annotations:
-    testgrid-dashboards: knative-sandbox-eventing-kafka-broker
+    testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-eventing-kafka-broker-go-coverage-beta-prow-tests
   spec:
     containers:
