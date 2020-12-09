@@ -39,9 +39,11 @@ Usage of rundk:
       A list of extra folders or files separated by comma that need to be mounted to run the test flow.
       It must be in the format of source1:target1,source2:target2,source3:target3.
   --mandatory-env-vars string
-      A list of env vars separated by comma that must be set on local, which will then be promoted to the container.
+      A list of env vars separated by comma that will be promoted to the container.
+      They must be set on the local, and users will get an error if they are not set.
   --optional-env-vars string
-      A list of env vars separated by comma that optionally need to be set on local, which will then be promoted to the container.
+      A list of env vars separated by comma that will be promoted to the container.
+      They can be optionally set on the local, and users will not get an error if they are not set.
 ```
 
 ### Example
