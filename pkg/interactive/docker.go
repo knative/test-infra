@@ -108,7 +108,7 @@ func (d *Docker) CopyAndAddMount(typeStr, parentDir, source, target string, optA
 
 	// Copy all the content if it's a directory
 	if fi.IsDir() {
-		source += "/."
+		source += string(os.PathSeparator) + "."
 	}
 	if _, err := cmd.RunCommand(fmt.Sprintf("cp -r %s %s", source, tempDir), cmd.WithStdout()); err != nil {
 		cleanup()

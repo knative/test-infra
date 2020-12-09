@@ -14,6 +14,10 @@ import (
 	"knative.dev/test-infra/pkg/interactive"
 )
 
+// The warmup time before starting the test flow to give users some flexibility
+// to react.
+const warmupTime = 3
+
 var (
 	image                     string
 	entrypoint                string
@@ -184,9 +188,9 @@ func run(cmd interactive.Docker, commandAndArgsOpt ...string) error {
 	if len(commandAndArgsOpt) != 0 {
 		cmd.AddArgs(entrypoint)
 		cmd.AddArgs(commandAndArgsOpt...)
-		log.Println("👆 Starting in 3 seconds, ^C to abort!")
+		log.Printf("👆 Starting in %d seconds, ^C to abort!", warmupTime)
 	}
 
-	time.Sleep(time.Second * 3)
+	time.Sleep(time.Second * warmupTime)
 	return cmd.Run()
 }

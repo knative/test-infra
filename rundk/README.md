@@ -27,7 +27,7 @@ Usage of rundk:
   --entrypoint string
       The entrypoint executable that runs the test commands. (default "runner.sh")
   --enable-docker-in-docker
-      Enable running docker commands in the test fllow.
+      Enable running docker commands in the test flow.
       By enabling this the container will share the same docker daemon in the host machine, so be careful when using it.
   --use-local-gcloud-credentials
       Use the same gcloud credentials as local.
