@@ -24,6 +24,8 @@ import (
 	"os"
 	"path"
 	"strings"
+
+	"knative.dev/test-infra/pkg/cmd"
 )
 
 var defaultDockerCommands []string
@@ -55,7 +57,7 @@ func (e Env) PromoteFromEnv(envVars ...string) error {
 	return err
 }
 
-// Creates an Docker with default Docker command arguments for running interactively
+// NewDocker creates a Docker with default Docker command arguments for running interactively
 func NewDocker() Docker {
 	return Docker{NewCommand(defaultDockerCommands...)}
 }
@@ -74,6 +76,52 @@ func (d *Docker) AddMount(typeStr, source, target string, optAdditionalArgs ...s
 		addl = "," + strings.Join(optAdditionalArgs, ",")
 	}
 	d.AddArgs("--mount", fmt.Sprintf("type=%s,source=%s,target=%s%s", typeStr, source, target, addl))
+}
+
+// CopyAndAddMount copies the source files into a temp directory, and then
+// mounts them as the target. It also returns a function to remove the temp
+// directory for cleaning up.
+func (d *Docker) CopyAndAddMount(typeStr, parentDir, source, target string, optAdditionalArgs ...string) func() {
+	fi, err := os.Stat(source)
+	if err != nil {
+		log.Fatalf("Error getting the FileInfo for %q: %v", source, err)
+		return nil
+	}
+
+	tempDir, err := ioutil.TempDir(parentDir, fi.Name())
+	if err != nil {
+		log.Fatal("error creating a temporary directory: ", err)
+		return nil
+	}
+
+	cleanup := func() {
+		log.Printf("🧹 Removing the temp directory %q", tempDir)
+		if err := os.RemoveAll(tempDir); err != nil {
+			log.Printf("Warning: error removing the temp directory %q: %v", tempDir, err)
+		}
+	}
+
+	if err := os.Chmod(tempDir, 0777); err != nil {
+		cleanup()
+		log.Fatalf("error changing file mode for %q: %v", tempDir, err)
+	}
+
+	// Copy all the content if it's a directory
+	if fi.IsDir() {
+		source += string(os.PathSeparator) + "."
+	}
+	if _, err := cmd.RunCommand(fmt.Sprintf("cp -r %s %s", source, tempDir), cmd.WithStdout()); err != nil {
+		cleanup()
+		log.Fatalf("error copying %q to %q: %v", source, tempDir, err)
+	}
+
+	if fi.IsDir() {
+		d.AddMount(typeStr, tempDir, target, optAdditionalArgs...)
+	} else {
+		d.AddMount(typeStr, tempDir+string(os.PathSeparator)+fi.Name(), target, optAdditionalArgs...)
+	}
+
+	return cleanup
 }
 
 // AddRWOverlay mounts a directory into the image at the desired location, but with an overlay
