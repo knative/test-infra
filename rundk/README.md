@@ -23,7 +23,7 @@ go get knative.dev/test-infra/rundk
 
 ```shell
 Usage of rundk:
-  --test-image string
+  --image string
       The image we use to run the test flow. (default "gcr.io/knative-tests/test-infra/prow-tests:stable")
   --entrypoint string
       The entrypoint executable that runs the test commands. (default "runner.sh")
@@ -52,11 +52,11 @@ Usage of rundk:
 Run E2E tests for a Knative repository:
 
 ```shell
-rundk --use-local-gcloud-credentials ./test/e2e-tests.sh --gcp-project-id=one-project-for-testing
+rundk --use-local-gcloud-credentials -- ./test/e2e-tests.sh --gcp-project-id=one-project-for-testing
 ```
 
 ```shell
-rundk --use-local-kubeconfig ./test/e2e-tests.sh --run-tests
+rundk --use-local-kubeconfig -- ./test/e2e-tests.sh --run-tests
 ```
 
 > Note: the `rundk` command must be run under the root or sub directory of your

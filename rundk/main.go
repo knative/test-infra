@@ -10,13 +10,21 @@ import (
 	"time"
 
 	"github.com/spf13/pflag"
+
 	"knative.dev/test-infra/pkg/helpers"
 	"knative.dev/test-infra/pkg/interactive"
 )
 
-// The warmup time before starting the test flow to give users some flexibility
-// to react.
-const warmupTime = 3
+const (
+	// The warmup time before starting the test flow to give users some flexibility
+	// to react.
+	warmupTime = 3
+
+	// The path to mount the gcloud default config files to the container.
+	gcloudDefaultConfigMountPath = "/root/.config/gcloud"
+	// The path to mount the kubectl default config files to the container.
+	kubectlDefaultConfigMountPath = "/root/.kube"
+)
 
 var (
 	image                     string
@@ -30,7 +38,7 @@ var (
 )
 
 func main() {
-	pflag.StringVar(&image, "test-image", "gcr.io/knative-tests/test-infra/prow-tests:stable", "The image we use to run the test flow.")
+	pflag.StringVar(&image, "image", "gcr.io/knative-tests/test-infra/prow-tests:stable", "The image we use to run the test flow.")
 	pflag.StringVar(&entrypoint, "entrypoint", "runner.sh", "The entrypoint executable that runs the test commands.")
 	pflag.BoolVar(&dindEnabled, "enable-docker-in-docker", false, "Enable running docker commands in the test flow. "+
 		"By enabling this the container will share the same docker daemon in the host machine, so be careful when using it.")
@@ -93,34 +101,42 @@ func setup() (interactive.Docker, func()) {
 				cleanup := cmd.CopyAndAddMount("bind", tmpDir, gcloudKey, gcloudKey)
 				builtUpDefers = append(builtUpDefers, cleanup)
 			}
-		}
-		// Copy and mount for gcloud default credentials to be available
-		defaultGcloudConfigPath := path.Join(os.Getenv("HOME"), ".config/gcloud")
-		if _, err := os.Stat(defaultGcloudConfigPath); !os.IsNotExist(err) {
-			cleanup := cmd.CopyAndAddMount("bind", tmpDir, defaultGcloudConfigPath, "/root/.config/gcloud")
-			builtUpDefers = append(builtUpDefers, cleanup)
+		} else {
+			// Copy and mount for default gcloud credentials to be available
+			// We only want to use the default gcloud credentials if GOOGLE_APPLICATION_CREDENTIALS env var is not explicitly set.
+			defaultGcloudConfigPath := path.Join(os.Getenv("HOME"), ".config/gcloud")
+			if _, err := os.Stat(defaultGcloudConfigPath); !os.IsNotExist(err) {
+				cleanup := cmd.CopyAndAddMount("bind", tmpDir, defaultGcloudConfigPath, gcloudDefaultConfigMountPath)
+				// Overwrite the gcloud config path, as per https://stackoverflow.com/a/48343135
+				envs["CLOUDSDK_CONFIG"] = gcloudDefaultConfigMountPath
+				builtUpDefers = append(builtUpDefers, cleanup)
+			}
 		}
 	}
 
 	// Setup kubeconfig
 	if useLocalKubeconfig {
-		kubeconfig := os.Getenv("KUBECONFIG")
+		kubeconfigEnvVarVal := os.Getenv("KUBECONFIG")
 		// If KUBECONFIG is not empty, also mount the kubeconfig files to the
 		// container
-		if kubeconfig != "" {
-			envs["KUBECONFIG"] = kubeconfig
-			for _, f := range strings.Split(kubeconfig, string(os.PathListSeparator)) {
+		if kubeconfigEnvVarVal != "" {
+			envs["KUBECONFIG"] = kubeconfigEnvVarVal
+			for _, f := range strings.Split(kubeconfigEnvVarVal, string(os.PathListSeparator)) {
 				if _, err := os.Stat(f); !os.IsNotExist(err) {
 					cleanup := cmd.CopyAndAddMount("bind", tmpDir, f, f)
 					builtUpDefers = append(builtUpDefers, cleanup)
 				}
 			}
-		}
-		// Copy and mount for default kube context to be available
-		defaultKubeconfigPath := path.Join(os.Getenv("HOME"), ".kube")
-		if _, err := os.Stat(defaultKubeconfigPath); !os.IsNotExist(err) {
-			cleanup := cmd.CopyAndAddMount("bind", tmpDir, path.Join(os.Getenv("HOME"), ".kube"), "/root/.kube")
-			builtUpDefers = append(builtUpDefers, cleanup)
+		} else {
+			// Copy and mount for default kube context to be available.
+			// We only want to use the default kube context if KUBECONFIG env var is not explicitly set.
+			defaultKubeconfigPath := path.Join(os.Getenv("HOME"), ".kube")
+			if _, err := os.Stat(defaultKubeconfigPath); !os.IsNotExist(err) {
+				cleanup := cmd.CopyAndAddMount("bind", tmpDir,
+					path.Join(os.Getenv("HOME"), ".kube"), kubectlDefaultConfigMountPath)
+				envs["KUBECONFIG"] = kubectlDefaultConfigMountPath
+				builtUpDefers = append(builtUpDefers, cleanup)
+			}
 		}
 	}
 
