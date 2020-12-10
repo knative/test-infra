@@ -8,7 +8,8 @@ developers can reproduce the test flow as run in the CI environment.
 - [Docker](https://docs.docker.com/get-docker/) must be installed
 - If you run this tool on MAC, `/tmp` directory must be added to Docker's File
   Sharing settings to allow Docker accessing the temporary files created for
-  mount, see the [comment](https://github.com/docker/docker.github.io/issues/4709#issuecomment-639596451).
+  mount, see the
+  [comment](https://github.com/docker/docker.github.io/issues/4709#issuecomment-639596451).
 
 ## Installation
 
