@@ -286,7 +286,6 @@ presubmits:
   - go-coverage: false
   knative/eventing:
   - repo-settings: null
-    performance: true
   - build-tests: true
     resources:
       requests:
