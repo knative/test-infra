@@ -1355,36 +1355,6 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-sandbox-kn-plugin-diag-go-coverage
-    agent: kubernetes
-    context: pull-knative-sandbox-kn-plugin-diag-go-coverage
-    always_run: true
-    rerun_command: "/test pull-knative-sandbox-kn-plugin-diag-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-sandbox-kn-plugin-diag-go-coverage),?(\\s+|$)"
-    optional: true
-    decorate: true
-    path_alias: knative.dev/kn-plugin-diag
-    cluster: "build-knative"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "coverage"
-        - "--postsubmit-job-name=post-knative-sandbox-kn-plugin-diag-go-coverage"
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=50"
-        - "--github-token=/etc/covbot-token/token"
-        volumeMounts:
-        - name: covbot-token
-          mountPath: /etc/covbot-token
-          readOnly: true
-      volumes:
-      - name: covbot-token
-        secret:
-          secretName: covbot-token
   knative-sandbox/kn-plugin-source-kafka:
   - name: pull-knative-sandbox-kn-plugin-source-kafka-build-tests
     agent: kubernetes
@@ -7386,60 +7356,6 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 1 * * *"
-  name: ci-knative-sandbox-kn-plugin-diag-go-coverage
-  labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-sandbox-kn-plugin-diag-go-coverage
-  agent: kubernetes
-  decorate: true
-  cluster: "build-knative"
-  extra_refs:
-  - org: knative-sandbox
-    repo: kn-plugin-diag
-    path_alias: knative.dev/kn-plugin-diag
-    base_ref: master
-  annotations:
-    testgrid-dashboards: knative-sandbox-kn-plugin-diag
-    testgrid-tab-name: knative-sandbox-kn-plugin-diag-go-coverage
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      command:
-      - "runner.sh"
-      args:
-      - "coverage"
-      - "--artifacts=$(ARTIFACTS)"
-      - "--cov-threshold-percentage=50"
-- cron: "47 7 * * *"
-  name: ci-knative-sandbox-kn-plugin-diag-go-coverage-beta-prow-tests
-  labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-sandbox-kn-plugin-diag-go-coverage
-  agent: kubernetes
-  decorate: true
-  cluster: "build-knative"
-  extra_refs:
-  - org: knative-sandbox
-    repo: kn-plugin-diag
-    path_alias: knative.dev/kn-plugin-diag
-    base_ref: master
-  annotations:
-    testgrid-dashboards: knative-prow-tests
-    testgrid-tab-name: knative-sandbox-kn-plugin-diag-go-coverage-beta-prow-tests
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
-      imagePullPolicy: Always
-      command:
-      - "runner.sh"
-      args:
-      - "coverage"
-      - "--artifacts=$(ARTIFACTS)"
-      - "--cov-threshold-percentage=50"
 - cron: "14 */4 * * *"
   name: ci-knative-sandbox-kn-plugin-source-kafka-continuous
   agent: kubernetes
@@ -17186,26 +17102,6 @@ postsubmits:
     decorate: true
     cluster: "build-knative"
     path_alias: knative.dev/client
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "coverage"
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=0"
-  knative-sandbox/kn-plugin-diag:
-  - name: post-knative-sandbox-kn-plugin-diag-go-coverage
-    branches:
-    - master
-    annotations:
-      testgrid-create-test-group: "false"
-    agent: kubernetes
-    decorate: true
-    cluster: "build-knative"
-    path_alias: knative.dev/kn-plugin-diag
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
