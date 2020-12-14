@@ -24,8 +24,6 @@ import (
 	"os"
 	"path"
 	"strings"
-
-	"knative.dev/test-infra/pkg/cmd"
 )
 
 var defaultDockerCommands []string
@@ -110,7 +108,8 @@ func (d *Docker) CopyAndAddMount(typeStr, parentDir, source, target string, optA
 	if fi.IsDir() {
 		source += string(os.PathSeparator) + "."
 	}
-	if _, err := cmd.RunCommand(fmt.Sprintf("cp -r %s %s", source, tempDir), cmd.WithStdout()); err != nil {
+	cpCmd := NewCommand("cp", "-r", source, tempDir)
+	if err := cpCmd.Run(); err != nil {
 		cleanup()
 		log.Fatalf("error copying %q to %q: %v", source, tempDir, err)
 	}

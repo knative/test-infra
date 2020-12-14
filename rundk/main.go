@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"os/exec"
 	"path"
 	"runtime"
 	"strings"
@@ -11,8 +12,7 @@ import (
 
 	"github.com/spf13/pflag"
 
-	"knative.dev/test-infra/pkg/helpers"
-	"knative.dev/test-infra/pkg/interactive"
+	"knative.dev/test-infra/rundk/interactive"
 )
 
 const (
@@ -157,7 +157,7 @@ func setup() (interactive.Docker, func()) {
 	}
 
 	// Copy and mount source code root dir
-	repoRoot, err := helpers.GetRootDir()
+	repoRoot, err := repoRootDir()
 	if err != nil {
 		log.Fatal("Error getting the repo's root directory: ", err)
 	}
@@ -209,4 +209,14 @@ func run(cmd interactive.Docker, commandAndArgsOpt ...string) error {
 
 	time.Sleep(time.Second * warmupTime)
 	return cmd.Run()
+}
+
+// repoRootDir returns the repo's local root directory.
+func repoRootDir() (string, error) {
+	cmd := exec.Command("git", "rev-parse", "--show-toplevel")
+	output, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(string(output)), nil
 }
