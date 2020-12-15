@@ -464,6 +464,14 @@ presubmits:
     args:
     - --run-test
     - ./test/e2e-upgrade-tests.sh
+  - custom-test: serving-upgrade-tests
+    args:
+    - --run-test
+    - ./test/e2e-serving-upgrade-tests.sh
+  - custom-test: eventing-upgrade-tests
+    args:
+    - --run-test
+    - ./test/e2e-eventing-upgrade-tests.sh
   knative-sandbox/async-component:
   - build-tests: true
   - unit-tests: true
