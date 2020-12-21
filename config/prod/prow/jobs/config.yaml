@@ -3554,6 +3554,151 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+  knative-sandbox/net-ingressv2:
+  - name: pull-knative-sandbox-net-ingressv2-build-tests
+    agent: kubernetes
+    context: pull-knative-sandbox-net-ingressv2-build-tests
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-sandbox-net-ingressv2-build-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-net-ingressv2-build-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/net-ingressv2
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--build-tests"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-sandbox-net-ingressv2-unit-tests
+    agent: kubernetes
+    context: pull-knative-sandbox-net-ingressv2-unit-tests
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-sandbox-net-ingressv2-unit-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-net-ingressv2-unit-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/net-ingressv2
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--unit-tests"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-sandbox-net-ingressv2-integration-tests
+    agent: kubernetes
+    context: pull-knative-sandbox-net-ingressv2-integration-tests
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-sandbox-net-ingressv2-integration-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-net-ingressv2-integration-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/net-ingressv2
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--integration-tests"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-sandbox-net-ingressv2-go-coverage
+    agent: kubernetes
+    context: pull-knative-sandbox-net-ingressv2-go-coverage
+    always_run: true
+    rerun_command: "/test pull-knative-sandbox-net-ingressv2-go-coverage"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-net-ingressv2-go-coverage),?(\\s+|$)"
+    optional: true
+    decorate: true
+    path_alias: knative.dev/net-ingressv2
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "coverage"
+        - "--postsubmit-job-name=post-knative-sandbox-net-ingressv2-go-coverage"
+        - "--artifacts=$(ARTIFACTS)"
+        - "--cov-threshold-percentage=50"
+        - "--github-token=/etc/covbot-token/token"
+        volumeMounts:
+        - name: covbot-token
+          mountPath: /etc/covbot-token
+          readOnly: true
+      volumes:
+      - name: covbot-token
+        secret:
+          secretName: covbot-token
   knative-sandbox/net-istio:
   - name: pull-knative-sandbox-net-istio-build-tests
     agent: kubernetes
@@ -13397,6 +13542,283 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
+- cron: "17 */4 * * *"
+  name: ci-knative-sandbox-net-ingressv2-continuous
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: net-ingressv2
+    path_alias: knative.dev/net-ingressv2
+    base_ref: master
+  annotations:
+    testgrid-dashboards: knative-sandbox-net-ingressv2
+    testgrid-tab-name: knative-sandbox-net-ingressv2-continuous
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/presubmit-tests.sh"
+      - "--all-tests"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "5 8,11,22 * * *"
+  name: ci-knative-sandbox-net-ingressv2-continuous-beta-prow-tests
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: net-ingressv2
+    path_alias: knative.dev/net-ingressv2
+    base_ref: master
+  annotations:
+    testgrid-dashboards: knative-prow-tests
+    testgrid-tab-name: knative-sandbox-net-ingressv2-continuous-beta-prow-tests
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/presubmit-tests.sh"
+      - "--all-tests"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "23 9 * * *"
+  name: ci-knative-sandbox-net-ingressv2-nightly-release
+  agent: kubernetes
+  decorate: true
+  reporter_config:
+    slack:
+      channel: net-ingressv2
+      report_template: "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
+      job_states_to_report:
+      - "failure"
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: net-ingressv2
+    path_alias: knative.dev/net-ingressv2
+    base_ref: master
+  annotations:
+    testgrid-dashboards: knative-sandbox-net-ingressv2
+    testgrid-tab-name: knative-sandbox-net-ingressv2-nightly-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--publish"
+      - "--tag-release"
+      volumeMounts:
+      - name: nightly-account
+        mountPath: /etc/nightly-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/nightly-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: nightly-account
+      secret:
+        secretName: nightly-account
+- cron: "31 9 * * 2"
+  name: ci-knative-sandbox-net-ingressv2-dot-release
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: net-ingressv2
+    path_alias: knative.dev/net-ingressv2
+    base_ref: master
+  annotations:
+    testgrid-dashboards: knative-sandbox-net-ingressv2
+    testgrid-tab-name: knative-sandbox-net-ingressv2-dot-release
+    testgrid-alert-stale-results-hours: "170"
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--dot-release"
+      - "--release-gcs knative-releases/net-ingressv2"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: ORG_NAME
+        value: knative-sandbox
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
+- cron: "49 */4 * * *"
+  name: ci-knative-sandbox-net-ingressv2-auto-release
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: net-ingressv2
+    path_alias: knative.dev/net-ingressv2
+    base_ref: master
+  annotations:
+    testgrid-dashboards: knative-sandbox-net-ingressv2
+    testgrid-tab-name: knative-sandbox-net-ingressv2-auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--auto-release"
+      - "--release-gcs knative-releases/net-ingressv2"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: ORG_NAME
+        value: knative-sandbox
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
+- cron: "0 1 * * *"
+  name: ci-knative-sandbox-net-ingressv2-go-coverage
+  labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-ingressv2-go-coverage
+  agent: kubernetes
+  decorate: true
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: net-ingressv2
+    path_alias: knative.dev/net-ingressv2
+    base_ref: master
+  annotations:
+    testgrid-dashboards: knative-sandbox-net-ingressv2
+    testgrid-tab-name: knative-sandbox-net-ingressv2-go-coverage
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - "runner.sh"
+      args:
+      - "coverage"
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=50"
+- cron: "19 7 * * *"
+  name: ci-knative-sandbox-net-ingressv2-go-coverage-beta-prow-tests
+  labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: ci-knative-sandbox-net-ingressv2-go-coverage
+  agent: kubernetes
+  decorate: true
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: net-ingressv2
+    path_alias: knative.dev/net-ingressv2
+    base_ref: master
+  annotations:
+    testgrid-dashboards: knative-prow-tests
+    testgrid-tab-name: knative-sandbox-net-ingressv2-go-coverage-beta-prow-tests
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
+      imagePullPolicy: Always
+      command:
+      - "runner.sh"
+      args:
+      - "coverage"
+      - "--artifacts=$(ARTIFACTS)"
+      - "--cov-threshold-percentage=50"
 - cron: "8 */4 * * *"
   name: ci-knative-sandbox-net-istio-continuous
   agent: kubernetes
@@ -17365,6 +17787,26 @@ postsubmits:
     decorate: true
     cluster: "build-knative"
     path_alias: knative.dev/net-certmanager
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "coverage"
+        - "--artifacts=$(ARTIFACTS)"
+        - "--cov-threshold-percentage=0"
+  knative-sandbox/net-ingressv2:
+  - name: post-knative-sandbox-net-ingressv2-go-coverage
+    branches:
+    - master
+    annotations:
+      testgrid-create-test-group: "false"
+    agent: kubernetes
+    decorate: true
+    cluster: "build-knative"
+    path_alias: knative.dev/net-ingressv2
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable

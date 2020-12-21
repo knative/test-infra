@@ -51,6 +51,7 @@ dashboards:
 - name: knative-sandbox-net-certmanager
 - name: knative-sandbox-net-contour
 - name: knative-sandbox-net-http01
+- name: knative-sandbox-net-ingressv2
 - name: knative-sandbox-net-istio
 - name: knative-sandbox-net-kourier
 - name: knative-sandbox-sample-controller
@@ -97,6 +98,7 @@ dashboard_groups:
       - "knative-sandbox-net-certmanager"
       - "knative-sandbox-net-contour"
       - "knative-sandbox-net-http01"
+      - "knative-sandbox-net-ingressv2"
       - "knative-sandbox-net-istio"
       - "knative-sandbox-net-kourier"
       - "knative-sandbox-sample-controller"
