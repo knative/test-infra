@@ -430,6 +430,11 @@ presubmits:
   - unit-tests: true
   - integration-tests: true
   - go-coverage: false
+  knative-sandbox/net-ingressv2:
+  - build-tests: true
+  - unit-tests: true
+  - integration-tests: true
+  - go-coverage: true
   knative-sandbox/net-istio:
   - build-tests: true
   - unit-tests: true
@@ -986,6 +991,17 @@ periodics:
     reporter_config:
       slack:
         channel: net-http01
+        job_states_to_report:
+        - failure
+        report_template: '"The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"'
+  - dot-release: true
+  - auto-release: true
+  knative-sandbox/net-ingressv2:
+  - continuous: true
+  - nightly: true
+    reporter_config:
+      slack:
+        channel: net-ingressv2
         job_states_to_report:
         - failure
         report_template: '"The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"'
