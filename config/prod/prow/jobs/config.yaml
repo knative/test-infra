@@ -4997,7 +4997,7 @@ periodics:
     base_ref: master
   annotations:
     testgrid-dashboards: knative-serving
-    testgrid-tab-name: knative-serving-continuous
+    testgrid-tab-name: knative-serving-continuous-random-change
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
