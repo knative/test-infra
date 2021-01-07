@@ -395,7 +395,7 @@ presubmits:
       limits:
         memory: 16Gi
     needs-monitor: true
-    optional: false
+    optional: true
     args:
     - --run-test
     - ./test/e2e-upgrade-tests.sh
