@@ -31,4 +31,6 @@ disk=200
 machine=n2-standard-2
 bot=prow-job@knative-tests.iam.gserviceaccount.com
 
+chmod +x "${tmp_dir}/install.sh"
+chmod +x "${tmp_dir}/configure.sh"
 "${tmp_dir}/install.sh" "$proj" "$pool" "$workers" "$disk" "$machine" "$bot"
