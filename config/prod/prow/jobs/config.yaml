@@ -2961,7 +2961,7 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-google-knative-gcp-upgrade-tests
     context: pull-google-knative-gcp-upgrade-tests
     always_run: true
-    optional: false
+    optional: true
     rerun_command: "/test pull-google-knative-gcp-upgrade-tests"
     trigger: "(?m)^/test (all|pull-google-knative-gcp-upgrade-tests),?(\\s+|$)"
     decorate: true
