@@ -24,7 +24,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
-	"github.com/google/go-github/v27/github"
+	"github.com/google/go-github/v32/github"
 	"gopkg.in/yaml.v2"
 	"knative.dev/test-infra/pkg/ghutil/fakeghutil"
 )

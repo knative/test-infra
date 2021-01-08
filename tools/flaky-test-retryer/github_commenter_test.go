@@ -22,7 +22,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/google/go-github/v27/github"
+	"github.com/google/go-github/v32/github"
 	"knative.dev/test-infra/pkg/ghutil/fakeghutil"
 	"knative.dev/test-infra/tools/flaky-test-retryer/prowapi"
 )

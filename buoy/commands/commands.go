@@ -29,6 +29,8 @@ func New() *cobra.Command {
 	addNeedsCmd(buoyCmd)
 	addCheckCmd(buoyCmd)
 	addExistsCmd(buoyCmd)
+	addReposCmd(buoyCmd)
+	addActionsCmd(buoyCmd)
 
 	return buoyCmd
 }

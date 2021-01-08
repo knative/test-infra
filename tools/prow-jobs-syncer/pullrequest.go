@@ -25,7 +25,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/google/go-github/v27/github"
+	"github.com/google/go-github/v32/github"
 	"knative.dev/test-infra/pkg/ghutil"
 	"knative.dev/test-infra/pkg/helpers"
 

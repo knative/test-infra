@@ -20,13 +20,15 @@ package ghutil
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 	"strings"
 	"time"
 
-	"github.com/google/go-github/v27/github"
+	"github.com/google/go-github/v32/github"
 	"golang.org/x/oauth2"
 )
 
@@ -70,14 +72,28 @@ type GithubClient struct {
 	Client *github.Client
 }
 
-// NewGithubClient explicitly authenticates to github with giving token and returns a handle
+// NewGithubClient explicitly authenticates to github with giving token and
+// returns a handle. If tokenFilePath is empty, NewGithubClient will attempt
+// to use the value in the environment `GITHUB_TOKEN`.
 func NewGithubClient(tokenFilePath string) (*GithubClient, error) {
-	b, err := ioutil.ReadFile(tokenFilePath)
-	if err != nil {
-		return nil, err
+	var token string
+	if tokenFilePath == "" {
+		var found bool
+		token, found = os.LookupEnv("GITHUB_TOKEN")
+		if !found {
+			return nil, errors.New("GITHUB_TOKEN is not defined in the environment")
+		}
+	} else {
+		b, err := ioutil.ReadFile(tokenFilePath)
+		if err != nil {
+			return nil, err
+		}
+		token = string(b)
 	}
+	token = strings.TrimSpace(token)
+
 	ts := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: strings.TrimSpace(string(b))},
+		&oauth2.Token{AccessToken: token},
 	)
 
 	return &GithubClient{github.NewClient(oauth2.NewClient(ctx, ts))}, nil
