@@ -20,4 +20,6 @@ package tools
 
 import (
 	_ "knative.dev/hack"
+        _ "github.com/google/go-licenses"
+	_ "github.com/google/licenseclassifier/licenses"
 )

@@ -14,6 +14,8 @@ require (
 	github.com/google/go-cmp v0.5.1
 	github.com/google/go-containerregistry v0.1.4
 	github.com/google/go-github/v32 v32.1.1-0.20201004213705-76c3c3d7c6e7 // HEAD as of Nov 6
+	github.com/google/go-licenses v0.0.0-20200227160636-0fa8c766a591
+	github.com/google/licenseclassifier v0.0.0-20210108172934-df6aa8a2788b
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/pkg/errors v0.9.1
