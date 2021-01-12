@@ -28,8 +28,9 @@ import (
 	"sort"
 	"strings"
 	"sync"
-	"sync/atomic"
 	"time"
+
+	"go.uber.org/atomic"
 
 	"knative.dev/test-infra/tools/cleanup/options"
 
@@ -290,7 +291,7 @@ func (d *BaseResourceDeleter) Delete(hoursToKeepResource int, concurrentOperatio
 	// Channel to hold errors.
 	errorChan := make(chan error, len(projects))
 
-	var count int32
+	var count atomic.Int32
 	for i := range projects {
 		wg.Add(1)
 		go func(project string) {
@@ -302,7 +303,7 @@ func (d *BaseResourceDeleter) Delete(hoursToKeepResource int, concurrentOperatio
 			if len(errorChan) == 0 {
 				c, err := d.deleteResourceFunc(project, hoursToKeepResource, dryRun)
 				// Update counter and errors list.
-				atomic.AddInt32(&count, int32(c))
+				count.Add(int32(c))
 				if err != nil {
 					errorChan <- err
 				}
@@ -329,7 +330,7 @@ func (d *BaseResourceDeleter) Delete(hoursToKeepResource int, concurrentOperatio
 		}
 	}
 	sort.Strings(errStrings)
-	return int(count), errStrings
+	return int(count.Load()), errStrings
 }
 
 // ShowStats simply shows the number of resources deleted, and any errors.
