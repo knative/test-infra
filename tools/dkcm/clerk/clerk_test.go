@@ -17,8 +17,9 @@ package clerk
 
 import (
 	"errors"
-	"reflect"
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 var (
@@ -79,11 +80,11 @@ func TestPopulateCluster(t *testing.T) {
 	}
 	for _, test := range cases {
 		actualCluster, actualErr := populateCluster(test.row)
-		if !reflect.DeepEqual(actualCluster, test.wantResult) {
-			t.Errorf("get Cluster: got cluster '%v', want cluster '%v'", actualCluster, test.wantResult)
+		if !cmp.Equal(actualCluster, test.wantResult) {
+			t.Errorf("Cluster = '%v', want: '%v'", actualCluster, test.wantResult)
 		}
 		if !errors.Is(actualErr, test.wantErr) {
-			t.Errorf("get Cluster: got err '%v', want err '%v'", actualErr, test.wantErr)
+			t.Errorf("Cluster err = '%v', want: '%v'", actualErr, test.wantErr)
 		}
 	}
 }
@@ -100,27 +101,27 @@ func TestGenerateAnd(t *testing.T) {
 	}
 	for _, test := range cases {
 		conditions := generateAND(test.fieldStatements)
-		if !reflect.DeepEqual(conditions, test.wantResult) {
-			t.Errorf("get condition: got condition '%s', want condition '%s'", conditions, test.wantResult)
+		if conditions != test.wantResult {
+			t.Errorf("GenerateAND = %q, want: %q", conditions, test.wantResult)
 		}
 	}
-
 }
 
-func TestupdateQueryString(t *testing.T) {
+func TestUpdateQueryString(t *testing.T) {
 	cases := []struct {
 		dbName     string
 		id         int64
 		wantResult string
 		update     []UpdateOption
 	}{
-		{"Clusters", 1, "UPDATE Clusters SET Zone = 'us-central1'WHERE ID = 1", []UpdateOption{UpdateStringField("Zone", "us-central1")}},
-		{"Clusters", 1, "UPDATE Clusters SET Zone = 'us-central1',Nodes=6 WHERE ID = 1", []UpdateOption{UpdateStringField("Zone", "us-central1"), UpdateNumField("Nodes", 6)}},
+		{"Clusters", 1, "UPDATE Clusters SET Zone = 'us-central1' WHERE ID = 1", []UpdateOption{UpdateStringField("Zone", "us-central1")}},
+		{"Clusters", 1, "UPDATE Clusters SET Zone = 'us-central1',Nodes = 6 WHERE ID = 1", []UpdateOption{UpdateStringField("Zone", "us-central1"), UpdateNumField("Nodes", 6)}},
 	}
 	for _, test := range cases {
 		generatedString := updateQueryString(test.dbName, test.id, test.update...)
-		if !reflect.DeepEqual(generatedString, test.wantResult) {
-			t.Errorf("get string: got string '%s', want string '%s'", generatedString, test.wantResult)
+		if generatedString != test.wantResult {
+			t.Errorf("UpdateQueryString = %q, want: %q", generatedString,
+				test.wantResult)
 		}
 	}
 }

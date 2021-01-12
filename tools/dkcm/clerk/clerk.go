@@ -163,14 +163,14 @@ func updateQueryString(dbName string, id int64, opts ...UpdateOption) string {
 	return fmt.Sprintf("UPDATE %s SET %s WHERE ID = %d", dbName, strings.Join(fieldStatements, ","), id)
 }
 
-// Update a cluster entry on different fields
+// UpdateCluster updates a cluster entry on different fields.
 func (db *DBClient) UpdateCluster(clusterID int64, opts ...UpdateOption) error {
 	queryString := updateQueryString(ClusterDB, clusterID, opts...)
 	_, err := db.Exec(queryString)
 	return err
 }
 
-// List all clusters
+// ListClusters lists all the clusters.
 func (db *DBClient) ListClusters() ([]Cluster, error) {
 	var result []Cluster
 	rows, err := db.Query(`
