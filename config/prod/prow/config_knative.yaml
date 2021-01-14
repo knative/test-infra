@@ -1167,3 +1167,8 @@ periodics:
         report_template: '"The nightly release job for eventing-natss failed, check the log: <{{.Status.URL}}|View logs>"'
   - dot-release: true
   - auto-release: true
+  knative-sandbox/eventing-autoscaler-keda:
+    - continuous: true
+    - nightly: true
+    - dot-release: true
+    - auto-release: true
