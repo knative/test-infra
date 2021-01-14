@@ -783,6 +783,25 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-autoscaler-keda-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-autoscaler-keda-continuous
+  alert_stale_results_hours: 3
+- name: ci-knative-sandbox-eventing-autoscaler-keda-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-autoscaler-keda-nightly-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-autoscaler-keda-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-autoscaler-keda-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-autoscaler-keda-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-autoscaler-keda-auto-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
 - name: ci-knative-sandbox-kn-plugin-source-kafka-0.18-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-source-kafka-0.18-dot-release
   alert_options:
@@ -1056,6 +1075,8 @@ test_groups:
 - name: ci-knative-sandbox-eventing-kafka-broker-go-coverage-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-kafka-broker-go-coverage-beta-prow-tests
   short_text_metric: "coverage"
+- name: ci-knative-sandbox-eventing-autoscaler-keda-continuous-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-autoscaler-keda-continuous-beta-prow-tests
 - name: ci-knative-backup-artifacts
   gcs_prefix: knative-prow/logs/ci-knative-backup-artifacts
   alert_options:
@@ -1865,6 +1886,32 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 1
+- name: eventing-autoscaler-keda
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-sandbox-eventing-autoscaler-keda-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: nightly
+    test_group_name: ci-knative-sandbox-eventing-autoscaler-keda-nightly-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: dot-release
+    test_group_name: ci-knative-sandbox-eventing-autoscaler-keda-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: auto-release
+    test_group_name: ci-knative-sandbox-eventing-autoscaler-keda-auto-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
 - name: knative-gcp
   dashboard_tab:
   - name: continuous
@@ -2465,6 +2512,9 @@ dashboards:
   - name: ci-knative-sandbox-eventing-kafka-broker-go-coverage
     test_group_name: ci-knative-sandbox-eventing-kafka-broker-go-coverage-beta-prow-tests
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+  - name: ci-knative-sandbox-eventing-autoscaler-keda-continuous
+    test_group_name: ci-knative-sandbox-eventing-autoscaler-keda-continuous-beta-prow-tests
+    base_options: "sort-by-failures="
 - name: utilities
   dashboard_tab:
   - name: ci-knative-backup-artifacts
@@ -2541,6 +2591,7 @@ dashboard_groups:
   - "eventing-kafka-broker"
   - "eventing-rabbitmq"
   - "eventing-natss"
+  - "eventing-autoscaler-keda"
 - name: google
   dashboard_names:
   - "knative-gcp"

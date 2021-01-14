@@ -32,6 +32,7 @@ dashboards:
 - name: knative-prow-tests
 - name: knative-sandbox-async-component
 - name: knative-sandbox-discovery
+- name: knative-sandbox-eventing-autoscaler-keda
 - name: knative-sandbox-eventing-awssqs
 - name: knative-sandbox-eventing-camel
 - name: knative-sandbox-eventing-ceph
@@ -79,6 +80,7 @@ dashboard_groups:
     dashboard_names:
       - "knative-sandbox-async-component"
       - "knative-sandbox-discovery"
+      - "knative-sandbox-eventing-autoscaler-keda"
       - "knative-sandbox-eventing-awssqs"
       - "knative-sandbox-eventing-camel"
       - "knative-sandbox-eventing-ceph"
