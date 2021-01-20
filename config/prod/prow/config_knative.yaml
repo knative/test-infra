@@ -378,6 +378,8 @@ presubmits:
     args:
     - --run-test
     - ./test/e2e-tests.sh
+    env-vars:
+      - ENABLE_AUTH_CHECK_TEST=0
   - custom-test: wi-tests
     resources:
       requests:
@@ -388,6 +390,8 @@ presubmits:
     args:
     - --run-test
     - ./test/e2e-wi-tests.sh
+    env-vars:
+      - ENABLE_AUTH_CHECK_TEST=0
   - custom-test: upgrade-tests
     resources:
       requests:
