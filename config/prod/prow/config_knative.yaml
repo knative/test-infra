@@ -378,7 +378,7 @@ presubmits:
     - --run-test
     - ./test/e2e-tests.sh
     env-vars:
-      - ENABLE_AUTH_CHECK_TEST=0
+    - ENABLE_AUTH_CHECK_TEST=0
   - custom-test: wi-tests
     resources:
       requests:
@@ -390,7 +390,7 @@ presubmits:
     - --run-test
     - ./test/e2e-wi-tests.sh
     env-vars:
-      - ENABLE_AUTH_CHECK_TEST=0
+    - ENABLE_AUTH_CHECK_TEST=0
   - custom-test: upgrade-tests
     resources:
       requests:
@@ -1055,13 +1055,6 @@ periodics:
   knative/operator:
   - continuous: true
   - branch-ci: true
-    release: "0.16"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - branch-ci: true
     release: "0.17"
     resources:
       requests:
@@ -1077,6 +1070,13 @@ periodics:
         memory: 16Gi
   - branch-ci: true
     release: "0.19"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - branch-ci: true
+    release: "0.20"
     resources:
       requests:
         memory: 12Gi
@@ -1084,13 +1084,6 @@ periodics:
         memory: 16Gi
   - nightly: true
   - dot-release: true
-    release: "0.16"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - dot-release: true
     release: "0.17"
     resources:
       requests:
@@ -1106,6 +1099,13 @@ periodics:
         memory: 16Gi
   - dot-release: true
     release: "0.19"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    release: "0.20"
     resources:
       requests:
         memory: 12Gi
