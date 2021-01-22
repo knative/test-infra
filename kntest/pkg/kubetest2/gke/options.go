@@ -30,7 +30,7 @@ func addOptions(gkeCmd *cobra.Command, cfg *kubetest2.GKEClusterConfig) {
 	f.StringVar(&cfg.GCPProjectID, "gcp-project-id", "", "GCP project ID for creating the cluster")
 
 	f.StringVar(&cfg.Name, "name", "", "The GKE cluster name.")
-	f.StringVar(&cfg.Region, "region", "us-central1", "The region to create the GKE cluster.")
+	f.StringVar(&cfg.Region, "region", "us-east1", "The region to create the GKE cluster.")
 	f.StringSliceVar(&cfg.BackupRegions, "backup-regions", []string{"us-west1", "us-east1"}, "The backup regions if the cluster creation runs into stockout issue in the primary region.")
 	f.StringVar(&cfg.Machine, "machine", "e2-standard-4", "The machine type for the GKE cluster.")
 	f.IntVar(&cfg.MinNodes, "min-nodes", 1, "The minimum number of nodes.")
