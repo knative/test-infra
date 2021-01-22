@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM gcr.io/k8s-testimages/kubekins-e2e:v20200827-e0bb92b-master AS stable-stuff
+FROM gcr.io/k8s-testimages/kubekins-e2e:v20210113-cc576af-master AS stable-stuff
 
 ENV DEBIAN_FRONTEND noninteractive
 ARG GCLOUD_VERSION=317.0.0
@@ -76,7 +76,7 @@ COPY images/prow-tests/in-gvm-env.sh /usr/local/bin
 ############################################################
 FROM stable-stuff AS external-go-gets
 
-ARG KUBETEST2_VERSION=ec3b910313a8c9b22d61372930e32dc99f2a7482
+ARG KUBETEST2_VERSION=43699a7ba223ddce766f62ecd7504c7233605710
 
 # Extra tools through go get
 # These run using the kubekins version of Go, not any defined by `gvm`
