@@ -1,6 +1,6 @@
 module knative.dev/test-infra
 
-go 1.14
+go 1.15
 
 require (
 	cloud.google.com/go v0.62.0 // indirect
@@ -20,21 +20,13 @@ require (
 	github.com/spf13/cobra v1.0.0
 	go.uber.org/atomic v1.6.0
 	golang.org/x/mod v0.3.0
-	golang.org/x/net v0.0.0-20200822124328-c89045814202
+	golang.org/x/net v0.0.0-20201110031124-69a78807bb2b
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
-	golang.org/x/sys v0.0.0-20200802091954-4b90ce9b60b3 // indirect
 	google.golang.org/api v0.29.0
 	google.golang.org/genproto v0.0.0-20200731012542-8145dea6a485 // indirect
 	google.golang.org/grpc v1.31.0 // indirect
 	gopkg.in/yaml.v2 v2.3.0
-	k8s.io/apimachinery v0.18.8
-	k8s.io/test-infra v0.0.0-20200803112140-d8aa4e063646 // indirect
-	knative.dev/hack v0.0.0-20210108203236-ea9c9a0cac5c
+	k8s.io/apimachinery v0.19.7
+	knative.dev/hack v0.0.0-20210120165453-8d623a0af457
 	sigs.k8s.io/boskos v0.0.0-20200729174948-794df80db9c9
-)
-
-replace (
-	k8s.io/apimachinery => k8s.io/apimachinery v0.18.8
-	k8s.io/client-go => k8s.io/client-go v0.18.8
-	k8s.io/code-generator => k8s.io/code-generator v0.18.8
 )
