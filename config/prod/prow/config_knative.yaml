@@ -448,6 +448,16 @@ presubmits:
     args:
     - --run-test
     - ./test/e2e-tests.sh --istio-version latest
+  - custom-test: latest-mesh
+    optional: true
+    args:
+    - --run-test
+    - ./test/e2e-tests.sh --istio-version latest --mesh
+  - custom-test: stable-mesh
+    optional: true
+    args:
+    - --run-test
+    - ./test/e2e-tests.sh --istio-version stable --mesh
   knative-sandbox/net-kourier:
   - build-tests: true
   - unit-tests: true
