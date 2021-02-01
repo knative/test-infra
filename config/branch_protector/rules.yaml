@@ -23,6 +23,21 @@ branch-protection:
         - tide
       # Enforce all configured restrictions above for administrators.
       enforce_admins: true
+
+      # net-contour is canarying some additional protections.
+      repos:
+        net-contour:
+          required_status_checks:
+            contexts:
+            - cla/google
+            - tide
+          # Enforce all configured restrictions above for administrators.
+          enforce_admins: true
+
+          # The extra protections
+          required_approving_review_count: 1
+          require_code_owner_reviews: true
+
     knative:
       # Protect all branches in knative
       protect: true
