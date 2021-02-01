@@ -47,8 +47,8 @@
 #          secretName: github-token-for-branchprotector
 
 periodics:
-# Run at 10AM PST.
-- cron: "0 17 * * *"
+# Run at 8AM PST.
+- cron: "0 15 * * *"
   name: ci-knative-test-infra-branchprotector
   agent: kubernetes
   decorate: true
