@@ -52,6 +52,8 @@ periodics:
   name: ci-knative-test-infra-branchprotector
   agent: kubernetes
   decorate: true
+  decoration_config:
+    timeout: 3h
   cluster: "prow-trusted"
   extra_refs:
   - org: knative
@@ -61,7 +63,7 @@ periodics:
   spec:
     containers:
     - name: branchprotector
-      image: gcr.io/k8s-prow/branchprotector:v20201103-bb494c0354
+      image: gcr.io/k8s-prow/branchprotector:v20210201-6494714d87
       command:
       - /app/prow/cmd/branchprotector/app.binary
       args:
@@ -82,6 +84,8 @@ postsubmits:
   - name: post-knative-test-infra-branchprotector
     agent: kubernetes
     decorate: true
+    decoration_config:
+      timeout: 3h
     path_alias: knative.dev/test-infra
     max_concurrency: 1
     run_if_changed: "^config/branch_protector/rules.yaml$"
@@ -91,7 +95,7 @@ postsubmits:
     spec:
       containers:
       - name: branchprotector
-        image: gcr.io/k8s-prow/branchprotector:v20201103-bb494c0354
+        image: gcr.io/k8s-prow/branchprotector:v20210201-6494714d87
         command:
         - /app/prow/cmd/branchprotector/app.binary
         args:
