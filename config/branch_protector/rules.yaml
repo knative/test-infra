@@ -13,6 +13,8 @@
 # limitations under the License.
 
 branch-protection:
+  # Allows a child to disable all protection even if the branch has inherited protection options from a parent.
+  allow_disabled_policies: true
   orgs:
     knative-sandbox:
       # Protect all branches in knative-sandbox
