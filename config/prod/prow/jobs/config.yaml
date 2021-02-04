@@ -12020,8 +12020,8 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "18 */4 * * *"
-  name: ci-google-knative-gcp-continuous
+- cron: "58 8 * * *"
+  name: ci-google-knative-gcp-main-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
@@ -12030,10 +12030,10 @@ periodics:
   extra_refs:
   - org: google
     repo: knative-gcp
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: google-knative-gcp
-    testgrid-tab-name: google-knative-gcp-continuous
+    testgrid-tab-name: google-knative-gcp-main-continuous
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -12042,28 +12042,51 @@ periodics:
       command:
       - runner.sh
       args:
-      - "./test/presubmit-tests.sh"
-      - "--all-tests"
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
       volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
       resources:
         requests:
           memory: 12Gi
         limits:
           memory: 16Gi
     volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
-- cron: "14 8,11,22 * * *"
-  name: ci-google-knative-gcp-continuous-beta-prow-tests
+- cron: "2 8,11 * * *"
+  name: ci-google-knative-gcp-main-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
   decoration_config:
@@ -12072,10 +12095,10 @@ periodics:
   extra_refs:
   - org: google
     repo: knative-gcp
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-prow-tests
-    testgrid-tab-name: google-knative-gcp-continuous-beta-prow-tests
+    testgrid-tab-name: google-knative-gcp-main-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -12084,23 +12107,46 @@ periodics:
       command:
       - runner.sh
       args:
-      - "./test/presubmit-tests.sh"
-      - "--all-tests"
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
       volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
       env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
       resources:
         requests:
           memory: 12Gi
         limits:
           memory: 16Gi
     volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -12624,8 +12670,8 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "34 9 * * *"
-  name: ci-google-knative-gcp-nightly-release
+- cron: "28 9 * * *"
+  name: ci-google-knative-gcp-main-nightly-release
   agent: kubernetes
   decorate: true
   decoration_config:
@@ -12634,12 +12680,11 @@ periodics:
   extra_refs:
   - org: google
     repo: knative-gcp
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: google-knative-gcp
-    testgrid-tab-name: google-knative-gcp-nightly-release
-    testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: "1"
+    testgrid-tab-name: google-knative-gcp-main-nightly-release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12659,6 +12704,8 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
       resources:
         requests:
           memory: 12Gi
@@ -12892,8 +12939,8 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "42 */4 * * *"
-  name: ci-google-knative-gcp-auto-release
+- cron: "48 */4 * * *"
+  name: ci-google-knative-gcp-main-auto-release
   agent: kubernetes
   decorate: true
   decoration_config:
@@ -12902,12 +12949,11 @@ periodics:
   extra_refs:
   - org: google
     repo: knative-gcp
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: google-knative-gcp
-    testgrid-tab-name: google-knative-gcp-auto-release
-    testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: "1"
+    testgrid-tab-name: google-knative-gcp-main-auto-release
+    testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12934,6 +12980,8 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
       resources:
         requests:
           memory: 12Gi

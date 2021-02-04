@@ -911,7 +911,8 @@ periodics:
   - continuous: true
     needs-dind: true
   google/knative-gcp:
-  - continuous: true
+  - branch-ci: true
+    branch: main
     resources:
       requests:
         memory: 12Gi
@@ -946,6 +947,7 @@ periodics:
       limits:
         memory: 16Gi
   - nightly: true
+    branch: main
     resources:
       requests:
         memory: 12Gi
@@ -980,6 +982,7 @@ periodics:
       limits:
         memory: 16Gi
   - auto-release: true
+    branch: main
     resources:
       requests:
         memory: 12Gi
