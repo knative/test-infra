@@ -723,6 +723,8 @@ periodics:
   - nightly: true
   - dot-release: true
     release: "0.18"
+  - dot-release: true
+    release: "0.19"
   knative-sandbox/kn-plugin-admin:
   - continuous: true
   knative/docs:
