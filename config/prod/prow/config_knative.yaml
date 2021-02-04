@@ -1180,8 +1180,11 @@ periodics:
         job_states_to_report:
         - failure
         report_template: '"The nightly release job for eventing-rabbitmq failed, check the log: <{{.Status.URL}}|View logs>"'
-  - dot-release: true
   - auto-release: true
+  - dot-release: true
+    release: "0.19"
+  - dot-release: true
+    release: "0.20"
   knative-sandbox/eventing-natss:
   - nightly: true
     reporter_config:
@@ -1191,6 +1194,9 @@ periodics:
         - failure
         report_template: '"The nightly release job for eventing-natss failed, check the log: <{{.Status.URL}}|View logs>"'
   - dot-release: true
+    release: "0.19"
+  - dot-release: true
+    release: "0.20"
   - auto-release: true
   knative-sandbox/eventing-autoscaler-keda:
   - continuous: true
