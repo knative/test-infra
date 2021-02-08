@@ -770,6 +770,29 @@ function get_latest_knative_yaml_source() {
   echo "https://storage.googleapis.com/knative-nightly/${repo_name}/latest/${yaml_name}.yaml"
 }
 
+function shellcheck_new_files() {
+  declare -a array_of_files
+  local failed=0
+  readarray -t array_of_files < <(list_changed_files)
+  for filename in "${array_of_files[@]}"; do
+    if echo "${filename}" | grep -q "^vendor/"; then
+      continue
+    fi
+    if file "${filename}" | grep -q "shell script"; then
+      # SC1090 is "Can't follow non-constant source"; we will scan files individually
+      if shellcheck -e SC1090 "${filename}"; then
+        echo "--- PASS: shellcheck on ${filename}"
+      else
+        echo "--- FAIL: shellcheck on ${filename}"
+        failed=1
+      fi
+    fi
+  done
+  if [[ ${failed} -eq 1 ]]; then
+    fail_script "shellcheck failures"
+  fi
+}
+
 function latest_version() {
   # This function works "best effort" and works on Prow but not necessarily locally.
   # The problem is finding the latest release. If a release occurs on the same commit which

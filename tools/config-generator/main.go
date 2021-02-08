@@ -58,6 +58,9 @@ var (
 	pathAliasOrgs = sets.NewString("knative", "knative-sandbox")
 	// GitHub repos that are not using knative.dev path alias.
 	nonPathAliasRepos = sets.NewString("knative/docs")
+
+	// Repos that have changed the branch name from master to main
+	mainBranchRepos = []string{"google/knative-gcp"}
 )
 
 type logFatalfFunc func(string, ...interface{})
@@ -235,7 +238,11 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 		data.ExtraRefs = append(data.ExtraRefs, "  "+data.PathAlias)
 	}
 	data.RepoNameForJob = strings.ToLower(strings.Replace(repo, "/", "-", -1))
-	data.RepoBranch = "master" // Default to be master, will override later for other branches
+	if strExists(mainBranchRepos, repo) {
+		data.RepoBranch = "main" // Default to be main for repos that have changed the branch name from master to main
+	} else {
+		data.RepoBranch = "master" // Default to be master for other repos
+	}
 	data.GcsBucket = GCSBucket
 	data.RepoURI = "github.com/" + repo
 	data.CloneURI = fmt.Sprintf("\"https://%s.git\"", data.RepoURI)
@@ -836,7 +843,7 @@ func main() {
 		// log.Print(spew.Sdump(metaData))
 
 		// These generate "test_groups:"
-		metaData.generateTestGridSection("test_groups", metaData.generateTestGroup, false)
+		metaData.generateTestGridSection("test_groups", generateTestGroup, false)
 		metaData.generateNonAlignedTestGroups()
 
 		// These generate "dashboards:"

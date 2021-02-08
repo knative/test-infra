@@ -81,6 +81,7 @@ func perfClusterPeriodicJob(jobNamePostFix, cronString, command string, args []s
 func perfClusterReconcilePostsubmitJob(jobNamePostFix, command string, args []string, repo repositoryData, sa string) {
 	var data postsubmitJobTemplateData
 	data.Base = perfClusterBaseProwJob(command, args, repo.Name, sa)
+	data.Base.Branches = []string{data.Base.RepoBranch}
 	data.PostsubmitJobName = fmt.Sprintf("post-%s-%s", data.Base.RepoNameForJob, jobNamePostFix)
 	data.PostsubmitCommand = createCommand(data.Base)
 	addMonitoringPubsubLabelsToJob(&data.Base, data.PostsubmitJobName)
