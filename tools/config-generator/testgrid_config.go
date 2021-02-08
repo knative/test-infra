@@ -175,7 +175,7 @@ func getTestgroupExtras(projName, jobName string) map[string]string {
 	switch jobName {
 	case "continuous":
 		// projName has the release encoded into it, so the main page at http://testgrid.knative.dev
-		// does not mix releases with the master branch
+		// does not mix releases with the master/main branch
 		if releaseRegex.FindString(projName) != "" {
 			extras["num_failures_to_alert"] = "3"
 			extras["alert_options"] = "\n    alert_mail_to_addresses: \"serverless-engprod-sea@google.com\""
@@ -232,7 +232,7 @@ func fmtTabAnnotation(tabName string) string {
 }
 
 // generateTestGroup generates the test group configuration
-func (t *TestGridMetaData) generateTestGroup(projName string, repoName string, jobNames []string) {
+func generateTestGroup(projName string, repoName string, jobNames []string) {
 	projRepoStr := buildProjRepoStr(projName, repoName)
 	for _, jobName := range jobNames {
 		testGroupName := getTestGroupName(projRepoStr, jobName)

@@ -245,11 +245,10 @@ func TestFmtTabAnnotation(t *testing.T) {
 
 func TestTestGridMetaDataGenerateTestGroup(t *testing.T) {
 	SetupForTesting()
-	data := NewTestGridMetaData()
 	projName := "proj-name"
 	repoName := "repo-name"
 	jobNames := []string{"continuous", "dot-release", "webhook-api-coverage", "test-coverage", "default"}
-	data.generateTestGroup(projName, repoName, jobNames)
+	generateTestGroup(projName, repoName, jobNames)
 	if len(GetOutput()) == 0 {
 		t.Errorf("No output")
 	}

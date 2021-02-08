@@ -43,6 +43,7 @@ type postsubmitJobTemplateData struct {
 func generateGoCoveragePostsubmit(title, repoName string, _ yaml.MapSlice) {
 	var data postsubmitJobTemplateData
 	data.Base = newbaseProwJobTemplateData(repoName)
+	data.Base.Branches = []string{data.Base.RepoBranch}
 	data.PostsubmitJobName = fmt.Sprintf("post-%s-go-coverage", data.Base.RepoNameForJob)
 	addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 	configureServiceAccountForJob(&data.Base)

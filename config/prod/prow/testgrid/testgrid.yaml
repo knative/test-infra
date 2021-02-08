@@ -1018,8 +1018,8 @@ test_groups:
 - name: ci-knative-test-infra-go-coverage-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-test-infra-go-coverage-beta-prow-tests
   short_text_metric: "coverage"
-- name: ci-google-knative-gcp-main-continuous-beta-prow-tests
-  gcs_prefix: knative-prow/logs/ci-google-knative-gcp-main-continuous-beta-prow-tests
+- name: ci-google-knative-gcp-continuous-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-google-knative-gcp-continuous-beta-prow-tests
 - name: ci-google-knative-gcp-0.17-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-google-knative-gcp-0.17-continuous-beta-prow-tests
 - name: ci-google-knative-gcp-0.18-continuous-beta-prow-tests
@@ -2448,8 +2448,8 @@ dashboards:
   - name: ci-knative-test-infra-go-coverage
     test_group_name: ci-knative-test-infra-go-coverage-beta-prow-tests
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
-  - name: ci-google-knative-gcp-main-continuous
-    test_group_name: ci-google-knative-gcp-main-continuous-beta-prow-tests
+  - name: ci-google-knative-gcp-continuous
+    test_group_name: ci-google-knative-gcp-continuous-beta-prow-tests
     base_options: "sort-by-failures="
   - name: ci-google-knative-gcp-0.17-continuous
     test_group_name: ci-google-knative-gcp-0.17-continuous-beta-prow-tests

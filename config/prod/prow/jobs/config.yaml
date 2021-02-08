@@ -12020,8 +12020,8 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "58 8 * * *"
-  name: ci-google-knative-gcp-main-continuous
+- cron: "18 */4 * * *"
+  name: ci-google-knative-gcp-continuous
   agent: kubernetes
   decorate: true
   decoration_config:
@@ -12033,7 +12033,7 @@ periodics:
     base_ref: main
   annotations:
     testgrid-dashboards: google-knative-gcp
-    testgrid-tab-name: google-knative-gcp-main-continuous
+    testgrid-tab-name: google-knative-gcp-continuous
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -12042,51 +12042,25 @@ periodics:
       command:
       - runner.sh
       args:
-      - "./hack/release.sh"
-      - "--nopublish"
-      - "--notag-release"
-      securityContext:
-        privileged: true
+      - "./test/presubmit-tests.sh"
+      - "--all-tests"
       volumeMounts:
-      - name: docker-graph
-        mountPath: /docker-graph
-      - name: modules
-        mountPath: /lib/modules
-      - name: cgroup
-        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
       env:
-      - name: DOCKER_IN_DOCKER_ENABLED
-        value: "true"
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: PULL_BASE_REF
         value: main
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
     volumes:
-    - name: docker-graph
-      emptyDir: {}
-    - name: modules
-      hostPath:
-        path: /lib/modules
-        type: Directory
-    - name: cgroup
-      hostPath:
-        path: /sys/fs/cgroup
-        type: Directory
     - name: test-account
       secret:
         secretName: test-account
-- cron: "2 8,11 * * *"
-  name: ci-google-knative-gcp-main-continuous-beta-prow-tests
+- cron: "14 8,11,22 * * *"
+  name: ci-google-knative-gcp-continuous-beta-prow-tests
   agent: kubernetes
   decorate: true
   decoration_config:
@@ -12098,7 +12072,7 @@ periodics:
     base_ref: main
   annotations:
     testgrid-dashboards: knative-prow-tests
-    testgrid-tab-name: google-knative-gcp-main-continuous-beta-prow-tests
+    testgrid-tab-name: google-knative-gcp-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -12107,46 +12081,20 @@ periodics:
       command:
       - runner.sh
       args:
-      - "./hack/release.sh"
-      - "--nopublish"
-      - "--notag-release"
-      securityContext:
-        privileged: true
+      - "./test/presubmit-tests.sh"
+      - "--all-tests"
       volumeMounts:
-      - name: docker-graph
-        mountPath: /docker-graph
-      - name: modules
-        mountPath: /lib/modules
-      - name: cgroup
-        mountPath: /sys/fs/cgroup
       - name: test-account
         mountPath: /etc/test-account
         readOnly: true
       env:
-      - name: DOCKER_IN_DOCKER_ENABLED
-        value: "true"
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: PULL_BASE_REF
         value: main
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
     volumes:
-    - name: docker-graph
-      emptyDir: {}
-    - name: modules
-      hostPath:
-        path: /lib/modules
-        type: Directory
-    - name: cgroup
-      hostPath:
-        path: /sys/fs/cgroup
-        type: Directory
     - name: test-account
       secret:
         secretName: test-account
@@ -12670,8 +12618,8 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "28 9 * * *"
-  name: ci-google-knative-gcp-main-nightly-release
+- cron: "34 9 * * *"
+  name: ci-google-knative-gcp-nightly-release
   agent: kubernetes
   decorate: true
   decoration_config:
@@ -12683,8 +12631,9 @@ periodics:
     base_ref: main
   annotations:
     testgrid-dashboards: google-knative-gcp
-    testgrid-tab-name: google-knative-gcp-main-nightly-release
-    testgrid-alert-stale-results-hours: "3"
+    testgrid-tab-name: google-knative-gcp-nightly-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -12939,8 +12888,8 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "48 */4 * * *"
-  name: ci-google-knative-gcp-main-auto-release
+- cron: "42 */4 * * *"
+  name: ci-google-knative-gcp-auto-release
   agent: kubernetes
   decorate: true
   decoration_config:
@@ -12952,8 +12901,9 @@ periodics:
     base_ref: main
   annotations:
     testgrid-dashboards: google-knative-gcp
-    testgrid-tab-name: google-knative-gcp-main-auto-release
-    testgrid-alert-stale-results-hours: "3"
+    testgrid-tab-name: google-knative-gcp-auto-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -13006,7 +12956,7 @@ periodics:
   extra_refs:
   - org: google
     repo: knative-gcp
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: google-knative-gcp
     testgrid-tab-name: google-knative-gcp-go-coverage
@@ -13032,7 +12982,7 @@ periodics:
   extra_refs:
   - org: google
     repo: knative-gcp
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: google-knative-gcp-go-coverage-beta-prow-tests
@@ -17828,7 +17778,7 @@ periodics:
   extra_refs:
   - org: google
     repo: knative-gcp
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-create-test-group: "false"
   spec:
@@ -17869,7 +17819,7 @@ periodics:
   extra_refs:
   - org: google
     repo: knative-gcp
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-create-test-group: "false"
   spec:
@@ -17902,7 +17852,7 @@ postsubmits:
   knative/serving:
   - name: post-knative-serving-reconcile-clusters
     branches:
-    - master
+    - "master"
     annotations:
       testgrid-create-test-group: "false"
     agent: kubernetes
@@ -17943,7 +17893,7 @@ postsubmits:
   knative/client:
   - name: post-knative-client-go-coverage
     branches:
-    - master
+    - "master"
     annotations:
       testgrid-create-test-group: "false"
     agent: kubernetes
@@ -17963,7 +17913,7 @@ postsubmits:
   knative/eventing:
   - name: post-knative-eventing-go-coverage
     branches:
-    - master
+    - "master"
     annotations:
       testgrid-create-test-group: "false"
     agent: kubernetes
@@ -17983,7 +17933,7 @@ postsubmits:
   knative/eventing-contrib:
   - name: post-knative-eventing-contrib-go-coverage
     branches:
-    - master
+    - "master"
     annotations:
       testgrid-create-test-group: "false"
     agent: kubernetes
@@ -18003,7 +17953,7 @@ postsubmits:
   knative/docs:
   - name: post-knative-docs-go-coverage
     branches:
-    - master
+    - "master"
     annotations:
       testgrid-create-test-group: "false"
     agent: kubernetes
@@ -18022,7 +17972,7 @@ postsubmits:
   knative/test-infra:
   - name: post-knative-test-infra-go-coverage
     branches:
-    - master
+    - "master"
     annotations:
       testgrid-create-test-group: "false"
     agent: kubernetes
@@ -18042,7 +17992,7 @@ postsubmits:
   google/knative-gcp:
   - name: post-google-knative-gcp-reconcile-clusters
     branches:
-    - master
+    - "main"
     annotations:
       testgrid-create-test-group: "false"
     agent: kubernetes
@@ -18081,7 +18031,7 @@ postsubmits:
           secretName: performance-test
   - name: post-google-knative-gcp-go-coverage
     branches:
-    - master
+    - "main"
     annotations:
       testgrid-create-test-group: "false"
     agent: kubernetes
@@ -18100,7 +18050,7 @@ postsubmits:
   knative-sandbox/net-certmanager:
   - name: post-knative-sandbox-net-certmanager-go-coverage
     branches:
-    - master
+    - "master"
     annotations:
       testgrid-create-test-group: "false"
     agent: kubernetes
@@ -18120,7 +18070,7 @@ postsubmits:
   knative-sandbox/net-ingressv2:
   - name: post-knative-sandbox-net-ingressv2-go-coverage
     branches:
-    - master
+    - "master"
     annotations:
       testgrid-create-test-group: "false"
     agent: kubernetes
@@ -18140,7 +18090,7 @@ postsubmits:
   knative-sandbox/net-istio:
   - name: post-knative-sandbox-net-istio-go-coverage
     branches:
-    - master
+    - "master"
     annotations:
       testgrid-create-test-group: "false"
     agent: kubernetes
@@ -18160,7 +18110,7 @@ postsubmits:
   knative-sandbox/net-kourier:
   - name: post-knative-sandbox-net-kourier-go-coverage
     branches:
-    - master
+    - "master"
     annotations:
       testgrid-create-test-group: "false"
     agent: kubernetes
@@ -18180,7 +18130,7 @@ postsubmits:
   knative/operator:
   - name: post-knative-operator-go-coverage
     branches:
-    - master
+    - "master"
     annotations:
       testgrid-create-test-group: "false"
     agent: kubernetes
@@ -18200,7 +18150,7 @@ postsubmits:
   knative-sandbox/async-component:
   - name: post-knative-sandbox-async-component-go-coverage
     branches:
-    - master
+    - "master"
     annotations:
       testgrid-create-test-group: "false"
     agent: kubernetes
@@ -18220,7 +18170,7 @@ postsubmits:
   knative-sandbox/eventing-kafka:
   - name: post-knative-sandbox-eventing-kafka-go-coverage
     branches:
-    - master
+    - "master"
     annotations:
       testgrid-create-test-group: "false"
     agent: kubernetes
@@ -18240,7 +18190,7 @@ postsubmits:
   knative-sandbox/eventing-kafka-broker:
   - name: post-knative-sandbox-eventing-kafka-broker-go-coverage
     branches:
-    - master
+    - "master"
     annotations:
       testgrid-create-test-group: "false"
     agent: kubernetes
