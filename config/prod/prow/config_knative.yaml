@@ -580,6 +580,22 @@ periodics:
     - ./test/e2e-tests.sh --istio-version latest --no-mesh
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --istio-version latest --no-mesh
+  - custom-job: istio-head-mesh
+    command:
+    - ./test/presubmit-tests.sh
+    args:
+    - --run-test
+    - ./test/e2e-tests.sh --istio-version head --mesh
+    - --run-test
+    - ./test/e2e-auto-tls-tests.sh --istio-version head --mesh
+  - custom-job: istio-head-no-mesh
+    command:
+    - ./test/presubmit-tests.sh
+    args:
+    - --run-test
+    - ./test/e2e-tests.sh --istio-version head --no-mesh
+    - --run-test
+    - ./test/e2e-auto-tls-tests.sh --istio-version head --no-mesh
   - custom-job: istio-stable-mesh
     command:
     - ./test/presubmit-tests.sh
