@@ -35,6 +35,13 @@ presubmits:
         - "--config-path=peribolos/knative.yaml"
         - "--github-token-path=/etc/github/token"
         - "--min-admins=5"
+        - "--fix-org=true"
+        - "--fix-org-members=true"
+        - "--fix-teams=true"
+        - "--fix-team-members=true"
+        - "--fix-team-repos=true"
+        - "--fix-repos=true"
+        - "--tokens=1200"
         # Set --confirm=false to only validate the configuration file.
         - "--confirm=false"
         volumeMounts:
@@ -63,6 +70,13 @@ presubmits:
         - "--config-path=peribolos/knative-sandbox.yaml"
         - "--github-token-path=/etc/github/token"
         - "--min-admins=5"
+        - "--fix-org=true"
+        - "--fix-org-members=true"
+        - "--fix-teams=true"
+        - "--fix-team-members=true"
+        - "--fix-team-repos=true"
+        - "--fix-repos=true"
+        - "--tokens=1200"
         # Set --confirm=false to only validate the configuration file.
         - "--confirm=false"
         volumeMounts:
