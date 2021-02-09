@@ -64,6 +64,12 @@ test_groups:
 - name: ci-knative-serving-istio-latest-no-mesh
   gcs_prefix: knative-prow/logs/ci-knative-serving-istio-latest-no-mesh
   alert_stale_results_hours: 3
+- name: ci-knative-serving-istio-head-mesh
+  gcs_prefix: knative-prow/logs/ci-knative-serving-istio-head-mesh
+  alert_stale_results_hours: 3
+- name: ci-knative-serving-istio-head-no-mesh
+  gcs_prefix: knative-prow/logs/ci-knative-serving-istio-head-no-mesh
+  alert_stale_results_hours: 3
 - name: ci-knative-serving-istio-stable-mesh
   gcs_prefix: knative-prow/logs/ci-knative-serving-istio-stable-mesh
   alert_stale_results_hours: 3
@@ -1176,6 +1182,12 @@ dashboards:
     base_options: "sort-by-name="
   - name: istio-latest-no-mesh
     test_group_name: ci-knative-serving-istio-latest-no-mesh
+    base_options: "sort-by-name="
+  - name: istio-head-mesh
+    test_group_name: ci-knative-serving-istio-head-mesh
+    base_options: "sort-by-name="
+  - name: istio-head-no-mesh
+    test_group_name: ci-knative-serving-istio-head-no-mesh
     base_options: "sort-by-name="
   - name: istio-stable-mesh
     test_group_name: ci-knative-serving-istio-stable-mesh
