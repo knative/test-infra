@@ -495,7 +495,7 @@ presubmits:
     optional: true
     run_if_changed: "^third_party/gloo-latest/*"
     rerun_command: "/test pull-knative-serving-gloo-0.17.1"
-    trigger: "(?m)^/test (all|pull-knative-serving-gloo-0.17.1),?(\\s+|$)"
+    trigger: "(?m)^/test (pull-knative-serving-gloo-0.17.1),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
@@ -538,7 +538,7 @@ presubmits:
     optional: true
     run_if_changed: "^third_party/gloo-latest/*"
     rerun_command: "/test pull-knative-serving-gloo-0.17.1-tls"
-    trigger: "(?m)^/test (all|pull-knative-serving-gloo-0.17.1-tls),?(\\s+|$)"
+    trigger: "(?m)^/test (pull-knative-serving-gloo-0.17.1-tls),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
@@ -753,7 +753,7 @@ presubmits:
     optional: true
     run_if_changed: "^third_party/ambassador-latest/*"
     rerun_command: "/test pull-knative-serving-ambassador-latest"
-    trigger: "(?m)^/test (all|pull-knative-serving-ambassador-latest),?(\\s+|$)"
+    trigger: "(?m)^/test (pull-knative-serving-ambassador-latest),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
@@ -796,7 +796,7 @@ presubmits:
     optional: true
     run_if_changed: "^third_party/ambassador-latest/*"
     rerun_command: "/test pull-knative-serving-ambassador-latest-tls"
-    trigger: "(?m)^/test (all|pull-knative-serving-ambassador-latest-tls),?(\\s+|$)"
+    trigger: "(?m)^/test (pull-knative-serving-ambassador-latest-tls),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
@@ -839,7 +839,7 @@ presubmits:
     optional: true
     run_if_changed: "^third_party/kong-latest/*"
     rerun_command: "/test pull-knative-serving-kong-latest"
-    trigger: "(?m)^/test (all|pull-knative-serving-kong-latest),?(\\s+|$)"
+    trigger: "(?m)^/test (pull-knative-serving-kong-latest),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
@@ -882,7 +882,7 @@ presubmits:
     optional: true
     run_if_changed: "^third_party/kong-latest/*"
     rerun_command: "/test pull-knative-serving-kong-latest-tls"
-    trigger: "(?m)^/test (all|pull-knative-serving-kong-latest-tls),?(\\s+|$)"
+    trigger: "(?m)^/test (pull-knative-serving-kong-latest-tls),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/serving
     cluster: "build-knative"
