@@ -524,6 +524,7 @@ presubmits:
     args:
     - --run-test
     - ./test/e2e-tests.sh --mt-source
+    optional: true
   - integration-tests: false
   - build-tests: true
     needs-dind: true

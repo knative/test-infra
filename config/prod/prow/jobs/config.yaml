@@ -4733,7 +4733,7 @@ presubmits:
     agent: kubernetes
     context: pull-knative-sandbox-eventing-kafka-integration-test-mt-source
     always_run: true
-    optional: false
+    optional: true
     rerun_command: "/test pull-knative-sandbox-eventing-kafka-integration-test-mt-source"
     trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-integration-test-mt-source),?(\\s+|$)"
     decorate: true
