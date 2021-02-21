@@ -31,8 +31,16 @@ REPO_YAML_PATH_TO_CHECK="${2:-}"
 make -C "${REPO_ROOT_DIR}/config/prod" get-cluster-credentials
 trap "make -C '${REPO_ROOT_DIR}/config/prod' unset-cluster-credentials" EXIT
 
-CONFIG_YAML="$(mktemp)"
-PLUGINS_YAML="$(mktemp)"
+# Download prow core config from prow
+if (( IS_OSX )); then
+  # On OS X, the file has to be under /private other it cannot be mounted by the container.
+  # See https://stackoverflow.com/questions/45122459/docker-mounts-denied-the-paths-are-not-shared-from-os-x-and-are-not-known/45123074
+  CONFIG_YAML="/private$(mktemp)"
+  PLUGINS_YAML="/private$(mktemp)"
+else
+  CONFIG_YAML="$(mktemp)"
+  PLUGINS_YAML="$(mktemp)"
+fi
 JOB_YAML="${REPO_ROOT_DIR}/config/prod/prow/jobs"
 
 kubectl get configmaps config -o "jsonpath={.data['config\.yaml']}" >"${CONFIG_YAML}"
@@ -45,11 +53,13 @@ REPO_YAML_PATH_ARG=""
 [[ -n "${REPO_NAME_TO_CHECK}" ]] && REPO_NAME_ARG="--prow-yaml-repo-name=${REPO_NAME_TO_CHECK}"
 [[ -n "${REPO_YAML_PATH_TO_CHECK}" ]] && REPO_YAML_PATH_ARG="--prow-yaml-repo-path=${REPO_YAML_PATH_TO_CHECK}"
 
+# TODO: Re-enable the mismatched-tide-lenient warning after we're done experimenting with CODEOWNERS in net-contour.
 docker run -i --rm \
     -v "${PWD}:${PWD}" -v "${CONFIG_YAML}:${CONFIG_YAML}" -v "${PLUGINS_YAML}:${PLUGINS_YAML}" -v "${JOB_YAML}:${JOB_YAML}" \
     -w "${PWD}" \
-    gcr.io/k8s-prow/checkconfig:v20200904-8d0a527a58 \
+    gcr.io/k8s-prow/checkconfig:v20210221-05cfa7fce9 \
     "--config-path=${CONFIG_YAML}" "--job-config-path=${JOB_YAML}" \
     "--plugin-config=${PLUGINS_YAML}" "--strict" "--exclude-warning=mismatched-tide" \
     "--exclude-warning=long-job-names" \
+    "--exclude-warning=mismatched-tide-lenient" \
     "${REPO_NAME_ARG}" "${REPO_YAML_PATH_ARG}"
