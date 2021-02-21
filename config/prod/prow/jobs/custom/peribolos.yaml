@@ -17,7 +17,7 @@
 
 presubmits:
   knative/community:
-  # Run on the Prow deployment cluster as it needs access to the github oauth token.
+  # Run on the prow-trusted build cluster as it needs access to the github oauth token.
   - name: pull-knative-peribolos
     agent: kubernetes
     decorate: true
@@ -52,7 +52,7 @@ presubmits:
       - name: oauth
         secret:
           secretName: github-token-for-peribolos
-  # Run on the Prow deployment cluster as it needs access to the github oauth token.
+  # Run on the prow-trusted build cluster as it needs access to the github oauth token.
   - name: pull-knative-sandbox-peribolos
     agent: kubernetes
     decorate: true
@@ -90,7 +90,7 @@ presubmits:
 
 postsubmits:
   knative/community:
-  # Run on the Prow deployment cluster as it needs access to the github oauth token.
+  # Run on the prow-trusted build cluster as it needs access to the github oauth token.
   - name: post-knative-peribolos
     agent: kubernetes
     decorate: true
@@ -100,6 +100,12 @@ postsubmits:
     cluster: "prow-trusted"
     branches:
     - "master"
+    reporter_config:
+      slack:
+        channel: productivity
+        job_states_to_report:
+          - failure
+        report_template: '"The knative peribolos postsubmit job fails, check the log: <{{.Status.URL}}|View logs>"'
     spec:
       containers:
       - image: gcr.io/k8s-prow/peribolos:v20201103-bb494c0354
@@ -125,7 +131,7 @@ postsubmits:
       - name: oauth
         secret:
           secretName: github-token-for-peribolos
-  # Run on the Prow deployment cluster as it needs access to the github oauth token.
+  # Run on the prow-trusted build cluster as it needs access to the github oauth token.
   - name: post-knative-sandbox-peribolos
     agent: kubernetes
     decorate: true
@@ -135,6 +141,12 @@ postsubmits:
     cluster: "prow-trusted"
     branches:
     - "master"
+    reporter_config:
+      slack:
+        channel: productivity
+        job_states_to_report:
+          - failure
+        report_template: '"The knative-sandbox peribolos postsubmit job fails, check the log: <{{.Status.URL}}|View logs>"'
     spec:
       containers:
       - image: gcr.io/k8s-prow/peribolos:v20201103-bb494c0354
