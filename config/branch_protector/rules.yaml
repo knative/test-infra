@@ -48,6 +48,16 @@ branch-protection:
         net-istio: *codeowners
         net-kourier: *codeowners
 
+        sample-controller: *codeowners
+        sample-source: *codeowners
+
+        .github: *codeowners
+        downstream-test-go: *codeowners
+        integration: *codeowners
+        knobots: *codeowners
+        kperf: *codeowners
+        reconciler-test: *codeowners
+
     knative:
       # Protect all branches in knative
       protect: true
