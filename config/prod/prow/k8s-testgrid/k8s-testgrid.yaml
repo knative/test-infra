@@ -23,7 +23,6 @@ dashboards:
 - name: google-knative-gcp
 - name: knative-caching
 - name: knative-client
-- name: knative-client-contrib
 - name: knative-docs
 - name: knative-eventing
 - name: knative-eventing-contrib
@@ -67,7 +66,6 @@ dashboard_groups:
     dashboard_names:
       - "knative-caching"
       - "knative-client"
-      - "knative-client-contrib"
       - "knative-docs"
       - "knative-eventing"
       - "knative-eventing-contrib"
