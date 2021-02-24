@@ -26,37 +26,11 @@ branch-protection:
       # Enforce all configured restrictions above for administrators.
       enforce_admins: true
 
-      # These repos are canarying additional protections.
-      repos:
-        net-contour: &codeowners
-          required_status_checks:
-            contexts:
-            - cla/google
-            - tide
-          # Enforce all configured restrictions above for administrators.
-          enforce_admins: true
-
-          # The extra protections
-          required_pull_request_reviews:
-            dismiss_stale_reviews: true
-            required_approving_review_count: 1
-            require_code_owner_reviews: true
-
-        net-certmanager: *codeowners
-        net-http01: *codeowners
-        net-ingressv2: *codeowners
-        net-istio: *codeowners
-        net-kourier: *codeowners
-
-        sample-controller: *codeowners
-        sample-source: *codeowners
-
-        .github: *codeowners
-        downstream-test-go: *codeowners
-        integration: *codeowners
-        knobots: *codeowners
-        kperf: *codeowners
-        reconciler-test: *codeowners
+      # The knative-sandbox repositories are using CODEOWNERS for access control.
+      required_pull_request_reviews:
+        dismiss_stale_reviews: true
+        required_approving_review_count: 1
+        require_code_owner_reviews: true
 
     knative:
       # Protect all branches in knative
