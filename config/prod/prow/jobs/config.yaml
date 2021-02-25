@@ -5909,7 +5909,7 @@ periodics:
       - "--run-test"
       - "./test/e2e-tests.sh --istio-version latest --no-mesh"
       - "--run-test"
-      - "./test/e2e-auto-tls-tests.sh --istio-version latest --no-mesh"
+      - "./test/e2e-auto-tls-tests.sh --istio-version latest --no-mesh --run-http01-auto-tls-tests"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -6073,7 +6073,7 @@ periodics:
       - "--run-test"
       - "./test/e2e-tests.sh --istio-version stable --no-mesh"
       - "--run-test"
-      - "./test/e2e-auto-tls-tests.sh --istio-version stable --no-mesh"
+      - "./test/e2e-auto-tls-tests.sh --istio-version stable --no-mesh --run-http01-auto-tls-tests"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account

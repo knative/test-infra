@@ -584,7 +584,7 @@ periodics:
     - --run-test
     - ./test/e2e-tests.sh --istio-version latest --no-mesh
     - --run-test
-    - ./test/e2e-auto-tls-tests.sh --istio-version latest --no-mesh
+    - ./test/e2e-auto-tls-tests.sh --istio-version latest --no-mesh --run-http01-auto-tls-tests
   - custom-job: istio-head-mesh
     command:
     - ./test/presubmit-tests.sh
@@ -616,7 +616,7 @@ periodics:
     - --run-test
     - ./test/e2e-tests.sh --istio-version stable --no-mesh
     - --run-test
-    - ./test/e2e-auto-tls-tests.sh --istio-version stable --no-mesh
+    - ./test/e2e-auto-tls-tests.sh --istio-version stable --no-mesh --run-http01-auto-tls-tests
   - custom-job: gloo-0.17.1
     command:
     - ./test/presubmit-tests.sh
