@@ -632,7 +632,7 @@ periodics:
     - --run-test
     - ./test/e2e-tests.sh --kourier-version stable
     - --run-test
-    - ./test/e2e-auto-tls-tests.sh --kourier-version stable
+    - ./test/e2e-auto-tls-tests.sh --kourier-version stable --run-http01-auto-tls-tests
   - custom-job: contour-latest
     command:
     - ./test/presubmit-tests.sh
@@ -640,7 +640,7 @@ periodics:
     - --run-test
     - ./test/e2e-tests.sh --contour-version latest
     - --run-test
-    - ./test/e2e-auto-tls-tests.sh --contour-version latest
+    - ./test/e2e-auto-tls-tests.sh --contour-version latest --run-http01-auto-tls-tests
   - custom-job: ambassador-latest
     command:
     - ./test/presubmit-tests.sh
