@@ -120,6 +120,18 @@ presubmits:
         memory: 12Gi
       limits:
         memory: 16Gi
+  - custom-test: istio-stable-no-mesh-tls-with-http01
+    needs-monitor: true
+    always-run: false
+    optional: true
+    args:
+    - --run-test
+    - ./test/e2e-auto-tls-tests.sh --istio-version stable --no-mesh --run-http01-auto-tls-tests
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
   - custom-test: gloo-0.17.1
     needs-monitor: true
     always-run: false
