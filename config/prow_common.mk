@@ -108,7 +108,7 @@ verify-testgrid-config:
 		-v "$(GOOGLE_APPLICATION_CREDENTIALS):$(GOOGLE_APPLICATION_CREDENTIALS)" \
 		-e "GOOGLE_APPLICATION_CREDENTIALS" \
 		-w "$(PWD)" \
-		gcr.io/k8s-prow/configurator:v20200519-00d052e16 \
+		gcr.io/k8s-prow/configurator:v20210301-e465510989 \
 		--validate-config-file \
 		"--yaml=$(realpath $(TESTGRID_CONFIG))"
 

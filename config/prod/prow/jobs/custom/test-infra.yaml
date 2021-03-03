@@ -104,9 +104,8 @@ presubmits:
         - knative
   - name: pull-test-infra-validate-own-testgrid-yaml
     decorate: true
-    always_run: false
-    optional: true
-    # run_if_changed: "^config/prod/prow/(jobs|k8s-testgrid)/.*.yaml"
+    optional: false
+    run_if_changed: "^config/prod/prow/(jobs|k8s-testgrid)/.*.yaml"
     branches:
     - "master"
     cluster: "build-knative"
@@ -116,15 +115,15 @@ presubmits:
       base_ref: master
     spec:
       containers:
-      - image: gcr.io/k8s-prow/configurator
+      - image: gcr.io/k8s-prow/configurator:v20210301-e465510989
+        command:
+        - /app/testgrid/cmd/configurator/app.binary
         args:
-        - --prow-config
-        - ../../GoogleCloudPlatform/oss-test-infra/prow/knative/config.yaml
-        - --prow-job-config
-        - config/prod/prow/jobs/config.yaml
-        - --yaml
-        - config/prod/prow/k8s-testgrid
         - --validate-config-file
+        - --prow-config=../../GoogleCloudPlatform/oss-test-infra/prow/knative/config.yaml
+        - --prow-job-config=config/prod/prow/jobs/config.yaml
+        - --default=config/prod/prow/k8s-testgrid/testgrid-common-settings.yaml
+        - --yaml=config/prod/prow/k8s-testgrid/k8s-testgrid.yaml
 
 periodics:
 # ci-knative-heartbeat is used for prometheus, alert(s) will be sent
@@ -602,19 +601,17 @@ postsubmits:
       base_ref: master
     spec:
       containers:
-      - image: gcr.io/k8s-prow/configurator
+      - image: gcr.io/k8s-prow/configurator:v20210301-e465510989
+        command:
+        - /app/testgrid/cmd/configurator/app.binary
         args:
-        - --prow-config
-        - ../../GoogleCloudPlatform/oss-test-infra/prow/knative/config.yaml
-        - --prow-job-config
-        - config/prod/prow/jobs/config.yaml
-        - --yaml
-        - config/prod/prow/k8s-testgrid
+        - --prow-config=../../GoogleCloudPlatform/oss-test-infra/prow/knative/config.yaml
+        - --prow-job-config=config/prod/prow/jobs/config.yaml
+        - --default=config/prod/prow/k8s-testgrid/testgrid-common-settings.yaml
+        - --yaml=config/prod/prow/k8s-testgrid/k8s-testgrid.yaml
         - --oneshot
-        - --output
-        - gs://knative-own-testgrid/config
-        - --gcp-service-account
-        - /etc/test-account/service-account.json
+        - --output=gs://knative-own-testgrid/config
+        - --gcp-service-account=/etc/test-account/service-account.json
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
