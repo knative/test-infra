@@ -69,10 +69,10 @@ unset-cluster-credentials:
 get-build-cluster-credentials: activate-serviceaccount
 	$(SET_BUILD_CLUSTER_CONTEXT)
 
-.PHONY: update-boskos-resource test update-testgrid-config confirm-master
+.PHONY: update-boskos-resource test update-testgrid-config confirm-main
 
 # Update the list of resources for Boskos
-update-boskos-resource: confirm-master
+update-boskos-resource: confirm-main
 	$(SET_BUILD_CLUSTER_CONTEXT)
 	kubectl create configmap resources --from-file=config=$(BOSKOS_RESOURCES) --dry-run --save-config -o yaml | kubectl --namespace="$(JOB_NAMESPACE)" apply -f -
 	$(UNSET_CONTEXT)
@@ -88,7 +88,7 @@ update-all: update-boskos-resource update-testgrid-config
 # Either export $GOOGLE_APPLICATION_CREDENTIALS pointing to a valid service
 # account key, or temporarily use your own credentials by running
 # gcloud auth application-default login
-update-testgrid-config: confirm-master
+update-testgrid-config: confirm-main
 	docker run -i --rm \
 		-v "$(PWD):$(PWD)" \
 		-v "$(realpath $(TESTGRID_CONFIG)):$(realpath $(TESTGRID_CONFIG))" \

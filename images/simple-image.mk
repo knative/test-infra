@@ -47,9 +47,9 @@ iterative-build:
 iterative-shell:
 	docker run -it --entrypoint bash $(IMG):local
 
-push_versioned: confirm-master build
+push_versioned: confirm-main build
 	docker push $(IMG):$(TAG)
 
-push_latest: confirm-master build
+push_latest: confirm-main build
 	docker tag $(IMG):$(TAG) $(IMG):latest
 	docker push $(IMG):latest
