@@ -60,7 +60,22 @@ var (
 	nonPathAliasRepos = sets.NewString("knative/docs")
 
 	// Repos that have changed the branch name from master to main
-	mainBranchRepos = []string{"google/knative-gcp"}
+	mainBranchRepos = sets.NewString(
+		"google/knative-gcp",
+		"knative/release",
+		"knative/specs",
+		"knative/ux",
+		"knative-sandbox/actions-kind",
+		"knative-sandbox/control-protocol",
+		"knative-sandbox/kn-plugin-diag",
+		"knative-sandbox/kn-plugin-event",
+		"knative-sandbox/kn-plugin-migration",
+		"knative-sandbox/kn-plugin-sample",
+		"knative-sandbox/kn-plugin-service-log",
+		"knative-sandbox/kn-plugin-source-kamelet",
+		"knative-sandbox/net-ingressv2",
+		"knative-sandbox/sample-controller",
+	)
 )
 
 type logFatalfFunc func(string, ...interface{})
@@ -238,7 +253,7 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 		data.ExtraRefs = append(data.ExtraRefs, "  "+data.PathAlias)
 	}
 	data.RepoNameForJob = strings.ToLower(strings.Replace(repo, "/", "-", -1))
-	if strExists(mainBranchRepos, repo) {
+	if mainBranchRepos.Has(repo) {
 		data.RepoBranch = "main" // Default to be main for repos that have changed the branch name from master to main
 	} else {
 		data.RepoBranch = "master" // Default to be master for other repos

@@ -7653,7 +7653,7 @@ periodics:
   - org: knative-sandbox
     repo: kn-plugin-diag
     path_alias: knative.dev/kn-plugin-diag
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-sandbox-kn-plugin-diag
     testgrid-tab-name: knative-sandbox-kn-plugin-diag-continuous
@@ -7676,6 +7676,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -7691,7 +7693,7 @@ periodics:
   - org: knative-sandbox
     repo: kn-plugin-diag
     path_alias: knative.dev/kn-plugin-diag
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-kn-plugin-diag-continuous-beta-prow-tests
@@ -7714,6 +7716,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -11841,7 +11845,7 @@ periodics:
   - org: knative-sandbox
     repo: sample-controller
     path_alias: knative.dev/sample-controller
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-sandbox-sample-controller
     testgrid-tab-name: knative-sandbox-sample-controller-continuous
@@ -11864,6 +11868,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -11879,7 +11885,7 @@ periodics:
   - org: knative-sandbox
     repo: sample-controller
     path_alias: knative.dev/sample-controller
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-sample-controller-continuous-beta-prow-tests
@@ -11902,6 +11908,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -13952,7 +13960,7 @@ periodics:
   - org: knative-sandbox
     repo: net-ingressv2
     path_alias: knative.dev/net-ingressv2
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-sandbox-net-ingressv2
     testgrid-tab-name: knative-sandbox-net-ingressv2-continuous
@@ -13975,6 +13983,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -13990,7 +14000,7 @@ periodics:
   - org: knative-sandbox
     repo: net-ingressv2
     path_alias: knative.dev/net-ingressv2
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-net-ingressv2-continuous-beta-prow-tests
@@ -14013,6 +14023,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -14034,7 +14046,7 @@ periodics:
   - org: knative-sandbox
     repo: net-ingressv2
     path_alias: knative.dev/net-ingressv2
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-sandbox-net-ingressv2
     testgrid-tab-name: knative-sandbox-net-ingressv2-nightly-release
@@ -14059,6 +14071,8 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -14074,7 +14088,7 @@ periodics:
   - org: knative-sandbox
     repo: net-ingressv2
     path_alias: knative.dev/net-ingressv2
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-sandbox-net-ingressv2
     testgrid-tab-name: knative-sandbox-net-ingressv2-dot-release
@@ -14107,6 +14121,8 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: hub-token
       secret:
@@ -14125,7 +14141,7 @@ periodics:
   - org: knative-sandbox
     repo: net-ingressv2
     path_alias: knative.dev/net-ingressv2
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-sandbox-net-ingressv2
     testgrid-tab-name: knative-sandbox-net-ingressv2-auto-release
@@ -14157,6 +14173,8 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: hub-token
       secret:
@@ -14177,7 +14195,7 @@ periodics:
   - org: knative-sandbox
     repo: net-ingressv2
     path_alias: knative.dev/net-ingressv2
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-sandbox-net-ingressv2
     testgrid-tab-name: knative-sandbox-net-ingressv2-go-coverage
@@ -14204,7 +14222,7 @@ periodics:
   - org: knative-sandbox
     repo: net-ingressv2
     path_alias: knative.dev/net-ingressv2
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-net-ingressv2-go-coverage-beta-prow-tests
@@ -18398,7 +18416,7 @@ postsubmits:
   knative-sandbox/net-ingressv2:
   - name: post-knative-sandbox-net-ingressv2-go-coverage
     branches:
-    - "master"
+    - "main"
     annotations:
       testgrid-create-test-group: "false"
     agent: kubernetes
