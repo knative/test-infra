@@ -340,7 +340,7 @@ periodics:
     containers:
     - image: gcr.io/k8s-testimages/generic_autobump:v20210227-adfdf65
       command:
-      - /autobump.sh
+      - /generic_autobump
       args:
       - --config = "config/prod/prow/knative-autobump-config.yaml"
       volumeMounts:
