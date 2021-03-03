@@ -25,7 +25,7 @@ ZONE := us-central1-a
 DEPLOYMENT_YAML := retryer_service.yaml
 
 .PHONY: deploy
-deploy: confirm-master
+deploy: confirm-main
 ifdef GOOGLE_APPLICATION_CREDENTIALS
 	gcloud auth activate-service-account --key-file="$(GOOGLE_APPLICATION_CREDENTIALS)"
 endif
