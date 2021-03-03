@@ -9,8 +9,6 @@ upstreamURLBase: "https://raw.githubusercontent.com/kubernetes/test-infra/master
 includedConfigPaths:
   - "config/prod/prow/jobs"
 targetVersion: "upstream"
-extraFiles:
-  - "prow/oss/config.yaml"
 prefixes:
   - name: "Prow"
     prefix: "gcr.io/k8s-prow/"
