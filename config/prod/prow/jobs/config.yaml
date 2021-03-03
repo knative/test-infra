@@ -14829,7 +14829,7 @@ periodics:
   - org: knative-sandbox
     repo: net-kourier
     path_alias: knative.dev/net-kourier
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-sandbox-net-kourier
     testgrid-tab-name: knative-sandbox-net-kourier-continuous
@@ -14852,6 +14852,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -14867,7 +14869,7 @@ periodics:
   - org: knative-sandbox
     repo: net-kourier
     path_alias: knative.dev/net-kourier
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-net-kourier-continuous-beta-prow-tests
@@ -14890,6 +14892,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -14911,7 +14915,7 @@ periodics:
   - org: knative-sandbox
     repo: net-kourier
     path_alias: knative.dev/net-kourier
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-sandbox-net-kourier
     testgrid-tab-name: knative-sandbox-net-kourier-nightly-release
@@ -14936,6 +14940,8 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -14951,7 +14957,7 @@ periodics:
   - org: knative-sandbox
     repo: net-kourier
     path_alias: knative.dev/net-kourier
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-sandbox-net-kourier
     testgrid-tab-name: knative-sandbox-net-kourier-dot-release
@@ -14984,6 +14990,8 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: hub-token
       secret:
@@ -15002,7 +15010,7 @@ periodics:
   - org: knative-sandbox
     repo: net-kourier
     path_alias: knative.dev/net-kourier
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-sandbox-net-kourier
     testgrid-tab-name: knative-sandbox-net-kourier-auto-release
@@ -15034,6 +15042,8 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: hub-token
       secret:
@@ -15054,7 +15064,7 @@ periodics:
   - org: knative-sandbox
     repo: net-kourier
     path_alias: knative.dev/net-kourier
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-sandbox-net-kourier
     testgrid-tab-name: knative-sandbox-net-kourier-go-coverage
@@ -15081,7 +15091,7 @@ periodics:
   - org: knative-sandbox
     repo: net-kourier
     path_alias: knative.dev/net-kourier
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-net-kourier-go-coverage-beta-prow-tests
@@ -18669,7 +18679,7 @@ postsubmits:
   knative-sandbox/net-kourier:
   - name: post-knative-sandbox-net-kourier-go-coverage
     branches:
-    - "master"
+    - "main"
     annotations:
       testgrid-create-test-group: "false"
     agent: kubernetes
