@@ -338,37 +338,16 @@ periodics:
     path_alias: knative.dev/test-infra
   spec:
     containers:
-    - image: gcr.io/k8s-prow/autobump:v20210114-dfe4a7d4c0
+    - image: gcr.io/k8s-testimages/generic_autobump:v20210227-adfdf65
       command:
       - /autobump.sh
       args:
-      - /etc/prow-auto-bumper-github-token/token
-      - "Knative Prow Updater Robot"
-      - knative-prow-updater-robot@google.com
+      - --config = "config/prod/prow/knative-autobump-config.yaml"
       volumeMounts:
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
       - name: prow-auto-bumper-github-token
         mountPath: /etc/prow-auto-bumper-github-token
         readOnly: true
-      env:
-      - name: GH_ORG
-        value: knative
-      - name: GH_REPO
-        value: test-infra
-      - name: PLANK_DEPLOYMENT_FILE # Just need a file contains an image tag
-        value: config/prod/prow/jobs/custom/test-infra.yaml
-      - name: COMPONENT_FILE_DIR
-        value: config/prod/prow/jobs # Let it bump twice is fine
-      - name: CONFIG_PATH
-        value: config/prod/prow/jobs/custom/test-infra.yaml # Trick autobump as this is required
-      - name: JOB_CONFIG_PATH
-        value: config/prod/prow/jobs
     volumes:
-    - name: test-account
-      secret:
-        secretName: test-account
     - name: prow-auto-bumper-github-token
       secret:
         secretName: prow-auto-bumper-github-token
