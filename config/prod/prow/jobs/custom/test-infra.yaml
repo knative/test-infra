@@ -342,7 +342,7 @@ periodics:
       command:
       - /generic_autobump
       args:
-      - --config = "config/prod/prow/knative-autobump-config.yaml"
+      - --config=config/prod/prow/knative-autobump-config.yaml
       volumeMounts:
       - name: prow-auto-bumper-github-token
         mountPath: /etc/prow-auto-bumper-github-token
