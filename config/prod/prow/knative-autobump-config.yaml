@@ -1,4 +1,4 @@
-gitHubLogin: "knative-prow-robot"
+gitHubLogin: "knative-prow-updater-robot"
 gitHubToken: "/etc/prow-auto-bumper-github-token/token"
 skipPullRequest: false
 gitHubOrg: "knative"
