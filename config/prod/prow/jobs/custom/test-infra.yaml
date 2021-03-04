@@ -347,10 +347,16 @@ periodics:
       - name: prow-auto-bumper-github-token
         mountPath: /etc/prow-auto-bumper-github-token
         readOnly: true
+      - name: ssh
+        mountPath: /root/.ssh
     volumes:
     - name: prow-auto-bumper-github-token
       secret:
         secretName: prow-auto-bumper-github-token
+    - name: ssh
+      secret:
+        secretName: prow-updater-robot-ssh-key
+        defaultMode: 0400
 
 - cron: "0 */2 * * *" # Every other hour
   name: ci-knative-prow-jobs-syncer
