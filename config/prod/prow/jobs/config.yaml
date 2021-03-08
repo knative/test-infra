@@ -7848,7 +7848,7 @@ periodics:
   - org: knative-sandbox
     repo: kn-plugin-sample
     path_alias: knative.dev/kn-plugin-sample
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-sandbox-kn-plugin-sample
     testgrid-tab-name: knative-sandbox-kn-plugin-sample-continuous
@@ -7871,6 +7871,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -7886,7 +7888,7 @@ periodics:
   - org: knative-sandbox
     repo: kn-plugin-sample
     path_alias: knative.dev/kn-plugin-sample
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-kn-plugin-sample-continuous-beta-prow-tests
@@ -7909,6 +7911,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
