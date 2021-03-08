@@ -58,7 +58,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: test-infra
-    base_ref: master
+    base_ref: main
     path_alias: knative.dev/test-infra
   spec:
     containers:
@@ -91,7 +91,7 @@ postsubmits:
     run_if_changed: "^config/branch_protector/rules.yaml$"
     cluster: "prow-trusted"
     branches:
-    - "master"
+    - "main"
     spec:
       containers:
       - name: branchprotector
