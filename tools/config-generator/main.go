@@ -21,7 +21,6 @@ package main
 
 import (
 	"bytes"
-	"context"
 	"flag"
 	"fmt"
 	"io"
@@ -36,7 +35,6 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/google/go-github/v32/github"
 	"gopkg.in/yaml.v2"
 	"k8s.io/apimachinery/pkg/util/sets"
 
@@ -60,12 +58,6 @@ var (
 	pathAliasOrgs = sets.NewString("knative", "knative-sandbox")
 	// GitHub repos that are not using knative.dev path alias.
 	nonPathAliasRepos = sets.NewString("knative/docs")
-
-	// Repos that have changed the branch name from master to main. We'll automatically
-	// look up everything in the knative and knative-sandbox org.
-	mainBranchRepos = sets.NewString(
-		"google/knative-gcp",
-	)
 )
 
 type logFatalfFunc func(string, ...interface{})
@@ -244,11 +236,7 @@ func newbaseProwJobTemplateData(repo string) baseProwJobTemplateData {
 	}
 	data.RepoNameForJob = strings.ToLower(strings.Replace(repo, "/", "-", -1))
 
-	if mainBranchRepos.Has(repo) {
-		data.RepoBranch = "main" // Default to be main for repos that have changed the branch name from master to main
-	} else {
-		data.RepoBranch = "master" // Default to be master for other repos
-	}
+	data.RepoBranch = "main" // Default to be main for other repos
 	data.GcsBucket = GCSBucket
 	data.RepoURI = "github.com/" + repo
 	data.CloneURI = fmt.Sprintf("\"https://%s.git\"", data.RepoURI)
@@ -763,23 +751,6 @@ func main() {
 		}
 		if err := upgradeReleaseBranchesTemplate(configFileName, gc); err != nil {
 			logFatalf("Failed upgrade based on release branch: '%v'", err)
-		}
-	}
-
-	// Fill in the main exception list. We fetch this once for all of our orgs to avoid
-	// rate-limiting issues with Github.
-	client := github.NewClient(nil)
-	for org := range pathAliasOrgs {
-		repos, _, err := client.Repositories.List(context.Background(), org, &github.RepositoryListOptions{
-			ListOptions: github.ListOptions{PerPage: 200},
-		})
-		if err != nil {
-			logFatalf("Cannot fetch default repos for %s org: %v", org, err)
-		}
-		for _, r := range repos {
-			if r.DefaultBranch != nil && *r.DefaultBranch == "main" {
-				mainBranchRepos.Insert(*r.FullName)
-			}
 		}
 	}
 
