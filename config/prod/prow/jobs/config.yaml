@@ -5435,7 +5435,7 @@ periodics:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-serving
     testgrid-tab-name: knative-serving-continuous
@@ -5458,6 +5458,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
       resources:
         requests:
           memory: 12Gi
@@ -5478,7 +5480,7 @@ periodics:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-serving-continuous-beta-prow-tests
@@ -5501,6 +5503,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
       resources:
         requests:
           memory: 12Gi
@@ -6009,7 +6013,7 @@ periodics:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-serving
     testgrid-tab-name: knative-serving-istio-latest-mesh
@@ -6035,6 +6039,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -6050,7 +6056,7 @@ periodics:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-serving
     testgrid-tab-name: knative-serving-istio-latest-no-mesh
@@ -6076,6 +6082,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -6091,7 +6099,7 @@ periodics:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-serving
     testgrid-tab-name: knative-serving-istio-head-mesh
@@ -6117,6 +6125,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -6132,7 +6142,7 @@ periodics:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-serving
     testgrid-tab-name: knative-serving-istio-head-no-mesh
@@ -6158,6 +6168,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -6173,7 +6185,7 @@ periodics:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-serving
     testgrid-tab-name: knative-serving-istio-stable-mesh
@@ -6199,6 +6211,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -6214,7 +6228,7 @@ periodics:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-serving
     testgrid-tab-name: knative-serving-istio-stable-no-mesh
@@ -6240,6 +6254,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -6255,7 +6271,7 @@ periodics:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-serving
     testgrid-tab-name: knative-serving-gloo-0.17.1
@@ -6281,6 +6297,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -6296,7 +6314,7 @@ periodics:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-serving
     testgrid-tab-name: knative-serving-kourier-stable
@@ -6322,6 +6340,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -6337,7 +6357,7 @@ periodics:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-serving
     testgrid-tab-name: knative-serving-contour-latest
@@ -6363,6 +6383,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -6378,7 +6400,7 @@ periodics:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-serving
     testgrid-tab-name: knative-serving-ambassador-latest
@@ -6404,6 +6426,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -6419,7 +6443,7 @@ periodics:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-serving
     testgrid-tab-name: knative-serving-kong-latest
@@ -6445,6 +6469,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -6460,7 +6486,7 @@ periodics:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-serving
     testgrid-tab-name: knative-serving-https
@@ -6486,6 +6512,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -6507,7 +6535,7 @@ periodics:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-serving
     testgrid-tab-name: knative-serving-nightly-release
@@ -6532,6 +6560,8 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
       resources:
         requests:
           memory: 12Gi
@@ -6772,7 +6802,7 @@ periodics:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-serving
     testgrid-tab-name: knative-serving-auto-release
@@ -6802,6 +6832,8 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
       resources:
         requests:
           memory: 12Gi
@@ -6825,7 +6857,7 @@ periodics:
   - org: knative
     repo: client
     path_alias: knative.dev/client
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-client
     testgrid-tab-name: knative-client-continuous
@@ -6848,6 +6880,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -6863,7 +6897,7 @@ periodics:
   - org: knative
     repo: client
     path_alias: knative.dev/client
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-client-continuous-beta-prow-tests
@@ -6886,6 +6920,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -7389,7 +7425,7 @@ periodics:
   - org: knative
     repo: client
     path_alias: knative.dev/client
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-client
     testgrid-tab-name: knative-client-nightly-release
@@ -7414,6 +7450,8 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -7429,7 +7467,7 @@ periodics:
   - org: knative
     repo: client
     path_alias: knative.dev/client
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-client
     testgrid-tab-name: knative-client-tekton
@@ -7451,6 +7489,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -7666,7 +7706,7 @@ periodics:
   - org: knative
     repo: client
     path_alias: knative.dev/client
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-client
     testgrid-tab-name: knative-client-auto-release
@@ -7696,6 +7736,8 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: hub-token
       secret:
@@ -7716,7 +7758,7 @@ periodics:
   - org: knative
     repo: client
     path_alias: knative.dev/client
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-client
     testgrid-tab-name: knative-client-go-coverage
@@ -7743,7 +7785,7 @@ periodics:
   - org: knative
     repo: client
     path_alias: knative.dev/client
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-client-go-coverage-beta-prow-tests
@@ -8484,7 +8526,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: docs
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-docs
     testgrid-tab-name: knative-docs-continuous
@@ -8517,6 +8559,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -8541,7 +8585,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: docs
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-docs-continuous-beta-prow-tests
@@ -8574,6 +8618,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -8600,7 +8646,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: docs
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-docs
     testgrid-tab-name: knative-docs-go-coverage
@@ -8626,7 +8672,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: docs
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-docs-go-coverage-beta-prow-tests
@@ -8651,7 +8697,7 @@ periodics:
   - org: knative
     repo: eventing
     path_alias: knative.dev/eventing
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-eventing
     testgrid-tab-name: knative-eventing-continuous
@@ -8674,6 +8720,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
       resources:
         requests:
           memory: 12Gi
@@ -8694,7 +8742,7 @@ periodics:
   - org: knative
     repo: eventing
     path_alias: knative.dev/eventing
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-eventing-continuous-beta-prow-tests
@@ -8717,6 +8765,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
       resources:
         requests:
           memory: 12Gi
@@ -9231,7 +9281,7 @@ periodics:
   - org: knative
     repo: eventing
     path_alias: knative.dev/eventing
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-eventing
     testgrid-tab-name: knative-eventing-nightly-release
@@ -9256,6 +9306,8 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
       resources:
         requests:
           memory: 12Gi
@@ -9496,7 +9548,7 @@ periodics:
   - org: knative
     repo: eventing
     path_alias: knative.dev/eventing
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-eventing
     testgrid-tab-name: knative-eventing-auto-release
@@ -9526,6 +9578,8 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
       resources:
         requests:
           memory: 12Gi
@@ -9551,7 +9605,7 @@ periodics:
   - org: knative
     repo: eventing
     path_alias: knative.dev/eventing
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-eventing
     testgrid-tab-name: knative-eventing-go-coverage
@@ -9578,7 +9632,7 @@ periodics:
   - org: knative
     repo: eventing
     path_alias: knative.dev/eventing
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-eventing-go-coverage-beta-prow-tests
@@ -9603,7 +9657,7 @@ periodics:
   - org: knative
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-eventing-contrib
     testgrid-tab-name: knative-eventing-contrib-continuous
@@ -9626,6 +9680,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
       resources:
         requests:
           memory: 12Gi
@@ -9646,7 +9702,7 @@ periodics:
   - org: knative
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-eventing-contrib-continuous-beta-prow-tests
@@ -9669,6 +9725,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
       resources:
         requests:
           memory: 12Gi
@@ -10177,7 +10235,7 @@ periodics:
   - org: knative
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-eventing-contrib
     testgrid-tab-name: knative-eventing-contrib-nightly-release
@@ -10202,6 +10260,8 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
       resources:
         requests:
           memory: 12Gi
@@ -10442,7 +10502,7 @@ periodics:
   - org: knative
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-eventing-contrib
     testgrid-tab-name: knative-eventing-contrib-auto-release
@@ -10472,6 +10532,8 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
       resources:
         requests:
           memory: 12Gi
@@ -10497,7 +10559,7 @@ periodics:
   - org: knative
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-eventing-contrib
     testgrid-tab-name: knative-eventing-contrib-go-coverage
@@ -10524,7 +10586,7 @@ periodics:
   - org: knative
     repo: eventing-contrib
     path_alias: knative.dev/eventing-contrib
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-eventing-contrib-go-coverage-beta-prow-tests
@@ -12075,7 +12137,7 @@ periodics:
   - org: knative
     repo: pkg
     path_alias: knative.dev/pkg
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-pkg
     testgrid-tab-name: knative-pkg-continuous
@@ -12098,6 +12160,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -12113,7 +12177,7 @@ periodics:
   - org: knative
     repo: pkg
     path_alias: knative.dev/pkg
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-pkg-continuous-beta-prow-tests
@@ -12136,6 +12200,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -12151,7 +12217,7 @@ periodics:
   - org: knative
     repo: caching
     path_alias: knative.dev/caching
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-caching
     testgrid-tab-name: knative-caching-continuous
@@ -12174,6 +12240,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -12189,7 +12257,7 @@ periodics:
   - org: knative
     repo: caching
     path_alias: knative.dev/caching
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-caching-continuous-beta-prow-tests
@@ -12212,6 +12280,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -12481,7 +12551,7 @@ periodics:
   - org: knative
     repo: test-infra
     path_alias: knative.dev/test-infra
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-test-infra
     testgrid-tab-name: knative-test-infra-continuous
@@ -12514,6 +12584,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -12539,7 +12611,7 @@ periodics:
   - org: knative
     repo: test-infra
     path_alias: knative.dev/test-infra
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-test-infra-continuous-beta-prow-tests
@@ -12572,6 +12644,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -12599,7 +12673,7 @@ periodics:
   - org: knative
     repo: test-infra
     path_alias: knative.dev/test-infra
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-test-infra
     testgrid-tab-name: knative-test-infra-go-coverage
@@ -12626,7 +12700,7 @@ periodics:
   - org: knative
     repo: test-infra
     path_alias: knative.dev/test-infra
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-test-infra-go-coverage-beta-prow-tests
@@ -15439,7 +15513,7 @@ periodics:
   - org: knative
     repo: operator
     path_alias: knative.dev/operator
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-operator
     testgrid-tab-name: knative-operator-continuous
@@ -15462,6 +15536,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -15477,7 +15553,7 @@ periodics:
   - org: knative
     repo: operator
     path_alias: knative.dev/operator
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-operator-continuous-beta-prow-tests
@@ -15500,6 +15576,8 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: test-account
       secret:
@@ -16043,7 +16121,7 @@ periodics:
   - org: knative
     repo: operator
     path_alias: knative.dev/operator
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-operator
     testgrid-tab-name: knative-operator-nightly-release
@@ -16068,6 +16146,8 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -16303,7 +16383,7 @@ periodics:
   - org: knative
     repo: operator
     path_alias: knative.dev/operator
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-operator
     testgrid-tab-name: knative-operator-auto-release
@@ -16333,6 +16413,8 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: PULL_BASE_REF
+        value: main
     volumes:
     - name: hub-token
       secret:
@@ -16353,7 +16435,7 @@ periodics:
   - org: knative
     repo: operator
     path_alias: knative.dev/operator
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-operator
     testgrid-tab-name: knative-operator-go-coverage
@@ -16380,7 +16462,7 @@ periodics:
   - org: knative
     repo: operator
     path_alias: knative.dev/operator
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-operator-go-coverage-beta-prow-tests
@@ -18655,7 +18737,7 @@ periodics:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-create-test-group: "false"
   spec:
@@ -18697,7 +18779,7 @@ periodics:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
-    base_ref: master
+    base_ref: main
   annotations:
     testgrid-create-test-group: "false"
   spec:
@@ -18812,7 +18894,7 @@ postsubmits:
   knative/serving:
   - name: post-knative-serving-reconcile-clusters
     branches:
-    - "master"
+    - "main"
     annotations:
       testgrid-create-test-group: "false"
     agent: kubernetes
@@ -18853,7 +18935,7 @@ postsubmits:
   knative/client:
   - name: post-knative-client-go-coverage
     branches:
-    - "master"
+    - "main"
     annotations:
       testgrid-create-test-group: "false"
     agent: kubernetes
@@ -18873,7 +18955,7 @@ postsubmits:
   knative/eventing:
   - name: post-knative-eventing-go-coverage
     branches:
-    - "master"
+    - "main"
     annotations:
       testgrid-create-test-group: "false"
     agent: kubernetes
@@ -18893,7 +18975,7 @@ postsubmits:
   knative/eventing-contrib:
   - name: post-knative-eventing-contrib-go-coverage
     branches:
-    - "master"
+    - "main"
     annotations:
       testgrid-create-test-group: "false"
     agent: kubernetes
@@ -18913,7 +18995,7 @@ postsubmits:
   knative/docs:
   - name: post-knative-docs-go-coverage
     branches:
-    - "master"
+    - "main"
     annotations:
       testgrid-create-test-group: "false"
     agent: kubernetes
@@ -18932,7 +19014,7 @@ postsubmits:
   knative/test-infra:
   - name: post-knative-test-infra-go-coverage
     branches:
-    - "master"
+    - "main"
     annotations:
       testgrid-create-test-group: "false"
     agent: kubernetes
@@ -19090,7 +19172,7 @@ postsubmits:
   knative/operator:
   - name: post-knative-operator-go-coverage
     branches:
-    - "master"
+    - "main"
     annotations:
       testgrid-create-test-group: "false"
     agent: kubernetes

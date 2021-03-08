@@ -25,7 +25,7 @@ presubmits:
     run_if_changed: "^peribolos/knative.yaml$"
     cluster: "prow-trusted"
     branches:
-    - "master"
+    - "main"
     spec:
       containers:
       - image: gcr.io/k8s-prow/peribolos:v20210305-350f3b2f2e
@@ -60,7 +60,7 @@ presubmits:
     run_if_changed: "^peribolos/knative-sandbox.yaml$"
     cluster: "prow-trusted"
     branches:
-    - "master"
+    - "main"
     spec:
       containers:
       - image: gcr.io/k8s-prow/peribolos:v20210305-350f3b2f2e
@@ -99,7 +99,7 @@ postsubmits:
     run_if_changed: "^peribolos/knative.yaml$"
     cluster: "prow-trusted"
     branches:
-    - "master"
+    - "main"
     reporter_config:
       slack:
         channel: productivity
@@ -140,7 +140,7 @@ postsubmits:
     run_if_changed: "^peribolos/knative-sandbox.yaml$"
     cluster: "prow-trusted"
     branches:
-    - "master"
+    - "main"
     reporter_config:
       slack:
         channel: productivity
@@ -183,7 +183,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: community
-    base_ref: master
+    base_ref: main
     path_alias: knative.dev/community
   spec:
     containers:
@@ -219,7 +219,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: community
-    base_ref: master
+    base_ref: main
     path_alias: knative.dev/community
   spec:
     containers:

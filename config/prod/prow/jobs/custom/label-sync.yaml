@@ -23,7 +23,7 @@ presubmits:
     path_alias: knative.dev/test-infra
     run_if_changed: "^config/label_sync/labels.yaml$"
     branches:
-    - "master"
+    - "main"
     spec:
       containers:
       - name: label-sync
@@ -57,7 +57,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: test-infra
-    base_ref: master
+    base_ref: main
     path_alias: knative.dev/test-infra
   spec:
     containers:
@@ -91,7 +91,7 @@ postsubmits:
     max_concurrency: 1
     run_if_changed: "^config/label_sync/labels.yaml$"
     branches:
-    - "master"
+    - "main"
     spec:
       containers:
       - name: label-sync

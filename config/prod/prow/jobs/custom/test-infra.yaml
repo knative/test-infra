@@ -85,7 +85,7 @@ presubmits:
     optional: true
     # run_if_changed: "^config/prod/prow/(jobs|k8s-testgrid)/.*.yaml"
     branches:
-    - "master"
+    - "main"
     cluster: "build-knative"
     extra_refs:
     - org: GoogleCloudPlatform
@@ -107,7 +107,7 @@ presubmits:
     optional: false
     run_if_changed: "^config/prod/prow/(jobs|k8s-testgrid)/.*.yaml"
     branches:
-    - "master"
+    - "main"
     cluster: "build-knative"
     extra_refs:
     - org: GoogleCloudPlatform
@@ -136,7 +136,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: test-infra
-    base_ref: master
+    base_ref: main
     path_alias: knative.dev/test-infra
   spec:
     containers:
@@ -186,7 +186,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: test-infra
-    base_ref: master
+    base_ref: main
     path_alias: knative.dev/test-infra
   spec:
     containers:
@@ -225,7 +225,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: test-infra
-    base_ref: master
+    base_ref: main
     path_alias: knative.dev/test-infra
   spec:
     containers:
@@ -334,7 +334,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: test-infra
-    base_ref: master
+    base_ref: main
     path_alias: knative.dev/test-infra
   spec:
     containers:
@@ -366,7 +366,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: test-infra
-    base_ref: master
+    base_ref: main
     path_alias: knative.dev/test-infra
   spec:
     containers:
@@ -414,7 +414,7 @@ postsubmits:
     cluster: "prow-trusted"
     run_if_changed: "^config/prod/(build-cluster/boskos/.*.yaml|prow/testgrid/testgrid.yaml)$"
     branches:
-    - "master"
+    - "main"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -451,7 +451,7 @@ postsubmits:
     cluster: "build-knative"
     run_if_changed: "^(images/.*|tools/(coverage|flaky-test-reporter|flaky-test-retryer)/.*|go.mod)$"
     branches:
-    - "master"
+    - "main"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -490,7 +490,7 @@ postsubmits:
     cluster: "build-knative"
     run_if_changed: "^(images/prow-tests/.*|kntest/.*|pkg/.*|go.mod)$"
     branches:
-    - "master"
+    - "main"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -521,7 +521,7 @@ postsubmits:
     cluster: "prow-trusted"
     run_if_changed: "^tools/flaky-test-retryer/gke_deployment/retryer_service.yaml$"
     branches:
-    - "master"
+    - "main"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -548,7 +548,7 @@ postsubmits:
     decorate: true
     run_if_changed: "^config/prod/prow/(jobs|k8s-testgrid)/.*.yaml"
     branches:
-    - "master"
+    - "main"
     cluster: "build-knative"
     extra_refs:
     - org: GoogleCloudPlatform
@@ -578,7 +578,7 @@ postsubmits:
     decorate: true
     run_if_changed: "^config/prod/prow/(jobs|k8s-testgrid)/.*.yaml"
     branches:
-    - "master"
+    - "main"
     cluster: "build-knative"
     extra_refs:
     - org: GoogleCloudPlatform
