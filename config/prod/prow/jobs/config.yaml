@@ -1867,17 +1867,17 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-eventing-Reconciler Tests
+  - name: pull-knative-eventing-reconciler-tests
     agent: kubernetes
     labels:
       prow.k8s.io/pubsub.project: knative-tests
       prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: pull-knative-eventing-Reconciler Tests
-    context: pull-knative-eventing-Reconciler Tests
+      prow.k8s.io/pubsub.runID: pull-knative-eventing-reconciler-tests
+    context: pull-knative-eventing-reconciler-tests
     always_run: true
     optional: false
-    rerun_command: "/test pull-knative-eventing-Reconciler Tests"
-    trigger: "(?m)^/test (all|pull-knative-eventing-Reconciler Tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-eventing-reconciler-tests"
+    trigger: "(?m)^/test (all|pull-knative-eventing-reconciler-tests),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/eventing
     cluster: "build-knative"
