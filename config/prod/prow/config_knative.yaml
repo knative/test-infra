@@ -313,6 +313,11 @@ presubmits:
     args:
     - --run-test
     - ./test/e2e-tests.sh
+  - custom-test: Reconciler Tests
+    needs-monitor: true
+    args:
+    - --run-test
+    - ./test/e2e-rekt-tests.sh
   - custom-test: conformance-tests
     needs-monitor: true
     args:
