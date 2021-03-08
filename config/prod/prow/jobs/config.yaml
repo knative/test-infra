@@ -12718,136 +12718,6 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "39 8 * * *"
-  name: ci-google-knative-gcp-0.17-continuous
-  agent: kubernetes
-  decorate: true
-  decoration_config:
-    timeout: 180m
-  cluster: "build-knative"
-  extra_refs:
-  - org: google
-    repo: knative-gcp
-    base_ref: release-0.17
-  annotations:
-    testgrid-dashboards: google-knative-gcp
-    testgrid-tab-name: google-knative-gcp-0.17-continuous
-    testgrid-alert-stale-results-hours: "3"
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      command:
-      - runner.sh
-      args:
-      - "./hack/release.sh"
-      - "--nopublish"
-      - "--notag-release"
-      securityContext:
-        privileged: true
-      volumeMounts:
-      - name: docker-graph
-        mountPath: /docker-graph
-      - name: modules
-        mountPath: /lib/modules
-      - name: cgroup
-        mountPath: /sys/fs/cgroup
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
-      env:
-      - name: DOCKER_IN_DOCKER_ENABLED
-        value: "true"
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-      - name: PULL_BASE_REF
-        value: release-0.17
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    volumes:
-    - name: docker-graph
-      emptyDir: {}
-    - name: modules
-      hostPath:
-        path: /lib/modules
-        type: Directory
-    - name: cgroup
-      hostPath:
-        path: /sys/fs/cgroup
-        type: Directory
-    - name: test-account
-      secret:
-        secretName: test-account
-- cron: "39 8,11 * * *"
-  name: ci-google-knative-gcp-0.17-continuous-beta-prow-tests
-  agent: kubernetes
-  decorate: true
-  decoration_config:
-    timeout: 180m
-  cluster: "build-knative"
-  extra_refs:
-  - org: google
-    repo: knative-gcp
-    base_ref: release-0.17
-  annotations:
-    testgrid-dashboards: knative-prow-tests
-    testgrid-tab-name: google-knative-gcp-0.17-continuous-beta-prow-tests
-    testgrid-alert-stale-results-hours: "3"
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
-      imagePullPolicy: Always
-      command:
-      - runner.sh
-      args:
-      - "./hack/release.sh"
-      - "--nopublish"
-      - "--notag-release"
-      securityContext:
-        privileged: true
-      volumeMounts:
-      - name: docker-graph
-        mountPath: /docker-graph
-      - name: modules
-        mountPath: /lib/modules
-      - name: cgroup
-        mountPath: /sys/fs/cgroup
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
-      env:
-      - name: DOCKER_IN_DOCKER_ENABLED
-        value: "true"
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-      - name: PULL_BASE_REF
-        value: release-0.17
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    volumes:
-    - name: docker-graph
-      emptyDir: {}
-    - name: modules
-      hostPath:
-        path: /lib/modules
-        type: Directory
-    - name: cgroup
-      hostPath:
-        path: /sys/fs/cgroup
-        type: Directory
-    - name: test-account
-      secret:
-        secretName: test-account
 - cron: "24 8 * * *"
   name: ci-google-knative-gcp-0.18-continuous
   agent: kubernetes
@@ -13238,6 +13108,136 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+- cron: "48 8 * * *"
+  name: ci-google-knative-gcp-0.21-continuous
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: google
+    repo: knative-gcp
+    base_ref: release-0.21
+  annotations:
+    testgrid-dashboards: google-knative-gcp
+    testgrid-tab-name: google-knative-gcp-0.21-continuous
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.21
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "4 8,11 * * *"
+  name: ci-google-knative-gcp-0.21-continuous-beta-prow-tests
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: google
+    repo: knative-gcp
+    base_ref: release-0.21
+  annotations:
+    testgrid-dashboards: knative-prow-tests
+    testgrid-tab-name: google-knative-gcp-0.21-continuous-beta-prow-tests
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--nopublish"
+      - "--notag-release"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.21
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    volumes:
+    - name: docker-graph
+      emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+    - name: test-account
+      secret:
+        secretName: test-account
 - cron: "34 9 * * *"
   name: ci-google-knative-gcp-nightly-release
   agent: kubernetes
@@ -13284,62 +13284,6 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "15 9 * * 2"
-  name: ci-google-knative-gcp-0.17-dot-release
-  agent: kubernetes
-  decorate: true
-  decoration_config:
-    timeout: 180m
-  cluster: "build-knative"
-  extra_refs:
-  - org: google
-    repo: knative-gcp
-    base_ref: release-0.17
-  annotations:
-    testgrid-dashboards: google-knative-gcp
-    testgrid-tab-name: google-knative-gcp-0.17-dot-release
-    testgrid-alert-stale-results-hours: "3"
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      command:
-      - runner.sh
-      args:
-      - "./hack/release.sh"
-      - "--dot-release"
-      - "--release-gcs knative-releases/knative-gcp"
-      - "--release-gcr gcr.io/knative-releases"
-      - "--github-token /etc/hub-token/token"
-      - "--branch release-0.17"
-      volumeMounts:
-      - name: hub-token
-        mountPath: /etc/hub-token
-        readOnly: true
-      - name: release-account
-        mountPath: /etc/release-account
-        readOnly: true
-      env:
-      - name: ORG_NAME
-        value: google
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/release-account/service-account.json
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-      - name: PULL_BASE_REF
-        value: release-0.17
-      resources:
-        requests:
-          memory: 12Gi
-        limits:
-          memory: 16Gi
-    volumes:
-    - name: hub-token
-      secret:
-        secretName: hub-token
-    - name: release-account
-      secret:
-        secretName: release-account
 - cron: "26 9 * * 2"
   name: ci-google-knative-gcp-0.18-dot-release
   agent: kubernetes
@@ -13496,6 +13440,62 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.20
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
+- cron: "54 9 * * 2"
+  name: ci-google-knative-gcp-0.21-dot-release
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: google
+    repo: knative-gcp
+    base_ref: release-0.21
+  annotations:
+    testgrid-dashboards: google-knative-gcp
+    testgrid-tab-name: google-knative-gcp-0.21-dot-release
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--dot-release"
+      - "--release-gcs knative-releases/knative-gcp"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      - "--branch release-0.21"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: ORG_NAME
+        value: google
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.21
       resources:
         requests:
           memory: 12Gi
