@@ -956,13 +956,6 @@ periodics:
   google/knative-gcp:
   - continuous: true
   - branch-ci: true
-    release: "0.17"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - branch-ci: true
     release: "0.18"
     resources:
       requests:
@@ -978,6 +971,13 @@ periodics:
         memory: 16Gi
   - branch-ci: true
     release: "0.20"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - branch-ci: true
+    release: "0.21"
     resources:
       requests:
         memory: 12Gi
@@ -990,13 +990,6 @@ periodics:
       limits:
         memory: 16Gi
   - dot-release: true
-    release: "0.17"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - dot-release: true
     release: "0.18"
     resources:
       requests:
@@ -1012,6 +1005,13 @@ periodics:
         memory: 16Gi
   - dot-release: true
     release: "0.20"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    release: "0.21"
     resources:
       requests:
         memory: 12Gi
