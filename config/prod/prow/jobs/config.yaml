@@ -13264,6 +13264,8 @@ periodics:
       - "./hack/release.sh"
       - "--publish"
       - "--tag-release"
+      - "--release-gcs knative-gcp-nightly"
+      - "--release-gcr gcr.io/knative-gcp-nightly"
       volumeMounts:
       - name: nightly-account
         mountPath: /etc/nightly-account
@@ -13308,8 +13310,8 @@ periodics:
       args:
       - "./hack/release.sh"
       - "--dot-release"
-      - "--release-gcs knative-releases/knative-gcp"
-      - "--release-gcr gcr.io/knative-releases"
+      - "--release-gcs knative-gcp"
+      - "--release-gcr gcr.io/knative-gcp"
       - "--github-token /etc/hub-token/token"
       - "--branch release-0.18"
       volumeMounts:
@@ -13364,8 +13366,8 @@ periodics:
       args:
       - "./hack/release.sh"
       - "--dot-release"
-      - "--release-gcs knative-releases/knative-gcp"
-      - "--release-gcr gcr.io/knative-releases"
+      - "--release-gcs knative-gcp"
+      - "--release-gcr gcr.io/knative-gcp"
       - "--github-token /etc/hub-token/token"
       - "--branch release-0.19"
       volumeMounts:
@@ -13420,8 +13422,8 @@ periodics:
       args:
       - "./hack/release.sh"
       - "--dot-release"
-      - "--release-gcs knative-releases/knative-gcp"
-      - "--release-gcr gcr.io/knative-releases"
+      - "--release-gcs knative-gcp"
+      - "--release-gcr gcr.io/knative-gcp"
       - "--github-token /etc/hub-token/token"
       - "--branch release-0.20"
       volumeMounts:
@@ -13476,8 +13478,8 @@ periodics:
       args:
       - "./hack/release.sh"
       - "--dot-release"
-      - "--release-gcs knative-releases/knative-gcp"
-      - "--release-gcr gcr.io/knative-releases"
+      - "--release-gcs knative-gcp"
+      - "--release-gcr gcr.io/knative-gcp"
       - "--github-token /etc/hub-token/token"
       - "--branch release-0.21"
       volumeMounts:
@@ -13533,8 +13535,8 @@ periodics:
       args:
       - "./hack/release.sh"
       - "--auto-release"
-      - "--release-gcs knative-releases/knative-gcp"
-      - "--release-gcr gcr.io/knative-releases"
+      - "--release-gcs knative-gcp"
+      - "--release-gcr gcr.io/knative-gcp"
       - "--github-token /etc/hub-token/token"
       volumeMounts:
       - name: hub-token
