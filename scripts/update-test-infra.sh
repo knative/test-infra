@@ -24,7 +24,7 @@ set -e
 # --update
 #  Do the update
 # --ref X
-#  Defines which ref (branch, tag, commit) of test-infra to get scripts from; defaults to master
+#  Defines which ref (branch, tag, commit) of test-infra to get scripts from; defaults to main
 # --first-time
 #  Run this script from your repo root directory to install scripts for the first time
 #  Will also sed -i non-vendor scripts in the current repo to point to new path
@@ -34,7 +34,7 @@ set -e
 
 declare -i FIRST_TIME_SETUP=0
 declare -i DO_UPDATE=0
-declare SCRIPTS_REF=master
+declare SCRIPTS_REF=main
 
 while [[ $# -ne 0 ]]; do
   parameter="$1"

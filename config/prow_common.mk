@@ -49,7 +49,7 @@ help:
 	@echo "Help"
 	@echo "'Update' means updating the servers and can only be run by oncall staff."
 	@echo "Common usage:"
-	@echo " make update-prow-cluster: Update all Prow things on the server to match the current branch. Errors if not master."
+	@echo " make update-prow-cluster: Update all Prow things on the server to match the current branch. Errors if not main or master."
 	@echo " make update-testgrid-config: Update the Testgrid config"
 	@echo " make get-cluster-credentials: Setup kubectl to point to Prow cluster"
 	@echo " make unset-cluster-credentials: Clear kubectl context"

@@ -106,6 +106,6 @@ func (p *PostSubmit) searchForLatestHealthyBuild() int {
 // ProfileReader returns the reader for the most recent healthy profile
 func (p *PostSubmit) ProfileReader() *artifacts.ProfileReader {
 	profilePath := p.pathToGoodCoverageProfile()
-	log.Printf("Reading base (master) coverage from <%s>...\n", profilePath)
+	log.Printf("Reading base (main) coverage from <%s>...\n", profilePath)
 	return p.Client.ProfileReader(p.Ctx, p.Bucket, profilePath)
 }

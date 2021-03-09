@@ -66,7 +66,7 @@ specified by the `--branch` flag.
 - `--version` Defines the version of the release, and must be in the form
   `X.Y.Z`, where X, Y and Z are numbers.
 - `--branch` Defines the branch in Knative repository from which the release
-  will be built. If not passed, the `master` branch at HEAD will be used. This
+  will be built. If not passed, the `main` branch at HEAD will be used. This
   branch must be created before the script is executed, and must be in the form
   `release-X.Y`, where X and Y must match the numbers used in the version passed
   in the `--version` flag. This flag has no effect unless `--version` is also

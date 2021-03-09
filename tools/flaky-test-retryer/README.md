@@ -3,7 +3,7 @@
 Flaky-test-retryer is a tool that automatically detects when presubmit jobs fail
 due to test flakiness, and reruns them atmost 3 times. Test flakiness and other
 configuration details are determined by the
-[flaky-test-reporter](https://github.com/knative/test-infra/tree/master/tools/flaky-test-reporter).
+[flaky-test-reporter](https://github.com/knative/test-infra/tree/main/tools/flaky-test-reporter).
 
 ## Basic Usage
 
@@ -66,7 +66,7 @@ The Github comment bot is what keeps track of retries, as well as triggering the
 retries themselves. The number of previous retries attempted is determined by
 parsing the comment history of the PR itself, and retries are attempted up to a
 number set
-[here](https://github.com/knative/test-infra/blob/master/tools/flaky-test-retryer/github_commenter.go#L35).
+[here](https://github.com/knative/test-infra/blob/main/tools/flaky-test-retryer/github_commenter.go#L35).
 There are a number of different comments that can be posted, based on the failed
 tests and existing retry comments. They all follow a similar format:
 

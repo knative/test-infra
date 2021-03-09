@@ -9,7 +9,7 @@ workflow type, explained below.
 
 ## Post-submit workflow
 
-Produces and stores a coverage profile for the master branch, for later
+Produces and stores a coverage profile for the default branch, for later
 presubmit jobs to compare against.
 
 1. A PR is merged.
@@ -25,8 +25,8 @@ robot GitHub account.
 1. Developer submits a new commit to an open PR on GitHub.
 1. Matching pre-submit Prow job is started.
 1. Test coverage profile generated.
-1. Calculate coverage change against master branch. Compare the coverage file
-   generated in this cycle against the coverage file in the master branch.
+1. Calculate coverage change against default branch. Compare the coverage file
+   generated in this cycle against the coverage file in the default branch.
 1. Using the PR data from GitHub, `.gitattributes` file, as well as coverage
    change data calculated above, produce a list of files that we care about in
    the line-by-line coverage report. Produce line by line coverage HTML files
