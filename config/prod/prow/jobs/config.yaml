@@ -8249,8 +8249,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -8289,8 +8287,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -8405,8 +8401,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -8445,8 +8439,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -8807,8 +8799,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -8847,8 +8837,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
