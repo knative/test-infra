@@ -4286,6 +4286,83 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
+  knative/specs:
+  - name: pull-knative-specs-build-tests
+    agent: kubernetes
+    context: pull-knative-specs-build-tests
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-specs-build-tests"
+    trigger: "(?m)^/test (all|pull-knative-specs-build-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/specs
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--build-tests"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-specs-unit-tests
+    agent: kubernetes
+    context: pull-knative-specs-unit-tests
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-specs-unit-tests"
+    trigger: "(?m)^/test (all|pull-knative-specs-unit-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/specs
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--unit-tests"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
   knative/operator:
   - name: pull-knative-operator-build-tests
     agent: kubernetes
