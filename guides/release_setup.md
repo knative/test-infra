@@ -23,11 +23,11 @@ Versioned releases can be one of two kinds:
 
 - **Major or minor releases** are those with changes to the `X` or `Y` values in
   the version. They are cut only when a new release branch (which must be named
-  `release-X.Y`) is created from the default branch of a repository. Within about
-  2 to 3 hours the new release will be built and published. The job status can
-  be checked in the `auto-release` tab in the corresponding repository dashboard
-  in TestGrid. The release notes published to GitHub are empty, so you must
-  manually edit it and add the relevant markdown content.
+  `release-X.Y`) is created from the default branch of a repository. Within
+  about 2 to 3 hours the new release will be built and published. The job status
+  can be checked in the `auto-release` tab in the corresponding repository
+  dashboard in TestGrid. The release notes published to GitHub are empty, so you
+  must manually edit it and add the relevant markdown content.
 
 - **Patch or dot releases** are those with changes to the `Z` value in the
   version. They are cut automatically, every Tuesday night between 2AM and 3AM
