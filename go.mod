@@ -27,6 +27,6 @@ require (
 	google.golang.org/grpc v1.31.0 // indirect
 	gopkg.in/yaml.v2 v2.3.0
 	k8s.io/apimachinery v0.19.7
-	knative.dev/hack v0.0.0-20210305150220-f99a25560134
+	knative.dev/hack v0.0.0-20210309141825-9b73a256fd9a
 	sigs.k8s.io/boskos v0.0.0-20200729174948-794df80db9c9
 )
