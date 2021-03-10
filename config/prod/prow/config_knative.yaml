@@ -285,7 +285,15 @@ presubmits:
   - build-tests: true
   - unit-tests: true
   - integration-tests: true
+  knative-sandbox/kn-plugin-migration:
+  - build-tests: true
+  - unit-tests: true
+  - integration-tests: true
   knative-sandbox/kn-plugin-sample:
+  - build-tests: true
+  - unit-tests: true
+  - integration-tests: true
+  knative-sandbox/kn-plugin-service-log:
   - build-tests: true
   - unit-tests: true
   - integration-tests: true
@@ -294,6 +302,10 @@ presubmits:
   - unit-tests: true
   - integration-tests: true
   - go-coverage: false
+  knative-sandbox/kn-plugin-source-kamelet:
+  - build-tests: true
+  - unit-tests: true
+  - integration-tests: true
   knative-sandbox/kn-plugin-admin:
   - build-tests: true
   - unit-tests: true
@@ -760,7 +772,11 @@ periodics:
   - auto-release: true
   knative-sandbox/kn-plugin-diag:
   - continuous: true
+  knative-sandbox/kn-plugin-migration:
+  - continuous: true
   knative-sandbox/kn-plugin-sample:
+  - continuous: true
+  knative-sandbox/kn-plugin-service-log:
   - continuous: true
   knative-sandbox/kn-plugin-source-kafka:
   - continuous: true
@@ -772,6 +788,8 @@ periodics:
     release: "0.19"
   - dot-release: true
     release: "0.21"
+  knative-sandbox/kn-plugin-source-kamelet:
+  - continuous: true
   knative-sandbox/kn-plugin-admin:
   - continuous: true
   - auto-release: true
