@@ -379,6 +379,9 @@ test_groups:
 - name: ci-knative-sandbox-kn-plugin-diag-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-diag-continuous
   alert_stale_results_hours: 3
+- name: ci-knative-sandbox-kn-plugin-migration-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-migration-continuous
+  alert_stale_results_hours: 3
 - name: ci-knative-sandbox-kn-plugin-sample-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-sample-continuous
   alert_stale_results_hours: 3
@@ -398,6 +401,9 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
+- name: ci-knative-sandbox-kn-plugin-source-kamelet-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-source-kamelet-continuous
+  alert_stale_results_hours: 3
 - name: ci-knative-sandbox-kn-plugin-admin-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-admin-continuous
   alert_stale_results_hours: 3
@@ -1013,12 +1019,16 @@ test_groups:
   short_text_metric: "coverage"
 - name: ci-knative-sandbox-kn-plugin-diag-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-diag-continuous-beta-prow-tests
+- name: ci-knative-sandbox-kn-plugin-migration-continuous-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-migration-continuous-beta-prow-tests
 - name: ci-knative-sandbox-kn-plugin-sample-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-sample-continuous-beta-prow-tests
 - name: ci-knative-sandbox-kn-plugin-service-log-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-service-log-continuous-beta-prow-tests
 - name: ci-knative-sandbox-kn-plugin-source-kafka-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-source-kafka-continuous-beta-prow-tests
+- name: ci-knative-sandbox-kn-plugin-source-kamelet-continuous-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-source-kamelet-continuous-beta-prow-tests
 - name: ci-knative-sandbox-kn-plugin-admin-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-admin-continuous-beta-prow-tests
 - name: ci-knative-docs-continuous-beta-prow-tests
@@ -1411,6 +1421,14 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 3
+- name: kn-plugin-migration
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-sandbox-kn-plugin-migration-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
 - name: kn-plugin-sample
   dashboard_tab:
   - name: continuous
@@ -1447,6 +1465,14 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 1
+- name: kn-plugin-source-kamelet
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-sandbox-kn-plugin-source-kamelet-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
 - name: kn-plugin-admin
   dashboard_tab:
   - name: continuous
@@ -2488,6 +2514,9 @@ dashboards:
   - name: ci-knative-sandbox-kn-plugin-diag-continuous
     test_group_name: ci-knative-sandbox-kn-plugin-diag-continuous-beta-prow-tests
     base_options: "sort-by-failures="
+  - name: ci-knative-sandbox-kn-plugin-migration-continuous
+    test_group_name: ci-knative-sandbox-kn-plugin-migration-continuous-beta-prow-tests
+    base_options: "sort-by-failures="
   - name: ci-knative-sandbox-kn-plugin-sample-continuous
     test_group_name: ci-knative-sandbox-kn-plugin-sample-continuous-beta-prow-tests
     base_options: "sort-by-failures="
@@ -2496,6 +2525,9 @@ dashboards:
     base_options: "sort-by-failures="
   - name: ci-knative-sandbox-kn-plugin-source-kafka-continuous
     test_group_name: ci-knative-sandbox-kn-plugin-source-kafka-continuous-beta-prow-tests
+    base_options: "sort-by-failures="
+  - name: ci-knative-sandbox-kn-plugin-source-kamelet-continuous
+    test_group_name: ci-knative-sandbox-kn-plugin-source-kamelet-continuous-beta-prow-tests
     base_options: "sort-by-failures="
   - name: ci-knative-sandbox-kn-plugin-admin-continuous
     test_group_name: ci-knative-sandbox-kn-plugin-admin-continuous-beta-prow-tests
@@ -2727,9 +2759,11 @@ dashboard_groups:
 - name: knative-sandbox
   dashboard_names:
   - "kn-plugin-diag"
+  - "kn-plugin-migration"
   - "kn-plugin-sample"
   - "kn-plugin-service-log"
   - "kn-plugin-source-kafka"
+  - "kn-plugin-source-kamelet"
   - "kn-plugin-admin"
   - "eventing-awssqs"
   - "eventing-ceph"
