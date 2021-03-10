@@ -8,7 +8,7 @@ get nightly and official releases with little effort. All automated releases are
 monitored through [TestGrid](http://testgrid.knative.dev).
 
 - **Nightly releases** are built every night between 2AM and 3 AM (PST), from
-  HEAD on the master branch. They are referenced by a date/commit label, in the
+  HEAD on the default branch. They are referenced by a date/commit label, in the
   form `vYYYYMMDD-<commit_short_hash>`. The job status can be checked in the
   `nightly` tab in the corresponding repository dashboard in TestGrid. Images
   are published to the `gcr.io/knative-nightly/MODULE` registry and manifests to
@@ -23,7 +23,7 @@ Versioned releases can be one of two kinds:
 
 - **Major or minor releases** are those with changes to the `X` or `Y` values in
   the version. They are cut only when a new release branch (which must be named
-  `release-X.Y`) is created from the master branch of a repository. Within about
+  `release-X.Y`) is created from the default branch of a repository. Within about
   2 to 3 hours the new release will be built and published. The job status can
   be checked in the `auto-release` tab in the corresponding repository dashboard
   in TestGrid. The release notes published to GitHub are empty, so you must
@@ -81,7 +81,7 @@ Versioned releases can be one of two kinds:
 
 1. Click the _Branch_ dropdown.
 1. Type the desired `release-X.Y` branch name into the search box.
-1. Click the `Create branch: release-X.Y from 'master'` button. _You must have
+1. Click the `Create branch: release-X.Y from 'main'` button. _You must have
    write permissions to the repo to create a branch._
 
 ### Starting the release from the Git CLI
@@ -92,10 +92,10 @@ Versioned releases can be one of two kinds:
     git fetch upstream
     ```
 
-1.  Create a `release-X.Y` branch from `upstream/master`.
+1.  Create a `release-X.Y` branch from `upstream/main`.
 
     ```sh
-    git branch --no-track release-X.Y upstream/master
+    git branch --no-track release-X.Y upstream/main
     ```
 
 1.  Push the branch to upstream.
@@ -131,7 +131,7 @@ Write release notes and add them to the release at
     git checkout -b my-backport-branch upstream/release-X.Y
     ```
 
-1.  Cherry-pick desired commits from master into the new branch.
+1.  Cherry-pick desired commits from main into the new branch.
 
     ```sh
     git cherry-pick <commitid>

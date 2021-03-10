@@ -5,7 +5,7 @@ This directory contains custom Docker images used by our Prow jobs.
 ## Building and publishing a new image
 
 To build and push a new image, you can run `make push` from an image directory.
-This should only be done once a PR is approved and from the master branch.
+This should only be done once a PR is approved and from the default branch.
 
 Users typically keep their working directory at the repo root and run relative
 make commands, like `make -C images/prow-tests push`, but for brevity's sake

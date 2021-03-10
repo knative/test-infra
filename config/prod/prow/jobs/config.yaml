@@ -5495,8 +5495,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
       resources:
         requests:
           memory: 12Gi
@@ -5540,8 +5538,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
       resources:
         requests:
           memory: 12Gi
@@ -6076,8 +6072,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -6119,8 +6113,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -6162,8 +6154,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -6205,8 +6195,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -6248,8 +6236,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -6291,8 +6277,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -6334,8 +6318,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -6377,8 +6359,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -6420,8 +6400,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -6463,8 +6441,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -6506,8 +6482,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -6549,8 +6523,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -6597,8 +6569,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
       resources:
         requests:
           memory: 12Gi
@@ -6869,8 +6839,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
       resources:
         requests:
           memory: 12Gi
@@ -6917,8 +6885,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -6957,8 +6923,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -7487,8 +7451,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -7526,8 +7488,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -7773,8 +7733,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -7870,8 +7828,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -7910,8 +7866,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -7950,8 +7904,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -7990,8 +7942,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -8030,8 +7980,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -8070,8 +8018,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -8119,8 +8065,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -8164,8 +8108,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -8360,8 +8302,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -8400,8 +8340,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -8449,8 +8387,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -8494,8 +8430,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -8544,8 +8478,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -8596,8 +8528,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -8655,8 +8585,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -8757,8 +8685,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
       resources:
         requests:
           memory: 12Gi
@@ -8802,8 +8728,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
       resources:
         requests:
           memory: 12Gi
@@ -9343,8 +9267,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
       resources:
         requests:
           memory: 12Gi
@@ -9615,8 +9537,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
       resources:
         requests:
           memory: 12Gi
@@ -9717,8 +9637,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
       resources:
         requests:
           memory: 12Gi
@@ -9762,8 +9680,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
       resources:
         requests:
           memory: 12Gi
@@ -10297,8 +10213,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
       resources:
         requests:
           memory: 12Gi
@@ -10569,8 +10483,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
       resources:
         requests:
           memory: 12Gi
@@ -10671,8 +10583,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -10711,8 +10621,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -10753,8 +10661,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -10802,8 +10708,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -10845,8 +10749,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -10885,8 +10787,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -10927,8 +10827,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -10976,8 +10874,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -11019,8 +10915,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -11059,8 +10953,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -11101,8 +10993,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -11150,8 +11040,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -11193,8 +11081,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -11233,8 +11119,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -11275,8 +11159,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -11324,8 +11206,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -11367,8 +11247,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -11407,8 +11285,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -11449,8 +11325,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -11726,8 +11600,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -11769,8 +11641,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -11809,8 +11679,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -11851,8 +11719,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -11900,8 +11766,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -11943,8 +11807,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -11983,8 +11845,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -12025,8 +11885,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -12074,8 +11932,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -12117,8 +11973,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -12157,8 +12011,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -12197,8 +12049,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -12237,8 +12087,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -12277,8 +12125,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -12317,8 +12163,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -12357,8 +12201,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -12397,8 +12239,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -12437,8 +12277,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -12477,8 +12315,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -12519,8 +12355,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -12568,8 +12402,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -12621,8 +12453,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -12681,8 +12511,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -12784,8 +12612,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -12823,8 +12649,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -13386,8 +13210,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
       resources:
         requests:
           memory: 12Gi
@@ -13663,8 +13485,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
       resources:
         requests:
           memory: 12Gi
@@ -13763,8 +13583,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -13803,8 +13621,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -13851,8 +13667,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -13901,8 +13715,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -13953,8 +13765,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -14050,8 +13860,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -14090,8 +13898,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -14138,8 +13944,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -14188,8 +13992,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -14240,8 +14042,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -14283,8 +14083,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -14323,8 +14121,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -14371,8 +14167,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -14421,8 +14215,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -14473,8 +14265,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -14516,8 +14306,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -14556,8 +14344,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -14604,8 +14390,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -14654,8 +14438,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -14706,8 +14488,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -14803,8 +14583,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -14843,8 +14621,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -14891,8 +14667,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -14932,8 +14706,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -15189,8 +14961,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -15286,8 +15056,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -15326,8 +15094,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -15374,8 +15140,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -15424,8 +15188,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -15476,8 +15238,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -15573,8 +15333,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -15613,8 +15371,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -16183,8 +15939,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -16450,8 +16204,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -16547,8 +16299,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -16587,8 +16337,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -16629,8 +16377,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -16679,8 +16425,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -16731,8 +16475,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -16828,8 +16570,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -16868,8 +16608,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -16916,8 +16654,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -16966,8 +16702,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -17018,8 +16752,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -17061,8 +16793,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -17101,8 +16831,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -17149,8 +16877,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -17199,8 +16925,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -17251,8 +16975,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -17304,8 +17026,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -17364,8 +17084,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -17426,8 +17144,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -17496,8 +17212,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -17568,8 +17282,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -17685,8 +17397,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -17745,8 +17455,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -17807,8 +17515,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: docker-graph
       emptyDir: {}
@@ -17877,8 +17583,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -17949,8 +17653,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -18064,8 +17766,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -18113,8 +17813,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -18320,8 +18018,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -18525,8 +18221,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -18568,8 +18262,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -18608,8 +18300,6 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: test-account
       secret:
@@ -18650,8 +18340,6 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: nightly-account
       secret:
@@ -18700,8 +18388,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:
@@ -18752,8 +18438,6 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      - name: PULL_BASE_REF
-        value: main
     volumes:
     - name: hub-token
       secret:

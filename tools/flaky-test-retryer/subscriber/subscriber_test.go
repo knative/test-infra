@@ -96,7 +96,7 @@ func TestToReportMessage(t *testing.T) {
 		{
 			name: "Valid report",
 			arg: &pubsub.Message{
-				Data: []byte(`{"project":"knative-tests","topic":"knative-monitoring","runid":"post-knative-serving-go-coverage-dev","status":"triggered","url":"","gcs_path":"gs://","refs":[{"org":"knative","repo":"serving","base_ref":"master","base_sha":"ce96dd74b1c85f024d63ce0991d4bf61aced582a","clone_uri":"https://github.com/knative/serving.git"}],"job_type":"postsubmit","job_name":"post-knative-serving-go-coverage-dev"}`)},
+				Data: []byte(`{"project":"knative-tests","topic":"knative-monitoring","runid":"post-knative-serving-go-coverage-dev","status":"triggered","url":"","gcs_path":"gs://","refs":[{"org":"knative","repo":"serving","base_ref":"main","base_sha":"ce96dd74b1c85f024d63ce0991d4bf61aced582a","clone_uri":"https://github.com/knative/serving.git"}],"job_type":"postsubmit","job_name":"post-knative-serving-go-coverage-dev"}`)},
 			want: &prowapi.ReportMessage{
 				Project: "knative-tests",
 				Topic:   "knative-monitoring",
@@ -108,7 +108,7 @@ func TestToReportMessage(t *testing.T) {
 					{
 						Org:      "knative",
 						Repo:     "serving",
-						BaseRef:  "master",
+						BaseRef:  "main",
 						BaseSHA:  "ce96dd74b1c85f024d63ce0991d4bf61aced582a",
 						CloneURI: "https://github.com/knative/serving.git",
 					},

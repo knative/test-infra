@@ -244,7 +244,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		data.Base.addEnvToJob("GOOGLE_APPLICATION_CREDENTIALS", data.Base.ServiceAccount)
 		data.Base.addEnvToJob("E2E_CLUSTER_REGION", "us-central1")
 	}
-	if data.Base.RepoBranch != "" && data.Base.RepoBranch != "master" {
+	if data.Base.RepoBranch != "" && data.Base.RepoBranch != "main" {
 		// If it's a release version, add env var PULL_BASE_REF as ref name of the base branch.
 		// The reason for having it is in https://github.com/knative/test-infra/issues/780.
 		data.Base.addEnvToJob("PULL_BASE_REF", data.Base.RepoBranch)

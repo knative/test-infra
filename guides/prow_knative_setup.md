@@ -43,7 +43,7 @@ All Prow config files for running Prow jobs for Knative projects are under
 1. Wait a few minutes, check that Prow is working by entering `/woof` as a
    comment in any PR in the new repo.
 
-1. Set **tide** as a required status check for the master branch.
+1. Set **tide** as a required status check for the default branch.
 
    ![Branch Checks](branch_checks.png)
 
@@ -64,7 +64,7 @@ All Prow config files for running Prow jobs for Knative projects are under
 1. Wait a few minutes, enter `/test [prow_job_name]` or `/test all` or `/retest`
    as a comment in any PR in the repo and ensure the test jobs are executed.
 
-1. Optionally, set the new test jobs as required status checks for the master
+1. Optionally, set the new test jobs as required status checks for the default
    branch.
 
    ![Branch Checks](branch_checks.png)
