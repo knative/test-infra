@@ -507,8 +507,10 @@ presubmits:
   - integration-tests: false
   - go-coverage: false
   knative/specs:
-  - build-tests: true
-  - unit-tests: true
+  - build-tests: false
+  - unit-tests: false
+  - integration-tests: false
+  - go-coverage: false
   knative/operator:
   - build-tests: true
   - unit-tests: true
