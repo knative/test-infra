@@ -90,6 +90,21 @@ default:
       prowPlugin: label
       addedBy: humans
 
+    # Specific labels for issue triage
+    # See https://apenwarr.ca/log/20171213#slide32 for why we want to have these labels
+    - color: 47d29b
+      description: Issues which should be fixed (post-triage)
+      name: triage/accepted
+      target: issues
+      prowPlugin: label
+      addedby: humans
+    - color: 47d29b
+      description: Issues which are waiting on a response from the reporter
+      name: triage/needs-user-input
+      target: issues
+      prowPlugin: label
+      addedBy: humans
+
     #############################################################################
     # These labels are important for automation so normally should not be changed
     #############################################################################
