@@ -285,6 +285,10 @@ presubmits:
   - build-tests: true
   - unit-tests: true
   - integration-tests: true
+  knative-sandbox/kn-plugin-event:
+  - build-tests: true
+  - unit-tests: true
+  - integration-tests: true
   knative-sandbox/kn-plugin-migration:
   - build-tests: true
   - unit-tests: true
@@ -773,6 +777,8 @@ periodics:
     release: "0.21"
   - auto-release: true
   knative-sandbox/kn-plugin-diag:
+  - continuous: true
+  knative-sandbox/kn-plugin-event:
   - continuous: true
   knative-sandbox/kn-plugin-migration:
   - continuous: true

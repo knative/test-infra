@@ -1397,6 +1397,121 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+  knative-sandbox/kn-plugin-event:
+  - name: pull-knative-sandbox-kn-plugin-event-build-tests
+    agent: kubernetes
+    context: pull-knative-sandbox-kn-plugin-event-build-tests
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-sandbox-kn-plugin-event-build-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-kn-plugin-event-build-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/kn-plugin-event
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--build-tests"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-sandbox-kn-plugin-event-unit-tests
+    agent: kubernetes
+    context: pull-knative-sandbox-kn-plugin-event-unit-tests
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-sandbox-kn-plugin-event-unit-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-kn-plugin-event-unit-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/kn-plugin-event
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--unit-tests"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-sandbox-kn-plugin-event-integration-tests
+    agent: kubernetes
+    context: pull-knative-sandbox-kn-plugin-event-integration-tests
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-sandbox-kn-plugin-event-integration-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-kn-plugin-event-integration-tests),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/kn-plugin-event
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--integration-tests"
+        volumeMounts:
+        - name: repoview-token
+          mountPath: /etc/repoview-token
+          readOnly: true
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: repoview-token
+        secret:
+          secretName: repoview-token
+      - name: test-account
+        secret:
+          secretName: test-account
   knative-sandbox/kn-plugin-migration:
   - name: pull-knative-sandbox-kn-plugin-migration-build-tests
     agent: kubernetes
@@ -8192,6 +8307,82 @@ periodics:
   annotations:
     testgrid-dashboards: knative-prow-tests
     testgrid-tab-name: knative-sandbox-kn-plugin-diag-continuous-beta-prow-tests
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/presubmit-tests.sh"
+      - "--all-tests"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "20 */4 * * *"
+  name: ci-knative-sandbox-kn-plugin-event-continuous
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: kn-plugin-event
+    path_alias: knative.dev/kn-plugin-event
+    base_ref: main
+  annotations:
+    testgrid-dashboards: knative-sandbox-kn-plugin-event
+    testgrid-tab-name: knative-sandbox-kn-plugin-event-continuous
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/presubmit-tests.sh"
+      - "--all-tests"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "36 8,11,22 * * *"
+  name: ci-knative-sandbox-kn-plugin-event-continuous-beta-prow-tests
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: kn-plugin-event
+    path_alias: knative.dev/kn-plugin-event
+    base_ref: main
+  annotations:
+    testgrid-dashboards: knative-prow-tests
+    testgrid-tab-name: knative-sandbox-kn-plugin-event-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:

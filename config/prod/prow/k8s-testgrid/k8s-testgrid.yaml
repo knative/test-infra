@@ -46,6 +46,7 @@ dashboards:
 - name: knative-sandbox-eventing-redis
 - name: knative-sandbox-kn-plugin-admin
 - name: knative-sandbox-kn-plugin-diag
+- name: knative-sandbox-kn-plugin-event
 - name: knative-sandbox-kn-plugin-migration
 - name: knative-sandbox-kn-plugin-sample
 - name: knative-sandbox-kn-plugin-service-log
@@ -97,6 +98,7 @@ dashboard_groups:
       - "knative-sandbox-eventing-redis"
       - "knative-sandbox-kn-plugin-admin"
       - "knative-sandbox-kn-plugin-diag"
+      - "knative-sandbox-kn-plugin-event"
       - "knative-sandbox-kn-plugin-migration"
       - "knative-sandbox-kn-plugin-sample"
       - "knative-sandbox-kn-plugin-service-log"
