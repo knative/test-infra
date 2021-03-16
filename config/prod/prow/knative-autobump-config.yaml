@@ -8,6 +8,11 @@ headBranchName: "autobump-knative"
 upstreamURLBase: "https://raw.githubusercontent.com/kubernetes/test-infra/master"
 includedConfigPaths:
   - "config/prod/prow/jobs"
+extraFiles:
+  - "config/prow_common.mk"
+  - "config/prod/prow/check_config.sh"
+  - "config/prod/prow/run_job.sh"
+  - "config/prod/prow/update_config.sh"
 targetVersion: "upstream"
 prefixes:
   - name: "Prow"
