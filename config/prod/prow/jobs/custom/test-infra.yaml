@@ -338,7 +338,7 @@ periodics:
     path_alias: knative.dev/test-infra
   spec:
     containers:
-    - image: gcr.io/k8s-prow/generic-autobumper:v20210310-a49501d5de
+    - image: gcr.io/k8s-prow/generic-autobumper:v20210316-7c62dd64c8
       command:
       - /app/prow/cmd/generic-autobumper/app.binary
       args:
