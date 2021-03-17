@@ -142,6 +142,9 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
+- name: ci-knative-eventing-s390x-e2e-tests
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-s390x-e2e-tests
+  alert_stale_results_hours: 3
 - name: ci-knative-eventing-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-eventing-go-coverage
   short_text_metric: "coverage"
@@ -1337,6 +1340,9 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 1
+  - name: s390x-e2e-tests
+    test_group_name: ci-knative-eventing-s390x-e2e-tests
+    base_options: "sort-by-name="
   - name: coverage
     test_group_name: ci-knative-eventing-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="

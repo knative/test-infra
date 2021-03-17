@@ -342,6 +342,24 @@ func addExtraEnvVarsToJob(envVars []string, data *baseProwJobTemplateData) {
 	}
 }
 
+// addExtraClusterInfoToJob enables extra cluster information for the given job.
+// Information includes: k8s config(config file), registry certificate(registry.crt file)
+// and KO_DOCKER_REPO environment variable value (ko-docker-repo file).
+func addExtraClusterInfoToJob(cluster yaml.MapSlice, data *baseProwJobTemplateData) {
+	for _, secret := range cluster {
+		if secret.Key != "secret" {
+			return
+		}
+		secretName := getString(secret.Value)
+		// Volume mount for all data. Kubeconfig shoild be copied to readwrite directory in job command
+		addVolumeToJob(data, "/opt/cluster", secretName, true, nil)
+		// KO_DOCKER_REPO env varable mount from secret
+		env := []string{envNameToKey("KO_DOCKER_REPO"), "  valueFrom:", "    secretKeyRef: ", "      name: " + secretName, "      key: ko-docker-repo"}
+
+		data.Env = append(data.Env, env...)
+	}
+}
+
 // setupDockerInDockerForJob enables docker-in-docker for the given job.
 func setupDockerInDockerForJob(data *baseProwJobTemplateData) {
 	// These volumes are required for running docker command and creating kind clusters.
@@ -418,6 +436,8 @@ func parseBasicJobConfigOverrides(data *baseProwJobTemplateData, config yaml.Map
 			setResourcesReqForJob(getMapSlice(item.Value), data)
 		case "reporter_config":
 			setReporterConfigReqForJob(getMapSlice(item.Value), data)
+		case "external_cluster":
+			addExtraClusterInfoToJob(getMapSlice(item.Value), data)
 		case nil: // already processed
 			continue
 		default:

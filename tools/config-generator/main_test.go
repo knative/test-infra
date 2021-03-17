@@ -288,6 +288,48 @@ func TestAddExtraEnvVarsToJob(t *testing.T) {
 	}
 }
 
+func TestAddExtraClusterInfoToJob(t *testing.T) {
+	SetupForTesting()
+	job := baseProwJobTemplateData{}
+	in := yaml.MapSlice{
+		yaml.MapItem{Key: "secret", Value: "foo"},
+	}
+
+	addExtraClusterInfoToJob(in, &job)
+
+	expectedVolumeMounts := []string{
+		"- name: foo",
+		"  mountPath: /opt/cluster",
+		"  readOnly: true",
+	}
+
+	if diff := cmp.Diff(job.VolumeMounts, expectedVolumeMounts); diff != "" {
+		t.Fatalf("Unexpected volume mount: (-got +want)\n%s", diff)
+	}
+
+	expectedVolumes := []string{
+		"- name: foo",
+		"  secret:",
+		"    secretName: foo",
+	}
+	if diff := cmp.Diff(job.Volumes, expectedVolumes); diff != "" {
+		t.Fatalf("Unexpected volume: (-got +want)\n%s", diff)
+	}
+
+	if diff := cmp.Diff(job.Env[0], "- name: KO_DOCKER_REPO"); diff != "" {
+		t.Fatalf("Unexpected env value: (-got +want)\n%s", diff)
+	}
+
+	in = yaml.MapSlice{
+		yaml.MapItem{Key: "not-secret", Value: "foo"},
+	}
+
+	addExtraClusterInfoToJob(in, &job)
+	if diff := cmp.Diff(job.Volumes, expectedVolumes); diff != "" {
+		t.Fatalf("Unexpected new volume was added: (-got +want)\n%s", diff)
+	}
+}
+
 func TestSetupDockerInDockerForJob(t *testing.T) {
 	SetupForTesting()
 	job := baseProwJobTemplateData{}
@@ -378,6 +420,9 @@ func TestParseBasicJobConfigOverrides(t *testing.T) {
 	reporterConfig := yaml.MapSlice{
 		yaml.MapItem{Key: "slack", Value: slack},
 	}
+	cluster := yaml.MapSlice{
+		yaml.MapItem{Key: "secret", Value: "foo"},
+	}
 
 	repoName := "foo_repo"
 	repositories = []repositoryData{
@@ -398,6 +443,7 @@ func TestParseBasicJobConfigOverrides(t *testing.T) {
 		yaml.MapItem{Key: "env-vars", Value: []interface{}{"foo=bar"}},
 		yaml.MapItem{Key: "optional", Value: true},
 		yaml.MapItem{Key: "resources", Value: resources},
+		yaml.MapItem{Key: "external_cluster", Value: cluster},
 		yaml.MapItem{Key: "reporter_config", Value: reporterConfig},
 	}
 
@@ -447,6 +493,9 @@ func TestParseBasicJobConfigOverrides(t *testing.T) {
 	if diff := cmp.Diff(job.Env[3], "  value: bar"); diff != "" {
 		t.Fatalf("Unexpected env value: (-got +want)\n%s", diff)
 	}
+	if diff := cmp.Diff(job.Env[4], "- name: KO_DOCKER_REPO"); diff != "" {
+		t.Fatalf("Unexpected env value: (-got +want)\n%s", diff)
+	}
 	expectedResources := []string{
 		"  requests:",
 		"    memory: 12Gi",
@@ -456,7 +505,40 @@ func TestParseBasicJobConfigOverrides(t *testing.T) {
 		"    disk: 16Ti",
 	}
 	if diff := cmp.Diff(job.Resources, expectedResources); diff != "" {
-		t.Fatalf("Unexpected volume mount: (-got +want)\n%s", diff)
+		t.Fatalf("Unexpected resources (-got +want)\n%s", diff)
+	}
+
+	expectedVolumeMounts := []string{
+		"- name: docker-graph",
+		"  mountPath: /docker-graph",
+		"- name: modules",
+		"  mountPath: /lib/modules",
+		"- name: cgroup",
+		"  mountPath: /sys/fs/cgroup",
+		"- name: foo",
+		"  mountPath: /opt/cluster",
+		"  readOnly: true",
+	}
+	if diff := cmp.Diff(job.VolumeMounts, expectedVolumeMounts); diff != "" {
+		t.Fatalf("Unexpected volume mounts: (-got +want)\n%s", diff)
+	}
+	expectedVolumes := []string{
+		"- name: docker-graph",
+		"  emptyDir: {}",
+		"- name: modules",
+		"  hostPath:",
+		"    path: /lib/modules",
+		"    type: Directory",
+		"- name: cgroup",
+		"  hostPath:",
+		"    path: /sys/fs/cgroup",
+		"    type: Directory",
+		"- name: foo",
+		"  secret:",
+		"    secretName: foo",
+	}
+	if diff := cmp.Diff(job.Volumes, expectedVolumes); diff != "" {
+		t.Fatalf("Unexpected volumes: (-got +want)\n%s", diff)
 	}
 
 	expectedReporterConfig := []string{
