@@ -3,6 +3,7 @@ gitHubToken: "/etc/prow-auto-bumper-github-token/token"
 skipPullRequest: false
 gitHubOrg: "knative"
 gitHubRepo: "test-infra"
+githubGitHubTargetBranch: "main"
 remoteName: "test-infra"
 headBranchName: "autobump-knative"
 upstreamURLBase: "https://raw.githubusercontent.com/kubernetes/test-infra/master"
