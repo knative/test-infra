@@ -28,7 +28,7 @@ presubmits:
     - "main"
     spec:
       containers:
-      - image: gcr.io/k8s-prow/peribolos:v20210305-350f3b2f2e
+      - image: gcr.io/k8s-prow/peribolos:v20210317-3053d84953
         command:
         - "/peribolos"
         args:
@@ -63,7 +63,7 @@ presubmits:
     - "main"
     spec:
       containers:
-      - image: gcr.io/k8s-prow/peribolos:v20210305-350f3b2f2e
+      - image: gcr.io/k8s-prow/peribolos:v20210317-3053d84953
         command:
         - "/peribolos"
         args:
@@ -108,7 +108,7 @@ postsubmits:
         report_template: '"The knative peribolos postsubmit job fails, check the log: <{{.Status.URL}}|View logs>"'
     spec:
       containers:
-      - image: gcr.io/k8s-prow/peribolos:v20210305-350f3b2f2e
+      - image: gcr.io/k8s-prow/peribolos:v20210317-3053d84953
         command:
         - "/peribolos"
         args:
@@ -149,7 +149,7 @@ postsubmits:
         report_template: '"The knative-sandbox peribolos postsubmit job fails, check the log: <{{.Status.URL}}|View logs>"'
     spec:
       containers:
-      - image: gcr.io/k8s-prow/peribolos:v20210305-350f3b2f2e
+      - image: gcr.io/k8s-prow/peribolos:v20210317-3053d84953
         command:
         - "/peribolos"
         args:
@@ -187,7 +187,7 @@ periodics:
     path_alias: knative.dev/community
   spec:
     containers:
-    - image: gcr.io/k8s-prow/peribolos:v20210305-350f3b2f2e
+    - image: gcr.io/k8s-prow/peribolos:v20210317-3053d84953
       command:
       - "/peribolos"
       args:
@@ -223,7 +223,7 @@ periodics:
     path_alias: knative.dev/community
   spec:
     containers:
-    - image: gcr.io/k8s-prow/peribolos:v20210305-350f3b2f2e
+    - image: gcr.io/k8s-prow/peribolos:v20210317-3053d84953
       command:
       - "/peribolos"
       args:
