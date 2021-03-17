@@ -269,3 +269,15 @@ repos:
       name: area/test
       target: issues
       addedBy: humans
+  knative/ux:
+    labels:
+    - color: e10edc
+      description: High-level Outcomes that appear on the UX WG Rodmap
+      name: Outcome
+      target: both
+      addedBy: humans
+    - color: c36dea
+      description: UX bugs and enhancements related to improve knative install experience
+      name: Install
+      target: both
+      addedBy: humans
