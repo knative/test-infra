@@ -211,8 +211,8 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		// Knock-out the item, signalling it was already parsed.
 		periodicConfig[i] = yaml.MapItem{}
 
-		dashboardName := org + "-" + repo
-		tabName := data.Base.RepoNameForJob
+		dashboardName := repo
+		tabName := data.Base.RepoName
 		if jobNameSuffix != "" {
 			tabName += "-" + jobNameSuffix
 		}
@@ -266,7 +266,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		betaData.Base.Image = strings.ReplaceAll(betaData.Base.Image, ":stable", ":beta")
 
 		// These jobs all get lumped together in a single Testgrid dashboard
-		dashboardAnnotation := fmtDashboardAnnotation("knative-prow-tests")
+		dashboardAnnotation := fmtDashboardAnnotation("prow-tests")
 		tabAnnotation := betaData.Base.Annotations[1] + "-beta-prow-tests"
 		betaData.Base.Annotations[0] = dashboardAnnotation
 		betaData.Base.Annotations[1] = tabAnnotation
@@ -334,8 +334,8 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 		addExtraEnvVarsToJob(extraEnvVars, &data.Base)
 		addMonitoringPubsubLabelsToJob(&data.Base, data.PeriodicJobName)
 		configureServiceAccountForJob(&data.Base)
-		dashboardName := data.Base.OrgName + "-" + data.Base.RepoName
-		tabName := data.Base.RepoNameForJob + "-" + jobNameSuffix
+		dashboardName := data.Base.RepoName
+		tabName := data.Base.RepoName + "-" + jobNameSuffix
 		testgroupExtras := map[string]string{"short-text-metric": "coverage"}
 		data.Base.Annotations = generateProwJobAnnotations(dashboardName, tabName, testgroupExtras)
 		executeJobTemplate("periodic go coverage", readTemplate(periodicCustomJob), title, repoName, data.PeriodicJobName, false, data)
@@ -347,7 +347,7 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 		betaData.Base.Image = strings.ReplaceAll(betaData.Base.Image, ":stable", ":beta")
 
 		// Ensure the beta-prow-tests go to the correct Testgrid dashboard and tab
-		dashboardName = "knative-prow-tests"
+		dashboardName = "prow-tests"
 		tabName += "-beta-prow-tests"
 		betaData.Base.Annotations = generateProwJobAnnotations(dashboardName, tabName, testgroupExtras)
 
