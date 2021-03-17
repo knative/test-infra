@@ -30,7 +30,7 @@
 #    spec:
 #      containers:
 #      - name: branchprotector
-#        image: gcr.io/k8s-prow/branchprotector:v20210305-350f3b2f2e
+#        image: gcr.io/k8s-prow/branchprotector:v20210317-3053d84953
 #        command:
 #        - /app/prow/cmd/branchprotector/app.binary
 #        args:
@@ -63,7 +63,7 @@ periodics:
   spec:
     containers:
     - name: branchprotector
-      image: gcr.io/k8s-prow/branchprotector:v20210305-350f3b2f2e
+      image: gcr.io/k8s-prow/branchprotector:v20210317-3053d84953
       command:
       - /app/prow/cmd/branchprotector/app.binary
       args:
@@ -95,7 +95,7 @@ postsubmits:
     spec:
       containers:
       - name: branchprotector
-        image: gcr.io/k8s-prow/branchprotector:v20210305-350f3b2f2e
+        image: gcr.io/k8s-prow/branchprotector:v20210317-3053d84953
         command:
         - /app/prow/cmd/branchprotector/app.binary
         args:
