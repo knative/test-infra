@@ -8343,8 +8343,8 @@ periodics:
     path_alias: knative.dev/kn-plugin-event
     base_ref: main
   annotations:
-    testgrid-dashboards: knative-sandbox-kn-plugin-event
-    testgrid-tab-name: knative-sandbox-kn-plugin-event-continuous
+    testgrid-dashboards: kn-plugin-event
+    testgrid-tab-name: kn-plugin-event-continuous
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
@@ -8381,8 +8381,8 @@ periodics:
     path_alias: knative.dev/kn-plugin-event
     base_ref: main
   annotations:
-    testgrid-dashboards: knative-prow-tests
-    testgrid-tab-name: knative-sandbox-kn-plugin-event-continuous-beta-prow-tests
+    testgrid-dashboards: prow-tests
+    testgrid-tab-name: kn-plugin-event-continuous-beta-prow-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
     containers:
