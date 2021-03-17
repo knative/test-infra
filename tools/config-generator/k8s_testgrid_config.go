@@ -47,7 +47,7 @@ func generateK8sTestgrid(orgsAndRepos map[string][]string) {
 	for _, org := range allOrgs {
 		renamedReposForOrg := []string{}
 		for _, repo := range orgsAndRepos[org] {
-			orgRepoComb := org + "-" + repo
+			orgRepoComb := repo
 			renamedReposForOrg = append(renamedReposForOrg, orgRepoComb)
 			allReposSet.Insert("name: " + orgRepoComb)
 		}
