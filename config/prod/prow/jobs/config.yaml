@@ -5019,6 +5019,73 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
+  knative-sandbox/eventing-autoscaler-keda:
+  - name: pull-knative-sandbox-eventing-autoscaler-keda-integration-test-kafka-source
+    agent: kubernetes
+    context: pull-knative-sandbox-eventing-autoscaler-keda-integration-test-kafka-source
+    always_run: true
+    optional: true
+    rerun_command: "/test pull-knative-sandbox-eventing-autoscaler-keda-integration-test-kafka-source"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-autoscaler-keda-integration-test-kafka-source),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/eventing-autoscaler-keda
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --kafka-source"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-sandbox-eventing-autoscaler-keda-integration-test-kafka-mt-source
+    agent: kubernetes
+    context: pull-knative-sandbox-eventing-autoscaler-keda-integration-test-kafka-mt-source
+    always_run: true
+    optional: true
+    rerun_command: "/test pull-knative-sandbox-eventing-autoscaler-keda-integration-test-kafka-mt-source"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-autoscaler-keda-integration-test-kafka-mt-source),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/eventing-autoscaler-keda
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --kafka-mt-source"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
   knative-sandbox/discovery:
   - name: pull-knative-sandbox-discovery-build-tests
     agent: kubernetes
