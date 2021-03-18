@@ -94,6 +94,9 @@ func (fgc *FakeGithubClient) CreateIssue(org, repo, title, body string) (*github
 	repoURL := fmt.Sprintf("%s/%s/%s", fgc.BaseURL, org, repo)
 	url := fmt.Sprintf("%s/%d", repoURL, issueNumber)
 	newIssue := &github.Issue{
+		User: &github.User{
+			Login: fgc.User.Login,
+		},
 		Title:         &title,
 		Body:          &body,
 		Number:        &issueNumber,
