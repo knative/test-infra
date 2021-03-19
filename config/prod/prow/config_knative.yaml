@@ -470,7 +470,7 @@ presubmits:
   - build-tests: true
   - unit-tests: true
   - integration-tests: true
-  - go-coverage: true
+  - go-coverage: false
   knative-sandbox/net-istio:
   - build-tests: true
   - unit-tests: true
