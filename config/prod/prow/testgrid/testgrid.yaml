@@ -1135,9 +1135,6 @@ test_groups:
   short_text_metric: "coverage"
 - name: ci-knative-sandbox-eventing-autoscaler-keda-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-autoscaler-keda-continuous-beta-prow-tests
-- name: ci-knative-sandbox-net-ingressv2-go-coverage-beta-prow-tests
-  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-ingressv2-go-coverage-beta-prow-tests
-  short_text_metric: "coverage"
 - name: ci-knative-backup-artifacts
   gcs_prefix: knative-prow/logs/ci-knative-backup-artifacts
   alert_options:
@@ -2650,9 +2647,6 @@ dashboards:
   - name: ci-knative-sandbox-eventing-autoscaler-keda-continuous
     test_group_name: ci-knative-sandbox-eventing-autoscaler-keda-continuous-beta-prow-tests
     base_options: "sort-by-failures="
-  - name: ci-knative-sandbox-net-ingressv2-go-coverage
-    test_group_name: ci-knative-sandbox-net-ingressv2-go-coverage-beta-prow-tests
-    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: utilities
   dashboard_tab:
   - name: ci-knative-backup-artifacts
