@@ -52,7 +52,6 @@ dashboards:
 - name: net-certmanager
 - name: net-contour
 - name: net-http01
-- name: net-ingressv2
 - name: net-istio
 - name: net-kourier
 - name: operator
@@ -106,7 +105,6 @@ dashboard_groups:
       - "net-certmanager"
       - "net-contour"
       - "net-http01"
-      - "net-ingressv2"
       - "net-istio"
       - "net-kourier"
       - "sample-controller"
