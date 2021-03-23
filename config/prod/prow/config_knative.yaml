@@ -132,32 +132,6 @@ presubmits:
         memory: 12Gi
       limits:
         memory: 16Gi
-  - custom-test: gloo-0.17.1
-    needs-monitor: true
-    always-run: false
-    run-if-changed: ^third_party/gloo-latest/*
-    optional: true
-    args:
-    - --run-test
-    - ./test/e2e-tests.sh --gloo-version 0.17.1
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - custom-test: gloo-0.17.1-tls
-    needs-monitor: true
-    always-run: false
-    run-if-changed: ^third_party/gloo-latest/*
-    optional: true
-    args:
-    - --run-test
-    - ./test/e2e-auto-tls-tests.sh --gloo-version 0.17.1
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
   - custom-test: kourier-stable
     needs-monitor: true
     always-run: false
@@ -655,14 +629,6 @@ periodics:
     - ./test/e2e-tests.sh --istio-version stable --no-mesh
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --istio-version stable --no-mesh --run-http01-auto-tls-tests
-  - custom-job: gloo-0.17.1
-    command:
-    - ./test/presubmit-tests.sh
-    args:
-    - --run-test
-    - ./test/e2e-tests.sh --gloo-version 0.17.1
-    - --run-test
-    - ./test/e2e-auto-tls-tests.sh --gloo-version 0.17.1
   - custom-job: kourier-stable
     command:
     - ./test/presubmit-tests.sh
