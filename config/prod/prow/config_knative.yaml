@@ -839,10 +839,7 @@ periodics:
     - bash
     args:
     - -c
-    - >-
-      mkdir -p /root/.kube &&
-      cp /opt/cluster/config /root/.kube/ &&
-      ./test/e2e-tests.sh --run-tests
+    - mkdir -p /root/.kube && cp /opt/cluster/config /root/.kube/ && ./test/e2e-tests.sh --run-tests
     env-vars:
     - DISABLE_MD_LINTING="1"
     - KO_FLAGS="--platform=linux/s390x"
