@@ -42,6 +42,7 @@ dashboards:
 - name: eventing-redis
 - name: kn-plugin-admin
 - name: kn-plugin-diag
+- name: kn-plugin-event
 - name: kn-plugin-migration
 - name: kn-plugin-sample
 - name: kn-plugin-service-log
@@ -96,6 +97,7 @@ dashboard_groups:
       - "eventing-redis"
       - "kn-plugin-admin"
       - "kn-plugin-diag"
+      - "kn-plugin-event"
       - "kn-plugin-migration"
       - "kn-plugin-sample"
       - "kn-plugin-service-log"
