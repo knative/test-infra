@@ -376,7 +376,7 @@ func (gih *GithubIssueHandler) githubToFlakyIssue(issue *github.Issue, dryrun bo
 	issueID := reTestIdentifierRegex.FindStringSubmatch(issue.GetBody())
 	// Malformed issue, all auto flaky issues need to be identifiable.
 	if len(issueID) < 2 {
-		return nil, fmt.Errorf("test identifier '%s' is malformed", issueID)
+		return nil, fmt.Errorf("test identifier '%s' is malformed: %+v", issueID, issue)
 	}
 	autoComment, err := gih.findExistingComment(issue, issueID[1])
 	if err != nil {
@@ -408,6 +408,11 @@ func (gih *GithubIssueHandler) getFlakyIssues(repoDataAll []RepoData) (map[strin
 			return nil, err
 		}
 		for _, issue := range issues {
+			// Skip issues that are not created by the GitHub bot.
+			if issue.User.Login != gih.user.Login {
+				continue
+			}
+
 			fi, err := gih.githubToFlakyIssue(issue, false)
 			if err != nil {
 				return nil, err
