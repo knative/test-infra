@@ -511,6 +511,21 @@ presubmits:
   - unit-tests: true
   - integration-tests: true
   - go-coverage: true
+  knative-sandbox/eventing-autoscaler-keda:
+  - custom-test: integration-test-kafka-source
+    args:
+    - --run-test
+    - ./test/e2e-tests.sh --kafka-source
+    optional: true
+  - custom-test: integration-test-kafka-mt-source
+    args:
+    - --run-test
+    - ./test/e2e-tests.sh --kafka-mt-source
+    optional: true
+  - build-tests: false
+  - unit-tests: false
+  - integration-tests: false
+  - go-coverage: false
   knative-sandbox/discovery:
   - build-tests: true
   - unit-tests: true
