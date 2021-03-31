@@ -16,11 +16,8 @@
 # In emergency, could easily edit this file, deleting all these lines
 confirm-main:
 	@if git diff-index --quiet HEAD; then true; else echo "Git working space is dirty -- will not update server"; false; fi;
-# TODO(chizhg): change to `git branch --show-current` after we update the Git version in prow-tests image.
-ifneq ("$(shell git rev-parse --abbrev-ref HEAD)","master")
-	ifneq ("$(shell git rev-parse --abbrev-ref HEAD)","main")
-		@echo "Branch is not master or main -- will not update server"
-		@false
-	endif
+	# TODO(chizhg): change to `git branch --show-current` after we update the Git version in prow-tests image.
+ifneq ("$(shell git rev-parse --abbrev-ref HEAD)","main")
+	@echo "Branch is not main -- will not update server"
+	@false
 endif
-
