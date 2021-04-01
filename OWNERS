@@ -2,8 +2,8 @@
 
 approvers:
 - technical-oversight-committee
-- productivity-approvers
+- productivity-writers
 
 reviewers:
-- productivity-approvers
+- productivity-writers
 - productivity-reviewers
