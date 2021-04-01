@@ -2,17 +2,21 @@
 
 aliases:
   technical-oversight-committee:
-    - evankanderson
-    - grantr
-    - markusthoemmes
-    - mattmoor
-    - tcnghia
-  productivity-approvers:
-    - chaodaiG
-    - chizhg
-    - coryrc
-    - n3wscott
+  - evankanderson
+  - grantr
+  - markusthoemmes
+  - rhuss
+
+  productivity-writers:
+  - chaodaiG
+  - chizhg
+  - coryrc
+  - n3wscott
+  
   productivity-reviewers:
-    - steuhs
-    - peterfeifanchen
-    - efiturri
+  - coryrc
+  - efiturri
+  - evankanderson
+  - peterfeifanchen
+  - steuhs
+  - yt3liu
