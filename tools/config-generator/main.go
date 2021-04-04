@@ -812,32 +812,6 @@ func main() {
 		logFatalf("Cannot parse config %q: %v", configFileName, err)
 	}
 
-	if *generateK8sTestgridConfig {
-		setOutput(k8sTestgridConfigOutput)
-		executeTemplate("general header", readTemplate(commonHeaderConfig), newBaseTestgridTemplateData(""))
-
-		periodicJobData := parseJob(configYaml, "periodics")
-		orgsAndRepoSet := make(map[string]sets.String)
-
-		// All periodics should be included in Testgrid.
-		for _, mapItem := range periodicJobData {
-			org, repo := parseOrgAndRepoFromMapItem(mapItem)
-			if _, exists := orgsAndRepoSet[org]; !exists {
-				orgsAndRepoSet[org] = sets.NewString()
-			}
-			orgsAndRepoSet[org].Insert(repo)
-		}
-
-		// Do a special insert for the beta prow test jobs.
-		orgsAndRepoSet["knative"].Insert("prow-tests")
-
-		orgsAndRepos := make(map[string][]string)
-		for org, repoSet := range orgsAndRepoSet {
-			orgsAndRepos[org] = repoSet.List()
-		}
-		generateK8sTestgrid(orgsAndRepos)
-	}
-
 	// Generate Testgrid config.
 	if *generateTestgridConfig {
 		setOutput(testgridConfigOutput)
@@ -868,6 +842,12 @@ func main() {
 		// These generate "dashboard_groups:"
 		metaData.generateDashboardGroups()
 		metaData.generateNonAlignedDashboardGroups()
+	}
+
+	if *generateK8sTestgridConfig {
+		setOutput(k8sTestgridConfigOutput)
+		executeTemplate("general header", readTemplate(commonHeaderConfig), newBaseTestgridTemplateData(""))
+		generateK8sTestgrid(metaData)
 	}
 }
 

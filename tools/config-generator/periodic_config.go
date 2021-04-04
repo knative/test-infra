@@ -133,6 +133,8 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	isContinuousJob := false
 	org := data.Base.OrgName
 	repo := data.Base.RepoName
+	dashboardName := repo
+	tabName := ""
 	// Parse the input yaml and set values data based on them
 	for i, item := range periodicConfig {
 		jobName := getString(item.Key)
@@ -143,6 +145,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			}
 			jobType = getString(item.Key)
 			jobNameSuffix = "continuous"
+			tabName = jobNameSuffix
 			isContinuousJob = true
 			// Use default command and arguments if none given.
 			if data.Base.Command == "" {
@@ -158,6 +161,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			}
 			jobType = getString(item.Key)
 			jobNameSuffix = "nightly-release"
+			tabName = jobNameSuffix
 			data.Base.ServiceAccount = nightlyAccount
 			data.Base.Command = releaseScript
 			data.Base.Args = releaseNightly
@@ -168,6 +172,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			}
 			jobType = getString(item.Key)
 			jobNameSuffix = "continuous"
+			tabName = jobNameSuffix
 			isContinuousJob = true
 			data.Base.Command = releaseScript
 			data.Base.Args = releaseLocal
@@ -179,6 +184,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			}
 			jobType = getString(item.Key)
 			jobNameSuffix = getString(item.Key)
+			tabName = jobNameSuffix
 			data.Base.ServiceAccount = releaseAccount
 			data.Base.Command = releaseScript
 			data.Base.Args = []string{
@@ -195,11 +201,14 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		case "custom-job":
 			jobType = getString(item.Key)
 			jobNameSuffix = getString(item.Value)
+			tabName = jobNameSuffix
 			data.Base.Timeout = 120
 		case "cron":
 			data.CronString = getString(item.Value)
 		case "release":
 			version := getString(item.Value)
+			dashboardName = org + "-" + version
+			tabName = repo + "-" + jobNameSuffix
 			jobNameSuffix = version + "-" + jobNameSuffix
 			data.Base.RepoBranch = "release-" + version
 			if jobType == "dot-release" {
@@ -210,12 +219,6 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		}
 		// Knock-out the item, signalling it was already parsed.
 		periodicConfig[i] = yaml.MapItem{}
-
-		dashboardName := repo
-		tabName := data.Base.RepoName
-		if jobNameSuffix != "" {
-			tabName += "-" + jobNameSuffix
-		}
 		testgroupExtras := getTestgroupExtras(org, jobName)
 		data.Base.Annotations = generateProwJobAnnotations(dashboardName, tabName, testgroupExtras)
 	}
@@ -266,10 +269,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 		betaData.Base.Image = strings.ReplaceAll(betaData.Base.Image, ":stable", ":beta")
 
 		// These jobs all get lumped together in a single Testgrid dashboard
-		dashboardAnnotation := fmtDashboardAnnotation("prow-tests")
-		tabAnnotation := betaData.Base.Annotations[1] + "-beta-prow-tests"
-		betaData.Base.Annotations[0] = dashboardAnnotation
-		betaData.Base.Annotations[1] = tabAnnotation
+		betaData.Base.Annotations = generateProwJobAnnotations("beta-prow-tests", data.PeriodicJobName, map[string]string{"alert_stale_results_hours": "3"})
 
 		// Run 2 or 3 times a day because prow-tests beta testing has different desired interval than the underlying job
 		hours := []int{getUTCtime(1), getUTCtime(4)}
@@ -347,9 +347,8 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 		betaData.Base.Image = strings.ReplaceAll(betaData.Base.Image, ":stable", ":beta")
 
 		// Ensure the beta-prow-tests go to the correct Testgrid dashboard and tab
-		dashboardName = "prow-tests"
-		tabName += "-beta-prow-tests"
-		betaData.Base.Annotations = generateProwJobAnnotations(dashboardName, tabName, testgroupExtras)
+		dashboardName = "beta-prow-tests"
+		betaData.Base.Annotations = generateProwJobAnnotations(dashboardName, data.PeriodicJobName, testgroupExtras)
 
 		// Run once a day because prow-tests beta testing has different desired interval than the underlying job
 		betaData.CronString = fmt.Sprintf("%d %s * * *",

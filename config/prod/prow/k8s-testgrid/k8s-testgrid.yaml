@@ -21,6 +21,7 @@
 # A prow annotation will be invalid if it references a dashboard that doesn't exist
 dashboards:
 - name: async-component
+- name: beta-prow-tests
 - name: caching
 - name: client
 - name: discovery
@@ -40,6 +41,10 @@ dashboards:
 - name: eventing-prometheus
 - name: eventing-rabbitmq
 - name: eventing-redis
+- name: google-0.18
+- name: google-0.19
+- name: google-0.20
+- name: google-0.21
 - name: kn-plugin-admin
 - name: kn-plugin-diag
 - name: kn-plugin-event
@@ -48,7 +53,18 @@ dashboards:
 - name: kn-plugin-service-log
 - name: kn-plugin-source-kafka
 - name: kn-plugin-source-kamelet
+- name: knative-0.15
+- name: knative-0.16
+- name: knative-0.17
+- name: knative-0.18
+- name: knative-0.19
+- name: knative-0.20
+- name: knative-0.21
 - name: knative-gcp
+- name: knative-sandbox-0.18
+- name: knative-sandbox-0.19
+- name: knative-sandbox-0.20
+- name: knative-sandbox-0.21
 - name: kperf
 - name: net-certmanager
 - name: net-contour
@@ -57,11 +73,11 @@ dashboards:
 - name: net-kourier
 - name: operator
 - name: pkg
-- name: prow-tests
 - name: sample-controller
 - name: sample-source
 - name: serving
 - name: test-infra
+- name: utilities
 dashboard_groups:
   - name: google-knative
     dashboard_names:
@@ -75,7 +91,6 @@ dashboard_groups:
       - "eventing-contrib"
       - "operator"
       - "pkg"
-      - "prow-tests"
       - "serving"
       - "test-infra"
   - name: knative-sandbox
@@ -111,3 +126,9 @@ dashboard_groups:
       - "net-kourier"
       - "sample-controller"
       - "sample-source"
+  - name: maintenance
+    dashboard_names:
+      - "utilities"
+  - name: prow-tests
+    dashboard_names:
+      - "beta-prow-tests"
