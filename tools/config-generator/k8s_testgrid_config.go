@@ -19,6 +19,7 @@ limitations under the License.
 package main
 
 import (
+	"regexp"
 	"sort"
 
 	"k8s.io/apimachinery/pkg/util/sets"
@@ -36,20 +37,34 @@ type k8sTestgridData struct {
 
 var orgDashboardRenameMap = map[string]string{"google": "google-knative"}
 
-func generateK8sTestgrid(orgsAndRepos map[string][]string) {
-	allReposSet := sets.NewString()
+func generateK8sTestgrid(metaData TestGridMetaData) {
+	// Regex expression for `knative-0.21`, `knative-sandbox-1.00`
+	reReleaseBranch := regexp.MustCompile(`(knative|knative\-sandbox|google)\-[\d]+\.[\d]+`)
+
+	allReposSet := sets.NewString("name: utilities", "name: beta-prow-tests")
 	// Sort orgsAndRepos to maintain the output order
-	var allOrgs []string
-	for org := range orgsAndRepos {
+	allOrgs := []string{"maintenance", "prow-tests"}
+	for org := range metaData.md {
 		allOrgs = append(allOrgs, org)
 	}
 	sort.Strings(allOrgs)
-	for _, org := range allOrgs {
+	orgsAndRepos := map[string][]string{
+		"maintenance": {"utilities"},
+		"prow-tests":  {"beta-prow-tests"},
+	}
+	for org, repos := range metaData.md {
+		// If org name matches release branch then this is a ungrouped
+		if reReleaseBranch.MatchString(org) {
+			allReposSet.Insert("name: " + org)
+			continue
+		}
 		renamedReposForOrg := []string{}
-		for _, repo := range orgsAndRepos[org] {
-			orgRepoComb := repo
-			renamedReposForOrg = append(renamedReposForOrg, orgRepoComb)
-			allReposSet.Insert("name: " + orgRepoComb)
+		for repo := range repos {
+			allReposSet.Insert("name: " + repo)
+			if repo == "utilities" || repo == "beta-prow-tests" {
+				continue
+			}
+			renamedReposForOrg = append(renamedReposForOrg, repo)
 		}
 		orgsAndRepos[org] = renamedReposForOrg
 	}
@@ -65,6 +80,10 @@ func generateK8sTestgrid(orgsAndRepos map[string][]string) {
 		groupName := org
 		if nameOverride, ok := orgDashboardRenameMap[org]; ok {
 			groupName = nameOverride
+		}
+		// If group name matches release branch then skip
+		if reReleaseBranch.MatchString(groupName) {
+			continue
 		}
 		executeTemplate("k8s testgrid group",
 			readTemplate(k8sTestgridGroupTempl),
