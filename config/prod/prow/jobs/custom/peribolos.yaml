@@ -106,6 +106,11 @@ postsubmits:
         job_states_to_report:
           - failure
         report_template: '"The knative peribolos postsubmit job fails, check the log: <{{.Status.URL}}|View logs>"'
+    annotations:
+      testgrid-dashboards: utilities
+      testgrid-tab-name: post-knative-peribolos
+      testgrid-alert-email: "serverless-engprod-sea@google.com"
+      testgrid-num-failures-to-alert: "1"
     spec:
       containers:
       - image: gcr.io/k8s-prow/peribolos:v20210323-4a95c1446c
@@ -147,6 +152,11 @@ postsubmits:
         job_states_to_report:
           - failure
         report_template: '"The knative-sandbox peribolos postsubmit job fails, check the log: <{{.Status.URL}}|View logs>"'
+    annotations:
+      testgrid-dashboards: utilities
+      testgrid-tab-name: post-knative-sandbox-peribolos
+      testgrid-alert-email: "serverless-engprod-sea@google.com"
+      testgrid-num-failures-to-alert: "1"
     spec:
       containers:
       - image: gcr.io/k8s-prow/peribolos:v20210323-4a95c1446c
@@ -185,6 +195,11 @@ periodics:
     repo: community
     base_ref: main
     path_alias: knative.dev/community
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-peribolos
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/k8s-prow/peribolos:v20210323-4a95c1446c
@@ -221,6 +236,11 @@ periodics:
     repo: community
     base_ref: main
     path_alias: knative.dev/community
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-sandbox-peribolos
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/k8s-prow/peribolos:v20210323-4a95c1446c
