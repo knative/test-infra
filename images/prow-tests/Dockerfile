@@ -16,12 +16,18 @@ FROM gcr.io/k8s-testimages/kubekins-e2e:v20210113-cc576af-master AS stable-stuff
 
 ENV DEBIAN_FRONTEND noninteractive
 ARG GCLOUD_VERSION=317.0.0
+ARG KUBECTL_VERSION=v1.18.7
 
 # If we don't run update, the apt-get install below don't work
 RUN apt-get update
 
 # gcloud
 RUN gcloud components update --version=${GCLOUD_VERSION}
+
+# kubectl
+RUN rm -f "$(which kubectl)" && \
+    wget "https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -O /usr/local/bin/kubectl && \
+    chmod +x /usr/local/bin/kubectl
 
 # Docker
 RUN gcloud components install docker-credential-gcr
