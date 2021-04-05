@@ -121,7 +121,7 @@ presubmits:
         args:
         - --validate-config-file
         - --prow-config=../../GoogleCloudPlatform/oss-test-infra/prow/knative/config.yaml
-        - --prow-job-config=config/prod/prow/jobs/config.yaml
+        - --prow-job-config=config/prod/prow/jobs
         - --default=config/prod/prow/k8s-testgrid/testgrid-common-settings.yaml
         - --yaml=config/prod/prow/k8s-testgrid/k8s-testgrid.yaml
 
@@ -661,7 +661,7 @@ postsubmits:
         - /app/testgrid/cmd/configurator/app.binary
         args:
         - --prow-config=../../GoogleCloudPlatform/oss-test-infra/prow/knative/config.yaml
-        - --prow-job-config=config/prod/prow/jobs/config.yaml
+        - --prow-job-config=config/prod/prow/jobs
         - --default=config/prod/prow/k8s-testgrid/testgrid-common-settings.yaml
         - --yaml=config/prod/prow/k8s-testgrid/k8s-testgrid.yaml
         - --oneshot
