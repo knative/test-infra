@@ -79,7 +79,7 @@ dashboards:
 - name: test-infra
 - name: utilities
 dashboard_groups:
-  - name: google-knative
+  - name: google
     dashboard_names:
       - "knative-gcp"
   - name: knative

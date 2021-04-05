@@ -35,8 +35,6 @@ type k8sTestgridData struct {
 	OrgsAndRepos map[string][]string
 }
 
-var orgDashboardRenameMap = map[string]string{"google": "google-knative"}
-
 func generateK8sTestgrid(metaData TestGridMetaData) {
 	// Regex expression for `knative-0.21`, `knative-sandbox-1.00`
 	reReleaseBranch := regexp.MustCompile(`(knative|knative\-sandbox|google)\-[\d]+\.[\d]+`)
@@ -78,9 +76,6 @@ func generateK8sTestgrid(metaData TestGridMetaData) {
 		repos := orgsAndRepos[org]
 		sort.Strings(repos)
 		groupName := org
-		if nameOverride, ok := orgDashboardRenameMap[org]; ok {
-			groupName = nameOverride
-		}
 		// If group name matches release branch then skip
 		if reReleaseBranch.MatchString(groupName) {
 			continue

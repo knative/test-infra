@@ -138,6 +138,11 @@ periodics:
     repo: test-infra
     base_ref: main
     path_alias: knative.dev/test-infra
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-heartbeat
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -156,6 +161,11 @@ periodics:
   agent: kubernetes
   decorate: true
   cluster: "build-knative"
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-backup-artifacts
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/backups:latest
@@ -188,6 +198,11 @@ periodics:
     repo: test-infra
     base_ref: main
     path_alias: knative.dev/test-infra
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-cleanup
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -227,6 +242,11 @@ periodics:
     repo: test-infra
     base_ref: main
     path_alias: knative.dev/test-infra
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-cleanup-performance-tests
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -258,6 +278,11 @@ periodics:
   agent: kubernetes
   decorate: true
   cluster: "build-knative"
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-flakes-reporter
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/flaky-test-reporter:latest
@@ -297,6 +322,11 @@ periodics:
   agent: kubernetes
   decorate: true
   cluster: "build-knative"
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-flakes-resultsrecorder
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/flaky-test-reporter:latest
@@ -336,6 +366,11 @@ periodics:
     repo: test-infra
     base_ref: main
     path_alias: knative.dev/test-infra
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-prow-auto-bumper
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/k8s-prow/generic-autobumper:v20210323-4a95c1446c
@@ -368,6 +403,11 @@ periodics:
     repo: test-infra
     base_ref: main
     path_alias: knative.dev/test-infra
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-prow-jobs-syncer
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -415,6 +455,11 @@ postsubmits:
     run_if_changed: "^config/prod/(build-cluster/boskos/.*.yaml|prow/testgrid/testgrid.yaml)$"
     branches:
     - "main"
+    annotations:
+      testgrid-dashboards: utilities
+      testgrid-tab-name: post-knative-prow-cluster-config-updater
+      testgrid-alert-email: "serverless-engprod-sea@google.com"
+      testgrid-num-failures-to-alert: "1"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -452,6 +497,11 @@ postsubmits:
     run_if_changed: "^(images/.*|tools/(coverage|flaky-test-reporter|flaky-test-retryer)/.*|go.mod)$"
     branches:
     - "main"
+    annotations:
+      testgrid-dashboards: utilities
+      testgrid-tab-name: post-knative-test-infra-image-push
+      testgrid-alert-email: "serverless-engprod-sea@google.com"
+      testgrid-num-failures-to-alert: "1"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -491,6 +541,11 @@ postsubmits:
     run_if_changed: "^(images/prow-tests/.*|kntest/.*|pkg/.*|go.mod)$"
     branches:
     - "main"
+    annotations:
+      testgrid-dashboards: utilities
+      testgrid-tab-name: post-knative-test-infra-prow-tests-image-push
+      testgrid-alert-email: "serverless-engprod-sea@google.com"
+      testgrid-num-failures-to-alert: "1"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -522,6 +577,11 @@ postsubmits:
     run_if_changed: "^tools/flaky-test-retryer/gke_deployment/retryer_service.yaml$"
     branches:
     - "main"
+    annotations:
+      testgrid-dashboards: utilities
+      testgrid-tab-name: post-knative-test-infra-deploy-tools
+      testgrid-alert-email: "serverless-engprod-sea@google.com"
+      testgrid-num-failures-to-alert: "1"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
@@ -554,6 +614,11 @@ postsubmits:
     - org: GoogleCloudPlatform
       repo: oss-test-infra
       base_ref: master
+    annotations:
+      testgrid-dashboards: utilities
+      testgrid-tab-name: post-test-infra-validate-k8s-testgrid-yaml
+      testgrid-alert-email: "serverless-engprod-sea@google.com"
+      testgrid-num-failures-to-alert: "1"
     spec:
       containers:
       - image: gcr.io/k8s-prow/transfigure
@@ -584,6 +649,11 @@ postsubmits:
     - org: GoogleCloudPlatform
       repo: oss-test-infra
       base_ref: master
+    annotations:
+      testgrid-dashboards: utilities
+      testgrid-tab-name: post-test-infra-update-testgrid-proto
+      testgrid-alert-email: "serverless-engprod-sea@google.com"
+      testgrid-num-failures-to-alert: "1"
     spec:
       containers:
       - image: gcr.io/k8s-prow/configurator:v20210323-4a95c1446c
