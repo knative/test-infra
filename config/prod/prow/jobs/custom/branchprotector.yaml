@@ -60,6 +60,11 @@ periodics:
     repo: test-infra
     base_ref: main
     path_alias: knative.dev/test-infra
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-test-infra-branchprotector
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - name: branchprotector
@@ -92,6 +97,11 @@ postsubmits:
     cluster: "prow-trusted"
     branches:
     - "main"
+    annotations:
+      testgrid-dashboards: utilities
+      testgrid-tab-name: post-knative-test-infra-branchprotector
+      testgrid-alert-email: "serverless-engprod-sea@google.com"
+      testgrid-num-failures-to-alert: "1"
     spec:
       containers:
       - name: branchprotector
