@@ -119,11 +119,12 @@ presubmits:
         command:
         - /app/testgrid/cmd/configurator/app.binary
         args:
-        - --validate-config-file
         - --prow-config=../../GoogleCloudPlatform/oss-test-infra/prow/knative/config.yaml
         - --prow-job-config=config/prod/prow/jobs
         - --default=config/prod/prow/k8s-testgrid/testgrid-common-settings.yaml
         - --yaml=config/prod/prow/k8s-testgrid/k8s-testgrid.yaml
+        - --oneshot
+        - --output=./config.pb
 
 periodics:
 # ci-knative-heartbeat is used for prometheus, alert(s) will be sent
