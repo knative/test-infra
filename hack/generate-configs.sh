@@ -14,10 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -o errexit
-set -o nounset
+set -Eeuo pipefail
 
-REPO_ROOT_DIR="$(dirname "$0")/.."
+REPO_ROOT_DIR="$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")"
 
 # Generate Prow configs since we are using generator
 readonly CONFIG_GENERATOR_DIR="${REPO_ROOT_DIR}/tools/config-generator"
