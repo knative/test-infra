@@ -38,6 +38,8 @@ const (
 
 	configGenPath = "tools/config-generator"
 
+	configGenScript = "hack/generate-configs.sh"
+
 	oncallAddress = "https://storage.googleapis.com/knative-infra-oncall/oncall.json"
 )
 

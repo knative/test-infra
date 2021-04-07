@@ -63,6 +63,11 @@ func main() {
 	log.Print(cmd.RunCommand(fmt.Sprintf("go run %s %s",
 		configgenFullPath, strings.Join(configgenArgs, " "))))
 
+	// The code gen above updates the template file, which might not be
+	// sufficient for generating all prow/testgrid configs, rerun config gen
+	// script to make everything up-to-date
+	log.Print(cmd.RunCommand(configGenScript))
+
 	gc, err := ghutil.NewGithubClient(*githubAccount)
 	if err != nil {
 		log.Fatalf("cannot authenticate to github: %v", err)
