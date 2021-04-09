@@ -49,7 +49,7 @@ docker run -i --rm \
     -v "${PWD}:${PWD}" -v "${CONFIG_YAML}:${CONFIG_YAML}" -v "${PLUGINS_YAML}:${PLUGINS_YAML}" -v "${JOB_YAML}:${JOB_YAML}" \
     -v "${KUBECONFIG}:${KUBECONFIG}:ro" \
     -w "${PWD}" \
-    gcr.io/k8s-prow/config-bootstrapper:v20210323-4a95c1446c \
+    gcr.io/k8s-prow/config-bootstrapper:v20210409-985ef5e721 \
     "--config-path=${CONFIG_YAML}" "--job-config-path=${JOB_YAML}" \
     "--plugin-config=${PLUGINS_YAML}" \
     "--source-path=${REPO_ROOT_DIR}" \

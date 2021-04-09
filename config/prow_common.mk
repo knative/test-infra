@@ -95,7 +95,7 @@ update-testgrid-config: confirm-main
 		-v "$(GOOGLE_APPLICATION_CREDENTIALS):$(GOOGLE_APPLICATION_CREDENTIALS)" \
 		-e "GOOGLE_APPLICATION_CREDENTIALS" \
 		-w "$(PWD)" \
-		gcr.io/k8s-prow/configurator:v20210323-4a95c1446c \
+		gcr.io/k8s-prow/configurator:v20210409-985ef5e721 \
 		"--oneshot" \
 		"--output=gs://$(TESTGRID_GCS)/config" \
 		"--yaml=$(realpath $(TESTGRID_CONFIG))"
@@ -108,7 +108,7 @@ verify-testgrid-config:
 		-v "$(GOOGLE_APPLICATION_CREDENTIALS):$(GOOGLE_APPLICATION_CREDENTIALS)" \
 		-e "GOOGLE_APPLICATION_CREDENTIALS" \
 		-w "$(PWD)" \
-		gcr.io/k8s-prow/configurator:v20210323-4a95c1446c \
+		gcr.io/k8s-prow/configurator:v20210409-985ef5e721 \
 		--validate-config-file \
 		"--yaml=$(realpath $(TESTGRID_CONFIG))"
 
@@ -118,7 +118,7 @@ verify-testgrid-config:
 		-v "$(GOOGLE_APPLICATION_CREDENTIALS):$(GOOGLE_APPLICATION_CREDENTIALS)" \
 		-e "GOOGLE_APPLICATION_CREDENTIALS" \
 		-w "$(PWD)" \
-		gcr.io/k8s-prow/configurator:v20210323-4a95c1446c \
+		gcr.io/k8s-prow/configurator:v20210409-985ef5e721 \
 		--oneshot \
 		--output=/dev/null \
 		"--yaml=$(realpath $(TESTGRID_CONFIG))"

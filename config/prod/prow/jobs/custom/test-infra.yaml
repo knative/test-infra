@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Add a fake plank image here so that autobump.sh can bump only job configs
-# image: gcr.io/k8s-prow/plank:v20210323-4a95c1446c
+# image: gcr.io/k8s-prow/plank:v20210409-985ef5e721
 # See
 # https://github.com/kubernetes/test-infra/blob/5815354584709c3f436e3d682110c673d224d7b1/prow/cmd/autobump/autobump.sh#L164
 
@@ -115,7 +115,7 @@ presubmits:
       base_ref: master
     spec:
       containers:
-      - image: gcr.io/k8s-prow/configurator:v20210323-4a95c1446c
+      - image: gcr.io/k8s-prow/configurator:v20210409-985ef5e721
         command:
         - /app/testgrid/cmd/configurator/app.binary
         args:
@@ -374,7 +374,7 @@ periodics:
     testgrid-num-failures-to-alert: "1"
   spec:
     containers:
-    - image: gcr.io/k8s-prow/generic-autobumper:v20210323-4a95c1446c
+    - image: gcr.io/k8s-prow/generic-autobumper:v20210409-985ef5e721
       command:
       - /app/prow/cmd/generic-autobumper/app.binary
       args:
@@ -657,7 +657,7 @@ postsubmits:
       testgrid-num-failures-to-alert: "1"
     spec:
       containers:
-      - image: gcr.io/k8s-prow/configurator:v20210323-4a95c1446c
+      - image: gcr.io/k8s-prow/configurator:v20210409-985ef5e721
         command:
         - /app/testgrid/cmd/configurator/app.binary
         args:
