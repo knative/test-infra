@@ -247,6 +247,10 @@ repos:
       name: kind/project-support
       target: issues
       addedBy: humans
+    - color: 91bd6c
+      name: skip-review
+      target: prs
+      addedBy: prow
   knative-sandbox/eventing-kafka-broker:
     labels:
     - color: 782b90

@@ -82,7 +82,7 @@ func getExistingPR(gcw *GHClientWrapper, gi git.Info, matchTitle string) (*githu
 	return res, err
 }
 
-func createOrUpdatePR(gcw *GHClientWrapper, gi git.Info, dryrun bool) error {
+func createOrUpdatePR(gcw *GHClientWrapper, gi git.Info, label string, dryrun bool) error {
 	const matchTitle = "[Auto] Update prow jobs for release branches"
 	commitMsg := matchTitle
 	title := commitMsg
@@ -95,13 +95,15 @@ func createOrUpdatePR(gcw *GHClientWrapper, gi git.Info, dryrun bool) error {
 		log.Print("There is nothing committed, skip PR")
 		return nil
 	}
-	existPR, err := getExistingPR(gcw, gi, matchTitle)
+
+	var existPR *github.PullRequest
+	existPR, err = getExistingPR(gcw, gi, matchTitle)
 	if err != nil {
 		return fmt.Errorf("failed querying existing pullrequests: %w", err)
 	}
 	if existPR != nil {
 		log.Printf("Found open PR %d", *existPR.Number)
-		return helpers.Run(
+		if err := helpers.Run(
 			fmt.Sprintf("Updating PR %d, title: %q, body: %q", *existPR.Number, title, body),
 			func() error {
 				if _, err := gcw.EditPullRequest(gi.Org, gi.Repo, *existPR.Number, title, body); err != nil {
@@ -110,16 +112,40 @@ func createOrUpdatePR(gcw *GHClientWrapper, gi git.Info, dryrun bool) error {
 				return nil
 			},
 			dryrun,
-		)
+		); err != nil {
+			return err
+		}
+	} else {
+		if err := helpers.Run(
+			fmt.Sprintf("Creating PR, title: %q, body: %q", title, body),
+			func() error {
+				existPR, err = gcw.CreatePullRequest(gi.Org, gi.Repo, gi.GetHeadRef(), gi.Base, title, body)
+				if err != nil {
+					return fmt.Errorf("failed creating pullrequest: %w", err)
+				}
+				return nil
+			},
+			dryrun,
+		); err != nil {
+			return err
+		}
 	}
-	return helpers.Run(
-		fmt.Sprintf("Creating PR, title: %q, body: %q", title, body),
-		func() error {
-			if _, err := gcw.CreatePullRequest(gi.Org, gi.Repo, gi.GetHeadRef(), gi.Base, title, body); err != nil {
-				return fmt.Errorf("failed creating pullrequest: %w", err)
-			}
-			return nil
-		},
-		dryrun,
-	)
+
+	if label != "" {
+		if err := helpers.Run(
+			fmt.Sprintf("Ensure label %q exists for PR", label),
+			func() error {
+				err = gcw.EnsureLabelForPullRequest(gi.Org, gi.Repo, *existPR.Number, label)
+				if err != nil {
+					return fmt.Errorf("failed ensuring label %q exists: %w", label, err)
+				}
+				return nil
+			},
+			dryrun,
+		); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

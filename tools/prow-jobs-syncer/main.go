@@ -38,10 +38,11 @@ func main() {
 	gitUserID := flag.String("git-userid", "", "The github ID of user for hosting fork, i.e. Github ID of bot")
 	gitUserName := flag.String("git-username", "", "The username to use on the git commit. Requires --git-email")
 	gitEmail := flag.String("git-email", "", "The email to use on the git commit. Requires --git-username")
+	label := flag.String("label", "", "The label to add on the PR")
 	dryrun := flag.Bool("dry-run", false, "dry run switch")
 	flag.Parse()
 
-	if dryrun != nil && *dryrun {
+	if *dryrun {
 		log.Println("Running in [dry run mode]")
 	}
 
@@ -84,7 +85,7 @@ func main() {
 	}
 
 	gcw := &GHClientWrapper{gc}
-	if err = createOrUpdatePR(gcw, targetGI, *dryrun); err != nil {
+	if err = createOrUpdatePR(gcw, targetGI, *label, *dryrun); err != nil {
 		log.Fatalf("failed creating pullrequest: '%v'", err)
 	}
 }
