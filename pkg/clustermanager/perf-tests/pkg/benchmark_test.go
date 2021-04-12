@@ -120,14 +120,6 @@ func TestBenchmarkNameForCluster(t *testing.T) {
 		clusterName:           "eventing--broker-imc",
 		repo:                  "eventing",
 		expectedBenchmarkName: "broker-imc",
-	}, {
-		clusterName:           "eventing-contrib--broker-natss",
-		repo:                  "eventing-contrib",
-		expectedBenchmarkName: "broker-natss",
-	}, {
-		clusterName:           "eventing-contrib--broker-kafka",
-		repo:                  "eventing",
-		expectedBenchmarkName: "",
 	}}
 
 	for _, tc := range testCases {

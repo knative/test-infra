@@ -85,16 +85,6 @@ jobConfigs:
     slackChannels:
       - name: eventing
         identity: C9JP909F0
-  - name: ci-knative-eventing-contrib-continuous
-    org: knative
-    repo: eventing-contrib
-    type: postsubmit
-    issueRepo: eventing-contrib
-    slackChannels:
-      - name: eventing-sources
-        identity: CQBKVH4QY
-      - name: eventing-channels
-        identity: CR2141CGY
   - name: ci-knative-sandbox-eventing-kafka-broker-continuous
     org: knative-sandbox
     repo: eventing-kafka-broker
