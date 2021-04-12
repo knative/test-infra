@@ -31,7 +31,6 @@ dashboards:
 - name: eventing-awssqs
 - name: eventing-camel
 - name: eventing-ceph
-- name: eventing-contrib
 - name: eventing-couchdb
 - name: eventing-github
 - name: eventing-gitlab
@@ -53,10 +52,6 @@ dashboards:
 - name: kn-plugin-service-log
 - name: kn-plugin-source-kafka
 - name: kn-plugin-source-kamelet
-- name: knative-0.15
-- name: knative-0.16
-- name: knative-0.17
-- name: knative-0.18
 - name: knative-0.19
 - name: knative-0.20
 - name: knative-0.21
@@ -90,7 +85,6 @@ dashboard_groups:
       - "client"
       - "docs"
       - "eventing"
-      - "eventing-contrib"
       - "operator"
       - "pkg"
       - "serving"
