@@ -20,6 +20,7 @@ package ghutil
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/google/go-github/v32/github"
 )
@@ -207,4 +208,35 @@ func (gc *GithubClient) CreatePullRequest(org, repo, head, base, title, body str
 		},
 	)
 	return res, err
+}
+
+// EnsureLabelForPullRequest ensures the label exists for the given PullRequest.
+func (gc *GithubClient) EnsureLabelForPullRequest(org, repo string, ID int, label string) error {
+	PR, err := gc.GetPullRequest(org, repo, ID)
+	if nil != err || nil == PR {
+		return err
+	}
+
+	labelExists := false
+	for _, l := range PR.Labels {
+		if strings.EqualFold(*l.Name, label) {
+			labelExists = true
+			break
+		}
+	}
+
+	if !labelExists {
+		_, err = gc.retry(
+			fmt.Sprintf("Add label %q for PullRequest '%d'", label, ID),
+			maxRetryCount,
+			func() (*github.Response, error) {
+				var resp *github.Response
+				var err error
+				_, resp, err = gc.Client.Issues.AddLabelsToIssue(ctx, org, repo, *PR.Number, []string{label})
+				return resp, err
+			},
+		)
+		return err
+	}
+	return nil
 }

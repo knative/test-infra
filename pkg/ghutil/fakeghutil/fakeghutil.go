@@ -298,6 +298,31 @@ func (fgc *FakeGithubClient) EditPullRequest(org, repo string, ID int, title, bo
 	return PR, nil
 }
 
+// EnsureLabelForPullRequest ensures the label exists for the PullRequest
+func (fgc *FakeGithubClient) EnsureLabelForPullRequest(org, repo string, ID int, label string) error {
+	PR, err := fgc.GetPullRequest(org, repo, ID)
+	if nil != err {
+		return err
+	}
+	labelExists := false
+	for _, l := range PR.Labels {
+		if strings.EqualFold(*l.Name, label) {
+			labelExists = true
+			break
+		}
+	}
+
+	if !labelExists {
+		if len(PR.Labels) == 0 {
+			PR.Labels = make([]*github.Label, 0)
+		}
+		PR.Labels = append(PR.Labels, &github.Label{
+			Name: &label,
+		})
+	}
+	return nil
+}
+
 // CreatePullRequest creates PullRequest, passing head user and branch name "user:ref-name", and base branch name like "main"
 func (fgc *FakeGithubClient) CreatePullRequest(org, repo, head, base, title, body string) (*github.PullRequest, error) {
 	PRNumber := fgc.getNextNumber()
