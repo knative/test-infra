@@ -323,7 +323,7 @@ presubmits:
     context: pull-knative-serving-istio-stable-mesh
     always_run: false
     optional: true
-    run_if_changed: "^third_party/net-istio.yaml"
+    run_if_changed: "^third_party/istio-latest/net-istio.yaml"
     rerun_command: "/test pull-knative-serving-istio-stable-mesh"
     trigger: "(?m)^/test (all|pull-knative-serving-istio-stable-mesh),?(\\s+|$)"
     decorate: true
@@ -366,7 +366,7 @@ presubmits:
     context: pull-knative-serving-istio-stable-mesh-tls
     always_run: false
     optional: true
-    run_if_changed: "^third_party/net-istio.yaml"
+    run_if_changed: "^third_party/istio-latest/net-istio.yaml"
     rerun_command: "/test pull-knative-serving-istio-stable-mesh-tls"
     trigger: "(?m)^/test (all|pull-knative-serving-istio-stable-mesh-tls),?(\\s+|$)"
     decorate: true

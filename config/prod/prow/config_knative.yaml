@@ -74,7 +74,7 @@ presubmits:
     needs-monitor: true
     always-run: false
     optional: true
-    run-if-changed: ^third_party/net-istio.yaml
+    run-if-changed: ^third_party/istio-latest/net-istio.yaml
     args:
     - --run-test
     - ./test/e2e-tests.sh --istio-version stable --mesh
@@ -87,7 +87,7 @@ presubmits:
     needs-monitor: true
     always-run: false
     optional: true
-    run-if-changed: ^third_party/net-istio.yaml
+    run-if-changed: ^third_party/istio-latest/net-istio.yaml
     args:
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --istio-version stable --mesh
