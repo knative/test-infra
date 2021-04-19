@@ -409,7 +409,8 @@ func (gih *GithubIssueHandler) getFlakyIssues(repoDataAll []RepoData) (map[strin
 		}
 		for _, issue := range issues {
 			// Skip issues that are not created by the GitHub bot.
-			if issue.User.Login != gih.user.Login {
+			if issue.User.Login != nil && gih.user.Login != nil && *issue.User.Login != *gih.user.Login {
+				log.Printf("Skip issue %+v since it's not created by the GitHub bot account: %q!=%q", *issue, *issue.User.Login, *gih.user.Login)
 				continue
 			}
 
@@ -436,11 +437,13 @@ func (gih *GithubIssueHandler) getFlakyIssues(repoDataAll []RepoData) (map[strin
 				}
 			}
 			if hasOpen && hasClosed {
-				for i, fi := range v {
-					if string(ghutil.IssueCloseState) == fi.issue.GetState() {
-						issuesMap[k] = append(issuesMap[k][:i], issuesMap[k][i+1:]...)
+				var openIssues []flakyIssue
+				for _, fi := range v {
+					if string(ghutil.IssueOpenState) == fi.issue.GetState() {
+						openIssues = append(openIssues, fi)
 					}
 				}
+				issuesMap[k] = openIssues
 			} else if !hasOpen {
 				sort.Slice(issuesMap[k], func(i, j int) bool {
 					return issuesMap[k][i].issue.CreatedAt != nil &&
