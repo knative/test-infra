@@ -94,10 +94,10 @@ RUN go get -u github.com/jstemmer/go-junit-report
 RUN GO111MODULE=on go get -u gotest.tools/gotestsum
 RUN GO111MODULE=on go get -u github.com/raviqqe/liche@v0.0.0-20200229003944-f57a5d1c5be4  # stable liche version for checking md links
 RUN GO111MODULE=on go get sigs.k8s.io/kind@v0.9.0
-RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2@${KUBETEST2_VERSION}
-RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2/kubetest2-gke@${KUBETEST2_VERSION}
-RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2/kubetest2-kind@${KUBETEST2_VERSION}
-RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2/kubetest2-tester-exec@${KUBETEST2_VERSION}
+RUN GO111MODULE=on go get sigs.k8s.io/kubetest2@${KUBETEST2_VERSION}
+RUN GO111MODULE=on go get sigs.k8s.io/kubetest2/kubetest2-gke@${KUBETEST2_VERSION}
+RUN GO111MODULE=on go get sigs.k8s.io/kubetest2/kubetest2-kind@${KUBETEST2_VERSION}
+RUN GO111MODULE=on go get sigs.k8s.io/kubetest2/kubetest2-tester-exec@${KUBETEST2_VERSION}
 
 RUN GO111MODULE=on go get github.com/gogo/protobuf/protoc-gen-gogofaster@v1.3.1
 
