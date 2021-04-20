@@ -76,7 +76,7 @@ COPY images/prow-tests/in-gvm-env.sh /usr/local/bin
 ############################################################
 FROM stable-stuff AS external-go-gets
 
-ARG KUBETEST2_VERSION=43699a7ba223ddce766f62ecd7504c7233605710
+ARG KUBETEST2_VERSION=ea3c260668075a29dd2b7f3ba4ddf1fe78bdf898
 
 # Extra tools through go get
 # These run using the kubekins version of Go, not any defined by `gvm`
@@ -88,10 +88,10 @@ RUN go get -u github.com/jstemmer/go-junit-report
 RUN GO111MODULE=on go get -u gotest.tools/gotestsum
 RUN GO111MODULE=on go get -u github.com/raviqqe/liche@v0.0.0-20200229003944-f57a5d1c5be4  # stable liche version for checking md links
 RUN GO111MODULE=on go get sigs.k8s.io/kind@v0.9.0
-RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2@${KUBETEST2_VERSION}
-RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2/kubetest2-gke@${KUBETEST2_VERSION}
-RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2/kubetest2-kind@${KUBETEST2_VERSION}
-RUN GO111MODULE=on go get -u sigs.k8s.io/kubetest2/kubetest2-tester-exec@${KUBETEST2_VERSION}
+RUN GO111MODULE=on go get sigs.k8s.io/kubetest2@${KUBETEST2_VERSION}
+RUN GO111MODULE=on go get sigs.k8s.io/kubetest2/kubetest2-gke@${KUBETEST2_VERSION}
+RUN GO111MODULE=on go get sigs.k8s.io/kubetest2/kubetest2-kind@${KUBETEST2_VERSION}
+RUN GO111MODULE=on go get sigs.k8s.io/kubetest2/kubetest2-tester-exec@${KUBETEST2_VERSION}
 
 RUN GO111MODULE=on go get github.com/gogo/protobuf/protoc-gen-gogofaster@v1.3.1
 
