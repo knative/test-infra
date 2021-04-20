@@ -82,7 +82,7 @@ COPY images/prow-tests/in-gvm-env.sh /usr/local/bin
 ############################################################
 FROM stable-stuff AS external-go-gets
 
-ARG KUBETEST2_VERSION=43699a7ba223ddce766f62ecd7504c7233605710
+ARG KUBETEST2_VERSION=ea3c260668075a29dd2b7f3ba4ddf1fe78bdf898
 
 # Extra tools through go get
 # These run using the kubekins version of Go, not any defined by `gvm`
