@@ -101,30 +101,30 @@ COPY images/prow-tests/in-gvm-env.sh /usr/local/bin
 # But it must be done in stable-stuff or the last FROM, because it does not install to /go/bin
 
 ############################################################
-FROM stable-stuff AS external-go-gets
+FROM golang:1.16 AS external-go-gets
 
 ARG KUBETEST2_VERSION=ea3c260668075a29dd2b7f3ba4ddf1fe78bdf898
 
 # Extra tools through go get
-# These run using the kubekins version of Go, not any defined by `gvm`
-RUN GO111MODULE=on go get github.com/google/ko/cmd/ko@v0.8.2
-RUN GO111MODULE=on go get github.com/boz/kail/cmd/kail
-RUN go get -u github.com/golang/dep/cmd/dep
+# These run using the golang image version of Go, not any defined by `gvm`
+RUN go get github.com/google/ko/cmd/ko@v0.8.2
+RUN go get github.com/boz/kail/cmd/kail
+RUN go get github.com/golang/dep/cmd/dep
 # TODO(chizhg): we started using gotestsum from release-0.17, remove go-junit-report after Knative release-0.20 is cut.
-RUN go get -u github.com/jstemmer/go-junit-report
-RUN GO111MODULE=on go get -u gotest.tools/gotestsum
-RUN GO111MODULE=on go get -u github.com/raviqqe/liche@v0.0.0-20200229003944-f57a5d1c5be4  # stable liche version for checking md links
-RUN GO111MODULE=on go get sigs.k8s.io/kind@v0.9.0
-RUN GO111MODULE=on go get sigs.k8s.io/kubetest2@${KUBETEST2_VERSION}
-RUN GO111MODULE=on go get sigs.k8s.io/kubetest2/kubetest2-gke@${KUBETEST2_VERSION}
-RUN GO111MODULE=on go get sigs.k8s.io/kubetest2/kubetest2-kind@${KUBETEST2_VERSION}
-RUN GO111MODULE=on go get sigs.k8s.io/kubetest2/kubetest2-tester-exec@${KUBETEST2_VERSION}
+RUN go get github.com/jstemmer/go-junit-report
+RUN go get gotest.tools/gotestsum
+RUN go get github.com/raviqqe/liche@v0.0.0-20200229003944-f57a5d1c5be4  # stable liche version for checking md links
+RUN go get sigs.k8s.io/kind@v0.9.0
+RUN go get sigs.k8s.io/kubetest2@${KUBETEST2_VERSION}
+RUN go get sigs.k8s.io/kubetest2/kubetest2-gke@${KUBETEST2_VERSION}
+RUN go get sigs.k8s.io/kubetest2/kubetest2-kind@${KUBETEST2_VERSION}
+RUN go get sigs.k8s.io/kubetest2/kubetest2-tester-exec@${KUBETEST2_VERSION}
 
-RUN GO111MODULE=on go get github.com/gogo/protobuf/protoc-gen-gogofaster@v1.3.1
+RUN go get github.com/gogo/protobuf/protoc-gen-gogofaster@v1.3.1
 
 # TODO(chizhg): remove it once we replace with kntest in the places where this tool is used
 # Install our own tools
-RUN GO111MODULE=on go get knative.dev/pkg/testutils/junithelper@release-0.17
+RUN go get knative.dev/pkg/testutils/junithelper@release-0.17
 
 ############################################################
 FROM stable-stuff AS test-infra-builds
