@@ -39,6 +39,27 @@ RUN apt-get install -y rubygems       # for mdl
 RUN gem install chef-utils -v 16.6.14 # for mdl, this is required for running the `gem install mdl` command below
 RUN apt-get install -y shellcheck     # for shellcheck presubmit
 
+# Setup adoptopenjdk
+ARG JAVA_VERSION=16
+RUN apt-get install -y wget apt-transport-https gnupg
+RUN wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add -
+RUN echo "deb https://adoptopenjdk.jfrog.io/adoptopenjdk/deb buster main" | tee /etc/apt/sources.list.d/adoptopenjdk.list
+RUN apt-get update
+RUN apt install -y adoptopenjdk-${JAVA_VERSION}-hotspot
+ENV JAVA_HOME=/usr/lib/jvm/adoptopenjdk-${JAVA_VERSION}-hotspot-amd64
+
+# Setup maven and required envs
+ARG MAVEN_VERSION=3.8.1
+ENV MAVEN_HOME=/usr/local/maven
+ENV M2_HOME=$MAVEN_HOME
+ENV PATH=${M2_HOME}/bin:${PATH}
+RUN wget -q https://downloads.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz -P /tmp && \
+    tar xf /tmp/apache-maven-${MAVEN_VERSION}-bin.tar.gz -C /tmp && \
+    mv /tmp/apache-maven-${MAVEN_VERSION} $MAVEN_HOME
+
+RUN java -version && \
+    mvn -v
+
 # Extra tools through gem
 # TODO: this tool isn't used anymore, remove when release-0.22 is cut; and don't install rubygems above either
 RUN gem install mdl
