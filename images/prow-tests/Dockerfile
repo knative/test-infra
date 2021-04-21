@@ -39,6 +39,11 @@ RUN apt-get install -y rubygems       # for mdl
 RUN gem install chef-utils -v 16.6.14 # for mdl, this is required for running the `gem install mdl` command below
 RUN apt-get install -y shellcheck     # for shellcheck presubmit
 
+# Setup sdkman, openjdk and maven, then remove the setup script
+COPY images/prow-tests/setup-java.sh /usr/local/bin
+RUN setup-java.sh
+RUN rm -f /usr/local/bin/setup-java.sh
+
 # Extra tools through gem
 # TODO: this tool isn't used anymore, remove when release-0.22 is cut; and don't install rubygems above either
 RUN gem install mdl
