@@ -121,6 +121,8 @@ RUN go get sigs.k8s.io/kubetest2/kubetest2-kind@${KUBETEST2_VERSION}
 RUN go get sigs.k8s.io/kubetest2/kubetest2-tester-exec@${KUBETEST2_VERSION}
 
 RUN go get github.com/gogo/protobuf/protoc-gen-gogofaster@v1.3.1
+RUN GO111MODULE=on go get github.com/gogo/protobuf/protoc-gen-gogofaster@v1.3.1
+RUN GO111MODULE=on go get google.golang.org/protobuf/cmd/protoc-gen-go@v1.26.0
 
 # TODO(chizhg): remove it once we replace with kntest in the places where this tool is used
 # Install our own tools
