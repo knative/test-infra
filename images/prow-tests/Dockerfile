@@ -35,8 +35,6 @@ RUN docker-credential-gcr configure-docker
 
 # Extra tools through apt-get
 RUN apt-get install -y uuid-runtime   # for uuidgen
-RUN apt-get install -y rubygems       # for mdl
-RUN gem install chef-utils -v 16.6.14 # for mdl, this is required for running the `gem install mdl` command below
 RUN apt-get install -y shellcheck     # for shellcheck presubmit
 
 # Setup adoptopenjdk
@@ -45,7 +43,7 @@ RUN apt-get install -y wget apt-transport-https gnupg
 RUN wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add -
 RUN echo "deb https://adoptopenjdk.jfrog.io/adoptopenjdk/deb buster main" | tee /etc/apt/sources.list.d/adoptopenjdk.list
 RUN apt-get update
-RUN apt install -y adoptopenjdk-${JAVA_VERSION}-hotspot
+RUN apt-get install -y adoptopenjdk-${JAVA_VERSION}-hotspot
 ENV JAVA_HOME=/usr/lib/jvm/adoptopenjdk-${JAVA_VERSION}-hotspot-amd64
 
 # Setup maven and required envs
@@ -59,10 +57,6 @@ RUN wget -q https://downloads.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries
 
 RUN java -version && \
     mvn -v
-
-# Extra tools through gem
-# TODO: this tool isn't used anymore, remove when release-0.22 is cut; and don't install rubygems above either
-RUN gem install mdl
 
 # Install go 1.13, 1.14, and 1.15 using https://github.com/moovweb/gvm
 # Missing prerequisite:
@@ -109,9 +103,6 @@ ARG KUBETEST2_VERSION=ea3c260668075a29dd2b7f3ba4ddf1fe78bdf898
 # These run using the golang image version of Go, not any defined by `gvm`
 RUN go get github.com/google/ko@v0.8.2
 RUN go get github.com/boz/kail/cmd/kail
-RUN go get github.com/golang/dep/cmd/dep
-# TODO(chizhg): we started using gotestsum from release-0.17, remove go-junit-report after Knative release-0.20 is cut.
-RUN go get github.com/jstemmer/go-junit-report
 RUN go get gotest.tools/gotestsum
 RUN go get github.com/raviqqe/liche@v0.0.0-20200229003944-f57a5d1c5be4  # stable liche version for checking md links
 RUN go get sigs.k8s.io/kind@v0.9.0
@@ -119,9 +110,11 @@ RUN go get sigs.k8s.io/kubetest2@${KUBETEST2_VERSION}
 RUN go get sigs.k8s.io/kubetest2/kubetest2-gke@${KUBETEST2_VERSION}
 RUN go get sigs.k8s.io/kubetest2/kubetest2-kind@${KUBETEST2_VERSION}
 RUN go get sigs.k8s.io/kubetest2/kubetest2-tester-exec@${KUBETEST2_VERSION}
-
-RUN go get github.com/gogo/protobuf/protoc-gen-gogofaster@v1.3.1
 RUN go get google.golang.org/protobuf/cmd/protoc-gen-go@v1.26.0
+
+# According to https://github.com/knative/test-infra/pull/2762 protoc-gen-gogofaster is unsupported (and shouldn't be used?)
+# Not sure when it can be removed, maybe knative-0.26?
+RUN go get github.com/gogo/protobuf/protoc-gen-gogofaster@v1.3.1
 
 # TODO(chizhg): remove it once we replace with kntest in the places where this tool is used
 # Install our own tools
