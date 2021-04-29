@@ -31,7 +31,7 @@ With an image you feel comfortable with deploying, create a PR to
 knative/test-infra and get approval. Once merged, a [postsubmit Prow job](https://prow.knative.dev/?job=post-knative-test-infra-prow-tests-image-push) will
 get triggered and build the new image into [Google Container Registry](https://pantheon.corp.google.com/gcr/images/knative-tests/GLOBAL/test-infra/prow-tests?gcrImageListsize=30). After the job succeeds, confirm the image is available
 with the `beta` and `latest` labels in the registry.
-At midnight PST, another set of Prow jobs will be triggered to run the
+Around midnight PST, another set of Prow jobs will be triggered to run the
 tests with the `beta` image and you should be able to verify their results
 on https://testgrid.knative.dev/beta-prow-tests. Check these results are
 as good as the jobs at https://testgrid.knative.dev/knative and, if you feel
