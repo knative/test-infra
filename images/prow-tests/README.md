@@ -28,19 +28,13 @@ something complicated, do some rudimentary exploration in the image by running
 `go get something`.
 
 With an image you feel comfortable with deploying, create a PR to
-knative/test-infra and get approval. Once merged, pull upstream into your
-default branch and run `make cloud_build`. This will upload your image to the
-registry at http://gcr.io/knative-tests/test-infra/prow-tests with a
-date-commit_hash, `latest`, and `beta` tags. Let the image run at least a single
-overnight and ensure the jobs in the
-https://testgrid.knative.dev/beta-prow-tests testgrid are as good as the jobs at
-https://testgrid.knative.dev/knative for default branch and releases under
-"knative-X.Y" at https://testgrid.knative.dev ; it's known that some are just
-bad so you will either learn to know them or just do a lot of clicking; it's
-unlikely to take more than ten minutes to review all the jobs unless something
-is actually wrong.
-
-Once you are happy the :beta image is working, go to
-https://gcr.io/knative-tests/test-infra/prow-tests and add the label `stable` to
-your image with the `beta` tag. Monitor #test on Slack to see if any new
-complaints appear.
+knative/test-infra and get approval. Once merged, a [postsubmit Prow job](https://prow.knative.dev/?job=post-knative-test-infra-prow-tests-image-push) will
+get triggered and build the new image into [Google Container Registry](https://pantheon.corp.google.com/gcr/images/knative-tests/GLOBAL/test-infra/prow-tests?gcrImageListsize=30). After the job succeeds, confirm the image is available
+with the `beta` and `latest` labels in the registry.
+At midnight PST, another set of Prow jobs will be triggered to run the
+tests with the `beta` image and you should be able to verify their results
+on https://testgrid.knative.dev/beta-prow-tests. Check these results are
+as good as the jobs at https://testgrid.knative.dev/knative and, if you feel
+comfortable with the change, set the `stable` label to the new image and
+assign `oldstable` to the previous one.
+Finally, monitor #test on Slack to see if any new complaints appear.
