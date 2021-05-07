@@ -40,10 +40,10 @@ dashboards:
 - name: eventing-prometheus
 - name: eventing-rabbitmq
 - name: eventing-redis
-- name: google-0.18
 - name: google-0.19
 - name: google-0.20
 - name: google-0.21
+- name: google-0.22
 - name: kn-plugin-admin
 - name: kn-plugin-diag
 - name: kn-plugin-event
