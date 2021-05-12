@@ -9,7 +9,7 @@ The `test-infra` repository contains a collection of tools for testing Knative,
 collecting metrics and displaying test results.
 This is the main repo for the productivity [working group](https://github.com/knative/community/blob/main/working-groups/WORKING-GROUPS.md#productivity)
 
-The productivity working group also has other repos: 
+The productivity working group also has other repos:
 - knative/.github
 
   Tools for github workflows
