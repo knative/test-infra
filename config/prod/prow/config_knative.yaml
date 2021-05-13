@@ -360,7 +360,6 @@ presubmits:
   - unit-tests: true
   google/knative-gcp:
   - repo-settings: null
-    performance: true
   - build-tests: true
     resources:
       requests:
