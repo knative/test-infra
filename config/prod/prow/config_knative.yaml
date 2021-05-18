@@ -1204,6 +1204,9 @@ periodics:
   - dot-release: true
     release: "0.22"
     needs-dind: true
+  - dot-release: true
+    release: "0.23"
+    needs-dind: true
   - auto-release: true
     needs-dind: true
   knative-sandbox/eventing-kafka-broker:
@@ -1232,13 +1235,13 @@ periodics:
         report_template: '"The nightly release job for eventing-rabbitmq failed, check the log: <{{.Status.URL}}|View logs>"'
   - auto-release: true
   - dot-release: true
-    release: "0.19"
-  - dot-release: true
     release: "0.20"
   - dot-release: true
     release: "0.21"
   - dot-release: true
     release: "0.22"
+  - dot-release: true
+    release: "0.23"
   knative-sandbox/eventing-natss:
   - nightly: true
     reporter_config:
@@ -1248,13 +1251,13 @@ periodics:
         - failure
         report_template: '"The nightly release job for eventing-natss failed, check the log: <{{.Status.URL}}|View logs>"'
   - dot-release: true
-    release: "0.19"
-  - dot-release: true
     release: "0.20"
   - dot-release: true
     release: "0.21"
   - dot-release: true
     release: "0.22"
+  - dot-release: true
+    release: "0.23"
   - auto-release: true
   knative-sandbox/eventing-autoscaler-keda:
   - continuous: true
