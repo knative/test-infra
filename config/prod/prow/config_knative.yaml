@@ -1223,6 +1223,9 @@ periodics:
   - dot-release: true
     release: "0.22"
     needs-dind: true
+  - dot-release: true
+    release: "0.23"
+    needs-dind: true
   - auto-release: true
     needs-dind: true
   knative-sandbox/eventing-rabbitmq:
