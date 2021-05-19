@@ -730,25 +730,25 @@ periodics:
   knative/client:
   - continuous: true
   - branch-ci: true
-    release: "0.19"
-  - branch-ci: true
     release: "0.20"
   - branch-ci: true
     release: "0.21"
   - branch-ci: true
     release: "0.22"
+  - branch-ci: true
+    release: "0.23"
   - nightly: true
   - custom-job: tekton
     cron: 0 13 * * *
     command: ./test/tekton-tests.sh
   - dot-release: true
-    release: "0.19"
-  - dot-release: true
     release: "0.20"
   - dot-release: true
     release: "0.21"
   - dot-release: true
     release: "0.22"
+  - dot-release: true
+    release: "0.23"
   - auto-release: true
   knative-sandbox/kn-plugin-diag:
   - continuous: true
@@ -765,13 +765,13 @@ periodics:
   - auto-release: true
   - nightly: true
   - dot-release: true
-    release: "0.18"
-  - dot-release: true
     release: "0.19"
   - dot-release: true
     release: "0.21"
   - dot-release: true
     release: "0.22"
+  - dot-release: true
+    release: "0.23"
   knative-sandbox/kn-plugin-source-kamelet:
   - continuous: true
   knative-sandbox/kn-plugin-admin:
