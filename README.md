@@ -7,11 +7,57 @@
 
 The `test-infra` repository contains a collection of tools for testing Knative,
 collecting metrics and displaying test results.
+This is the main repo for the [productivity working group](https://github.com/knative/community/blob/main/working-groups/WORKING-GROUPS.md#productivity)
 
-## High level architecture
+The productivity working group also has other repos:
+- knative/.github
 
-Knative uses [Prow](https://github.com/kubernetes/test-infra/tree/master/prow)
-to schedule testing and update issues.
+  Tools for github workflows
+
+- knative/hack
+
+  Shellscripts used across the repos placed in a separate repo to avoid
+  dependency cycles
+
+- knative/release
+
+  Release documentation and tools
+
+- knative-sandbox/.github
+
+  Tools for github actions
+
+- knative-sandbox/actions-downstream-test
+
+  A github action to test multiple components together
+
+- knative-sandbox/actions-kind
+
+  A github action to run tests in a kind cluster https://kind.sigs.k8s.io/
+
+- knative-sandbox/kperf
+
+  A performance test framework
+
+- knative-sandbox/knobots
+
+  Automated pull requests to fix up the code (based on github actions)
+
+## Tools we use
+
+We use two big platforms for running automation:
+- [Prow](https://github.com/kubernetes/test-infra/tree/master/prow)
+
+  To schedule testing and update issues. Prow handles the merge queue
+  and makes sure every commit passes tests. Prow builds releases from release branches.
+
+- [Github Actions](https://docs.github.com/en/actions)
+
+  We use github actions for some automated tests, coordinating releases
+  and syncronizing files between repos
+
+<!-- TODO: As an improvement for the architecture section maybe mention how
+the tools fit together -->
 
 ### Gubernator
 
@@ -31,8 +77,8 @@ continuous integration, code coverage, nightly release, conformance and etc.
 ### E2E Testing
 
 Our E2E testing uses
-[kubetest](https://github.com/kubernetes/test-infra/blob/master/kubetest) to
-build/deploy/test Knative clusters.
+[kubetest2](https://github.com/kubernetes-sigs/kubetest2) to
+build/deploy/test Knative clusters (managed by Prow).
 
 ## Contributing
 
