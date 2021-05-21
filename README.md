@@ -7,7 +7,7 @@
 
 The `test-infra` repository contains a collection of tools for testing Knative,
 collecting metrics and displaying test results.
-This is the main repo for the productivity [working group](https://github.com/knative/community/blob/main/working-groups/WORKING-GROUPS.md#productivity)
+This is the main repo for the [productivity working group](https://github.com/knative/community/blob/main/working-groups/WORKING-GROUPS.md#productivity)
 
 The productivity working group also has other repos:
 - knative/.github
@@ -35,7 +35,6 @@ The productivity working group also has other repos:
 
   A github action to run tests in a kind cluster https://kind.sigs.k8s.io/
 
-
 - knative-sandbox/kperf
 
   A performance test framework
@@ -52,8 +51,7 @@ We use two big platforms for running automation:
   To schedule testing and update issues. Prow handles the merge queue
   and makes sure every commit passes tests. Prow builds releases from release branches.
 
-- [Github Actions](https://docs.github.com/en/actions
-)
+- [Github Actions](https://docs.github.com/en/actions)
 
   We use github actions for some automated tests, coordinating releases
   and syncronizing files between repos
@@ -79,7 +77,7 @@ continuous integration, code coverage, nightly release, conformance and etc.
 ### E2E Testing
 
 Our E2E testing uses
-[kubetest](https://github.com/kubernetes/test-infra/blob/master/kubetest) to
+[kubetest2](https://github.com/kubernetes-sigs/kubetest2) to
 build/deploy/test Knative clusters (managed by Prow).
 
 ## Contributing
