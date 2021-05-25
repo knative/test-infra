@@ -934,13 +934,6 @@ periodics:
   google/knative-gcp:
   - continuous: true
   - branch-ci: true
-    release: "0.19"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - branch-ci: true
     release: "0.20"
     resources:
       requests:
@@ -961,25 +954,19 @@ periodics:
         memory: 12Gi
       limits:
         memory: 16Gi
+  - branch-ci: true
+    release: "0.23"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
   - nightly: true
     args:
     - --publish
     - --tag-release
     - --release-gcs knative-gcp-nightly
     - --release-gcr gcr.io/knative-gcp-nightly
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - dot-release: true
-    release: "0.19"
-    args:
-    - --dot-release
-    - --release-gcs knative-gcp
-    - --release-gcr gcr.io/knative-gcp
-    - --github-token /etc/hub-token/token
-    - --branch release-0.19
     resources:
       requests:
         memory: 12Gi
@@ -1013,6 +1000,19 @@ periodics:
         memory: 16Gi
   - dot-release: true
     release: "0.22"
+    args:
+    - --dot-release
+    - --release-gcs knative-gcp
+    - --release-gcr gcr.io/knative-gcp
+    - --github-token /etc/hub-token/token
+    - --branch release-0.21
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    release: "0.23"
     args:
     - --dot-release
     - --release-gcs knative-gcp
