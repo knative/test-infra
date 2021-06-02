@@ -289,6 +289,11 @@ presubmits:
   - unit-tests: true
   - integration-tests: true
   - go-coverage: false
+  knative-sandbox/kn-plugin-quickstart:
+  - build-tests: true
+  - unit-tests: true
+  - integration-tests: true
+  - go-coverage: false
   knative/eventing:
   - repo-settings: null
   - build-tests: true
@@ -775,6 +780,11 @@ periodics:
   knative-sandbox/kn-plugin-source-kamelet:
   - continuous: true
   knative-sandbox/kn-plugin-admin:
+  - continuous: true
+  - auto-release: true
+  - nightly: true
+  - dot-release: true
+  knative-sandbox/kn-plugin-quickstart:
   - continuous: true
   - auto-release: true
   - nightly: true
