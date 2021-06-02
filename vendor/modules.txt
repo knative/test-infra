@@ -436,7 +436,7 @@ k8s.io/apimachinery/pkg/util/validation/field
 k8s.io/test-infra/prow/config/secret
 k8s.io/test-infra/prow/logrusutil
 k8s.io/test-infra/prow/version
-# knative.dev/hack v0.0.0-20210428122153-93ad9129c268
+# knative.dev/hack v0.0.0-20210601210329-de04b70e00d0
 ## explicit
 knative.dev/hack
 # sigs.k8s.io/boskos v0.0.0-20200729174948-794df80db9c9
