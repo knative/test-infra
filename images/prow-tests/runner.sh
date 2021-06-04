@@ -48,4 +48,9 @@ if [[ -n ${version} ]]; then
   export GOPATH="${ORIGINAL_GOPATH}"
 fi
 
+# Workaround fix.
+# TODO: remove after release-0.27.
+current_branch="$(git rev-parse --abbrev-ref HEAD)"
+[[ "${current_branch}" == "release-0.23" ]] && ./hack/update-deps.sh --upgrade --release 0.23
+
 kubekins-runner.sh "$@"
