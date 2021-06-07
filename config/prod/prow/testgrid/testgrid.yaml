@@ -91,6 +91,9 @@ test_groups:
 - name: ci-knative-serving-https
   gcs_prefix: knative-prow/logs/ci-knative-serving-https
   alert_stale_results_hours: 3
+- name: ci-knative-serving-s390x-e2e-tests
+  gcs_prefix: knative-prow/logs/ci-knative-serving-s390x-e2e-tests
+  alert_stale_results_hours: 3
 - name: ci-knative-serving-nightly-release
   gcs_prefix: knative-prow/logs/ci-knative-serving-nightly-release
   alert_options:
@@ -117,6 +120,9 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
+- name: ci-knative-client-s390x-e2e-tests
+  gcs_prefix: knative-prow/logs/ci-knative-client-s390x-e2e-tests
+  alert_stale_results_hours: 3
 - name: ci-knative-client-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-client-go-coverage
   short_text_metric: "coverage"
@@ -170,6 +176,9 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
+- name: ci-knative-operator-s390x-e2e-tests
+  gcs_prefix: knative-prow/logs/ci-knative-operator-s390x-e2e-tests
+  alert_stale_results_hours: 3
 - name: ci-knative-operator-test-coverage
   gcs_prefix: knative-prow/logs/ci-knative-operator-go-coverage
   short_text_metric: "coverage"
@@ -1245,6 +1254,9 @@ dashboards:
   - name: https
     test_group_name: ci-knative-serving-https
     base_options: "sort-by-name="
+  - name: s390x-e2e-tests
+    test_group_name: ci-knative-serving-s390x-e2e-tests
+    base_options: "sort-by-name="
   - name: nightly
     test_group_name: ci-knative-serving-nightly-release
     base_options: "sort-by-name="
@@ -1280,6 +1292,9 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 1
+  - name: s390x-e2e-tests
+    test_group_name: ci-knative-client-s390x-e2e-tests
+    base_options: "sort-by-name="
   - name: coverage
     test_group_name: ci-knative-client-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
@@ -1367,6 +1382,9 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 1
+  - name: s390x-e2e-tests
+    test_group_name: ci-knative-operator-s390x-e2e-tests
+    base_options: "sort-by-name="
   - name: coverage
     test_group_name: ci-knative-operator-test-coverage
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
