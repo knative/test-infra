@@ -399,6 +399,25 @@ test_groups:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   alert_stale_results_hours: 170
   num_failures_to_alert: 1
+- name: ci-knative-sandbox-kn-plugin-quickstart-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-quickstart-continuous
+  alert_stale_results_hours: 3
+- name: ci-knative-sandbox-kn-plugin-quickstart-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-quickstart-auto-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-kn-plugin-quickstart-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-quickstart-nightly-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-kn-plugin-quickstart-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-quickstart-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
 - name: ci-knative-sandbox-eventing-awssqs-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-awssqs-continuous
   alert_stale_results_hours: 3
@@ -1008,6 +1027,8 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-source-kamelet-continuous-beta-prow-tests
 - name: ci-knative-sandbox-kn-plugin-admin-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-admin-continuous-beta-prow-tests
+- name: ci-knative-sandbox-kn-plugin-quickstart-continuous-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-quickstart-continuous-beta-prow-tests
 - name: ci-knative-docs-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-docs-continuous-beta-prow-tests
 - name: ci-knative-docs-go-coverage-beta-prow-tests
@@ -1439,6 +1460,32 @@ dashboards:
     num_failures_to_alert: 1
   - name: dot-release
     test_group_name: ci-knative-sandbox-kn-plugin-admin-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+- name: kn-plugin-quickstart
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-sandbox-kn-plugin-quickstart-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: auto-release
+    test_group_name: ci-knative-sandbox-kn-plugin-quickstart-auto-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: nightly
+    test_group_name: ci-knative-sandbox-kn-plugin-quickstart-nightly-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: dot-release
+    test_group_name: ci-knative-sandbox-kn-plugin-quickstart-dot-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
@@ -2452,6 +2499,9 @@ dashboards:
   - name: ci-knative-sandbox-kn-plugin-admin-continuous
     test_group_name: ci-knative-sandbox-kn-plugin-admin-continuous-beta-prow-tests
     base_options: "sort-by-failures="
+  - name: ci-knative-sandbox-kn-plugin-quickstart-continuous
+    test_group_name: ci-knative-sandbox-kn-plugin-quickstart-continuous-beta-prow-tests
+    base_options: "sort-by-failures="
   - name: ci-knative-docs-continuous
     test_group_name: ci-knative-docs-continuous-beta-prow-tests
     base_options: "sort-by-failures="
@@ -2661,6 +2711,7 @@ dashboard_groups:
   - "kn-plugin-source-kafka"
   - "kn-plugin-source-kamelet"
   - "kn-plugin-admin"
+  - "kn-plugin-quickstart"
   - "eventing-awssqs"
   - "eventing-ceph"
   - "eventing-couchdb"
