@@ -352,7 +352,7 @@ func addExtraClusterInfoToJob(cluster yaml.MapSlice, data *baseProwJobTemplateDa
 		}
 		secretName := getString(secret.Value)
 		// Volume mount for all data. Kubeconfig shoild be copied to readwrite directory in job command
-		addVolumeToJob(data, "/opt/cluster", secretName, true, nil)
+		addVolumeToJob(data, "/opt/cluster", secretName, true, []string{"  defaultMode: 0600"})
 		// KO_DOCKER_REPO env varable mount from secret
 		env := []string{envNameToKey("KO_DOCKER_REPO"), "  valueFrom:", "    secretKeyRef: ", "      name: " + secretName, "      key: ko-docker-repo"}
 
