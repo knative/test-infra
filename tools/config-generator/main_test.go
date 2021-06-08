@@ -311,6 +311,7 @@ func TestAddExtraClusterInfoToJob(t *testing.T) {
 		"- name: foo",
 		"  secret:",
 		"    secretName: foo",
+		"    defaultMode: 0600",
 	}
 	if diff := cmp.Diff(job.Volumes, expectedVolumes); diff != "" {
 		t.Fatalf("Unexpected volume: (-got +want)\n%s", diff)
@@ -536,6 +537,7 @@ func TestParseBasicJobConfigOverrides(t *testing.T) {
 		"- name: foo",
 		"  secret:",
 		"    secretName: foo",
+		"    defaultMode: 0600",
 	}
 	if diff := cmp.Diff(job.Volumes, expectedVolumes); diff != "" {
 		t.Fatalf("Unexpected volumes: (-got +want)\n%s", diff)

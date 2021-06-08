@@ -6958,6 +6958,7 @@ periodics:
     - name: s390x-cluster1
       secret:
         secretName: s390x-cluster1
+        defaultMode: 0600
     - name: test-account
       secret:
         secretName: test-account
@@ -8233,6 +8234,7 @@ periodics:
     - name: s390x-cluster1
       secret:
         secretName: s390x-cluster1
+        defaultMode: 0600
     - name: test-account
       secret:
         secretName: test-account
@@ -10681,6 +10683,7 @@ periodics:
     - name: s390x-cluster1
       secret:
         secretName: s390x-cluster1
+        defaultMode: 0600
     - name: test-account
       secret:
         secretName: test-account
@@ -16182,6 +16185,7 @@ periodics:
     - name: s390x-cluster1
       secret:
         secretName: s390x-cluster1
+        defaultMode: 0600
     - name: test-account
       secret:
         secretName: test-account
