@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+// Package kubetest2 is DEPRECATED. Please use https://github.com/kubernetes-sigs/kubetest2/tree/master/kubetest2-gke/deployer directly.
 package kubetest2
 
 import (

@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+// Package cmd is DEPRECATED. Please use github.com/magefile/mage/sh or os/exec directly.
 package cmd
 
 import (

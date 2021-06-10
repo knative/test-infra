@@ -14,8 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// junit.go defines types and functions specific to manipulating junit test result XML files
-
+// Package junit is DEPRECATED. Please use github.com/jstemmer/go-junit-report as a library.
 package junit
 
 import (
