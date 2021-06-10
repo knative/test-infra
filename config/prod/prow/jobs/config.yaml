@@ -875,6 +875,7 @@ presubmits:
     context: pull-knative-serving-https
     always_run: false
     optional: true
+    run_if_changed: "^third_party/cert-manager-latest/*"
     rerun_command: "/test pull-knative-serving-https"
     trigger: "(?m)^/test (all|pull-knative-serving-https),?(\\s+|$)"
     decorate: true
