@@ -236,6 +236,7 @@ presubmits:
         memory: 16Gi
   - custom-test: https
     always-run: false
+    run-if-changed: ^third_party/cert-manager-latest/*
     optional: true
     args:
     - --run-test
