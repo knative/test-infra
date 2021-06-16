@@ -91,8 +91,11 @@ test_groups:
 - name: ci-knative-serving-https
   gcs_prefix: knative-prow/logs/ci-knative-serving-https
   alert_stale_results_hours: 3
-- name: ci-knative-serving-s390x-e2e-tests
-  gcs_prefix: knative-prow/logs/ci-knative-serving-s390x-e2e-tests
+- name: ci-knative-serving-s390x-kourier-tests
+  gcs_prefix: knative-prow/logs/ci-knative-serving-s390x-kourier-tests
+  alert_stale_results_hours: 3
+- name: ci-knative-serving-s390x-contour-tests
+  gcs_prefix: knative-prow/logs/ci-knative-serving-s390x-contour-tests
   alert_stale_results_hours: 3
 - name: ci-knative-serving-nightly-release
   gcs_prefix: knative-prow/logs/ci-knative-serving-nightly-release
@@ -1254,8 +1257,11 @@ dashboards:
   - name: https
     test_group_name: ci-knative-serving-https
     base_options: "sort-by-name="
-  - name: s390x-e2e-tests
-    test_group_name: ci-knative-serving-s390x-e2e-tests
+  - name: s390x-kourier-tests
+    test_group_name: ci-knative-serving-s390x-kourier-tests
+    base_options: "sort-by-name="
+  - name: s390x-contour-tests
+    test_group_name: ci-knative-serving-s390x-contour-tests
     base_options: "sort-by-name="
   - name: nightly
     test_group_name: ci-knative-serving-nightly-release
