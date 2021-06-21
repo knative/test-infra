@@ -38,6 +38,7 @@ branch-protection:
       repos:
         .github:
           protect: false
+
     google:
       repos:
         # Protect all branches in google/knative-gcp

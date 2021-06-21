@@ -73,6 +73,7 @@ periodics:
       - /app/prow/cmd/branchprotector/app.binary
       args:
       - --config-path=config/branch_protector/rules.yaml
+      - --job-config-path=config/prod/prow/jobs/custom/branchprotector.yaml
       - --github-token-path=/etc/github/token
       - --confirm
       volumeMounts:
@@ -110,6 +111,7 @@ postsubmits:
         - /app/prow/cmd/branchprotector/app.binary
         args:
         - --config-path=config/branch_protector/rules.yaml
+        - --job-config-path=config/prod/prow/jobs/custom/branchprotector.yaml
         - --github-token-path=/etc/github/token
         - --confirm
         volumeMounts:
