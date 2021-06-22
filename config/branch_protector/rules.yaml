@@ -23,6 +23,8 @@ branch-protection:
         contexts:
         - cla/google
         - tide
+      exclude:
+      - "^dependabot/" # don't protect branches created by dependabot
       # Enforce all configured restrictions above for administrators.
       enforce_admins: true
 
