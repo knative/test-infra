@@ -34,6 +34,18 @@ presubmits:
         memory: 12Gi
       limits:
         memory: 16Gi
+  - custom-test: istio-latest-mesh-short
+    needs-monitor: true
+    always-run: false
+    optional: true
+    args:
+    - --run-test
+    - ./test/e2e-tests.sh --istio-version latest --mesh --short
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
   - custom-test: istio-latest-mesh-tls
     needs-monitor: true
     always-run: false
@@ -78,6 +90,19 @@ presubmits:
     args:
     - --run-test
     - ./test/e2e-tests.sh --istio-version stable --mesh
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - custom-test: istio-stable-mesh-short
+    needs-monitor: true
+    always-run: false
+    optional: true
+    run-if-changed: ^third_party/istio-latest/net-istio.yaml
+    args:
+    - --run-test
+    - ./test/e2e-tests.sh --istio-version stable --mesh --short
     resources:
       requests:
         memory: 12Gi
