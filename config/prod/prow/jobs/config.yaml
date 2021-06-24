@@ -188,6 +188,48 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+  - name: pull-knative-serving-istio-latest-mesh-short
+    agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-knative-serving-istio-latest-mesh-short
+    context: pull-knative-serving-istio-latest-mesh-short
+    always_run: false
+    optional: true
+    rerun_command: "/test pull-knative-serving-istio-latest-mesh-short"
+    trigger: "(?m)^/test (all|pull-knative-serving-istio-latest-mesh-short),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/serving
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version latest --mesh --short"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
   - name: pull-knative-serving-istio-latest-mesh-tls
     agent: kubernetes
     labels:
@@ -339,6 +381,49 @@ presubmits:
         - "./test/presubmit-tests.sh"
         - "--run-test"
         - "./test/e2e-tests.sh --istio-version stable --mesh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-serving-istio-stable-mesh-short
+    agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-knative-serving-istio-stable-mesh-short
+    context: pull-knative-serving-istio-stable-mesh-short
+    always_run: false
+    optional: true
+    run_if_changed: "^third_party/istio-latest/net-istio.yaml"
+    rerun_command: "/test pull-knative-serving-istio-stable-mesh-short"
+    trigger: "(?m)^/test (all|pull-knative-serving-istio-stable-mesh-short),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/serving
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --istio-version stable --mesh --short"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
