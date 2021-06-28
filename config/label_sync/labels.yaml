@@ -285,3 +285,21 @@ repos:
       name: Install
       target: both
       addedBy: humans
+  knative-sandbox/net-istio:
+    labels:
+    - color: 447cf6
+      name: area/mesh
+      target: issues
+      addedBy: humans
+    - color: 490130
+      name: area/sidecar
+      target: issues
+      addedBy: humans
+    - color: 2adcaa
+      name: area/perf
+      target: issues
+      addedBy: humans
+    - color: d17a50
+      name: area/status
+      target: issues
+      addedBy: humans
