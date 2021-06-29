@@ -1301,9 +1301,6 @@ periodics:
   - nightly: true
     needs-dind: true
   - dot-release: true
-    release: "0.20"
-    needs-dind: true
-  - dot-release: true
     release: "0.21"
     needs-dind: true
   - dot-release: true
@@ -1311,6 +1308,9 @@ periodics:
     needs-dind: true
   - dot-release: true
     release: "0.23"
+    needs-dind: true
+  - dot-release: true
+    release: "0.24"
     needs-dind: true
   - auto-release: true
     needs-dind: true
