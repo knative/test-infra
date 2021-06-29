@@ -17877,78 +17877,6 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "40 9 * * 2"
-  name: ci-knative-sandbox-eventing-kafka-broker-0.20-dot-release
-  agent: kubernetes
-  decorate: true
-  decoration_config:
-    timeout: 180m
-  cluster: "build-knative"
-  extra_refs:
-  - org: knative-sandbox
-    repo: eventing-kafka-broker
-    path_alias: knative.dev/eventing-kafka-broker
-    base_ref: release-0.20
-  annotations:
-    testgrid-dashboards: knative-sandbox-0.20
-    testgrid-tab-name: eventing-kafka-broker-dot-release
-    testgrid-alert-stale-results-hours: "3"
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      command:
-      - runner.sh
-      args:
-      - "./hack/release.sh"
-      - "--dot-release"
-      - "--release-gcs knative-releases/eventing-kafka-broker"
-      - "--release-gcr gcr.io/knative-releases"
-      - "--github-token /etc/hub-token/token"
-      - "--branch release-0.20"
-      securityContext:
-        privileged: true
-      volumeMounts:
-      - name: hub-token
-        mountPath: /etc/hub-token
-        readOnly: true
-      - name: docker-graph
-        mountPath: /docker-graph
-      - name: modules
-        mountPath: /lib/modules
-      - name: cgroup
-        mountPath: /sys/fs/cgroup
-      - name: release-account
-        mountPath: /etc/release-account
-        readOnly: true
-      env:
-      - name: ORG_NAME
-        value: knative-sandbox
-      - name: DOCKER_IN_DOCKER_ENABLED
-        value: "true"
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/release-account/service-account.json
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-      - name: PULL_BASE_REF
-        value: release-0.20
-    volumes:
-    - name: hub-token
-      secret:
-        secretName: hub-token
-    - name: docker-graph
-      emptyDir: {}
-    - name: modules
-      hostPath:
-        path: /lib/modules
-        type: Directory
-    - name: cgroup
-      hostPath:
-        path: /sys/fs/cgroup
-        type: Directory
-    - name: release-account
-      secret:
-        secretName: release-account
 - cron: "51 9 * * 2"
   name: ci-knative-sandbox-eventing-kafka-broker-0.21-dot-release
   agent: kubernetes
@@ -18148,6 +18076,78 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.23
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: docker-graph
+      emptyDir: {}
+    - name: modules
+      hostPath:
+        path: /lib/modules
+        type: Directory
+    - name: cgroup
+      hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+    - name: release-account
+      secret:
+        secretName: release-account
+- cron: "32 9 * * 2"
+  name: ci-knative-sandbox-eventing-kafka-broker-0.24-dot-release
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: eventing-kafka-broker
+    path_alias: knative.dev/eventing-kafka-broker
+    base_ref: release-0.24
+  annotations:
+    testgrid-dashboards: knative-sandbox-0.24
+    testgrid-tab-name: eventing-kafka-broker-dot-release
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--dot-release"
+      - "--release-gcs knative-releases/eventing-kafka-broker"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      - "--branch release-0.24"
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: docker-graph
+        mountPath: /docker-graph
+      - name: modules
+        mountPath: /lib/modules
+      - name: cgroup
+        mountPath: /sys/fs/cgroup
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: ORG_NAME
+        value: knative-sandbox
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.24
     volumes:
     - name: hub-token
       secret:
@@ -18385,58 +18385,6 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "34 9 * * 2"
-  name: ci-knative-sandbox-eventing-rabbitmq-0.20-dot-release
-  agent: kubernetes
-  decorate: true
-  decoration_config:
-    timeout: 180m
-  cluster: "build-knative"
-  extra_refs:
-  - org: knative-sandbox
-    repo: eventing-rabbitmq
-    path_alias: knative.dev/eventing-rabbitmq
-    base_ref: release-0.20
-  annotations:
-    testgrid-dashboards: knative-sandbox-0.20
-    testgrid-tab-name: eventing-rabbitmq-dot-release
-    testgrid-alert-stale-results-hours: "3"
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      command:
-      - runner.sh
-      args:
-      - "./hack/release.sh"
-      - "--dot-release"
-      - "--release-gcs knative-releases/eventing-rabbitmq"
-      - "--release-gcr gcr.io/knative-releases"
-      - "--github-token /etc/hub-token/token"
-      - "--branch release-0.20"
-      volumeMounts:
-      - name: hub-token
-        mountPath: /etc/hub-token
-        readOnly: true
-      - name: release-account
-        mountPath: /etc/release-account
-        readOnly: true
-      env:
-      - name: ORG_NAME
-        value: knative-sandbox
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/release-account/service-account.json
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-      - name: PULL_BASE_REF
-        value: release-0.20
-    volumes:
-    - name: hub-token
-      secret:
-        secretName: hub-token
-    - name: release-account
-      secret:
-        secretName: release-account
 - cron: "33 9 * * 2"
   name: ci-knative-sandbox-eventing-rabbitmq-0.21-dot-release
   agent: kubernetes
@@ -18586,6 +18534,58 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.23
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
+- cron: "58 9 * * 2"
+  name: ci-knative-sandbox-eventing-rabbitmq-0.24-dot-release
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: eventing-rabbitmq
+    path_alias: knative.dev/eventing-rabbitmq
+    base_ref: release-0.24
+  annotations:
+    testgrid-dashboards: knative-sandbox-0.24
+    testgrid-tab-name: eventing-rabbitmq-dot-release
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--dot-release"
+      - "--release-gcs knative-releases/eventing-rabbitmq"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      - "--branch release-0.24"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: ORG_NAME
+        value: knative-sandbox
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.24
     volumes:
     - name: hub-token
       secret:
