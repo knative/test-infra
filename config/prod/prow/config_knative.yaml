@@ -1173,13 +1173,13 @@ periodics:
     - --run-test
     - ./test/e2e-tests.sh --istio-version latest
   - dot-release: true
-    release: "0.20"
-  - dot-release: true
     release: "0.21"
   - dot-release: true
     release: "0.22"
   - dot-release: true
     release: "0.23"
+  - dot-release: true
+    release: "0.24"
   - auto-release: true
   knative-sandbox/net-kourier:
   - continuous: true
