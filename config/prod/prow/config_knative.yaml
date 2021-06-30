@@ -969,13 +969,6 @@ periodics:
   - continuous: true
   - nightly: true
   - dot-release: true
-    release: "0.20"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - dot-release: true
     release: "0.21"
     resources:
       requests:
@@ -991,6 +984,13 @@ periodics:
         memory: 16Gi
   - dot-release: true
     release: "0.23"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    release: "0.24"
     resources:
       requests:
         memory: 12Gi
