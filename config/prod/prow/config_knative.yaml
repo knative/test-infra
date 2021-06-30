@@ -617,13 +617,13 @@ periodics:
       limits:
         memory: 16Gi
   - branch-ci: true
-    release: "0.20"
-  - branch-ci: true
     release: "0.21"
   - branch-ci: true
     release: "0.22"
   - branch-ci: true
     release: "0.23"
+  - branch-ci: true
+    release: "0.24"
   - custom-job: istio-latest-mesh
     command:
     - ./test/presubmit-tests.sh
@@ -761,13 +761,6 @@ periodics:
       limits:
         memory: 16Gi
   - dot-release: true
-    release: "0.20"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - dot-release: true
     release: "0.21"
     resources:
       requests:
@@ -783,6 +776,13 @@ periodics:
         memory: 16Gi
   - dot-release: true
     release: "0.23"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    release: "0.24"
     resources:
       requests:
         memory: 12Gi
@@ -797,25 +797,25 @@ periodics:
   knative/client:
   - continuous: true
   - branch-ci: true
-    release: "0.20"
-  - branch-ci: true
     release: "0.21"
   - branch-ci: true
     release: "0.22"
   - branch-ci: true
     release: "0.23"
+  - branch-ci: true
+    release: "0.24"
   - nightly: true
   - custom-job: tekton
     cron: 0 13 * * *
     command: ./test/tekton-tests.sh
   - dot-release: true
-    release: "0.20"
-  - dot-release: true
     release: "0.21"
   - dot-release: true
     release: "0.22"
   - dot-release: true
     release: "0.23"
+  - dot-release: true
+    release: "0.24"
   - auto-release: true
   - custom-job: s390x-e2e-tests
     cron: 0 11 * * *
@@ -848,13 +848,13 @@ periodics:
   - auto-release: true
   - nightly: true
   - dot-release: true
-    release: "0.19"
-  - dot-release: true
     release: "0.21"
   - dot-release: true
     release: "0.22"
   - dot-release: true
     release: "0.23"
+  - dot-release: true
+    release: "0.24"
   knative-sandbox/kn-plugin-source-kamelet:
   - continuous: true
   knative-sandbox/kn-plugin-admin:
@@ -878,13 +878,13 @@ periodics:
       limits:
         memory: 16Gi
   - branch-ci: true
-    release: "0.20"
-  - branch-ci: true
     release: "0.21"
   - branch-ci: true
     release: "0.22"
   - branch-ci: true
     release: "0.23"
+  - branch-ci: true
+    release: "0.24"
   - nightly: true
     reporter_config:
       slack:
@@ -898,13 +898,6 @@ periodics:
       limits:
         memory: 16Gi
   - dot-release: true
-    release: "0.20"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - dot-release: true
     release: "0.21"
     resources:
       requests:
@@ -920,6 +913,13 @@ periodics:
         memory: 16Gi
   - dot-release: true
     release: "0.23"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    release: "0.24"
     resources:
       requests:
         memory: 12Gi
@@ -969,13 +969,6 @@ periodics:
   - continuous: true
   - nightly: true
   - dot-release: true
-    release: "0.20"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - dot-release: true
     release: "0.21"
     resources:
       requests:
@@ -991,6 +984,13 @@ periodics:
         memory: 16Gi
   - dot-release: true
     release: "0.23"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    release: "0.24"
     resources:
       requests:
         memory: 12Gi
@@ -1173,13 +1173,13 @@ periodics:
     - --run-test
     - ./test/e2e-tests.sh --istio-version latest
   - dot-release: true
-    release: "0.20"
-  - dot-release: true
     release: "0.21"
   - dot-release: true
     release: "0.22"
   - dot-release: true
     release: "0.23"
+  - dot-release: true
+    release: "0.24"
   - auto-release: true
   knative-sandbox/net-kourier:
   - continuous: true
@@ -1301,9 +1301,6 @@ periodics:
   - nightly: true
     needs-dind: true
   - dot-release: true
-    release: "0.20"
-    needs-dind: true
-  - dot-release: true
     release: "0.21"
     needs-dind: true
   - dot-release: true
@@ -1311,6 +1308,9 @@ periodics:
     needs-dind: true
   - dot-release: true
     release: "0.23"
+    needs-dind: true
+  - dot-release: true
+    release: "0.24"
     needs-dind: true
   - auto-release: true
     needs-dind: true
@@ -1320,9 +1320,6 @@ periodics:
   - nightly: true
     needs-dind: true
   - dot-release: true
-    release: "0.20"
-    needs-dind: true
-  - dot-release: true
     release: "0.21"
     needs-dind: true
   - dot-release: true
@@ -1330,6 +1327,9 @@ periodics:
     needs-dind: true
   - dot-release: true
     release: "0.23"
+    needs-dind: true
+  - dot-release: true
+    release: "0.24"
     needs-dind: true
   - auto-release: true
     needs-dind: true
@@ -1343,13 +1343,13 @@ periodics:
         report_template: '"The nightly release job for eventing-rabbitmq failed, check the log: <{{.Status.URL}}|View logs>"'
   - auto-release: true
   - dot-release: true
-    release: "0.20"
-  - dot-release: true
     release: "0.21"
   - dot-release: true
     release: "0.22"
   - dot-release: true
     release: "0.23"
+  - dot-release: true
+    release: "0.24"
   knative-sandbox/eventing-natss:
   - nightly: true
     reporter_config:
@@ -1359,13 +1359,13 @@ periodics:
         - failure
         report_template: '"The nightly release job for eventing-natss failed, check the log: <{{.Status.URL}}|View logs>"'
   - dot-release: true
-    release: "0.20"
-  - dot-release: true
     release: "0.21"
   - dot-release: true
     release: "0.22"
   - dot-release: true
     release: "0.23"
+  - dot-release: true
+    release: "0.24"
   - auto-release: true
   knative-sandbox/eventing-autoscaler-keda:
   - continuous: true
