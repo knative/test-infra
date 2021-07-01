@@ -33,7 +33,7 @@ The Productivity Working Group also has other repos:
 
 - [knative-sandbox/actions-kind](https://github.com/knative-sandbox/actions-kind)
 
-  A github action to run tests in a [kind](https://kind.sigs.k8s.io/) cluster 
+  A github action to run tests in a [kind](https://kind.sigs.k8s.io/) cluster
 
 - [knative-sandbox/kperf](https://github.com/knative-sandbox/kperf)
 
