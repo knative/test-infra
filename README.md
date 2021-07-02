@@ -7,39 +7,39 @@
 
 The `test-infra` repository contains a collection of tools for testing Knative,
 collecting metrics and displaying test results.
-This is the main repo for the [productivity working group](https://github.com/knative/community/blob/main/working-groups/WORKING-GROUPS.md#productivity)
+This is the main repo for the [Productivity Working Group](https://github.com/knative/community/blob/main/working-groups/WORKING-GROUPS.md#productivity)
 
-The productivity working group also has other repos:
-- knative/.github
+The Productivity Working Group also has other repos:
+- [knative/.github](https://github.com/knative/.github)
 
   Tools for github workflows
 
-- knative/hack
+- [knative/hack](https://github.com/knative/.github)
 
   Shellscripts used across the repos placed in a separate repo to avoid
   dependency cycles
 
-- knative/release
+- [knative/release](https://github.com/knative/release)
 
   Release documentation and tools
 
-- knative-sandbox/.github
+- [knative-sandbox/.github](https://github.com/knative-sandbox/.github)
 
   Tools for github actions
 
-- knative-sandbox/actions-downstream-test
+- [knative-sandbox/actions-downstream-test](https://github.com/knative-sandbox/actions-downstream-test)
 
   A github action to test multiple components together
 
-- knative-sandbox/actions-kind
+- [knative-sandbox/actions-kind](https://github.com/knative-sandbox/actions-kind)
 
-  A github action to run tests in a kind cluster https://kind.sigs.k8s.io/
+  A github action to run tests in a [kind](https://kind.sigs.k8s.io/) cluster
 
-- knative-sandbox/kperf
+- [knative-sandbox/kperf](https://github.com/knative-sandbox/kperf)
 
   A performance test framework
 
-- knative-sandbox/knobots
+- [knative-sandbox/knobots](https://github.com/knative-sandbox/knobots)
 
   Automated pull requests to fix up the code (based on github actions)
 
