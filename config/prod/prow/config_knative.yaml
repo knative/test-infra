@@ -608,6 +608,10 @@ presubmits:
   - build-tests: true
   - unit-tests: true
   - integration-tests: true
+  knative-sandbox/monitoring:
+  - build-tests: false
+  - unit-tests: false
+  - integration-tests: false
 periodics:
   knative/serving:
   - continuous: true
@@ -1013,6 +1017,8 @@ periodics:
   - continuous: true
   knative-sandbox/sample-controller:
   - continuous: true
+  - nightly: true
+  - auto-release: true
   knative-sandbox/sample-source:
   - continuous: true
   - nightly: true
