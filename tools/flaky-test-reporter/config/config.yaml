@@ -56,6 +56,13 @@ jobConfigs:
     slackChannels:
       - name: net-contour
         identity: C012J5TCS6Q
+  - name: ci-knative-serving-s390x-contour-tests
+    org: knative
+    repo: serving
+    type: postsubmit
+    slackChannels:
+      - name: s390x
+        identity: C027YB4QUUU
   - name: ci-knative-serving-kourier-stable
     org: knative
     repo: serving
@@ -63,6 +70,13 @@ jobConfigs:
     slackChannels:
       - name: net-kourier
         identity: C012C0VQJAW
+  - name: ci-knative-serving-s390x-kourier-tests
+    org: knative
+    repo: serving
+    type: postsubmit
+    slackChannels:
+      - name: s390x
+        identity: C027YB4QUUU
   - name: ci-knative-serving-ambassador-latest
     org: knative
     repo: serving
@@ -85,6 +99,13 @@ jobConfigs:
     slackChannels:
       - name: eventing
         identity: C9JP909F0
+  - name: ci-knative-eventing-s390x-e2e-tests
+    org: knative
+    repo: eventing
+    type: postsubmit
+    slackChannels:
+      - name: s390x
+        identity: C027YB4QUUU
   - name: ci-knative-sandbox-eventing-kafka-broker-continuous
     org: knative-sandbox
     repo: eventing-kafka-broker
@@ -98,3 +119,17 @@ jobConfigs:
     org: google
     repo: knative-gcp
     type: postsubmit
+  - name: ci-knative-operator-s390x-e2e-tests
+    org: knative
+    repo: operator
+    type: postsubmit
+    slackChannels:
+      - name: s390x
+        identity: C027YB4QUUU
+  - name: ci-knative-client-s390x-e2e-tests
+    org: knative
+    repo: client
+    type: postsubmit
+    slackChannels:
+      - name: s390x
+        identity: C027YB4QUUU
