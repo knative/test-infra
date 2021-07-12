@@ -15,37 +15,6 @@
 # branchprotector is a tool implemented by k8s sig-testing.
 # It can configures github branch protection rules according to the specified policy in a YAML file.
 
-# Do not enable presubmit test for now since it's taking extra long time.
-# TODO(chizhg): reenable it if we can run it in a more lightweight mode - https://github.com/knative/test-infra/pull/2555
-#presubmits:
-#  knative/test-infra:
-#  - name: pull-knative-test-infra-branchprotector
-#    agent: kubernetes
-#    decorate: true
-#    path_alias: knative.dev/test-infra
-#    run_if_changed: "^config/branch_protector/rules.yaml$"
-#    cluster: "prow-trusted"
-#    branches:
-#    - "master"
-#    spec:
-#      containers:
-#      - name: branchprotector
-#        image: gcr.io/k8s-prow/branchprotector:v20210506-5c14a376fa
-#        command:
-#        - /app/prow/cmd/branchprotector/app.binary
-#        args:
-#        - --config-path=config/branch_protector/rules.yaml
-#        - --github-token-path=/etc/github/token
-#        - --confirm=false
-#        volumeMounts:
-#        - name: oauth
-#          mountPath: /etc/github
-#          readOnly: true
-#      volumes:
-#      - name: oauth
-#        secret:
-#          secretName: github-token-for-branchprotector
-
 periodics:
 # Run at 10AM PST.
 - cron: "0 17 * * *"
@@ -60,6 +29,9 @@ periodics:
     repo: test-infra
     base_ref: main
     path_alias: knative.dev/test-infra
+  - org: GoogleCloudPlatform
+    repo: oss-test-infra
+    base_ref: master
   annotations:
     testgrid-dashboards: utilities
     testgrid-tab-name: ci-knative-test-infra-branchprotector
@@ -72,8 +44,8 @@ periodics:
       command:
       - /app/prow/cmd/branchprotector/app.binary
       args:
-      - --config-path=config/branch_protector/rules.yaml
-      - --job-config-path=config/prod/prow/jobs/custom/branchprotector.yaml
+      - --config-path=../../GoogleCloudPlatform/oss-test-infra/prow/knative/config.yaml
+      - --job-config-path=config/prod/prow/jobs
       - --github-token-path=/etc/github/token
       - --confirm
       volumeMounts:
@@ -84,41 +56,3 @@ periodics:
     - name: oauth
       secret:
         secretName: github-token-for-branchprotector
-
-postsubmits:
-  knative/test-infra:
-  - name: post-knative-test-infra-branchprotector
-    agent: kubernetes
-    decorate: true
-    decoration_config:
-      timeout: 3h
-    path_alias: knative.dev/test-infra
-    max_concurrency: 1
-    run_if_changed: "^config/branch_protector/rules.yaml$"
-    cluster: "prow-trusted"
-    branches:
-    - "main"
-    annotations:
-      testgrid-dashboards: utilities
-      testgrid-tab-name: post-knative-test-infra-branchprotector
-      testgrid-alert-email: "serverless-engprod-sea@google.com"
-      testgrid-num-failures-to-alert: "1"
-    spec:
-      containers:
-      - name: branchprotector
-        image: gcr.io/k8s-prow/branchprotector:v20210506-5c14a376fa
-        command:
-        - /app/prow/cmd/branchprotector/app.binary
-        args:
-        - --config-path=config/branch_protector/rules.yaml
-        - --job-config-path=config/prod/prow/jobs/custom/branchprotector.yaml
-        - --github-token-path=/etc/github/token
-        - --confirm
-        volumeMounts:
-        - name: oauth
-          mountPath: /etc/github
-          readOnly: true
-      volumes:
-      - name: oauth
-        secret:
-          secretName: github-token-for-branchprotector
