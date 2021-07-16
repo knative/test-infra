@@ -290,9 +290,8 @@ presubmits:
   - unit-tests: true
   - integration-tests: true
   knative-sandbox/kn-plugin-func:
-  - build-tests: true
-  - unit-tests: true
-  - integration-tests: true
+  # Using only github actions for now
+  - build-tests: false
   knative-sandbox/kn-plugin-migration:
   - build-tests: true
   - unit-tests: true
@@ -846,8 +845,8 @@ periodics:
   knative-sandbox/kn-plugin-event:
   - continuous: true
   knative-sandbox/kn-plugin-func:
-  - continuous: true
-  # TODO: add auto-release: true
+  # Using GitHub actions for automation right now
+  - continuous: false
   knative-sandbox/kn-plugin-migration:
   - continuous: true
   knative-sandbox/kn-plugin-sample:
