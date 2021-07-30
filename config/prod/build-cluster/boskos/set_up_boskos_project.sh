@@ -138,3 +138,6 @@ gcloud projects add-iam-policy-binding ${PROJECT} \
 # This command will throw an error if the app is already created, but since we expect to run
 # this script idempotently, we always mark this command as succeeded.
 gcloud app create --region=us-central || echo "AppEngine app probably already exists, ignoring..."
+# Enable network-policy in the cluster
+gcloud container clusters update --project=${PROJECT} knative-prow-build-cluster --update-addons=NetworkPolicy=ENABLED
+gcloud container clusters update --project=${PROJECT} knative-prow-build-cluster --enable-network-policy -q # -q avoids rolling update prompt
