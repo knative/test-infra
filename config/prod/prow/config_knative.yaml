@@ -1440,13 +1440,13 @@ periodics:
         report_template: '"The nightly release job for eventing-rabbitmq failed, check the log: <{{.Status.URL}}|View logs>"'
   - auto-release: true
   - dot-release: true
-    release: "0.21"
-  - dot-release: true
     release: "0.22"
   - dot-release: true
     release: "0.23"
   - dot-release: true
     release: "0.24"
+  - dot-release: true
+    release: "0.25"
   knative-sandbox/eventing-natss:
   - nightly: true
     reporter_config:
