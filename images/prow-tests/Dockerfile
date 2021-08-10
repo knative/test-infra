@@ -112,6 +112,7 @@ RUN go get sigs.k8s.io/kubetest2/kubetest2-gke@${KUBETEST2_VERSION}
 RUN go get sigs.k8s.io/kubetest2/kubetest2-kind@${KUBETEST2_VERSION}
 RUN go get sigs.k8s.io/kubetest2/kubetest2-tester-exec@${KUBETEST2_VERSION}
 RUN go get google.golang.org/protobuf/cmd/protoc-gen-go@v1.26.0
+RUN go get github.com/google/go-licenses
 
 # According to https://github.com/knative/test-infra/pull/2762 protoc-gen-gogofaster is unsupported (and shouldn't be used?)
 # Not sure when it can be removed, maybe knative-0.26?
@@ -143,10 +144,6 @@ COPY --from=test-infra-builds /go/bin/* /go/bin/
 
 # Only needed in this Dockerfile
 RUN rm -f /usr/local/bin/source-gvm-and-run.sh
-
-# This tool is poorly written and requires its mod cache to be present to function!
-# (The purpose of the multiple stages is to keep the mod cache out of the final image)
-RUN GO111MODULE=on go get -u github.com/google/go-licenses
 
 # Extract versions
 RUN bazel version > /bazel_version
