@@ -1047,13 +1047,6 @@ periodics:
   - continuous: true
   - nightly: true
   - dot-release: true
-    release: "0.21"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - dot-release: true
     release: "0.22"
     resources:
       requests:
@@ -1069,6 +1062,13 @@ periodics:
         memory: 16Gi
   - dot-release: true
     release: "0.24"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    release: "0.25"
     resources:
       requests:
         memory: 12Gi
@@ -1398,9 +1398,6 @@ periodics:
   - nightly: true
     needs-dind: true
   - dot-release: true
-    release: "0.21"
-    needs-dind: true
-  - dot-release: true
     release: "0.22"
     needs-dind: true
   - dot-release: true
@@ -1408,6 +1405,9 @@ periodics:
     needs-dind: true
   - dot-release: true
     release: "0.24"
+    needs-dind: true
+  - dot-release: true
+    release: "0.25"
     needs-dind: true
   - auto-release: true
     needs-dind: true
@@ -1417,9 +1417,6 @@ periodics:
   - nightly: true
     needs-dind: true
   - dot-release: true
-    release: "0.21"
-    needs-dind: true
-  - dot-release: true
     release: "0.22"
     needs-dind: true
   - dot-release: true
@@ -1427,6 +1424,9 @@ periodics:
     needs-dind: true
   - dot-release: true
     release: "0.24"
+    needs-dind: true
+  - dot-release: true
+    release: "0.25"
     needs-dind: true
   - auto-release: true
     needs-dind: true
