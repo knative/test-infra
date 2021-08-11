@@ -786,12 +786,6 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
-- name: ci-knative-sandbox-kn-plugin-source-kafka-0.21-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-source-kafka-0.21-dot-release
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  alert_stale_results_hours: 170
-  num_failures_to_alert: 1
 - name: ci-knative-sandbox-kn-plugin-source-kafka-0.22-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-source-kafka-0.22-dot-release
   alert_options:
@@ -914,6 +908,12 @@ test_groups:
   num_failures_to_alert: 1
 - name: ci-knative-sandbox-eventing-natss-0.24-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-natss-0.24-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-kn-plugin-source-kafka-0.25-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-source-kafka-0.25-dot-release
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   alert_stale_results_hours: 170
@@ -2294,14 +2294,6 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 3
-- name: knative-sandbox-0.21
-  dashboard_tab:
-  - name: kn-plugin-source-kafka-dot-release
-    test_group_name: ci-knative-sandbox-kn-plugin-source-kafka-0.21-dot-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 3
 - name: knative-sandbox-0.22
   dashboard_tab:
   - name: kn-plugin-source-kafka-dot-release
@@ -2436,6 +2428,12 @@ dashboards:
     num_failures_to_alert: 3
 - name: knative-sandbox-0.25
   dashboard_tab:
+  - name: kn-plugin-source-kafka-dot-release
+    test_group_name: ci-knative-sandbox-kn-plugin-source-kafka-0.25-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
   - name: eventing-gitlab-dot-release
     test_group_name: ci-knative-sandbox-eventing-gitlab-0.25-dot-release
     base_options: "sort-by-name="
