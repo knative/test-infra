@@ -1275,13 +1275,6 @@ periodics:
   knative/operator:
   - continuous: true
   - branch-ci: true
-    release: "0.21"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - branch-ci: true
     release: "0.22"
     resources:
       requests:
@@ -1297,6 +1290,13 @@ periodics:
         memory: 16Gi
   - branch-ci: true
     release: "0.24"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - branch-ci: true
+    release: "0.25"
     resources:
       requests:
         memory: 12Gi
@@ -1304,13 +1304,6 @@ periodics:
         memory: 16Gi
   - nightly: true
   - dot-release: true
-    release: "0.21"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - dot-release: true
     release: "0.22"
     resources:
       requests:
@@ -1326,6 +1319,13 @@ periodics:
         memory: 16Gi
   - dot-release: true
     release: "0.24"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    release: "0.25"
     resources:
       requests:
         memory: 12Gi
