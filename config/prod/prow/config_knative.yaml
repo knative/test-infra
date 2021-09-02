@@ -1481,13 +1481,13 @@ periodics:
   - dot-release: true
   - auto-release: true
   knative-sandbox/eventing-kogito:
-    - continuous: true
-    - nightly: true
-      reporter_config:
-        slack:
-          channel: eventing-sources
-          job_states_to_report:
-          - failure
-          report_template: '"The nightly release job for Kogito failed, check the log: <{{.Status.URL}}|View logs>"'
-    - dot-release: true
-    - auto-release: true
+  - continuous: true
+  - nightly: true
+    reporter_config:
+      slack:
+        channel: eventing-sources
+        job_states_to_report:
+        - failure
+        report_template: '"The nightly release job for Kogito failed, check the log: <{{.Status.URL}}|View logs>"'
+  - dot-release: true
+  - auto-release: true
