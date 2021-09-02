@@ -36,6 +36,7 @@ dashboards:
 - name: eventing-gitlab
 - name: eventing-kafka
 - name: eventing-kafka-broker
+- name: eventing-kogito
 - name: eventing-natss
 - name: eventing-prometheus
 - name: eventing-rabbitmq
@@ -102,6 +103,7 @@ dashboard_groups:
       - "eventing-gitlab"
       - "eventing-kafka"
       - "eventing-kafka-broker"
+      - "eventing-kogito"
       - "eventing-natss"
       - "eventing-prometheus"
       - "eventing-rabbitmq"
