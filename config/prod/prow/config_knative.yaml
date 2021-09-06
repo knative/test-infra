@@ -1218,6 +1218,13 @@ periodics:
         - failure
         report_template: '"The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"'
   - dot-release: true
+    release: "0.22"
+  - dot-release: true
+    release: "0.23"
+  - dot-release: true
+    release: "0.24"
+  - dot-release: true
+    release: "0.25"
   - auto-release: true
   knative-sandbox/net-contour:
   - continuous: true
