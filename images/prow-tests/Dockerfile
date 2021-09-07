@@ -16,7 +16,7 @@ FROM gcr.io/k8s-testimages/kubekins-e2e:v20210113-cc576af-master AS stable-stuff
 
 ENV DEBIAN_FRONTEND noninteractive
 ARG GCLOUD_VERSION=317.0.0
-ARG KUBECTL_VERSION=v1.18.7
+ARG KUBECTL_VERSION=v1.21.4
 
 # If we don't run update, the apt-get install below don't work
 RUN apt-get update
