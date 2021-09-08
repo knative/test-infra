@@ -11409,6 +11409,57 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
+- cron: "15 9 * * 2"
+  name: ci-knative-sandbox-eventing-awssqs-dot-release
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: eventing-awssqs
+    path_alias: knative.dev/eventing-awssqs
+    base_ref: main
+  annotations:
+    testgrid-dashboards: eventing-awssqs
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: "170"
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--dot-release"
+      - "--release-gcs knative-releases/eventing-awssqs"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: ORG_NAME
+        value: knative-sandbox
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
 - cron: "27 */4 * * *"
   name: ci-knative-sandbox-eventing-ceph-continuous
   agent: kubernetes
@@ -11551,6 +11602,57 @@ periodics:
       args:
       - "./hack/release.sh"
       - "--auto-release"
+      - "--release-gcs knative-releases/eventing-ceph"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: ORG_NAME
+        value: knative-sandbox
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
+- cron: "17 9 * * 2"
+  name: ci-knative-sandbox-eventing-ceph-dot-release
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: eventing-ceph
+    path_alias: knative.dev/eventing-ceph
+    base_ref: main
+  annotations:
+    testgrid-dashboards: eventing-ceph
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: "170"
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--dot-release"
       - "--release-gcs knative-releases/eventing-ceph"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
@@ -11741,6 +11843,57 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
+- cron: "3 9 * * 2"
+  name: ci-knative-sandbox-eventing-couchdb-dot-release
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: eventing-couchdb
+    path_alias: knative.dev/eventing-couchdb
+    base_ref: main
+  annotations:
+    testgrid-dashboards: eventing-couchdb
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: "170"
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--dot-release"
+      - "--release-gcs knative-releases/eventing-couchdb"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: ORG_NAME
+        value: knative-sandbox
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
 - cron: "46 */4 * * *"
   name: ci-knative-sandbox-eventing-github-continuous
   agent: kubernetes
@@ -11883,6 +12036,57 @@ periodics:
       args:
       - "./hack/release.sh"
       - "--auto-release"
+      - "--release-gcs knative-releases/eventing-github"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: ORG_NAME
+        value: knative-sandbox
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
+- cron: "54 9 * * 2"
+  name: ci-knative-sandbox-eventing-github-dot-release
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: eventing-github
+    path_alias: knative.dev/eventing-github
+    base_ref: main
+  annotations:
+    testgrid-dashboards: eventing-github
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: "170"
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--dot-release"
       - "--release-gcs knative-releases/eventing-github"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"
@@ -12467,6 +12671,57 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
+- cron: "1 9 * * 2"
+  name: ci-knative-sandbox-eventing-prometheus-dot-release
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: eventing-prometheus
+    path_alias: knative.dev/eventing-prometheus
+    base_ref: main
+  annotations:
+    testgrid-dashboards: eventing-prometheus
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: "170"
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--dot-release"
+      - "--release-gcs knative-releases/eventing-prometheus"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: ORG_NAME
+        value: knative-sandbox
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
 - cron: "0 */4 * * *"
   name: ci-knative-sandbox-eventing-redis-continuous
   agent: kubernetes
@@ -12609,6 +12864,57 @@ periodics:
       args:
       - "./hack/release.sh"
       - "--auto-release"
+      - "--release-gcs knative-releases/eventing-redis"
+      - "--release-gcr gcr.io/knative-releases"
+      - "--github-token /etc/hub-token/token"
+      volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+      env:
+      - name: ORG_NAME
+        value: knative-sandbox
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: hub-token
+      secret:
+        secretName: hub-token
+    - name: release-account
+      secret:
+        secretName: release-account
+- cron: "28 9 * * 2"
+  name: ci-knative-sandbox-eventing-redis-dot-release
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: eventing-redis
+    path_alias: knative.dev/eventing-redis
+    base_ref: main
+  annotations:
+    testgrid-dashboards: eventing-redis
+    testgrid-tab-name: dot-release
+    testgrid-alert-stale-results-hours: "170"
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--dot-release"
       - "--release-gcs knative-releases/eventing-redis"
       - "--release-gcr gcr.io/knative-releases"
       - "--github-token /etc/hub-token/token"

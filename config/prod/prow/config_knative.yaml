@@ -1035,18 +1035,22 @@ periodics:
   - continuous: true
   - nightly: true
   - auto-release: true
+  - dot-release: true
   knative-sandbox/eventing-ceph:
   - continuous: true
   - nightly: true
   - auto-release: true
+  - dot-release: true
   knative-sandbox/eventing-couchdb:
   - continuous: true
   - nightly: true
   - auto-release: true
+  - dot-release: true
   knative-sandbox/eventing-github:
   - continuous: true
   - nightly: true
   - auto-release: true
+  - dot-release: true
   knative-sandbox/eventing-gitlab:
   - continuous: true
   - nightly: true
@@ -1083,10 +1087,12 @@ periodics:
   - continuous: true
   - nightly: true
   - auto-release: true
+  - dot-release: true
   knative-sandbox/eventing-redis:
   - continuous: true
   - nightly: true
   - auto-release: true
+  - dot-release: true
   knative-sandbox/kperf:
   - continuous: true
   knative/pkg:
