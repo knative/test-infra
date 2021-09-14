@@ -126,6 +126,19 @@ test_groups:
 - name: ci-knative-client-s390x-e2e-tests
   gcs_prefix: knative-prow/logs/ci-knative-client-s390x-e2e-tests
   alert_stale_results_hours: 3
+- name: ci-knative-client-pkg-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-client-pkg-continuous
+  alert_stale_results_hours: 3
+- name: ci-knative-client-pkg-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-client-pkg-auto-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-client-pkg-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-client-pkg-nightly-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
 - name: ci-knative-docs-continuous
   gcs_prefix: knative-prow/logs/ci-knative-docs-continuous
   alert_stale_results_hours: 3
@@ -1103,6 +1116,8 @@ test_groups:
 - name: ci-knative-client-go-coverage-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-client-go-coverage-beta-prow-tests
   short_text_metric: "coverage"
+- name: ci-knative-client-pkg-continuous-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-client-pkg-continuous-beta-prow-tests
 - name: ci-knative-sandbox-kn-plugin-diag-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-diag-continuous-beta-prow-tests
 - name: ci-knative-sandbox-kn-plugin-event-continuous-beta-prow-tests
@@ -1383,6 +1398,26 @@ dashboards:
   - name: s390x-e2e-tests
     test_group_name: ci-knative-client-s390x-e2e-tests
     base_options: "sort-by-name="
+- name: client-pkg
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-client-pkg-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: auto-release
+    test_group_name: ci-knative-client-pkg-auto-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: nightly
+    test_group_name: ci-knative-client-pkg-nightly-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
 - name: docs
   dashboard_tab:
   - name: continuous
@@ -2692,6 +2727,9 @@ dashboards:
   - name: ci-knative-client-go-coverage
     test_group_name: ci-knative-client-go-coverage-beta-prow-tests
     base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
+  - name: ci-knative-client-pkg-continuous
+    test_group_name: ci-knative-client-pkg-continuous-beta-prow-tests
+    base_options: "sort-by-failures="
   - name: ci-knative-sandbox-kn-plugin-diag-continuous
     test_group_name: ci-knative-sandbox-kn-plugin-diag-continuous-beta-prow-tests
     base_options: "sort-by-failures="
@@ -2915,6 +2953,7 @@ dashboard_groups:
   dashboard_names:
   - "serving"
   - "client"
+  - "client-pkg"
   - "docs"
   - "eventing"
   - "pkg"

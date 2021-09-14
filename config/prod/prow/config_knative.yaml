@@ -277,6 +277,10 @@ presubmits:
     always-run: true
     command:
     - ./test/presubmit-integration-tests-latest-release.sh
+  knative/client-pkg:
+  - build-tests: true
+  - unit-tests: true
+  - go-coverage: false
   knative/client-contrib:
   - build-tests: true
   - unit-tests: true
@@ -896,6 +900,10 @@ periodics:
     - INGRESS_CLASS="contour.ingress.networking.knative.dev"
     external_cluster:
       secret: s390x-cluster1
+  knative/client-pkg:
+  - continuous: true
+  - auto-release: true
+  - nightly: true
   knative-sandbox/kn-plugin-diag:
   - continuous: true
   knative-sandbox/kn-plugin-event:
