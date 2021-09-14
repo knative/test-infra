@@ -24,6 +24,7 @@ dashboards:
 - name: beta-prow-tests
 - name: caching
 - name: client
+- name: client-pkg
 - name: discovery
 - name: docs
 - name: eventing
@@ -84,6 +85,7 @@ dashboard_groups:
     dashboard_names:
       - "caching"
       - "client"
+      - "client-pkg"
       - "docs"
       - "eventing"
       - "operator"
