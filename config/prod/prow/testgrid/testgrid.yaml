@@ -458,12 +458,6 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
-- name: ci-knative-sandbox-eventing-awssqs-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-awssqs-dot-release
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  alert_stale_results_hours: 170
-  num_failures_to_alert: 1
 - name: ci-knative-sandbox-eventing-ceph-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-ceph-continuous
   alert_stale_results_hours: 3
@@ -476,12 +470,6 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-ceph-auto-release
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  num_failures_to_alert: 1
-- name: ci-knative-sandbox-eventing-ceph-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-ceph-dot-release
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  alert_stale_results_hours: 170
   num_failures_to_alert: 1
 - name: ci-knative-sandbox-eventing-couchdb-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-couchdb-continuous
@@ -496,12 +484,6 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
-- name: ci-knative-sandbox-eventing-couchdb-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-couchdb-dot-release
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  alert_stale_results_hours: 170
-  num_failures_to_alert: 1
 - name: ci-knative-sandbox-eventing-github-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-github-continuous
   alert_stale_results_hours: 3
@@ -514,12 +496,6 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-github-auto-release
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  num_failures_to_alert: 1
-- name: ci-knative-sandbox-eventing-github-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-github-dot-release
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  alert_stale_results_hours: 170
   num_failures_to_alert: 1
 - name: ci-knative-sandbox-eventing-gitlab-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-gitlab-continuous
@@ -547,12 +523,6 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
-- name: ci-knative-sandbox-eventing-prometheus-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-prometheus-dot-release
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  alert_stale_results_hours: 170
-  num_failures_to_alert: 1
 - name: ci-knative-sandbox-eventing-redis-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-redis-continuous
   alert_stale_results_hours: 3
@@ -565,12 +535,6 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-redis-auto-release
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  num_failures_to_alert: 1
-- name: ci-knative-sandbox-eventing-redis-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-redis-dot-release
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  alert_stale_results_hours: 170
   num_failures_to_alert: 1
 - name: ci-knative-sandbox-kperf-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kperf-continuous
@@ -846,8 +810,44 @@ test_groups:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   alert_stale_results_hours: 170
   num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-awssqs-0.22-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-awssqs-0.22-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-ceph-0.22-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-ceph-0.22-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-couchdb-0.22-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-couchdb-0.22-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-github-0.22-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-github-0.22-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
 - name: ci-knative-sandbox-eventing-gitlab-0.22-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-gitlab-0.22-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-prometheus-0.22-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-prometheus-0.22-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-redis-0.22-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-redis-0.22-dot-release
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   alert_stale_results_hours: 170
@@ -900,8 +900,44 @@ test_groups:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   alert_stale_results_hours: 170
   num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-awssqs-0.23-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-awssqs-0.23-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-ceph-0.23-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-ceph-0.23-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-couchdb-0.23-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-couchdb-0.23-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-github-0.23-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-github-0.23-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
 - name: ci-knative-sandbox-eventing-gitlab-0.23-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-gitlab-0.23-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-prometheus-0.23-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-prometheus-0.23-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-redis-0.23-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-redis-0.23-dot-release
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   alert_stale_results_hours: 170
@@ -954,8 +990,44 @@ test_groups:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   alert_stale_results_hours: 170
   num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-awssqs-0.24-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-awssqs-0.24-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-ceph-0.24-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-ceph-0.24-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-couchdb-0.24-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-couchdb-0.24-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-github-0.24-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-github-0.24-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
 - name: ci-knative-sandbox-eventing-gitlab-0.24-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-gitlab-0.24-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-prometheus-0.24-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-prometheus-0.24-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-redis-0.24-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-redis-0.24-dot-release
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   alert_stale_results_hours: 170
@@ -1008,8 +1080,44 @@ test_groups:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   alert_stale_results_hours: 170
   num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-awssqs-0.25-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-awssqs-0.25-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-ceph-0.25-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-ceph-0.25-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-couchdb-0.25-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-couchdb-0.25-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-github-0.25-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-github-0.25-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
 - name: ci-knative-sandbox-eventing-gitlab-0.25-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-gitlab-0.25-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-prometheus-0.25-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-prometheus-0.25-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-eventing-redis-0.25-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-redis-0.25-dot-release
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   alert_stale_results_hours: 170
@@ -1643,12 +1751,6 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 1
-  - name: dot-release
-    test_group_name: ci-knative-sandbox-eventing-awssqs-dot-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 1
 - name: eventing-ceph
   dashboard_tab:
   - name: continuous
@@ -1665,12 +1767,6 @@ dashboards:
     num_failures_to_alert: 1
   - name: auto-release
     test_group_name: ci-knative-sandbox-eventing-ceph-auto-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 1
-  - name: dot-release
-    test_group_name: ci-knative-sandbox-eventing-ceph-dot-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
@@ -1695,12 +1791,6 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 1
-  - name: dot-release
-    test_group_name: ci-knative-sandbox-eventing-couchdb-dot-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 1
 - name: eventing-github
   dashboard_tab:
   - name: continuous
@@ -1717,12 +1807,6 @@ dashboards:
     num_failures_to_alert: 1
   - name: auto-release
     test_group_name: ci-knative-sandbox-eventing-github-auto-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 1
-  - name: dot-release
-    test_group_name: ci-knative-sandbox-eventing-github-dot-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
@@ -1767,12 +1851,6 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 1
-  - name: dot-release
-    test_group_name: ci-knative-sandbox-eventing-prometheus-dot-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 1
 - name: eventing-redis
   dashboard_tab:
   - name: continuous
@@ -1789,12 +1867,6 @@ dashboards:
     num_failures_to_alert: 1
   - name: auto-release
     test_group_name: ci-knative-sandbox-eventing-redis-auto-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 1
-  - name: dot-release
-    test_group_name: ci-knative-sandbox-eventing-redis-dot-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
@@ -2457,8 +2529,44 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 3
+  - name: eventing-awssqs-dot-release
+    test_group_name: ci-knative-sandbox-eventing-awssqs-0.22-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: eventing-ceph-dot-release
+    test_group_name: ci-knative-sandbox-eventing-ceph-0.22-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: eventing-couchdb-dot-release
+    test_group_name: ci-knative-sandbox-eventing-couchdb-0.22-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: eventing-github-dot-release
+    test_group_name: ci-knative-sandbox-eventing-github-0.22-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
   - name: eventing-gitlab-dot-release
     test_group_name: ci-knative-sandbox-eventing-gitlab-0.22-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: eventing-prometheus-dot-release
+    test_group_name: ci-knative-sandbox-eventing-prometheus-0.22-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: eventing-redis-dot-release
+    test_group_name: ci-knative-sandbox-eventing-redis-0.22-dot-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
@@ -2513,8 +2621,44 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 3
+  - name: eventing-awssqs-dot-release
+    test_group_name: ci-knative-sandbox-eventing-awssqs-0.23-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: eventing-ceph-dot-release
+    test_group_name: ci-knative-sandbox-eventing-ceph-0.23-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: eventing-couchdb-dot-release
+    test_group_name: ci-knative-sandbox-eventing-couchdb-0.23-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: eventing-github-dot-release
+    test_group_name: ci-knative-sandbox-eventing-github-0.23-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
   - name: eventing-gitlab-dot-release
     test_group_name: ci-knative-sandbox-eventing-gitlab-0.23-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: eventing-prometheus-dot-release
+    test_group_name: ci-knative-sandbox-eventing-prometheus-0.23-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: eventing-redis-dot-release
+    test_group_name: ci-knative-sandbox-eventing-redis-0.23-dot-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
@@ -2569,8 +2713,44 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 3
+  - name: eventing-awssqs-dot-release
+    test_group_name: ci-knative-sandbox-eventing-awssqs-0.24-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: eventing-ceph-dot-release
+    test_group_name: ci-knative-sandbox-eventing-ceph-0.24-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: eventing-couchdb-dot-release
+    test_group_name: ci-knative-sandbox-eventing-couchdb-0.24-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: eventing-github-dot-release
+    test_group_name: ci-knative-sandbox-eventing-github-0.24-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
   - name: eventing-gitlab-dot-release
     test_group_name: ci-knative-sandbox-eventing-gitlab-0.24-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: eventing-prometheus-dot-release
+    test_group_name: ci-knative-sandbox-eventing-prometheus-0.24-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: eventing-redis-dot-release
+    test_group_name: ci-knative-sandbox-eventing-redis-0.24-dot-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
@@ -2625,8 +2805,44 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 3
+  - name: eventing-awssqs-dot-release
+    test_group_name: ci-knative-sandbox-eventing-awssqs-0.25-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: eventing-ceph-dot-release
+    test_group_name: ci-knative-sandbox-eventing-ceph-0.25-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: eventing-couchdb-dot-release
+    test_group_name: ci-knative-sandbox-eventing-couchdb-0.25-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: eventing-github-dot-release
+    test_group_name: ci-knative-sandbox-eventing-github-0.25-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
   - name: eventing-gitlab-dot-release
     test_group_name: ci-knative-sandbox-eventing-gitlab-0.25-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: eventing-prometheus-dot-release
+    test_group_name: ci-knative-sandbox-eventing-prometheus-0.25-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: eventing-redis-dot-release
+    test_group_name: ci-knative-sandbox-eventing-redis-0.25-dot-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
