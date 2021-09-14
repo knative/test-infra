@@ -1043,18 +1043,50 @@ periodics:
   - continuous: true
   - nightly: true
   - auto-release: true
+  - dot-release: true
+    release: "0.22"
+  - dot-release: true
+    release: "0.23"
+  - dot-release: true
+    release: "0.24"
+  - dot-release: true
+    release: "0.25"
   knative-sandbox/eventing-ceph:
   - continuous: true
   - nightly: true
   - auto-release: true
+  - dot-release: true
+    release: "0.22"
+  - dot-release: true
+    release: "0.23"
+  - dot-release: true
+    release: "0.24"
+  - dot-release: true
+    release: "0.25"
   knative-sandbox/eventing-couchdb:
   - continuous: true
   - nightly: true
   - auto-release: true
+  - dot-release: true
+    release: "0.22"
+  - dot-release: true
+    release: "0.23"
+  - dot-release: true
+    release: "0.24"
+  - dot-release: true
+    release: "0.25"
   knative-sandbox/eventing-github:
   - continuous: true
   - nightly: true
   - auto-release: true
+  - dot-release: true
+    release: "0.22"
+  - dot-release: true
+    release: "0.23"
+  - dot-release: true
+    release: "0.24"
+  - dot-release: true
+    release: "0.25"
   knative-sandbox/eventing-gitlab:
   - continuous: true
   - nightly: true
@@ -1091,10 +1123,26 @@ periodics:
   - continuous: true
   - nightly: true
   - auto-release: true
+  - dot-release: true
+    release: "0.22"
+  - dot-release: true
+    release: "0.23"
+  - dot-release: true
+    release: "0.24"
+  - dot-release: true
+    release: "0.25"
   knative-sandbox/eventing-redis:
   - continuous: true
   - nightly: true
   - auto-release: true
+  - dot-release: true
+    release: "0.22"
+  - dot-release: true
+    release: "0.23"
+  - dot-release: true
+    release: "0.24"
+  - dot-release: true
+    release: "0.25"
   knative-sandbox/kperf:
   - continuous: true
   knative/pkg:
