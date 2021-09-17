@@ -404,6 +404,22 @@ test_groups:
 - name: ci-knative-sandbox-kn-plugin-service-log-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-service-log-continuous
   alert_stale_results_hours: 3
+- name: ci-knative-sandbox-kn-plugin-service-log-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-service-log-auto-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-kn-plugin-service-log-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-service-log-nightly-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-kn-plugin-service-log-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-service-log-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
 - name: ci-knative-sandbox-kn-plugin-source-kafka-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-source-kafka-continuous
   alert_stale_results_hours: 3
@@ -1702,6 +1718,24 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 3
+  - name: auto-release
+    test_group_name: ci-knative-sandbox-kn-plugin-service-log-auto-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: nightly
+    test_group_name: ci-knative-sandbox-kn-plugin-service-log-nightly-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: dot-release
+    test_group_name: ci-knative-sandbox-kn-plugin-service-log-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
 - name: kn-plugin-source-kafka
   dashboard_tab:
   - name: continuous
