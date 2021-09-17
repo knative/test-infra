@@ -7271,6 +7271,75 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
+- cron: "0 12 * * *"
+  name: ci-knative-serving-0.24-s390x-kourier-tests
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 120m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: serving
+    path_alias: knative.dev/serving
+    base_ref: release-0.24
+  annotations:
+    testgrid-dashboards: knative-0.24
+    testgrid-tab-name: serving-s390x-kourier-tests
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "bash"
+      - "-c"
+      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --kourier-version latest"
+      volumeMounts:
+      - name: s390x-cluster1
+        mountPath: /opt/cluster
+        readOnly: true
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GO111MODULE
+        value: "on"
+      - name: TEST_OPTIONS
+        value: "--enable-alpha --enable-beta --resolvabledomain=false"
+      - name: DISABLE_MD_LINTING
+        value: "1"
+      - name: KO_FLAGS
+        value: "--platform=linux/s390x"
+      - name: SYSTEM_NAMESPACE
+        value: "knative-serving"
+      - name: PLATFORM
+        value: "linux/s390x"
+      - name: KUBECONFIG
+        value: "/root/.kube/config"
+      - name: DOCKER_CONFIG
+        value: "/opt/cluster"
+      - name: KO_DOCKER_REPO
+        valueFrom:
+          secretKeyRef:
+            name: s390x-cluster1
+            key: ko-docker-repo
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.24
+    volumes:
+    - name: s390x-cluster1
+      secret:
+        secretName: s390x-cluster1
+        defaultMode: 0600
+    - name: test-account
+      secret:
+        secretName: test-account
 - cron: "0 5 * * *"
   name: ci-knative-serving-s390x-contour-tests
   agent: kubernetes
@@ -7399,6 +7468,75 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.23
+    volumes:
+    - name: s390x-cluster1
+      secret:
+        secretName: s390x-cluster1
+        defaultMode: 0600
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "0 10 * * *"
+  name: ci-knative-serving-0.24-s390x-contour-tests
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 120m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: serving
+    path_alias: knative.dev/serving
+    base_ref: release-0.24
+  annotations:
+    testgrid-dashboards: knative-0.24
+    testgrid-tab-name: serving-s390x-contour-tests
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "bash"
+      - "-c"
+      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --contour-version latest"
+      volumeMounts:
+      - name: s390x-cluster1
+        mountPath: /opt/cluster
+        readOnly: true
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GO111MODULE
+        value: "on"
+      - name: TEST_OPTIONS
+        value: "--enable-alpha --enable-beta --resolvabledomain=false"
+      - name: DISABLE_MD_LINTING
+        value: "1"
+      - name: KO_FLAGS
+        value: "--platform=linux/s390x"
+      - name: SYSTEM_NAMESPACE
+        value: "knative-serving"
+      - name: PLATFORM
+        value: "linux/s390x"
+      - name: KUBECONFIG
+        value: "/root/.kube/config"
+      - name: DOCKER_CONFIG
+        value: "/opt/cluster"
+      - name: KO_DOCKER_REPO
+        valueFrom:
+          secretKeyRef:
+            name: s390x-cluster1
+            key: ko-docker-repo
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.24
     volumes:
     - name: s390x-cluster1
       secret:
@@ -8740,6 +8878,71 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.23
+    volumes:
+    - name: s390x-cluster1
+      secret:
+        secretName: s390x-cluster1
+        defaultMode: 0600
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "0 4 * * *"
+  name: ci-knative-client-0.24-s390x-e2e-tests
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 120m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: client
+    path_alias: knative.dev/client
+    base_ref: release-0.24
+  annotations:
+    testgrid-dashboards: knative-0.24
+    testgrid-tab-name: client-s390x-e2e-tests
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "bash"
+      - "-c"
+      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-client -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
+      volumeMounts:
+      - name: s390x-cluster1
+        mountPath: /opt/cluster
+        readOnly: true
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DISABLE_MD_LINTING
+        value: "1"
+      - name: KO_FLAGS
+        value: "--platform=linux/s390x"
+      - name: PLATFORM
+        value: "linux/s390x"
+      - name: KUBECONFIG
+        value: "/root/.kube/config"
+      - name: DOCKER_CONFIG
+        value: "/opt/cluster"
+      - name: INGRESS_CLASS
+        value: "contour.ingress.networking.knative.dev"
+      - name: KO_DOCKER_REPO
+        valueFrom:
+          secretKeyRef:
+            name: s390x-cluster1
+            key: ko-docker-repo
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.24
     volumes:
     - name: s390x-cluster1
       secret:
@@ -11422,6 +11625,75 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.23
+    volumes:
+    - name: s390x-cluster1
+      secret:
+        secretName: s390x-cluster1
+        defaultMode: 0600
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "0 8 * * *"
+  name: ci-knative-eventing-0.24-s390x-e2e-tests
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 120m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: eventing
+    path_alias: knative.dev/eventing
+    base_ref: release-0.24
+  annotations:
+    testgrid-dashboards: knative-0.24
+    testgrid-tab-name: eventing-s390x-e2e-tests
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "bash"
+      - "-c"
+      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
+      volumeMounts:
+      - name: s390x-cluster1
+        mountPath: /opt/cluster
+        readOnly: true
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DISABLE_MD_LINTING
+        value: "1"
+      - name: KO_FLAGS
+        value: "--platform=linux/s390x"
+      - name: DEPLOY_KNATIVE_MONITORING
+        value: "0"
+      - name: SYSTEM_NAMESPACE
+        value: "knative-eventing"
+      - name: PLATFORM
+        value: "linux/s390x"
+      - name: KUBECONFIG
+        value: "/root/.kube/config"
+      - name: SCALE_CHAOSDUCK_TO_ZERO
+        value: "1"
+      - name: DOCKER_CONFIG
+        value: "/opt/cluster"
+      - name: KO_DOCKER_REPO
+        valueFrom:
+          secretKeyRef:
+            name: s390x-cluster1
+            key: ko-docker-repo
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.24
     volumes:
     - name: s390x-cluster1
       secret:
@@ -18641,6 +18913,71 @@ periodics:
         value: us-central1
       - name: PULL_BASE_REF
         value: release-0.23
+    volumes:
+    - name: s390x-cluster1
+      secret:
+        secretName: s390x-cluster1
+        defaultMode: 0600
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "0 6 * * *"
+  name: ci-knative-operator-0.24-s390x-e2e-tests
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 120m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: operator
+    path_alias: knative.dev/operator
+    base_ref: release-0.24
+  annotations:
+    testgrid-dashboards: knative-0.24
+    testgrid-tab-name: operator-s390x-e2e-tests
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "bash"
+      - "-c"
+      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-operator -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
+      volumeMounts:
+      - name: s390x-cluster1
+        mountPath: /opt/cluster
+        readOnly: true
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: DISABLE_MD_LINTING
+        value: "1"
+      - name: KO_FLAGS
+        value: "--platform=linux/s390x"
+      - name: PLATFORM
+        value: "linux/s390x"
+      - name: KUBECONFIG
+        value: "/root/.kube/config"
+      - name: DOCKER_CONFIG
+        value: "/opt/cluster"
+      - name: INGRESS_CLASS
+        value: "contour.ingress.networking.knative.dev"
+      - name: KO_DOCKER_REPO
+        valueFrom:
+          secretKeyRef:
+            name: s390x-cluster1
+            key: ko-docker-repo
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: PULL_BASE_REF
+        value: release-0.24
     volumes:
     - name: s390x-cluster1
       secret:
