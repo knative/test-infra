@@ -420,6 +420,22 @@ test_groups:
 - name: ci-knative-sandbox-kn-plugin-source-kamelet-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-source-kamelet-continuous
   alert_stale_results_hours: 3
+- name: ci-knative-sandbox-kn-plugin-source-kamelet-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-source-kamelet-auto-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-kn-plugin-source-kamelet-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-source-kamelet-nightly-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-kn-plugin-source-kamelet-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-source-kamelet-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
 - name: ci-knative-sandbox-kn-plugin-admin-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-admin-continuous
   alert_stale_results_hours: 3
@@ -1714,6 +1730,24 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 3
+  - name: auto-release
+    test_group_name: ci-knative-sandbox-kn-plugin-source-kamelet-auto-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: nightly
+    test_group_name: ci-knative-sandbox-kn-plugin-source-kamelet-nightly-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: dot-release
+    test_group_name: ci-knative-sandbox-kn-plugin-source-kamelet-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
 - name: kn-plugin-admin
   dashboard_tab:
   - name: continuous
