@@ -620,6 +620,11 @@ presubmits:
   - build-tests: true
   - unit-tests: true
   - integration-tests: false
+  knative-sandbox/container-freezer:
+  - build-tests: true
+  - unit-tests: true
+  - integration-tests: true
+  - go-coverage: true
 periodics:
   knative/serving:
   - continuous: true
@@ -1652,5 +1657,10 @@ periodics:
         job_states_to_report:
         - failure
         report_template: '"The nightly release job for Kogito failed, check the log: <{{.Status.URL}}|View logs>"'
+  - dot-release: true
+  - auto-release: true
+  knative-sandbox/container-freezer:
+  - continuous: true
+  - nightly: true
   - dot-release: true
   - auto-release: true

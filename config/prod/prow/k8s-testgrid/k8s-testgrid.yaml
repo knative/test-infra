@@ -25,6 +25,7 @@ dashboards:
 - name: caching
 - name: client
 - name: client-pkg
+- name: container-freezer
 - name: discovery
 - name: docs
 - name: eventing
@@ -97,6 +98,7 @@ dashboard_groups:
   - name: knative-sandbox
     dashboard_names:
       - "async-component"
+      - "container-freezer"
       - "discovery"
       - "eventing-autoscaler-keda"
       - "eventing-awssqs"
