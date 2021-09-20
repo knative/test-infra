@@ -150,7 +150,9 @@ Example:
 ### Option #1: Via Prow UI
 
 **Note:** Has to be a member of
-[Knative Milestone Maintainer](https://github.com/orgs/knative/teams/knative-milestone-maintainers)
+[Knative Release Leads](https://github.com/knative/community/blob/main/peribolos/knative.yaml#L884)
+or
+[Technical Oversight Committee](https://github.com/knative/community/blob/main/peribolos/knative.yaml#L875)
 
 1. Open a browser, navigate to
    `https://prow.knative.dev/?job=ci-knative-MODULE-[OLD_RELEASE_BRANCH-]dot-release`,
