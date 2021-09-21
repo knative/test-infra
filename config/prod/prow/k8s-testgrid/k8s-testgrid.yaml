@@ -59,11 +59,13 @@ dashboards:
 - name: knative-0.23
 - name: knative-0.24
 - name: knative-0.25
+- name: knative-0.26
 - name: knative-gcp
 - name: knative-sandbox-0.22
 - name: knative-sandbox-0.23
 - name: knative-sandbox-0.24
 - name: knative-sandbox-0.25
+- name: knative-sandbox-0.26
 - name: kperf
 - name: net-certmanager
 - name: net-contour
