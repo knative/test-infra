@@ -1124,60 +1124,53 @@ periodics:
   - nightly: true
   - auto-release: true
   - dot-release: true
-    release: "0.22"
-  - dot-release: true
     release: "0.23"
   - dot-release: true
     release: "0.24"
   - dot-release: true
     release: "0.25"
+  - dot-release: true
+    release: "0.26"
   knative-sandbox/eventing-ceph:
   - continuous: true
   - nightly: true
   - auto-release: true
   - dot-release: true
-    release: "0.22"
-  - dot-release: true
     release: "0.23"
   - dot-release: true
     release: "0.24"
   - dot-release: true
     release: "0.25"
+  - dot-release: true
+    release: "0.26"
   knative-sandbox/eventing-couchdb:
   - continuous: true
   - nightly: true
   - auto-release: true
   - dot-release: true
-    release: "0.22"
-  - dot-release: true
     release: "0.23"
   - dot-release: true
     release: "0.24"
   - dot-release: true
     release: "0.25"
+  - dot-release: true
+    release: "0.26"
   knative-sandbox/eventing-github:
   - continuous: true
   - nightly: true
   - auto-release: true
   - dot-release: true
-    release: "0.22"
-  - dot-release: true
     release: "0.23"
   - dot-release: true
     release: "0.24"
   - dot-release: true
     release: "0.25"
+  - dot-release: true
+    release: "0.26"
   knative-sandbox/eventing-gitlab:
   - continuous: true
   - nightly: true
   - dot-release: true
-    release: "0.22"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - dot-release: true
     release: "0.23"
     resources:
       requests:
@@ -1193,6 +1186,13 @@ periodics:
         memory: 16Gi
   - dot-release: true
     release: "0.25"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    release: "0.26"
     resources:
       requests:
         memory: 12Gi
@@ -1204,25 +1204,25 @@ periodics:
   - nightly: true
   - auto-release: true
   - dot-release: true
-    release: "0.22"
-  - dot-release: true
     release: "0.23"
   - dot-release: true
     release: "0.24"
   - dot-release: true
     release: "0.25"
+  - dot-release: true
+    release: "0.26"
   knative-sandbox/eventing-redis:
   - continuous: true
   - nightly: true
   - auto-release: true
   - dot-release: true
-    release: "0.22"
-  - dot-release: true
     release: "0.23"
   - dot-release: true
     release: "0.24"
   - dot-release: true
     release: "0.25"
+  - dot-release: true
+    release: "0.26"
   knative-sandbox/kperf:
   - continuous: true
   knative/pkg:
@@ -1569,9 +1569,6 @@ periodics:
   - nightly: true
     needs-dind: true
   - dot-release: true
-    release: "0.22"
-    needs-dind: true
-  - dot-release: true
     release: "0.23"
     needs-dind: true
   - dot-release: true
@@ -1579,6 +1576,9 @@ periodics:
     needs-dind: true
   - dot-release: true
     release: "0.25"
+    needs-dind: true
+  - dot-release: true
+    release: "0.26"
     needs-dind: true
   - auto-release: true
     needs-dind: true
@@ -1611,13 +1611,13 @@ periodics:
         report_template: '"The nightly release job for eventing-rabbitmq failed, check the log: <{{.Status.URL}}|View logs>"'
   - auto-release: true
   - dot-release: true
-    release: "0.22"
-  - dot-release: true
     release: "0.23"
   - dot-release: true
     release: "0.24"
   - dot-release: true
     release: "0.25"
+  - dot-release: true
+    release: "0.26"
   knative-sandbox/eventing-natss:
   - nightly: true
     reporter_config:
@@ -1627,13 +1627,13 @@ periodics:
         - failure
         report_template: '"The nightly release job for eventing-natss failed, check the log: <{{.Status.URL}}|View logs>"'
   - dot-release: true
-    release: "0.22"
-  - dot-release: true
     release: "0.23"
   - dot-release: true
     release: "0.24"
   - dot-release: true
     release: "0.25"
+  - dot-release: true
+    release: "0.26"
   - auto-release: true
   knative-sandbox/eventing-autoscaler-keda:
   - continuous: true
