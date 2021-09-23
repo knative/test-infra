@@ -963,6 +963,9 @@ periodics:
   - continuous: true
   knative-sandbox/kn-plugin-event:
   - continuous: true
+  - auto-release: true
+  - nightly: true
+  - dot-release: true
   knative-sandbox/kn-plugin-migration:
   - continuous: true
   knative-sandbox/kn-plugin-sample:
