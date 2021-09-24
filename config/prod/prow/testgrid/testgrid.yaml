@@ -393,6 +393,17 @@ test_groups:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   alert_stale_results_hours: 170
   num_failures_to_alert: 1
+- name: ci-knative-operator-0.26-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-operator-0.26-continuous
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 3
+- name: ci-knative-operator-0.26-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-operator-0.26-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
 - name: ci-knative-sandbox-kn-plugin-diag-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-diag-continuous
   alert_stale_results_hours: 3
@@ -1283,17 +1294,6 @@ test_groups:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   alert_stale_results_hours: 170
   num_failures_to_alert: 1
-- name: ci-knative-operator-0.22-continuous
-  gcs_prefix: knative-prow/logs/ci-knative-operator-0.22-continuous
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  num_failures_to_alert: 3
-- name: ci-knative-operator-0.22-dot-release
-  gcs_prefix: knative-prow/logs/ci-knative-operator-0.22-dot-release
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  alert_stale_results_hours: 170
-  num_failures_to_alert: 1
 - name: ci-knative-sandbox-eventing-kafka-broker-0.22-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-kafka-broker-0.22-dot-release
   alert_options:
@@ -1424,14 +1424,14 @@ test_groups:
   short_text_metric: "coverage"
 - name: ci-knative-operator-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-operator-continuous-beta-prow-tests
-- name: ci-knative-operator-0.22-continuous-beta-prow-tests
-  gcs_prefix: knative-prow/logs/ci-knative-operator-0.22-continuous-beta-prow-tests
 - name: ci-knative-operator-0.23-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-operator-0.23-continuous-beta-prow-tests
 - name: ci-knative-operator-0.24-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-operator-0.24-continuous-beta-prow-tests
 - name: ci-knative-operator-0.25-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-operator-0.25-continuous-beta-prow-tests
+- name: ci-knative-operator-0.26-continuous-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-operator-0.26-continuous-beta-prow-tests
 - name: ci-knative-operator-go-coverage-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-operator-go-coverage-beta-prow-tests
   short_text_metric: "coverage"
@@ -2691,6 +2691,18 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 3
+  - name: operator-continuous
+    test_group_name: ci-knative-operator-0.26-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: operator-dot-release
+    test_group_name: ci-knative-operator-0.26-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
 - name: knative-sandbox-0.23
   dashboard_tab:
   - name: kn-plugin-source-kafka-dot-release
@@ -3109,20 +3121,6 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 3
-- name: knative-0.22
-  dashboard_tab:
-  - name: operator-continuous
-    test_group_name: ci-knative-operator-0.22-continuous
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 3
-  - name: operator-dot-release
-    test_group_name: ci-knative-operator-0.22-dot-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 3
 - name: knative-sandbox-0.22
   dashboard_tab:
   - name: eventing-kafka-broker-dot-release
@@ -3307,9 +3305,6 @@ dashboards:
   - name: ci-knative-operator-continuous
     test_group_name: ci-knative-operator-continuous-beta-prow-tests
     base_options: "sort-by-failures="
-  - name: ci-knative-operator-0.22-continuous
-    test_group_name: ci-knative-operator-0.22-continuous-beta-prow-tests
-    base_options: "sort-by-failures="
   - name: ci-knative-operator-0.23-continuous
     test_group_name: ci-knative-operator-0.23-continuous-beta-prow-tests
     base_options: "sort-by-failures="
@@ -3318,6 +3313,9 @@ dashboards:
     base_options: "sort-by-failures="
   - name: ci-knative-operator-0.25-continuous
     test_group_name: ci-knative-operator-0.25-continuous-beta-prow-tests
+    base_options: "sort-by-failures="
+  - name: ci-knative-operator-0.26-continuous
+    test_group_name: ci-knative-operator-0.26-continuous-beta-prow-tests
     base_options: "sort-by-failures="
   - name: ci-knative-operator-go-coverage
     test_group_name: ci-knative-operator-go-coverage-beta-prow-tests
