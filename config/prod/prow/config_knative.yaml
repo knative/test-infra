@@ -357,8 +357,6 @@ presubmits:
   knative/docs:
   - build-tests: true
   - unit-tests: true
-  - integration-tests: true
-    needs-dind: true
   - go-coverage: true
   knative/pkg:
   - build-tests: true
