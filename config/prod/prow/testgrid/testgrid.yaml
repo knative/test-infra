@@ -880,6 +880,28 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
+- name: ci-knative-sandbox-container-freezer-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-container-freezer-continuous
+  alert_stale_results_hours: 3
+- name: ci-knative-sandbox-container-freezer-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-container-freezer-nightly-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-container-freezer-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-container-freezer-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-container-freezer-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-container-freezer-auto-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-container-freezer-test-coverage
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-container-freezer-go-coverage
+  short_text_metric: "coverage"
 - name: ci-knative-sandbox-kn-plugin-source-kafka-0.23-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-source-kafka-0.23-dot-release
   alert_options:
@@ -1458,6 +1480,11 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-autoscaler-keda-continuous-beta-prow-tests
 - name: ci-knative-sandbox-eventing-kogito-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-kogito-continuous-beta-prow-tests
+- name: ci-knative-sandbox-container-freezer-continuous-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-container-freezer-continuous-beta-prow-tests
+- name: ci-knative-sandbox-container-freezer-go-coverage-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-container-freezer-go-coverage-beta-prow-tests
+  short_text_metric: "coverage"
 - name: ci-knative-backup-artifacts
   gcs_prefix: knative-prow/logs/ci-knative-backup-artifacts
   alert_options:
@@ -2402,6 +2429,35 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 1
+- name: container-freezer
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-sandbox-container-freezer-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: nightly
+    test_group_name: ci-knative-sandbox-container-freezer-nightly-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: dot-release
+    test_group_name: ci-knative-sandbox-container-freezer-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: auto-release
+    test_group_name: ci-knative-sandbox-container-freezer-auto-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: coverage
+    test_group_name: ci-knative-sandbox-container-freezer-test-coverage
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: knative-gcp
   dashboard_tab:
   - name: continuous
@@ -3348,6 +3404,12 @@ dashboards:
   - name: ci-knative-sandbox-eventing-kogito-continuous
     test_group_name: ci-knative-sandbox-eventing-kogito-continuous-beta-prow-tests
     base_options: "sort-by-failures="
+  - name: ci-knative-sandbox-container-freezer-continuous
+    test_group_name: ci-knative-sandbox-container-freezer-continuous-beta-prow-tests
+    base_options: "sort-by-failures="
+  - name: ci-knative-sandbox-container-freezer-go-coverage
+    test_group_name: ci-knative-sandbox-container-freezer-go-coverage-beta-prow-tests
+    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: utilities
   dashboard_tab:
   - name: ci-knative-backup-artifacts
@@ -3430,6 +3492,7 @@ dashboard_groups:
   - "eventing-natss"
   - "eventing-autoscaler-keda"
   - "eventing-kogito"
+  - "container-freezer"
 - name: google
   dashboard_names:
   - "knative-gcp"
