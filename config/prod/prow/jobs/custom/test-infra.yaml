@@ -67,7 +67,7 @@ presubmits:
         - /transfigure.sh
         args:
         - test
-        - ../../github.com/GoogleCloudPlatform/oss-test-infra/prow/knative/config.yaml
+        - ../../GoogleCloudPlatform/oss-test-infra/prow/knative/config.yaml
         - config/prod/prow/jobs/config.yaml
         - config/prod/prow/k8s-testgrid/k8s-testgrid.yaml
         - knative
@@ -88,7 +88,7 @@ presubmits:
         command:
         - /app/testgrid/cmd/configurator/app.binary
         args:
-        - --prow-config=../../github.com/GoogleCloudPlatform/oss-test-infra/prow/knative/config.yaml
+        - --prow-config=../../GoogleCloudPlatform/oss-test-infra/prow/knative/config.yaml
         - --prow-job-config=config/prod/prow/jobs
         - --default=config/prod/prow/k8s-testgrid/testgrid-common-settings.yaml
         - --yaml=config/prod/prow/k8s-testgrid/k8s-testgrid.yaml
@@ -633,7 +633,7 @@ postsubmits:
         - /transfigure.sh
         args:
         - /etc/prow-auto-bumper-github-token/token
-        - ../../github.com/GoogleCloudPlatform/oss-test-infra/prow/knative/config.yaml
+        - ../../GoogleCloudPlatform/oss-test-infra/prow/knative/config.yaml
         - config/prod/prow/jobs/config.yaml
         - config/prod/prow/k8s-testgrid/k8s-testgrid.yaml
         - knative
@@ -667,7 +667,7 @@ postsubmits:
         command:
         - /app/testgrid/cmd/configurator/app.binary
         args:
-        - --prow-config=../../github.com/GoogleCloudPlatform/oss-test-infra/prow/knative/config.yaml
+        - --prow-config=../../GoogleCloudPlatform/oss-test-infra/prow/knative/config.yaml
         - --prow-job-config=config/prod/prow/jobs
         - --default=config/prod/prow/k8s-testgrid/testgrid-common-settings.yaml
         - --yaml=config/prod/prow/k8s-testgrid/k8s-testgrid.yaml
