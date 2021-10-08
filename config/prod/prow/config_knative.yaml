@@ -466,7 +466,7 @@ presubmits:
   - unit-tests: true
   - integration-tests: true
   - go-coverage: false
-  knative-sandbox/net-ingressv2:
+  knative-sandbox/net-gateway-api:
   - build-tests: true
   - unit-tests: true
   - integration-tests: true

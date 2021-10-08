@@ -4197,16 +4197,16 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  knative-sandbox/net-ingressv2:
-  - name: pull-knative-sandbox-net-ingressv2-build-tests
+  knative-sandbox/net-gateway-api:
+  - name: pull-knative-sandbox-net-gateway-api-build-tests
     agent: kubernetes
-    context: pull-knative-sandbox-net-ingressv2-build-tests
+    context: pull-knative-sandbox-net-gateway-api-build-tests
     always_run: true
     optional: false
-    rerun_command: "/test pull-knative-sandbox-net-ingressv2-build-tests"
-    trigger: "(?m)^/test (all|pull-knative-sandbox-net-ingressv2-build-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-net-gateway-api-build-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-net-gateway-api-build-tests),?(\\s+|$)"
     decorate: true
-    path_alias: knative.dev/net-ingressv2
+    path_alias: knative.dev/net-gateway-api
     cluster: "build-knative"
     spec:
       containers:
@@ -4236,15 +4236,15 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-sandbox-net-ingressv2-unit-tests
+  - name: pull-knative-sandbox-net-gateway-api-unit-tests
     agent: kubernetes
-    context: pull-knative-sandbox-net-ingressv2-unit-tests
+    context: pull-knative-sandbox-net-gateway-api-unit-tests
     always_run: true
     optional: false
-    rerun_command: "/test pull-knative-sandbox-net-ingressv2-unit-tests"
-    trigger: "(?m)^/test (all|pull-knative-sandbox-net-ingressv2-unit-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-net-gateway-api-unit-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-net-gateway-api-unit-tests),?(\\s+|$)"
     decorate: true
-    path_alias: knative.dev/net-ingressv2
+    path_alias: knative.dev/net-gateway-api
     cluster: "build-knative"
     spec:
       containers:
@@ -4274,15 +4274,15 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-sandbox-net-ingressv2-integration-tests
+  - name: pull-knative-sandbox-net-gateway-api-integration-tests
     agent: kubernetes
-    context: pull-knative-sandbox-net-ingressv2-integration-tests
+    context: pull-knative-sandbox-net-gateway-api-integration-tests
     always_run: true
     optional: false
-    rerun_command: "/test pull-knative-sandbox-net-ingressv2-integration-tests"
-    trigger: "(?m)^/test (all|pull-knative-sandbox-net-ingressv2-integration-tests),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-net-gateway-api-integration-tests"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-net-gateway-api-integration-tests),?(\\s+|$)"
     decorate: true
-    path_alias: knative.dev/net-ingressv2
+    path_alias: knative.dev/net-gateway-api
     cluster: "build-knative"
     spec:
       containers:
