@@ -5656,24 +5656,14 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--build-tests"
-        securityContext:
-          privileged: true
         volumeMounts:
         - name: repoview-token
           mountPath: /etc/repoview-token
           readOnly: true
-        - name: docker-graph
-          mountPath: /docker-graph
-        - name: modules
-          mountPath: /lib/modules
-        - name: cgroup
-          mountPath: /sys/fs/cgroup
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
         env:
-        - name: DOCKER_IN_DOCKER_ENABLED
-          value: "true"
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
@@ -5682,16 +5672,6 @@ presubmits:
       - name: repoview-token
         secret:
           secretName: repoview-token
-      - name: docker-graph
-        emptyDir: {}
-      - name: modules
-        hostPath:
-          path: /lib/modules
-          type: Directory
-      - name: cgroup
-        hostPath:
-          path: /sys/fs/cgroup
-          type: Directory
       - name: test-account
         secret:
           secretName: test-account
@@ -5714,24 +5694,14 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--unit-tests"
-        securityContext:
-          privileged: true
         volumeMounts:
         - name: repoview-token
           mountPath: /etc/repoview-token
           readOnly: true
-        - name: docker-graph
-          mountPath: /docker-graph
-        - name: modules
-          mountPath: /lib/modules
-        - name: cgroup
-          mountPath: /sys/fs/cgroup
         - name: test-account
           mountPath: /etc/test-account
           readOnly: true
         env:
-        - name: DOCKER_IN_DOCKER_ENABLED
-          value: "true"
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
@@ -5740,16 +5710,6 @@ presubmits:
       - name: repoview-token
         secret:
           secretName: repoview-token
-      - name: docker-graph
-        emptyDir: {}
-      - name: modules
-        hostPath:
-          path: /lib/modules
-          type: Directory
-      - name: cgroup
-        hostPath:
-          path: /sys/fs/cgroup
-          type: Directory
       - name: test-account
         secret:
           secretName: test-account
@@ -5837,29 +5797,10 @@ presubmits:
         - name: covbot-token
           mountPath: /etc/covbot-token
           readOnly: true
-        - name: docker-graph
-          mountPath: /docker-graph
-        - name: modules
-          mountPath: /lib/modules
-        - name: cgroup
-          mountPath: /sys/fs/cgroup
-        env:
-        - name: DOCKER_IN_DOCKER_ENABLED
-          value: "true"
       volumes:
       - name: covbot-token
         secret:
           secretName: covbot-token
-      - name: docker-graph
-        emptyDir: {}
-      - name: modules
-        hostPath:
-          path: /lib/modules
-          type: Directory
-      - name: cgroup
-        hostPath:
-          path: /sys/fs/cgroup
-          type: Directory
   knative-sandbox/kperf:
   - name: pull-knative-sandbox-kperf-build-tests
     agent: kubernetes
