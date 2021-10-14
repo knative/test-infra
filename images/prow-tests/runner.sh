@@ -18,8 +18,8 @@ ORIGINAL_GOPATH="${GOPATH}"
 
 source "${HOME}/.gvm/scripts/gvm"
 
-# By default use the latest go version we have installed
-version="go1.17.2"
+# By default do not switch the Go version and use the default.
+version=""
 
 # If GO_VERSION is defined, use it as the version.
 # It has a higher priority than go.mod as it's specified more explicitly.

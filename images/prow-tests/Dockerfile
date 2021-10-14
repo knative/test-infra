@@ -75,9 +75,10 @@ COPY images/prow-tests/source-gvm-and-run.sh /usr/local/bin
 # Install our versions of Go.
 # We only install the latest 3 versions of Go which should be enough for
 # all Knative repositories.
-RUN source-gvm-and-run.sh install go1.15.12 --prefer-binary
-RUN source-gvm-and-run.sh install go1.16.4 --prefer-binary
+RUN source-gvm-and-run.sh install go1.15.15 --prefer-binary
+RUN source-gvm-and-run.sh install go1.16.9 --prefer-binary
 RUN source-gvm-and-run.sh install go1.17.2 --prefer-binary
+RUN source-gvm-and-run.sh use go1.17 --default
 
 # protoc and required golang tooling
 ARG PROTOC_VERSION=3.17.0
@@ -101,7 +102,7 @@ COPY images/prow-tests/in-gvm-env.sh /usr/local/bin
 # But it must be done in stable-stuff or the last FROM, because it does not install to /go/bin
 
 ############################################################
-FROM golang:1.16 AS external-go-gets
+FROM golang:1.17 AS external-go-gets
 
 ARG KUBETEST2_VERSION=ea3c260668075a29dd2b7f3ba4ddf1fe78bdf898
 ARG KIND_VERSION=v0.11.1
