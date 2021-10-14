@@ -14,7 +14,7 @@ The Productivity Working Group also has other repos:
 
   Tools for github workflows
 
-- [knative/hack](https://github.com/knative/.github)
+- [knative/hack](https://github.com/knative/hack)
 
   Shellscripts used across the repos placed in a separate repo to avoid
   dependency cycles
