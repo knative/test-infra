@@ -899,9 +899,6 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
-- name: ci-knative-sandbox-container-freezer-test-coverage
-  gcs_prefix: knative-prow/logs/ci-knative-sandbox-container-freezer-go-coverage
-  short_text_metric: "coverage"
 - name: ci-knative-sandbox-kn-plugin-source-kafka-0.23-dot-release
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-source-kafka-0.23-dot-release
   alert_options:
@@ -1482,9 +1479,6 @@ test_groups:
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-eventing-kogito-continuous-beta-prow-tests
 - name: ci-knative-sandbox-container-freezer-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-container-freezer-continuous-beta-prow-tests
-- name: ci-knative-sandbox-container-freezer-go-coverage-beta-prow-tests
-  gcs_prefix: knative-prow/logs/ci-knative-sandbox-container-freezer-go-coverage-beta-prow-tests
-  short_text_metric: "coverage"
 - name: ci-knative-backup-artifacts
   gcs_prefix: knative-prow/logs/ci-knative-backup-artifacts
   alert_options:
@@ -2455,9 +2449,6 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 1
-  - name: coverage
-    test_group_name: ci-knative-sandbox-container-freezer-test-coverage
-    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: knative-gcp
   dashboard_tab:
   - name: continuous
@@ -3407,9 +3398,6 @@ dashboards:
   - name: ci-knative-sandbox-container-freezer-continuous
     test_group_name: ci-knative-sandbox-container-freezer-continuous-beta-prow-tests
     base_options: "sort-by-failures="
-  - name: ci-knative-sandbox-container-freezer-go-coverage
-    test_group_name: ci-knative-sandbox-container-freezer-go-coverage-beta-prow-tests
-    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: utilities
   dashboard_tab:
   - name: ci-knative-backup-artifacts
