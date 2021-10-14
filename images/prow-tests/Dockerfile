@@ -68,11 +68,12 @@ RUN curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscript
 #  but in Dockerfile, each RUN is its own shell, so source'd in-RUN env vars are not propagated
 # So have created "source-gvm-and-run.sh" to source the above then run gvm
 COPY images/prow-tests/source-gvm-and-run.sh /usr/local/bin
-# Install our versions of Go
-RUN source-gvm-and-run.sh install go1.13.15 --prefer-binary
-RUN source-gvm-and-run.sh install go1.14.15 --prefer-binary
+# Install our versions of Go.
+# We only install the latest 3 versions of Go which should be enough for
+# all Knative repositories.
 RUN source-gvm-and-run.sh install go1.15.12 --prefer-binary
 RUN source-gvm-and-run.sh install go1.16.4 --prefer-binary
+RUN source-gvm-and-run.sh install go1.17.2 --prefer-binary
 
 # protoc and required golang tooling
 ARG PROTOC_VERSION=3.17.0
@@ -99,19 +100,22 @@ COPY images/prow-tests/in-gvm-env.sh /usr/local/bin
 FROM golang:1.16 AS external-go-gets
 
 ARG KUBETEST2_VERSION=ea3c260668075a29dd2b7f3ba4ddf1fe78bdf898
+ARG KIND_VERSION=v0.11.1
+ARG KO_VERSION=v0.8.2
+ARG PROTOC_GEN_GO_VERSION=v1.26.0
 
 # Extra tools through go get
 # These run using the golang image version of Go, not any defined by `gvm`
-RUN go get github.com/google/ko@v0.8.2
+RUN go get github.com/google/ko@${KO_VERSION}
 RUN go get github.com/boz/kail/cmd/kail
 RUN go get gotest.tools/gotestsum
 RUN go get github.com/raviqqe/liche@v0.0.0-20200229003944-f57a5d1c5be4  # stable liche version for checking md links
-RUN go get sigs.k8s.io/kind@v0.9.0
+RUN go get sigs.k8s.io/kind@${KIND_VERSION}
 RUN go get sigs.k8s.io/kubetest2@${KUBETEST2_VERSION}
 RUN go get sigs.k8s.io/kubetest2/kubetest2-gke@${KUBETEST2_VERSION}
 RUN go get sigs.k8s.io/kubetest2/kubetest2-kind@${KUBETEST2_VERSION}
 RUN go get sigs.k8s.io/kubetest2/kubetest2-tester-exec@${KUBETEST2_VERSION}
-RUN go get google.golang.org/protobuf/cmd/protoc-gen-go@v1.26.0
+RUN go get google.golang.org/protobuf/cmd/protoc-gen-go@${PROTOC_GEN_GO_VERSION}
 RUN go get github.com/google/go-licenses
 
 # According to https://github.com/knative/test-infra/pull/2762 protoc-gen-gogofaster is unsupported (and shouldn't be used?)

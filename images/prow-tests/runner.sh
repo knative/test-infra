@@ -18,8 +18,8 @@ ORIGINAL_GOPATH="${GOPATH}"
 
 source "${HOME}/.gvm/scripts/gvm"
 
-# By default using Go version 1.13.
-version="go1.13"
+# By default do not switch the Go version and use the default.
+version=""
 # Extract the go version if the project is using go mod.
 if [[ -f "go.mod" ]]; then
   version="go$(sed -n 's/^go //p' go.mod | tr -d '[:space:]')"
