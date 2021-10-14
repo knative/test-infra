@@ -6167,36 +6167,6 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-sandbox-container-freezer-go-coverage
-    agent: kubernetes
-    context: pull-knative-sandbox-container-freezer-go-coverage
-    always_run: true
-    rerun_command: "/test pull-knative-sandbox-container-freezer-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-sandbox-container-freezer-go-coverage),?(\\s+|$)"
-    optional: true
-    decorate: true
-    path_alias: knative.dev/container-freezer
-    cluster: "build-knative"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "coverage"
-        - "--postsubmit-job-name=post-knative-sandbox-container-freezer-go-coverage"
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=50"
-        - "--github-token=/etc/covbot-token/token"
-        volumeMounts:
-        - name: covbot-token
-          mountPath: /etc/covbot-token
-          readOnly: true
-      volumes:
-      - name: covbot-token
-        secret:
-          secretName: covbot-token
 periodics:
 - cron: "0 */4 * * *"
   name: ci-knative-serving-continuous
@@ -22709,60 +22679,6 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "0 1 * * *"
-  name: ci-knative-sandbox-container-freezer-go-coverage
-  labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-sandbox-container-freezer-go-coverage
-  agent: kubernetes
-  decorate: true
-  cluster: "build-knative"
-  extra_refs:
-  - org: knative-sandbox
-    repo: container-freezer
-    path_alias: knative.dev/container-freezer
-    base_ref: main
-  annotations:
-    testgrid-dashboards: container-freezer
-    testgrid-tab-name: container-freezer-go-coverage
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      command:
-      - "runner.sh"
-      args:
-      - "coverage"
-      - "--artifacts=$(ARTIFACTS)"
-      - "--cov-threshold-percentage=50"
-- cron: "51 7 * * *"
-  name: ci-knative-sandbox-container-freezer-go-coverage-beta-prow-tests
-  labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-sandbox-container-freezer-go-coverage
-  agent: kubernetes
-  decorate: true
-  cluster: "build-knative"
-  extra_refs:
-  - org: knative-sandbox
-    repo: container-freezer
-    path_alias: knative.dev/container-freezer
-    base_ref: main
-  annotations:
-    testgrid-dashboards: beta-prow-tests
-    testgrid-tab-name: ci-knative-sandbox-container-freezer-go-coverage
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
-      imagePullPolicy: Always
-      command:
-      - "runner.sh"
-      args:
-      - "coverage"
-      - "--artifacts=$(ARTIFACTS)"
-      - "--cov-threshold-percentage=50"
 - cron: "30 07 * * *"
   name: ci-knative-serving-recreate-clusters
   agent: kubernetes
@@ -23117,26 +23033,6 @@ postsubmits:
     decorate: true
     cluster: "build-knative"
     path_alias: knative.dev/eventing-kafka-broker
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "coverage"
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=0"
-  knative-sandbox/container-freezer:
-  - name: post-knative-sandbox-container-freezer-go-coverage
-    branches:
-    - "main"
-    annotations:
-      testgrid-create-test-group: "false"
-    agent: kubernetes
-    decorate: true
-    cluster: "build-knative"
-    path_alias: knative.dev/container-freezer
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
