@@ -18,13 +18,9 @@ ORIGINAL_GOPATH="${GOPATH}"
 
 source "${HOME}/.gvm/scripts/gvm"
 
-# By default do not switch the Go version and use the default.
-version=""
-# Extract the go version if the project is using go mod.
-if [[ -f "go.mod" ]]; then
-  version="go$(sed -n 's/^go //p' go.mod | tr -d '[:space:]')"
-  echo "Found go.mod file, using Go version '${version}' specified by it."
-fi
+# By default use the latest go version we have installed
+version="go1.17.2"
+
 # If GO_VERSION is defined, use it as the version.
 # It has a higher priority than go.mod as it's specified more explicitly.
 if [[ -v GO_VERSION ]]; then
