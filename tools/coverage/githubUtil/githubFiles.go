@@ -24,7 +24,6 @@ import (
 	"github.com/google/go-github/v32/github"
 	"knative.dev/test-infra/tools/coverage/git"
 	"knative.dev/test-infra/tools/coverage/githubUtil/githubPr"
-	"knative.dev/test-infra/tools/coverage/logUtil"
 )
 
 // return corresponding source file path of given path (abc_test.go -> abc.go)
@@ -47,7 +46,7 @@ func GetConcernedFiles(data *githubPr.GithubPr, filePathPrefix string) map[strin
 		files, rsp, err := data.GithubClient.PullRequests.ListFiles(data.Ctx, data.RepoOwner, data.RepoName,
 			data.Pr, listOptions)
 		if err != nil {
-			logUtil.LogFatalf("error running c.PullRequests.ListFiles("+
+			log.Fatalf("error running c.PullRequests.ListFiles("+
 				"Ctx, repoOwner=%s, RepoName=%s, pullNum=%v, listOptions): %v\n",
 				data.RepoOwner, data.RepoName, data.Pr, err)
 			return nil

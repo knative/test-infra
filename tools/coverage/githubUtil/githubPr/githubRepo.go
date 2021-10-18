@@ -24,7 +24,6 @@ import (
 
 	"github.com/google/go-github/v32/github"
 	"knative.dev/test-infra/tools/coverage/githubUtil/githubClient"
-	"knative.dev/test-infra/tools/coverage/logUtil"
 )
 
 type GithubPr struct {
@@ -46,7 +45,7 @@ func New(githubTokenLocation, repoOwner, repoName, prNumStr,
 
 	prNum, err := strconv.Atoi(prNumStr)
 	if err != nil {
-		logUtil.LogFatalf("Failed to convert prNumStr(=%v) to int: %v\n", prNumStr,
+		log.Fatalf("Failed to convert prNumStr(=%v) to int: %v\n", prNumStr,
 			err)
 	}
 
@@ -57,7 +56,7 @@ func New(githubTokenLocation, repoOwner, repoName, prNumStr,
 		githubToken, err := getGithubToken(githubTokenLocation)
 
 		if err != nil {
-			logUtil.LogFatalf("Failed to get github token: %v\n", err)
+			log.Fatalf("Failed to get github token: %v\n", err)
 		}
 
 		client = githubClient.Make(ctx, githubToken)
@@ -90,7 +89,7 @@ func (data *GithubPr) removeAllBotComments() (nRemoved int, err error) {
 	comments, _, err := data.GithubClient.Issues.ListComments(data.Ctx, data.RepoOwner, data.RepoName, data.Pr, nil)
 
 	if err != nil {
-		logUtil.LogFatalf("data.GithubClient.Issues.ListComments(..."+
+		log.Fatalf("data.GithubClient.Issues.ListComments(..."+
 			") returns error: %v\n", err)
 	}
 
@@ -103,7 +102,7 @@ func (data *GithubPr) removeAllBotComments() (nRemoved int, err error) {
 				data.Ctx, data.RepoOwner, data.RepoName, cmt.GetID())
 
 			if err != nil {
-				logUtil.LogFatalf("data.GithubClient.Issues.DeleteComment("+
+				log.Fatalf("data.GithubClient.Issues.DeleteComment("+
 					"data.Ctx, data.RepoOwner, data.RepoName, "+
 					"cmt.GetID()) returns error:%v\n", err)
 			}

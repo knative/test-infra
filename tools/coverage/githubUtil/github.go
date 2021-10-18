@@ -63,5 +63,6 @@ func GetRepoPath() (string, error) {
 	if err != nil {
 		return "", err
 	}
+	fmt.Println("!!!!!!!!!", repoRoot, gopath, relPath)
 	return strings.TrimSpace(relPath), nil
 }

@@ -23,7 +23,6 @@ import (
 	"strconv"
 
 	"knative.dev/test-infra/tools/coverage/artifacts"
-	"knative.dev/test-infra/tools/coverage/logUtil"
 )
 
 type PostSubmit struct {
@@ -68,7 +67,7 @@ func (p *PostSubmit) listBuilds() []int {
 		}
 	}
 	if len(res) == 0 {
-		logUtil.LogFatalf("No build found for bucket '%s' and object '%s'\n",
+		log.Fatalf("No build found for bucket '%s' and object '%s'\n",
 			p.Bucket, jobDir)
 	}
 	sort.Sort(sort.Reverse(sort.IntSlice(res)))
@@ -99,7 +98,7 @@ func (p *PostSubmit) searchForLatestHealthyBuild() int {
 			return build
 		}
 	}
-	logUtil.LogFatalf("No healthy build found, builds=%v\n", builds)
+	log.Fatalf("No healthy build found, builds=%v\n", builds)
 	return -1
 }
 

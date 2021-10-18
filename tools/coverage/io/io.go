@@ -20,8 +20,6 @@ import (
 	"log"
 	"os"
 	"path"
-
-	"knative.dev/test-infra/tools/coverage/logUtil"
 )
 
 // CreateMarker produces empty file as marker
@@ -35,7 +33,7 @@ func Write(content *string, destinationDir, fileName string) {
 	filePath := path.Join(destinationDir, fileName)
 	file, err := os.Create(filePath)
 	if err != nil {
-		logUtil.LogFatalf("Error writing file: %v", err)
+		log.Fatalf("Error writing file: %v", err)
 	} else {
 		log.Printf("Created file:%s", filePath)
 		if content == nil {

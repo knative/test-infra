@@ -24,7 +24,6 @@ import (
 	"knative.dev/test-infra/pkg/junit"
 	"knative.dev/test-infra/tools/coverage/artifacts"
 	"knative.dev/test-infra/tools/coverage/calc"
-	"knative.dev/test-infra/tools/coverage/logUtil"
 )
 
 // NewTestCase constructs the TestCase struct
@@ -96,7 +95,7 @@ func ProfileToTestsuiteXML(arts *artifacts.LocalArtifacts, covThres int) {
 	)
 	f, err := os.Create(arts.JunitXmlForTestgridPath())
 	if err != nil {
-		logUtil.LogFatalf("Cannot create file: %v", err)
+		log.Fatalf("Cannot create file: %v", err)
 	}
 	defer f.Close()
 
@@ -104,7 +103,7 @@ func ProfileToTestsuiteXML(arts *artifacts.LocalArtifacts, covThres int) {
 	suites.AddTestSuite(toTestsuite(groupCov, groupCov.GetDirs()))
 	output, err := suites.ToBytes("", "    ")
 	if err != nil {
-		logUtil.LogFatalf("error: %v\n", err)
+		log.Fatalf("error: %v\n", err)
 	}
 
 	f.Write(output)

@@ -25,7 +25,6 @@ import (
 	"knative.dev/test-infra/tools/coverage/artifacts"
 	"knative.dev/test-infra/tools/coverage/gcs"
 	"knative.dev/test-infra/tools/coverage/githubUtil/githubPr"
-	"knative.dev/test-infra/tools/coverage/logUtil"
 	"knative.dev/test-infra/tools/coverage/testgrid"
 )
 
@@ -41,6 +40,8 @@ const (
 )
 
 func main() {
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+
 	fmt.Println("entering code coverage main")
 
 	envOverriddenDefaultArtifactsDir := os.Getenv("ARTIFACTS")
@@ -90,13 +91,12 @@ func main() {
 		buildStr := os.Getenv("BUILD_NUMBER")
 		build, err := strconv.Atoi(buildStr)
 		if err != nil {
-			logUtil.LogFatalf("BUILD_NUMBER(%s) cannot be converted to int, err=%v",
+			log.Fatalf("BUILD_NUMBER(%s) cannot be converted to int, err=%v",
 				buildStr, err)
 		}
 
 		prData := githubPr.New(*githubTokenPath, repoOwner, repoName, pr, *postingBotUserName)
 		gcsData := &gcs.PresubmitBuild{GcsBuild: gcs.GcsBuild{
-			Client:       gcs.NewClient(prData.Ctx),
 			Bucket:       *gcsBucketName,
 			Job:          jobName,
 			Build:        build,
@@ -112,7 +112,7 @@ func main() {
 		presubmit.Artifacts = *presubmit.MakeGcsArtifacts(*localArtifacts)
 		isCoverageLow, err := RunPresubmit(presubmit, localArtifacts)
 		if isCoverageLow {
-			logUtil.LogFatalf("Code coverage is below threshold (%d%%), "+
+			log.Fatalf("Code coverage is below threshold (%d%%), "+
 				"fail presubmit workflow intentionally", *covThreshold)
 		}
 		if err != nil {

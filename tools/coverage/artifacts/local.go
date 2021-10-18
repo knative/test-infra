@@ -21,8 +21,6 @@ import (
 	"os/exec"
 	"path"
 	"strings"
-
-	"knative.dev/test-infra/tools/coverage/logUtil"
 )
 
 type LocalArtifacts struct {
@@ -43,7 +41,7 @@ func (arts *LocalArtifacts) ProfileReader() *ProfileReader {
 	f, err := os.Open(arts.ProfilePath())
 	if err != nil {
 		wd, _ := os.Getwd()
-		logUtil.LogFatalf("LocalArtifacts.ProfileReader(): os.Open(profilePath) error: %v, cwd=%s", err, wd)
+		log.Fatalf("LocalArtifacts.ProfileReader(): os.Open(profilePath) error: %v, cwd=%s", err, wd)
 	}
 	return NewProfileReader(f)
 }
@@ -60,7 +58,7 @@ func (arts *LocalArtifacts) KeyProfileCreator() *os.File {
 	keyProfileFile, err := os.Create(keyProfilePath)
 	log.Printf("os.Create(keyProfilePath)=%s", keyProfilePath)
 	if err != nil {
-		logUtil.LogFatalf("file(%s) creation error: %v", keyProfilePath, err)
+		log.Fatalf("file(%s) creation error: %v", keyProfilePath, err)
 	}
 
 	return keyProfileFile

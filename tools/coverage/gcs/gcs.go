@@ -26,7 +26,6 @@ import (
 	"cloud.google.com/go/storage"
 	"google.golang.org/api/iterator"
 	"knative.dev/test-infra/tools/coverage/artifacts"
-	"knative.dev/test-infra/tools/coverage/logUtil"
 )
 
 type StorageClient interface {
@@ -46,7 +45,7 @@ func NewClient(ctx context.Context) *Client {
 	client, err := storage.NewClient(ctx)
 
 	if err != nil {
-		logUtil.LogFatalf("Failed to create client: %v", err)
+		log.Fatalf("Failed to create client: %v", err)
 	}
 	return &Client{client}
 }
@@ -82,7 +81,7 @@ func (c *Client) ProfileReader(ctx context.Context, bucket,
 	o := c.Bucket(bucket).Object(object)
 	reader, err := o.NewReader(ctx)
 	if err != nil {
-		logUtil.LogFatalf("o.NewReader(Ctx) error: %v", err)
+		log.Fatalf("o.NewReader(Ctx) error: %v", err)
 	}
 	return artifacts.NewProfileReader(reader)
 }
