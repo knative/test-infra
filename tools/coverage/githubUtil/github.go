@@ -59,10 +59,11 @@ func GetRepoPath() (string, error) {
 	if gopath == "" {
 		return "", errors.New("GOPATH is empty")
 	}
+	wd, _ := os.Getwd()
+	fmt.Println("!!!!!!!!!", repoRoot, gopath, wd)
 	relPath, err := filepath.Rel(path.Join(gopath, "src"), string(repoRoot))
 	if err != nil {
 		return "", err
 	}
-	fmt.Println("!!!!!!!!!", repoRoot, gopath, relPath)
 	return strings.TrimSpace(relPath), nil
 }
