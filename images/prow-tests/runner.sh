@@ -44,7 +44,4 @@ if [[ -n ${version} ]]; then
   export GOPATH="${ORIGINAL_GOPATH}"
 fi
 
-# Work around networking issues, see https://github.com/kubernetes/test-infra/issues/23741
-iptables -t mangle -A POSTROUTING -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
-
 kubekins-runner.sh "$@"
