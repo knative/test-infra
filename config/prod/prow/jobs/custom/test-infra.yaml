@@ -48,29 +48,6 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-test-infra-validate-k8s-testgrid-yaml
-    decorate: true
-    always_run: false
-    optional: true
-    # run_if_changed: "^config/prod/prow/(jobs|k8s-testgrid)/.*.yaml"
-    branches:
-    - "main"
-    cluster: "build-knative"
-    extra_refs:
-    - org: GoogleCloudPlatform
-      repo: oss-test-infra
-      base_ref: master
-    spec:
-      containers:
-      - image: gcr.io/k8s-prow/transfigure
-        command:
-        - /transfigure.sh
-        args:
-        - test
-        - ../../GoogleCloudPlatform/oss-test-infra/prow/knative/config.yaml
-        - config/prod/prow/jobs/config.yaml
-        - config/prod/prow/k8s-testgrid/k8s-testgrid.yaml
-        - knative
   - name: pull-test-infra-validate-own-testgrid-yaml
     decorate: true
     optional: false
@@ -611,41 +588,6 @@ postsubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: post-test-infra-validate-k8s-testgrid-yaml
-    decorate: true
-    run_if_changed: "^config/prod/prow/(jobs|k8s-testgrid)/.*.yaml"
-    branches:
-    - "main"
-    cluster: "build-knative"
-    extra_refs:
-    - org: GoogleCloudPlatform
-      repo: oss-test-infra
-      base_ref: master
-    annotations:
-      testgrid-dashboards: utilities
-      testgrid-tab-name: post-test-infra-validate-k8s-testgrid-yaml
-      testgrid-alert-email: "serverless-engprod-sea@google.com"
-      testgrid-num-failures-to-alert: "1"
-    spec:
-      containers:
-      - image: gcr.io/k8s-prow/transfigure
-        command:
-        - /transfigure.sh
-        args:
-        - /etc/prow-auto-bumper-github-token/token
-        - ../../GoogleCloudPlatform/oss-test-infra/prow/knative/config.yaml
-        - config/prod/prow/jobs/config.yaml
-        - config/prod/prow/k8s-testgrid/k8s-testgrid.yaml
-        - knative
-        - k8s-test-infra
-        volumeMounts:
-        - name: prow-auto-bumper-github-token
-          mountPath: /etc/prow-auto-bumper-github-token
-          readOnly: true
-      volumes:
-      - name: prow-auto-bumper-github-token
-        secret:
-          secretName: prow-auto-bumper-github-token
   - name: post-test-infra-update-testgrid-proto
     decorate: true
     run_if_changed: "^config/prod/prow/(jobs|k8s-testgrid)/.*.yaml"
