@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ORIGINAL_GOPATH="${GOPATH}"
+ORIGINAL_GOPATH="${HOME}/go"
 
 source "${HOME}/.gvm/scripts/gvm"
 
@@ -36,12 +36,11 @@ if [[ -n ${version} ]]; then
   gvm pkgset create --local || echo
   gvm pkgset use --local
   popd || exit 2
-  # At this point, our GOPATH is set to something like:
-  #  GOPATH=/go:/go/.gvm_local/pkgsets/go1.13.10/local:/root/.gvm/pkgsets/go1.13.10/global
-  # Which is fine for Go, but some scripts assume GOPATH is a single directory :(
-  # Lets hope this doesn't blow up in our face someday
-  echo "Overriding GOPATH to '${ORIGINAL_GOPATH}'"
-  export GOPATH="${ORIGINAL_GOPATH}"
 fi
+# At this point, our GOPATH is set to something like:
+#  GOPATH=/root/.gvm/pkgsets/go1.13.10/global
+# Knative prow jobs create a GOPATH like /home/prow/go/src/knative.dev/...
+echo "Resetting GOPATH to '${ORIGINAL_GOPATH}'"
+export GOPATH="${ORIGINAL_GOPATH}"
 
 kubekins-runner.sh "$@"
