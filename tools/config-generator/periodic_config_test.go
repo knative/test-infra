@@ -17,7 +17,9 @@ limitations under the License.
 package main
 
 import (
+	"errors"
 	"fmt"
+	"reflect"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -123,29 +125,142 @@ func TestGenerateCron(t *testing.T) {
 	}
 }
 
+type unstructuredAssertion func(map[interface{}]interface{}) error
+
+var (
+	errInvalidFormat = errors.New("invalid format")
+	errArgsMismatch  = errors.New("args mismatch")
+)
+
+func digin(un interface{}, diggers []func(interface{}) (interface{}, error)) (interface{}, error) {
+	var err error
+	for _, digger := range diggers {
+		un, err = digger(un)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return un, nil
+}
+
+func mapKey(key string) func(interface{}) (interface{}, error) {
+	return func(un interface{}) (interface{}, error) {
+		m, ok := un.(map[interface{}]interface{})
+		if !ok {
+			return nil, fmt.Errorf("%w: not a map: %#v", errInvalidFormat, un)
+		}
+		return m[key], nil
+	}
+}
+
+func sliceElement(el int) func(interface{}) (interface{}, error) {
+	return func(un interface{}) (interface{}, error) {
+		s, ok := un.([]interface{})
+		if !ok {
+			return nil, fmt.Errorf("%w: not a slice: %#v", errInvalidFormat, un)
+		}
+		return s[el], nil
+	}
+}
+
+func hasProperArgs(title string, want []string) func(map[interface{}]interface{}) error {
+	return func(un map[interface{}]interface{}) error {
+		val, err := digin(un, []func(interface{}) (interface{}, error){
+			mapKey(title),
+			sliceElement(0),
+			mapKey("spec"),
+			mapKey("containers"),
+			sliceElement(0),
+			mapKey("args"),
+		})
+		if err != nil {
+			return err
+		}
+		s, ok := val.([]interface{})
+		if !ok {
+			return fmt.Errorf("%w: %#v is not a slice", errInvalidFormat, val)
+		}
+		got, err := stringifySlice(s)
+		if err != nil {
+			return err
+		}
+		if !reflect.DeepEqual(want, got) {
+			return fmt.Errorf("%w: %#v != %#v", errArgsMismatch, want, got)
+		}
+		return nil
+	}
+}
+
+func stringifySlice(in []interface{}) ([]string, error) {
+	out := make([]string, len(in))
+	for i, v := range in {
+		var ok bool
+		out[i], ok = v.(string)
+		if !ok {
+			return nil, fmt.Errorf("%w: not []string: %#v", errInvalidFormat, in)
+		}
+	}
+	return out, nil
+}
+
 func TestGeneratePeriodic(t *testing.T) {
-	SetupForTesting()
 	title := "title"
 	repoName := "repoName"
-	items := []yaml.MapItem{
-		{Key: "continuous", Value: true},
-		{Key: "nightly", Value: true},
-		{Key: "branch-ci", Value: true},
-		{Key: "dot-release", Value: true},
-		{Key: "auto-release", Value: true},
+	tests := []struct {
+		jobType    string
+		assertions []unstructuredAssertion
+	}{
+		{jobType: "continuous"},
+		{jobType: "nightly", assertions: []unstructuredAssertion{hasProperArgs(title, []string{
+			"./hack/release.sh",
+			"--publish", "--tag-release",
+		})}},
+		{jobType: "branch-ci"},
+		{jobType: "dot-release", assertions: []unstructuredAssertion{hasProperArgs(title, []string{
+			"./hack/release.sh",
+			"--dot-release", "--release-gcs repoName",
+			"--release-gcr gcr.io/knative-releases",
+			"--github-token /etc/hub-token/token",
+		})}},
+		{jobType: "auto-release", assertions: []unstructuredAssertion{hasProperArgs(title, []string{
+			"./hack/release.sh",
+			"--auto-release", "--release-gcs repoName",
+			"--release-gcr gcr.io/knative-releases",
+			"--github-token /etc/hub-token/token",
+		})}},
 	}
 	var periodicConfig yaml.MapSlice
-	for _, item := range items {
-		periodicConfig = yaml.MapSlice{item}
-		generatePeriodic(title, repoName, periodicConfig)
-		outputLen := len(GetOutput())
-		if outputLen == 0 {
-			t.Fatalf("Failure for key %d: No output", outputLen)
-		}
-		if logFatalCalls != 0 {
-			t.Fatalf("Failure for key %s: LogFatal was called.", item.Key)
-		}
-		SetupForTesting()
+	oldReleaseScript := releaseScript
+	defer func() {
+		releaseScript = oldReleaseScript
+	}()
+	for _, tc := range tests {
+		tc := tc
+		t.Run(tc.jobType, func(t *testing.T) {
+			SetupForTesting()
+			releaseScript = "./hack/release.sh"
+			periodicConfig = yaml.MapSlice{{Key: tc.jobType, Value: true}}
+			generatePeriodic(title, repoName, periodicConfig)
+			out := GetOutput()
+			outputLen := len(out)
+			if outputLen == 0 {
+				t.Fatal("No output")
+			}
+			if logFatalCalls != 0 {
+				t.Fatal("LogFatal was called")
+			}
+			un := make(map[interface{}]interface{})
+			err := yaml.Unmarshal([]byte(out), &un)
+			if err != nil {
+				t.Fatal(err)
+			}
+			for _, assertion := range tc.assertions {
+				err = assertion(un)
+				if err != nil {
+					t.Fatal(err)
+				}
+			}
+		})
 	}
 }
 
