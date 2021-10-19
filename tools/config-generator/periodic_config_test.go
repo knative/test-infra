@@ -218,15 +218,15 @@ func TestGeneratePeriodic(t *testing.T) {
 		{jobType: "branch-ci"},
 		{jobType: "dot-release", assertions: []unstructuredAssertion{hasProperArgs(title, []string{
 			"./hack/release.sh",
-			"--dot-release", "--release-gcs repoName",
-			"--release-gcr gcr.io/knative-releases",
-			"--github-token /etc/hub-token/token",
+			"--dot-release", "--release-gcs", repoName,
+			"--release-gcr", "gcr.io/knative-releases",
+			"--github-token", "/etc/hub-token/token",
 		})}},
 		{jobType: "auto-release", assertions: []unstructuredAssertion{hasProperArgs(title, []string{
 			"./hack/release.sh",
-			"--auto-release", "--release-gcs repoName",
-			"--release-gcr gcr.io/knative-releases",
-			"--github-token /etc/hub-token/token",
+			"--auto-release", "--release-gcs", repoName,
+			"--release-gcr", "gcr.io/knative-releases",
+			"--github-token", "/etc/hub-token/token",
 		})}},
 	}
 	var periodicConfig yaml.MapSlice
