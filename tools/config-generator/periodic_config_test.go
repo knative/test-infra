@@ -124,64 +124,95 @@ func TestGenerateCron(t *testing.T) {
 	}
 }
 
+type release struct {
+	version string
+}
+
+type periodicJob struct {
+	jobType string
+	*release
+}
+
 func TestGeneratePeriodic(t *testing.T) {
 	title := "title"
 	repoName := "repoName"
 	tests := []struct {
-		jobType    string
+		job        periodicJob
 		assertions []unstructured.Assertion
 	}{
-		{jobType: "continuous"},
-		{jobType: "nightly", assertions: []unstructured.Assertion{hasProperArgs(title, []string{
+		{job: periodicJob{jobType: "continuous"}},
+		{job: periodicJob{jobType: "nightly"}, assertions: []unstructured.Assertion{hasProperArgs(title, []string{
 			"./hack/release.sh",
 			"--publish", "--tag-release",
 		})}},
-		{jobType: "branch-ci"},
-		{jobType: "dot-release", assertions: []unstructured.Assertion{hasProperArgs(title, []string{
+		{job: periodicJob{jobType: "branch-ci"}},
+		{job: periodicJob{jobType: "dot-release"}, assertions: []unstructured.Assertion{hasProperArgs(title, []string{
 			"./hack/release.sh",
 			"--dot-release", "--release-gcs", repoName,
 			"--release-gcr", "gcr.io/knative-releases",
 			"--github-token", "/etc/hub-token/token",
 		})}},
-		{jobType: "auto-release", assertions: []unstructured.Assertion{hasProperArgs(title, []string{
+		{job: periodicJob{jobType: "auto-release"}, assertions: []unstructured.Assertion{hasProperArgs(title, []string{
 			"./hack/release.sh",
 			"--auto-release", "--release-gcs", repoName,
 			"--release-gcr", "gcr.io/knative-releases",
 			"--github-token", "/etc/hub-token/token",
 		})}},
+		{
+			job: periodicJob{jobType: "dot-release", release: &release{version: "0.23"}},
+			assertions: []unstructured.Assertion{hasProperArgs(title, []string{
+				"./hack/release.sh",
+				"--dot-release", "--release-gcs", repoName,
+				"--release-gcr", "gcr.io/knative-releases",
+				"--github-token", "/etc/hub-token/token",
+				"--branch release-0.23",
+			})},
+		},
 	}
-	var periodicConfig yaml.MapSlice
 	oldReleaseScript := releaseScript
 	defer func() {
 		releaseScript = oldReleaseScript
 	}()
-	for _, tc := range tests {
+	for i, tc := range tests {
 		tc := tc
-		t.Run(tc.jobType, func(t *testing.T) {
-			SetupForTesting()
-			releaseScript = "./hack/release.sh"
-			periodicConfig = yaml.MapSlice{{Key: tc.jobType, Value: true}}
-			generatePeriodic(title, repoName, periodicConfig)
-			out := GetOutput()
-			outputLen := len(out)
-			if outputLen == 0 {
-				t.Fatal("No output")
-			}
-			if logFatalCalls != 0 {
-				t.Fatal("LogFatal was called")
-			}
-			un := make(map[interface{}]interface{})
-			err := yaml.Unmarshal([]byte(out), &un)
-			if err != nil {
-				t.Fatal(err)
-			}
-			for _, assertion := range tc.assertions {
-				err = assertion(un)
-				if err != nil {
-					t.Fatal(err)
-				}
-			}
+		t.Run(fmt.Sprintf("%d-%s", i, tc.job.jobType), func(t *testing.T) {
+			testGeneratePeriodicEach(t, title, repoName, tc.job, tc.assertions)
 		})
+	}
+}
+func testGeneratePeriodicEach(
+	tb testing.TB,
+	title, repoName string,
+	job periodicJob,
+	assertions []unstructured.Assertion,
+) {
+	var periodicConfig yaml.MapSlice
+	SetupForTesting()
+	releaseScript = "./hack/release.sh"
+	periodicConfig = yaml.MapSlice{{Key: job.jobType, Value: true}}
+	if job.release != nil {
+		periodicConfig = append(periodicConfig,
+			yaml.MapItem{Key: "release", Value: job.version})
+	}
+	generatePeriodic(title, repoName, periodicConfig)
+	out := GetOutput()
+	outputLen := len(out)
+	if outputLen == 0 {
+		tb.Fatal("No output")
+	}
+	if logFatalCalls != 0 {
+		tb.Fatal("LogFatal was called")
+	}
+	un := make(map[interface{}]interface{})
+	err := yaml.Unmarshal([]byte(out), &un)
+	if err != nil {
+		tb.Fatal(err)
+	}
+	for _, assertion := range assertions {
+		err = assertion(un)
+		if err != nil {
+			tb.Fatal(err)
+		}
 	}
 }
 
