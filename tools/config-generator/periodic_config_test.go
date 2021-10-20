@@ -17,13 +17,12 @@ limitations under the License.
 package main
 
 import (
-	"errors"
 	"fmt"
-	"reflect"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
 	"gopkg.in/yaml.v2"
+	"knative.dev/test-infra/tools/config-generator/unstructured"
 )
 
 func TestClone(t *testing.T) {
@@ -125,104 +124,26 @@ func TestGenerateCron(t *testing.T) {
 	}
 }
 
-type unstructuredAssertion func(map[interface{}]interface{}) error
-
-var (
-	errInvalidFormat = errors.New("invalid format")
-	errArgsMismatch  = errors.New("args mismatch")
-)
-
-func digin(un interface{}, diggers []func(interface{}) (interface{}, error)) (interface{}, error) {
-	var err error
-	for _, digger := range diggers {
-		un, err = digger(un)
-		if err != nil {
-			return nil, err
-		}
-	}
-	return un, nil
-}
-
-func mapKey(key string) func(interface{}) (interface{}, error) {
-	return func(un interface{}) (interface{}, error) {
-		m, ok := un.(map[interface{}]interface{})
-		if !ok {
-			return nil, fmt.Errorf("%w: not a map: %#v", errInvalidFormat, un)
-		}
-		return m[key], nil
-	}
-}
-
-func sliceElement(el int) func(interface{}) (interface{}, error) {
-	return func(un interface{}) (interface{}, error) {
-		s, ok := un.([]interface{})
-		if !ok {
-			return nil, fmt.Errorf("%w: not a slice: %#v", errInvalidFormat, un)
-		}
-		return s[el], nil
-	}
-}
-
-func hasProperArgs(title string, want []string) func(map[interface{}]interface{}) error {
-	return func(un map[interface{}]interface{}) error {
-		val, err := digin(un, []func(interface{}) (interface{}, error){
-			mapKey(title),
-			sliceElement(0),
-			mapKey("spec"),
-			mapKey("containers"),
-			sliceElement(0),
-			mapKey("args"),
-		})
-		if err != nil {
-			return err
-		}
-		s, ok := val.([]interface{})
-		if !ok {
-			return fmt.Errorf("%w: %#v is not a slice", errInvalidFormat, val)
-		}
-		got, err := stringifySlice(s)
-		if err != nil {
-			return err
-		}
-		if !reflect.DeepEqual(want, got) {
-			return fmt.Errorf("%w: %#v != %#v", errArgsMismatch, want, got)
-		}
-		return nil
-	}
-}
-
-func stringifySlice(in []interface{}) ([]string, error) {
-	out := make([]string, len(in))
-	for i, v := range in {
-		var ok bool
-		out[i], ok = v.(string)
-		if !ok {
-			return nil, fmt.Errorf("%w: not []string: %#v", errInvalidFormat, in)
-		}
-	}
-	return out, nil
-}
-
 func TestGeneratePeriodic(t *testing.T) {
 	title := "title"
 	repoName := "repoName"
 	tests := []struct {
 		jobType    string
-		assertions []unstructuredAssertion
+		assertions []unstructured.Assertion
 	}{
 		{jobType: "continuous"},
-		{jobType: "nightly", assertions: []unstructuredAssertion{hasProperArgs(title, []string{
+		{jobType: "nightly", assertions: []unstructured.Assertion{hasProperArgs(title, []string{
 			"./hack/release.sh",
 			"--publish", "--tag-release",
 		})}},
 		{jobType: "branch-ci"},
-		{jobType: "dot-release", assertions: []unstructuredAssertion{hasProperArgs(title, []string{
+		{jobType: "dot-release", assertions: []unstructured.Assertion{hasProperArgs(title, []string{
 			"./hack/release.sh",
 			"--dot-release", "--release-gcs", repoName,
 			"--release-gcr", "gcr.io/knative-releases",
 			"--github-token", "/etc/hub-token/token",
 		})}},
-		{jobType: "auto-release", assertions: []unstructuredAssertion{hasProperArgs(title, []string{
+		{jobType: "auto-release", assertions: []unstructured.Assertion{hasProperArgs(title, []string{
 			"./hack/release.sh",
 			"--auto-release", "--release-gcs", repoName,
 			"--release-gcr", "gcr.io/knative-releases",
@@ -279,5 +200,22 @@ func TestGenerateGoCoveragePeriodic(t *testing.T) {
 	}
 	if logFatalCalls != 0 {
 		t.Fatalf("LogFatal was called.")
+	}
+}
+
+func hasProperArgs(title string, want []string) unstructured.Assertion {
+	assert := unstructured.EqualsStringSlice(want)
+	query := fmt.Sprintf("%s.0.spec.containers.0.args", title)
+	return queryAndAssert(query, assert)
+}
+
+func queryAndAssert(query string, assert unstructured.Assertion) unstructured.Assertion {
+	return func(un interface{}) error {
+		questioner := unstructured.NewQuestioner(un)
+		val, err := questioner.Query(query)
+		if err != nil {
+			return err
+		}
+		return assert(val)
 	}
 }
