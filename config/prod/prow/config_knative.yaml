@@ -298,9 +298,9 @@ presubmits:
   - unit-tests: true
   - integration-tests: true
   knative-sandbox/kn-plugin-operator:
-    - build-tests: true
-    - unit-tests: true
-    - integration-tests: true
+  - build-tests: true
+  - unit-tests: true
+  - integration-tests: true
   knative-sandbox/kn-plugin-sample:
   - build-tests: true
   - unit-tests: true
@@ -973,7 +973,7 @@ periodics:
   knative-sandbox/kn-plugin-migration:
   - continuous: true
   knative-sandbox/kn-plugin-operator:
-    - continuous: true
+  - continuous: true
   knative-sandbox/kn-plugin-sample:
   - continuous: true
   knative-sandbox/kn-plugin-service-log:
