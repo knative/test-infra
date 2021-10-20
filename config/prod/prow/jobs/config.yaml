@@ -16561,8 +16561,10 @@ periodics:
       - "./hack/release.sh"
       - "--publish"
       - "--tag-release"
-      - "--release-gcs knative-gcp-nightly"
-      - "--release-gcr gcr.io/knative-gcp-nightly"
+      - "--release-gcs"
+      - "knative-gcp-nightly"
+      - "--release-gcr"
+      - "gcr.io/knative-gcp-nightly"
       volumeMounts:
       - name: nightly-account
         mountPath: /etc/nightly-account
@@ -16605,10 +16607,14 @@ periodics:
       args:
       - "./hack/release.sh"
       - "--dot-release"
-      - "--release-gcs knative-gcp"
-      - "--release-gcr gcr.io/knative-gcp"
-      - "--github-token /etc/hub-token/token"
-      - "--branch release-0.20"
+      - "--release-gcs"
+      - "knative-gcp"
+      - "--release-gcr"
+      - "gcr.io/knative-gcp"
+      - "--github-token"
+      - "/etc/hub-token/token"
+      - "--branch"
+      - "release-0.20"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -16661,10 +16667,14 @@ periodics:
       args:
       - "./hack/release.sh"
       - "--dot-release"
-      - "--release-gcs knative-gcp"
-      - "--release-gcr gcr.io/knative-gcp"
-      - "--github-token /etc/hub-token/token"
-      - "--branch release-0.21"
+      - "--release-gcs"
+      - "knative-gcp"
+      - "--release-gcr"
+      - "gcr.io/knative-gcp"
+      - "--github-token"
+      - "/etc/hub-token/token"
+      - "--branch"
+      - "release-0.21"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -16717,10 +16727,14 @@ periodics:
       args:
       - "./hack/release.sh"
       - "--dot-release"
-      - "--release-gcs knative-gcp"
-      - "--release-gcr gcr.io/knative-gcp"
-      - "--github-token /etc/hub-token/token"
-      - "--branch release-0.21"
+      - "--release-gcs"
+      - "knative-gcp"
+      - "--release-gcr"
+      - "gcr.io/knative-gcp"
+      - "--github-token"
+      - "/etc/hub-token/token"
+      - "--branch"
+      - "release-0.21"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -16773,10 +16787,14 @@ periodics:
       args:
       - "./hack/release.sh"
       - "--dot-release"
-      - "--release-gcs knative-gcp"
-      - "--release-gcr gcr.io/knative-gcp"
-      - "--github-token /etc/hub-token/token"
-      - "--branch release-0.21"
+      - "--release-gcs"
+      - "knative-gcp"
+      - "--release-gcr"
+      - "gcr.io/knative-gcp"
+      - "--github-token"
+      - "/etc/hub-token/token"
+      - "--branch"
+      - "release-0.21"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -16830,9 +16848,12 @@ periodics:
       args:
       - "./hack/release.sh"
       - "--auto-release"
-      - "--release-gcs knative-gcp"
-      - "--release-gcr gcr.io/knative-gcp"
-      - "--github-token /etc/hub-token/token"
+      - "--release-gcs"
+      - "knative-gcp"
+      - "--release-gcr"
+      - "gcr.io/knative-gcp"
+      - "--github-token"
+      - "/etc/hub-token/token"
       volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
