@@ -165,7 +165,7 @@ func TestGeneratePeriodic(t *testing.T) {
 				"--dot-release", "--release-gcs", repoName,
 				"--release-gcr", "gcr.io/knative-releases",
 				"--github-token", "/etc/hub-token/token",
-				"--branch release-0.23",
+				"--branch", "release-0.23",
 			})},
 		},
 	}

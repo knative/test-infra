@@ -214,7 +214,7 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			jobNameSuffix = version + "-" + jobNameSuffix
 			data.Base.RepoBranch = "release-" + version
 			if jobType == "dot-release" {
-				data.Base.Args = append(data.Base.Args, "--branch release-"+version)
+				data.Base.Args = append(data.Base.Args, "--branch", "release-"+version)
 			}
 		default:
 			continue
