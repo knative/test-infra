@@ -1280,12 +1280,13 @@ periodics:
       limits:
         memory: 16Gi
   - nightly: true
-    args: [
-      '--publish',
-      '--tag-release',
-      '--release-gcs', 'knative-gcp-nightly',
-      '--release-gcr', 'gcr.io/knative-gcp-nightly'
-    ]
+    args:
+    - --publish
+    - --tag-release
+    - --release-gcs
+    - knative-gcp-nightly
+    - --release-gcr
+    - gcr.io/knative-gcp-nightly
     resources:
       requests:
         memory: 12Gi
@@ -1293,13 +1294,16 @@ periodics:
         memory: 16Gi
   - dot-release: true
     release: "0.20"
-    args: [
-      '--dot-release',
-      '--release-gcs', 'knative-gcp',
-      '--release-gcr', 'gcr.io/knative-gcp',
-      '--github-token', '/etc/hub-token/token',
-      '--branch', 'release-0.20'
-    ]
+    args:
+    - --dot-release
+    - --release-gcs
+    - knative-gcp
+    - --release-gcr
+    - gcr.io/knative-gcp
+    - --github-token
+    - /etc/hub-token/token
+    - --branch
+    - release-0.20
     resources:
       requests:
         memory: 12Gi
@@ -1307,13 +1311,16 @@ periodics:
         memory: 16Gi
   - dot-release: true
     release: "0.21"
-    args: [
-      '--dot-release',
-      '--release-gcs', 'knative-gcp',
-      '--release-gcr', 'gcr.io/knative-gcp',
-      '--github-token', '/etc/hub-token/token',
-      '--branch', 'release-0.21'
-    ]
+    args:
+    - --dot-release
+    - --release-gcs
+    - knative-gcp
+    - --release-gcr
+    - gcr.io/knative-gcp
+    - --github-token
+    - /etc/hub-token/token
+    - --branch
+    - release-0.21
     resources:
       requests:
         memory: 12Gi
@@ -1321,13 +1328,16 @@ periodics:
         memory: 16Gi
   - dot-release: true
     release: "0.22"
-    args: [
-      '--dot-release',
-      '--release-gcs', 'knative-gcp',
-      '--release-gcr', 'gcr.io/knative-gcp',
-      '--github-token', '/etc/hub-token/token',
-      '--branch', 'release-0.21'
-    ]
+    args:
+    - --dot-release
+    - --release-gcs
+    - knative-gcp
+    - --release-gcr
+    - gcr.io/knative-gcp
+    - --github-token
+    - /etc/hub-token/token
+    - --branch
+    - release-0.21
     resources:
       requests:
         memory: 12Gi
@@ -1335,25 +1345,30 @@ periodics:
         memory: 16Gi
   - dot-release: true
     release: "0.23"
-    args: [
-      '--dot-release',
-      '--release-gcs', 'knative-gcp',
-      '--release-gcr', 'gcr.io/knative-gcp',
-      '--github-token', '/etc/hub-token/token',
-      '--branch', 'release-0.21'
-    ]
+    args:
+    - --dot-release
+    - --release-gcs
+    - knative-gcp
+    - --release-gcr
+    - gcr.io/knative-gcp
+    - --github-token
+    - /etc/hub-token/token
+    - --branch
+    - release-0.21
     resources:
       requests:
         memory: 12Gi
       limits:
         memory: 16Gi
   - auto-release: true
-    args: [
-      '--auto-release',
-      '--release-gcs', 'knative-gcp',
-      '--release-gcr', 'gcr.io/knative-gcp',
-      '--github-token', '/etc/hub-token/token'
-    ]
+    args:
+    - --auto-release
+    - --release-gcs
+    - knative-gcp
+    - --release-gcr
+    - gcr.io/knative-gcp
+    - --github-token
+    - /etc/hub-token/token
     resources:
       requests:
         memory: 12Gi
