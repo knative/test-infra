@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ORIGINAL_GOPATH="${HOME}/go"
+ORIGINAL_GOPATH="/home/prow/go"
 
 source "${HOME}/.gvm/scripts/gvm"
 
