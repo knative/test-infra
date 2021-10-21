@@ -15,9 +15,7 @@
 PROJECT       := knative-tests
 PROW_GCS      := knative-prow
 PROW_HOST     := https://prow.knative.dev
-TESTGRID_GCS  := knative-testgrid
 
 KNATIVE_CONFIG   := config_knative.yaml
-TESTGRID_CONFIG  ?= prow/testgrid/testgrid.yaml
 
 include ../prow_common.mk

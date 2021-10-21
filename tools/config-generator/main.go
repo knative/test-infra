@@ -722,14 +722,10 @@ func main() {
 	logFatalf = log.Fatalf
 	// Parse flags and check them.
 	prowJobsConfigOutput := ""
-	testgridConfigOutput := ""
 	k8sTestgridConfigOutput := ""
-	var generateTestgridConfig = flag.Bool("generate-testgrid-config", true, "Whether to generate the testgrid config from the template file")
 	var generateK8sTestgridConfig = flag.Bool("generate-k8s-testgrid-config", true, "Whether to generate the k8s testgrid config from the template file")
-	var includeConfig = flag.Bool("include-config", true, "Whether to include general configuration (e.g., plank) in the generated config")
 	var dockerImagesBase = flag.String("image-docker", "gcr.io/knative-tests/test-infra", "Default registry for the docker images used by the jobs")
 	flag.StringVar(&prowJobsConfigOutput, "prow-jobs-config-output", "", "The destination for the prow jobs config output, default to be stdout")
-	flag.StringVar(&testgridConfigOutput, "testgrid-config-output", "", "The destination for the testgrid config output, default to be stdout")
 	flag.StringVar(&k8sTestgridConfigOutput, "k8s-testgrid-config-output", "", "The destination for the k8s testgrid config output, default to be stdout")
 	flag.StringVar(&prowHost, "prow-host", "https://prow.knative.dev", "Prow host, including HTTP protocol")
 	flag.StringVar(&testGridHost, "testgrid-host", "https://testgrid.knative.dev", "TestGrid host, including HTTP protocol")
@@ -810,38 +806,6 @@ func main() {
 	// config object is modified when we generate prow config, so we'll need to reload it here
 	if err = yaml.Unmarshal(configFileContent, &configYaml); err != nil {
 		logFatalf("Cannot parse config %q: %v", configFileName, err)
-	}
-
-	// Generate Testgrid config.
-	if *generateTestgridConfig {
-		setOutput(testgridConfigOutput)
-
-		if *includeConfig {
-			executeTemplate("general header", readTemplate(commonHeaderConfig), newBaseTestgridTemplateData(""))
-			executeTemplate("general config", readTemplate(generalTestgridConfig), newBaseTestgridTemplateData(""))
-		}
-
-		presubmitJobData := parseJob(configYaml, "presubmits")
-		goCoverageMap = parseGoCoverageMap(presubmitJobData)
-
-		periodicJobData := parseJob(configYaml, "periodics")
-		collectMetaData(periodicJobData)
-		addCustomJobsTestgrid()
-
-		// log.Print(spew.Sdump(metaData))
-
-		// These generate "test_groups:"
-		metaData.generateTestGridSection("test_groups", generateTestGroup, false)
-		metaData.generateNonAlignedTestGroups()
-
-		// These generate "dashboards:"
-		metaData.generateTestGridSection("dashboards", generateDashboard, true)
-		metaData.generateDashboardsForReleases()
-		metaData.generateNonAlignedDashboards()
-
-		// These generate "dashboard_groups:"
-		metaData.generateDashboardGroups()
-		metaData.generateNonAlignedDashboardGroups()
 	}
 
 	if *generateK8sTestgridConfig {

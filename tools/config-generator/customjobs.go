@@ -34,21 +34,3 @@ var (
 		"post-knative-test-infra-deploy-tools",
 	}
 )
-
-func addCustomJobsTestgrid() {
-	var (
-		extras = map[string]string{
-			"num_failures_to_alert": "1",
-			"alert_options":         "\n      alert_mail_to_addresses: \"serverless-engprod-sea@google.com\"",
-		}
-	)
-	for _, job := range customJobnames {
-		metaData.AddNonAlignedTest(NonAlignedTestGroup{
-			DashboardGroup: "maintenance",
-			DashboardName:  "utilities",
-			HumanTabName:   job,
-			CIJobName:      job,
-			Extra:          extras,
-		})
-	}
-}

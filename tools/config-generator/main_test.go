@@ -838,59 +838,6 @@ func TestParseGoCoverageMap(t *testing.T) {
 	}
 }
 
-func TestCollectMetaData(t *testing.T) {
-	redDetailMap := JobDetailMap{
-		"red-repo": []string{"red-a", "red-b"},
-	}
-
-	metaData = TestGridMetaData{
-		md: map[string]JobDetailMap{
-			"red-proj": redDetailMap,
-		},
-		projNames: []string{"red-proj"},
-	}
-	redRepo := []interface{}{
-		yaml.MapSlice{
-			yaml.MapItem{Key: "continuous", Value: true},
-			yaml.MapItem{Key: "dot-release", Value: true},
-			yaml.MapItem{Key: "auto-release", Value: false},
-			yaml.MapItem{Key: "nightly", Value: false},
-			yaml.MapItem{Key: "webhook-apicoverage", Value: false},
-		},
-		yaml.MapSlice{
-			yaml.MapItem{Key: "branch-ci", Value: true},
-		},
-	}
-	bluRepo := []interface{}{
-		yaml.MapSlice{
-			yaml.MapItem{Key: "release", Value: "0.1.2"},
-			yaml.MapItem{Key: "custom-job", Value: "custom-job-name"},
-			yaml.MapItem{Key: "ignore-me", Value: "ignore-me-too"},
-		},
-	}
-	config := yaml.MapSlice{
-		yaml.MapItem{Key: "red-proj/red-repo", Value: redRepo},
-		yaml.MapItem{Key: "blu-proj/blu-repo", Value: bluRepo},
-	}
-
-	collectMetaData(config)
-
-	expected := []string{"red-a", "red-b", "dot-release", "continuous"}
-	if diff := cmp.Diff(metaData.md["red-proj"]["red-repo"], expected); diff != "" {
-		t.Fatalf("Unexpected metadata for red proj/repo. (-got +want)\n%s", diff)
-	}
-
-	expected = []string{"custom-job-name"}
-	if diff := cmp.Diff(metaData.md["blu-proj-0.1.2"]["blu-repo"], expected); diff != "" {
-		t.Fatalf("Unexpected metadata for blu proj/repo. (-got +want)\n%s", diff)
-	}
-
-	expected = []string{"red-proj", "blu-proj", "blu-proj-0.1.2"}
-	if diff := cmp.Diff(metaData.projNames, expected); diff != "" {
-		t.Fatalf("Unexpected list of project names. (-got +want)\n%s", diff)
-	}
-}
-
 func TestUpdateTestCoverageJobDataIfNeeded(t *testing.T) {
 	SetupForTesting()
 	repoName := "foo-repo"

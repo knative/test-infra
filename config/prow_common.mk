@@ -50,7 +50,6 @@ help:
 	@echo "'Update' means updating the servers and can only be run by oncall staff."
 	@echo "Common usage:"
 	@echo " make update-prow-cluster: Update all Prow things on the server to match the current branch. Errors if not main or master."
-	@echo " make update-testgrid-config: Update the Testgrid config"
 	@echo " make get-cluster-credentials: Setup kubectl to point to Prow cluster"
 	@echo " make unset-cluster-credentials: Clear kubectl context"
 
@@ -69,7 +68,7 @@ unset-cluster-credentials:
 get-build-cluster-credentials: activate-serviceaccount
 	$(SET_BUILD_CLUSTER_CONTEXT)
 
-.PHONY: update-boskos-resource test update-testgrid-config confirm-main
+.PHONY: update-boskos-resource test confirm-main
 
 # Update the list of resources for Boskos
 update-boskos-resource: confirm-main
@@ -81,21 +80,4 @@ update-boskos-resource: confirm-main
 update-prow-cluster: update-boskos-resource
 
 # Update everything
-update-all: update-boskos-resource update-testgrid-config
-
-# Update TestGrid config.
-# Application Default Credentials must be set, otherwise the upload will fail.
-# Either export $GOOGLE_APPLICATION_CREDENTIALS pointing to a valid service
-# account key, or temporarily use your own credentials by running
-# gcloud auth application-default login
-update-testgrid-config: confirm-main
-	docker run -i --rm \
-		-v "$(PWD):$(PWD)" \
-		-v "$(realpath $(TESTGRID_CONFIG)):$(realpath $(TESTGRID_CONFIG))" \
-		-v "$(GOOGLE_APPLICATION_CREDENTIALS):$(GOOGLE_APPLICATION_CREDENTIALS)" \
-		-e "GOOGLE_APPLICATION_CREDENTIALS" \
-		-w "$(PWD)" \
-		gcr.io/k8s-prow/configurator:v20210506-5c14a376fa \
-		"--oneshot" \
-		"--output=gs://$(TESTGRID_GCS)/config" \
-		"--yaml=$(realpath $(TESTGRID_CONFIG))"
+update-all: update-boskos-resource
