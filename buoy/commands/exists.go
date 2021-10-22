@@ -28,15 +28,22 @@ import (
 
 func addExistsCmd(root *cobra.Command) {
 	var (
-		release string
-		verbose bool
-		tag     bool
+		release       string
+		moduleRelease string
+		verbose       bool
+		tag           bool
 	)
 
 	var cmd = &cobra.Command{
 		Use:   "exists go.mod",
 		Short: "Determine if the release branch exists for a given module.",
 		Args:  cobra.ExactArgs(1),
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if moduleRelease == "" {
+				moduleRelease = release
+			}
+			return nil
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			gomodFile := args[0]
 
@@ -45,7 +52,7 @@ func addExistsCmd(root *cobra.Command) {
 				out = cmd.OutOrStderr()
 			}
 
-			meta, err := gomod.ReleaseStatus(gomodFile, release, out)
+			meta, err := gomod.ReleaseStatus(gomodFile, release, moduleRelease, out)
 			if err != nil {
 				return err
 			}
@@ -64,6 +71,7 @@ func addExistsCmd(root *cobra.Command) {
 
 	cmd.Flags().StringVarP(&release, "release", "r", "", "release should be '<major>.<minor>' (i.e.: 1.23 or v1.23) [required]")
 	_ = cmd.MarkFlagRequired("release")
+	cmd.Flags().StringVarP(&moduleRelease, "module-release", "m", "", "if the go modules are a different release set than the release, use --module-release, should be '<major>.<minor>' (i.e.: 0.12 or v0.12)")
 	cmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "Print verbose output (stderr)")
 	cmd.Flags().BoolVarP(&tag, "next", "t", false, "Print the next release tag (stdout)")
 

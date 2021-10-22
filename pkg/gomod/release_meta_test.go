@@ -69,7 +69,7 @@ func TestReleaseStatus(t *testing.T) {
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			got, err := ReleaseStatus(tt.gomod, tt.release, os.Stdout)
+			got, err := ReleaseStatus(tt.gomod, tt.release, tt.release, os.Stdout)
 			if (tt.wantErr && err == nil) || (!tt.wantErr && err != nil) {
 				t.Errorf("unexpected error state, want error == %t, got %v", tt.wantErr, err)
 			}

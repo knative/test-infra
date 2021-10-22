@@ -30,22 +30,27 @@ import (
 // Check examines a go mod file for dependencies and  determines if each have a release artifact
 // based on the ruleset provided. Check leverages the same rules used by
 // knative.dev/test-infra/pkg/git.Repo().BestRefFor
-func Check(gomod, release, domain string, ruleset git.RulesetType, out io.Writer) error {
+func Check(gomod, release, moduleRelease, domain string, ruleset git.RulesetType, out io.Writer) error {
 	modulePkgs, _, err := Modules([]string{gomod}, domain)
 	if err != nil {
 		return err
 	}
 
 	for module, packages := range modulePkgs {
-		if err := check(module, packages, release, ruleset, out); err != nil {
+		if err := check(module, packages, release, moduleRelease, ruleset, out); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
-func check(module string, packages []string, release string, ruleset git.RulesetType, out io.Writer) error {
-	this, err := semver.ParseTolerant(release)
+func check(module string, packages []string, release, moduleRelease string, ruleset git.RulesetType, out io.Writer) error {
+	r, err := semver.ParseTolerant(release)
+	if err != nil {
+		return err
+	}
+
+	mr, err := semver.ParseTolerant(moduleRelease)
 	if err != nil {
 		return err
 	}
@@ -61,7 +66,7 @@ func check(module string, packages []string, release string, ruleset git.Ruleset
 			return err
 		}
 
-		ref, refType := repo.BestRefFor(this, ruleset)
+		ref, refType := repo.BestRefFor(r, mr, ruleset)
 		switch refType {
 		case git.NoRef:
 			nonReady = append(nonReady, ref)

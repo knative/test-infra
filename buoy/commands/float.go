@@ -28,10 +28,11 @@ import (
 
 func addFloatCmd(root *cobra.Command) {
 	var (
-		domain      string
-		release     string
-		rulesetFlag string
-		ruleset     git.RulesetType
+		domain        string
+		release       string
+		moduleRelease string
+		rulesetFlag   string
+		ruleset       git.RulesetType
 	)
 
 	var cmd = &cobra.Command{
@@ -64,13 +65,16 @@ For rulesets that that restrict the selection process, no ref is selected.
 			if ruleset == git.InvalidRule {
 				return fmt.Errorf("invalid ruleset, please select one of: [%s]", strings.Join(git.Rulesets(), ", "))
 			}
+			if moduleRelease == "" {
+				moduleRelease = release
+			}
 			return nil
 		},
 
 		RunE: func(cmd *cobra.Command, args []string) error {
 			gomodFile := args[0]
 
-			refs, err := gomod.Float(gomodFile, release, domain, ruleset)
+			refs, err := gomod.Float(gomodFile, release, moduleRelease, domain, ruleset)
 			if err != nil {
 				return err
 			}
@@ -87,6 +91,7 @@ For rulesets that that restrict the selection process, no ref is selected.
 	cmd.Flags().StringVarP(&domain, "domain", "d", "knative.dev", "domain filter (i.e. knative.dev) [required]")
 	cmd.Flags().StringVarP(&release, "release", "r", "", "release should be '<major>.<minor>' (i.e.: 1.23 or v1.23) [required]")
 	_ = cmd.MarkFlagRequired("release")
+	cmd.Flags().StringVarP(&moduleRelease, "module-release", "m", "", "if the go modules are a different release set than the release, use --module-release, should be '<major>.<minor>' (i.e.: 0.12 or v0.12)")
 	cmd.Flags().StringVar(&rulesetFlag, "ruleset", git.AnyRule.String(), fmt.Sprintf("The ruleset to evaluate the dependency refs. Rulesets: [%s]", strings.Join(git.Rulesets(), ", ")))
 
 	root.AddCommand(cmd)

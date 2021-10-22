@@ -27,81 +27,92 @@ import (
 // TestCheck - This is an integration test, it will make a call out to the internet.
 func TestCheck(t *testing.T) {
 	tests := map[string]struct {
-		gomod   string
-		release string
-		domain  string
-		rule    git.RulesetType
-		wantErr bool
+		gomod         string
+		release       string
+		moduleRelease string
+		domain        string
+		rule          git.RulesetType
+		wantErr       bool
 	}{
 		"demo1, v0.15, knative.dev, any rule": {
-			gomod:   "./testdata/gomod.check1",
-			release: "v0.15",
-			domain:  "knative.dev",
-			rule:    git.AnyRule,
+			gomod:         "./testdata/gomod.check1",
+			release:       "v0.15",
+			moduleRelease: "v0.15",
+			domain:        "knative.dev",
+			rule:          git.AnyRule,
 		},
 		"demo1, v0.15, knative.dev, release rule": {
-			gomod:   "./testdata/gomod.check1",
-			release: "v0.15",
-			domain:  "knative.dev",
-			rule:    git.ReleaseRule,
-			wantErr: true,
+			gomod:         "./testdata/gomod.check1",
+			release:       "v0.15",
+			moduleRelease: "v0.15",
+			domain:        "knative.dev",
+			rule:          git.ReleaseRule,
+			wantErr:       true,
 		},
 		"demo1, v0.15, knative.dev, release branch rule": {
-			gomod:   "./testdata/gomod.check1",
-			release: "v0.15",
-			domain:  "knative.dev",
-			rule:    git.ReleaseBranchRule,
+			gomod:         "./testdata/gomod.check1",
+			release:       "v0.15",
+			moduleRelease: "v0.15",
+			domain:        "knative.dev",
+			rule:          git.ReleaseBranchRule,
 		},
 		"demo1, v99.99, knative.dev, release branch or release rule": {
-			gomod:   "./testdata/gomod.check1",
-			release: "v99.99",
-			domain:  "knative.dev",
-			rule:    git.ReleaseOrReleaseBranchRule,
-			wantErr: true,
+			gomod:         "./testdata/gomod.check1",
+			release:       "v99.99",
+			moduleRelease: "v99.99",
+			domain:        "knative.dev",
+			rule:          git.ReleaseOrReleaseBranchRule,
+			wantErr:       true,
 		},
 		"demo1, v0.16, knative.dev, any rule": {
-			gomod:   "./testdata/gomod.check1",
-			release: "v0.16",
-			domain:  "knative.dev",
-			rule:    git.AnyRule,
+			gomod:         "./testdata/gomod.check1",
+			release:       "v0.16",
+			moduleRelease: "v0.16",
+			domain:        "knative.dev",
+			rule:          git.AnyRule,
 		},
-		"demo1, v0.16, k8s.io, any rule": {
-			gomod:   "./testdata/gomod.check1",
-			release: "v0.16",
-			domain:  "knative.dev",
-			rule:    git.AnyRule,
+		"demo1, v0.16, v0.15 mods, knative.dev, any rule": {
+			gomod:         "./testdata/gomod.check1",
+			release:       "v0.16",
+			moduleRelease: "v0.15",
+			domain:        "knative.dev",
+			rule:          git.AnyRule,
 		},
 		"demo1, v99.99, knative.dev, any rule": {
-			gomod:   "./testdata/gomod.check1",
-			release: "v99.99",
-			domain:  "knative.dev",
-			rule:    git.AnyRule,
+			gomod:         "./testdata/gomod.check1",
+			release:       "v99.99",
+			moduleRelease: "v99.99",
+			domain:        "knative.dev",
+			rule:          git.AnyRule,
 		},
 		"bad release": {
-			gomod:   "./testdata/gomod.check1",
-			release: "not gonna work",
-			domain:  "knative.dev",
-			rule:    git.AnyRule,
-			wantErr: true,
+			gomod:         "./testdata/gomod.check1",
+			release:       "not gonna work",
+			moduleRelease: "not gonna work",
+			domain:        "knative.dev",
+			rule:          git.AnyRule,
+			wantErr:       true,
 		},
 		"bad go module": {
-			gomod:   "./testdata/gomod.float1",
-			release: "v0.15",
-			domain:  "does-not-exist.nope",
-			rule:    git.AnyRule,
-			wantErr: true,
+			gomod:         "./testdata/gomod.float1",
+			release:       "v0.15",
+			moduleRelease: "v0.15",
+			domain:        "does-not-exist.nope",
+			rule:          git.AnyRule,
+			wantErr:       true,
 		},
 		"bad go mod file": {
-			gomod:   "./testdata/bad.example",
-			release: "v0.15",
-			domain:  "knative.dev",
-			rule:    git.AnyRule,
-			wantErr: true,
+			gomod:         "./testdata/bad.example",
+			release:       "v0.15",
+			moduleRelease: "v0.15",
+			domain:        "knative.dev",
+			rule:          git.AnyRule,
+			wantErr:       true,
 		},
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			err := Check(tt.gomod, tt.release, tt.domain, tt.rule, os.Stdout)
+			err := Check(tt.gomod, tt.release, tt.moduleRelease, tt.domain, tt.rule, os.Stdout)
 			if (tt.wantErr && err == nil) || (!tt.wantErr && err != nil) {
 				t.Errorf("unexpected error state, want error == %t, got %v", tt.wantErr, err)
 			}

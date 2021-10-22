@@ -21,6 +21,7 @@ import (
 
 	"github.com/blang/semver/v4"
 	fixtures "github.com/go-git/go-git-fixtures/v4"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestGetRepo_BasicOne(t *testing.T) {
@@ -57,15 +58,16 @@ func TestRepo_BestRefFor(t *testing.T) {
 		Ref:           "ref",
 		DefaultBranch: "main",
 		Tags:          []string{"v0.1.0", "bar", "v0.2.0", "baz", "v0.2.1", "v0.2.2-rc.1", "v0.2.2+build", "foo"},
-		Branches:      []string{"release-0.1", "bar", "release-0.2", "baz", "main", "release-0.3"},
+		Branches:      []string{"release-0.1", "bar", "release-0.2", "baz", "main", "release-0.3", "release-1.0"},
 	}
 
 	tests := map[string]struct {
-		repo    *Repo
-		version semver.Version
-		want    string
-		release RefType
-		rule    RulesetType
+		repo          *Repo
+		version       semver.Version
+		moduleVersion semver.Version
+		want          string
+		release       RefType
+		rule          RulesetType
 	}{
 		"Any - v0.1": {
 			repo:    repo,
@@ -94,6 +96,14 @@ func TestRepo_BestRefFor(t *testing.T) {
 			want:    "ref@main",
 			release: DefaultBranchRef,
 			rule:    AnyRule,
+		},
+		"Any - v1.0.0 && v0.4.0 mod": {
+			repo:          repo,
+			version:       semver.MustParse("1.0.0"),
+			moduleVersion: semver.MustParse("0.4.0"),
+			want:          "ref@release-1.0",
+			release:       ReleaseBranchRef,
+			rule:          AnyRule,
 		},
 
 		"ReleaseOrReleaseBranch - v0.1": {
@@ -124,6 +134,22 @@ func TestRepo_BestRefFor(t *testing.T) {
 			release: NoRef,
 			rule:    ReleaseOrReleaseBranchRule,
 		},
+		"ReleaseOrReleaseBranch - v1.0.0 && v0.4.0 mod": {
+			repo:          repo,
+			version:       semver.MustParse("1.0.0"),
+			moduleVersion: semver.MustParse("0.4.0"),
+			want:          "ref@release-1.0",
+			release:       ReleaseBranchRef,
+			rule:          ReleaseOrReleaseBranchRule,
+		},
+		"ReleaseOrReleaseBranch - v2.0.0 && v0.4.0 mod": {
+			repo:          repo,
+			version:       semver.MustParse("2.0.0"),
+			moduleVersion: semver.MustParse("0.4.0"),
+			want:          "ref",
+			release:       NoRef,
+			rule:          ReleaseOrReleaseBranchRule,
+		},
 
 		"Release - v0.1": {
 			repo:    repo,
@@ -152,6 +178,14 @@ func TestRepo_BestRefFor(t *testing.T) {
 			want:    "ref",
 			release: NoRef,
 			rule:    ReleaseRule,
+		},
+		"Release - v1.0.0 and mod v0.4": {
+			repo:          repo,
+			version:       semver.MustParse("1.0.0"),
+			moduleVersion: semver.MustParse("0.4.0"),
+			want:          "ref",
+			release:       NoRef,
+			rule:          ReleaseRule,
 		},
 
 		"ReleaseBranch - v0.1": {
@@ -182,10 +216,21 @@ func TestRepo_BestRefFor(t *testing.T) {
 			release: NoRef,
 			rule:    ReleaseBranchRule,
 		},
+		"ReleaseBranch - v1.0.0 && v0.4.0 mod": {
+			repo:          repo,
+			version:       semver.MustParse("1.0.0"),
+			moduleVersion: semver.MustParse("0.4.0"),
+			want:          "ref@release-1.0",
+			release:       ReleaseBranchRef,
+			rule:          ReleaseBranchRule,
+		},
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			got, release := tt.repo.BestRefFor(tt.version, tt.rule)
+			if cmp.Equal(tt.moduleVersion, semver.Version{}) {
+				tt.moduleVersion = tt.version
+			}
+			got, release := tt.repo.BestRefFor(tt.version, tt.moduleVersion, tt.rule)
 			if got != tt.want {
 				t.Errorf("repo.BestRefFor() got ref = %v, want %v", got, tt.want)
 			}
