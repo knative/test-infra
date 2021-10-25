@@ -784,6 +784,44 @@ periodics:
     - DOCKER_CONFIG="/opt/cluster"
     external_cluster:
       secret: s390x-cluster1
+  - custom-job: s390x-kourier-tests
+    release: "0.25"
+    cron: 0 0 * * *
+    command:
+    - bash
+    args:
+    - -c
+    - mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --kourier-version latest
+    env-vars:
+    - GO111MODULE="on"
+    - TEST_OPTIONS="--enable-alpha --enable-beta --resolvabledomain=false"
+    - DISABLE_MD_LINTING="1"
+    - KO_FLAGS="--platform=linux/s390x"
+    - SYSTEM_NAMESPACE="knative-serving"
+    - PLATFORM="linux/s390x"
+    - KUBECONFIG="/root/.kube/config"
+    - DOCKER_CONFIG="/opt/cluster"
+    external_cluster:
+      secret: s390x-cluster1
+  - custom-job: s390x-kourier-tests
+    release: "0.26"
+    cron: 30 3 * * *
+    command:
+    - bash
+    args:
+    - -c
+    - mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --kourier-version latest
+    env-vars:
+    - GO111MODULE="on"
+    - TEST_OPTIONS="--enable-alpha --enable-beta --resolvabledomain=false"
+    - DISABLE_MD_LINTING="1"
+    - KO_FLAGS="--platform=linux/s390x"
+    - SYSTEM_NAMESPACE="knative-serving"
+    - PLATFORM="linux/s390x"
+    - KUBECONFIG="/root/.kube/config"
+    - DOCKER_CONFIG="/opt/cluster"
+    external_cluster:
+      secret: s390x-cluster1
   - custom-job: s390x-contour-tests
     cron: 0 5 * * *
     command:
@@ -824,6 +862,44 @@ periodics:
   - custom-job: s390x-contour-tests
     release: "0.24"
     cron: 0 10 * * *
+    command:
+    - bash
+    args:
+    - -c
+    - mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --contour-version latest
+    env-vars:
+    - GO111MODULE="on"
+    - TEST_OPTIONS="--enable-alpha --enable-beta --resolvabledomain=false"
+    - DISABLE_MD_LINTING="1"
+    - KO_FLAGS="--platform=linux/s390x"
+    - SYSTEM_NAMESPACE="knative-serving"
+    - PLATFORM="linux/s390x"
+    - KUBECONFIG="/root/.kube/config"
+    - DOCKER_CONFIG="/opt/cluster"
+    external_cluster:
+      secret: s390x-cluster1
+  - custom-job: s390x-contour-tests
+    release: "0.25"
+    cron: 0 22 * * *
+    command:
+    - bash
+    args:
+    - -c
+    - mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --contour-version latest
+    env-vars:
+    - GO111MODULE="on"
+    - TEST_OPTIONS="--enable-alpha --enable-beta --resolvabledomain=false"
+    - DISABLE_MD_LINTING="1"
+    - KO_FLAGS="--platform=linux/s390x"
+    - SYSTEM_NAMESPACE="knative-serving"
+    - PLATFORM="linux/s390x"
+    - KUBECONFIG="/root/.kube/config"
+    - DOCKER_CONFIG="/opt/cluster"
+    external_cluster:
+      secret: s390x-cluster1
+  - custom-job: s390x-contour-tests
+    release: "0.26"
+    cron: 30 5 * * *
     command:
     - bash
     args:
@@ -945,6 +1021,40 @@ periodics:
   - custom-job: s390x-e2e-tests
     release: "0.24"
     cron: 0 4 * * *
+    command:
+    - bash
+    args:
+    - -c
+    - mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-client -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests
+    env-vars:
+    - DISABLE_MD_LINTING="1"
+    - KO_FLAGS="--platform=linux/s390x"
+    - PLATFORM="linux/s390x"
+    - KUBECONFIG="/root/.kube/config"
+    - DOCKER_CONFIG="/opt/cluster"
+    - INGRESS_CLASS="contour.ingress.networking.knative.dev"
+    external_cluster:
+      secret: s390x-cluster1
+  - custom-job: s390x-e2e-tests
+    release: "0.25"
+    cron: 0 16 * * *
+    command:
+    - bash
+    args:
+    - -c
+    - mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-client -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests
+    env-vars:
+    - DISABLE_MD_LINTING="1"
+    - KO_FLAGS="--platform=linux/s390x"
+    - PLATFORM="linux/s390x"
+    - KUBECONFIG="/root/.kube/config"
+    - DOCKER_CONFIG="/opt/cluster"
+    - INGRESS_CLASS="contour.ingress.networking.knative.dev"
+    external_cluster:
+      secret: s390x-cluster1
+  - custom-job: s390x-e2e-tests
+    release: "0.26"
+    cron: 30 11 * * *
     command:
     - bash
     args:
@@ -1082,7 +1192,6 @@ periodics:
     env-vars:
     - DISABLE_MD_LINTING="1"
     - KO_FLAGS="--platform=linux/s390x"
-    - DEPLOY_KNATIVE_MONITORING="0"
     - SYSTEM_NAMESPACE="knative-eventing"
     - PLATFORM="linux/s390x"
     - KUBECONFIG="/root/.kube/config"
@@ -1101,7 +1210,6 @@ periodics:
     env-vars:
     - DISABLE_MD_LINTING="1"
     - KO_FLAGS="--platform=linux/s390x"
-    - DEPLOY_KNATIVE_MONITORING="0"
     - SYSTEM_NAMESPACE="knative-eventing"
     - PLATFORM="linux/s390x"
     - KUBECONFIG="/root/.kube/config"
@@ -1120,7 +1228,42 @@ periodics:
     env-vars:
     - DISABLE_MD_LINTING="1"
     - KO_FLAGS="--platform=linux/s390x"
-    - DEPLOY_KNATIVE_MONITORING="0"
+    - SYSTEM_NAMESPACE="knative-eventing"
+    - PLATFORM="linux/s390x"
+    - KUBECONFIG="/root/.kube/config"
+    - SCALE_CHAOSDUCK_TO_ZERO="1"
+    - DOCKER_CONFIG="/opt/cluster"
+    external_cluster:
+      secret: s390x-cluster1
+  - custom-job: s390x-e2e-tests
+    release: "0.25"
+    cron: 0 20 * * *
+    command:
+    - bash
+    args:
+    - -c
+    - mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests
+    env-vars:
+    - DISABLE_MD_LINTING="1"
+    - KO_FLAGS="--platform=linux/s390x"
+    - SYSTEM_NAMESPACE="knative-eventing"
+    - PLATFORM="linux/s390x"
+    - KUBECONFIG="/root/.kube/config"
+    - SCALE_CHAOSDUCK_TO_ZERO="1"
+    - DOCKER_CONFIG="/opt/cluster"
+    external_cluster:
+      secret: s390x-cluster1
+  - custom-job: s390x-e2e-tests
+    release: "0.26"
+    cron: 30 7 * * *
+    command:
+    - bash
+    args:
+    - -c
+    - mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests
+    env-vars:
+    - DISABLE_MD_LINTING="1"
+    - KO_FLAGS="--platform=linux/s390x"
     - SYSTEM_NAMESPACE="knative-eventing"
     - PLATFORM="linux/s390x"
     - KUBECONFIG="/root/.kube/config"
@@ -1552,6 +1695,40 @@ periodics:
   - custom-job: s390x-e2e-tests
     release: "0.24"
     cron: 0 6 * * *
+    command:
+    - bash
+    args:
+    - -c
+    - mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-operator -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests
+    env-vars:
+    - DISABLE_MD_LINTING="1"
+    - KO_FLAGS="--platform=linux/s390x"
+    - PLATFORM="linux/s390x"
+    - KUBECONFIG="/root/.kube/config"
+    - DOCKER_CONFIG="/opt/cluster"
+    - INGRESS_CLASS="contour.ingress.networking.knative.dev"
+    external_cluster:
+      secret: s390x-cluster1
+  - custom-job: s390x-e2e-tests
+    release: "0.25"
+    cron: 0 18 * * *
+    command:
+    - bash
+    args:
+    - -c
+    - mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-operator -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests
+    env-vars:
+    - DISABLE_MD_LINTING="1"
+    - KO_FLAGS="--platform=linux/s390x"
+    - PLATFORM="linux/s390x"
+    - KUBECONFIG="/root/.kube/config"
+    - DOCKER_CONFIG="/opt/cluster"
+    - INGRESS_CLASS="contour.ingress.networking.knative.dev"
+    external_cluster:
+      secret: s390x-cluster1
+  - custom-job: s390x-e2e-tests
+    release: "0.26"
+    cron: 30 9 * * *
     command:
     - bash
     args:
