@@ -434,7 +434,7 @@ k8s.io/apimachinery/pkg/util/validation/field
 k8s.io/test-infra/prow/config/secret
 k8s.io/test-infra/prow/logrusutil
 k8s.io/test-infra/prow/version
-# knative.dev/hack v0.0.0-20211019034732-ced8ce706528
+# knative.dev/hack v0.0.0-20211025203920-02860f59a556 => github.com/salaboy/hack v0.0.0-20211019034732-ced8ce706528
 ## explicit
 knative.dev/hack
 # sigs.k8s.io/boskos v0.0.0-20200729174948-794df80db9c9
@@ -444,3 +444,4 @@ sigs.k8s.io/boskos/common
 sigs.k8s.io/boskos/storage
 # sigs.k8s.io/yaml v1.2.0
 sigs.k8s.io/yaml
+# knative.dev/hack => github.com/salaboy/hack v0.0.0-20211019034732-ced8ce706528
