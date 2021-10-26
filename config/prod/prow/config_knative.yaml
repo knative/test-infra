@@ -767,7 +767,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-kourier-tests
     release: "0.24"
-    cron: 0 12 * * *
+    cron: 0 4 * * *
     command:
     - bash
     args:
@@ -786,7 +786,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-kourier-tests
     release: "0.25"
-    cron: 0 0 * * *
+    cron: 0 16 * * *
     command:
     - bash
     args:
@@ -805,7 +805,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-kourier-tests
     release: "0.26"
-    cron: 30 3 * * *
+    cron: 30 5 * * *
     command:
     - bash
     args:
@@ -823,7 +823,7 @@ periodics:
     external_cluster:
       secret: s390x-cluster1
   - custom-job: s390x-contour-tests
-    cron: 0 5 * * *
+    cron: 0 9 * * *
     command:
     - bash
     args:
@@ -842,7 +842,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-contour-tests
     release: "0.23"
-    cron: 0 17 * * *
+    cron: 0 21 * * *
     command:
     - bash
     args:
@@ -861,7 +861,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-contour-tests
     release: "0.24"
-    cron: 0 10 * * *
+    cron: 0 12 * * *
     command:
     - bash
     args:
@@ -880,7 +880,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-contour-tests
     release: "0.25"
-    cron: 0 22 * * *
+    cron: 0 0 * * *
     command:
     - bash
     args:
@@ -899,7 +899,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-contour-tests
     release: "0.26"
-    cron: 30 5 * * *
+    cron: 30 7 * * *
     command:
     - bash
     args:
@@ -1020,7 +1020,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
     release: "0.24"
-    cron: 0 4 * * *
+    cron: 0 10 * * *
     command:
     - bash
     args:
@@ -1037,7 +1037,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
     release: "0.25"
-    cron: 0 16 * * *
+    cron: 0 22 * * *
     command:
     - bash
     args:
@@ -1054,7 +1054,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
     release: "0.26"
-    cron: 30 11 * * *
+    cron: 30 3 * * *
     command:
     - bash
     args:
@@ -1219,7 +1219,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
     release: "0.24"
-    cron: 0 8 * * *
+    cron: 0 6 * * *
     command:
     - bash
     args:
@@ -1237,7 +1237,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
     release: "0.25"
-    cron: 0 20 * * *
+    cron: 0 18 * * *
     command:
     - bash
     args:
@@ -1255,7 +1255,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
     release: "0.26"
-    cron: 30 7 * * *
+    cron: 30 9 * * *
     command:
     - bash
     args:
@@ -1660,7 +1660,7 @@ periodics:
         memory: 16Gi
   - auto-release: true
   - custom-job: s390x-e2e-tests
-    cron: 0 9 * * *
+    cron: 0 5 * * *
     command:
     - bash
     args:
@@ -1677,7 +1677,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
     release: "0.23"
-    cron: 0 21 * * *
+    cron: 0 17 * * *
     command:
     - bash
     args:
@@ -1694,7 +1694,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
     release: "0.24"
-    cron: 0 6 * * *
+    cron: 0 8 * * *
     command:
     - bash
     args:
@@ -1711,7 +1711,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
     release: "0.25"
-    cron: 0 18 * * *
+    cron: 0 20 * * *
     command:
     - bash
     args:
@@ -1728,7 +1728,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
     release: "0.26"
-    cron: 30 9 * * *
+    cron: 30 11 * * *
     command:
     - bash
     args:

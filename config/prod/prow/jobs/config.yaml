@@ -7385,7 +7385,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 12 * * *"
+- cron: "0 4 * * *"
   name: ci-knative-serving-0.24-s390x-kourier-tests
   agent: kubernetes
   decorate: true
@@ -7454,7 +7454,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 0 * * *"
+- cron: "0 16 * * *"
   name: ci-knative-serving-0.25-s390x-kourier-tests
   agent: kubernetes
   decorate: true
@@ -7523,7 +7523,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "30 3 * * *"
+- cron: "30 5 * * *"
   name: ci-knative-serving-0.26-s390x-kourier-tests
   agent: kubernetes
   decorate: true
@@ -7592,7 +7592,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 5 * * *"
+- cron: "0 9 * * *"
   name: ci-knative-serving-s390x-contour-tests
   agent: kubernetes
   decorate: true
@@ -7659,7 +7659,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 17 * * *"
+- cron: "0 21 * * *"
   name: ci-knative-serving-0.23-s390x-contour-tests
   agent: kubernetes
   decorate: true
@@ -7728,7 +7728,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 10 * * *"
+- cron: "0 12 * * *"
   name: ci-knative-serving-0.24-s390x-contour-tests
   agent: kubernetes
   decorate: true
@@ -7797,7 +7797,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 22 * * *"
+- cron: "0 0 * * *"
   name: ci-knative-serving-0.25-s390x-contour-tests
   agent: kubernetes
   decorate: true
@@ -7866,7 +7866,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "30 5 * * *"
+- cron: "30 7 * * *"
   name: ci-knative-serving-0.26-s390x-contour-tests
   agent: kubernetes
   decorate: true
@@ -9314,7 +9314,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 4 * * *"
+- cron: "0 10 * * *"
   name: ci-knative-client-0.24-s390x-e2e-tests
   agent: kubernetes
   decorate: true
@@ -9379,7 +9379,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 16 * * *"
+- cron: "0 22 * * *"
   name: ci-knative-client-0.25-s390x-e2e-tests
   agent: kubernetes
   decorate: true
@@ -9444,7 +9444,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "30 11 * * *"
+- cron: "30 3 * * *"
   name: ci-knative-client-0.26-s390x-e2e-tests
   agent: kubernetes
   decorate: true
@@ -12757,7 +12757,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 8 * * *"
+- cron: "0 6 * * *"
   name: ci-knative-eventing-0.24-s390x-e2e-tests
   agent: kubernetes
   decorate: true
@@ -12824,7 +12824,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 20 * * *"
+- cron: "0 18 * * *"
   name: ci-knative-eventing-0.25-s390x-e2e-tests
   agent: kubernetes
   decorate: true
@@ -12891,7 +12891,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "30 7 * * *"
+- cron: "30 9 * * *"
   name: ci-knative-eventing-0.26-s390x-e2e-tests
   agent: kubernetes
   decorate: true
@@ -20297,7 +20297,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "0 9 * * *"
+- cron: "0 5 * * *"
   name: ci-knative-operator-s390x-e2e-tests
   agent: kubernetes
   decorate: true
@@ -20360,7 +20360,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 21 * * *"
+- cron: "0 17 * * *"
   name: ci-knative-operator-0.23-s390x-e2e-tests
   agent: kubernetes
   decorate: true
@@ -20425,7 +20425,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 6 * * *"
+- cron: "0 8 * * *"
   name: ci-knative-operator-0.24-s390x-e2e-tests
   agent: kubernetes
   decorate: true
@@ -20490,7 +20490,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 18 * * *"
+- cron: "0 20 * * *"
   name: ci-knative-operator-0.25-s390x-e2e-tests
   agent: kubernetes
   decorate: true
@@ -20555,7 +20555,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "30 9 * * *"
+- cron: "30 11 * * *"
   name: ci-knative-operator-0.26-s390x-e2e-tests
   agent: kubernetes
   decorate: true
