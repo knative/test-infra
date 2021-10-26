@@ -32,6 +32,7 @@ import (
 func addCheckCmd(root *cobra.Command) {
 	var domain string
 	var release string
+	var moduleRelease string
 	var rulesetFlag string
 	var ruleset git.RulesetType
 	var verbose bool
@@ -59,6 +60,9 @@ Rulesets,
 			if ruleset == git.InvalidRule {
 				return fmt.Errorf("invalid ruleset, please select one of: [%s]", strings.Join(git.Rulesets(), ", "))
 			}
+			if moduleRelease == "" {
+				moduleRelease = release
+			}
 			return nil
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -69,7 +73,7 @@ Rulesets,
 				out = cmd.OutOrStderr()
 			}
 
-			err := gomod.Check(gomodFile, release, domain, ruleset, out)
+			err := gomod.Check(gomodFile, release, moduleRelease, domain, ruleset, out)
 			if errors.Is(err, gomod.DependencyErr) {
 				_, _ = fmt.Fprintln(cmd.OutOrStdout(), err.Error())
 				os.Exit(1)
@@ -83,6 +87,7 @@ Rulesets,
 	_ = cmd.MarkFlagRequired("domain")
 	cmd.Flags().StringVarP(&release, "release", "r", "", "release should be '<major>.<minor>' (i.e.: 1.23 or v1.23) [required]")
 	_ = cmd.MarkFlagRequired("release")
+	cmd.Flags().StringVarP(&moduleRelease, "module-release", "m", "", "if the go modules are a different release set than the release, use --module-release, should be '<major>.<minor>' (i.e.: 0.12 or v0.12)")
 	cmd.Flags().StringVar(&rulesetFlag, "ruleset", git.ReleaseOrReleaseBranchRule.String(), fmt.Sprintf("The ruleset to evaluate the dependency refs. Rulesets: [%s]", strings.Join(git.Rulesets(), ", ")))
 	cmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "Print verbose output.")
 

@@ -36,8 +36,13 @@ type ReleaseMeta struct {
 
 // ReleaseStatus collects metadata about release branch status and next released
 // version tags for a given module.
-func ReleaseStatus(gomod, release string, out io.Writer) (*ReleaseMeta, error) {
-	this, err := semver.ParseTolerant(release)
+func ReleaseStatus(gomod, release, moduleRelease string, out io.Writer) (*ReleaseMeta, error) {
+	r, err := semver.ParseTolerant(release)
+	if err != nil {
+		return nil, err
+	}
+
+	mr, err := semver.ParseTolerant(moduleRelease)
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +63,7 @@ func ReleaseStatus(gomod, release string, out io.Writer) (*ReleaseMeta, error) {
 		return nil, err
 	}
 
-	ref, refType := repo.BestRefFor(this, git.ReleaseBranchRule)
+	ref, refType := repo.BestRefFor(r, mr, git.ReleaseBranchRule)
 	if refType == git.ReleaseBranchRef {
 		_, rb, _ := git.ParseRef(ref)
 		next.ReleaseBranch = rb
@@ -68,7 +73,7 @@ func ReleaseStatus(gomod, release string, out io.Writer) (*ReleaseMeta, error) {
 			_, _ = fmt.Fprintln(out, "✔ ", rb)
 		}
 	} else {
-		next.ReleaseBranch = git.ReleaseBranchVersion(this)
+		next.ReleaseBranch = git.ReleaseBranchVersion(r)
 		next.ReleaseBranchExists = false
 
 		if out != nil {
@@ -76,7 +81,7 @@ func ReleaseStatus(gomod, release string, out io.Writer) (*ReleaseMeta, error) {
 		}
 	}
 
-	ref, refType = repo.BestRefFor(this, git.ReleaseRule)
+	ref, refType = repo.BestRefFor(r, mr, git.ReleaseRule)
 	if refType == git.ReleaseRef {
 		_, r, _ := git.ParseRef(ref)
 		rv, _ := semver.ParseTolerant(r) // has to parse, r is from BestRefFor
@@ -84,7 +89,7 @@ func ReleaseStatus(gomod, release string, out io.Writer) (*ReleaseMeta, error) {
 
 		next.Release = git.ReleaseVersion(rv)
 	} else {
-		next.Release = git.ReleaseVersion(this)
+		next.Release = git.ReleaseVersion(mr)
 	}
 
 	if out != nil {

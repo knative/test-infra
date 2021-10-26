@@ -92,7 +92,7 @@ func (rt RefType) String() string {
 
 // BestRefFor Returns module@ref, isRelease based on the provided ruleset for
 // a this release.
-func (r *Repo) BestRefFor(this semver.Version, ruleset RulesetType) (string, RefType) {
+func (r *Repo) BestRefFor(release, moduleRelease semver.Version, ruleset RulesetType) (string, RefType) {
 	switch ruleset {
 	case AnyRule, ReleaseOrReleaseBranchRule, ReleaseRule:
 		var largest *semver.Version
@@ -104,7 +104,7 @@ func (r *Repo) BestRefFor(this semver.Version, ruleset RulesetType) (string, Ref
 				if v.Pre != nil || v.Build != nil {
 					continue
 				}
-				if v.Major == this.Major && v.Minor == this.Minor {
+				if v.Major == moduleRelease.Major && v.Minor == moduleRelease.Minor {
 					if largest == nil || largest.LT(v) {
 						largest = &v
 					}
@@ -124,7 +124,7 @@ func (r *Repo) BestRefFor(this semver.Version, ruleset RulesetType) (string, Ref
 			if bv, ok := normalizeBranchVersion(b); ok {
 				v, _ := semver.Make(bv)
 
-				if v.Major == this.Major && v.Minor == this.Minor {
+				if v.Major == release.Major && v.Minor == release.Minor {
 					if largest == nil || largest.LT(v) {
 						largest = &v
 					}

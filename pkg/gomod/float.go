@@ -28,13 +28,18 @@ import (
 // Returns the set of module refs that were found. If no ref is found for a
 // dependency, Float omits that ref from the returned list. Float leverages
 // the same rules used by knative.dev/test-infra/pkg/git.Repo().BestRefFor
-func Float(gomod, release, domain string, ruleset git.RulesetType) ([]string, error) {
+func Float(gomod, release, moduleRelease, domain string, ruleset git.RulesetType) ([]string, error) {
 	_, packages, err := Modules([]string{gomod}, domain)
 	if err != nil {
 		return nil, err
 	}
 
-	this, err := semver.ParseTolerant(release)
+	r, err := semver.ParseTolerant(release)
+	if err != nil {
+		return nil, err
+	}
+
+	mr, err := semver.ParseTolerant(moduleRelease)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +51,7 @@ func Float(gomod, release, domain string, ruleset git.RulesetType) ([]string, er
 			return nil, err
 		}
 
-		if ref, refType := repo.BestRefFor(this, ruleset); refType != git.NoRef {
+		if ref, refType := repo.BestRefFor(r, mr, ruleset); refType != git.NoRef {
 			refs = append(refs, ref)
 		}
 	}
