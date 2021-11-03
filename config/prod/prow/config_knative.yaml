@@ -1,7 +1,6 @@
 presubmits:
   knative/serving:
   - repo-settings: null
-    performance: true
   - build-tests: true
     resources:
       requests:
