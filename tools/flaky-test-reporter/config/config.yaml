@@ -77,20 +77,6 @@ jobConfigs:
     slackChannels:
       - name: s390x
         identity: C027YB4QUUU
-  - name: ci-knative-serving-ambassador-latest
-    org: knative
-    repo: serving
-    type: postsubmit
-    slackChannels:
-      - name: net-ambassador
-        identity: C011X8SPF8X
-  - name: ci-knative-serving-kong-latest
-    org: knative
-    repo: serving
-    type: postsubmit
-    slackChannels:
-      - name: net-kong
-        identity: C01258TE58W
   - name: ci-knative-eventing-continuous
     org: knative
     repo: eventing
