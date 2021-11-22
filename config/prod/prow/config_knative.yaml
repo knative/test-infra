@@ -545,6 +545,11 @@ presubmits:
   - unit-tests: true
   - integration-tests: true
     needs-dind: true
+  - custom-test: upgrade-tests
+    needs-dind: true
+    args:
+      - --run-test
+      - ./test/e2e-upgrade-tests.sh
   - go-coverage: true
   knative-sandbox/eventing-rabbitmq:
   - build-tests: false
