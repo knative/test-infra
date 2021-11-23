@@ -146,6 +146,48 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+  - name: pull-knative-serving-performance-tests-kperf
+    agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-knative-serving-performance-tests-kperf
+    context: pull-knative-serving-performance-tests-kperf
+    always_run: false
+    optional: true
+    rerun_command: "/test pull-knative-serving-performance-tests-kperf"
+    trigger: "(?m)^/test (all|pull-knative-serving-performance-tests-kperf),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/serving
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/performance/performance-tests.sh"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
   - name: pull-knative-serving-istio-latest-mesh
     agent: kubernetes
     labels:
