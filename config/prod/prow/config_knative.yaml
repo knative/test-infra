@@ -21,6 +21,18 @@ presubmits:
       limits:
         memory: 16Gi
   - go-coverage: false
+  - custom-test: performance-tests-kperf
+    needs-monitor: true
+    always-run: false
+    optional: true
+    args:
+    - --run-test
+    - ./test/performance/performance-tests.sh
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
   - custom-test: istio-latest-mesh
     needs-monitor: true
     always-run: false
