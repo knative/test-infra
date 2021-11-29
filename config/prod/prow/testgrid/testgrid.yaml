@@ -697,6 +697,14 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
+- name: ci-knative-sandbox-net-gateway-api-continuous
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-gateway-api-continuous
+  alert_stale_results_hours: 3
+- name: ci-knative-sandbox-net-gateway-api-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-gateway-api-nightly-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
 - name: ci-knative-sandbox-net-http01-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-http01-continuous
   alert_stale_results_hours: 3
@@ -1458,6 +1466,8 @@ test_groups:
   short_text_metric: "coverage"
 - name: ci-knative-sandbox-net-contour-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-contour-continuous-beta-prow-tests
+- name: ci-knative-sandbox-net-gateway-api-continuous-beta-prow-tests
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-gateway-api-continuous-beta-prow-tests
 - name: ci-knative-sandbox-net-http01-continuous-beta-prow-tests
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-http01-continuous-beta-prow-tests
 - name: ci-knative-sandbox-net-istio-continuous-beta-prow-tests
@@ -2162,6 +2172,20 @@ dashboards:
     num_failures_to_alert: 1
   - name: auto-release
     test_group_name: ci-knative-sandbox-net-contour-auto-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+- name: net-gateway-api
+  dashboard_tab:
+  - name: continuous
+    test_group_name: ci-knative-sandbox-net-gateway-api-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: nightly
+    test_group_name: ci-knative-sandbox-net-gateway-api-nightly-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
@@ -3428,6 +3452,9 @@ dashboards:
   - name: ci-knative-sandbox-net-contour-continuous
     test_group_name: ci-knative-sandbox-net-contour-continuous-beta-prow-tests
     base_options: "sort-by-failures="
+  - name: ci-knative-sandbox-net-gateway-api-continuous
+    test_group_name: ci-knative-sandbox-net-gateway-api-continuous-beta-prow-tests
+    base_options: "sort-by-failures="
   - name: ci-knative-sandbox-net-http01-continuous
     test_group_name: ci-knative-sandbox-net-http01-continuous-beta-prow-tests
     base_options: "sort-by-failures="
@@ -3565,6 +3592,7 @@ dashboard_groups:
   - "sample-source"
   - "net-certmanager"
   - "net-contour"
+  - "net-gateway-api"
   - "net-http01"
   - "net-istio"
   - "net-kourier"

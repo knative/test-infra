@@ -18203,6 +18203,128 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
+- cron: "29 */4 * * *"
+  name: ci-knative-sandbox-net-gateway-api-continuous
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: net-gateway-api
+    path_alias: knative.dev/net-gateway-api
+    base_ref: main
+  annotations:
+    testgrid-dashboards: net-gateway-api
+    testgrid-tab-name: continuous
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/presubmit-tests.sh"
+      - "--all-tests"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "29 8,11,22 * * *"
+  name: ci-knative-sandbox-net-gateway-api-continuous-beta-prow-tests
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: net-gateway-api
+    path_alias: knative.dev/net-gateway-api
+    base_ref: main
+  annotations:
+    testgrid-dashboards: beta-prow-tests
+    testgrid-tab-name: ci-knative-sandbox-net-gateway-api-continuous
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:beta
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/presubmit-tests.sh"
+      - "--all-tests"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "3 9 * * *"
+  name: ci-knative-sandbox-net-gateway-api-nightly-release
+  agent: kubernetes
+  decorate: true
+  reporter_config:
+    slack:
+      channel: net-gateway-api
+      report_template: "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
+      job_states_to_report:
+      - "failure"
+  decoration_config:
+    timeout: 180m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative-sandbox
+    repo: net-gateway-api
+    path_alias: knative.dev/net-gateway-api
+    base_ref: main
+  annotations:
+    testgrid-dashboards: net-gateway-api
+    testgrid-tab-name: nightly-release
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./hack/release.sh"
+      - "--publish"
+      - "--tag-release"
+      volumeMounts:
+      - name: nightly-account
+        mountPath: /etc/nightly-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/nightly-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: nightly-account
+      secret:
+        secretName: nightly-account
 - cron: "9 */4 * * *"
   name: ci-knative-sandbox-net-http01-continuous
   agent: kubernetes
