@@ -1510,6 +1510,7 @@ periodics:
         job_states_to_report:
         - failure
         report_template: '"The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"'
+  - auto-release: true
   knative-sandbox/net-http01:
   - continuous: true
   - nightly: true

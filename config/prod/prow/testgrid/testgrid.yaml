@@ -705,6 +705,11 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
+- name: ci-knative-sandbox-net-gateway-api-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-gateway-api-auto-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
 - name: ci-knative-sandbox-net-http01-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-net-http01-continuous
   alert_stale_results_hours: 3
@@ -2186,6 +2191,12 @@ dashboards:
     num_failures_to_alert: 3
   - name: nightly
     test_group_name: ci-knative-sandbox-net-gateway-api-nightly-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: auto-release
+    test_group_name: ci-knative-sandbox-net-gateway-api-auto-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
