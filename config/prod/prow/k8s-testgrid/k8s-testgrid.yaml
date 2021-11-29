@@ -70,6 +70,7 @@ dashboards:
 - name: kperf
 - name: net-certmanager
 - name: net-contour
+- name: net-gateway-api
 - name: net-http01
 - name: net-istio
 - name: net-kourier
@@ -127,6 +128,7 @@ dashboard_groups:
       - "kperf"
       - "net-certmanager"
       - "net-contour"
+      - "net-gateway-api"
       - "net-http01"
       - "net-istio"
       - "net-kourier"
