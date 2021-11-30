@@ -218,6 +218,18 @@ presubmits:
         memory: 12Gi
       limits:
         memory: 16Gi
+  - custom-test: gateway-api-latest
+    needs-monitor: true
+    always-run: false
+    run-if-changed: ^third_party/gateway-api-latest/*
+    args:
+    - --run-test
+    - ./test/e2e-tests.sh --gateway-api-version latest
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
   - custom-test: https
     always-run: false
     run-if-changed: ^third_party/cert-manager-latest/*
@@ -668,6 +680,12 @@ periodics:
     - ./test/e2e-tests.sh --contour-version latest
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --contour-version latest --run-http01-auto-tls-tests
+  - custom-job: gateway-api-latest
+    command:
+    - ./test/presubmit-tests.sh
+    args:
+    - --run-test
+    - ./test/e2e-tests.sh --gateway-api-version latest
   - custom-job: https
     command:
     - ./test/presubmit-tests.sh
