@@ -825,6 +825,49 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+  - name: pull-knative-serving-gateway-api-latest
+    agent: kubernetes
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: pull-knative-serving-gateway-api-latest
+    context: pull-knative-serving-gateway-api-latest
+    always_run: false
+    optional: false
+    run_if_changed: "^third_party/gateway-api-latest/*"
+    rerun_command: "/test pull-knative-serving-gateway-api-latest"
+    trigger: "(?m)^/test (all|pull-knative-serving-gateway-api-latest),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/serving
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --gateway-api-version latest"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+        resources:
+          requests:
+            memory: 12Gi
+          limits:
+            memory: 16Gi
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
   - name: pull-knative-serving-https
     agent: kubernetes
     context: pull-knative-serving-https
@@ -7036,6 +7079,45 @@ periodics:
       - "./test/e2e-tests.sh --contour-version latest"
       - "--run-test"
       - "./test/e2e-auto-tls-tests.sh --contour-version latest --run-http01-auto-tls-tests"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "32 */3 * * *"
+  name: ci-knative-serving-gateway-api-latest
+  agent: kubernetes
+  decorate: true
+  decoration_config:
+    timeout: 120m
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: serving
+    path_alias: knative.dev/serving
+    base_ref: main
+  annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: gateway-api-latest
+    testgrid-alert-stale-results-hours: "3"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/presubmit-tests.sh"
+      - "--run-test"
+      - "./test/e2e-tests.sh --gateway-api-version latest"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
