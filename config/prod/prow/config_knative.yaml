@@ -71,8 +71,8 @@ presubmits:
         memory: 16Gi
   - custom-test: istio-latest-no-mesh
     needs-monitor: true
-    always-run: false
-    optional: true
+    always-run: true
+    optional: false
     args:
     - --run-test
     - ./test/e2e-tests.sh --istio-version latest --no-mesh
@@ -83,86 +83,11 @@ presubmits:
         memory: 16Gi
   - custom-test: istio-latest-no-mesh-tls
     needs-monitor: true
-    always-run: false
-    optional: true
+    always-run: true
+    optional: false
     args:
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --istio-version latest --no-mesh
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - custom-test: istio-stable-mesh
-    needs-monitor: true
-    always-run: false
-    optional: true
-    run-if-changed: ^third_party/istio-latest/net-istio.yaml
-    args:
-    - --run-test
-    - ./test/e2e-tests.sh --istio-version stable --mesh
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - custom-test: istio-stable-mesh-short
-    needs-monitor: true
-    always-run: false
-    optional: true
-    run-if-changed: ^third_party/istio-latest/net-istio.yaml
-    args:
-    - --run-test
-    - ./test/e2e-tests.sh --istio-version stable --mesh --short
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - custom-test: istio-stable-mesh-tls
-    needs-monitor: true
-    always-run: false
-    optional: true
-    run-if-changed: ^third_party/istio-latest/net-istio.yaml
-    args:
-    - --run-test
-    - ./test/e2e-auto-tls-tests.sh --istio-version stable --mesh
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - custom-test: istio-stable-no-mesh
-    needs-monitor: true
-    always-run: true
-    optional: false
-    args:
-    - --run-test
-    - ./test/e2e-tests.sh --istio-version stable --no-mesh
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - custom-test: istio-stable-no-mesh-tls
-    needs-monitor: true
-    always-run: true
-    optional: false
-    args:
-    - --run-test
-    - ./test/e2e-auto-tls-tests.sh --istio-version stable --no-mesh
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - custom-test: istio-stable-no-mesh-tls-with-http01
-    needs-monitor: true
-    always-run: false
-    optional: true
-    args:
-    - --run-test
-    - ./test/e2e-auto-tls-tests.sh --istio-version stable --no-mesh --run-http01-auto-tls-tests
     resources:
       requests:
         memory: 12Gi
@@ -461,11 +386,6 @@ presubmits:
     args:
     - --run-test
     - ./test/e2e-tests.sh --istio-version latest --mesh
-  - custom-test: stable-mesh
-    optional: true
-    args:
-    - --run-test
-    - ./test/e2e-tests.sh --istio-version stable --mesh
   knative-sandbox/net-kourier:
   - build-tests: true
   - unit-tests: true
@@ -648,22 +568,6 @@ periodics:
     - ./test/e2e-tests.sh --istio-version head --no-mesh
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --istio-version head --no-mesh
-  - custom-job: istio-stable-mesh
-    command:
-    - ./test/presubmit-tests.sh
-    args:
-    - --run-test
-    - ./test/e2e-tests.sh --istio-version stable --mesh
-    - --run-test
-    - ./test/e2e-auto-tls-tests.sh --istio-version stable --mesh
-  - custom-job: istio-stable-no-mesh
-    command:
-    - ./test/presubmit-tests.sh
-    args:
-    - --run-test
-    - ./test/e2e-tests.sh --istio-version stable --no-mesh
-    - --run-test
-    - ./test/e2e-auto-tls-tests.sh --istio-version stable --no-mesh --run-http01-auto-tls-tests
   - custom-job: kourier-stable
     command:
     - ./test/presubmit-tests.sh

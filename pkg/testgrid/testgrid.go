@@ -30,8 +30,6 @@ var jobNameTestgridURLMap = map[string]string{
 	"ci-knative-serving-continuous":           "serving#continuous",
 	"ci-knative-serving-istio-latest-mesh":    "serving#istio-latest-mesh",
 	"ci-knative-serving-istio-latest-no-mesh": "serving#istio-latest-no-mesh",
-	"ci-knative-serving-istio-stable-mesh":    "serving#istio-stable-mesh",
-	"ci-knative-serving-istio-stable-no-mesh": "serving#istio-stable-no-mesh",
 	"ci-knative-serving-kourier-stable":       "serving#kourier-stable",
 	"ci-knative-serving-contour-latest":       "serving#contour-latest",
 	"ci-knative-serving-gateway-api-latest":   "serving#gateway-api-latest",
