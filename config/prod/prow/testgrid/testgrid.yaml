@@ -58,6 +58,9 @@ test_groups:
 - name: ci-knative-serving-continuous
   gcs_prefix: knative-prow/logs/ci-knative-serving-continuous
   alert_stale_results_hours: 3
+- name: ci-knative-serving-performance-latest
+  gcs_prefix: knative-prow/logs/ci-knative-serving-performance-latest
+  alert_stale_results_hours: 3
 - name: ci-knative-serving-istio-latest-mesh
   gcs_prefix: knative-prow/logs/ci-knative-serving-istio-latest-mesh
   alert_stale_results_hours: 3
@@ -1590,6 +1593,9 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 3
+  - name: performance-latest
+    test_group_name: ci-knative-serving-performance-latest
+    base_options: "sort-by-name="
   - name: istio-latest-mesh
     test_group_name: ci-knative-serving-istio-latest-mesh
     base_options: "sort-by-name="

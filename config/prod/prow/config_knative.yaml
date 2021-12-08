@@ -536,6 +536,12 @@ periodics:
     release: "1.0"
   - branch-ci: true
     release: "1.1"
+  - custom-job: performance-latest
+    command:
+    - ./test/presubmit-tests.sh
+    args:
+    - "--run-test"
+    - "./test/performance/performance-tests.sh"
   - custom-job: istio-latest-mesh
     command:
     - ./test/presubmit-tests.sh
