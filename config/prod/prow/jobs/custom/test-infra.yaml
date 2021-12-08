@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Add a fake plank image here so that autobump.sh can bump only job configs
-# image: gcr.io/k8s-prow/plank:v20210506-5c14a376fa
+# Add a fake hook image here so that autobump.sh can bump only job configs
+# image: gcr.io/k8s-prow/hook:v20210506-5c14a376fa
 # See
 # https://github.com/kubernetes/test-infra/blob/5815354584709c3f436e3d682110c673d224d7b1/prow/cmd/autobump/autobump.sh#L164
 
