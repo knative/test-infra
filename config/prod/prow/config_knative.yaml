@@ -537,6 +537,7 @@ periodics:
   - branch-ci: true
     release: "1.1"
   - custom-job: performance-latest
+    cron: 30 20 * * *
     command:
     - ./test/presubmit-tests.sh
     args:
