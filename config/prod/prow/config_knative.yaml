@@ -1146,25 +1146,25 @@ periodics:
   - nightly: true
   - auto-release: true
   - dot-release: true
-    release: "0.24"
-  - dot-release: true
     release: "0.25"
   - dot-release: true
     release: "0.26"
   - dot-release: true
     release: "1.0"
+  - dot-release: true
+    release: "1.1"
   knative-sandbox/eventing-ceph:
   - continuous: true
   - nightly: true
   - auto-release: true
   - dot-release: true
-    release: "0.24"
-  - dot-release: true
     release: "0.25"
   - dot-release: true
     release: "0.26"
   - dot-release: true
     release: "1.0"
+  - dot-release: true
+    release: "1.1"
   knative-sandbox/eventing-couchdb:
   - continuous: true
   - nightly: true
@@ -1226,13 +1226,13 @@ periodics:
   - nightly: true
   - auto-release: true
   - dot-release: true
-    release: "0.24"
-  - dot-release: true
     release: "0.25"
   - dot-release: true
     release: "0.26"
   - dot-release: true
     release: "1.0"
+  - dot-release: true
+    release: "1.1"
   knative-sandbox/eventing-redis:
   - continuous: true
   - nightly: true
