@@ -529,13 +529,13 @@ periodics:
       limits:
         memory: 16Gi
   - branch-ci: true
-    release: "0.24"
-  - branch-ci: true
     release: "0.25"
   - branch-ci: true
     release: "0.26"
   - branch-ci: true
     release: "1.0"
+  - branch-ci: true
+    release: "1.1"
   - custom-job: istio-latest-mesh
     command:
     - ./test/presubmit-tests.sh
@@ -799,13 +799,6 @@ periodics:
       limits:
         memory: 16Gi
   - dot-release: true
-    release: "0.24"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - dot-release: true
     release: "0.25"
     resources:
       requests:
@@ -821,6 +814,13 @@ periodics:
         memory: 16Gi
   - dot-release: true
     release: "1.0"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    release: "1.1"
     resources:
       requests:
         memory: 12Gi
@@ -999,13 +999,13 @@ periodics:
       limits:
         memory: 16Gi
   - branch-ci: true
-    release: "0.24"
-  - branch-ci: true
     release: "0.25"
   - branch-ci: true
     release: "0.26"
   - branch-ci: true
     release: "1.0"
+  - branch-ci: true
+    release: "1.1"
   - nightly: true
     reporter_config:
       slack:
@@ -1019,13 +1019,6 @@ periodics:
       limits:
         memory: 16Gi
   - dot-release: true
-    release: "0.24"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - dot-release: true
     release: "0.25"
     resources:
       requests:
@@ -1041,6 +1034,13 @@ periodics:
         memory: 16Gi
   - dot-release: true
     release: "1.0"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    release: "1.1"
     resources:
       requests:
         memory: 12Gi
@@ -1397,13 +1397,13 @@ periodics:
         - failure
         report_template: '"The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"'
   - dot-release: true
-    release: "0.24"
-  - dot-release: true
     release: "0.25"
   - dot-release: true
     release: "0.26"
   - dot-release: true
     release: "1.0"
+  - dot-release: true
+    release: "1.1"
   - auto-release: true
   knative-sandbox/net-contour:
   - continuous: true
@@ -1415,13 +1415,13 @@ periodics:
         - failure
         report_template: '"The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"'
   - dot-release: true
-    release: "0.24"
-  - dot-release: true
     release: "0.25"
   - dot-release: true
     release: "0.26"
   - dot-release: true
     release: "1.0"
+  - dot-release: true
+    release: "1.1"
   - auto-release: true
   knative-sandbox/net-gateway-api:
   - continuous: true
@@ -1460,13 +1460,13 @@ periodics:
     - --run-test
     - ./test/e2e-tests.sh --istio-version latest
   - dot-release: true
-    release: "0.24"
-  - dot-release: true
     release: "0.25"
   - dot-release: true
     release: "0.26"
   - dot-release: true
     release: "1.0"
+  - dot-release: true
+    release: "1.1"
   - auto-release: true
   knative-sandbox/net-kourier:
   - continuous: true
