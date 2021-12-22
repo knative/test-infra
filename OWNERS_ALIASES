@@ -31,23 +31,17 @@ aliases:
   - omerbensaadon
   - salaboy
   docs-reviewers:
-  - RichardJJG
-  - mpetason
   - nainaz
   - omerbensaadon
   - pmbanugo
   - snneji
   docs-wg-leads:
   - csantanapr
-  - omerbensaadon
   - snneji
   docs-writers:
-  - RichardJJG
   - abrennan89
-  - carieshmarie
   - csantanapr
-  - omerbensaadon
-  - richieescarez
+  - psschwei
   - snneji
   eventing-reviewers:
   - aslom
@@ -81,17 +75,15 @@ aliases:
   - knative-prow-updater-robot
   - knative-test-reporter-robot
   - lance
-  - markusthoemmes
-  - matzew
-  - nak3
   - pmorie
+  - psschwei
   - rhuss
   - spencerdillard
   - thisisnotapril
   - vaikas
   knative-release-leads:
-  - matzew
-  - nak3
+  - dprotaso
+  - psschwei
   knative-robots:
   - knative-prow-releaser-robot
   - knative-prow-robot
@@ -162,12 +154,10 @@ aliases:
   - steuhs
   productivity-wg-leads:
   - chizhg
-  - n3wscott
   productivity-writers:
   - chaodaiG
   - chizhg
   - coryrc
-  - n3wscott
   security-wg-leads:
   - evankanderson
   - julz
@@ -189,7 +179,6 @@ aliases:
   serving-writers:
   - dprotaso
   - julz
-  - markusthoemmes
   - tcnghia
   - vagababov
   source-wg-leads:
@@ -204,7 +193,6 @@ aliases:
   - dprotaso
   - evankanderson
   - julz
-  - markusthoemmes
   - rhuss
   trademark-committee:
   - duglin
@@ -212,9 +200,7 @@ aliases:
   - spencerdillard
   ux-wg-leads:
   - csantanapr
-  - omerbensaadon
   - snneji
   ux-writers:
   - csantanapr
-  - omerbensaadon
   - snneji
