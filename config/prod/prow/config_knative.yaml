@@ -493,7 +493,12 @@ presubmits:
     needs-dind: true
     args:
     - --run-test
-    - ./test/e2e-upgrade-tests.sh
+    - ./test/upgrade-tests.sh
+  - custom-test: reconciler-tests
+    needs-dind: true
+    args:
+      - --run-test
+      - ./test/reconciler-tests.sh
   - go-coverage: true
   knative-sandbox/eventing-rabbitmq:
   - build-tests: false
