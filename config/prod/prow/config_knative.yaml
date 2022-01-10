@@ -622,7 +622,7 @@ periodics:
     external_cluster:
       secret: s390x-cluster1
   - custom-job: s390x-kourier-tests
-    release: "0.23"
+    release: "1.0"
     cron: 0 15 * * *
     command:
     - bash
@@ -641,7 +641,7 @@ periodics:
     external_cluster:
       secret: s390x-cluster1
   - custom-job: s390x-kourier-tests
-    release: "0.24"
+    release: "1.1"
     cron: 0 4 * * *
     command:
     - bash
@@ -716,7 +716,7 @@ periodics:
     external_cluster:
       secret: s390x-cluster1
   - custom-job: s390x-contour-tests
-    release: "0.23"
+    release: "1.0"
     cron: 0 21 * * *
     command:
     - bash
@@ -735,7 +735,7 @@ periodics:
     external_cluster:
       secret: s390x-cluster1
   - custom-job: s390x-contour-tests
-    release: "0.24"
+    release: "1.1"
     cron: 0 12 * * *
     command:
     - bash
@@ -877,7 +877,7 @@ periodics:
     external_cluster:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
-    release: "0.23"
+    release: "1.0"
     cron: 0 23 * * *
     command:
     - bash
@@ -894,7 +894,7 @@ periodics:
     external_cluster:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
-    release: "0.24"
+    release: "1.1"
     cron: 0 10 * * *
     command:
     - bash
@@ -1075,7 +1075,7 @@ periodics:
     external_cluster:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
-    release: "0.23"
+    release: "1.0"
     cron: 0 19 * * *
     command:
     - bash
@@ -1093,7 +1093,7 @@ periodics:
     external_cluster:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
-    release: "0.24"
+    release: "1.1"
     cron: 0 6 * * *
     command:
     - bash
@@ -1561,7 +1561,7 @@ periodics:
     external_cluster:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
-    release: "0.23"
+    release: "1.0"
     cron: 0 17 * * *
     command:
     - bash
@@ -1578,7 +1578,7 @@ periodics:
     external_cluster:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
-    release: "0.24"
+    release: "1.1"
     cron: 0 8 * * *
     command:
     - bash
