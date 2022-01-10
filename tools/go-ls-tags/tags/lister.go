@@ -18,7 +18,6 @@ limitations under the License.
 
 import (
 	"context"
-	"errors"
 
 	"knative.dev/test-infra/tools/go-ls-tags/tags/index"
 )
@@ -31,11 +30,10 @@ const (
 	DefaultIgnoreFile = ".gotagsignore"
 )
 
-var (
-	ErrCantListFiles = errors.New("cannot list files")
-	DefaultExcludes  = []string{"vendor", "third_party", "hack", ".git"}
-)
+// DefaultExcludes is list of default excludes to be used.
+var DefaultExcludes = []string{"vendor", "third_party", "hack", ".git"}
 
+// Lister can list tags of Go source files.
 type Lister struct {
 	Directory  string
 	IgnoreFile string
@@ -44,6 +42,7 @@ type Lister struct {
 	context.Context
 }
 
+// List all used Go build tags, or errors.
 func (l Lister) List() ([]string, error) {
 	ff, err := l.files()
 	if err != nil {

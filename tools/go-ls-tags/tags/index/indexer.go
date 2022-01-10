@@ -26,6 +26,7 @@ import (
 	"knative.dev/test-infra/tools/go-ls-tags/files"
 )
 
+// ErrIndexingFailed when indexing failed.
 var ErrIndexingFailed = errors.New("indexing failed")
 
 // Index can index files to collect Go tags from them.

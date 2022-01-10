@@ -26,7 +26,7 @@ func (l Lister) files() ([]string, error) {
 	var files []string
 	err := filepath.Walk(l.Directory, func(fullpath string, info os.FileInfo, err error) error {
 		if err != nil {
-			return err
+			return errwrap(err)
 		}
 		if info.IsDir() || l.isExcluded(fullpath) {
 			return nil
@@ -38,7 +38,7 @@ func (l Lister) files() ([]string, error) {
 		return nil
 	})
 	if err != nil {
-		return nil, err
+		return nil, errwrap(err)
 	}
 	return files, nil
 }

@@ -18,7 +18,6 @@ package tags
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"path"
 	"strings"
@@ -28,7 +27,7 @@ import (
 
 func (l Lister) filterIgnored(tags []string, err error) ([]string, error) {
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", ErrCantListFiles, err)
+		return nil, errwrap(err)
 	}
 	ignoreFile := path.Join(l.Directory, l.IgnoreFile)
 	if _, err = os.Stat(ignoreFile); errors.Is(err, os.ErrNotExist) {
@@ -43,7 +42,7 @@ func (l Lister) filterIgnored(tags []string, err error) ([]string, error) {
 		ignored = append(ignored, line)
 	})
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", ErrCantListFiles, err)
+		return nil, errwrap(err)
 	}
 
 	result := make([]string, 0, len(tags))

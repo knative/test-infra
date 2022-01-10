@@ -1,7 +1,9 @@
-//go:build test_tag_v1 || test_tag_v2
-// +build test_tag_v1 test_tag_v2
+package tags
 
-// This file is used for testing purposes.
+import (
+	"errors"
+	"fmt"
+)
 
 /*
 Copyright 2022 The Knative Authors
@@ -19,4 +21,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package tags
+// ErrCantListTags when tags can't be listed.
+var ErrCantListTags = errors.New("cannot list tags")
+
+func errwrap(err error) error {
+	if !errors.Is(err, ErrCantListTags) {
+		return fmt.Errorf("%w: %v", ErrCantListTags, err)
+	}
+	return err
+}
