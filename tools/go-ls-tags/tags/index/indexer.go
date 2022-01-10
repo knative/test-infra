@@ -17,43 +17,79 @@ limitations under the License.
 */
 
 import (
+	"errors"
 	"go/build/constraint"
 	"log"
 	"sync"
 
+	"github.com/hashicorp/go-multierror"
 	"knative.dev/test-infra/tools/go-ls-tags/files"
 )
 
+var ErrIndexingFailed = errors.New("indexing failed")
+
+// Index can index files to collect Go tags from them.
 type Index struct {
 	Files []string
-	tags  map[string]struct{}
 }
 
+// Tags will search files for Go build tags.
 func (i *Index) Tags() ([]string, error) {
 	wg := new(sync.WaitGroup)
 	wg.Add(len(i.Files))
-	tags := new(set)
-	tagChan := make(chan string)
-	go collectTags(tagChan, tags)
+	results := make(chan []string, 1)
+	errCh := make(chan error)
+	errResult := make(chan error)
+	tagCh := make(chan string)
+	go collectTags(tagCh, results)
+	go collectErrors(errCh, errResult)
 	for _, file := range i.Files {
-		go lookupTags(file, wg, tagChan)
+		go lookupTags(file, wg, tagCh, errCh)
 	}
 	wg.Wait()
+	close(tagCh)
+	close(errCh)
 
-	return tags.list(), nil
+	tags := <-results
+	err := <-errResult
+	return tags, err
 }
 
-func lookupTags(path string, wg *sync.WaitGroup, ch chan<- string) {
+func lookupTags(path string, wg *sync.WaitGroup, tagCh chan<- string, errCh chan<- error) {
 	defer wg.Done()
-	files.ReadLines(path, func(line string) {
+	err := files.ReadLines(path, func(line string) {
 		expr, err := constraint.Parse(line)
 		if err != nil {
 			return
 		}
 		for _, tag := range extractTags(expr) {
-			ch <- tag
+			tagCh <- tag
 		}
 	})
+	if err != nil {
+		errCh <- err
+	}
+}
+
+func collectTags(tagCh <-chan string, results chan<- []string) {
+	tags := new(set)
+	for tag := range tagCh {
+		tags.add(tag)
+	}
+
+	results <- tags.list()
+}
+
+func collectErrors(errs <-chan error, results chan<- error) {
+	causes := make([]error, 0)
+	for err := range errs {
+		causes = append(causes, err)
+	}
+	var err error
+	if len(causes) > 0 {
+		err = multierror.Append(ErrIndexingFailed, causes...)
+	}
+	results <- err
 }
 
 func extractTags(expr constraint.Expr) []string {
@@ -73,12 +109,6 @@ func extractTags(expr constraint.Expr) []string {
 		log.Fatalf("unsupported type %T", v)
 	}
 	return tags
-}
-
-func collectTags(ch <-chan string, tags *set) {
-	for tag := range ch {
-		tags.add(tag)
-	}
 }
 
 type set struct {

@@ -24,7 +24,10 @@ import (
 )
 
 const (
-	DefaultExtension  = "go"
+	// DefaultExtension is a default extension for Go source files.
+	DefaultExtension = "go"
+	// DefaultIgnoreFile is a default name of ignore file, that can be used to
+	// ignore Go build tags.
 	DefaultIgnoreFile = ".gotagsignore"
 )
 

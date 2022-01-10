@@ -18,14 +18,14 @@ package files
 
 import (
 	"bufio"
-	"log"
 	"os"
 )
 
-func ReadLines(path string, fn func(line string)) {
+// ReadLines will read lines from a file and pass each line to a func handler.
+func ReadLines(path string, fn func(line string)) error {
 	f, err := os.Open(path)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	defer func(f *os.File) {
 		_ = f.Close()
@@ -36,7 +36,9 @@ func ReadLines(path string, fn func(line string)) {
 		fn(scanner.Text())
 	}
 
-	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
+	if err = scanner.Err(); err != nil {
+		return err
 	}
+
+	return nil
 }
