@@ -24,9 +24,13 @@ import (
 	"knative.dev/test-infra/pkg/golang/retcode"
 )
 
+// OsExitFunc is a os.Exit like function.
 type OsExitFunc func(int)
+
+// ExecuteOption is a option that can configure the ExecuteContext.
 type ExecuteOption func(ctx *ExecuteContext)
 
+// ExecuteContext holds a execution context.
 type ExecuteContext struct {
 	OsExitFunc
 	Args   []string
@@ -35,6 +39,7 @@ type ExecuteContext struct {
 	context.Context
 }
 
+// Execute the go-ls-tags tool.
 func Execute(opts ...ExecuteOption) {
 	ctx := ExecuteContext{
 		OsExitFunc: os.Exit,
