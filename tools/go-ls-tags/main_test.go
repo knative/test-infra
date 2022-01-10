@@ -44,6 +44,9 @@ func (tc *testCase) test(t *testing.T) {
 	if te.retcode != tc.retcode {
 		t.Errorf("want exit code: %d, got: %v", tc.retcode, te.retcode)
 	}
+	if te.errOut.String() != "" {
+		t.Error("Standard error output isn't empty:\n", te.errOut.String())
+	}
 	text := te.out.String()
 	for _, fragment := range tc.fragments {
 		if !strings.Contains(text, fragment) {

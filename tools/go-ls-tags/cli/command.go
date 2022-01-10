@@ -17,14 +17,9 @@ limitations under the License.
 package cli
 
 import (
-	"errors"
-	"fmt"
-
 	"github.com/spf13/cobra"
 	"knative.dev/test-infra/tools/go-ls-tags/tags"
 )
-
-var ErrUnexpected = errors.New("unexpected")
 
 type execution struct {
 	ExecuteContext
@@ -43,8 +38,10 @@ func newExecution(ctx ExecuteContext) execution {
 		args:           &args{},
 	}
 	root := &cobra.Command{
-		Use:   "go-ls-tags",
-		Short: "List build tags within a Go source tree",
+		Use:           "go-ls-tags",
+		Short:         "List build tags within a Go source tree",
+		SilenceUsage:  true,
+		SilenceErrors: true,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			lister := &tags.Lister{
 				Extension:  ex.extension,
@@ -69,7 +66,8 @@ type presenter struct {
 
 func (p presenter) present(tags []string, err error) error {
 	if err != nil {
-		return fmt.Errorf("%w: %v", ErrUnexpected, err)
+		p.PrintErr("Error: ", err)
+		return err
 	}
 	for _, tag := range tags {
 		p.Println(tag)
@@ -79,4 +77,5 @@ func (p presenter) present(tags []string, err error) error {
 
 type printer interface {
 	Println(i ...interface{})
+	PrintErr(i ...interface{})
 }

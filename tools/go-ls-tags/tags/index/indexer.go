@@ -18,11 +18,12 @@ limitations under the License.
 
 import (
 	"errors"
+	"fmt"
 	"go/build/constraint"
 	"log"
+	"strings"
 	"sync"
 
-	"github.com/hashicorp/go-multierror"
 	"knative.dev/test-infra/tools/go-ls-tags/files"
 )
 
@@ -88,7 +89,11 @@ func collectErrors(errs <-chan error, results chan<- error) {
 	}
 	var err error
 	if len(causes) > 0 {
-		err = multierror.Append(ErrIndexingFailed, causes...)
+		sb := new(strings.Builder)
+		for _, cause := range causes {
+			sb.WriteString("\n - " + cause.Error())
+		}
+		err = fmt.Errorf("%w: %s", ErrIndexingFailed, sb)
 	}
 	results <- err
 }
