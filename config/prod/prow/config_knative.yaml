@@ -181,6 +181,10 @@ presubmits:
   - build-tests: true
   - unit-tests: true
   - integration-tests: true
+  knative-sandbox/reconciler-test:
+    - build-tests: true
+    - unit-tests: true
+    - integration-tests: true
   knative-sandbox/kn-plugin-diag:
   - build-tests: true
   - unit-tests: true
