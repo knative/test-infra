@@ -447,6 +447,22 @@ test_groups:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   alert_stale_results_hours: 170
   num_failures_to_alert: 1
+- name: ci-knative-sandbox-kn-plugin-func-auto-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-func-auto-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-kn-plugin-func-nightly-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-func-nightly-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  num_failures_to_alert: 1
+- name: ci-knative-sandbox-kn-plugin-func-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-func-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
 - name: ci-knative-sandbox-kn-plugin-migration-continuous
   gcs_prefix: knative-prow/logs/ci-knative-sandbox-kn-plugin-migration-continuous
   alert_stale_results_hours: 3
@@ -1792,6 +1808,26 @@ dashboards:
     num_failures_to_alert: 1
   - name: dot-release
     test_group_name: ci-knative-sandbox-kn-plugin-event-dot-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+- name: kn-plugin-func
+  dashboard_tab:
+  - name: auto-release
+    test_group_name: ci-knative-sandbox-kn-plugin-func-auto-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: nightly
+    test_group_name: ci-knative-sandbox-kn-plugin-func-nightly-release
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 1
+  - name: dot-release
+    test_group_name: ci-knative-sandbox-kn-plugin-func-dot-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
@@ -3575,6 +3611,7 @@ dashboard_groups:
   dashboard_names:
   - "kn-plugin-diag"
   - "kn-plugin-event"
+  - "kn-plugin-func"
   - "kn-plugin-migration"
   - "kn-plugin-operator"
   - "kn-plugin-sample"

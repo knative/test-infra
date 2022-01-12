@@ -50,6 +50,7 @@ dashboards:
 - name: kn-plugin-admin
 - name: kn-plugin-diag
 - name: kn-plugin-event
+- name: kn-plugin-func
 - name: kn-plugin-migration
 - name: kn-plugin-operator
 - name: kn-plugin-quickstart
@@ -117,6 +118,7 @@ dashboard_groups:
       - "kn-plugin-admin"
       - "kn-plugin-diag"
       - "kn-plugin-event"
+      - "kn-plugin-func"
       - "kn-plugin-migration"
       - "kn-plugin-operator"
       - "kn-plugin-quickstart"
