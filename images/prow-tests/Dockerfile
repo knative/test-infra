@@ -15,7 +15,7 @@
 FROM gcr.io/k8s-testimages/kubekins-e2e:v20210113-cc576af-master AS stable-stuff
 
 ENV DEBIAN_FRONTEND noninteractive
-ARG GCLOUD_VERSION=317.0.0
+ARG GCLOUD_VERSION=368.0.0
 ARG KUBECTL_VERSION=v1.21.4
 
 # If we don't run update, the apt-get install below don't work
@@ -30,8 +30,7 @@ RUN rm -f "$(which kubectl)" && \
     chmod +x /usr/local/bin/kubectl
 
 # Docker
-RUN gcloud components install docker-credential-gcr
-RUN docker-credential-gcr configure-docker
+RUN gcloud auth configure-docker -q
 
 # Extra tools through apt-get
 RUN apt-get install -y uuid-runtime   # for uuidgen
