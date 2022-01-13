@@ -193,10 +193,6 @@ presubmits:
   - build-tests: true
   - unit-tests: true
   - integration-tests: true
-  knative-sandbox/kn-plugin-func:
-  - unit-tests: true
-  - integration-tests: true
-    needs-dind: true
   knative-sandbox/kn-plugin-migration:
   - build-tests: true
   - unit-tests: true
@@ -965,8 +961,11 @@ periodics:
   - dot-release: true
   knative-sandbox/kn-plugin-func:
   - auto-release: true
+    needs-dind: true
   - nightly: true
+    needs-dind: true
   - dot-release: true
+    needs-dind: true
   knative-sandbox/kn-plugin-migration:
   - continuous: true
   knative-sandbox/kn-plugin-operator:
