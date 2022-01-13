@@ -30,7 +30,7 @@ RUN rm -f "$(which kubectl)" && \
     chmod +x /usr/local/bin/kubectl
 
 # Docker
-RUN gcloud components install docker-credential-gcr
+RUN go get -u github.com/GoogleCloudPlatform/docker-credential-gcr@v2.0.5
 RUN docker-credential-gcr configure-docker --registries=gcr.io,us-docker.pkg.dev
 
 # Extra tools through apt-get
