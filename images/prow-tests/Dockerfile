@@ -30,7 +30,8 @@ RUN rm -f "$(which kubectl)" && \
     chmod +x /usr/local/bin/kubectl
 
 # Docker
-RUN gcloud auth configure-docker -q
+RUN gcloud components install docker-credential-gcr
+RUN docker-credential-gcr configure-docker --registries=gcr.io,us-docker.pkg.dev
 
 # Extra tools through apt-get
 RUN apt-get install -y uuid-runtime   # for uuidgen
