@@ -2874,42 +2874,6 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
-  - name: pull-knative-test-infra-prow-tests-image-build
-    agent: kubernetes
-    context: pull-knative-test-infra-prow-tests-image-build
-    always_run: false
-    optional: false
-    run_if_changed: "^(images/prow-tests/.*|kntest/.*|pkg/.*|go.mod)$"
-    rerun_command: "/test pull-knative-test-infra-prow-tests-image-build"
-    trigger: "(?m)^/test (all|pull-knative-test-infra-prow-tests-image-build),?(\\s+|$)"
-    decorate: true
-    path_alias: knative.dev/test-infra
-    cluster: "build-knative"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "runner.sh"
-        - "make"
-        - "-C"
-        - "images/prow-tests"
-        - "build"
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-      volumes:
-      - name: test-account
-        secret:
-          secretName: test-account
   knative/hack:
   - name: pull-knative-hack-build-tests
     agent: kubernetes

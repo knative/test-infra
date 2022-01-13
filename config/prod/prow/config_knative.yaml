@@ -271,16 +271,6 @@ presubmits:
   - build-tests: true
   - unit-tests: true
   - go-coverage: true
-  - custom-test: prow-tests-image-build
-    always-run: false
-    run-if-changed: "^(images/prow-tests/.*|kntest/.*|pkg/.*|go.mod)$"
-    command:
-      - runner.sh
-    args:
-    - "make"
-    - "-C"
-    - "images/prow-tests"
-    - "build"
   knative/hack:
   - build-tests: true
   - unit-tests: true
