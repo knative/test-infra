@@ -29,10 +29,6 @@ RUN rm -f "$(which kubectl)" && \
     wget "https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -O /usr/local/bin/kubectl && \
     chmod +x /usr/local/bin/kubectl
 
-# Docker
-RUN go get -u github.com/GoogleCloudPlatform/docker-credential-gcr@v2.0.5
-RUN docker-credential-gcr configure-docker --registries=gcr.io,us-docker.pkg.dev
-
 # Extra tools through apt-get
 RUN apt-get install -y uuid-runtime   # for uuidgen
 RUN apt-get install -y shellcheck     # for shellcheck presubmit
@@ -130,6 +126,10 @@ RUN go get github.com/gogo/protobuf/protoc-gen-gogofaster@v1.3.1
 # TODO(chizhg): remove it once we replace with kntest in the places where this tool is used
 # Install our own tools
 RUN go get knative.dev/pkg/testutils/junithelper@release-0.17
+
+# Docker
+RUN go get -u github.com/GoogleCloudPlatform/docker-credential-gcr@v2.0.5
+RUN docker-credential-gcr configure-docker --registries=gcr.io,us-docker.pkg.dev
 
 ############################################################
 FROM stable-stuff AS test-infra-builds
