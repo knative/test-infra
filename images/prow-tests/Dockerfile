@@ -42,16 +42,12 @@ RUN apt-get update
 RUN apt-get install -y adoptopenjdk-${JAVA_VERSION}-hotspot
 ENV JAVA_HOME=/usr/lib/jvm/adoptopenjdk-${JAVA_VERSION}-hotspot-amd64
 
-# Setup maven and required envs
-# It seems the old minor maven versions will be removed once there is a new one,
-# so it'll be possible that the version specified here won't be downloadable in
-# the future and break the image build.
-# TODO: find a better way to install maven.
-ARG MAVEN_VERSION=3.8.3
+# Download maven from https://archive.apache.org/dist/maven/maven-3/ instead of dlcdn.apache.org to guarantee reproducible builds
+ARG MAVEN_VERSION=3.8.4
 ENV MAVEN_HOME=/usr/local/maven
 ENV M2_HOME=$MAVEN_HOME
 ENV PATH=${M2_HOME}/bin:${PATH}
-RUN wget -q https://downloads.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz -P /tmp && \
+RUN wget -q https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz -P /tmp && \
     tar xf /tmp/apache-maven-${MAVEN_VERSION}-bin.tar.gz -C /tmp && \
     mv /tmp/apache-maven-${MAVEN_VERSION} $MAVEN_HOME
 
