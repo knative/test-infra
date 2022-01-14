@@ -90,12 +90,8 @@ presubmits:
         - "make"
         - "-C"
         - "images/prow-tests"
-        - "build"
-        securityContext:
-          privileged: true
+        - "build-ci-test"
         env:
-        - name: DOCKER_IN_DOCKER_ENABLED
-          value: "true"
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         volumeMounts:
@@ -103,8 +99,6 @@ presubmits:
           mountPath: /etc/test-account
           readOnly: true
       volumes:
-      - name: docker-graph
-        emptyDir: {}
       - name: test-account
         secret:
           secretName: test-account
