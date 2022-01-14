@@ -12,42 +12,61 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM gcr.io/k8s-testimages/kubekins-e2e:v20210113-cc576af-master AS stable-stuff
+# Starting from the gcloud debian image https://github.com/GoogleCloudPlatform/cloud-sdk-docker/blob/master/debian_slim/Dockerfile
+ARG GCLOUD_VERSION=368.0.0
+
+FROM google/cloud-sdk:${GCLOUD_VERSION}-slim AS stable-stuff
 
 ENV DEBIAN_FRONTEND noninteractive
-ARG GCLOUD_VERSION=368.0.0
+
 ARG KUBECTL_VERSION=v1.21.4
-
-# If we don't run update, the apt-get install below don't work
-RUN apt-get update
-
-# gcloud
-RUN gcloud components update --version=${GCLOUD_VERSION}
+ARG BAZELISK_VERSION=v1.11.0
+ARG DOCKER_VERSION=5:20.10.9~3-0~debian-buster
 
 # kubectl
-RUN rm -f "$(which kubectl)" && \
-    wget "https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -O /usr/local/bin/kubectl && \
+RUN curl -fsSL "https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -o /usr/local/bin/kubectl && \
     chmod +x /usr/local/bin/kubectl
 
-# Extra tools through apt-get
-RUN apt-get install -y uuid-runtime   # for uuidgen
-RUN apt-get install -y shellcheck     # for shellcheck presubmit
+# bazel
+RUN curl -fsSL "https://github.com/bazelbuild/bazelisk/releases/download/${BAZELISK_VERSION}/bazelisk-linux-amd64" -o /usr/local/bin/bazel && \
+    chmod +x /usr/local/bin/bazel
+
+# Docker including docker-ce, docker-ce-cli, and containerd.io
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
+    echo "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list && \
+    apt-get update && \
+    apt-get -y install --no-install-recommends docker-ce="${DOCKER_VERSION}" docker-ce-cli="${DOCKER_VERSION}"
+
+# # Install gcloud command line tool
+# # Install gcloud beta component
+# RUN set -eux; \
+#     \
+#     case $(uname -m) in \
+#         x86_64)  export GCLOUD_TAR_FILE="google-cloud-sdk-${GCLOUD_VERSION}-linux-x86_64.tar.gz" ;; \
+#         aarch64) export GCLOUD_TAR_FILE="google-cloud-sdk-${GCLOUD_VERSION}-linux-arm.tar.gz" ;; \
+#         *) echo "unsupported architecture"; exit 1 ;; \
+#     esac; \
+#     \
+#     wget -nv "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/${GCLOUD_TAR_FILE}"; \
+#     tar -xzvf ."/${GCLOUD_TAR_FILE}" -C "${OUTDIR}/usr/local" && rm "${GCLOUD_TAR_FILE}"; \
+#     ${OUTDIR}/usr/local/google-cloud-sdk/bin/gcloud components install beta --quiet; \
+#     ${OUTDIR}/usr/local/google-cloud-sdk/bin/gcloud components install alpha --quiet; \
+#     rm -rf /usr/local/google-cloud-sdk/.install/.backup
 
 # Setup adoptopenjdk
 ARG JAVA_VERSION=16
-RUN apt-get install -y wget apt-transport-https gnupg
-RUN wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add -
+RUN curl -sf https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add -
 RUN echo "deb https://adoptopenjdk.jfrog.io/adoptopenjdk/deb buster main" | tee /etc/apt/sources.list.d/adoptopenjdk.list
 RUN apt-get update
 RUN apt-get install -y adoptopenjdk-${JAVA_VERSION}-hotspot
 ENV JAVA_HOME=/usr/lib/jvm/adoptopenjdk-${JAVA_VERSION}-hotspot-amd64
 
-# Download maven from https://archive.apache.org/dist/maven/maven-3/ instead of dlcdn.apache.org to guarantee reproducible builds
-ARG MAVEN_VERSION=3.8.4
+ARG MAVEN_VERSION=3.8.3
 ENV MAVEN_HOME=/usr/local/maven
 ENV M2_HOME=$MAVEN_HOME
 ENV PATH=${M2_HOME}/bin:${PATH}
-RUN wget -q https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz -P /tmp && \
+
+RUN curl -fsSL https://downloads.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz -o /tmp/apache-maven-${MAVEN_VERSION}-bin.tar.gz && \
     tar xf /tmp/apache-maven-${MAVEN_VERSION}-bin.tar.gz -C /tmp && \
     mv /tmp/apache-maven-${MAVEN_VERSION} $MAVEN_HOME
 
@@ -56,7 +75,7 @@ RUN java -version && \
 
 # Install go 1.13, 1.14, and 1.15 using https://github.com/moovweb/gvm
 # Missing prerequisite:
-RUN apt-get install -y bison
+RUN apt-get install -y bison uuid-runtime shellcheck unzip
 # GVM_NO_UPDATE_PROFILE=true means do not alter /root/.bashrc to automatically source gvm config, so when not using runner.sh, image works normally
 # Install the tool:
 RUN curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer | GVM_NO_UPDATE_PROFILE=true bash
@@ -68,13 +87,13 @@ COPY images/prow-tests/source-gvm-and-run.sh /usr/local/bin
 # We only install the latest 3 versions of Go which should be enough for
 # all Knative repositories.
 RUN source-gvm-and-run.sh install go1.15.15 --prefer-binary
-RUN source-gvm-and-run.sh install go1.16.13 --prefer-binary
-RUN source-gvm-and-run.sh install go1.17.6 --prefer-binary
+RUN source-gvm-and-run.sh install go1.16.9 --prefer-binary
+RUN source-gvm-and-run.sh install go1.17.2 --prefer-binary
 RUN source-gvm-and-run.sh use go1.17 --default
 
 # protoc and required golang tooling
 ARG PROTOC_VERSION=3.17.0
-RUN wget "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip" -O protoc.zip \
+RUN curl -fsSL "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip" -o protoc.zip \
     && unzip -p protoc.zip bin/protoc > /usr/local/bin/protoc \
     && chmod +x /usr/local/bin/protoc \
     && rm protoc.zip
@@ -100,20 +119,23 @@ ARG KUBETEST2_VERSION=ea3c260668075a29dd2b7f3ba4ddf1fe78bdf898
 ARG KIND_VERSION=v0.11.1
 ARG KO_VERSION=v0.8.2
 ARG PROTOC_GEN_GO_VERSION=v1.26.0
+ARG KIND_VERSION=v0.11.1
 
 # Extra tools through go get
 # These run using the golang image version of Go, not any defined by `gvm`
-RUN go get github.com/google/ko@${KO_VERSION}
+RUN go install github.com/google/ko@${KO_VERSION}
 RUN go get github.com/boz/kail/cmd/kail
-RUN go get gotest.tools/gotestsum
-RUN go get github.com/raviqqe/liche@v0.0.0-20200229003944-f57a5d1c5be4  # stable liche version for checking md links
-RUN go get sigs.k8s.io/kind@${KIND_VERSION}
-RUN go get sigs.k8s.io/kubetest2@${KUBETEST2_VERSION}
-RUN go get sigs.k8s.io/kubetest2/kubetest2-gke@${KUBETEST2_VERSION}
-RUN go get sigs.k8s.io/kubetest2/kubetest2-kind@${KUBETEST2_VERSION}
-RUN go get sigs.k8s.io/kubetest2/kubetest2-tester-exec@${KUBETEST2_VERSION}
-RUN go get google.golang.org/protobuf/cmd/protoc-gen-go@${PROTOC_GEN_GO_VERSION}
-RUN go get github.com/google/go-licenses
+RUN go install gotest.tools/gotestsum
+RUN go install github.com/raviqqe/liche@v0.0.0-20200229003944-f57a5d1c5be4  # stable liche version for checking md links
+RUN go install sigs.k8s.io/kind@${KIND_VERSION}
+RUN go install sigs.k8s.io/kubetest2@${KUBETEST2_VERSION}
+RUN go install sigs.k8s.io/kubetest2/kubetest2-gke@${KUBETEST2_VERSION}
+RUN go install sigs.k8s.io/kubetest2/kubetest2-kind@${KUBETEST2_VERSION}
+RUN go install sigs.k8s.io/kubetest2/kubetest2-tester-exec@${KUBETEST2_VERSION}
+RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@${PROTOC_GEN_GO_VERSION}
+RUN go install github.com/google/go-licenses
+RUN go install sigs.k8s.io/kind@${KIND_VERSION}
+
 
 # According to https://github.com/knative/test-infra/pull/2762 protoc-gen-gogofaster is unsupported (and shouldn't be used?)
 # Not sure when it can be removed, maybe knative-0.26?
@@ -124,7 +146,7 @@ RUN go get github.com/gogo/protobuf/protoc-gen-gogofaster@v1.3.1
 RUN go get knative.dev/pkg/testutils/junithelper@release-0.17
 
 # Docker
-RUN go get -u github.com/GoogleCloudPlatform/docker-credential-gcr@v2.0.5
+RUN go install github.com/GoogleCloudPlatform/docker-credential-gcr@v2.0.5
 RUN docker-credential-gcr configure-docker --registries=gcr.io,us-docker.pkg.dev
 
 ############################################################
