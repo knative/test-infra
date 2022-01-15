@@ -37,22 +37,6 @@ RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
     apt-get update && \
     apt-get -y install --no-install-recommends docker-ce="${DOCKER_VERSION}" docker-ce-cli="${DOCKER_VERSION}"
 
-# # Install gcloud command line tool
-# # Install gcloud beta component
-# RUN set -eux; \
-#     \
-#     case $(uname -m) in \
-#         x86_64)  export GCLOUD_TAR_FILE="google-cloud-sdk-${GCLOUD_VERSION}-linux-x86_64.tar.gz" ;; \
-#         aarch64) export GCLOUD_TAR_FILE="google-cloud-sdk-${GCLOUD_VERSION}-linux-arm.tar.gz" ;; \
-#         *) echo "unsupported architecture"; exit 1 ;; \
-#     esac; \
-#     \
-#     wget -nv "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/${GCLOUD_TAR_FILE}"; \
-#     tar -xzvf ."/${GCLOUD_TAR_FILE}" -C "${OUTDIR}/usr/local" && rm "${GCLOUD_TAR_FILE}"; \
-#     ${OUTDIR}/usr/local/google-cloud-sdk/bin/gcloud components install beta --quiet; \
-#     ${OUTDIR}/usr/local/google-cloud-sdk/bin/gcloud components install alpha --quiet; \
-#     rm -rf /usr/local/google-cloud-sdk/.install/.backup
-
 # Setup adoptopenjdk
 ARG JAVA_VERSION=16
 RUN curl -sf https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add -
@@ -66,7 +50,7 @@ ENV MAVEN_HOME=/usr/local/maven
 ENV M2_HOME=$MAVEN_HOME
 ENV PATH=${M2_HOME}/bin:${PATH}
 
-RUN curl -fsSL https://downloads.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz -o /tmp/apache-maven-${MAVEN_VERSION}-bin.tar.gz && \
+RUN curl -fsSL https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz -o /tmp/apache-maven-${MAVEN_VERSION}-bin.tar.gz && \
     tar xf /tmp/apache-maven-${MAVEN_VERSION}-bin.tar.gz -C /tmp && \
     mv /tmp/apache-maven-${MAVEN_VERSION} $MAVEN_HOME
 
@@ -87,8 +71,8 @@ COPY images/prow-tests/source-gvm-and-run.sh /usr/local/bin
 # We only install the latest 3 versions of Go which should be enough for
 # all Knative repositories.
 RUN source-gvm-and-run.sh install go1.15.15 --prefer-binary
-RUN source-gvm-and-run.sh install go1.16.9 --prefer-binary
-RUN source-gvm-and-run.sh install go1.17.2 --prefer-binary
+RUN source-gvm-and-run.sh install go1.16.13 --prefer-binary
+RUN source-gvm-and-run.sh install go1.17.6 --prefer-binary
 RUN source-gvm-and-run.sh use go1.17 --default
 
 # protoc and required golang tooling
@@ -124,8 +108,8 @@ ARG KIND_VERSION=v0.11.1
 # Extra tools through go get
 # These run using the golang image version of Go, not any defined by `gvm`
 RUN go install github.com/google/ko@${KO_VERSION}
-RUN go get github.com/boz/kail/cmd/kail
-RUN go install gotest.tools/gotestsum
+RUN go get github.com/boz/kail/cmd/kail@v0.15.0
+RUN go install gotest.tools/gotestsum@v1.7.0
 RUN go install github.com/raviqqe/liche@v0.0.0-20200229003944-f57a5d1c5be4  # stable liche version for checking md links
 RUN go install sigs.k8s.io/kind@${KIND_VERSION}
 RUN go install sigs.k8s.io/kubetest2@${KUBETEST2_VERSION}
@@ -133,7 +117,7 @@ RUN go install sigs.k8s.io/kubetest2/kubetest2-gke@${KUBETEST2_VERSION}
 RUN go install sigs.k8s.io/kubetest2/kubetest2-kind@${KUBETEST2_VERSION}
 RUN go install sigs.k8s.io/kubetest2/kubetest2-tester-exec@${KUBETEST2_VERSION}
 RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@${PROTOC_GEN_GO_VERSION}
-RUN go install github.com/google/go-licenses
+RUN go install github.com/google/go-licenses@v1.0.0
 RUN go install sigs.k8s.io/kind@${KIND_VERSION}
 
 
