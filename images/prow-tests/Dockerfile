@@ -153,5 +153,5 @@ RUN rm -f /usr/local/bin/source-gvm-and-run.sh
 RUN bazel version > /bazel_version
 RUN ko version > /ko_version
 
-# Ensure docker config is the final image
+# Ensure docker config is in the final image
 RUN docker-credential-gcr configure-docker --registries=gcr.io,us-docker.pkg.dev
