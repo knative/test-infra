@@ -125,7 +125,6 @@ RUN go get knative.dev/pkg/testutils/junithelper@release-0.17
 
 # Docker
 RUN go get -u github.com/GoogleCloudPlatform/docker-credential-gcr@v2.0.5
-RUN docker-credential-gcr configure-docker --registries=gcr.io,us-docker.pkg.dev
 
 ############################################################
 FROM stable-stuff AS test-infra-builds
@@ -154,3 +153,5 @@ RUN rm -f /usr/local/bin/source-gvm-and-run.sh
 RUN bazel version > /bazel_version
 RUN ko version > /ko_version
 
+# Ensure docker config is the final image
+RUN docker-credential-gcr configure-docker --registries=gcr.io,us-docker.pkg.dev
