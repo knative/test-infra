@@ -59,7 +59,7 @@ RUN java -version && \
 RUN apt-get install -y bison
 # GVM_NO_UPDATE_PROFILE=true means do not alter /root/.bashrc to automatically source gvm config, so when not using runner.sh, image works normally
 # Install the tool:
-RUN curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer | GVM_NO_UPDATE_PROFILE=true bash
+RUN curl -fsSL https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer | GVM_NO_UPDATE_PROFILE=true bash
 # gvm requires one to "source /root/.gvm/scripts/gvm" after installing
 #  but in Dockerfile, each RUN is its own shell, so source'd in-RUN env vars are not propagated
 # So have created "source-gvm-and-run.sh" to source the above then run gvm
