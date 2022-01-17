@@ -57,7 +57,7 @@ REPO_YAML_PATH_ARG=""
 docker run -i --rm \
     -v "${PWD}:${PWD}" -v "${CONFIG_YAML}:${CONFIG_YAML}" -v "${PLUGINS_YAML}:${PLUGINS_YAML}" -v "${JOB_YAML}:${JOB_YAML}" \
     -w "${PWD}" \
-    gcr.io/k8s-prow/checkconfig:v20220110-d7e864482d \
+    gcr.io/k8s-prow/checkconfig:v20220114-25626d8ef5 \
     "--config-path=${CONFIG_YAML}" "--job-config-path=${JOB_YAML}" \
     "--plugin-config=${PLUGINS_YAML}" "--strict" "--exclude-warning=mismatched-tide" \
     "--exclude-warning=long-job-names" \
