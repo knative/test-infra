@@ -12,15 +12,60 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Starting from the gcloud debian image https://github.com/GoogleCloudPlatform/cloud-sdk-docker/blob/master/debian_slim/Dockerfile
-ARG GCLOUD_VERSION=368.0.0
+FROM debian:bullseye-slim AS base
 
-FROM google/cloud-sdk:${GCLOUD_VERSION}-slim AS stable-stuff
+# Pinned versions of stuff we pull in
+ARG CLOUD_SDK_VERSION=368.0.0
+ARG KUBECTL_VERSION=v1.21.4
+ARG DOCKER_VERSION=5:20.10.9~3-0~debian-bullseye
+ARG MAVEN_VERSION=3.8.4
+ARG JAVA_VERSION=16
+ARG PROTOC_VERSION=3.17.0
 
+WORKDIR /workspace
+RUN mkdir -p /workspace
+ENV WORKSPACE=/workspace \
+    TERM=xterm
 ENV DEBIAN_FRONTEND noninteractive
 
-ARG KUBECTL_VERSION=v1.21.4
-ARG DOCKER_VERSION=5:20.10.9~3-0~debian-buster
+#
+# BEGIN: GCLOUD SETUP from https://dockgithub.com/GoogleCloudPlatform/cloud-sdk-docker/blob/master/debian_slim/Dockerfile 
+#
+
+ENV PATH=/google-cloud-sdk/bin:/workspace:${PATH} \
+    CLOUDSDK_CORE_DISABLE_PROMPTS=1
+
+RUN apt-get update -qqy && apt-get install -qqy \
+        curl \
+        gcc \
+        python3-dev \
+        python3-pip \
+        apt-transport-https \
+        lsb-release \
+        openssh-client \
+        ca-certificates \
+        git \
+        software-properties-common \
+        bison \
+        uuid-runtime \
+        shellcheck \
+        unzip \
+        wget \
+        gnupg
+
+RUN pip3 install -U crcmod==1.7
+RUN curl -fsSLO https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz
+RUN tar xzf google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz -C /
+RUN rm google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz
+RUN gcloud config set core/disable_usage_reporting true && \
+    gcloud config set component_manager/disable_update_check true && \
+    gcloud config set metrics/environment github_docker_image && \
+    gcloud components install alpha beta && \
+    gcloud --version 
+
+#
+# END: GCLOUD SETUP
+#
 
 # kubectl
 RUN curl -fsSL "https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -o /usr/local/bin/kubectl && \
@@ -30,24 +75,11 @@ RUN curl -fsSL "https://storage.googleapis.com/kubernetes-release/release/${KUBE
 # BEGIN: DOCKER IN DOCKER SETUP
 #
 
-# Install Docker deps, some of these are already installed in the image but
-# that's fine since they won't re-install and we can reuse the code below
-# for another image someday.
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    gnupg2 \
-    software-properties-common \
-    lsb-release && \
-    rm -rf /var/lib/apt/lists/*
-
 # Add the Docker apt-repository
-RUN curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg \
-    | apt-key add - && \
-    add-apt-repository \
-    "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
-    $(lsb_release -cs) stable"
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg && \
+    echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
+    $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 # Install Docker
 # TODO: the `sed` is a bit of a hack, look into alternatives.
@@ -55,14 +87,11 @@ RUN curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID"
 # We're already inside docker though so we can be sure these are already mounted.
 # Trying to remount these makes for a very noisy error block in the beginning of
 # the pod logs, so we just comment out the call to it... :shrug:
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends docker-ce="${DOCKER_VERSION}" && \
-    rm -rf /var/lib/apt/lists/* && \
+RUN apt-get update -qqy && \
+    apt-get install -qqy --no-install-recommends docker-ce="${DOCKER_VERSION}" && \
     sed -i 's/cgroupfs_mount$/#cgroupfs_mount\n/' /etc/init.d/docker \
     && update-alternatives --set iptables /usr/sbin/iptables-legacy \
     && update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
-
-
 
 # Move Docker's storage location
 RUN echo 'DOCKER_OPTS="${DOCKER_OPTS} --data-root=/docker-graph"' | \
@@ -75,15 +104,19 @@ RUN mkdir /docker-graph
 # END: DOCKER IN DOCKER SETUP
 #
 
-# Setup adoptopenjdk
-ARG JAVA_VERSION=16
-RUN curl -fsSL https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add -
-RUN echo "deb https://adoptopenjdk.jfrog.io/adoptopenjdk/deb buster main" | tee /etc/apt/sources.list.d/adoptopenjdk.list
-RUN apt-get update
-RUN apt-get install -y adoptopenjdk-${JAVA_VERSION}-hotspot
+#
+# BEGIN: JAVA SETUP
+#
+
+RUN curl -fsSL https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | gpg --dearmor -o /usr/share/keyrings/adoptopenjdk-archive-keyring.gpg && \
+    echo \
+    "deb [signed-by=/usr/share/keyrings/adoptopenjdk-archive-keyring.gpg] https://adoptopenjdk.jfrog.io/adoptopenjdk/deb \
+    $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/adoptopenjdk.list
+RUN apt-get update -qqy && \
+    apt-get install -qqy adoptopenjdk-${JAVA_VERSION}-hotspot && \
+    rm -rf /var/lib/apt/lists/* 
 ENV JAVA_HOME=/usr/lib/jvm/adoptopenjdk-${JAVA_VERSION}-hotspot-amd64
 
-ARG MAVEN_VERSION=3.8.4
 ENV MAVEN_HOME=/usr/local/maven
 ENV M2_HOME=$MAVEN_HOME
 ENV PATH=${M2_HOME}/bin:${PATH}
@@ -95,9 +128,11 @@ RUN curl -fsSL https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/bi
 RUN java -version && \
     mvn -v
 
-# Install go 1.13, 1.14, and 1.15 using https://github.com/moovweb/gvm
-# Missing prerequisite:
-RUN apt-get install -y bison uuid-runtime shellcheck unzip wget
+#
+# END: JAVA SETUP
+#
+
+# Install go 1.15, 1.16, and 1.17 using https://github.com/moovweb/gvm
 # GVM_NO_UPDATE_PROFILE=true means do not alter /root/.bashrc to automatically source gvm config, so when not using runner.sh, image works normally
 # Install the tool:
 RUN curl -fsSL https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer | GVM_NO_UPDATE_PROFILE=true bash
@@ -114,7 +149,6 @@ RUN source-gvm-and-run.sh install go1.17.6 --prefer-binary
 RUN source-gvm-and-run.sh use go1.17 --default
 
 # protoc and required golang tooling
-ARG PROTOC_VERSION=3.17.0
 RUN curl -fsSL "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip" -o protoc.zip \
     && unzip -p protoc.zip bin/protoc > /usr/local/bin/protoc \
     && chmod +x /usr/local/bin/protoc \
@@ -131,7 +165,7 @@ COPY images/prow-tests/in-gvm-env.sh /usr/local/bin
 #  you could do it like:
 #  RUN GO_VERSION=go1.13 in-gvm-env.sh go install knative.dev/test-infra/tools/coverage
 #  RUN GO_VERSION=go1.14 in-gvm-env.sh go install knative.dev/test-infra/tools/coverage
-# But it must be done in stable-stuff or the last FROM, because it does not install to /go/bin
+# But it must be done in base or the last FROM, because it does not install to /go/bin
 
 ############################################################
 FROM golang:1.17 AS external-go-gets
@@ -175,14 +209,14 @@ COPY . /go/src/knative.dev/test-infra
 
 # Build custom tools in the container
 
-RUN go install knative.dev/test-infra/tools/coverage@latest
-RUN go install knative.dev/test-infra/kntest/cmd/kntest@latest
+RUN cd /go/src/knative.dev/test-infra && go install ./tools/coverage
+RUN cd /go/src/knative.dev/test-infra && go install ./kntest/cmd/kntest
 
 # TODO(chizhg): maybe also move perf-tests tool to be part of kntest?
-RUN go install knative.dev/test-infra/pkg/clustermanager/perf-tests@latest
+RUN cd /go/src/knative.dev/test-infra && go install ./pkg/clustermanager/perf-tests
 
 ############################################################
-FROM stable-stuff
+FROM base
 
 COPY --from=external-go-gets /go/bin/* /go/bin/
 
