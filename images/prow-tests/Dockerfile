@@ -29,7 +29,7 @@ ENV WORKSPACE=/workspace \
 ENV DEBIAN_FRONTEND noninteractive
 
 #
-# BEGIN: GCLOUD SETUP from https://dockgithub.com/GoogleCloudPlatform/cloud-sdk-docker/blob/master/debian_slim/Dockerfile 
+# BEGIN: GCLOUD SETUP
 #
 
 ENV PATH=/google-cloud-sdk/bin:/workspace:${PATH} \
@@ -61,7 +61,7 @@ RUN gcloud config set core/disable_usage_reporting true && \
     gcloud config set component_manager/disable_update_check true && \
     gcloud config set metrics/environment github_docker_image && \
     gcloud components install alpha beta && \
-    gcloud --version 
+    gcloud --version
 
 #
 # END: GCLOUD SETUP
@@ -114,7 +114,7 @@ RUN curl -fsSL https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | g
     $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/adoptopenjdk.list
 RUN apt-get update -qqy && \
     apt-get install -qqy adoptopenjdk-${JAVA_VERSION}-hotspot && \
-    rm -rf /var/lib/apt/lists/* 
+    rm -rf /var/lib/apt/lists/*
 ENV JAVA_HOME=/usr/lib/jvm/adoptopenjdk-${JAVA_VERSION}-hotspot-amd64
 
 ENV MAVEN_HOME=/usr/local/maven
