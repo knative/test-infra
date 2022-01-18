@@ -145,10 +145,9 @@ ARG GOTESTSUM_VERSION=v1.7.0
 ARG KAIL_VERSION=v0.15.0
 ARG LICHE_VERSION=v0.0.0-20200229003944-f57a5d1c5be4
 ARG GO_LICENSES_VERSION=v1.0.0
-ARG JUNIT_HELPER=release-0.17
 ARG DOCKER_CREDENTIAL_GCR_VERSION=v2.0.5
 
-# Extra tools through go install/get
+# Extra tools through go install
 # These run using the golang image version of Go, not any defined by `gvm`
 RUN go install github.com/google/ko@${KO_VERSION}
 RUN go install github.com/boz/kail/cmd/kail@${KAIL_VERSION}
@@ -167,10 +166,6 @@ RUN go install sigs.k8s.io/kind@${KIND_VERSION}
 # According to https://github.com/knative/test-infra/pull/2762 protoc-gen-gogofaster is unsupported (and shouldn't be used?)
 # Not sure when it can be removed, maybe knative-0.26?
 RUN go install github.com/gogo/protobuf/protoc-gen-gogofaster@${PROTOC_GEN_GOGOFASTER_VERSION}
-
-# TODO(chizhg): remove it once we replace with kntest in the places where this tool is used
-# Install our own tools
-RUN go get knative.dev/pkg/testutils/junithelper@${JUNIT_HELPER}
 
 # Docker
 RUN go install github.com/GoogleCloudPlatform/docker-credential-gcr@${DOCKER_CREDENTIAL_GCR_VERSION}
