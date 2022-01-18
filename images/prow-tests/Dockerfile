@@ -137,11 +137,11 @@ COPY . /go/src/knative.dev/test-infra
 
 # Build custom tools in the container
 
-RUN go install knative.dev/test-infra/tools/coverage
-RUN go install knative.dev/test-infra/kntest/cmd/kntest
+RUN cd /go/src/knative.dev/test-infra && go install ./tools/coverage
+RUN cd /go/src/knative.dev/test-infra && go install ./kntest/cmd/kntest
 
 # TODO(chizhg): maybe also move perf-tests tool to be part of kntest?
-RUN go install knative.dev/test-infra/pkg/clustermanager/perf-tests
+RUN cd /go/src/knative.dev/test-infra && go install ./pkg/clustermanager/perf-tests
 
 ############################################################
 FROM stable-stuff
