@@ -20,18 +20,13 @@ FROM google/cloud-sdk:${GCLOUD_VERSION}-slim AS stable-stuff
 ENV DEBIAN_FRONTEND noninteractive
 
 ARG KUBECTL_VERSION=v1.21.4
-ARG BAZELISK_VERSION=v1.11.0
 ARG DOCKER_VERSION=5:20.10.9~3-0~debian-buster
 
 # kubectl
 RUN curl -fsSL "https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -o /usr/local/bin/kubectl && \
     chmod +x /usr/local/bin/kubectl
 
-# bazel
-RUN curl -fsSL "https://github.com/bazelbuild/bazelisk/releases/download/${BAZELISK_VERSION}/bazelisk-linux-amd64" -o /usr/local/bin/bazel && \
-    chmod +x /usr/local/bin/bazel
-
-# Docker including docker-ce, docker-ce-cli, and containerd.io
+# Docker including docker-ce, docker-ce-cli,
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
     echo "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list && \
     apt-get update && \
@@ -62,7 +57,7 @@ RUN java -version && \
 RUN apt-get install -y bison uuid-runtime shellcheck unzip
 # GVM_NO_UPDATE_PROFILE=true means do not alter /root/.bashrc to automatically source gvm config, so when not using runner.sh, image works normally
 # Install the tool:
-RUN curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer | GVM_NO_UPDATE_PROFILE=true bash
+RUN curl -fsSL https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer | GVM_NO_UPDATE_PROFILE=true bash
 # gvm requires one to "source /root/.gvm/scripts/gvm" after installing
 #  but in Dockerfile, each RUN is its own shell, so source'd in-RUN env vars are not propagated
 # So have created "source-gvm-and-run.sh" to source the above then run gvm
@@ -103,35 +98,41 @@ ARG KUBETEST2_VERSION=ea3c260668075a29dd2b7f3ba4ddf1fe78bdf898
 ARG KIND_VERSION=v0.11.1
 ARG KO_VERSION=v0.8.2
 ARG PROTOC_GEN_GO_VERSION=v1.26.0
+ARG PROTOC_GEN_GOGOFASTER_VERSION=v1.3.1
 ARG KIND_VERSION=v0.11.1
+ARG GOTESTSUM_VERSION=v1.7.0
+ARG KAIL_VERSION=v0.15.0
+ARG LICHE_VERSION=v0.0.0-20200229003944-f57a5d1c5be4 
+ARG GO_LICENSES_VERSION=v1.0.0
+ARG JUNIT_HELPER=release-0.17
+ARG DOCKER_CREDENTIAL_GCR_VERSION=v2.0.5
 
 # Extra tools through go get
 # These run using the golang image version of Go, not any defined by `gvm`
 RUN go install github.com/google/ko@${KO_VERSION}
-RUN go get github.com/boz/kail/cmd/kail@v0.15.0
-RUN go install gotest.tools/gotestsum@v1.7.0
-RUN go install github.com/raviqqe/liche@v0.0.0-20200229003944-f57a5d1c5be4  # stable liche version for checking md links
+RUN go get github.com/boz/kail/cmd/kail@${KAIL_VERSION}
+RUN go install gotest.tools/gotestsum@${GOTESTSUM_VERSION}
+RUN go install github.com/raviqqe/liche@${LICHE_VERSION}  # stable liche version for checking md links
 RUN go install sigs.k8s.io/kind@${KIND_VERSION}
 RUN go install sigs.k8s.io/kubetest2@${KUBETEST2_VERSION}
 RUN go install sigs.k8s.io/kubetest2/kubetest2-gke@${KUBETEST2_VERSION}
 RUN go install sigs.k8s.io/kubetest2/kubetest2-kind@${KUBETEST2_VERSION}
 RUN go install sigs.k8s.io/kubetest2/kubetest2-tester-exec@${KUBETEST2_VERSION}
 RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@${PROTOC_GEN_GO_VERSION}
-RUN go install github.com/google/go-licenses@v1.0.0
+RUN go install github.com/google/go-licenses@${GO_LICENSES_VERSION}
 RUN go install sigs.k8s.io/kind@${KIND_VERSION}
 
 
 # According to https://github.com/knative/test-infra/pull/2762 protoc-gen-gogofaster is unsupported (and shouldn't be used?)
 # Not sure when it can be removed, maybe knative-0.26?
-RUN go get github.com/gogo/protobuf/protoc-gen-gogofaster@v1.3.1
+RUN go get github.com/gogo/protobuf/protoc-gen-gogofaster@${PROTOC_GEN_GOGOFASTER_VERSION}}
 
 # TODO(chizhg): remove it once we replace with kntest in the places where this tool is used
 # Install our own tools
-RUN go get knative.dev/pkg/testutils/junithelper@release-0.17
+RUN go get knative.dev/pkg/testutils/junithelper@{JUNIT_HELPER}
 
 # Docker
-RUN go install github.com/GoogleCloudPlatform/docker-credential-gcr@v2.0.5
-RUN docker-credential-gcr configure-docker --registries=gcr.io,us-docker.pkg.dev
+RUN go get -u github.com/GoogleCloudPlatform/docker-credential-gcr@${DOCKER_CREDENTIAL_GCR_VERSION}
 
 ############################################################
 FROM stable-stuff AS test-infra-builds
@@ -157,6 +158,7 @@ COPY --from=test-infra-builds /go/bin/* /go/bin/
 RUN rm -f /usr/local/bin/source-gvm-and-run.sh
 
 # Extract versions
-RUN bazel version > /bazel_version
 RUN ko version > /ko_version
 
+# Ensure docker config is in the final image
+RUN docker-credential-gcr configure-docker --registries=gcr.io,us-docker.pkg.dev
