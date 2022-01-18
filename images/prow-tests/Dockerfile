@@ -77,7 +77,7 @@ RUN mkdir /docker-graph
 
 # Setup adoptopenjdk
 ARG JAVA_VERSION=16
-RUN curl -sf https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add -
+RUN curl -fsSL https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add -
 RUN echo "deb https://adoptopenjdk.jfrog.io/adoptopenjdk/deb buster main" | tee /etc/apt/sources.list.d/adoptopenjdk.list
 RUN apt-get update
 RUN apt-get install -y adoptopenjdk-${JAVA_VERSION}-hotspot
@@ -151,7 +151,7 @@ ARG DOCKER_CREDENTIAL_GCR_VERSION=v2.0.5
 # Extra tools through go install/get
 # These run using the golang image version of Go, not any defined by `gvm`
 RUN go install github.com/google/ko@${KO_VERSION}
-RUN go get github.com/boz/kail/cmd/kail@${KAIL_VERSION}
+RUN go install github.com/boz/kail/cmd/kail@${KAIL_VERSION}
 RUN go install gotest.tools/gotestsum@${GOTESTSUM_VERSION}
 RUN go install github.com/raviqqe/liche@${LICHE_VERSION}  # stable liche version for checking md links
 RUN go install sigs.k8s.io/kind@${KIND_VERSION}
@@ -166,14 +166,14 @@ RUN go install sigs.k8s.io/kind@${KIND_VERSION}
 
 # According to https://github.com/knative/test-infra/pull/2762 protoc-gen-gogofaster is unsupported (and shouldn't be used?)
 # Not sure when it can be removed, maybe knative-0.26?
-RUN go get github.com/gogo/protobuf/protoc-gen-gogofaster@${PROTOC_GEN_GOGOFASTER_VERSION}}
+RUN go install github.com/gogo/protobuf/protoc-gen-gogofaster@${PROTOC_GEN_GOGOFASTER_VERSION}
 
 # TODO(chizhg): remove it once we replace with kntest in the places where this tool is used
 # Install our own tools
-RUN go get knative.dev/pkg/testutils/junithelper@{JUNIT_HELPER}
+RUN go get knative.dev/pkg/testutils/junithelper@${JUNIT_HELPER}
 
 # Docker
-RUN go get -u github.com/GoogleCloudPlatform/docker-credential-gcr@${DOCKER_CREDENTIAL_GCR_VERSION}
+RUN go install github.com/GoogleCloudPlatform/docker-credential-gcr@${DOCKER_CREDENTIAL_GCR_VERSION}
 
 ############################################################
 FROM stable-stuff AS test-infra-builds
