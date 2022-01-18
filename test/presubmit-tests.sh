@@ -21,9 +21,7 @@
 # Use the flags --build-tests, --unit-tests and --integration-tests
 # to run a specific set of tests.
 
-export GO111MODULE=on
-
-source $(dirname "$0")/../vendor/knative.dev/presubmit-tests.sh
+source $(dirname "$0")/../../vendor/knative.dev/presubmit-tests.sh
 
 # Run our custom build tests after the standard build tests.
 

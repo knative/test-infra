@@ -17,7 +17,7 @@
 # This script checks for consistency among prow core config, plugins, and job
 # configs
 
-source $(dirname "$0")/../vendor/knative.dev/hack/library.sh
+source $(dirname "$0")/../../../vendor/knative.dev/hack/library.sh
 
 set -e
 

@@ -16,7 +16,7 @@
 
 # Simple script to start a Prow job.
 
-source $(dirname "$0")/../vendor/knative.dev/hack/library.sh
+source $(dirname "$0")/../../../vendor/knative.dev/hack/library.sh
 
 # First parameter is expected to be the prow job name
 JOB_NAME="$1"
