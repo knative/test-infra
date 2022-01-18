@@ -17,7 +17,7 @@ limitations under the License.
 package gcs
 
 import (
-	"context"
+	"context
 
 	"cloud.google.com/go/storage"
 )
