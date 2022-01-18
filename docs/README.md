@@ -9,7 +9,6 @@ Documentation can be found in other directories of the repository. For example:
 
 - [Main README](../README.md)
 - [Documentation on configuration of the CI/CD system](../guides/prow_setup.md)
-- [Documentation on the helper scripts](../scripts/README.md)
 
 ## Updating the test-infra GitHub page
 

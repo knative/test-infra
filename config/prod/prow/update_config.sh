@@ -16,7 +16,7 @@
 
 # This script updates Prow job configs.
 
-source $(dirname $0)/../../../scripts/library.sh
+source $(dirname "$0")/../vendor/knative.dev/hack/library.sh
 
 set -e
 

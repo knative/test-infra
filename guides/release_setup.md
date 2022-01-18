@@ -49,7 +49,7 @@ Versioned releases can be one of two kinds:
 
 1. Write your release script, which will publish your artifacts. For details,
    see the
-   [helper script documentation](../scripts/README.md#using-the-releasesh-helper-script).
+   [helper script documentation](https://github.com/knative.dev/hack/README.md#using-the-releasesh-helper-script).
 
 1. Enable `nightly`, `auto-release` and `dot-release` jobs for your repo in the
    [config_knative.yaml](../config/prod/prow/config_knative.yaml) file. For

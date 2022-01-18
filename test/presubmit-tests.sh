@@ -23,7 +23,7 @@
 
 export GO111MODULE=on
 
-source $(dirname "${BASH_SOURCE[0]}")/../scripts/presubmit-tests.sh
+source $(dirname "$0")/../vendor/knative.dev/presubmit-tests.sh
 
 # Run our custom build tests after the standard build tests.
 
