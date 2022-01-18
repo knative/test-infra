@@ -1,6 +1,6 @@
 # kntest
 
-kntest is developed to simplify the [shell scripts](../scripts) used by all
+kntest is developed to simplify the [shell scripts](https://github.com/knative/hack) used by all
 Knative projects and make the test process more robust.
 
 This project is still under active development, and this doc will contain more

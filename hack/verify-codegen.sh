@@ -18,7 +18,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-source $(dirname "$0")/../scripts/library.sh
+source $(dirname "${BASH_SOURCE[0]}")/../vendor/knative.dev/hack/library.sh
 
 readonly TMP_DIFFROOT="$(mktemp -d)"
 DIRS_TOBE_INSPECTED=(
