@@ -26,11 +26,54 @@ ARG DOCKER_VERSION=5:20.10.9~3-0~debian-buster
 RUN curl -fsSL "https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -o /usr/local/bin/kubectl && \
     chmod +x /usr/local/bin/kubectl
 
-# Docker including docker-ce, docker-ce-cli,
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
-    echo "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list && \
-    apt-get update && \
-    apt-get -y install --no-install-recommends docker-ce="${DOCKER_VERSION}" docker-ce-cli="${DOCKER_VERSION}"
+#
+# BEGIN: DOCKER IN DOCKER SETUP
+#
+
+# Install Docker deps, some of these are already installed in the image but
+# that's fine since they won't re-install and we can reuse the code below
+# for another image someday.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg2 \
+    software-properties-common \
+    lsb-release && \
+    rm -rf /var/lib/apt/lists/*
+
+# Add the Docker apt-repository
+RUN curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg \
+    | apt-key add - && \
+    add-apt-repository \
+    "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
+    $(lsb_release -cs) stable"
+
+# Install Docker
+# TODO: the `sed` is a bit of a hack, look into alternatives.
+# Why this exists: `docker service start` on debian runs a `cgroupfs_mount` method,
+# We're already inside docker though so we can be sure these are already mounted.
+# Trying to remount these makes for a very noisy error block in the beginning of
+# the pod logs, so we just comment out the call to it... :shrug:
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends docker-ce="${DOCKER_VERSION}" && \
+    rm -rf /var/lib/apt/lists/* && \
+    sed -i 's/cgroupfs_mount$/#cgroupfs_mount\n/' /etc/init.d/docker \
+    && update-alternatives --set iptables /usr/sbin/iptables-legacy \
+    && update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
+
+
+
+# Move Docker's storage location
+RUN echo 'DOCKER_OPTS="${DOCKER_OPTS} --data-root=/docker-graph"' | \
+    tee --append /etc/default/docker
+# NOTE this should be mounted and persisted as a volume ideally (!)
+# We will make a fallback one now just in case
+RUN mkdir /docker-graph
+
+#
+# END: DOCKER IN DOCKER SETUP
+#
 
 # Setup adoptopenjdk
 ARG JAVA_VERSION=16
@@ -54,7 +97,7 @@ RUN java -version && \
 
 # Install go 1.13, 1.14, and 1.15 using https://github.com/moovweb/gvm
 # Missing prerequisite:
-RUN apt-get install -y bison uuid-runtime shellcheck unzip
+RUN apt-get install -y bison uuid-runtime shellcheck unzip wget
 # GVM_NO_UPDATE_PROFILE=true means do not alter /root/.bashrc to automatically source gvm config, so when not using runner.sh, image works normally
 # Install the tool:
 RUN curl -fsSL https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer | GVM_NO_UPDATE_PROFILE=true bash
@@ -80,7 +123,6 @@ RUN curl -fsSL "https://github.com/protocolbuffers/protobuf/releases/download/v$
 
 # Note, it's pointless to run `source-gvm-and-run.sh use go1.13` in this Dockerfile because the PATH changes it makes won't stay in effect
 # We wrap the runner with our own which will run `gvm use $GO_VERSION` for us.
-RUN mv "$(which runner.sh)" "$(dirname "$(which runner.sh)")/kubekins-runner.sh"
 COPY images/prow-tests/runner.sh /usr/local/bin
 
 # Used if you want to install different programs for different versions of Go
@@ -99,15 +141,14 @@ ARG KIND_VERSION=v0.11.1
 ARG KO_VERSION=v0.8.2
 ARG PROTOC_GEN_GO_VERSION=v1.26.0
 ARG PROTOC_GEN_GOGOFASTER_VERSION=v1.3.1
-ARG KIND_VERSION=v0.11.1
 ARG GOTESTSUM_VERSION=v1.7.0
 ARG KAIL_VERSION=v0.15.0
-ARG LICHE_VERSION=v0.0.0-20200229003944-f57a5d1c5be4 
+ARG LICHE_VERSION=v0.0.0-20200229003944-f57a5d1c5be4
 ARG GO_LICENSES_VERSION=v1.0.0
 ARG JUNIT_HELPER=release-0.17
 ARG DOCKER_CREDENTIAL_GCR_VERSION=v2.0.5
 
-# Extra tools through go get
+# Extra tools through go install/get
 # These run using the golang image version of Go, not any defined by `gvm`
 RUN go install github.com/google/ko@${KO_VERSION}
 RUN go get github.com/boz/kail/cmd/kail@${KAIL_VERSION}
