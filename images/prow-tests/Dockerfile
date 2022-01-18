@@ -15,8 +15,11 @@
 FROM gcr.io/k8s-testimages/kubekins-e2e:v20210113-cc576af-master AS stable-stuff
 
 ENV DEBIAN_FRONTEND noninteractive
+ARG COMMIT_HASH
 ARG GCLOUD_VERSION=368.0.0
 ARG KUBECTL_VERSION=v1.21.4
+
+RUN echo "${COMMIT_HASH}" > /commit_hash
 
 # If we don't run update, the apt-get install below don't work
 RUN apt-get update
