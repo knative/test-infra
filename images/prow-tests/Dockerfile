@@ -83,7 +83,7 @@ RUN apt-get update
 RUN apt-get install -y adoptopenjdk-${JAVA_VERSION}-hotspot
 ENV JAVA_HOME=/usr/lib/jvm/adoptopenjdk-${JAVA_VERSION}-hotspot-amd64
 
-ARG MAVEN_VERSION=3.8.3
+ARG MAVEN_VERSION=3.8.4
 ENV MAVEN_HOME=/usr/local/maven
 ENV M2_HOME=$MAVEN_HOME
 ENV PATH=${M2_HOME}/bin:${PATH}
@@ -175,28 +175,26 @@ RUN go get knative.dev/pkg/testutils/junithelper@${JUNIT_HELPER}
 # Docker
 RUN go install github.com/GoogleCloudPlatform/docker-credential-gcr@${DOCKER_CREDENTIAL_GCR_VERSION}
 
-############################################################
-FROM stable-stuff AS test-infra-builds
-
 # We do this instead of `go get` so the tools are locked to the Dockerfile's commit
 COPY . /go/src/knative.dev/test-infra
 
 # Build custom tools in the container
 
-RUN go install knative.dev/test-infra/tools/coverage
-RUN go install knative.dev/test-infra/kntest/cmd/kntest
+RUN go install knative.dev/test-infra/tools/coverage@latest
+RUN go install knative.dev/test-infra/kntest/cmd/kntest@latest
 
 # TODO(chizhg): maybe also move perf-tests tool to be part of kntest?
-RUN go install knative.dev/test-infra/pkg/clustermanager/perf-tests
+RUN go install knative.dev/test-infra/pkg/clustermanager/perf-tests@latest
 
 ############################################################
 FROM stable-stuff
 
 COPY --from=external-go-gets /go/bin/* /go/bin/
-COPY --from=test-infra-builds /go/bin/* /go/bin/
 
 # Only needed in this Dockerfile
 RUN rm -f /usr/local/bin/source-gvm-and-run.sh
+
+ENV PATH /go/bin:$PATH
 
 # Extract versions
 RUN ko version > /ko_version
