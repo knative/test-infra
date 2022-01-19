@@ -12,24 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM debian:bullseye-slim AS base
-
-ENV DEBIAN_FRONTEND noninteractive
-ARG COMMIT_HASH
+FROM debian:bullseye-20211220-slim AS base
 
 # Pinned versions of stuff we pull in
-ARG GCLOUD_VERSION=368.0.0
 ARG CLOUD_SDK_VERSION=368.0.0
 ARG KUBECTL_VERSION=v1.21.4
 ARG DOCKER_VERSION=5:20.10.9~3-0~debian-bullseye
 ARG MAVEN_VERSION=3.8.4
 ARG JAVA_VERSION=16
 ARG PROTOC_VERSION=3.17.0
+ARG COMMIT_HASH
 
 RUN echo "${COMMIT_HASH}" > /commit_hash
 
-# If we don't run update, the apt-get install below don't work
-RUN apt-get update
 WORKDIR /workspace
 RUN mkdir -p /workspace
 ENV WORKSPACE=/workspace \
