@@ -16,7 +16,7 @@ IMAGE_NAME = prow-tests
 include ../simple-image.mk
 
 push: confirm-main
-	gcloud builds submit --config=./cloudbuild.yaml --substitutions=_TAG=$(TAG),_IMG=$(IMG),_COMMIT_HASH$(COMMIT_HASH) \
+	gcloud builds submit --config=./cloudbuild.yaml --substitutions=_TAG=$(TAG),_IMG=$(IMG),_COMMIT_HASH=$(COMMIT_HASH) \
 		--machine-type=n1-highcpu-8 \
 		--project=$(PROJECT) --timeout=1h ./../..
 
