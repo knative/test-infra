@@ -503,6 +503,11 @@ presubmits:
     args:
     - --run-test
     - ./test/reconciler-tests.sh
+  - custom-test: rekt-tests
+    needs-dind: true
+    args:
+    - --run-test
+    - ./test/rekt-tests.sh
   - go-coverage: true
   knative-sandbox/eventing-rabbitmq:
   - build-tests: false
