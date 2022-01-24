@@ -40,7 +40,7 @@ const (
 )
 
 var (
-	baseKubetest2Flags = []string{"gke", "--ignore-gcp-ssh-key=true", "--up", "-v=1"}
+	baseKubetest2Flags = []string{"gke", "--ignore-gcp-ssh-key=true", "--up", "-v=1", "--down"}
 
 	// If one of the error patterns below is matched, it would be recommended to
 	// retry creating the cluster in a different region.
