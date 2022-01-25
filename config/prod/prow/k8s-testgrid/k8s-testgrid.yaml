@@ -62,6 +62,7 @@ dashboards:
 - name: knative-0.26
 - name: knative-1.0
 - name: knative-1.1
+- name: knative-1.2
 - name: knative-gcp
 - name: knative-sandbox-0.25
 - name: knative-sandbox-0.26
