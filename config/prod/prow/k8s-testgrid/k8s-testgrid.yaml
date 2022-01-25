@@ -67,6 +67,7 @@ dashboards:
 - name: knative-sandbox-0.26
 - name: knative-sandbox-1.0
 - name: knative-sandbox-1.1
+- name: knative-sandbox-1.2
 - name: kperf
 - name: net-certmanager
 - name: net-contour

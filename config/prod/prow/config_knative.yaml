@@ -1413,13 +1413,13 @@ periodics:
         - failure
         report_template: '"The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"'
   - dot-release: true
-    release: "0.25"
-  - dot-release: true
     release: "0.26"
   - dot-release: true
     release: "1.0"
   - dot-release: true
     release: "1.1"
+  - dot-release: true
+    release: "1.2"
   - auto-release: true
   knative-sandbox/net-contour:
   - continuous: true
@@ -1431,13 +1431,13 @@ periodics:
         - failure
         report_template: '"The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"'
   - dot-release: true
-    release: "0.25"
-  - dot-release: true
     release: "0.26"
   - dot-release: true
     release: "1.0"
   - dot-release: true
     release: "1.1"
+  - dot-release: true
+    release: "1.2"
   - auto-release: true
   knative-sandbox/net-gateway-api:
   - continuous: true
