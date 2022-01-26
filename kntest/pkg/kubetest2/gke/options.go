@@ -35,6 +35,7 @@ func addOptions(gkeCmd *cobra.Command, cfg *kubetest2.GKEClusterConfig) {
 	f.StringVar(&cfg.Machine, "machine", "e2-standard-4", "The machine type for the GKE cluster.")
 	f.IntVar(&cfg.MinNodes, "min-nodes", 1, "The minimum number of nodes.")
 	f.IntVar(&cfg.MaxNodes, "max-nodes", 3, "The maximum number of nodes.")
+	f.StringVar(&cfg.ImageType, "image-type", "cos_containerd", "The image type to use for the cluster.")
 	f.StringVar(&cfg.Network, "network", "e2e-network", "The network name for the GKE cluster.")
 	f.StringVar(&cfg.ReleaseChannel, "release-channel", "", "The release channel of the GKE cluster, can be one of (empty, rapid, regular, stable). When it's used, --cluster-version must be empty or a valid version in the channel."+
 		"Reference: https://cloud.google.com/kubernetes-engine/docs/concepts/release-channels")

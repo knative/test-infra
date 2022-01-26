@@ -72,6 +72,7 @@ type GKEClusterConfig struct {
 	Version                           string
 	Scopes                            string
 	Addons                            string
+	ImageType                         string
 	EnableWorkloadIdentity            bool
 	PrivateClusterAccessLevel         string
 	PrivateClusterMasterIPSubnetRange string
