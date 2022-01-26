@@ -844,25 +844,25 @@ periodics:
   knative/client:
   - continuous: true
   - branch-ci: true
-    release: "0.25"
-  - branch-ci: true
     release: "0.26"
   - branch-ci: true
     release: "1.0"
   - branch-ci: true
     release: "1.1"
+  - branch-ci: true
+    release: "1.2"
   - nightly: true
   - custom-job: tekton
     cron: 0 13 * * *
     command: ./test/tekton-tests.sh
   - dot-release: true
-    release: "0.25"
-  - dot-release: true
     release: "0.26"
   - dot-release: true
     release: "1.0"
   - dot-release: true
     release: "1.1"
+  - dot-release: true
+    release: "1.2"
   - auto-release: true
   - custom-job: s390x-e2e-tests
     cron: 0 11 * * *
@@ -1691,9 +1691,6 @@ periodics:
   - nightly: true
     needs-dind: true
   - dot-release: true
-    release: "0.25"
-    needs-dind: true
-  - dot-release: true
     release: "0.26"
     needs-dind: true
   - dot-release: true
@@ -1701,6 +1698,9 @@ periodics:
     needs-dind: true
   - dot-release: true
     release: "1.1"
+    needs-dind: true
+  - dot-release: true
+    release: "1.2"
     needs-dind: true
   - auto-release: true
     needs-dind: true
