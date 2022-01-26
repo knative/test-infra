@@ -1162,13 +1162,13 @@ periodics:
   - nightly: true
   - auto-release: true
   - dot-release: true
-    release: "0.25"
-  - dot-release: true
     release: "0.26"
   - dot-release: true
     release: "1.0"
   - dot-release: true
     release: "1.1"
+  - dot-release: true
+    release: "1.2"
   knative-sandbox/eventing-ceph:
   - continuous: true
   - nightly: true
@@ -1198,24 +1198,17 @@ periodics:
   - nightly: true
   - auto-release: true
   - dot-release: true
-    release: "0.25"
-  - dot-release: true
     release: "0.26"
   - dot-release: true
     release: "1.0"
   - dot-release: true
     release: "1.1"
+  - dot-release: true
+    release: "1.2"
   knative-sandbox/eventing-gitlab:
   - continuous: true
   - nightly: true
   - dot-release: true
-    release: "0.25"
-    resources:
-      requests:
-        memory: 12Gi
-      limits:
-        memory: 16Gi
-  - dot-release: true
     release: "0.26"
     resources:
       requests:
@@ -1231,6 +1224,13 @@ periodics:
         memory: 16Gi
   - dot-release: true
     release: "1.1"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+  - dot-release: true
+    release: "1.2"
     resources:
       requests:
         memory: 12Gi
@@ -1254,13 +1254,13 @@ periodics:
   - nightly: true
   - auto-release: true
   - dot-release: true
-    release: "0.25"
-  - dot-release: true
     release: "0.26"
   - dot-release: true
     release: "1.0"
   - dot-release: true
     release: "1.1"
+  - dot-release: true
+    release: "1.2"
   knative-sandbox/kperf:
   - continuous: true
   knative/pkg:
@@ -1672,9 +1672,6 @@ periodics:
   - nightly: true
     needs-dind: true
   - dot-release: true
-    release: "0.25"
-    needs-dind: true
-  - dot-release: true
     release: "0.26"
     needs-dind: true
   - dot-release: true
@@ -1682,6 +1679,9 @@ periodics:
     needs-dind: true
   - dot-release: true
     release: "1.1"
+    needs-dind: true
+  - dot-release: true
+    release: "1.2"
     needs-dind: true
   - auto-release: true
     needs-dind: true
