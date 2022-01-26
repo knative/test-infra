@@ -104,7 +104,8 @@ func Run(opts *Options, cc *GKEClusterConfig) error {
 		cc.Name = helpers.AppendRandomString(clusterNamePrefix)
 	}
 	kubetest2Flags = append(kubetest2Flags, "--cluster-name="+cc.Name, "--environment="+cc.Environment,
-		"--num-nodes="+strconv.Itoa(cc.MinNodes), "--machine-type="+cc.Machine, "--network="+cc.Network)
+		"--num-nodes="+strconv.Itoa(cc.MinNodes), "--machine-type="+cc.Machine, "--network="+cc.Network,
+		"--image-type="+cc.ImageType)
 	if cc.GCPServiceAccount != "" {
 		kubetest2Flags = append(kubetest2Flags, "--gcp-service-account="+cc.GCPServiceAccount)
 	}
