@@ -982,13 +982,13 @@ periodics:
   - auto-release: true
   - nightly: true
   - dot-release: true
-    release: "0.25"
-  - dot-release: true
     release: "0.26"
   - dot-release: true
     release: "1.0"
   - dot-release: true
     release: "1.1"
+  - dot-release: true
+    release: "1.2"
   knative-sandbox/kn-plugin-source-kamelet:
   - continuous: true
   - auto-release: true
