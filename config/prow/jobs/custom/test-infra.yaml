@@ -21,7 +21,7 @@ presubmits:
   knative/test-infra:
   - name: pull-test-infra-validate-prow-yaml
     decorate: true
-    run_if_changed: "^config/prod/prow/(cluster|core|jobs)/.*.yaml$"
+    run_if_changed: "^config/prow/(cluster|core|jobs)/.*.yaml$"
     cluster: "prow-trusted"
     spec:
       containers:
@@ -29,7 +29,7 @@ presubmits:
         command:
         - "runner.sh"
         args:
-        - "./config/prod/prow/check_config.sh"
+        - "./config/prow/check_config.sh"
         - "$(REPO_OWNER)/$(REPO_NAME)"
         securityContext:
           privileged: true
@@ -51,7 +51,7 @@ presubmits:
   - name: pull-test-infra-validate-own-testgrid-yaml
     decorate: true
     optional: false
-    run_if_changed: "^config/prod/prow/(jobs|k8s-testgrid)/.*.yaml"
+    run_if_changed: "^config/prow/(jobs|k8s-testgrid)/.*.yaml"
     branches:
     - "main"
     cluster: "build-knative"
@@ -66,9 +66,9 @@ presubmits:
         - /app/testgrid/cmd/configurator/app.binary
         args:
         - --prow-config=../../GoogleCloudPlatform/oss-test-infra/prow/knative/config.yaml
-        - --prow-job-config=config/prod/prow/jobs
-        - --default=config/prod/prow/k8s-testgrid/testgrid-common-settings.yaml
-        - --yaml=config/prod/prow/k8s-testgrid/k8s-testgrid.yaml
+        - --prow-job-config=config/prow/jobs
+        - --default=config/prow/k8s-testgrid/testgrid-common-settings.yaml
+        - --yaml=config/prow/k8s-testgrid/k8s-testgrid.yaml
         - --oneshot
         - --output=./config.pb
   - name: pull-knative-test-infra-prow-tests-image-build
@@ -191,7 +191,7 @@ periodics:
       - "go"
       - "run"
       - "./tools/cleanup/cleanup.go"
-      - "--project-resource-yaml=config/prod/build-cluster/boskos/boskos_resources.yaml"
+      - "--project-resource-yaml=config/prow/build-cluster/boskos/boskos_resources.yaml"
       - "--days-to-keep-images=30"
       - "--hours-to-keep-clusters=24"
       - "--concurrent-operations=50"
@@ -355,7 +355,7 @@ periodics:
       command:
       - /app/prow/cmd/generic-autobumper/app.binary
       args:
-      - --config=config/prod/prow/knative-autobump-config.yaml
+      - --config=config/prow/knative-autobump-config.yaml
       - --labels-override=skip-review # This label is used by tide for identifying trusted PR
       volumeMounts:
       - name: prow-auto-bumper-github-token
@@ -391,7 +391,7 @@ periodics:
       command:
       - /app/prow/cmd/generic-autobumper/app.binary
       args:
-      - --config=config/prod/prow/knative-autobump-config.yaml
+      - --config=config/prow/knative-autobump-config.yaml
       volumeMounts:
       - name: prow-auto-bumper-github-token
         mountPath: /etc/prow-auto-bumper-github-token
@@ -467,7 +467,7 @@ postsubmits:
     path_alias: knative.dev/test-infra
     max_concurrency: 1
     cluster: "prow-trusted"
-    run_if_changed: "^config/prod/(build-cluster/boskos/.*.yaml|prow/testgrid/testgrid.yaml)$"
+    run_if_changed: "^config/(prow/build-cluster/boskos/.*.yaml|prow/testgrid/testgrid.yaml)$"
     branches:
     - "main"
     annotations:
@@ -484,7 +484,7 @@ postsubmits:
         args:
         - "make"
         - "-C"
-        - "./config/prod"
+        - "./config"
         - "update-all"
         securityContext:
           privileged: true
@@ -621,7 +621,7 @@ postsubmits:
           secretName: test-account
   - name: post-test-infra-update-testgrid-proto
     decorate: true
-    run_if_changed: "^config/prod/prow/(jobs|k8s-testgrid)/.*.yaml"
+    run_if_changed: "^config/prow/(jobs|k8s-testgrid)/.*.yaml"
     branches:
     - "main"
     cluster: "build-knative"
@@ -641,9 +641,9 @@ postsubmits:
         - /app/testgrid/cmd/configurator/app.binary
         args:
         - --prow-config=../../GoogleCloudPlatform/oss-test-infra/prow/knative/config.yaml
-        - --prow-job-config=config/prod/prow/jobs
-        - --default=config/prod/prow/k8s-testgrid/testgrid-common-settings.yaml
-        - --yaml=config/prod/prow/k8s-testgrid/k8s-testgrid.yaml
+        - --prow-job-config=config/prow/jobs
+        - --default=config/prow/k8s-testgrid/testgrid-common-settings.yaml
+        - --yaml=config/prow/k8s-testgrid/k8s-testgrid.yaml
         - --oneshot
         - --output=gs://knative-own-testgrid/config
         - --gcp-service-account=/etc/test-account/service-account.json

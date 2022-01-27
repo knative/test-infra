@@ -16,9 +16,15 @@ SHELL := /bin/bash
 SELF_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 include $(SELF_DIR)../common.mk
 
-# This file is used by prod and staging Makefiles
-
 # Default settings for the CI/CD system.
+
+PROJECT       ?= knative-tests
+PROW_GCS      ?= knative-prow
+PROW_HOST     ?= https://prow.knative.dev
+TESTGRID_GCS  ?= knative-testgrid
+
+KNATIVE_CONFIG   ?= config_knative.yaml
+TESTGRID_CONFIG  ?= prow/testgrid/testgrid.yaml
 
 CLUSTER           ?= prow
 BUILD_CLUSTER     ?= knative-prow-build-cluster
@@ -36,7 +42,7 @@ PROW_JOB_CONFIG                 ?= prow/jobs
 PROW_GCS                        ?= knative-prow
 PROW_CONFIG_GCS                 ?= gs://$(PROW_GCS)/configs
 
-BOSKOS_RESOURCES                ?= build-cluster/boskos/boskos_resources.yaml
+BOSKOS_RESOURCES                ?= prow/build-cluster/boskos/boskos_resources.yaml
 
 # Useful shortcuts.
 

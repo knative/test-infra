@@ -22,8 +22,8 @@ set -e
 
 orig_kubeconfig=${KUBECONFIG}
 KUBECONFIG="/tmp/kubeconfig.yaml"
-make -C "${REPO_ROOT_DIR}/config/prod" get-cluster-credentials
-add_trap "make -C ${REPO_ROOT_DIR}/config/prod unset-cluster-credentials" EXIT
+make -C "${REPO_ROOT_DIR}/config" get-cluster-credentials
+add_trap "make -C ${REPO_ROOT_DIR}/config unset-cluster-credentials" EXIT
 add_trap "rm ${KUBECONFIG}" EXIT
 add_trap "KUBECONFIG=${orig_kubeconfig}" EXIT
 
@@ -38,7 +38,7 @@ else
   PLUGINS_YAML="$(mktemp)"
 fi
 
-JOB_YAML="${REPO_ROOT_DIR}/config/prod/prow/jobs"
+JOB_YAML="${REPO_ROOT_DIR}/config/prow/jobs"
 
 kubectl get configmaps config -o "jsonpath={.data['config\.yaml']}" >"${CONFIG_YAML}"
 echo "Prow core config downloaded at ${CONFIG_YAML}"
