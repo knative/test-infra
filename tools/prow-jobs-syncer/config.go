@@ -30,11 +30,11 @@ const (
 
 	// Paths
 	repoPath           = "src/knative.dev/test-infra"
-	coreConfigPath     = "config/prod/prow/core/config.yaml"
-	jobConfigPath      = "config/prod/prow/jobs/config.yaml"
-	pluginPath         = "config/prod/prow/core/plugins.yaml"
-	testgridConfigPath = "config/prod/prow/testgrid/testgrid.yaml"
-	templateConfigPath = "config/prod/prow/config_knative.yaml"
+	coreConfigPath     = "config/prow/core/config.yaml"
+	jobConfigPath      = "config/prow/jobs/config.yaml"
+	pluginPath         = "config/prow/core/plugins.yaml"
+	testgridConfigPath = "config/prow/testgrid/testgrid.yaml"
+	templateConfigPath = "config/prow/config_knative.yaml"
 
 	configGenPath = "tools/config-generator"
 

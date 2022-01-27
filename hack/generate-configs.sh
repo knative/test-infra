@@ -30,7 +30,7 @@ go run "${CONFIG_GENERATOR_DIR}" \
     --image-docker=gcr.io/knative-tests/test-infra \
     --prow-host=https://prow.knative.dev \
     --testgrid-gcs-bucket="knative-testgrid" \
-    --prow-jobs-config-output="${CONFIG_DIR}/prod/prow/jobs/config.yaml" \
-    --testgrid-config-output="${CONFIG_DIR}/prod/prow/testgrid/testgrid.yaml" \
-    --k8s-testgrid-config-output="${CONFIG_DIR}/prod/prow/k8s-testgrid/k8s-testgrid.yaml" \
-    "${CONFIG_DIR}/prod/prow/config_knative.yaml"
+    --prow-jobs-config-output="${CONFIG_DIR}/prow/jobs/config.yaml" \
+    --testgrid-config-output="${CONFIG_DIR}/prow/testgrid/testgrid.yaml" \
+    --k8s-testgrid-config-output="${CONFIG_DIR}/prow/k8s-testgrid/k8s-testgrid.yaml" \
+    "${CONFIG_DIR}/prow/config_knative.yaml"

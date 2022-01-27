@@ -173,7 +173,7 @@ or
    branch (e.g., `0.11-`)
 
    ```
-   cd config/prod/prow
+   cd config/prow
    ./run_job.sh ci-knative-MODULE-[OLD_RELEASE_BRANCH-]dot-release
    ```
 
@@ -199,7 +199,7 @@ or
    module name (e.g., `serving` or `eventing`).
 
    ```
-   cd config/prod/prow
+   cd config/prow
    ./run_job.sh ci-knative-MODULE-nightly-release
    ```
 

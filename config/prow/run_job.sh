@@ -38,13 +38,13 @@ if (( IS_OSX )); then
 else
   CONFIG_YAML=$(mktemp)
 fi
-make -C "${REPO_ROOT_DIR}/config/prod" get-cluster-credentials
-trap "make -C '${REPO_ROOT_DIR}/config/prod' unset-cluster-credentials" EXIT
+make -C "${REPO_ROOT_DIR}/config" get-cluster-credentials
+trap "make -C '${REPO_ROOT_DIR}/config' unset-cluster-credentials" EXIT
 kubectl get configmaps config -o "jsonpath={.data['config\.yaml']}" >"${CONFIG_YAML}"
 echo "Prow core config downloaded at ${CONFIG_YAML}"
 
 JOB_YAML=$(mktemp)
-JOB_CONFIG_YAML=${REPO_ROOT_DIR}/config/prod/prow/jobs
+JOB_CONFIG_YAML=${REPO_ROOT_DIR}/config/prow/jobs
 
 if [[ -n "${GITHUB_TOKEN_PATH}" ]]; then
     docker run -i --rm \
@@ -73,6 +73,6 @@ fi
 
 echo "Job YAML file saved to ${JOB_YAML}"
 
-make -C "${REPO_ROOT_DIR}/config/prod" get-cluster-credentials
+make -C "${REPO_ROOT_DIR}/config" get-cluster-credentials
 kubectl apply -f ${JOB_YAML}
-make -C "${REPO_ROOT_DIR}/config/prod" unset-cluster-credentials
+make -C "${REPO_ROOT_DIR}/config" unset-cluster-credentials

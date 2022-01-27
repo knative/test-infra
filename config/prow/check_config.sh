@@ -28,8 +28,8 @@ set -e
 REPO_NAME_TO_CHECK="${1:-}"
 REPO_YAML_PATH_TO_CHECK="${2:-}"
 
-make -C "${REPO_ROOT_DIR}/config/prod" get-cluster-credentials
-trap "make -C '${REPO_ROOT_DIR}/config/prod' unset-cluster-credentials" EXIT
+make -C "${REPO_ROOT_DIR}/config" get-cluster-credentials
+trap "make -C '${REPO_ROOT_DIR}/config' unset-cluster-credentials" EXIT
 
 # Download prow core config from prow
 if (( IS_OSX )); then
@@ -41,7 +41,7 @@ else
   CONFIG_YAML="$(mktemp)"
   PLUGINS_YAML="$(mktemp)"
 fi
-JOB_YAML="${REPO_ROOT_DIR}/config/prod/prow/jobs"
+JOB_YAML="${REPO_ROOT_DIR}/config/prow/jobs"
 
 kubectl get configmaps config -o "jsonpath={.data['config\.yaml']}" >"${CONFIG_YAML}"
 echo "Prow core config downloaded at ${CONFIG_YAML}"
