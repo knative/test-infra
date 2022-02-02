@@ -1,6 +1,7 @@
 gitHubLogin: "knative-prow-updater-robot"
 gitHubToken: "/etc/prow-auto-bumper-github-token/token"
 skipPullRequest: false
+selfAssign: true # Commenting `/cc`, so that autobump PR is not assigned to anyone
 gitHubOrg: "knative"
 gitHubRepo: "test-infra"
 remoteName: "test-infra"
@@ -8,11 +9,13 @@ headBranchName: "autobump-knative"
 upstreamURLBase: "https://raw.githubusercontent.com/kubernetes/test-infra/master"
 includedConfigPaths:
   - "config/prow/jobs"
+  - "config/prow/build-cluster/cluster"
 extraFiles:
   - "config/Makefile"
   - "config/prow/check_config.sh"
   - "config/prow/run_job.sh"
   - "config/prow/update_config.sh"
+  - "config/prow/build-cluster/config.yaml"
 targetVersion: "upstream"
 prefixes:
   - name: "Prow"

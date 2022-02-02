@@ -33,4 +33,5 @@ export GCSBUCKET="${GCSBUCKET:-knative-prow}"
 export NODECOUNT=4
 export OUT_FILE="build-cluster-kubeconfig.yaml"
 
-bash <(curl -sSfL https://raw.githubusercontent.com/GoogleCloudPlatform/oss-test-infra/master/prow/create-build-cluster.sh) "$@"
+#bash <(curl -sSfL https://raw.githubusercontent.com/GoogleCloudPlatform/oss-test-infra/master/prow/create-build-cluster.sh) "$@"
+source create-build-cluster-helper.sh
