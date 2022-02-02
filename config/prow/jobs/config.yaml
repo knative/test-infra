@@ -5762,6 +5762,324 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
+  - name: pull-knative-sandbox-eventing-kafka-broker-channel-integration-tests-tls
+    agent: kubernetes
+    context: pull-knative-sandbox-eventing-kafka-broker-channel-integration-tests-tls
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-sandbox-eventing-kafka-broker-channel-integration-tests-tls"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-broker-channel-integration-tests-tls),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/eventing-kafka-broker
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --channel-tls"
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: docker-graph
+          mountPath: /docker-graph
+        - name: modules
+          mountPath: /lib/modules
+        - name: cgroup
+          mountPath: /sys/fs/cgroup
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: docker-graph
+        emptyDir: {}
+      - name: modules
+        hostPath:
+          path: /lib/modules
+          type: Directory
+      - name: cgroup
+        hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-sandbox-eventing-kafka-broker-channel-integration-tests-sasl-ssl
+    agent: kubernetes
+    context: pull-knative-sandbox-eventing-kafka-broker-channel-integration-tests-sasl-ssl
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-sandbox-eventing-kafka-broker-channel-integration-tests-sasl-ssl"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-broker-channel-integration-tests-sasl-ssl),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/eventing-kafka-broker
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --channel-sasl-ssl"
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: docker-graph
+          mountPath: /docker-graph
+        - name: modules
+          mountPath: /lib/modules
+        - name: cgroup
+          mountPath: /sys/fs/cgroup
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: docker-graph
+        emptyDir: {}
+      - name: modules
+        hostPath:
+          path: /lib/modules
+          type: Directory
+      - name: cgroup
+        hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-sandbox-eventing-kafka-broker-channel-integration-tests-sasl-plain
+    agent: kubernetes
+    context: pull-knative-sandbox-eventing-kafka-broker-channel-integration-tests-sasl-plain
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-sandbox-eventing-kafka-broker-channel-integration-tests-sasl-plain"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-broker-channel-integration-tests-sasl-plain),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/eventing-kafka-broker
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/e2e-tests.sh --channel-sasl-plain"
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: docker-graph
+          mountPath: /docker-graph
+        - name: modules
+          mountPath: /lib/modules
+        - name: cgroup
+          mountPath: /sys/fs/cgroup
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: docker-graph
+        emptyDir: {}
+      - name: modules
+        hostPath:
+          path: /lib/modules
+          type: Directory
+      - name: cgroup
+        hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-sandbox-eventing-kafka-broker-channel-reconciler-tests-tls
+    agent: kubernetes
+    context: pull-knative-sandbox-eventing-kafka-broker-channel-reconciler-tests-tls
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-sandbox-eventing-kafka-broker-channel-reconciler-tests-tls"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-broker-channel-reconciler-tests-tls),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/eventing-kafka-broker
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/reconciler-tests.sh channel-tls"
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: docker-graph
+          mountPath: /docker-graph
+        - name: modules
+          mountPath: /lib/modules
+        - name: cgroup
+          mountPath: /sys/fs/cgroup
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: docker-graph
+        emptyDir: {}
+      - name: modules
+        hostPath:
+          path: /lib/modules
+          type: Directory
+      - name: cgroup
+        hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-sandbox-eventing-kafka-broker-channel-reconciler-tests-sasl-ssl
+    agent: kubernetes
+    context: pull-knative-sandbox-eventing-kafka-broker-channel-reconciler-tests-sasl-ssl
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-sandbox-eventing-kafka-broker-channel-reconciler-tests-sasl-ssl"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-broker-channel-reconciler-tests-sasl-ssl),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/eventing-kafka-broker
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/reconciler-tests.sh --channel-sasl-ssl"
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: docker-graph
+          mountPath: /docker-graph
+        - name: modules
+          mountPath: /lib/modules
+        - name: cgroup
+          mountPath: /sys/fs/cgroup
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: docker-graph
+        emptyDir: {}
+      - name: modules
+        hostPath:
+          path: /lib/modules
+          type: Directory
+      - name: cgroup
+        hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-knative-sandbox-eventing-kafka-broker-channel-reconciler-tests-sasl-plain
+    agent: kubernetes
+    context: pull-knative-sandbox-eventing-kafka-broker-channel-reconciler-tests-sasl-plain
+    always_run: true
+    optional: false
+    rerun_command: "/test pull-knative-sandbox-eventing-kafka-broker-channel-reconciler-tests-sasl-plain"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-broker-channel-reconciler-tests-sasl-plain),?(\\s+|$)"
+    decorate: true
+    path_alias: knative.dev/eventing-kafka-broker
+    cluster: "build-knative"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/presubmit-tests.sh"
+        - "--run-test"
+        - "./test/reconciler-tests.sh --channel-sasl-plain"
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: docker-graph
+          mountPath: /docker-graph
+        - name: modules
+          mountPath: /lib/modules
+        - name: cgroup
+          mountPath: /sys/fs/cgroup
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+      volumes:
+      - name: docker-graph
+        emptyDir: {}
+      - name: modules
+        hostPath:
+          path: /lib/modules
+          type: Directory
+      - name: cgroup
+        hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+      - name: test-account
+        secret:
+          secretName: test-account
   knative-sandbox/kperf:
   - name: pull-knative-sandbox-kperf-build-tests
     agent: kubernetes

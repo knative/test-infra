@@ -504,6 +504,36 @@ presubmits:
     - --run-test
     - ./test/reconciler-tests.sh
   - go-coverage: true
+  - custom-test: channel-integration-tests-tls
+    needs-dind: true
+    args:
+    - --run-test
+    - ./test/e2e-tests.sh --channel-tls
+  - custom-test: channel-integration-tests-sasl-ssl
+    needs-dind: true
+    args:
+    - --run-test
+    - ./test/e2e-tests.sh --channel-sasl-ssl
+  - custom-test: channel-integration-tests-sasl-plain
+    needs-dind: true
+    args:
+    - --run-test
+    - ./test/e2e-tests.sh --channel-sasl-plain
+  - custom-test: channel-reconciler-tests-tls
+    needs-dind: true
+    args:
+    - --run-test
+    - ./test/reconciler-tests.sh channel-tls
+  - custom-test: channel-reconciler-tests-sasl-ssl
+    needs-dind: true
+    args:
+    - --run-test
+    - ./test/reconciler-tests.sh --channel-sasl-ssl
+  - custom-test: channel-reconciler-tests-sasl-plain
+    needs-dind: true
+    args:
+    - --run-test
+    - ./test/reconciler-tests.sh --channel-sasl-plain
   knative-sandbox/eventing-rabbitmq:
   - build-tests: false
   - unit-tests: false
