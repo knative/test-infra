@@ -110,7 +110,6 @@ presubmits:
       testgrid-alert-email: "serverless-engprod-sea@google.com"
       testgrid-num-failures-to-alert: '1'
     decorate: true
-    path_alias: k8s.io/k8s.io
     run_if_changed: "^groups/"
     branches:
     - ^main$
