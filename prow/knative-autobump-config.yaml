@@ -1,21 +1,21 @@
 ---
-gitHubLogin: "google-oss-robot"
-gitHubToken: "/etc/github-token/oauth"
-onCallAddress: "https://storage.googleapis.com/kubernetes-jenkins/oncall.json"
+gitHubLogin: "knative-prow-updater-robot"
+gitHubToken: "/etc/prow-auto-bumper-github-token/token"
 skipPullRequest: false
 selfAssign: true # Commenting `/cc`, so that autobump PR is not assigned to anyone
-gitHubOrg: "GoogleCloudPlatform"
-gitHubRepo: "oss-test-infra"
-remoteName: "oss-test-infra"
-headBranchName: "autobump-knative-prow"
+gitHubOrg: "knative"
+gitHubRepo: "test-infra"
+remoteName: "test-infra"
+headBranchName: "autobump-knative"
 upstreamURLBase: "https://raw.githubusercontent.com/kubernetes/test-infra/master"
-includedConfigPaths:
-  - "prow/knative/cluster"
 targetVersion: "upstream"
+includedConfigPaths:
+  - "prow/cluster"
+  - "prow/jobs"
 extraFiles:
-  - "prow/knative/config.yaml"
+  - "prow/config.yaml"
 prefixes:
-  - name: "knative-prow"
+  - name: "Prow"
     prefix: "gcr.io/k8s-prow/"
     refConfigFile: "config/prow/cluster/deck_deployment.yaml"
     repo: "https://github.com/kubernetes/test-infra"
