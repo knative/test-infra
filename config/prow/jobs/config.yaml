@@ -7506,7 +7506,7 @@ periodics:
       secret:
         secretName: test-account
 - cron: "0 16 * * *"
-  name: ci-knative-serving-0.25-s390x-kourier-tests
+  name: ci-knative-serving-1.2-s390x-kourier-tests
   agent: kubernetes
   decorate: true
   decoration_config:
@@ -7516,9 +7516,9 @@ periodics:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
-    base_ref: release-0.25
+    base_ref: release-1.2
   annotations:
-    testgrid-dashboards: knative-0.25
+    testgrid-dashboards: knative-1.2
     testgrid-tab-name: serving-s390x-kourier-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -7565,7 +7565,7 @@ periodics:
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: PULL_BASE_REF
-        value: release-0.25
+        value: release-1.2
     volumes:
     - name: s390x-cluster1
       secret:
@@ -7849,7 +7849,7 @@ periodics:
       secret:
         secretName: test-account
 - cron: "0 0 * * *"
-  name: ci-knative-serving-0.25-s390x-contour-tests
+  name: ci-knative-serving-1.2-s390x-contour-tests
   agent: kubernetes
   decorate: true
   decoration_config:
@@ -7859,9 +7859,9 @@ periodics:
   - org: knative
     repo: serving
     path_alias: knative.dev/serving
-    base_ref: release-0.25
+    base_ref: release-1.2
   annotations:
-    testgrid-dashboards: knative-0.25
+    testgrid-dashboards: knative-1.2
     testgrid-tab-name: serving-s390x-contour-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -7908,7 +7908,7 @@ periodics:
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: PULL_BASE_REF
-        value: release-0.25
+        value: release-1.2
     volumes:
     - name: s390x-cluster1
       secret:
@@ -9431,7 +9431,7 @@ periodics:
       secret:
         secretName: test-account
 - cron: "0 22 * * *"
-  name: ci-knative-client-0.25-s390x-e2e-tests
+  name: ci-knative-client-1.2-s390x-e2e-tests
   agent: kubernetes
   decorate: true
   decoration_config:
@@ -9441,9 +9441,9 @@ periodics:
   - org: knative
     repo: client
     path_alias: knative.dev/client
-    base_ref: release-0.25
+    base_ref: release-1.2
   annotations:
-    testgrid-dashboards: knative-0.25
+    testgrid-dashboards: knative-1.2
     testgrid-tab-name: client-s390x-e2e-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -9486,7 +9486,7 @@ periodics:
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: PULL_BASE_REF
-        value: release-0.25
+        value: release-1.2
     volumes:
     - name: s390x-cluster1
       secret:
@@ -13083,7 +13083,7 @@ periodics:
       secret:
         secretName: test-account
 - cron: "0 18 * * *"
-  name: ci-knative-eventing-0.25-s390x-e2e-tests
+  name: ci-knative-eventing-1.2-s390x-e2e-tests
   agent: kubernetes
   decorate: true
   decoration_config:
@@ -13093,9 +13093,9 @@ periodics:
   - org: knative
     repo: eventing
     path_alias: knative.dev/eventing
-    base_ref: release-0.25
+    base_ref: release-1.2
   annotations:
-    testgrid-dashboards: knative-0.25
+    testgrid-dashboards: knative-1.2
     testgrid-tab-name: eventing-s390x-e2e-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -13140,7 +13140,7 @@ periodics:
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: PULL_BASE_REF
-        value: release-0.25
+        value: release-1.2
     volumes:
     - name: s390x-cluster1
       secret:
@@ -20924,7 +20924,7 @@ periodics:
       secret:
         secretName: test-account
 - cron: "0 20 * * *"
-  name: ci-knative-operator-0.25-s390x-e2e-tests
+  name: ci-knative-operator-1.2-s390x-e2e-tests
   agent: kubernetes
   decorate: true
   decoration_config:
@@ -20934,9 +20934,9 @@ periodics:
   - org: knative
     repo: operator
     path_alias: knative.dev/operator
-    base_ref: release-0.25
+    base_ref: release-1.2
   annotations:
-    testgrid-dashboards: knative-0.25
+    testgrid-dashboards: knative-1.2
     testgrid-tab-name: operator-s390x-e2e-tests
     testgrid-alert-stale-results-hours: "3"
   spec:
@@ -20979,7 +20979,7 @@ periodics:
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: PULL_BASE_REF
-        value: release-0.25
+        value: release-1.2
     volumes:
     - name: s390x-cluster1
       secret:

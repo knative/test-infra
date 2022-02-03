@@ -706,7 +706,7 @@ periodics:
     external_cluster:
       secret: s390x-cluster1
   - custom-job: s390x-kourier-tests
-    release: "0.25"
+    release: "1.2"
     cron: 0 16 * * *
     command:
     - bash
@@ -800,7 +800,7 @@ periodics:
     external_cluster:
       secret: s390x-cluster1
   - custom-job: s390x-contour-tests
-    release: "0.25"
+    release: "1.2"
     cron: 0 0 * * *
     command:
     - bash
@@ -957,7 +957,7 @@ periodics:
     external_cluster:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
-    release: "0.25"
+    release: "1.2"
     cron: 0 22 * * *
     command:
     - bash
@@ -1164,7 +1164,7 @@ periodics:
     external_cluster:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
-    release: "0.25"
+    release: "1.2"
     cron: 0 18 * * *
     command:
     - bash
@@ -1648,7 +1648,7 @@ periodics:
     external_cluster:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
-    release: "0.25"
+    release: "1.2"
     cron: 0 20 * * *
     command:
     - bash
