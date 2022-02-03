@@ -504,36 +504,48 @@ presubmits:
     - --run-test
     - ./test/reconciler-tests.sh
   - go-coverage: true
-  - custom-test: channel-integration-tests-tls
+  - custom-test: channel-integration-tests-ssl
     needs-dind: true
+    env-vars:
+      - EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO="SSL"
     args:
     - --run-test
-    - ./test/e2e-tests.sh --channel-tls
+    - ./test/e2e-tests.sh
   - custom-test: channel-integration-tests-sasl-ssl
     needs-dind: true
+    env-vars:
+      - EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO="SASL_SSL"
     args:
     - --run-test
-    - ./test/e2e-tests.sh --channel-sasl-ssl
+    - ./test/e2e-tests.sh
   - custom-test: channel-integration-tests-sasl-plain
     needs-dind: true
+    env-vars:
+      - EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO="SASL_PLAIN"
     args:
     - --run-test
-    - ./test/e2e-tests.sh --channel-sasl-plain
-  - custom-test: channel-reconciler-tests-tls
+    - ./test/e2e-tests.sh
+  - custom-test: channel-reconciler-tests-ssl
     needs-dind: true
+    env-vars:
+      - EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO="SSL"
     args:
     - --run-test
-    - ./test/reconciler-tests.sh channel-tls
+    - ./test/reconciler-tests.sh
   - custom-test: channel-reconciler-tests-sasl-ssl
     needs-dind: true
+    env-vars:
+      - EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO="SASL_SSL"
     args:
     - --run-test
-    - ./test/reconciler-tests.sh --channel-sasl-ssl
+    - ./test/reconciler-tests.sh
   - custom-test: channel-reconciler-tests-sasl-plain
     needs-dind: true
+    env-vars:
+      - EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO="SASL_PLAIN"
     args:
     - --run-test
-    - ./test/reconciler-tests.sh --channel-sasl-plain
+    - ./test/reconciler-tests.sh
   knative-sandbox/eventing-rabbitmq:
   - build-tests: false
   - unit-tests: false
