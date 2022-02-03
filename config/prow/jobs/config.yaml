@@ -5762,13 +5762,13 @@ presubmits:
       - name: covbot-token
         secret:
           secretName: covbot-token
-  - name: pull-knative-sandbox-eventing-kafka-broker-channel-integration-tests-tls
+  - name: pull-knative-sandbox-eventing-kafka-broker-channel-integration-tests-ssl
     agent: kubernetes
-    context: pull-knative-sandbox-eventing-kafka-broker-channel-integration-tests-tls
+    context: pull-knative-sandbox-eventing-kafka-broker-channel-integration-tests-ssl
     always_run: true
     optional: false
-    rerun_command: "/test pull-knative-sandbox-eventing-kafka-broker-channel-integration-tests-tls"
-    trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-broker-channel-integration-tests-tls),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-eventing-kafka-broker-channel-integration-tests-ssl"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-broker-channel-integration-tests-ssl),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/eventing-kafka-broker
     cluster: "build-knative"
@@ -5781,7 +5781,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh --channel-tls"
+        - "./test/e2e-tests.sh"
         securityContext:
           privileged: true
         volumeMounts:
@@ -5797,6 +5797,8 @@ presubmits:
         env:
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
+        - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+          value: "SSL"
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
@@ -5834,7 +5836,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh --channel-sasl-ssl"
+        - "./test/e2e-tests.sh"
         securityContext:
           privileged: true
         volumeMounts:
@@ -5850,6 +5852,8 @@ presubmits:
         env:
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
+        - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+          value: "SASL_SSL"
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
@@ -5887,7 +5891,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh --channel-sasl-plain"
+        - "./test/e2e-tests.sh"
         securityContext:
           privileged: true
         volumeMounts:
@@ -5903,6 +5907,8 @@ presubmits:
         env:
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
+        - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+          value: "SASL_PLAIN"
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
@@ -5921,13 +5927,13 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-sandbox-eventing-kafka-broker-channel-reconciler-tests-tls
+  - name: pull-knative-sandbox-eventing-kafka-broker-channel-reconciler-tests-ssl
     agent: kubernetes
-    context: pull-knative-sandbox-eventing-kafka-broker-channel-reconciler-tests-tls
+    context: pull-knative-sandbox-eventing-kafka-broker-channel-reconciler-tests-ssl
     always_run: true
     optional: false
-    rerun_command: "/test pull-knative-sandbox-eventing-kafka-broker-channel-reconciler-tests-tls"
-    trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-broker-channel-reconciler-tests-tls),?(\\s+|$)"
+    rerun_command: "/test pull-knative-sandbox-eventing-kafka-broker-channel-reconciler-tests-ssl"
+    trigger: "(?m)^/test (all|pull-knative-sandbox-eventing-kafka-broker-channel-reconciler-tests-ssl),?(\\s+|$)"
     decorate: true
     path_alias: knative.dev/eventing-kafka-broker
     cluster: "build-knative"
@@ -5940,7 +5946,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/reconciler-tests.sh channel-tls"
+        - "./test/reconciler-tests.sh"
         securityContext:
           privileged: true
         volumeMounts:
@@ -5956,6 +5962,8 @@ presubmits:
         env:
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
+        - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+          value: "SSL"
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
@@ -5993,7 +6001,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/reconciler-tests.sh --channel-sasl-ssl"
+        - "./test/reconciler-tests.sh"
         securityContext:
           privileged: true
         volumeMounts:
@@ -6009,6 +6017,8 @@ presubmits:
         env:
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
+        - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+          value: "SASL_SSL"
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
@@ -6046,7 +6056,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/reconciler-tests.sh --channel-sasl-plain"
+        - "./test/reconciler-tests.sh"
         securityContext:
           privileged: true
         volumeMounts:
@@ -6062,6 +6072,8 @@ presubmits:
         env:
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
+        - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+          value: "SASL_PLAIN"
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: E2E_CLUSTER_REGION
