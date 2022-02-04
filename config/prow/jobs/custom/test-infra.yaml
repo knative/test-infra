@@ -104,11 +104,6 @@ presubmits:
           secretName: test-account
   knative/community:
   - name: pull-knativeteam-groups-test
-    annotations:
-      testgrid-dashboards: utilities
-      testgrid-tab-name: pull-knativeteam-groups
-      testgrid-alert-email: "serverless-engprod-sea@google.com"
-      testgrid-num-failures-to-alert: '1'
     decorate: true
     run_if_changed: "^groups/"
     branches:
@@ -492,14 +487,10 @@ periodics:
       testgrid-dashboards: utilities
       testgrid-tab-name: knativeteam-groups-jobs
       testgrid-alert-email: "serverless-engprod-sea@google.com"
-  # rerun_auth_config:
-  #   github_team_slugs:
-  #   # proxy for sig-k8s-infra-oncall
-  #   - org: kubernetes
-  #     slug: sig-k8s-infra-leads
-  #   # team specifically for this service
-  #   - org: kubernetes
-  #     slug: k8s-infra-group-admins
+  rerun_auth_config:
+    github_team_slugs:
+    - org: knative
+      slug: productivity-infra-admins
   spec:
     serviceAccountName: gsuite-groups-manager
     containers:
@@ -724,14 +715,10 @@ knative/community:
       testgrid-tab-name: knativeteam-groups-jobs
       testgrid-alert-email: "serverless-engprod-sea@google.com"
       testgrid-num-failures-to-alert: '1'
-    # rerun_auth_config:
-    #   github_team_slugs:
-    #   # proxy for sig-k8s-infra-oncall
-    #   - org: kubernetes
-    #     slug: sig-k8s-infra-leads
-    #   # team specifically for this service
-    #   - org: kubernetes
-    #     slug: k8s-infra-group-admins
+    rerun_auth_config:
+      github_team_slugs:
+      - org: knative
+        slug: productivity-infra-admins
     spec:
       serviceAccountName: gsuite-groups-manager
       containers:
