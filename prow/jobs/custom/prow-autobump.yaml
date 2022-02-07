@@ -1,0 +1,74 @@
+periodics:
+- cron: "15 15-23 * * 1-5"  # Run at 7:15-15:15 PST (15:15 UTC) Mon-Fri
+  name: ci-oss-test-infra-autobump-knative-prow
+  cluster: test-infra-trusted
+  decorate: true
+  extra_refs:
+  - org: GoogleCloudPlatform
+    repo: oss-test-infra
+    base_ref: master
+  annotations:
+    testgrid-dashboards: googleoss-test-infra
+    testgrid-tab-name: autobump-knative-prow
+    testgrid-alert-email: k8s-infra-oncall@google.com
+    testgrid-num-failures-to-alert: '3'
+  spec:
+    containers:
+    - image: gcr.io/k8s-prow/generic-autobumper:v20220204-81c1f517b0
+      command:
+      - /app/prow/cmd/generic-autobumper/app.binary
+      args:
+      - --config=prow/knative/knative-autobump-config.yaml
+      volumeMounts:
+      - name: github
+        mountPath: /etc/github-token
+        readOnly: true
+      - name: ssh
+        mountPath: /root/.ssh
+    volumes:
+    - name: github
+      secret:
+        secretName: oauth-token-2
+    - name: ssh
+      secret:
+        secretName: google-oss-robot-ssh-keys
+        defaultMode: 0400
+- cron: "30 21 * * 1-5"  # Bump with label `skip-review`. Run at 13:30 PST (21:30 UTC, fall) Mon-Fri
+  # Save for daylight saving:
+  # (Could consider not to switch, since running at 14:30 PST is an acceptable time)
+  # cron: "30 20 * * 1-5"  # Bump with label `skip-review`. Run at 13:30 PST (20:30 UTC, spring) Mon-Fri
+  name: ci-oss-test-infra-autobump-knative-prow-for-auto-deploy
+  cluster: test-infra-trusted
+  decorate: true
+  extra_refs:
+  - org: GoogleCloudPlatform
+    repo: oss-test-infra
+    base_ref: master
+  annotations:
+    testgrid-dashboards: googleoss-test-infra
+    testgrid-tab-name: autobump-knative-prow-for-auto-deploy
+    testgrid-alert-email: k8s-infra-oncall@google.com
+    testgrid-num-failures-to-alert: '1'
+  spec:
+    containers:
+    - image: gcr.io/k8s-prow/generic-autobumper:v20220204-81c1f517b0
+      command:
+      - /app/prow/cmd/generic-autobumper/app.binary
+      args:
+      - --config=prow/knative/knative-autobump-config.yaml
+      - --labels-override=skip-review # This label is used by tide for identifying trusted PR
+      - --skip-if-no-oncall # Only apply `skip-review` label when oncall is active
+      volumeMounts:
+      - name: github
+        mountPath: /etc/github-token
+        readOnly: true
+      - name: ssh
+        mountPath: /root/.ssh
+    volumes:
+    - name: github
+      secret:
+        secretName: oauth-token-2
+    - name: ssh
+      secret:
+        secretName: google-oss-robot-ssh-keys
+        defaultMode: 0400
