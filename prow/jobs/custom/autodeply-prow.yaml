@@ -13,6 +13,7 @@
 # limitations under the License.
 
 postsubmits:
+  knative/test-infra:
   - name: post-oss-test-infra-deploy-knative-prow
     cluster: test-infra-trusted
     run_if_changed: '^prow/knative/cluster/|^prow/oss/serviceaccounts/'
