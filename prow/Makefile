@@ -23,22 +23,22 @@ export KUBECONFIG
 .PHONY: save-kubeconfig
 save-kubeconfig:
 ifndef save
-        $(eval KUBECONFIG=$(shell mktemp))
+	$(eval KUBECONFIG=$(shell mktemp))
 endif
 
 .PHONY: activate-serviceaccount
 activate-serviceaccount:
 ifdef GOOGLE_APPLICATION_CREDENTIALS
-        gcloud auth activate-service-account --key-file="$(GOOGLE_APPLICATION_CREDENTIALS)"
+	gcloud auth activate-service-account --key-file="$(GOOGLE_APPLICATION_CREDENTIALS)"
 endif
 
 .PHONY: get-cluster-credentials
 get-cluster-credentials: save-kubeconfig activate-serviceaccount
-        gcloud container clusters get-credentials "$(CLUSTER)" --project="$(PROJECT)" --zone="$(ZONE)"
+	gcloud container clusters get-credentials "$(CLUSTER)" --project="$(PROJECT)" --zone="$(ZONE)"
 
 .PHONY: get-build-cluster-credentials
 get-build-cluster-credentials: save-kubeconfig activate-serviceaccount
-        gcloud container clusters get-credentials "$(CLUSTER_BUILD)" --project="$(PROJECT_BUILD)" --zone="$(ZONE)"
+	gcloud container clusters get-credentials "$(CLUSTER_BUILD)" --project="$(PROJECT_BUILD)" --zone="$(ZONE)"
 
 # These are the usual GKE variables.
 PROJECT       ?= knative-tests

@@ -44,7 +44,7 @@ kubectl get configmaps config -o "jsonpath={.data['config\.yaml']}" >"${CONFIG_Y
 echo "Prow core config downloaded at ${CONFIG_YAML}"
 
 JOB_YAML=$(mktemp)
-JOB_CONFIG_YAML=${REPO_ROOT_DIR}/config/prow/jobs
+JOB_CONFIG_YAML=${REPO_ROOT_DIR}/prow/jobs
 
 if [[ -n "${GITHUB_TOKEN_PATH}" ]]; then
     docker run -i --rm \

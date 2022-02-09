@@ -21,7 +21,7 @@ presubmits:
   knative/test-infra:
   - name: pull-test-infra-validate-prow-yaml
     decorate: true
-    run_if_changed: "^config/prow/(cluster|core|jobs)/.*.yaml$"
+    run_if_changed: "^prow/(cluster|jobs)/.*.yaml$"
     cluster: "prow-trusted"
     spec:
       containers:
@@ -29,7 +29,7 @@ presubmits:
         command:
         - "runner.sh"
         args:
-        - "./config/prow/check_config.sh"
+        - "./prow/config.sh check"
         - "$(REPO_OWNER)/$(REPO_NAME)"
         securityContext:
           privileged: true
@@ -51,7 +51,7 @@ presubmits:
   - name: pull-test-infra-validate-own-testgrid-yaml
     decorate: true
     optional: false
-    run_if_changed: "^config/prow/(jobs|k8s-testgrid)/.*.yaml"
+    run_if_changed: "(^config/prow/k8s-testgrid/.*.yaml$|^prow/jobs/.*.yaml$)"
     branches:
     - "main"
     cluster: "build-knative"
@@ -65,8 +65,8 @@ presubmits:
         command:
         - /app/testgrid/cmd/configurator/app.binary
         args:
-        - --prow-config=../../GoogleCloudPlatform/oss-test-infra/prow/knative/config.yaml
-        - --prow-job-config=config/prow/jobs
+        - --prow-config=prow/config.yaml
+        - --prow-job-config=prow/jobs
         - --default=config/prow/k8s-testgrid/testgrid-common-settings.yaml
         - --yaml=config/prow/k8s-testgrid/k8s-testgrid.yaml
         - --oneshot
@@ -209,7 +209,7 @@ periodics:
       - "go"
       - "run"
       - "./tools/cleanup/cleanup.go"
-      - "--project-resource-yaml=config/prow/build-cluster/boskos/boskos_resources.yaml"
+      - "--project-resource-yaml=prow/cluster/boskos/boskos_resources.yaml"
       - "--days-to-keep-images=30"
       - "--hours-to-keep-clusters=24"
       - "--concurrent-operations=50"
@@ -686,8 +686,8 @@ postsubmits:
         command:
         - /app/testgrid/cmd/configurator/app.binary
         args:
-        - --prow-config=../../GoogleCloudPlatform/oss-test-infra/prow/knative/config.yaml
-        - --prow-job-config=config/prow/jobs
+        - --prow-config=prow/config.yaml
+        - --prow-job-config=prow/jobs
         - --default=config/prow/k8s-testgrid/testgrid-common-settings.yaml
         - --yaml=config/prow/k8s-testgrid/k8s-testgrid.yaml
         - --oneshot

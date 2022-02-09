@@ -52,7 +52,7 @@ else
   PLUGINS_YAML="$(mktemp)"
 fi
 
-JOB_YAML="${REPO_ROOT_DIR}/config/prow/jobs"
+JOB_YAML="${REPO_ROOT_DIR}/prow/jobs"
 
 kubectl get configmaps config -o "jsonpath={.data['config\.yaml']}" >"${CONFIG_YAML}"
 echo "Prow core config downloaded at ${CONFIG_YAML}"

@@ -28,7 +28,7 @@ import (
 )
 
 var (
-	defaultTemplateConfigPath = "../../config/prow/jobs/custom"
+	defaultTemplateConfigPath = "../../prow/jobs/custom"
 )
 
 type customJobStruct struct {

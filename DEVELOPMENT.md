@@ -45,7 +45,7 @@ of:
   [`./hack/update-codegen.sh`](./hack/update-codegen.sh). Inputs include:
 
   - Prow configs templates
-    [config/prow/config_knative.yaml](./config/prow/config_knative.yaml).
+    [prow/config_knative.yaml](./prow/config_knative.yaml).
 
   - Prow configs generator [tools/config-generator](./tools/config-generator).
 

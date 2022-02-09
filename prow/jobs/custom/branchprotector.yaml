@@ -45,7 +45,7 @@ periodics:
       - /app/prow/cmd/branchprotector/app.binary
       args:
       - --config-path=../../github.com/GoogleCloudPlatform/oss-test-infra/prow/knative/config.yaml
-      - --job-config-path=config/prow/jobs
+      - --job-config-path=prow/jobs
       - --github-token-path=/etc/github/token
       - --confirm
       volumeMounts:
