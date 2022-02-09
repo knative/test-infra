@@ -14,7 +14,7 @@
 
 SHELL=/bin/bash -o pipefail
 
-include ../../../../Makefile.gcloud.mk
+include ../../../Makefile.gcloud.mk
 
 PROJECT       ?= knative-tests
 ZONE          ?= us-central1-f

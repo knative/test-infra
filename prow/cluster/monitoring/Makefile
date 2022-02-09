@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include ../../../Makefile.gcloud.mk
+include ../../Makefile.gcloud.mk
 
 PROJECT       ?= knative-tests
 ZONE          ?= us-central1-f
