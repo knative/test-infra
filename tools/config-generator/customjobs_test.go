@@ -53,7 +53,7 @@ func TestEnsureCustomJob(t *testing.T) {
 
 			allCustomJobs := customJobStruct{}
 			if err = yaml.Unmarshal(content, &allCustomJobs); err != nil {
-				t.Fatalf("Failed unmarshalling: %v", err)
+				t.Fatalf("Failed unmarshalling %q: %v", path, err)
 			}
 			for _, sjs := range allCustomJobs.Presubmits {
 				for _, sj := range sjs {
