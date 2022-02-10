@@ -1,0 +1,737 @@
+# Copyright 2020 The Knative Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Add a fake hook image here so that autobump.sh can bump only job configs
+# image: gcr.io/k8s-prow/hook:v20220124-9887456efc
+# See
+# https://github.com/kubernetes/test-infra/blob/5815354584709c3f436e3d682110c673d224d7b1/prow/cmd/autobump/autobump.sh#L164
+
+presubmits:
+  knative/test-infra:
+  - name: pull-test-infra-validate-prow-yaml
+    decorate: true
+    run_if_changed: "^prow/(cluster|jobs)/.*.yaml$"
+    cluster: "prow-trusted"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        command:
+        - "runner.sh"
+        args:
+        - "./prow/config.sh check"
+        - "$(REPO_OWNER)/$(REPO_NAME)"
+        securityContext:
+          privileged: true
+        env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+      volumes:
+      - name: docker-graph
+        emptyDir: {}
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: pull-test-infra-validate-own-testgrid-yaml
+    decorate: true
+    optional: false
+    run_if_changed: "(^config/prow/k8s-testgrid/.*.yaml$|^prow/jobs/.*.yaml$)"
+    branches:
+    - "main"
+    cluster: "build-knative"
+    extra_refs:
+    - org: GoogleCloudPlatform
+      repo: oss-test-infra
+      base_ref: master
+    spec:
+      containers:
+      - image: gcr.io/k8s-prow/configurator:v20220124-9887456efc
+        command:
+        - /app/testgrid/cmd/configurator/app.binary
+        args:
+        - --prow-config=prow/config.yaml
+        - --prow-job-config=prow/jobs
+        - --default=config/prow/k8s-testgrid/testgrid-common-settings.yaml
+        - --yaml=config/prow/k8s-testgrid/k8s-testgrid.yaml
+        - --oneshot
+        - --output=./config.pb
+  - name: pull-knative-test-infra-prow-tests-image-build
+    agent: kubernetes
+    optional: false
+    decorate: true
+    path_alias: knative.dev/test-infra
+    cluster: "build-knative"
+    run_if_changed: "^(images/prow-tests/.*|kntest/.*|pkg/.*|go.mod)$"
+    branches:
+    - "main"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "make"
+        - "-C"
+        - "images/prow-tests"
+        - "build-ci-test"
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  knative/community:
+  - name: pull-knativeteam-groups-test
+    decorate: true
+    run_if_changed: "^groups/"
+    branches:
+    - ^main$
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        command:
+        - runner.sh
+        args:
+        - make
+        - -C
+        - ./groups
+        - test
+        env:
+        - name: GO111MODULE
+          value: "on"
+periodics:
+# ci-knative-heartbeat is used for prometheus, alert(s) will be sent
+# if this job hadn't been succeeded for some time
+- cron: "*/3 * * * *" # Every 3 minutes
+  name: ci-knative-heartbeat
+  agent: kubernetes
+  decorate: true
+  cluster: "default"
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: main
+    path_alias: knative.dev/test-infra
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-heartbeat
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - "runner.sh"
+      args:
+      - "echo"
+      - "Everything is fine!"
+      resources:
+        requests:
+          cpu: 100m
+          memory: 1Gi
+- cron: "15 9 * * *"
+  name: ci-knative-backup-artifacts
+  agent: kubernetes
+  decorate: true
+  cluster: "build-knative"
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-backup-artifacts
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/backups:latest
+      imagePullPolicy: Always
+      command:
+      - "/backup.sh"
+      args:
+      - "/etc/backup-account/service-account.json"
+      volumeMounts:
+      - name: backup-account
+        mountPath: /etc/backup-account
+        readOnly: true
+    volumes:
+    - name: backup-account
+      secret:
+        secretName: backup-account
+- cron: "0 19 * * *"
+  name: ci-knative-cleanup
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-cleanup
+  agent: kubernetes
+  decorate: true
+  cluster: "build-knative"
+  decoration_config:
+    timeout: 6h
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: main
+    path_alias: knative.dev/test-infra
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-cleanup
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - "runner.sh"
+      args:
+      - "go"
+      - "run"
+      - "./tools/cleanup/cleanup.go"
+      - "--project-resource-yaml=prow/cluster/boskos/boskos_resources.yaml"
+      - "--days-to-keep-images=30"
+      - "--hours-to-keep-clusters=24"
+      - "--concurrent-operations=50"
+      - "--service-account=/etc/test-account/service-account.json"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+- cron: "0 19 * * 1,3,5"
+  name: ci-knative-cleanup-performance-tests
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-cleanup-performance-tests
+  agent: kubernetes
+  decorate: true
+  cluster: "build-knative"
+  decoration_config:
+    timeout: 6h
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: main
+    path_alias: knative.dev/test-infra
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-cleanup-performance-tests
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - "runner.sh"
+      args:
+      - "go"
+      - "run"
+      - "./tools/cleanup/cleanup.go"
+      - "--project=knative-performance"
+      - "--project=knative-eventing-performance"
+      - "--days-to-keep-images=30"
+      - "--service-account=/etc/performance-test/service-account.json"
+      volumeMounts:
+      - name: performance-test
+        mountPath: /etc/performance-test
+        readOnly: true
+    volumes:
+    - name: performance-test
+      secret:
+        secretName: performance-test
+- cron: "0 12 * * *"
+  name: ci-knative-flakes-reporter
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-flakes-reporter
+  agent: kubernetes
+  decorate: true
+  cluster: "build-knative"
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-flakes-reporter
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/flaky-test-reporter:latest
+      imagePullPolicy: Always
+      command:
+      - "/flaky-test-reporter"
+      args:
+      - "--service-account=/etc/test-account/service-account.json"
+      - "--github-account=/etc/flaky-test-reporter-github-token/token"
+      - "--slack-account=/etc/flaky-test-reporter-slack-token/token"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      - name: flaky-test-reporter-github-token
+        mountPath: /etc/flaky-test-reporter-github-token
+        readOnly: true
+      - name: flaky-test-reporter-slack-token
+        mountPath: /etc/flaky-test-reporter-slack-token
+        readOnly: true
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+    - name: flaky-test-reporter-github-token
+      secret:
+        secretName: flaky-test-reporter-github-token
+    - name: flaky-test-reporter-slack-token
+      secret:
+        secretName: flaky-test-reporter-slack-token
+- cron: "0 * * * *"
+  name: ci-knative-flakes-resultsrecorder
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-knative-flakes-reporter
+  agent: kubernetes
+  decorate: true
+  cluster: "build-knative"
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-flakes-resultsrecorder
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/flaky-test-reporter:latest
+      imagePullPolicy: Always
+      command:
+      - "/flaky-test-reporter"
+      args:
+      - "--service-account=/etc/test-account/service-account.json"
+      - "--skip-report"
+      - "--build-count=20"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      - name: flaky-test-reporter-github-token
+        mountPath: /etc/flaky-test-reporter-github-token
+        readOnly: true
+      - name: flaky-test-reporter-slack-token
+        mountPath: /etc/flaky-test-reporter-slack-token
+        readOnly: true
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+    - name: flaky-test-reporter-github-token
+      secret:
+        secretName: flaky-test-reporter-github-token
+    - name: flaky-test-reporter-slack-token
+      secret:
+        secretName: flaky-test-reporter-slack-token
+- cron: "15 15-23 * * 1"  # Bump with label `skip-review`. Run at 7:15-15:15 PST (15:15 UTC) each Monday.
+  name: ci-knative-prow-auto-bumper-for-auto-deploy
+  cluster: "build-knative"
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: main
+    path_alias: knative.dev/test-infra
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-prow-auto-bumper-for-auto-deploy
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
+  spec:
+    containers:
+    - image: gcr.io/k8s-prow/generic-autobumper:v20220124-9887456efc
+      command:
+      - /app/prow/cmd/generic-autobumper/app.binary
+      args:
+      - --config=config/prow/knative-autobump-config.yaml
+      - --labels-override=skip-review # This label is used by tide for identifying trusted PR
+      volumeMounts:
+      - name: prow-auto-bumper-github-token
+        mountPath: /etc/prow-auto-bumper-github-token
+        readOnly: true
+      - name: ssh
+        mountPath: /root/.ssh
+    volumes:
+    - name: prow-auto-bumper-github-token
+      secret:
+        secretName: prow-auto-bumper-github-token
+    - name: ssh
+      secret:
+        secretName: prow-updater-robot-ssh-key
+        defaultMode: 0400
+- cron: "30 * * * 1-5"  # Bump don't label `skip-review`. Run at :30 past every hour Mon-Fri
+  name: ci-knative-prow-auto-bumper
+  cluster: "build-knative"
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: main
+    path_alias: knative.dev/test-infra
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-prow-auto-bumper
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
+  spec:
+    containers:
+    - image: gcr.io/k8s-prow/generic-autobumper:v20220124-9887456efc
+      command:
+      - /app/prow/cmd/generic-autobumper/app.binary
+      args:
+      - --config=config/prow/knative-autobump-config.yaml
+      volumeMounts:
+      - name: prow-auto-bumper-github-token
+        mountPath: /etc/prow-auto-bumper-github-token
+        readOnly: true
+      - name: ssh
+        mountPath: /root/.ssh
+    volumes:
+    - name: prow-auto-bumper-github-token
+      secret:
+        secretName: prow-auto-bumper-github-token
+    - name: ssh
+      secret:
+        secretName: prow-updater-robot-ssh-key
+        defaultMode: 0400
+- cron: "0 */2 * * *" # Every other hour
+  name: ci-knative-prow-jobs-syncer
+  agent: kubernetes
+  decorate: true
+  cluster: "build-knative"
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: main
+    path_alias: knative.dev/test-infra
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-prow-jobs-syncer
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      imagePullPolicy: Always
+      command:
+      - "runner.sh"
+      args:
+      - "go"
+      - "run"
+      - "./tools/prow-jobs-syncer"
+      - "--github-account=/etc/prow-auto-bumper-github-token/token"
+      - "--git-userid=knative-prow-updater-robot"
+      - "--git-username='Knative Prow Updater Robot'"
+      - "--git-email=knative-prow-updater-robot@google.com"
+      - "--label=skip-review"
+      volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+      - name: prow-auto-bumper-github-token
+        mountPath: /etc/prow-auto-bumper-github-token
+        readOnly: true
+      - name: prow-updater-robot-ssh-key
+        mountPath: /root/.ssh
+        readOnly: true
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+    - name: prow-auto-bumper-github-token
+      secret:
+        secretName: prow-auto-bumper-github-token
+    - name: prow-updater-robot-ssh-key
+      secret:
+        secretName: prow-updater-robot-ssh-key
+        defaultMode: 0400
+- cron: "0 */6 * * *" # Every 6 hours
+  name: ci-knativeteam-groups
+  cluster: prow-trusted
+  decorate: true
+  max_concurrency: 1
+  extra_refs:
+  - org: knative
+    repo: community
+    base_ref: main
+  annotations:
+      testgrid-dashboards: utilities
+      testgrid-tab-name: knativeteam-groups-jobs
+      testgrid-alert-email: "serverless-engprod-sea@google.com"
+  rerun_auth_config:
+    github_team_slugs:
+    - org: knative
+      slug: productivity-infra-admins
+  spec:
+    serviceAccountName: gsuite-groups-manager
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      command:
+      - runner.sh
+      args:
+      - make
+      - C
+      - groups
+      - run
+      - --
+      - --confirm
+postsubmits:
+  knative/test-infra:
+  - name: post-knative-prow-cluster-config-updater
+    agent: kubernetes
+    decorate: true
+    path_alias: knative.dev/test-infra
+    max_concurrency: 1
+    cluster: "prow-trusted"
+    run_if_changed: "^config/(prow/build-cluster/boskos/.*.yaml|prow/testgrid/testgrid.yaml)$"
+    branches:
+    - "main"
+    annotations:
+      testgrid-dashboards: utilities
+      testgrid-tab-name: post-knative-prow-cluster-config-updater
+      testgrid-alert-email: "serverless-engprod-sea@google.com"
+      testgrid-num-failures-to-alert: "1"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "make"
+        - "-C"
+        - "./config"
+        - "update-all"
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+      volumes:
+      - name: docker-graph
+        emptyDir: {}
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: post-knative-test-infra-image-push
+    agent: kubernetes
+    decorate: true
+    path_alias: knative.dev/test-infra
+    max_concurrency: 1
+    cluster: "build-knative"
+    run_if_changed: "^(images/.*|tools/(coverage|flaky-test-reporter|flaky-test-retryer)/.*|go.mod)$"
+    branches:
+    - "main"
+    annotations:
+      testgrid-dashboards: utilities
+      testgrid-tab-name: post-knative-test-infra-image-push
+      testgrid-alert-email: "serverless-engprod-sea@google.com"
+      testgrid-num-failures-to-alert: "1"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./images/push-all.sh"
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        resources:
+          requests:
+            memory: 28Gi
+          limits:
+            memory: 32Gi
+      volumes:
+      - name: docker-graph
+        emptyDir: {}
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: post-knative-test-infra-prow-tests-image-push
+    agent: kubernetes
+    decorate: true
+    path_alias: knative.dev/test-infra
+    max_concurrency: 1
+    cluster: "build-knative"
+    run_if_changed: "^(images/prow-tests/.*|kntest/.*|pkg/.*|go.mod)$"
+    branches:
+    - "main"
+    annotations:
+      testgrid-dashboards: utilities
+      testgrid-tab-name: post-knative-test-infra-prow-tests-image-push
+      testgrid-alert-email: "serverless-engprod-sea@google.com"
+      testgrid-num-failures-to-alert: "1"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "make"
+        - "-C"
+        - "images/prow-tests"
+        - "push"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: post-knative-test-infra-deploy-tools
+    agent: kubernetes
+    decorate: true
+    path_alias: knative.dev/test-infra
+    max_concurrency: 1
+    cluster: "prow-trusted"
+    run_if_changed: "^tools/flaky-test-retryer/gke_deployment/retryer_service.yaml$"
+    branches:
+    - "main"
+    annotations:
+      testgrid-dashboards: utilities
+      testgrid-tab-name: post-knative-test-infra-deploy-tools
+      testgrid-alert-email: "serverless-engprod-sea@google.com"
+      testgrid-num-failures-to-alert: "1"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "make"
+        - "-C"
+        - "./tools/flaky-test-retryer/gke_deployment"
+        - "deploy"
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+  - name: post-test-infra-update-testgrid-proto
+    decorate: true
+    run_if_changed: "^config/prow/(jobs|k8s-testgrid)/.*.yaml"
+    branches:
+    - "main"
+    cluster: "build-knative"
+    extra_refs:
+    - org: GoogleCloudPlatform
+      repo: oss-test-infra
+      base_ref: master
+    annotations:
+      testgrid-dashboards: utilities
+      testgrid-tab-name: post-test-infra-update-testgrid-proto
+      testgrid-alert-email: "serverless-engprod-sea@google.com"
+      testgrid-num-failures-to-alert: "1"
+    spec:
+      containers:
+      - image: gcr.io/k8s-prow/configurator:v20220124-9887456efc
+        command:
+        - /app/testgrid/cmd/configurator/app.binary
+        args:
+        - --prow-config=prow/config.yaml
+        - --prow-job-config=prow/jobs
+        - --default=config/prow/k8s-testgrid/testgrid-common-settings.yaml
+        - --yaml=config/prow/k8s-testgrid/k8s-testgrid.yaml
+        - --oneshot
+        - --output=gs://knative-own-testgrid/config
+        - --gcp-service-account=/etc/test-account/service-account.json
+        volumeMounts:
+        - name: test-account
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+      volumes:
+      - name: test-account
+        secret:
+          secretName: test-account
+knative/community:
+  - name: post-knativeteam-groups
+    cluster: prow-trusted
+    decorate: true
+    max_concurrency: 1
+    run_if_changed: '^groups/'
+    branches:
+    - ^main$
+    annotations:
+      testgrid-dashboards: utilities
+      testgrid-tab-name: knativeteam-groups-jobs
+      testgrid-alert-email: "serverless-engprod-sea@google.com"
+      testgrid-num-failures-to-alert: '1'
+    rerun_auth_config:
+      github_team_slugs:
+      - org: knative
+        slug: productivity-infra-admins
+    spec:
+      serviceAccountName: gsuite-groups-manager
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        command:
+        - runner.sh
+        args:
+        - make
+        - -C
+        - groups
+        - run
+        - --
+        - --confirm
+

@@ -52,7 +52,7 @@ Versioned releases can be one of two kinds:
    [helper script documentation](https://github.com/knative/hack/README.md#using-the-releasesh-helper-script).
 
 1. Enable `nightly`, `auto-release` and `dot-release` jobs for your repo in the
-   [config_knative.yaml](../config/prow/config_knative.yaml) file. For
+   [config_knative.yaml](../prow/config_knative.yaml) file. For
    example:
 
    ```
@@ -63,7 +63,7 @@ Versioned releases can be one of two kinds:
    ```
 
 2. Run `./hack/generate-configs.sh` to regenerate
-   [config.yaml](../config/prow/jobs/config.yaml), otherwise the presubmit
+   [config.yaml](../prow/jobs/config.yaml), otherwise the presubmit
    test will fail. Merge such pull request and ask the
    [oncall](https://knative.github.io/test-infra/) to update the Prow cluster
    and TestGrid with the new configs, by running `make update-prow-job-config`

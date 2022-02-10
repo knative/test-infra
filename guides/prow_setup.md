@@ -15,14 +15,14 @@ resource manager service we use to manage a pool of GCP projects and handle the
 transition between different states for these projects.
 
 1. All projects and permissions can be created by running
-   `./config/prow/build-cluster/create_boskos_projects.sh`. For example, to
+   `./prow/build-cluster/create_boskos_projects.sh`. For example, to
    create 10 extra projects run
-   `./config/prow/build-cluster/create_boskos_projects 10 0X0X0X-0X0X0X-0X0X0X`.
+   `./prow/build-cluster/create_boskos_projects 10 0X0X0X-0X0X0X-0X0X0X`.
    You will need to substitute the actual billing ID for the second argument. In
    the event the script fails, it should be easy to follow along with in the GUI
    or run on the CLI. Projects are created with a numeric, incremental prefix
    automatically, based on the contents of
-   [prow/build-cluster/boskos_resources.yaml](../config/prow/build-cluster/boskos/boskos_resources.yaml),
+   [prow/build-cluster/boskos_resources.yaml](../prow/build-cluster/boskos/boskos_resources.yaml),
    which is automatically updated.
 
 2. Increase the compute CPU quota for the project to 200. Go to

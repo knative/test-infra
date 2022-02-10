@@ -1,7 +1,7 @@
 # Prow setup for Knative projects
 
 All Prow config files for running Prow jobs for Knative projects are under
-[config/prow](../config/prow).
+[prow/](../prow).
 
 ## Setting up Prow for a new organization
 
@@ -31,12 +31,12 @@ All Prow config files for running Prow jobs for Knative projects are under
 1. Make sure that _Knative Prow Robots_ team is an Admin of the repo.
 
 1. Add the new repo to
-   [config_knative.yaml](../config/prow/config_knative.yaml), the meta
+   [config_knative.yaml](../prow/config_knative.yaml), the meta
    config file for generating Prow config and Prow job config. Check the
    top-level section `presubmits:` and `periodics:` for blueprints for what to
    add. Then run `./hack/generate-configs.sh` to regenerate
-   [config/prow/jobs/config.yaml](../config/prow/jobs/config.yaml) and
-   [config/prow/core](../config/prow/core), otherwise the presubmit
+   [prow/jobs/config.yaml](../prow/jobs/config.yaml) and
+   [prow/core](../prow/core), otherwise the presubmit
    test in test-infra will fail. Create a PR with the changes. Once it's merged
    the configs will be automatically updated by a postsubmit job.
 
@@ -53,10 +53,10 @@ All Prow config files for running Prow jobs for Knative projects are under
    `//test/presubmit-tests.sh` working, and optionally `//hack/release.sh`
    working for automated nightly releases).
 
-2. Update [config_knative.yaml](../config/prow/config_knative.yaml)
+2. Update [config_knative.yaml](../prow/config_knative.yaml)
    (usually, copy and update the existing configuration from another
    repository). Run `./hack/generate-configs.sh` to regenerate
-   [config/prow/jobs/config.yaml](../config/prow/jobs/config.yaml),
+   [prow/jobs/config.yaml](../prow/jobs/config.yaml),
    otherwise the presubmit test will fail. Create a pull request with the
    changes. Once it's merged the configs will be automatically updated by a
    postsubmit job.

@@ -1,0 +1,49 @@
+# Copyright 2022 The Knative Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+postsubmits:
+  knative/test-infra:
+  - name: post-oss-test-infra-deploy-knative-prow
+    cluster: test-infra-trusted
+    run_if_changed: '^prow/knative/cluster/|^prow/oss/serviceaccounts/'
+    decorate: true
+    branches:
+    - master
+    annotations:
+      testgrid-dashboards: googleoss-test-infra
+      testgrid-tab-name: knative-prow-deploy
+      testgrid-alert-email: k8s-infra-oncall@google.com
+      testgrid-num-failures-to-alert: '2'
+    reporter_config:
+      slack:
+        host: "knative" # Must match additional-slack-token-files in crier deployment
+        channel: "test"
+        job_states_to_report:
+        - success
+        - failure
+        - aborted
+        - error
+        report_template: 'Deploying prow: {{.Status.State}}. <{{.Spec.Refs.BaseLink}}|Commit {{.Spec.Refs.BaseSHA}}> <{{.Status.URL}}|View logs> <https://testgrid.k8s.io/googleoss-test-infra#knative-prow-deploy|Job history on Testgrid>'
+    spec:
+      serviceAccountName: prow-deployer
+      containers:
+      - image: gcr.io/k8s-testimages/gcloud-in-go:v20200824-5d057db
+        command:
+        - make
+        args:
+        - -C
+        - prow/knative
+        - deploy
+        - deploy-build
+        - deploy-monitoring
