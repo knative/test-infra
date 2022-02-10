@@ -112,8 +112,9 @@ presubmits:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         command:
-        - make
+        - runner.sh
         args:
+        - make
         - -C
         - ./groups
         - test
@@ -496,9 +497,10 @@ periodics:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:stable
       command:
-      - make
+      - runner.sh
       args:
-      - -C
+      - make
+      - C
       - groups
       - run
       - --
@@ -724,8 +726,9 @@ knative/community:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
         command:
-        - make
+        - runner.sh
         args:
+        - make
         - -C
         - groups
         - run
