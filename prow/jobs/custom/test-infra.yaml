@@ -513,7 +513,7 @@ postsubmits:
     path_alias: knative.dev/test-infra
     max_concurrency: 1
     cluster: "prow-trusted"
-    run_if_changed: "^config/(prow/build-cluster/boskos/.*.yaml|prow/testgrid/testgrid.yaml)$"
+    run_if_changed: "^(prow/cluster/boskos/.*.yaml|config/prow/testgrid/testgrid.yaml)$"
     branches:
     - "main"
     annotations:
@@ -667,7 +667,7 @@ postsubmits:
           secretName: test-account
   - name: post-test-infra-update-testgrid-proto
     decorate: true
-    run_if_changed: "^config/prow/(jobs|k8s-testgrid)/.*.yaml"
+    run_if_changed: "^(config/prow/k8s-testgrid/|prow/jobs/).*.yaml"
     branches:
     - "main"
     cluster: "build-knative"

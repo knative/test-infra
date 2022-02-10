@@ -42,7 +42,7 @@ PROW_JOB_CONFIG                 ?= prow/jobs
 PROW_GCS                        ?= knative-prow
 PROW_CONFIG_GCS                 ?= gs://$(PROW_GCS)/configs
 
-BOSKOS_RESOURCES                ?= prow/build-cluster/boskos/boskos_resources.yaml
+BOSKOS_RESOURCES                ?= prow/cluster/boskos/boskos_resources.yaml
 
 # Useful shortcuts.
 
