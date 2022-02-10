@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This script is used to create a new build cluster for use with knative-prow. The cluster will have a 
+# This script is used to create a new build cluster for use with knative-prow. The cluster will have a
 # single pd-ssd nodepool that will have autoupgrade and autorepair enabled.
 #
 # Usage: populate the parameters by setting them below or specifying environment variables then run

@@ -9,7 +9,7 @@ local legendConfig = {
             sideWidth: 250,
         },
     };
-    
+
 local dashboardConfig = {
         uid: 'c27162ae7ad9ce08d2dcfa2d5ce7fee8',
     };
@@ -159,7 +159,7 @@ dashboard.new(
         legend_current=true,
         legend_avg=true,
         legend_sort='avg',
-        legend_sortDesc=true,        
+        legend_sortDesc=true,
     ) + legendConfig)
     .addTarget(prometheus.target(
         'sum(rate(deck_http_request_duration_seconds_count{job="deck", path=~"$path", method=~"$method"}[5m])) by (status)',

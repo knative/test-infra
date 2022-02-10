@@ -106,7 +106,7 @@ dashboard.new(
         'sum(rate(merges_sum{org="%s",repo="%s",branch="%s"}[1d])) * 86400' % [pool.org, pool.repo, pool.branch],
         legendFormat='Daily merge rate',
     )){gridPos:{h: 9, w: 24, x: 0, y: 27}}
-    
+
     for pool in config._config.tideDashboardExplicitPools
 ])
 .addPanel(

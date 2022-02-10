@@ -10,7 +10,7 @@
             sum(up{job=~"prometheus|alertmanager"}) by (job) <= 1
           |||,
           'for': '5m',
-          labels: { 
+          labels: {
             severity: 'critical',
             slo: componentName,
           },
