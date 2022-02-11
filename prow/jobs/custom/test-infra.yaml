@@ -21,7 +21,7 @@ presubmits:
   knative/test-infra:
   - name: pull-test-infra-validate-prow-yaml
     decorate: true
-    run_if_changed: "^prow/(cluster|jobs)/**/.*.yaml$"
+    run_if_changed: '^prow/((config|plugins)\.yaml$|jobs/)'
     cluster: "prow-trusted"
     spec:
       containers:
@@ -394,48 +394,6 @@ periodics:
       - --confirm
 postsubmits:
   knative/test-infra:
-  - name: post-knative-prow-cluster-config-updater
-    agent: kubernetes
-    decorate: true
-    path_alias: knative.dev/test-infra
-    max_concurrency: 1
-    cluster: "prow-trusted"
-    run_if_changed: "^(prow/cluster/boskos/.*.yaml|config/prow/testgrid/testgrid.yaml)$"
-    branches:
-    - "main"
-    annotations:
-      testgrid-dashboards: utilities
-      testgrid-tab-name: post-knative-prow-cluster-config-updater
-      testgrid-alert-email: "serverless-engprod-sea@google.com"
-      testgrid-num-failures-to-alert: "1"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "make"
-        - "-C"
-        - "./config"
-        - "update-all"
-        securityContext:
-          privileged: true
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: DOCKER_IN_DOCKER_ENABLED
-          value: "true"
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-      volumes:
-      - name: docker-graph
-        emptyDir: {}
-      - name: test-account
-        secret:
-          secretName: test-account
   - name: post-knative-test-infra-image-push
     agent: kubernetes
     decorate: true

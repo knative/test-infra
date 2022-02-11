@@ -42,8 +42,6 @@ PROW_JOB_CONFIG                 ?= prow/jobs
 PROW_GCS                        ?= knative-prow
 PROW_CONFIG_GCS                 ?= gs://$(PROW_GCS)/configs
 
-BOSKOS_RESOURCES                ?= prow/cluster/boskos/boskos_resources.yaml
-
 # Useful shortcuts.
 
 SET_CONTEXT                     := gcloud container clusters get-credentials "$(CLUSTER)" --project="$(PROJECT)" --zone="$(ZONE)"
@@ -55,7 +53,6 @@ help:
 	@echo "Help"
 	@echo "'Update' means updating the servers and can only be run by oncall staff."
 	@echo "Common usage:"
-	@echo " make update-prow-cluster: Update all Prow things on the server to match the current branch. Errors if not main or master."
 	@echo " make update-testgrid-config: Update the Testgrid config"
 	@echo " make get-cluster-credentials: Setup kubectl to point to Prow cluster"
 	@echo " make unset-cluster-credentials: Clear kubectl context"
@@ -75,19 +72,7 @@ unset-cluster-credentials:
 get-build-cluster-credentials: activate-serviceaccount
 	$(SET_BUILD_CLUSTER_CONTEXT)
 
-.PHONY: update-boskos-resource test update-testgrid-config confirm-main
-
-# Update the list of resources for Boskos
-update-boskos-resource: confirm-main
-	$(SET_BUILD_CLUSTER_CONTEXT)
-	kubectl create configmap resources --from-file=config=$(BOSKOS_RESOURCES) --dry-run --save-config -o yaml | kubectl --namespace="$(JOB_NAMESPACE)" apply -f -
-	$(UNSET_CONTEXT)
-
-# Update all resources on Prow cluster
-update-prow-cluster: update-boskos-resource
-
-# Update everything
-update-all: update-boskos-resource update-testgrid-config
+.PHONY: update-testgrid-config confirm-main
 
 # Update TestGrid config.
 # Application Default Credentials must be set, otherwise the upload will fail.
