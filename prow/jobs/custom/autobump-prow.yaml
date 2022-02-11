@@ -1,0 +1,72 @@
+periodics:
+- cron: "15 15-23 * * 1"  # Bump with label `skip-review`. Run at 7:15-15:15 PST (15:15 UTC) each Monday.
+  name: ci-knative-prow-auto-bumper-for-auto-deploy
+  cluster: "build-knative"
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: main
+    path_alias: knative.dev/test-infra
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-prow-auto-bumper-for-auto-deploy
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
+  spec:
+    containers:
+    - image: gcr.io/k8s-prow/generic-autobumper:v20220124-9887456efc
+      command:
+      - /app/prow/cmd/generic-autobumper/app.binary
+      args:
+      - --config=prow/knative-autobump-config.yaml
+      - --labels-override=skip-review # This label is used by tide for identifying trusted PR
+      volumeMounts:
+      - name: prow-auto-bumper-github-token
+        mountPath: /etc/prow-auto-bumper-github-token
+        readOnly: true
+      - name: ssh
+        mountPath: /root/.ssh
+    volumes:
+    - name: prow-auto-bumper-github-token
+      secret:
+        secretName: prow-auto-bumper-github-token
+    - name: ssh
+      secret:
+        secretName: prow-updater-robot-ssh-key
+        defaultMode: 0400
+- cron: "30 * * * 1-5"  # Bump don't label `skip-review`. Run at :30 past every hour Mon-Fri
+  name: ci-knative-prow-auto-bumper
+  cluster: "build-knative"
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: main
+    path_alias: knative.dev/test-infra
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-prow-auto-bumper
+    testgrid-alert-email: "serverless-engprod-sea@google.com"
+    testgrid-num-failures-to-alert: "1"
+  spec:
+    containers:
+    - image: gcr.io/k8s-prow/generic-autobumper:v20220124-9887456efc
+      command:
+      - /app/prow/cmd/generic-autobumper/app.binary
+      args:
+      - --config=prow/knative-autobump-config.yaml
+      volumeMounts:
+      - name: prow-auto-bumper-github-token
+        mountPath: /etc/prow-auto-bumper-github-token
+        readOnly: true
+      - name: ssh
+        mountPath: /root/.ssh
+    volumes:
+    - name: prow-auto-bumper-github-token
+      secret:
+        secretName: prow-auto-bumper-github-token
+    - name: ssh
+      secret:
+        secretName: prow-updater-robot-ssh-key
+        defaultMode: 0400

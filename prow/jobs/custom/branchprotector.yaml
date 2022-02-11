@@ -29,9 +29,6 @@ periodics:
     repo: test-infra
     base_ref: main
     path_alias: knative.dev/test-infra
-  - org: GoogleCloudPlatform
-    repo: oss-test-infra
-    base_ref: master
   annotations:
     testgrid-dashboards: utilities
     testgrid-tab-name: ci-knative-test-infra-branchprotector
@@ -44,7 +41,7 @@ periodics:
       command:
       - /app/prow/cmd/branchprotector/app.binary
       args:
-      - --config-path=../../github.com/GoogleCloudPlatform/oss-test-infra/prow/knative/config.yaml
+      - --config-path=prow/config.yaml
       - --job-config-path=prow/jobs
       - --github-token-path=/etc/github/token
       - --confirm

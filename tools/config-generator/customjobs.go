@@ -23,7 +23,6 @@ var (
 	customJobnames = []string{
 		"ci-knative-backup-artifacts",
 		"ci-knative-cleanup",
-		"ci-knative-cleanup-performance-tests",
 		"ci-knative-flakes-reporter",
 		"ci-knative-flakes-resultsrecorder",
 		"ci-knative-prow-auto-bumper",
