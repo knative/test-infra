@@ -105,6 +105,7 @@ presubmits:
   knative/community:
   - name: pull-knativeteam-groups-test
     decorate: true
+    optional: true   # TODO(upodroid@, chizhg@): remove this after https://github.com/knative/community/pull/905 is merged
     run_if_changed: "^groups/"
     branches:
     - ^main$
