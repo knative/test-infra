@@ -27,7 +27,6 @@ var (
 		"ci-knative-flakes-resultsrecorder",
 		"ci-knative-prow-auto-bumper",
 		"ci-knative-prow-jobs-syncer",
-		"post-knative-prow-cluster-config-updater",
 		"post-knative-test-infra-image-push",
 		"post-knative-sandbox-peribolos",
 		"post-knative-test-infra-deploy-tools",

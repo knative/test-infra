@@ -17,7 +17,7 @@ extraFiles:
 prefixes:
   - name: "Prow"
     prefix: "gcr.io/k8s-prow/"
-    refConfigFile: "prow/cluster/deck_deployment.yaml"
+    refConfigFile: "config/prow/cluster/deck_deployment.yaml"
     repo: "https://github.com/kubernetes/test-infra"
     summarise: false
     consistentImages: true
