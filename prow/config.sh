@@ -16,23 +16,26 @@
 
 # This script updates Prow job configs.
 
-if [[ "${1}" != "check" || "${1}" != "update" ]]; then
+if [[ "${1}" != "check" && "${1}" != "update" ]]; then
 	echo "Usage is 'config.sh [COMMAND]' where command is 'check' or 'update'."
+	exit 1
 fi
 
-source $(dirname "${BASH_SOURCE[0]}")/../../../vendor/knative.dev/hack/library.sh
+source $(dirname "${BASH_SOURCE[0]}")/../vendor/knative.dev/hack/library.sh
 
-set -e
+set -ex
+
+orig_kubeconfig=${KUBECONFIG}
+export KUBECONFIG
+KUBECONFIG="$(mktemp -d)/kubeconfig.yaml"
+touch "${KUBECONFIG}"
+# add_trap "rm ${KUBECONFIG}" EXIT
+add_trap "export KUBECONFIG=${orig_kubeconfig}" EXIT
 
 make -C "${REPO_ROOT_DIR}/config" get-cluster-credentials
 add_trap "make -C ${REPO_ROOT_DIR}/config unset-cluster-credentials" EXIT
 
-if [[ "${1}" != "update" ]]; then
-	orig_kubeconfig=${KUBECONFIG}
-	KUBECONFIG="/tmp/kubeconfig.yaml"
-	add_trap "rm ${KUBECONFIG}" EXIT
-	add_trap "KUBECONFIG=${orig_kubeconfig}" EXIT
-else #check
+if [[ "${1}" == "check" ]]; then
 	# Settings for inrepoconfig checking, if only `REPO_NAME` is supplied then:
 	# `REPO_YAML_PATH` is default to `("/home/prow/go/src/github.com/%s/.prow.yaml",
 	# o.prowYAMLRepoName)`. See
@@ -41,33 +44,19 @@ else #check
 	REPO_YAML_PATH_TO_CHECK="${3:-}"
 fi
 
-# Download prow core config from prow
-if (( IS_OSX )); then
-  # On OS X, the file has to be under /private other it cannot be mounted by the container.
-  # See https://stackoverflow.com/questions/45122459/docker-mounts-denied-the-paths-are-not-shared-from-os-x-and-are-not-known/45123074
-  CONFIG_YAML="/private$(mktemp)"
-  PLUGINS_YAML="/private$(mktemp)"
-else
-  CONFIG_YAML="$(mktemp)"
-  PLUGINS_YAML="$(mktemp)"
-fi
-
 JOB_YAML="${REPO_ROOT_DIR}/prow/jobs"
+CONFIG_YAML="${REPO_ROOT_DIR}/prow/config.yaml"
+PLUGINS_YAML="${REPO_ROOT_DIR}/prow/plugins.yaml"
 
-kubectl get configmaps config -o "jsonpath={.data['config\.yaml']}" >"${CONFIG_YAML}"
-echo "Prow core config downloaded at ${CONFIG_YAML}"
-kubectl get configmaps plugins -o "jsonpath={.data['plugins\.yaml']}" > "${PLUGINS_YAML}"
-echo "Prow plugins downloaded at ${PLUGINS_YAML}"
-
-if [[ "${1}" != "update" ]]; then
-	docker run -i --rm \
-	    -v "${PWD}:${PWD}" -v "${CONFIG_YAML}:${CONFIG_YAML}" -v "${PLUGINS_YAML}:${PLUGINS_YAML}" -v "${JOB_YAML}:${JOB_YAML}" \
-	    -v "${KUBECONFIG}:${KUBECONFIG}:ro" \
-	    -w "${PWD}" \
-	    gcr.io/k8s-prow/config-bootstrapper:v20220124-9887456efc \
+if [[ "${1}" == "update" ]]; then
+	if [[ ! -x "$(command -v kntest)" ]]; then
+		echo "--- FAIL: config-bootstrapper not installed, please install it from https://github.com/kubernetes/test-infra/tree/master/prow/cmd/config-bootstrapper"; exit 1;
+	fi
+	# FIXME: this command is supposed to work but seems not, need to figure out why...
+	config-bootstrapper \
 	    "--config-path=${CONFIG_YAML}" "--job-config-path=${JOB_YAML}" \
 	    "--plugin-config=${PLUGINS_YAML}" \
-	    "--source-path=${REPO_ROOT_DIR}" \
+	    "--source-path=." \
 	    "--kubeconfig=${KUBECONFIG}" \
 	    "--dry-run=false"
 else #check

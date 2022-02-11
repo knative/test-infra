@@ -1546,11 +1546,6 @@ test_groups:
   alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 1
-- name: ci-knative-cleanup-performance-tests
-  gcs_prefix: knative-prow/logs/ci-knative-cleanup-performance-tests
-  alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  num_failures_to_alert: 1
 - name: ci-knative-flakes-reporter
   gcs_prefix: knative-prow/logs/ci-knative-flakes-reporter
   alert_options:
@@ -3571,9 +3566,6 @@ dashboards:
     base_options: ""
   - name: ci-knative-cleanup
     test_group_name: ci-knative-cleanup
-    base_options: ""
-  - name: ci-knative-cleanup-performance-tests
-    test_group_name: ci-knative-cleanup-performance-tests
     base_options: ""
   - name: ci-knative-flakes-reporter
     test_group_name: ci-knative-flakes-reporter
