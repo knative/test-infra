@@ -29,7 +29,8 @@ presubmits:
         command:
         - "runner.sh"
         args:
-        - "./prow/config.sh check"
+        - "./prow/config.sh"
+        - "check"
         - "$(REPO_OWNER)/$(REPO_NAME)"
         securityContext:
           privileged: true
