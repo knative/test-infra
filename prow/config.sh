@@ -49,7 +49,7 @@ CONFIG_YAML="${REPO_ROOT_DIR}/prow/config.yaml"
 PLUGINS_YAML="${REPO_ROOT_DIR}/prow/plugins.yaml"
 
 if [[ "${1}" == "update" ]]; then
-	if [[ ! -x "$(command -v kntest)" ]]; then
+	if [[ ! -x "$(command -v config-bootstrapper)" ]]; then
 		echo "--- FAIL: config-bootstrapper not installed, please install it from https://github.com/kubernetes/test-infra/tree/master/prow/cmd/config-bootstrapper"; exit 1;
 	fi
 	# FIXME: this command is supposed to work but seems not, need to figure out why...
