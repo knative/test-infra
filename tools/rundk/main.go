@@ -12,7 +12,7 @@ import (
 
 	"github.com/spf13/pflag"
 
-	"knative.dev/test-infra/rundk/interactive"
+	"knative.dev/test-infra/tools/rundk/interactive"
 )
 
 const (

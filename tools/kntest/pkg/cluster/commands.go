@@ -14,26 +14,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package kubetest2
+package cluster
 
 import (
 	"github.com/spf13/cobra"
 
-	"knative.dev/test-infra/kntest/pkg/kubetest2/gke"
-	"knative.dev/test-infra/pkg/clustermanager/kubetest2"
+	"knative.dev/test-infra/tools/kntest/pkg/cluster/gke"
 )
 
-// AddCommand add the command for running kubetest2.
-func AddCommand(topLevel *cobra.Command) {
-	var kubetest2Cmd = &cobra.Command{
-		Use:   "kubetest2",
-		Short: "Simple wrapper of kubetest2 commands for Knative testing.",
+func AddCommands(topLevel *cobra.Command) {
+	var clusterCmd = &cobra.Command{
+		Use:   "cluster",
+		Short: "Cluster related commands.",
 	}
 
-	kubetest2Options := &kubetest2.Options{}
-	addOptions(kubetest2Cmd, kubetest2Options)
+	gke.AddCommands(clusterCmd)
 
-	gke.AddCommand(kubetest2Cmd, kubetest2Options)
-
-	topLevel.AddCommand(kubetest2Cmd)
+	topLevel.AddCommand(clusterCmd)
 }

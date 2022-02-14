@@ -1,4 +1,4 @@
-module knative.dev/test-infra/rundk
+module knative.dev/test-infra/tools/rundk
 
 go 1.15
 
