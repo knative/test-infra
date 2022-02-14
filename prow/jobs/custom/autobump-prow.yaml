@@ -15,7 +15,7 @@ periodics:
     testgrid-num-failures-to-alert: "1"
   spec:
     containers:
-    - image: gcr.io/k8s-prow/generic-autobumper:v20220211-9762cdc433
+    - image: gcr.io/k8s-prow/generic-autobumper:v20220211-e4574accfe
       command:
       - /app/prow/cmd/generic-autobumper/app.binary
       args:
@@ -51,7 +51,7 @@ periodics:
     testgrid-num-failures-to-alert: "1"
   spec:
     containers:
-    - image: gcr.io/k8s-prow/generic-autobumper:v20220211-9762cdc433
+    - image: gcr.io/k8s-prow/generic-autobumper:v20220211-e4574accfe
       command:
       - /app/prow/cmd/generic-autobumper/app.binary
       args:

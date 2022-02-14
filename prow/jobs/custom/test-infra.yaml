@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Add a fake hook image here so that autobump.sh can bump only job configs
-# image: gcr.io/k8s-prow/hook:v20220211-9762cdc433
+# image: gcr.io/k8s-prow/hook:v20220211-e4574accfe
 # See
 # https://github.com/kubernetes/test-infra/blob/5815354584709c3f436e3d682110c673d224d7b1/prow/cmd/autobump/autobump.sh#L164
 
@@ -62,7 +62,7 @@ presubmits:
       base_ref: master
     spec:
       containers:
-      - image: gcr.io/k8s-prow/configurator:v20220211-9762cdc433
+      - image: gcr.io/k8s-prow/configurator:v20220211-e4574accfe
         command:
         - /app/testgrid/cmd/configurator/app.binary
         args:
@@ -529,7 +529,7 @@ postsubmits:
       testgrid-num-failures-to-alert: "1"
     spec:
       containers:
-      - image: gcr.io/k8s-prow/configurator:v20220211-9762cdc433
+      - image: gcr.io/k8s-prow/configurator:v20220211-e4574accfe
         command:
         - /app/testgrid/cmd/configurator/app.binary
         args:
