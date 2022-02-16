@@ -1,19 +1,19 @@
-<!--
-Request Prow to automatically lint any go code in this PR:
-
-/lint
--->
-
-**What this PR does, why we need it**:
-
-<!--
-*Automatically closes linked issue when PR is merged.
-Usage: `Fixes #<issue number>`, or `Fixes (paste link of issue)`.
--->
-**Which issue(s) this PR fixes**:
+**Which issue(s) this PR fixes**:<br>
 Fixes #
 
-**Special notes to reviewers**:
+<!-- 
+  Use `Fixes #<issue number>`, or `Fixes (paste link of issue)`
+  to automatically close linked issue when the PR is merged.
+  Uncomment and fill below if the PR does not close any issues.
+-->
+<!--
+**What this PR does, why we need it**:<br>
+-->
 
-**User-visible changes in this PR**:
-
+<!--
+  If there is any golang code in this PR please uncomment the 
+  `/lint` statement below to have Prow automatically lint it.
+-->
+<!--
+  /lint
+-->
