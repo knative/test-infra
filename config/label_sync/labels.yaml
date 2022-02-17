@@ -110,7 +110,7 @@ default:
       prowPlugin: label
       addedBy: humans
     - color: be4d25
-      name: kind/cncf-blocked
+      name: kind/cncf-after
       target: both
       prowPlugin: label
       addedBy: humans
