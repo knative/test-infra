@@ -44,8 +44,7 @@ func addOptions(gkeCmd *cobra.Command, cfg *kubetest2.GKEClusterConfig) {
 	f.StringVar(&cfg.Addons, "addons", "", "Addons for the GKE cluster, should be comma-separated.")
 	f.BoolVar(&cfg.EnableWorkloadIdentity, "enable-workload-identity", false, "Whether to enable workload identity for this cluster or not.")
 	f.StringVar(&cfg.PrivateClusterAccessLevel, "private-cluster-access-level", "", "Private cluster access level, if not empty, must be one of 'no', 'limited' or 'unrestricted'")
-	f.StringVar(&cfg.PrivateClusterMasterIPSubnetRange, "private-cluster-master-ip-subnet-range", "172.16.0", "The master IP subnet range for the private cluster. The last digit must be left empty to allow retrying cluster creation in the backup regions.")
-	f.StringVar(&cfg.PrivateClusterMasterIPSubnetMask, "private-cluster-master-ip-subnet-mask", "28", "The master IP subnet mask for the private cluster.")
+	f.StringSliceVar(&cfg.PrivateClusterMasterIPSubnetRange, "private-cluster-master-ip-subnet-range", []string{"172.16.0.32/28", "173.16.0.32/28", "174.16.0.32/28"}, "The master IP subnet range for the private cluster. Its length must be the same as the number of clusters if private cluster is requested.")
 
 	f.StringVar(&cfg.ExtraGcloudFlags, "extra-gcloud-flags", "", "The extra gcloud flags that will be used for cluster creation.")
 }
