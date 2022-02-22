@@ -25,7 +25,6 @@ var (
 		"ci-knative-cleanup",
 		"ci-knative-flakes-reporter",
 		"ci-knative-flakes-resultsrecorder",
-		"ci-knative-prow-auto-bumper",
 		"ci-knative-prow-jobs-syncer",
 		"post-knative-test-infra-image-push",
 		"post-knative-sandbox-peribolos",
