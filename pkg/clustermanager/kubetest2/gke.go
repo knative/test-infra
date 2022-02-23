@@ -131,14 +131,15 @@ func Run(opts *Options, cc *GKEClusterConfig) error {
 		kubetest2Flags = append(kubetest2Flags, "--private-cluster-master-ip-range="+strings.Join(cc.PrivateClusterMasterIPSubnetRange, ","))
 	}
 
+	regions := append([]string{cc.Region}, cc.BackupRegions...)
+	kubetest2Flags = append(kubetest2Flags, "--region="+strings.Join(regions, ","))
+	kubetest2Flags = append(kubetest2Flags, "--retryable-error-patterns='"+retryableErrorPatterns+"'")
+
+	// Test command args must come last.
 	if opts.TestCommand != "" {
 		kubetest2Flags = append(kubetest2Flags, "--test=exec", "--")
 		kubetest2Flags = append(kubetest2Flags, strings.Split(opts.TestCommand, " ")...)
 	}
-
-	regions := append([]string{cc.Region}, cc.BackupRegions...)
-	kubetest2Flags = append(kubetest2Flags, "--region="+strings.Join(regions, ","))
-	kubetest2Flags = append(kubetest2Flags, "--retryable-error-patterns='"+retryableErrorPatterns+"'")
 
 	log.Printf("Running kubetest2 with flags: %q", kubetest2Flags)
 
