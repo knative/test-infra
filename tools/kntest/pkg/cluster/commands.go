@@ -25,7 +25,7 @@ import (
 func AddCommands(topLevel *cobra.Command) {
 	var clusterCmd = &cobra.Command{
 		Use:   "cluster",
-		Short: "Cluster related commands.",
+		Short: "Cluster related commands. Currently not used in Knative CI. Use kubetest2 subcommand instead.",
 	}
 
 	gke.AddCommands(clusterCmd)
