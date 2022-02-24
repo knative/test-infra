@@ -175,7 +175,7 @@ COPY images/prow-tests/in-gvm-env.sh /usr/local/bin
 ############################################################
 FROM golang:1.17 AS external-go-gets
 
-ARG KUBETEST2_VERSION=cc0c36d0693ec17451a39a1bf2fff706beb06150
+ARG KUBETEST2_VERSION=5e5d3e9eebc6a609aa428bd3e2a1c0c3566d5baf
 ARG KIND_VERSION=v0.11.1
 ARG KO_VERSION=v0.8.2
 ARG PROTOC_GEN_GO_VERSION=v1.26.0
