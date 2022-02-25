@@ -2415,7 +2415,7 @@ presubmits:
       prow.k8s.io/pubsub.runID: pull-knative-eventing-reconciler-tests
     context: pull-knative-eventing-reconciler-tests
     always_run: true
-    optional: false
+    optional: true
     rerun_command: "/test pull-knative-eventing-reconciler-tests"
     trigger: "(?m)^/test (all|pull-knative-eventing-reconciler-tests),?(\\s+|$)"
     decorate: true
