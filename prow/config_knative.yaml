@@ -244,6 +244,7 @@ presubmits:
     - ./test/e2e-tests.sh
   - custom-test: reconciler-tests
     needs-monitor: true
+    optional: true
     args:
     - --run-test
     - ./test/e2e-rekt-tests.sh
