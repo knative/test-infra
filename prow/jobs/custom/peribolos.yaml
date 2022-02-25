@@ -28,9 +28,9 @@ presubmits:
     - "main"
     spec:
       containers:
-      - image: gcr.io/k8s-prow/peribolos:v20220219-6289bdf4c9
+      - image: gcr.io/k8s-prow/peribolos:v20220223-a7c3ef700d
         command:
-        - "/peribolos"
+        - "peribolos"
         args:
         - "--config-path=peribolos/knative.yaml"
         - "--github-token-path=/etc/github/token"
@@ -63,9 +63,9 @@ presubmits:
     - "main"
     spec:
       containers:
-      - image: gcr.io/k8s-prow/peribolos:v20220219-6289bdf4c9
+      - image: gcr.io/k8s-prow/peribolos:v20220223-a7c3ef700d
         command:
-        - "/peribolos"
+        - "peribolos"
         args:
         - "--config-path=peribolos/knative-sandbox.yaml"
         - "--github-token-path=/etc/github/token"
@@ -113,9 +113,9 @@ postsubmits:
       testgrid-num-failures-to-alert: "1"
     spec:
       containers:
-      - image: gcr.io/k8s-prow/peribolos:v20220219-6289bdf4c9
+      - image: gcr.io/k8s-prow/peribolos:v20220223-a7c3ef700d
         command:
-        - "/peribolos"
+        - "peribolos"
         args:
         - "--config-path=peribolos/knative.yaml"
         - "--github-token-path=/etc/github/token"
@@ -159,9 +159,9 @@ postsubmits:
       testgrid-num-failures-to-alert: "1"
     spec:
       containers:
-      - image: gcr.io/k8s-prow/peribolos:v20220219-6289bdf4c9
+      - image: gcr.io/k8s-prow/peribolos:v20220223-a7c3ef700d
         command:
-        - "/peribolos"
+        - "peribolos"
         args:
         - "--config-path=peribolos/knative-sandbox.yaml"
         - "--github-token-path=/etc/github/token"
@@ -202,9 +202,9 @@ periodics:
     testgrid-num-failures-to-alert: "1"
   spec:
     containers:
-    - image: gcr.io/k8s-prow/peribolos:v20220219-6289bdf4c9
+    - image: gcr.io/k8s-prow/peribolos:v20220223-a7c3ef700d
       command:
-      - "/peribolos"
+      - "peribolos"
       args:
       - "--config-path=peribolos/knative.yaml"
       - "--github-token-path=/etc/github/token"
@@ -243,9 +243,9 @@ periodics:
     testgrid-num-failures-to-alert: "1"
   spec:
     containers:
-    - image: gcr.io/k8s-prow/peribolos:v20220219-6289bdf4c9
+    - image: gcr.io/k8s-prow/peribolos:v20220223-a7c3ef700d
       command:
-      - "/peribolos"
+      - "peribolos"
       args:
       - "--config-path=peribolos/knative-sandbox.yaml"
       - "--github-token-path=/etc/github/token"
