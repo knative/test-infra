@@ -62,9 +62,9 @@ presubmits:
       base_ref: master
     spec:
       containers:
-      - image: gcr.io/k8s-prow/configurator:v20220219-6289bdf4c9
+      - image: gcr.io/k8s-prow/configurator:v20220223-a7c3ef700d
         command:
-        - /app/testgrid/cmd/configurator/app.binary
+        - configurator
         args:
         - --prow-config=prow/config.yaml
         - --prow-job-config=prow/jobs
@@ -529,9 +529,9 @@ postsubmits:
       testgrid-num-failures-to-alert: "1"
     spec:
       containers:
-      - image: gcr.io/k8s-prow/configurator:v20220219-6289bdf4c9
+      - image: gcr.io/k8s-prow/configurator:v20220223-a7c3ef700d
         command:
-        - /app/testgrid/cmd/configurator/app.binary
+        - configurator
         args:
         - --prow-config=prow/config.yaml
         - --prow-job-config=prow/jobs
