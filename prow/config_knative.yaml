@@ -1617,6 +1617,12 @@ periodics:
     needs-dind: true
   - nightly: true
     needs-dind: true
+    reporter_config:
+      slack:
+        channel: eventing-kafka
+        job_states_to_report:
+        - failure
+        report_template: '"The nightly release job for eventing-kafka failed, check the log: <{{.Status.URL}}|View logs>"'
   - dot-release: true
     release: "0.26"
     needs-dind: true
@@ -1635,6 +1641,12 @@ periodics:
   - continuous: true
     needs-dind: true
   - nightly: true
+    reporter_config:
+      slack:
+        channel: eventing-kafka
+        job_states_to_report:
+        - failure
+        report_template: '"The nightly release job for eventing-kafka-broker failed, check the log: <{{.Status.URL}}|View logs>"'
     needs-dind: true
   - dot-release: true
     release: "0.26"
@@ -1654,7 +1666,7 @@ periodics:
   - nightly: true
     reporter_config:
       slack:
-        channel: eventing
+        channel: eventing-rabbitmq
         job_states_to_report:
         - failure
         report_template: '"The nightly release job for eventing-rabbitmq failed, check the log: <{{.Status.URL}}|View logs>"'

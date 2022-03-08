@@ -21128,6 +21128,12 @@ periodics:
   name: ci-knative-sandbox-eventing-kafka-nightly-release
   agent: kubernetes
   decorate: true
+  reporter_config:
+    slack:
+      channel: eventing-kafka
+      report_template: "The nightly release job for eventing-kafka failed, check the log: <{{.Status.URL}}|View logs>"
+      job_states_to_report:
+      - "failure"
   decoration_config:
     timeout: 180m
   cluster: "build-knative"
@@ -21735,6 +21741,12 @@ periodics:
   name: ci-knative-sandbox-eventing-kafka-broker-nightly-release
   agent: kubernetes
   decorate: true
+  reporter_config:
+    slack:
+      channel: eventing-kafka
+      report_template: "The nightly release job for eventing-kafka-broker failed, check the log: <{{.Status.URL}}|View logs>"
+      job_states_to_report:
+      - "failure"
   decoration_config:
     timeout: 180m
   cluster: "build-knative"
@@ -22228,7 +22240,7 @@ periodics:
   decorate: true
   reporter_config:
     slack:
-      channel: eventing
+      channel: eventing-rabbitmq
       report_template: "The nightly release job for eventing-rabbitmq failed, check the log: <{{.Status.URL}}|View logs>"
       job_states_to_report:
       - "failure"
