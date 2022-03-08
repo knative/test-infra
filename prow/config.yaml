@@ -119,12 +119,14 @@ deck:
       - podinfo.json
   tide_update_period: 1s
   rerun_auth_configs:
-    '*':
+    'knative':
       github_team_slugs:
         - org: 'knative'
           slug: 'technical-oversight-committee'
         - org: 'knative'
           slug: 'knative-release-leads'
+    'knative-sandbox':
+      github_team_slugs:
         - org: 'knative-sandbox'
           slug: 'technical-oversight-committee'
         - org: 'knative-sandbox'
