@@ -887,25 +887,25 @@ periodics:
   knative/client:
   - continuous: true
   - branch-ci: true
-    release: "0.26"
-  - branch-ci: true
     release: "1.0"
   - branch-ci: true
     release: "1.1"
   - branch-ci: true
     release: "1.2"
+  - branch-ci: true
+    release: "1.3"
   - nightly: true
   - custom-job: tekton
     cron: 0 13 * * *
     command: ./test/tekton-tests.sh
   - dot-release: true
-    release: "0.26"
-  - dot-release: true
     release: "1.0"
   - dot-release: true
     release: "1.1"
   - dot-release: true
     release: "1.2"
+  - dot-release: true
+    release: "1.3"
   - auto-release: true
   - custom-job: s390x-e2e-tests
     cron: 0 11 * * *
@@ -1672,13 +1672,13 @@ periodics:
         report_template: '"The nightly release job for eventing-rabbitmq failed, check the log: <{{.Status.URL}}|View logs>"'
   - auto-release: true
   - dot-release: true
-    release: "0.26"
-  - dot-release: true
     release: "1.0"
   - dot-release: true
     release: "1.1"
   - dot-release: true
     release: "1.2"
+  - dot-release: true
+    release: "1.3"
   knative-sandbox/eventing-natss:
   - nightly: true
     reporter_config:
