@@ -29,4 +29,3 @@ the serving repository.
   `/test pull-knative-serving-go-coverage-dev` to a PR.
 - To run the periodic workflow, (re)run a `post-knative-serving-go-coverage-dev`
   job.
-- The beta-prow-tests dashboard also has coverage running from prow-tests:beta

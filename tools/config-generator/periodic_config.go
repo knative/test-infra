@@ -130,7 +130,6 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 	jobNameSuffix := ""
 	jobTemplate := readTemplate(periodicTestJob)
 	jobType := ""
-	isContinuousJob := false
 	org := data.Base.OrgName
 	repo := data.Base.RepoName
 	dashboardName := repo
@@ -146,7 +145,6 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			jobType = getString(item.Key)
 			jobNameSuffix = "continuous"
 			tabName = jobNameSuffix
-			isContinuousJob = true
 			// Use default command and arguments if none given.
 			if data.Base.Command == "" {
 				data.Base.Command = presubmitScript
@@ -173,7 +171,6 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 			jobType = getString(item.Key)
 			jobNameSuffix = "continuous"
 			tabName = jobNameSuffix
-			isContinuousJob = true
 			data.Base.Command = releaseScript
 			data.Base.Args = releaseLocal
 			setupDockerInDockerForJob(&data.Base)
@@ -260,50 +257,6 @@ func generatePeriodic(title string, repoName string, periodicConfig yaml.MapSlic
 
 	// This is where the data actually gets written out
 	executeJobTemplate("periodic", jobTemplate, title, repoName, data.PeriodicJobName, false, data)
-
-	// If job is a continuous run, add a duplicate for pre-release testing of new prow-tests image
-	// It will (mostly) run less often than source job
-	if isContinuousJob {
-		betaData := data.Clone()
-
-		// Change the name and image
-		betaData.PeriodicJobName += "-beta-prow-tests"
-		betaData.Base.Image = strings.ReplaceAll(betaData.Base.Image, ":stable", ":beta")
-
-		// These jobs all get lumped together in a single Testgrid dashboard
-		betaData.Base.Annotations = generateProwJobAnnotations("beta-prow-tests", data.PeriodicJobName, map[string]string{"alert_stale_results_hours": "3"})
-
-		// Run 2 or 3 times a day because prow-tests beta testing has different desired interval than the underlying job
-		hours := []int{getUTCtime(1), getUTCtime(4)}
-		if jobType == "continuous" { // as opposed to branch-ci
-			// These jobs run 8-24 times per day, so it matters more if they break
-			// So test them slightly more often
-			hours = append(hours, getUTCtime(15))
-		}
-		var hoursStr []string
-		for _, h := range hours {
-			hoursStr = append(hoursStr, fmt.Sprint(h))
-		}
-		betaData.CronString = fmt.Sprintf("%d %s * * *",
-			calculateMinuteOffset(jobType, betaData.PeriodicJobName),
-			strings.Join(hoursStr, ","))
-
-		// Write out our duplicate job
-		executeJobTemplate("periodic", jobTemplate, title, repoName, betaData.PeriodicJobName, false, betaData)
-
-		// Setup TestGrid here
-		// Each job becomes one of "test_groups"
-		// Then we want our own "dashboard" separate from others
-		// With each one of the jobs (aka "test_groups") in the single dashboard group
-		metaData.AddNonAlignedTest(NonAlignedTestGroup{
-			DashboardGroup: "prow-tests",
-			DashboardName:  "beta-prow-tests",
-			HumanTabName:   data.PeriodicJobName, // this is purposefully not betaData, so the display name is the original CI job name
-			CIJobName:      betaData.PeriodicJobName,
-			BaseOptions:    testgridTabSortByFailures,
-			Extra:          nil,
-		})
-	}
 }
 
 // generateGoCoveragePeriodic generates the go coverage periodic job config for the given repo (configuration is ignored).
@@ -341,38 +294,5 @@ func generateGoCoveragePeriodic(title string, repoName string, _ yaml.MapSlice) 
 		testgroupExtras := map[string]string{"short-text-metric": "coverage"}
 		data.Base.Annotations = generateProwJobAnnotations(dashboardName, tabName, testgroupExtras)
 		executeJobTemplate("periodic go coverage", readTemplate(periodicCustomJob), title, repoName, data.PeriodicJobName, false, data)
-
-		betaData := data.Clone()
-
-		// Change the name and image
-		betaData.PeriodicJobName += "-beta-prow-tests"
-		betaData.Base.Image = strings.ReplaceAll(betaData.Base.Image, ":stable", ":beta")
-
-		// Ensure the beta-prow-tests go to the correct Testgrid dashboard and tab
-		dashboardName = "beta-prow-tests"
-		betaData.Base.Annotations = generateProwJobAnnotations(dashboardName, data.PeriodicJobName, testgroupExtras)
-
-		// Run once a day because prow-tests beta testing has different desired interval than the underlying job
-		betaData.CronString = fmt.Sprintf("%d %s * * *",
-			calculateMinuteOffset("go-coverage", betaData.PeriodicJobName),
-			fmt.Sprint(getUTCtime(0)))
-
-		// Write out our duplicate job
-		executeJobTemplate("periodic go coverage", readTemplate(periodicCustomJob), title, repoName, betaData.PeriodicJobName, false, betaData)
-
-		// Setup TestGrid here
-		// Each job becomes one of "test_groups"
-		// Then we want our own "dashboard" separate from others
-		// With each one of the jobs (aka "test_groups") in the single dashboard group
-		extras := make(map[string]string)
-		extras["short_text_metric"] = "coverage"
-		metaData.AddNonAlignedTest(NonAlignedTestGroup{
-			DashboardGroup: "prow-tests",
-			DashboardName:  "beta-prow-tests",
-			HumanTabName:   data.PeriodicJobName, // this is purposefully not betaData, so the display name is the original CI job name
-			CIJobName:      betaData.PeriodicJobName,
-			BaseOptions:    testgridTabGroupByDir,
-			Extra:          extras,
-		})
 	}
 }

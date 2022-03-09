@@ -21,7 +21,6 @@
 # A prow annotation will be invalid if it references a dashboard that doesn't exist
 dashboards:
 - name: async-component
-- name: beta-prow-tests
 - name: caching
 - name: client
 - name: client-pkg
@@ -139,5 +138,3 @@ dashboard_groups:
     dashboard_names:
       - "utilities"
   - name: prow-tests
-    dashboard_names:
-      - "beta-prow-tests"
