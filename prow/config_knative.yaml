@@ -1224,6 +1224,12 @@ periodics:
     release: "1.2"
   - dot-release: true
     release: "1.3"
+    resources:
+      requests:
+        memory: 12Gi
+      limits:
+        memory: 16Gi
+    needs-dind: true
   knative-sandbox/eventing-couchdb:
   - continuous: true
   - nightly: true

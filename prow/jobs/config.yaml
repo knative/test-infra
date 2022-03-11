@@ -18707,6 +18707,7 @@ periodics:
       - "--auto-release"
       - "--release-gcs"
       - "knative-releases/eventing-kafka"
+      - "knative-releases/eventing-ceph"
       - "--release-gcr"
       - "gcr.io/knative-releases"
       - "--github-token"
