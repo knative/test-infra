@@ -18735,6 +18735,11 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      resources:
+        requests:
+          memory: 12Gi
+        limits:
+          memory: 16Gi
     volumes:
     - name: hub-token
       secret:
