@@ -6400,7 +6400,7 @@ presubmits:
         secret:
           secretName: test-account
 periodics:
-- cron: "0 */4 * * *"
+- cron: "0 */12 * * *"
   name: ci-knative-serving-continuous
   agent: kubernetes
   decorate: true
@@ -6687,7 +6687,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "5 */3 * * *"
+- cron: "5 */9 * * *"
   name: ci-knative-serving-istio-latest-mesh
   agent: kubernetes
   decorate: true
@@ -6728,7 +6728,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "31 */3 * * *"
+- cron: "31 */9 * * *"
   name: ci-knative-serving-istio-latest-no-mesh
   agent: kubernetes
   decorate: true
@@ -6769,7 +6769,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "26 */3 * * *"
+- cron: "26 */9 * * *"
   name: ci-knative-serving-istio-head-mesh
   agent: kubernetes
   decorate: true
@@ -6810,7 +6810,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "42 */3 * * *"
+- cron: "42 */9 * * *"
   name: ci-knative-serving-istio-head-no-mesh
   agent: kubernetes
   decorate: true
@@ -6851,7 +6851,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "24 */3 * * *"
+- cron: "24 */9 * * *"
   name: ci-knative-serving-kourier-stable
   agent: kubernetes
   decorate: true
@@ -6892,7 +6892,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "43 */3 * * *"
+- cron: "43 */9 * * *"
   name: ci-knative-serving-contour-latest
   agent: kubernetes
   decorate: true
@@ -6933,7 +6933,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "32 */3 * * *"
+- cron: "32 */9 * * *"
   name: ci-knative-serving-gateway-api-latest
   agent: kubernetes
   decorate: true
@@ -6972,7 +6972,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "42 */3 * * *"
+- cron: "42 */9 * * *"
   name: ci-knative-serving-https
   agent: kubernetes
   decorate: true
@@ -7986,7 +7986,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "20 */4 * * *"
+- cron: "20 */12 * * *"
   name: ci-knative-serving-auto-release
   agent: kubernetes
   decorate: true
@@ -8042,7 +8042,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "53 */4 * * *"
+- cron: "53 */12 * * *"
   name: ci-knative-client-continuous
   agent: kubernetes
   decorate: true
@@ -8617,7 +8617,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "29 */4 * * *"
+- cron: "29 */12 * * *"
   name: ci-knative-client-auto-release
   agent: kubernetes
   decorate: true
@@ -9018,7 +9018,7 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "44 */4 * * *"
+- cron: "44 */12 * * *"
   name: ci-knative-client-pkg-continuous
   agent: kubernetes
   decorate: true
@@ -9056,7 +9056,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "8 */4 * * *"
+- cron: "8 */12 * * *"
   name: ci-knative-client-pkg-auto-release
   agent: kubernetes
   decorate: true
@@ -9147,7 +9147,7 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "1 */4 * * *"
+- cron: "1 */12 * * *"
   name: ci-knative-sandbox-kn-plugin-diag-continuous
   agent: kubernetes
   decorate: true
@@ -9185,7 +9185,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "20 */4 * * *"
+- cron: "20 */12 * * *"
   name: ci-knative-sandbox-kn-plugin-event-continuous
   agent: kubernetes
   decorate: true
@@ -9223,7 +9223,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "24 */4 * * *"
+- cron: "24 */12 * * *"
   name: ci-knative-sandbox-kn-plugin-event-auto-release
   agent: kubernetes
   decorate: true
@@ -9370,7 +9370,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "18 */4 * * *"
+- cron: "18 */12 * * *"
   name: ci-knative-sandbox-kn-plugin-func-auto-release
   agent: kubernetes
   decorate: true
@@ -9577,7 +9577,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "28 */4 * * *"
+- cron: "28 */12 * * *"
   name: ci-knative-sandbox-kn-plugin-migration-continuous
   agent: kubernetes
   decorate: true
@@ -9615,7 +9615,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "16 */4 * * *"
+- cron: "16 */12 * * *"
   name: ci-knative-sandbox-kn-plugin-operator-continuous
   agent: kubernetes
   decorate: true
@@ -9653,7 +9653,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "38 */4 * * *"
+- cron: "38 */12 * * *"
   name: ci-knative-sandbox-kn-plugin-sample-continuous
   agent: kubernetes
   decorate: true
@@ -9691,7 +9691,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "16 */4 * * *"
+- cron: "16 */12 * * *"
   name: ci-knative-sandbox-kn-plugin-service-log-continuous
   agent: kubernetes
   decorate: true
@@ -9729,7 +9729,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 */4 * * *"
+- cron: "0 */12 * * *"
   name: ci-knative-sandbox-kn-plugin-service-log-auto-release
   agent: kubernetes
   decorate: true
@@ -9876,7 +9876,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "14 */4 * * *"
+- cron: "14 */12 * * *"
   name: ci-knative-sandbox-kn-plugin-source-kafka-continuous
   agent: kubernetes
   decorate: true
@@ -9914,7 +9914,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "34 */4 * * *"
+- cron: "34 */12 * * *"
   name: ci-knative-sandbox-kn-plugin-source-kafka-auto-release
   agent: kubernetes
   decorate: true
@@ -10231,7 +10231,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "25 */4 * * *"
+- cron: "25 */12 * * *"
   name: ci-knative-sandbox-kn-plugin-source-kamelet-continuous
   agent: kubernetes
   decorate: true
@@ -10269,7 +10269,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "17 */4 * * *"
+- cron: "17 */12 * * *"
   name: ci-knative-sandbox-kn-plugin-source-kamelet-auto-release
   agent: kubernetes
   decorate: true
@@ -10416,7 +10416,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "33 */4 * * *"
+- cron: "33 */12 * * *"
   name: ci-knative-sandbox-kn-plugin-admin-continuous
   agent: kubernetes
   decorate: true
@@ -10454,7 +10454,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "53 */4 * * *"
+- cron: "53 */12 * * *"
   name: ci-knative-sandbox-kn-plugin-admin-auto-release
   agent: kubernetes
   decorate: true
@@ -10601,7 +10601,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "19 */4 * * *"
+- cron: "19 */12 * * *"
   name: ci-knative-sandbox-kn-plugin-quickstart-continuous
   agent: kubernetes
   decorate: true
@@ -10639,7 +10639,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "35 */4 * * *"
+- cron: "35 */12 * * *"
   name: ci-knative-sandbox-kn-plugin-quickstart-auto-release
   agent: kubernetes
   decorate: true
@@ -10786,7 +10786,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "45 */4 * * *"
+- cron: "45 */12 * * *"
   name: ci-knative-docs-continuous
   agent: kubernetes
   decorate: true
@@ -10869,7 +10869,7 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "52 */4 * * *"
+- cron: "52 */12 * * *"
   name: ci-knative-eventing-continuous
   agent: kubernetes
   decorate: true
@@ -11443,7 +11443,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "52 */4 * * *"
+- cron: "52 */12 * * *"
   name: ci-knative-eventing-auto-release
   agent: kubernetes
   decorate: true
@@ -11859,7 +11859,7 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "21 */4 * * *"
+- cron: "21 */12 * * *"
   name: ci-knative-sandbox-eventing-awssqs-continuous
   agent: kubernetes
   decorate: true
@@ -11937,7 +11937,7 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "21 */4 * * *"
+- cron: "21 */12 * * *"
   name: ci-knative-sandbox-eventing-awssqs-auto-release
   agent: kubernetes
   decorate: true
@@ -12214,7 +12214,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "27 */4 * * *"
+- cron: "27 */12 * * *"
   name: ci-knative-sandbox-eventing-ceph-continuous
   agent: kubernetes
   decorate: true
@@ -12292,7 +12292,7 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "47 */4 * * *"
+- cron: "47 */12 * * *"
   name: ci-knative-sandbox-eventing-ceph-auto-release
   agent: kubernetes
   decorate: true
@@ -12594,7 +12594,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "37 */4 * * *"
+- cron: "37 */12 * * *"
   name: ci-knative-sandbox-eventing-couchdb-continuous
   agent: kubernetes
   decorate: true
@@ -12672,7 +12672,7 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "33 */4 * * *"
+- cron: "33 */12 * * *"
   name: ci-knative-sandbox-eventing-couchdb-auto-release
   agent: kubernetes
   decorate: true
@@ -12949,7 +12949,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "46 */4 * * *"
+- cron: "46 */12 * * *"
   name: ci-knative-sandbox-eventing-github-continuous
   agent: kubernetes
   decorate: true
@@ -13027,7 +13027,7 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "42 */4 * * *"
+- cron: "42 */12 * * *"
   name: ci-knative-sandbox-eventing-github-auto-release
   agent: kubernetes
   decorate: true
@@ -13304,7 +13304,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "38 */4 * * *"
+- cron: "38 */12 * * *"
   name: ci-knative-sandbox-eventing-gitlab-continuous
   agent: kubernetes
   decorate: true
@@ -13626,7 +13626,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "6 */4 * * *"
+- cron: "6 */12 * * *"
   name: ci-knative-sandbox-eventing-gitlab-auto-release
   agent: kubernetes
   decorate: true
@@ -13679,7 +13679,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "7 */4 * * *"
+- cron: "7 */12 * * *"
   name: ci-knative-sandbox-eventing-prometheus-continuous
   agent: kubernetes
   decorate: true
@@ -13757,7 +13757,7 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "11 */4 * * *"
+- cron: "11 */12 * * *"
   name: ci-knative-sandbox-eventing-prometheus-auto-release
   agent: kubernetes
   decorate: true
@@ -14034,7 +14034,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "0 */4 * * *"
+- cron: "0 */12 * * *"
   name: ci-knative-sandbox-eventing-redis-continuous
   agent: kubernetes
   decorate: true
@@ -14112,7 +14112,7 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "48 */4 * * *"
+- cron: "48 */12 * * *"
   name: ci-knative-sandbox-eventing-redis-auto-release
   agent: kubernetes
   decorate: true
@@ -14389,7 +14389,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "16 */4 * * *"
+- cron: "16 */12 * * *"
   name: ci-knative-sandbox-kperf-continuous
   agent: kubernetes
   decorate: true
@@ -14427,7 +14427,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "2 */4 * * *"
+- cron: "2 */12 * * *"
   name: ci-knative-pkg-continuous
   agent: kubernetes
   decorate: true
@@ -14465,7 +14465,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "47 */4 * * *"
+- cron: "47 */12 * * *"
   name: ci-knative-caching-continuous
   agent: kubernetes
   decorate: true
@@ -14503,7 +14503,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "5 */4 * * *"
+- cron: "5 */12 * * *"
   name: ci-knative-sandbox-sample-controller-continuous
   agent: kubernetes
   decorate: true
@@ -14581,7 +14581,7 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "1 */4 * * *"
+- cron: "1 */12 * * *"
   name: ci-knative-sandbox-sample-controller-auto-release
   agent: kubernetes
   decorate: true
@@ -14634,7 +14634,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "50 */4 * * *"
+- cron: "50 */12 * * *"
   name: ci-knative-sandbox-sample-source-continuous
   agent: kubernetes
   decorate: true
@@ -14712,7 +14712,7 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "54 */4 * * *"
+- cron: "54 */12 * * *"
   name: ci-knative-sandbox-sample-source-auto-release
   agent: kubernetes
   decorate: true
@@ -14765,7 +14765,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "49 */4 * * *"
+- cron: "49 */12 * * *"
   name: ci-knative-test-infra-continuous
   agent: kubernetes
   decorate: true
@@ -14898,7 +14898,7 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "42 */4 * * *"
+- cron: "42 */12 * * *"
   name: ci-google-knative-gcp-auto-release
   agent: kubernetes
   decorate: true
@@ -14981,7 +14981,7 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "59 */4 * * *"
+- cron: "59 */12 * * *"
   name: ci-knative-sandbox-net-certmanager-continuous
   agent: kubernetes
   decorate: true
@@ -15289,7 +15289,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "27 */4 * * *"
+- cron: "27 */12 * * *"
   name: ci-knative-sandbox-net-certmanager-auto-release
   agent: kubernetes
   decorate: true
@@ -15369,7 +15369,7 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "38 */4 * * *"
+- cron: "38 */12 * * *"
   name: ci-knative-sandbox-net-contour-continuous
   agent: kubernetes
   decorate: true
@@ -15677,7 +15677,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "42 */4 * * *"
+- cron: "42 */12 * * *"
   name: ci-knative-sandbox-net-contour-auto-release
   agent: kubernetes
   decorate: true
@@ -15730,7 +15730,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "29 */4 * * *"
+- cron: "29 */12 * * *"
   name: ci-knative-sandbox-net-gateway-api-continuous
   agent: kubernetes
   decorate: true
@@ -15814,7 +15814,7 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "53 */4 * * *"
+- cron: "53 */12 * * *"
   name: ci-knative-sandbox-net-gateway-api-auto-release
   agent: kubernetes
   decorate: true
@@ -15867,7 +15867,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "9 */4 * * *"
+- cron: "9 */12 * * *"
   name: ci-knative-sandbox-net-http01-continuous
   agent: kubernetes
   decorate: true
@@ -16005,7 +16005,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "5 */4 * * *"
+- cron: "5 */12 * * *"
   name: ci-knative-sandbox-net-http01-auto-release
   agent: kubernetes
   decorate: true
@@ -16058,7 +16058,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "8 */4 * * *"
+- cron: "8 */12 * * *"
   name: ci-knative-sandbox-net-istio-continuous
   agent: kubernetes
   decorate: true
@@ -16142,7 +16142,7 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "34 */3 * * *"
+- cron: "34 */9 * * *"
   name: ci-knative-sandbox-net-istio-latest
   agent: kubernetes
   decorate: true
@@ -16405,7 +16405,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "12 */4 * * *"
+- cron: "12 */12 * * *"
   name: ci-knative-sandbox-net-istio-auto-release
   agent: kubernetes
   decorate: true
@@ -16485,7 +16485,7 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "17 */4 * * *"
+- cron: "17 */12 * * *"
   name: ci-knative-sandbox-net-kourier-continuous
   agent: kubernetes
   decorate: true
@@ -16623,7 +16623,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "53 */4 * * *"
+- cron: "53 */12 * * *"
   name: ci-knative-sandbox-net-kourier-auto-release
   agent: kubernetes
   decorate: true
@@ -16703,7 +16703,7 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "0 */4 * * *"
+- cron: "0 */12 * * *"
   name: ci-knative-operator-continuous
   agent: kubernetes
   decorate: true
@@ -17281,7 +17281,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "32 */4 * * *"
+- cron: "32 */12 * * *"
   name: ci-knative-operator-auto-release
   agent: kubernetes
   decorate: true
@@ -17682,7 +17682,7 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "36 */4 * * *"
+- cron: "36 */12 * * *"
   name: ci-knative-sandbox-async-component-continuous
   agent: kubernetes
   decorate: true
@@ -17814,7 +17814,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "24 */4 * * *"
+- cron: "24 */12 * * *"
   name: ci-knative-sandbox-async-component-auto-release
   agent: kubernetes
   decorate: true
@@ -17894,7 +17894,7 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "32 */4 * * *"
+- cron: "32 */12 * * *"
   name: ci-knative-sandbox-discovery-continuous
   agent: kubernetes
   decorate: true
@@ -18032,7 +18032,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "28 */4 * * *"
+- cron: "28 */12 * * *"
   name: ci-knative-sandbox-discovery-auto-release
   agent: kubernetes
   decorate: true
@@ -18085,7 +18085,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "23 */4 * * *"
+- cron: "23 */12 * * *"
   name: ci-knative-sandbox-eventing-camel-continuous
   agent: kubernetes
   decorate: true
@@ -18223,7 +18223,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "55 */4 * * *"
+- cron: "55 */12 * * *"
   name: ci-knative-sandbox-eventing-camel-auto-release
   agent: kubernetes
   decorate: true
@@ -18276,7 +18276,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "31 */4 * * *"
+- cron: "31 */12 * * *"
   name: ci-knative-sandbox-eventing-kafka-continuous
   agent: kubernetes
   decorate: true
@@ -18704,7 +18704,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "31 */4 * * *"
+- cron: "31 */12 * * *"
   name: ci-knative-sandbox-eventing-kafka-auto-release
   agent: kubernetes
   decorate: true
@@ -18809,7 +18809,7 @@ periodics:
       - "coverage"
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "59 */4 * * *"
+- cron: "59 */12 * * *"
   name: ci-knative-sandbox-eventing-kafka-broker-continuous
   agent: kubernetes
   decorate: true
@@ -19237,7 +19237,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "11 */4 * * *"
+- cron: "11 */12 * * *"
   name: ci-knative-sandbox-eventing-kafka-broker-auto-release
   agent: kubernetes
   decorate: true
@@ -19383,7 +19383,7 @@ periodics:
     - name: nightly-account
       secret:
         secretName: nightly-account
-- cron: "9 */4 * * *"
+- cron: "9 */12 * * *"
   name: ci-knative-sandbox-eventing-rabbitmq-auto-release
   agent: kubernetes
   decorate: true
@@ -19930,7 +19930,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "2 */4 * * *"
+- cron: "2 */12 * * *"
   name: ci-knative-sandbox-eventing-natss-auto-release
   agent: kubernetes
   decorate: true
@@ -19983,7 +19983,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "14 */4 * * *"
+- cron: "14 */12 * * *"
   name: ci-knative-sandbox-eventing-autoscaler-keda-continuous
   agent: kubernetes
   decorate: true
@@ -20115,7 +20115,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "50 */4 * * *"
+- cron: "50 */12 * * *"
   name: ci-knative-sandbox-eventing-autoscaler-keda-auto-release
   agent: kubernetes
   decorate: true
@@ -20168,7 +20168,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "2 */4 * * *"
+- cron: "2 */12 * * *"
   name: ci-knative-sandbox-eventing-kogito-continuous
   agent: kubernetes
   decorate: true
@@ -20306,7 +20306,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "34 */4 * * *"
+- cron: "34 */12 * * *"
   name: ci-knative-sandbox-eventing-kogito-auto-release
   agent: kubernetes
   decorate: true
@@ -20359,7 +20359,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "1 */4 * * *"
+- cron: "1 */12 * * *"
   name: ci-knative-sandbox-container-freezer-continuous
   agent: kubernetes
   decorate: true
@@ -20491,7 +20491,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "17 */4 * * *"
+- cron: "17 */12 * * *"
   name: ci-knative-sandbox-container-freezer-auto-release
   agent: kubernetes
   decorate: true
