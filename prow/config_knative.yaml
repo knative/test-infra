@@ -168,7 +168,7 @@ presubmits:
   - build-tests: true
   - unit-tests: true
   - integration-tests: true
-  - go-coverage: true
+  - go-coverage: false
   - custom-test: integration-tests-latest-release
     always-run: true
     command:
@@ -415,7 +415,7 @@ presubmits:
   - build-tests: true
   - unit-tests: true
   - integration-tests: true
-  - go-coverage: true
+  - go-coverage: false
   - custom-test: upgrade-tests
     args:
     - --run-test
