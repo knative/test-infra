@@ -1,0 +1,248 @@
+org: knative
+repo: serving
+branches: [main]
+image: gcr.io/knative-tests/test-infra/prow-tests:stable
+imagePullPolicy: Always
+
+jobs:
+  - name: build-tests
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --build-tests]
+    excluded_requirements: [gcp]
+
+  - name: unit-tests
+    types: [presubmit]
+    resources: default
+    command: [runner.sh, ./test/presubmit-tests.sh, --unit-tests]
+    excluded_requirements: [gcp]
+
+  - name: upgrade-tests
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, ./test/e2e-upgrade-tests.sh]
+
+  - name: performance-tests-kperf
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, ./test/performance/performance-tests.sh]
+    modifiers: [presubmit_optional, presubmit_skipped]
+
+  - name: istio-latest-mesh
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/e2e-tests.sh --istio-version latest --mesh"]
+    modifiers: [presubmit_optional, presubmit_skipped]
+
+  - name: istio-latest-mesh-short
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/e2e-tests.sh --istio-version latest --mesh --short"]
+    modifiers: [presubmit_optional, presubmit_skipped]
+
+  - name: istio-latest-mesh-tls
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/e2e-auto-tls-tests.sh --istio-version latest --mesh"]
+    modifiers: [presubmit_optional, presubmit_skipped]
+
+  - name: istio-latest-no-mesh
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/e2e-tests.sh --istio-version latest --no-mesh"]
+    modifiers: [presubmit_optional, presubmit_skipped]
+
+  - name: istio-latest-no-mesh-tls
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/e2e-auto-tls-tests.sh --istio-version latest --no-mesh"]
+    modifiers: [presubmit_optional, presubmit_skipped]
+
+  - name: kourier-stable
+    types: [presubmit]
+    regex: ^third_party/kourier-latest/*
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/e2e-tests.sh --kourier-version stable"]
+    modifiers: [presubmit_optional, presubmit_skipped]
+
+  - name: kourier-stable-tls
+    types: [presubmit]
+    regex: ^third_party/kourier-latest/*
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/e2e-auto-tls-tests.sh --kourier-version stable"]
+    modifiers: [presubmit_optional, presubmit_skipped]
+
+  - name: contour-latest
+    types: [presubmit]
+    regex: ^third_party/contour-latest/*
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/e2e-tests.sh --contour-version latest"]
+    modifiers: [presubmit_optional, presubmit_skipped]
+
+  - name: contour-tls
+    types: [presubmit]
+    regex: ^third_party/contour-latest/*
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/e2e-auto-tls-tests.sh --contour-version latest"]
+    modifiers: [presubmit_optional, presubmit_skipped]
+
+  - name: gateway-api-latest
+    types: [presubmit]
+    regex: ^third_party/gateway-api-latest/*
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/e2e-tests.sh --gateway-api-version latest"]
+    modifiers: [presubmit_optional, presubmit_skipped]
+
+  - name: https
+    types: [presubmit]
+    regex: ^third_party/cert-manager-latest/*
+    command:
+    - runner.sh
+    args:
+    - ./test/presubmit-tests.sh
+    - --run-test
+    - "./test/e2e-tests.sh --https"
+    - --run-test
+    - "./test/e2e-auto-tls-tests.sh --https"
+    modifiers: [presubmit_optional, presubmit_skipped]
+
+  - name: continuous
+    timeout: 3h
+    types: [periodic]
+    command: [runner.sh, ./test/presubmit-tests.sh, --all-tests]
+
+  - name: istio-latest-mesh
+    types: [periodic]
+    command:
+    - runner.sh
+    args:
+    - ./test/presubmit-tests.sh
+    - --run-test
+    - ./test/e2e-tests.sh --istio-version latest --mesh
+    - --run-test
+    - ./test/e2e-auto-tls-tests.sh --istio-version latest --mesh
+
+  - name: istio-latest-no-mesh
+    types: [periodic]
+    command:
+    - runner.sh
+    args:
+    - ./test/presubmit-tests.sh
+    - --run-test
+    - ./test/e2e-tests.sh --istio-version latest --mesh
+    - --run-test
+    - ./test/e2e-auto-tls-tests.sh --istio-version latest --mesh
+
+  - name: istio-head-mesh
+    types: [periodic]
+    command:
+    - runner.sh
+    args:
+    - ./test/presubmit-tests.sh
+    - --run-test
+    - ./test/e2e-tests.sh --istio-version head --mesh
+    - --run-test
+    - ./test/e2e-auto-tls-tests.sh --istio-version head --mesh
+
+  - name: istio-head-no-mesh
+    types: [periodic]
+    command:
+    - runner.sh
+    args:
+    - ./test/presubmit-tests.sh
+    - --run-test
+    - ./test/e2e-tests.sh --istio-version head --no-mesh
+    - --run-test
+    - ./test/e2e-auto-tls-tests.sh --istio-version head --no-mesh
+
+  - name: kourier-stable
+    types: [periodic]
+    command:
+    - runner.sh
+    args:
+    - --run-test
+    - ./test/e2e-tests.sh --kourier-version stable
+    - --run-test
+    - ./test/e2e-auto-tls-tests.sh --kourier-version stable --run-http01-auto-tls-tests
+
+  - name: contour-latest
+    types: [periodic]
+    command:
+    - runner.sh
+    args:
+    - --run-test
+    - ./test/e2e-tests.sh --contour-version latest
+    - --run-test
+    - ./test/e2e-auto-tls-tests.sh --contour-version latest --run-http01-auto-tls-tests
+
+  - name: gateway-api-latest
+    types: [periodic]
+    command:
+    - runner.sh
+    args:
+    - --run-test
+    - ./test/e2e-tests.sh --gateway-api-version latest
+
+  - name: https
+    types: [periodic]
+    command:
+    - runner.sh
+    args:
+    - --run-test
+    - ./test/e2e-tests.sh --https
+    - --run-test
+    - ./test/e2e-auto-tls-tests.sh --https
+
+  - name: s390x-kourier-tests
+    types: [periodic]
+    cron: 0 5 * * *
+    requirements: [s390x]
+    command: [runner.sh]
+    args:
+      - bash
+      - -c
+      - |
+        "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && server_addr=$(./connect.sh kourier-main) && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --kourier-version latest"
+    env:
+      - name: SYSTEM_NAMESPACE
+        value: knative-serving
+      - name: TEST_OPTIONS
+        value: "--enable-alpha --enable-beta --resolvabledomain=false"
+
+  - name: s390x-contour-tests
+    types: [periodic]
+    cron: 0 5 * * *
+    requirements: [s390x]
+    command: [runner.sh]
+    args:
+      - bash
+      - -c
+      - |
+        "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && server_addr=$(./connect.sh contour-main) && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --contour-version latest"
+    env:
+      - name: SYSTEM_NAMESPACE
+        value: knative-serving
+      - name: TEST_OPTIONS
+        value: "--enable-alpha --enable-beta --resolvabledomain=false"
+
+  - name: nightly
+    types: [periodic]
+    timeout: 3h
+    command: [runner.sh, ./hack/release.sh, --publish, --tag-release]
+    requirements: [nightly]
+    excluded_requirements: [gcp]
+    reporter_config:
+      slack:
+        channel: serving
+        report_template: |
+          "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
+        job_states_to_report:
+        - "failure"
+
+  - name: release
+    types: [periodic]
+    timeout: 3h
+    command: [runner.sh, ./hack/release.sh, --auto-release, --release-gcs, knative-releases/serving, --release-gcr, gcr.io/knative-releases, --github-token, /etc/hub-token/token]
+    requirements: [release]
+    excluded_requirements: [gcp]
+
+resources: high
+resources_presets:
+  high:
+    limits:
+      memory: 16Gi
+    requests:
+      memory: 12Gi
+
+  default:
+    limits:
+      memory: 10Gi
+    requests:
+      memory: 8Gi
