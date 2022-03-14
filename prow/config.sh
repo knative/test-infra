@@ -69,7 +69,7 @@ else #check
 	docker run -i --rm \
 	    -v "${PWD}:${PWD}" -v "${CONFIG_YAML}:${CONFIG_YAML}" -v "${PLUGINS_YAML}:${PLUGINS_YAML}" -v "${JOB_YAML}:${JOB_YAML}" \
 	    -w "${PWD}" \
-	    gcr.io/k8s-prow/checkconfig:v20220303-21d4df3f17 \
+	    gcr.io/k8s-prow/checkconfig:v20220310-033172a69b \
 	    "--config-path=${CONFIG_YAML}" "--job-config-path=${JOB_YAML}" \
 	    "--plugin-config=${PLUGINS_YAML}" "--strict" "--exclude-warning=mismatched-tide" \
 	    "--exclude-warning=long-job-names" \
