@@ -162,7 +162,6 @@ tide:
     - do-not-merge/invalid-owners-file
     - needs-rebase
   - repos:
-    - "google/knative-gcp"
     - "knative-prow-robot/test-infra"
     labels:
     - lgtm
@@ -179,7 +178,6 @@ tide:
   merge_method:
     knative: squash
     knative-sandbox: squash
-    google/knative-gcp: squash
   target_url: https://prow.knative.dev/tide
   pr_status_base_urls:
     '*': https://prow.knative.dev/pr
@@ -229,15 +227,3 @@ branch-protection:
       repos:
         .github:
           protect: false
-
-    google:
-      repos:
-        # Protect all branches in google/knative-gcp
-        knative-gcp:
-          protect: true
-          required_status_checks:
-            contexts:
-            - cla/google
-            - tide
-          # Enforce all configured restrictions above for administrators.
-          enforce_admins: true

@@ -87,10 +87,6 @@ jobConfigs:
     org: knative
     repo: test-infra
     type: postsubmit
-  - name: ci-google-knative-gcp-continuous
-    org: google
-    repo: knative-gcp
-    type: postsubmit
   - name: ci-knative-operator-s390x-e2e-tests
     org: knative
     repo: operator

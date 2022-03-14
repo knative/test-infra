@@ -1312,19 +1312,6 @@ test_groups:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   alert_stale_results_hours: 170
   num_failures_to_alert: 1
-- name: ci-google-knative-gcp-nightly-release
-  gcs_prefix: knative-prow/logs/ci-google-knative-gcp-nightly-release
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  num_failures_to_alert: 1
-- name: ci-google-knative-gcp-auto-release
-  gcs_prefix: knative-prow/logs/ci-google-knative-gcp-auto-release
-  alert_options:
-    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  num_failures_to_alert: 1
-- name: ci-google-knative-gcp-test-coverage
-  gcs_prefix: knative-prow/logs/ci-google-knative-gcp-go-coverage
-  short_text_metric: "coverage"
 - name: ci-knative-backup-artifacts
   gcs_prefix: knative-prow/logs/ci-knative-backup-artifacts
   alert_options:
@@ -2319,23 +2306,6 @@ dashboards:
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
     num_failures_to_alert: 1
-- name: knative-gcp
-  dashboard_tab:
-  - name: nightly
-    test_group_name: ci-google-knative-gcp-nightly-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 1
-  - name: auto-release
-    test_group_name: ci-google-knative-gcp-auto-release
-    base_options: "sort-by-name="
-    alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-    num_failures_to_alert: 1
-  - name: coverage
-    test_group_name: ci-google-knative-gcp-test-coverage
-    base_options: "exclude-filter-by-regex=Overall$&group-by-directory=&expand-groups=&sort-by-name="
 - name: knative-0.26
   dashboard_tab:
   - name: serving-continuous
@@ -3125,9 +3095,6 @@ dashboard_groups:
   - "eventing-autoscaler-keda"
   - "eventing-kogito"
   - "container-freezer"
-- name: google
-  dashboard_names:
-  - "knative-gcp"
 - name: maintenance
   dashboard_names:
   - "utilities"

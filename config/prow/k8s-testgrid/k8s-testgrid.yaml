@@ -58,7 +58,6 @@ dashboards:
 - name: knative-1.1
 - name: knative-1.2
 - name: knative-1.3
-- name: knative-gcp
 - name: knative-sandbox-0.25
 - name: knative-sandbox-0.26
 - name: knative-sandbox-1.0
@@ -80,9 +79,6 @@ dashboards:
 - name: test-infra
 - name: utilities
 dashboard_groups:
-  - name: google
-    dashboard_names:
-      - "knative-gcp"
   - name: knative
     dashboard_names:
       - "caching"

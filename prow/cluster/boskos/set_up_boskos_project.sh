@@ -122,19 +122,3 @@ for res in ${RESOURCES[@]} $*; do
   echo "NOTE: Adding ${res} as ${role}"
   gcloud projects add-iam-policy-binding ${PROJECT} --member ${type}:${res} --role ${role}
 done
-
-# As required by step 6 in https://github.com/google/knative-gcp/tree/master/docs/storage,
-# grant the GCS service account the permissions to publish to GCP Pub/Sub.
-echo "Activating GCS service account"
-curl -s -X GET -H "Authorization: Bearer ${ACCESS_TOKEN}" "https://www.googleapis.com/storage/v1/projects/${PROJECT}/serviceAccount"
-gcloud projects add-iam-policy-binding ${PROJECT} \
-  --member="serviceAccount:service-${PROJECT_NUMBER}@gs-project-accounts.iam.gserviceaccount.com" \
-  --role roles/pubsub.publisher
-
-# As required by step 1 in https://github.com/google/knative-gcp/tree/master/docs/scheduler,
-# create an App Engine app.
-# We use us-central here, but it indeed does not matter which region this app is created in.
-#
-# This command will throw an error if the app is already created, but since we expect to run
-# this script idempotently, we always mark this command as succeeded.
-gcloud app create --region=us-central || echo "AppEngine app probably already exists, ignoring..."
