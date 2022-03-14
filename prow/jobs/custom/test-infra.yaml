@@ -291,7 +291,7 @@ periodics:
       args:
       - "--service-account=/etc/test-account/service-account.json"
       - "--skip-report"
-      - "--build-count=20"
+      - "--build-count=10"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account

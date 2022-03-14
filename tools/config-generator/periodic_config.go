@@ -90,7 +90,7 @@ func generateCron(jobType, jobName, repoName string, timeout int) string {
 	hours := int((timeout+5)/60) + 1 // Allow at least 5 minutes between runs
 	hourCron := fmt.Sprintf("%d * * * *", minutesOffset)
 	if hours > 1 {
-		hourCron = fmt.Sprintf("%d */%d * * *", minutesOffset, hours)
+		hourCron = fmt.Sprintf("%d */%d * * *", minutesOffset, hours*3)
 	}
 	daily := func(pacificHour int) string {
 		return fmt.Sprintf("%d %d * * *", minutesOffset, getUTCtime(pacificHour))

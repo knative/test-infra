@@ -45,7 +45,7 @@ func main() {
 	serviceAccount := flag.String("service-account", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"), "JSON key file for GCS service account")
 	githubAccount := flag.String("github-account", "", "Token file for Github authentication")
 	slackAccount := flag.String("slack-account", "", "slack secret file for authenticating with Slack")
-	buildsCountOverride := flag.Int("build-count", 10, "count of builds to scan")
+	buildsCountOverride := flag.Int("build-count", 5, "count of builds to scan")
 	skipReport := flag.Bool("skip-report", false, "skip Github and Slack report")
 	dryrun := flag.Bool("dry-run", false, "dry run switch")
 	flag.Parse()
