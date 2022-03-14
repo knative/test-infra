@@ -53,7 +53,6 @@ dashboards:
 - name: kn-plugin-service-log
 - name: kn-plugin-source-kafka
 - name: kn-plugin-source-kamelet
-- name: knative-0.25
 - name: knative-0.26
 - name: knative-1.0
 - name: knative-1.1
