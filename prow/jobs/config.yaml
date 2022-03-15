@@ -764,36 +764,6 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-client-go-coverage
-    agent: kubernetes
-    context: pull-knative-client-go-coverage
-    always_run: true
-    rerun_command: "/test pull-knative-client-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-client-go-coverage),?(\\s+|$)"
-    optional: true
-    decorate: true
-    path_alias: knative.dev/client
-    cluster: "build-knative"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "coverage"
-        - "--postsubmit-job-name=post-knative-client-go-coverage"
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=50"
-        - "--github-token=/etc/covbot-token/token"
-        volumeMounts:
-        - name: covbot-token
-          mountPath: /etc/covbot-token
-          readOnly: true
-      volumes:
-      - name: covbot-token
-        secret:
-          secretName: covbot-token
   - name: pull-knative-client-integration-tests-latest-release
     agent: kubernetes
     context: pull-knative-client-integration-tests-latest-release
@@ -4671,36 +4641,6 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
-  - name: pull-knative-operator-go-coverage
-    agent: kubernetes
-    context: pull-knative-operator-go-coverage
-    always_run: true
-    rerun_command: "/test pull-knative-operator-go-coverage"
-    trigger: "(?m)^/test (all|pull-knative-operator-go-coverage),?(\\s+|$)"
-    optional: true
-    decorate: true
-    path_alias: knative.dev/operator
-    cluster: "build-knative"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "coverage"
-        - "--postsubmit-job-name=post-knative-operator-go-coverage"
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=50"
-        - "--github-token=/etc/covbot-token/token"
-        volumeMounts:
-        - name: covbot-token
-          mountPath: /etc/covbot-token
-          readOnly: true
-      volumes:
-      - name: covbot-token
-        secret:
-          secretName: covbot-token
   - name: pull-knative-operator-upgrade-tests
     agent: kubernetes
     context: pull-knative-operator-upgrade-tests
@@ -8991,33 +8931,6 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 1 * * *"
-  name: ci-knative-client-go-coverage
-  labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-client-go-coverage
-  agent: kubernetes
-  decorate: true
-  cluster: "build-knative"
-  extra_refs:
-  - org: knative
-    repo: client
-    path_alias: knative.dev/client
-    base_ref: main
-  annotations:
-    testgrid-dashboards: client
-    testgrid-tab-name: client-go-coverage
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      command:
-      - "runner.sh"
-      args:
-      - "coverage"
-      - "--artifacts=$(ARTIFACTS)"
-      - "--cov-threshold-percentage=50"
 - cron: "44 */12 * * *"
   name: ci-knative-client-pkg-continuous
   agent: kubernetes
@@ -17655,33 +17568,6 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 1 * * *"
-  name: ci-knative-operator-go-coverage
-  labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-operator-go-coverage
-  agent: kubernetes
-  decorate: true
-  cluster: "build-knative"
-  extra_refs:
-  - org: knative
-    repo: operator
-    path_alias: knative.dev/operator
-    base_ref: main
-  annotations:
-    testgrid-dashboards: operator
-    testgrid-tab-name: operator-go-coverage
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-      imagePullPolicy: Always
-      command:
-      - "runner.sh"
-      args:
-      - "coverage"
-      - "--artifacts=$(ARTIFACTS)"
-      - "--cov-threshold-percentage=50"
 - cron: "36 */12 * * *"
   name: ci-knative-sandbox-async-component-continuous
   agent: kubernetes
@@ -20545,26 +20431,6 @@ periodics:
       secret:
         secretName: release-account
 postsubmits:
-  knative/client:
-  - name: post-knative-client-go-coverage
-    branches:
-    - "main"
-    annotations:
-      testgrid-create-test-group: "false"
-    agent: kubernetes
-    decorate: true
-    cluster: "build-knative"
-    path_alias: knative.dev/client
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "coverage"
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=0"
   knative/eventing:
   - name: post-knative-eventing-go-coverage
     branches:
@@ -20693,26 +20559,6 @@ postsubmits:
     decorate: true
     cluster: "build-knative"
     path_alias: knative.dev/net-kourier
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "coverage"
-        - "--artifacts=$(ARTIFACTS)"
-        - "--cov-threshold-percentage=0"
-  knative/operator:
-  - name: post-knative-operator-go-coverage
-    branches:
-    - "main"
-    annotations:
-      testgrid-create-test-group: "false"
-    agent: kubernetes
-    decorate: true
-    cluster: "build-knative"
-    path_alias: knative.dev/operator
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
