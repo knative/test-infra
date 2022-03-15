@@ -6978,7 +6978,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --kourier-version latest"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh kourier-main && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --kourier-version latest"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -7020,7 +7020,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 15 * * *"
+- cron: "20 3 * * *"
   name: ci-knative-serving-1.0-s390x-kourier-tests
   agent: kubernetes
   decorate: true
@@ -7045,7 +7045,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --kourier-version latest"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh kourier-10 && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --kourier-version latest"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -7089,7 +7089,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 4 * * *"
+- cron: "30 3 * * *"
   name: ci-knative-serving-1.1-s390x-kourier-tests
   agent: kubernetes
   decorate: true
@@ -7114,7 +7114,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --kourier-version latest"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh kourier-11 && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --kourier-version latest"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -7158,7 +7158,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 16 * * *"
+- cron: "40 3 * * *"
   name: ci-knative-serving-1.2-s390x-kourier-tests
   agent: kubernetes
   decorate: true
@@ -7183,7 +7183,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --kourier-version latest"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh kourier-12 && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --kourier-version latest"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -7227,7 +7227,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "30 5 * * *"
+- cron: "10 3 * * *"
   name: ci-knative-serving-0.26-s390x-kourier-tests
   agent: kubernetes
   decorate: true
@@ -7252,7 +7252,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --kourier-version latest"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh kourier-026 && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --kourier-version latest"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -7296,7 +7296,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 9 * * *"
+- cron: "0 5 * * *"
   name: ci-knative-serving-s390x-contour-tests
   agent: kubernetes
   decorate: true
@@ -7321,7 +7321,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --contour-version latest"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh contour-main && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --contour-version latest"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -7363,7 +7363,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 21 * * *"
+- cron: "20 5 * * *"
   name: ci-knative-serving-1.0-s390x-contour-tests
   agent: kubernetes
   decorate: true
@@ -7388,7 +7388,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --contour-version latest"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh contour-10 && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --contour-version latest"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -7432,7 +7432,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 12 * * *"
+- cron: "30 5 * * *"
   name: ci-knative-serving-1.1-s390x-contour-tests
   agent: kubernetes
   decorate: true
@@ -7457,7 +7457,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --contour-version latest"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh contour-11 && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --contour-version latest"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -7501,7 +7501,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 0 * * *"
+- cron: "40 5 * * *"
   name: ci-knative-serving-1.2-s390x-contour-tests
   agent: kubernetes
   decorate: true
@@ -7526,7 +7526,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --contour-version latest"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh contour-12 && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --contour-version latest"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -7570,7 +7570,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "30 7 * * *"
+- cron: "10 5 * * *"
   name: ci-knative-serving-0.26-s390x-contour-tests
   agent: kubernetes
   decorate: true
@@ -7595,7 +7595,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --contour-version latest"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh contour-026 && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --contour-version latest"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -8608,7 +8608,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "0 11 * * *"
+- cron: "0 9 * * *"
   name: ci-knative-client-s390x-e2e-tests
   agent: kubernetes
   decorate: true
@@ -8633,7 +8633,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-client -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh client-main && kubectl get cm s390x-config-client -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -8671,7 +8671,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 23 * * *"
+- cron: "20 9 * * *"
   name: ci-knative-client-1.0-s390x-e2e-tests
   agent: kubernetes
   decorate: true
@@ -8696,7 +8696,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-client -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh client-10 && kubectl get cm s390x-config-client -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -8736,7 +8736,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 10 * * *"
+- cron: "30 9 * * *"
   name: ci-knative-client-1.1-s390x-e2e-tests
   agent: kubernetes
   decorate: true
@@ -8761,7 +8761,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-client -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh client-11 && kubectl get cm s390x-config-client -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -8801,7 +8801,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 22 * * *"
+- cron: "40 9 * * *"
   name: ci-knative-client-1.2-s390x-e2e-tests
   agent: kubernetes
   decorate: true
@@ -8826,7 +8826,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-client -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh client-12 && kubectl get cm s390x-config-client -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -8866,7 +8866,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "30 3 * * *"
+- cron: "10 9 * * *"
   name: ci-knative-client-0.26-s390x-e2e-tests
   agent: kubernetes
   decorate: true
@@ -8891,7 +8891,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-client -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh client-026 && kubectl get cm s390x-config-client -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -11437,7 +11437,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh eventing-main && kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -11477,7 +11477,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 19 * * *"
+- cron: "20 7 * * *"
   name: ci-knative-eventing-1.0-s390x-e2e-tests
   agent: kubernetes
   decorate: true
@@ -11502,7 +11502,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh eventing-10 && kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -11544,7 +11544,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 6 * * *"
+- cron: "30 7 * * *"
   name: ci-knative-eventing-1.1-s390x-e2e-tests
   agent: kubernetes
   decorate: true
@@ -11569,7 +11569,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh eventing-11 && kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -11611,7 +11611,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 18 * * *"
+- cron: "40 7 * * *"
   name: ci-knative-eventing-1.2-s390x-e2e-tests
   agent: kubernetes
   decorate: true
@@ -11636,7 +11636,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh eventing-12 && kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -11678,7 +11678,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "30 9 * * *"
+- cron: "10 7 * * *"
   name: ci-knative-eventing-0.26-s390x-e2e-tests
   agent: kubernetes
   decorate: true
@@ -11703,7 +11703,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh eventing-026 && kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -17245,7 +17245,7 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "0 5 * * *"
+- cron: "0 11 * * *"
   name: ci-knative-operator-s390x-e2e-tests
   agent: kubernetes
   decorate: true
@@ -17270,7 +17270,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-operator -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh operator-main && kubectl get cm s390x-config-operator -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -17308,7 +17308,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 17 * * *"
+- cron: "20 11 * * *"
   name: ci-knative-operator-1.0-s390x-e2e-tests
   agent: kubernetes
   decorate: true
@@ -17333,7 +17333,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-operator -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh operator-10 && kubectl get cm s390x-config-operator -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -17373,7 +17373,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 8 * * *"
+- cron: "30 11 * * *"
   name: ci-knative-operator-1.1-s390x-e2e-tests
   agent: kubernetes
   decorate: true
@@ -17398,7 +17398,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-operator -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh operator-11 && kubectl get cm s390x-config-operator -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -17438,7 +17438,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "0 20 * * *"
+- cron: "40 11 * * *"
   name: ci-knative-operator-1.2-s390x-e2e-tests
   agent: kubernetes
   decorate: true
@@ -17463,7 +17463,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-operator -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh operator-12 && kubectl get cm s390x-config-operator -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -17503,7 +17503,7 @@ periodics:
     - name: test-account
       secret:
         secretName: test-account
-- cron: "30 11 * * *"
+- cron: "10 11 * * *"
   name: ci-knative-operator-0.26-s390x-e2e-tests
   agent: kubernetes
   decorate: true
@@ -17528,7 +17528,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && server_addr=$(cat /opt/cluster/config) && ssh -o StrictHostKeyChecking=no -i /opt/cluster/knative01.pem linux1@${server_addr} cat /home/linux1/.kube/config > /root/.kube/config && kubectl get cm s390x-config-operator -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh operator-026 && kubectl get cm s390x-config-operator -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
