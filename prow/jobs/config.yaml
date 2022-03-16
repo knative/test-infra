@@ -6978,7 +6978,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh kourier-main && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --kourier-version latest"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && server_addr=$(./connect.sh kourier-main) && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --kourier-version latest"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -7045,7 +7045,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh kourier-10 && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --kourier-version latest"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && server_addr=$(./connect.sh kourier-10) && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --kourier-version latest"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -7114,7 +7114,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh kourier-11 && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --kourier-version latest"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && server_addr=$(./connect.sh kourier-11) && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --kourier-version latest"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -7183,7 +7183,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh kourier-12 && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --kourier-version latest"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && server_addr=$(./connect.sh kourier-12) && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --kourier-version latest"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -7252,7 +7252,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh kourier-13 && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --kourier-version latest"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && server_addr=$(./connect.sh kourier-13) && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --kourier-version latest"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -7321,7 +7321,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh contour-main && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --contour-version latest"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && server_addr=$(./connect.sh contour-main) && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --contour-version latest"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -7388,7 +7388,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh contour-10 && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --contour-version latest"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && server_addr=$(./connect.sh contour-10) && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --contour-version latest"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -7457,7 +7457,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh contour-11 && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --contour-version latest"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && server_addr=$(./connect.sh contour-11) && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --contour-version latest"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -7526,7 +7526,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh contour-12 && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --contour-version latest"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && server_addr=$(./connect.sh contour-12) && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --contour-version latest"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
@@ -7595,7 +7595,7 @@ periodics:
       args:
       - "bash"
       - "-c"
-      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh contour-13 && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --contour-version latest"
+      - "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && server_addr=$(./connect.sh contour-13) && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --contour-version latest"
       volumeMounts:
       - name: s390x-cluster1
         mountPath: /opt/cluster
