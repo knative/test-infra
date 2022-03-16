@@ -39,7 +39,7 @@ func generateK8sTestgrid(metaData TestGridMetaData) {
 	// Regex expression for `knative-0.21`, `knative-sandbox-1.00`
 	reReleaseBranch := regexp.MustCompile(`(knative|knative\-sandbox|google)\-[\d]+\.[\d]+`)
 
-	allReposSet := sets.NewString("name: utilities", "name: beta-prow-tests")
+	allReposSet := sets.NewString("name: utilities")
 	// Sort orgsAndRepos to maintain the output order
 	allOrgs := []string{"maintenance", "prow-tests"}
 	for org := range metaData.md {
@@ -48,7 +48,6 @@ func generateK8sTestgrid(metaData TestGridMetaData) {
 	sort.Strings(allOrgs)
 	orgsAndRepos := map[string][]string{
 		"maintenance": {"utilities"},
-		"prow-tests":  {"beta-prow-tests"},
 	}
 	for org, repos := range metaData.md {
 		// If org name matches release branch then this is a ungrouped
@@ -59,7 +58,7 @@ func generateK8sTestgrid(metaData TestGridMetaData) {
 		renamedReposForOrg := []string{}
 		for repo := range repos {
 			allReposSet.Insert("name: " + repo)
-			if repo == "utilities" || repo == "beta-prow-tests" {
+			if repo == "utilities" {
 				continue
 			}
 			renamedReposForOrg = append(renamedReposForOrg, repo)

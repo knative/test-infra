@@ -80,12 +80,12 @@ func TestGenerateCron(t *testing.T) {
 		{
 			jobType:  "continuous",
 			timeout:  55,
-			expected: fmt.Sprintf("%d */2 * * *", calculateMinuteOffset("continuous", jobName)),
+			expected: fmt.Sprintf("%d */6 * * *", calculateMinuteOffset("continuous", jobName)),
 		},
 		{
 			jobType:  "continuous",
 			timeout:  60 + 55,
-			expected: fmt.Sprintf("%d */3 * * *", calculateMinuteOffset("continuous", jobName)),
+			expected: fmt.Sprintf("%d */9 * * *", calculateMinuteOffset("continuous", jobName)),
 		},
 		{
 			jobType:  "custom-job",

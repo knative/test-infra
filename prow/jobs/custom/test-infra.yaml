@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Add a fake hook image here so that autobump.sh can bump only job configs
-# image: gcr.io/k8s-prow/hook:v20220219-6289bdf4c9
+# image: gcr.io/k8s-prow/hook:v20220310-033172a69b
 # See
 # https://github.com/kubernetes/test-infra/blob/5815354584709c3f436e3d682110c673d224d7b1/prow/cmd/autobump/autobump.sh#L164
 
@@ -62,7 +62,7 @@ presubmits:
       base_ref: master
     spec:
       containers:
-      - image: gcr.io/k8s-prow/configurator:v20220223-a7c3ef700d
+      - image: gcr.io/k8s-prow/configurator:v20220310-033172a69b
         command:
         - configurator
         args:
@@ -71,7 +71,8 @@ presubmits:
         - --default=config/prow/k8s-testgrid/testgrid-common-settings.yaml
         - --yaml=config/prow/k8s-testgrid/k8s-testgrid.yaml
         - --oneshot
-        - --output=./config.pb
+        - --validate-config-file
+
   - name: pull-knative-test-infra-prow-tests-image-build
     agent: kubernetes
     optional: false
@@ -290,7 +291,7 @@ periodics:
       args:
       - "--service-account=/etc/test-account/service-account.json"
       - "--skip-report"
-      - "--build-count=20"
+      - "--build-count=10"
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
@@ -528,7 +529,7 @@ postsubmits:
       testgrid-num-failures-to-alert: "1"
     spec:
       containers:
-      - image: gcr.io/k8s-prow/configurator:v20220223-a7c3ef700d
+      - image: gcr.io/k8s-prow/configurator:v20220310-033172a69b
         command:
         - configurator
         args:

@@ -76,6 +76,7 @@ aliases:
   - knative-prow-robot
   - knative-prow-updater-robot
   - knative-test-reporter-robot
+  - kvmware
   - lance
   - pmorie
   - rhuss
@@ -86,6 +87,7 @@ aliases:
   - xtreme-sameer-vohra
   knative-release-leads:
   - carlisia
+  - kvmware
   - xtreme-sameer-vohra
   knative-robots:
   - knative-prow-releaser-robot
@@ -153,7 +155,6 @@ aliases:
   - efiturri
   - evankanderson
   - gerardo-lc
-  - kvmware
   - mgencur
   - shinigambit
   productivity-wg-leads:
@@ -163,7 +164,9 @@ aliases:
   - chaodaiG
   - chizhg
   - coryrc
+  - kvmware
   - psschwei
+  - upodroid
   security-wg-leads:
   - evankanderson
   - julz
@@ -188,8 +191,6 @@ aliases:
   - julz
   - tcnghia
   - vagababov
-  source-wg-leads:
-  - lionelvillard
   steering-committee:
   - csantanapr
   - itsmurugappan
