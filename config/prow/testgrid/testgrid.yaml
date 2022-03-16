@@ -374,6 +374,12 @@ test_groups:
   alert_options:
     alert_mail_to_addresses: "serverless-engprod-sea@google.com"
   num_failures_to_alert: 3
+- name: ci-knative-eventing-1.2-dot-release
+  gcs_prefix: knative-prow/logs/ci-knative-eventing-1.2-dot-release
+  alert_options:
+    alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+  alert_stale_results_hours: 170
+  num_failures_to_alert: 1
 - name: ci-knative-eventing-1.2-s390x-e2e-tests
   gcs_prefix: knative-prow/logs/ci-knative-eventing-1.2-s390x-e2e-tests
   alert_stale_results_hours: 3
@@ -2603,6 +2609,12 @@ dashboards:
     num_failures_to_alert: 3
   - name: eventing-continuous
     test_group_name: ci-knative-eventing-1.2-continuous
+    base_options: "sort-by-name="
+    alert_options:
+      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
+    num_failures_to_alert: 3
+  - name: eventing-dot-release
+    test_group_name: ci-knative-eventing-1.2-dot-release
     base_options: "sort-by-name="
     alert_options:
       alert_mail_to_addresses: "serverless-engprod-sea@google.com"
