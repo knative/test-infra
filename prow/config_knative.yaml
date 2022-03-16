@@ -670,7 +670,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-kourier-tests
     release: "1.0"
-    cron: 20 3 * * *
+    cron: 10 7 * * *
     command:
     - bash
     args:
@@ -689,7 +689,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-kourier-tests
     release: "1.1"
-    cron: 30 3 * * *
+    cron: 20 11 * * *
     command:
     - bash
     args:
@@ -708,7 +708,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-kourier-tests
     release: "1.2"
-    cron: 40 3 * * *
+    cron: 30 15 * * *
     command:
     - bash
     args:
@@ -726,13 +726,13 @@ periodics:
     external_cluster:
       secret: s390x-cluster1
   - custom-job: s390x-kourier-tests
-    release: "0.26"
-    cron: 10 3 * * *
+    release: "1.3"
+    cron: 40 19 * * *
     command:
     - bash
     args:
     - -c
-    - mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh kourier-026 && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --kourier-version latest
+    - mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh kourier-13 && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --kourier-version latest
     env-vars:
     - GO111MODULE="on"
     - TEST_OPTIONS="--enable-alpha --enable-beta --resolvabledomain=false"
@@ -764,7 +764,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-contour-tests
     release: "1.0"
-    cron: 20 5 * * *
+    cron: 10 9 * * *
     command:
     - bash
     args:
@@ -783,7 +783,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-contour-tests
     release: "1.1"
-    cron: 30 5 * * *
+    cron: 20 13 * * *
     command:
     - bash
     args:
@@ -802,7 +802,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-contour-tests
     release: "1.2"
-    cron: 40 5 * * *
+    cron: 30 17 * * *
     command:
     - bash
     args:
@@ -820,13 +820,13 @@ periodics:
     external_cluster:
       secret: s390x-cluster1
   - custom-job: s390x-contour-tests
-    release: "0.26"
-    cron: 10 5 * * *
+    release: "1.3"
+    cron: 40 21 * * *
     command:
     - bash
     args:
     - -c
-    - mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh contour-026 && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --contour-version latest
+    - mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh contour-13 && kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr} && ./test/e2e-tests.sh --run-tests --contour-version latest
     env-vars:
     - GO111MODULE="on"
     - TEST_OPTIONS="--enable-alpha --enable-beta --resolvabledomain=false"
@@ -908,7 +908,7 @@ periodics:
     release: "1.3"
   - auto-release: true
   - custom-job: s390x-e2e-tests
-    cron: 0 9 * * *
+    cron: 0 14 * * *
     command:
     - bash
     args:
@@ -925,7 +925,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
     release: "1.0"
-    cron: 20 9 * * *
+    cron: 10 18 * * *
     command:
     - bash
     args:
@@ -942,7 +942,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
     release: "1.1"
-    cron: 30 9 * * *
+    cron: 20 22 * * *
     command:
     - bash
     args:
@@ -959,7 +959,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
     release: "1.2"
-    cron: 40 9 * * *
+    cron: 30 2 * * *
     command:
     - bash
     args:
@@ -975,13 +975,13 @@ periodics:
     external_cluster:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
-    release: "0.26"
-    cron: 10 9 * * *
+    release: "1.3"
+    cron: 40 6 * * *
     command:
     - bash
     args:
     - -c
-    - mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh client-026 && kubectl get cm s390x-config-client -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests
+    - mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh client-13 && kubectl get cm s390x-config-client -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests
     env-vars:
     - DISABLE_MD_LINTING="1"
     - KO_FLAGS="--platform=linux/s390x"
@@ -1130,7 +1130,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
     release: "1.0"
-    cron: 20 7 * * *
+    cron: 10 11 * * *
     command:
     - bash
     args:
@@ -1148,7 +1148,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
     release: "1.1"
-    cron: 30 7 * * *
+    cron: 20 15 * * *
     command:
     - bash
     args:
@@ -1166,7 +1166,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
     release: "1.2"
-    cron: 40 7 * * *
+    cron: 30 19 * * *
     command:
     - bash
     args:
@@ -1183,13 +1183,13 @@ periodics:
     external_cluster:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
-    release: "0.26"
-    cron: 10 7 * * *
+    release: "1.3"
+    cron: 40 23 * * *
     command:
     - bash
     args:
     - -c
-    - mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh eventing-026 && kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests
+    - mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh eventing-13 && kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests
     env-vars:
     - DISABLE_MD_LINTING="1"
     - KO_FLAGS="--platform=linux/s390x"
@@ -1508,7 +1508,7 @@ periodics:
         memory: 16Gi
   - auto-release: true
   - custom-job: s390x-e2e-tests
-    cron: 0 11 * * *
+    cron: 0 16 * * *
     command:
     - bash
     args:
@@ -1525,7 +1525,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
     release: "1.0"
-    cron: 20 11 * * *
+    cron: 10 20 * * *
     command:
     - bash
     args:
@@ -1542,7 +1542,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
     release: "1.1"
-    cron: 30 11 * * *
+    cron: 20 0 * * *
     command:
     - bash
     args:
@@ -1559,7 +1559,7 @@ periodics:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
     release: "1.2"
-    cron: 40 11 * * *
+    cron: 30 4 * * *
     command:
     - bash
     args:
@@ -1575,13 +1575,13 @@ periodics:
     external_cluster:
       secret: s390x-cluster1
   - custom-job: s390x-e2e-tests
-    release: "0.26"
-    cron: 10 11 * * *
+    release: "1.3"
+    cron: 40 8 * * *
     command:
     - bash
     args:
     - -c
-    - mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh operator-026 && kubectl get cm s390x-config-operator -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests
+    - mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh operator-13 && kubectl get cm s390x-config-operator -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests
     env-vars:
     - DISABLE_MD_LINTING="1"
     - KO_FLAGS="--platform=linux/s390x"
