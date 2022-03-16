@@ -1064,6 +1064,8 @@ periodics:
   - branch-ci: true
     release: "1.1"
   - branch-ci: true
+    release: "1.2"
+  - branch-ci: true
     release: "1.3"
   - nightly: true
     reporter_config:
