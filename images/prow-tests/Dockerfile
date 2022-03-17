@@ -15,12 +15,13 @@
 FROM debian:bullseye-20220228-slim AS base
 
 # Pinned versions of stuff we pull in
-ARG CLOUD_SDK_VERSION=368.0.0
+ARG CLOUD_SDK_VERSION=377.0.0
 ARG KUBECTL_VERSION=v1.21.4
 ARG DOCKER_VERSION=5:20.10.9~3-0~debian-bullseye
 ARG MAVEN_VERSION=3.8.4
 ARG JAVA_VERSION=16
 ARG PROTOC_VERSION=3.17.0
+ARG TFENV_VERSION=v2.2.3
 ARG COMMIT_HASH
 
 RUN echo "${COMMIT_HASH}" > /commit_hash
@@ -75,6 +76,10 @@ RUN gcloud config set core/disable_usage_reporting true && \
 # kubectl
 RUN curl -fsSL "https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -o /usr/local/bin/kubectl && \
     chmod +x /usr/local/bin/kubectl
+
+# tfenv
+RUN git clone -b ${TFENV_VERSION} https://github.com/tfutils/tfenv.git ~/.tfenv && \
+    ln -s ~/.tfenv/bin/* /usr/local/bin
 
 #
 # BEGIN: DOCKER IN DOCKER SETUP

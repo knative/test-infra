@@ -17,11 +17,11 @@ include ../simple-image.mk
 
 push: confirm-main
 	gcloud builds submit --config=./cloudbuild.yaml --substitutions=_TAG=$(TAG),_IMG=$(IMG),_COMMIT_HASH=$(COMMIT_HASH) \
-		--machine-type=n1-highcpu-8 \
+		--machine-type=e2-highcpu-8 \
 		--project=$(PROJECT) --timeout=1h ./../..
 
 # Build target for validating prow-tests image build in presubmit.
 build-ci-test:
 	gcloud builds submit --config=./cloudbuild-test.yaml --substitutions=_TAG=$(TAG),_IMG=$(IMG),_COMMIT_HASH=$(COMMIT_HASH)  \
-		--machine-type=n1-highcpu-8 \
+		--machine-type=e2-highcpu-8 \
 		--project=$(PROJECT) --timeout=1h ./../..
