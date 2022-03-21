@@ -21,7 +21,6 @@ package main
 
 var (
 	customJobnames = []string{
-		"ci-knative-backup-artifacts",
 		"ci-knative-cleanup",
 		"ci-knative-flakes-reporter",
 		"ci-knative-flakes-resultsrecorder",

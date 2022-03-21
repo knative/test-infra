@@ -1330,11 +1330,6 @@ test_groups:
 - name: ci-google-knative-gcp-test-coverage
   gcs_prefix: knative-prow/logs/ci-google-knative-gcp-go-coverage
   short_text_metric: "coverage"
-- name: ci-knative-backup-artifacts
-  gcs_prefix: knative-prow/logs/ci-knative-backup-artifacts
-  alert_options:
-      alert_mail_to_addresses: "serverless-engprod-sea@google.com"
-  num_failures_to_alert: 1
 - name: ci-knative-cleanup
   gcs_prefix: knative-prow/logs/ci-knative-cleanup
   alert_options:
@@ -3055,9 +3050,6 @@ dashboards:
     num_failures_to_alert: 3
 - name: utilities
   dashboard_tab:
-  - name: ci-knative-backup-artifacts
-    test_group_name: ci-knative-backup-artifacts
-    base_options: ""
   - name: ci-knative-cleanup
     test_group_name: ci-knative-cleanup
     base_options: ""

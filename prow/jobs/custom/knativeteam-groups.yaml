@@ -1,0 +1,84 @@
+presubmits:
+  knative/community:
+  - name: pull-knativeteam-groups-test
+    decorate: true
+    run_if_changed: "^groups/"
+    branches:
+    - ^main$
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        command:
+        - runner.sh
+        args:
+        - make
+        - -C
+        - ./groups
+        - test
+        env:
+        - name: GO111MODULE
+          value: "on"
+
+periodics:
+- cron: "0 */6 * * *" # Every 6 hours
+  name: ci-knativeteam-groups
+  cluster: prow-trusted
+  decorate: true
+  max_concurrency: 1
+  extra_refs:
+  - org: knative
+    repo: community
+    base_ref: main
+  annotations:
+      testgrid-dashboards: utilities
+      testgrid-tab-name: ci-knativeteam-groups-jobs
+      testgrid-alert-email: "serverless-engprod-sea@google.com"
+  rerun_auth_config:
+    github_team_slugs:
+    - org: knative
+      slug: productivity-infra-admins
+  spec:
+    serviceAccountName: gsuite-groups-manager
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      command:
+      - runner.sh
+      args:
+      - make
+      - -C
+      - groups
+      - run
+      - --
+      - --confirm
+
+postsubmits:
+  knative/community:
+  - name: post-knativeteam-groups
+    cluster: prow-trusted
+    decorate: true
+    max_concurrency: 1
+    run_if_changed: '^groups/'
+    branches:
+    - ^main$
+    annotations:
+      testgrid-dashboards: utilities
+      testgrid-tab-name: post-knativeteam-groups-jobs
+      testgrid-alert-email: "serverless-engprod-sea@google.com"
+      testgrid-num-failures-to-alert: '1'
+    rerun_auth_config:
+      github_team_slugs:
+      - org: knative
+        slug: productivity-infra-admins
+    spec:
+      serviceAccountName: gsuite-groups-manager
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+        command:
+        - runner.sh
+        args:
+        - make
+        - -C
+        - groups
+        - run
+        - --
+        - --confirm
