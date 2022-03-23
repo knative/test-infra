@@ -18,7 +18,6 @@ package helpers
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"strings"
@@ -51,16 +50,6 @@ func GetRootDir() (string, error) {
 		return "", err
 	}
 	return strings.TrimSpace(string(output)), nil
-}
-
-// MustGetRootDir gets directory of git root.
-// Fatal if it fails.
-func MustGetRootDir() string {
-	root, err := GetRootDir()
-	if err != nil {
-		log.Fatalf("Error getting root dir: %v", err)
-	}
-	return root
 }
 
 // ChdirToRoot change directory to git root dir

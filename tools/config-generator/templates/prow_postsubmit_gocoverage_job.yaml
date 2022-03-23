@@ -1,0 +1,21 @@
+  - name: [[.PostsubmitJobName]]
+    [[indent_array_section 4 "branches" .Base.Branches]]
+    annotations:
+      testgrid-create-test-group: "false"
+    agent: kubernetes
+    decorate: true
+    [[.Base.Cluster]]
+    [[indent_section 8 "labels" .Base.Labels]]
+    [[.Base.PathAlias]]
+    spec:
+      containers:
+      - image: [[.Base.Image]]
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "coverage"
+        - "--artifacts=$(ARTIFACTS)"
+        - "--cov-threshold-percentage=0"
+        [[indent_section 8 "resources" .Base.Resources]]
+        [[indent_section 8 "env" .Base.Env]]

@@ -31,18 +31,19 @@ All Prow config files for running Prow jobs for Knative projects are under
 1. Make sure that _Knative Prow Robots_ team is an Admin of the repo.
 
 1. Add the new repo to
-   [jobs_config](../prow/jobs_config), the meta
+   [config_knative.yaml](../prow/config_knative.yaml), the meta
    config file for generating Prow config and Prow job config. Check the
    top-level section `presubmits:` and `periodics:` for blueprints for what to
    add. Then run `./hack/generate-configs.sh` to regenerate
-   [prow/jobs/generated](../prow/jobs/generated), otherwise the presubmit
+   [prow/jobs/config.yaml](../prow/jobs/config.yaml) and
+   [prow/core](../prow/core), otherwise the presubmit
    test in test-infra will fail. Create a PR with the changes. Once it's merged
    the configs will be automatically updated by a postsubmit job.
 
-1. Wait a few minutes, check that Prow is working by entering `/woof` as a
+2. Wait a few minutes, check that Prow is working by entering `/woof` as a
    comment in any PR in the new repo.
 
-1. Set **tide** as a required status check for the default branch.
+3. Set **tide** as a required status check for the default branch.
 
    ![Branch Checks](branch_checks.png)
 
@@ -52,7 +53,7 @@ All Prow config files for running Prow jobs for Knative projects are under
    `//test/presubmit-tests.sh` working, and optionally `//hack/release.sh`
    working for automated nightly releases).
 
-1. Update [jobs_config](../prow/jobs_config)
+2. Update [config_knative.yaml](../prow/config_knative.yaml)
    (usually, copy and update the existing configuration from another
    repository). Run `./hack/generate-configs.sh` to regenerate
    [prow/jobs/config.yaml](../prow/jobs/config.yaml),
@@ -60,10 +61,10 @@ All Prow config files for running Prow jobs for Knative projects are under
    changes. Once it's merged the configs will be automatically updated by a
    postsubmit job.
 
-1. Wait a few minutes, enter `/test [prow_job_name]` or `/test all` or `/retest`
+3. Wait a few minutes, enter `/test [prow_job_name]` or `/test all` or `/retest`
    as a comment in any PR in the repo and ensure the test jobs are executed.
 
-1. Optionally, set the new test jobs as required status checks for the default
+4. Optionally, set the new test jobs as required status checks for the default
    branch.
 
    ![Branch Checks](branch_checks.png)

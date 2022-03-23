@@ -1,5 +1,3 @@
-# README
-
 ## Knative prow
 
 This directory contains prow configs hosted for Knative. This prow is bumped by knative-autobump-config.yaml which uses [Kubernetes generic-autobumper](https://github.com/kubernetes/test-infra/tree/master/prow/cmd/generic-autobumper).
@@ -7,8 +5,8 @@ This directory contains prow configs hosted for Knative. This prow is bumped by 
 - `Makefile` Commands to interact with the Prow instance regarding configs and
   updates.
 - `cluster/*.yaml` Deployments of the Prow cluster.
-- `jobs/generated` Generated configuration of the Prow jobs.
-- `jobs_config` Input configuration for `configgen` tool.
+- `jobs/config.yaml` Generated configuration of the Prow jobs.
+- `config_knative.yaml` Input configuration for `config-generator` tool.
 - `jobs/run_job.sh` Convenience script to start a Prow job from command-line.
 - `jobs/pj-on-kind.sh` Convenience script to start a Prow job on kind from
   command-line.
