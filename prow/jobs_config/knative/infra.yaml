@@ -1,0 +1,7 @@
+org: knative
+repo: infra
+branches: [main]
+image: gcr.io/knative-tests/test-infra/prow-tests:stable
+imagePullPolicy: Always
+
+jobs:
