@@ -24,7 +24,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"sigs.k8s.io/yaml"
+	yaml "gopkg.in/yaml.v2"
 )
 
 // configFile saves all information we need, this path is caller based

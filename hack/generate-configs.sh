@@ -19,14 +19,17 @@ set -Eeuo pipefail
 REPO_ROOT_DIR="$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")"
 
 # Generate Prow configs since we are using generator
-readonly CONFIG_GENERATOR_DIR="${REPO_ROOT_DIR}/tools/configgen"
+readonly CONFIG_GENERATOR_DIR="${REPO_ROOT_DIR}/tools/config-generator"
 
-# Clean up existing generated config files.
-rm -rf "${REPO_ROOT_DIR}/prow/jobs/generated/*"
-
-# Generate config for Prow jobs and TestGrid
-cd "${CONFIG_GENERATOR_DIR}" && go run . \
-    --prow-jobs-config-input="${REPO_ROOT_DIR}/prow/jobs_config" \
-    --prow-jobs-config-output="${REPO_ROOT_DIR}/prow/jobs/generated" \
-    --all-prow-jobs-config="${REPO_ROOT_DIR}/prow/jobs" \
-    --testgrid-config-output="${REPO_ROOT_DIR}/config/prow/k8s-testgrid/k8s-testgrid.yaml"
+# Generate config for production Prow
+go run "${CONFIG_GENERATOR_DIR}" \
+    --gcs-bucket="knative-prow" \
+    --generate-testgrid-config=true \
+    --generate-k8s-testgrid-config=true \
+    --image-docker=gcr.io/knative-tests/test-infra \
+    --prow-host=https://prow.knative.dev \
+    --testgrid-gcs-bucket="knative-testgrid" \
+    --prow-jobs-config-output="${REPO_ROOT_DIR}/prow/jobs/config.yaml" \
+    --testgrid-config-output="${REPO_ROOT_DIR}/config/prow/testgrid/testgrid.yaml" \
+    --k8s-testgrid-config-output="${REPO_ROOT_DIR}/config/prow/k8s-testgrid/k8s-testgrid.yaml" \
+    "${REPO_ROOT_DIR}/prow/config_knative.yaml"

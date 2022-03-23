@@ -45,9 +45,9 @@ of:
   [`./hack/update-codegen.sh`](./hack/update-codegen.sh). Inputs include:
 
   - Prow configs templates
-    [prow/jobs_config](./prow/jobs_config).
+    [prow/config_knative.yaml](./prow/config_knative.yaml).
 
-  - Prow configs generator [tools/configgen](./tools/configgen).
+  - Prow configs generator [tools/config-generator](./tools/config-generator).
 
 - **If you change a package's deps** (including adding an external dependency),
   then you must run [`./hack/update-deps.sh`](./hack/update-deps.sh).

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 jobConfigs:
-  - name: continuous_serving_main_periodic
+  - name: ci-knative-serving-continuous
     org: knative
     repo: serving
     type: postsubmit
@@ -21,49 +21,49 @@ jobConfigs:
     slackChannels:
       - name: serving-api
         identity: CA4DNJ9A4
-  - name: istio-latest-mesh_serving_main_periodic
+  - name: ci-knative-serving-istio-latest-mesh
     org: knative
     repo: serving
     type: postsubmit
     slackChannels:
       - name: net-istio
         identity: C012AK2FPK7
-  - name: istio-latest-no-mesh_serving_main_periodic
+  - name: ci-knative-serving-istio-latest-no-mesh
     org: knative
     repo: serving
     type: postsubmit
     slackChannels:
       - name: net-istio
         identity: C012AK2FPK7
-  - name: contour-latest_serving_main_periodic
+  - name: ci-knative-serving-contour-latest
     org: knative
     repo: serving
     type: postsubmit
     slackChannels:
       - name: net-contour
         identity: C012J5TCS6Q
-  - name: s390x-contour-tests_serving_main_periodic
+  - name: ci-knative-serving-s390x-contour-tests
     org: knative
     repo: serving
     type: postsubmit
     slackChannels:
       - name: s390x
         identity: C027YB4QUUU
-  - name: kourier-stable_serving_main
+  - name: ci-knative-serving-kourier-stable
     org: knative
     repo: serving
     type: postsubmit
     slackChannels:
       - name: net-kourier
         identity: C012C0VQJAW
-  - name: s390x-kourier-tests_serving_main_periodic
+  - name: ci-knative-serving-s390x-kourier-tests
     org: knative
     repo: serving
     type: postsubmit
     slackChannels:
       - name: s390x
         identity: C027YB4QUUU
-  - name: continuous_eventing_main_periodic
+  - name: ci-knative-eventing-continuous
     org: knative
     repo: eventing
     type: postsubmit
@@ -71,26 +71,34 @@ jobConfigs:
     slackChannels:
       - name: eventing
         identity: C9JP909F0
-  - name: s390x-e2e-tests_eventing_main_periodic
+  - name: ci-knative-eventing-s390x-e2e-tests
     org: knative
     repo: eventing
     type: postsubmit
     slackChannels:
       - name: s390x
         identity: C027YB4QUUU
-  - name: continuous_eventing-kafka-broker_main_periodic
+  - name: ci-knative-sandbox-eventing-kafka-broker-continuous
     org: knative-sandbox
     repo: eventing-kafka-broker
     type: postsubmit
     issueRepo: eventing-kafka-broker
-  - name: s390x-e2e-tests_operator_main_periodic
+  - name: ci-knative-test-infra-continuous
+    org: knative
+    repo: test-infra
+    type: postsubmit
+  - name: ci-google-knative-gcp-continuous
+    org: google
+    repo: knative-gcp
+    type: postsubmit
+  - name: ci-knative-operator-s390x-e2e-tests
     org: knative
     repo: operator
     type: postsubmit
     slackChannels:
       - name: s390x
         identity: C027YB4QUUU
-  - name: s390x-e2e-tests_client_main_periodic
+  - name: ci-knative-client-s390x-e2e-tests
     org: knative
     repo: client
     type: postsubmit
