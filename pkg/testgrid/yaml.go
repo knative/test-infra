@@ -19,39 +19,35 @@ package testgrid
 import (
 	"fmt"
 	"io/ioutil"
-	"path"
 
-	"gopkg.in/yaml.v2"
-
-	"knative.dev/test-infra/pkg/helpers"
+	"sigs.k8s.io/yaml"
 )
-
-const configPath = "config/prow/testgrid/testgrid.yaml"
 
 // Config is entire testgrid config
 type Config struct {
-	Dashboards []Dashboard `yaml:"dashboards"`
+	Dashboards      []Dashboard      `json:"dashboards"`
+	DashboardGroups []DashboardGroup `json:"dashboard_groups"`
+}
+
+// DashboardGroup is a group of dashboards on testgrid
+type DashboardGroup struct {
+	// The name for the dashboard group.
+	Name string `json:"name"`
+	// A list of names specifying dashboards to show links to in a separate tabbed
+	// bar at the top of the page for each of the given dashboards.
+	DashboardNames []string `json:"dashboard_names"`
 }
 
 // Dashboard is single dashboard on testgrid
 type Dashboard struct {
-	Name string `yaml:"name"`
-	Tabs []Tab  `yaml:"dashboard_tab"`
+	Name         string          `json:"name"`
+	DashboardTab []*DashboardTab `json:"dashboard_tab,omitempty"`
 }
 
-// Tab is a single tab on testgrid
-type Tab struct {
-	Name          string `yaml:"name"`
-	TestGroupName string `yaml:"test_group_name"`
-}
-
-// NewConfig loads from default config
-func NewConfig() (*Config, error) {
-	root, err := helpers.GetRootDir()
-	if err != nil {
-		return nil, err
-	}
-	return NewConfigFromFile(path.Join(root, configPath))
+// DashboardTab is a single tab on testgrid
+type DashboardTab struct {
+	Name          string `json:"name"`
+	TestGroupName string `json:"test_group_name"`
 }
 
 // NewConfigFromFile loads config from file
@@ -71,7 +67,7 @@ func NewConfigFromFile(fp string) (*Config, error) {
 // (generally this is prow job name)
 func (ac *Config) GetTabRelURL(tgName string) (string, error) {
 	for _, dashboard := range ac.Dashboards {
-		for _, tab := range dashboard.Tabs {
+		for _, tab := range dashboard.DashboardTab {
 			if tab.TestGroupName == tgName {
 				return fmt.Sprintf("%s#%s", dashboard.Name, tab.Name), nil
 			}

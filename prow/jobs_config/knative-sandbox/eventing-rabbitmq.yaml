@@ -1,0 +1,29 @@
+org: knative-sandbox
+repo: eventing-rabbitmq
+branches: [main]
+image: gcr.io/knative-tests/test-infra/prow-tests:stable
+imagePullPolicy: Always
+
+jobs:
+  - name: continuous
+    types: [periodic]
+    command: [runner.sh, ./test/presubmit-tests.sh, --all-tests]
+
+  - name: nightly
+    types: [periodic]
+    command: [runner.sh, ./hack/release.sh, --publish, --tag-release]
+    requirements: [nightly]
+    excluded_requirements: [gcp]
+    reporter_config:
+      slack:
+        channel: eventing-rabbitmq
+        job_states_to_report:
+        - failure
+        report_template: |
+          "The nightly release job for eventing-rabbitmq failed, check the log: <{{.Status.URL}}|View logs>"
+
+  - name: release
+    types: [periodic]
+    command: [runner.sh, ./hack/release.sh, --auto-release, --release-gcs, knative-releases/eventing-rabbitmq, --release-gcr, gcr.io/knative-releases, --github-token, /etc/hub-token/token]
+    requirements: [release]
+    excluded_requirements: [gcp]

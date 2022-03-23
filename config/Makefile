@@ -23,9 +23,6 @@ PROW_GCS      ?= knative-prow
 PROW_HOST     ?= https://prow.knative.dev
 TESTGRID_GCS  ?= knative-testgrid
 
-KNATIVE_CONFIG   ?= config_knative.yaml
-TESTGRID_CONFIG  ?= prow/testgrid/testgrid.yaml
-
 CLUSTER           ?= prow
 BUILD_CLUSTER     ?= knative-prow-build-cluster
 ZONE              ?= us-central1-f

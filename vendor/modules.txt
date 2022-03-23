@@ -422,7 +422,6 @@ gopkg.in/check.v1
 # gopkg.in/warnings.v0 v0.1.2
 gopkg.in/warnings.v0
 # gopkg.in/yaml.v2 v2.3.0
-## explicit
 gopkg.in/yaml.v2
 # k8s.io/apimachinery v0.19.7
 ## explicit
@@ -443,4 +442,5 @@ sigs.k8s.io/boskos/client
 sigs.k8s.io/boskos/common
 sigs.k8s.io/boskos/storage
 # sigs.k8s.io/yaml v1.2.0
+## explicit
 sigs.k8s.io/yaml
