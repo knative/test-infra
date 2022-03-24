@@ -27,12 +27,12 @@ const (
 
 // jobNameTestgridURLMap contains harded coded mapping of job name: Testgrid tab URL relative to base URL
 var jobNameTestgridURLMap = map[string]string{
-	"ci-knative-serving-continuous":           "serving#continuous",
-	"ci-knative-serving-istio-latest-mesh":    "serving#istio-latest-mesh",
-	"ci-knative-serving-istio-latest-no-mesh": "serving#istio-latest-no-mesh",
-	"ci-knative-serving-kourier-stable":       "serving#kourier-stable",
-	"ci-knative-serving-contour-latest":       "serving#contour-latest",
-	"ci-knative-serving-gateway-api-latest":   "serving#gateway-api-latest",
+	"continuous_serving_main_periodic":           "serving#continuous",
+	"istio-latest-mesh-serving_main_periodic":    "serving#istio-latest-mesh",
+	"istio-latest-no-mesh-serving_main_periodic": "serving#istio-latest-no-mesh",
+	"kourier-stable-serving_main_periodic":       "serving#kourier-stable",
+	"contour-latest-serving_main_periodic":       "serving#contour-latest",
+	"gateway-api-latest-serving_main_periodic":   "serving#gateway-api-latest",
 }
 
 // GetTestgridTabURL gets Testgrid URL for giving job and filters for Testgrid

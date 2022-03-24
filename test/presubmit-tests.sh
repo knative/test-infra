@@ -34,6 +34,11 @@ function post_build_tests() {
   return ${failed}
 }
 
+function post_unit_tests() {
+  local CONFIG_GENERATOR_DIR="${REPO_ROOT_DIR}/tools/configgen"
+  cd "${CONFIG_GENERATOR_DIR}" && report_go_test -race -count 1 ./...
+}
+
 # We use the default integration test runner.
 
 main "$@"

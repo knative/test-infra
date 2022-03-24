@@ -1,0 +1,20 @@
+org: knative-sandbox
+repo: reconciler-test
+branches: [main]
+image: gcr.io/knative-tests/test-infra/prow-tests:stable
+imagePullPolicy: Always
+
+jobs:
+  - name: build-tests
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --build-tests]
+    excluded_requirements: [gcp]
+
+  - name: unit-tests
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --unit-tests]
+    excluded_requirements: [gcp]
+
+  - name: integration-tests
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --integration-tests]
