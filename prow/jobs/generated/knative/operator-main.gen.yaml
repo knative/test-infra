@@ -187,6 +187,8 @@ periodics:
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
       image: gcr.io/knative-tests/test-infra/prow-tests:stable
       name: ""
       resources: {}

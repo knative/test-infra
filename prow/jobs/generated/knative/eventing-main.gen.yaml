@@ -52,7 +52,7 @@ periodics:
     testgrid-dashboards: eventing
     testgrid-tab-name: s390x-e2e-tests
   cluster: build-knative
-  cron: 0 5 * * *
+  cron: 26 9 * * *
   decorate: true
   extra_refs:
   - base_ref: main
@@ -201,6 +201,8 @@ periodics:
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
       image: gcr.io/knative-tests/test-infra/prow-tests:stable
       name: ""
       resources:

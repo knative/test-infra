@@ -39,7 +39,7 @@ jobs:
   - runner.sh
   - ./test/presubmit-tests.sh
   - --run-test
-  - ./test/e2e-upgrade-tests.sh
+  - ./test/upgrade-tests.sh
   name: upgrade-tests
   requirements:
   - docker

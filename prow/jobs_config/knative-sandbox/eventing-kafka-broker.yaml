@@ -22,7 +22,7 @@ jobs:
 
   - name: upgrade-tests
     types: [presubmit]
-    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/e2e-upgrade-tests.sh"]
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/upgrade-tests.sh"]
     requirements: [docker]
 
   - name: reconciler-tests
