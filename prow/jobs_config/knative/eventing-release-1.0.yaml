@@ -74,7 +74,6 @@ jobs:
     ./test/e2e-tests.sh --run-tests
   command:
   - runner.sh
-  cron: 0 5 * * *
   env:
   - name: SYSTEM_NAMESPACE
     value: knative-eventing

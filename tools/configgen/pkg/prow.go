@@ -31,16 +31,21 @@ import (
 func GenerateProwJobsConfig(prowJobsConfigInput, prowJobsConfigOutput string) error {
 
 	bc := prowgenpkg.ReadBase(nil, filepath.Join(prowJobsConfigInput, ".base.yaml"))
-	cli := &prowgenpkg.Client{
-		BaseConfig:          bc,
-		LongJobNamesAllowed: true,
-	}
 
 	if err := filepath.WalkDir(prowJobsConfigInput, func(path string, d os.DirEntry, err error) error {
 		log.Printf("Generating Prow jobs for %q", path)
 		// Skip directory, base config file and other unrelated files.
 		if d.IsDir() || d.Name() == ".base.yaml" || !strings.HasSuffix(path, ".yaml") {
 			return nil
+		}
+
+		baseConfig := bc
+		if _, err := os.Stat(filepath.Join(filepath.Dir(path), ".base.yaml")); !os.IsNotExist(err) {
+			baseConfig = prowgenpkg.ReadBase(&baseConfig, filepath.Join(filepath.Dir(path), ".base.yaml"))
+		}
+		cli := &prowgenpkg.Client{
+			BaseConfig:          baseConfig,
+			LongJobNamesAllowed: true,
 		}
 
 		jobsConfig := cli.ReadJobsConfig(path)

@@ -35,7 +35,6 @@ jobs:
 
   - name: s390x-e2e-tests
     types: [periodic]
-    cron: 0 5 * * *
     requirements: [s390x]
     command: [runner.sh]
     args:

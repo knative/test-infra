@@ -1,0 +1,24 @@
+requirement_presets:
+  release:
+    env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      # ORG_NAME must be set to knative-sandbox, overwriting the preset in root .base.yaml
+      - name: ORG_NAME
+        value: knative-sandbox
+    volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+    volumes:
+      - name: hub-token
+        secret:
+          secretName: hub-token
+      - name: release-account
+        secret:
+          secretName: release-account
