@@ -64,7 +64,14 @@ jobs:
   - bash
   - -c
   - |
-    "mkdir -p /root/.kube && cat /opt/cluster/ci-script > connect.sh && chmod +x connect.sh && ./connect.sh eventing-main && kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh && chmod +x adjust.sh && ./adjust.sh && ./test/e2e-tests.sh --run-tests"
+    mkdir -p /root/.kube
+    cat /opt/cluster/ci-script > connect.sh
+    chmod +x connect.sh
+    ./connect.sh eventing-main
+    kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
+    chmod +x adjust.sh
+    ./adjust.sh
+    ./test/e2e-tests.sh --run-tests
   command:
   - runner.sh
   cron: 0 5 * * *
