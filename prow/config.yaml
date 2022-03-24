@@ -229,6 +229,10 @@ branch-protection:
       repos:
         .github:
           protect: false
+        serving:
+          required_status_checks:
+            contexts:
+            - "Build (1.17.x, ubuntu-latest)"  
 
     google:
       repos:
