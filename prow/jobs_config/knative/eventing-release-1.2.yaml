@@ -80,6 +80,7 @@ jobs:
   - name: SCALE_CHAOSDUCK_TO_ZERO
     value: "1"
   name: s390x-e2e-tests
+  cron: 30 19 * * *
   requirements:
   - s390x
   types:
