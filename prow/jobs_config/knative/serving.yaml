@@ -145,6 +145,7 @@ jobs:
     command:
     - runner.sh
     args:
+    - ./test/presubmit-tests.sh
     - --run-test
     - ./test/e2e-tests.sh --kourier-version stable
     - --run-test
@@ -155,6 +156,7 @@ jobs:
     command:
     - runner.sh
     args:
+    - ./test/presubmit-tests.sh
     - --run-test
     - ./test/e2e-tests.sh --contour-version latest
     - --run-test
@@ -165,6 +167,7 @@ jobs:
     command:
     - runner.sh
     args:
+    - ./test/presubmit-tests.sh
     - --run-test
     - ./test/e2e-tests.sh --gateway-api-version latest
 
@@ -173,6 +176,7 @@ jobs:
     command:
     - runner.sh
     args:
+    - ./test/presubmit-tests.sh
     - --run-test
     - ./test/e2e-tests.sh --https
     - --run-test

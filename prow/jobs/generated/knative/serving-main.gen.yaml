@@ -249,6 +249,7 @@ periodics:
   spec:
     containers:
     - args:
+      - ./test/presubmit-tests.sh
       - --run-test
       - ./test/e2e-tests.sh --kourier-version stable
       - --run-test
@@ -294,6 +295,7 @@ periodics:
   spec:
     containers:
     - args:
+      - ./test/presubmit-tests.sh
       - --run-test
       - ./test/e2e-tests.sh --contour-version latest
       - --run-test
@@ -339,6 +341,7 @@ periodics:
   spec:
     containers:
     - args:
+      - ./test/presubmit-tests.sh
       - --run-test
       - ./test/e2e-tests.sh --gateway-api-version latest
       command:
@@ -382,6 +385,7 @@ periodics:
   spec:
     containers:
     - args:
+      - ./test/presubmit-tests.sh
       - --run-test
       - ./test/e2e-tests.sh --https
       - --run-test
