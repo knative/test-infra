@@ -49,7 +49,7 @@ jobConfigs:
     slackChannels:
       - name: s390x
         identity: C027YB4QUUU
-  - name: kourier-stable_serving_main
+  - name: kourier-stable_serving_main_periodic
     org: knative
     repo: serving
     type: postsubmit
