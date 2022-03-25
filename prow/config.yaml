@@ -219,6 +219,11 @@ branch-protection:
         contexts:
         - cla/google
         - tide
+        - "Build (1.17.x, ubuntu-latest)"
+        - "Auto-format and Check (goimports)"
+        - "Auto-format and Check (gofmt)"
+        - "Unit Tests (1.17.x, ubuntu-latest)"
+        - "Lint"
       include:
       - "^main$"
       - "^master$"
@@ -229,10 +234,6 @@ branch-protection:
       repos:
         .github:
           protect: false
-        serving:
-          required_status_checks:
-            contexts:
-            - "Build (1.17.x, ubuntu-latest)"  
 
     google:
       repos:
