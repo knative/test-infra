@@ -71,7 +71,7 @@ jobs:
     mkdir -p /root/.kube
     cat /opt/cluster/ci-script > connect.sh
     chmod +x connect.sh
-    ./connect.sh operator-main
+    ./connect.sh operator-12
     kubectl get cm s390x-config-operator -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
     chmod +x adjust.sh
     ./adjust.sh
