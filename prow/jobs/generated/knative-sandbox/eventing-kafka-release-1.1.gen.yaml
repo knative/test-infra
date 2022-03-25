@@ -15,6 +15,7 @@ periodics:
   extra_refs:
   - base_ref: release-1.1
     org: knative-sandbox
+    path_alias: knative.dev/eventing-kafka
     repo: eventing-kafka
   name: continuous_eventing-kafka_release-1.1_periodic
   spec:
@@ -70,6 +71,7 @@ periodics:
   extra_refs:
   - base_ref: release-1.1
     org: knative-sandbox
+    path_alias: knative.dev/eventing-kafka
     repo: eventing-kafka
   name: release_eventing-kafka_release-1.1_periodic
   spec:
@@ -122,6 +124,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: build-tests_eventing-kafka_release-1.1
+    path_alias: knative.dev/eventing-kafka
     spec:
       containers:
       - command:
@@ -162,6 +165,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: unit-tests_eventing-kafka_release-1.1
+    path_alias: knative.dev/eventing-kafka
     spec:
       containers:
       - command:
@@ -202,6 +206,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: integration-test-channel-consolidated_eventing-kafka_release-1.1
+    path_alias: knative.dev/eventing-kafka
     spec:
       containers:
       - command:
@@ -235,6 +240,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: integration-test-channel-consolidated-tls_eventing-kafka_release-1.1
+    path_alias: knative.dev/eventing-kafka
     spec:
       containers:
       - command:
@@ -268,6 +274,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: integration-test-channel-consolidated-sasl_eventing-kafka_release-1.1
+    path_alias: knative.dev/eventing-kafka
     spec:
       containers:
       - command:
@@ -301,6 +308,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: integration-test-channel-distributed_eventing-kafka_release-1.1
+    path_alias: knative.dev/eventing-kafka
     spec:
       containers:
       - command:
@@ -335,6 +343,7 @@ presubmits:
     decorate: true
     name: integration-test-mt-source_eventing-kafka_release-1.1
     optional: true
+    path_alias: knative.dev/eventing-kafka
     spec:
       containers:
       - command:
@@ -368,6 +377,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: upgrade-tests_eventing-kafka_release-1.1
+    path_alias: knative.dev/eventing-kafka
     spec:
       containers:
       - command:

@@ -15,6 +15,7 @@ periodics:
   extra_refs:
   - base_ref: main
     org: knative-sandbox
+    path_alias: knative.dev/eventing-couchdb
     repo: eventing-couchdb
   name: continuous_eventing-couchdb_main_periodic
   spec:
@@ -70,6 +71,7 @@ periodics:
   extra_refs:
   - base_ref: main
     org: knative-sandbox
+    path_alias: knative.dev/eventing-couchdb
     repo: eventing-couchdb
   name: nightly_eventing-couchdb_main_periodic
   spec:
@@ -124,6 +126,7 @@ periodics:
   extra_refs:
   - base_ref: main
     org: knative-sandbox
+    path_alias: knative.dev/eventing-couchdb
     repo: eventing-couchdb
   name: release_eventing-couchdb_main_periodic
   spec:

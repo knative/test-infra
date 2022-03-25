@@ -15,6 +15,7 @@ periodics:
   extra_refs:
   - base_ref: main
     org: knative-sandbox
+    path_alias: knative.dev/eventing-autoscaler-keda
     repo: eventing-autoscaler-keda
   name: continuous_eventing-autoscaler-keda_main_periodic
   spec:
@@ -52,6 +53,7 @@ periodics:
   extra_refs:
   - base_ref: main
     org: knative-sandbox
+    path_alias: knative.dev/eventing-autoscaler-keda
     repo: eventing-autoscaler-keda
   name: nightly_eventing-autoscaler-keda_main_periodic
   spec:
@@ -88,6 +90,7 @@ periodics:
   extra_refs:
   - base_ref: main
     org: knative-sandbox
+    path_alias: knative.dev/eventing-autoscaler-keda
     repo: eventing-autoscaler-keda
   name: release_eventing-autoscaler-keda_main_periodic
   spec:
@@ -139,6 +142,7 @@ presubmits:
     decorate: true
     name: integration-test-kafka-source_eventing-autoscaler-keda_main
     optional: true
+    path_alias: knative.dev/eventing-autoscaler-keda
     spec:
       containers:
       - command:
@@ -173,6 +177,7 @@ presubmits:
     decorate: true
     name: integration-test-kafka-mt-source_eventing-autoscaler-keda_main
     optional: true
+    path_alias: knative.dev/eventing-autoscaler-keda
     spec:
       containers:
       - command:

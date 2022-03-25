@@ -13,6 +13,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: build-tests_discovery_main
+    path_alias: knative.dev/discovery
     spec:
       containers:
       - command:
@@ -32,6 +33,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: unit-tests_discovery_main
+    path_alias: knative.dev/discovery
     spec:
       containers:
       - command:
@@ -51,6 +53,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: integration-tests_discovery_main
+    path_alias: knative.dev/discovery
     spec:
       containers:
       - command:

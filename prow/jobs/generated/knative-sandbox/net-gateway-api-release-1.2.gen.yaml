@@ -15,6 +15,7 @@ periodics:
   extra_refs:
   - base_ref: release-1.2
     org: knative-sandbox
+    path_alias: knative.dev/net-gateway-api
     repo: net-gateway-api
   name: continuous_net-gateway-api_release-1.2_periodic
   spec:
@@ -52,6 +53,7 @@ periodics:
   extra_refs:
   - base_ref: release-1.2
     org: knative-sandbox
+    path_alias: knative.dev/net-gateway-api
     repo: net-gateway-api
   name: release_net-gateway-api_release-1.2_periodic
   spec:
@@ -104,6 +106,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: build-tests_net-gateway-api_release-1.2
+    path_alias: knative.dev/net-gateway-api
     spec:
       containers:
       - command:
@@ -123,6 +126,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: unit-tests_net-gateway-api_release-1.2
+    path_alias: knative.dev/net-gateway-api
     spec:
       containers:
       - command:
@@ -142,6 +146,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: integration-tests_net-gateway-api_release-1.2
+    path_alias: knative.dev/net-gateway-api
     spec:
       containers:
       - command:

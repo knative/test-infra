@@ -15,6 +15,7 @@ periodics:
   extra_refs:
   - base_ref: main
     org: knative-sandbox
+    path_alias: knative.dev/eventing-redis
     repo: eventing-redis
   name: continuous_eventing-redis_main_periodic
   spec:
@@ -70,6 +71,7 @@ periodics:
   extra_refs:
   - base_ref: main
     org: knative-sandbox
+    path_alias: knative.dev/eventing-redis
     repo: eventing-redis
   name: nightly_eventing-redis_main_periodic
   spec:
@@ -124,6 +126,7 @@ periodics:
   extra_refs:
   - base_ref: main
     org: knative-sandbox
+    path_alias: knative.dev/eventing-redis
     repo: eventing-redis
   name: release_eventing-redis_main_periodic
   spec:

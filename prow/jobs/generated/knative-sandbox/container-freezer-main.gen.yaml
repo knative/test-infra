@@ -15,6 +15,7 @@ periodics:
   extra_refs:
   - base_ref: main
     org: knative-sandbox
+    path_alias: knative.dev/container-freezer
     repo: container-freezer
   name: continuous_container-freezer_main_periodic
   spec:
@@ -52,6 +53,7 @@ periodics:
   extra_refs:
   - base_ref: main
     org: knative-sandbox
+    path_alias: knative.dev/container-freezer
     repo: container-freezer
   name: nightly_container-freezer_main_periodic
   spec:
@@ -88,6 +90,7 @@ periodics:
   extra_refs:
   - base_ref: main
     org: knative-sandbox
+    path_alias: knative.dev/container-freezer
     repo: container-freezer
   name: release_container-freezer_main_periodic
   spec:
@@ -138,6 +141,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: build-tests_container-freezer_main
+    path_alias: knative.dev/container-freezer
     spec:
       containers:
       - command:
@@ -157,6 +161,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: unit-tests_container-freezer_main
+    path_alias: knative.dev/container-freezer
     spec:
       containers:
       - command:
@@ -176,6 +181,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: integration-tests_container-freezer_main
+    path_alias: knative.dev/container-freezer
     spec:
       containers:
       - command:

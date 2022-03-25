@@ -15,6 +15,7 @@ periodics:
   extra_refs:
   - base_ref: main
     org: knative-sandbox
+    path_alias: knative.dev/eventing-kafka-broker
     repo: eventing-kafka-broker
   name: continuous_eventing-kafka-broker_main_periodic
   spec:
@@ -70,6 +71,7 @@ periodics:
   extra_refs:
   - base_ref: main
     org: knative-sandbox
+    path_alias: knative.dev/eventing-kafka-broker
     repo: eventing-kafka-broker
   name: nightly_eventing-kafka-broker_main_periodic
   reporter_config:
@@ -131,6 +133,7 @@ periodics:
   extra_refs:
   - base_ref: main
     org: knative-sandbox
+    path_alias: knative.dev/eventing-kafka-broker
     repo: eventing-kafka-broker
   name: release_eventing-kafka-broker_main_periodic
   spec:
@@ -199,6 +202,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: build-tests_eventing-kafka-broker_main
+    path_alias: knative.dev/eventing-kafka-broker
     spec:
       containers:
       - command:
@@ -218,6 +222,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: unit-tests_eventing-kafka-broker_main
+    path_alias: knative.dev/eventing-kafka-broker
     spec:
       containers:
       - command:
@@ -237,6 +242,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: integration-tests_eventing-kafka-broker_main
+    path_alias: knative.dev/eventing-kafka-broker
     spec:
       containers:
       - command:
@@ -287,6 +293,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: upgrade-tests_eventing-kafka-broker_main
+    path_alias: knative.dev/eventing-kafka-broker
     spec:
       containers:
       - command:
@@ -338,6 +345,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: reconciler-tests_eventing-kafka-broker_main
+    path_alias: knative.dev/eventing-kafka-broker
     spec:
       containers:
       - command:
@@ -389,6 +397,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: channel-integration-tests-ssl_eventing-kafka-broker_main
+    path_alias: knative.dev/eventing-kafka-broker
     spec:
       containers:
       - command:
@@ -442,6 +451,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: channel-integration-tests-sasl-ssl_eventing-kafka-broker_main
+    path_alias: knative.dev/eventing-kafka-broker
     spec:
       containers:
       - command:
@@ -495,6 +505,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: channel-integration-tests-sasl-plain_eventing-kafka-broker_main
+    path_alias: knative.dev/eventing-kafka-broker
     spec:
       containers:
       - command:
@@ -548,6 +559,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: channel-reconciler-tests-ssl_eventing-kafka-broker_main
+    path_alias: knative.dev/eventing-kafka-broker
     spec:
       containers:
       - command:
@@ -601,6 +613,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: channel-reconciler-tests-sasl-ssl_eventing-kafka-broker_main
+    path_alias: knative.dev/eventing-kafka-broker
     spec:
       containers:
       - command:
@@ -654,6 +667,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: channel-reconciler-tests-sasl-plain_eventing-kafka-broker_main
+    path_alias: knative.dev/eventing-kafka-broker
     spec:
       containers:
       - command:
