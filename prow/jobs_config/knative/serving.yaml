@@ -183,7 +183,6 @@ jobs:
     - ./test/e2e-auto-tls-tests.sh --https
 
   - name: s390x-kourier-tests
-    cron: 0 3 * * *
     types: [periodic]
     requirements: [s390x]
     command: [runner.sh]
@@ -207,7 +206,6 @@ jobs:
         value: "--enable-alpha --enable-beta --resolvabledomain=false"
 
   - name: s390x-contour-tests
-    cron: 0 5 * * *
     types: [periodic]
     requirements: [s390x]
     command: [runner.sh]
