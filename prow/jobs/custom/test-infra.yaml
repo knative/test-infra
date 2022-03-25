@@ -290,14 +290,17 @@ periodics:
       command:
       - "runner.sh"
       args:
-      - "go"
-      - "run"
-      - "./tools/prow-jobs-syncer"
-      - "--github-account=/etc/prow-auto-bumper-github-token/token"
-      - "--git-userid=knative-prow-updater-robot"
-      - "--git-username='Knative Prow Updater Robot'"
-      - "--git-email=knative-prow-updater-robot@google.com"
-      - "--label=skip-review"
+      - bash
+      - -c
+      - |
+        cd tools/release-jobs-syncer
+        go run . --github-account=/etc/prow-auto-bumper-github-token/token \
+          --git-userid=knative-prow-updater-robot \
+          --git-username='Knative Prow Updater Robot' \
+          --git-email=knative-prow-updater-robot@google.com \
+          --prow-job-config-root-path=prow/jobs_config \
+          --regen-config-script=hack/generate-configs.sh \
+          --label=skip-review
       volumeMounts:
       - name: test-account
         mountPath: /etc/test-account
