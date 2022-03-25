@@ -420,7 +420,7 @@ periodics:
     testgrid-dashboards: serving
     testgrid-tab-name: s390x-kourier-tests
   cluster: build-knative
-  cron: 25 */9 * * *
+  cron: 0 3 * * *
   decorate: true
   extra_refs:
   - base_ref: main
@@ -499,7 +499,7 @@ periodics:
     testgrid-dashboards: serving
     testgrid-tab-name: s390x-contour-tests
   cluster: build-knative
-  cron: 28 */9 * * *
+  cron: 0 5 * * *
   decorate: true
   extra_refs:
   - base_ref: main

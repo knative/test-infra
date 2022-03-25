@@ -48,7 +48,7 @@ periodics:
     testgrid-dashboards: operator
     testgrid-tab-name: s390x-e2e-tests
   cluster: build-knative
-  cron: 50 21 * * *
+  cron: 0 16 * * *
   decorate: true
   extra_refs:
   - base_ref: main
