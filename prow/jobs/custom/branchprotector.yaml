@@ -22,7 +22,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 3h
+    timeout: 5h
   cluster: "prow-trusted"
   extra_refs:
   - org: knative
