@@ -32,7 +32,6 @@ jobs:
     command: [runner.sh, ./test/tekton-tests.sh]
 
   - name: s390x-e2e-tests
-    cron: 0 14 * * *
     types: [periodic]
     requirements: [s390x]
     command: [runner.sh]

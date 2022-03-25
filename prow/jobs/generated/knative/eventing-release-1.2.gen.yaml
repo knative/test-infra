@@ -52,7 +52,7 @@ periodics:
     testgrid-dashboards: knative-release-1.2
     testgrid-tab-name: eventing-s390x-e2e-tests
   cluster: build-knative
-  cron: 30 19 * * *
+  cron: 34 17 * * *
   decorate: true
   extra_refs:
   - base_ref: release-1.2

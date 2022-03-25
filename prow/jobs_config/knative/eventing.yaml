@@ -34,7 +34,6 @@ jobs:
     command: [runner.sh, ./test/presubmit-tests.sh, --all-tests]
 
   - name: s390x-e2e-tests
-    cron: 0 7 * * *
     types: [periodic]
     requirements: [s390x]
     command: [runner.sh]

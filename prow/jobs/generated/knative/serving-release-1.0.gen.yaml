@@ -54,7 +54,7 @@ periodics:
     testgrid-dashboards: knative-release-1.0
     testgrid-tab-name: serving-s390x-kourier-tests
   cluster: build-knative
-  cron: 10 7 * * *
+  cron: 55 */9 * * *
   decorate: true
   extra_refs:
   - base_ref: release-1.0
@@ -133,7 +133,7 @@ periodics:
     testgrid-dashboards: knative-release-1.0
     testgrid-tab-name: serving-s390x-contour-tests
   cluster: build-knative
-  cron: 10 9 * * *
+  cron: 34 */9 * * *
   decorate: true
   extra_refs:
   - base_ref: release-1.0
