@@ -65,6 +65,7 @@ func GenerateTestGridConfig(prowJobsConfig, testGridConfigOutput string) error {
 			return fmt.Errorf("error reading file %q: %w", path, err)
 		}
 		if err := yaml.Unmarshal(bs, jobConfig); err != nil {
+
 			return fmt.Errorf("error parsing Prow job config %q: %w", path, err)
 		}
 
