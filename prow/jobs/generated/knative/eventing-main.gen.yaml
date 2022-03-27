@@ -10,8 +10,10 @@ periodics:
     testgrid-dashboards: eventing
     testgrid-tab-name: continuous
   cluster: build-knative
-  cron: 59 */9 * * *
+  cron: 59 */12 * * *
   decorate: true
+  decoration_config:
+    timeout: 3h0m0s
   extra_refs:
   - base_ref: main
     org: knative
@@ -132,6 +134,8 @@ periodics:
   cluster: build-knative
   cron: 9 9 * * *
   decorate: true
+  decoration_config:
+    timeout: 3h0m0s
   extra_refs:
   - base_ref: main
     org: knative
@@ -178,8 +182,10 @@ periodics:
     testgrid-dashboards: eventing
     testgrid-tab-name: release
   cluster: build-knative
-  cron: 41 */9 * * *
+  cron: 41 */12 * * *
   decorate: true
+  decoration_config:
+    timeout: 3h0m0s
   extra_refs:
   - base_ref: main
     org: knative
