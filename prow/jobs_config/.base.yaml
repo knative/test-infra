@@ -8,6 +8,7 @@ autogen_header: |
 
 path_aliases:
   knative: knative.dev
+  knative-sandbox: knative.dev
 
 node_selector:
   type: testing

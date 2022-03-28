@@ -15,6 +15,7 @@ periodics:
   extra_refs:
   - base_ref: main
     org: knative-sandbox
+    path_alias: knative.dev/sample-controller
     repo: sample-controller
   name: nightly_sample-controller_main_periodic
   spec:
@@ -51,6 +52,7 @@ periodics:
   extra_refs:
   - base_ref: main
     org: knative-sandbox
+    path_alias: knative.dev/sample-controller
     repo: sample-controller
   name: release_sample-controller_main_periodic
   spec:
@@ -101,6 +103,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: build-tests_sample-controller_main
+    path_alias: knative.dev/sample-controller
     spec:
       containers:
       - command:
@@ -120,6 +123,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: unit-tests_sample-controller_main
+    path_alias: knative.dev/sample-controller
     spec:
       containers:
       - command:

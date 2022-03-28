@@ -15,6 +15,7 @@ periodics:
   extra_refs:
   - base_ref: release-1.2
     org: knative-sandbox
+    path_alias: knative.dev/eventing-natss
     repo: eventing-natss
   name: continuous_eventing-natss_release-1.2_periodic
   spec:
@@ -52,6 +53,7 @@ periodics:
   extra_refs:
   - base_ref: release-1.2
     org: knative-sandbox
+    path_alias: knative.dev/eventing-natss
     repo: eventing-natss
   name: release_eventing-natss_release-1.2_periodic
   spec:

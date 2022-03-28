@@ -15,6 +15,7 @@ periodics:
   extra_refs:
   - base_ref: main
     org: knative-sandbox
+    path_alias: knative.dev/eventing-gitlab
     repo: eventing-gitlab
   name: continuous_eventing-gitlab_main_periodic
   spec:
@@ -74,6 +75,7 @@ periodics:
   extra_refs:
   - base_ref: main
     org: knative-sandbox
+    path_alias: knative.dev/eventing-gitlab
     repo: eventing-gitlab
   name: nightly_eventing-gitlab_main_periodic
   spec:
@@ -132,6 +134,7 @@ periodics:
   extra_refs:
   - base_ref: main
     org: knative-sandbox
+    path_alias: knative.dev/eventing-gitlab
     repo: eventing-gitlab
   name: release_eventing-gitlab_main_periodic
   spec:

@@ -15,6 +15,7 @@ periodics:
   extra_refs:
   - base_ref: release-1.3
     org: knative-sandbox
+    path_alias: knative.dev/eventing-ceph
     repo: eventing-ceph
   name: continuous_eventing-ceph_release-1.3_periodic
   spec:
@@ -70,6 +71,7 @@ periodics:
   extra_refs:
   - base_ref: release-1.3
     org: knative-sandbox
+    path_alias: knative.dev/eventing-ceph
     repo: eventing-ceph
   name: release_eventing-ceph_release-1.3_periodic
   spec:

@@ -15,6 +15,7 @@ periodics:
   extra_refs:
   - base_ref: main
     org: knative-sandbox
+    path_alias: knative.dev/kn-plugin-migration
     repo: kn-plugin-migration
   name: continuous_kn-plugin-migration_main_periodic
   spec:
@@ -51,6 +52,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: build-tests_kn-plugin-migration_main
+    path_alias: knative.dev/kn-plugin-migration
     spec:
       containers:
       - command:
@@ -70,6 +72,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: unit-tests_kn-plugin-migration_main
+    path_alias: knative.dev/kn-plugin-migration
     spec:
       containers:
       - command:
@@ -89,6 +92,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: integration-tests_kn-plugin-migration_main
+    path_alias: knative.dev/kn-plugin-migration
     spec:
       containers:
       - command:

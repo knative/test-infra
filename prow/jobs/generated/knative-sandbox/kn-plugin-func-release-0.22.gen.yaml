@@ -15,6 +15,7 @@ periodics:
   extra_refs:
   - base_ref: release-0.22
     org: knative-sandbox
+    path_alias: knative.dev/kn-plugin-func
     repo: kn-plugin-func
   name: release_kn-plugin-func_release-0.22_periodic
   spec:

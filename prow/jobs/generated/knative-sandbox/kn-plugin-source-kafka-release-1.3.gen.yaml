@@ -15,6 +15,7 @@ periodics:
   extra_refs:
   - base_ref: release-1.3
     org: knative-sandbox
+    path_alias: knative.dev/kn-plugin-source-kafka
     repo: kn-plugin-source-kafka
   name: continuous_kn-plugin-source-kafka_release-1.3_periodic
   spec:
@@ -52,6 +53,7 @@ periodics:
   extra_refs:
   - base_ref: release-1.3
     org: knative-sandbox
+    path_alias: knative.dev/kn-plugin-source-kafka
     repo: kn-plugin-source-kafka
   name: release_kn-plugin-source-kafka_release-1.3_periodic
   spec:
@@ -104,6 +106,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: build-tests_kn-plugin-source-kafka_release-1.3
+    path_alias: knative.dev/kn-plugin-source-kafka
     spec:
       containers:
       - command:
@@ -123,6 +126,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: unit-tests_kn-plugin-source-kafka_release-1.3
+    path_alias: knative.dev/kn-plugin-source-kafka
     spec:
       containers:
       - command:
@@ -142,6 +146,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: integration-tests_kn-plugin-source-kafka_release-1.3
+    path_alias: knative.dev/kn-plugin-source-kafka
     spec:
       containers:
       - command:

@@ -15,6 +15,7 @@ periodics:
   extra_refs:
   - base_ref: main
     org: knative-sandbox
+    path_alias: knative.dev/kn-plugin-func
     repo: kn-plugin-func
   name: nightly_kn-plugin-func_main_periodic
   spec:
@@ -69,6 +70,7 @@ periodics:
   extra_refs:
   - base_ref: main
     org: knative-sandbox
+    path_alias: knative.dev/kn-plugin-func
     repo: kn-plugin-func
   name: release_kn-plugin-func_main_periodic
   spec:

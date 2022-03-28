@@ -15,6 +15,7 @@ periodics:
   extra_refs:
   - base_ref: main
     org: knative-sandbox
+    path_alias: knative.dev/eventing-awssqs
     repo: eventing-awssqs
   name: continuous_eventing-awssqs_main_periodic
   spec:
@@ -52,6 +53,7 @@ periodics:
   extra_refs:
   - base_ref: main
     org: knative-sandbox
+    path_alias: knative.dev/eventing-awssqs
     repo: eventing-awssqs
   name: nightly_eventing-awssqs_main_periodic
   spec:
@@ -88,6 +90,7 @@ periodics:
   extra_refs:
   - base_ref: main
     org: knative-sandbox
+    path_alias: knative.dev/eventing-awssqs
     repo: eventing-awssqs
   name: release_eventing-awssqs_main_periodic
   spec:

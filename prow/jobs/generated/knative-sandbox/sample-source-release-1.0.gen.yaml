@@ -15,6 +15,7 @@ periodics:
   extra_refs:
   - base_ref: release-1.0
     org: knative-sandbox
+    path_alias: knative.dev/sample-source
     repo: sample-source
   name: release_sample-source_release-1.0_periodic
   spec:
@@ -67,6 +68,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: build-tests_sample-source_release-1.0
+    path_alias: knative.dev/sample-source
     spec:
       containers:
       - command:
@@ -86,6 +88,7 @@ presubmits:
     cluster: build-knative
     decorate: true
     name: unit-tests_sample-source_release-1.0
+    path_alias: knative.dev/sample-source
     spec:
       containers:
       - command:
