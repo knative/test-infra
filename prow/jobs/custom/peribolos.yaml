@@ -33,7 +33,10 @@ presubmits:
         - "peribolos"
         args:
         - "--config-path=peribolos/knative.yaml"
-        - "--github-token-path=/etc/github/token"
+        - --github-app-id=$(GITHUB_APP_ID)
+        - --github-app-private-key-path=/etc/github/cert
+        - "--github-hourly-tokens=2000"
+        - "--github-allowed-burst=1000"
         - "--min-admins=5"
         - "--fix-org=true"
         - "--fix-org-members=true"
@@ -41,17 +44,22 @@ presubmits:
         - "--fix-team-members=true"
         - "--fix-team-repos=true"
         - "--fix-repos=true"
-        - "--tokens=1200"
         # Set --confirm=false to only validate the configuration file.
         - "--confirm=false"
         volumeMounts:
-        - name: oauth
+        - name: github-token
           mountPath: /etc/github
           readOnly: true
+        env:
+        - name: GITHUB_APP_ID
+          valueFrom:
+            secretKeyRef:
+              name: github-token
+              key: appid
       volumes:
-      - name: oauth
+      - name: github-token
         secret:
-          secretName: github-token-for-peribolos
+          secretName: github-token
   # Run on the prow-trusted build cluster as it needs access to the github oauth token.
   - name: pull-knative-sandbox-peribolos
     agent: kubernetes
@@ -68,7 +76,10 @@ presubmits:
         - "peribolos"
         args:
         - "--config-path=peribolos/knative-sandbox.yaml"
-        - "--github-token-path=/etc/github/token"
+        - --github-app-id=$(GITHUB_APP_ID)
+        - --github-app-private-key-path=/etc/github/cert
+        - "--github-hourly-tokens=2000"
+        - "--github-allowed-burst=1000"
         - "--min-admins=5"
         - "--fix-org=true"
         - "--fix-org-members=true"
@@ -76,17 +87,22 @@ presubmits:
         - "--fix-team-members=true"
         - "--fix-team-repos=true"
         - "--fix-repos=true"
-        - "--tokens=1200"
         # Set --confirm=false to only validate the configuration file.
         - "--confirm=false"
         volumeMounts:
-        - name: oauth
+        - name: github-token
           mountPath: /etc/github
           readOnly: true
+        env:
+        - name: GITHUB_APP_ID
+          valueFrom:
+            secretKeyRef:
+              name: github-token
+              key: appid
       volumes:
-      - name: oauth
+      - name: github-token
         secret:
-          secretName: github-token-for-peribolos
+          secretName: github-token
 
 postsubmits:
   knative/community:
@@ -118,7 +134,10 @@ postsubmits:
         - "peribolos"
         args:
         - "--config-path=peribolos/knative.yaml"
-        - "--github-token-path=/etc/github/token"
+        - --github-app-id=$(GITHUB_APP_ID)
+        - --github-app-private-key-path=/etc/github/cert
+        - "--github-hourly-tokens=2000"
+        - "--github-allowed-burst=1000"
         - "--min-admins=5"
         - "--fix-org=true"
         - "--fix-org-members=true"
@@ -126,16 +145,21 @@ postsubmits:
         - "--fix-team-members=true"
         - "--fix-team-repos=true"
         - "--fix-repos=true"
-        - "--tokens=1200"
         - "--confirm=true"
         volumeMounts:
-        - name: oauth
+        - name: github-token
           mountPath: /etc/github
           readOnly: true
+        env:
+        - name: GITHUB_APP_ID
+          valueFrom:
+            secretKeyRef:
+              name: github-token
+              key: appid
       volumes:
-      - name: oauth
+      - name: github-token
         secret:
-          secretName: github-token-for-peribolos
+          secretName: github-token
   # Run on the prow-trusted build cluster as it needs access to the github oauth token.
   - name: post-knative-sandbox-peribolos
     agent: kubernetes
@@ -164,7 +188,10 @@ postsubmits:
         - "peribolos"
         args:
         - "--config-path=peribolos/knative-sandbox.yaml"
-        - "--github-token-path=/etc/github/token"
+        - --github-app-id=$(GITHUB_APP_ID)
+        - --github-app-private-key-path=/etc/github/cert
+        - "--github-hourly-tokens=2000"
+        - "--github-allowed-burst=1000"
         - "--min-admins=5"
         - "--fix-org=true"
         - "--fix-org-members=true"
@@ -172,16 +199,21 @@ postsubmits:
         - "--fix-team-members=true"
         - "--fix-team-repos=true"
         - "--fix-repos=true"
-        - "--tokens=1200"
         - "--confirm=true"
         volumeMounts:
-        - name: oauth
+        - name: github-token
           mountPath: /etc/github
           readOnly: true
+        env:
+        - name: GITHUB_APP_ID
+          valueFrom:
+            secretKeyRef:
+              name: github-token
+              key: appid
       volumes:
-      - name: oauth
+      - name: github-token
         secret:
-          secretName: github-token-for-peribolos
+          secretName: github-token
 
 periodics:
 # Run at 9AM PST.
@@ -207,7 +239,10 @@ periodics:
       - "peribolos"
       args:
       - "--config-path=peribolos/knative.yaml"
-      - "--github-token-path=/etc/github/token"
+      - --github-app-id=$(GITHUB_APP_ID)
+      - --github-app-private-key-path=/etc/github/cert
+      - "--github-hourly-tokens=2000"
+      - "--github-allowed-burst=1000"
       - "--min-admins=5"
       - "--fix-org=true"
       - "--fix-org-members=true"
@@ -215,16 +250,21 @@ periodics:
       - "--fix-team-members=true"
       - "--fix-team-repos=true"
       - "--fix-repos=true"
-      - "--tokens=1200"
       - "--confirm=true"
       volumeMounts:
-      - name: oauth
+      - name: github-token
         mountPath: /etc/github
         readOnly: true
+      env:
+      - name: GITHUB_APP_ID
+        valueFrom:
+          secretKeyRef:
+            name: github-token
+            key: appid
     volumes:
-    - name: oauth
+    - name: github-token
       secret:
-        secretName: github-token-for-peribolos
+        secretName: github-token
 # Run at 10AM PST.
 - cron: "0 17 * * *"
   name: ci-knative-sandbox-peribolos
@@ -248,7 +288,10 @@ periodics:
       - "peribolos"
       args:
       - "--config-path=peribolos/knative-sandbox.yaml"
-      - "--github-token-path=/etc/github/token"
+      - --github-app-id=$(GITHUB_APP_ID)
+      - --github-app-private-key-path=/etc/github/cert
+      - "--github-hourly-tokens=2000"
+      - "--github-allowed-burst=1000"
       - "--min-admins=5"
       - "--fix-org=true"
       - "--fix-org-members=true"
@@ -256,13 +299,18 @@ periodics:
       - "--fix-team-members=true"
       - "--fix-team-repos=true"
       - "--fix-repos=true"
-      - "--tokens=1200"
       - "--confirm=true"
       volumeMounts:
-      - name: oauth
+      - name: github-token
         mountPath: /etc/github
         readOnly: true
+      env:
+      - name: GITHUB_APP_ID
+        valueFrom:
+          secretKeyRef:
+            name: github-token
+            key: appid
     volumes:
-    - name: oauth
+    - name: github-token
       secret:
-        secretName: github-token-for-peribolos
+        secretName: github-token

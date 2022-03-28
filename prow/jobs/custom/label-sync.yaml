@@ -22,6 +22,7 @@ presubmits:
     decorate: true
     path_alias: knative.dev/test-infra
     run_if_changed: "^config/label_sync/labels.yaml$"
+    cluster: "prow-trusted"
     branches:
     - "main"
     spec:
@@ -35,18 +36,27 @@ presubmits:
         # Set --confirm=false to only validate the configuration file.
         - --confirm=false
         - --orgs=knative-sandbox,knative
-        - --token=/etc/github/oauth
         - --endpoint=http://ghproxy.default.svc.cluster.local
         - --endpoint=https://api.github.com
+        - --github-app-id=$(GITHUB_APP_ID)
+        - --github-app-private-key-path=/etc/github/cert
+        - "--github-hourly-tokens=2000"
+        - "--github-allowed-burst=1000"
         - --debug
         volumeMounts:
-        - name: oauth
+        - name: github-token
           mountPath: /etc/github
           readOnly: true
+        env:
+        - name: GITHUB_APP_ID
+          valueFrom:
+            secretKeyRef:
+              name: github-token
+              key: appid
       volumes:
-      - name: oauth
+      - name: github-token
         secret:
-          secretName: oauth-token
+          secretName: github-token
 
 periodics:
 # Run at 8AM PST.
@@ -54,6 +64,7 @@ periodics:
   name: ci-knative-test-infra-label-sync
   agent: kubernetes
   decorate: true
+  cluster: "prow-trusted"
   extra_refs:
   - org: knative
     repo: test-infra
@@ -74,18 +85,27 @@ periodics:
       - --config=config/label_sync/labels.yaml
       - --confirm=true
       - --orgs=knative-sandbox,knative
-      - --token=/etc/github/oauth
       - --endpoint=http://ghproxy.default.svc.cluster.local
       - --endpoint=https://api.github.com
+      - --github-app-id=$(GITHUB_APP_ID)
+      - --github-app-private-key-path=/etc/github/cert
+      - "--github-hourly-tokens=2000"
+      - "--github-allowed-burst=1000"
       - --debug
       volumeMounts:
-      - name: oauth
+      - name: github-token
         mountPath: /etc/github
         readOnly: true
+      env:
+      - name: GITHUB_APP_ID
+        valueFrom:
+          secretKeyRef:
+            name: github-token
+            key: appid
     volumes:
-    - name: oauth
+    - name: github-token
       secret:
-        secretName: oauth-token
+        secretName: github-token
 
 postsubmits:
   knative/test-infra:
@@ -95,6 +115,7 @@ postsubmits:
     path_alias: knative.dev/test-infra
     max_concurrency: 1
     run_if_changed: "^config/label_sync/labels.yaml$"
+    cluster: "prow-trusted"
     branches:
     - "main"
     annotations:
@@ -112,15 +133,24 @@ postsubmits:
         - --config=config/label_sync/labels.yaml
         - --confirm=true
         - --orgs=knative-sandbox,knative
-        - --token=/etc/github/oauth
         - --endpoint=http://ghproxy.default.svc.cluster.local
         - --endpoint=https://api.github.com
+        - --github-app-id=$(GITHUB_APP_ID)
+        - --github-app-private-key-path=/etc/github/cert
+        - "--github-hourly-tokens=2000"
+        - "--github-allowed-burst=1000"
         - --debug
         volumeMounts:
-        - name: oauth
+        - name: github-token
           mountPath: /etc/github
           readOnly: true
+        env:
+        - name: GITHUB_APP_ID
+          valueFrom:
+            secretKeyRef:
+              name: github-token
+              key: appid
       volumes:
-      - name: oauth
+      - name: github-token
         secret:
-          secretName: oauth-token
+          secretName: github-token

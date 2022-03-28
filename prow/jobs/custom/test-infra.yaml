@@ -22,7 +22,6 @@ presubmits:
   - name: pull-test-infra-validate-prow-yaml
     decorate: true
     run_if_changed: '^prow/((config|plugins)\.yaml$|jobs/)'
-    cluster: "prow-trusted"
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:stable
