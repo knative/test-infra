@@ -43,13 +43,22 @@ periodics:
       args:
       - --config-path=prow/config.yaml
       - --job-config-path=prow/jobs
-      - --github-token-path=/etc/github/token
+      - --github-app-id=$(GITHUB_APP_ID)
+      - --github-app-private-key-path=/etc/github/cert
+      - "--github-hourly-tokens=2000"
+      - "--github-allowed-burst=1000"
       - --confirm
       volumeMounts:
-      - name: oauth
+      - name: github-token
         mountPath: /etc/github
         readOnly: true
+      env:
+      - name: GITHUB_APP_ID
+        valueFrom:
+          secretKeyRef:
+            name: github-token
+            key: appid
     volumes:
-    - name: oauth
+    - name: github-token
       secret:
-        secretName: github-token-for-branchprotector
+        secretName: github-token
