@@ -29,6 +29,12 @@ periodics:
     repo: test-infra
     base_ref: main
     path_alias: knative.dev/test-infra
+  reporter_config:
+    slack:
+      channel: productivity
+      job_states_to_report:
+        - failure
+      report_template: '"The branchprotector job fails, check the log: <{{.Status.URL}}|View logs>"'
   annotations:
     testgrid-dashboards: utilities
     testgrid-tab-name: ci-knative-test-infra-branchprotector
