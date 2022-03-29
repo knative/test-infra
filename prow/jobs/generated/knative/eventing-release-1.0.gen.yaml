@@ -12,6 +12,8 @@ periodics:
   cluster: build-knative
   cron: 45 4 * * *
   decorate: true
+  decoration_config:
+    timeout: 3h0m0s
   extra_refs:
   - base_ref: release-1.0
     org: knative
@@ -132,6 +134,8 @@ periodics:
   cluster: build-knative
   cron: 15 9 * * 2
   decorate: true
+  decoration_config:
+    timeout: 3h0m0s
   extra_refs:
   - base_ref: release-1.0
     org: knative
