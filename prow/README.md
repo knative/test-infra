@@ -12,7 +12,7 @@ This directory contains prow configs hosted for Knative. This prow is bumped by 
 - `jobs/run_job.sh` Convenience script to start a Prow job from command-line.
 - `jobs/pj-on-kind.sh` Convenience script to start a Prow job on kind from
   command-line.
-- `cluster/boskos` Just Boskos resource definition and helper scripts; deployments in
+- `cluster/boskos` Just1 Boskos resource definition and helper scripts; deployments in
   `cluster/build/*`.
 
 ### Prow Clusters
