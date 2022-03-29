@@ -33,10 +33,12 @@ presubmits:
         - "peribolos"
         args:
         - "--config-path=peribolos/knative.yaml"
-        - --github-app-id=$(GITHUB_APP_ID)
-        - --github-app-private-key-path=/etc/github/cert
-        - "--github-hourly-tokens=2000"
-        - "--github-allowed-burst=1000"
+        # We have to still use the GitHub oauth token for authentication, since
+        # peribolos does not allow using GitHub app token when having
+        # --confirm=false.
+        # This seems more like a bug for peribolos, but we should be able to live
+        # with it for now.
+        - "--github-token-path=/etc/github/token"
         - "--min-admins=5"
         - "--fix-org=true"
         - "--fix-org-members=true"
@@ -44,23 +46,18 @@ presubmits:
         - "--fix-team-members=true"
         - "--fix-team-repos=true"
         - "--fix-repos=true"
-        - "--require-self=false"
+        - "--tokens=1200"
         # Set --confirm=false to only validate the configuration file.
         - "--confirm=false"
         volumeMounts:
-        - name: github-token
+        - name: oauth
           mountPath: /etc/github
           readOnly: true
-        env:
-        - name: GITHUB_APP_ID
-          valueFrom:
-            secretKeyRef:
-              name: github-token
-              key: appid
       volumes:
-      - name: github-token
+      - name: oauth
         secret:
-          secretName: github-token
+          secretName: github-token-for-peribolos
+
   # Run on the prow-trusted build cluster as it needs access to the github oauth token.
   - name: pull-knative-sandbox-peribolos
     agent: kubernetes
@@ -77,10 +74,12 @@ presubmits:
         - "peribolos"
         args:
         - "--config-path=peribolos/knative-sandbox.yaml"
-        - --github-app-id=$(GITHUB_APP_ID)
-        - --github-app-private-key-path=/etc/github/cert
-        - "--github-hourly-tokens=2000"
-        - "--github-allowed-burst=1000"
+        # We have to still use the GitHub oauth token for authentication, since
+        # peribolos does not allow using GitHub app token when having
+        # --confirm=false.
+        # This seems more like a bug for peribolos, but we should be able to live
+        # with it for now.
+        - "--github-token-path=/etc/github/token"
         - "--min-admins=5"
         - "--fix-org=true"
         - "--fix-org-members=true"
@@ -88,23 +87,17 @@ presubmits:
         - "--fix-team-members=true"
         - "--fix-team-repos=true"
         - "--fix-repos=true"
-        - "--require-self=false"
+        - "--tokens=1200"
         # Set --confirm=false to only validate the configuration file.
         - "--confirm=false"
         volumeMounts:
-        - name: github-token
+        - name: oauth
           mountPath: /etc/github
           readOnly: true
-        env:
-        - name: GITHUB_APP_ID
-          valueFrom:
-            secretKeyRef:
-              name: github-token
-              key: appid
       volumes:
-      - name: github-token
+      - name: oauth
         secret:
-          secretName: github-token
+          secretName: github-token-for-peribolos
 
 postsubmits:
   knative/community:
