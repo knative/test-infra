@@ -44,6 +44,7 @@ presubmits:
         - "--fix-team-members=true"
         - "--fix-team-repos=true"
         - "--fix-repos=true"
+        - "--require-self=false"
         # Set --confirm=false to only validate the configuration file.
         - "--confirm=false"
         volumeMounts:
@@ -87,6 +88,7 @@ presubmits:
         - "--fix-team-members=true"
         - "--fix-team-repos=true"
         - "--fix-repos=true"
+        - "--require-self=false"
         # Set --confirm=false to only validate the configuration file.
         - "--confirm=false"
         volumeMounts:
@@ -145,6 +147,7 @@ postsubmits:
         - "--fix-team-members=true"
         - "--fix-team-repos=true"
         - "--fix-repos=true"
+        - "--require-self=false"
         - "--confirm=true"
         volumeMounts:
         - name: github-token
@@ -199,6 +202,7 @@ postsubmits:
         - "--fix-team-members=true"
         - "--fix-team-repos=true"
         - "--fix-repos=true"
+        - "--require-self=false"
         - "--confirm=true"
         volumeMounts:
         - name: github-token
@@ -250,6 +254,7 @@ periodics:
       - "--fix-team-members=true"
       - "--fix-team-repos=true"
       - "--fix-repos=true"
+      - "--require-self=false"
       - "--confirm=true"
       volumeMounts:
       - name: github-token
@@ -299,6 +304,7 @@ periodics:
       - "--fix-team-members=true"
       - "--fix-team-repos=true"
       - "--fix-repos=true"
+      - "--require-self=false"
       - "--confirm=true"
       volumeMounts:
       - name: github-token
