@@ -1,6 +1,6 @@
 # Knative GCP Infrastructure
 
-We use terraform to manage our Google Cloud infrastructure.
+We use Terraform to manage our Google Cloud infrastructure.
 
 - [knative-dns](./dns)
 
@@ -19,7 +19,7 @@ We use terraform to manage our Google Cloud infrastructure.
 
 Terraform needs to be bootstrapped manually before it can be used. This process was done during Knative CNCF Infrastructure Migration. It is noted here for completeness and for potential troubleshooting.
 
-This needs to be ran by a person 
+This needs to be ran by a person.
 
 ```
 # Get the ORG_ID
