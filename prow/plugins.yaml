@@ -88,6 +88,10 @@ config_updater:
     prow/jobs/**/*.yaml:
       name: job-config
       gzip: true
+    prow/config.yaml:
+      name: config
+    prow/plugins.yaml:
+      name: plugins
 
 blunderbuss:
   use_status_availability: true
