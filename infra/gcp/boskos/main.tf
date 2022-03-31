@@ -1,17 +1,6 @@
-provider "google" {
-}
 
-provider "google-beta" {
-}
 
 terraform {
-  required_version = "0.14.11"
-
-  backend "gcs" {
-    bucket = "knative-state"
-    prefix = "boskos"
-  }
-
   required_providers {
     google = {
       version = "4.15"

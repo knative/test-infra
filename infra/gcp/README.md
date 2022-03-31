@@ -15,7 +15,7 @@ We use terraform to manage our Google Cloud infrastructure.
   This the knative-boskos-XX project pools. 
 
 
-# Bootstrapping Terraform
+# Bootstrapping Terraform - One Time Setup
 
 Terraform needs to be bootstrapped manually before it can be used. This process was done during Knative CNCF Infrastructure Migration. It is noted here for completeness and for potential troubleshooting.
 

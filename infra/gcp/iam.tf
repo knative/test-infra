@@ -12,7 +12,7 @@ module "iam" {
 
     "roles/resourcemanager.organizationAdmin" = [
       "group:kn-infra-gcp-org-admins@knative.team",
-      "serviceAccount:terraform@knative-seed.iam.gserviceaccount.com",        
+      "serviceAccount:terraform@knative-seed.iam.gserviceaccount.com",
     ]
 
     "roles/cloudsupport.techSupportEditor" = [
