@@ -34,7 +34,7 @@ spec:
             name: deck
             port:
               number: 80
-      - path: /hook
+      - path: /ghapp-hook
         pathType: ImplementationSpecific
         backend:
           service:

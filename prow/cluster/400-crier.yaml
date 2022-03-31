@@ -33,7 +33,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
       - name: crier
-        image: gcr.io/k8s-prow/crier:v20220323-9b8611d021
+        image: gcr.io/k8s-prow/crier:v20220330-0793228920
         args:
         - --pubsub-workers=5 # Arbitrary number of multiplier
         - --blob-storage-workers=1
@@ -41,10 +41,11 @@ spec:
         - --kubeconfig=/etc/kubeconfig/config
         - --config-path=/etc/config/config.yaml
         - --job-config-path=/etc/job-config
-        - --github-token-path=/etc/github/oauth
         - --github-workers=5
         - --github-endpoint=http://ghproxy
         - --github-endpoint=https://api.github.com
+        - --github-app-id=$(GITHUB_APP_ID)
+        - --github-app-private-key-path=/etc/github/cert
         - --slack-workers=1
         - --slack-token-file=/etc/slack/token
         ports:
@@ -60,12 +61,18 @@ spec:
         - name: job-config
           mountPath: /etc/job-config
           readOnly: true
-        - name: oauth
+        - name: github-token
           mountPath: /etc/github
           readOnly: true
         - name: slack
           mountPath: /etc/slack
           readOnly: true
+        env:
+        - name: GITHUB_APP_ID
+          valueFrom:
+            secretKeyRef:
+              name: github-token
+              key: appid
       volumes:
       - name: config
         configMap:
@@ -73,9 +80,9 @@ spec:
       - name: job-config
         configMap:
           name: job-config
-      - name: oauth
+      - name: github-token
         secret:
-          secretName: oauth-token
+          secretName: github-token
       - name: kubeconfig
         secret:
           defaultMode: 420
