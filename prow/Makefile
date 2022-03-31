@@ -22,8 +22,6 @@ CLUSTER       ?= prow
 CLUSTER_BUILD ?= knative-prow-build-cluster
 JOB_NAMESPACE ?= test-pods
 
-BOSKOS_RESOURCES ?= prow/cluster/boskos/boskos_resources.yaml
-
 .PHONY: deploy
 deploy: get-cluster-credentials
 # Apply the ProwJob CRD with --server-side=true due to its size.
@@ -33,7 +31,8 @@ deploy: get-cluster-credentials
 .PHONY: deploy-build
 deploy-build: get-build-cluster-credentials
 	kubectl apply -f ./cluster/build/
-	kubectl create configmap resources --from-file=config=$(BOSKOS_RESOURCES) --dry-run --save-config -o yaml | kubectl --namespace="$(JOB_NAMESPACE)" apply -f -
+	kubectl create configmap resources --from-file=config=./cluster/boskos/boskos_resources.yaml --dry-run --save-config -o yaml \
+		| kubectl --namespace="$(JOB_NAMESPACE)" apply -f -
 
 .PHONY: deploy-monitoring
 deploy-monitoring:
