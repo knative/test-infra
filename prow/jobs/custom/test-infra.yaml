@@ -25,7 +25,7 @@ presubmits:
     cluster: "build-knative"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:v20220331-8ed73402
         command:
         - "runner.sh"
         args:
@@ -84,7 +84,7 @@ presubmits:
     - "main"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:v20220331-8ed73402
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -124,7 +124,7 @@ periodics:
     testgrid-num-failures-to-alert: "1"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests:v20220331-8ed73402
       imagePullPolicy: Always
       command:
       - "runner.sh"
@@ -158,7 +158,7 @@ periodics:
     testgrid-num-failures-to-alert: "1"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests:v20220331-8ed73402
       imagePullPolicy: Always
       command:
       - "runner.sh"
@@ -285,7 +285,7 @@ periodics:
     testgrid-num-failures-to-alert: "1"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+    - image: gcr.io/knative-tests/test-infra/prow-tests:v20220331-8ed73402
       imagePullPolicy: Always
       command:
       - "runner.sh"
@@ -340,7 +340,7 @@ postsubmits:
       testgrid-num-failures-to-alert: "1"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:v20220331-8ed73402
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -384,7 +384,7 @@ postsubmits:
       testgrid-num-failures-to-alert: "1"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:v20220331-8ed73402
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -420,7 +420,7 @@ postsubmits:
       testgrid-num-failures-to-alert: "1"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:stable
+      - image: gcr.io/knative-tests/test-infra/prow-tests:v20220331-8ed73402
         imagePullPolicy: Always
         command:
         - runner.sh
