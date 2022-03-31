@@ -1,16 +1,16 @@
 periodics:
-- cron: "15 15 * * 1"  # Bump with label `skip-review`. Run at 7:15 PST (15:15 UTC) each Monday.
-  name: ci-knative-prow-auto-bumper-for-auto-deploy
+- cron: "15 15 * * 1-5"  # Bump with label `skip-review`. Run at 7:15 PST (15:15 UTC) each weekday.
+  name: ci-knative-prow-tests-auto-bumper
   cluster: "build-knative"
   decorate: true
   extra_refs:
   - org: knative
     repo: test-infra
-    base_ref: main  
+    base_ref: main
     path_alias: knative.dev/test-infra
   annotations:
     testgrid-dashboards: utilities
-    testgrid-tab-name: ci-knative-prow-auto-bumper-for-auto-deploy
+    testgrid-tab-name: ci-knative-prow-tests-auto-bumper
     testgrid-alert-email: "serverless-engprod-sea@google.com"
     testgrid-num-failures-to-alert: "1"
   spec:
@@ -19,7 +19,7 @@ periodics:
       command:
       - generic-autobumper
       args:
-      - --config=prow/knative-autobump-config.yaml
+      - --config=prow/knative-prow-tests-autobump-config.yaml
       - --labels-override=skip-review # This label is used by tide for identifying trusted PR
       volumeMounts:
       - name: prow-auto-bumper-github-token
