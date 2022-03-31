@@ -12,7 +12,7 @@ We use Terraform to manage our Google Cloud infrastructure.
 
 - [knative-boskos-01…100](./boskos)
 
-  This the knative-boskos-XX project pools. 
+  This the knative-boskos-XX project pools.
 
 
 # Bootstrapping Terraform - One Time Setup
