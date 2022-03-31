@@ -20,35 +20,25 @@
 presubmits:
   knative/test-infra:
   - name: pull-test-infra-validate-prow-yaml
-    decorate: true
     run_if_changed: '^prow/((config|plugins)\.yaml$|jobs/)'
+    decorate: true
     cluster: "build-knative"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:v20220401-c2f0165b
+      - image: gcr.io/k8s-prow/checkconfig:v20220330-0793228920
         command:
-        - "runner.sh"
+        - checkconfig
         args:
-        - "./prow/config.sh"
-        - "check"
-        - "$(REPO_OWNER)/$(REPO_NAME)"
-        securityContext:
-          privileged: true
-        env:
-        - name: DOCKER_IN_DOCKER_ENABLED
-          value: "true"
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-      volumes:
-      - name: docker-graph
-        emptyDir: {}
-      - name: test-account
-        secret:
-          secretName: test-account
+        - --config-path=./prow/config.yaml
+        - --job-config-path=./prow/jobs
+        - --plugin-config=./prow/plugins.yaml
+        - --strict
+        # This warning can forbid valid (and convenient) config. Exclude it.
+        # Details: https://github.com/GoogleCloudPlatform/oss-test-infra/pull/131#discussion_r334208082
+        - --exclude-warning=mismatched-tide
+        - --exclude-warning=non-decorated-jobs
+        - --exclude-warning=long-job-names
+
   - name: pull-test-infra-validate-own-testgrid-yaml
     decorate: true
     optional: false
