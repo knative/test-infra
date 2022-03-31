@@ -24,7 +24,7 @@ go get knative.dev/test-infra/rundk
 ```shell
 Usage of rundk:
   --image string
-      The image we use to run the test flow. (default "gcr.io/knative-tests/test-infra/prow-tests:stable")
+      The image we use to run the test flow. (default "gcr.io/knative-tests/test-infra/prow-tests:v20220331-8ed73402")
   --entrypoint string
       The entrypoint executable that runs the test commands. (default "runner.sh")
   --enable-docker-in-docker

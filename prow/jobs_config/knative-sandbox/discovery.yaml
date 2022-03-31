@@ -1,7 +1,7 @@
 org: knative-sandbox
 repo: discovery
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:stable
+image: gcr.io/knative-tests/test-infra/prow-tests:v20220331-8ed73402
 imagePullPolicy: Always
 
 jobs:

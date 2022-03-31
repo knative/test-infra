@@ -38,7 +38,7 @@ var (
 )
 
 func main() {
-	pflag.StringVar(&image, "image", "gcr.io/knative-tests/test-infra/prow-tests:stable", "The image we use to run the test flow.")
+	pflag.StringVar(&image, "image", "gcr.io/knative-tests/test-infra/prow-tests:v20220331-8ed73402", "The image we use to run the test flow.")
 	pflag.StringVar(&entrypoint, "entrypoint", "runner.sh", "The entrypoint executable that runs the test commands.")
 	pflag.BoolVar(&dindEnabled, "enable-docker-in-docker", false, "Enable running docker commands in the test flow. "+
 		"By enabling this the container will share the same docker daemon in the host machine, so be careful when using it.")
