@@ -42,7 +42,6 @@ var (
 )
 
 func main() {
-	serviceAccount := flag.String("service-account", os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"), "JSON key file for GCS service account")
 	githubAccount := flag.String("github-account", "", "Token file for Github authentication")
 	slackAccount := flag.String("slack-account", "", "slack secret file for authenticating with Slack")
 	buildsCountOverride := flag.Int("build-count", 5, "count of builds to scan")
@@ -57,7 +56,7 @@ func main() {
 		log.Printf("running in [dry run mode]")
 	}
 
-	if err := prow.Initialize(*serviceAccount); err != nil { // Explicit authenticate with gcs Client
+	if err := prow.Initialize(); err != nil {
 		log.Fatalf("Failed authenticating GCS: '%v'", err)
 	}
 

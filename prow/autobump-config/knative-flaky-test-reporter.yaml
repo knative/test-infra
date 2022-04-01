@@ -6,7 +6,7 @@ selfAssign: true # Commenting `/cc`, so that autobump PR is not assigned to anyo
 gitHubOrg: "knative"
 gitHubRepo: "test-infra"
 remoteName: "test-infra"
-headBranchName: "autobump-prow-tests-knative"
+headBranchName: "autobump-flaky-test-reporter-knative"
 targetVersion: "latest"
 includedConfigPaths:
   - "prow/jobs"

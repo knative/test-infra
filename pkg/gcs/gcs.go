@@ -28,7 +28,6 @@ import (
 
 	"cloud.google.com/go/storage"
 	"google.golang.org/api/iterator"
-	"google.golang.org/api/option"
 )
 
 type storageClient struct {
@@ -36,8 +35,8 @@ type storageClient struct {
 }
 
 // NewClient creates new GCS client with given service account
-func NewClient(ctx context.Context, serviceAccount string) (Client, error) {
-	client, err := storage.NewClient(ctx, option.WithCredentialsFile(serviceAccount))
+func NewClient(ctx context.Context) (Client, error) {
+	client, err := storage.NewClient(ctx)
 	if err != nil {
 		return nil, err
 	}

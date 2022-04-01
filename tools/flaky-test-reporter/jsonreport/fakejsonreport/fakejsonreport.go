@@ -29,7 +29,7 @@ type FakeClient struct {
 }
 
 // Initialize wraps prow's init, which must be called before any other prow functions are used.
-func Initialize(serviceAccount string) (*FakeClient, error) {
+func Initialize() (*FakeClient, error) {
 	return &FakeClient{}, nil
 }
 

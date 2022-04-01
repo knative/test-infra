@@ -38,9 +38,9 @@ import (
 var client jsonreport.Client
 
 // InitLogParser configures jsonreport's dependencies.
-func InitLogParser(serviceAccount string) error {
+func InitLogParser() error {
 	var err error
-	client, err = jsonreport.Initialize(serviceAccount)
+	client, err = jsonreport.Initialize()
 	return err
 }
 

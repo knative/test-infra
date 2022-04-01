@@ -45,18 +45,18 @@ type HandlerClient struct {
 
 // NewHandlerClient gives us a handler where we can listen for Pubsub messages and
 // post comments on GitHub.
-func NewHandlerClient(serviceAccount, githubAccount string, dryrun bool) (*HandlerClient, error) {
+func NewHandlerClient(githubAccount string, dryrun bool) (*HandlerClient, error) {
 	ctx := context.Background()
-	if err := InitLogParser(serviceAccount); err != nil {
+	if err := InitLogParser(); err != nil {
 		log.Fatalf("Failed authenticating GCS: '%v'", err)
 	}
 	githubClient, err := NewGithubClient(githubAccount, dryrun)
 	if err != nil {
-		return nil, fmt.Errorf("Github client: %v", err)
+		return nil, fmt.Errorf("github client: %v", err)
 	}
 	pubsubClient, err := subscriber.NewSubscriberClient(pubsubTopic)
 	if err != nil {
-		return nil, fmt.Errorf("Pubsub client: %v", err)
+		return nil, fmt.Errorf("pubsub client: %v", err)
 	}
 	return &HandlerClient{
 		ctx,
