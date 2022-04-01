@@ -3,8 +3,7 @@ module knative.dev/test-infra
 go 1.15
 
 require (
-	cloud.google.com/go/kms v1.4.0 // indirect
-	cloud.google.com/go/pubsub v1.6.1
+	cloud.google.com/go/iam v0.1.0 // indirect
 	cloud.google.com/go/storage v1.10.0
 	github.com/blang/semver/v4 v4.0.0
 	github.com/davecgh/go-spew v1.1.1
@@ -23,6 +22,7 @@ require (
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8
 	google.golang.org/api v0.70.0
+	google.golang.org/genproto v0.0.0-20220222213610-43724f9ea8cf // indirect
 	k8s.io/apimachinery v0.20.6
 	knative.dev/hack v0.0.0-20220328133751-f06773764ce3
 	sigs.k8s.io/boskos v0.0.0-20200729174948-794df80db9c9
