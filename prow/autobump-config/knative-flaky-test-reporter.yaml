@@ -12,8 +12,8 @@ includedConfigPaths:
   - "prow/jobs"
   - "prow/jobs_config"
 prefixes:
-  - name: "Knative prow-tests image"
-    prefix: "gcr.io/knative-tests/test-infra/prow-tests"
+  - name: "Knative flaky-test-reporter image"
+    prefix: "gcr.io/knative-tests/test-infra/flaky-test-reporter"
     repo: "https://github.com/knative/test-infra"
     summarise: false
     consistentImages: true
