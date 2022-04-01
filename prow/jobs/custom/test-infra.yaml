@@ -137,10 +137,6 @@ periodics:
           memory: 1Gi
 - cron: "0 19 * * *"
   name: ci-knative-cleanup
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-cleanup
   agent: kubernetes
   decorate: true
   cluster: "build-knative"
@@ -187,10 +183,6 @@ periodics:
         secretName: test-account
 - cron: "0 12 * * *"
   name: ci-knative-flakes-reporter
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-flakes-reporter
   agent: kubernetes
   decorate: true
   cluster: "build-knative"
@@ -228,10 +220,6 @@ periodics:
         secretName: flaky-test-reporter-slack-token
 - cron: "0 * * * *"
   name: ci-knative-flakes-resultsrecorder
-  labels:
-    prow.k8s.io/pubsub.project: knative-tests
-    prow.k8s.io/pubsub.topic: knative-monitoring
-    prow.k8s.io/pubsub.runID: ci-knative-flakes-reporter
   agent: kubernetes
   decorate: true
   cluster: "build-knative"
@@ -327,7 +315,7 @@ postsubmits:
     path_alias: knative.dev/test-infra
     max_concurrency: 1
     cluster: "build-knative"
-    run_if_changed: "^(images/.*|tools/(coverage|flaky-test-reporter|flaky-test-retryer)/.*|pkg/.*|go.mod)$"
+    run_if_changed: "^(images/.*|tools/(coverage|flaky-test-reporter)/.*|pkg/.*|go.mod)$"
     branches:
     - "main"
     annotations:
@@ -390,42 +378,6 @@ postsubmits:
         - "-C"
         - "images/prow-tests"
         - "push"
-        volumeMounts:
-        - name: test-account
-          mountPath: /etc/test-account
-          readOnly: true
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-      volumes:
-      - name: test-account
-        secret:
-          secretName: test-account
-  - name: post-knative-test-infra-deploy-tools
-    agent: kubernetes
-    decorate: true
-    path_alias: knative.dev/test-infra
-    max_concurrency: 1
-    cluster: "prow-trusted"
-    run_if_changed: "^tools/flaky-test-retryer/gke_deployment/retryer_service.yaml$"
-    branches:
-    - "main"
-    annotations:
-      testgrid-dashboards: utilities
-      testgrid-tab-name: post-knative-test-infra-deploy-tools
-      testgrid-alert-email: "serverless-engprod-sea@google.com"
-      testgrid-num-failures-to-alert: "1"
-    spec:
-      containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:v20220401-c2f0165b
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "make"
-        - "-C"
-        - "./tools/flaky-test-retryer/gke_deployment"
-        - "deploy"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
