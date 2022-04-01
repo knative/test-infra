@@ -37,7 +37,7 @@ spec:
         image: gcr.io/k8s-staging-boskos/reaper:v20200819-984516e
         args:
         - --resource-type=gke-project
-        - --expire=11m
+        - --expire=3m
         resources:
           requests:
             cpu: 200m
