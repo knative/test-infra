@@ -54,7 +54,7 @@ var (
 )
 
 func setup() {
-	client, _ = fakejsonreport.Initialize("")
+	client, _ = fakejsonreport.Initialize()
 	client.CreateReport(fakeRepo, fakeFlakyTests, true)
 }
 

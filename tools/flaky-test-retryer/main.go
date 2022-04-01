@@ -49,7 +49,7 @@ func initFlags() *EnvFlags {
 func main() {
 	flags := initFlags()
 
-	handler, err := NewHandlerClient(flags.ServiceAccount, flags.GithubAccount, flags.Dryrun)
+	handler, err := NewHandlerClient(flags.GithubAccount, flags.Dryrun)
 	if err != nil {
 		log.Fatalf("Coud not create handler: '%v'", err)
 	}

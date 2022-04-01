@@ -19,7 +19,7 @@ periodics:
       command:
       - generic-autobumper
       args:
-      - --config=prow/knative-prow-tests-autobump-config.yaml
+      - --config=prow/autobump-config/knative-prow-tests.yaml
       - --labels-override=skip-review # This label is used by tide for identifying trusted PR
       volumeMounts:
       - name: prow-auto-bumper-github-token

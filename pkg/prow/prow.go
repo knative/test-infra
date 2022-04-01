@@ -126,10 +126,9 @@ func GetLocalArtifactsDir() string {
 
 /* GCS related logics */
 
-// Initialize wraps gcs authentication, have to be invoked before any other functions
-func Initialize(serviceAccount string) error {
+func Initialize() error {
 	var err error
-	client, err = gcs.NewClient(ctx, serviceAccount)
+	client, err = gcs.NewClient(ctx)
 	return err
 }
 
