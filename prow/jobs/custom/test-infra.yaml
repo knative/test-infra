@@ -129,9 +129,9 @@ presubmits:
           value: "true"
         resources:
           requests:
-            memory: 16Gi
+            memory: 2Gi
           limits:
-            memory: 32Gi
+            memory: 4Gi
       volumes:
       - name: docker-graph
         emptyDir: {}
