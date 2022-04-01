@@ -37,7 +37,7 @@ func CatalogPage(target name.Registry, last string, n int, options ...Option) ([
 	}
 
 	scopes := []string{target.Scope(transport.PullScope)}
-	tr, err := transport.New(target, o.auth, o.transport, scopes)
+	tr, err := transport.NewWithContext(o.context, target, o.auth, o.transport, scopes)
 	if err != nil {
 		return nil, err
 	}
@@ -82,16 +82,19 @@ func Catalog(ctx context.Context, target name.Registry, options ...Option) ([]st
 	}
 
 	scopes := []string{target.Scope(transport.PullScope)}
-	tr, err := transport.New(target, o.auth, o.transport, scopes)
+	tr, err := transport.NewWithContext(o.context, target, o.auth, o.transport, scopes)
 	if err != nil {
 		return nil, err
 	}
 
 	uri := &url.URL{
-		Scheme:   target.Scheme(),
-		Host:     target.RegistryStr(),
-		Path:     "/v2/_catalog",
-		RawQuery: "n=10000",
+		Scheme: target.Scheme(),
+		Host:   target.RegistryStr(),
+		Path:   "/v2/_catalog",
+	}
+
+	if o.pageSize > 0 {
+		uri.RawQuery = fmt.Sprintf("n=%d", o.pageSize)
 	}
 
 	client := http.Client{Transport: tr}

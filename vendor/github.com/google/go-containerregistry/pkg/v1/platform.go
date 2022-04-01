@@ -14,6 +14,10 @@
 
 package v1
 
+import (
+	"sort"
+)
+
 // Platform represents the target os/arch for an image.
 type Platform struct {
 	Architecture string   `json:"architecture"`
@@ -22,4 +26,33 @@ type Platform struct {
 	OSFeatures   []string `json:"os.features,omitempty"`
 	Variant      string   `json:"variant,omitempty"`
 	Features     []string `json:"features,omitempty"`
+}
+
+// Equals returns true if the given platform is semantically equivalent to this one.
+// The order of Features and OSFeatures is not important.
+func (p Platform) Equals(o Platform) bool {
+	return p.OS == o.OS && p.Architecture == o.Architecture && p.Variant == o.Variant && p.OSVersion == o.OSVersion &&
+		stringSliceEqualIgnoreOrder(p.OSFeatures, o.OSFeatures) && stringSliceEqualIgnoreOrder(p.Features, o.Features)
+}
+
+// stringSliceEqual compares 2 string slices and returns if their contents are identical.
+func stringSliceEqual(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i, elm := range a {
+		if elm != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
+// stringSliceEqualIgnoreOrder compares 2 string slices and returns if their contents are identical, ignoring order
+func stringSliceEqualIgnoreOrder(a, b []string) bool {
+	if a != nil && b != nil {
+		sort.Strings(a)
+		sort.Strings(b)
+	}
+	return stringSliceEqual(a, b)
 }
