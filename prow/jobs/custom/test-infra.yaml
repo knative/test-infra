@@ -104,6 +104,40 @@ presubmits:
       - name: test-account
         secret:
           secretName: test-account
+  - name: pull-knative-test-infra-flaky-test-reporter-image-build
+    agent: kubernetes
+    optional: false
+    decorate: true
+    path_alias: knative.dev/test-infra
+    cluster: "build-knative"
+    run_if_changed: "^(images/flaky-test-reporter|tools/flaky-test-reporter/.*|pkg/.*|go.mod)$"
+    branches:
+    - "main"
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:v20220331-8ed73402
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "make"
+        - "-C"
+        - "images/flaky-test-reporter"
+        - "build"
+        env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
+        resources:
+          requests:
+            memory: 16Gi
+          limits:
+            memory: 32Gi
+      volumes:
+      - name: docker-graph
+        emptyDir: {}
+      - name: test-account
+        secret:
+          secretName: test-account
 periodics:
 # ci-knative-heartbeat is used for prometheus, alert(s) will be sent
 # if this job hadn't been succeeded for some time
@@ -321,7 +355,7 @@ postsubmits:
     path_alias: knative.dev/test-infra
     max_concurrency: 1
     cluster: "build-knative"
-    run_if_changed: "^(images/.*|tools/(coverage|flaky-test-reporter|flaky-test-retryer)/.*|go.mod)$"
+    run_if_changed: "^(images/.*|tools/(coverage|flaky-test-reporter|flaky-test-retryer)/.*|pkg/.*|go.mod)$"
     branches:
     - "main"
     annotations:
