@@ -13,9 +13,7 @@ All Prow config files for running Prow jobs for Knative projects are under
 
 1. Invite at least [knative-prow-robot](https://github.com/knative-prow-robot)
    for your org. Add it to the robots team you created. For automated releases
-   and metrics reporting (e.g., code coverage) you'll need to also add
-   [knative-prow-releaser-robot](https://github.com/knative-prow-releaser-robot)
-   and [knative-metrics-robot](https://github.com/knative-metrics-robot).
+   you'll need to also add [knative-prow-releaser-robot](https://github.com/knative-prow-releaser-robot).
 
 ## Setting up Prow for a new repo (reviewers assignment and auto merge)
 

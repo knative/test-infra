@@ -173,8 +173,8 @@ COPY images/prow-tests/runner.sh /usr/local/bin
 COPY images/prow-tests/in-gvm-env.sh /usr/local/bin
 # If you needed to compile and install different tools for different version of Go,
 #  you could do it like:
-#  RUN GO_VERSION=go1.13 in-gvm-env.sh go install knative.dev/test-infra/tools/coverage
-#  RUN GO_VERSION=go1.14 in-gvm-env.sh go install knative.dev/test-infra/tools/coverage
+#  RUN GO_VERSION=go1.13 in-gvm-env.sh go install knative.dev/test-infra/tools/cleanup
+#  RUN GO_VERSION=go1.14 in-gvm-env.sh go install knative.dev/test-infra/tools/cleanup
 # But it must be done in base or the last FROM, because it does not install to /go/bin
 
 ############################################################
@@ -221,8 +221,6 @@ RUN go install github.com/GoogleCloudPlatform/docker-credential-gcr@${DOCKER_CRE
 COPY . /go/src/knative.dev/test-infra
 
 # Build custom tools in the container
-
-RUN cd /go/src/knative.dev/test-infra && go install ./tools/coverage
 RUN cd /go/src/knative.dev/test-infra && go install ./tools/kntest/cmd/kntest
 
 # TODO(chizhg): maybe also move perf-tests tool to be part of kntest?
