@@ -1,7 +1,7 @@
 org: knative-sandbox
 repo: net-istio
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20220401-c2f0165b
+image: gcr.io/knative-tests/test-infra/prow-tests:v20220401-0c7bdaf4
 imagePullPolicy: Always
 
 jobs:
