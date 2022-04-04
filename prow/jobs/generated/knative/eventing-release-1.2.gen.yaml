@@ -52,6 +52,84 @@ periodics:
         secretName: test-account
 - annotations:
     testgrid-dashboards: knative-release-1.2
+    testgrid-tab-name: eventing-s390x-e2e-reconciler-tests
+  cluster: build-knative
+  cron: 30 21 * * *
+  decorate: true
+  extra_refs:
+  - base_ref: release-1.2
+    org: knative
+    path_alias: knative.dev/eventing
+    repo: eventing
+  name: s390x-e2e-reconciler-tests_eventing_release-1.2_periodic
+  spec:
+    containers:
+    - args:
+      - bash
+      - -c
+      - |
+        mkdir -p /root/.kube
+        cat /opt/cluster/ci-script > connect.sh
+        chmod +x connect.sh
+        ./connect.sh eventing_rekt-12
+        kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
+        chmod +x adjust.sh
+        ./adjust.sh
+        ./test/e2e-rekt-tests.sh --run-tests
+      command:
+      - runner.sh
+      env:
+      - name: SYSTEM_NAMESPACE
+        value: knative-eventing
+      - name: SCALE_CHAOSDUCK_TO_ZERO
+        value: "1"
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: KO_FLAGS
+        value: --platform=linux/s390x
+      - name: PLATFORM
+        value: linux/s390x
+      - name: KO_DOCKER_REPO
+        valueFrom:
+          secretKeyRef:
+            key: ko-docker-repo
+            name: s390x-cluster1
+      - name: DISABLE_MD_LINTING
+        value: "1"
+      - name: KUBECONFIG
+        value: /root/.kube/config
+      - name: DOCKER_CONFIG
+        value: /opt/cluster
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220401-c2f0165b
+      name: ""
+      resources:
+        limits:
+          memory: 16Gi
+        requests:
+          memory: 12Gi
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /etc/test-account
+        name: test-account
+        readOnly: true
+      - mountPath: /opt/cluster
+        name: s390x-cluster1
+        readOnly: true
+    nodeSelector:
+      type: testing
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+    - name: s390x-cluster1
+      secret:
+        defaultMode: 384
+        secretName: s390x-cluster1
+- annotations:
+    testgrid-dashboards: knative-release-1.2
     testgrid-tab-name: eventing-s390x-e2e-tests
   cluster: build-knative
   cron: 30 19 * * *

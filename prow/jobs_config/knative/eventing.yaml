@@ -57,6 +57,29 @@ jobs:
       - name: SCALE_CHAOSDUCK_TO_ZERO
         value: "1"
 
+  - name: s390x-e2e-reconciler-tests
+    cron: 0 9 * * *
+    types: [periodic]
+    requirements: [s390x]
+    command: [runner.sh]
+    args:
+      - bash
+      - -c
+      - |
+        mkdir -p /root/.kube
+        cat /opt/cluster/ci-script > connect.sh
+        chmod +x connect.sh
+        ./connect.sh eventing_rekt-main
+        kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
+        chmod +x adjust.sh
+        ./adjust.sh
+        ./test/e2e-rekt-tests.sh --run-tests
+    env:
+      - name: SYSTEM_NAMESPACE
+        value: knative-eventing
+      - name: SCALE_CHAOSDUCK_TO_ZERO
+        value: "1"
+
   - name: nightly
     types: [periodic]
     timeout: 3h
