@@ -102,7 +102,7 @@ periodics:
         value: /root/.kube/config
       - name: DOCKER_CONFIG
         value: /opt/cluster
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220401-c2f0165b
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220401-0c7bdaf4
       name: ""
       resources:
         limits:
