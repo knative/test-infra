@@ -74,7 +74,7 @@ presubmits:
     - "main"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:v20220401-0c7bdaf4
+      - image: gcr.io/knative-tests/test-infra/prow-tests:v20220405-5a6cdbac
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -114,7 +114,7 @@ periodics:
     testgrid-num-failures-to-alert: "1"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:v20220401-0c7bdaf4
+    - image: gcr.io/knative-tests/test-infra/prow-tests:v20220405-5a6cdbac
       imagePullPolicy: Always
       command:
       - "runner.sh"
@@ -150,7 +150,7 @@ periodics:
       report_template: '"The cleanup periodic job fails, check the log: <{{.Status.URL}}|View logs>"'
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:v20220401-0c7bdaf4
+    - image: gcr.io/knative-tests/test-infra/prow-tests:v20220405-5a6cdbac
       imagePullPolicy: Always
       command:
       - "runner.sh"
@@ -260,7 +260,7 @@ periodics:
     testgrid-num-failures-to-alert: "1"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:v20220401-0c7bdaf4
+    - image: gcr.io/knative-tests/test-infra/prow-tests:v20220405-5a6cdbac
       imagePullPolicy: Always
       command:
       - "runner.sh"
@@ -315,7 +315,7 @@ postsubmits:
       testgrid-num-failures-to-alert: "1"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:v20220401-0c7bdaf4
+      - image: gcr.io/knative-tests/test-infra/prow-tests:v20220405-5a6cdbac
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -359,7 +359,7 @@ postsubmits:
       testgrid-num-failures-to-alert: "1"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:v20220401-0c7bdaf4
+      - image: gcr.io/knative-tests/test-infra/prow-tests:v20220405-5a6cdbac
         imagePullPolicy: Always
         command:
         - runner.sh
