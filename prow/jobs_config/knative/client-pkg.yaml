@@ -1,7 +1,7 @@
 org: knative
 repo: client-pkg
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20220401-0c7bdaf4
+image: gcr.io/knative-tests/test-infra/prow-tests:v20220405-5a6cdbac
 imagePullPolicy: Always
 
 jobs:
