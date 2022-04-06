@@ -110,8 +110,6 @@ periodics:
   annotations:
     testgrid-dashboards: utilities
     testgrid-tab-name: ci-knative-heartbeat
-    testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:v20220405-5a6cdbac
@@ -140,8 +138,6 @@ periodics:
   annotations:
     testgrid-dashboards: utilities
     testgrid-tab-name: ci-knative-cleanup
-    testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: "1"
   reporter_config:
     slack:
       channel: productivity
@@ -179,8 +175,12 @@ periodics:
   annotations:
     testgrid-dashboards: utilities
     testgrid-tab-name: ci-knative-flakes-reporter
-    testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: "1"
+  reporter_config:
+    slack:
+      channel: productivity
+      job_states_to_report:
+        - failure
+      report_template: '"The flakes-reporter periodic job fails, check the log: <{{.Status.URL}}|View logs>"'
   spec:
     serviceAccountName: flaky-test-reporter
     containers:
@@ -216,8 +216,12 @@ periodics:
   annotations:
     testgrid-dashboards: utilities
     testgrid-tab-name: ci-knative-flakes-resultsrecorder
-    testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: "1"
+  reporter_config:
+    slack:
+      channel: productivity
+      job_states_to_report:
+        - failure
+      report_template: '"The flakes-resultsrecorder periodic job fails, check the log: <{{.Status.URL}}|View logs>"'
   spec:
     serviceAccountName: flaky-test-reporter
     containers:
@@ -256,8 +260,12 @@ periodics:
   annotations:
     testgrid-dashboards: utilities
     testgrid-tab-name: ci-knative-prow-jobs-syncer
-    testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: "1"
+  reporter_config:
+    slack:
+      channel: productivity
+      job_states_to_report:
+        - failure
+      report_template: '"The prow-jobs-syncer periodic job fails, check the log: <{{.Status.URL}}|View logs>"'
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:v20220405-5a6cdbac
@@ -311,8 +319,12 @@ postsubmits:
     annotations:
       testgrid-dashboards: utilities
       testgrid-tab-name: post-knative-test-infra-image-push
-      testgrid-alert-email: "serverless-engprod-sea@google.com"
-      testgrid-num-failures-to-alert: "1"
+    reporter_config:
+      slack:
+        channel: productivity
+        job_states_to_report:
+          - failure
+        report_template: '"The test-infra-tools-image-push postsubmit job fails, check the log: <{{.Status.URL}}|View logs>"'
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:v20220405-5a6cdbac
@@ -355,8 +367,12 @@ postsubmits:
     annotations:
       testgrid-dashboards: utilities
       testgrid-tab-name: post-knative-test-infra-prow-tests-image-push
-      testgrid-alert-email: "serverless-engprod-sea@google.com"
-      testgrid-num-failures-to-alert: "1"
+    reporter_config:
+      slack:
+        channel: productivity
+        job_states_to_report:
+          - failure
+        report_template: '"The prow-tests-image-push postsubmit job fails, check the log: <{{.Status.URL}}|View logs>"'
     spec:
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:v20220405-5a6cdbac
@@ -392,8 +408,12 @@ postsubmits:
     annotations:
       testgrid-dashboards: utilities
       testgrid-tab-name: post-test-infra-update-testgrid-proto
-      testgrid-alert-email: "serverless-engprod-sea@google.com"
-      testgrid-num-failures-to-alert: "1"
+    reporter_config:
+      slack:
+        channel: productivity
+        job_states_to_report:
+          - failure
+        report_template: '"The update-testgrid-proto postsubmit job fails, check the log: <{{.Status.URL}}|View logs>"'
     spec:
       containers:
       - image: gcr.io/k8s-prow/configurator:v20220323-9b8611d021

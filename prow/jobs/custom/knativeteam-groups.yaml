@@ -33,7 +33,6 @@ periodics:
   annotations:
       testgrid-dashboards: utilities
       testgrid-tab-name: ci-knativeteam-groups-jobs
-      testgrid-alert-email: "serverless-engprod-sea@google.com"
   rerun_auth_config:
     github_team_slugs:
     - org: knative
@@ -64,12 +63,16 @@ postsubmits:
     annotations:
       testgrid-dashboards: utilities
       testgrid-tab-name: post-knativeteam-groups-jobs
-      testgrid-alert-email: "serverless-engprod-sea@google.com"
-      testgrid-num-failures-to-alert: '1'
     rerun_auth_config:
       github_team_slugs:
       - org: knative
         slug: productivity-infra-admins
+    reporter_config:
+      slack:
+        channel: productivity
+        job_states_to_report:
+          - failure
+        report_template: '"The knativeteam-groups sync postsubmit job fails, check the log: <{{.Status.URL}}|View logs>"'
     spec:
       serviceAccountName: gsuite-groups-manager
       containers:

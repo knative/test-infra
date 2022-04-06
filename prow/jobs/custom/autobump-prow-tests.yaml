@@ -11,8 +11,6 @@ periodics:
   annotations:
     testgrid-dashboards: utilities
     testgrid-tab-name: ci-knative-prow-tests-auto-bumper
-    testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/k8s-prow/generic-autobumper:v20220323-9b8611d021

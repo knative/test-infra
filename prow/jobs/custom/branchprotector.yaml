@@ -38,8 +38,6 @@ periodics:
   annotations:
     testgrid-dashboards: utilities
     testgrid-tab-name: ci-knative-test-infra-branchprotector
-    testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - name: branchprotector

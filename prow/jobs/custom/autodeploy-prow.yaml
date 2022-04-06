@@ -23,8 +23,6 @@ postsubmits:
     annotations:
       testgrid-dashboards: utilities
       testgrid-tab-name: ci-knative-prow-auto-deploy
-      testgrid-alert-email: "serverless-engprod-sea@google.com"
-      testgrid-num-failures-to-alert: "1"
     reporter_config:
       slack:
         channel: productivity
@@ -62,8 +60,6 @@ periodics:
   annotations:
     testgrid-dashboards: utilities
     testgrid-tab-name: ci-knative-test-infra-config-bootstrapper
-    testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: "1"
   reporter_config:
     slack:
       channel: productivity
