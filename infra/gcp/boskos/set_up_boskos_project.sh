@@ -39,9 +39,6 @@ readonly PROJECT_NUMBER="$(gcloud projects describe ${PROJECT} --format="value(p
 #   - @googlegroups.com addresses are assumed to be groups.
 #   - @...gserviceaccount.com addresses are assumed to be service accounts.
 readonly RESOURCES=(
-    "roles/owner"
-    "serverless-engprod-sea-root@twosync.google.com"
-
     "roles/editor"
     "knative-productivity-admins@googlegroups.com"
     "knative-tests@appspot.gserviceaccount.com"
