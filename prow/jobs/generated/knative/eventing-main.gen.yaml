@@ -208,6 +208,77 @@ periodics:
         secretName: s390x-cluster1
 - annotations:
     testgrid-dashboards: eventing
+    testgrid-tab-name: ppc64le-e2e-tests
+  cluster: build-knative
+  cron: 0 7 * * *
+  decorate: true
+  extra_refs:
+  - base_ref: main
+    org: knative
+    path_alias: knative.dev/eventing
+    repo: eventing
+  name: ppc64le-e2e-tests_eventing_main_periodic
+  spec:
+    containers:
+    - args:
+      - bash
+      - -c
+      - |
+        cat /opt/cluster/ci-script > /tmp/connect.sh
+        chmod +x /tmp/connect.sh
+        . /tmp/connect.sh ${CI_JOB}
+        ./test/e2e-tests.sh --run-tests
+      command:
+      - runner.sh
+      env:
+      - name: SYSTEM_NAMESPACE
+        value: knative-eventing
+      - name: SCALE_CHAOSDUCK_TO_ZERO
+        value: "1"
+      - name: CI_JOB
+        value: eventing-main
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: KO_FLAGS
+        value: --platform=linux/ppc64le
+      - name: PLATFORM
+        value: linux/ppc64le
+      - name: KO_DOCKER_REPO
+        value: registry.ppc64le
+      - name: DISABLE_MD_LINTING
+        value: "1"
+      - name: KUBECONFIG
+        value: /root/.kube/config
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220405-5a6cdbac
+      name: ""
+      resources:
+        limits:
+          memory: 16Gi
+        requests:
+          memory: 12Gi
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /etc/test-account
+        name: test-account
+        readOnly: true
+      - mountPath: /opt/cluster
+        name: ppc64le-cluster
+        readOnly: true
+    nodeSelector:
+      type: testing
+    volumes:
+    - name: test-account
+      secret:
+        secretName: test-account
+    - name: ppc64le-cluster
+      secret:
+        defaultMode: 384
+        secretName: ppc64le-cluster
+- annotations:
+    testgrid-dashboards: eventing
     testgrid-tab-name: nightly
   cluster: build-knative
   cron: 9 9 * * *
