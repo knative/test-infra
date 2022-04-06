@@ -120,8 +120,6 @@ postsubmits:
     annotations:
       testgrid-dashboards: utilities
       testgrid-tab-name: post-knative-peribolos
-      testgrid-alert-email: "serverless-engprod-sea@google.com"
-      testgrid-num-failures-to-alert: "1"
     spec:
       containers:
       - image: gcr.io/k8s-prow/peribolos:v20220323-9b8611d021
@@ -175,8 +173,6 @@ postsubmits:
     annotations:
       testgrid-dashboards: utilities
       testgrid-tab-name: post-knative-sandbox-peribolos
-      testgrid-alert-email: "serverless-engprod-sea@google.com"
-      testgrid-num-failures-to-alert: "1"
     spec:
       containers:
       - image: gcr.io/k8s-prow/peribolos:v20220323-9b8611d021
@@ -227,8 +223,6 @@ periodics:
   annotations:
     testgrid-dashboards: utilities
     testgrid-tab-name: ci-knative-peribolos
-    testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/k8s-prow/peribolos:v20220323-9b8611d021
@@ -277,8 +271,6 @@ periodics:
   annotations:
     testgrid-dashboards: utilities
     testgrid-tab-name: ci-knative-sandbox-peribolos
-    testgrid-alert-email: "serverless-engprod-sea@google.com"
-    testgrid-num-failures-to-alert: "1"
   spec:
     containers:
     - image: gcr.io/k8s-prow/peribolos:v20220323-9b8611d021
