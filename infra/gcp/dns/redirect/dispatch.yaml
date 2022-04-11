@@ -1,0 +1,11 @@
+dispatch:
+- url: "testgrid.knative.dev/*"
+  service: testgrid
+- url: "slack.knative.dev/*"
+  service: slack
+- url: "blog.knative.dev/*"
+  service: blog
+- url: "stats.knative.dev/*"
+  service: stats
+- url: "knative.dev/*"
+  service: default
