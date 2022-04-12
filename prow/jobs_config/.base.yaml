@@ -115,3 +115,25 @@ requirement_presets:
         secret:
           secretName: s390x-cluster1
           defaultMode: 0600
+
+  ppc64le:
+    env:
+      - name: KO_FLAGS
+        value: "--platform=linux/ppc64le"
+      - name: PLATFORM
+        value: "linux/ppc64le"
+      - name: KO_DOCKER_REPO
+        value: "registry.ppc64le"
+      - name: DISABLE_MD_LINTING
+        value: "1"
+      - name: KUBECONFIG
+        value: /root/.kube/config
+    volumeMounts:
+      - name: ppc64le-cluster
+        mountPath: /opt/cluster
+        readOnly: true
+    volumes:
+      - name: ppc64le-cluster
+        secret:
+          secretName: ppc64le-cluster
+          defaultMode: 0600
