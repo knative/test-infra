@@ -63,12 +63,9 @@ We use two big platforms for running automation:
 <!-- TODO: As an improvement for the architecture section maybe mention how
 the tools fit together -->
 
-### Gubernator
+### Spyglass
 
 Knative uses
-[gubernator](https://github.com/kubernetes/test-infra/tree/master/gubernator) to
-provide a [PR dashboard](https://gubernator.knative.dev/pr) for contributions in
-the Knative github organization, and
 [Spyglass](https://github.com/kubernetes/test-infra/tree/master/prow/spyglass)
 to visualize test details.
 

@@ -15,7 +15,7 @@
 plank:
   job_url_template: 'https://prow.knative.dev/view/gcs/knative-prow/{{if or (eq .Spec.Type "presubmit") (eq .Spec.Type "batch")}}pr-logs/pull{{with .Spec.Refs}}/{{.Org}}_{{.Repo}}{{end}}{{else}}logs{{end}}{{if eq .Spec.Type "presubmit"}}/{{with index .Spec.Refs.Pulls 0}}{{.Number}}{{end}}{{else if eq .Spec.Type "batch"}}/batch{{end}}/{{.Spec.Job}}/{{.Status.BuildID}}/'
   report_templates:
-    '*': '[Full PR test history](https://gubernator.knative.dev/pr/{{.Spec.Refs.Org}}_{{.Spec.Refs.Repo}}/{{with index .Spec.Refs.Pulls 0}}{{.Number}}{{end}}). [Your PR dashboard](https://gubernator.knative.dev/pr/{{with index .Spec.Refs.Pulls 0}}{{.Author}}{{end}}).'
+    '*': '[Your PR dashboard](https://prow.knative.dev/pr).'
   job_url_prefix_config:
     '*': https://prow.knative.dev/view/
   pod_pending_timeout: 60m
@@ -56,7 +56,7 @@ deck:
     gcs_browser_prefix: https://console.cloud.google.com/storage/browser/
     testgrid_config: gs://knative-testgrid/config
     testgrid_root: https://testgrid.knative.dev/
-    announcement: "The old job viewer, Gubernator, has been deprecated in favour of this page, Spyglass.{{if .ArtifactPath}} For now, the old page is <a href='https://gubernator.knative.dev/build/{{.ArtifactPath}}'>still available</a>.{{end}} Please send feedback to Knative productivity."
+    announcement: "Please send feedback to Knative Infra (productivity)."
     lenses:
     - lens:
         name: metadata

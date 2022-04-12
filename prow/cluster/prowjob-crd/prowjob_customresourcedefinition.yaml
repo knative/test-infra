@@ -20067,7 +20067,7 @@ spec:
               build_id:
                 description: BuildID is the build identifier vended either by tot
                   or the snowflake library for this job and used as an identifier
-                  for grouping artifacts in GCS for views in TestGrid and Gubernator.
+                  for grouping artifacts in GCS for views in TestGrid.
                   Idenitifiers vended by tot are monotonically increasing whereas
                   identifiers vended by the snowflake library are not.
                 type: string
