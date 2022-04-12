@@ -67,14 +67,6 @@ module "knative_dev" {
       ]
     },
     {
-      name = "gubernator"
-      type = "CNAME"
-      ttl  = 300
-      records = [
-        "ghs.googlehosted.com.",
-      ]
-    },
-    {
       name = "slack"
       type = "CNAME"
       ttl  = 300
