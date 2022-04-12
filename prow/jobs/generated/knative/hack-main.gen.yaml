@@ -96,22 +96,30 @@ presubmits:
         - --run-test
         - ./test/e2e-kind.sh
         env:
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220405-5a6cdbac
         name: ""
         resources: {}
         securityContext:
           privileged: true
         volumeMounts:
-        - mountPath: /etc/test-account
-          name: test-account
-          readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
-      - name: test-account
-        secret:
-          secretName: test-account
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup

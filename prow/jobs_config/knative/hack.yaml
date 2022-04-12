@@ -22,3 +22,5 @@ jobs:
   - name: kind-tests
     types: [presubmit]
     command: [runner.sh, ./test/presubmit-tests.sh, --run-test, ./test/e2e-kind.sh]
+    requirements: [docker]
+    excluded_requirements: [gcp]
