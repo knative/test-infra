@@ -16,12 +16,12 @@
 # It can update or migrate github labels on repos in a github org based on a YAML file.
 
 presubmits:
-  knative/test-infra:
+  knative/community:
   - name: pull-knative-test-infra-label-sync
     agent: kubernetes
     decorate: true
-    path_alias: knative.dev/test-infra
-    run_if_changed: "^config/label_sync/labels.yaml$"
+    path_alias: knative.dev/community
+    run_if_changed: "^label_sync/labels.yaml$"
     cluster: "prow-trusted"
     branches:
     - "main"
@@ -32,7 +32,7 @@ presubmits:
         command:
         - label_sync
         args:
-        - --config=config/label_sync/labels.yaml
+        - --config=label_sync/labels.yaml
         # Set --confirm=false to only validate the configuration file.
         - --confirm=false
         - --orgs=knative-sandbox,knative
@@ -65,9 +65,9 @@ periodics:
   cluster: "prow-trusted"
   extra_refs:
   - org: knative
-    repo: test-infra
+    repo: community
     base_ref: main
-    path_alias: knative.dev/test-infra
+    path_alias: knative.dev/community
   annotations:
     testgrid-dashboards: utilities
     testgrid-tab-name: ci-knative-test-infra-label-sync
@@ -78,7 +78,7 @@ periodics:
       command:
       - label_sync
       args:
-      - --config=config/label_sync/labels.yaml
+      - --config=label_sync/labels.yaml
       - --confirm=true
       - --orgs=knative-sandbox,knative
       - --github-app-id=$(GITHUB_APP_ID)
@@ -102,13 +102,13 @@ periodics:
         secretName: github-token
 
 postsubmits:
-  knative/test-infra:
+  knative/community:
   - name: post-knative-test-infra-label-sync
     agent: kubernetes
     decorate: true
-    path_alias: knative.dev/test-infra
+    path_alias: knative.dev/community
     max_concurrency: 1
-    run_if_changed: "^config/label_sync/labels.yaml$"
+    run_if_changed: "^label_sync/labels.yaml$"
     cluster: "prow-trusted"
     branches:
     - "main"
@@ -128,7 +128,7 @@ postsubmits:
         command:
         - label_sync
         args:
-        - --config=config/label_sync/labels.yaml
+        - --config=label_sync/labels.yaml
         - --confirm=true
         - --orgs=knative-sandbox,knative
         - --github-app-id=$(GITHUB_APP_ID)
