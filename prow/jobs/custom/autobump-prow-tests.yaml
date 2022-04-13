@@ -11,6 +11,12 @@ periodics:
   annotations:
     testgrid-dashboards: utilities
     testgrid-tab-name: ci-knative-prow-tests-auto-bumper
+  reporter_config:
+    slack:
+      channel: productivity
+      job_states_to_report:
+        - failure
+      report_template: '"The autobump-prow-tests periodic job fails, check the log: <{{.Status.URL}}|View logs>"'
   spec:
     containers:
     - image: gcr.io/k8s-prow/generic-autobumper:v20220323-9b8611d021

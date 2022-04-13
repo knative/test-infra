@@ -14,7 +14,6 @@ includedConfigPaths:
   - "prow/jobs"
 extraFiles:
   - "prow/config.yaml"
-  - "prow/config.sh"
   - "prow/jobs/run_job.sh"
 prefixes:
   - name: "Prow"
