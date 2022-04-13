@@ -1,7 +1,7 @@
 org: knative-sandbox
 repo: eventing-kafka-broker
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20220405-5a6cdbac
+image: gcr.io/knative-tests/test-infra/prow-tests:v20220412-eae25a77
 imagePullPolicy: Always
 
 jobs:
