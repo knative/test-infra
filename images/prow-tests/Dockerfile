@@ -155,7 +155,7 @@ COPY images/prow-tests/source-gvm-and-run.sh /usr/local/bin
 # all Knative repositories.
 RUN source-gvm-and-run.sh install go1.15.15 --prefer-binary
 RUN source-gvm-and-run.sh install go1.16.15 --prefer-binary
-RUN source-gvm-and-run.sh install go1.17.8 --prefer-binary
+RUN source-gvm-and-run.sh install go1.17.9 --prefer-binary
 RUN source-gvm-and-run.sh use go1.17 --default
 
 # protoc and required golang tooling
