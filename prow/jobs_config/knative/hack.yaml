@@ -1,7 +1,7 @@
 org: knative
 repo: hack
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20220412-eae25a77
+image: gcr.io/knative-tests/test-infra/prow-tests:v20220413-fb53bd95
 imagePullPolicy: Always
 
 jobs:
