@@ -39,7 +39,7 @@ periodics:
         value: us-central1
       - name: ORG_NAME
         value: knative-sandbox
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220412-eae25a77
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220413-fb53bd95
       name: ""
       resources: {}
       securityContext:
@@ -75,7 +75,7 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --build-tests
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220412-eae25a77
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220413-fb53bd95
         name: ""
         resources: {}
         securityContext:
@@ -95,7 +95,7 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --unit-tests
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220412-eae25a77
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220413-fb53bd95
         name: ""
         resources: {}
         securityContext:
