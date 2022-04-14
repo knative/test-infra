@@ -6,6 +6,10 @@ We use Terraform to manage our Google Cloud infrastructure.
 
   This is the knative-dns project. It holds the `knative.dev` and `knative.team` DNS Zones
 
+- [knative-tests](./tests)
+
+  This is the knative-tests project. It holds the Prow Clusters and associated infrastructure.
+
 - [knative-gsuite](./gsuite)
 
   This is the knative-gsuite project. It holds a service account that can access Google Workspace Admin API.

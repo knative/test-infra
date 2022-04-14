@@ -18,3 +18,7 @@ module "dns" {
 module "gsuite" {
   source = "./gsuite"
 }
+
+module "tests" {
+  source = "./tests"
+}
