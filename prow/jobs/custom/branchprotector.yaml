@@ -41,7 +41,7 @@ periodics:
   spec:
     containers:
     - name: branchprotector
-      image: gcr.io/k8s-prow/branchprotector:v20220323-9b8611d021
+      image: gcr.io/k8s-prow/branchprotector:v20220414-949f7bddd3
       command:
       - branchprotector
       args:
