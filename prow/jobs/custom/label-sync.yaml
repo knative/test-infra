@@ -36,25 +36,19 @@ presubmits:
         # Set --confirm=false to only validate the configuration file.
         - --confirm=false
         - --orgs=knative-sandbox,knative
-        - --github-app-id=$(GITHUB_APP_ID)
-        - --github-app-private-key-path=/etc/github/cert
-        - "--github-hourly-tokens=2000"
-        - "--github-allowed-burst=1000"
+        # We have to still use the GitHub oauth token for authentication, since
+        # https://github.com/knative/test-infra/pull/3198 change and having
+        # --confirm=false. This happens with peribolos as well.
+        - --token=/etc/github/oauth
         - --debug
         volumeMounts:
-        - name: github-token
+        - name: oauth
           mountPath: /etc/github
           readOnly: true
-        env:
-        - name: GITHUB_APP_ID
-          valueFrom:
-            secretKeyRef:
-              name: github-token
-              key: appid
       volumes:
-      - name: github-token
+      - name: oauth
         secret:
-          secretName: github-token
+          secretName: oauth-token
 
 periodics:
 # Run at 8AM PST.
