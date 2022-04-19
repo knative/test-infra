@@ -17,6 +17,11 @@ module "prow_trusted" {
   horizontal_pod_autoscaling = true
   filestore_csi_driver       = false
   create_service_account     = false
+  cluster_resource_labels = {
+    cluster     = "prow-trusted"
+    role        = "prow"
+    environment = "production"
+  }
 
   node_pools = [
     {
@@ -41,7 +46,7 @@ module "prow" {
   source                     = "terraform-google-modules/kubernetes-engine/google"
   project_id                 = module.project.project_id
   name                       = "prow"
-  region                      = "us-central1"
+  region                     = "us-central1"
   release_channel            = "RAPID"
   network                    = "default"
   subnetwork                 = "default"
@@ -52,13 +57,19 @@ module "prow" {
   horizontal_pod_autoscaling = true
   filestore_csi_driver       = false
   create_service_account     = false
+  cluster_resource_labels = {
+    cluster     = "prow"
+    role        = "prow"
+    environment = "production"
+  }
 
   node_pools = [
     {
       name               = "prod-v1"
-      machine_type       = "e2-standard-8"
+      machine_type       = "e2-standard-4"
+      node_locations     = "us-central1-a,us-central1-b"
       min_count          = 1
-      max_count          = 3
+      max_count          = 2
       disk_size_gb       = 100
       disk_type          = "pd-standard"
       image_type         = "COS_CONTAINERD"
@@ -72,7 +83,6 @@ module "prow" {
 
   node_pools_labels = {
     all = {
-      cluster     = "prow"
       environment = "production"
     }
   }
@@ -93,11 +103,17 @@ module "prow_build" {
   horizontal_pod_autoscaling = true
   filestore_csi_driver       = false
   create_service_account     = false
+  cluster_resource_labels = {
+    cluster     = "prow-build"
+    role        = "prow"
+    environment = "production"
+  }
 
   node_pools = [
     {
       name               = "system-pool-v1"
-      machine_type       = "e2-standard-4"
+      machine_type       = "e2-standard-2"
+      node_locations     = "us-central1-c,us-central1-f"
       min_count          = 1
       max_count          = 2
       disk_size_gb       = 100
@@ -112,6 +128,8 @@ module "prow_build" {
     {
       name               = "testing-pool-v1"
       machine_type       = "e2-standard-16"
+      node_locations     = "us-central1-c,us-central1-f"
+      local_ssd_count    = 1
       min_count          = 0
       max_count          = 4
       disk_size_gb       = 100
@@ -127,8 +145,15 @@ module "prow_build" {
 
   node_pools_labels = {
     all = {
-      cluster     = "prow-build"
       environment = "production"
+    }
+
+    testing-pool-v1 = {
+      type = "testing"
+    }
+
+    system-pool-v1 = {
+      type = "system"
     }
   }
 }
