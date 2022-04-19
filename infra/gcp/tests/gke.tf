@@ -97,9 +97,9 @@ module "prow_build" {
   node_pools = [
     {
       name               = "system-pool-v1"
-      machine_type       = "e2-standard-8"
+      machine_type       = "e2-standard-4"
       min_count          = 1
-      max_count          = 6
+      max_count          = 2
       disk_size_gb       = 100
       disk_type          = "pd-standard"
       image_type         = "COS_CONTAINERD"
