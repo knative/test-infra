@@ -17,14 +17,14 @@ This directory contains prow configs hosted for Knative. This prow is bumped by 
 
 ### Prow Clusters
 
-- [Prow control plane cluster(default prow cluster)](https://pantheon.corp.google.com/kubernetes/clusters/details/us-central1-f/prow?project=knative-tests) \[Currently only accessible by Google employees]
+- [Prow control plane cluster(default prow cluster)](https://console.corp.google.com/kubernetes/clusters/details/us-central1/prow?project=knative-tests)
   - Prow deployments, core configs, and plugins are hosted in this repo
   - Prow job configs are hosted in knative/test-infra repo
-- [Build cluster](https://pantheon.corp.google.com/kubernetes/clusters/details/us-central1-f/knative-prow-build-cluster) \[Currently only accessible by Google employees]
+- [Build cluster](https://console.corp.google.com/kubernetes/clusters/details/us-central1/prow-build?project=knative-tests) 
   - Build cluster deployments are hosted in this repo
   - Boskos resources are hosted in knative/test-infra repo
-- [Trusted cluster](https://pantheon.corp.google.com/kubernetes/clusters/details/us-central1-a/prow-trusted) \[Currently only accessible by Google employees]
-  - This is a very basic cluster with important secrets
+- [Trusted cluster](https://console.corp.google.com/kubernetes/clusters/details/us-central1-a/prow-trusted?project=knative-tests)
+  - This is a small cluster with important secrets and runs sensitive prow jobs.
 
 ### Manually Deploy
 
@@ -41,8 +41,8 @@ allows prow cluster creating secrets based on values from google secret manager
 declared in this repositories:
 
 - Secrets for prow
-service cluster are stored under [`/prow/knative/cluster`](/prow/knative/cluster)
-- Secrets for prow build cluster are stored under [`/prow/knative/cluster/build`](/prow/knative/cluster/build)
+service cluster are stored under [`/prow/cluster`](/prow/cluster)
+- Secrets for prow build cluster are stored under [`/prow/cluster/build`](/prow/cluster/build)
 
 Please make sure
 granting service account
