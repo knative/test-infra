@@ -48,7 +48,7 @@ periodics:
     testgrid-dashboards: knative-release-1.4
     testgrid-tab-name: operator-s390x-e2e-tests
   cluster: build-knative
-  cron: 0 16 * * *
+  cron: 10 20 * * *
   decorate: true
   extra_refs:
   - base_ref: release-1.4
@@ -65,7 +65,7 @@ periodics:
         mkdir -p /root/.kube
         cat /opt/cluster/ci-script > connect.sh
         chmod +x connect.sh
-        ./connect.sh operator-main
+        ./connect.sh operator-14
         kubectl get cm s390x-config-operator -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
         chmod +x adjust.sh
         ./adjust.sh
