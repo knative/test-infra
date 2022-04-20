@@ -54,7 +54,7 @@ periodics:
     testgrid-dashboards: knative-release-1.4
     testgrid-tab-name: serving-s390x-kourier-tests
   cluster: build-knative
-  cron: 0 3 * * *
+  cron: 10 7 * * *
   decorate: true
   extra_refs:
   - base_ref: release-1.4
@@ -71,7 +71,7 @@ periodics:
         mkdir -p /root/.kube
         cat /opt/cluster/ci-script > connect.sh
         chmod +x connect.sh
-        server_addr=$(./connect.sh kourier-main)
+        server_addr=$(./connect.sh kourier-14)
         kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
         chmod +x adjust.sh
         ./adjust.sh
@@ -133,7 +133,7 @@ periodics:
     testgrid-dashboards: knative-release-1.4
     testgrid-tab-name: serving-s390x-contour-tests
   cluster: build-knative
-  cron: 0 5 * * *
+  cron: 10 9 * * *
   decorate: true
   extra_refs:
   - base_ref: release-1.4
@@ -150,7 +150,7 @@ periodics:
         mkdir -p /root/.kube
         cat /opt/cluster/ci-script > connect.sh
         chmod +x connect.sh
-        server_addr=$(./connect.sh contour-main)
+        server_addr=$(./connect.sh contour-14)
         kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
         chmod +x adjust.sh
         ./adjust.sh
