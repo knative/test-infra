@@ -219,10 +219,11 @@ subjects:
   name: "plank"
   namespace: default
 ---
-
 kind: ServiceAccount
 apiVersion: v1
 metadata:
+  annotations:
+    iam.gke.io/gcp-service-account: prow-control-plane@knative-tests.iam.gserviceaccount.com
   name: "sinker"
   namespace: default
 ---
@@ -485,3 +486,15 @@ subjects:
   - kind: ServiceAccount
     name: "statusreconciler"
     namespace: default
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "prow-control-plane"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: "cluster-admin"
+subjects:
+- kind: User
+  name: prow-control-plane@knative-tests.iam.gserviceaccount.com

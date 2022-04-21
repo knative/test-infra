@@ -17,7 +17,7 @@ include Makefile.gcloud.mk
 # These are the usual GKE variables.
 PROJECT       ?= knative-tests
 PROJECT_BUILD ?= knative-tests
-ZONE          ?= us-central1-f
+REGION        ?= us-central1
 CLUSTER       ?= prow
 CLUSTER_BUILD ?= knative-prow-build-cluster
 JOB_NAMESPACE ?= test-pods
