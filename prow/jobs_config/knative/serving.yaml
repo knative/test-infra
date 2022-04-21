@@ -1,7 +1,7 @@
 org: knative
 repo: serving
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20220413-fb53bd95
+image: gcr.io/knative-tests/test-infra/prow-tests:v20220420-38db2837
 imagePullPolicy: Always
 
 jobs:

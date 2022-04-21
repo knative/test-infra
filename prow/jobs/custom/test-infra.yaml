@@ -74,7 +74,7 @@ presubmits:
     - "main"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:v20220413-fb53bd95
+      - image: gcr.io/knative-tests/test-infra/prow-tests:v20220420-38db2837
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -112,7 +112,7 @@ periodics:
     testgrid-tab-name: ci-knative-heartbeat
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:v20220413-fb53bd95
+    - image: gcr.io/knative-tests/test-infra/prow-tests:v20220420-38db2837
       imagePullPolicy: Always
       command:
       - "runner.sh"
@@ -146,7 +146,7 @@ periodics:
       report_template: '"The cleanup periodic job fails, check the log: <{{.Status.URL}}|View logs>"'
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:v20220413-fb53bd95
+    - image: gcr.io/knative-tests/test-infra/prow-tests:v20220420-38db2837
       imagePullPolicy: Always
       command:
       - "runner.sh"
@@ -268,7 +268,7 @@ periodics:
       report_template: '"The prow-jobs-syncer periodic job fails, check the log: <{{.Status.URL}}|View logs>"'
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:v20220413-fb53bd95
+    - image: gcr.io/knative-tests/test-infra/prow-tests:v20220420-38db2837
       imagePullPolicy: Always
       command:
       - "runner.sh"
@@ -327,7 +327,7 @@ postsubmits:
         report_template: '"The test-infra-tools-image-push postsubmit job fails, check the log: <{{.Status.URL}}|View logs>"'
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:v20220413-fb53bd95
+      - image: gcr.io/knative-tests/test-infra/prow-tests:v20220420-38db2837
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -375,7 +375,7 @@ postsubmits:
         report_template: '"The prow-tests-image-push postsubmit job fails, check the log: <{{.Status.URL}}|View logs>"'
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:v20220413-fb53bd95
+      - image: gcr.io/knative-tests/test-infra/prow-tests:v20220420-38db2837
         imagePullPolicy: Always
         command:
         - runner.sh

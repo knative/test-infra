@@ -29,7 +29,7 @@ periodics:
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220413-fb53bd95
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220420-38db2837
       name: ""
       resources: {}
       securityContext:
@@ -94,7 +94,7 @@ periodics:
         value: /root/.kube/config
       - name: DOCKER_CONFIG
         value: /opt/cluster
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220413-fb53bd95
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220420-38db2837
       name: ""
       resources: {}
       securityContext:
@@ -147,7 +147,7 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220413-fb53bd95
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220420-38db2837
       name: ""
       resources: {}
       securityContext:
@@ -183,7 +183,7 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --build-tests
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220413-fb53bd95
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220420-38db2837
         name: ""
         resources: {}
         securityContext:
@@ -203,7 +203,7 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --unit-tests
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220413-fb53bd95
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220420-38db2837
         name: ""
         resources: {}
         securityContext:
@@ -228,7 +228,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220413-fb53bd95
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220420-38db2837
         name: ""
         resources: {}
         securityContext:
@@ -260,7 +260,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220413-fb53bd95
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220420-38db2837
         name: ""
         resources: {}
         securityContext:
