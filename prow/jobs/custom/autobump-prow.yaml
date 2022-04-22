@@ -1,7 +1,9 @@
 periodics:
 - cron: "15 15 * * 1"  # Bump with label `skip-review`. Run at 7:15 PST (15:15 UTC) each Monday.
   name: ci-knative-prow-auto-bumper-for-auto-deploy
-  cluster: "build-knative"
+  cluster: "prow-build"
+  decoration_config: # will remove this temp override
+    gcs_credentials_secret: "gcs-upload"
   decorate: true
   extra_refs:
   - org: knative
@@ -26,16 +28,26 @@ periodics:
       - --config=prow/autobump-config/knative.yaml
       - --labels-override=skip-review # This label is used by tide for identifying trusted PR
       volumeMounts:
-      - name: prow-auto-bumper-github-token
+      - name: github-credentials
         mountPath: /etc/prow-auto-bumper-github-token
         readOnly: true
       - name: ssh
         mountPath: /root/.ssh
     volumes:
-    - name: prow-auto-bumper-github-token
+    - name: github-credentials
       secret:
-        secretName: prow-auto-bumper-github-token
+        secretName: github-credentials
+        items:
+        - key: auto_bumper_token
+          path: prow-auto-bumper-github-token
     - name: ssh
       secret:
-        secretName: prow-updater-robot-ssh-key
+        secretName: github-credentials
         defaultMode: 0400
+        items:
+        - key: id_rsa
+          path: id_rsa
+        - key: id_rsa_pub
+          path: id_rsa.pub
+        - key: known_hosts
+          path: known_hosts
