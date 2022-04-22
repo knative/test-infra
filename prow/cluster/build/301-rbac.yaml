@@ -70,6 +70,12 @@ rules:
     verbs:
       - get
 ---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: "prow-control-plane"
+  namespace: kube-system
+---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
@@ -79,5 +85,6 @@ roleRef:
   kind: ClusterRole
   name: "cluster-admin"
 subjects:
-- kind: User
-  name: prow-control-plane@knative-tests.iam.gserviceaccount.com
+  - kind: ServiceAccount
+    name: prow-control-plane
+    namespace: kube-system

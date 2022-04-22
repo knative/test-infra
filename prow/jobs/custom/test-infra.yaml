@@ -45,7 +45,9 @@ presubmits:
     run_if_changed: "(^config/prow/k8s-testgrid/.*.yaml$|^prow/jobs/.*.yaml$)"
     branches:
     - "main"
-    cluster: "build-knative"
+    cluster: "prow-build"
+    decoration_config: # will remove this temp override
+      gcs_credentials_secret: "gcs-upload"
     extra_refs:
     - org: GoogleCloudPlatform
       repo: oss-test-infra
@@ -68,7 +70,9 @@ presubmits:
     optional: false
     decorate: true
     path_alias: knative.dev/test-infra
-    cluster: "build-knative"
+    cluster: "prow-build"
+    decoration_config: # will remove this temp override
+      gcs_credentials_secret: "gcs-upload"
     run_if_changed: "^(images/prow-tests/.*|tools/kntest/.*|pkg/.*|go.mod)$"
     branches:
     - "main"
@@ -87,13 +91,16 @@ presubmits:
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         volumeMounts:
-        - name: test-account
+        - name: prow-google-credentials
           mountPath: /etc/test-account
           readOnly: true
       volumes:
-      - name: test-account
+      - name: prow-google-credentials
         secret:
-          secretName: test-account
+          secretName: prow-google-credentials
+          items:
+          - key: service-account-key.json
+            path: service-account.json
 periodics:
 # ci-knative-heartbeat is used for prometheus, alert(s) will be sent
 # if this job hadn't been succeeded for some time
