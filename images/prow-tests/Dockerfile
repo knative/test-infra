@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM debian:bullseye-20220228-slim AS base
+FROM debian:bullseye-20220418-slim AS base
 
 # Pinned versions of stuff we pull in
-ARG CLOUD_SDK_VERSION=377.0.0
+ARG CLOUD_SDK_VERSION=382.0.0
 ARG KUBECTL_VERSION=v1.21.4
 ARG DOCKER_VERSION=5:20.10.9~3-0~debian-bullseye
 ARG MAVEN_VERSION=3.8.4
