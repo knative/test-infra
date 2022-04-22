@@ -22,7 +22,7 @@ REPO_ROOT_DIR="$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")"
 readonly CONFIG_GENERATOR_DIR="${REPO_ROOT_DIR}/tools/configgen"
 
 # Clean up existing generated config files.
-rm -rf "${REPO_ROOT_DIR}/prow/jobs/generated/*"
+rm -rf "${REPO_ROOT_DIR}/prow/jobs/generated"/*
 
 # Generate config for Prow jobs and TestGrid
 cd "${CONFIG_GENERATOR_DIR}" && go run . \
