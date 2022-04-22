@@ -52,4 +52,7 @@ spec:
       volumes:
       - name: service
         secret:
-          secretName: test-account
+          secretName: prow-google-credentials
+          items:
+          - key: service-account-key.json
+            path: service-account.json
