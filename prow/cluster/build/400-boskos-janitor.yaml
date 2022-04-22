@@ -49,6 +49,9 @@ spec:
           requests:
             cpu: 200m
             memory: 20Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
       volumes:
       - name: service
         secret:
