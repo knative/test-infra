@@ -32,7 +32,7 @@ plank:
       gcs_configuration:
         bucket: "knative-prow"
         path_strategy: "explicit"
-      gcs_credentials_secret: "test-account"
+      gcs_credentials_secret: "gcs-upload"
       resources:
         sidecar:
           requests:
