@@ -43,7 +43,10 @@ periodics:
     volumes:
     - name: test-account
       secret:
-        secretName: test-account
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
 - annotations:
     testgrid-dashboards: knative-release-1.2
     testgrid-tab-name: client-s390x-e2e-tests
@@ -111,7 +114,10 @@ periodics:
     volumes:
     - name: test-account
       secret:
-        secretName: test-account
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
     - name: s390x-cluster1
       secret:
         defaultMode: 384
@@ -248,7 +254,10 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
   - always_run: true
     branches:
     - ^release-1.2$
@@ -280,4 +289,7 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
