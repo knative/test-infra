@@ -22,7 +22,7 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 1h 
+    timeout: 1h
     gcs_credentials_secret: "test-account" # will remove this temp override
   cluster: "prow-trusted"
   extra_refs:
