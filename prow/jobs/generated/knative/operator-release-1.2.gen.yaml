@@ -9,7 +9,7 @@ periodics:
 - annotations:
     testgrid-dashboards: knative-release-1.2
     testgrid-tab-name: operator-continuous
-  cluster: prow-build
+  cluster: build-knative
   cron: 51 10 * * *
   decorate: true
   extra_refs:
@@ -43,14 +43,11 @@ periodics:
     volumes:
     - name: test-account
       secret:
-        items:
-        - key: service-account-key.json
-          path: service-account.json
-        secretName: prow-google-credentials
+        secretName: test-account
 - annotations:
     testgrid-dashboards: knative-release-1.2
     testgrid-tab-name: operator-s390x-e2e-tests
-  cluster: prow-build
+  cluster: build-knative
   cron: 30 4 * * *
   decorate: true
   extra_refs:
@@ -114,10 +111,7 @@ periodics:
     volumes:
     - name: test-account
       secret:
-        items:
-        - key: service-account-key.json
-          path: service-account.json
-        secretName: prow-google-credentials
+        secretName: test-account
     - name: s390x-cluster1
       secret:
         defaultMode: 384
@@ -125,7 +119,7 @@ periodics:
 - annotations:
     testgrid-dashboards: knative-release-1.2
     testgrid-tab-name: operator-release
-  cluster: prow-build
+  cluster: build-knative
   cron: 9 9 * * 2
   decorate: true
   extra_refs:
@@ -170,22 +164,16 @@ periodics:
     volumes:
     - name: hub-token
       secret:
-        items:
-        - key: hub_token
-          path: token
-        secretName: github-credentials
+        secretName: hub-token
     - name: release-account
       secret:
-        items:
-        - key: release.json
-          path: service-account.json
-        secretName: prow-google-credentials
+        secretName: release-account
 presubmits:
   knative/operator:
   - always_run: true
     branches:
     - ^release-1.2$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: build-tests_operator_release-1.2
     path_alias: knative.dev/operator
@@ -205,7 +193,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.2$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: unit-tests_operator_release-1.2
     path_alias: knative.dev/operator
@@ -225,7 +213,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.2$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: integration-tests_operator_release-1.2
     path_alias: knative.dev/operator
@@ -254,14 +242,11 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          items:
-          - key: service-account-key.json
-            path: service-account.json
-          secretName: prow-google-credentials
+          secretName: test-account
   - always_run: true
     branches:
     - ^release-1.2$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: upgrade-tests_operator_release-1.2
     path_alias: knative.dev/operator
@@ -291,14 +276,11 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          items:
-          - key: service-account-key.json
-            path: service-account.json
-          secretName: prow-google-credentials
+          secretName: test-account
   - always_run: true
     branches:
     - ^release-1.2$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: serving-upgrade-tests_operator_release-1.2
     path_alias: knative.dev/operator
@@ -328,14 +310,11 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          items:
-          - key: service-account-key.json
-            path: service-account.json
-          secretName: prow-google-credentials
+          secretName: test-account
   - always_run: true
     branches:
     - ^release-1.2$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: eventing-upgrade-tests_operator_release-1.2
     path_alias: knative.dev/operator
@@ -365,7 +344,4 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          items:
-          - key: service-account-key.json
-            path: service-account.json
-          secretName: prow-google-credentials
+          secretName: test-account

@@ -108,8 +108,6 @@ periodics:
   name: ci-knative-heartbeat
   agent: kubernetes
   decorate: true
-  decoration_config:
-    gcs_credentials_secret: "test-account" # will remove this temp override
   cluster: "default"
   extra_refs:
   - org: knative
@@ -139,7 +137,6 @@ periodics:
   cluster: "build-knative"
   decoration_config:
     timeout: 6h
-    gcs_credentials_secret: "test-account" # will remove this temp override
   extra_refs:
   - org: knative
     repo: test-infra
@@ -181,8 +178,6 @@ periodics:
   name: ci-knative-flakes-reporter
   agent: kubernetes
   decorate: true
-  decoration_config:
-    gcs_credentials_secret: "test-account" # will remove this temp override
   cluster: "build-knative"
   annotations:
     testgrid-dashboards: utilities
@@ -224,8 +219,6 @@ periodics:
   name: ci-knative-flakes-resultsrecorder
   agent: kubernetes
   decorate: true
-  decoration_config:
-    gcs_credentials_secret: "test-account" # will remove this temp override
   cluster: "build-knative"
   annotations:
     testgrid-dashboards: utilities
@@ -265,8 +258,6 @@ periodics:
   name: ci-knative-prow-jobs-syncer
   agent: kubernetes
   decorate: true
-  decoration_config:
-    gcs_credentials_secret: "test-account" # will remove this temp override
   cluster: "build-knative"
   extra_refs:
   - org: knative
@@ -326,8 +317,6 @@ postsubmits:
   - name: post-knative-test-infra-image-push
     agent: kubernetes
     decorate: true
-    decoration_config:
-      gcs_credentials_secret: "test-account" # will remove this temp override
     path_alias: knative.dev/test-infra
     max_concurrency: 1
     cluster: "build-knative"
@@ -376,8 +365,6 @@ postsubmits:
   - name: post-knative-test-infra-prow-tests-image-push
     agent: kubernetes
     decorate: true
-    decoration_config:
-      gcs_credentials_secret: "test-account" # will remove this temp override
     path_alias: knative.dev/test-infra
     max_concurrency: 1
     cluster: "build-knative"
@@ -417,8 +404,6 @@ postsubmits:
           secretName: test-account
   - name: post-test-infra-update-testgrid-proto
     decorate: true
-    decoration_config:
-      gcs_credentials_secret: "test-account" # will remove this temp override
     run_if_changed: "^(config/prow/k8s-testgrid/|prow/jobs/).*.yaml"
     branches:
     - "main"

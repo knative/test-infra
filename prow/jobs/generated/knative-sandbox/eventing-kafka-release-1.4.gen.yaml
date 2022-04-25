@@ -9,7 +9,7 @@ periodics:
 - annotations:
     testgrid-dashboards: knative-sandbox-release-1.4
     testgrid-tab-name: eventing-kafka-continuous
-  cluster: prow-build
+  cluster: build-knative
   cron: 38 21 * * *
   decorate: true
   extra_refs:
@@ -51,10 +51,7 @@ periodics:
     volumes:
     - name: test-account
       secret:
-        items:
-        - key: service-account-key.json
-          path: service-account.json
-        secretName: prow-google-credentials
+        secretName: test-account
     - emptyDir: {}
       name: docker-graph
     - hostPath:
@@ -68,7 +65,7 @@ periodics:
 - annotations:
     testgrid-dashboards: knative-sandbox-release-1.4
     testgrid-tab-name: eventing-kafka-release
-  cluster: prow-build
+  cluster: build-knative
   cron: 10 9 * * 2
   decorate: true
   extra_refs:
@@ -123,16 +120,10 @@ periodics:
     volumes:
     - name: hub-token
       secret:
-        items:
-        - key: hub_token
-          path: token
-        secretName: github-credentials
+        secretName: hub-token
     - name: release-account
       secret:
-        items:
-        - key: release.json
-          path: service-account.json
-        secretName: prow-google-credentials
+        secretName: release-account
     - emptyDir: {}
       name: docker-graph
     - hostPath:
@@ -148,7 +139,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.4$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: build-tests_eventing-kafka_release-1.4
     path_alias: knative.dev/eventing-kafka
@@ -189,7 +180,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.4$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: unit-tests_eventing-kafka_release-1.4
     path_alias: knative.dev/eventing-kafka
@@ -230,7 +221,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.4$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: integration-test-channel-consolidated_eventing-kafka_release-1.4
     path_alias: knative.dev/eventing-kafka
@@ -260,14 +251,11 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          items:
-          - key: service-account-key.json
-            path: service-account.json
-          secretName: prow-google-credentials
+          secretName: test-account
   - always_run: true
     branches:
     - ^release-1.4$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: integration-test-channel-consolidated-tls_eventing-kafka_release-1.4
     path_alias: knative.dev/eventing-kafka
@@ -297,14 +285,11 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          items:
-          - key: service-account-key.json
-            path: service-account.json
-          secretName: prow-google-credentials
+          secretName: test-account
   - always_run: true
     branches:
     - ^release-1.4$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: integration-test-channel-consolidated-sasl_eventing-kafka_release-1.4
     path_alias: knative.dev/eventing-kafka
@@ -334,14 +319,11 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          items:
-          - key: service-account-key.json
-            path: service-account.json
-          secretName: prow-google-credentials
+          secretName: test-account
   - always_run: true
     branches:
     - ^release-1.4$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: integration-test-channel-distributed_eventing-kafka_release-1.4
     path_alias: knative.dev/eventing-kafka
@@ -371,14 +353,11 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          items:
-          - key: service-account-key.json
-            path: service-account.json
-          secretName: prow-google-credentials
+          secretName: test-account
   - always_run: true
     branches:
     - ^release-1.4$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: integration-test-mt-source_eventing-kafka_release-1.4
     optional: true
@@ -409,14 +388,11 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          items:
-          - key: service-account-key.json
-            path: service-account.json
-          secretName: prow-google-credentials
+          secretName: test-account
   - always_run: true
     branches:
     - ^release-1.4$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: upgrade-tests_eventing-kafka_release-1.4
     path_alias: knative.dev/eventing-kafka
@@ -446,7 +422,4 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          items:
-          - key: service-account-key.json
-            path: service-account.json
-          secretName: prow-google-credentials
+          secretName: test-account

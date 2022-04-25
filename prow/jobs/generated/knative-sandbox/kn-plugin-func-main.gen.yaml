@@ -9,7 +9,7 @@ periodics:
 - annotations:
     testgrid-dashboards: kn-plugin-func
     testgrid-tab-name: nightly
-  cluster: prow-build
+  cluster: build-knative
   cron: 43 9 * * *
   decorate: true
   extra_refs:
@@ -50,10 +50,7 @@ periodics:
     volumes:
     - name: nightly-account
       secret:
-        items:
-        - key: nightly.json
-          path: service-account.json
-        secretName: prow-google-credentials
+        secretName: nightly-account
     - emptyDir: {}
       name: docker-graph
     - hostPath:
@@ -67,7 +64,7 @@ periodics:
 - annotations:
     testgrid-dashboards: kn-plugin-func
     testgrid-tab-name: release
-  cluster: prow-build
+  cluster: build-knative
   cron: 19 */9 * * *
   decorate: true
   extra_refs:
@@ -120,16 +117,10 @@ periodics:
     volumes:
     - name: hub-token
       secret:
-        items:
-        - key: hub_token
-          path: token
-        secretName: github-credentials
+        secretName: hub-token
     - name: release-account
       secret:
-        items:
-        - key: release.json
-          path: service-account.json
-        secretName: prow-google-credentials
+        secretName: release-account
     - emptyDir: {}
       name: docker-graph
     - hostPath:

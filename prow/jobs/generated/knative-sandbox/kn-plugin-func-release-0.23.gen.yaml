@@ -9,7 +9,7 @@ periodics:
 - annotations:
     testgrid-dashboards: knative-sandbox-release-0.23
     testgrid-tab-name: kn-plugin-func-release
-  cluster: prow-build
+  cluster: build-knative
   cron: 3 9 * * 2
   decorate: true
   extra_refs:
@@ -64,16 +64,10 @@ periodics:
     volumes:
     - name: hub-token
       secret:
-        items:
-        - key: hub_token
-          path: token
-        secretName: github-credentials
+        secretName: hub-token
     - name: release-account
       secret:
-        items:
-        - key: release.json
-          path: service-account.json
-        secretName: prow-google-credentials
+        secretName: release-account
     - emptyDir: {}
       name: docker-graph
     - hostPath:

@@ -13,7 +13,7 @@ path_aliases:
 node_selector:
   type: testing
 
-cluster: prow-build
+cluster: "build-knative"
 
 requirements: [gcp]
 requirement_presets:
@@ -28,10 +28,7 @@ requirement_presets:
     volumes:
       - name: nightly-account
         secret:
-          secretName: prow-google-credentials
-          items:
-          - key: nightly.json
-            path: service-account.json
+          secretName: nightly-account
 
   release:
     env:
@@ -49,16 +46,10 @@ requirement_presets:
     volumes:
       - name: hub-token
         secret:
-          secretName: github-credentials
-          items:
-          - key: hub_token
-            path: token
+          secretName: hub-token
       - name: release-account
         secret:
-          secretName: prow-google-credentials
-          items:
-          - key: release.json
-            path: service-account.json
+          secretName: release-account
 
   docker:
     env:
@@ -96,10 +87,7 @@ requirement_presets:
     volumes:
       - name: test-account
         secret:
-          secretName: prow-google-credentials
-          items:
-          - key: service-account-key.json
-            path: service-account.json
+          secretName: test-account
 
   s390x:
     env:
@@ -149,3 +137,64 @@ requirement_presets:
         secret:
           secretName: ppc64le-cluster
           defaultMode: 0600
+
+  nightly-dev:
+    env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/nightly-account/service-account.json
+    volumeMounts:
+      - name: nightly-account
+        mountPath: /etc/nightly-account
+        readOnly: true
+    volumes:
+      - name: nightly-account
+        secret:
+          secretName: prow-google-credentials
+          items:
+          - key: nightly.json
+            path: service-account.json
+
+  release-dev:
+    env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: release-account
+        mountPath: /etc/release-account
+        readOnly: true
+    volumes:
+      - name: hub-token
+        secret:
+          secretName: github-credentials
+          items:
+          - key: hub_token
+            path: token
+      - name: release-account
+        secret:
+          secretName: prow-google-credentials
+          items:
+          - key: release.json
+            path: service-account.json
+
+  gcp-dev:
+    env:
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+    volumeMounts:
+      - name: test-account
+        mountPath: /etc/test-account
+        readOnly: true
+    volumes:
+      - name: test-account
+        secret:
+          secretName: prow-google-credentials
+          items:
+          - key: service-account-key.json
+            path: service-account.json

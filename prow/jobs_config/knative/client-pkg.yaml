@@ -3,6 +3,8 @@ repo: client-pkg
 branches: [main]
 image: gcr.io/knative-tests/test-infra/prow-tests:v20220420-38db2837
 imagePullPolicy: Always
+cluster: prow-build
+
 
 jobs:
   - name: build-tests
@@ -18,3 +20,5 @@ jobs:
   - name: continuous
     types: [periodic]
     command: [runner.sh, ./test/presubmit-tests.sh, --all-tests]
+    excluded_requirements: [gcp]
+    requirements: [gcp-dev]

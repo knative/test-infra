@@ -18,13 +18,7 @@ requirement_presets:
     volumes:
       - name: hub-token
         secret:
-          secretName: github-credentials
-          items:
-            - key: hub_token
-              path: token
+          secretName: hub-token
       - name: release-account
         secret:
-          secretName: prow-google-credentials
-          items:
-            - key: release.json
-              path: service-account.json
+          secretName: release-account

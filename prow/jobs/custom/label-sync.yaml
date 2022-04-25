@@ -20,8 +20,6 @@ presubmits:
   - name: pull-knative-test-infra-label-sync
     agent: kubernetes
     decorate: true
-    decoration_config:
-      gcs_credentials_secret: "test-account" # will remove this temp override
     path_alias: knative.dev/community
     run_if_changed: "^label_sync/labels.yaml$"
     cluster: "prow-trusted"
@@ -58,8 +56,6 @@ periodics:
   name: ci-knative-test-infra-label-sync
   agent: kubernetes
   decorate: true
-  decoration_config:
-    gcs_credentials_secret: "test-account" # will remove this temp override
   cluster: "prow-trusted"
   extra_refs:
   - org: knative
@@ -104,8 +100,6 @@ postsubmits:
   - name: post-knative-test-infra-label-sync
     agent: kubernetes
     decorate: true
-    decoration_config:
-      gcs_credentials_secret: "test-account" # will remove this temp override
     path_alias: knative.dev/community
     max_concurrency: 1
     run_if_changed: "^label_sync/labels.yaml$"

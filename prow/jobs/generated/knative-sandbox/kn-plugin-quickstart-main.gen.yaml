@@ -9,7 +9,7 @@ periodics:
 - annotations:
     testgrid-dashboards: kn-plugin-quickstart
     testgrid-tab-name: continuous
-  cluster: prow-build
+  cluster: build-knative
   cron: 42 */9 * * *
   decorate: true
   extra_refs:
@@ -43,14 +43,11 @@ periodics:
     volumes:
     - name: test-account
       secret:
-        items:
-        - key: service-account-key.json
-          path: service-account.json
-        secretName: prow-google-credentials
+        secretName: test-account
 - annotations:
     testgrid-dashboards: kn-plugin-quickstart
     testgrid-tab-name: nightly
-  cluster: prow-build
+  cluster: build-knative
   cron: 22 9 * * *
   decorate: true
   extra_refs:
@@ -83,14 +80,11 @@ periodics:
     volumes:
     - name: nightly-account
       secret:
-        items:
-        - key: nightly.json
-          path: service-account.json
-        secretName: prow-google-credentials
+        secretName: nightly-account
 - annotations:
     testgrid-dashboards: kn-plugin-quickstart
     testgrid-tab-name: release
-  cluster: prow-build
+  cluster: build-knative
   cron: 26 */9 * * *
   decorate: true
   extra_refs:
@@ -135,22 +129,16 @@ periodics:
     volumes:
     - name: hub-token
       secret:
-        items:
-        - key: hub_token
-          path: token
-        secretName: github-credentials
+        secretName: hub-token
     - name: release-account
       secret:
-        items:
-        - key: release.json
-          path: service-account.json
-        secretName: prow-google-credentials
+        secretName: release-account
 presubmits:
   knative-sandbox/kn-plugin-quickstart:
   - always_run: true
     branches:
     - ^main$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: build-tests_kn-plugin-quickstart_main
     path_alias: knative.dev/kn-plugin-quickstart
@@ -170,7 +158,7 @@ presubmits:
   - always_run: true
     branches:
     - ^main$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: unit-tests_kn-plugin-quickstart_main
     path_alias: knative.dev/kn-plugin-quickstart
@@ -190,7 +178,7 @@ presubmits:
   - always_run: true
     branches:
     - ^main$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: integration-tests_kn-plugin-quickstart_main
     path_alias: knative.dev/kn-plugin-quickstart
@@ -219,7 +207,4 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          items:
-          - key: service-account-key.json
-            path: service-account.json
-          secretName: prow-google-credentials
+          secretName: test-account

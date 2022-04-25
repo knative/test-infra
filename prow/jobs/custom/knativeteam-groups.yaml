@@ -2,8 +2,6 @@ presubmits:
   knative/community:
   - name: pull-knativeteam-groups-test
     decorate: true
-    decoration_config:
-      gcs_credentials_secret: "test-account" # will remove this temp override
     run_if_changed: "^groups/"
     branches:
     - ^main$
@@ -27,8 +25,6 @@ periodics:
   name: ci-knativeteam-groups
   cluster: prow-trusted
   decorate: true
-  decoration_config:
-    gcs_credentials_secret: "test-account" # will remove this temp override
   max_concurrency: 1
   extra_refs:
   - org: knative

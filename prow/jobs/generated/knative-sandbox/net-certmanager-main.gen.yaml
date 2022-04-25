@@ -9,7 +9,7 @@ periodics:
 - annotations:
     testgrid-dashboards: net-certmanager
     testgrid-tab-name: continuous
-  cluster: prow-build
+  cluster: build-knative
   cron: 24 */9 * * *
   decorate: true
   extra_refs:
@@ -43,14 +43,11 @@ periodics:
     volumes:
     - name: test-account
       secret:
-        items:
-        - key: service-account-key.json
-          path: service-account.json
-        secretName: prow-google-credentials
+        secretName: test-account
 - annotations:
     testgrid-dashboards: net-certmanager
     testgrid-tab-name: nightly
-  cluster: prow-build
+  cluster: build-knative
   cron: 0 9 * * *
   decorate: true
   extra_refs:
@@ -90,14 +87,11 @@ periodics:
     volumes:
     - name: nightly-account
       secret:
-        items:
-        - key: nightly.json
-          path: service-account.json
-        secretName: prow-google-credentials
+        secretName: nightly-account
 - annotations:
     testgrid-dashboards: net-certmanager
     testgrid-tab-name: release
-  cluster: prow-build
+  cluster: build-knative
   cron: 32 */9 * * *
   decorate: true
   extra_refs:
@@ -142,22 +136,16 @@ periodics:
     volumes:
     - name: hub-token
       secret:
-        items:
-        - key: hub_token
-          path: token
-        secretName: github-credentials
+        secretName: hub-token
     - name: release-account
       secret:
-        items:
-        - key: release.json
-          path: service-account.json
-        secretName: prow-google-credentials
+        secretName: release-account
 presubmits:
   knative-sandbox/net-certmanager:
   - always_run: true
     branches:
     - ^main$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: build-tests_net-certmanager_main
     path_alias: knative.dev/net-certmanager
@@ -177,7 +165,7 @@ presubmits:
   - always_run: true
     branches:
     - ^main$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: unit-tests_net-certmanager_main
     path_alias: knative.dev/net-certmanager
@@ -197,7 +185,7 @@ presubmits:
   - always_run: true
     branches:
     - ^main$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: integration-tests_net-certmanager_main
     path_alias: knative.dev/net-certmanager
@@ -226,7 +214,4 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          items:
-          - key: service-account-key.json
-            path: service-account.json
-          secretName: prow-google-credentials
+          secretName: test-account

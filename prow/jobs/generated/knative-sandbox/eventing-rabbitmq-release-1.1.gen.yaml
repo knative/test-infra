@@ -9,7 +9,7 @@ periodics:
 - annotations:
     testgrid-dashboards: knative-sandbox-release-1.1
     testgrid-tab-name: eventing-rabbitmq-continuous
-  cluster: prow-build
+  cluster: build-knative
   cron: 5 12 * * *
   decorate: true
   extra_refs:
@@ -43,14 +43,11 @@ periodics:
     volumes:
     - name: test-account
       secret:
-        items:
-        - key: service-account-key.json
-          path: service-account.json
-        secretName: prow-google-credentials
+        secretName: test-account
 - annotations:
     testgrid-dashboards: knative-sandbox-release-1.1
     testgrid-tab-name: eventing-rabbitmq-release
-  cluster: prow-build
+  cluster: build-knative
   cron: 11 9 * * 2
   decorate: true
   extra_refs:
@@ -97,13 +94,7 @@ periodics:
     volumes:
     - name: hub-token
       secret:
-        items:
-        - key: hub_token
-          path: token
-        secretName: github-credentials
+        secretName: hub-token
     - name: release-account
       secret:
-        items:
-        - key: release.json
-          path: service-account.json
-        secretName: prow-google-credentials
+        secretName: release-account

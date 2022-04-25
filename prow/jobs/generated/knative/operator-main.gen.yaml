@@ -9,7 +9,7 @@ periodics:
 - annotations:
     testgrid-dashboards: operator
     testgrid-tab-name: continuous
-  cluster: prow-build
+  cluster: build-knative
   cron: 55 */9 * * *
   decorate: true
   extra_refs:
@@ -43,14 +43,11 @@ periodics:
     volumes:
     - name: test-account
       secret:
-        items:
-        - key: service-account-key.json
-          path: service-account.json
-        secretName: prow-google-credentials
+        secretName: test-account
 - annotations:
     testgrid-dashboards: operator
     testgrid-tab-name: s390x-e2e-tests
-  cluster: prow-build
+  cluster: build-knative
   cron: 0 16 * * *
   decorate: true
   extra_refs:
@@ -114,10 +111,7 @@ periodics:
     volumes:
     - name: test-account
       secret:
-        items:
-        - key: service-account-key.json
-          path: service-account.json
-        secretName: prow-google-credentials
+        secretName: test-account
     - name: s390x-cluster1
       secret:
         defaultMode: 384
@@ -125,7 +119,7 @@ periodics:
 - annotations:
     testgrid-dashboards: operator
     testgrid-tab-name: nightly
-  cluster: prow-build
+  cluster: build-knative
   cron: 5 9 * * *
   decorate: true
   extra_refs:
@@ -165,14 +159,11 @@ periodics:
     volumes:
     - name: nightly-account
       secret:
-        items:
-        - key: nightly.json
-          path: service-account.json
-        secretName: prow-google-credentials
+        secretName: nightly-account
 - annotations:
     testgrid-dashboards: operator
     testgrid-tab-name: release
-  cluster: prow-build
+  cluster: build-knative
   cron: 45 */9 * * *
   decorate: true
   extra_refs:
@@ -215,22 +206,16 @@ periodics:
     volumes:
     - name: hub-token
       secret:
-        items:
-        - key: hub_token
-          path: token
-        secretName: github-credentials
+        secretName: hub-token
     - name: release-account
       secret:
-        items:
-        - key: release.json
-          path: service-account.json
-        secretName: prow-google-credentials
+        secretName: release-account
 presubmits:
   knative/operator:
   - always_run: true
     branches:
     - ^main$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: build-tests_operator_main
     path_alias: knative.dev/operator
@@ -250,7 +235,7 @@ presubmits:
   - always_run: true
     branches:
     - ^main$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: unit-tests_operator_main
     path_alias: knative.dev/operator
@@ -270,7 +255,7 @@ presubmits:
   - always_run: true
     branches:
     - ^main$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: integration-tests_operator_main
     path_alias: knative.dev/operator
@@ -299,14 +284,11 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          items:
-          - key: service-account-key.json
-            path: service-account.json
-          secretName: prow-google-credentials
+          secretName: test-account
   - always_run: true
     branches:
     - ^main$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: upgrade-tests_operator_main
     path_alias: knative.dev/operator
@@ -336,14 +318,11 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          items:
-          - key: service-account-key.json
-            path: service-account.json
-          secretName: prow-google-credentials
+          secretName: test-account
   - always_run: true
     branches:
     - ^main$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: serving-upgrade-tests_operator_main
     path_alias: knative.dev/operator
@@ -373,14 +352,11 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          items:
-          - key: service-account-key.json
-            path: service-account.json
-          secretName: prow-google-credentials
+          secretName: test-account
   - always_run: true
     branches:
     - ^main$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: eventing-upgrade-tests_operator_main
     path_alias: knative.dev/operator
@@ -410,7 +386,4 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          items:
-          - key: service-account-key.json
-            path: service-account.json
-          secretName: prow-google-credentials
+          secretName: test-account

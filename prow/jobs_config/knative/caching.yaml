@@ -3,6 +3,7 @@ repo: caching
 branches: [main]
 image: gcr.io/knative-tests/test-infra/prow-tests:v20220420-38db2837
 imagePullPolicy: Always
+cluster: prow-build
 
 jobs:
   - name: build-tests
@@ -18,3 +19,5 @@ jobs:
   - name: integration-tests
     types: [presubmit]
     command: [runner.sh, ./test/presubmit-tests.sh, --integration-tests]
+    excluded_requirements: [gcp]
+    requirements: [gcp-dev]

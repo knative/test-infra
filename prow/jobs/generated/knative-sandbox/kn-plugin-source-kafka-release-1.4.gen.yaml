@@ -9,7 +9,7 @@ periodics:
 - annotations:
     testgrid-dashboards: knative-sandbox-release-1.4
     testgrid-tab-name: kn-plugin-source-kafka-continuous
-  cluster: prow-build
+  cluster: build-knative
   cron: 59 6 * * *
   decorate: true
   extra_refs:
@@ -43,14 +43,11 @@ periodics:
     volumes:
     - name: test-account
       secret:
-        items:
-        - key: service-account-key.json
-          path: service-account.json
-        secretName: prow-google-credentials
+        secretName: test-account
 - annotations:
     testgrid-dashboards: knative-sandbox-release-1.4
     testgrid-tab-name: kn-plugin-source-kafka-release
-  cluster: prow-build
+  cluster: build-knative
   cron: 25 9 * * 2
   decorate: true
   extra_refs:
@@ -105,16 +102,10 @@ periodics:
     volumes:
     - name: hub-token
       secret:
-        items:
-        - key: hub_token
-          path: token
-        secretName: github-credentials
+        secretName: hub-token
     - name: release-account
       secret:
-        items:
-        - key: release.json
-          path: service-account.json
-        secretName: prow-google-credentials
+        secretName: release-account
     - emptyDir: {}
       name: docker-graph
     - hostPath:
@@ -130,7 +121,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.4$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: build-tests_kn-plugin-source-kafka_release-1.4
     path_alias: knative.dev/kn-plugin-source-kafka
@@ -150,7 +141,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.4$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: unit-tests_kn-plugin-source-kafka_release-1.4
     path_alias: knative.dev/kn-plugin-source-kafka
@@ -170,7 +161,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.4$
-    cluster: prow-build
+    cluster: build-knative
     decorate: true
     name: integration-tests_kn-plugin-source-kafka_release-1.4
     path_alias: knative.dev/kn-plugin-source-kafka
@@ -199,7 +190,4 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          items:
-          - key: service-account-key.json
-            path: service-account.json
-          secretName: prow-google-credentials
+          secretName: test-account

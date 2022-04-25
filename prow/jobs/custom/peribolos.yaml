@@ -21,8 +21,6 @@ presubmits:
   - name: pull-knative-peribolos
     agent: kubernetes
     decorate: true
-    decoration_config:
-      gcs_credentials_secret: "test-account" # will remove this temp override
     path_alias: knative.dev/community
     run_if_changed: "^peribolos/knative.yaml$"
     cluster: "prow-trusted"
@@ -64,8 +62,6 @@ presubmits:
   - name: pull-knative-sandbox-peribolos
     agent: kubernetes
     decorate: true
-    decoration_config:
-      gcs_credentials_secret: "test-account" # will remove this temp override
     path_alias: knative.dev/community
     run_if_changed: "^peribolos/knative-sandbox.yaml$"
     cluster: "prow-trusted"
@@ -109,8 +105,6 @@ postsubmits:
   - name: post-knative-peribolos
     agent: kubernetes
     decorate: true
-    decoration_config:
-      gcs_credentials_secret: "test-account" # will remove this temp override
     path_alias: knative.dev/community
     max_concurrency: 1
     run_if_changed: "^peribolos/knative.yaml$"
@@ -164,8 +158,6 @@ postsubmits:
   - name: post-knative-sandbox-peribolos
     agent: kubernetes
     decorate: true
-    decoration_config:
-      gcs_credentials_secret: "test-account" # will remove this temp override
     path_alias: knative.dev/community
     max_concurrency: 1
     run_if_changed: "^peribolos/knative-sandbox.yaml$"
@@ -222,8 +214,6 @@ periodics:
   name: ci-knative-peribolos
   agent: kubernetes
   decorate: true
-  decoration_config:
-    gcs_credentials_secret: "test-account" # will remove this temp override
   cluster: "prow-trusted"
   extra_refs:
   - org: knative
