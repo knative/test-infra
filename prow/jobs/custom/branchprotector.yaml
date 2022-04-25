@@ -22,7 +22,8 @@ periodics:
   agent: kubernetes
   decorate: true
   decoration_config:
-    timeout: 5h
+    timeout: 1h 
+    gcs_credentials_secret: "test-account" # will remove this temp override
   cluster: "prow-trusted"
   extra_refs:
   - org: knative
@@ -49,8 +50,8 @@ periodics:
       - --job-config-path=prow/jobs
       - --github-app-id=$(GITHUB_APP_ID)
       - --github-app-private-key-path=/etc/github/cert
-      - "--github-hourly-tokens=2000"
-      - "--github-allowed-burst=1000"
+      - --github-hourly-tokens=2000
+      - --github-allowed-burst=1000
       - --confirm
       volumeMounts:
       - name: github-token

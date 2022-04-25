@@ -18,8 +18,10 @@ postsubmits:
     cluster: prow-trusted
     run_if_changed: '^prow/cluster/'
     decorate: true
+    decoration_config: # will remove this temp override
+      gcs_credentials_secret: "gcs-upload"
     branches:
-    - main
+    - test-account
     annotations:
       testgrid-dashboards: utilities
       testgrid-tab-name: ci-knative-prow-auto-deploy
@@ -55,7 +57,7 @@ periodics:
   extra_refs:
   - org: knative
     repo: test-infra
-    base_ref: main
+    base_ref: test-account
     path_alias: knative.dev/test-infra
   annotations:
     testgrid-dashboards: utilities
