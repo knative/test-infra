@@ -84,7 +84,7 @@ periodics:
 - annotations:
     testgrid-dashboards: client
     testgrid-tab-name: s390x-e2e-tests
-  cluster: build-knative
+  cluster: prow-build
   cron: 0 14 * * *
   decorate: true
   extra_refs:
@@ -196,11 +196,14 @@ periodics:
     volumes:
     - name: nightly-account
       secret:
-        secretName: nightly-account
+        items:
+        - key: nightly.json
+          path: service-account.json
+        secretName: prow-google-credentials
 - annotations:
     testgrid-dashboards: client
     testgrid-tab-name: release
-  cluster: build-knative
+  cluster: prow-build
   cron: 4 */9 * * *
   decorate: true
   extra_refs:
@@ -243,10 +246,16 @@ periodics:
     volumes:
     - name: hub-token
       secret:
-        secretName: hub-token
+        items:
+        - key: hub_token
+          path: token
+        secretName: github-credentials
     - name: release-account
       secret:
-        secretName: release-account
+        items:
+        - key: release.json
+          path: service-account.json
+        secretName: prow-google-credentials
 presubmits:
   knative/client:
   - always_run: true

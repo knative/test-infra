@@ -9,7 +9,7 @@ periodics:
 - annotations:
     testgrid-dashboards: knative-release-1.1
     testgrid-tab-name: client-continuous
-  cluster: build-knative
+  cluster: prow-buid
   cron: 55 2 * * *
   decorate: true
   extra_refs:
@@ -47,7 +47,7 @@ periodics:
 - annotations:
     testgrid-dashboards: knative-release-1.1
     testgrid-tab-name: client-s390x-e2e-tests
-  cluster: build-knative
+  cluster: prow-buid
   cron: 20 22 * * *
   decorate: true
   extra_refs:
@@ -119,7 +119,7 @@ periodics:
 - annotations:
     testgrid-dashboards: knative-release-1.1
     testgrid-tab-name: client-release
-  cluster: build-knative
+  cluster: prow-buid
   cron: 53 9 * * 2
   decorate: true
   extra_refs:
@@ -164,16 +164,22 @@ periodics:
     volumes:
     - name: hub-token
       secret:
-        secretName: hub-token
+        items:
+        - key: hub_token
+          path: token
+        secretName: github-credentials
     - name: release-account
       secret:
-        secretName: release-account
+        items:
+        - key: release.json
+          path: service-account.json
+        secretName: prow-google-credentials
 presubmits:
   knative/client:
   - always_run: true
     branches:
     - ^release-1.1$
-    cluster: build-knative
+    cluster: prow-buid
     decorate: true
     name: build-tests_client_release-1.1
     path_alias: knative.dev/client
@@ -193,7 +199,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.1$
-    cluster: build-knative
+    cluster: prow-buid
     decorate: true
     name: unit-tests_client_release-1.1
     path_alias: knative.dev/client
@@ -213,7 +219,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.1$
-    cluster: build-knative
+    cluster: prow-buid
     decorate: true
     name: integration-tests_client_release-1.1
     path_alias: knative.dev/client
@@ -246,7 +252,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.1$
-    cluster: build-knative
+    cluster: prow-buid
     decorate: true
     name: integration-tests-latest-release_client_release-1.1
     path_alias: knative.dev/client
