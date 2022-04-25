@@ -38,42 +38,43 @@ plank:
           requests:
             cpu: 100m
             memory: 20Mi
-    - cluster: build-knative
-      timeout: 2h
-      grace_period: 15s
-      utility_images:
-        # Update these versions when updating plank version in cluster.yaml
-        clonerefs: "gcr.io/k8s-prow/clonerefs:v20220414-949f7bddd3"
-        initupload: "gcr.io/k8s-prow/initupload:v20220414-949f7bddd3"
-        entrypoint: "gcr.io/k8s-prow/entrypoint:v20220414-949f7bddd3"
-        sidecar: "gcr.io/k8s-prow/sidecar:v20220414-949f7bddd3"
-      gcs_configuration:
-        bucket: "knative-prow"
-        path_strategy: "explicit"
-      gcs_credentials_secret: "test-account"
-      resources:
-        sidecar:
-          requests:
-            cpu: 100m
-            memory: 20Mi
-    - cluster: default
-      # timeout: 2h
-      # grace_period: 15s
-      # utility_images:
-      #   # Update these versions when updating plank version in cluster.yaml
-      #   clonerefs: "gcr.io/k8s-prow/clonerefs:v20220414-949f7bddd3"
-      #   initupload: "gcr.io/k8s-prow/initupload:v20220414-949f7bddd3"
-      #   entrypoint: "gcr.io/k8s-prow/entrypoint:v20220414-949f7bddd3"
-      #   sidecar: "gcr.io/k8s-prow/sidecar:v20220414-949f7bddd3"
-      gcs_configuration:
-        bucket: "knative-prow"
-        path_strategy: "explicit"
-      gcs_credentials_secret: "test-account"
-      resources:
-        sidecar:
-          requests:
-            cpu: 100m
-            memory: 20Mi
+    - config:
+        timeout: 2h
+        grace_period: 15s
+        utility_images:
+          # Update these versions when updating plank version in cluster.yaml
+          clonerefs: "gcr.io/k8s-prow/clonerefs:v20220414-949f7bddd3"
+          initupload: "gcr.io/k8s-prow/initupload:v20220414-949f7bddd3"
+          entrypoint: "gcr.io/k8s-prow/entrypoint:v20220414-949f7bddd3"
+          sidecar: "gcr.io/k8s-prow/sidecar:v20220414-949f7bddd3"
+        gcs_configuration:
+          bucket: "knative-prow"
+          path_strategy: "explicit"
+        gcs_credentials_secret: "test-account"
+        resources:
+          sidecar:
+            requests:
+              cpu: 100m
+              memory: 20Mi
+    - cluster: prow-build
+      config:
+        timeout: 2h
+        grace_period: 15s
+        utility_images:
+          # Update these versions when updating plank version in cluster.yaml
+          clonerefs: "gcr.io/k8s-prow/clonerefs:v20220414-949f7bddd3"
+          initupload: "gcr.io/k8s-prow/initupload:v20220414-949f7bddd3"
+          entrypoint: "gcr.io/k8s-prow/entrypoint:v20220414-949f7bddd3"
+          sidecar: "gcr.io/k8s-prow/sidecar:v20220414-949f7bddd3"
+        gcs_configuration:
+          bucket: "knative-prow"
+          path_strategy: "explicit"
+        gcs_credentials_secret: "test-account"
+        resources:
+          sidecar:
+            requests:
+              cpu: 100m
+              memory: 20Mi
 
 slack_reporter_configs:
   "*":

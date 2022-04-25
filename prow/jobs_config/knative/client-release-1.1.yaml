@@ -7,7 +7,7 @@
 branches:
 - release-1.1
 image: gcr.io/knative-tests/test-infra/prow-tests:v20220420-38db2837
-cluster: prow-buid
+cluster: prow-build
 jobs:
 - command:
   - runner.sh

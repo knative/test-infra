@@ -106,7 +106,7 @@ func TestReleaseJobs(t *testing.T) {
 					errStrs.WriteString(fmt.Sprintf("cron is supposed to be auto-generated, do not add it for release job in %q\n", path))
 				}
 				reqs := sets.NewString(job.Requirements...)
-				if !reqs.Has("release") {
+				if !reqs.Has("release") || !reqs.Has("release-dev") {
 					errStrs.WriteString(fmt.Sprintf("release requirement is required for release job in %q\n", path))
 				}
 
