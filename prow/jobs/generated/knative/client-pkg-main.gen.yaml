@@ -9,7 +9,7 @@ periodics:
 - annotations:
     testgrid-dashboards: client-pkg
     testgrid-tab-name: continuous
-  cluster: build-knative
+  cluster: prow-build
   cron: 31 */9 * * *
   decorate: true
   extra_refs:
@@ -43,13 +43,16 @@ periodics:
     volumes:
     - name: test-account
       secret:
-        secretName: test-account
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
 presubmits:
   knative/client-pkg:
   - always_run: true
     branches:
     - ^main$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: build-tests_client-pkg_main
     path_alias: knative.dev/client-pkg
@@ -69,7 +72,7 @@ presubmits:
   - always_run: true
     branches:
     - ^main$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: unit-tests_client-pkg_main
     path_alias: knative.dev/client-pkg
