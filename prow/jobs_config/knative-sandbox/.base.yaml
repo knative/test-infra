@@ -12,13 +12,19 @@ requirement_presets:
       - name: hub-token
         mountPath: /etc/hub-token
         readOnly: true
+        items:
+        - key: hub_token
+          path: token
       - name: release-account
         mountPath: /etc/release-account
         readOnly: true
     volumes:
       - name: hub-token
         secret:
-          secretName: hub-token
+          secretName: github-credentials
       - name: release-account
         secret:
-          secretName: release-account
+          secretName: prow-google-credentials
+          items:
+          - key: release.json
+            path: service-account.json

@@ -9,7 +9,7 @@ periodics:
 - annotations:
     testgrid-dashboards: knative-release-1.1
     testgrid-tab-name: serving-continuous
-  cluster: build-knative
+  cluster: prow-build
   cron: 40 23 * * *
   decorate: true
   decoration_config:
@@ -49,11 +49,14 @@ periodics:
     volumes:
     - name: test-account
       secret:
-        secretName: test-account
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
 - annotations:
     testgrid-dashboards: knative-release-1.1
     testgrid-tab-name: serving-s390x-kourier-tests
-  cluster: build-knative
+  cluster: prow-build
   cron: 20 11 * * *
   decorate: true
   extra_refs:
@@ -124,7 +127,10 @@ periodics:
     volumes:
     - name: test-account
       secret:
-        secretName: test-account
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
     - name: s390x-cluster1
       secret:
         defaultMode: 384
@@ -132,7 +138,7 @@ periodics:
 - annotations:
     testgrid-dashboards: knative-release-1.1
     testgrid-tab-name: serving-s390x-contour-tests
-  cluster: build-knative
+  cluster: prow-build
   cron: 20 13 * * *
   decorate: true
   extra_refs:
@@ -203,7 +209,10 @@ periodics:
     volumes:
     - name: test-account
       secret:
-        secretName: test-account
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
     - name: s390x-cluster1
       secret:
         defaultMode: 384
@@ -211,7 +220,7 @@ periodics:
 - annotations:
     testgrid-dashboards: knative-release-1.1
     testgrid-tab-name: serving-release
-  cluster: build-knative
+  cluster: prow-build
   cron: 4 9 * * 2
   decorate: true
   decoration_config:
@@ -262,16 +271,22 @@ periodics:
     volumes:
     - name: hub-token
       secret:
-        secretName: hub-token
+        items:
+        - key: hub_token
+          path: token
+        secretName: github-credentials
     - name: release-account
       secret:
-        secretName: release-account
+        items:
+        - key: release.json
+          path: service-account.json
+        secretName: prow-google-credentials
 presubmits:
   knative/serving:
   - always_run: true
     branches:
     - ^release-1.1$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: build-tests_serving_release-1.1
     path_alias: knative.dev/serving
@@ -295,7 +310,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.1$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: unit-tests_serving_release-1.1
     path_alias: knative.dev/serving
@@ -319,7 +334,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.1$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: upgrade-tests_serving_release-1.1
     path_alias: knative.dev/serving
@@ -353,11 +368,14 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
   - always_run: true
     branches:
     - ^release-1.1$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: istio-latest-no-mesh_serving_release-1.1
     path_alias: knative.dev/serving
@@ -391,11 +409,14 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
   - always_run: true
     branches:
     - ^release-1.1$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: istio-latest-no-mesh-tls_serving_release-1.1
     path_alias: knative.dev/serving
@@ -429,11 +450,14 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
   - always_run: false
     branches:
     - ^release-1.1$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: performance-tests-kperf_serving_release-1.1
     optional: true
@@ -468,11 +492,14 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
   - always_run: false
     branches:
     - ^release-1.1$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: istio-latest-mesh_serving_release-1.1
     optional: true
@@ -507,11 +534,14 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
   - always_run: false
     branches:
     - ^release-1.1$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: istio-latest-mesh-short_serving_release-1.1
     optional: true
@@ -546,11 +576,14 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
   - always_run: false
     branches:
     - ^release-1.1$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: istio-latest-mesh-tls_serving_release-1.1
     optional: true
@@ -585,11 +618,14 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
   - always_run: false
     branches:
     - ^release-1.1$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: kourier-stable_serving_release-1.1
     path_alias: knative.dev/serving
@@ -624,11 +660,14 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
   - always_run: false
     branches:
     - ^release-1.1$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: kourier-stable-tls_serving_release-1.1
     path_alias: knative.dev/serving
@@ -663,11 +702,14 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
   - always_run: false
     branches:
     - ^release-1.1$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: contour-latest_serving_release-1.1
     path_alias: knative.dev/serving
@@ -702,11 +744,14 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
   - always_run: false
     branches:
     - ^release-1.1$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: contour-tls_serving_release-1.1
     path_alias: knative.dev/serving
@@ -741,11 +786,14 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
   - always_run: false
     branches:
     - ^release-1.1$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: gateway-api-latest_serving_release-1.1
     path_alias: knative.dev/serving
@@ -780,11 +828,14 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
   - always_run: false
     branches:
     - ^release-1.1$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: https_serving_release-1.1
     optional: true
@@ -823,4 +874,7 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials

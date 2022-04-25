@@ -13,7 +13,7 @@ path_aliases:
 node_selector:
   type: testing
 
-cluster: "build-knative"
+cluster: prow-build
 
 requirements: [gcp]
 requirement_presets:
@@ -28,7 +28,10 @@ requirement_presets:
     volumes:
       - name: nightly-account
         secret:
-          secretName: nightly-account
+          secretName: prow-google-credentials
+          items:
+          - key: nightly.json
+            path: service-account.json
 
   release:
     env:
@@ -46,10 +49,16 @@ requirement_presets:
     volumes:
       - name: hub-token
         secret:
-          secretName: hub-token
+          secretName: github-credentials
+          items:
+          - key: hub_token
+            path: token
       - name: release-account
         secret:
-          secretName: release-account
+          secretName: prow-google-credentials
+          items:
+          - key: release.json
+            path: service-account.json
 
   docker:
     env:
@@ -87,7 +96,10 @@ requirement_presets:
     volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          secretName: prow-google-credentials
+          items:
+          - key: service-account-key.json
+            path: service-account.json
 
   s390x:
     env:

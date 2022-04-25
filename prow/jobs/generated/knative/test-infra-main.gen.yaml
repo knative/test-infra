@@ -10,7 +10,7 @@ presubmits:
   - always_run: true
     branches:
     - ^main$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: build-tests_test-infra_main
     path_alias: knative.dev/test-infra
@@ -30,7 +30,7 @@ presubmits:
   - always_run: true
     branches:
     - ^main$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: unit-tests_test-infra_main
     path_alias: knative.dev/test-infra
