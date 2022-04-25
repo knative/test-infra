@@ -39,7 +39,7 @@ periodics:
         secretName: github-credentials
         items:
         - key: auto_bumper_token
-          path: prow-auto-bumper-github-token
+          path: token
     - name: ssh
       secret:
         secretName: github-credentials
