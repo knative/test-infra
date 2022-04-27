@@ -21,7 +21,7 @@ metadata:
     app: boskos-janitor
   namespace: test-pods
 spec:
-  replicas: 6  # Number of distributed janitor instances; k8s has ~1/16 as many projects
+  replicas: 4  # Number of distributed janitor instances; k8s has ~1/16 as many projects
   selector:
     matchLabels:
       app: boskos-janitor
@@ -47,11 +47,11 @@ spec:
           readOnly: true
         resources:
           requests:
-            cpu: 200m
-            memory: 20Mi
+              cpu: 200m
+              memory: 20Mi
           limits:
-            cpu: 500m
-            memory: 512Mi
+              cpu: 2000m
+              memory: 2560Mi
       volumes:
       - name: service
         secret:
