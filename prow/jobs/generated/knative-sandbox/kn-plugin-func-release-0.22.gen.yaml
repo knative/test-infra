@@ -9,7 +9,7 @@ periodics:
 - annotations:
     testgrid-dashboards: knative-sandbox-release-0.22
     testgrid-tab-name: kn-plugin-func-release
-  cluster: build-knative
+  cluster: prow-build
   cron: 22 9 * * 2
   decorate: true
   extra_refs:

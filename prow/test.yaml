@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ci-knative-prow-tests-auto-bumper-test
+  namespace: test-pods
+spec:
+  containers:
+  - image: ubuntu:latest
+   # image: gcr.io/k8s-prow/generic-autobumper:v20220414-949f7bddd3
+    # Just spin & wait forever
+    command: [ "/bin/bash", "-c", "--" ]
+    args: [ "while true; do sleep 30; done;" ]
+    imagePullPolicy: IfNotPresent
+    name: test
+    volumeMounts:
+    - mountPath: /etc/prow-auto-bumper-github-token
+      name: github-credentials
+      readOnly: true
+    - mountPath: /root/.ssh
+      name: ssh
+
+    workingDir: /home/prow/go/src/knative.dev/test-infra
+  volumes:
+  - name: github-credentials
+    secret:
+      defaultMode: 420
+      items:
+      - key: auto_bumper_token
+        path: token
+      secretName: github-credentials
+  - name: ssh
+    secret:
+      defaultMode: 256
+      items:
+      - key: id_rsa
+        path: id_rsa
+      - key: id_rsa_pub
+        path: id_rsa.pub
+      - key: known_hosts
+        path: known_hosts
+      secretName: github-credentials
+# ---
+# apiVersion: v1
+# kind: Pod
+# metadata:
+#   name: ci-knative-prow-tests-auto-bumper-test
+#   namespace: test-pods
+# spec:
+#   automountServiceAccountToken: false
+#   containers:
+#   - image: ubuntu:latest
+#     # image: gcr.io/k8s-prow/generic-autobumper:v20220414-949f7bddd3
+#     # Just spin & wait forever
+#     command: [ "/bin/bash", "-c", "--" ]
+#     args: [ "while true; do sleep 30; done;" ]
+#     imagePullPolicy: IfNotPresent
+#     name: test
+#     volumeMounts:
+#     - mountPath: /etc/prow-auto-bumper-github-token
+#       name: prow-auto-bumper-github-token
+#       readOnly: true
+#     - mountPath: /root/.ssh
+#       name: ssh
+#       readOnly: false
+#     workingDir: /home/prow/go/src/knative.dev/test-infra
+#   volumes:
+#   - name: prow-auto-bumper-github-token
+#     secret:
+#       defaultMode: 420
+#       secretName: prow-auto-bumper-github-token
+#   - name: ssh
+#     secret:
+#       defaultMode: 256
+#       secretName: prow-updater-robot-ssh-key

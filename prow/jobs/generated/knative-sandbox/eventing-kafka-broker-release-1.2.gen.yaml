@@ -9,7 +9,7 @@ periodics:
 - annotations:
     testgrid-dashboards: knative-sandbox-release-1.2
     testgrid-tab-name: eventing-kafka-broker-continuous
-  cluster: build-knative
+  cluster: prow-build
   cron: 50 9 * * *
   decorate: true
   extra_refs:
@@ -51,7 +51,10 @@ periodics:
     volumes:
     - name: test-account
       secret:
-        secretName: test-account
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
     - emptyDir: {}
       name: docker-graph
     - hostPath:
@@ -65,7 +68,7 @@ periodics:
 - annotations:
     testgrid-dashboards: knative-sandbox-release-1.2
     testgrid-tab-name: eventing-kafka-broker-release
-  cluster: build-knative
+  cluster: prow-build
   cron: 38 9 * * 2
   decorate: true
   extra_refs:
@@ -121,7 +124,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.2$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: build-tests_eventing-kafka-broker_release-1.2
     path_alias: knative.dev/eventing-kafka-broker
@@ -141,7 +144,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.2$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: unit-tests_eventing-kafka-broker_release-1.2
     path_alias: knative.dev/eventing-kafka-broker
@@ -161,7 +164,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.2$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: integration-tests_eventing-kafka-broker_release-1.2
     path_alias: knative.dev/eventing-kafka-broker
@@ -198,7 +201,10 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
       - emptyDir: {}
         name: docker-graph
       - hostPath:
@@ -212,7 +218,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.2$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: upgrade-tests_eventing-kafka-broker_release-1.2
     path_alias: knative.dev/eventing-kafka-broker
@@ -250,7 +256,10 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
       - emptyDir: {}
         name: docker-graph
       - hostPath:
@@ -264,7 +273,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.2$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: reconciler-tests_eventing-kafka-broker_release-1.2
     path_alias: knative.dev/eventing-kafka-broker
@@ -302,7 +311,10 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
       - emptyDir: {}
         name: docker-graph
       - hostPath:
@@ -316,7 +328,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.2$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: channel-integration-tests-ssl_eventing-kafka-broker_release-1.2
     path_alias: knative.dev/eventing-kafka-broker
@@ -356,7 +368,10 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
       - emptyDir: {}
         name: docker-graph
       - hostPath:
@@ -370,7 +385,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.2$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: channel-integration-tests-sasl-ssl_eventing-kafka-broker_release-1.2
     path_alias: knative.dev/eventing-kafka-broker
@@ -410,7 +425,10 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
       - emptyDir: {}
         name: docker-graph
       - hostPath:
@@ -424,7 +442,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.2$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: channel-integration-tests-sasl-plain_eventing-kafka-broker_release-1.2
     path_alias: knative.dev/eventing-kafka-broker
@@ -464,7 +482,10 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
       - emptyDir: {}
         name: docker-graph
       - hostPath:
@@ -478,7 +499,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.2$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: channel-reconciler-tests-ssl_eventing-kafka-broker_release-1.2
     path_alias: knative.dev/eventing-kafka-broker
@@ -518,7 +539,10 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
       - emptyDir: {}
         name: docker-graph
       - hostPath:
@@ -532,7 +556,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.2$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: channel-reconciler-tests-sasl-ssl_eventing-kafka-broker_release-1.2
     path_alias: knative.dev/eventing-kafka-broker
@@ -572,7 +596,10 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
       - emptyDir: {}
         name: docker-graph
       - hostPath:
@@ -586,7 +613,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.2$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: channel-reconciler-tests-sasl-plain_eventing-kafka-broker_release-1.2
     path_alias: knative.dev/eventing-kafka-broker
@@ -626,7 +653,10 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
       - emptyDir: {}
         name: docker-graph
       - hostPath:

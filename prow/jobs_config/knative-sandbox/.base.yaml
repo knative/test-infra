@@ -1,3 +1,5 @@
+cluster: prow-build
+
 requirement_presets:
   release:
     env:

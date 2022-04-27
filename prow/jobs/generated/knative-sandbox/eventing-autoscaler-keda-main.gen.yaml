@@ -9,7 +9,7 @@ periodics:
 - annotations:
     testgrid-dashboards: eventing-autoscaler-keda
     testgrid-tab-name: continuous
-  cluster: build-knative
+  cluster: prow-build
   cron: 49 */9 * * *
   decorate: true
   extra_refs:
@@ -43,11 +43,14 @@ periodics:
     volumes:
     - name: test-account
       secret:
-        secretName: test-account
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
 - annotations:
     testgrid-dashboards: eventing-autoscaler-keda
     testgrid-tab-name: nightly
-  cluster: build-knative
+  cluster: prow-build
   cron: 55 9 * * *
   decorate: true
   extra_refs:
@@ -80,11 +83,14 @@ periodics:
     volumes:
     - name: nightly-account
       secret:
-        secretName: nightly-account
+        items:
+        - key: nightly.json
+          path: service-account.json
+        secretName: prow-google-credentials
 - annotations:
     testgrid-dashboards: eventing-autoscaler-keda
     testgrid-tab-name: release
-  cluster: build-knative
+  cluster: prow-build
   cron: 51 */9 * * *
   decorate: true
   extra_refs:
@@ -138,7 +144,7 @@ presubmits:
   - always_run: true
     branches:
     - ^main$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: integration-test-kafka-source_eventing-autoscaler-keda_main
     optional: true
@@ -169,11 +175,14 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
   - always_run: true
     branches:
     - ^main$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: integration-test-kafka-mt-source_eventing-autoscaler-keda_main
     optional: true
@@ -204,4 +213,7 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials

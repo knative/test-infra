@@ -9,7 +9,7 @@ periodics:
 - annotations:
     testgrid-dashboards: knative-sandbox-release-1.2
     testgrid-tab-name: sample-source-release
-  cluster: build-knative
+  cluster: prow-build
   cron: 49 9 * * 2
   decorate: true
   extra_refs:
@@ -65,7 +65,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.2$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: build-tests_sample-source_release-1.2
     path_alias: knative.dev/sample-source
@@ -85,7 +85,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.2$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: unit-tests_sample-source_release-1.2
     path_alias: knative.dev/sample-source

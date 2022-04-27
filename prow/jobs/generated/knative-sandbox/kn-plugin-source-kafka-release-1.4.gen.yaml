@@ -9,7 +9,7 @@ periodics:
 - annotations:
     testgrid-dashboards: knative-sandbox-release-1.4
     testgrid-tab-name: kn-plugin-source-kafka-continuous
-  cluster: build-knative
+  cluster: prow-build
   cron: 59 6 * * *
   decorate: true
   extra_refs:
@@ -43,11 +43,14 @@ periodics:
     volumes:
     - name: test-account
       secret:
-        secretName: test-account
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
 - annotations:
     testgrid-dashboards: knative-sandbox-release-1.4
     testgrid-tab-name: kn-plugin-source-kafka-release
-  cluster: build-knative
+  cluster: prow-build
   cron: 25 9 * * 2
   decorate: true
   extra_refs:
@@ -121,7 +124,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.4$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: build-tests_kn-plugin-source-kafka_release-1.4
     path_alias: knative.dev/kn-plugin-source-kafka
@@ -141,7 +144,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.4$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: unit-tests_kn-plugin-source-kafka_release-1.4
     path_alias: knative.dev/kn-plugin-source-kafka
@@ -161,7 +164,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.4$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: integration-tests_kn-plugin-source-kafka_release-1.4
     path_alias: knative.dev/kn-plugin-source-kafka
@@ -190,4 +193,7 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
