@@ -41,7 +41,7 @@ periodics:
         value: knative-sandbox
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220422-578dcfbf
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220427-e617c7a7
       name: ""
       resources: {}
       securityContext:
