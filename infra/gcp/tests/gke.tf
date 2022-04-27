@@ -1,7 +1,7 @@
 // WARNING, MAKE SURE YOU DON"T DESTROY THESE CLUSTERS ACCIDENTALLY
 
 module "prow_trusted" {
-  source                     = "terraform-google-modules/kubernetes-engine/google"
+  source                     = "terraform-google-modules/kubernetes-engine/google//modules/beta-public-cluster"
   project_id                 = module.project.project_id
   name                       = "prow-trusted"
   regional                   = false
@@ -43,7 +43,7 @@ module "prow_trusted" {
 }
 
 module "prow" {
-  source                     = "terraform-google-modules/kubernetes-engine/google"
+  source                     = "terraform-google-modules/kubernetes-engine/google//modules/beta-public-cluster"
   project_id                 = module.project.project_id
   name                       = "prow"
   region                     = "us-central1"
@@ -90,7 +90,7 @@ module "prow" {
 }
 
 module "prow_build" {
-  source                     = "terraform-google-modules/kubernetes-engine/google"
+  source                     = "terraform-google-modules/kubernetes-engine/google//modules/beta-public-cluster"
   project_id                 = module.project.project_id
   name                       = "prow-build"
   region                     = "us-central1"
@@ -105,6 +105,16 @@ module "prow_build" {
   filestore_csi_driver       = false
   create_service_account     = false
   remove_default_node_pool   = true
+  gce_pd_csi_driver          = true
+  cluster_autoscaling = {
+    enabled             = false
+    autoscaling_profile = "OPTIMIZE_UTILIZATION"
+    gpu_resources       = []
+    max_cpu_cores       = null
+    max_memory_gb       = null
+    min_cpu_cores       = null
+    min_memory_gb       = null
+  }
 
   cluster_resource_labels = {
     cluster     = "prow-build"
@@ -134,7 +144,7 @@ module "prow_build" {
       node_locations     = "us-central1-c,us-central1-f"
       local_ssd_count    = 1
       min_count          = 0
-      max_count          = 4
+      max_count          = 6
       disk_size_gb       = 100
       disk_type          = "pd-ssd"
       image_type         = "COS_CONTAINERD"
