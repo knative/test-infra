@@ -9,7 +9,7 @@ periodics:
 - annotations:
     testgrid-dashboards: knative-sandbox-release-1.2
     testgrid-tab-name: eventing-gitlab-continuous
-  cluster: build-knative
+  cluster: prow-build
   cron: 51 22 * * *
   decorate: true
   extra_refs:
@@ -55,7 +55,10 @@ periodics:
     volumes:
     - name: test-account
       secret:
-        secretName: test-account
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
     - emptyDir: {}
       name: docker-graph
     - hostPath:
@@ -69,7 +72,7 @@ periodics:
 - annotations:
     testgrid-dashboards: knative-sandbox-release-1.2
     testgrid-tab-name: eventing-gitlab-release
-  cluster: build-knative
+  cluster: prow-build
   cron: 37 9 * * 2
   decorate: true
   extra_refs:

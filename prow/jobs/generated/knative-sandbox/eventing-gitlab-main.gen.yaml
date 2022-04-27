@@ -9,7 +9,7 @@ periodics:
 - annotations:
     testgrid-dashboards: eventing-gitlab
     testgrid-tab-name: continuous
-  cluster: build-knative
+  cluster: prow-build
   cron: 43 */9 * * *
   decorate: true
   extra_refs:
@@ -55,7 +55,10 @@ periodics:
     volumes:
     - name: test-account
       secret:
-        secretName: test-account
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
     - emptyDir: {}
       name: docker-graph
     - hostPath:
@@ -69,7 +72,7 @@ periodics:
 - annotations:
     testgrid-dashboards: eventing-gitlab
     testgrid-tab-name: nightly
-  cluster: build-knative
+  cluster: prow-build
   cron: 33 9 * * *
   decorate: true
   extra_refs:
@@ -114,7 +117,10 @@ periodics:
     volumes:
     - name: nightly-account
       secret:
-        secretName: nightly-account
+        items:
+        - key: nightly.json
+          path: service-account.json
+        secretName: prow-google-credentials
     - emptyDir: {}
       name: docker-graph
     - hostPath:
@@ -128,7 +134,7 @@ periodics:
 - annotations:
     testgrid-dashboards: eventing-gitlab
     testgrid-tab-name: release
-  cluster: build-knative
+  cluster: prow-build
   cron: 5 */9 * * *
   decorate: true
   extra_refs:

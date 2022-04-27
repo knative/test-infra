@@ -9,7 +9,7 @@ periodics:
 - annotations:
     testgrid-dashboards: knative-sandbox-release-1.4
     testgrid-tab-name: eventing-redis-continuous
-  cluster: build-knative
+  cluster: prow-build
   cron: 33 16 * * *
   decorate: true
   extra_refs:
@@ -51,7 +51,10 @@ periodics:
     volumes:
     - name: test-account
       secret:
-        secretName: test-account
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
     - emptyDir: {}
       name: docker-graph
     - hostPath:
@@ -65,7 +68,7 @@ periodics:
 - annotations:
     testgrid-dashboards: knative-sandbox-release-1.4
     testgrid-tab-name: eventing-redis-release
-  cluster: build-knative
+  cluster: prow-build
   cron: 19 9 * * 2
   decorate: true
   extra_refs:

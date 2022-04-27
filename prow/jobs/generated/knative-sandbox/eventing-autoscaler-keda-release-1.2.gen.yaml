@@ -9,7 +9,7 @@ periodics:
 - annotations:
     testgrid-dashboards: knative-sandbox-release-1.2
     testgrid-tab-name: eventing-autoscaler-keda-continuous
-  cluster: build-knative
+  cluster: prow-build
   cron: 33 16 * * *
   decorate: true
   extra_refs:
@@ -43,11 +43,14 @@ periodics:
     volumes:
     - name: test-account
       secret:
-        secretName: test-account
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
 - annotations:
     testgrid-dashboards: knative-sandbox-release-1.2
     testgrid-tab-name: eventing-autoscaler-keda-release
-  cluster: build-knative
+  cluster: prow-build
   cron: 31 9 * * 2
   decorate: true
   extra_refs:
@@ -103,7 +106,7 @@ presubmits:
   - always_run: true
     branches:
     - ^release-1.2$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: integration-test-kafka-source_eventing-autoscaler-keda_release-1.2
     optional: true
@@ -134,11 +137,14 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
   - always_run: true
     branches:
     - ^release-1.2$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: integration-test-kafka-mt-source_eventing-autoscaler-keda_release-1.2
     optional: true
@@ -169,4 +175,7 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials

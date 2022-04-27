@@ -10,7 +10,7 @@ presubmits:
   - always_run: true
     branches:
     - ^main$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: build-tests_pkg_main
     path_alias: knative.dev/pkg
@@ -30,7 +30,7 @@ presubmits:
   - always_run: true
     branches:
     - ^main$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: unit-tests_pkg_main
     path_alias: knative.dev/pkg
@@ -50,7 +50,7 @@ presubmits:
   - always_run: true
     branches:
     - ^main$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: integration-tests_pkg_main
     path_alias: knative.dev/pkg
@@ -79,4 +79,7 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials

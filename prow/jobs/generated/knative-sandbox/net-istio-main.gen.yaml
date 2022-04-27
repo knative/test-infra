@@ -9,7 +9,7 @@ periodics:
 - annotations:
     testgrid-dashboards: net-istio
     testgrid-tab-name: continuous
-  cluster: build-knative
+  cluster: prow-build
   cron: 41 */9 * * *
   decorate: true
   extra_refs:
@@ -43,11 +43,14 @@ periodics:
     volumes:
     - name: test-account
       secret:
-        secretName: test-account
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
 - annotations:
     testgrid-dashboards: net-istio
     testgrid-tab-name: nightly
-  cluster: build-knative
+  cluster: prow-build
   cron: 35 9 * * *
   decorate: true
   extra_refs:
@@ -87,11 +90,14 @@ periodics:
     volumes:
     - name: nightly-account
       secret:
-        secretName: nightly-account
+        items:
+        - key: nightly.json
+          path: service-account.json
+        secretName: prow-google-credentials
 - annotations:
     testgrid-dashboards: net-istio
     testgrid-tab-name: release
-  cluster: build-knative
+  cluster: prow-build
   cron: 3 */9 * * *
   decorate: true
   extra_refs:
@@ -145,7 +151,7 @@ presubmits:
   - always_run: true
     branches:
     - ^main$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: build-tests_net-istio_main
     path_alias: knative.dev/net-istio
@@ -165,7 +171,7 @@ presubmits:
   - always_run: true
     branches:
     - ^main$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: unit-tests_net-istio_main
     path_alias: knative.dev/net-istio
@@ -185,7 +191,7 @@ presubmits:
   - always_run: true
     branches:
     - ^main$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: integration-tests_net-istio_main
     path_alias: knative.dev/net-istio
@@ -214,11 +220,14 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
   - always_run: true
     branches:
     - ^main$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: latest_net-istio_main
     path_alias: knative.dev/net-istio
@@ -248,11 +257,14 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
   - always_run: true
     branches:
     - ^main$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: latest-mesh_net-istio_main
     path_alias: knative.dev/net-istio
@@ -282,4 +294,7 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials

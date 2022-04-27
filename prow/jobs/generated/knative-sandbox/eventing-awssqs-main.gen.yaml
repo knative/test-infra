@@ -9,7 +9,7 @@ periodics:
 - annotations:
     testgrid-dashboards: eventing-awssqs
     testgrid-tab-name: continuous
-  cluster: build-knative
+  cluster: prow-build
   cron: 42 */9 * * *
   decorate: true
   extra_refs:
@@ -43,11 +43,14 @@ periodics:
     volumes:
     - name: test-account
       secret:
-        secretName: test-account
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
 - annotations:
     testgrid-dashboards: eventing-awssqs
     testgrid-tab-name: nightly
-  cluster: build-knative
+  cluster: prow-build
   cron: 38 9 * * *
   decorate: true
   extra_refs:
@@ -80,11 +83,14 @@ periodics:
     volumes:
     - name: nightly-account
       secret:
-        secretName: nightly-account
+        items:
+        - key: nightly.json
+          path: service-account.json
+        secretName: prow-google-credentials
 - annotations:
     testgrid-dashboards: eventing-awssqs
     testgrid-tab-name: release
-  cluster: build-knative
+  cluster: prow-build
   cron: 18 */9 * * *
   decorate: true
   extra_refs:

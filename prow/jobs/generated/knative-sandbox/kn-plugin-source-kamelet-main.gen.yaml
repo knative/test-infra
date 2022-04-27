@@ -9,7 +9,7 @@ periodics:
 - annotations:
     testgrid-dashboards: kn-plugin-source-kamelet
     testgrid-tab-name: continuous
-  cluster: build-knative
+  cluster: prow-build
   cron: 48 */9 * * *
   decorate: true
   extra_refs:
@@ -43,11 +43,14 @@ periodics:
     volumes:
     - name: test-account
       secret:
-        secretName: test-account
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
 - annotations:
     testgrid-dashboards: kn-plugin-source-kamelet
     testgrid-tab-name: nightly
-  cluster: build-knative
+  cluster: prow-build
   cron: 32 9 * * *
   decorate: true
   extra_refs:
@@ -80,11 +83,14 @@ periodics:
     volumes:
     - name: nightly-account
       secret:
-        secretName: nightly-account
+        items:
+        - key: nightly.json
+          path: service-account.json
+        secretName: prow-google-credentials
 - annotations:
     testgrid-dashboards: kn-plugin-source-kamelet
     testgrid-tab-name: release
-  cluster: build-knative
+  cluster: prow-build
   cron: 44 */9 * * *
   decorate: true
   extra_refs:
@@ -138,7 +144,7 @@ presubmits:
   - always_run: true
     branches:
     - ^main$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: build-tests_kn-plugin-source-kamelet_main
     path_alias: knative.dev/kn-plugin-source-kamelet
@@ -158,7 +164,7 @@ presubmits:
   - always_run: true
     branches:
     - ^main$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: unit-tests_kn-plugin-source-kamelet_main
     path_alias: knative.dev/kn-plugin-source-kamelet
@@ -178,7 +184,7 @@ presubmits:
   - always_run: true
     branches:
     - ^main$
-    cluster: build-knative
+    cluster: prow-build
     decorate: true
     name: integration-tests_kn-plugin-source-kamelet_main
     path_alias: knative.dev/kn-plugin-source-kamelet
@@ -207,4 +213,7 @@ presubmits:
       volumes:
       - name: test-account
         secret:
-          secretName: test-account
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
