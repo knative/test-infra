@@ -44,6 +44,10 @@ module "iam" {
       "serviceAccount:${google_service_account.gke_nodes.email}",
     ]
 
+    "roles/monitoring.viewer" = [ # Required for Managed Prometheus
+      "serviceAccount:${google_service_account.gke_nodes.email}",
+    ]
+
     "roles/pubsub.editor" : [
       "serviceAccount:prow-control-plane@knative-tests.iam.gserviceaccount.com"
     ],
