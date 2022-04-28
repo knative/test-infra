@@ -33,6 +33,11 @@ jobs:
     command: [runner.sh, ./test/presubmit-tests.sh, --run-test, ./test/performance/performance-tests.sh]
     modifiers: [presubmit_optional, presubmit_skipped]
 
+  - name: performance-tests-mako
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, ./test/performance/performance-tests-mako.sh]
+    modifiers: [presubmit_optional, presubmit_skipped]
+
   - name: istio-latest-mesh
     types: [presubmit]
     command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/e2e-tests.sh --istio-version latest --mesh"]
