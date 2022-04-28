@@ -88,7 +88,7 @@ func Run(opts *Options, cc *GKEClusterConfig) error {
 	if cc.ReleaseChannel != "" {
 		createCommand += " --release-channel=" + cc.ReleaseChannel
 	}
-	kubetest2Flags = append(kubetest2Flags, "--version="+cc.Version)
+	kubetest2Flags = append(kubetest2Flags, "--cluster-version="+cc.Version)
 	if cc.Addons != "" {
 		createCommand += " --addons=" + cc.Addons
 	}
