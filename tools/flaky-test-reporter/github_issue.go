@@ -466,36 +466,10 @@ func (gih *GithubIssueHandler) processGithubIssuesForRepo(rd RepoData, flakyIssu
 		return nil, []string{"skip creating/updating issues, job is marked to not create GitHub issues\n"}, nil
 	}
 
-	// If there are too many failures, create a single issue tracking it.
+	// If there are too many failures, skip creating the GitHub issue.
 	if flakyRateAboveThreshold(rd) {
 		flakyRate := getFlakyRate(rd)
-		log.Printf("flaky rate above threshold, creating a single issue")
-		identity := getBulkIssueIdentity(rd, flakyRate)
-		if _, ok := flakyIssuesMap[identity]; ok {
-			log.Printf("issue already exist, skip creating")
-			return nil, nil, nil
-		}
-
-		testId := fmt.Sprintf(testIdentifierPattern, identity)
-		message := fmt.Sprintf("Creating issue '%s' in repo '%s'", identity, rd.Config.IssueRepo)
-		log.Println(message)
-		issue, err := gih.createNewIssue(
-			rd.Config.Org,
-			rd.Config.IssueRepo,
-			fmt.Sprintf("[flaky] %s", identity),
-			fmt.Sprintf(issueBodyTemplate, identity, rd.Config.Repo, testId),
-			fmt.Sprintf("Bulk issue tracking: %s\n<!--%s-->", identity, testId),
-			dryrun,
-		)
-		if err != nil {
-			return nil, []string{message}, err
-		}
-
-		fi, err := gih.githubToFlakyIssue(issue, dryrun)
-		if err != nil || fi == nil {
-			return []flakyIssue{}, []string{message}, err
-		}
-		return []flakyIssue{*fi}, []string{message}, nil
+		return nil, []string{fmt.Sprintf("flaky rate above threshold, skip creating the issue: %s\n", getBulkIssueIdentity(rd, flakyRate))}, nil
 	}
 
 	var (
