@@ -957,7 +957,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220427-e617c7a7
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220428-d4a62c20
         name: ""
         resources:
           limits:
