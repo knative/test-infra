@@ -22,7 +22,7 @@ presubmits:
   - name: pull-test-infra-validate-prow-yaml
     run_if_changed: '^prow/((config|plugins)\.yaml$|jobs/)'
     decorate: true
-    cluster: "build-knative"
+    cluster: prow-build
     spec:
       containers:
       - image: gcr.io/k8s-prow/checkconfig:v20220414-949f7bddd3
@@ -70,7 +70,7 @@ presubmits:
     optional: false
     decorate: true
     path_alias: knative.dev/test-infra
-    cluster: "prow-build"
+    cluster: prow-build
     decoration_config: # will remove this temp override
       gcs_credentials_secret: "gcs-upload"
     run_if_changed: "^(images/prow-tests/.*|tools/kntest/.*|pkg/.*|go.mod)$"
@@ -134,7 +134,7 @@ periodics:
   name: ci-knative-cleanup
   agent: kubernetes
   decorate: true
-  cluster: "build-knative"
+  cluster: prow-build
   decoration_config:
     timeout: 6h
   extra_refs:
@@ -167,18 +167,21 @@ periodics:
       - "--concurrent-operations=50"
       - "--service-account=/etc/test-account/service-account.json"
       volumeMounts:
-      - name: test-account
+      - name: prow-google-credentials
         mountPath: /etc/test-account
         readOnly: true
     volumes:
-    - name: test-account
+    - name: prow-google-credentials
       secret:
-        secretName: test-account
+        secretName: prow-google-credentials
+        items:
+        - key: service-account-key.json
+          path: service-account.json
 - cron: "0 12 * * *"
   name: ci-knative-flakes-reporter
   agent: kubernetes
   decorate: true
-  cluster: "build-knative"
+  cluster: prow-build
   annotations:
     testgrid-dashboards: utilities
     testgrid-tab-name: ci-knative-flakes-reporter
@@ -199,27 +202,30 @@ periodics:
       - "--github-account=/etc/flaky-test-reporter-github-token/token"
       - "--slack-account=/etc/flaky-test-reporter-slack-token/token"
       volumeMounts:
-      - name: flaky-test-reporter-github-token
+      - name: github-credentials
         mountPath: /etc/flaky-test-reporter-github-token
         readOnly: true
-      - name: flaky-test-reporter-slack-token
+      - name: slack-credentials
         mountPath: /etc/flaky-test-reporter-slack-token
         readOnly: true
     volumes:
-    - name: test-account
+    - name: github-credentials
       secret:
-        secretName: test-account
-    - name: flaky-test-reporter-github-token
+        secretName: github-credentials
+        items:
+        - key: auto_bumper_token
+          path: token
+    - name: slack-credentials
       secret:
-        secretName: flaky-test-reporter-github-token
-    - name: flaky-test-reporter-slack-token
-      secret:
-        secretName: flaky-test-reporter-slack-token
+        secretName: slack-credentials
+        items:
+        - key: token
+          path: token
 - cron: "0 * * * *"
   name: ci-knative-flakes-resultsrecorder
   agent: kubernetes
   decorate: true
-  cluster: "build-knative"
+  cluster: prow-build
   annotations:
     testgrid-dashboards: utilities
     testgrid-tab-name: ci-knative-flakes-resultsrecorder
@@ -240,25 +246,30 @@ periodics:
       - "--skip-report"
       - "--build-count=10"
       volumeMounts:
-      - name: flaky-test-reporter-github-token
+      - name: github-credentials
         mountPath: /etc/flaky-test-reporter-github-token
         readOnly: true
-      - name: flaky-test-reporter-slack-token
+      - name: slack-credentials
         mountPath: /etc/flaky-test-reporter-slack-token
         readOnly: true
     volumes:
-    - name: flaky-test-reporter-github-token
+    - name: github-credentials
       secret:
-        secretName: flaky-test-reporter-github-token
-    - name: flaky-test-reporter-slack-token
+        secretName: github-credentials
+        items:
+        - key: auto_bumper_token
+          path: token
+    - name: slack-credentials
       secret:
-        secretName: flaky-test-reporter-slack-token
-
+        secretName: slack-credentials
+        items:
+        - key: token
+          path: token
 - cron: "0 */2 * * *" # Every other hour
   name: ci-knative-prow-jobs-syncer
   agent: kubernetes
   decorate: true
-  cluster: "build-knative"
+  cluster: prow-build
   extra_refs:
   - org: knative
     repo: test-infra
@@ -292,26 +303,39 @@ periodics:
           --regen-config-script=hack/generate-configs.sh \
           --label=skip-review
       volumeMounts:
-      - name: test-account
+      - name: prow-google-credentials
         mountPath: /etc/test-account
         readOnly: true
-      - name: prow-auto-bumper-github-token
+      - name: github-credentials
         mountPath: /etc/prow-auto-bumper-github-token
         readOnly: true
-      - name: prow-updater-robot-ssh-key
+      - name: ssh
         mountPath: /root/.ssh
-        readOnly: true
     volumes:
-    - name: test-account
+    - name: prow-google-credentials
       secret:
-        secretName: test-account
-    - name: prow-auto-bumper-github-token
+        secretName: prow-google-credentials
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+    - name: github-credentials
       secret:
-        secretName: prow-auto-bumper-github-token
-    - name: prow-updater-robot-ssh-key
+        secretName: github-credentials
+        items:
+        - key: auto_bumper_token
+          path: token
+    - name: ssh
       secret:
-        secretName: prow-updater-robot-ssh-key
-        defaultMode: 0700
+        secretName: github-credentials
+        defaultMode: 0400
+        items:
+        - key: id_rsa
+          path: id_rsa
+        - key: id_rsa_pub
+          path: id_rsa.pub
+        - key: known_hosts
+          path: known_hosts
+
 postsubmits:
   knative/test-infra:
   - name: post-knative-test-infra-image-push
@@ -319,7 +343,7 @@ postsubmits:
     decorate: true
     path_alias: knative.dev/test-infra
     max_concurrency: 1
-    cluster: "build-knative"
+    cluster: prow-build
     run_if_changed: "^(images/.*|tools/(flaky-test-reporter)/.*|pkg/.*|go.mod)$"
     branches:
     - "main"
@@ -343,7 +367,7 @@ postsubmits:
         securityContext:
           privileged: true
         volumeMounts:
-        - name: test-account
+        - name: prow-google-credentials
           mountPath: /etc/test-account
           readOnly: true
         env:
@@ -359,15 +383,18 @@ postsubmits:
       volumes:
       - name: docker-graph
         emptyDir: {}
-      - name: test-account
+      - name: prow-google-credentials
         secret:
-          secretName: test-account
+          secretName: prow-google-credentials
+          items:
+          - key: service-account-key.json
+            path: service-account.json
   - name: post-knative-test-infra-prow-tests-image-push
     agent: kubernetes
     decorate: true
     path_alias: knative.dev/test-infra
     max_concurrency: 1
-    cluster: "build-knative"
+    cluster: prow-build
     run_if_changed: "^(images/prow-tests/.*|tools/kntest/.*|pkg/.*|go.mod)$"
     branches:
     - "main"
@@ -392,22 +419,25 @@ postsubmits:
         - "images/prow-tests"
         - "push"
         volumeMounts:
-        - name: test-account
+        - name: prow-google-credentials
           mountPath: /etc/test-account
           readOnly: true
         env:
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
       volumes:
-      - name: test-account
+      - name: prow-google-credentials
         secret:
-          secretName: test-account
+          secretName: prow-google-credentials
+          items:
+          - key: service-account-key.json
+            path: service-account.json
   - name: post-test-infra-update-testgrid-proto
     decorate: true
     run_if_changed: "^(config/prow/k8s-testgrid/|prow/jobs/).*.yaml"
     branches:
     - "main"
-    cluster: "build-knative"
+    cluster: prow-build
     extra_refs:
     - org: GoogleCloudPlatform
       repo: oss-test-infra
@@ -435,13 +465,16 @@ postsubmits:
         - --output=gs://knative-own-testgrid/config
         - --gcp-service-account=/etc/test-account/service-account.json
         volumeMounts:
-        - name: test-account
+        - name: prow-google-credentials
           mountPath: /etc/test-account
           readOnly: true
         env:
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
       volumes:
-      - name: test-account
+      - name: prow-google-credentials
         secret:
-          secretName: test-account
+          secretName: prow-google-credentials
+          items:
+          - key: service-account-key.json
+            path: service-account.json
