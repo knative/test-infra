@@ -265,6 +265,7 @@ periodics:
         items:
         - key: token
           path: token
+
 - cron: "0 */2 * * *" # Every other hour
   name: ci-knative-prow-jobs-syncer
   agent: kubernetes
@@ -327,7 +328,7 @@ periodics:
     - name: ssh
       secret:
         secretName: github-credentials
-        defaultMode: 0400
+        defaultMode: 0700
         items:
         - key: id_rsa
           path: id_rsa
