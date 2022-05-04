@@ -30,20 +30,8 @@ GITHUB_TOKEN_PATH="$2"
 
 set -e
 
-# Download prow core config from prow
-if (( IS_OSX )); then
-  # On OS X, the file has to be under /private other it cannot be mounted by the container.
-  # See https://stackoverflow.com/questions/45122459/docker-mounts-denied-the-paths-are-not-shared-from-os-x-and-are-not-known/45123074
-  CONFIG_YAML="/private$(mktemp)"
-else
-  CONFIG_YAML=$(mktemp)
-fi
-make -C "${REPO_ROOT_DIR}/config" get-cluster-credentials
-trap "make -C '${REPO_ROOT_DIR}/config' unset-cluster-credentials" EXIT
-kubectl get configmaps config -o "jsonpath={.data['config\.yaml']}" >"${CONFIG_YAML}"
-echo "Prow core config downloaded at ${CONFIG_YAML}"
-
 JOB_YAML=$(mktemp)
+CONFIG_YAML=${REPO_ROOT_DIR}/prow/config.yaml
 JOB_CONFIG_YAML=${REPO_ROOT_DIR}/prow/jobs
 
 if [[ -n "${GITHUB_TOKEN_PATH}" ]]; then
@@ -54,7 +42,7 @@ if [[ -n "${GITHUB_TOKEN_PATH}" ]]; then
         gcr.io/k8s-prow/mkpj:v20220428-75c5d931e2 \
         "--job=${JOB_NAME}" "--config-path=${CONFIG_YAML}" "--job-config-path=${JOB_CONFIG_YAML}" \
         "--github-token-path=${GITHUB_TOKEN_PATH}" \
-        > ${JOB_YAML}
+        > "${JOB_YAML}"
 else
     failed=0
     docker run -i --rm \
@@ -62,7 +50,7 @@ else
         -w "${PWD}" \
         gcr.io/k8s-prow/mkpj:v20220428-75c5d931e2 \
         "--job=${JOB_NAME}" "--config-path=${CONFIG_YAML}" "--job-config-path=${JOB_CONFIG_YAML}" \
-        > ${JOB_YAML} || failed=1
+        > "${JOB_YAML}" || failed=1
 
     if (( failed )); then
         echo "ERROR: failed generating job config using mkpj"
@@ -74,5 +62,5 @@ fi
 echo "Job YAML file saved to ${JOB_YAML}"
 
 make -C "${REPO_ROOT_DIR}/config" get-cluster-credentials
-kubectl apply -f ${JOB_YAML}
+kubectl apply -f "${JOB_YAML}"
 make -C "${REPO_ROOT_DIR}/config" unset-cluster-credentials
