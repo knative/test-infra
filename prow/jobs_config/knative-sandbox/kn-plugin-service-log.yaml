@@ -1,7 +1,7 @@
 org: knative-sandbox
 repo: kn-plugin-service-log
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20220428-d4a62c20
+image: gcr.io/knative-tests/test-infra/prow-tests:v20220505-456af677
 imagePullPolicy: Always
 
 jobs:

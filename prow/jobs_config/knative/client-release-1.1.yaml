@@ -6,7 +6,7 @@
 # #######################################################################
 branches:
 - release-1.1
-image: gcr.io/knative-tests/test-infra/prow-tests:v20220428-d4a62c20
+image: gcr.io/knative-tests/test-infra/prow-tests:v20220505-456af677
 cluster: prow-build
 jobs:
 - command:
