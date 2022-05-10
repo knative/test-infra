@@ -94,10 +94,16 @@ periodics:
     volumes:
     - name: hub-token
       secret:
-        secretName: hub-token
+        items:
+        - key: hub_token
+          path: token
+        secretName: github-credentials
     - name: release-account
       secret:
-        secretName: release-account
+        items:
+        - key: release.json
+          path: service-account.json
+        secretName: prow-google-credentials
 presubmits:
   knative-sandbox/sample-source:
   - always_run: true
