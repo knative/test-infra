@@ -144,7 +144,7 @@ module "prow_build" {
       node_locations     = "us-central1-c,us-central1-f"
       local_ssd_count    = 1
       min_count          = 0
-      max_count          = 6
+      max_count          = 20
       disk_size_gb       = 100
       disk_type          = "pd-ssd"
       image_type         = "COS_CONTAINERD"
