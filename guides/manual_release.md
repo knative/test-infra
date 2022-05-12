@@ -149,16 +149,13 @@ Example:
 
 ### Option #1: Via Prow UI
 
-**Note:** Has to be a member of
-[Knative Release Leads](https://github.com/knative/community/blob/main/peribolos/knative.yaml#L884)
-or
-[Technical Oversight Committee](https://github.com/knative/community/blob/main/peribolos/knative.yaml#L875)
+**Note:** Has to be a member of one of the groups under `deck: -> rerun_auth_configs:` block in [config.yaml](https://github.com/knative/test-infra/blob/main/prow/config.yaml)
 
 1. Open a browser, navigate to
-   `https://prow.knative.dev/?job=ci-knative-MODULE-[OLD_RELEASE_BRANCH-]dot-release`,
+   `https://prow.knative.dev/?job=continuous_MODULE_release-[RELEASE_BRANCH_VERSION]_periodic`,
    replace `MODULE` with the right Knative module name (e.g., `serving` or
-   `eventing`), and replace `[OLD_RELEASE_BRANCH-]` with the release branch
-   number if it's old release branch (e.g., `0.11-`)
+   `eventing`), and replace `[RELEASE_BRANCH_VERSION-]` with the release branch
+   number (e.g. `1.4`)
 
 1. Pick the first line, click on the refresh button, then click `RERUN` button
 
@@ -169,12 +166,11 @@ or
 1. Use the `run_job.sh` script to start the dot release job for the module you
    want, like in the example below. Replace `MODULE` with the right Knative
    module name (e.g., `serving` or `eventing`), and replace
-   `[OLD_RELEASE_BRANCH-]` with the release branch number if it's old release
-   branch (e.g., `0.11-`)
+   `[RELEASE_BRANCH_VERSION-]` with the release branch number (e.g., `1.4`)
 
    ```
    cd config/prow
-   ./run_job.sh ci-knative-MODULE-[OLD_RELEASE_BRANCH-]dot-release
+   ./run_job.sh continuous_MODULE_release-[RELEASE_BRANCH_VERSION]_periodic
    ```
 
 1. Monitor the new job through [Prow UI](https://prow.knative.dev).
