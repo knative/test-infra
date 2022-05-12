@@ -51,7 +51,7 @@ periodics:
     testgrid-dashboards: operator
     testgrid-tab-name: s390x-e2e-tests
   cluster: prow-build
-  cron: 0 16 * * *
+  cron: 0 13 * * *
   decorate: true
   extra_refs:
   - base_ref: main
