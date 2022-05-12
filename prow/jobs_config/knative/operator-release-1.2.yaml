@@ -82,7 +82,7 @@ jobs:
   - name: INGRESS_CLASS
     value: contour.ingress.networking.knative.dev
   name: s390x-e2e-tests
-  cron: 30 4 * * *
+  cron: 30 1 * * *
   requirements:
   - s390x
   types:
