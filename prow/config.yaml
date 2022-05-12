@@ -144,6 +144,8 @@ deck:
           slug: 'technical-oversight-committee'
         - org: 'knative'
           slug: 'knative-release-leads'
+        - org: 'knative'
+          slug: 'productivity-writers'
 
 prowjob_namespace: default
 pod_namespace: test-pods
