@@ -39,6 +39,7 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV PATH=/google-cloud-sdk/bin:/workspace:${PATH} \
     CLOUDSDK_CORE_DISABLE_PROMPTS=1
 
+# net-tools is used by serving tests
 RUN apt-get update -qqy && apt-get install -qqy \
         curl \
         gcc \
@@ -57,7 +58,8 @@ RUN apt-get update -qqy && apt-get install -qqy \
         wget \
         gnupg \
         jq \
-        procps
+        procps \
+        net-tools
 
 RUN pip3 install -U crcmod==1.7
 RUN curl -fsSLO https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz
