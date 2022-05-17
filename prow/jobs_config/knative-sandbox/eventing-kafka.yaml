@@ -1,7 +1,7 @@
 org: knative-sandbox
 repo: eventing-kafka
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20220505-456af677
+image: gcr.io/knative-tests/test-infra/prow-tests:v20220517-cc009619
 imagePullPolicy: Always
 
 jobs:
