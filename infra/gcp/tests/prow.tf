@@ -13,7 +13,7 @@ resource "google_service_account_iam_binding" "prow_control_plane" {
 resource "google_service_account" "prow_control_plane" {
   account_id   = "prow-control-plane"
   display_name = "Prow Control Plane"
-  description = "Service account used by Prow control plane to interact with Google services for the knative-tests project."
+  description  = "Service account used by Prow control plane to interact with Google services for the knative-tests project."
   project      = "knative-tests"
 }
 
