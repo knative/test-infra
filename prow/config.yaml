@@ -141,11 +141,25 @@ deck:
     '*':
       github_team_slugs:
         - org: 'knative'
+          slug: 'productivity-writers'
+        - org: 'knative'
           slug: 'technical-oversight-committee'
         - org: 'knative'
           slug: 'knative-release-leads'
         - org: 'knative'
-          slug: 'productivity-writers'
+          slug: 'client-wg-leads'
+        - org: 'knative'
+          slug: 'docs-wg-leads'
+        - org: 'knative'
+          slug: 'eventing-wg-leads'
+        - org: 'knative'
+          slug: 'operations-wg-leads'
+        - org: 'knative'
+          slug: 'security-wg-leads'
+        - org: 'knative'
+          slug: 'serving-wg-leads'
+        - org: 'knative'
+          slug: 'ux-wg-leads'
 
 prowjob_namespace: default
 pod_namespace: test-pods
