@@ -157,9 +157,9 @@ jobs:
   name: release
   requirements:
   - release
+  - docker
   excluded_requirements:
   - gcp
-  - docker
   types:
   - periodic
 org: knative-sandbox
