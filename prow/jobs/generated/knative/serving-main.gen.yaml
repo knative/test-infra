@@ -445,6 +445,53 @@ periodics:
         secretName: prow-google-credentials
 - annotations:
     testgrid-dashboards: serving
+    testgrid-tab-name: performance-tests-kperf
+  cluster: prow-build
+  cron: 39 */9 * * *
+  decorate: true
+  extra_refs:
+  - base_ref: main
+    org: knative
+    path_alias: knative.dev/serving
+    repo: serving
+  name: performance-tests-kperf_serving_main_periodic
+  spec:
+    containers:
+    - args:
+      - ./test/presubmit-tests.sh
+      - --run-test
+      - ../test/performance/performance-tests.sh
+      command:
+      - runner.sh
+      env:
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220517-cc009619
+      name: ""
+      resources:
+        limits:
+          memory: 16Gi
+        requests:
+          memory: 12Gi
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /etc/test-account
+        name: test-account
+        readOnly: true
+    nodeSelector:
+      type: testing
+    volumes:
+    - name: test-account
+      secret:
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
+- annotations:
+    testgrid-dashboards: serving
     testgrid-tab-name: s390x-kourier-tests
   cluster: prow-build
   cron: 0 3 * * *
