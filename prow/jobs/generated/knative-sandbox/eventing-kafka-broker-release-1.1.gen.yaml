@@ -98,6 +98,8 @@ periodics:
         value: us-central1
       - name: ORG_NAME
         value: knative-sandbox
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20220517-cc009619
       name: ""
       resources: {}
@@ -110,6 +112,12 @@ periodics:
       - mountPath: /etc/release-account
         name: release-account
         readOnly: true
+      - mountPath: /docker-graph
+        name: docker-graph
+      - mountPath: /lib/modules
+        name: modules
+      - mountPath: /sys/fs/cgroup
+        name: cgroup
     nodeSelector:
       type: testing
     volumes:
@@ -125,6 +133,16 @@ periodics:
         - key: release.json
           path: service-account.json
         secretName: prow-google-credentials
+    - emptyDir: {}
+      name: docker-graph
+    - hostPath:
+        path: /lib/modules
+        type: Directory
+      name: modules
+    - hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+      name: cgroup
 presubmits:
   knative-sandbox/eventing-kafka-broker:
   - always_run: true
