@@ -235,6 +235,7 @@ branch-protection:
         - tide
       exclude:
       - "^dependabot/" # don't protect branches created by dependabot
+      - "^knative-*/" # don't protect branches created by Knative automation
       include:
       - "^main$"
       - "^master$"
@@ -249,6 +250,9 @@ branch-protection:
         contexts:
         - EasyCLA
         - tide
+      exclude:
+      - "^dependabot/" # don't protect branches created by dependabot
+      - "^knative-*/" # don't protect branches created by Knative automation
       include:
       - "^main$"
       - "^master$"
