@@ -231,7 +231,7 @@ branch-protection:
       protect: true
       required_status_checks:
         contexts:
-        - EasyCLA
+        - cla/google
         - tide
       exclude:
       - "^dependabot/" # don't protect branches created by dependabot
@@ -248,7 +248,7 @@ branch-protection:
       protect: true
       required_status_checks:
         contexts:
-        - EasyCLA
+        - cla/google
         - tide
       exclude:
       - "^dependabot/" # don't protect branches created by dependabot
