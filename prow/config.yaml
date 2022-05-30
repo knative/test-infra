@@ -25,10 +25,10 @@ plank:
         grace_period: 15s
         utility_images:
           # Update these versions when updating plank version in cluster.yaml
-          clonerefs: "gcr.io/k8s-prow/clonerefs:v20220519-c750e0df24"
-          initupload: "gcr.io/k8s-prow/initupload:v20220519-c750e0df24"
-          entrypoint: "gcr.io/k8s-prow/entrypoint:v20220519-c750e0df24"
-          sidecar: "gcr.io/k8s-prow/sidecar:v20220519-c750e0df24"
+          clonerefs: "gcr.io/k8s-prow/clonerefs:v20220527-80855b9778"
+          initupload: "gcr.io/k8s-prow/initupload:v20220527-80855b9778"
+          entrypoint: "gcr.io/k8s-prow/entrypoint:v20220527-80855b9778"
+          sidecar: "gcr.io/k8s-prow/sidecar:v20220527-80855b9778"
         gcs_configuration:
           bucket: "knative-prow"
           path_strategy: "explicit"
@@ -44,10 +44,10 @@ plank:
         grace_period: 15s
         utility_images:
           # Update these versions when updating plank version in cluster.yaml
-          clonerefs: "gcr.io/k8s-prow/clonerefs:v20220519-c750e0df24"
-          initupload: "gcr.io/k8s-prow/initupload:v20220519-c750e0df24"
-          entrypoint: "gcr.io/k8s-prow/entrypoint:v20220519-c750e0df24"
-          sidecar: "gcr.io/k8s-prow/sidecar:v20220519-c750e0df24"
+          clonerefs: "gcr.io/k8s-prow/clonerefs:v20220527-80855b9778"
+          initupload: "gcr.io/k8s-prow/initupload:v20220527-80855b9778"
+          entrypoint: "gcr.io/k8s-prow/entrypoint:v20220527-80855b9778"
+          sidecar: "gcr.io/k8s-prow/sidecar:v20220527-80855b9778"
         gcs_configuration:
           bucket: "knative-prow"
           path_strategy: "explicit"
