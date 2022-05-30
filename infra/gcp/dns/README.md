@@ -1,7 +1,7 @@
 # Knative DNS Project
 
 This folder holds the DNS Infrastructure for 
-- `knative.team` 
+- `knative.team`
 - `knative.dev`
 - `kn.dev`
 - `kn-e2e.dev`
