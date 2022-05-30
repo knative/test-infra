@@ -1,6 +1,6 @@
 # Knative DNS Project
 
-This folder holds the DNS Infrastructure for 
+This folder holds the DNS Infrastructure for:
 - `knative.team`
 - `knative.dev`
 - `kn.dev`
