@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM debian:bullseye-20220418-slim AS base
+FROM debian:bullseye-20220509-slim AS base
 
 # Pinned versions of stuff we pull in
-ARG CLOUD_SDK_VERSION=382.0.0
+ARG CLOUD_SDK_VERSION=387.0.0
 ARG KUBECTL_VERSION=v1.21.4
 ARG DOCKER_VERSION=5:20.10.9~3-0~debian-bullseye
 ARG MAVEN_VERSION=3.8.4
@@ -184,7 +184,7 @@ FROM golang:1.17 AS external-go-gets
 
 ARG KUBETEST2_VERSION=5e5d3e9eebc6a609aa428bd3e2a1c0c3566d5baf
 ARG KIND_VERSION=v0.12.0
-ARG KO_VERSION=v0.9.3
+ARG KO_VERSION=v0.11.2
 ARG PROTOC_GEN_GO_VERSION=v1.26.0
 ARG PROTOC_GEN_GOGOFASTER_VERSION=v1.3.1
 ARG GOTESTSUM_VERSION=v1.7.0
