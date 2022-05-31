@@ -7,17 +7,17 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.1
+    testgrid-dashboards: knative-sandbox-release-1.5
     testgrid-tab-name: net-http01-continuous
   cluster: prow-build
-  cron: 35 6 * * *
+  cron: 3 10 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-1.1
+  - base_ref: release-1.5
     org: knative-sandbox
     path_alias: knative.dev/net-http01
     repo: net-http01
-  name: continuous_net-http01_release-1.1_periodic
+  name: continuous_net-http01_release-1.5_periodic
   spec:
     containers:
     - command:
@@ -48,17 +48,17 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.1
+    testgrid-dashboards: knative-sandbox-release-1.5
     testgrid-tab-name: net-http01-release
   cluster: prow-build
-  cron: 37 9 * * 2
+  cron: 9 9 * * 2
   decorate: true
   extra_refs:
-  - base_ref: release-1.1
+  - base_ref: release-1.5
     org: knative-sandbox
     path_alias: knative.dev/net-http01
     repo: net-http01
-  name: release_net-http01_release-1.1_periodic
+  name: release_net-http01_release-1.5_periodic
   spec:
     containers:
     - command:
@@ -72,7 +72,7 @@ periodics:
       - --github-token
       - /etc/hub-token/token
       - --branch
-      - release-1.1
+      - release-1.5
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
@@ -111,10 +111,10 @@ presubmits:
   knative-sandbox/net-http01:
   - always_run: true
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: build-tests_net-http01_release-1.1
+    name: build-tests_net-http01_release-1.5
     path_alias: knative.dev/net-http01
     spec:
       containers:
@@ -131,10 +131,10 @@ presubmits:
         type: testing
   - always_run: true
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: unit-tests_net-http01_release-1.1
+    name: unit-tests_net-http01_release-1.5
     path_alias: knative.dev/net-http01
     spec:
       containers:
@@ -151,10 +151,10 @@ presubmits:
         type: testing
   - always_run: true
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: integration-tests_net-http01_release-1.1
+    name: integration-tests_net-http01_release-1.5
     path_alias: knative.dev/net-http01
     spec:
       containers:

@@ -7,17 +7,17 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.1
-    testgrid-tab-name: net-kourier-continuous
+    testgrid-dashboards: knative-sandbox-release-1.5
+    testgrid-tab-name: net-gateway-api-continuous
   cluster: prow-build
-  cron: 17 0 * * *
+  cron: 45 4 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-1.1
+  - base_ref: release-1.5
     org: knative-sandbox
-    path_alias: knative.dev/net-kourier
-    repo: net-kourier
-  name: continuous_net-kourier_release-1.1_periodic
+    path_alias: knative.dev/net-gateway-api
+    repo: net-gateway-api
+  name: continuous_net-gateway-api_release-1.5_periodic
   spec:
     containers:
     - command:
@@ -48,17 +48,17 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.1
-    testgrid-tab-name: net-kourier-release
+    testgrid-dashboards: knative-sandbox-release-1.5
+    testgrid-tab-name: net-gateway-api-release
   cluster: prow-build
-  cron: 7 9 * * 2
+  cron: 15 9 * * 2
   decorate: true
   extra_refs:
-  - base_ref: release-1.1
+  - base_ref: release-1.5
     org: knative-sandbox
-    path_alias: knative.dev/net-kourier
-    repo: net-kourier
-  name: release_net-kourier_release-1.1_periodic
+    path_alias: knative.dev/net-gateway-api
+    repo: net-gateway-api
+  name: release_net-gateway-api_release-1.5_periodic
   spec:
     containers:
     - command:
@@ -66,13 +66,13 @@ periodics:
       - ./hack/release.sh
       - --dot-release
       - --release-gcs
-      - knative-releases/net-kourier
+      - knative-releases/net-gateway-api
       - --release-gcr
       - gcr.io/knative-releases
       - --github-token
       - /etc/hub-token/token
       - --branch
-      - release-1.1
+      - release-1.5
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
@@ -108,14 +108,14 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 presubmits:
-  knative-sandbox/net-kourier:
+  knative-sandbox/net-gateway-api:
   - always_run: true
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: build-tests_net-kourier_release-1.1
-    path_alias: knative.dev/net-kourier
+    name: build-tests_net-gateway-api_release-1.5
+    path_alias: knative.dev/net-gateway-api
     spec:
       containers:
       - command:
@@ -131,11 +131,11 @@ presubmits:
         type: testing
   - always_run: true
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: unit-tests_net-kourier_release-1.1
-    path_alias: knative.dev/net-kourier
+    name: unit-tests_net-gateway-api_release-1.5
+    path_alias: knative.dev/net-gateway-api
     spec:
       containers:
       - command:
@@ -151,11 +151,11 @@ presubmits:
         type: testing
   - always_run: true
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: integration-tests_net-kourier_release-1.1
-    path_alias: knative.dev/net-kourier
+    name: integration-tests_net-gateway-api_release-1.5
+    path_alias: knative.dev/net-gateway-api
     spec:
       containers:
       - command:
