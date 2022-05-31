@@ -7,17 +7,17 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-release-1.1
-    testgrid-tab-name: client-continuous
+    testgrid-dashboards: knative-sandbox-release-1.5
+    testgrid-tab-name: eventing-kogito-continuous
   cluster: prow-build
-  cron: 55 2 * * *
+  cron: 10 5 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-1.1
-    org: knative
-    path_alias: knative.dev/client
-    repo: client
-  name: continuous_client_release-1.1_periodic
+  - base_ref: release-1.5
+    org: knative-sandbox
+    path_alias: knative.dev/eventing-kogito
+    repo: eventing-kogito
+  name: continuous_eventing-kogito_release-1.5_periodic
   spec:
     containers:
     - command:
@@ -48,92 +48,17 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 - annotations:
-    testgrid-dashboards: knative-release-1.1
-    testgrid-tab-name: client-s390x-e2e-tests
+    testgrid-dashboards: knative-sandbox-release-1.5
+    testgrid-tab-name: eventing-kogito-release
   cluster: prow-build
-  cron: 20 19 * * *
+  cron: 18 9 * * 2
   decorate: true
   extra_refs:
-  - base_ref: release-1.1
-    org: knative
-    path_alias: knative.dev/client
-    repo: client
-  name: s390x-e2e-tests_client_release-1.1_periodic
-  spec:
-    containers:
-    - args:
-      - bash
-      - -c
-      - |
-        mkdir -p /root/.kube
-        cat /opt/cluster/ci-script > connect.sh
-        chmod +x connect.sh
-        ./connect.sh client-11
-        kubectl get cm s390x-config-client -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
-        chmod +x adjust.sh
-        ./adjust.sh
-        ./test/e2e-tests.sh --run-tests
-      command:
-      - runner.sh
-      env:
-      - name: INGRESS_CLASS
-        value: contour.ingress.networking.knative.dev
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: KO_FLAGS
-        value: --platform=linux/s390x
-      - name: PLATFORM
-        value: linux/s390x
-      - name: KO_DOCKER_REPO
-        valueFrom:
-          secretKeyRef:
-            key: ko-docker-repo
-            name: s390x-cluster1
-      - name: DISABLE_MD_LINTING
-        value: "1"
-      - name: KUBECONFIG
-        value: /root/.kube/config
-      - name: DOCKER_CONFIG
-        value: /opt/cluster
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220531-f8cd600f
-      name: ""
-      resources: {}
-      securityContext:
-        privileged: true
-      volumeMounts:
-      - mountPath: /etc/test-account
-        name: test-account
-        readOnly: true
-      - mountPath: /opt/cluster
-        name: s390x-cluster1
-        readOnly: true
-    nodeSelector:
-      type: testing
-    volumes:
-    - name: test-account
-      secret:
-        items:
-        - key: service-account-key.json
-          path: service-account.json
-        secretName: prow-google-credentials
-    - name: s390x-cluster1
-      secret:
-        defaultMode: 384
-        secretName: s390x-cluster1
-- annotations:
-    testgrid-dashboards: knative-release-1.1
-    testgrid-tab-name: client-release
-  cluster: prow-build
-  cron: 53 9 * * 2
-  decorate: true
-  extra_refs:
-  - base_ref: release-1.1
-    org: knative
-    path_alias: knative.dev/client
-    repo: client
-  name: release_client_release-1.1_periodic
+  - base_ref: release-1.5
+    org: knative-sandbox
+    path_alias: knative.dev/eventing-kogito
+    repo: eventing-kogito
+  name: release_eventing-kogito_release-1.5_periodic
   spec:
     containers:
     - command:
@@ -141,18 +66,20 @@ periodics:
       - ./hack/release.sh
       - --dot-release
       - --release-gcs
-      - knative-releases/client
+      - knative-releases/eventing-kogito
       - --release-gcr
       - gcr.io/knative-releases
       - --github-token
       - /etc/hub-token/token
       - --branch
-      - release-1.1
+      - release-1.5
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: ORG_NAME
+        value: knative-sandbox
       image: gcr.io/knative-tests/test-infra/prow-tests:v20220531-f8cd600f
       name: ""
       resources: {}
@@ -181,14 +108,14 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 presubmits:
-  knative/client:
+  knative-sandbox/eventing-kogito:
   - always_run: true
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: build-tests_client_release-1.1
-    path_alias: knative.dev/client
+    name: build-tests_eventing-kogito_release-1.5
+    path_alias: knative.dev/eventing-kogito
     spec:
       containers:
       - command:
@@ -204,11 +131,11 @@ presubmits:
         type: testing
   - always_run: true
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: unit-tests_client_release-1.1
-    path_alias: knative.dev/client
+    name: unit-tests_eventing-kogito_release-1.5
+    path_alias: knative.dev/eventing-kogito
     spec:
       containers:
       - command:
@@ -224,52 +151,17 @@ presubmits:
         type: testing
   - always_run: true
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: integration-tests_client_release-1.1
-    path_alias: knative.dev/client
+    name: integration-tests_eventing-kogito_release-1.5
+    path_alias: knative.dev/eventing-kogito
     spec:
       containers:
       - command:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --integration-tests
-        env:
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220531-f8cd600f
-        name: ""
-        resources: {}
-        securityContext:
-          privileged: true
-        volumeMounts:
-        - mountPath: /etc/test-account
-          name: test-account
-          readOnly: true
-      nodeSelector:
-        type: testing
-      volumes:
-      - name: test-account
-        secret:
-          items:
-          - key: service-account-key.json
-            path: service-account.json
-          secretName: prow-google-credentials
-  - always_run: true
-    branches:
-    - ^release-1.1$
-    cluster: prow-build
-    decorate: true
-    name: integration-tests-latest-release_client_release-1.1
-    path_alias: knative.dev/client
-    spec:
-      containers:
-      - command:
-        - runner.sh
-        - ./test/presubmit-integration-tests-latest-release.sh
         env:
         - name: E2E_CLUSTER_REGION
           value: us-central1
