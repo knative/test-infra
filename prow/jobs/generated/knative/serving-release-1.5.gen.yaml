@@ -7,19 +7,19 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-release-1.1
+    testgrid-dashboards: knative-release-1.5
     testgrid-tab-name: serving-continuous
   cluster: prow-build
-  cron: 40 23 * * *
+  cron: 8 3 * * *
   decorate: true
   decoration_config:
     timeout: 3h0m0s
   extra_refs:
-  - base_ref: release-1.1
+  - base_ref: release-1.5
     org: knative
     path_alias: knative.dev/serving
     repo: serving
-  name: continuous_serving_release-1.1_periodic
+  name: continuous_serving_release-1.5_periodic
   spec:
     containers:
     - command:
@@ -54,17 +54,17 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 - annotations:
-    testgrid-dashboards: knative-release-1.1
+    testgrid-dashboards: knative-release-1.5
     testgrid-tab-name: serving-s390x-kourier-tests
   cluster: prow-build
-  cron: 20 11 * * *
+  cron: 0 3 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-1.1
+  - base_ref: release-1.5
     org: knative
     path_alias: knative.dev/serving
     repo: serving
-  name: s390x-kourier-tests_serving_release-1.1_periodic
+  name: s390x-kourier-tests_serving_release-1.5_periodic
   spec:
     containers:
     - args:
@@ -74,7 +74,7 @@ periodics:
         mkdir -p /root/.kube
         cat /opt/cluster/ci-script > connect.sh
         chmod +x connect.sh
-        server_addr=$(./connect.sh kourier-11)
+        server_addr=$(./connect.sh kourier-main)
         kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
         chmod +x adjust.sh
         ./adjust.sh
@@ -136,17 +136,17 @@ periodics:
         defaultMode: 384
         secretName: s390x-cluster1
 - annotations:
-    testgrid-dashboards: knative-release-1.1
+    testgrid-dashboards: knative-release-1.5
     testgrid-tab-name: serving-s390x-contour-tests
   cluster: prow-build
-  cron: 20 13 * * *
+  cron: 0 5 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-1.1
+  - base_ref: release-1.5
     org: knative
     path_alias: knative.dev/serving
     repo: serving
-  name: s390x-contour-tests_serving_release-1.1_periodic
+  name: s390x-contour-tests_serving_release-1.5_periodic
   spec:
     containers:
     - args:
@@ -156,7 +156,7 @@ periodics:
         mkdir -p /root/.kube
         cat /opt/cluster/ci-script > connect.sh
         chmod +x connect.sh
-        server_addr=$(./connect.sh contour-11)
+        server_addr=$(./connect.sh contour-main)
         kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
         chmod +x adjust.sh
         ./adjust.sh
@@ -218,19 +218,19 @@ periodics:
         defaultMode: 384
         secretName: s390x-cluster1
 - annotations:
-    testgrid-dashboards: knative-release-1.1
+    testgrid-dashboards: knative-release-1.5
     testgrid-tab-name: serving-release
   cluster: prow-build
-  cron: 4 9 * * 2
+  cron: 28 9 * * 2
   decorate: true
   decoration_config:
     timeout: 3h0m0s
   extra_refs:
-  - base_ref: release-1.1
+  - base_ref: release-1.5
     org: knative
     path_alias: knative.dev/serving
     repo: serving
-  name: release_serving_release-1.1_periodic
+  name: release_serving_release-1.5_periodic
   spec:
     containers:
     - command:
@@ -244,7 +244,7 @@ periodics:
       - --github-token
       - /etc/hub-token/token
       - --branch
-      - release-1.1
+      - release-1.5
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
@@ -285,10 +285,10 @@ presubmits:
   knative/serving:
   - always_run: true
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: build-tests_serving_release-1.1
+    name: build-tests_serving_release-1.5
     path_alias: knative.dev/serving
     spec:
       containers:
@@ -309,10 +309,10 @@ presubmits:
         type: testing
   - always_run: true
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: unit-tests_serving_release-1.1
+    name: unit-tests_serving_release-1.5
     path_alias: knative.dev/serving
     spec:
       containers:
@@ -333,10 +333,10 @@ presubmits:
         type: testing
   - always_run: true
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: upgrade-tests_serving_release-1.1
+    name: upgrade-tests_serving_release-1.5
     path_alias: knative.dev/serving
     spec:
       containers:
@@ -374,10 +374,10 @@ presubmits:
           secretName: prow-google-credentials
   - always_run: true
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: istio-latest-no-mesh_serving_release-1.1
+    name: istio-latest-no-mesh_serving_release-1.5
     path_alias: knative.dev/serving
     spec:
       containers:
@@ -415,10 +415,10 @@ presubmits:
           secretName: prow-google-credentials
   - always_run: true
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: istio-latest-no-mesh-tls_serving_release-1.1
+    name: istio-latest-no-mesh-tls_serving_release-1.5
     path_alias: knative.dev/serving
     spec:
       containers:
@@ -456,10 +456,10 @@ presubmits:
           secretName: prow-google-credentials
   - always_run: false
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: performance-tests-kperf_serving_release-1.1
+    name: performance-tests-kperf_serving_release-1.5
     optional: true
     path_alias: knative.dev/serving
     spec:
@@ -498,10 +498,52 @@ presubmits:
           secretName: prow-google-credentials
   - always_run: false
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: istio-latest-mesh_serving_release-1.1
+    name: performance-tests-mako_serving_release-1.5
+    optional: true
+    path_alias: knative.dev/serving
+    spec:
+      containers:
+      - command:
+        - runner.sh
+        - ./test/presubmit-tests.sh
+        - --run-test
+        - ./test/performance/performance-tests-mako.sh
+        env:
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220525-e43f8c84
+        name: ""
+        resources:
+          limits:
+            memory: 16Gi
+          requests:
+            memory: 12Gi
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /etc/test-account
+          name: test-account
+          readOnly: true
+      nodeSelector:
+        type: testing
+      volumes:
+      - name: test-account
+        secret:
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
+  - always_run: false
+    branches:
+    - ^release-1.5$
+    cluster: prow-build
+    decorate: true
+    name: istio-latest-mesh_serving_release-1.5
     optional: true
     path_alias: knative.dev/serving
     spec:
@@ -540,10 +582,10 @@ presubmits:
           secretName: prow-google-credentials
   - always_run: false
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: istio-latest-mesh-short_serving_release-1.1
+    name: istio-latest-mesh-short_serving_release-1.5
     optional: true
     path_alias: knative.dev/serving
     spec:
@@ -582,10 +624,10 @@ presubmits:
           secretName: prow-google-credentials
   - always_run: false
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: istio-latest-mesh-tls_serving_release-1.1
+    name: istio-latest-mesh-tls_serving_release-1.5
     optional: true
     path_alias: knative.dev/serving
     spec:
@@ -624,10 +666,10 @@ presubmits:
           secretName: prow-google-credentials
   - always_run: false
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: kourier-stable_serving_release-1.1
+    name: kourier-stable_serving_release-1.5
     path_alias: knative.dev/serving
     run_if_changed: ^third_party/kourier-latest/*
     spec:
@@ -666,10 +708,10 @@ presubmits:
           secretName: prow-google-credentials
   - always_run: false
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: kourier-stable-tls_serving_release-1.1
+    name: kourier-stable-tls_serving_release-1.5
     path_alias: knative.dev/serving
     run_if_changed: ^third_party/kourier-latest/*
     spec:
@@ -708,10 +750,10 @@ presubmits:
           secretName: prow-google-credentials
   - always_run: false
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: contour-latest_serving_release-1.1
+    name: contour-latest_serving_release-1.5
     path_alias: knative.dev/serving
     run_if_changed: ^third_party/contour-latest/*
     spec:
@@ -750,10 +792,10 @@ presubmits:
           secretName: prow-google-credentials
   - always_run: false
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: contour-tls_serving_release-1.1
+    name: contour-tls_serving_release-1.5
     path_alias: knative.dev/serving
     run_if_changed: ^third_party/contour-latest/*
     spec:
@@ -792,10 +834,10 @@ presubmits:
           secretName: prow-google-credentials
   - always_run: false
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: gateway-api-latest_serving_release-1.1
+    name: gateway-api-latest_serving_release-1.5
     path_alias: knative.dev/serving
     run_if_changed: ^third_party/gateway-api-latest/*
     spec:
@@ -834,10 +876,10 @@ presubmits:
           secretName: prow-google-credentials
   - always_run: false
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: https_serving_release-1.1
+    name: https_serving_release-1.5
     optional: true
     path_alias: knative.dev/serving
     run_if_changed: ^third_party/cert-manager-latest/*
