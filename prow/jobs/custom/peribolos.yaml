@@ -46,7 +46,7 @@ presubmits:
         - "--fix-team-members=true"
         - "--fix-team-repos=true"
         - "--fix-repos=true"
-        - "--tokens=1200"
+        - "--github-hourly-tokens=1200"
         # Set --confirm=false to only validate the configuration file.
         - "--confirm=false"
         volumeMounts:
@@ -87,7 +87,7 @@ presubmits:
         - "--fix-team-members=true"
         - "--fix-team-repos=true"
         - "--fix-repos=true"
-        - "--tokens=1200"
+        - "--github-hourly-tokens=1200"
         # Set --confirm=false to only validate the configuration file.
         - "--confirm=false"
         volumeMounts:
