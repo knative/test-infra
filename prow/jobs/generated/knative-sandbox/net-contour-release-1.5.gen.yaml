@@ -7,17 +7,17 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.1
-    testgrid-tab-name: net-certmanager-continuous
+    testgrid-dashboards: knative-sandbox-release-1.5
+    testgrid-tab-name: net-contour-continuous
   cluster: prow-build
-  cron: 55 14 * * *
+  cron: 54 13 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-1.1
+  - base_ref: release-1.5
     org: knative-sandbox
-    path_alias: knative.dev/net-certmanager
-    repo: net-certmanager
-  name: continuous_net-certmanager_release-1.1_periodic
+    path_alias: knative.dev/net-contour
+    repo: net-contour
+  name: continuous_net-contour_release-1.5_periodic
   spec:
     containers:
     - command:
@@ -48,17 +48,17 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.1
-    testgrid-tab-name: net-certmanager-release
+    testgrid-dashboards: knative-sandbox-release-1.5
+    testgrid-tab-name: net-contour-release
   cluster: prow-build
-  cron: 41 9 * * 2
+  cron: 54 9 * * 2
   decorate: true
   extra_refs:
-  - base_ref: release-1.1
+  - base_ref: release-1.5
     org: knative-sandbox
-    path_alias: knative.dev/net-certmanager
-    repo: net-certmanager
-  name: release_net-certmanager_release-1.1_periodic
+    path_alias: knative.dev/net-contour
+    repo: net-contour
+  name: release_net-contour_release-1.5_periodic
   spec:
     containers:
     - command:
@@ -66,13 +66,13 @@ periodics:
       - ./hack/release.sh
       - --dot-release
       - --release-gcs
-      - knative-releases/net-certmanager
+      - knative-releases/net-contour
       - --release-gcr
       - gcr.io/knative-releases
       - --github-token
       - /etc/hub-token/token
       - --branch
-      - release-1.1
+      - release-1.5
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
@@ -108,14 +108,14 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 presubmits:
-  knative-sandbox/net-certmanager:
+  knative-sandbox/net-contour:
   - always_run: true
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: build-tests_net-certmanager_release-1.1
-    path_alias: knative.dev/net-certmanager
+    name: build-tests_net-contour_release-1.5
+    path_alias: knative.dev/net-contour
     spec:
       containers:
       - command:
@@ -131,11 +131,11 @@ presubmits:
         type: testing
   - always_run: true
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: unit-tests_net-certmanager_release-1.1
-    path_alias: knative.dev/net-certmanager
+    name: unit-tests_net-contour_release-1.5
+    path_alias: knative.dev/net-contour
     spec:
       containers:
       - command:
@@ -151,11 +151,11 @@ presubmits:
         type: testing
   - always_run: true
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: integration-tests_net-certmanager_release-1.1
-    path_alias: knative.dev/net-certmanager
+    name: integration-tests_net-contour_release-1.5
+    path_alias: knative.dev/net-contour
     spec:
       containers:
       - command:
