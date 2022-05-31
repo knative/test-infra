@@ -7,17 +7,17 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.1
-    testgrid-tab-name: kn-plugin-quickstart-continuous
+    testgrid-dashboards: knative-sandbox-release-1.5
+    testgrid-tab-name: kn-plugin-source-kafka-continuous
   cluster: prow-build
-  cron: 25 8 * * *
+  cron: 36 19 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-1.1
+  - base_ref: release-1.5
     org: knative-sandbox
-    path_alias: knative.dev/kn-plugin-quickstart
-    repo: kn-plugin-quickstart
-  name: continuous_kn-plugin-quickstart_release-1.1_periodic
+    path_alias: knative.dev/kn-plugin-source-kafka
+    repo: kn-plugin-source-kafka
+  name: continuous_kn-plugin-source-kafka_release-1.5_periodic
   spec:
     containers:
     - command:
@@ -48,17 +48,17 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.1
-    testgrid-tab-name: kn-plugin-quickstart-release
+    testgrid-dashboards: knative-sandbox-release-1.5
+    testgrid-tab-name: kn-plugin-source-kafka-release
   cluster: prow-build
-  cron: 55 9 * * 2
+  cron: 28 9 * * 2
   decorate: true
   extra_refs:
-  - base_ref: release-1.1
+  - base_ref: release-1.5
     org: knative-sandbox
-    path_alias: knative.dev/kn-plugin-quickstart
-    repo: kn-plugin-quickstart
-  name: release_kn-plugin-quickstart_release-1.1_periodic
+    path_alias: knative.dev/kn-plugin-source-kafka
+    repo: kn-plugin-source-kafka
+  name: release_kn-plugin-source-kafka_release-1.5_periodic
   spec:
     containers:
     - command:
@@ -66,13 +66,13 @@ periodics:
       - ./hack/release.sh
       - --dot-release
       - --release-gcs
-      - knative-releases/kn-plugin-quickstart
+      - knative-releases/kn-plugin-source-kafka
       - --release-gcr
       - gcr.io/knative-releases
       - --github-token
       - /etc/hub-token/token
       - --branch
-      - release-1.1
+      - release-1.5
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
@@ -80,6 +80,8 @@ periodics:
         value: us-central1
       - name: ORG_NAME
         value: knative-sandbox
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20220531-f8cd600f
       name: ""
       resources: {}
@@ -92,6 +94,12 @@ periodics:
       - mountPath: /etc/release-account
         name: release-account
         readOnly: true
+      - mountPath: /docker-graph
+        name: docker-graph
+      - mountPath: /lib/modules
+        name: modules
+      - mountPath: /sys/fs/cgroup
+        name: cgroup
     nodeSelector:
       type: testing
     volumes:
@@ -107,15 +115,25 @@ periodics:
         - key: release.json
           path: service-account.json
         secretName: prow-google-credentials
+    - emptyDir: {}
+      name: docker-graph
+    - hostPath:
+        path: /lib/modules
+        type: Directory
+      name: modules
+    - hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+      name: cgroup
 presubmits:
-  knative-sandbox/kn-plugin-quickstart:
+  knative-sandbox/kn-plugin-source-kafka:
   - always_run: true
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: build-tests_kn-plugin-quickstart_release-1.1
-    path_alias: knative.dev/kn-plugin-quickstart
+    name: build-tests_kn-plugin-source-kafka_release-1.5
+    path_alias: knative.dev/kn-plugin-source-kafka
     spec:
       containers:
       - command:
@@ -131,11 +149,11 @@ presubmits:
         type: testing
   - always_run: true
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: unit-tests_kn-plugin-quickstart_release-1.1
-    path_alias: knative.dev/kn-plugin-quickstart
+    name: unit-tests_kn-plugin-source-kafka_release-1.5
+    path_alias: knative.dev/kn-plugin-source-kafka
     spec:
       containers:
       - command:
@@ -151,11 +169,11 @@ presubmits:
         type: testing
   - always_run: true
     branches:
-    - ^release-1.1$
+    - ^release-1.5$
     cluster: prow-build
     decorate: true
-    name: integration-tests_kn-plugin-quickstart_release-1.1
-    path_alias: knative.dev/kn-plugin-quickstart
+    name: integration-tests_kn-plugin-source-kafka_release-1.5
+    path_alias: knative.dev/kn-plugin-source-kafka
     spec:
       containers:
       - command:
