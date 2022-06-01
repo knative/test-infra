@@ -194,7 +194,7 @@ jobs:
     args:
     - ./test/presubmit-tests.sh
     - --run-test
-    - ../test/performance/performance-tests.sh
+    - ./test/performance/performance-tests.sh
 
   - name: s390x-kourier-tests
     cron: 0 3 * * *
