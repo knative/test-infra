@@ -68,14 +68,14 @@ jobs:
     mkdir -p /root/.kube
     cat /opt/cluster/ci-script > connect.sh
     chmod +x connect.sh
-    ./connect.sh eventing-main
+    ./connect.sh eventing-15
     kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
     chmod +x adjust.sh
     ./adjust.sh
     ./test/e2e-tests.sh --run-tests
   command:
   - runner.sh
-  cron: 0 7 * * *
+  cron: 20 15 * * *
   env:
   - name: SYSTEM_NAMESPACE
     value: knative-eventing
@@ -93,14 +93,14 @@ jobs:
     mkdir -p /root/.kube
     cat /opt/cluster/ci-script > connect.sh
     chmod +x connect.sh
-    ./connect.sh eventing_rekt-main
+    ./connect.sh eventing_rekt-15
     kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
     chmod +x adjust.sh
     ./adjust.sh
     ./test/e2e-rekt-tests.sh --run-tests
   command:
   - runner.sh
-  cron: 0 9 * * *
+  cron: 20 17 * * *
   env:
   - name: SYSTEM_NAMESPACE
     value: knative-eventing
