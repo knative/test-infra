@@ -460,7 +460,7 @@ periodics:
     - args:
       - ./test/presubmit-tests.sh
       - --run-test
-      - ../test/performance/performance-tests.sh
+      - ./test/performance/performance-tests.sh
       command:
       - runner.sh
       env:
