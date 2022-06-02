@@ -21,3 +21,9 @@ module "project" {
     "compute.googleapis.com"
   ]
 }
+
+module "monitoring" {
+  source = "./monitoring"
+  project   = module.project.project_id
+  notification_channel_id = "potato"
+}

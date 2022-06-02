@@ -18,8 +18,9 @@ include Makefile.gcloud.mk
 PROJECT       ?= knative-tests
 PROJECT_BUILD ?= knative-tests
 REGION        ?= us-central1
+ZONE          ?= us-central1-f
 CLUSTER       ?= prow
-CLUSTER_BUILD ?= knative-prow-build-cluster
+CLUSTER_BUILD ?= prow-build
 JOB_NAMESPACE ?= test-pods
 
 .PHONY: deploy
@@ -31,8 +32,6 @@ deploy: get-cluster-credentials
 .PHONY: deploy-build
 deploy-build: get-build-cluster-credentials
 	kubectl apply -f ./cluster/build/
-	kubectl create configmap resources --from-file=config=./cluster/boskos/boskos_resources.yaml --dry-run --save-config -o yaml \
-		| kubectl --namespace="$(JOB_NAMESPACE)" apply -f -
 
 .PHONY: deploy-monitoring
 deploy-monitoring:
