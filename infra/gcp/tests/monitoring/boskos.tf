@@ -23,7 +23,6 @@ resource "google_monitoring_alert_policy" "boskos_alerts" {
       | outer_join 0
       | condition t_0.value_boskos_resources_aggregate == 0 && t_1.value_boskos_resources_aggregate > 5
       | window 1m
-      
       EOT
       trigger {
         count = 1
