@@ -59,7 +59,8 @@ RUN apt-get update -qqy && apt-get install -qqy \
         gnupg \
         jq \
         procps \
-        net-tools
+        net-tools \
+        gnuplot
 
 RUN pip3 install -U crcmod==1.7
 RUN curl -fsSLO https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz
@@ -183,15 +184,15 @@ COPY images/prow-tests/in-gvm-env.sh /usr/local/bin
 FROM golang:1.17 AS external-go-gets
 
 ARG KUBETEST2_VERSION=5e5d3e9eebc6a609aa428bd3e2a1c0c3566d5baf
-ARG KIND_VERSION=v0.12.0
+ARG KIND_VERSION=v0.14.0
 ARG KO_VERSION=v0.11.2
-ARG PROTOC_GEN_GO_VERSION=v1.26.0
-ARG PROTOC_GEN_GOGOFASTER_VERSION=v1.3.1
-ARG GOTESTSUM_VERSION=v1.7.0
+ARG PROTOC_GEN_GO_VERSION=v1.29.0
+ARG PROTOC_GEN_GOGOFASTER_VERSION=v1.3.2
+ARG GOTESTSUM_VERSION=v1.8.1
 ARG KAIL_VERSION=v0.15.0
 ARG LICHE_VERSION=v0.0.0-20200229003944-f57a5d1c5be4
-ARG GO_LICENSES_VERSION=v1.0.0
-ARG DOCKER_CREDENTIAL_GCR_VERSION=v2.0.5
+ARG GO_LICENSES_VERSION=v1.2.1
+ARG DOCKER_CREDENTIAL_GCR_VERSION=v2.1.5
 ARG JSONNET_VERSION=v0.18.0
 ARG GOJSONTOYAML_VERSION=v0.1.0
 
