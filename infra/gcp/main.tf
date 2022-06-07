@@ -22,3 +22,7 @@ module "gsuite" {
 module "tests" {
   source = "./tests"
 }
+
+module "analytics" {
+  source = "./analytics"
+}
