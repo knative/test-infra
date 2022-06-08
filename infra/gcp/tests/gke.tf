@@ -2,6 +2,7 @@
 
 module "prow_trusted" {
   source                     = "terraform-google-modules/kubernetes-engine/google//modules/beta-public-cluster"
+  version                    = "~> 21.1"
   project_id                 = module.project.project_id
   name                       = "prow-trusted"
   regional                   = false
@@ -17,6 +18,7 @@ module "prow_trusted" {
   filestore_csi_driver       = false
   create_service_account     = false
   remove_default_node_pool   = true
+  gce_pd_csi_driver          = true
   cluster_resource_labels = {
     cluster     = "prow-trusted"
     role        = "prow"
@@ -44,6 +46,7 @@ module "prow_trusted" {
 
 module "prow" {
   source                     = "terraform-google-modules/kubernetes-engine/google//modules/beta-public-cluster"
+  version                    = "~> 21.1"
   project_id                 = module.project.project_id
   name                       = "prow"
   region                     = "us-central1"
@@ -58,6 +61,7 @@ module "prow" {
   filestore_csi_driver       = false
   create_service_account     = false
   remove_default_node_pool   = true
+  gce_pd_csi_driver          = true
   cluster_resource_labels = {
     cluster     = "prow"
     role        = "prow"

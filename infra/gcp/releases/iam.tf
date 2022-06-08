@@ -1,66 +1,35 @@
-// Prow Control Plane
-resource "google_service_account_iam_binding" "prow_control_plane" {
-  service_account_id = google_service_account.prow_control_plane.name
-  role               = "roles/iam.workloadIdentityUser"
+module "iam" {
+  source  = "terraform-google-modules/iam/google//modules/projects_iam"
+  version = "~> 7"
 
-  members = [
-    "serviceAccount:knative-tests.svc.id.goog[default/crier]",
-    "serviceAccount:knative-tests.svc.id.goog[default/deck]",
-    "serviceAccount:knative-tests.svc.id.goog[default/sinker]",
-  ]
+  projects = ["knative-releases"]
+
+  mode = "authoritative"
+
+  bindings = {
+
+    "roles/storage.admin" = [
+      "serviceAccount:${google_service_account.prow_job.email}",
+    ]
+    "projects/knative-releases/roles/ServiceAccountIAMEditor" = [
+      "serviceAccount:${google_service_account.prow_job.email}",
+    ]
+  }
 }
 
-resource "google_service_account" "prow_control_plane" {
-  account_id   = "prow-control-plane"
-  display_name = "Prow Control Plane"
-  description  = "Service account used by Prow control plane to interact with Google services for the knative-tests project."
-  project      = "knative-tests"
+// Service Account used by Knative Releases
+resource "google_service_account" "prow_job" {
+  account_id   = "prow-job"
+  display_name = "Prow Job Knative Release Creator"
+  project      = module.project.project_id
 }
 
-
-// External Secrets Operator
-resource "google_service_account_iam_binding" "external_secrets" {
-  service_account_id = google_service_account.external_secrets.name
-  role               = "roles/iam.workloadIdentityUser"
-
-  members = [
-    "serviceAccount:knative-tests.svc.id.goog[default/kubernetes-external-secrets-sa]",
-    "serviceAccount:knative-tests.svc.id.goog[default/external-secrets]",
-  ]
-}
-
-resource "google_service_account" "external_secrets" {
-  account_id   = "kubernetes-external-secrets-sa"
-  display_name = "External Secrets Operator"
-  project      = "knative-tests"
-}
-
-// Pod Utils - This is the default service account used by all ProwJob Pods
-resource "google_service_account_iam_binding" "prow_pod_utils" {
-  service_account_id = google_service_account.prow_pod_utils.name
-  role               = "roles/iam.workloadIdentityUser"
-
-  members = [
-    "serviceAccount:knative-tests.svc.id.goog[default/default]",
-    "serviceAccount:knative-tests.svc.id.goog[test-pods/default]",
-  ]
-}
-
-resource "google_service_account" "prow_pod_utils" {
-  account_id   = "prow-pod-utils"
-  display_name = "Prow Pod Utilities"
-  description  = "SA for Prow's pod utilities to use to upload job results to GCS."
-  project      = "knative-tests"
-}
-
-// Prowjob Runner Account
 resource "google_service_account_iam_binding" "prow_job" {
   service_account_id = google_service_account.prow_job.name
   role               = "roles/iam.workloadIdentityUser"
 
   members = [
-    "serviceAccount:knative-tests.svc.id.goog[test-pods/boskos]",
-    "serviceAccount:knative-tests.svc.id.goog[test-pods/test-runner]",
+    "serviceAccount:knative-tests.svc.id.goog[test-pods/release]",
 
     // Existing bindings that should be removed I think?
     "serviceAccount:knative-boskos-01.svc.id.goog[cloud-run-events/broker]",
@@ -392,11 +361,6 @@ resource "google_service_account_iam_binding" "prow_job" {
     "serviceAccount:knative-boskos-98.svc.id.goog[events-system/controller]",
     "serviceAccount:knative-boskos-99.svc.id.goog[cloud-run-events/broker]",
     "serviceAccount:knative-boskos-99.svc.id.goog[cloud-run-events/controller]"
+ 
   ]
-}
-
-resource "google_service_account" "prow_job" {
-  account_id   = "prow-job"
-  display_name = "Prow Job Knative Test Runner"
-  project      = "knative-tests"
 }

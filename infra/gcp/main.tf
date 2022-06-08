@@ -1,6 +1,6 @@
-data "google_billing_account" "main" {
-  billing_account = var.billing_account
-}
+# data "google_billing_account" "main" {
+#   billing_account = var.billing_account
+# }
 
 data "google_organization" "org" {
   domain = var.domain
@@ -25,4 +25,12 @@ module "tests" {
 
 module "analytics" {
   source = "./analytics"
+}
+
+module "releases" {
+  source = "./releases"
+}
+
+module "nightly" {
+  source = "./nightly"
 }

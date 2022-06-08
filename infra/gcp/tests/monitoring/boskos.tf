@@ -36,5 +36,5 @@ resource "google_monitoring_alert_policy" "boskos_alerts" {
   }
 
   # gcloud beta monitoring channels list --project=oss-prow
-#   notification_channels = ["projects/${var.project}/notificationChannels/${var.notification_channel_id}"]
+  #   notification_channels = ["projects/${var.project}/notificationChannels/${var.notification_channel_id}"]
 }

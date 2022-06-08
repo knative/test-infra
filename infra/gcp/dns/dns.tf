@@ -141,15 +141,15 @@ module "kn_dev" {
 
 // kn-e2e.dev DNS
 module "kn_e2e_dev" {
-  source     = "terraform-google-modules/cloud-dns/google"
-  version    = "~> 4.1"
+  source      = "terraform-google-modules/cloud-dns/google"
+  version     = "~> 4.1"
   description = "Custom domain used only for Knative E2E tests."
-  project_id = "knative-e2e-dns"
-  type       = "public"
-  name       = "knative-e2e"
-  domain     = "kn-e2e.dev."
+  project_id  = "knative-e2e-dns"
+  type        = "public"
+  name        = "knative-e2e"
+  domain      = "kn-e2e.dev."
   dnssec_config = {
-    state = "on"}
+  state = "on" }
 
   recordsets = []
   // RECORDSETS ARE ADDED VIA E2E AUTOMATION, CONSIDER THOSE TESTS BEFORE ADDING RECORDS
