@@ -1,9 +1,9 @@
 // nightly Buckets
 resource "google_storage_bucket" "nightly" {
-  name     = "knative-nightly"
-  location = "US"
+  name          = "knative-nightly"
+  location      = "US"
   storage_class = "MULTI_REGIONAL"
-  project  = "knative-nightly"
+  project       = "knative-nightly"
 
   uniform_bucket_level_access = true
 }

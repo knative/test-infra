@@ -361,6 +361,6 @@ resource "google_service_account_iam_binding" "prow_job" {
     "serviceAccount:knative-boskos-98.svc.id.goog[events-system/controller]",
     "serviceAccount:knative-boskos-99.svc.id.goog[cloud-run-events/broker]",
     "serviceAccount:knative-boskos-99.svc.id.goog[cloud-run-events/controller]"
- 
+
   ]
 }
