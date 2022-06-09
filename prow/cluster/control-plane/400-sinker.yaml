@@ -15,28 +15,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: horologium
+  name: sinker
   namespace: default
   labels:
-    app: horologium
+    app: sinker
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
-      app: horologium
+      app: sinker
   template:
     metadata:
       labels:
-        app: horologium
+        app: sinker
     spec:
-      serviceAccountName: "horologium"
-      terminationGracePeriodSeconds: 30
+      serviceAccountName: "sinker"
       containers:
-      - name: horologium
-        image: gcr.io/k8s-prow/horologium:v20220602-a4b31d7576
+      - name: sinker
+        image: gcr.io/k8s-prow/sinker:v20220602-a4b31d7576
         args:
         - --config-path=/etc/config/config.yaml
         - --job-config-path=/etc/job-config
+        - --kubeconfig=/etc/kubeconfig/config
         - --dry-run=false
         ports:
         - name: metrics
@@ -48,6 +48,9 @@ spec:
         - name: job-config
           mountPath: /etc/job-config
           readOnly: true
+        - name: kubeconfig
+          mountPath: /etc/kubeconfig
+          readOnly: true
       volumes:
       - name: config
         configMap:
@@ -55,17 +58,21 @@ spec:
       - name: job-config
         configMap:
           name: job-config
+      - name: kubeconfig
+        secret:
+          defaultMode: 0644
+          secretName: kubeconfig
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: horologium
+    app: sinker
   namespace: default
-  name: horologium
+  name: sinker
 spec:
   ports:
     - name: metrics
       port: 9090
   selector:
-    app: horologium
+    app: sinker

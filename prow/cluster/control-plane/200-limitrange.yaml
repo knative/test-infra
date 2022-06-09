@@ -15,12 +15,13 @@
 apiVersion: v1
 kind: LimitRange
 metadata:
-  name: mem-limit-range
+  name: cpu-limit-range
   namespace: test-pods
 spec:
   limits:
-    - default:
-        memory: 10Gi
-      defaultRequest:
+    - defaultRequest:
+        cpu: 2000m
         memory: 8Gi
       type: Container
+    - default:
+        memory: 10Gi       
