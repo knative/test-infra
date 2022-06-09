@@ -1,4 +1,3 @@
-
 # Previously known as plank
 apiVersion: apps/v1
 kind: Deployment

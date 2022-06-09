@@ -24,4 +24,4 @@ spec:
         memory: 8Gi
       type: Container
     - default:
-        memory: 10Gi       
+        memory: 10Gi
