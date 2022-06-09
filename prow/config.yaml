@@ -75,7 +75,7 @@ deck:
     gcs_browser_prefix: https://console.cloud.google.com/storage/browser/
     testgrid_config: gs://knative-testgrid/config
     testgrid_root: https://testgrid.knative.dev/
-    announcement: "Prow will be migrated to a new GKE Cluster at 27/05/2022 13:00 UTC / 06:00 PDT, it will be offline for approximately one hour. Please reach out on productivity slack channel to report issues."
+    announcement: "Prow will be migrated to a new GKE Cluster at 11/05/2022 14:00 UTC / 07:00 PDT , it will be offline for approximately six hours. Please reach out on productivity slack channel to report issues."
     lenses:
     - lens:
         name: metadata
