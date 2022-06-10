@@ -24,50 +24,50 @@ jobs:
     types: [presubmit]
     command: [runner.sh, ./test/presubmit-integration-tests-latest-release.sh]
 
-  # - name: continuous
-  #   types: [periodic]
-  #   command: [runner.sh, ./test/presubmit-tests.sh, --all-tests]
+  - name: continuous
+    types: [periodic]
+    command: [runner.sh, ./test/presubmit-tests.sh, --all-tests]
 
-  # - name: tekton
-  #   types: [periodic]
-  #   command: [runner.sh, ./test/tekton-tests.sh]
+  - name: tekton
+    types: [periodic]
+    command: [runner.sh, ./test/tekton-tests.sh]
 
-  # - name: s390x-e2e-tests
-  #   cron: 0 11 * * *
-  #   types: [periodic]
-  #   requirements: [s390x]
-  #   command: [runner.sh]
-  #   args:
-  #     - bash
-  #     - -c
-  #     - |
-  #       mkdir -p /root/.kube
-  #       cat /opt/cluster/ci-script > connect.sh
-  #       chmod +x connect.sh
-  #       ./connect.sh client-main
-  #       kubectl get cm s390x-config-client -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
-  #       chmod +x adjust.sh
-  #       ./adjust.sh
-  #       ./test/e2e-tests.sh --run-tests
-  #   env:
-  #     - name: INGRESS_CLASS
-  #       value: contour.ingress.networking.knative.dev
+  - name: s390x-e2e-tests
+    cron: 0 11 * * *
+    types: [periodic]
+    requirements: [s390x]
+    command: [runner.sh]
+    args:
+      - bash
+      - -c
+      - |
+        mkdir -p /root/.kube
+        cat /opt/cluster/ci-script > connect.sh
+        chmod +x connect.sh
+        ./connect.sh client-main
+        kubectl get cm s390x-config-client -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
+        chmod +x adjust.sh
+        ./adjust.sh
+        ./test/e2e-tests.sh --run-tests
+    env:
+      - name: INGRESS_CLASS
+        value: contour.ingress.networking.knative.dev
 
-  # - name: nightly
-  #   types: [periodic]
-  #   command: [runner.sh, ./hack/release.sh, --publish, --tag-release]
-  #   requirements: [nightly]
-  #   excluded_requirements: [gcp]
-  #   reporter_config:
-  #     slack:
-  #       channel: client
-  #       report_template: |
-  #         "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
-  #       job_states_to_report:
-  #       - "failure"
+  - name: nightly
+    types: [periodic]
+    command: [runner.sh, ./hack/release.sh, --publish, --tag-release]
+    requirements: [nightly]
+    excluded_requirements: [gcp]
+    reporter_config:
+      slack:
+        channel: client
+        report_template: |
+          "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
+        job_states_to_report:
+        - "failure"
 
-  # - name: release
-  #   types: [periodic]
-  #   command: [runner.sh, ./hack/release.sh, --auto-release, --release-gcs, knative-releases/client, --release-gcr, gcr.io/knative-releases, --github-token, /etc/hub-token/token]
-  #   requirements: [release]
-  #   excluded_requirements: [gcp]
+  - name: release
+    types: [periodic]
+    command: [runner.sh, ./hack/release.sh, --auto-release, --release-gcs, knative-releases/client, --release-gcr, gcr.io/knative-releases, --github-token, /etc/hub-token/token]
+    requirements: [release]
+    excluded_requirements: [gcp]

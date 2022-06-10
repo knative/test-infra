@@ -4,20 +4,20 @@ branches: [main]
 image: gcr.io/knative-tests/test-infra/prow-tests:v20220608-184bbc48
 imagePullPolicy: Always
 
-# jobs:
-#   - name: continuous
-#     types: [periodic]
-#     command: [runner.sh, ./test/presubmit-tests.sh, --all-tests]
-#     requirements: [docker]
+jobs:
+  - name: continuous
+    types: [periodic]
+    command: [runner.sh, ./test/presubmit-tests.sh, --all-tests]
+    requirements: [docker]
 
-#   - name: nightly
-#     types: [periodic]
-#     command: [runner.sh, ./hack/release.sh, --publish, --tag-release]
-#     requirements: [nightly, docker]
-#     excluded_requirements: [gcp]
+  - name: nightly
+    types: [periodic]
+    command: [runner.sh, ./hack/release.sh, --publish, --tag-release]
+    requirements: [nightly, docker]
+    excluded_requirements: [gcp]
 
-#   - name: release
-#     types: [periodic]
-#     command: [runner.sh, ./hack/release.sh, --auto-release, --release-gcs, knative-releases/eventing-couchdb, --release-gcr, gcr.io/knative-releases, --github-token, /etc/hub-token/token]
-#     requirements: [release, docker]
-#     excluded_requirements: [gcp]
+  - name: release
+    types: [periodic]
+    command: [runner.sh, ./hack/release.sh, --auto-release, --release-gcs, knative-releases/eventing-couchdb, --release-gcr, gcr.io/knative-releases, --github-token, /etc/hub-token/token]
+    requirements: [release, docker]
+    excluded_requirements: [gcp]

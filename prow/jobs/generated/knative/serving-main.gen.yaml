@@ -5,6 +5,770 @@
 # ####                                                               ####
 # #######################################################################
 
+periodics:
+- annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: continuous
+  cluster: prow-build
+  cron: 45 */12 * * *
+  decorate: true
+  decoration_config:
+    timeout: 3h0m0s
+  extra_refs:
+  - base_ref: main
+    org: knative
+    path_alias: knative.dev/serving
+    repo: serving
+  name: continuous_serving_main_periodic
+  spec:
+    containers:
+    - command:
+      - runner.sh
+      - ./test/presubmit-tests.sh
+      - --all-tests
+      env:
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220608-184bbc48
+      name: ""
+      resources:
+        limits:
+          memory: 16Gi
+        requests:
+          memory: 12Gi
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /etc/test-account
+        name: test-account
+        readOnly: true
+    nodeSelector:
+      type: testing
+    volumes:
+    - name: test-account
+      secret:
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
+- annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: istio-latest-mesh
+  cluster: prow-build
+  cron: 36 */9 * * *
+  decorate: true
+  extra_refs:
+  - base_ref: main
+    org: knative
+    path_alias: knative.dev/serving
+    repo: serving
+  name: istio-latest-mesh_serving_main_periodic
+  spec:
+    containers:
+    - args:
+      - ./test/presubmit-tests.sh
+      - --run-test
+      - ./test/e2e-tests.sh --istio-version latest --mesh
+      - --run-test
+      - ./test/e2e-auto-tls-tests.sh --istio-version latest --mesh
+      command:
+      - runner.sh
+      env:
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220608-184bbc48
+      name: ""
+      resources:
+        limits:
+          memory: 16Gi
+        requests:
+          memory: 12Gi
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /etc/test-account
+        name: test-account
+        readOnly: true
+    nodeSelector:
+      type: testing
+    volumes:
+    - name: test-account
+      secret:
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
+- annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: istio-latest-no-mesh
+  cluster: prow-build
+  cron: 40 */9 * * *
+  decorate: true
+  extra_refs:
+  - base_ref: main
+    org: knative
+    path_alias: knative.dev/serving
+    repo: serving
+  name: istio-latest-no-mesh_serving_main_periodic
+  spec:
+    containers:
+    - args:
+      - ./test/presubmit-tests.sh
+      - --run-test
+      - ./test/e2e-tests.sh --istio-version latest --mesh
+      - --run-test
+      - ./test/e2e-auto-tls-tests.sh --istio-version latest --mesh
+      command:
+      - runner.sh
+      env:
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220608-184bbc48
+      name: ""
+      resources:
+        limits:
+          memory: 16Gi
+        requests:
+          memory: 12Gi
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /etc/test-account
+        name: test-account
+        readOnly: true
+    nodeSelector:
+      type: testing
+    volumes:
+    - name: test-account
+      secret:
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
+- annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: istio-head-mesh
+  cluster: prow-build
+  cron: 27 */9 * * *
+  decorate: true
+  extra_refs:
+  - base_ref: main
+    org: knative
+    path_alias: knative.dev/serving
+    repo: serving
+  name: istio-head-mesh_serving_main_periodic
+  spec:
+    containers:
+    - args:
+      - ./test/presubmit-tests.sh
+      - --run-test
+      - ./test/e2e-tests.sh --istio-version head --mesh
+      - --run-test
+      - ./test/e2e-auto-tls-tests.sh --istio-version head --mesh
+      command:
+      - runner.sh
+      env:
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220608-184bbc48
+      name: ""
+      resources:
+        limits:
+          memory: 16Gi
+        requests:
+          memory: 12Gi
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /etc/test-account
+        name: test-account
+        readOnly: true
+    nodeSelector:
+      type: testing
+    volumes:
+    - name: test-account
+      secret:
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
+- annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: istio-head-no-mesh
+  cluster: prow-build
+  cron: 37 */9 * * *
+  decorate: true
+  extra_refs:
+  - base_ref: main
+    org: knative
+    path_alias: knative.dev/serving
+    repo: serving
+  name: istio-head-no-mesh_serving_main_periodic
+  spec:
+    containers:
+    - args:
+      - ./test/presubmit-tests.sh
+      - --run-test
+      - ./test/e2e-tests.sh --istio-version head --no-mesh
+      - --run-test
+      - ./test/e2e-auto-tls-tests.sh --istio-version head --no-mesh
+      command:
+      - runner.sh
+      env:
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220608-184bbc48
+      name: ""
+      resources:
+        limits:
+          memory: 16Gi
+        requests:
+          memory: 12Gi
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /etc/test-account
+        name: test-account
+        readOnly: true
+    nodeSelector:
+      type: testing
+    volumes:
+    - name: test-account
+      secret:
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
+- annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: kourier-stable
+  cluster: prow-build
+  cron: 7 */9 * * *
+  decorate: true
+  extra_refs:
+  - base_ref: main
+    org: knative
+    path_alias: knative.dev/serving
+    repo: serving
+  name: kourier-stable_serving_main_periodic
+  spec:
+    containers:
+    - args:
+      - ./test/presubmit-tests.sh
+      - --run-test
+      - ./test/e2e-tests.sh --kourier-version stable
+      - --run-test
+      - ./test/e2e-auto-tls-tests.sh --kourier-version stable --run-http01-auto-tls-tests
+      command:
+      - runner.sh
+      env:
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220608-184bbc48
+      name: ""
+      resources:
+        limits:
+          memory: 16Gi
+        requests:
+          memory: 12Gi
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /etc/test-account
+        name: test-account
+        readOnly: true
+    nodeSelector:
+      type: testing
+    volumes:
+    - name: test-account
+      secret:
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
+- annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: contour-latest
+  cluster: prow-build
+  cron: 28 */9 * * *
+  decorate: true
+  extra_refs:
+  - base_ref: main
+    org: knative
+    path_alias: knative.dev/serving
+    repo: serving
+  name: contour-latest_serving_main_periodic
+  spec:
+    containers:
+    - args:
+      - ./test/presubmit-tests.sh
+      - --run-test
+      - ./test/e2e-tests.sh --contour-version latest
+      - --run-test
+      - ./test/e2e-auto-tls-tests.sh --contour-version latest --run-http01-auto-tls-tests
+      command:
+      - runner.sh
+      env:
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220608-184bbc48
+      name: ""
+      resources:
+        limits:
+          memory: 16Gi
+        requests:
+          memory: 12Gi
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /etc/test-account
+        name: test-account
+        readOnly: true
+    nodeSelector:
+      type: testing
+    volumes:
+    - name: test-account
+      secret:
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
+- annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: gateway-api-latest
+  cluster: prow-build
+  cron: 47 */9 * * *
+  decorate: true
+  extra_refs:
+  - base_ref: main
+    org: knative
+    path_alias: knative.dev/serving
+    repo: serving
+  name: gateway-api-latest_serving_main_periodic
+  spec:
+    containers:
+    - args:
+      - ./test/presubmit-tests.sh
+      - --run-test
+      - ./test/e2e-tests.sh --gateway-api-version latest
+      command:
+      - runner.sh
+      env:
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220608-184bbc48
+      name: ""
+      resources:
+        limits:
+          memory: 16Gi
+        requests:
+          memory: 12Gi
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /etc/test-account
+        name: test-account
+        readOnly: true
+    nodeSelector:
+      type: testing
+    volumes:
+    - name: test-account
+      secret:
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
+- annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: https
+  cluster: prow-build
+  cron: 11 */9 * * *
+  decorate: true
+  extra_refs:
+  - base_ref: main
+    org: knative
+    path_alias: knative.dev/serving
+    repo: serving
+  name: https_serving_main_periodic
+  spec:
+    containers:
+    - args:
+      - ./test/presubmit-tests.sh
+      - --run-test
+      - ./test/e2e-tests.sh --https
+      - --run-test
+      - ./test/e2e-auto-tls-tests.sh --https
+      command:
+      - runner.sh
+      env:
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220608-184bbc48
+      name: ""
+      resources:
+        limits:
+          memory: 16Gi
+        requests:
+          memory: 12Gi
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /etc/test-account
+        name: test-account
+        readOnly: true
+    nodeSelector:
+      type: testing
+    volumes:
+    - name: test-account
+      secret:
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
+- annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: performance-tests-kperf
+  cluster: prow-build
+  cron: 39 */9 * * *
+  decorate: true
+  extra_refs:
+  - base_ref: main
+    org: knative
+    path_alias: knative.dev/serving
+    repo: serving
+  name: performance-tests-kperf_serving_main_periodic
+  spec:
+    containers:
+    - args:
+      - ./test/presubmit-tests.sh
+      - --run-test
+      - ./test/performance/performance-tests.sh
+      command:
+      - runner.sh
+      env:
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220608-184bbc48
+      name: ""
+      resources:
+        limits:
+          memory: 16Gi
+        requests:
+          memory: 12Gi
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /etc/test-account
+        name: test-account
+        readOnly: true
+    nodeSelector:
+      type: testing
+    volumes:
+    - name: test-account
+      secret:
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
+- annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: s390x-kourier-tests
+  cluster: prow-build
+  cron: 0 3 * * *
+  decorate: true
+  extra_refs:
+  - base_ref: main
+    org: knative
+    path_alias: knative.dev/serving
+    repo: serving
+  name: s390x-kourier-tests_serving_main_periodic
+  spec:
+    containers:
+    - args:
+      - bash
+      - -c
+      - |
+        mkdir -p /root/.kube
+        cat /opt/cluster/ci-script > connect.sh
+        chmod +x connect.sh
+        server_addr=$(./connect.sh kourier-main)
+        kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
+        chmod +x adjust.sh
+        ./adjust.sh
+        export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr}
+        ./test/e2e-tests.sh --run-tests --kourier-version latest
+      command:
+      - runner.sh
+      env:
+      - name: SYSTEM_NAMESPACE
+        value: knative-serving
+      - name: TEST_OPTIONS
+        value: --enable-alpha --enable-beta --resolvabledomain=false
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: KO_FLAGS
+        value: --platform=linux/s390x
+      - name: PLATFORM
+        value: linux/s390x
+      - name: KO_DOCKER_REPO
+        valueFrom:
+          secretKeyRef:
+            key: ko-docker-repo
+            name: s390x-cluster1
+      - name: DISABLE_MD_LINTING
+        value: "1"
+      - name: KUBECONFIG
+        value: /root/.kube/config
+      - name: DOCKER_CONFIG
+        value: /opt/cluster
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220608-184bbc48
+      name: ""
+      resources:
+        limits:
+          memory: 16Gi
+        requests:
+          memory: 12Gi
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /etc/test-account
+        name: test-account
+        readOnly: true
+      - mountPath: /opt/cluster
+        name: s390x-cluster1
+        readOnly: true
+    nodeSelector:
+      type: testing
+    volumes:
+    - name: test-account
+      secret:
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
+    - name: s390x-cluster1
+      secret:
+        defaultMode: 384
+        secretName: s390x-cluster1
+- annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: s390x-contour-tests
+  cluster: prow-build
+  cron: 0 5 * * *
+  decorate: true
+  extra_refs:
+  - base_ref: main
+    org: knative
+    path_alias: knative.dev/serving
+    repo: serving
+  name: s390x-contour-tests_serving_main_periodic
+  spec:
+    containers:
+    - args:
+      - bash
+      - -c
+      - |
+        mkdir -p /root/.kube
+        cat /opt/cluster/ci-script > connect.sh
+        chmod +x connect.sh
+        server_addr=$(./connect.sh contour-main)
+        kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
+        chmod +x adjust.sh
+        ./adjust.sh
+        export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint '${server_addr}
+        ./test/e2e-tests.sh --run-tests --contour-version latest
+      command:
+      - runner.sh
+      env:
+      - name: SYSTEM_NAMESPACE
+        value: knative-serving
+      - name: TEST_OPTIONS
+        value: --enable-alpha --enable-beta --resolvabledomain=false
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: KO_FLAGS
+        value: --platform=linux/s390x
+      - name: PLATFORM
+        value: linux/s390x
+      - name: KO_DOCKER_REPO
+        valueFrom:
+          secretKeyRef:
+            key: ko-docker-repo
+            name: s390x-cluster1
+      - name: DISABLE_MD_LINTING
+        value: "1"
+      - name: KUBECONFIG
+        value: /root/.kube/config
+      - name: DOCKER_CONFIG
+        value: /opt/cluster
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220608-184bbc48
+      name: ""
+      resources:
+        limits:
+          memory: 16Gi
+        requests:
+          memory: 12Gi
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /etc/test-account
+        name: test-account
+        readOnly: true
+      - mountPath: /opt/cluster
+        name: s390x-cluster1
+        readOnly: true
+    nodeSelector:
+      type: testing
+    volumes:
+    - name: test-account
+      secret:
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
+    - name: s390x-cluster1
+      secret:
+        defaultMode: 384
+        secretName: s390x-cluster1
+- annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: nightly
+  cluster: prow-build
+  cron: 15 9 * * *
+  decorate: true
+  decoration_config:
+    timeout: 3h0m0s
+  extra_refs:
+  - base_ref: main
+    org: knative
+    path_alias: knative.dev/serving
+    repo: serving
+  name: nightly_serving_main_periodic
+  reporter_config:
+    slack:
+      channel: serving
+      job_states_to_report:
+      - failure
+      report_template: |
+        "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
+  spec:
+    containers:
+    - command:
+      - runner.sh
+      - ./hack/release.sh
+      - --publish
+      - --tag-release
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/nightly-account/service-account.json
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220608-184bbc48
+      name: ""
+      resources:
+        limits:
+          memory: 16Gi
+        requests:
+          memory: 12Gi
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /etc/nightly-account
+        name: nightly-account
+        readOnly: true
+    nodeSelector:
+      type: testing
+    volumes:
+    - name: nightly-account
+      secret:
+        items:
+        - key: nightly.json
+          path: service-account.json
+        secretName: prow-google-credentials
+- annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: release
+  cluster: prow-build
+  cron: 11 */12 * * *
+  decorate: true
+  decoration_config:
+    timeout: 3h0m0s
+  extra_refs:
+  - base_ref: main
+    org: knative
+    path_alias: knative.dev/serving
+    repo: serving
+  name: release_serving_main_periodic
+  spec:
+    containers:
+    - command:
+      - runner.sh
+      - ./hack/release.sh
+      - --auto-release
+      - --release-gcs
+      - knative-releases/serving
+      - --release-gcr
+      - gcr.io/knative-releases
+      - --github-token
+      - /etc/hub-token/token
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/release-account/service-account.json
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220608-184bbc48
+      name: ""
+      resources:
+        limits:
+          memory: 16Gi
+        requests:
+          memory: 12Gi
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /etc/hub-token
+        name: hub-token
+        readOnly: true
+      - mountPath: /etc/release-account
+        name: release-account
+        readOnly: true
+    nodeSelector:
+      type: testing
+    volumes:
+    - name: hub-token
+      secret:
+        items:
+        - key: hub_token
+          path: token
+        secretName: github-credentials
+    - name: release-account
+      secret:
+        items:
+        - key: release.json
+          path: service-account.json
+        secretName: prow-google-credentials
 presubmits:
   knative/serving:
   - always_run: true

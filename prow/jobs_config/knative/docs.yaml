@@ -15,7 +15,7 @@ jobs:
     command: [runner.sh, ./test/presubmit-tests.sh, --unit-tests]
     excluded_requirements: [gcp]
 
-  # - name: continuous
-  #   types: [periodic]
-  #   command: [runner.sh, ./test/presubmit-tests.sh, --all-tests]
-  #   requirements: [docker]
+  - name: continuous
+    types: [periodic]
+    command: [runner.sh, ./test/presubmit-tests.sh, --all-tests]
+    requirements: [docker]
