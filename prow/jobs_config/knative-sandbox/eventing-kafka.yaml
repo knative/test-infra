@@ -42,51 +42,51 @@ jobs:
     types: [presubmit]
     command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/e2e-upgrade-tests.sh"]
 
-  - name: continuous
-    types: [periodic]
-    command: [runner.sh, ./test/presubmit-tests.sh, --all-tests]
-    requirements: [docker]
+  # - name: continuous
+  #   types: [periodic]
+  #   command: [runner.sh, ./test/presubmit-tests.sh, --all-tests]
+  #   requirements: [docker]
 
-  - name: nightly
-    types: [periodic]
-    command: [runner.sh, ./hack/release.sh, --publish, --tag-release]
-    requirements: [nightly, docker]
-    excluded_requirements: [gcp]
-    reporter_config:
-      slack:
-        channel: eventing-kafka
-        report_template: |
-          "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
-        job_states_to_report:
-        - "failure"
+  # - name: nightly
+  #   types: [periodic]
+  #   command: [runner.sh, ./hack/release.sh, --publish, --tag-release]
+  #   requirements: [nightly, docker]
+  #   excluded_requirements: [gcp]
+  #   reporter_config:
+  #     slack:
+  #       channel: eventing-kafka
+  #       report_template: |
+  #         "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
+  #       job_states_to_report:
+  #       - "failure"
 
-  - name: release
-    types: [periodic]
-    command: [runner.sh, ./hack/release.sh, --auto-release, --release-gcs, knative-releases/eventing-kafka, --release-gcr, gcr.io/knative-releases, --github-token, /etc/hub-token/token]
-    requirements: [release, docker]
-    excluded_requirements: [gcp]
+  # - name: release
+  #   types: [periodic]
+  #   command: [runner.sh, ./hack/release.sh, --auto-release, --release-gcs, knative-releases/eventing-kafka, --release-gcr, gcr.io/knative-releases, --github-token, /etc/hub-token/token]
+  #   requirements: [release, docker]
+  #   excluded_requirements: [gcp]
 
-  - name: s390x-e2e-tests
-    cron: 0 14 * * *
-    types: [periodic]
-    requirements: [s390x]
-    command: [runner.sh]
-    args:
-      - bash
-      - -c
-      - |
-        mkdir -p /root/.kube
-        cat /opt/cluster/ci-script > connect.sh
-        chmod +x connect.sh
-        ./connect.sh eventing_kafka-main
-        kubectl get cm s390x-config-eventing-kafka -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
-        chmod +x adjust.sh
-        ./adjust.sh
-        ./test/e2e-tests.sh --run-tests
-    env:
-      - name: SYSTEM_NAMESPACE
-        value: knative-eventing
-      - name: EVENTING_NAMESPACE
-        value: knative-eventing
-      - name: SCALE_CHAOSDUCK_TO_ZERO
-        value: "1"
+  # - name: s390x-e2e-tests
+  #   cron: 0 14 * * *
+  #   types: [periodic]
+  #   requirements: [s390x]
+  #   command: [runner.sh]
+  #   args:
+  #     - bash
+  #     - -c
+  #     - |
+  #       mkdir -p /root/.kube
+  #       cat /opt/cluster/ci-script > connect.sh
+  #       chmod +x connect.sh
+  #       ./connect.sh eventing_kafka-main
+  #       kubectl get cm s390x-config-eventing-kafka -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
+  #       chmod +x adjust.sh
+  #       ./adjust.sh
+  #       ./test/e2e-tests.sh --run-tests
+  #   env:
+  #     - name: SYSTEM_NAMESPACE
+  #       value: knative-eventing
+  #     - name: EVENTING_NAMESPACE
+  #       value: knative-eventing
+  #     - name: SCALE_CHAOSDUCK_TO_ZERO
+  #       value: "1"

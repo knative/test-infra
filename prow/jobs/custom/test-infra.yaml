@@ -104,32 +104,32 @@ presubmits:
 periodics:
 # ci-knative-heartbeat is used for prometheus, alert(s) will be sent
 # if this job hadn't been succeeded for some time
-- cron: "*/3 * * * *" # Every 3 minutes
-  name: ci-knative-heartbeat
-  agent: kubernetes
-  decorate: true
-  cluster: "default"
-  extra_refs:
-  - org: knative
-    repo: test-infra
-    base_ref: main
-    path_alias: knative.dev/test-infra
-  annotations:
-    testgrid-dashboards: utilities
-    testgrid-tab-name: ci-knative-heartbeat
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:v20220608-184bbc48
-      imagePullPolicy: Always
-      command:
-      - "runner.sh"
-      args:
-      - "echo"
-      - "Everything is fine!"
-      resources:
-        requests:
-          cpu: 100m
-          memory: 1Gi
+# - cron: "*/3 * * * *" # Every 3 minutes
+#   name: ci-knative-heartbeat
+#   agent: kubernetes
+#   decorate: true
+#   cluster: "default"
+#   extra_refs:
+#   - org: knative
+#     repo: test-infra
+#     base_ref: main
+#     path_alias: knative.dev/test-infra
+#   annotations:
+#     testgrid-dashboards: utilities
+#     testgrid-tab-name: ci-knative-heartbeat
+#   spec:
+#     containers:
+#     - image: gcr.io/knative-tests/test-infra/prow-tests:v20220608-184bbc48
+#       imagePullPolicy: Always
+#       command:
+#       - "runner.sh"
+#       args:
+#       - "echo"
+#       - "Everything is fine!"
+#       resources:
+#         requests:
+#           cpu: 100m
+#           memory: 1Gi
 - cron: "0 19 * * *"
   name: ci-knative-cleanup
   agent: kubernetes

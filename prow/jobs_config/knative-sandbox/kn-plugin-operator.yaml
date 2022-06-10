@@ -19,6 +19,6 @@ jobs:
     types: [presubmit]
     command: [runner.sh, ./test/presubmit-tests.sh, --integration-tests]
 
-  - name: continuous
-    types: [periodic]
-    command: [runner.sh, ./test/presubmit-tests.sh, --all-tests]
+  # - name: continuous
+  #   types: [periodic]
+  #   command: [runner.sh, ./test/presubmit-tests.sh, --all-tests]
