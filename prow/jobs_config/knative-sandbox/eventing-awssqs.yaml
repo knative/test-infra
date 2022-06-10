@@ -1,8 +1,8 @@
 org: knative-sandbox
 repo: eventing-awssqs
-# branches: [main]
-# image: gcr.io/knative-tests/test-infra/prow-tests:v20220608-184bbc48
-# imagePullPolicy: Always
+branches: [main]
+image: gcr.io/knative-tests/test-infra/prow-tests:v20220608-184bbc48
+imagePullPolicy: Always
 
 # jobs:
 #   - name: continuous
