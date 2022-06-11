@@ -27,12 +27,12 @@ JOB_NAMESPACE ?= test-pods
 deploy: get-cluster-credentials
 # Apply the ProwJob CRD with --server-side=true due to its size.
 	kubectl apply --server-side=true -f ./cluster/prowjob-crd/
-	kubectl apply -f ./cluster/
+	kubectl apply -f ./cluster/control-plane
 
 .PHONY: deploy-build
 deploy-build: get-build-cluster-credentials
 	kubectl apply -f ./cluster/build/
 
-.PHONY: deploy-monitoring
-deploy-monitoring:
-	$(MAKE) -C ./cluster/monitoring apply
+# .PHONY: deploy-monitoring
+# deploy-monitoring:
+# 	$(MAKE) -C ./cluster/monitoring apply
