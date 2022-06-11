@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# apiVersion: networking.gke.io/v1
-# kind: ManagedCertificate
-# metadata:
-#   name: prow-knative-dev
-# spec:
-#   domains:
-#   - prow.knative.dev
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: prow-knative-dev
+spec:
+  domains:
+  - prow.knative.dev

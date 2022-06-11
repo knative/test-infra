@@ -13,31 +13,31 @@
 # limitations under the License.
 
 # Ingresses
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: deck-ing
-#   namespace: default
-#   annotations:
-#     kubernetes.io/ingress.class: "gce"
-#     kubernetes.io/ingress.global-static-ip-name: prow-ingress
-#     networking.gke.io/managed-certificates: prow-knative-dev
-# spec:
-#   rules:
-#   - host: prow.knative.dev
-#     http:
-#       paths:
-#       - path: /*
-#         pathType: ImplementationSpecific
-#         backend:
-#           service:
-#             name: deck
-#             port:
-#               number: 80
-#       - path: /ghapp-hook
-#         pathType: ImplementationSpecific
-#         backend:
-#           service:
-#             name: hook
-#             port:
-#               number: 8888
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: deck-ing
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: "gce"
+    kubernetes.io/ingress.global-static-ip-name: prow-ingress
+    networking.gke.io/managed-certificates: prow-knative-dev
+spec:
+  rules:
+  - host: prow.knative.dev
+    http:
+      paths:
+      - path: /*
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: deck
+            port:
+              number: 80
+      - path: /ghapp-hook
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: hook
+            port:
+              number: 8888
