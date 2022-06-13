@@ -25,10 +25,10 @@ plank:
         grace_period: 15s
         utility_images:
           # Update these versions when updating plank version in cluster.yaml
-          clonerefs: "gcr.io/k8s-prow/clonerefs:v20220602-a4b31d7576"
-          initupload: "gcr.io/k8s-prow/initupload:v20220602-a4b31d7576"
-          entrypoint: "gcr.io/k8s-prow/entrypoint:v20220602-a4b31d7576"
-          sidecar: "gcr.io/k8s-prow/sidecar:v20220602-a4b31d7576"
+          clonerefs: "gcr.io/k8s-prow/clonerefs:v20220610-d59e6cd2db"
+          initupload: "gcr.io/k8s-prow/initupload:v20220610-d59e6cd2db"
+          entrypoint: "gcr.io/k8s-prow/entrypoint:v20220610-d59e6cd2db"
+          sidecar: "gcr.io/k8s-prow/sidecar:v20220610-d59e6cd2db"
         gcs_configuration:
           bucket: "knative-prow"
           path_strategy: "explicit"
@@ -44,10 +44,10 @@ plank:
         grace_period: 15s
         utility_images:
           # Update these versions when updating plank version in cluster.yaml
-          clonerefs: "gcr.io/k8s-prow/clonerefs:v20220602-a4b31d7576"
-          initupload: "gcr.io/k8s-prow/initupload:v20220602-a4b31d7576"
-          entrypoint: "gcr.io/k8s-prow/entrypoint:v20220602-a4b31d7576"
-          sidecar: "gcr.io/k8s-prow/sidecar:v20220602-a4b31d7576"
+          clonerefs: "gcr.io/k8s-prow/clonerefs:v20220610-d59e6cd2db"
+          initupload: "gcr.io/k8s-prow/initupload:v20220610-d59e6cd2db"
+          entrypoint: "gcr.io/k8s-prow/entrypoint:v20220610-d59e6cd2db"
+          sidecar: "gcr.io/k8s-prow/sidecar:v20220610-d59e6cd2db"
         gcs_configuration:
           bucket: "knative-prow"
           path_strategy: "explicit"
@@ -75,7 +75,7 @@ deck:
     gcs_browser_prefix: https://console.cloud.google.com/storage/browser/
     testgrid_config: gs://knative-testgrid/config
     testgrid_root: https://testgrid.knative.dev/
-    announcement: "Prow will be migrated to a new GKE Cluster at 27/05/2022 13:00 UTC / 06:00 PDT, it will be offline for approximately one hour. Please reach out on productivity slack channel to report issues."
+    announcement: "Prow will be migrated to a new GKE Cluster at 11/05/2022 14:00 UTC / 07:00 PDT , it will be offline for approximately six hours. Please reach out on productivity slack channel to report issues."
     lenses:
     - lens:
         name: metadata
