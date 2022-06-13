@@ -29,11 +29,6 @@ module "buckets_releases" {
     "roles/storage.legacyBucketReader" = [
       "projectViewer:knative-releases"
     ]
-
-    "roles/storage.objectAdmin" = [
-      "user:mark@chmarny.com"
-    ]
-
     "roles/storage.objectViewer" = [
       "allUsers"
     ]
