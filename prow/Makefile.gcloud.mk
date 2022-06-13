@@ -34,7 +34,7 @@ endif
 
 .PHONY: get-cluster-credentials
 get-cluster-credentials: save-kubeconfig activate-serviceaccount
-	gcloud container clusters get-credentials "$(CLUSTER)" --project="$(PROJECT)" --zone="$(ZONE)"
+	gcloud container clusters get-credentials "$(CLUSTER)" --project="$(PROJECT)" --region="$(REGION)"
 
 .PHONY: get-build-cluster-credentials
 get-build-cluster-credentials: save-kubeconfig activate-serviceaccount

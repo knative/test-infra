@@ -18,7 +18,6 @@ include Makefile.gcloud.mk
 PROJECT       ?= knative-tests
 PROJECT_BUILD ?= knative-tests
 REGION        ?= us-central1
-ZONE          ?= us-central1-f
 CLUSTER       ?= prow
 CLUSTER_BUILD ?= prow-build
 JOB_NAMESPACE ?= test-pods
