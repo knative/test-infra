@@ -10,7 +10,7 @@ headBranchName: "autobump-knative"
 upstreamURLBase: "https://raw.githubusercontent.com/kubernetes/test-infra/master"
 targetVersion: "upstream"
 includedConfigPaths:
-  - "prow/cluster"
+  - "prow/cluster/control-plane"
   - "prow/jobs"
 extraFiles:
   - "prow/config.yaml"

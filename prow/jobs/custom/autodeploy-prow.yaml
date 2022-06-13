@@ -40,7 +40,6 @@ postsubmits:
         - prow
         - deploy
         - deploy-build
-        - deploy-monitoring
 
 periodics:
 # Run config-bootstrapper Prow job every day to make sure the configmaps on the

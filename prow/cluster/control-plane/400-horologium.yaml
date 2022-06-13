@@ -29,7 +29,7 @@ spec:
       labels:
         app: horologium
     spec:
-      serviceAccountName: "horologium"
+      serviceAccountName: horologium
       terminationGracePeriodSeconds: 30
       containers:
       - name: horologium

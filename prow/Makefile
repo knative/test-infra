@@ -18,7 +18,6 @@ include Makefile.gcloud.mk
 PROJECT       ?= knative-tests
 PROJECT_BUILD ?= knative-tests
 REGION        ?= us-central1
-ZONE          ?= us-central1-f
 CLUSTER       ?= prow
 CLUSTER_BUILD ?= prow-build
 JOB_NAMESPACE ?= test-pods
@@ -26,13 +25,13 @@ JOB_NAMESPACE ?= test-pods
 .PHONY: deploy
 deploy: get-cluster-credentials
 # Apply the ProwJob CRD with --server-side=true due to its size.
-	kubectl apply --server-side=true -f ./cluster/prowjob-crd/
-	kubectl apply -f ./cluster/
+	kubectl apply --server-side=true -f ./cluster/control-plane/prowjob-crd/
+	kubectl apply -f ./cluster/control-plane
 
 .PHONY: deploy-build
 deploy-build: get-build-cluster-credentials
 	kubectl apply -f ./cluster/build/
 
-.PHONY: deploy-monitoring
-deploy-monitoring:
-	$(MAKE) -C ./cluster/monitoring apply
+# .PHONY: deploy-monitoring
+# deploy-monitoring:
+# 	$(MAKE) -C ./cluster/monitoring apply
