@@ -34,3 +34,38 @@ resource "google_service_account" "external_secrets" {
   display_name = "External Secrets Operator"
   project      = "knative-tests"
 }
+
+// Pod Utils - This is the default service account used by all ProwJob Pods
+resource "google_service_account_iam_binding" "prow_pod_utils" {
+  service_account_id = google_service_account.prow_pod_utils.name
+  role               = "roles/iam.workloadIdentityUser"
+
+  members = [
+    "serviceAccount:knative-tests.svc.id.goog[default/default]",
+    "serviceAccount:knative-tests.svc.id.goog[test-pods/default]",
+  ]
+}
+
+resource "google_service_account" "prow_pod_utils" {
+  account_id   = "prow-pod-utils"
+  display_name = "Prow Pod Utilities"
+  description  = "SA for Prow's pod utilities to use to upload job results to GCS."
+  project      = "knative-tests"
+}
+
+// Prowjob Runner Account
+resource "google_service_account_iam_binding" "prow_job" {
+  service_account_id = google_service_account.prow_job.name
+  role               = "roles/iam.workloadIdentityUser"
+
+  members = [
+    "serviceAccount:knative-tests.svc.id.goog[test-pods/boskos]",
+    "serviceAccount:knative-tests.svc.id.goog[test-pods/test-runner]",
+  ]
+}
+
+resource "google_service_account" "prow_job" {
+  account_id   = "prow-job"
+  display_name = "Prow Job Knative Test Runner"
+  project      = "knative-tests"
+}

@@ -128,7 +128,7 @@ module "knative_team" {
       type = "TXT"
       ttl = 300
       records = [
-        "\"v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjLQ9stjzBzp1HIGdxFWKotUPNrFwh47vQV7lIi1ioABjjgFDpeUvxVKsitVYO1m2ufxocY/rLOIGQ4Ap1WDM0qVh2VIPy9hpYxM1rEhEoQm5xWtyNb2GL9OUqXJmmDDDJPi2VnuNnDBRcGcEng/xGmgwSO6rMsAZrZVZVc41DkGWlQaiO5BzA/HBQx5vwMzvKhqtgbfAtgj7V6g8qTYTdyljgSQPlelH63xYGJNaEqf1blg7aXwsZzXPxHbW8Vj16zcFBweo7X+Gg/ig2H3uFdgMzON6CnGG/dw/8sL/zVDr/2zRd7i5DS0S8XJpn7lomwWlNE8RIW27qI8aVOvrZwIDAQAB\""
+        "\"v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjLQ9stjzBzp1HIGdxFWKotUPNrFwh47vQV7lIi1ioABjjgFDpeUvxVKsitVYO1m2ufxocY/rLOIGQ4Ap1WDM0qVh2VIPy9hpYxM1rEhEoQm5xWtyNb2GL9OUqXJmmDDDJPi2VnuNnDBRcGcEng/xGmgwSO6rMsAZrZVZV\" \"c41DkGWlQaiO5BzA/HBQx5vwMzvKhqtgbfAtgj7V6g8qTYTdyljgSQPlelH63xYGJNaEqf1blg7aXwsZzXPxHbW8Vj16zcFBweo7X+Gg/ig2H3uFdgMzON6CnGG/dw/8sL/zVDr/2zRd7i5DS0S8XJpn7lomwWlNE8RIW27qI8aVOvrZwIDAQAB\""
       ]
     },
     {
@@ -137,14 +137,7 @@ module "knative_team" {
       ttl  = 300
       records = [
         "\"v=spf1 include:_spf.google.com ~all\"",
-        "google-site-verification=w5KR-YluNH94Htu_LcKidfaDfQhlyzRaCp4-_VI5yFY"
-      ]
-    },
-    {
-      name = ""
-      type = "TXT"
-      ttl  = 300
-      records = [
+        "google-site-verification=w5KR-YluNH94Htu_LcKidfaDfQhlyzRaCp4-_VI5yFY",
         "\"v=DMARC1; p=none; pct=100; adkim=s; aspf=s\"",
       ]
     },
@@ -166,15 +159,15 @@ module "kn_dev" {
 
 // kn-e2e.dev DNS
 module "kn_e2e_dev" {
-  source     = "terraform-google-modules/cloud-dns/google"
-  version    = "~> 4.1"
+  source      = "terraform-google-modules/cloud-dns/google"
+  version     = "~> 4.1"
   description = "Custom domain used only for Knative E2E tests."
-  project_id = "knative-e2e-dns"
-  type       = "public"
-  name       = "knative-e2e"
-  domain     = "kn-e2e.dev."
+  project_id  = "knative-e2e-dns"
+  type        = "public"
+  name        = "knative-e2e"
+  domain      = "kn-e2e.dev."
   dnssec_config = {
-    state = "on"}
+  state = "on" }
 
   recordsets = []
   // RECORDSETS ARE ADDED VIA E2E AUTOMATION, CONSIDER THOSE TESTS BEFORE ADDING RECORDS
