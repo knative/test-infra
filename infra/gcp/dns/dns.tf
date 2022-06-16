@@ -126,7 +126,7 @@ module "knative_team" {
     {
       name = "google._domainkey"
       type = "TXT"
-      ttl = 300
+      ttl  = 300
       records = [
         "\"v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjLQ9stjzBzp1HIGdxFWKotUPNrFwh47vQV7lIi1ioABjjgFDpeUvxVKsitVYO1m2ufxocY/rLOIGQ4Ap1WDM0qVh2VIPy9hpYxM1rEhEoQm5xWtyNb2GL9OUqXJmmDDDJPi2VnuNnDBRcGcEng/xGmgwSO6rMsAZrZVZV\" \"c41DkGWlQaiO5BzA/HBQx5vwMzvKhqtgbfAtgj7V6g8qTYTdyljgSQPlelH63xYGJNaEqf1blg7aXwsZzXPxHbW8Vj16zcFBweo7X+Gg/ig2H3uFdgMzON6CnGG/dw/8sL/zVDr/2zRd7i5DS0S8XJpn7lomwWlNE8RIW27qI8aVOvrZwIDAQAB\""
       ]

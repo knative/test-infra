@@ -195,6 +195,7 @@ ARG GO_LICENSES_VERSION=v1.2.1
 ARG DOCKER_CREDENTIAL_GCR_VERSION=v2.0.5
 ARG JSONNET_VERSION=v0.18.0
 ARG GOJSONTOYAML_VERSION=v0.1.0
+ARG COSIGN_VERSION=v1.9.0
 
 # Extra tools through go install
 # These run using the golang image version of Go, not any defined by `gvm`
@@ -212,6 +213,7 @@ RUN go install github.com/google/go-licenses@${GO_LICENSES_VERSION}
 RUN go install sigs.k8s.io/kind@${KIND_VERSION}
 RUN go install github.com/google/go-jsonnet/cmd/jsonnet@${JSONNET_VERSION}
 RUN go install github.com/brancz/gojsontoyaml@${GOJSONTOYAML_VERSION}
+RUN go install github.com/sigstore/cosign/cmd/cosign@${COSIGN_VERSION}}
 
 # According to https://github.com/knative/test-infra/pull/2762 protoc-gen-gogofaster is unsupported (and shouldn't be used?)
 # Not sure when it can be removed, maybe knative-0.26?
