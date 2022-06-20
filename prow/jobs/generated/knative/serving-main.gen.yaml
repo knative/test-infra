@@ -31,6 +31,8 @@ periodics:
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
       name: ""
       resources:
@@ -44,6 +46,12 @@ periodics:
       - mountPath: /etc/test-account
         name: test-account
         readOnly: true
+      - mountPath: /docker-graph
+        name: docker-graph
+      - mountPath: /lib/modules
+        name: modules
+      - mountPath: /sys/fs/cgroup
+        name: cgroup
     nodeSelector:
       type: testing
     volumes:
@@ -53,6 +61,16 @@ periodics:
         - key: service-account-key.json
           path: service-account.json
         secretName: prow-google-credentials
+    - emptyDir: {}
+      name: docker-graph
+    - hostPath:
+        path: /lib/modules
+        type: Directory
+      name: modules
+    - hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+      name: cgroup
 - annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: istio-latest-mesh
@@ -80,6 +98,8 @@ periodics:
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
       name: ""
       resources:
@@ -93,6 +113,12 @@ periodics:
       - mountPath: /etc/test-account
         name: test-account
         readOnly: true
+      - mountPath: /docker-graph
+        name: docker-graph
+      - mountPath: /lib/modules
+        name: modules
+      - mountPath: /sys/fs/cgroup
+        name: cgroup
     nodeSelector:
       type: testing
     volumes:
@@ -102,6 +128,16 @@ periodics:
         - key: service-account-key.json
           path: service-account.json
         secretName: prow-google-credentials
+    - emptyDir: {}
+      name: docker-graph
+    - hostPath:
+        path: /lib/modules
+        type: Directory
+      name: modules
+    - hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+      name: cgroup
 - annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: istio-latest-no-mesh
@@ -129,6 +165,8 @@ periodics:
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
       name: ""
       resources:
@@ -142,6 +180,12 @@ periodics:
       - mountPath: /etc/test-account
         name: test-account
         readOnly: true
+      - mountPath: /docker-graph
+        name: docker-graph
+      - mountPath: /lib/modules
+        name: modules
+      - mountPath: /sys/fs/cgroup
+        name: cgroup
     nodeSelector:
       type: testing
     volumes:
@@ -151,6 +195,16 @@ periodics:
         - key: service-account-key.json
           path: service-account.json
         secretName: prow-google-credentials
+    - emptyDir: {}
+      name: docker-graph
+    - hostPath:
+        path: /lib/modules
+        type: Directory
+      name: modules
+    - hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+      name: cgroup
 - annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: istio-head-mesh
@@ -178,6 +232,8 @@ periodics:
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
       name: ""
       resources:
@@ -191,6 +247,12 @@ periodics:
       - mountPath: /etc/test-account
         name: test-account
         readOnly: true
+      - mountPath: /docker-graph
+        name: docker-graph
+      - mountPath: /lib/modules
+        name: modules
+      - mountPath: /sys/fs/cgroup
+        name: cgroup
     nodeSelector:
       type: testing
     volumes:
@@ -200,6 +262,16 @@ periodics:
         - key: service-account-key.json
           path: service-account.json
         secretName: prow-google-credentials
+    - emptyDir: {}
+      name: docker-graph
+    - hostPath:
+        path: /lib/modules
+        type: Directory
+      name: modules
+    - hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+      name: cgroup
 - annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: istio-head-no-mesh
@@ -227,6 +299,8 @@ periodics:
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
       name: ""
       resources:
@@ -240,6 +314,12 @@ periodics:
       - mountPath: /etc/test-account
         name: test-account
         readOnly: true
+      - mountPath: /docker-graph
+        name: docker-graph
+      - mountPath: /lib/modules
+        name: modules
+      - mountPath: /sys/fs/cgroup
+        name: cgroup
     nodeSelector:
       type: testing
     volumes:
@@ -249,6 +329,16 @@ periodics:
         - key: service-account-key.json
           path: service-account.json
         secretName: prow-google-credentials
+    - emptyDir: {}
+      name: docker-graph
+    - hostPath:
+        path: /lib/modules
+        type: Directory
+      name: modules
+    - hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+      name: cgroup
 - annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: kourier-stable
@@ -276,6 +366,8 @@ periodics:
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
       name: ""
       resources:
@@ -289,6 +381,12 @@ periodics:
       - mountPath: /etc/test-account
         name: test-account
         readOnly: true
+      - mountPath: /docker-graph
+        name: docker-graph
+      - mountPath: /lib/modules
+        name: modules
+      - mountPath: /sys/fs/cgroup
+        name: cgroup
     nodeSelector:
       type: testing
     volumes:
@@ -298,6 +396,16 @@ periodics:
         - key: service-account-key.json
           path: service-account.json
         secretName: prow-google-credentials
+    - emptyDir: {}
+      name: docker-graph
+    - hostPath:
+        path: /lib/modules
+        type: Directory
+      name: modules
+    - hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+      name: cgroup
 - annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: contour-latest
@@ -325,6 +433,8 @@ periodics:
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
       name: ""
       resources:
@@ -338,6 +448,12 @@ periodics:
       - mountPath: /etc/test-account
         name: test-account
         readOnly: true
+      - mountPath: /docker-graph
+        name: docker-graph
+      - mountPath: /lib/modules
+        name: modules
+      - mountPath: /sys/fs/cgroup
+        name: cgroup
     nodeSelector:
       type: testing
     volumes:
@@ -347,6 +463,16 @@ periodics:
         - key: service-account-key.json
           path: service-account.json
         secretName: prow-google-credentials
+    - emptyDir: {}
+      name: docker-graph
+    - hostPath:
+        path: /lib/modules
+        type: Directory
+      name: modules
+    - hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+      name: cgroup
 - annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: gateway-api-latest
@@ -372,6 +498,8 @@ periodics:
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
       name: ""
       resources:
@@ -385,6 +513,12 @@ periodics:
       - mountPath: /etc/test-account
         name: test-account
         readOnly: true
+      - mountPath: /docker-graph
+        name: docker-graph
+      - mountPath: /lib/modules
+        name: modules
+      - mountPath: /sys/fs/cgroup
+        name: cgroup
     nodeSelector:
       type: testing
     volumes:
@@ -394,6 +528,16 @@ periodics:
         - key: service-account-key.json
           path: service-account.json
         secretName: prow-google-credentials
+    - emptyDir: {}
+      name: docker-graph
+    - hostPath:
+        path: /lib/modules
+        type: Directory
+      name: modules
+    - hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+      name: cgroup
 - annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: https
@@ -421,6 +565,8 @@ periodics:
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
       name: ""
       resources:
@@ -434,6 +580,12 @@ periodics:
       - mountPath: /etc/test-account
         name: test-account
         readOnly: true
+      - mountPath: /docker-graph
+        name: docker-graph
+      - mountPath: /lib/modules
+        name: modules
+      - mountPath: /sys/fs/cgroup
+        name: cgroup
     nodeSelector:
       type: testing
     volumes:
@@ -443,6 +595,16 @@ periodics:
         - key: service-account-key.json
           path: service-account.json
         secretName: prow-google-credentials
+    - emptyDir: {}
+      name: docker-graph
+    - hostPath:
+        path: /lib/modules
+        type: Directory
+      name: modules
+    - hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+      name: cgroup
 - annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: performance-tests-kperf
@@ -468,6 +630,8 @@ periodics:
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
       name: ""
       resources:
@@ -481,6 +645,12 @@ periodics:
       - mountPath: /etc/test-account
         name: test-account
         readOnly: true
+      - mountPath: /docker-graph
+        name: docker-graph
+      - mountPath: /lib/modules
+        name: modules
+      - mountPath: /sys/fs/cgroup
+        name: cgroup
     nodeSelector:
       type: testing
     volumes:
@@ -490,6 +660,16 @@ periodics:
         - key: service-account-key.json
           path: service-account.json
         secretName: prow-google-credentials
+    - emptyDir: {}
+      name: docker-graph
+    - hostPath:
+        path: /lib/modules
+        type: Directory
+      name: modules
+    - hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+      name: cgroup
 - annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: s390x-kourier-tests
@@ -528,6 +708,8 @@ periodics:
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       - name: KO_FLAGS
         value: --platform=linux/s390x
       - name: PLATFORM
@@ -556,6 +738,12 @@ periodics:
       - mountPath: /etc/test-account
         name: test-account
         readOnly: true
+      - mountPath: /docker-graph
+        name: docker-graph
+      - mountPath: /lib/modules
+        name: modules
+      - mountPath: /sys/fs/cgroup
+        name: cgroup
       - mountPath: /opt/cluster
         name: s390x-cluster1
         readOnly: true
@@ -568,6 +756,16 @@ periodics:
         - key: service-account-key.json
           path: service-account.json
         secretName: prow-google-credentials
+    - emptyDir: {}
+      name: docker-graph
+    - hostPath:
+        path: /lib/modules
+        type: Directory
+      name: modules
+    - hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+      name: cgroup
     - name: s390x-cluster1
       secret:
         defaultMode: 384
@@ -610,6 +808,8 @@ periodics:
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       - name: KO_FLAGS
         value: --platform=linux/s390x
       - name: PLATFORM
@@ -638,6 +838,12 @@ periodics:
       - mountPath: /etc/test-account
         name: test-account
         readOnly: true
+      - mountPath: /docker-graph
+        name: docker-graph
+      - mountPath: /lib/modules
+        name: modules
+      - mountPath: /sys/fs/cgroup
+        name: cgroup
       - mountPath: /opt/cluster
         name: s390x-cluster1
         readOnly: true
@@ -650,6 +856,16 @@ periodics:
         - key: service-account-key.json
           path: service-account.json
         secretName: prow-google-credentials
+    - emptyDir: {}
+      name: docker-graph
+    - hostPath:
+        path: /lib/modules
+        type: Directory
+      name: modules
+    - hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+      name: cgroup
     - name: s390x-cluster1
       secret:
         defaultMode: 384
@@ -683,6 +899,8 @@ periodics:
       - --publish
       - --tag-release
       env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/nightly-account/service-account.json
       image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
@@ -695,12 +913,28 @@ periodics:
       securityContext:
         privileged: true
       volumeMounts:
+      - mountPath: /docker-graph
+        name: docker-graph
+      - mountPath: /lib/modules
+        name: modules
+      - mountPath: /sys/fs/cgroup
+        name: cgroup
       - mountPath: /etc/nightly-account
         name: nightly-account
         readOnly: true
     nodeSelector:
       type: testing
     volumes:
+    - emptyDir: {}
+      name: docker-graph
+    - hostPath:
+        path: /lib/modules
+        type: Directory
+      name: modules
+    - hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+      name: cgroup
     - name: nightly-account
       secret:
         items:
@@ -734,6 +968,8 @@ periodics:
       - --github-token
       - /etc/hub-token/token
       env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -748,6 +984,12 @@ periodics:
       securityContext:
         privileged: true
       volumeMounts:
+      - mountPath: /docker-graph
+        name: docker-graph
+      - mountPath: /lib/modules
+        name: modules
+      - mountPath: /sys/fs/cgroup
+        name: cgroup
       - mountPath: /etc/hub-token
         name: hub-token
         readOnly: true
@@ -757,6 +999,16 @@ periodics:
     nodeSelector:
       type: testing
     volumes:
+    - emptyDir: {}
+      name: docker-graph
+    - hostPath:
+        path: /lib/modules
+        type: Directory
+      name: modules
+    - hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+      name: cgroup
     - name: hub-token
       secret:
         items:
@@ -784,6 +1036,9 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --build-tests
+        env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
         name: ""
         resources:
@@ -793,8 +1048,26 @@ presubmits:
             memory: 12Gi
         securityContext:
           privileged: true
+        volumeMounts:
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
+      volumes:
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: true
     branches:
     - ^main$
@@ -808,6 +1081,9 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --unit-tests
+        env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
         name: ""
         resources:
@@ -817,8 +1093,26 @@ presubmits:
             memory: 8Gi
         securityContext:
           privileged: true
+        volumeMounts:
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
+      volumes:
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: true
     branches:
     - ^main$
@@ -838,6 +1132,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
         name: ""
         resources:
@@ -851,6 +1147,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -860,6 +1162,16 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: true
     branches:
     - ^main$
@@ -879,6 +1191,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
         name: ""
         resources:
@@ -892,6 +1206,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -901,6 +1221,16 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: true
     branches:
     - ^main$
@@ -920,6 +1250,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
         name: ""
         resources:
@@ -933,6 +1265,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -942,6 +1280,16 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: false
     branches:
     - ^main$
@@ -962,6 +1310,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
         name: ""
         resources:
@@ -975,6 +1325,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -984,6 +1340,16 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: false
     branches:
     - ^main$
@@ -1004,6 +1370,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
         name: ""
         resources:
@@ -1017,6 +1385,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -1026,6 +1400,16 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: false
     branches:
     - ^main$
@@ -1046,6 +1430,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
         name: ""
         resources:
@@ -1059,6 +1445,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -1068,6 +1460,16 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: false
     branches:
     - ^main$
@@ -1088,6 +1490,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
         name: ""
         resources:
@@ -1101,6 +1505,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -1110,6 +1520,16 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: false
     branches:
     - ^main$
@@ -1130,6 +1550,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
         name: ""
         resources:
@@ -1143,6 +1565,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -1152,6 +1580,16 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: false
     branches:
     - ^main$
@@ -1172,6 +1610,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
         name: ""
         resources:
@@ -1185,6 +1625,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -1194,6 +1640,16 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: false
     branches:
     - ^main$
@@ -1214,6 +1670,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
         name: ""
         resources:
@@ -1227,6 +1685,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -1236,6 +1700,16 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: false
     branches:
     - ^main$
@@ -1256,6 +1730,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
         name: ""
         resources:
@@ -1269,6 +1745,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -1278,6 +1760,16 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: false
     branches:
     - ^main$
@@ -1298,6 +1790,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
         name: ""
         resources:
@@ -1311,6 +1805,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -1320,6 +1820,16 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: false
     branches:
     - ^main$
@@ -1340,6 +1850,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
         name: ""
         resources:
@@ -1353,6 +1865,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -1362,6 +1880,16 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: false
     branches:
     - ^main$
@@ -1386,6 +1914,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
         name: ""
         resources:
@@ -1399,6 +1929,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -1408,3 +1944,13 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
