@@ -3,6 +3,7 @@ repo: serving
 branches: [main]
 image: gcr.io/knative-tests/test-infra/prow-tests:v20220613-a26b7626
 imagePullPolicy: Always
+requirements: [docker]
 
 jobs:
   - name: build-tests
