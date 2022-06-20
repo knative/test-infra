@@ -19,7 +19,7 @@ periodics:
       report_template: '"The autobump-prow-tests periodic job fails, check the log: <{{.Status.URL}}|View logs>"'
   spec:
     containers:
-    - image: gcr.io/k8s-prow/generic-autobumper:v20220610-d59e6cd2db
+    - image: gcr.io/k8s-prow/generic-autobumper:v20220617-15befaa8ca
       command:
       - generic-autobumper
       args:
