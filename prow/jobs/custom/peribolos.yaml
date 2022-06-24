@@ -19,6 +19,7 @@ presubmits:
   knative/community:
   # Run on the prow-trusted build cluster as it needs access to the github oauth token.
   - name: pull-knative-peribolos
+    optional: true
     agent: kubernetes
     decorate: true
     path_alias: knative.dev/community
@@ -60,6 +61,7 @@ presubmits:
 
   # Run on the prow-trusted build cluster as it needs access to the github oauth token.
   - name: pull-knative-sandbox-peribolos
+    optional: true
     agent: kubernetes
     decorate: true
     path_alias: knative.dev/community
