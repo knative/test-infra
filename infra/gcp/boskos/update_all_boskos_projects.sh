@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+source $(dirname "${BASH_SOURCE[0]}")/../../../vendor/knative.dev/hack/library.sh
+
 set -e
 
 # This scripts takes no command line parameters. It reads from BOSKOS_RESOURCE_FILE
@@ -22,7 +24,7 @@ set -e
 
 cd "$(dirname $0)"
 
-readonly BOSKOS_RESOURCE_FILE=${BOSKOS_RESOURCE_FILE:-boskos_resources.yaml}
+readonly BOSKOS_RESOURCE_FILE=${BOSKOS_RESOURCE_FILE:-${REPO_ROOT_DIR}/prow/cluster/boskos/boskos_resources.yaml}
 readonly BOSKOS_PROJECT_PREFIX=${BOSKOS_PROJECT_PREFIX:-knative-boskos-}
 
 if [[ ! -f ${BOSKOS_RESOURCE_FILE} ]]; then
