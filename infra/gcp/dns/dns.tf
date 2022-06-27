@@ -26,18 +26,6 @@ module "knative_dev" {
     },
     {
       name = ""
-      type = "MX"
-      ttl  = 300
-      records = [
-        "1 aspmx.l.google.com.",
-        "5 alt1.aspmx.l.google.com.",
-        "5 alt2.aspmx.l.google.com.",
-        "10 alt3.aspmx.l.google.com.",
-        "10 alt4.aspmx.l.google.com.",
-      ]
-    },
-    {
-      name = ""
       type = "CAA"
       ttl  = 300
       records = [
@@ -50,7 +38,7 @@ module "knative_dev" {
       type = "TXT"
       ttl  = 300
       records = [
-        "\"v=spf1 include:_spf.google.com ~all\"",
+        "\"v=spf1 ?all\"",
         "google-site-verification=w5KR-YluNH94Htu_LcKidfaDfQhlyzRaCp4-_VI5yFY"
       ]
     },
