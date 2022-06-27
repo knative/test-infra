@@ -14,14 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -o errexit
-set -o nounset
-set -o pipefail
+source $(dirname "${BASH_SOURCE[0]}")/../e2e-tests.sh
 
-source $(dirname "${BASH_SOURCE[0]}")/../hack/upstream/library.sh
+function knative_setup() {
+  start_latest_knative_serving
+}
 
-# Make sure our dependencies are up-to-date
-"${REPO_ROOT_DIR}"/hack/update-deps.sh "$@"
+# Script entry point.
+initialize "$@" --cloud-provider kind -v 9
 
-# Generate configs
-"${REPO_ROOT_DIR}"/hack/generate-configs.sh
+go_test_e2e ./test/e2e || fail_test
+
+success

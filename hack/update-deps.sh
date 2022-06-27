@@ -18,6 +18,6 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-source $(dirname "${BASH_SOURCE[0]}")/../vendor/knative.dev/hack/library.sh
+source $(dirname "${BASH_SOURCE[0]}")/../hack/upstream/library.sh
 
 go_update_deps "$@"

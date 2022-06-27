@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright 2020 The Knative Authors
+# Copyright 2018 The Knative Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,14 +14,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -o errexit
-set -o nounset
-set -o pipefail
+source $(dirname "$0")/../../e2e-tests.sh
 
-source $(dirname "${BASH_SOURCE[0]}")/../hack/upstream/library.sh
+function parse_flags() {
+  if [[ "$1" == "--smoke-test-custom-flag" ]]; then
+    echo ">> All tests passed"
+    exit 0
+  fi
+  fail_test "Unexpected flag $1 passed"
+}
 
-# Make sure our dependencies are up-to-date
-"${REPO_ROOT_DIR}"/hack/update-deps.sh "$@"
+echo ">> Testing e2e custom flags"
 
-# Generate configs
-"${REPO_ROOT_DIR}"/hack/generate-configs.sh
+initialize --smoke-test-custom-flag
