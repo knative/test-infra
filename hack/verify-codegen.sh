@@ -23,7 +23,6 @@ source $(dirname "${BASH_SOURCE[0]}")/../hack/upstream/library.sh
 readonly TMP_DIFFROOT="$(mktemp -d)"
 DIRS_TOBE_INSPECTED=(
   "go.sum"
-  "vendor"
   "config"
   "third_party"
 )
