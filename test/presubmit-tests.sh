@@ -20,7 +20,7 @@
 # flag, causes all tests to be executed, in the right order.
 # Use the flags --build-tests, --unit-tests and --integration-tests
 # to run a specific set of tests.
-source $(dirname "${BASH_SOURCE[0]}")/../vendor/knative.dev/hack/presubmit-tests.sh
+source $(dirname "${BASH_SOURCE[0]}")/../hack/upstream/presubmit-tests.sh
 
 # Run our custom build tests after the standard build tests.
 
