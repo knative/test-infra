@@ -632,7 +632,7 @@ function go_update_deps() {
     fi
   fi
 
-  group "Go mod tidy and vendor"
+  group "Go mod tidy"
 
   # Prune modules.
   local orig_pipefail_opt=$(shopt -p -o pipefail)
@@ -642,9 +642,6 @@ function go_update_deps() {
 
   group "Updating licenses"
   update_licenses third_party/VENDOR-LICENSE "./..."
-
-  group "Removing broken symlinks"
-  remove_broken_symlinks ./vendor
 }
 
 # Return the go module name of the current module.
