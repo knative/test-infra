@@ -1,11 +1,11 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: external-secrets-build
+  name: external-secrets-prow
   namespace: argocd
 spec:
   destination:
-    name: prow-build
+    name: in-cluster # argocd is running on prow cluster
     namespace: external-secrets
   source:
     repoURL: 'https://charts.external-secrets.io'
