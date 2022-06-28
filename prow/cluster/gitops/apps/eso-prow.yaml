@@ -6,7 +6,7 @@ metadata:
 spec:
   destination:
     name: in-cluster # argocd is running on prow cluster
-    namespace: external-secrets
+    namespace: default
   source:
     repoURL: 'https://charts.external-secrets.io'
     targetRevision: v0.5.7
@@ -22,8 +22,8 @@ spec:
     chart: external-secrets
   project: default
   syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+    # automated:
+    #   prune: true
+    #   selfHeal: true
     syncOptions:
       - CreateNamespace=true

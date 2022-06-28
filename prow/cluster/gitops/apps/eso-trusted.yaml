@@ -6,7 +6,7 @@ metadata:
 spec:
   destination:
     name: prow-trusted
-    namespace: external-secrets
+    namespace: default
   source:
     repoURL: 'https://charts.external-secrets.io'
     targetRevision: v0.5.7
