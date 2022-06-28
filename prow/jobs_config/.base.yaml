@@ -104,7 +104,7 @@ requirement_presets:
   s390x:
     env:
       - name: KO_FLAGS
-        value: "--platform=linux/s390x"
+        value: "--platform=linux/s390x --insecure-registry"
       - name: PLATFORM
         value: "linux/s390x"
       - name: KO_DOCKER_REPO
