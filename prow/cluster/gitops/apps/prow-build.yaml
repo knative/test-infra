@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prow-build
+  namespace: argocd
+spec:
+  destination:
+    name: prow-build
+    namespace: test-pods
+  project: default
+  source:
+    path: prow/cluster/build
+    repoURL: https://github.com/knative/test-infra
+    targetRevision: main
+
