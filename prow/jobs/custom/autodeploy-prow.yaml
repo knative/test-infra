@@ -12,35 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-postsubmits:
-  knative/test-infra:
-  - name: post-test-infra-deploy-prow
-    cluster: prow-trusted
-    run_if_changed: '^prow/cluster/'
-    decorate: true
-    branches:
-    - main
-    annotations:
-      testgrid-dashboards: utilities
-      testgrid-tab-name: ci-knative-prow-auto-deploy
-    reporter_config:
-      slack:
-        channel: productivity
-        job_states_to_report:
-          - failure
-        report_template: '"The Prow deploy postsubmit job fails, check the log: <{{.Status.URL}}|View logs>"'
-    spec:
-      serviceAccountName: prow-deployer
-      containers:
-      - image: gcr.io/k8s-testimages/gcloud-in-go:v20200824-5d057db
-        command:
-        - make
-        args:
-        - -C
-        - prow
-        - deploy
-        - deploy-build
-
 periodics:
 # Run config-bootstrapper Prow job every day to make sure the configmaps on the
 # Prow cluster are always consistent with configs files in the GitHub repo.
