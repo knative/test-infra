@@ -152,7 +152,7 @@ Example:
 **Note:** Has to be a member of one of the groups under `deck: -> rerun_auth_configs:` block in [config.yaml](https://github.com/knative/test-infra/blob/main/prow/config.yaml)
 
 1. Open a browser, navigate to
-   `https://prow.knative.dev/?job=continuous_MODULE_release-[RELEASE_BRANCH_VERSION]_periodic`,
+   `https://prow.knative.dev/?job=release_MODULE_release-[RELEASE_BRANCH_VERSION]_periodic`,
    replace `MODULE` with the right Knative module name (e.g., `serving` or
    `eventing`), and replace `[RELEASE_BRANCH_VERSION-]` with the release branch
    number (e.g. `1.4`)
@@ -170,7 +170,7 @@ Example:
 
    ```
    cd config/prow
-   ./run_job.sh continuous_MODULE_release-[RELEASE_BRANCH_VERSION]_periodic
+   ./run_job.sh release_MODULE_release-[RELEASE_BRANCH_VERSION]_periodic
    ```
 
 1. Monitor the new job through [Prow UI](https://prow.knative.dev).
