@@ -24,7 +24,7 @@ require (
 	google.golang.org/api v0.70.0
 	google.golang.org/genproto v0.0.0-20220222213610-43724f9ea8cf // indirect
 	k8s.io/apimachinery v0.20.6
-	knative.dev/hack v0.0.0-20220524153203-12d3e2a7addc
+	knative.dev/hack v0.0.0-20220629134730-e7d63651ce8f
 	sigs.k8s.io/boskos v0.0.0-20200729174948-794df80db9c9
 	sigs.k8s.io/yaml v1.2.0
 )
