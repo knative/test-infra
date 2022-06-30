@@ -82,6 +82,12 @@ module "iam" {
       "serviceAccount:prow-job@knative-tests.iam.gserviceaccount.com",
       "serviceAccount:pwg-admins@knative-tests.iam.gserviceaccount.com"
     ]
+
+    "roles/iap.httpsResourceAccessor" = [
+      "group:kn-infra-gcp-org-admins@knative.team",
+      "domain:knative.team",
+      "group:wg-leads@knative.team"
+    ]
   }
 }
 
