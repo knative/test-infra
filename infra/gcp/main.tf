@@ -34,3 +34,7 @@ module "releases" {
 module "nightly" {
   source = "./nightly"
 }
+
+module "shared" {
+  source = "./shared"
+}
