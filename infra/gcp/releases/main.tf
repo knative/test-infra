@@ -6,7 +6,7 @@ module "project" {
   project_id      = "knative-releases"
   folder_id       = "1055082993535"
   org_id          = "22054930418"
-  billing_account = "014273-543CE9-58CE57"
+  billing_account = "018CEF-0F96A6-4D1A14"
 
   # Sane project defaults
   default_service_account     = "keep"
