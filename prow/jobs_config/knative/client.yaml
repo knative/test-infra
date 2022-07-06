@@ -54,7 +54,7 @@ jobs:
         value: contour.ingress.networking.knative.dev
 
   - name: ppc64le-e2e-tests
-    cron: 0 11 * * *
+    cron: 0 9 * * *
     types: [periodic]
     requirements: [ppc64le]
     command: [runner.sh]
