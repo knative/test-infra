@@ -32,6 +32,7 @@ module "iam" {
 
     "roles/browser" = [
       "domain:knative.team",
+      "group:gke-security-groups@knative.dev",
     ]
 
     "roles/resourcemanager.projectCreator" = [

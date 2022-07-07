@@ -2,7 +2,7 @@ module "iam" {
   source  = "terraform-google-modules/iam/google//modules/projects_iam"
   version = "~> 7"
 
-  projects = ["knative-tests"]
+  projects = [module.project.project_id]
 
   mode = "authoritative"
 
@@ -25,11 +25,12 @@ module "iam" {
     ]
 
     "roles/viewer" = [ # Will change this in the near future
-      "group:wg-leads@knative.team"
+      "group:wg-leads@knative.team",
+      # "group:gke-security-groups@knative.dev"
     ]
-    "roles/container.viewer" = [
-      "group:gke-security-groups@knative.dev"
-    ]
+    # "roles/container.viewer" = [
+    #   "group:gke-security-groups@knative.dev"
+    # ]
   }
 }
 
