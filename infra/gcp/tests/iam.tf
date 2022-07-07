@@ -78,8 +78,8 @@ module "iam" {
     ]
 
     "roles/iap.httpsResourceAccessor" = [
-      "group:kn-infra-gcp-org-admins@knative.team",
-      "domain:knative.team",
+      "group:kn-infra-gcp-org-admins@knative.dev",
+      "domain:knative.dev",
       "group:wg-leads@knative.team"
     ]
   }
