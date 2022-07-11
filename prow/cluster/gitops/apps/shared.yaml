@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prow
+  namespace: argocd
+spec:
+  destination:
+    name: shared
+    namespace: default
+  project: default
+  source:
+    path: infra/k8s/shared
+    repoURL: https://github.com/knative/test-infra
+    targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

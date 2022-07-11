@@ -15,24 +15,19 @@ module "iam" {
 
     "roles/cloudbuild.builds.editor" = [
       "serviceAccount:prow-job@knative-tests.iam.gserviceaccount.com",
-      "serviceAccount:pwg-admins@knative-tests.iam.gserviceaccount.com"
     ]
 
     "roles/container.admin" = [
       "serviceAccount:prow-deployer@knative-tests.iam.gserviceaccount.com",
-      "serviceAccount:pwg-admins@knative-tests.iam.gserviceaccount.com"
     ]
 
     "roles/container.clusterAdmin" = [
-      "serviceAccount:workload-metrics-svc-acct@knative-tests.iam.gserviceaccount.com"
     ],
 
     "roles/iam.serviceAccountTokenCreator" = [
-      "serviceAccount:workload-metrics-svc-acct@knative-tests.iam.gserviceaccount.com"
     ],
 
     "roles/iam.serviceAccountUser" : [
-      "serviceAccount:workload-metrics-svc-acct@knative-tests.iam.gserviceaccount.com"
     ],
 
 
@@ -80,12 +75,11 @@ module "iam" {
 
     "roles/viewer" = [
       "serviceAccount:prow-job@knative-tests.iam.gserviceaccount.com",
-      "serviceAccount:pwg-admins@knative-tests.iam.gserviceaccount.com"
     ]
 
     "roles/iap.httpsResourceAccessor" = [
-      "group:kn-infra-gcp-org-admins@knative.team",
-      "domain:knative.team",
+      "group:kn-infra-gcp-org-admins@knative.dev",
+      "domain:knative.dev",
       "group:wg-leads@knative.team"
     ]
   }

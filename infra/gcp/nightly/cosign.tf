@@ -4,6 +4,7 @@ module "cosign" {
 
   project_id          = module.project.project_id
   purpose             = "ASYMMETRIC_SIGN"
+  key_algorithm       = "EC_SIGN_P384_SHA384"
   key_rotation_period = "7776000s" # 90 days
   location            = "global"
   keyring             = "cosign"
