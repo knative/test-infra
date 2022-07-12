@@ -7,17 +7,17 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.2
+    testgrid-dashboards: knative-sandbox-release-1.6
     testgrid-tab-name: sample-controller-release
   cluster: prow-build
-  cron: 0 9 * * 2
+  cron: 44 9 * * 2
   decorate: true
   extra_refs:
-  - base_ref: release-1.2
+  - base_ref: release-1.6
     org: knative-sandbox
     path_alias: knative.dev/sample-controller
     repo: sample-controller
-  name: release_sample-controller_release-1.2_periodic
+  name: release_sample-controller_release-1.6_periodic
   spec:
     containers:
     - command:
@@ -31,7 +31,7 @@ periodics:
       - --github-token
       - /etc/hub-token/token
       - --branch
-      - release-1.2
+      - release-1.6
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
@@ -70,10 +70,10 @@ presubmits:
   knative-sandbox/sample-controller:
   - always_run: true
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: build-tests_sample-controller_release-1.2
+    name: build-tests_sample-controller_release-1.6
     path_alias: knative.dev/sample-controller
     spec:
       containers:
@@ -90,10 +90,10 @@ presubmits:
         type: testing
   - always_run: true
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: unit-tests_sample-controller_release-1.2
+    name: unit-tests_sample-controller_release-1.6
     path_alias: knative.dev/sample-controller
     spec:
       containers:
