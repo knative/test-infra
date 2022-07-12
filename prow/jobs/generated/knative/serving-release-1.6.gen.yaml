@@ -7,19 +7,19 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-release-1.2
+    testgrid-dashboards: knative-release-1.6
     testgrid-tab-name: serving-continuous
   cluster: prow-build
-  cron: 45 16 * * *
+  cron: 57 4 * * *
   decorate: true
   decoration_config:
     timeout: 3h0m0s
   extra_refs:
-  - base_ref: release-1.2
+  - base_ref: release-1.6
     org: knative
     path_alias: knative.dev/serving
     repo: serving
-  name: continuous_serving_release-1.2_periodic
+  name: continuous_serving_release-1.6_periodic
   spec:
     containers:
     - command:
@@ -31,6 +31,8 @@ periodics:
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20220630-9ea214bf
       name: ""
       resources:
@@ -44,6 +46,12 @@ periodics:
       - mountPath: /etc/test-account
         name: test-account
         readOnly: true
+      - mountPath: /docker-graph
+        name: docker-graph
+      - mountPath: /lib/modules
+        name: modules
+      - mountPath: /sys/fs/cgroup
+        name: cgroup
     nodeSelector:
       type: testing
     volumes:
@@ -53,18 +61,28 @@ periodics:
         - key: service-account-key.json
           path: service-account.json
         secretName: prow-google-credentials
+    - emptyDir: {}
+      name: docker-graph
+    - hostPath:
+        path: /lib/modules
+        type: Directory
+      name: modules
+    - hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+      name: cgroup
 - annotations:
-    testgrid-dashboards: knative-release-1.2
+    testgrid-dashboards: knative-release-1.6
     testgrid-tab-name: serving-s390x-kourier-tests
   cluster: prow-build
-  cron: 30 15 * * *
+  cron: 0 3 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-1.2
+  - base_ref: release-1.6
     org: knative
     path_alias: knative.dev/serving
     repo: serving
-  name: s390x-kourier-tests_serving_release-1.2_periodic
+  name: s390x-kourier-tests_serving_release-1.6_periodic
   spec:
     containers:
     - args:
@@ -74,7 +92,7 @@ periodics:
         mkdir -p /root/.kube
         cat /opt/cluster/ci-script > connect.sh
         chmod +x connect.sh
-        server_addr=$(./connect.sh kourier-12)
+        server_addr=$(./connect.sh kourier-main)
         kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
         chmod +x adjust.sh
         ./adjust.sh
@@ -91,6 +109,8 @@ periodics:
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       - name: KO_FLAGS
         value: --platform=linux/s390x --insecure-registry
       - name: PLATFORM
@@ -119,6 +139,12 @@ periodics:
       - mountPath: /etc/test-account
         name: test-account
         readOnly: true
+      - mountPath: /docker-graph
+        name: docker-graph
+      - mountPath: /lib/modules
+        name: modules
+      - mountPath: /sys/fs/cgroup
+        name: cgroup
       - mountPath: /opt/cluster
         name: s390x-cluster1
         readOnly: true
@@ -131,22 +157,32 @@ periodics:
         - key: service-account-key.json
           path: service-account.json
         secretName: prow-google-credentials
+    - emptyDir: {}
+      name: docker-graph
+    - hostPath:
+        path: /lib/modules
+        type: Directory
+      name: modules
+    - hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+      name: cgroup
     - name: s390x-cluster1
       secret:
         defaultMode: 384
         secretName: s390x-cluster1
 - annotations:
-    testgrid-dashboards: knative-release-1.2
+    testgrid-dashboards: knative-release-1.6
     testgrid-tab-name: serving-s390x-contour-tests
   cluster: prow-build
-  cron: 30 17 * * *
+  cron: 0 5 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-1.2
+  - base_ref: release-1.6
     org: knative
     path_alias: knative.dev/serving
     repo: serving
-  name: s390x-contour-tests_serving_release-1.2_periodic
+  name: s390x-contour-tests_serving_release-1.6_periodic
   spec:
     containers:
     - args:
@@ -156,7 +192,7 @@ periodics:
         mkdir -p /root/.kube
         cat /opt/cluster/ci-script > connect.sh
         chmod +x connect.sh
-        server_addr=$(./connect.sh contour-12)
+        server_addr=$(./connect.sh contour-main)
         kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
         chmod +x adjust.sh
         ./adjust.sh
@@ -173,6 +209,8 @@ periodics:
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       - name: KO_FLAGS
         value: --platform=linux/s390x --insecure-registry
       - name: PLATFORM
@@ -201,6 +239,12 @@ periodics:
       - mountPath: /etc/test-account
         name: test-account
         readOnly: true
+      - mountPath: /docker-graph
+        name: docker-graph
+      - mountPath: /lib/modules
+        name: modules
+      - mountPath: /sys/fs/cgroup
+        name: cgroup
       - mountPath: /opt/cluster
         name: s390x-cluster1
         readOnly: true
@@ -213,24 +257,34 @@ periodics:
         - key: service-account-key.json
           path: service-account.json
         secretName: prow-google-credentials
+    - emptyDir: {}
+      name: docker-graph
+    - hostPath:
+        path: /lib/modules
+        type: Directory
+      name: modules
+    - hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+      name: cgroup
     - name: s390x-cluster1
       secret:
         defaultMode: 384
         secretName: s390x-cluster1
 - annotations:
-    testgrid-dashboards: knative-release-1.2
+    testgrid-dashboards: knative-release-1.6
     testgrid-tab-name: serving-release
   cluster: prow-build
-  cron: 3 9 * * 2
+  cron: 59 9 * * 2
   decorate: true
   decoration_config:
     timeout: 3h0m0s
   extra_refs:
-  - base_ref: release-1.2
+  - base_ref: release-1.6
     org: knative
     path_alias: knative.dev/serving
     repo: serving
-  name: release_serving_release-1.2_periodic
+  name: release_serving_release-1.6_periodic
   spec:
     containers:
     - command:
@@ -244,8 +298,10 @@ periodics:
       - --github-token
       - /etc/hub-token/token
       - --branch
-      - release-1.2
+      - release-1.6
       env:
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -260,6 +316,12 @@ periodics:
       securityContext:
         privileged: true
       volumeMounts:
+      - mountPath: /docker-graph
+        name: docker-graph
+      - mountPath: /lib/modules
+        name: modules
+      - mountPath: /sys/fs/cgroup
+        name: cgroup
       - mountPath: /etc/hub-token
         name: hub-token
         readOnly: true
@@ -269,6 +331,16 @@ periodics:
     nodeSelector:
       type: testing
     volumes:
+    - emptyDir: {}
+      name: docker-graph
+    - hostPath:
+        path: /lib/modules
+        type: Directory
+      name: modules
+    - hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+      name: cgroup
     - name: hub-token
       secret:
         items:
@@ -285,10 +357,10 @@ presubmits:
   knative/serving:
   - always_run: true
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: build-tests_serving_release-1.2
+    name: build-tests_serving_release-1.6
     path_alias: knative.dev/serving
     spec:
       containers:
@@ -296,6 +368,9 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --build-tests
+        env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220630-9ea214bf
         name: ""
         resources:
@@ -305,14 +380,32 @@ presubmits:
             memory: 12Gi
         securityContext:
           privileged: true
+        volumeMounts:
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
+      volumes:
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: true
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: unit-tests_serving_release-1.2
+    name: unit-tests_serving_release-1.6
     path_alias: knative.dev/serving
     spec:
       containers:
@@ -320,6 +413,9 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --unit-tests
+        env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220630-9ea214bf
         name: ""
         resources:
@@ -329,14 +425,32 @@ presubmits:
             memory: 8Gi
         securityContext:
           privileged: true
+        volumeMounts:
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
+      volumes:
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: true
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: upgrade-tests_serving_release-1.2
+    name: upgrade-tests_serving_release-1.6
     path_alias: knative.dev/serving
     spec:
       containers:
@@ -350,6 +464,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220630-9ea214bf
         name: ""
         resources:
@@ -363,6 +479,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -372,12 +494,22 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: true
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: istio-latest-no-mesh_serving_release-1.2
+    name: istio-latest-no-mesh_serving_release-1.6
     path_alias: knative.dev/serving
     spec:
       containers:
@@ -391,6 +523,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220630-9ea214bf
         name: ""
         resources:
@@ -404,6 +538,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -413,12 +553,22 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: true
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: istio-latest-no-mesh-tls_serving_release-1.2
+    name: istio-latest-no-mesh-tls_serving_release-1.6
     path_alias: knative.dev/serving
     spec:
       containers:
@@ -432,6 +582,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220630-9ea214bf
         name: ""
         resources:
@@ -445,6 +597,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -454,12 +612,22 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: false
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: performance-tests-kperf_serving_release-1.2
+    name: performance-tests-kperf_serving_release-1.6
     optional: true
     path_alias: knative.dev/serving
     spec:
@@ -474,6 +642,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220630-9ea214bf
         name: ""
         resources:
@@ -487,6 +657,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -496,12 +672,82 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: false
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: istio-latest-mesh_serving_release-1.2
+    name: performance-tests-mako_serving_release-1.6
+    optional: true
+    path_alias: knative.dev/serving
+    spec:
+      containers:
+      - command:
+        - runner.sh
+        - ./test/presubmit-tests.sh
+        - --run-test
+        - ./test/performance/performance-tests-mako.sh
+        env:
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220630-9ea214bf
+        name: ""
+        resources:
+          limits:
+            memory: 16Gi
+          requests:
+            memory: 12Gi
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /etc/test-account
+          name: test-account
+          readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
+      nodeSelector:
+        type: testing
+      volumes:
+      - name: test-account
+        secret:
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
+  - always_run: false
+    branches:
+    - ^release-1.6$
+    cluster: prow-build
+    decorate: true
+    name: istio-latest-mesh_serving_release-1.6
     optional: true
     path_alias: knative.dev/serving
     spec:
@@ -516,6 +762,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220630-9ea214bf
         name: ""
         resources:
@@ -529,6 +777,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -538,12 +792,22 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: false
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: istio-latest-mesh-short_serving_release-1.2
+    name: istio-latest-mesh-short_serving_release-1.6
     optional: true
     path_alias: knative.dev/serving
     spec:
@@ -558,6 +822,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220630-9ea214bf
         name: ""
         resources:
@@ -571,6 +837,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -580,12 +852,22 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: false
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: istio-latest-mesh-tls_serving_release-1.2
+    name: istio-latest-mesh-tls_serving_release-1.6
     optional: true
     path_alias: knative.dev/serving
     spec:
@@ -600,6 +882,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220630-9ea214bf
         name: ""
         resources:
@@ -613,6 +897,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -622,12 +912,22 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: false
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: kourier-stable_serving_release-1.2
+    name: kourier-stable_serving_release-1.6
     path_alias: knative.dev/serving
     run_if_changed: ^third_party/kourier-latest/*
     spec:
@@ -642,6 +942,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220630-9ea214bf
         name: ""
         resources:
@@ -655,6 +957,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -664,12 +972,22 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: false
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: kourier-stable-tls_serving_release-1.2
+    name: kourier-stable-tls_serving_release-1.6
     path_alias: knative.dev/serving
     run_if_changed: ^third_party/kourier-latest/*
     spec:
@@ -684,6 +1002,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220630-9ea214bf
         name: ""
         resources:
@@ -697,6 +1017,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -706,12 +1032,22 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: false
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: contour-latest_serving_release-1.2
+    name: contour-latest_serving_release-1.6
     path_alias: knative.dev/serving
     run_if_changed: ^third_party/contour-latest/*
     spec:
@@ -726,6 +1062,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220630-9ea214bf
         name: ""
         resources:
@@ -739,6 +1077,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -748,12 +1092,22 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: false
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: contour-tls_serving_release-1.2
+    name: contour-tls_serving_release-1.6
     path_alias: knative.dev/serving
     run_if_changed: ^third_party/contour-latest/*
     spec:
@@ -768,6 +1122,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220630-9ea214bf
         name: ""
         resources:
@@ -781,6 +1137,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -790,12 +1152,22 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: false
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: gateway-api-latest_serving_release-1.2
+    name: gateway-api-latest_serving_release-1.6
     path_alias: knative.dev/serving
     run_if_changed: ^third_party/gateway-api-latest/*
     spec:
@@ -810,6 +1182,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220630-9ea214bf
         name: ""
         resources:
@@ -823,6 +1197,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -832,12 +1212,22 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
   - always_run: false
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: https_serving_release-1.2
+    name: https_serving_release-1.6
     optional: true
     path_alias: knative.dev/serving
     run_if_changed: ^third_party/cert-manager-latest/*
@@ -856,6 +1246,8 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220630-9ea214bf
         name: ""
         resources:
@@ -869,6 +1261,12 @@ presubmits:
         - mountPath: /etc/test-account
           name: test-account
           readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
       nodeSelector:
         type: testing
       volumes:
@@ -878,3 +1276,13 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
