@@ -55,7 +55,7 @@ jobs:
     env:
       - name: INGRESS_CLASS
         value: contour.ingress.networking.knative.dev
-       
+
   - name: ppc64le-e2e-tests
     cron: 0 13 * * *
     types: [periodic]
