@@ -124,6 +124,74 @@ periodics:
         secretName: s390x-cluster1
 - annotations:
     testgrid-dashboards: operator
+    testgrid-tab-name: ppc64le-e2e-tests
+  cluster: prow-build
+  cron: 0 13 * * *
+  decorate: true
+  extra_refs:
+  - base_ref: main
+    org: knative
+    path_alias: knative.dev/operator
+    repo: operator
+  name: ppc64le-e2e-tests_operator_main_periodic
+  spec:
+    containers:
+    - args:
+      - bash
+      - -c
+      - |
+        cat /opt/cluster/ci-script > /tmp/connect.sh
+        chmod +x /tmp/connect.sh
+        . /tmp/connect.sh ${CI_JOB}
+        ./test/e2e-tests.sh --run-tests
+      command:
+      - runner.sh
+      env:
+      - name: CI_JOB
+        value: operator-main
+      - name: INGRESS_CLASS
+        value: contour.ingress.networking.knative.dev
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: KO_FLAGS
+        value: --platform=linux/ppc64le
+      - name: PLATFORM
+        value: linux/ppc64le
+      - name: KO_DOCKER_REPO
+        value: registry.ppc64le
+      - name: DISABLE_MD_LINTING
+        value: "1"
+      - name: KUBECONFIG
+        value: /root/.kube/config
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220630-9ea214bf
+      name: ""
+      resources: {}
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /etc/test-account
+        name: test-account
+        readOnly: true
+      - mountPath: /opt/cluster
+        name: ppc64le-cluster
+        readOnly: true
+    nodeSelector:
+      type: testing
+    volumes:
+    - name: test-account
+      secret:
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
+    - name: ppc64le-cluster
+      secret:
+        defaultMode: 384
+        secretName: ppc64le-cluster
+- annotations:
+    testgrid-dashboards: operator
     testgrid-tab-name: nightly
   cluster: prow-build
   cron: 5 9 * * *

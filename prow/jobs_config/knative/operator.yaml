@@ -55,6 +55,25 @@ jobs:
     env:
       - name: INGRESS_CLASS
         value: contour.ingress.networking.knative.dev
+       
+  - name: ppc64le-e2e-tests
+    cron: 0 13 * * *
+    types: [periodic]
+    requirements: [ppc64le]
+    command: [runner.sh]
+    args:
+      - bash
+      - -c
+      - |
+        cat /opt/cluster/ci-script > /tmp/connect.sh
+        chmod +x /tmp/connect.sh
+        . /tmp/connect.sh ${CI_JOB}
+        ./test/e2e-tests.sh --run-tests
+    env:
+      - name: CI_JOB
+        value: "operator-main"
+      - name: INGRESS_CLASS
+        value: contour.ingress.networking.knative.dev
 
   - name: nightly
     types: [periodic]
