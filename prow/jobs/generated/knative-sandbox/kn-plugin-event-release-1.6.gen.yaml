@@ -7,17 +7,17 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.2
+    testgrid-dashboards: knative-sandbox-release-1.6
     testgrid-tab-name: kn-plugin-event-continuous
   cluster: prow-build
-  cron: 17 12 * * *
+  cron: 5 0 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-1.2
+  - base_ref: release-1.6
     org: knative-sandbox
     path_alias: knative.dev/kn-plugin-event
     repo: kn-plugin-event
-  name: continuous_kn-plugin-event_release-1.2_periodic
+  name: continuous_kn-plugin-event_release-1.6_periodic
   spec:
     containers:
     - command:
@@ -48,17 +48,17 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.2
+    testgrid-dashboards: knative-sandbox-release-1.6
     testgrid-tab-name: kn-plugin-event-release
   cluster: prow-build
-  cron: 7 9 * * 2
+  cron: 23 9 * * 2
   decorate: true
   extra_refs:
-  - base_ref: release-1.2
+  - base_ref: release-1.6
     org: knative-sandbox
     path_alias: knative.dev/kn-plugin-event
     repo: kn-plugin-event
-  name: release_kn-plugin-event_release-1.2_periodic
+  name: release_kn-plugin-event_release-1.6_periodic
   spec:
     containers:
     - command:
@@ -72,7 +72,7 @@ periodics:
       - --github-token
       - /etc/hub-token/token
       - --branch
-      - release-1.2
+      - release-1.6
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
@@ -111,10 +111,10 @@ presubmits:
   knative-sandbox/kn-plugin-event:
   - always_run: true
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: build-tests_kn-plugin-event_release-1.2
+    name: build-tests_kn-plugin-event_release-1.6
     path_alias: knative.dev/kn-plugin-event
     spec:
       containers:
@@ -131,10 +131,10 @@ presubmits:
         type: testing
   - always_run: true
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: unit-tests_kn-plugin-event_release-1.2
+    name: unit-tests_kn-plugin-event_release-1.6
     path_alias: knative.dev/kn-plugin-event
     spec:
       containers:
@@ -151,10 +151,10 @@ presubmits:
         type: testing
   - always_run: true
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: integration-tests_kn-plugin-event_release-1.2
+    name: integration-tests_kn-plugin-event_release-1.6
     path_alias: knative.dev/kn-plugin-event
     spec:
       containers:
