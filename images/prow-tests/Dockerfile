@@ -69,7 +69,7 @@ RUN rm google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz
 RUN gcloud config set core/disable_usage_reporting true && \
     gcloud config set component_manager/disable_update_check true && \
     gcloud config set metrics/environment github_docker_image && \
-    gcloud components install alpha beta && \
+    gcloud components install alpha beta gke-gcloud-auth-plugin && \
     gcloud --version
 
 #
