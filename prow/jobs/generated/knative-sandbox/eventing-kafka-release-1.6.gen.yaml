@@ -7,17 +7,17 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.2
+    testgrid-dashboards: knative-sandbox-release-1.6
     testgrid-tab-name: eventing-kafka-continuous
   cluster: prow-build
-  cron: 52 11 * * *
+  cron: 36 7 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-1.2
+  - base_ref: release-1.6
     org: knative-sandbox
     path_alias: knative.dev/eventing-kafka
     repo: eventing-kafka
-  name: continuous_eventing-kafka_release-1.2_periodic
+  name: continuous_eventing-kafka_release-1.6_periodic
   spec:
     containers:
     - command:
@@ -66,17 +66,17 @@ periodics:
         type: Directory
       name: cgroup
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.2
+    testgrid-dashboards: knative-sandbox-release-1.6
     testgrid-tab-name: eventing-kafka-release
   cluster: prow-build
-  cron: 16 9 * * 2
+  cron: 48 9 * * 2
   decorate: true
   extra_refs:
-  - base_ref: release-1.2
+  - base_ref: release-1.6
     org: knative-sandbox
     path_alias: knative.dev/eventing-kafka
     repo: eventing-kafka
-  name: release_eventing-kafka_release-1.2_periodic
+  name: release_eventing-kafka_release-1.6_periodic
   spec:
     containers:
     - command:
@@ -90,7 +90,7 @@ periodics:
       - --github-token
       - /etc/hub-token/token
       - --branch
-      - release-1.2
+      - release-1.6
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
@@ -98,6 +98,8 @@ periodics:
         value: us-central1
       - name: ORG_NAME
         value: knative-sandbox
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20220630-9ea214bf
       name: ""
       resources: {}
@@ -110,6 +112,12 @@ periodics:
       - mountPath: /etc/release-account
         name: release-account
         readOnly: true
+      - mountPath: /docker-graph
+        name: docker-graph
+      - mountPath: /lib/modules
+        name: modules
+      - mountPath: /sys/fs/cgroup
+        name: cgroup
     nodeSelector:
       type: testing
     volumes:
@@ -125,14 +133,24 @@ periodics:
         - key: release.json
           path: service-account.json
         secretName: prow-google-credentials
+    - emptyDir: {}
+      name: docker-graph
+    - hostPath:
+        path: /lib/modules
+        type: Directory
+      name: modules
+    - hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+      name: cgroup
 presubmits:
   knative-sandbox/eventing-kafka:
   - always_run: true
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: build-tests_eventing-kafka_release-1.2
+    name: build-tests_eventing-kafka_release-1.6
     path_alias: knative.dev/eventing-kafka
     spec:
       containers:
@@ -170,10 +188,10 @@ presubmits:
         name: cgroup
   - always_run: true
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: unit-tests_eventing-kafka_release-1.2
+    name: unit-tests_eventing-kafka_release-1.6
     path_alias: knative.dev/eventing-kafka
     spec:
       containers:
@@ -211,10 +229,10 @@ presubmits:
         name: cgroup
   - always_run: true
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: integration-test-channel-consolidated_eventing-kafka_release-1.2
+    name: integration-test-channel-consolidated_eventing-kafka_release-1.6
     path_alias: knative.dev/eventing-kafka
     spec:
       containers:
@@ -248,10 +266,10 @@ presubmits:
           secretName: prow-google-credentials
   - always_run: true
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: integration-test-channel-consolidated-tls_eventing-kafka_release-1.2
+    name: integration-test-channel-consolidated-tls_eventing-kafka_release-1.6
     path_alias: knative.dev/eventing-kafka
     spec:
       containers:
@@ -285,10 +303,10 @@ presubmits:
           secretName: prow-google-credentials
   - always_run: true
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: integration-test-channel-consolidated-sasl_eventing-kafka_release-1.2
+    name: integration-test-channel-consolidated-sasl_eventing-kafka_release-1.6
     path_alias: knative.dev/eventing-kafka
     spec:
       containers:
@@ -322,10 +340,10 @@ presubmits:
           secretName: prow-google-credentials
   - always_run: true
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: integration-test-channel-distributed_eventing-kafka_release-1.2
+    name: integration-test-channel-distributed_eventing-kafka_release-1.6
     path_alias: knative.dev/eventing-kafka
     spec:
       containers:
@@ -359,10 +377,10 @@ presubmits:
           secretName: prow-google-credentials
   - always_run: true
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: integration-test-mt-source_eventing-kafka_release-1.2
+    name: integration-test-mt-source_eventing-kafka_release-1.6
     optional: true
     path_alias: knative.dev/eventing-kafka
     spec:
@@ -397,10 +415,10 @@ presubmits:
           secretName: prow-google-credentials
   - always_run: true
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: upgrade-tests_eventing-kafka_release-1.2
+    name: upgrade-tests_eventing-kafka_release-1.6
     path_alias: knative.dev/eventing-kafka
     spec:
       containers:
