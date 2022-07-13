@@ -102,10 +102,9 @@ func CreateOrUpdatePR(gc ghutil.GithubOperations, gi git.Info, label string, dry
 
 func generatePRBody() string {
 	body := "PR created for syncing Prow jobs for release branches changes\n\n"
-	assignment := "/cc knative/productivity-wg-leads\n/assign knative/productivity-wg-leads\n\n"
 	producedBy := "Produced by: release-jobs-syncer"
 
-	return body + assignment + producedBy
+	return body + producedBy
 }
 
 // get existing open PR not merged yet
