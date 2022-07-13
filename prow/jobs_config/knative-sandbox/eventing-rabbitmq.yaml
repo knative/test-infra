@@ -1,7 +1,7 @@
 org: knative-sandbox
 repo: eventing-rabbitmq
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20220630-9ea214bf
+image: gcr.io/knative-tests/test-infra/prow-tests:v20220712-636775ef
 imagePullPolicy: Always
 
 jobs:
