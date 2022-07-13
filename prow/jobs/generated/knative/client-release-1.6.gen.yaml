@@ -51,7 +51,7 @@ periodics:
     testgrid-dashboards: knative-release-1.6
     testgrid-tab-name: client-s390x-e2e-tests
   cluster: prow-build
-  cron: 0 11 * * *
+  cron: 30 23 * * *
   decorate: true
   extra_refs:
   - base_ref: release-1.6
@@ -68,7 +68,7 @@ periodics:
         mkdir -p /root/.kube
         cat /opt/cluster/ci-script > connect.sh
         chmod +x connect.sh
-        ./connect.sh client-main
+        ./connect.sh client-16
         kubectl get cm s390x-config-client -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
         chmod +x adjust.sh
         ./adjust.sh

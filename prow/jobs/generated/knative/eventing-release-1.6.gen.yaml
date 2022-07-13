@@ -57,7 +57,7 @@ periodics:
     testgrid-dashboards: knative-release-1.6
     testgrid-tab-name: eventing-s390x-e2e-tests
   cluster: prow-build
-  cron: 0 7 * * *
+  cron: 30 19 * * *
   decorate: true
   extra_refs:
   - base_ref: release-1.6
@@ -74,7 +74,7 @@ periodics:
         mkdir -p /root/.kube
         cat /opt/cluster/ci-script > connect.sh
         chmod +x connect.sh
-        ./connect.sh eventing-main
+        ./connect.sh eventing-16
         kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
         chmod +x adjust.sh
         ./adjust.sh
