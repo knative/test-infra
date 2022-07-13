@@ -7,17 +7,17 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.2
-    testgrid-tab-name: kn-plugin-quickstart-continuous
+    testgrid-dashboards: knative-sandbox-release-1.6
+    testgrid-tab-name: kn-plugin-admin-continuous
   cluster: prow-build
-  cron: 24 7 * * *
+  cron: 12 7 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-1.2
+  - base_ref: release-1.6
     org: knative-sandbox
-    path_alias: knative.dev/kn-plugin-quickstart
-    repo: kn-plugin-quickstart
-  name: continuous_kn-plugin-quickstart_release-1.2_periodic
+    path_alias: knative.dev/kn-plugin-admin
+    repo: kn-plugin-admin
+  name: continuous_kn-plugin-admin_release-1.6_periodic
   spec:
     containers:
     - command:
@@ -48,17 +48,17 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.2
-    testgrid-tab-name: kn-plugin-quickstart-release
+    testgrid-dashboards: knative-sandbox-release-1.6
+    testgrid-tab-name: kn-plugin-admin-release
   cluster: prow-build
-  cron: 52 9 * * 2
+  cron: 36 9 * * 2
   decorate: true
   extra_refs:
-  - base_ref: release-1.2
+  - base_ref: release-1.6
     org: knative-sandbox
-    path_alias: knative.dev/kn-plugin-quickstart
-    repo: kn-plugin-quickstart
-  name: release_kn-plugin-quickstart_release-1.2_periodic
+    path_alias: knative.dev/kn-plugin-admin
+    repo: kn-plugin-admin
+  name: release_kn-plugin-admin_release-1.6_periodic
   spec:
     containers:
     - command:
@@ -66,13 +66,13 @@ periodics:
       - ./hack/release.sh
       - --dot-release
       - --release-gcs
-      - knative-releases/kn-plugin-quickstart
+      - knative-releases/kn-plugin-admin
       - --release-gcr
       - gcr.io/knative-releases
       - --github-token
       - /etc/hub-token/token
       - --branch
-      - release-1.2
+      - release-1.6
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
@@ -108,14 +108,14 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 presubmits:
-  knative-sandbox/kn-plugin-quickstart:
+  knative-sandbox/kn-plugin-admin:
   - always_run: true
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: build-tests_kn-plugin-quickstart_release-1.2
-    path_alias: knative.dev/kn-plugin-quickstart
+    name: build-tests_kn-plugin-admin_release-1.6
+    path_alias: knative.dev/kn-plugin-admin
     spec:
       containers:
       - command:
@@ -131,11 +131,11 @@ presubmits:
         type: testing
   - always_run: true
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: unit-tests_kn-plugin-quickstart_release-1.2
-    path_alias: knative.dev/kn-plugin-quickstart
+    name: unit-tests_kn-plugin-admin_release-1.6
+    path_alias: knative.dev/kn-plugin-admin
     spec:
       containers:
       - command:
@@ -151,11 +151,11 @@ presubmits:
         type: testing
   - always_run: true
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: integration-tests_kn-plugin-quickstart_release-1.2
-    path_alias: knative.dev/kn-plugin-quickstart
+    name: integration-tests_kn-plugin-admin_release-1.6
+    path_alias: knative.dev/kn-plugin-admin
     spec:
       containers:
       - command:
