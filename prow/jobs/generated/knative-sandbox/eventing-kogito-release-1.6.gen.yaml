@@ -7,17 +7,17 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.2
+    testgrid-dashboards: knative-sandbox-release-1.6
     testgrid-tab-name: eventing-kogito-continuous
   cluster: prow-build
-  cron: 59 6 * * *
+  cron: 23 18 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-1.2
+  - base_ref: release-1.6
     org: knative-sandbox
     path_alias: knative.dev/eventing-kogito
     repo: eventing-kogito
-  name: continuous_eventing-kogito_release-1.2_periodic
+  name: continuous_eventing-kogito_release-1.6_periodic
   spec:
     containers:
     - command:
@@ -48,17 +48,17 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.2
+    testgrid-dashboards: knative-sandbox-release-1.6
     testgrid-tab-name: eventing-kogito-release
   cluster: prow-build
-  cron: 13 9 * * 2
+  cron: 29 9 * * 2
   decorate: true
   extra_refs:
-  - base_ref: release-1.2
+  - base_ref: release-1.6
     org: knative-sandbox
     path_alias: knative.dev/eventing-kogito
     repo: eventing-kogito
-  name: release_eventing-kogito_release-1.2_periodic
+  name: release_eventing-kogito_release-1.6_periodic
   spec:
     containers:
     - command:
@@ -72,7 +72,7 @@ periodics:
       - --github-token
       - /etc/hub-token/token
       - --branch
-      - release-1.2
+      - release-1.6
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
@@ -111,10 +111,10 @@ presubmits:
   knative-sandbox/eventing-kogito:
   - always_run: true
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: build-tests_eventing-kogito_release-1.2
+    name: build-tests_eventing-kogito_release-1.6
     path_alias: knative.dev/eventing-kogito
     spec:
       containers:
@@ -131,10 +131,10 @@ presubmits:
         type: testing
   - always_run: true
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: unit-tests_eventing-kogito_release-1.2
+    name: unit-tests_eventing-kogito_release-1.6
     path_alias: knative.dev/eventing-kogito
     spec:
       containers:
@@ -151,10 +151,10 @@ presubmits:
         type: testing
   - always_run: true
     branches:
-    - ^release-1.2$
+    - ^release-1.6$
     cluster: prow-build
     decorate: true
-    name: integration-tests_eventing-kogito_release-1.2
+    name: integration-tests_eventing-kogito_release-1.6
     path_alias: knative.dev/eventing-kogito
     spec:
       containers:
