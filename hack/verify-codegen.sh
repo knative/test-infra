@@ -24,7 +24,6 @@ readonly TMP_DIFFROOT="$(mktemp -d)"
 DIRS_TOBE_INSPECTED=(
   "go.sum"
   "config"
-  "third_party"
 )
 
 cleanup() {
