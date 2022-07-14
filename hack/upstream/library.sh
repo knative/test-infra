@@ -639,9 +639,6 @@ function go_update_deps() {
   set -o pipefail
   go mod tidy 2>&1 | grep -v "ignoring symlink" || true
   eval "$orig_pipefail_opt"
-
-  group "Updating licenses"
-  update_licenses third_party/VENDOR-LICENSE "./..."
 }
 
 # Return the go module name of the current module.
