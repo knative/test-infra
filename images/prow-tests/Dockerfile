@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM debian:bullseye-20220509-slim AS base
+FROM debian:bullseye-20220711-slim AS base
 
 # Pinned versions of stuff we pull in
-ARG CLOUD_SDK_VERSION=387.0.0
-ARG KUBECTL_VERSION=v1.21.4
-ARG DOCKER_VERSION=5:20.10.9~3-0~debian-bullseye
+ARG CLOUD_SDK_VERSION=393.0.0
+ARG KUBECTL_VERSION=v1.23.8
+ARG DOCKER_VERSION=5:20.10.17~3-0~debian-bullseye
 ARG MAVEN_VERSION=3.8.4
 ARG JAVA_VERSION=16
 ARG PROTOC_VERSION=3.17.0
@@ -69,7 +69,7 @@ RUN rm google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz
 RUN gcloud config set core/disable_usage_reporting true && \
     gcloud config set component_manager/disable_update_check true && \
     gcloud config set metrics/environment github_docker_image && \
-    gcloud components install alpha beta && \
+    gcloud components install alpha beta gke-gcloud-auth-plugin && \
     gcloud --version
 
 #
