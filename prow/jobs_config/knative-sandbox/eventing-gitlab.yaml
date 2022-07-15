@@ -1,7 +1,7 @@
 org: knative-sandbox
 repo: eventing-gitlab
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20220712-636775ef
+image: gcr.io/knative-tests/test-infra/prow-tests:v20220714-5fb3ba3d
 imagePullPolicy: Always
 
 jobs:

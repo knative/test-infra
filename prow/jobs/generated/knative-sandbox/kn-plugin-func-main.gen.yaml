@@ -30,7 +30,7 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220712-636775ef
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220714-5fb3ba3d
       name: ""
       resources: {}
       securityContext:
@@ -97,7 +97,7 @@ periodics:
         value: knative-sandbox
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220712-636775ef
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220714-5fb3ba3d
       name: ""
       resources: {}
       securityContext:
