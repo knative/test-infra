@@ -6,7 +6,7 @@
 # #############################################################################
 branches:
 - release-1.6
-image: gcr.io/knative-tests/test-infra/prow-tests:v20220712-636775ef
+image: gcr.io/knative-tests/test-infra/prow-tests:v20220718-ea7fb341
 jobs:
 - command:
   - runner.sh
@@ -121,14 +121,14 @@ jobs:
     ./test/e2e-tests.sh --run-tests
   command:
   - runner.sh
-  cron: 0 7 * * *
+  cron: 0 17 * * *
   env:
   - name: SYSTEM_NAMESPACE
     value: knative-eventing
   - name: SCALE_CHAOSDUCK_TO_ZERO
     value: "1"
   - name: CI_JOB
-    value: eventing-main
+    value: eventing-release-1.6
   name: ppc64le-e2e-tests
   requirements:
   - ppc64le

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Add a fake hook image here so that autobump.sh can bump only job configs
-# image: gcr.io/k8s-prow/hook:v20220707-6c9b2eb5c9
+# image: gcr.io/k8s-prow/hook:v20220717-914c8283a1
 # See
 # https://github.com/kubernetes/test-infra/blob/5815354584709c3f436e3d682110c673d224d7b1/prow/cmd/autobump/autobump.sh#L164
 
@@ -25,7 +25,7 @@ presubmits:
     cluster: prow-build
     spec:
       containers:
-      - image: gcr.io/k8s-prow/checkconfig:v20220707-6c9b2eb5c9
+      - image: gcr.io/k8s-prow/checkconfig:v20220717-914c8283a1
         command:
         - checkconfig
         args:
@@ -54,7 +54,7 @@ presubmits:
       base_ref: master
     spec:
       containers:
-      - image: gcr.io/k8s-prow/configurator:v20220707-6c9b2eb5c9
+      - image: gcr.io/k8s-prow/configurator:v20220717-914c8283a1
         command:
         - configurator
         args:
@@ -78,7 +78,7 @@ presubmits:
     - "main"
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:v20220712-636775ef
+      - image: gcr.io/knative-tests/test-infra/prow-tests:v20220718-ea7fb341
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -119,7 +119,7 @@ periodics:
     testgrid-tab-name: ci-knative-heartbeat
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:v20220712-636775ef
+    - image: gcr.io/knative-tests/test-infra/prow-tests:v20220718-ea7fb341
       imagePullPolicy: Always
       command:
       - "runner.sh"
@@ -153,7 +153,7 @@ periodics:
       report_template: '"The cleanup periodic job fails, check the log: <{{.Status.URL}}|View logs>"'
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:v20220712-636775ef
+    - image: gcr.io/knative-tests/test-infra/prow-tests:v20220718-ea7fb341
       imagePullPolicy: Always
       command:
       - "runner.sh"
@@ -287,7 +287,7 @@ periodics:
       report_template: '"The prow-jobs-syncer periodic job fails, check the log: <{{.Status.URL}}|View logs>"'
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:v20220712-636775ef
+    - image: gcr.io/knative-tests/test-infra/prow-tests:v20220718-ea7fb341
       imagePullPolicy: Always
       command:
       - "runner.sh"
@@ -359,7 +359,7 @@ postsubmits:
         report_template: '"The test-infra-tools-image-push postsubmit job fails, check the log: <{{.Status.URL}}|View logs>"'
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:v20220712-636775ef
+      - image: gcr.io/knative-tests/test-infra/prow-tests:v20220718-ea7fb341
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -410,7 +410,7 @@ postsubmits:
         report_template: '"The prow-tests-image-push postsubmit job fails, check the log: <{{.Status.URL}}|View logs>"'
     spec:
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:v20220712-636775ef
+      - image: gcr.io/knative-tests/test-infra/prow-tests:v20220718-ea7fb341
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -454,7 +454,7 @@ postsubmits:
         report_template: '"The update-testgrid-proto postsubmit job fails, check the log: <{{.Status.URL}}|View logs>"'
     spec:
       containers:
-      - image: gcr.io/k8s-prow/configurator:v20220707-6c9b2eb5c9
+      - image: gcr.io/k8s-prow/configurator:v20220717-914c8283a1
         command:
         - configurator
         args:

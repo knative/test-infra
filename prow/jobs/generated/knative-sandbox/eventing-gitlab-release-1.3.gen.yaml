@@ -31,7 +31,7 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220712-636775ef
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220718-ea7fb341
       name: ""
       resources:
         limits:
@@ -102,7 +102,7 @@ periodics:
         value: us-central1
       - name: ORG_NAME
         value: knative-sandbox
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220712-636775ef
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220718-ea7fb341
       name: ""
       resources:
         limits:
