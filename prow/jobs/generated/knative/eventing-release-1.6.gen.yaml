@@ -219,7 +219,7 @@ periodics:
     testgrid-dashboards: knative-release-1.6
     testgrid-tab-name: eventing-ppc64le-e2e-tests
   cluster: prow-build
-  cron: 0 7 * * *
+  cron: 0 17 * * *
   decorate: true
   extra_refs:
   - base_ref: release-1.6
@@ -245,7 +245,7 @@ periodics:
       - name: SCALE_CHAOSDUCK_TO_ZERO
         value: "1"
       - name: CI_JOB
-        value: eventing-main
+        value: eventing-release-1.6
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
