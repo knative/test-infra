@@ -100,7 +100,7 @@ jobs:
     ./test/e2e-rekt-tests.sh --run-tests
   command:
   - runner.sh
-  cron: 0 9 * * *
+  cron: 30 21 * * *
   env:
   - name: SYSTEM_NAMESPACE
     value: knative-eventing
