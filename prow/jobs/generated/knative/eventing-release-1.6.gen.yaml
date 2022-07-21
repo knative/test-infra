@@ -138,7 +138,7 @@ periodics:
     testgrid-dashboards: knative-release-1.6
     testgrid-tab-name: eventing-s390x-e2e-reconciler-tests
   cluster: prow-build
-  cron: 0 9 * * *
+  cron: 30 21 * * *
   decorate: true
   extra_refs:
   - base_ref: release-1.6
