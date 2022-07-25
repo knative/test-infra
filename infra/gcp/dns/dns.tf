@@ -63,6 +63,14 @@ module "knative_dev" {
       ]
     },
     {
+      name = "gcsweb"
+      type = "A"
+      ttl  = 300
+      records = [
+        "35.201.93.215",
+      ]
+    },
+    {
       name = "elections"
       type = "CNAME"
       ttl  = 300

@@ -19,3 +19,4 @@ metadata:
 spec:
   domains:
   - prow.knative.dev
+  - gcsweb.knative.dev
