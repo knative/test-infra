@@ -51,7 +51,7 @@ periodics:
     testgrid-dashboards: knative-release-1.5
     testgrid-tab-name: client-s390x-e2e-tests
   cluster: prow-build
-  cron: 20 19 * * *
+  cron: 20 13 * * *
   decorate: true
   extra_refs:
   - base_ref: release-1.5

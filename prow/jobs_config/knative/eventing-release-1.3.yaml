@@ -81,7 +81,7 @@ jobs:
   - name: SCALE_CHAOSDUCK_TO_ZERO
     value: "1"
   name: s390x-e2e-reconciler-tests
-  cron: 40 1 * * *
+  cron: 20 9 * * *
   requirements:
   - s390x
   types:
@@ -106,7 +106,7 @@ jobs:
   - name: SCALE_CHAOSDUCK_TO_ZERO
     value: "1"
   name: s390x-e2e-tests
-  cron: 40 23 * * *
+  cron: 20 8 * * *
   requirements:
   - s390x
   types:

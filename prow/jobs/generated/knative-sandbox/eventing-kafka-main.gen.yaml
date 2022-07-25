@@ -210,7 +210,7 @@ periodics:
     testgrid-dashboards: eventing-kafka
     testgrid-tab-name: s390x-e2e-tests
   cluster: prow-build
-  cron: 0 14 * * *
+  cron: 20 6 * * *
   decorate: true
   extra_refs:
   - base_ref: main

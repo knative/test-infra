@@ -57,7 +57,7 @@ periodics:
     testgrid-dashboards: eventing
     testgrid-tab-name: s390x-e2e-tests
   cluster: prow-build
-  cron: 0 7 * * *
+  cron: 20 4 * * *
   decorate: true
   extra_refs:
   - base_ref: main
@@ -138,7 +138,7 @@ periodics:
     testgrid-dashboards: eventing
     testgrid-tab-name: s390x-e2e-reconciler-tests
   cluster: prow-build
-  cron: 0 9 * * *
+  cron: 20 5 * * *
   decorate: true
   extra_refs:
   - base_ref: main
