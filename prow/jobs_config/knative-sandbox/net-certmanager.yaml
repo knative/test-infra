@@ -1,7 +1,7 @@
 org: knative-sandbox
 repo: net-certmanager
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20220718-ea7fb341
+image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-95d896f4
 imagePullPolicy: Always
 
 jobs:
