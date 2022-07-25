@@ -194,7 +194,7 @@ jobs:
   - name: TEST_OPTIONS
     value: --enable-alpha --enable-beta --resolvabledomain=false
   name: s390x-kourier-tests
-  cron: 40 19 * * *
+  cron: 20 6 * * *
   requirements:
   - s390x
   types:
@@ -220,7 +220,7 @@ jobs:
   - name: TEST_OPTIONS
     value: --enable-alpha --enable-beta --resolvabledomain=false
   name: s390x-contour-tests
-  cron: 40 21 * * *
+  cron: 20 7 * * *
   requirements:
   - s390x
   types:

@@ -674,7 +674,7 @@ periodics:
     testgrid-dashboards: serving
     testgrid-tab-name: s390x-kourier-tests
   cluster: prow-build
-  cron: 0 3 * * *
+  cron: 20 2 * * *
   decorate: true
   extra_refs:
   - base_ref: main
@@ -774,7 +774,7 @@ periodics:
     testgrid-dashboards: serving
     testgrid-tab-name: s390x-contour-tests
   cluster: prow-build
-  cron: 0 5 * * *
+  cron: 20 3 * * *
   decorate: true
   extra_refs:
   - base_ref: main
