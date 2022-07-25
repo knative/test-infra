@@ -402,7 +402,6 @@ subjects:
   name: "tide"
   namespace: default
 ---
-
 kind: ServiceAccount
 apiVersion: v1
 metadata:
@@ -498,3 +497,11 @@ roleRef:
 subjects:
 - kind: User
   name: prow-control-plane@knative-tests.iam.gserviceaccount.com
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  annotations:
+    iam.gke.io/gcp-service-account: prow-pod-utils@knative-tests.iam.gserviceaccount.com
+  name: default
+  namespace: default
