@@ -78,7 +78,7 @@ jobs:
     ./test/e2e-tests.sh --run-tests
   command:
   - runner.sh
-  cron: 30 1 * * *
+  cron: 20 16 * * *
   env:
   - name: INGRESS_CLASS
     value: contour.ingress.networking.knative.dev
@@ -97,7 +97,7 @@ jobs:
     ./test/e2e-tests.sh --run-tests
   command:
   - runner.sh
-  cron: 20 16 * * *
+  cron: 0 14 * * *
   env:
   - name: CI_JOB
     value: operator-release-1.6

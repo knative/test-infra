@@ -51,7 +51,7 @@ periodics:
     testgrid-dashboards: knative-release-1.6
     testgrid-tab-name: operator-s390x-e2e-tests
   cluster: prow-build
-  cron: 30 1 * * *
+  cron: 20 16 * * *
   decorate: true
   extra_refs:
   - base_ref: release-1.6
@@ -126,7 +126,7 @@ periodics:
     testgrid-dashboards: knative-release-1.6
     testgrid-tab-name: operator-ppc64le-e2e-tests
   cluster: prow-build
-  cron: 20 16 * * *
+  cron: 0 14 * * *
   decorate: true
   extra_refs:
   - base_ref: release-1.6
