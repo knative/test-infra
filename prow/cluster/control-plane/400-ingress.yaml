@@ -24,20 +24,30 @@ metadata:
     networking.gke.io/managed-certificates: prow-knative-dev
 spec:
   rules:
-  - host: prow.knative.dev
-    http:
-      paths:
-      - path: /*
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: deck
-            port:
-              number: 80
-      - path: /ghapp-hook
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: hook
-            port:
-              number: 8888
+    - host: prow.knative.dev
+      http:
+        paths:
+          - path: /*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: deck
+                port:
+                  number: 80
+          - path: /ghapp-hook
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: hook
+                port:
+                  number: 8888
+    - host: gcsweb.knative.dev
+      http:
+        paths:
+          - path: /*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: gcsweb
+                port:
+                  number: 80
