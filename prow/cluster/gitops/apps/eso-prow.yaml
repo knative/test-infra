@@ -9,7 +9,7 @@ spec:
     namespace: default
   source:
     repoURL: 'https://charts.external-secrets.io'
-    targetRevision: v0.5.7
+    targetRevision: v0.5.8
     helm:
       releaseName: external-secrets
       parameters:
@@ -22,8 +22,8 @@ spec:
     chart: external-secrets
   project: default
   syncPolicy:
-    # automated:
-    #   prune: true
-    #   selfHeal: true
+    automated:
+      prune: true
+      selfHeal: true
     syncOptions:
       - CreateNamespace=true
