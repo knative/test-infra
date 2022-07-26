@@ -69,3 +69,20 @@ resource "google_service_account" "prow_job" {
   display_name = "Prow Job Knative Test Runner"
   project      = "knative-tests"
 }
+
+// GSuite Groups Manager
+resource "google_service_account_iam_binding" "gsuite" {
+  service_account_id = google_service_account.gsuite.name
+  role               = "roles/iam.workloadIdentityUser"
+
+  members = [
+    "serviceAccount:knative-tests.svc.id.goog[test-pods/gsuite-groups-manager]",
+  ]
+}
+
+resource "google_service_account" "gsuite" {
+  account_id   = "gsuite-groups-manager"
+  display_name = "GSuite Groups Manager"
+  project      = "knative-tests"
+  description  = "Service account for managing knative.team gsuite groups."
+}

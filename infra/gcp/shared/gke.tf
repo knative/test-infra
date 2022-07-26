@@ -1,25 +1,25 @@
 // WARNING, MAKE SURE YOU DON"T DESTROY THIS CLUSTER ACCIDENTALLY
 
 module "shared" {
-  source                               = "terraform-google-modules/kubernetes-engine/google//modules/beta-public-cluster"
-  version                              = "~> 21"
-  project_id                           = module.project.project_id
-  name                                 = "shared"
-  region                               = "us-central1"
-  release_channel                      = "RAPID"
-  network                              = module.vpc.network_name
-  subnetwork                           = module.vpc.subnets["us-central1/gke-subnet-01"].name
-  ip_range_pods                        = "gke-pods-01"
-  ip_range_services                    = "gke-services-01"
-  http_load_balancing                  = true
-  network_policy                       = false
-  horizontal_pod_autoscaling           = true
-  filestore_csi_driver                 = false
-  create_service_account               = false
-  remove_default_node_pool             = true
-  gce_pd_csi_driver                    = true
+  source                     = "terraform-google-modules/kubernetes-engine/google//modules/beta-public-cluster"
+  version                    = "~> 21"
+  project_id                 = module.project.project_id
+  name                       = "shared"
+  region                     = "us-central1"
+  release_channel            = "RAPID"
+  network                    = module.vpc.network_name
+  subnetwork                 = module.vpc.subnets["us-central1/gke-subnet-01"].name
+  ip_range_pods              = "gke-pods-01"
+  ip_range_services          = "gke-services-01"
+  http_load_balancing        = true
+  network_policy             = false
+  horizontal_pod_autoscaling = true
+  filestore_csi_driver       = false
+  create_service_account     = false
+  remove_default_node_pool   = true
+  gce_pd_csi_driver          = true
   # monitoring_enable_managed_prometheus = true
-  authenticator_security_group         = "gke-security-groups@knative.dev"
+  authenticator_security_group = "gke-security-groups@knative.dev"
   cluster_autoscaling = {
     enabled             = false
     autoscaling_profile = "OPTIMIZE_UTILIZATION"

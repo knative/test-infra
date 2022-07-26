@@ -32,7 +32,7 @@ plank:
         gcs_configuration:
           bucket: "knative-prow"
           path_strategy: "explicit"
-        gcs_credentials_secret: "test-account"
+        gcs_credentials_secret: ""
         resources:
           sidecar:
             requests:
@@ -72,7 +72,7 @@ deck:
   google_analytics: G-Z5SCKHSFYJ
   spyglass:
     size_limit: 500000000 # 500MB
-    gcs_browser_prefix: https://console.cloud.google.com/storage/browser/
+    gcs_browser_prefix: https://gcsweb.knative.dev/gcs/
     testgrid_config: gs://knative-testgrid/config
     testgrid_root: https://testgrid.knative.dev/
     announcement: "Please reach out on the #productivity slack channel to report issues with Knative Test Infrastructure."
