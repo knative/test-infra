@@ -1,7 +1,7 @@
 org: knative-sandbox
 repo: eventing-autoscaler-keda
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-95d896f4
+image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
 imagePullPolicy: Always
 
 jobs:

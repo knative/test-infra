@@ -7,7 +7,7 @@
 branches:
 - release-1.6
 cluster: prow-build
-image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-95d896f4
+image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
 jobs:
 - command:
   - runner.sh
