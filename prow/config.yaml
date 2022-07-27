@@ -217,6 +217,7 @@ tide:
   squash_label: tide/merge-method-squash
   rebase_label: tide/merge-method-rebase
   merge_label: tide/merge-method-merge
+  # https://github.com/kubernetes/test-infra/blob/master/prow/cmd/tide/config.md#context-policy-options
   context_options:
     # Treat unknown contexts as optional
     skip-unknown-contexts: false
