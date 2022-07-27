@@ -19,7 +19,6 @@ presubmits:
   knative/community:
   # Run on the prow-trusted build cluster as it needs access to the github oauth token.
   - name: pull-knative-peribolos
-    optional: true
     agent: kubernetes
     decorate: true
     path_alias: knative.dev/community
@@ -43,9 +42,6 @@ presubmits:
         - "--min-admins=5"
         - "--fix-org=true"
         - "--fix-org-members=true"
-        - "--fix-teams=true"
-        - "--fix-team-members=true"
-        - "--fix-team-repos=true"
         - "--fix-repos=true"
         - "--github-hourly-tokens=1200"
         # Set --confirm=false to only validate the configuration file.
@@ -61,7 +57,6 @@ presubmits:
 
   # Run on the prow-trusted build cluster as it needs access to the github oauth token.
   - name: pull-knative-sandbox-peribolos
-    optional: true
     agent: kubernetes
     decorate: true
     path_alias: knative.dev/community
@@ -85,9 +80,6 @@ presubmits:
         - "--min-admins=5"
         - "--fix-org=true"
         - "--fix-org-members=true"
-        - "--fix-teams=true"
-        - "--fix-team-members=true"
-        - "--fix-team-repos=true"
         - "--fix-repos=true"
         - "--github-hourly-tokens=1200"
         # Set --confirm=false to only validate the configuration file.
