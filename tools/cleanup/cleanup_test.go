@@ -122,19 +122,19 @@ func TestBaseResourceDeleter(t *testing.T) {
 	}{
 		{ // No projects.
 			[]string{},
-			0,
+			1,
 		},
 		{ // With less than 10 projects.
 			[]string{"p1", "p2"},
-			1,
+			0,
 		},
 		{ // With more than 10 projects.
 			[]string{"p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9", "pA", "pB", "pC", "pD"},
-			1,
+			0,
 		},
 		{ // With projects, but errors.
 			[]string{"p1e", "p2e", "p3e"},
-			1,
+			0,
 		},
 	}
 

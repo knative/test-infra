@@ -1,0 +1,11 @@
+name: failme
+
+on: [push, pull_request]
+
+jobs:
+  fail:
+    runs-on: ubuntu-latest
+
+    - name: just fail
+      run: |
+        exit(1)
