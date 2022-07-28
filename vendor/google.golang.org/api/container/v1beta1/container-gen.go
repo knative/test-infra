@@ -87,7 +87,7 @@ const (
 
 // NewService creates a new Service.
 func NewService(ctx context.Context, opts ...option.ClientOption) (*Service, error) {
-	scopesOption := option.WithScopes(
+	scopesOption := internaloption.WithDefaultScopes(
 		"https://www.googleapis.com/auth/cloud-platform",
 	)
 	// NOTE: prepend, so we don't override user-specified scopes.
@@ -565,13 +565,17 @@ type AutoprovisioningNodePoolDefaults struct {
 	// Management: NodeManagement configuration for this NodePool.
 	Management *NodeManagement `json:"management,omitempty"`
 
-	// MinCpuPlatform: Minimum CPU platform to be used by this instance. The
-	// instance may be scheduled on the specified or newer CPU platform.
-	// Applicable values are the friendly names of CPU platforms, such as
-	// `minCpuPlatform: "Intel Haswell" or `minCpuPlatform: "Intel Sandy
-	// Bridge". For more information, read how to specify min CPU platform
+	// MinCpuPlatform: Deprecated. Minimum CPU platform to be used for NAP
+	// created node pools. The instance may be scheduled on the specified or
+	// newer CPU platform. Applicable values are the friendly names of CPU
+	// platforms, such as minCpuPlatform: Intel Haswell or minCpuPlatform:
+	// Intel Sandy Bridge. For more information, read how to specify min CPU
+	// platform
 	// (https://cloud.google.com/compute/docs/instances/specify-min-cpu-platform)
-	// To unset the min cpu platform field pass "automatic" as field value.
+	// This field is deprecated, min_cpu_platform should be specified using
+	// cloud.google.com/requested-min-cpu-platform label selector on the
+	// pod. To unset the min cpu platform field pass "automatic" as field
+	// value.
 	MinCpuPlatform string `json:"minCpuPlatform,omitempty"`
 
 	// OauthScopes: The set of Google API scopes to be made available on all
@@ -686,7 +690,7 @@ func (s *BigQueryDestination) MarshalJSON() ([]byte, error) {
 // BinaryAuthorization: Configuration for Binary Authorization.
 type BinaryAuthorization struct {
 	// Enabled: Enable Binary Authorization for this cluster. If enabled,
-	// all container images will be validated by Google Binauthz.
+	// all container images will be validated by Binary Authorization.
 	Enabled bool `json:"enabled,omitempty"`
 
 	// ForceSendFields is a list of field names (e.g. "Enabled") to
@@ -1109,6 +1113,11 @@ type Cluster struct {
 	// is in route-based network mode.
 	NodeIpv4CidrSize int64 `json:"nodeIpv4CidrSize,omitempty"`
 
+	// NodePoolAutoConfig: Node pool configs that apply to all
+	// auto-provisioned node pools in autopilot clusters and node
+	// auto-provisioning enabled clusters.
+	NodePoolAutoConfig *NodePoolAutoConfig `json:"nodePoolAutoConfig,omitempty"`
+
 	// NodePoolDefaults: Default NodePool settings for the entire cluster.
 	// These settings are overridden if specified on the specific NodePool
 	// object.
@@ -1204,6 +1213,10 @@ type Cluster struct {
 	// VerticalPodAutoscaling: Cluster-level Vertical Pod Autoscaling
 	// configuration.
 	VerticalPodAutoscaling *VerticalPodAutoscaling `json:"verticalPodAutoscaling,omitempty"`
+
+	// WorkloadAltsConfig: Configuration for direct-path (via ALTS) with
+	// workload identity.
+	WorkloadAltsConfig *WorkloadALTSConfig `json:"workloadAltsConfig,omitempty"`
 
 	// WorkloadCertificates: Configuration for issuance of mTLS keys and
 	// certificates to Kubernetes pods.
@@ -1458,6 +1471,11 @@ type ClusterUpdate struct {
 	// versions.
 	DesiredMonitoringService string `json:"desiredMonitoringService,omitempty"`
 
+	// DesiredNodePoolAutoConfigNetworkTags: The desired network tags that
+	// apply to all auto-provisioned node pools in autopilot clusters and
+	// node auto-provisioning enabled clusters.
+	DesiredNodePoolAutoConfigNetworkTags *NetworkTags `json:"desiredNodePoolAutoConfigNetworkTags,omitempty"`
+
 	// DesiredNodePoolAutoscaling: Autoscaler configuration for the node
 	// pool specified in desired_node_pool_id. If there is only one pool in
 	// the cluster and desired_node_pool_id is not provided then the change
@@ -1526,6 +1544,10 @@ type ClusterUpdate struct {
 	// DesiredVerticalPodAutoscaling: Cluster-level Vertical Pod Autoscaling
 	// configuration.
 	DesiredVerticalPodAutoscaling *VerticalPodAutoscaling `json:"desiredVerticalPodAutoscaling,omitempty"`
+
+	// DesiredWorkloadAltsConfig: Configuration for direct-path (via ALTS)
+	// with workload identity.
+	DesiredWorkloadAltsConfig *WorkloadALTSConfig `json:"desiredWorkloadAltsConfig,omitempty"`
 
 	// DesiredWorkloadCertificates: Configuration for issuance of mTLS keys
 	// and certificates to Kubernetes pods.
@@ -1921,11 +1943,12 @@ func (s *DatabaseEncryption) MarshalJSON() ([]byte, error) {
 // birthday. The time of day and time zone are either specified
 // elsewhere or are insignificant. The date is relative to the Gregorian
 // Calendar. This can represent one of the following: * A full date,
-// with non-zero year, month, and day values * A month and day value,
-// with a zero year, such as an anniversary * A year on its own, with
-// zero month and day values * A year and month value, with a zero day,
-// such as a credit card expiration date Related types are
-// google.type.TimeOfDay and `google.protobuf.Timestamp`.
+// with non-zero year, month, and day values. * A month and day, with a
+// zero year (for example, an anniversary). * A year on its own, with a
+// zero month and a zero day. * A year and month, with a zero day (for
+// example, a credit card expiration date). Related types: *
+// google.type.TimeOfDay * google.type.DateTime *
+// google.protobuf.Timestamp
 type Date struct {
 	// Day: Day of a month. Must be from 1 to 31 and valid for the year and
 	// month, or 0 to specify a year by itself or a year and month where the
@@ -2024,8 +2047,7 @@ func (s *DnsCacheConfig) MarshalJSON() ([]byte, error) {
 // duplicated empty messages in your APIs. A typical example is to use
 // it as the request or the response type of an API method. For
 // instance: service Foo { rpc Bar(google.protobuf.Empty) returns
-// (google.protobuf.Empty); } The JSON representation for `Empty` is
-// empty JSON object `{}`.
+// (google.protobuf.Empty); }
 type Empty struct {
 	// ServerResponse contains the HTTP response code and headers from the
 	// server.
@@ -2817,10 +2839,10 @@ func (s *LegacyAbac) MarshalJSON() ([]byte, error) {
 type LinuxNodeConfig struct {
 	// Sysctls: The Linux kernel parameters to be applied to the nodes and
 	// all pods running on the nodes. The following parameters are
-	// supported. net.core.netdev_max_backlog net.core.rmem_max
-	// net.core.wmem_default net.core.wmem_max net.core.optmem_max
-	// net.core.somaxconn net.ipv4.tcp_rmem net.ipv4.tcp_wmem
-	// net.ipv4.tcp_tw_reuse
+	// supported. net.core.busy_poll net.core.busy_read
+	// net.core.netdev_max_backlog net.core.rmem_max net.core.wmem_default
+	// net.core.wmem_max net.core.optmem_max net.core.somaxconn
+	// net.ipv4.tcp_rmem net.ipv4.tcp_wmem net.ipv4.tcp_tw_reuse
 	Sysctls map[string]string `json:"sysctls,omitempty"`
 
 	// ForceSendFields is a list of field names (e.g. "Sysctls") to
@@ -3522,7 +3544,8 @@ type MonitoringComponentConfig struct {
 	// Possible values:
 	//   "COMPONENT_UNSPECIFIED" - Default value. This shouldn't be used.
 	//   "SYSTEM_COMPONENTS" - system components
-	//   "WORKLOADS" - workloads
+	//   "WORKLOADS" - Deprecated: Use Google Cloud Managed Service for
+	// Prometheus.
 	EnableComponents []string `json:"enableComponents,omitempty"`
 
 	// ForceSendFields is a list of field names (e.g. "EnableComponents") to
@@ -3769,7 +3792,9 @@ func (s *NetworkTags) MarshalJSON() ([]byte, error) {
 	return gensupport.MarshalJSON(raw, s.ForceSendFields, s.NullFields)
 }
 
-// NodeConfig: Parameters that describe the nodes in a cluster.
+// NodeConfig: Parameters that describe the nodes in a cluster. *Note:*
+// GKE Autopilot clusters do not recognize parameters in `NodeConfig`.
+// Use AutoprovisioningNodePoolDefaults instead.
 type NodeConfig struct {
 	// Accelerators: A list of hardware accelerators to be attached to each
 	// node. See https://cloud.google.com/compute/docs/gpus for more
@@ -3787,6 +3812,10 @@ type NodeConfig struct {
 	// with Cloud KMS Keys please see:
 	// https://cloud.google.com/compute/docs/disks/customer-managed-encryption
 	BootDiskKmsKey string `json:"bootDiskKmsKey,omitempty"`
+
+	// ConfidentialNodes: Confidential nodes config. All the nodes in the
+	// node pool will be Confidential VM once enabled.
+	ConfidentialNodes *ConfidentialNodes `json:"confidentialNodes,omitempty"`
 
 	// DiskSizeGb: Size of the disk attached to each node, specified in GB.
 	// The smallest allowed disk size is 10GB. If unspecified, the default
@@ -4008,6 +4037,12 @@ type NodeKubeletConfig struct {
 	// affinity and exclusivity on the node. The default value is 'none' if
 	// unspecified.
 	CpuManagerPolicy string `json:"cpuManagerPolicy,omitempty"`
+
+	// PodPidsLimit: Set the Pod PID limits. See
+	// https://kubernetes.io/docs/concepts/policy/pid-limiting/#pod-pid-limits
+	// Controls the maximum number of processes allowed to run in a pod. The
+	// value must be greater than or equal to 1024 and less than 4194304.
+	PodPidsLimit int64 `json:"podPidsLimit,omitempty,string"`
 
 	// ForceSendFields is a list of field names (e.g. "CpuCfsQuota") to
 	// unconditionally include in API requests. By default, fields with
@@ -4284,6 +4319,39 @@ type NodePool struct {
 
 func (s *NodePool) MarshalJSON() ([]byte, error) {
 	type NoMethod NodePool
+	raw := NoMethod(*s)
+	return gensupport.MarshalJSON(raw, s.ForceSendFields, s.NullFields)
+}
+
+// NodePoolAutoConfig: node pool configs that apply to all
+// auto-provisioned node pools in autopilot clusters and node
+// auto-provisioning enabled clusters
+type NodePoolAutoConfig struct {
+	// NetworkTags: The list of instance tags applied to all nodes. Tags are
+	// used to identify valid sources or targets for network firewalls and
+	// are specified by the client during cluster creation. Each tag within
+	// the list must comply with RFC1035.
+	NetworkTags *NetworkTags `json:"networkTags,omitempty"`
+
+	// ForceSendFields is a list of field names (e.g. "NetworkTags") to
+	// unconditionally include in API requests. By default, fields with
+	// empty or default values are omitted from API requests. However, any
+	// non-pointer, non-interface field appearing in ForceSendFields will be
+	// sent to the server regardless of whether the field is empty or not.
+	// This may be used to include empty fields in Patch requests.
+	ForceSendFields []string `json:"-"`
+
+	// NullFields is a list of field names (e.g. "NetworkTags") to include
+	// in API requests with the JSON null value. By default, fields with
+	// empty values are omitted from API requests. However, any field with
+	// an empty value appearing in NullFields will be sent to the server as
+	// null. It is an error if a field in this list has a non-empty value.
+	// This may be used to include null fields in Patch requests.
+	NullFields []string `json:"-"`
+}
+
+func (s *NodePoolAutoConfig) MarshalJSON() ([]byte, error) {
+	type NoMethod NodePoolAutoConfig
 	raw := NoMethod(*s)
 	return gensupport.MarshalJSON(raw, s.ForceSendFields, s.NullFields)
 }
@@ -6475,6 +6543,10 @@ type UpdateNodePoolRequest struct {
 	// This field has been deprecated and replaced by the name field.
 	ClusterId string `json:"clusterId,omitempty"`
 
+	// ConfidentialNodes: Confidential nodes config. All the nodes in the
+	// node pool will be Confidential VM once enabled.
+	ConfidentialNodes *ConfidentialNodes `json:"confidentialNodes,omitempty"`
+
 	// GcfsConfig: GCFS config.
 	GcfsConfig *GcfsConfig `json:"gcfsConfig,omitempty"`
 
@@ -6933,6 +7005,37 @@ type WindowsVersions struct {
 
 func (s *WindowsVersions) MarshalJSON() ([]byte, error) {
 	type NoMethod WindowsVersions
+	raw := NoMethod(*s)
+	return gensupport.MarshalJSON(raw, s.ForceSendFields, s.NullFields)
+}
+
+// WorkloadALTSConfig: Configuration for direct-path (via ALTS) with
+// workload identity.
+type WorkloadALTSConfig struct {
+	// EnableAlts: enable_alts controls whether the alts handshaker should
+	// be enabled or not for direct-path. Requires Workload Identity
+	// (workload_pool must be non-empty).
+	EnableAlts bool `json:"enableAlts,omitempty"`
+
+	// ForceSendFields is a list of field names (e.g. "EnableAlts") to
+	// unconditionally include in API requests. By default, fields with
+	// empty or default values are omitted from API requests. However, any
+	// non-pointer, non-interface field appearing in ForceSendFields will be
+	// sent to the server regardless of whether the field is empty or not.
+	// This may be used to include empty fields in Patch requests.
+	ForceSendFields []string `json:"-"`
+
+	// NullFields is a list of field names (e.g. "EnableAlts") to include in
+	// API requests with the JSON null value. By default, fields with empty
+	// values are omitted from API requests. However, any field with an
+	// empty value appearing in NullFields will be sent to the server as
+	// null. It is an error if a field in this list has a non-empty value.
+	// This may be used to include null fields in Patch requests.
+	NullFields []string `json:"-"`
+}
+
+func (s *WorkloadALTSConfig) MarshalJSON() ([]byte, error) {
+	type NoMethod WorkloadALTSConfig
 	raw := NoMethod(*s)
 	return gensupport.MarshalJSON(raw, s.ForceSendFields, s.NullFields)
 }

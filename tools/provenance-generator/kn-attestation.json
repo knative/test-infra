@@ -1,0 +1,56 @@
+{
+    "_type": "https://in-toto.io/Statement/v0.1",
+    "predicateType": "https://slsa.dev/provenance/v0.2",
+    "subject": [
+      {
+        "name": "gcr.io/knative-releases/knative.dev/serving/cmd/controller",
+        "digest": {
+          "sha256": "bac158dfb0c73d13ed42266ba287f1a86192c0ba581e23fbe012d30a1c34837c"
+        }
+      },
+      {
+        "name": "gcr.io/knative-releases/knative.dev/serving/cmd/queue",
+        "digest": {
+          "sha256": "83f6888ea9561495f67334d044ffa8ad067d251ad953358dda7ea5183390cc69"
+        }
+      }
+    ],
+    "predicate": {
+      "builder": {
+        "id": "https://prow.knative.dev"
+      },
+      "buildType": "https://cloudbuild.googleapis.com/CloudBuildYaml@v1",
+      "invocation": {
+        "configSource": {
+          "entryPoint": "https://github.com/knative/serving/blob/main/hack/release.sh"
+        },
+        "parameters": [
+          "runner.sh",
+          "./hack/release.sh",
+          "--auto-release",
+          "--release-gcs=knative-releases/async-component",
+          "--release-gcr=gcr.io/knative-releases",
+          "--github-token=/etc/hub-token/token"
+        ]
+      },
+      "metadata": {
+        "buildInvocationID": "1552230788685107200",
+        "buildStartedOn": "2022-07-28T10:21:41.996820966Z",
+        "buildFinishedOn": "2022-07-28T10:25:12.818292Z",
+        "completeness": {
+          "parameters": true,
+          "environment": false,
+          "materials": true
+        },
+        "reproducible": false
+      },
+      "materials": [
+        {
+          "uri": "git+https://github.com/knative/serving",
+          "digest": {
+            "sha1": "c82be271867f137d0923be34acd18b6aca452446"
+          }
+        }
+      ]
+    }
+  }

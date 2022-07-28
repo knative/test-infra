@@ -2484,7 +2484,7 @@
       }
     }
   },
-  "revision": "20220114",
+  "revision": "20220328",
   "rootUrl": "https://container.googleapis.com/",
   "schemas": {
     "AcceleratorConfig": {
@@ -2641,7 +2641,7 @@
           "description": "NodeManagement configuration for this NodePool."
         },
         "minCpuPlatform": {
-          "description": "Minimum CPU platform to be used by this instance. The instance may be scheduled on the specified or newer CPU platform. Applicable values are the friendly names of CPU platforms, such as `minCpuPlatform: \"Intel Haswell\"` or `minCpuPlatform: \"Intel Sandy Bridge\"`. For more information, read [how to specify min CPU platform](https://cloud.google.com/compute/docs/instances/specify-min-cpu-platform) To unset the min cpu platform field pass \"automatic\" as field value.",
+          "description": "Deprecated. Minimum CPU platform to be used for NAP created node pools. The instance may be scheduled on the specified or newer CPU platform. Applicable values are the friendly names of CPU platforms, such as minCpuPlatform: Intel Haswell or minCpuPlatform: Intel Sandy Bridge. For more information, read [how to specify min CPU platform](https://cloud.google.com/compute/docs/instances/specify-min-cpu-platform) This field is deprecated, min_cpu_platform should be specified using cloud.google.com/requested-min-cpu-platform label selector on the pod. To unset the min cpu platform field pass \"automatic\" as field value.",
           "type": "string"
         },
         "oauthScopes": {
@@ -2697,7 +2697,7 @@
       "id": "BinaryAuthorization",
       "properties": {
         "enabled": {
-          "description": "Enable Binary Authorization for this cluster. If enabled, all container images will be validated by Google Binauthz.",
+          "description": "Enable Binary Authorization for this cluster. If enabled, all container images will be validated by Binary Authorization.",
           "type": "boolean"
         }
       },
@@ -2978,6 +2978,10 @@
           "format": "int32",
           "type": "integer"
         },
+        "nodePoolAutoConfig": {
+          "$ref": "NodePoolAutoConfig",
+          "description": "Node pool configs that apply to all auto-provisioned node pools in autopilot clusters and node auto-provisioning enabled clusters."
+        },
         "nodePoolDefaults": {
           "$ref": "NodePoolDefaults",
           "description": "Default NodePool settings for the entire cluster. These settings are overridden if specified on the specific NodePool object."
@@ -3073,6 +3077,10 @@
         "verticalPodAutoscaling": {
           "$ref": "VerticalPodAutoscaling",
           "description": "Cluster-level Vertical Pod Autoscaling configuration."
+        },
+        "workloadAltsConfig": {
+          "$ref": "WorkloadALTSConfig",
+          "description": "Configuration for direct-path (via ALTS) with workload identity."
         },
         "workloadCertificates": {
           "$ref": "WorkloadCertificates",
@@ -3264,6 +3272,10 @@
           "description": "The monitoring service the cluster should use to write metrics. Currently available options: * \"monitoring.googleapis.com/kubernetes\" - The Cloud Monitoring service with a Kubernetes-native resource model * `monitoring.googleapis.com` - The legacy Cloud Monitoring service (no longer available as of GKE 1.15). * `none` - No metrics will be exported from the cluster. If left as an empty string,`monitoring.googleapis.com/kubernetes` will be used for GKE 1.14+ or `monitoring.googleapis.com` for earlier versions.",
           "type": "string"
         },
+        "desiredNodePoolAutoConfigNetworkTags": {
+          "$ref": "NetworkTags",
+          "description": "The desired network tags that apply to all auto-provisioned node pools in autopilot clusters and node auto-provisioning enabled clusters."
+        },
         "desiredNodePoolAutoscaling": {
           "$ref": "NodePoolAutoscaling",
           "description": "Autoscaler configuration for the node pool specified in desired_node_pool_id. If there is only one pool in the cluster and desired_node_pool_id is not provided then the change applies to that single node pool."
@@ -3327,6 +3339,10 @@
         "desiredVerticalPodAutoscaling": {
           "$ref": "VerticalPodAutoscaling",
           "description": "Cluster-level Vertical Pod Autoscaling configuration."
+        },
+        "desiredWorkloadAltsConfig": {
+          "$ref": "WorkloadALTSConfig",
+          "description": "Configuration for direct-path (via ALTS) with workload identity."
         },
         "desiredWorkloadCertificates": {
           "$ref": "WorkloadCertificates",
@@ -3525,7 +3541,7 @@
       "type": "object"
     },
     "Date": {
-      "description": "Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values * A month and day value, with a zero year, such as an anniversary * A year on its own, with zero month and day values * A year and month value, with a zero day, such as a credit card expiration date Related types are google.type.TimeOfDay and `google.protobuf.Timestamp`.",
+      "description": "Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp",
       "id": "Date",
       "properties": {
         "day": {
@@ -3569,7 +3585,7 @@
       "type": "object"
     },
     "Empty": {
-      "description": "A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); } The JSON representation for `Empty` is empty JSON object `{}`.",
+      "description": "A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); }",
       "id": "Empty",
       "properties": {},
       "type": "object"
@@ -3973,7 +3989,7 @@
           "additionalProperties": {
             "type": "string"
           },
-          "description": "The Linux kernel parameters to be applied to the nodes and all pods running on the nodes. The following parameters are supported. net.core.netdev_max_backlog net.core.rmem_max net.core.wmem_default net.core.wmem_max net.core.optmem_max net.core.somaxconn net.ipv4.tcp_rmem net.ipv4.tcp_wmem net.ipv4.tcp_tw_reuse",
+          "description": "The Linux kernel parameters to be applied to the nodes and all pods running on the nodes. The following parameters are supported. net.core.busy_poll net.core.busy_read net.core.netdev_max_backlog net.core.rmem_max net.core.wmem_default net.core.wmem_max net.core.optmem_max net.core.somaxconn net.ipv4.tcp_rmem net.ipv4.tcp_wmem net.ipv4.tcp_tw_reuse",
           "type": "object"
         }
       },
@@ -4321,7 +4337,7 @@
             "enumDescriptions": [
               "Default value. This shouldn't be used.",
               "system components",
-              "workloads"
+              "Deprecated: Use Google Cloud Managed Service for Prometheus."
             ],
             "type": "string"
           },
@@ -4459,7 +4475,7 @@
       "type": "object"
     },
     "NodeConfig": {
-      "description": "Parameters that describe the nodes in a cluster.",
+      "description": "Parameters that describe the nodes in a cluster. *Note:* GKE Autopilot clusters do not recognize parameters in `NodeConfig`. Use AutoprovisioningNodePoolDefaults instead.",
       "id": "NodeConfig",
       "properties": {
         "accelerators": {
@@ -4476,6 +4492,10 @@
         "bootDiskKmsKey": {
           "description": " The Customer Managed Encryption Key used to encrypt the boot disk attached to each node in the node pool. This should be of the form projects/[KEY_PROJECT_ID]/locations/[LOCATION]/keyRings/[RING_NAME]/cryptoKeys/[KEY_NAME]. For more information about protecting resources with Cloud KMS Keys please see: https://cloud.google.com/compute/docs/disks/customer-managed-encryption",
           "type": "string"
+        },
+        "confidentialNodes": {
+          "$ref": "ConfidentialNodes",
+          "description": "Confidential nodes config. All the nodes in the node pool will be Confidential VM once enabled."
         },
         "diskSizeGb": {
           "description": "Size of the disk attached to each node, specified in GB. The smallest allowed disk size is 10GB. If unspecified, the default disk size is 100GB.",
@@ -4618,6 +4638,11 @@
         },
         "cpuManagerPolicy": {
           "description": "Control the CPU management policy on the node. See https://kubernetes.io/docs/tasks/administer-cluster/cpu-management-policies/ The following values are allowed. * \"none\": the default, which represents the existing scheduling behavior. * \"static\": allows pods with certain resource characteristics to be granted increased CPU affinity and exclusivity on the node. The default value is 'none' if unspecified.",
+          "type": "string"
+        },
+        "podPidsLimit": {
+          "description": "Set the Pod PID limits. See https://kubernetes.io/docs/concepts/policy/pid-limiting/#pod-pid-limits Controls the maximum number of processes allowed to run in a pod. The value must be greater than or equal to 1024 and less than 4194304.",
+          "format": "int64",
           "type": "string"
         }
       },
@@ -4775,6 +4800,17 @@
         "version": {
           "description": "The version of the Kubernetes of this node.",
           "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "NodePoolAutoConfig": {
+      "description": "node pool configs that apply to all auto-provisioned node pools in autopilot clusters and node auto-provisioning enabled clusters",
+      "id": "NodePoolAutoConfig",
+      "properties": {
+        "networkTags": {
+          "$ref": "NetworkTags",
+          "description": "The list of instance tags applied to all nodes. Tags are used to identify valid sources or targets for network firewalls and are specified by the client during cluster creation. Each tag within the list must comply with RFC1035."
         }
       },
       "type": "object"
@@ -6076,6 +6112,10 @@
           "description": "Required. Deprecated. The name of the cluster to upgrade. This field has been deprecated and replaced by the name field.",
           "type": "string"
         },
+        "confidentialNodes": {
+          "$ref": "ConfidentialNodes",
+          "description": "Confidential nodes config. All the nodes in the node pool will be Confidential VM once enabled."
+        },
         "gcfsConfig": {
           "$ref": "GcfsConfig",
           "description": "GCFS config."
@@ -6355,6 +6395,17 @@
             "$ref": "WindowsVersion"
           },
           "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "WorkloadALTSConfig": {
+      "description": "Configuration for direct-path (via ALTS) with workload identity.",
+      "id": "WorkloadALTSConfig",
+      "properties": {
+        "enableAlts": {
+          "description": "enable_alts controls whether the alts handshaker should be enabled or not for direct-path. Requires Workload Identity (workload_pool must be non-empty).",
+          "type": "boolean"
         }
       },
       "type": "object"
