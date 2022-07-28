@@ -221,6 +221,11 @@ tide:
   context_options:
     # Treat unknown contexts as optional
     skip-unknown-contexts: false
+    orgs:
+      knative-sandbox:
+        repos:
+          eventing-kafka-broker:
+            skip-unknown-contexts: true
 #     orgs:
 #       org:
 #         required-contexts:
