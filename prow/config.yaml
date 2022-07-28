@@ -217,9 +217,25 @@ tide:
   squash_label: tide/merge-method-squash
   rebase_label: tide/merge-method-rebase
   merge_label: tide/merge-method-merge
+  # https://github.com/kubernetes/test-infra/blob/master/prow/cmd/tide/config.md#context-policy-options
   context_options:
     # Treat unknown contexts as optional
-    skip-unknown-contexts: true
+    skip-unknown-contexts: false
+#     orgs:
+#       org:
+#         required-contexts:
+#         - "check-required-for-all-repos"
+#         repos:
+#           repo:
+#             required-contexts:
+#              - "check-required-for-all-branches"
+#             branches:
+#               branch:
+#                 from-branch-protection: false
+#                 required-contexts:
+#                 - "required_test"
+#                 optional-contexts:
+#                 - "optional_test"
 
 # Configure GitHub branch protection rules according to the specified policy.
 branch-protection:
