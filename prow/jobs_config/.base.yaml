@@ -112,8 +112,6 @@ requirement_presets:
           secretKeyRef:
             name: s390x-cluster1
             key: ko-docker-repo
-      - name: DISABLE_MD_LINTING
-        value: "1"
       - name: KUBECONFIG
         value: /root/.kube/config
       - name: DOCKER_CONFIG
@@ -136,8 +134,6 @@ requirement_presets:
         value: "linux/ppc64le"
       - name: KO_DOCKER_REPO
         value: "registry.ppc64le"
-      - name: DISABLE_MD_LINTING
-        value: "1"
       - name: KUBECONFIG
         value: /root/.kube/config
     volumeMounts:

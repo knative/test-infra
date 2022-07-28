@@ -99,8 +99,6 @@ periodics:
           secretKeyRef:
             key: ko-docker-repo
             name: s390x-cluster1
-      - name: DISABLE_MD_LINTING
-        value: "1"
       - name: KUBECONFIG
         value: /root/.kube/config
       - name: DOCKER_CONFIG
@@ -180,8 +178,6 @@ periodics:
           secretKeyRef:
             key: ko-docker-repo
             name: s390x-cluster1
-      - name: DISABLE_MD_LINTING
-        value: "1"
       - name: KUBECONFIG
         value: /root/.kube/config
       - name: DOCKER_CONFIG
@@ -256,8 +252,6 @@ periodics:
         value: linux/ppc64le
       - name: KO_DOCKER_REPO
         value: registry.ppc64le
-      - name: DISABLE_MD_LINTING
-        value: "1"
       - name: KUBECONFIG
         value: /root/.kube/config
       image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
