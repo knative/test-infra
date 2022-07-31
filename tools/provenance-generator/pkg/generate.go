@@ -2,19 +2,25 @@ package pkg
 
 import (
 	"os"
-	"strings"
-	"time"
 
 	slsa "github.com/in-toto/in-toto-golang/in_toto/slsa_provenance/v0.2"
+	prowapi "k8s.io/test-infra/prow/apis/prowjobs/v1"
+	"k8s.io/test-infra/prow/pod-utils/clone"
 	"sigs.k8s.io/bom/pkg/provenance"
 )
 
-func GenerateAttestation(config Config) {
-	// Build the arguments RawMessage:
+type BuildConfig struct {
+	command []string
+	prowJob *prowapi.ProwJob
+}
 
-	cloneRecord := config.CloneRecords[0] // Safe as earlier step deletes all other entries
+func GenerateAttestation(config Config) *provenance.Statement {
+	var cloneRecord clone.Record
+	if len(config.CloneRecords) == 1 {
+		cloneRecord = config.CloneRecords[0]
+	}
 
-	// Get the k/k commit we are building
+	// Get the commit we are building
 	commitSHA := cloneRecord.FinalSHA
 	// Create the predicate to populate it with the current
 	// run metadata:
@@ -31,13 +37,19 @@ func GenerateAttestation(config Config) {
 	p.Metadata.Completeness.Parameters = true  // The parameters are complete as we know the from prow
 	p.Metadata.Completeness.Materials = true   // The materials are complete as we only use the github repo
 	p.Metadata.Completeness.Environment = true // We don't use environment values to build images/binaries
-	startTime := config.StartTime.UTC()
-	endTime := time.Now().UTC()
+	startTime := config.ProwJob.CreationTimestamp.Time.UTC()
+	endTime := config.ProwJob.Status.CompletionTime.Time.UTC()
 	p.Metadata.BuildStartedOn = &startTime
 	p.Metadata.BuildFinishedOn = &endTime
-	p.Invocation.ConfigSource.EntryPoint = repo + "/blob/" + cloneRecord.Refs.BaseRef + strings.Trim(config.EntryPointOpts.Args[1], ".")
-	p.BuildType = "https://cloudbuild.googleapis.com/CloudBuildYaml@v1"
-	p.Invocation.Parameters = config.EntryPointOpts.Args
+	p.Invocation.ConfigSource.EntryPoint = "https://github.com/knative/test-infra/tree/main/prow/jobs/generated/" + cloneRecord.Refs.Org
+	p.BuildType = "https://prow.knative.dev/ProwJob@v1"
+	var buildConfig interface{}
+	buildConfig = map[string]interface{}{
+		"command":    config.EntryPointOpts.Args,
+		"entrypoint": config.EntryPointOpts,
+		"prowjob":    config.ProwJob,
+	}
+	p.BuildConfig = buildConfig
 	// TODO (upodroid) switch to config.Arguments but it needs to be sorted, config.ArgumentsInsertOrder has the key insert order
 
 	p.AddMaterial(("git+" + repo), slsa.DigestSet{"sha1": commitSHA})
@@ -47,7 +59,5 @@ func GenerateAttestation(config Config) {
 	attestation = provenance.NewSLSAStatement()
 	attestation.Predicate = p
 	attestation.Subject = config.Subject
-
-	attestation.Write("attestation.json")
-
+	return attestation
 }

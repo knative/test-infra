@@ -1,56 +1,253 @@
 {
-    "_type": "https://in-toto.io/Statement/v0.1",
-    "predicateType": "https://slsa.dev/provenance/v0.2",
-    "subject": [
-      {
-        "name": "gcr.io/knative-releases/knative.dev/serving/cmd/controller",
-        "digest": {
-          "sha256": "bac158dfb0c73d13ed42266ba287f1a86192c0ba581e23fbe012d30a1c34837c"
-        }
-      },
-      {
-        "name": "gcr.io/knative-releases/knative.dev/serving/cmd/queue",
-        "digest": {
-          "sha256": "83f6888ea9561495f67334d044ffa8ad067d251ad953358dda7ea5183390cc69"
-        }
+  "_type": "https://in-toto.io/Statement/v0.1",
+  "predicateType": "https://slsa.dev/provenance/v0.2",
+  "subject": [
+    {
+      "name": "gcr.io/knative-releases/knative.dev/serving/cmd/controller",
+      "digest": {
+        "sha256": "bac158dfb0c73d13ed42266ba287f1a86192c0ba581e23fbe012d30a1c34837c"
       }
-    ],
-    "predicate": {
-      "builder": {
-        "id": "https://prow.knative.dev"
-      },
-      "buildType": "https://cloudbuild.googleapis.com/CloudBuildYaml@v1",
-      "invocation": {
-        "configSource": {
-          "entryPoint": "https://github.com/knative/serving/blob/main/hack/release.sh"
-        },
-        "parameters": [
+    },
+    {
+      "name": "gcr.io/knative-releases/knative.dev/serving/cmd/queue",
+      "digest": {
+        "sha256": "83f6888ea9561495f67334d044ffa8ad067d251ad953358dda7ea5183390cc69"
+      }
+    }
+  ],
+  "predicate": {
+    "builder": {
+      "id": "https://prow.knative.dev"
+    },
+    "buildType": "https://prow.knative.dev/ProwJob@v1",
+    "invocation": {
+      "configSource": {
+        "entryPoint": "https://github.com/knative/test-infra/main/hack/release.sh"
+      }
+    },
+    "buildConfig": {
+      "command": [
+        "runner.sh",
+        "./hack/release.sh",
+        "--publish",
+        "--tag-release"
+      ],
+      "entrypoint": {
+        "timeout": 10800000000000,
+        "grace_period": 15000000000,
+        "artifact_dir": "/logs/artifacts",
+        "args": [
           "runner.sh",
           "./hack/release.sh",
-          "--auto-release",
-          "--release-gcs=knative-releases/async-component",
-          "--release-gcr=gcr.io/knative-releases",
-          "--github-token=/etc/hub-token/token"
-        ]
+          "--publish",
+          "--tag-release"
+        ],
+        "container_name": "test",
+        "process_log": "/logs/process-log.txt",
+        "marker_file": "/logs/marker-file.txt",
+        "metadata_file": "/logs/artifacts/metadata.json"
       },
-      "metadata": {
-        "buildInvocationID": "1552230788685107200",
-        "buildStartedOn": "2022-07-28T10:21:41.996820966Z",
-        "buildFinishedOn": "2022-07-28T10:25:12.818292Z",
-        "completeness": {
-          "parameters": true,
-          "environment": false,
-          "materials": true
+      "prowjob": {
+        "metadata": {
+          "name": "b71fa037-0d8c-11ed-ab62-2ace146f4dd8",
+          "namespace": "default",
+          "uid": "dc818b0b-df93-44a8-86fe-fee9c02182a0",
+          "resourceVersion": "71593618",
+          "generation": 7,
+          "creationTimestamp": "2022-07-27T09:15:53Z",
+          "labels": {
+            "created-by-prow": "true",
+            "prow.k8s.io/build-id": "1552221225705541632",
+            "prow.k8s.io/context": "",
+            "prow.k8s.io/id": "b71fa037-0d8c-11ed-ab62-2ace146f4dd8",
+            "prow.k8s.io/job": "nightly_serving_main_periodic",
+            "prow.k8s.io/refs.base_ref": "main",
+            "prow.k8s.io/refs.org": "knative",
+            "prow.k8s.io/refs.repo": "serving",
+            "prow.k8s.io/type": "periodic"
+          },
+          "annotations": {
+            "prow.k8s.io/context": "",
+            "prow.k8s.io/job": "nightly_serving_main_periodic",
+            "testgrid-dashboards": "serving",
+            "testgrid-tab-name": "nightly"
+          }
         },
-        "reproducible": false
-      },
-      "materials": [
-        {
-          "uri": "git+https://github.com/knative/serving",
-          "digest": {
-            "sha1": "c82be271867f137d0923be34acd18b6aca452446"
+        "spec": {
+          "type": "periodic",
+          "agent": "kubernetes",
+          "cluster": "prow-build",
+          "namespace": "test-pods",
+          "job": "nightly_serving_main_periodic",
+          "extra_refs": [
+            {
+              "org": "knative",
+              "repo": "serving",
+              "base_ref": "main",
+              "path_alias": "knative.dev/serving"
+            }
+          ],
+          "report": true,
+          "pod_spec": {
+            "volumes": [
+              {
+                "name": "docker-graph",
+                "emptyDir": {}
+              },
+              {
+                "name": "modules",
+                "hostPath": {
+                  "path": "/lib/modules",
+                  "type": "Directory"
+                }
+              },
+              {
+                "name": "cgroup",
+                "hostPath": {
+                  "path": "/sys/fs/cgroup",
+                  "type": "Directory"
+                }
+              },
+              {
+                "name": "nightly-account",
+                "secret": {
+                  "secretName": "prow-google-credentials",
+                  "items": [
+                    {
+                      "key": "nightly.json",
+                      "path": "service-account.json"
+                    }
+                  ]
+                }
+              }
+            ],
+            "containers": [
+              {
+                "name": "",
+                "image": "gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33",
+                "command": [
+                  "runner.sh",
+                  "./hack/release.sh",
+                  "--publish",
+                  "--tag-release"
+                ],
+                "env": [
+                  {
+                    "name": "DOCKER_IN_DOCKER_ENABLED",
+                    "value": "true"
+                  },
+                  {
+                    "name": "GOOGLE_APPLICATION_CREDENTIALS",
+                    "value": "/etc/nightly-account/service-account.json"
+                  }
+                ],
+                "resources": {
+                  "limits": {
+                    "memory": "16Gi"
+                  },
+                  "requests": {
+                    "memory": "12Gi"
+                  }
+                },
+                "volumeMounts": [
+                  {
+                    "name": "docker-graph",
+                    "mountPath": "/docker-graph"
+                  },
+                  {
+                    "name": "modules",
+                    "mountPath": "/lib/modules"
+                  },
+                  {
+                    "name": "cgroup",
+                    "mountPath": "/sys/fs/cgroup"
+                  },
+                  {
+                    "name": "nightly-account",
+                    "readOnly": true,
+                    "mountPath": "/etc/nightly-account"
+                  }
+                ],
+                "securityContext": {
+                  "privileged": true
+                }
+              }
+            ],
+            "nodeSelector": {
+              "type": "testing"
+            }
+          },
+          "decoration_config": {
+            "timeout": "3h0m0s",
+            "grace_period": "15s",
+            "utility_images": {
+              "clonerefs": "gcr.io/k8s-prow/clonerefs:v20220721-cf42b99a12",
+              "initupload": "gcr.io/k8s-prow/initupload:v20220721-cf42b99a12",
+              "entrypoint": "gcr.io/k8s-prow/entrypoint:v20220721-cf42b99a12",
+              "sidecar": "gcr.io/k8s-prow/sidecar:v20220721-cf42b99a12"
+            },
+            "resources": {
+              "sidecar": {
+                "requests": {
+                  "cpu": "100m",
+                  "memory": "20Mi"
+                }
+              }
+            },
+            "gcs_configuration": {
+              "bucket": "knative-prow",
+              "path_strategy": "explicit"
+            },
+            "gcs_credentials_secret": "gcs-upload"
+          },
+          "reporter_config": {
+            "slack": {
+              "channel": "serving",
+              "job_states_to_report": [
+                "failure"
+              ],
+              "report_template": "\"The nightly release job fails, check the log: <{{.Status.URL}}|View logs>\"\n",
+              "report": true
+            }
+          },
+          "prowjob_defaults": {
+            "tenant_id": "GlobalDefaultID"
+          }
+        },
+        "status": {
+          "startTime": "2022-07-27T09:15:53Z",
+          "pendingTime": "2022-07-27T09:15:53Z",
+          "completionTime": "2022-07-27T11:15:41Z",
+          "state": "success",
+          "description": "Job succeeded.",
+          "url": "https://prow.knative.dev/view/gs/knative-prow/logs/nightly_serving_main_periodic/1552221225705541632",
+          "pod_name": "b71fa037-0d8c-11ed-ab62-2ace146f4dd8",
+          "build_id": "1552221225705541632",
+          "prev_report_states": {
+            "gcsk8sreporter": "success",
+            "gcsreporter": "success"
           }
         }
-      ]
-    }
+      }
+    },
+    "metadata": {
+      "buildInvocationID": "1552221225705541632",
+      "buildStartedOn": "2022-07-27T12:15:53+03:00",
+      "buildFinishedOn": "2022-07-27T14:15:41+03:00",
+      "completeness": {
+        "parameters": true,
+        "environment": true,
+        "materials": true
+      },
+      "reproducible": false
+    },
+    "materials": [
+      {
+        "uri": "git+https://github.com/knative/serving",
+        "digest": {
+          "sha1": "c82be271867f137d0923be34acd18b6aca452446"
+        }
+      }
+    ]
   }
+}
