@@ -53,6 +53,7 @@ periodics:
       - mountPath: /sys/fs/cgroup
         name: cgroup
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -120,6 +121,7 @@ periodics:
       - mountPath: /sys/fs/cgroup
         name: cgroup
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -187,6 +189,7 @@ periodics:
       - mountPath: /sys/fs/cgroup
         name: cgroup
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -254,6 +257,7 @@ periodics:
       - mountPath: /sys/fs/cgroup
         name: cgroup
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -321,6 +325,7 @@ periodics:
       - mountPath: /sys/fs/cgroup
         name: cgroup
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -388,6 +393,7 @@ periodics:
       - mountPath: /sys/fs/cgroup
         name: cgroup
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -455,6 +461,7 @@ periodics:
       - mountPath: /sys/fs/cgroup
         name: cgroup
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -520,6 +527,7 @@ periodics:
       - mountPath: /sys/fs/cgroup
         name: cgroup
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -587,6 +595,7 @@ periodics:
       - mountPath: /sys/fs/cgroup
         name: cgroup
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -652,6 +661,7 @@ periodics:
       - mountPath: /sys/fs/cgroup
         name: cgroup
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -748,6 +758,7 @@ periodics:
         name: s390x-cluster1
         readOnly: true
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -848,6 +859,7 @@ periodics:
         name: s390x-cluster1
         readOnly: true
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -923,6 +935,7 @@ periodics:
         name: nightly-account
         readOnly: true
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - emptyDir: {}
@@ -997,6 +1010,7 @@ periodics:
         name: release-account
         readOnly: true
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - emptyDir: {}
@@ -1056,6 +1070,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - emptyDir: {}
@@ -1101,6 +1116,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - emptyDir: {}
@@ -1154,6 +1170,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -1213,6 +1230,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -1272,6 +1290,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -1332,6 +1351,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -1392,6 +1412,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -1452,6 +1473,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -1512,6 +1534,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -1572,6 +1595,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -1632,6 +1656,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -1692,6 +1717,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -1752,6 +1778,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -1812,6 +1839,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -1872,6 +1900,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -1936,6 +1965,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account

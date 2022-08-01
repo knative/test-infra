@@ -47,6 +47,7 @@ periodics:
       - mountPath: /sys/fs/cgroup
         name: cgroup
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -111,6 +112,7 @@ periodics:
         name: release-account
         readOnly: true
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: hub-token

@@ -47,6 +47,7 @@ periodics:
       - mountPath: /sys/fs/cgroup
         name: cgroup
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -112,6 +113,7 @@ periodics:
       - mountPath: /sys/fs/cgroup
         name: cgroup
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: nightly-account
@@ -182,6 +184,7 @@ periodics:
       - mountPath: /sys/fs/cgroup
         name: cgroup
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: hub-token
@@ -235,12 +238,12 @@ periodics:
       command:
       - runner.sh
       env:
-      - name: SYSTEM_NAMESPACE
-        value: knative-eventing
       - name: EVENTING_NAMESPACE
         value: knative-eventing
       - name: SCALE_CHAOSDUCK_TO_ZERO
         value: "1"
+      - name: SYSTEM_NAMESPACE
+        value: knative-eventing
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -273,6 +276,7 @@ periodics:
         name: s390x-cluster1
         readOnly: true
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -316,6 +320,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - emptyDir: {}
@@ -357,6 +362,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - emptyDir: {}
@@ -398,6 +404,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -435,6 +442,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -472,6 +480,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -509,6 +518,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -547,6 +557,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -584,6 +595,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account

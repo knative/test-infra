@@ -45,6 +45,7 @@ periodics:
         name: test-account
         readOnly: true
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -123,6 +124,7 @@ periodics:
         name: s390x-cluster1
         readOnly: true
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -205,6 +207,7 @@ periodics:
         name: s390x-cluster1
         readOnly: true
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -267,6 +270,7 @@ periodics:
         name: release-account
         readOnly: true
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: hub-token
@@ -306,6 +310,7 @@ presubmits:
         securityContext:
           privileged: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
   - always_run: true
     branches:
@@ -330,6 +335,7 @@ presubmits:
         securityContext:
           privileged: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
   - always_run: true
     branches:
@@ -364,6 +370,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -405,6 +412,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -446,6 +454,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -488,6 +497,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -530,6 +540,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -572,6 +583,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -614,6 +626,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -656,6 +669,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -698,6 +712,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -740,6 +755,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -782,6 +798,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -824,6 +841,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -866,6 +884,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -912,6 +931,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account

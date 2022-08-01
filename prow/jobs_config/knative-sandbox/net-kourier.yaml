@@ -2,7 +2,6 @@ org: knative-sandbox
 repo: net-kourier
 branches: [main]
 image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
-imagePullPolicy: Always
 
 jobs:
   - name: build-tests

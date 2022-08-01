@@ -46,6 +46,7 @@ periodics:
       - mountPath: /sys/fs/cgroup
         name: cgroup
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: nightly-account
@@ -116,6 +117,7 @@ periodics:
       - mountPath: /sys/fs/cgroup
         name: cgroup
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: hub-token
