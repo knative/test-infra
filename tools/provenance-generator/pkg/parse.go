@@ -58,7 +58,7 @@ func LoadParameters(config Config) Config {
 	//Appoximate start time of job
 	fileInfo, err := os.Stat(config.CloneLogPath)
 	if err != nil {
-		log.Fatalf("failed to open file %v", err)
+		log.Fatalf("failed to open file: %v", err)
 	}
 	config.StartTime = fileInfo.ModTime()
 
@@ -67,7 +67,7 @@ func LoadParameters(config Config) Config {
 
 	log.Printf("log path %v", config.CloneLogPath)
 	if err := json.Unmarshal(byteValue, &cloneLogs); err != nil {
-		log.Fatalf("failed to unmarshal clone-logs file %v", err)
+		log.Fatalf("failed to unmarshal clone-logs file: %v", err)
 	}
 	config.CloneRecords = cloneLogs
 
@@ -187,7 +187,7 @@ func parseAlgorithm(checksumValue string) (string, error) {
 	case sha512.Size:
 		algo = "sha512"
 	default:
-		return "", fmt.Errorf("Unknown type for checksum: %s", checksumValue)
+		return "", fmt.Errorf("unknown type for checksum: %s", checksumValue)
 	}
 	return algo, nil
 }
@@ -200,7 +200,6 @@ func ParseEntryPoint(config Config) Config {
 	}
 	config.EntryPointOpts = entryPointOpts
 
-	// Sanity checks
 	if config.EntryPointOpts.Args[0] != "runner.sh" {
 		log.Fatal("this prowjob is misconfigured, expecting runner.sh to be called first")
 	}
