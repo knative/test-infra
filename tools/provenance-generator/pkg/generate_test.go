@@ -64,7 +64,7 @@ func TestGenerateAttestation(t *testing.T) {
 	// 	t.Errorf("cannot unmarshal attestation.json: %v", err)
 	// }
 
-	// Comparing provenance.Statement is broken for some reason, 
+	// Comparing provenance.Statement is broken for some reason,
 	generatedAttestationJSON, err := generatedAttestation.ToJSON()
 	if check, err := AreEqualJSON(generatedAttestationJSON, expectedAttestationFile); check == false {
 		t.Errorf("expected '%v', got '%v'", string(generatedAttestationJSON), string(expectedAttestationFile))
