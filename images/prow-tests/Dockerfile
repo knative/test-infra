@@ -22,6 +22,7 @@ ARG MAVEN_VERSION=3.8.4
 ARG JAVA_VERSION=16
 ARG PROTOC_VERSION=21.4
 ARG TFENV_VERSION=v2.2.3
+ARG DOCKER_CREDENTIAL_GCR_VERSION=2.0.5
 ARG COMMIT_HASH
 # TARGETARCH is an automatic platform ARG enabled by Docker BuildKit.
 ARG TARGETARCH
@@ -74,6 +75,14 @@ RUN gcloud config set core/disable_usage_reporting true && \
     gcloud config set metrics/environment github_docker_image && \
     gcloud components install alpha beta gke-gcloud-auth-plugin && \
     gcloud --version
+
+
+# GCR docker credential helper
+RUN curl -fsSL \
+    "https://github.com/GoogleCloudPlatform/docker-credential-gcr/releases/download/v${DOCKER_CREDENTIAL_GCR_VERSION}/docker-credential-gcr_linux_${TARGETARCH}-${DOCKER_CREDENTIAL_GCR_VERSION}.tar.gz" \
+    -o /tmp/docker-credential-gcr_linux_${TARGETARCH}-${DOCKER_CREDENTIAL_GCR_VERSION}.tar.gz && \
+    tar -xzf /tmp/docker-credential-gcr_linux_${TARGETARCH}-${DOCKER_CREDENTIAL_GCR_VERSION}.tar.gz -C /tmp && \
+    mv /tmp/docker-credential-gcr /usr/local/bin/docker-credential-gcr
 
 #
 # END: GCLOUD SETUP
@@ -175,10 +184,10 @@ RUN set -eux; \
     esac; \
     \
     curl -fsSL "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/${PROTOC_ZIP}" -o "/tmp/${PROTOC_ZIP}" ; \
-    unzip "/tmp/${PROTOC_ZIP}"; \
+    unzip "/tmp/${PROTOC_ZIP}" -d /tmp; \
     mv /tmp/bin/protoc /usr/local/bin/protoc; \
     chmod +x /usr/local/bin/protoc; \
-    && rm protoc.zip
+    rm "/tmp/${PROTOC_ZIP}"
 
 # protoc-gen-gogofaster is installed in below section
 
@@ -206,7 +215,6 @@ ARG GOTESTSUM_VERSION=v1.8.1
 ARG KAIL_VERSION=v0.15.0
 ARG LICHE_VERSION=v0.0.0-20200229003944-f57a5d1c5be4
 ARG GO_LICENSES_VERSION=v1.2.1
-ARG DOCKER_CREDENTIAL_GCR_VERSION=v2.0.5
 ARG JSONNET_VERSION=v0.18.0
 ARG GOJSONTOYAML_VERSION=v0.1.0
 ARG COSIGN_VERSION=v1.9.0
@@ -232,11 +240,6 @@ RUN go install github.com/sigstore/cosign/cmd/cosign@${COSIGN_VERSION}
 # According to https://github.com/knative/test-infra/pull/2762 protoc-gen-gogofaster is unsupported (and shouldn't be used?)
 # Not sure when it can be removed, maybe knative-0.26?
 RUN go install github.com/gogo/protobuf/protoc-gen-gogofaster@${PROTOC_GEN_GOGOFASTER_VERSION}
-
-# GCR docker credential helper
-RUN curl -fsSL https://github.com/GoogleCloudPlatform/docker-credential-gcr/releases/download/v${GCR_AUTH_VERSION}/docker-credential-gcr_linux_${TARGETARCH}-${GCR_AUTH_VERSION}.tar.gz -o /tmp && \
-    tar -xzf /tmp/docker-credential-gcr_linux_${TARGETARCH}-${GCR_AUTH_VERSION}.tar.gz -C /tmp && \
-    mv /tmp/docker-credential-gcr /usr/bin
 
 # We do this instead of `go get` so the tools are locked to the Dockerfile's commit
 COPY . /go/src/knative.dev/test-infra

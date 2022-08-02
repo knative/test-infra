@@ -13,19 +13,11 @@
 # limitations under the License.
 
 steps:
-- name: gcr.io/cloud-builders/docker
+- name: gcr.io/k8s-testimages/gcb-docker-gcloud # https://github.com/kubernetes/test-infra/tree/master/images/gcb-docker-gcloud
+  entrypoint: /buildx-entrypoint
   args:
-  - 'buildx'
-  - 'create'
-  - '--name'
-  - 'multiarch'
-  - '--use'
-- name: gcr.io/cloud-builders/docker
-  args:
-  - 'buildx'
-  - 'build'
-  - '--platform'
-  - 'linux/amd64,linux/arm64'
+  - build
+  - '--platform=linux/amd64,linux/arm64'
   - '--build-arg'
   - 'COMMIT_HASH=${_COMMIT_HASH}'
   - '--no-cache'
