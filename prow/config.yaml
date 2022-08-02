@@ -222,6 +222,10 @@ tide:
     # Treat unknown contexts as optional
     skip-unknown-contexts: false
     orgs:
+      knative:
+        repos:
+          pkg:
+            skip-unknown-contexts: true
       knative-sandbox:
         repos:
           eventing-kafka-broker:
