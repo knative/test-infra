@@ -20,9 +20,12 @@ ARG KUBECTL_VERSION=v1.23.8
 ARG DOCKER_VERSION=5:20.10.17~3-0~debian-bullseye
 ARG MAVEN_VERSION=3.8.4
 ARG JAVA_VERSION=16
-ARG PROTOC_VERSION=3.17.0
+ARG PROTOC_VERSION=21.4
 ARG TFENV_VERSION=v2.2.3
 ARG COMMIT_HASH
+# TARGETARCH is an automatic platform ARG enabled by Docker BuildKit.
+ARG TARGETARCH
+
 
 RUN echo "${COMMIT_HASH}" > /commit_hash
 
@@ -77,7 +80,7 @@ RUN gcloud config set core/disable_usage_reporting true && \
 #
 
 # kubectl
-RUN curl -fsSL "https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -o /usr/local/bin/kubectl && \
+RUN curl -fsSL "https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/${TARGETARCH}/kubectl" -o /usr/local/bin/kubectl && \
     chmod +x /usr/local/bin/kubectl
 
 # tfenv
@@ -121,14 +124,15 @@ RUN mkdir /docker-graph
 # BEGIN: JAVA SETUP
 #
 
+# Java is required for eventing-kafka-broker jobs
 RUN curl -fsSL https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | gpg --dearmor -o /usr/share/keyrings/adoptopenjdk-archive-keyring.gpg && \
     echo \
-    "deb [signed-by=/usr/share/keyrings/adoptopenjdk-archive-keyring.gpg] https://adoptopenjdk.jfrog.io/adoptopenjdk/deb \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/adoptopenjdk-archive-keyring.gpg] https://adoptopenjdk.jfrog.io/adoptopenjdk/deb \
     $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/adoptopenjdk.list
 RUN apt-get update -qqy && \
     apt-get install -qqy adoptopenjdk-${JAVA_VERSION}-hotspot && \
     rm -rf /var/lib/apt/lists/*
-ENV JAVA_HOME=/usr/lib/jvm/adoptopenjdk-${JAVA_VERSION}-hotspot-amd64
+ENV JAVA_HOME=/usr/lib/jvm/adoptopenjdk-${JAVA_VERSION}-hotspot-${TARGETARCH}
 
 ENV MAVEN_HOME=/usr/local/maven
 ENV M2_HOME=$MAVEN_HOME
@@ -162,10 +166,20 @@ RUN source-gvm-and-run.sh install go1.18.3 --prefer-binary
 RUN source-gvm-and-run.sh use go1.18 --default
 
 # protoc and required golang tooling
-RUN curl -fsSL "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip" -o protoc.zip \
-    && unzip -p protoc.zip bin/protoc > /usr/local/bin/protoc \
-    && chmod +x /usr/local/bin/protoc \
+RUN set -eux; \
+    \
+    case $(uname -m) in \
+        x86_64) export PROTOC_ZIP=protoc-${PROTOC_VERSION}-linux-x86_64.zip;; \
+        aarch64) export PROTOC_ZIP=protoc-${PROTOC_VERSION}-linux-aarch_64.zip;; \
+        *) echo "unsupported architecture"; exit 1 ;; \
+    esac; \
+    \
+    curl -fsSL "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/${PROTOC_ZIP}" -o "/tmp/${PROTOC_ZIP}" ; \
+    unzip "/tmp/${PROTOC_ZIP}"; \
+    mv /tmp/bin/protoc /usr/local/bin/protoc; \
+    chmod +x /usr/local/bin/protoc; \
     && rm protoc.zip
+
 # protoc-gen-gogofaster is installed in below section
 
 # Note, it's pointless to run `source-gvm-and-run.sh use go1.13` in this Dockerfile because the PATH changes it makes won't stay in effect
@@ -219,8 +233,10 @@ RUN go install github.com/sigstore/cosign/cmd/cosign@${COSIGN_VERSION}
 # Not sure when it can be removed, maybe knative-0.26?
 RUN go install github.com/gogo/protobuf/protoc-gen-gogofaster@${PROTOC_GEN_GOGOFASTER_VERSION}
 
-# Docker
-RUN go install github.com/GoogleCloudPlatform/docker-credential-gcr@${DOCKER_CREDENTIAL_GCR_VERSION}
+# GCR docker credential helper
+RUN curl -fsSL https://github.com/GoogleCloudPlatform/docker-credential-gcr/releases/download/v${GCR_AUTH_VERSION}/docker-credential-gcr_linux_${TARGETARCH}-${GCR_AUTH_VERSION}.tar.gz -o /tmp && \
+    tar -xzf /tmp/docker-credential-gcr_linux_${TARGETARCH}-${GCR_AUTH_VERSION}.tar.gz -C /tmp && \
+    mv /tmp/docker-credential-gcr /usr/bin
 
 # We do this instead of `go get` so the tools are locked to the Dockerfile's commit
 COPY . /go/src/knative.dev/test-infra

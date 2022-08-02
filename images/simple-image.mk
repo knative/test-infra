@@ -38,7 +38,7 @@ TAG := $(shell date +v%Y%m%d)-$(shell git describe --always --dirty --match '^$$
 export COMMIT_HASH := $(shell git rev-parse --verify HEAD)
 
 build:
-	docker build --build-arg COMMIT_HASH=$$COMMIT_HASH --no-cache --pull -t $(IMG):$(TAG) -f $(DOCKERFILE) $(DOCKERBUILDARGS) ../..
+	docker buildx build --platform=linux/amd64,linux/arm64 --build-arg COMMIT_HASH=$$COMMIT_HASH --no-cache --pull -t $(IMG):$(TAG) -f $(DOCKERFILE) $(DOCKERBUILDARGS) ../..
 
 # You can build locally without --no-cache to save time
 iterative-build:
