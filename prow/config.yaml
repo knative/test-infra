@@ -230,6 +230,8 @@ tide:
         repos:
           eventing-kafka-broker:
             skip-unknown-contexts: true
+          reconciler-test:
+            skip-unknown-contexts: true
 #     orgs:
 #       org:
 #         required-contexts:
