@@ -19,16 +19,41 @@ jobs:
     types: [presubmit]
     command: [runner.sh, ./test/presubmit-tests.sh, --integration-tests]
     requirements: [docker]
+    env:
+      - name: BROKER_CLASS
+        value: Kafka
+
+  - name: integration-tests-namespaced-broker
+    types: [ presubmit ]
+    command: [ runner.sh, ./test/presubmit-tests.sh, --integration-tests ]
+    requirements: [ docker ]
+    env:
+      - name: BROKER_CLASS
+        value: KafkaNamespaced
 
   - name: upgrade-tests
     types: [presubmit]
     command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/upgrade-tests.sh"]
     requirements: [docker]
+    env:
+      - name: BROKER_CLASS
+        value: Kafka
 
   - name: reconciler-tests
     types: [presubmit]
     command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/reconciler-tests.sh"]
     requirements: [docker]
+    env:
+      - name: BROKER_CLASS
+        value: Kafka
+
+  - name: reconciler-tests-namespaced-broker
+    types: [ presubmit ]
+    command: [ runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/reconciler-tests.sh" ]
+    requirements: [ docker ]
+    env:
+      - name: BROKER_CLASS
+        value: KafkaNamespaced
 
   - name: channel-integration-tests-ssl
     types: [presubmit]
@@ -37,6 +62,8 @@ jobs:
     env:
       - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
         value: SSL
+      - name: BROKER_CLASS
+        value: Kafka
 
   - name: channel-integration-tests-sasl-ssl
     types: [presubmit]
@@ -45,6 +72,8 @@ jobs:
     env:
       - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
         value: SASL_SSL
+      - name: BROKER_CLASS
+        value: Kafka
 
   - name: channel-integration-tests-sasl-plain
     types: [presubmit]
@@ -53,6 +82,8 @@ jobs:
     env:
       - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
         value: SASL_PLAIN
+      - name: BROKER_CLASS
+        value: Kafka
 
   - name: channel-reconciler-tests-ssl
     types: [presubmit]
@@ -61,6 +92,8 @@ jobs:
     env:
       - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
         value: SSL
+      - name: BROKER_CLASS
+        value: Kafka
 
   - name: channel-reconciler-tests-sasl-ssl
     types: [presubmit]
@@ -69,6 +102,8 @@ jobs:
     env:
       - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
         value: SASL_SSL
+      - name: BROKER_CLASS
+        value: Kafka
 
   - name: channel-reconciler-tests-sasl-plain
     types: [presubmit]
@@ -77,11 +112,16 @@ jobs:
     env:
       - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
         value: SASL_PLAIN
+      - name: BROKER_CLASS
+        value: Kafka
 
   - name: continuous
     types: [periodic]
     command: [runner.sh, ./test/presubmit-tests.sh, --all-tests]
     requirements: [docker]
+    env:
+      - name: BROKER_CLASS
+        value: Kafka
 
   - name: nightly
     types: [periodic]
@@ -95,6 +135,9 @@ jobs:
           "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
         job_states_to_report:
         - "failure"
+    env:
+      - name: BROKER_CLASS
+        value: Kafka
 
   - name: release
     types: [periodic]
@@ -128,6 +171,8 @@ jobs:
         value: "1"
       - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
         value: SSL
+      - name: BROKER_CLASS
+        value: Kafka
 
   - name: s390x-e2e-tests-sasl-ssl
     cron: 20 8 * * *
@@ -155,6 +200,8 @@ jobs:
         value: "1"
       - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
         value: SASL_SSL
+      - name: BROKER_CLASS
+        value: Kafka
 
   - name: s390x-e2e-tests-sasl-plain
     cron: 20 9 * * *
@@ -182,3 +229,5 @@ jobs:
         value: "1"
       - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
         value: SASL_PLAIN
+      - name: BROKER_CLASS
+        value: Kafka
