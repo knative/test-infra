@@ -36,6 +36,7 @@ jobs:
 
   - name: performance-tests-mako
     types: [presubmit]
+    requirements: [perf]
     command: [runner.sh, ./test/presubmit-tests.sh, --run-test, ./test/performance/performance-tests-mako.sh]
     modifiers: [presubmit_optional, presubmit_skipped]
 
@@ -196,6 +197,16 @@ jobs:
     - ./test/presubmit-tests.sh
     - --run-test
     - ./test/performance/performance-tests.sh
+
+  - name: performance-tests-mako
+    types: [periodic]
+    requirements: [perf]
+    command:
+    - runner.sh
+    args:
+    - ./test/presubmit-tests.sh
+    - --run-test
+    - ./test/performance/performance-tests-mako.sh
 
   - name: s390x-kourier-tests
     cron: 20 2 * * *
