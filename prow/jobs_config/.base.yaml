@@ -83,6 +83,20 @@ requirement_presets:
           path: /sys/fs/cgroup
           type: Directory
 
+  perf:
+    env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+    volumeMounts:
+      - name: influx-secret-volume
+        mountPath: /etc/influx-secret-volume
+        readOnly: true
+    volumes:
+      - name: influx-secret-volume
+        secret:
+          secretName: influx-secret
+          defaultMode: 0600
+
   gcp:
     env:
       - name: E2E_CLUSTER_REGION

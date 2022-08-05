@@ -672,6 +672,78 @@ periodics:
       name: cgroup
 - annotations:
     testgrid-dashboards: serving
+    testgrid-tab-name: performance-tests-mako
+  cluster: prow-build
+  cron: 43 */9 * * *
+  decorate: true
+  extra_refs:
+  - base_ref: main
+    org: knative
+    path_alias: knative.dev/serving
+    repo: serving
+  name: performance-tests-mako_serving_main_periodic
+  spec:
+    containers:
+    - args:
+      - ./test/presubmit-tests.sh
+      - --run-test
+      - ./test/performance/performance-tests-mako.sh
+      command:
+      - runner.sh
+      env:
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
+      name: ""
+      resources:
+        limits:
+          memory: 16Gi
+        requests:
+          memory: 12Gi
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /etc/test-account
+        name: test-account
+        readOnly: true
+      - mountPath: /docker-graph
+        name: docker-graph
+      - mountPath: /lib/modules
+        name: modules
+      - mountPath: /sys/fs/cgroup
+        name: cgroup
+      - mountPath: /etc/influx-secret-volume
+        name: influx-secret-volume
+        readOnly: true
+    nodeSelector:
+      type: testing
+    volumes:
+    - name: test-account
+      secret:
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
+    - emptyDir: {}
+      name: docker-graph
+    - hostPath:
+        path: /lib/modules
+        type: Directory
+      name: modules
+    - hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+      name: cgroup
+    - name: influx-secret-volume
+      secret:
+        defaultMode: 384
+        secretName: influx-secret
+- annotations:
+    testgrid-dashboards: serving
     testgrid-tab-name: s390x-kourier-tests
   cluster: prow-build
   cron: 20 2 * * *
@@ -1387,6 +1459,9 @@ presubmits:
           name: modules
         - mountPath: /sys/fs/cgroup
           name: cgroup
+        - mountPath: /etc/influx-secret-volume
+          name: influx-secret-volume
+          readOnly: true
       nodeSelector:
         type: testing
       volumes:
@@ -1406,6 +1481,10 @@ presubmits:
           path: /sys/fs/cgroup
           type: Directory
         name: cgroup
+      - name: influx-secret-volume
+        secret:
+          defaultMode: 384
+          secretName: influx-secret
   - always_run: false
     branches:
     - ^main$
