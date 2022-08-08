@@ -50,6 +50,7 @@ dashboard_groups:
   - net-kourier
   - sample-controller
   - sample-source
+  - security-guard
   name: knative-sandbox
 dashboards:
 - name: async-component
@@ -106,5 +107,6 @@ dashboards:
 - name: operator
 - name: sample-controller
 - name: sample-source
+- name: security-guard
 - name: serving
 - name: utilities
