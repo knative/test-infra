@@ -88,13 +88,20 @@ requirement_presets:
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
     volumeMounts:
-      - name: influx-secret-volume
-        mountPath: /etc/influx-secret-volume
+      - name: influx-token-secret-volume
+        mountPath: /etc/influx-token-secret-volume
+        readOnly: true
+      - name: influx-url-secret-volume
+        mountPath: /etc/influx-url-secret-volume
         readOnly: true
     volumes:
-      - name: influx-secret-volume
+      - name: influx-token-secret-volume
         secret:
-          secretName: influx-secret
+          secretName: influx-token-secret
+          defaultMode: 0600
+      - name: influx-url-secret-volume
+        secret:
+          secretName: influx-url-secret
           defaultMode: 0600
 
   gcp:

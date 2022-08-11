@@ -716,8 +716,11 @@ periodics:
         name: modules
       - mountPath: /sys/fs/cgroup
         name: cgroup
-      - mountPath: /etc/influx-secret-volume
-        name: influx-secret-volume
+      - mountPath: /etc/influx-token-secret-volume
+        name: influx-token-secret-volume
+        readOnly: true
+      - mountPath: /etc/influx-url-secret-volume
+        name: influx-url-secret-volume
         readOnly: true
     nodeSelector:
       type: testing
@@ -738,10 +741,14 @@ periodics:
         path: /sys/fs/cgroup
         type: Directory
       name: cgroup
-    - name: influx-secret-volume
+    - name: influx-token-secret-volume
       secret:
         defaultMode: 384
-        secretName: influx-secret
+        secretName: influx-token-secret
+    - name: influx-url-secret-volume
+      secret:
+        defaultMode: 384
+        secretName: influx-url-secret
 - annotations:
     testgrid-dashboards: serving
     testgrid-tab-name: s390x-kourier-tests
@@ -1459,8 +1466,11 @@ presubmits:
           name: modules
         - mountPath: /sys/fs/cgroup
           name: cgroup
-        - mountPath: /etc/influx-secret-volume
-          name: influx-secret-volume
+        - mountPath: /etc/influx-token-secret-volume
+          name: influx-token-secret-volume
+          readOnly: true
+        - mountPath: /etc/influx-url-secret-volume
+          name: influx-url-secret-volume
           readOnly: true
       nodeSelector:
         type: testing
@@ -1481,10 +1491,14 @@ presubmits:
           path: /sys/fs/cgroup
           type: Directory
         name: cgroup
-      - name: influx-secret-volume
+      - name: influx-token-secret-volume
         secret:
           defaultMode: 384
-          secretName: influx-secret
+          secretName: influx-token-secret
+      - name: influx-url-secret-volume
+        secret:
+          defaultMode: 384
+          secretName: influx-url-secret
   - always_run: false
     branches:
     - ^main$
