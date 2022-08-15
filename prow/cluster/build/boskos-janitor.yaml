@@ -12,36 +12,39 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Reaper
+# Janitor
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: boskos-reaper
+  name: boskos-janitor
   labels:
-    app: boskos-reaper
+    app: boskos-janitor
   namespace: test-pods
 spec:
-  replicas: 1  # one canonical source of resources
+  replicas: 4  # Number of distributed janitor instances; k8s has ~1/16 as many projects
   selector:
     matchLabels:
-      app: boskos-reaper
+      app: boskos-janitor
   template:
     metadata:
       labels:
-        app: boskos-reaper
+        app: boskos-janitor
     spec:
-      serviceAccountName: "boskos"
-      terminationGracePeriodSeconds: 30
+      serviceAccountName: boskos
+      terminationGracePeriodSeconds: 300
       containers:
-      - name: boskos-reaper
-        image: gcr.io/k8s-staging-boskos/reaper:v20200819-984516e
+      - name: boskos-janitor
+        image: gcr.io/k8s-staging-boskos/janitor:v20220815-0e9ae74
         args:
         - --resource-type=gke-project
-        - --expire=3m
+        - --pool-size=20
+        - --
+        - --hours=0
+        - --verbose
         resources:
           requests:
-            cpu: 200m
-            memory: 20Mi
+              cpu: 200m
+              memory: 20Mi
           limits:
-            cpu: 500m
-            memory: 512Mi
+              cpu: 4000m
+              memory: 2560Mi
