@@ -7,17 +7,17 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.3
-    testgrid-tab-name: net-http01-continuous
+    testgrid-dashboards: knative-sandbox-release-1.7
+    testgrid-tab-name: net-gateway-api-continuous
   cluster: prow-build
-  cron: 1 20 * * *
+  cron: 39 22 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-1.3
+  - base_ref: release-1.7
     org: knative-sandbox
-    path_alias: knative.dev/net-http01
-    repo: net-http01
-  name: continuous_net-http01_release-1.3_periodic
+    path_alias: knative.dev/net-gateway-api
+    repo: net-gateway-api
+  name: continuous_net-gateway-api_release-1.7_periodic
   spec:
     containers:
     - command:
@@ -48,17 +48,17 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.3
-    testgrid-tab-name: net-http01-release
+    testgrid-dashboards: knative-sandbox-release-1.7
+    testgrid-tab-name: net-gateway-api-release
   cluster: prow-build
-  cron: 43 9 * * 2
+  cron: 1 9 * * 2
   decorate: true
   extra_refs:
-  - base_ref: release-1.3
+  - base_ref: release-1.7
     org: knative-sandbox
-    path_alias: knative.dev/net-http01
-    repo: net-http01
-  name: release_net-http01_release-1.3_periodic
+    path_alias: knative.dev/net-gateway-api
+    repo: net-gateway-api
+  name: release_net-gateway-api_release-1.7_periodic
   spec:
     containers:
     - command:
@@ -66,13 +66,13 @@ periodics:
       - ./hack/release.sh
       - --dot-release
       - --release-gcs
-      - knative-releases/net-http01
+      - knative-releases/net-gateway-api
       - --release-gcr
       - gcr.io/knative-releases
       - --github-token
       - /etc/hub-token/token
       - --branch
-      - release-1.3
+      - release-1.7
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
@@ -108,14 +108,14 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 presubmits:
-  knative-sandbox/net-http01:
+  knative-sandbox/net-gateway-api:
   - always_run: true
     branches:
-    - ^release-1.3$
+    - ^release-1.7$
     cluster: prow-build
     decorate: true
-    name: build-tests_net-http01_release-1.3
-    path_alias: knative.dev/net-http01
+    name: build-tests_net-gateway-api_release-1.7
+    path_alias: knative.dev/net-gateway-api
     spec:
       containers:
       - command:
@@ -131,11 +131,11 @@ presubmits:
         type: testing
   - always_run: true
     branches:
-    - ^release-1.3$
+    - ^release-1.7$
     cluster: prow-build
     decorate: true
-    name: unit-tests_net-http01_release-1.3
-    path_alias: knative.dev/net-http01
+    name: unit-tests_net-gateway-api_release-1.7
+    path_alias: knative.dev/net-gateway-api
     spec:
       containers:
       - command:
@@ -151,11 +151,11 @@ presubmits:
         type: testing
   - always_run: true
     branches:
-    - ^release-1.3$
+    - ^release-1.7$
     cluster: prow-build
     decorate: true
-    name: integration-tests_net-http01_release-1.3
-    path_alias: knative.dev/net-http01
+    name: integration-tests_net-gateway-api_release-1.7
+    path_alias: knative.dev/net-gateway-api
     spec:
       containers:
       - command:
