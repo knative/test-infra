@@ -86,6 +86,7 @@ dashboards:
 - name: knative-release-1.4
 - name: knative-release-1.5
 - name: knative-release-1.6
+- name: knative-release-1.7
 - name: knative-sandbox-release-0.1
 - name: knative-sandbox-release-0.22
 - name: knative-sandbox-release-0.23
@@ -98,6 +99,7 @@ dashboards:
 - name: knative-sandbox-release-1.4
 - name: knative-sandbox-release-1.5
 - name: knative-sandbox-release-1.6
+- name: knative-sandbox-release-1.7
 - name: net-certmanager
 - name: net-contour
 - name: net-gateway-api
