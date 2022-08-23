@@ -7,17 +7,17 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.3
-    testgrid-tab-name: eventing-gitlab-continuous
+    testgrid-dashboards: knative-sandbox-release-1.7
+    testgrid-tab-name: eventing-rabbitmq-continuous
   cluster: prow-build
-  cron: 24 19 * * *
+  cron: 3 10 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-1.3
+  - base_ref: release-1.7
     org: knative-sandbox
-    path_alias: knative.dev/eventing-gitlab
-    repo: eventing-gitlab
-  name: continuous_eventing-gitlab_release-1.3_periodic
+    path_alias: knative.dev/eventing-rabbitmq
+    repo: eventing-rabbitmq
+  name: continuous_eventing-rabbitmq_release-1.7_periodic
   spec:
     containers:
     - command:
@@ -29,27 +29,15 @@ periodics:
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
-      - name: DOCKER_IN_DOCKER_ENABLED
-        value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20220822-af47ef80
       name: ""
-      resources:
-        limits:
-          memory: 16Gi
-        requests:
-          memory: 12Gi
+      resources: {}
       securityContext:
         privileged: true
       volumeMounts:
       - mountPath: /etc/test-account
         name: test-account
         readOnly: true
-      - mountPath: /docker-graph
-        name: docker-graph
-      - mountPath: /lib/modules
-        name: modules
-      - mountPath: /sys/fs/cgroup
-        name: cgroup
     nodeSelector:
       type: testing
     volumes:
@@ -59,28 +47,18 @@ periodics:
         - key: service-account-key.json
           path: service-account.json
         secretName: prow-google-credentials
-    - emptyDir: {}
-      name: docker-graph
-    - hostPath:
-        path: /lib/modules
-        type: Directory
-      name: modules
-    - hostPath:
-        path: /sys/fs/cgroup
-        type: Directory
-      name: cgroup
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.3
-    testgrid-tab-name: eventing-gitlab-release
+    testgrid-dashboards: knative-sandbox-release-1.7
+    testgrid-tab-name: eventing-rabbitmq-release
   cluster: prow-build
-  cron: 4 9 * * 2
+  cron: 41 9 * * 2
   decorate: true
   extra_refs:
-  - base_ref: release-1.3
+  - base_ref: release-1.7
     org: knative-sandbox
-    path_alias: knative.dev/eventing-gitlab
-    repo: eventing-gitlab
-  name: release_eventing-gitlab_release-1.3_periodic
+    path_alias: knative.dev/eventing-rabbitmq
+    repo: eventing-rabbitmq
+  name: release_eventing-rabbitmq_release-1.7_periodic
   spec:
     containers:
     - command:
@@ -88,13 +66,13 @@ periodics:
       - ./hack/release.sh
       - --dot-release
       - --release-gcs
-      - knative-releases/eventing-gitlab
+      - knative-releases/eventing-rabbitmq
       - --release-gcr
       - gcr.io/knative-releases
       - --github-token
       - /etc/hub-token/token
       - --branch
-      - release-1.3
+      - release-1.7
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
@@ -104,11 +82,7 @@ periodics:
         value: knative-sandbox
       image: gcr.io/knative-tests/test-infra/prow-tests:v20220822-af47ef80
       name: ""
-      resources:
-        limits:
-          memory: 16Gi
-        requests:
-          memory: 12Gi
+      resources: {}
       securityContext:
         privileged: true
       volumeMounts:
