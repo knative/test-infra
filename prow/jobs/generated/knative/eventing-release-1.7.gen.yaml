@@ -7,19 +7,19 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-release-1.3
+    testgrid-dashboards: knative-release-1.7
     testgrid-tab-name: eventing-continuous
   cluster: prow-build
-  cron: 52 11 * * *
+  cron: 36 7 * * *
   decorate: true
   decoration_config:
     timeout: 3h0m0s
   extra_refs:
-  - base_ref: release-1.3
+  - base_ref: release-1.7
     org: knative
     path_alias: knative.dev/eventing
     repo: eventing
-  name: continuous_eventing_release-1.3_periodic
+  name: continuous_eventing_release-1.7_periodic
   spec:
     containers:
     - command:
@@ -54,96 +54,17 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 - annotations:
-    testgrid-dashboards: knative-release-1.3
-    testgrid-tab-name: eventing-s390x-e2e-reconciler-tests
-  cluster: prow-build
-  cron: 20 9 * * *
-  decorate: true
-  extra_refs:
-  - base_ref: release-1.3
-    org: knative
-    path_alias: knative.dev/eventing
-    repo: eventing
-  name: s390x-e2e-reconciler-tests_eventing_release-1.3_periodic
-  spec:
-    containers:
-    - args:
-      - bash
-      - -c
-      - |
-        mkdir -p /root/.kube
-        cat /opt/cluster/ci-script > connect.sh
-        chmod +x connect.sh
-        ./connect.sh eventing_rekt-13
-        kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
-        chmod +x adjust.sh
-        ./adjust.sh
-        ./test/e2e-rekt-tests.sh --run-tests
-      command:
-      - runner.sh
-      env:
-      - name: SYSTEM_NAMESPACE
-        value: knative-eventing
-      - name: SCALE_CHAOSDUCK_TO_ZERO
-        value: "1"
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: KO_FLAGS
-        value: --platform=linux/s390x --insecure-registry
-      - name: PLATFORM
-        value: linux/s390x
-      - name: KO_DOCKER_REPO
-        valueFrom:
-          secretKeyRef:
-            key: ko-docker-repo
-            name: s390x-cluster1
-      - name: KUBECONFIG
-        value: /root/.kube/config
-      - name: DOCKER_CONFIG
-        value: /opt/cluster
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220822-af47ef80
-      name: ""
-      resources:
-        limits:
-          memory: 16Gi
-        requests:
-          memory: 12Gi
-      securityContext:
-        privileged: true
-      volumeMounts:
-      - mountPath: /etc/test-account
-        name: test-account
-        readOnly: true
-      - mountPath: /opt/cluster
-        name: s390x-cluster1
-        readOnly: true
-    nodeSelector:
-      type: testing
-    volumes:
-    - name: test-account
-      secret:
-        items:
-        - key: service-account-key.json
-          path: service-account.json
-        secretName: prow-google-credentials
-    - name: s390x-cluster1
-      secret:
-        defaultMode: 384
-        secretName: s390x-cluster1
-- annotations:
-    testgrid-dashboards: knative-release-1.3
+    testgrid-dashboards: knative-release-1.7
     testgrid-tab-name: eventing-s390x-e2e-tests
   cluster: prow-build
-  cron: 20 8 * * *
+  cron: 20 4 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-1.3
+  - base_ref: release-1.7
     org: knative
     path_alias: knative.dev/eventing
     repo: eventing
-  name: s390x-e2e-tests_eventing_release-1.3_periodic
+  name: s390x-e2e-tests_eventing_release-1.7_periodic
   spec:
     containers:
     - args:
@@ -153,7 +74,7 @@ periodics:
         mkdir -p /root/.kube
         cat /opt/cluster/ci-script > connect.sh
         chmod +x connect.sh
-        ./connect.sh eventing-13
+        ./connect.sh eventing-main
         kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
         chmod +x adjust.sh
         ./adjust.sh
@@ -212,19 +133,242 @@ periodics:
         defaultMode: 384
         secretName: s390x-cluster1
 - annotations:
-    testgrid-dashboards: knative-release-1.3
+    testgrid-dashboards: knative-release-1.7
+    testgrid-tab-name: eventing-s390x-e2e-reconciler-tests
+  cluster: prow-build
+  cron: 20 5 * * *
+  decorate: true
+  extra_refs:
+  - base_ref: release-1.7
+    org: knative
+    path_alias: knative.dev/eventing
+    repo: eventing
+  name: s390x-e2e-reconciler-tests_eventing_release-1.7_periodic
+  spec:
+    containers:
+    - args:
+      - bash
+      - -c
+      - |
+        mkdir -p /root/.kube
+        cat /opt/cluster/ci-script > connect.sh
+        chmod +x connect.sh
+        ./connect.sh eventing_rekt-main
+        kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
+        chmod +x adjust.sh
+        ./adjust.sh
+        ./test/e2e-rekt-tests.sh --run-tests
+      command:
+      - runner.sh
+      env:
+      - name: SYSTEM_NAMESPACE
+        value: knative-eventing
+      - name: SCALE_CHAOSDUCK_TO_ZERO
+        value: "1"
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: KO_FLAGS
+        value: --platform=linux/s390x --insecure-registry
+      - name: PLATFORM
+        value: linux/s390x
+      - name: KO_DOCKER_REPO
+        valueFrom:
+          secretKeyRef:
+            key: ko-docker-repo
+            name: s390x-cluster1
+      - name: KUBECONFIG
+        value: /root/.kube/config
+      - name: DOCKER_CONFIG
+        value: /opt/cluster
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220822-af47ef80
+      name: ""
+      resources:
+        limits:
+          memory: 16Gi
+        requests:
+          memory: 12Gi
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /etc/test-account
+        name: test-account
+        readOnly: true
+      - mountPath: /opt/cluster
+        name: s390x-cluster1
+        readOnly: true
+    nodeSelector:
+      type: testing
+    volumes:
+    - name: test-account
+      secret:
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
+    - name: s390x-cluster1
+      secret:
+        defaultMode: 384
+        secretName: s390x-cluster1
+- annotations:
+    testgrid-dashboards: knative-release-1.7
+    testgrid-tab-name: eventing-ppc64le-e2e-tests
+  cluster: prow-build
+  cron: 0 7 * * *
+  decorate: true
+  extra_refs:
+  - base_ref: release-1.7
+    org: knative
+    path_alias: knative.dev/eventing
+    repo: eventing
+  name: ppc64le-e2e-tests_eventing_release-1.7_periodic
+  spec:
+    containers:
+    - args:
+      - bash
+      - -c
+      - |
+        cat /opt/cluster/ci-script > /tmp/connect.sh
+        chmod +x /tmp/connect.sh
+        . /tmp/connect.sh ${CI_JOB}
+        ./test/e2e-tests.sh --run-tests
+      command:
+      - runner.sh
+      env:
+      - name: SYSTEM_NAMESPACE
+        value: knative-eventing
+      - name: SCALE_CHAOSDUCK_TO_ZERO
+        value: "1"
+      - name: CI_JOB
+        value: eventing-main
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: KO_FLAGS
+        value: --platform=linux/ppc64le
+      - name: PLATFORM
+        value: linux/ppc64le
+      - name: KO_DOCKER_REPO
+        value: registry.ppc64le
+      - name: KUBECONFIG
+        value: /root/.kube/config
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220822-af47ef80
+      name: ""
+      resources:
+        limits:
+          memory: 16Gi
+        requests:
+          memory: 12Gi
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /etc/test-account
+        name: test-account
+        readOnly: true
+      - mountPath: /opt/cluster
+        name: ppc64le-cluster
+        readOnly: true
+    nodeSelector:
+      type: testing
+    volumes:
+    - name: test-account
+      secret:
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
+    - name: ppc64le-cluster
+      secret:
+        defaultMode: 384
+        secretName: ppc64le-cluster
+- annotations:
+    testgrid-dashboards: knative-release-1.7
+    testgrid-tab-name: eventing-ppc64le-e2e-reconciler-tests
+  cluster: prow-build
+  cron: 30 4 * * *
+  decorate: true
+  extra_refs:
+  - base_ref: release-1.7
+    org: knative
+    path_alias: knative.dev/eventing
+    repo: eventing
+  name: ppc64le-e2e-reconciler-tests_eventing_release-1.7_periodic
+  spec:
+    containers:
+    - args:
+      - bash
+      - -c
+      - |
+        cat /opt/cluster/ci-script > /tmp/connect.sh
+        chmod +x /tmp/connect.sh
+        . /tmp/connect.sh ${CI_JOB}
+        ./test/e2e-rekt-tests.sh --run-tests
+      command:
+      - runner.sh
+      env:
+      - name: SYSTEM_NAMESPACE
+        value: knative-eventing
+      - name: SCALE_CHAOSDUCK_TO_ZERO
+        value: "1"
+      - name: CI_JOB
+        value: eventing_rekt-main
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: KO_FLAGS
+        value: --platform=linux/ppc64le
+      - name: PLATFORM
+        value: linux/ppc64le
+      - name: KO_DOCKER_REPO
+        value: registry.ppc64le
+      - name: KUBECONFIG
+        value: /root/.kube/config
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220822-af47ef80
+      name: ""
+      resources:
+        limits:
+          memory: 16Gi
+        requests:
+          memory: 12Gi
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /etc/test-account
+        name: test-account
+        readOnly: true
+      - mountPath: /opt/cluster
+        name: ppc64le-cluster
+        readOnly: true
+    nodeSelector:
+      type: testing
+    volumes:
+    - name: test-account
+      secret:
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
+    - name: ppc64le-cluster
+      secret:
+        defaultMode: 384
+        secretName: ppc64le-cluster
+- annotations:
+    testgrid-dashboards: knative-release-1.7
     testgrid-tab-name: eventing-release
   cluster: prow-build
-  cron: 16 9 * * 2
+  cron: 56 9 * * 2
   decorate: true
   decoration_config:
     timeout: 3h0m0s
   extra_refs:
-  - base_ref: release-1.3
+  - base_ref: release-1.7
     org: knative
     path_alias: knative.dev/eventing
     repo: eventing
-  name: release_eventing_release-1.3_periodic
+  name: release_eventing_release-1.7_periodic
   spec:
     containers:
     - command:
@@ -238,7 +382,7 @@ periodics:
       - --github-token
       - /etc/hub-token/token
       - --branch
-      - release-1.3
+      - release-1.7
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
@@ -279,10 +423,10 @@ presubmits:
   knative/eventing:
   - always_run: true
     branches:
-    - ^release-1.3$
+    - ^release-1.7$
     cluster: prow-build
     decorate: true
-    name: build-tests_eventing_release-1.3
+    name: build-tests_eventing_release-1.7
     path_alias: knative.dev/eventing
     spec:
       containers:
@@ -303,10 +447,10 @@ presubmits:
         type: testing
   - always_run: true
     branches:
-    - ^release-1.3$
+    - ^release-1.7$
     cluster: prow-build
     decorate: true
-    name: unit-tests_eventing_release-1.3
+    name: unit-tests_eventing_release-1.7
     path_alias: knative.dev/eventing
     spec:
       containers:
@@ -327,10 +471,10 @@ presubmits:
         type: testing
   - always_run: true
     branches:
-    - ^release-1.3$
+    - ^release-1.7$
     cluster: prow-build
     decorate: true
-    name: conformance-tests_eventing_release-1.3
+    name: conformance-tests_eventing_release-1.7
     path_alias: knative.dev/eventing
     spec:
       containers:
@@ -368,10 +512,10 @@ presubmits:
           secretName: prow-google-credentials
   - always_run: true
     branches:
-    - ^release-1.3$
+    - ^release-1.7$
     cluster: prow-build
     decorate: true
-    name: reconciler-tests_eventing_release-1.3
+    name: reconciler-tests_eventing_release-1.7
     optional: true
     path_alias: knative.dev/eventing
     spec:
@@ -410,10 +554,10 @@ presubmits:
           secretName: prow-google-credentials
   - always_run: true
     branches:
-    - ^release-1.3$
+    - ^release-1.7$
     cluster: prow-build
     decorate: true
-    name: upgrade-tests_eventing_release-1.3
+    name: upgrade-tests_eventing_release-1.7
     path_alias: knative.dev/eventing
     spec:
       containers:
