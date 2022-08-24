@@ -169,7 +169,8 @@ Example:
    `[RELEASE_BRANCH_VERSION-]` with the release branch number (e.g., `1.4`)
 
    ```
-   cd config/prow
+   # run gcloud auth login first and pull the latest commit in main branch
+   cd prow/jobs
    ./run_job.sh release_MODULE_release-[RELEASE_BRANCH_VERSION]_periodic
    ```
 
@@ -195,6 +196,7 @@ Example:
    module name (e.g., `serving` or `eventing`).
 
    ```
+   # run gcloud auth login first and pull the latest commit in main branch
    cd config/prow
    ./run_job.sh ci-knative-MODULE-nightly-release
    ```
