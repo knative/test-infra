@@ -7,17 +7,17 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.3
-    testgrid-tab-name: eventing-autoscaler-keda-continuous
+    testgrid-dashboards: knative-sandbox-release-1.7
+    testgrid-tab-name: kn-plugin-event-continuous
   cluster: prow-build
-  cron: 18 13 * * *
+  cron: 34 5 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-1.3
+  - base_ref: release-1.7
     org: knative-sandbox
-    path_alias: knative.dev/eventing-autoscaler-keda
-    repo: eventing-autoscaler-keda
-  name: continuous_eventing-autoscaler-keda_release-1.3_periodic
+    path_alias: knative.dev/kn-plugin-event
+    repo: kn-plugin-event
+  name: continuous_kn-plugin-event_release-1.7_periodic
   spec:
     containers:
     - command:
@@ -48,17 +48,17 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.3
-    testgrid-tab-name: eventing-autoscaler-keda-release
+    testgrid-dashboards: knative-sandbox-release-1.7
+    testgrid-tab-name: kn-plugin-event-release
   cluster: prow-build
-  cron: 6 9 * * 2
+  cron: 34 9 * * 2
   decorate: true
   extra_refs:
-  - base_ref: release-1.3
+  - base_ref: release-1.7
     org: knative-sandbox
-    path_alias: knative.dev/eventing-autoscaler-keda
-    repo: eventing-autoscaler-keda
-  name: release_eventing-autoscaler-keda_release-1.3_periodic
+    path_alias: knative.dev/kn-plugin-event
+    repo: kn-plugin-event
+  name: release_kn-plugin-event_release-1.7_periodic
   spec:
     containers:
     - command:
@@ -66,13 +66,13 @@ periodics:
       - ./hack/release.sh
       - --dot-release
       - --release-gcs
-      - knative-releases/eventing-autoscaler-keda
+      - knative-releases/kn-plugin-event
       - --release-gcr
       - gcr.io/knative-releases
       - --github-token
       - /etc/hub-token/token
       - --branch
-      - release-1.3
+      - release-1.7
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
@@ -108,60 +108,60 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 presubmits:
-  knative-sandbox/eventing-autoscaler-keda:
+  knative-sandbox/kn-plugin-event:
   - always_run: true
     branches:
-    - ^release-1.3$
+    - ^release-1.7$
     cluster: prow-build
     decorate: true
-    name: integration-test-kafka-source_eventing-autoscaler-keda_release-1.3
-    optional: true
-    path_alias: knative.dev/eventing-autoscaler-keda
+    name: build-tests_kn-plugin-event_release-1.7
+    path_alias: knative.dev/kn-plugin-event
     spec:
       containers:
       - command:
         - runner.sh
         - ./test/presubmit-tests.sh
-        - --run-test
-        - ./test/e2e-tests.sh --kafka-source
-        env:
-        - name: E2E_CLUSTER_REGION
-          value: us-central1
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/test-account/service-account.json
+        - --build-tests
         image: gcr.io/knative-tests/test-infra/prow-tests:v20220822-af47ef80
         name: ""
         resources: {}
         securityContext:
           privileged: true
-        volumeMounts:
-        - mountPath: /etc/test-account
-          name: test-account
-          readOnly: true
       nodeSelector:
         type: testing
-      volumes:
-      - name: test-account
-        secret:
-          items:
-          - key: service-account-key.json
-            path: service-account.json
-          secretName: prow-google-credentials
   - always_run: true
     branches:
-    - ^release-1.3$
+    - ^release-1.7$
     cluster: prow-build
     decorate: true
-    name: integration-test-kafka-mt-source_eventing-autoscaler-keda_release-1.3
-    optional: true
-    path_alias: knative.dev/eventing-autoscaler-keda
+    name: unit-tests_kn-plugin-event_release-1.7
+    path_alias: knative.dev/kn-plugin-event
     spec:
       containers:
       - command:
         - runner.sh
         - ./test/presubmit-tests.sh
-        - --run-test
-        - ./test/e2e-tests.sh --kafka-mt-source
+        - --unit-tests
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220822-af47ef80
+        name: ""
+        resources: {}
+        securityContext:
+          privileged: true
+      nodeSelector:
+        type: testing
+  - always_run: true
+    branches:
+    - ^release-1.7$
+    cluster: prow-build
+    decorate: true
+    name: integration-tests_kn-plugin-event_release-1.7
+    path_alias: knative.dev/kn-plugin-event
+    spec:
+      containers:
+      - command:
+        - runner.sh
+        - ./test/presubmit-tests.sh
+        - --integration-tests
         env:
         - name: E2E_CLUSTER_REGION
           value: us-central1
