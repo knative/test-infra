@@ -29,7 +29,7 @@ periodics:
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220822-af47ef80
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
       name: ""
       resources: {}
       securityContext:
@@ -69,7 +69,7 @@ periodics:
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/nightly-account/service-account.json
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220822-af47ef80
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
       name: ""
       resources: {}
       securityContext:
@@ -118,7 +118,7 @@ periodics:
         value: us-central1
       - name: ORG_NAME
         value: knative-sandbox
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220822-af47ef80
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
       name: ""
       resources: {}
       securityContext:
