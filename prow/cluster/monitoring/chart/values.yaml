@@ -1,0 +1,67 @@
+grafana:
+  image:
+    tag: 9.1.1
+  resources:
+   limits:
+     cpu: 4000m
+     memory: 2048Mi
+   requests:
+     cpu: 500m
+     memory: 1024Mi
+  sidecar:
+    dashboards:
+      enabled: true
+      searchNamespace: ALL
+    datasources:
+      defaultDatasourceEnabled: false
+  serviceAccount:
+    create: true
+    name: grafana
+    annotations:
+      iam.gke.io/gcp-service-account: grafana@knative-tests.iam.gserviceaccount.com
+  deploymentStrategy:
+    type: Recreate # blame the PVC but this should be infrequent
+  persistence:
+    enabled: true
+    size: 50Gi
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: prometheus
+          type: prometheus
+          url: http://frontend.monitoring.svc:9090
+          access: proxy
+          timeout: 120
+          isDefault: true
+  plugins:
+    - grafana-worldmap-panel
+    - grafana-piechart-panel
+    - grafana-polystat-panel
+  service:
+    annotations:
+      # temporary https://stackoverflow.com/questions/72636456/gke-gateway-api-httproute-not-working-for-https-between-load-balancer-and-applic
+      cloud.google.com/backend-config: '{"default": "grafana"}'
+  extraSecretMounts:
+    - name: grafana-oauth
+      secretName: grafana-oauth
+      defaultMode: 0440
+      mountPath: /etc/secrets/oauth
+      readOnly: true
+  grafana.ini:
+    feature_toggles:
+      publicDashboards: "true"
+    server:
+      root_url: https://grafana.knative.dev
+    auth.github:
+      enabled: true
+      allow_sign_up: true
+      scopes: user:email,read:org
+      auth_url: https://github.com/login/oauth/authorize
+      token_url: https://github.com/login/oauth/access_token
+      api_url: https://api.github.com/user
+      role_attribute_path: contains(groups[*], '@knative/productivity-wg-leads') && 'Admin' || contains(groups[*], '@knative/productivity-writers') && 'Editor' || 'Viewer'
+      allowed_organizations: knative kubernetes
+      client_id: $__file{/etc/secrets/oauth/client_id}
+      client_secret: $__file{/etc/secrets/oauth/client_secret}
+

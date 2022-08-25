@@ -10,7 +10,7 @@ resource "google_storage_bucket" "prow" {
       type          = "SetStorageClass"
     }
     condition {
-      age                        = 180
+      age = 180
     }
   }
   lifecycle_rule {
@@ -19,7 +19,7 @@ resource "google_storage_bucket" "prow" {
     }
 
     condition {
-      age                        = 210
+      age = 210
     }
   }
 }

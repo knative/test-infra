@@ -86,3 +86,20 @@ resource "google_service_account" "gsuite" {
   project      = "knative-tests"
   description  = "Service account for managing knative.team gsuite groups."
 }
+
+// Grafana
+resource "google_service_account_iam_binding" "grafana" {
+  service_account_id = google_service_account.grafana.name
+  role               = "roles/iam.workloadIdentityUser"
+
+  members = [
+    "serviceAccount:knative-tests.svc.id.goog[monitoring/grafana]",
+  ]
+}
+
+resource "google_service_account" "grafana" {
+  account_id   = "grafana"
+  display_name = "Grafana"
+  project      = "knative-tests"
+  description  = "Service account for accessing Managed Prometheus Metrics"
+}
