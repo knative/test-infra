@@ -7,17 +7,17 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-0.22
+    testgrid-dashboards: knative-sandbox-release-0.26
     testgrid-tab-name: kn-plugin-func-release
   cluster: prow-build
-  cron: 22 9 * * 2
+  cron: 6 9 * * 2
   decorate: true
   extra_refs:
-  - base_ref: release-0.22
+  - base_ref: release-0.26
     org: knative-sandbox
     path_alias: knative.dev/kn-plugin-func
     repo: kn-plugin-func
-  name: release_kn-plugin-func_release-0.22_periodic
+  name: release_kn-plugin-func_release-0.26_periodic
   spec:
     containers:
     - command:
@@ -31,7 +31,7 @@ periodics:
       - --github-token
       - /etc/hub-token/token
       - --branch
-      - release-0.22
+      - release-0.26
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
