@@ -2,7 +2,6 @@ org: knative
 repo: client-pkg
 branches: [main]
 image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
-imagePullPolicy: Always
 cluster: prow-build
 
 jobs:
