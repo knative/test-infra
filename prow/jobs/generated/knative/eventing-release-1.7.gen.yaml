@@ -215,7 +215,7 @@ periodics:
     testgrid-dashboards: knative-release-1.7
     testgrid-tab-name: eventing-ppc64le-e2e-tests
   cluster: prow-build
-  cron: 0 7 * * *
+  cron: 30 5 * * *
   decorate: true
   extra_refs:
   - base_ref: release-1.7
@@ -241,7 +241,7 @@ periodics:
       - name: SCALE_CHAOSDUCK_TO_ZERO
         value: "1"
       - name: CI_JOB
-        value: eventing-main
+        value: eventing-release-1.7
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -287,7 +287,7 @@ periodics:
     testgrid-dashboards: knative-release-1.7
     testgrid-tab-name: eventing-ppc64le-e2e-reconciler-tests
   cluster: prow-build
-  cron: 30 4 * * *
+  cron: 30 2 * * *
   decorate: true
   extra_refs:
   - base_ref: release-1.7
@@ -313,7 +313,7 @@ periodics:
       - name: SCALE_CHAOSDUCK_TO_ZERO
         value: "1"
       - name: CI_JOB
-        value: eventing_rekt-main
+        value: eventing_rekt-1.7
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
