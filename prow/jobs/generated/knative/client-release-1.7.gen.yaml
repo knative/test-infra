@@ -124,7 +124,7 @@ periodics:
     testgrid-dashboards: knative-release-1.7
     testgrid-tab-name: client-ppc64le-e2e-tests
   cluster: prow-build
-  cron: 0 9 * * *
+  cron: 30 19 * * *
   decorate: true
   extra_refs:
   - base_ref: release-1.7
@@ -148,7 +148,7 @@ periodics:
       - name: INGRESS_CLASS
         value: contour.ingress.networking.knative.dev
       - name: CI_JOB
-        value: client-main
+        value: client-release-1.7
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS

@@ -121,14 +121,14 @@ jobs:
     ./test/e2e-tests.sh --run-tests
   command:
   - runner.sh
-  cron: 0 7 * * *
+  cron: 30 5 * * *
   env:
   - name: SYSTEM_NAMESPACE
     value: knative-eventing
   - name: SCALE_CHAOSDUCK_TO_ZERO
     value: "1"
   - name: CI_JOB
-    value: eventing-main
+    value: eventing-release-1.7
   name: ppc64le-e2e-tests
   requirements:
   - ppc64le
@@ -144,14 +144,14 @@ jobs:
     ./test/e2e-rekt-tests.sh --run-tests
   command:
   - runner.sh
-  cron: 30 4 * * *
+  cron: 30 2 * * *
   env:
   - name: SYSTEM_NAMESPACE
     value: knative-eventing
   - name: SCALE_CHAOSDUCK_TO_ZERO
     value: "1"
   - name: CI_JOB
-    value: eventing_rekt-main
+    value: eventing_rekt-1.7
   name: ppc64le-e2e-reconciler-tests
   requirements:
   - ppc64le
