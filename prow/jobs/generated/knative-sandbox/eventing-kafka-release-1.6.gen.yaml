@@ -47,6 +47,7 @@ periodics:
       - mountPath: /sys/fs/cgroup
         name: cgroup
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -119,6 +120,7 @@ periodics:
       - mountPath: /sys/fs/cgroup
         name: cgroup
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: hub-token
@@ -174,6 +176,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - emptyDir: {}
@@ -215,6 +218,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - emptyDir: {}
@@ -256,6 +260,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -293,6 +298,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -330,6 +336,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -367,6 +374,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -405,6 +413,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -442,6 +451,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account

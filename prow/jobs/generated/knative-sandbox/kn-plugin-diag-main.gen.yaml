@@ -29,7 +29,7 @@ periodics:
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
       name: ""
       resources: {}
       securityContext:
@@ -39,6 +39,7 @@ periodics:
         name: test-account
         readOnly: true
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -62,12 +63,13 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --build-tests
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
         name: ""
         resources: {}
         securityContext:
           privileged: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
   - always_run: true
     branches:
@@ -82,12 +84,13 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --unit-tests
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
         name: ""
         resources: {}
         securityContext:
           privileged: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
   - always_run: true
     branches:
@@ -107,7 +110,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
         name: ""
         resources: {}
         securityContext:
@@ -117,6 +120,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account

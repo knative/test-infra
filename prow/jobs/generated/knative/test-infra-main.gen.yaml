@@ -26,6 +26,7 @@ presubmits:
         securityContext:
           privileged: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
   - always_run: true
     branches:
@@ -46,4 +47,5 @@ presubmits:
         securityContext:
           privileged: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
