@@ -62,12 +62,28 @@ module "knative_dev" {
         "35.201.93.215",
       ]
     },
+    # {
+    #   name = "prow"
+    #   type = "AAAA"
+    #   ttl  = 300
+    #   records = [
+    #     "2600:1901:0:559b::",
+    #   ]
+    # },
     {
       name = "gcsweb"
       type = "A"
       ttl  = 300
       records = [
         "35.201.93.215",
+      ]
+    },
+    {
+      name = "grafana"
+      type = "A"
+      ttl  = 300
+      records = [
+        "35.244.204.234",
       ]
     },
     {
@@ -116,6 +132,14 @@ module "knative_dev" {
       ttl  = 300
       records = [
         "24af6f63e3",
+      ]
+    },
+    {
+      name = "_acme-challenge"
+      type = "CNAME"
+      ttl  = 300
+      records = [
+        "83ded2db-0c5e-4f1f-ab89-93105195240d.12.authorize.certificatemanager.goog.",
       ]
     },
   ]

@@ -1,0 +1,22 @@
+kind: Gateway
+apiVersion: gateway.networking.k8s.io/v1beta1
+metadata:
+  name: https-lb
+  namespace: default
+  annotations:
+    networking.gke.io/certmap: knative-dev
+spec:
+  gatewayClassName: gke-l7-gxlb
+  listeners:
+  - name: https
+    protocol: HTTPS
+    port: 443
+    allowedRoutes:
+      namespaces:
+        from: Selector
+        selector:
+          matchLabels:
+            shared-lb-access: "true"
+  addresses:
+  - type: NamedAddress
+    value: grafana-ingress

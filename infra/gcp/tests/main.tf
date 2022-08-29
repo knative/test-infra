@@ -19,7 +19,8 @@ module "project" {
   activate_apis = [
     "secretmanager.googleapis.com",
     "compute.googleapis.com",
-    "cloudkms.googleapis.com"
+    "cloudkms.googleapis.com",
+    "certificatemanager.googleapis.com"
   ]
 }
 
