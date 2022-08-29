@@ -45,6 +45,7 @@ periodics:
         name: test-account
         readOnly: true
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -82,10 +83,10 @@ periodics:
       command:
       - runner.sh
       env:
-      - name: SYSTEM_NAMESPACE
-        value: knative-eventing
       - name: SCALE_CHAOSDUCK_TO_ZERO
         value: "1"
+      - name: SYSTEM_NAMESPACE
+        value: knative-eventing
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -120,6 +121,7 @@ periodics:
         name: s390x-cluster1
         readOnly: true
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -161,10 +163,10 @@ periodics:
       command:
       - runner.sh
       env:
-      - name: SYSTEM_NAMESPACE
-        value: knative-eventing
       - name: SCALE_CHAOSDUCK_TO_ZERO
         value: "1"
+      - name: SYSTEM_NAMESPACE
+        value: knative-eventing
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -199,6 +201,7 @@ periodics:
         name: s390x-cluster1
         readOnly: true
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -236,12 +239,12 @@ periodics:
       command:
       - runner.sh
       env:
-      - name: SYSTEM_NAMESPACE
-        value: knative-eventing
-      - name: SCALE_CHAOSDUCK_TO_ZERO
-        value: "1"
       - name: CI_JOB
         value: eventing-main
+      - name: SCALE_CHAOSDUCK_TO_ZERO
+        value: "1"
+      - name: SYSTEM_NAMESPACE
+        value: knative-eventing
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -271,6 +274,7 @@ periodics:
         name: ppc64le-cluster
         readOnly: true
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -308,12 +312,12 @@ periodics:
       command:
       - runner.sh
       env:
-      - name: SYSTEM_NAMESPACE
-        value: knative-eventing
-      - name: SCALE_CHAOSDUCK_TO_ZERO
-        value: "1"
       - name: CI_JOB
         value: eventing_rekt-main
+      - name: SCALE_CHAOSDUCK_TO_ZERO
+        value: "1"
+      - name: SYSTEM_NAMESPACE
+        value: knative-eventing
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -343,6 +347,7 @@ periodics:
         name: ppc64le-cluster
         readOnly: true
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -400,6 +405,7 @@ periodics:
         name: nightly-account
         readOnly: true
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: nightly-account
@@ -456,6 +462,7 @@ periodics:
         name: release-account
         readOnly: true
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: hub-token
@@ -495,6 +502,7 @@ presubmits:
         securityContext:
           privileged: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
   - always_run: true
     branches:
@@ -519,6 +527,7 @@ presubmits:
         securityContext:
           privileged: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
   - always_run: true
     branches:
@@ -553,6 +562,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -595,6 +605,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -636,6 +647,7 @@ presubmits:
           name: test-account
           readOnly: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account

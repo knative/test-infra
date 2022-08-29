@@ -2,7 +2,6 @@ org: knative
 repo: serving
 branches: [main]
 image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
-imagePullPolicy: Always
 requirements: [docker]
 
 jobs:
@@ -290,3 +289,72 @@ resources_presets:
       memory: 10Gi
     requests:
       memory: 8Gi
+
+requirement_presets:
+  nightly:
+    podSpec:
+      serviceAccountName: nightly
+    env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/nightly-account/service-account.json
+    volumeMounts:
+      - name: nightly-account
+        mountPath: /etc/nightly-account
+        readOnly: true
+    volumes:
+      - name: nightly-account
+        secret:
+          items:
+          - key: nightly.json
+            path: service-account.json
+          secretName: prow-google-credentials
+
+  release:
+    podSpec:
+      serviceAccountName: release
+    env:
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+    volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+    volumes:
+      - name: hub-token
+        secret:
+          items:
+          - key: hub_token
+            path: token
+          secretName: github-credentials
+      - name: release-account
+        secret:
+          items:
+          - key: release.json
+            path: service-account.json
+          secretName: prow-google-credentials
+
+  perf:
+    podSpec:
+      serviceAccountName: test-runner
+    volumeMounts:
+      - name: influx-token-secret-volume
+        mountPath: /etc/influx-token-secret-volume
+        readOnly: true
+      - name: influx-url-secret-volume
+        mountPath: /etc/influx-url-secret-volume
+        readOnly: true
+    volumes:
+      - name: influx-token-secret-volume
+        secret:
+          secretName: influx-token-secret
+          defaultMode: 0600
+      - name: influx-url-secret-volume
+        secret:
+          secretName: influx-url-secret
+          defaultMode: 0600
+  gcp:
+    podSpec:
+      serviceAccountName: test-runner
+    env:
+      - name: E2E_CLUSTER_REGION
+        value: us-central1

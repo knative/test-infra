@@ -49,6 +49,7 @@ periodics:
       - mountPath: /sys/fs/cgroup
         name: cgroup
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -121,6 +122,7 @@ periodics:
       - mountPath: /sys/fs/cgroup
         name: cgroup
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: hub-token
@@ -174,16 +176,16 @@ periodics:
       command:
       - runner.sh
       env:
-      - name: SYSTEM_NAMESPACE
-        value: knative-eventing
+      - name: BROKER_CLASS
+        value: Kafka
+      - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+        value: SSL
       - name: EVENTING_NAMESPACE
         value: knative-eventing
       - name: SCALE_CHAOSDUCK_TO_ZERO
         value: "1"
-      - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
-        value: SSL
-      - name: BROKER_CLASS
-        value: Kafka
+      - name: SYSTEM_NAMESPACE
+        value: knative-eventing
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -214,6 +216,7 @@ periodics:
         name: s390x-cluster1
         readOnly: true
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -255,16 +258,16 @@ periodics:
       command:
       - runner.sh
       env:
-      - name: SYSTEM_NAMESPACE
-        value: knative-eventing
+      - name: BROKER_CLASS
+        value: Kafka
+      - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+        value: SASL_SSL
       - name: EVENTING_NAMESPACE
         value: knative-eventing
       - name: SCALE_CHAOSDUCK_TO_ZERO
         value: "1"
-      - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
-        value: SASL_SSL
-      - name: BROKER_CLASS
-        value: Kafka
+      - name: SYSTEM_NAMESPACE
+        value: knative-eventing
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -295,6 +298,7 @@ periodics:
         name: s390x-cluster1
         readOnly: true
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -336,16 +340,16 @@ periodics:
       command:
       - runner.sh
       env:
-      - name: SYSTEM_NAMESPACE
-        value: knative-eventing
+      - name: BROKER_CLASS
+        value: Kafka
+      - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+        value: SASL_PLAIN
       - name: EVENTING_NAMESPACE
         value: knative-eventing
       - name: SCALE_CHAOSDUCK_TO_ZERO
         value: "1"
-      - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
-        value: SASL_PLAIN
-      - name: BROKER_CLASS
-        value: Kafka
+      - name: SYSTEM_NAMESPACE
+        value: knative-eventing
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -376,6 +380,7 @@ periodics:
         name: s390x-cluster1
         readOnly: true
     nodeSelector:
+      kubernetes.io/arch: amd64
       type: testing
     volumes:
     - name: test-account
@@ -409,6 +414,7 @@ presubmits:
         securityContext:
           privileged: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
   - always_run: true
     branches:
@@ -429,6 +435,7 @@ presubmits:
         securityContext:
           privileged: true
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
   - always_run: true
     branches:
@@ -468,6 +475,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -524,6 +532,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -581,6 +590,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -638,6 +648,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -695,6 +706,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -728,10 +740,10 @@ presubmits:
         - --run-test
         - ./test/e2e-tests.sh
         env:
-        - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
-          value: SSL
         - name: BROKER_CLASS
           value: Kafka
+        - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+          value: SSL
         - name: E2E_CLUSTER_REGION
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -754,6 +766,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -787,10 +800,10 @@ presubmits:
         - --run-test
         - ./test/e2e-tests.sh
         env:
-        - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
-          value: SASL_SSL
         - name: BROKER_CLASS
           value: Kafka
+        - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+          value: SASL_SSL
         - name: E2E_CLUSTER_REGION
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -813,6 +826,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -846,10 +860,10 @@ presubmits:
         - --run-test
         - ./test/e2e-tests.sh
         env:
-        - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
-          value: SASL_PLAIN
         - name: BROKER_CLASS
           value: Kafka
+        - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+          value: SASL_PLAIN
         - name: E2E_CLUSTER_REGION
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -872,6 +886,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -905,10 +920,10 @@ presubmits:
         - --run-test
         - ./test/reconciler-tests.sh
         env:
-        - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
-          value: SSL
         - name: BROKER_CLASS
           value: Kafka
+        - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+          value: SSL
         - name: E2E_CLUSTER_REGION
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -931,6 +946,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -964,10 +980,10 @@ presubmits:
         - --run-test
         - ./test/reconciler-tests.sh
         env:
-        - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
-          value: SASL_SSL
         - name: BROKER_CLASS
           value: Kafka
+        - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+          value: SASL_SSL
         - name: E2E_CLUSTER_REGION
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -990,6 +1006,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
@@ -1023,10 +1040,10 @@ presubmits:
         - --run-test
         - ./test/reconciler-tests.sh
         env:
-        - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
-          value: SASL_PLAIN
         - name: BROKER_CLASS
           value: Kafka
+        - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+          value: SASL_PLAIN
         - name: E2E_CLUSTER_REGION
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -1049,6 +1066,7 @@ presubmits:
         - mountPath: /sys/fs/cgroup
           name: cgroup
       nodeSelector:
+        kubernetes.io/arch: amd64
         type: testing
       volumes:
       - name: test-account
