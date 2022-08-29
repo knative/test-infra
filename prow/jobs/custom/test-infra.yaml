@@ -394,7 +394,7 @@ postsubmits:
           - failure
         report_template: '"The update-testgrid-proto postsubmit job has failed, please check the logs: <{{.Status.URL}}|View logs>"'
     spec:
-      serviceAccountName: testgrid-updater 
+      serviceAccountName: testgrid-updater
       containers:
       - image: gcr.io/k8s-prow/configurator:v20220826-af914c2b81
         command:

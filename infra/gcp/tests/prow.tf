@@ -104,7 +104,7 @@ resource "google_service_account" "grafana" {
   description  = "Service account for accessing Managed Prometheus Metrics"
 }
 
-// Grafana
+// Testgrid Updater
 resource "google_service_account_iam_binding" "testgrid_updater" {
   service_account_id = google_service_account.testgrid_updater.name
   role               = "roles/iam.workloadIdentityUser"

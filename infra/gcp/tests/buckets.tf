@@ -82,7 +82,7 @@ module "iam_testgrid_bucket" {
 
   bindings = {
     "roles/storage.admin" = [
-      "serviceAccount:testgrid-updater@knative-tests.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.testgrid_updater.email}",
       "serviceAccount:updater@k8s-testgrid.iam.gserviceaccount.com"
     ]
     "roles/storage.objectViewer" = [
