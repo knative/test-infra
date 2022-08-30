@@ -157,6 +157,7 @@ presubmits:
     decorate: true
     name: build-tests_kn-plugin-source-kamelet_main
     path_alias: knative.dev/kn-plugin-source-kamelet
+    rerun_command: /test build-tests
     spec:
       containers:
       - command:
@@ -171,6 +172,7 @@ presubmits:
       nodeSelector:
         kubernetes.io/arch: amd64
         type: testing
+    trigger: ((?m)^/test( | .* )build-tests,?($|\s.*))|((?m)^/test( | .* )build-tests_kn-plugin-source-kamelet_main,?($|\s.*))
   - always_run: true
     branches:
     - ^main$
@@ -178,6 +180,7 @@ presubmits:
     decorate: true
     name: unit-tests_kn-plugin-source-kamelet_main
     path_alias: knative.dev/kn-plugin-source-kamelet
+    rerun_command: /test unit-tests
     spec:
       containers:
       - command:
@@ -192,6 +195,7 @@ presubmits:
       nodeSelector:
         kubernetes.io/arch: amd64
         type: testing
+    trigger: ((?m)^/test( | .* )unit-tests,?($|\s.*))|((?m)^/test( | .* )unit-tests_kn-plugin-source-kamelet_main,?($|\s.*))
   - always_run: true
     branches:
     - ^main$
@@ -199,6 +203,7 @@ presubmits:
     decorate: true
     name: integration-tests_kn-plugin-source-kamelet_main
     path_alias: knative.dev/kn-plugin-source-kamelet
+    rerun_command: /test integration-tests
     spec:
       containers:
       - command:
@@ -229,3 +234,4 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+    trigger: ((?m)^/test( | .* )integration-tests,?($|\s.*))|((?m)^/test( | .* )integration-tests_kn-plugin-source-kamelet_main,?($|\s.*))
