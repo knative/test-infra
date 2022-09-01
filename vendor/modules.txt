@@ -81,6 +81,9 @@ github.com/PuerkitoBio/urlesc
 # github.com/acomagu/bufpipe v1.0.3
 ## explicit; go 1.12
 github.com/acomagu/bufpipe
+# github.com/andybalholm/brotli v1.0.3
+## explicit; go 1.12
+github.com/andybalholm/brotli
 # github.com/andygrunwald/go-gerrit v0.0.0-20210709065208-9d38b0be0268
 ## explicit; go 1.15
 github.com/andygrunwald/go-gerrit
@@ -143,12 +146,24 @@ github.com/aws/aws-sdk-go/service/sts/stsiface
 # github.com/beorn7/perks v1.0.1
 ## explicit; go 1.11
 github.com/beorn7/perks/quantile
+# github.com/blang/semver v3.5.1+incompatible
+## explicit
+github.com/blang/semver
 # github.com/blang/semver/v4 v4.0.0
 ## explicit; go 1.14
 github.com/blang/semver/v4
 # github.com/blendle/zapdriver v1.3.1
 ## explicit; go 1.12
 github.com/blendle/zapdriver
+# github.com/carolynvs/magex v0.8.1
+## explicit; go 1.15
+github.com/carolynvs/magex/mgx
+github.com/carolynvs/magex/pkg
+github.com/carolynvs/magex/pkg/archive
+github.com/carolynvs/magex/pkg/downloads
+github.com/carolynvs/magex/pkg/gopath
+github.com/carolynvs/magex/shx
+github.com/carolynvs/magex/xplat
 # github.com/census-instrumentation/opencensus-proto v0.3.0
 ## explicit
 github.com/census-instrumentation/opencensus-proto/gen-go/agent/common/v1
@@ -188,6 +203,14 @@ github.com/docker/docker/pkg/homedir
 ## explicit; go 1.13
 github.com/docker/docker-credential-helpers/client
 github.com/docker/docker-credential-helpers/credentials
+# github.com/dsnet/compress v0.0.2-0.20210315054119-f66993602bf5
+## explicit; go 1.9
+github.com/dsnet/compress
+github.com/dsnet/compress/bzip2
+github.com/dsnet/compress/bzip2/internal/sais
+github.com/dsnet/compress/internal
+github.com/dsnet/compress/internal/errors
+github.com/dsnet/compress/internal/prefix
 # github.com/emicklei/go-restful v2.15.0+incompatible
 ## explicit
 github.com/emicklei/go-restful
@@ -326,6 +349,9 @@ github.com/golang/protobuf/ptypes/any
 github.com/golang/protobuf/ptypes/duration
 github.com/golang/protobuf/ptypes/timestamp
 github.com/golang/protobuf/ptypes/wrappers
+# github.com/golang/snappy v0.0.4
+## explicit
+github.com/golang/snappy
 # github.com/gomodule/redigo v1.8.5
 ## explicit; go 1.14
 github.com/gomodule/redigo/redis
@@ -451,12 +477,31 @@ github.com/kelseyhightower/envconfig
 # github.com/kevinburke/ssh_config v0.0.0-20201106050909-4977a11b4351
 ## explicit
 github.com/kevinburke/ssh_config
+# github.com/klauspost/compress v1.15.4
+## explicit; go 1.16
+github.com/klauspost/compress
+github.com/klauspost/compress/flate
+github.com/klauspost/compress/fse
+github.com/klauspost/compress/gzip
+github.com/klauspost/compress/huff0
+github.com/klauspost/compress/internal/cpuinfo
+github.com/klauspost/compress/internal/snapref
+github.com/klauspost/compress/zip
+github.com/klauspost/compress/zstd
+github.com/klauspost/compress/zstd/internal/xxhash
+# github.com/klauspost/pgzip v1.2.5
+## explicit
+github.com/klauspost/pgzip
 # github.com/kr/pretty v0.3.0
 ## explicit; go 1.12
 github.com/kr/pretty
 # github.com/kr/text v0.2.0
 ## explicit
 github.com/kr/text
+# github.com/magefile/mage v1.13.0
+## explicit; go 1.12
+github.com/magefile/mage/mg
+github.com/magefile/mage/sh
 # github.com/mailru/easyjson v0.7.7
 ## explicit; go 1.12
 github.com/mailru/easyjson/buffer
@@ -469,6 +514,9 @@ github.com/mattn/go-zglob/fastwalk
 # github.com/matttproud/golang_protobuf_extensions v1.0.2-0.20181231171920-c182affec369
 ## explicit; go 1.9
 github.com/matttproud/golang_protobuf_extensions/pbutil
+# github.com/mholt/archiver/v3 v3.5.1
+## explicit; go 1.13
+github.com/mholt/archiver/v3
 # github.com/mitchellh/go-homedir v1.1.0
 ## explicit
 github.com/mitchellh/go-homedir
@@ -478,6 +526,9 @@ github.com/modern-go/concurrent
 # github.com/modern-go/reflect2 v1.0.2
 ## explicit; go 1.12
 github.com/modern-go/reflect2
+# github.com/nwaples/rardecode v1.1.0
+## explicit
+github.com/nwaples/rardecode
 # github.com/opencontainers/go-digest v1.0.0
 ## explicit; go 1.13
 github.com/opencontainers/go-digest
@@ -488,6 +539,13 @@ github.com/opencontainers/image-spec/specs-go/v1
 # github.com/peterbourgon/diskv v2.0.1+incompatible
 ## explicit
 github.com/peterbourgon/diskv
+# github.com/pierrec/lz4/v4 v4.1.2
+## explicit; go 1.14
+github.com/pierrec/lz4/v4
+github.com/pierrec/lz4/v4/internal/lz4block
+github.com/pierrec/lz4/v4/internal/lz4errors
+github.com/pierrec/lz4/v4/internal/lz4stream
+github.com/pierrec/lz4/v4/internal/xxh32
 # github.com/pkg/errors v0.9.1
 ## explicit
 github.com/pkg/errors
@@ -536,8 +594,6 @@ github.com/spf13/cobra
 # github.com/spf13/pflag v1.0.5
 ## explicit; go 1.12
 github.com/spf13/pflag
-# github.com/stretchr/testify v1.8.0
-## explicit; go 1.13
 # github.com/tektoncd/pipeline v0.36.0
 ## explicit; go 1.17
 github.com/tektoncd/pipeline/pkg/apis/config
@@ -555,9 +611,18 @@ github.com/tektoncd/pipeline/pkg/substitution
 ## explicit
 github.com/trivago/tgo/tcontainer
 github.com/trivago/tgo/treflect
+# github.com/ulikunitz/xz v0.5.9
+## explicit; go 1.12
+github.com/ulikunitz/xz
+github.com/ulikunitz/xz/internal/hash
+github.com/ulikunitz/xz/internal/xlog
+github.com/ulikunitz/xz/lzma
 # github.com/xanzy/ssh-agent v0.3.0
 ## explicit
 github.com/xanzy/ssh-agent
+# github.com/xi2/xz v0.0.0-20171230120015-48954b6210f8
+## explicit
+github.com/xi2/xz
 # go.opencensus.io v0.23.0
 ## explicit; go 1.13
 go.opencensus.io
@@ -866,7 +931,7 @@ gopkg.in/yaml.v2
 # gopkg.in/yaml.v3 v3.0.1 => gopkg.in/yaml.v3 v3.0.0-20190709130402-674ba3eaed22
 ## explicit
 gopkg.in/yaml.v3
-# istio.io/test-infra/tools/prowgen v0.0.0-20220830131841-370919739c00
+# istio.io/test-infra/tools/prowgen v0.0.0-20220901165144-fb2b1ff5f41f
 ## explicit; go 1.18
 istio.io/test-infra/tools/prowgen/pkg
 istio.io/test-infra/tools/prowgen/pkg/decorator
@@ -1119,7 +1184,7 @@ k8s.io/kube-openapi/pkg/common
 k8s.io/kube-openapi/pkg/schemaconv
 k8s.io/kube-openapi/pkg/util/proto
 k8s.io/kube-openapi/pkg/validation/spec
-# k8s.io/test-infra v0.0.0-20220801075428-527a7b720677
+# k8s.io/test-infra v0.0.0-20220729194712-07f065e00e9b
 ## explicit; go 1.18
 k8s.io/test-infra/ghproxy/ghcache
 k8s.io/test-infra/ghproxy/ghmetrics
@@ -1166,6 +1231,7 @@ k8s.io/utils/clock/testing
 k8s.io/utils/integer
 k8s.io/utils/internal/third_party/forked/golang/net
 k8s.io/utils/net
+k8s.io/utils/path
 k8s.io/utils/pointer
 k8s.io/utils/strings/slices
 k8s.io/utils/trace
@@ -1189,6 +1255,9 @@ knative.dev/pkg/logging/logkey
 knative.dev/pkg/metrics
 knative.dev/pkg/metrics/metricskey
 knative.dev/pkg/tracker
+# sigs.k8s.io/bom v0.3.0
+## explicit; go 1.18
+sigs.k8s.io/bom
 # sigs.k8s.io/boskos v0.0.0-20220516053617-d007e4465eb6
 ## explicit; go 1.15
 sigs.k8s.io/boskos/client
@@ -1223,6 +1292,12 @@ sigs.k8s.io/controller-runtime/pkg/webhook/internal/metrics
 ## explicit; go 1.17
 sigs.k8s.io/json
 sigs.k8s.io/json/internal/golang/encoding/json
+# sigs.k8s.io/release-utils v0.7.1
+## explicit; go 1.18
+sigs.k8s.io/release-utils/command
+sigs.k8s.io/release-utils/env
+sigs.k8s.io/release-utils/env/internal
+sigs.k8s.io/release-utils/mage
 # sigs.k8s.io/structured-merge-diff/v4 v4.2.1
 ## explicit; go 1.13
 sigs.k8s.io/structured-merge-diff/v4/fieldpath

@@ -71,11 +71,12 @@ presubmits:
     decorate: true
     path_alias: knative.dev/test-infra
     cluster: prow-build
+    decoration_config: # will remove this temp override
+      gcs_credentials_secret: "gcs-upload"
     run_if_changed: "^(images/prow-tests/.*|tools/kntest/.*|pkg/.*|go.mod)$"
     branches:
     - "main"
     spec:
-      serviceAccountName: test-runner
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
         imagePullPolicy: Always
@@ -86,6 +87,20 @@ presubmits:
         - "-C"
         - "images/prow-tests"
         - "build-ci-test"
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        volumeMounts:
+        - name: prow-google-credentials
+          mountPath: /etc/test-account
+          readOnly: true
+      volumes:
+      - name: prow-google-credentials
+        secret:
+          secretName: prow-google-credentials
+          items:
+          - key: service-account-key.json
+            path: service-account.json
 periodics:
 # ci-knative-heartbeat is used for prometheus, alert(s) will be sent
 # if this job hadn't been succeeded for some time
@@ -135,9 +150,8 @@ periodics:
       channel: productivity
       job_states_to_report:
         - failure
-      report_template: '"The cleanup periodic job has failed, please check the logs: <{{.Status.URL}}|View logs>"'
+      report_template: '"The cleanup periodic job fails, check the log: <{{.Status.URL}}|View logs>"'
   spec:
-    serviceAccountName: test-runner
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
       imagePullPolicy: Always
@@ -147,10 +161,22 @@ periodics:
       - "go"
       - "run"
       - "./tools/cleanup/cleanup.go"
-      - "--project-resource-yaml=prow/cluster/build/boskos-deployment.yaml"
+      - "--project-resource-yaml=prow/cluster/boskos/boskos_resources.yaml"
       - "--days-to-keep-images=30"
       - "--hours-to-keep-clusters=24"
       - "--concurrent-operations=50"
+      - "--service-account=/etc/test-account/service-account.json"
+      volumeMounts:
+      - name: prow-google-credentials
+        mountPath: /etc/test-account
+        readOnly: true
+    volumes:
+    - name: prow-google-credentials
+      secret:
+        secretName: prow-google-credentials
+        items:
+        - key: service-account-key.json
+          path: service-account.json
 - cron: "0 12 * * *"
   name: ci-knative-flakes-reporter
   agent: kubernetes
@@ -164,7 +190,7 @@ periodics:
       channel: productivity
       job_states_to_report:
         - failure
-      report_template: '"The flakes-reporter periodic job has failed, please check the logs: <{{.Status.URL}}|View logs>"'
+      report_template: '"The flakes-reporter periodic job fails, check the log: <{{.Status.URL}}|View logs>"'
   spec:
     serviceAccountName: flaky-test-reporter
     containers:
@@ -208,7 +234,7 @@ periodics:
       channel: productivity
       job_states_to_report:
         - failure
-      report_template: '"The flakes-resultsrecorder periodic job has failed, please check the logs: <{{.Status.URL}}|View logs>"'
+      report_template: '"The flakes-resultsrecorder periodic job fails, check the log: <{{.Status.URL}}|View logs>"'
   spec:
     serviceAccountName: flaky-test-reporter
     containers:
@@ -258,7 +284,7 @@ periodics:
       channel: productivity
       job_states_to_report:
         - failure
-      report_template: '"The prow-jobs-syncer periodic job has failed, please check the logs: <{{.Status.URL}}|View logs>"'
+      report_template: '"The prow-jobs-syncer periodic job fails, check the log: <{{.Status.URL}}|View logs>"'
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
@@ -278,12 +304,21 @@ periodics:
           --regen-config-script=hack/generate-configs.sh \
           --label=skip-review
       volumeMounts:
+      - name: prow-google-credentials
+        mountPath: /etc/test-account
+        readOnly: true
       - name: github-credentials
         mountPath: /etc/prow-auto-bumper-github-token
         readOnly: true
       - name: ssh
         mountPath: /root/.ssh
     volumes:
+    - name: prow-google-credentials
+      secret:
+        secretName: prow-google-credentials
+        items:
+        - key: service-account-key.json
+          path: service-account.json
     - name: github-credentials
       secret:
         secretName: github-credentials
@@ -321,9 +356,8 @@ postsubmits:
         channel: productivity
         job_states_to_report:
           - failure
-        report_template: '"The test-infra-tools-image-push postsubmit job has failed, please check the logs: <{{.Status.URL}}|View logs>"'
+        report_template: '"The test-infra-tools-image-push postsubmit job fails, check the log: <{{.Status.URL}}|View logs>"'
     spec:
-      serviceAccountName: test-runner
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
         imagePullPolicy: Always
@@ -333,9 +367,15 @@ postsubmits:
         - "./images/push-all.sh"
         securityContext:
           privileged: true
+        volumeMounts:
+        - name: prow-google-credentials
+          mountPath: /etc/test-account
+          readOnly: true
         env:
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
         resources:
           requests:
             memory: 28Gi
@@ -344,6 +384,12 @@ postsubmits:
       volumes:
       - name: docker-graph
         emptyDir: {}
+      - name: prow-google-credentials
+        secret:
+          secretName: prow-google-credentials
+          items:
+          - key: service-account-key.json
+            path: service-account.json
   - name: post-knative-test-infra-prow-tests-image-push
     agent: kubernetes
     decorate: true
@@ -361,9 +407,8 @@ postsubmits:
         channel: productivity
         job_states_to_report:
           - failure
-        report_template: '"The prow-tests-image-push postsubmit job has failed, please check the logs: <{{.Status.URL}}|View logs>"'
+        report_template: '"The prow-tests-image-push postsubmit job fails, check the log: <{{.Status.URL}}|View logs>"'
     spec:
-      serviceAccountName: test-runner # switch a different service account
       containers:
       - image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
         imagePullPolicy: Always
@@ -374,6 +419,20 @@ postsubmits:
         - "-C"
         - "images/prow-tests"
         - "push"
+        volumeMounts:
+        - name: prow-google-credentials
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+      volumes:
+      - name: prow-google-credentials
+        secret:
+          secretName: prow-google-credentials
+          items:
+          - key: service-account-key.json
+            path: service-account.json
   - name: post-test-infra-update-testgrid-proto
     decorate: true
     run_if_changed: "^(config/prow/k8s-testgrid/|prow/jobs/).*.yaml"
@@ -392,9 +451,8 @@ postsubmits:
         channel: productivity
         job_states_to_report:
           - failure
-        report_template: '"The update-testgrid-proto postsubmit job has failed, please check the logs: <{{.Status.URL}}|View logs>"'
+        report_template: '"The update-testgrid-proto postsubmit job fails, check the log: <{{.Status.URL}}|View logs>"'
     spec:
-      serviceAccountName: testgrid-updater
       containers:
       - image: gcr.io/k8s-prow/configurator:v20220826-af914c2b81
         command:
@@ -406,3 +464,18 @@ postsubmits:
         - --yaml=config/prow/k8s-testgrid/k8s-testgrid.yaml
         - --oneshot
         - --output=gs://knative-own-testgrid/config
+        - --gcp-service-account=/etc/test-account/service-account.json
+        volumeMounts:
+        - name: prow-google-credentials
+          mountPath: /etc/test-account
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+      volumes:
+      - name: prow-google-credentials
+        secret:
+          secretName: prow-google-credentials
+          items:
+          - key: service-account-key.json
+            path: service-account.json

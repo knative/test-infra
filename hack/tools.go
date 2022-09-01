@@ -21,4 +21,5 @@ package tools
 
 import (
 	_ "knative.dev/hack"
+	_ "sigs.k8s.io/bom" // will be removed in PR 3456
 )
