@@ -103,3 +103,20 @@ resource "google_service_account" "grafana" {
   project      = "knative-tests"
   description  = "Service account for accessing Managed Prometheus Metrics"
 }
+
+// Testgrid Updater
+resource "google_service_account_iam_binding" "testgrid_updater" {
+  service_account_id = google_service_account.testgrid_updater.name
+  role               = "roles/iam.workloadIdentityUser"
+
+  members = [
+    "serviceAccount:knative-tests.svc.id.goog[test-pods/testgrid-updater]",
+  ]
+}
+
+resource "google_service_account" "testgrid_updater" {
+  account_id   = "testgrid-updater"
+  display_name = "Testgrid Updater"
+  project      = "knative-tests"
+  description  = "Updates testgrid configuration"
+}
