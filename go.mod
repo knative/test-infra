@@ -46,7 +46,7 @@ replace (
 	k8s.io/client-go => k8s.io/client-go v0.23.9 // consider the version used by knative/pkg repo
 	k8s.io/kube-openapi => k8s.io/kube-openapi v0.0.0-20211115234752-e816edb12b65 // goes away when upgraded to k8s is upgraded to v0.24 https://github.com/kubernetes/client-go/issues/1084
 	sigs.k8s.io/controller-runtime => sigs.k8s.io/controller-runtime v0.11.2 // goes away when upgraded to k8s is upgraded to v0.24
-) 
+)
 
 require (
 	cloud.google.com/go v0.102.1 // indirect
