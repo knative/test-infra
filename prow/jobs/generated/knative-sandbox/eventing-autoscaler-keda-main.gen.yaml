@@ -158,6 +158,7 @@ presubmits:
     name: integration-test-kafka-source_eventing-autoscaler-keda_main
     optional: true
     path_alias: knative.dev/eventing-autoscaler-keda
+    rerun_command: /test integration-test-kafka-source
     spec:
       containers:
       - command:
@@ -189,6 +190,8 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+    trigger: ((?m)^/test( | .* )integration-test-kafka-source,?($|\s.*))|((?m)^/test(
+      | .* )integration-test-kafka-source_eventing-autoscaler-keda_main,?($|\s.*))
   - always_run: true
     branches:
     - ^main$
@@ -197,6 +200,7 @@ presubmits:
     name: integration-test-kafka-mt-source_eventing-autoscaler-keda_main
     optional: true
     path_alias: knative.dev/eventing-autoscaler-keda
+    rerun_command: /test integration-test-kafka-mt-source
     spec:
       containers:
       - command:
@@ -228,3 +232,5 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+    trigger: ((?m)^/test( | .* )integration-test-kafka-mt-source,?($|\s.*))|((?m)^/test(
+      | .* )integration-test-kafka-mt-source_eventing-autoscaler-keda_main,?($|\s.*))
