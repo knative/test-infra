@@ -37,6 +37,7 @@ spec:
         args:
         - --config=/etc/config/config
         - --namespace=test-pods
+        - --log-level=debug
         ports:
           - containerPort: 8080
             protocol: TCP
@@ -152,6 +153,15 @@ data:
       - knative-boskos-87
       - knative-boskos-88
       - knative-boskos-89
+      - knative-boskos-101
+      - knative-boskos-102
+      - knative-boskos-103
+      - knative-boskos-104
+      - knative-boskos-105
+      - knative-boskos-106
+      - knative-boskos-107
+      - knative-boskos-108
+      - knative-boskos-109
       state: dirty
       type: gke-project
 kind: ConfigMap

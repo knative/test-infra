@@ -6,11 +6,6 @@ data "google_organization" "org" {
   domain = var.domain
 }
 
-
-module "boskos" {
-  source = "./boskos"
-}
-
 module "dns" {
   source = "./dns"
 }
