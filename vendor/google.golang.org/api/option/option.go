@@ -10,7 +10,6 @@ import (
 	"net/http"
 
 	"golang.org/x/oauth2"
-	"golang.org/x/oauth2/google"
 	"google.golang.org/api/internal"
 	"google.golang.org/api/internal/impersonate"
 	"google.golang.org/grpc"
@@ -145,6 +144,8 @@ func (w withGRPCDialOption) Apply(o *internal.DialSettings) {
 
 // WithGRPCConnectionPool returns a ClientOption that creates a pool of gRPC
 // connections that requests will be balanced between.
+//
+// This is an EXPERIMENTAL API and may be changed or removed in the future.
 func WithGRPCConnectionPool(size int) ClientOption {
 	return withGRPCConnectionPool(size)
 }
@@ -326,15 +327,4 @@ func (i impersonateServiceAccount) Apply(o *internal.DialSettings) {
 	}
 	o.ImpersonationConfig.Delegates = make([]string, len(i.delegates))
 	copy(o.ImpersonationConfig.Delegates, i.delegates)
-}
-
-type withCreds google.Credentials
-
-func (w *withCreds) Apply(o *internal.DialSettings) {
-	o.Credentials = (*google.Credentials)(w)
-}
-
-// WithCredentials returns a ClientOption that authenticates API calls.
-func WithCredentials(creds *google.Credentials) ClientOption {
-	return (*withCreds)(creds)
 }

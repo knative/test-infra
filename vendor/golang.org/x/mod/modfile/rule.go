@@ -423,12 +423,68 @@ func (f *File) add(errs *ErrorList, block *LineBlock, line *Line, verb string, a
 		}
 
 	case "replace":
-		replace, wrappederr := parseReplace(f.Syntax.Name, line, verb, args, fix)
-		if wrappederr != nil {
-			*errs = append(*errs, *wrappederr)
+		arrow := 2
+		if len(args) >= 2 && args[1] == "=>" {
+			arrow = 1
+		}
+		if len(args) < arrow+2 || len(args) > arrow+3 || args[arrow] != "=>" {
+			errorf("usage: %s module/path [v1.2.3] => other/module v1.4\n\t or %s module/path [v1.2.3] => ../local/directory", verb, verb)
 			return
 		}
-		f.Replace = append(f.Replace, replace)
+		s, err := parseString(&args[0])
+		if err != nil {
+			errorf("invalid quoted string: %v", err)
+			return
+		}
+		pathMajor, err := modulePathMajor(s)
+		if err != nil {
+			wrapModPathError(s, err)
+			return
+		}
+		var v string
+		if arrow == 2 {
+			v, err = parseVersion(verb, s, &args[1], fix)
+			if err != nil {
+				wrapError(err)
+				return
+			}
+			if err := module.CheckPathMajor(v, pathMajor); err != nil {
+				wrapModPathError(s, err)
+				return
+			}
+		}
+		ns, err := parseString(&args[arrow+1])
+		if err != nil {
+			errorf("invalid quoted string: %v", err)
+			return
+		}
+		nv := ""
+		if len(args) == arrow+2 {
+			if !IsDirectoryPath(ns) {
+				errorf("replacement module without version must be directory path (rooted or starting with ./ or ../)")
+				return
+			}
+			if filepath.Separator == '/' && strings.Contains(ns, `\`) {
+				errorf("replacement directory appears to be Windows path (on a non-windows system)")
+				return
+			}
+		}
+		if len(args) == arrow+3 {
+			nv, err = parseVersion(verb, ns, &args[arrow+2], fix)
+			if err != nil {
+				wrapError(err)
+				return
+			}
+			if IsDirectoryPath(ns) {
+				errorf("replacement module directory path %q cannot have version", ns)
+				return
+			}
+		}
+		f.Replace = append(f.Replace, &Replace{
+			Old:    module.Version{Path: s, Version: v},
+			New:    module.Version{Path: ns, Version: nv},
+			Syntax: line,
+		})
 
 	case "retract":
 		rationale := parseDirectiveComment(block, line)
@@ -457,83 +513,6 @@ func (f *File) add(errs *ErrorList, block *LineBlock, line *Line, verb string, a
 		}
 		f.Retract = append(f.Retract, retract)
 	}
-}
-
-func parseReplace(filename string, line *Line, verb string, args []string, fix VersionFixer) (*Replace, *Error) {
-	wrapModPathError := func(modPath string, err error) *Error {
-		return &Error{
-			Filename: filename,
-			Pos:      line.Start,
-			ModPath:  modPath,
-			Verb:     verb,
-			Err:      err,
-		}
-	}
-	wrapError := func(err error) *Error {
-		return &Error{
-			Filename: filename,
-			Pos:      line.Start,
-			Err:      err,
-		}
-	}
-	errorf := func(format string, args ...interface{}) *Error {
-		return wrapError(fmt.Errorf(format, args...))
-	}
-
-	arrow := 2
-	if len(args) >= 2 && args[1] == "=>" {
-		arrow = 1
-	}
-	if len(args) < arrow+2 || len(args) > arrow+3 || args[arrow] != "=>" {
-		return nil, errorf("usage: %s module/path [v1.2.3] => other/module v1.4\n\t or %s module/path [v1.2.3] => ../local/directory", verb, verb)
-	}
-	s, err := parseString(&args[0])
-	if err != nil {
-		return nil, errorf("invalid quoted string: %v", err)
-	}
-	pathMajor, err := modulePathMajor(s)
-	if err != nil {
-		return nil, wrapModPathError(s, err)
-
-	}
-	var v string
-	if arrow == 2 {
-		v, err = parseVersion(verb, s, &args[1], fix)
-		if err != nil {
-			return nil, wrapError(err)
-		}
-		if err := module.CheckPathMajor(v, pathMajor); err != nil {
-			return nil, wrapModPathError(s, err)
-		}
-	}
-	ns, err := parseString(&args[arrow+1])
-	if err != nil {
-		return nil, errorf("invalid quoted string: %v", err)
-	}
-	nv := ""
-	if len(args) == arrow+2 {
-		if !IsDirectoryPath(ns) {
-			return nil, errorf("replacement module without version must be directory path (rooted or starting with ./ or ../)")
-		}
-		if filepath.Separator == '/' && strings.Contains(ns, `\`) {
-			return nil, errorf("replacement directory appears to be Windows path (on a non-windows system)")
-		}
-	}
-	if len(args) == arrow+3 {
-		nv, err = parseVersion(verb, ns, &args[arrow+2], fix)
-		if err != nil {
-			return nil, wrapError(err)
-		}
-		if IsDirectoryPath(ns) {
-			return nil, errorf("replacement module directory path %q cannot have version", ns)
-
-		}
-	}
-	return &Replace{
-		Old:    module.Version{Path: s, Version: v},
-		New:    module.Version{Path: ns, Version: nv},
-		Syntax: line,
-	}, nil
 }
 
 // fixRetract applies fix to each retract directive in f, appending any errors
@@ -574,63 +553,6 @@ func (f *File) fixRetract(fix VersionFixer, errs *ErrorList) {
 			wrapError(err)
 		}
 		r.VersionInterval = vi
-	}
-}
-
-func (f *WorkFile) add(errs *ErrorList, line *Line, verb string, args []string, fix VersionFixer) {
-	wrapError := func(err error) {
-		*errs = append(*errs, Error{
-			Filename: f.Syntax.Name,
-			Pos:      line.Start,
-			Err:      err,
-		})
-	}
-	errorf := func(format string, args ...interface{}) {
-		wrapError(fmt.Errorf(format, args...))
-	}
-
-	switch verb {
-	default:
-		errorf("unknown directive: %s", verb)
-
-	case "go":
-		if f.Go != nil {
-			errorf("repeated go statement")
-			return
-		}
-		if len(args) != 1 {
-			errorf("go directive expects exactly one argument")
-			return
-		} else if !GoVersionRE.MatchString(args[0]) {
-			errorf("invalid go version '%s': must match format 1.23", args[0])
-			return
-		}
-
-		f.Go = &Go{Syntax: line}
-		f.Go.Version = args[0]
-
-	case "use":
-		if len(args) != 1 {
-			errorf("usage: %s local/dir", verb)
-			return
-		}
-		s, err := parseString(&args[0])
-		if err != nil {
-			errorf("invalid quoted string: %v", err)
-			return
-		}
-		f.Use = append(f.Use, &Use{
-			Path:   s,
-			Syntax: line,
-		})
-
-	case "replace":
-		replace, wrappederr := parseReplace(f.Syntax.Name, line, verb, args, fix)
-		if wrappederr != nil {
-			*errs = append(*errs, *wrappederr)
-			return
-		}
-		f.Replace = append(f.Replace, replace)
 	}
 }
 
@@ -1290,10 +1212,6 @@ func (f *File) DropExclude(path, vers string) error {
 }
 
 func (f *File) AddReplace(oldPath, oldVers, newPath, newVers string) error {
-	return addReplace(f.Syntax, &f.Replace, oldPath, oldVers, newPath, newVers)
-}
-
-func addReplace(syntax *FileSyntax, replace *[]*Replace, oldPath, oldVers, newPath, newVers string) error {
 	need := true
 	old := module.Version{Path: oldPath, Version: oldVers}
 	new := module.Version{Path: newPath, Version: newVers}
@@ -1307,12 +1225,12 @@ func addReplace(syntax *FileSyntax, replace *[]*Replace, oldPath, oldVers, newPa
 	}
 
 	var hint *Line
-	for _, r := range *replace {
+	for _, r := range f.Replace {
 		if r.Old.Path == oldPath && (oldVers == "" || r.Old.Version == oldVers) {
 			if need {
 				// Found replacement for old; update to use new.
 				r.New = new
-				syntax.updateLine(r.Syntax, tokens...)
+				f.Syntax.updateLine(r.Syntax, tokens...)
 				need = false
 				continue
 			}
@@ -1325,7 +1243,7 @@ func addReplace(syntax *FileSyntax, replace *[]*Replace, oldPath, oldVers, newPa
 		}
 	}
 	if need {
-		*replace = append(*replace, &Replace{Old: old, New: new, Syntax: syntax.addLine(hint, tokens...)})
+		f.Replace = append(f.Replace, &Replace{Old: old, New: new, Syntax: f.Syntax.addLine(hint, tokens...)})
 	}
 	return nil
 }
@@ -1411,36 +1329,30 @@ func (f *File) SortBlocks() {
 // retract directives are not de-duplicated since comments are
 // meaningful, and versions may be retracted multiple times.
 func (f *File) removeDups() {
-	removeDups(f.Syntax, &f.Exclude, &f.Replace)
-}
-
-func removeDups(syntax *FileSyntax, exclude *[]*Exclude, replace *[]*Replace) {
 	kill := make(map[*Line]bool)
 
 	// Remove duplicate excludes.
-	if exclude != nil {
-		haveExclude := make(map[module.Version]bool)
-		for _, x := range *exclude {
-			if haveExclude[x.Mod] {
-				kill[x.Syntax] = true
-				continue
-			}
-			haveExclude[x.Mod] = true
+	haveExclude := make(map[module.Version]bool)
+	for _, x := range f.Exclude {
+		if haveExclude[x.Mod] {
+			kill[x.Syntax] = true
+			continue
 		}
-		var excl []*Exclude
-		for _, x := range *exclude {
-			if !kill[x.Syntax] {
-				excl = append(excl, x)
-			}
-		}
-		*exclude = excl
+		haveExclude[x.Mod] = true
 	}
+	var excl []*Exclude
+	for _, x := range f.Exclude {
+		if !kill[x.Syntax] {
+			excl = append(excl, x)
+		}
+	}
+	f.Exclude = excl
 
 	// Remove duplicate replacements.
 	// Later replacements take priority over earlier ones.
 	haveReplace := make(map[module.Version]bool)
-	for i := len(*replace) - 1; i >= 0; i-- {
-		x := (*replace)[i]
+	for i := len(f.Replace) - 1; i >= 0; i-- {
+		x := f.Replace[i]
 		if haveReplace[x.Old] {
 			kill[x.Syntax] = true
 			continue
@@ -1448,18 +1360,18 @@ func removeDups(syntax *FileSyntax, exclude *[]*Exclude, replace *[]*Replace) {
 		haveReplace[x.Old] = true
 	}
 	var repl []*Replace
-	for _, x := range *replace {
+	for _, x := range f.Replace {
 		if !kill[x.Syntax] {
 			repl = append(repl, x)
 		}
 	}
-	*replace = repl
+	f.Replace = repl
 
 	// Duplicate require and retract directives are not removed.
 
 	// Drop killed statements from the syntax tree.
 	var stmts []Expr
-	for _, stmt := range syntax.Stmt {
+	for _, stmt := range f.Syntax.Stmt {
 		switch stmt := stmt.(type) {
 		case *Line:
 			if kill[stmt] {
@@ -1479,7 +1391,7 @@ func removeDups(syntax *FileSyntax, exclude *[]*Exclude, replace *[]*Replace) {
 		}
 		stmts = append(stmts, stmt)
 	}
-	syntax.Stmt = stmts
+	f.Syntax.Stmt = stmts
 }
 
 // lineLess returns whether li should be sorted before lj. It sorts

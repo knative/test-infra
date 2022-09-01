@@ -303,7 +303,6 @@ presubmits:
     decorate: true
     name: build-tests_operator_main
     path_alias: knative.dev/operator
-    rerun_command: /test build-tests
     spec:
       containers:
       - command:
@@ -318,7 +317,6 @@ presubmits:
       nodeSelector:
         kubernetes.io/arch: amd64
         type: testing
-    trigger: ((?m)^/test( | .* )build-tests,?($|\s.*))|((?m)^/test( | .* )build-tests_operator_main,?($|\s.*))
   - always_run: true
     branches:
     - ^main$
@@ -326,7 +324,6 @@ presubmits:
     decorate: true
     name: unit-tests_operator_main
     path_alias: knative.dev/operator
-    rerun_command: /test unit-tests
     spec:
       containers:
       - command:
@@ -341,7 +338,6 @@ presubmits:
       nodeSelector:
         kubernetes.io/arch: amd64
         type: testing
-    trigger: ((?m)^/test( | .* )unit-tests,?($|\s.*))|((?m)^/test( | .* )unit-tests_operator_main,?($|\s.*))
   - always_run: true
     branches:
     - ^main$
@@ -349,7 +345,6 @@ presubmits:
     decorate: true
     name: integration-tests_operator_main
     path_alias: knative.dev/operator
-    rerun_command: /test integration-tests
     spec:
       containers:
       - command:
@@ -380,7 +375,6 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
-    trigger: ((?m)^/test( | .* )integration-tests,?($|\s.*))|((?m)^/test( | .* )integration-tests_operator_main,?($|\s.*))
   - always_run: true
     branches:
     - ^main$
@@ -388,7 +382,6 @@ presubmits:
     decorate: true
     name: upgrade-tests_operator_main
     path_alias: knative.dev/operator
-    rerun_command: /test upgrade-tests
     spec:
       containers:
       - command:
@@ -420,7 +413,6 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
-    trigger: ((?m)^/test( | .* )upgrade-tests,?($|\s.*))|((?m)^/test( | .* )upgrade-tests_operator_main,?($|\s.*))
   - always_run: true
     branches:
     - ^main$
@@ -428,7 +420,6 @@ presubmits:
     decorate: true
     name: serving-upgrade-tests_operator_main
     path_alias: knative.dev/operator
-    rerun_command: /test serving-upgrade-tests
     spec:
       containers:
       - command:
@@ -460,8 +451,6 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
-    trigger: ((?m)^/test( | .* )serving-upgrade-tests,?($|\s.*))|((?m)^/test( | .*
-      )serving-upgrade-tests_operator_main,?($|\s.*))
   - always_run: true
     branches:
     - ^main$
@@ -469,7 +458,6 @@ presubmits:
     decorate: true
     name: eventing-upgrade-tests_operator_main
     path_alias: knative.dev/operator
-    rerun_command: /test eventing-upgrade-tests
     spec:
       containers:
       - command:
@@ -501,5 +489,3 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
-    trigger: ((?m)^/test( | .* )eventing-upgrade-tests,?($|\s.*))|((?m)^/test( | .*
-      )eventing-upgrade-tests_operator_main,?($|\s.*))

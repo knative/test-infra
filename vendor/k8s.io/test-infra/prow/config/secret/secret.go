@@ -22,20 +22,25 @@ import (
 	"io/ioutil"
 )
 
-// loadSingleSecret reads and returns the value of a single file.
-func loadSingleSecret(path string) ([]byte, error) {
-	b, err := ioutil.ReadFile(path)
-	if err != nil {
-		return nil, fmt.Errorf("error reading %s: %w", path, err)
+// LoadSecrets loads multiple paths of secrets and add them in a map.
+func LoadSecrets(paths []string) (map[string][]byte, error) {
+	secretsMap := make(map[string][]byte, len(paths))
+
+	for _, path := range paths {
+		secretValue, err := LoadSingleSecret(path)
+		if err != nil {
+			return nil, err
+		}
+		secretsMap[path] = secretValue
 	}
-	return bytes.TrimSpace(b), nil
+	return secretsMap, nil
 }
 
-func loadSingleSecretWithParser[T any](path string, parsingFN func([]byte) (T, error)) ([]byte, T, error) {
-	raw, err := loadSingleSecret(path)
+// LoadSingleSecret reads and returns the value of a single file.
+func LoadSingleSecret(path string) ([]byte, error) {
+	b, err := ioutil.ReadFile(path)
 	if err != nil {
-		return nil, *(new(T)), err
+		return nil, fmt.Errorf("error reading %s: %v", path, err)
 	}
-	parsed, err := parsingFN(raw)
-	return raw, parsed, err
+	return bytes.TrimSpace(b), nil
 }

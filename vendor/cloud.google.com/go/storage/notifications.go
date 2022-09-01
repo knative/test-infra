@@ -137,12 +137,7 @@ func (b *BucketHandle) AddNotification(ctx context.Context, n *Notification) (re
 	if b.userProject != "" {
 		call.UserProject(b.userProject)
 	}
-
-	var rn *raw.Notification
-	err = run(ctx, func() error {
-		rn, err = call.Context(ctx).Do()
-		return err
-	}, b.retry, false, setRetryHeaderHTTP(call))
+	rn, err := call.Context(ctx).Do()
 	if err != nil {
 		return nil, err
 	}
@@ -161,10 +156,10 @@ func (b *BucketHandle) Notifications(ctx context.Context) (n map[string]*Notific
 		call.UserProject(b.userProject)
 	}
 	var res *raw.Notifications
-	err = run(ctx, func() error {
+	err = runWithRetry(ctx, func() error {
 		res, err = call.Context(ctx).Do()
 		return err
-	}, b.retry, true, setRetryHeaderHTTP(call))
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -189,7 +184,5 @@ func (b *BucketHandle) DeleteNotification(ctx context.Context, id string) (err e
 	if b.userProject != "" {
 		call.UserProject(b.userProject)
 	}
-	return run(ctx, func() error {
-		return call.Context(ctx).Do()
-	}, b.retry, true, setRetryHeaderHTTP(call))
+	return call.Context(ctx).Do()
 }

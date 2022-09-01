@@ -486,7 +486,6 @@ presubmits:
     decorate: true
     name: build-tests_eventing_main
     path_alias: knative.dev/eventing
-    rerun_command: /test build-tests
     spec:
       containers:
       - command:
@@ -505,7 +504,6 @@ presubmits:
       nodeSelector:
         kubernetes.io/arch: amd64
         type: testing
-    trigger: ((?m)^/test( | .* )build-tests,?($|\s.*))|((?m)^/test( | .* )build-tests_eventing_main,?($|\s.*))
   - always_run: true
     branches:
     - ^main$
@@ -513,7 +511,6 @@ presubmits:
     decorate: true
     name: unit-tests_eventing_main
     path_alias: knative.dev/eventing
-    rerun_command: /test unit-tests
     spec:
       containers:
       - command:
@@ -532,7 +529,6 @@ presubmits:
       nodeSelector:
         kubernetes.io/arch: amd64
         type: testing
-    trigger: ((?m)^/test( | .* )unit-tests,?($|\s.*))|((?m)^/test( | .* )unit-tests_eventing_main,?($|\s.*))
   - always_run: true
     branches:
     - ^main$
@@ -540,7 +536,6 @@ presubmits:
     decorate: true
     name: conformance-tests_eventing_main
     path_alias: knative.dev/eventing
-    rerun_command: /test conformance-tests
     spec:
       containers:
       - command:
@@ -576,7 +571,6 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
-    trigger: ((?m)^/test( | .* )conformance-tests,?($|\s.*))|((?m)^/test( | .* )conformance-tests_eventing_main,?($|\s.*))
   - always_run: true
     branches:
     - ^main$
@@ -585,7 +579,6 @@ presubmits:
     name: reconciler-tests_eventing_main
     optional: true
     path_alias: knative.dev/eventing
-    rerun_command: /test reconciler-tests
     spec:
       containers:
       - command:
@@ -621,7 +614,6 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
-    trigger: ((?m)^/test( | .* )reconciler-tests,?($|\s.*))|((?m)^/test( | .* )reconciler-tests_eventing_main,?($|\s.*))
   - always_run: true
     branches:
     - ^main$
@@ -629,7 +621,6 @@ presubmits:
     decorate: true
     name: upgrade-tests_eventing_main
     path_alias: knative.dev/eventing
-    rerun_command: /test upgrade-tests
     spec:
       containers:
       - command:
@@ -665,4 +656,3 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
-    trigger: ((?m)^/test( | .* )upgrade-tests,?($|\s.*))|((?m)^/test( | .* )upgrade-tests_eventing_main,?($|\s.*))

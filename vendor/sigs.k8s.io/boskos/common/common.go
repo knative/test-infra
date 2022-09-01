@@ -261,9 +261,9 @@ func (ud *UserData) Set(id string, in interface{}) error {
 
 // Update updates existing UserData with new UserData.
 // If a key as an empty string, the key will be deleted
-func (ud *UserData) Update(new *UserData) *UserData {
+func (ud *UserData) Update(new *UserData) {
 	if new == nil {
-		return ud
+		return
 	}
 	new.Range(func(key, value interface{}) bool {
 		if value.(string) != "" {
@@ -273,14 +273,10 @@ func (ud *UserData) Update(new *UserData) *UserData {
 		}
 		return true
 	})
-	return ud
 }
 
 // ToMap converts a UserData to UserDataMap
 func (ud *UserData) ToMap() UserDataMap {
-	if ud == nil {
-		return nil
-	}
 	m := UserDataMap{}
 	ud.Range(func(key, value interface{}) bool {
 		m[key.(string)] = value.(string)

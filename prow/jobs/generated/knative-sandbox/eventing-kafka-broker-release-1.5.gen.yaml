@@ -154,7 +154,6 @@ presubmits:
     decorate: true
     name: build-tests_eventing-kafka-broker_release-1.5
     path_alias: knative.dev/eventing-kafka-broker
-    rerun_command: /test build-tests
     spec:
       containers:
       - command:
@@ -169,7 +168,6 @@ presubmits:
       nodeSelector:
         kubernetes.io/arch: amd64
         type: testing
-    trigger: ((?m)^/test( | .* )build-tests,?($|\s.*))|((?m)^/test( | .* )build-tests_eventing-kafka-broker_release-1.5,?($|\s.*))
   - always_run: true
     branches:
     - ^release-1.5$
@@ -177,7 +175,6 @@ presubmits:
     decorate: true
     name: unit-tests_eventing-kafka-broker_release-1.5
     path_alias: knative.dev/eventing-kafka-broker
-    rerun_command: /test unit-tests
     spec:
       containers:
       - command:
@@ -192,7 +189,6 @@ presubmits:
       nodeSelector:
         kubernetes.io/arch: amd64
         type: testing
-    trigger: ((?m)^/test( | .* )unit-tests,?($|\s.*))|((?m)^/test( | .* )unit-tests_eventing-kafka-broker_release-1.5,?($|\s.*))
   - always_run: true
     branches:
     - ^release-1.5$
@@ -200,7 +196,6 @@ presubmits:
     decorate: true
     name: integration-tests_eventing-kafka-broker_release-1.5
     path_alias: knative.dev/eventing-kafka-broker
-    rerun_command: /test integration-tests
     spec:
       containers:
       - command:
@@ -249,7 +244,6 @@ presubmits:
           path: /sys/fs/cgroup
           type: Directory
         name: cgroup
-    trigger: ((?m)^/test( | .* )integration-tests,?($|\s.*))|((?m)^/test( | .* )integration-tests_eventing-kafka-broker_release-1.5,?($|\s.*))
   - always_run: true
     branches:
     - ^release-1.5$
@@ -257,7 +251,6 @@ presubmits:
     decorate: true
     name: upgrade-tests_eventing-kafka-broker_release-1.5
     path_alias: knative.dev/eventing-kafka-broker
-    rerun_command: /test upgrade-tests
     spec:
       containers:
       - command:
@@ -307,7 +300,6 @@ presubmits:
           path: /sys/fs/cgroup
           type: Directory
         name: cgroup
-    trigger: ((?m)^/test( | .* )upgrade-tests,?($|\s.*))|((?m)^/test( | .* )upgrade-tests_eventing-kafka-broker_release-1.5,?($|\s.*))
   - always_run: true
     branches:
     - ^release-1.5$
@@ -315,7 +307,6 @@ presubmits:
     decorate: true
     name: reconciler-tests_eventing-kafka-broker_release-1.5
     path_alias: knative.dev/eventing-kafka-broker
-    rerun_command: /test reconciler-tests
     spec:
       containers:
       - command:
@@ -365,7 +356,6 @@ presubmits:
           path: /sys/fs/cgroup
           type: Directory
         name: cgroup
-    trigger: ((?m)^/test( | .* )reconciler-tests,?($|\s.*))|((?m)^/test( | .* )reconciler-tests_eventing-kafka-broker_release-1.5,?($|\s.*))
   - always_run: true
     branches:
     - ^release-1.5$
@@ -373,7 +363,6 @@ presubmits:
     decorate: true
     name: channel-integration-tests-ssl_eventing-kafka-broker_release-1.5
     path_alias: knative.dev/eventing-kafka-broker
-    rerun_command: /test channel-integration-tests-ssl
     spec:
       containers:
       - command:
@@ -425,8 +414,6 @@ presubmits:
           path: /sys/fs/cgroup
           type: Directory
         name: cgroup
-    trigger: ((?m)^/test( | .* )channel-integration-tests-ssl,?($|\s.*))|((?m)^/test(
-      | .* )channel-integration-tests-ssl_eventing-kafka-broker_release-1.5,?($|\s.*))
   - always_run: true
     branches:
     - ^release-1.5$
@@ -434,7 +421,6 @@ presubmits:
     decorate: true
     name: channel-integration-tests-sasl-ssl_eventing-kafka-broker_release-1.5
     path_alias: knative.dev/eventing-kafka-broker
-    rerun_command: /test channel-integration-tests-sasl-ssl
     spec:
       containers:
       - command:
@@ -486,8 +472,6 @@ presubmits:
           path: /sys/fs/cgroup
           type: Directory
         name: cgroup
-    trigger: ((?m)^/test( | .* )channel-integration-tests-sasl-ssl,?($|\s.*))|((?m)^/test(
-      | .* )channel-integration-tests-sasl-ssl_eventing-kafka-broker_release-1.5,?($|\s.*))
   - always_run: true
     branches:
     - ^release-1.5$
@@ -495,7 +479,6 @@ presubmits:
     decorate: true
     name: channel-integration-tests-sasl-plain_eventing-kafka-broker_release-1.5
     path_alias: knative.dev/eventing-kafka-broker
-    rerun_command: /test channel-integration-tests-sasl-plain
     spec:
       containers:
       - command:
@@ -547,8 +530,6 @@ presubmits:
           path: /sys/fs/cgroup
           type: Directory
         name: cgroup
-    trigger: ((?m)^/test( | .* )channel-integration-tests-sasl-plain,?($|\s.*))|((?m)^/test(
-      | .* )channel-integration-tests-sasl-plain_eventing-kafka-broker_release-1.5,?($|\s.*))
   - always_run: true
     branches:
     - ^release-1.5$
@@ -556,7 +537,6 @@ presubmits:
     decorate: true
     name: channel-reconciler-tests-ssl_eventing-kafka-broker_release-1.5
     path_alias: knative.dev/eventing-kafka-broker
-    rerun_command: /test channel-reconciler-tests-ssl
     spec:
       containers:
       - command:
@@ -608,8 +588,6 @@ presubmits:
           path: /sys/fs/cgroup
           type: Directory
         name: cgroup
-    trigger: ((?m)^/test( | .* )channel-reconciler-tests-ssl,?($|\s.*))|((?m)^/test(
-      | .* )channel-reconciler-tests-ssl_eventing-kafka-broker_release-1.5,?($|\s.*))
   - always_run: true
     branches:
     - ^release-1.5$
@@ -617,7 +595,6 @@ presubmits:
     decorate: true
     name: channel-reconciler-tests-sasl-ssl_eventing-kafka-broker_release-1.5
     path_alias: knative.dev/eventing-kafka-broker
-    rerun_command: /test channel-reconciler-tests-sasl-ssl
     spec:
       containers:
       - command:
@@ -669,8 +646,6 @@ presubmits:
           path: /sys/fs/cgroup
           type: Directory
         name: cgroup
-    trigger: ((?m)^/test( | .* )channel-reconciler-tests-sasl-ssl,?($|\s.*))|((?m)^/test(
-      | .* )channel-reconciler-tests-sasl-ssl_eventing-kafka-broker_release-1.5,?($|\s.*))
   - always_run: true
     branches:
     - ^release-1.5$
@@ -678,7 +653,6 @@ presubmits:
     decorate: true
     name: channel-reconciler-tests-sasl-plain_eventing-kafka-broker_release-1.5
     path_alias: knative.dev/eventing-kafka-broker
-    rerun_command: /test channel-reconciler-tests-sasl-plain
     spec:
       containers:
       - command:
@@ -730,5 +704,3 @@ presubmits:
           path: /sys/fs/cgroup
           type: Directory
         name: cgroup
-    trigger: ((?m)^/test( | .* )channel-reconciler-tests-sasl-plain,?($|\s.*))|((?m)^/test(
-      | .* )channel-reconciler-tests-sasl-plain_eventing-kafka-broker_release-1.5,?($|\s.*))

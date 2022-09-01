@@ -6,13 +6,13 @@ import (
 	"sort"
 	"strings"
 
+	"golang.org/x/crypto/openpgp"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/filemode"
 	"github.com/go-git/go-git/v5/plumbing/format/index"
 	"github.com/go-git/go-git/v5/plumbing/object"
 	"github.com/go-git/go-git/v5/storage"
 
-	"github.com/ProtonMail/go-crypto/openpgp"
 	"github.com/go-git/go-billy/v5"
 )
 
@@ -58,23 +58,17 @@ func (w *Worktree) autoAddModifiedAndDeleted() error {
 		return err
 	}
 
-	idx, err := w.r.Storer.Index()
-	if err != nil {
-		return err
-	}
-
 	for path, fs := range s {
 		if fs.Worktree != Modified && fs.Worktree != Deleted {
 			continue
 		}
 
-		if _, _, err := w.doAddFile(idx, s, path, nil); err != nil {
+		if _, err := w.Add(path); err != nil {
 			return err
 		}
-
 	}
 
-	return w.r.Storer.SetIndex(idx)
+	return nil
 }
 
 func (w *Worktree) updateHEAD(commit plumbing.Hash) error {
@@ -230,9 +224,5 @@ func (h *buildTreeHelper) copyTreeToStorageRecursive(parent string, t *object.Tr
 		return plumbing.ZeroHash, err
 	}
 
-	hash := o.Hash()
-	if h.s.HasEncodedObject(hash) == nil {
-		return hash, nil
-	}
 	return h.s.SetEncodedObject(o)
 }

@@ -7,7 +7,7 @@ import (
 	"errors"
 	"io"
 
-	ctxio "github.com/jbenet/go-context/io"
+	"github.com/jbenet/go-context/io"
 )
 
 type readPeeker interface {
@@ -167,14 +167,4 @@ func (r *writerOnError) Write(p []byte) (n int, err error) {
 	}
 
 	return
-}
-
-type PipeReader interface {
-	io.ReadCloser
-	CloseWithError(err error) error
-}
-
-type PipeWriter interface {
-	io.WriteCloser
-	CloseWithError(err error) error
 }
