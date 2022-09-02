@@ -35,13 +35,14 @@ include $(SELF_DIR)../common.mk
 
 IMG = $(REGISTRY)/$(PROJECT)/test-infra/$(IMAGE_NAME)
 TAG := $(shell date +v%Y%m%d)-$(shell git describe --always --dirty --match '^$$')
+export COMMIT_HASH := $(shell git rev-parse --verify HEAD)
 
 build:
-	docker build --no-cache --pull -t $(IMG):$(TAG) -f $(DOCKERFILE) $(DOCKERBUILDARGS) ../..
+	docker build --build-arg COMMIT_HASH=$$COMMIT_HASH --no-cache --pull -t $(IMG):$(TAG) -f $(DOCKERFILE) $(DOCKERBUILDARGS) ../..
 
 # You can build locally without --no-cache to save time
 iterative-build:
-	docker build --pull -t $(IMG):local -f $(DOCKERFILE) $(DOCKERBUILDARGS) ../..
+	docker build --build-arg COMMIT_HASH=$$COMMIT_HASH --pull -t $(IMG):local -f $(DOCKERFILE) $(DOCKERBUILDARGS) ../..
 
 # And get a shell in the container
 iterative-shell:

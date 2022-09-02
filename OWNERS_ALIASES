@@ -4,15 +4,6 @@
 aliases:
   api-core-wg-leads:
   - dprotaso
-  autoscaling-reviewers:
-  - nader-ziada
-  - psschwei
-  - taragu
-  autoscaling-wg-leads:
-  - julz
-  autoscaling-writers:
-  - julz
-  - yanweiguo
   client-reviewers:
   - itsmurugappan
   client-wg-leads:
@@ -24,6 +15,7 @@ aliases:
   - maximilien
   - navidshaikh
   - rhuss
+  - vyasgun
   conformance-task-force-leads:
   - omerbensaadon
   - salaboy
@@ -36,7 +28,7 @@ aliases:
   - pmbanugo
   - snneji
   docs-wg-leads:
-  - csantanapr
+  - abrennan89
   - snneji
   docs-writers:
   - abrennan89
@@ -49,42 +41,45 @@ aliases:
   - tommyreddad
   eventing-triage:
   - akashrv
-  - antoineco
   - lberk
   eventing-wg-leads:
-  - devguyio
   - lionelvillard
+  - pierDipi
   eventing-writers:
   - akashrv
   - aliok
-  - antoineco
-  - devguyio
   - lberk
   - lionelvillard
   - matzew
+  - odacremolbap
   - pierDipi
-  - vaikas
   knative-admin:
   - csantanapr
   - dprotaso
-  - duglin
+  - dsimansk
   - evankanderson
-  - julz
+  - itsmurugappan
+  - knative-automation
   - knative-prow-releaser-robot
   - knative-prow-robot
   - knative-prow-updater-robot
   - knative-test-reporter-robot
+  - kvmware
   - lance
+  - matzew
+  - n3wscott
   - pmorie
-  - psschwei
-  - rhuss
+  - smoser-ibm
   - spencerdillard
   - thisisnotapril
+  - upodroid
   - vaikas
+  - zroubalik
   knative-release-leads:
   - dprotaso
-  - psschwei
+  - matzew
   knative-robots:
+  - knative-automation
   - knative-prow-releaser-robot
   - knative-prow-robot
   - knative-prow-updater-robot
@@ -101,11 +96,9 @@ aliases:
   - vagababov
   - yanweiguo
   networking-wg-leads:
-  - ZhiminXiang
   - nak3
   networking-writers:
   - JRBANCEL
-  - ZhiminXiang
   - nak3
   - vagababov
   operations-reviewers:
@@ -114,6 +107,7 @@ aliases:
   - houshengbo
   - jcrossley3
   - matzew
+  - maximilien
   - trshafer
   operations-wg-leads:
   - houshengbo
@@ -123,6 +117,7 @@ aliases:
   - houshengbo
   - jcrossley3
   - matzew
+  - maximilien
   - trshafer
   pkg-configmap-reviewers:
   - dprotaso
@@ -143,21 +138,25 @@ aliases:
   - mattmoor
   - tcnghia
   - vagababov
+  productivity-leads:
+  - kvmware
+  - upodroid
   productivity-reviewers:
   - albertomilan
-  - efiturri
   - evankanderson
   - gerardo-lc
-  - joshua-bone
-  - kvmware
+  - mgencur
   - shinigambit
-  - steuhs
   productivity-wg-leads:
-  - chizhg
+  - kvmware
+  - upodroid
   productivity-writers:
+  - cardil
   - chaodaiG
-  - chizhg
   - coryrc
+  - kvmware
+  - psschwei
+  - upodroid
   security-wg-leads:
   - evankanderson
   - julz
@@ -175,32 +174,37 @@ aliases:
   - nader-ziada
   - nealhu
   - psschwei
+  - skonto
   - whaught
+  serving-wg-leads:
+  - dprotaso
+  - psschwei
   serving-writers:
   - dprotaso
   - julz
+  - psschwei
   - tcnghia
   - vagababov
-  source-wg-leads:
-  - lionelvillard
   steering-committee:
   - csantanapr
+  - itsmurugappan
   - lance
   - pmorie
   - thisisnotapril
   - vaikas
   technical-oversight-committee:
   - dprotaso
+  - dsimansk
   - evankanderson
-  - julz
-  - rhuss
+  - n3wscott
+  - zroubalik
   trademark-committee:
-  - duglin
   - evankanderson
+  - smoser-ibm
   - spencerdillard
   ux-wg-leads:
-  - csantanapr
+  - abrennan89
   - snneji
   ux-writers:
-  - csantanapr
+  - abrennan89
   - snneji

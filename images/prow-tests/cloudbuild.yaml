@@ -16,6 +16,8 @@ steps:
 - name: gcr.io/cloud-builders/docker
   args:
   - 'build'
+  - '--build-arg'
+  - 'COMMIT_HASH=${_COMMIT_HASH}'
   - '--no-cache'
   - '--pull'
   - '-t'

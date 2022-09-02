@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prow
+  namespace: argocd
+spec:
+  destination:
+    name: in-cluster # argocd is running on prow cluster
+    namespace: default
+  project: default
+  source:
+    path: prow/cluster/control-plane
+    repoURL: https://github.com/knative/test-infra
+    targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

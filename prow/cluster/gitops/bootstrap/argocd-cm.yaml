@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+data:
+  url: https://argo.knative.dev
+  users.anonymous.enabled: "true"
+  application.instanceLabelKey: knative.dev/instance
+  resource.compareoptions: |
+    ignoreAggregatedRoles: true
+  resource.customizations: |
+    admissionregistration.k8s.io/MutatingWebhookConfiguration:
+      ignoreDifferences: |
+        jqPathExpressions:
+        - '.webhooks[]?.clientConfig.caBundle'
+  dex.config: |
+    connectors:
+      - type: authproxy
+        id: iap_proxy
+        name: "Google IAP Proxy"
+        config:
+          userHeader: "X-Goog-Authenticated-User-Email"

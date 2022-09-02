@@ -17,7 +17,7 @@
 # This is a helper script for Knative E2E test scripts.
 # See README.md for instructions on how to use it.
 
-source $(dirname "${BASH_SOURCE[0]}")/infra-library.sh
+source "$(dirname "${BASH_SOURCE[0]:-$0}")/infra-library.sh"
 
 readonly TEST_RESULT_FILE=/tmp/${REPO_NAME}-e2e-result
 
@@ -29,8 +29,12 @@ function teardown_test_resources() {
   # On boskos, save time and don't teardown as the cluster will be destroyed anyway.
   (( IS_BOSKOS )) && return
   header "Tearing down test environment"
-  function_exists test_teardown && test_teardown
-  function_exists knative_teardown && knative_teardown
+  if function_exists test_teardown; then
+    test_teardown
+  fi
+  if function_exists knative_teardown; then
+    knative_teardown
+  fi
 }
 
 # Run the given E2E tests. Assume tests are tagged e2e, unless `-tags=XXX` is passed.
@@ -68,9 +72,6 @@ function setup_test_cluster() {
 
   is_protected_cluster "${k8s_cluster}" && \
     abort "kubeconfig context set to ${k8s_cluster}, which is forbidden"
-
-  # Acquire cluster admin role for the current user.
-  acquire_cluster_admin_role "${k8s_cluster}"
 
   # Setup KO_DOCKER_REPO if it is a GKE cluster. Incorporate an element of
   # randomness to ensure that each run properly publishes images. Don't
@@ -136,13 +137,17 @@ CLOUD_PROVIDER="gke"
 function initialize() {
   local run_tests=0
   local custom_flags=()
+  local parse_script_flags=0
   E2E_SCRIPT="$(get_canonical_path "$0")"
   local e2e_script_command=( "${E2E_SCRIPT}" "--run-tests" )
+
+  for i in "$@"; do
+    if [[ $i == "--run-tests" ]]; then parse_script_flags=1; fi
+  done
 
   cd "${REPO_ROOT_DIR}"
   while [[ $# -ne 0 ]]; do
     local parameter=$1
-    # TODO(chizhg): remove parse_flags logic if no repos are using it.
     # Try parsing flag as a custom one.
     if function_exists parse_flags; then
       parse_flags "$@"
@@ -151,7 +156,10 @@ function initialize() {
         # Skip parsed flag (and possibly argument) and continue
         # Also save it to it's passed through to the test script
         for ((i=1;i<=skip;i++)); do
-          e2e_script_command+=("$1")
+          # Avoid double-parsing 
+          if (( parse_script_flags )); then
+            e2e_script_command+=("$1")
+          fi
           shift
         done
         continue

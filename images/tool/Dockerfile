@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.14.2
+FROM golang:1.17
 LABEL maintainer="Chao Dai <chaodai@google.com>"
 
 # Required input: -e TOOL_NAME=name, i.e. TOOL_NAME=flaky-test-reporter
@@ -25,7 +25,7 @@ COPY . /go/src/knative.dev/test-infra
 
 # TODO: jobs should not run `/command`, just `command`
 
-RUN go install "/go/src/knative.dev/test-infra/tools/${TOOLS_SUBDIR}${TOOL_NAME}"
+RUN cd "/go/src/knative.dev/test-infra" && go install "./tools/${TOOLS_SUBDIR}${TOOL_NAME}"
 RUN cp "$(which ${TOOL_NAME})" /
 
 RUN if [ "${TOOL_NAME}" = flaky-test-reporter ]; then mkdir -p /config && cp /go/src/knative.dev/test-infra/tools/flaky-test-reporter/config/config.yaml /config/config.yaml; fi

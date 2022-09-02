@@ -12,29 +12,14 @@ This is a helper script to run the presubmit tests. To use it:
 1. [optional] Define the function `build_tests()`. If you don't define this
    function, the default action for running the build tests is to:
 
-   - check markdown files
    - run `go build` on the entire repo
    - run `/hack/verify-codegen.sh` (if it exists)
    - check licenses in all go packages
-
-   The markdown link checker tool doesn't check `localhost` links by default.
-   Its configuration file, `markdown-link-check-config.json`, lives in the
-   `hack` directory. To override it, create a file with the same name,
-   containing the custom config in the `/test` directory.
-
-   The markdown lint tool ignores long lines by default. Its configuration file,
-   `markdown-lint-config.rc`, lives in the `hack` repo. To override it, create a
-   file with the same name, containing the custom config in the `/test`
-   directory.
 
 1. [optional] Customize the default build test runner, if you're using it. Set
    the following environment variables if the default values don't fit your
    needs:
 
-   - `DISABLE_MD_LINTING`: Disable linting markdown files, defaults to 0
-     (false).
-   - `DISABLE_MD_LINK_CHECK`: Disable checking links in markdown files, defaults
-     to 0 (false).
    - `PRESUBMIT_TEST_FAIL_FAST`: Fail the presubmit test immediately if a test
      fails, defaults to 0 (false).
 
@@ -111,7 +96,7 @@ main "$@"
 This is a helper script for Knative E2E test scripts. To use it:
 
 1. [optional] Customize the test cluster. Pass the flags as described
-   [here](../kntest/pkg/kubetest2/gke/README.md) to the `initialize` function
+   [here](../tools/kntest/pkg/kubetest2/gke/README.md) to the `initialize` function
    call if the default values don't fit your needs.
 
 1. Source the script.
@@ -167,6 +152,11 @@ This is a helper script for Knative E2E test scripts. To use it:
 1. By default Istio is installed on the cluster via Addon, use
    `--skip-istio-addon` if you choose not to have it preinstalled.
 
+1. By default Google Kubernetes Engine telemetry to Cloud Logging and Monitoring is disabled.
+   This can be enabled by setting `ENABLE_GKE_TELEMETRY` to `true`.
+   
+1. By default Spot Worker nodes are disabled. This can be enabled by setting `ENABLE_PREEMPTIBLE_NODES`
+   to `true`.
 ### Sample end-to-end test script
 
 This script will test that the latest Knative Serving nightly release works. It

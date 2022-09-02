@@ -1,0 +1,31 @@
+org: knative-sandbox
+repo: eventing-autoscaler-keda
+branches: [main]
+image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+
+jobs:
+  - name: integration-test-kafka-source
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/e2e-tests.sh --kafka-source"]
+    modifiers: [presubmit_optional]
+
+  - name: integration-test-kafka-mt-source
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/e2e-tests.sh --kafka-mt-source"]
+    modifiers: [presubmit_optional]
+
+  - name: continuous
+    types: [periodic]
+    command: [runner.sh, ./test/presubmit-tests.sh, --all-tests]
+
+  - name: nightly
+    types: [periodic]
+    command: [runner.sh, ./hack/release.sh, --publish, --tag-release]
+    requirements: [nightly]
+    excluded_requirements: [gcp]
+
+  - name: release
+    types: [periodic]
+    command: [runner.sh, ./hack/release.sh, --auto-release, --release-gcs, knative-releases/eventing-autoscaler-keda, --release-gcr, gcr.io/knative-releases, --github-token, /etc/hub-token/token]
+    requirements: [release]
+    excluded_requirements: [gcp]

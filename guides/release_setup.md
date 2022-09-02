@@ -49,25 +49,14 @@ Versioned releases can be one of two kinds:
 
 1. Write your release script, which will publish your artifacts. For details,
    see the
-   [helper script documentation](../scripts/README.md#using-the-releasesh-helper-script).
+   [helper script documentation](https://github.com/knative/hack/README.md#using-the-releasesh-helper-script).
 
 1. Enable `nightly`, `auto-release` and `dot-release` jobs for your repo in the
-   [config_knative.yaml](../config/prod/prow/config_knative.yaml) file. For
-   example:
-
-   ```
-   knative/MODULE:
-    - nightly: true
-    - dot-release: true
-    - auto-release: true
-   ```
+   [jobs_config](../prow/jobs_config) file.
 
 1. Run `./hack/generate-configs.sh` to regenerate
-   [config.yaml](../config/prod/prow/jobs/config.yaml), otherwise the presubmit
-   test will fail. Merge such pull request and ask the
-   [oncall](https://knative.github.io/test-infra/) to update the Prow cluster
-   and TestGrid with the new configs, by running `make update-prow-job-config`
-   and `make update-testgrid-config` in `config/prod/prow`. Within two hours the
+   [config.yaml](../prow/jobs/config.yaml), otherwise the presubmit
+   test will fail. Merge such pull request, within two hours the
    3 new jobs (nightly, auto-release and dot-release) will appear on TestGrid.
 
    The jobs can also be found in the
@@ -86,19 +75,19 @@ Versioned releases can be one of two kinds:
 
 ### Starting the release from the Git CLI
 
-1.  Fetch the upstream remote.
+1. Fetch the upstream remote.
 
     ```sh
     git fetch upstream
     ```
 
-1.  Create a `release-X.Y` branch from `upstream/main`.
+1. Create a `release-X.Y` branch from `upstream/main`.
 
     ```sh
     git branch --no-track release-X.Y upstream/main
     ```
 
-1.  Push the branch to upstream.
+1. Push the branch to upstream.
 
     ```sh
     git push upstream release-X.Y
@@ -118,34 +107,34 @@ Write release notes and add them to the release at
 
 ## Adding a commit to the next minor version release
 
-1.  Fetch the upstream remote.
+1. Fetch the upstream remote.
 
     ```sh
     git fetch upstream
     ```
 
-1.  Create a branch based on the desired (usually the latest) `release-X.Y`
+1. Create a branch based on the desired (usually the latest) `release-X.Y`
     branch.
 
     ```sh
     git checkout -b my-backport-branch upstream/release-X.Y
     ```
 
-1.  Cherry-pick desired commits from main into the new branch.
+1. Cherry-pick desired commits from main into the new branch.
 
     ```sh
     git cherry-pick <commitid>
     ```
 
-1.  Push the branch to your fork.
+1. Push the branch to your fork.
 
     ```sh
     git push origin
     ```
 
-1.  Create a PR for your branch based on the `release-X.Y` branch.
+1. Create a PR for your branch based on the `release-X.Y` branch.
 
-1.  Once the PR is merged, it will be included in the next minor release, which
+1. Once the PR is merged, it will be included in the next minor release, which
     is usually built Tuesday nights, between 2AM and 3AM.
 
 **Note**: If a minor release is required for a release branch that's not the

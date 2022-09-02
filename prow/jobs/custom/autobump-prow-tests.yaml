@@ -1,0 +1,51 @@
+periodics:
+- cron: "15 15 * * 1-5"  # Bump with label `skip-review`. Run at 7:15 PST (15:15 UTC) each weekday.
+  name: ci-knative-prow-tests-auto-bumper
+  cluster: prow-build
+  decorate: true
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: main
+    path_alias: knative.dev/test-infra
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-prow-tests-auto-bumper
+  reporter_config:
+    slack:
+      channel: productivity
+      job_states_to_report:
+        - failure
+      report_template: '"The autobump-prow-tests periodic job fails, check the log: <{{.Status.URL}}|View logs>"'
+  spec:
+    containers:
+    - image: gcr.io/k8s-prow/generic-autobumper:v20220826-af914c2b81
+      command:
+      - generic-autobumper
+      args:
+      - --config=prow/autobump-config/knative-prow-tests.yaml
+      - --labels-override=skip-review # This label is used by tide for identifying trusted PR
+      volumeMounts:
+      - name: github-credentials
+        mountPath: /etc/prow-auto-bumper-github-token
+        readOnly: true
+      - name: ssh
+        mountPath: /root/.ssh
+    volumes:
+    - name: github-credentials
+      secret:
+        secretName: github-credentials
+        items:
+        - key: auto_bumper_token
+          path: token
+    - name: ssh
+      secret:
+        secretName: github-credentials
+        defaultMode: 0400
+        items:
+        - key: id_rsa
+          path: id_rsa
+        - key: id_rsa_pub
+          path: id_rsa.pub
+        - key: known_hosts
+          path: known_hosts

@@ -8,8 +8,6 @@ summary of flaky tests to Slack channels.
 
 Flags for this tool are:
 
-- `--service-account` specifies the path of file containing service account for
-  GCS access.
 - `--github-account` specifies the path of file containing Github token for
   Github API calls.
 - `--slack-account` specifies the path of file containing Slack token for Slack
@@ -28,9 +26,8 @@ passing this flag it will only **read** information from GCS/Github, and all the
 
 ### Requirement
 
-- `GCP token`: Create a GCP service account following this
-  [instruction](https://cloud.google.com/iam/docs/creating-managing-service-account-keys).
-  Download generated json key file and save it securely on your system.
+- Google Credentials. Make sure you have configured your gcloud SDK by running
+  `google application-default login`
 - `Github token`: Create a github token by visiting
   `https://github.com/settings/tokens`, click `Generate new token` and select at
   least `repo:status` and `public_repo` permissions before generate the token.
@@ -43,7 +40,8 @@ passing this flag it will only **read** information from GCS/Github, and all the
 Command for debugging:
 
 ```
-go run [REPO_ROOT]/tools/flaky-test-reporter --service-account "[PATH_OF_GCP_TOKEN]" \
+cd [REPO_ROOT]
+go run tools/flaky-test-reporter \
  --github-account "[PATH_OF_GITHUB_TOKEN]" --dry-run
 ```
 

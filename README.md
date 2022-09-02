@@ -14,6 +14,10 @@ The Productivity Working Group also has other repos:
 
   Tools for github workflows
 
+- [knative/actions](https://github.com/knative/actions)
+
+  Reusable github workflows and actions
+
 - [knative/hack](https://github.com/knative/hack)
 
   Shellscripts used across the repos placed in a separate repo to avoid
@@ -59,12 +63,9 @@ We use two big platforms for running automation:
 <!-- TODO: As an improvement for the architecture section maybe mention how
 the tools fit together -->
 
-### Gubernator
+### Spyglass
 
 Knative uses
-[gubernator](https://github.com/kubernetes/test-infra/tree/master/gubernator) to
-provide a [PR dashboard](https://gubernator.knative.dev/pr) for contributions in
-the Knative github organization, and
 [Spyglass](https://github.com/kubernetes/test-infra/tree/master/prow/spyglass)
 to visualize test details.
 
@@ -72,7 +73,7 @@ to visualize test details.
 
 Knative provides a [health dashboard](https://testgrid.knative.dev/) to show
 test, code and release health for each repo. It covers key areas such as
-continuous integration, code coverage, nightly release, conformance and etc.
+continuous integration, nightly release, conformance and etc.
 
 ### E2E Testing
 

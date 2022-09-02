@@ -51,12 +51,13 @@ func (gc *GithubClient) ListRepos(org string) ([]string, error) {
 
 // ListBranches lists branchs for given repo
 func (gc *GithubClient) ListBranches(org, repo string) ([]*github.Branch, error) {
+	branchListOptions := &github.BranchListOptions{}
 	genericList, err := gc.depaginate(
 		fmt.Sprintf("listing Pull request from org %q and base %q", org, repo),
 		maxRetryCount,
-		&github.ListOptions{},
+		&branchListOptions.ListOptions,
 		func() ([]interface{}, *github.Response, error) {
-			page, resp, err := gc.Client.Repositories.ListBranches(ctx, org, repo, nil)
+			page, resp, err := gc.Client.Repositories.ListBranches(ctx, org, repo, branchListOptions)
 			var interfaceList []interface{}
 			if nil == err {
 				for _, PR := range page {

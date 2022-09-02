@@ -100,6 +100,8 @@ func NewImageDeleter(projects []string, registry string, serviceAccount string) 
 				err = fmt.Errorf("cannot activate service account:\n%s", cmdErr.ErrorOutput)
 			}
 		}
+		// Configure docker auth. Ignore the error.
+		cmd.RunCommand("gcloud auth configure-docker")
 	}
 	return &deleter, err
 }

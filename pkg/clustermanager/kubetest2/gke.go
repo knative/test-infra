@@ -21,8 +21,8 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"os"
 	"os/exec"
-	"regexp"
 	"strconv"
 	"strings"
 
@@ -40,15 +40,21 @@ const (
 )
 
 var (
-	baseKubetest2Flags = []string{"gke", "--ignore-gcp-ssh-key=true", "--up", "-v=1"}
+	baseKubetest2Flags = []string{
+		"gke",
+		"--up",
+		"--down",
+		"--ignore-gcp-ssh-key=true",
+		"--boskos-heartbeat-interval-seconds=60",
+		"-v=1",
+	}
 
 	// If one of the error patterns below is matched, it would be recommended to
 	// retry creating the cluster in a different region.
 	// - stockout (https://github.com/knative/test-infra/issues/592)
-	retryableCreationErrors = []*regexp.Regexp{
-		regexp.MustCompile(`.*does not have enough resources available to fulfill.*`),
-		regexp.MustCompile(`.*only \d+ nodes out of \d+ have registered; this is likely due to Nodes failing to start correctly.*`),
-	}
+	retryableErrorPatterns = `.*does not have enough resources available to fulfill.*` +
+		`,.*only \d+ nodes out of \d+ have registered; this is likely due to Nodes failing to start correctly.*` +
+		`,.*All cluster resources were brought up.+ but: component .+ from endpoint .+ is unhealthy.*`
 )
 
 // GKEClusterConfig are the supported configurations for creating a GKE cluster.
@@ -72,10 +78,10 @@ type GKEClusterConfig struct {
 	Version                           string
 	Scopes                            string
 	Addons                            string
+	ImageType                         string
 	EnableWorkloadIdentity            bool
 	PrivateClusterAccessLevel         string
-	PrivateClusterMasterIPSubnetRange string
-	PrivateClusterMasterIPSubnetMask  string
+	PrivateClusterMasterIPSubnetRange []string
 
 	ExtraGcloudFlags string
 }
@@ -89,7 +95,7 @@ func Run(opts *Options, cc *GKEClusterConfig) error {
 	if cc.ReleaseChannel != "" {
 		createCommand += " --release-channel=" + cc.ReleaseChannel
 	}
-	kubetest2Flags = append(kubetest2Flags, "--version="+cc.Version)
+	kubetest2Flags = append(kubetest2Flags, "--cluster-version="+cc.Version)
 	if cc.Addons != "" {
 		createCommand += " --addons=" + cc.Addons
 	}
@@ -103,7 +109,8 @@ func Run(opts *Options, cc *GKEClusterConfig) error {
 		cc.Name = helpers.AppendRandomString(clusterNamePrefix)
 	}
 	kubetest2Flags = append(kubetest2Flags, "--cluster-name="+cc.Name, "--environment="+cc.Environment,
-		"--num-nodes="+strconv.Itoa(cc.MinNodes), "--machine-type="+cc.Machine, "--network="+cc.Network)
+		"--num-nodes="+strconv.Itoa(cc.MinNodes), "--machine-type="+cc.Machine, "--network="+cc.Network,
+		"--image-type="+cc.ImageType)
 	if cc.GCPServiceAccount != "" {
 		kubetest2Flags = append(kubetest2Flags, "--gcp-service-account="+cc.GCPServiceAccount)
 	}
@@ -126,69 +133,46 @@ func Run(opts *Options, cc *GKEClusterConfig) error {
 		kubetest2Flags = append(kubetest2Flags, "--project="+cc.GCPProjectID)
 	}
 
-	return createGKEClusterWithRetries(kubetest2Flags, opts, cc)
-}
+	if cc.PrivateClusterAccessLevel != "" {
+		kubetest2Flags = append(kubetest2Flags, "--private-cluster-access-level="+cc.PrivateClusterAccessLevel)
+		kubetest2Flags = append(kubetest2Flags, "--private-cluster-master-ip-range="+strings.Join(cc.PrivateClusterMasterIPSubnetRange, ","))
+	}
 
-func createGKEClusterWithRetries(kubetest2Flags []string, opts *Options, cc *GKEClusterConfig) error {
-	var err error
 	regions := append([]string{cc.Region}, cc.BackupRegions...)
-	for i, region := range regions {
-		flags := append(kubetest2Flags, "--region="+region)
-		if cc.PrivateClusterAccessLevel != "" {
-			flags = append(flags, "--private-cluster-access-level="+cc.PrivateClusterAccessLevel)
-			masterIPRange := fmt.Sprintf("%s.%d/%s", cc.PrivateClusterMasterIPSubnetRange, i, cc.PrivateClusterMasterIPSubnetMask)
-			flags = append(flags, "--private-cluster-master-ip-range="+masterIPRange)
-		}
+	kubetest2Flags = append(kubetest2Flags, "--region="+strings.Join(regions, ","))
+	kubetest2Flags = append(kubetest2Flags, "--retryable-error-patterns='"+retryableErrorPatterns+"'")
 
-		if opts.TestCommand != "" {
-			flags = append(flags, "--test=exec", "--")
-			flags = append(flags, strings.Split(opts.TestCommand, " ")...)
-		}
-
-		log.Printf("Running kubetest2 with flags: %q", flags)
-		command := exec.Command("kubetest2", flags...)
-		var out string
-		out, err = runWithOutput(command)
-		if err != nil {
-			if isRetryableCreationError(out) {
-				log.Print("Cluster creation fails due to unpredictable reasons, will retry creating with different args")
-				continue
-			} else {
-				return err
-			}
-		} else {
-			// Only save the metadata if it's in CI environment and meta data is asked to be saved.
-			if prow.IsCI() && opts.SaveMetaData {
-				saveMetaData(cc, region)
-			}
-			break
-		}
+	// Test command args must come last.
+	if opts.TestCommand != "" {
+		kubetest2Flags = append(kubetest2Flags, "--test=exec", "--")
+		kubetest2Flags = append(kubetest2Flags, strings.Split(opts.TestCommand, " ")...)
 	}
 
-	return err
-}
+	log.Printf("Running kubetest2 with flags: %q", kubetest2Flags)
 
-// isRetryableCreationError determines if cluster creation should be retried based on the error message.
-func isRetryableCreationError(errMsg string) bool {
-	for _, regx := range retryableCreationErrors {
-		if regx.MatchString(errMsg) {
-			return true
-		}
+	command := exec.Command("kubetest2", kubetest2Flags...)
+	command.Stdout = os.Stdout
+	command.Stderr = os.Stderr
+	if err := command.Run(); err != nil {
+		return err
 	}
-	return false
+
+	// Only save the metadata if it's in CI environment and meta data is asked to be saved.
+	if prow.IsCI() && opts.SaveMetaData {
+		return saveMetaData(cc, strings.Join(regions, ","))
+	}
+	return nil
 }
 
 // saveMetaData will save the metadata with best effort.
-func saveMetaData(cc *GKEClusterConfig, region string) {
+func saveMetaData(cc *GKEClusterConfig, region string) error {
 	cli, err := metautil.NewClient("")
 	if err != nil {
-		log.Printf("error creating the metautil client: %v", err)
-		return
+		return fmt.Errorf("error creating the metautil client: %w", err)
 	}
 	cv, err := cmd.RunCommand("kubectl version --short=true")
 	if err != nil {
-		log.Printf("error getting the cluster version: %v", err)
-		return
+		return fmt.Errorf("error getting the cluster version: %w", err)
 	}
 
 	// Set the metadata with best effort.
@@ -198,4 +182,5 @@ func saveMetaData(cc *GKEClusterConfig, region string) {
 	cli.Set("E2E:Version", cv)
 	cli.Set("E2E:MinNodes", strconv.Itoa(cc.MinNodes))
 	cli.Set("E2E:MaxNodes", strconv.Itoa(cc.MaxNodes))
+	return nil
 }

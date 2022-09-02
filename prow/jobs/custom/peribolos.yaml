@@ -1,0 +1,301 @@
+# Copyright 2020 The Knative Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Peribolos is a tool implemented by k8s sig-testing.
+# It allows the org settings, teams and memberships to be declared in a yaml file, and get GitHub updated to match the declared configuration.
+
+presubmits:
+  knative/community:
+  # Run on the prow-trusted build cluster as it needs access to the github oauth token.
+  - name: pull-knative-peribolos
+    agent: kubernetes
+    decorate: true
+    path_alias: knative.dev/community
+    run_if_changed: "^peribolos/knative.yaml$"
+    cluster: "prow-trusted"
+    branches:
+    - "main"
+    spec:
+      containers:
+      - image: gcr.io/k8s-prow/peribolos:v20220826-af914c2b81
+        command:
+        - "peribolos"
+        args:
+        - "--config-path=peribolos/knative.yaml"
+        # We have to still use the GitHub oauth token for authentication, since
+        # peribolos does not allow using GitHub app token when having
+        # --confirm=false.
+        # This seems more like a bug for peribolos, but we should be able to live
+        # with it for now.
+        - "--github-token-path=/etc/github/token"
+        - "--min-admins=5"
+        - "--fix-org=true"
+        - "--fix-org-members=true"
+        - "--fix-repos=true"
+        - "--github-hourly-tokens=1200"
+        # Set --confirm=false to only validate the configuration file.
+        - "--confirm=false"
+        volumeMounts:
+        - name: oauth
+          mountPath: /etc/github
+          readOnly: true
+      volumes:
+      - name: oauth
+        secret:
+          secretName: github-token-for-peribolos
+
+  # Run on the prow-trusted build cluster as it needs access to the github oauth token.
+  - name: pull-knative-sandbox-peribolos
+    agent: kubernetes
+    decorate: true
+    path_alias: knative.dev/community
+    run_if_changed: "^peribolos/knative-sandbox.yaml$"
+    cluster: "prow-trusted"
+    branches:
+    - "main"
+    spec:
+      containers:
+      - image: gcr.io/k8s-prow/peribolos:v20220826-af914c2b81
+        command:
+        - "peribolos"
+        args:
+        - "--config-path=peribolos/knative-sandbox.yaml"
+        # We have to still use the GitHub oauth token for authentication, since
+        # peribolos does not allow using GitHub app token when having
+        # --confirm=false.
+        # This seems more like a bug for peribolos, but we should be able to live
+        # with it for now.
+        - "--github-token-path=/etc/github/token"
+        - "--min-admins=5"
+        - "--fix-org=true"
+        - "--fix-org-members=true"
+        - "--fix-repos=true"
+        - "--github-hourly-tokens=1200"
+        # Set --confirm=false to only validate the configuration file.
+        - "--confirm=false"
+        volumeMounts:
+        - name: oauth
+          mountPath: /etc/github
+          readOnly: true
+      volumes:
+      - name: oauth
+        secret:
+          secretName: github-token-for-peribolos
+
+postsubmits:
+  knative/community:
+  # Run on the prow-trusted build cluster as it needs access to the github oauth token.
+  - name: post-knative-peribolos
+    agent: kubernetes
+    decorate: true
+    path_alias: knative.dev/community
+    max_concurrency: 1
+    run_if_changed: "^peribolos/knative.yaml$"
+    cluster: "prow-trusted"
+    branches:
+    - "main"
+    reporter_config:
+      slack:
+        channel: productivity
+        job_states_to_report:
+          - failure
+        report_template: '"The knative peribolos postsubmit job fails, check the log: <{{.Status.URL}}|View logs>"'
+    annotations:
+      testgrid-dashboards: utilities
+      testgrid-tab-name: post-knative-peribolos
+    spec:
+      containers:
+      - image: gcr.io/k8s-prow/peribolos:v20220826-af914c2b81
+        command:
+        - "peribolos"
+        args:
+        - "--config-path=peribolos/knative.yaml"
+        - --github-app-id=$(GITHUB_APP_ID)
+        - --github-app-private-key-path=/etc/github/cert
+        - "--github-hourly-tokens=2000"
+        - "--github-allowed-burst=1000"
+        - "--min-admins=5"
+        - "--fix-org=true"
+        - "--fix-org-members=true"
+        - "--fix-teams=true"
+        - "--fix-team-members=true"
+        - "--fix-team-repos=true"
+        - "--fix-repos=true"
+        - "--require-self=false"
+        - "--confirm=true"
+        volumeMounts:
+        - name: github-token
+          mountPath: /etc/github
+          readOnly: true
+        env:
+        - name: GITHUB_APP_ID
+          valueFrom:
+            secretKeyRef:
+              name: github-token
+              key: appid
+      volumes:
+      - name: github-token
+        secret:
+          secretName: github-token
+  # Run on the prow-trusted build cluster as it needs access to the github oauth token.
+  - name: post-knative-sandbox-peribolos
+    agent: kubernetes
+    decorate: true
+    path_alias: knative.dev/community
+    max_concurrency: 1
+    run_if_changed: "^peribolos/knative-sandbox.yaml$"
+    cluster: "prow-trusted"
+    branches:
+    - "main"
+    reporter_config:
+      slack:
+        channel: productivity
+        job_states_to_report:
+          - failure
+        report_template: '"The knative-sandbox peribolos postsubmit job fails, check the log: <{{.Status.URL}}|View logs>"'
+    annotations:
+      testgrid-dashboards: utilities
+      testgrid-tab-name: post-knative-sandbox-peribolos
+    spec:
+      containers:
+      - image: gcr.io/k8s-prow/peribolos:v20220826-af914c2b81
+        command:
+        - "peribolos"
+        args:
+        - "--config-path=peribolos/knative-sandbox.yaml"
+        - --github-app-id=$(GITHUB_APP_ID)
+        - --github-app-private-key-path=/etc/github/cert
+        - "--github-hourly-tokens=2000"
+        - "--github-allowed-burst=1000"
+        - "--min-admins=5"
+        - "--fix-org=true"
+        - "--fix-org-members=true"
+        - "--fix-teams=true"
+        - "--fix-team-members=true"
+        - "--fix-team-repos=true"
+        - "--fix-repos=true"
+        - "--require-self=false"
+        - "--confirm=true"
+        volumeMounts:
+        - name: github-token
+          mountPath: /etc/github
+          readOnly: true
+        env:
+        - name: GITHUB_APP_ID
+          valueFrom:
+            secretKeyRef:
+              name: github-token
+              key: appid
+      volumes:
+      - name: github-token
+        secret:
+          secretName: github-token
+
+periodics:
+# Run at 9AM PST.
+- cron: "0 17 * * *"
+  name: ci-knative-peribolos
+  agent: kubernetes
+  decorate: true
+  cluster: "prow-trusted"
+  extra_refs:
+  - org: knative
+    repo: community
+    base_ref: main
+    path_alias: knative.dev/community
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-peribolos
+  spec:
+    containers:
+    - image: gcr.io/k8s-prow/peribolos:v20220826-af914c2b81
+      command:
+      - "peribolos"
+      args:
+      - "--config-path=peribolos/knative.yaml"
+      - --github-app-id=$(GITHUB_APP_ID)
+      - --github-app-private-key-path=/etc/github/cert
+      - "--github-hourly-tokens=2000"
+      - "--github-allowed-burst=1000"
+      - "--min-admins=5"
+      - "--fix-org=true"
+      - "--fix-org-members=true"
+      - "--fix-teams=true"
+      - "--fix-team-members=true"
+      - "--fix-team-repos=true"
+      - "--fix-repos=true"
+      - "--require-self=false"
+      - "--confirm=true"
+      volumeMounts:
+      - name: github-token
+        mountPath: /etc/github
+        readOnly: true
+      env:
+      - name: GITHUB_APP_ID
+        valueFrom:
+          secretKeyRef:
+            name: github-token
+            key: appid
+    volumes:
+    - name: github-token
+      secret:
+        secretName: github-token
+# Run at 10AM PST.
+- cron: "0 17 * * *"
+  name: ci-knative-sandbox-peribolos
+  agent: kubernetes
+  decorate: true
+  cluster: "prow-trusted"
+  extra_refs:
+  - org: knative
+    repo: community
+    base_ref: main
+    path_alias: knative.dev/community
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-sandbox-peribolos
+  spec:
+    containers:
+    - image: gcr.io/k8s-prow/peribolos:v20220826-af914c2b81
+      command:
+      - "peribolos"
+      args:
+      - "--config-path=peribolos/knative-sandbox.yaml"
+      - --github-app-id=$(GITHUB_APP_ID)
+      - --github-app-private-key-path=/etc/github/cert
+      - "--github-hourly-tokens=2000"
+      - "--github-allowed-burst=1000"
+      - "--min-admins=5"
+      - "--fix-org=true"
+      - "--fix-org-members=true"
+      - "--fix-teams=true"
+      - "--fix-team-members=true"
+      - "--fix-team-repos=true"
+      - "--fix-repos=true"
+      - "--require-self=false"
+      - "--confirm=true"
+      volumeMounts:
+      - name: github-token
+        mountPath: /etc/github
+        readOnly: true
+      env:
+      - name: GITHUB_APP_ID
+        valueFrom:
+          secretKeyRef:
+            name: github-token
+            key: appid
+    volumes:
+    - name: github-token
+      secret:
+        secretName: github-token

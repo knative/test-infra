@@ -1,0 +1,59 @@
+# Copyright 2022 The Knative Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+periodics:
+# Run config-bootstrapper Prow job every day to make sure the configmaps on the
+# Prow cluster are always consistent with configs files in the GitHub repo.
+# For more contexts, check https://github.com/knative/test-infra/issues/3220.
+# Scheduled to run at 12AM PST.
+- cron: "0 7 * * *"
+  name: ci-knative-test-infra-config-bootstrapper
+  agent: kubernetes
+  decorate: true
+  cluster: "prow-trusted"
+  extra_refs:
+  - org: knative
+    repo: test-infra
+    base_ref: main
+    path_alias: knative.dev/test-infra
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-test-infra-config-bootstrapper
+  reporter_config:
+    slack:
+      channel: productivity
+      job_states_to_report:
+        - failure
+      report_template: '"The config-bootstrapper periodic job fails, check the log: <{{.Status.URL}}|View logs>"'
+  spec:
+    containers:
+    - image: gcr.io/k8s-prow/config-bootstrapper:v20220826-af914c2b81
+      imagePullPolicy: Always
+      command:
+      - config-bootstrapper
+      args:
+      - --config-path=prow/config.yaml
+      - --job-config-path=prow/jobs
+      - --plugin-config=prow/plugins.yaml
+      - --source-path=.
+      - --kubeconfig=/etc/prow-kubeconfig/kubeconfig.yaml
+      - --dry-run=false
+      volumeMounts:
+      - name: prow-kubeconfig
+        mountPath: /etc/prow-kubeconfig
+        readOnly: true
+    volumes:
+    - name: prow-kubeconfig
+      secret:
+        secretName: prow-kubeconfig

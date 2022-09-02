@@ -110,7 +110,7 @@ func TestCreateIssue(t *testing.T) {
 		issueRepo                            string
 		wantIssues                           int
 	}{
-		{197, 6, 0, 0, fakeRepo, 1}, // flaky rate > 1% and > 5 flaky tests, create only 1 issue
+		{197, 6, 0, 0, fakeRepo, 0}, // flaky rate > 1% and > 5 flaky tests, do not create issue
 		{197, 2, 0, 0, fakeRepo, 2}, // flaky rate > 1% and < 5 flaky tests, create issue for each
 		{200, 2, 0, 0, fakeRepo, 2}, // flaky rate < 1%, create issue for each
 		{197, 2, 0, 0, "", 0},       // flaky rate > 1%, flag is set to not create issue

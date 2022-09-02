@@ -55,8 +55,8 @@ type JSONClient struct{}
 var _ Client = (*JSONClient)(nil)
 
 // Initialize wraps prow's init, which must be called before any other prow functions are used.
-func Initialize(serviceAccount string) (Client, error) {
-	return &JSONClient{}, prow.Initialize(serviceAccount)
+func Initialize() (Client, error) {
+	return &JSONClient{}, prow.Initialize()
 }
 
 // CreateReport generates a flaky report for a given repository, and optionally

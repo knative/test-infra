@@ -1,0 +1,183 @@
+org: knative-sandbox
+repo: eventing-kafka-broker
+branches: [main]
+image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+
+jobs:
+  - name: build-tests
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --build-tests]
+    excluded_requirements: [gcp]
+
+  - name: unit-tests
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --unit-tests]
+    excluded_requirements: [gcp]
+
+  - name: integration-tests
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --integration-tests]
+    requirements: [docker]
+
+  - name: upgrade-tests
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/upgrade-tests.sh"]
+    requirements: [docker]
+
+  - name: reconciler-tests
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/reconciler-tests.sh"]
+    requirements: [docker]
+
+  - name: channel-integration-tests-ssl
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/e2e-tests.sh"]
+    requirements: [docker]
+    env:
+      - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+        value: SSL
+
+  - name: channel-integration-tests-sasl-ssl
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/e2e-tests.sh"]
+    requirements: [docker]
+    env:
+      - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+        value: SASL_SSL
+
+  - name: channel-integration-tests-sasl-plain
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/e2e-tests.sh"]
+    requirements: [docker]
+    env:
+      - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+        value: SASL_PLAIN
+
+  - name: channel-reconciler-tests-ssl
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/reconciler-tests.sh"]
+    requirements: [docker]
+    env:
+      - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+        value: SSL
+
+  - name: channel-reconciler-tests-sasl-ssl
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/reconciler-tests.sh"]
+    requirements: [docker]
+    env:
+      - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+        value: SASL_SSL
+
+  - name: channel-reconciler-tests-sasl-plain
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/reconciler-tests.sh"]
+    requirements: [docker]
+    env:
+      - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+        value: SASL_PLAIN
+
+  - name: continuous
+    types: [periodic]
+    command: [runner.sh, ./test/presubmit-tests.sh, --all-tests]
+    requirements: [docker]
+
+  - name: nightly
+    types: [periodic]
+    command: [runner.sh, ./hack/release.sh, --publish, --tag-release]
+    requirements: [nightly, docker]
+    excluded_requirements: [gcp]
+    reporter_config:
+      slack:
+        channel: eventing-kafka
+        report_template: |
+          "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
+        job_states_to_report:
+        - "failure"
+
+  - name: release
+    types: [periodic]
+    command: [runner.sh, ./hack/release.sh, --auto-release, --release-gcs, knative-releases/eventing-kafka-broker, --release-gcr, gcr.io/knative-releases, --github-token, /etc/hub-token/token]
+    requirements: [release, docker]
+    excluded_requirements: [gcp]
+
+  - name: s390x-e2e-tests-ssl
+    cron: 20 7 * * *
+    types: [periodic]
+    requirements: [s390x]
+    command: [runner.sh]
+    args:
+      - bash
+      - -c
+      - |
+        mkdir -p /root/.kube
+        cat /opt/cluster/ci-script > connect.sh
+        chmod +x connect.sh
+        ./connect.sh eventing_kafka-broker-ssl-main
+        kubectl get cm s390x-config-eventing-kafka-broker -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
+        chmod +x adjust.sh
+        ./adjust.sh
+        ./test/e2e-tests.sh --run-tests
+    env:
+      - name: SYSTEM_NAMESPACE
+        value: knative-eventing
+      - name: EVENTING_NAMESPACE
+        value: knative-eventing
+      - name: SCALE_CHAOSDUCK_TO_ZERO
+        value: "1"
+      - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+        value: SSL
+
+  - name: s390x-e2e-tests-sasl-ssl
+    cron: 20 8 * * *
+    types: [periodic]
+    requirements: [s390x]
+    command: [runner.sh]
+    args:
+      - bash
+      - -c
+      - |
+        mkdir -p /root/.kube
+        cat /opt/cluster/ci-script > connect.sh
+        chmod +x connect.sh
+        ./connect.sh eventing_kafka-broker-sasl-ssl-main
+        kubectl get cm s390x-config-eventing-kafka-broker -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
+        chmod +x adjust.sh
+        ./adjust.sh
+        ./test/e2e-tests.sh --run-tests
+    env:
+      - name: SYSTEM_NAMESPACE
+        value: knative-eventing
+      - name: EVENTING_NAMESPACE
+        value: knative-eventing
+      - name: SCALE_CHAOSDUCK_TO_ZERO
+        value: "1"
+      - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+        value: SASL_SSL
+
+  - name: s390x-e2e-tests-sasl-plain
+    cron: 20 9 * * *
+    types: [periodic]
+    requirements: [s390x]
+    command: [runner.sh]
+    args:
+      - bash
+      - -c
+      - |
+        mkdir -p /root/.kube
+        cat /opt/cluster/ci-script > connect.sh
+        chmod +x connect.sh
+        ./connect.sh eventing_kafka-broker-sasl-plain-main
+        kubectl get cm s390x-config-eventing-kafka-broker -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
+        chmod +x adjust.sh
+        ./adjust.sh
+        ./test/e2e-tests.sh --run-tests
+    env:
+      - name: SYSTEM_NAMESPACE
+        value: knative-eventing
+      - name: EVENTING_NAMESPACE
+        value: knative-eventing
+      - name: SCALE_CHAOSDUCK_TO_ZERO
+        value: "1"
+      - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+        value: SASL_PLAIN

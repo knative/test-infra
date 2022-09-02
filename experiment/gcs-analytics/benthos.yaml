@@ -1,0 +1,23 @@
+input:
+  label: ""
+  gcp_cloud_storage:
+    bucket: knative-releases-analysis
+    prefix: ""
+    codec: all-bytes
+    delete_objects: true
+
+output:
+  label: ""
+  gcp_bigquery:
+    project: knative-releases
+    dataset: analytics
+    table: gcs-access-logs
+    format: CSV
+    max_in_flight: 64
+    job_labels: {}
+    csv:
+      header: []
+      field_delimiter: ','
+    batching:
+      count: 500
+      byte_size: 0

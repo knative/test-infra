@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-secrets-trusted
+  namespace: argocd
+spec:
+  destination:
+    name: prow-trusted
+    namespace: default
+  source:
+    repoURL: 'https://charts.external-secrets.io'
+    targetRevision: v0.5.8
+    helm:
+      releaseName: external-secrets
+      parameters:
+        - name: installCRDs
+          value: 'true'
+        - name: serviceAccount.name
+          value: external-secrets
+        - name: serviceAccount.annotations.iam\.gke\.io/gcp-service-account
+          value: kubernetes-external-secrets-sa@knative-tests.iam.gserviceaccount.com
+    chart: external-secrets
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

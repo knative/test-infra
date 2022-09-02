@@ -24,7 +24,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	yaml "gopkg.in/yaml.v2"
+	"sigs.k8s.io/yaml"
 )
 
 const (
@@ -45,15 +45,15 @@ var backupLocations = []string{"us-west1", "us-west2", "us-east1"}
 
 // GKECluster saves the config information for the GKE cluster
 type GKECluster struct {
-	Config ClusterConfig `yaml:"GKECluster,omitempty"`
+	Config ClusterConfig `json:"GKECluster,omitempty"`
 }
 
 // ClusterConfig is config for the cluster
 type ClusterConfig struct {
-	Location  string `yaml:"location,omitempty"`
-	NodeCount int64  `yaml:"nodeCount,omitempty"`
-	NodeType  string `yaml:"nodeType,omitempty"`
-	Addons    string `yaml:"addons,omitempty"`
+	Location  string `json:"location,omitempty"`
+	NodeCount int64  `json:"nodeCount,omitempty"`
+	NodeType  string `json:"nodeType,omitempty"`
+	Addons    string `json:"addons,omitempty"`
 }
 
 // benchmarkNames returns names of the benchmarks.
