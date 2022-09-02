@@ -1,0 +1,8 @@
+go 1.18
+
+use (
+	.
+	tools/configgen
+	tools/release-jobs-syncer
+	tools/rundk
+)

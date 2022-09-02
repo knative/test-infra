@@ -48,6 +48,7 @@ require (
 	github.com/emicklei/go-restful v2.15.0+incompatible // indirect
 	github.com/evanphx/json-patch v4.12.0+incompatible // indirect
 	github.com/evanphx/json-patch/v5 v5.6.0 // indirect
+	github.com/fatih/color v1.13.0 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/felixge/fgprof v0.9.1 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
@@ -76,10 +77,11 @@ require (
 	github.com/googleapis/gax-go v2.0.2+incompatible // indirect
 	github.com/googleapis/gax-go/v2 v2.4.0 // indirect
 	github.com/googleapis/go-type-adapters v1.0.0 // indirect
-	github.com/gregjones/httpcache v0.0.0-20190212212710-3befbb6ad0cc // indirect
+	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
+	github.com/hashicorp/go-hclog v1.0.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/go-retryablehttp v0.7.0 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
@@ -88,6 +90,8 @@ require (
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
+	github.com/mattn/go-colorable v0.1.12 // indirect
+	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mattn/go-zglob v0.0.2 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.2-0.20181231171920-c182affec369 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
