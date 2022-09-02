@@ -20,6 +20,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"knative.dev/test-infra/pkg/logging"
 )
 
 func (l Lister) files() ([]string, error) {
@@ -44,12 +46,14 @@ func (l Lister) files() ([]string, error) {
 }
 
 func (l Lister) isExcluded(fullpath string) bool {
+	log := logging.FromContext(l)
 	relative, err := filepath.Rel(l.Directory, fullpath)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	for _, exclude := range l.Exclude {
 		if strings.HasPrefix(relative, exclude) {
+			log.Debugf("Excluding file %s", relative)
 			return true
 		}
 	}

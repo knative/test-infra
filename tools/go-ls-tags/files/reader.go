@@ -18,11 +18,14 @@ package files
 
 import (
 	"bufio"
+	"context"
 	"os"
+
+	"knative.dev/test-infra/tools/go-ls-tags/timeout"
 )
 
 // ReadLines will read lines from a file and pass each line to a func handler.
-func ReadLines(path string, fn func(line string)) error {
+func ReadLines(ctx context.Context, path string, fn func(line string) error) error {
 	f, err := os.Open(path)
 	if err != nil {
 		return err
@@ -31,14 +34,21 @@ func ReadLines(path string, fn func(line string)) error {
 		_ = f.Close()
 	}(f)
 
+	return scanFile(ctx, f, fn)
+}
+
+func scanFile(ctx context.Context, f *os.File, fn func(line string) error) error {
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
-		fn(scanner.Text())
+		if err := timeout.WithDeadline(ctx, func() error {
+			return fn(scanner.Text())
+		}); err != nil {
+			return err
+		}
 	}
 
-	if err = scanner.Err(); err != nil {
+	if err := scanner.Err(); err != nil {
 		return err
 	}
-
 	return nil
 }

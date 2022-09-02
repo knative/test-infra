@@ -18,24 +18,42 @@ package main
 
 import (
 	"bytes"
-	"log"
-	"math"
-	"os"
-	"path"
 	"reflect"
-	"runtime"
 	"sort"
 	"strings"
 	"testing"
 
+	"github.com/wavesoftware/go-commandline"
 	"knative.dev/test-infra/tools/go-ls-tags/cli"
+	"knative.dev/test-infra/tools/go-ls-tags/test"
 )
 
 func TestMainFunc(t *testing.T) {
-	for _, tc := range testCases() {
+	tcs := []testCase{{
+		name:      "help",
+		args:      []string{"--help"},
+		fragments: []string{"Usage:\n  go-ls-tags"},
+	}, {
+		name:    "not existing option",
+		args:    []string{"--not-existing-opt"},
+		retcode: 176,
+	}, {
+		name: "no options",
+		args: []string{},
+		tags: []string{"test_tag_v1", "test_tag_v2"},
+	}}
+	for _, tc := range tcs {
 		tc := tc
-		t.Run(tc.name(), tc.test)
+		t.Run(tc.name, tc.test)
 	}
+}
+
+type testCase struct {
+	name      string
+	args      []string
+	retcode   int
+	fragments []string
+	tags      []string
 }
 
 func (tc *testCase) test(t *testing.T) {
@@ -43,9 +61,6 @@ func (tc *testCase) test(t *testing.T) {
 
 	if te.retcode != tc.retcode {
 		t.Errorf("want exit code: %d, got: %v", tc.retcode, te.retcode)
-	}
-	if te.errOut.String() != "" {
-		t.Error("Standard error output isn't empty:\n", te.errOut.String())
 	}
 	text := te.out.String()
 	for _, fragment := range tc.fragments {
@@ -64,77 +79,26 @@ func (tc *testCase) test(t *testing.T) {
 	}
 }
 
-func (tc *testCase) name() string {
-	name := strings.Join(tc.args, " ")
-	if name == "" {
-		name = "<empty>"
-	}
-	return name
-}
-
-func testCases() []testCase {
-	return []testCase{{
-		args:      []string{"--help"},
-		fragments: []string{"Usage:\n  go-ls-tags"},
-	}, {
-		args:    []string{"--not-existing-opt"},
-		retcode: 176,
-	}, {
-		args: []string{},
-		tags: []string{"test_tag_v2"},
-	}}
-}
-
-func rootdir() string {
-	_, curfile, _, _ := runtime.Caller(0) //nolint:dogsled
-	return path.Dir(path.Dir(path.Dir(curfile)))
-}
-
 type testExecution struct {
-	out, errOut bytes.Buffer
-	retcode     int
-}
-
-type testCase struct {
-	args      []string
-	retcode   int
-	fragments []string
-	tags      []string
+	out     bytes.Buffer
+	retcode int
 }
 
 func executeMain(args []string) testExecution {
-	te := testExecution{
-		retcode: math.MinInt64,
-	}
-	opts = []cli.ExecuteOption{func(ctx *cli.ExecuteContext) {
-		ctx.OsExitFunc = func(code int) {
+	te := testExecution{}
+	cli.Options = []commandline.Option{
+		commandline.WithArgs(args...),
+		commandline.WithOutput(&te.out),
+		commandline.WithExit(func(code int) {
 			te.retcode = code
-		}
-		ctx.Args = args
-		ctx.Out = &te.out
-		ctx.ErrOut = &te.errOut
-	}}
+		}),
+	}
 	defer func() {
-		opts = nil
+		cli.Options = nil
 	}()
-	withDirectory(rootdir(), func() {
+	test.WithDirectory(test.Rootdir(), func() {
 		main()
 	})
 
 	return te
-}
-
-func withDirectory(dir string, fn func()) {
-	wd, err := os.Getwd()
-	if err != nil {
-		log.Panic(err)
-	}
-	defer func() {
-		_ = os.Chdir(wd)
-	}()
-	err = os.Chdir(dir)
-	if err != nil {
-		log.Panic(err)
-	}
-	fn()
 }

@@ -38,12 +38,12 @@ func withArgs(root *cobra.Command, a *args) *cobra.Command {
 	pf.StringVar(&a.ignoreFile,
 		"ignore-file",
 		tags.DefaultIgnoreFile,
-		"A ignore file used to filter out tags")
+		"An ignore file used to filter out tags")
 	pf.StringVar(&a.directory,
 		"directory",
 		files.WorkingDirectoryOrDie(),
 		"A directory to start from")
-	pf.StringArrayVar(&a.exclude,
+	pf.StringSliceVar(&a.exclude,
 		"exclude",
 		tags.DefaultExcludes,
 		"Directories to exclude")

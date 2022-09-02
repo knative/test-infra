@@ -17,13 +17,14 @@ limitations under the License.
 */
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"go/build/constraint"
-	"log"
 	"strings"
 	"sync"
 
+	"knative.dev/test-infra/pkg/logging"
 	"knative.dev/test-infra/tools/go-ls-tags/files"
 )
 
@@ -36,56 +37,56 @@ type Index struct {
 }
 
 // Tags will search files for Go build tags.
-func (i *Index) Tags() ([]string, error) {
+func (i *Index) Tags(ctx context.Context) ([]string, error) {
 	wg := new(sync.WaitGroup)
 	wg.Add(len(i.Files))
-	results := make(chan []string, 1)
-	errCh := make(chan error)
-	errResult := make(chan error)
-	tagCh := make(chan string)
-	go collectTags(tagCh, results)
-	go collectErrors(errCh, errResult)
+	results := make(chan result, 1)
+	ch := make(chan result)
+	go collect(ctx, ch, results)
 	for _, file := range i.Files {
-		go lookupTags(file, wg, tagCh, errCh)
+		go lookupTags(ctx, file, wg, ch)
 	}
 	wg.Wait()
-	close(tagCh)
-	close(errCh)
+	close(ch)
 
-	tags := <-results
-	err := <-errResult
-	return tags, err
+	r := <-results
+	return r.tags, r.err
 }
 
-func lookupTags(path string, wg *sync.WaitGroup, tagCh chan<- string, errCh chan<- error) {
+type result struct {
+	tags []string
+	err  error
+}
+
+func lookupTags(ctx context.Context, path string, wg *sync.WaitGroup, ch chan<- result) {
+	log := logging.FromContext(ctx)
+	log.Debugf("Lookup tags for file %s", path)
 	defer wg.Done()
-	err := files.ReadLines(path, func(line string) {
+	err := files.ReadLines(ctx, path, func(line string) error {
 		expr, err := constraint.Parse(line)
 		if err != nil {
-			return
+			return nil
 		}
-		for _, tag := range extractTags(expr) {
-			tagCh <- tag
-		}
+		ch <- result{tags: extractTags(expr)}
+		return nil
 	})
 	if err != nil {
-		errCh <- err
+		ch <- result{err: err}
 	}
 }
 
-func collectTags(tagCh <-chan string, results chan<- []string) {
+func collect(ctx context.Context, ch <-chan result, resultCh chan<- result) {
 	tags := new(set)
-	for tag := range tagCh {
-		tags.add(tag)
-	}
-
-	results <- tags.list()
-}
-
-func collectErrors(errs <-chan error, results chan<- error) {
 	causes := make([]error, 0)
-	for err := range errs {
-		causes = append(causes, err)
+	log := logging.FromContext(ctx)
+	for res := range ch {
+		log.Infof("result: %#v", res)
+		if res.err != nil {
+			causes = append(causes, res.err)
+		}
+		for _, tag := range res.tags {
+			tags.add(tag)
+		}
 	}
 	var err error
 	if len(causes) > 0 {
@@ -95,7 +96,8 @@ func collectErrors(errs <-chan error, results chan<- error) {
 		}
 		err = fmt.Errorf("%w: %s", ErrIndexingFailed, sb)
 	}
-	results <- err
+
+	resultCh <- result{tags.list(), err}
 }
 
 func extractTags(expr constraint.Expr) []string {
@@ -104,7 +106,7 @@ func extractTags(expr constraint.Expr) []string {
 	case *constraint.TagExpr:
 		tags = append(tags, v.Tag)
 	case *constraint.NotExpr:
-		tags = append(tags, extractTags(v.X)...)
+		return tags
 	case *constraint.AndExpr:
 		tags = append(tags, extractTags(v.X)...)
 		tags = append(tags, extractTags(v.Y)...)
@@ -112,7 +114,7 @@ func extractTags(expr constraint.Expr) []string {
 		tags = append(tags, extractTags(v.X)...)
 		tags = append(tags, extractTags(v.Y)...)
 	default:
-		log.Fatalf("unsupported type %T", v)
+		panic(fmt.Errorf("unsupported type %T", v))
 	}
 	return tags
 }

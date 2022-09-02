@@ -17,11 +17,10 @@ limitations under the License.
 package main
 
 import (
+	"github.com/wavesoftware/go-commandline"
 	"knative.dev/test-infra/tools/go-ls-tags/cli"
 )
 
-var opts []cli.ExecuteOption
-
 func main() {
-	cli.Execute(opts...)
+	commandline.New(cli.App{}).ExecuteOrDie(cli.Options...)
 }

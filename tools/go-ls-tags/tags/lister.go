@@ -19,6 +19,7 @@ limitations under the License.
 import (
 	"context"
 
+	"knative.dev/test-infra/pkg/logging"
 	"knative.dev/test-infra/tools/go-ls-tags/tags/index"
 )
 
@@ -44,10 +45,14 @@ type Lister struct {
 
 // List all used Go build tags, or errors.
 func (l Lister) List() ([]string, error) {
+	log := logging.FromContext(l)
 	ff, err := l.files()
 	if err != nil {
 		return nil, err
 	}
 	ix := index.Index{Files: ff}
-	return l.filterIgnored(ix.Tags())
+	var tags []string
+	tags, err = l.filterIgnored(ix.Tags(l.Context))
+	log.Infof("Found tags: %q", tags)
+	return tags, err
 }

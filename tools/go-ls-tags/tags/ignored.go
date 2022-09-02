@@ -22,29 +22,37 @@ import (
 	"path"
 	"strings"
 
+	"knative.dev/test-infra/pkg/logging"
 	"knative.dev/test-infra/tools/go-ls-tags/files"
 )
 
 func (l Lister) filterIgnored(tags []string, err error) ([]string, error) {
+	log := logging.FromContext(l)
 	if err != nil {
 		return nil, errwrap(err)
 	}
-	ignoreFile := path.Join(l.Directory, l.IgnoreFile)
+	ignoreFile := l.IgnoreFile
+	if !path.IsAbs(l.IgnoreFile) {
+		ignoreFile = path.Join(l.Directory, l.IgnoreFile)
+	}
 	if _, err = os.Stat(ignoreFile); errors.Is(err, os.ErrNotExist) {
 		return tags, nil
 	}
+	log.Infof("Using ignore file: %s", ignoreFile)
 	ignored := make([]string, 0, len(tags))
-	err = files.ReadLines(ignoreFile, func(line string) {
+	err = files.ReadLines(l, ignoreFile, func(line string) error {
 		line = strings.Trim(line, " \t")
 		if line == "" || strings.HasPrefix(line, "#") {
-			return
+			return nil
 		}
 		ignored = append(ignored, line)
+		return nil
 	})
 	if err != nil {
 		return nil, errwrap(err)
 	}
 
+	log.Infof("Ignoring tags: %q", ignored)
 	result := make([]string, 0, len(tags))
 OUTER:
 	for _, tag := range tags {
