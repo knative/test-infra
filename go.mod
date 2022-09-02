@@ -29,7 +29,7 @@ require (
 	sigs.k8s.io/yaml v1.2.0
 )
 
-require github.com/hashicorp/errwrap v1.0.0 // indirect
+require github.com/hashicorp/errwrap v1.0.0
 
 require (
 	cloud.google.com/go v0.100.2 // indirect

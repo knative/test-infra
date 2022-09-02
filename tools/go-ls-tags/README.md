@@ -1,6 +1,6 @@
 # Golang List Tags
 
-This tool will find the Golang tags used within the project reliably using 
+This tool will find the Golang tags used within the project reliably using
 Go implementation instead of wonky bash scripts.
 
 ## Usage
