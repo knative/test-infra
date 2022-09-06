@@ -42,9 +42,9 @@ func (a App) Command() *cobra.Command {
 				Exclude:    arg.exclude,
 				Directory:  arg.directory,
 				IgnoreFile: arg.ignoreFile,
-				Context:    cmd.Context(),
 			}
-			return presenter{cmd}.present(lister.List())
+			pres := presenter{cmd}
+			return pres.present(lister.List(cmd.Context()))
 		},
 	}
 	root.SetOut(os.Stdout)

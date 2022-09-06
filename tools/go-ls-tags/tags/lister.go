@@ -40,19 +40,22 @@ type Lister struct {
 	IgnoreFile string
 	Extension  string
 	Exclude    []string
-	context.Context
 }
 
 // List all used Go build tags, or errors.
-func (l Lister) List() ([]string, error) {
-	log := logging.FromContext(l)
-	ff, err := l.files()
+func (l Lister) List(ctx context.Context) ([]string, error) {
+	log := logging.FromContext(ctx)
+	ff, err := l.files(ctx)
 	if err != nil {
 		return nil, err
 	}
 	ix := index.Index{Files: ff}
 	var tags []string
-	tags, err = l.filterIgnored(ix.Tags(l.Context))
+	tags, err = ix.Tags(ctx)
+	if err != nil {
+		return nil, errwrap(err)
+	}
+	tags, err = l.filterIgnored(ctx, tags)
 	log.Infof("Found tags: %q", tags)
 	return tags, err
 }

@@ -17,6 +17,7 @@ limitations under the License.
 */
 
 import (
+	"context"
 	"os"
 	"path/filepath"
 	"strings"
@@ -24,13 +25,13 @@ import (
 	"knative.dev/test-infra/pkg/logging"
 )
 
-func (l Lister) files() ([]string, error) {
+func (l Lister) files(ctx context.Context) ([]string, error) {
 	var files []string
 	err := filepath.Walk(l.Directory, func(fullpath string, info os.FileInfo, err error) error {
 		if err != nil {
 			return errwrap(err)
 		}
-		if info.IsDir() || l.isExcluded(fullpath) {
+		if info.IsDir() || l.isExcluded(ctx, fullpath) {
 			return nil
 		}
 
@@ -45,8 +46,8 @@ func (l Lister) files() ([]string, error) {
 	return files, nil
 }
 
-func (l Lister) isExcluded(fullpath string) bool {
-	log := logging.FromContext(l)
+func (l Lister) isExcluded(ctx context.Context, fullpath string) bool {
+	log := logging.FromContext(ctx)
 	relative, err := filepath.Rel(l.Directory, fullpath)
 	if err != nil {
 		log.Fatal(err)

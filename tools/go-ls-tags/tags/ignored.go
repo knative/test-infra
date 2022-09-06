@@ -17,6 +17,7 @@ limitations under the License.
 package tags
 
 import (
+	"context"
 	"errors"
 	"os"
 	"path"
@@ -26,21 +27,18 @@ import (
 	"knative.dev/test-infra/tools/go-ls-tags/files"
 )
 
-func (l Lister) filterIgnored(tags []string, err error) ([]string, error) {
-	log := logging.FromContext(l)
-	if err != nil {
-		return nil, errwrap(err)
-	}
+func (l Lister) filterIgnored(ctx context.Context, tags []string) ([]string, error) {
+	log := logging.FromContext(ctx)
 	ignoreFile := l.IgnoreFile
 	if !path.IsAbs(l.IgnoreFile) {
 		ignoreFile = path.Join(l.Directory, l.IgnoreFile)
 	}
-	if _, err = os.Stat(ignoreFile); errors.Is(err, os.ErrNotExist) {
+	if _, err := os.Stat(ignoreFile); errors.Is(err, os.ErrNotExist) {
 		return tags, nil
 	}
 	log.Infof("Using ignore file: %s", ignoreFile)
 	ignored := make([]string, 0, len(tags))
-	err = files.ReadLines(l, ignoreFile, func(line string) error {
+	err := files.ReadLines(ctx, ignoreFile, func(line string) error {
 		line = strings.Trim(line, " \t")
 		if line == "" || strings.HasPrefix(line, "#") {
 			return nil

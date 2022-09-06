@@ -32,7 +32,6 @@ import (
 )
 
 func TestApp(t *testing.T) {
-	t.Parallel()
 	tcs := []testCase{{
 		name:      "help",
 		args:      []string{"--help"},
@@ -75,7 +74,6 @@ type testCase struct {
 }
 
 func (tc *testCase) test(t *testing.T) {
-	t.Parallel()
 	te := execute(tc.args)
 
 	if tc.err != nil {
