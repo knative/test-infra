@@ -16,8 +16,8 @@ func currentCmd(fl *Flags) *cobra.Command {
 	}
 }
 
-func current(os OS, fl *Flags, print Printer) error {
-	pr := presenter{os, fl, print}
+func current(os OS, fl *Flags, prt Printer) error {
+	pr := presenter{os, fl, prt}
 	curr, err := modules.Current(os, os)
-	return pr.presentModule(curr, err)
+	return pr.presentModule(*curr, err)
 }

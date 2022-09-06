@@ -20,17 +20,14 @@ func (p presenter) presentList(mods []modules.Module, err error) error {
 		return err
 	}
 	for _, m := range mods {
-		_ = p.presentModule(&m, nil)
+		_ = p.presentModule(m, nil)
 	}
 	return nil
 }
 
-func (p presenter) presentModule(curr *modules.Module, err error) error {
+func (p presenter) presentModule(curr modules.Module, err error) error {
 	if err != nil {
 		return err
-	}
-	if curr == nil {
-		return nil
 	}
 	line := curr.Name
 	if p.DisplayFilepath {

@@ -67,6 +67,11 @@ func findWorkfile(fs FileSystem, env Environment) (string, error) {
 		if !path.IsAbs(gowork) {
 			return "", fmt.Errorf("%w: GOWORK must be an absolute path", ErrInvalidGowork)
 		}
-		return filepath.Rel("/", gowork)
+		p, err := filepath.Rel("/", gowork)
+		if err != nil {
+			return "", fmt.Errorf("%w: Cant compute relative path "+
+				"to go.work to '/': %v", ErrBug, gowork)
+		}
+		return p, nil
 	}
 }

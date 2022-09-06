@@ -10,7 +10,7 @@ func main() {
 }
 
 // RunMain is for testing purposes.
-func RunMain(opts ...commandline.Option) {
+func RunMain(opts ...commandline.Option) { //nolint:deadcode
 	prev := cli.Options
 	cli.Options = append(make([]commandline.Option, 0, len(prev)), opts...)
 	defer func(p []commandline.Option) {

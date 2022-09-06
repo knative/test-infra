@@ -1,7 +1,6 @@
 package modules
 
 import (
-	"fmt"
 	"io/fs"
 	"path/filepath"
 )
@@ -21,7 +20,7 @@ type Environment interface {
 func findEnclosingFile(fs FileSystem, file string, drops ...func(string) bool) (string, error) {
 	dir, err := fs.Cwd()
 	if err != nil {
-		return "", fmt.Errorf("%w: %v", ErrBug, err)
+		return "", errWrap(err, ErrBug)
 	}
 	dir = filepath.Clean(dir)
 
@@ -35,7 +34,7 @@ func findEnclosingFile(fs FileSystem, file string, drops ...func(string) bool) (
 			}()
 			fi, err := f.Stat()
 			if err != nil {
-				return "", fmt.Errorf("%w: %v", ErrBug, err)
+				return "", errWrap(err, ErrBug)
 			}
 
 			if !fi.IsDir() {

@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"fmt"
 	"io/fs"
 	"os"
 	"path"
@@ -11,7 +12,7 @@ import (
 
 const rootDir = "/"
 
-var systemFS = os.DirFS(rootDir)
+var systemFS = os.DirFS(rootDir) //nolint:gochecknoglobals
 
 // OS represents a virtual operating system.
 type OS interface {
@@ -29,15 +30,23 @@ func (s system) Get(name string) string {
 }
 
 func (s system) Open(name string) (fs.File, error) {
-	return systemFS.Open(name)
+	f, err := systemFS.Open(name)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", modules.ErrBug, err)
+	}
+	return f, nil
 }
 
 func (s system) Cwd() (string, error) {
 	dir, err := os.Getwd()
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("%w: %v", modules.ErrBug, err)
 	}
-	return filepath.Rel(rootDir, dir)
+	p, err := filepath.Rel(rootDir, dir)
+	if err != nil {
+		return "", fmt.Errorf("%w: %v", modules.ErrBug, err)
+	}
+	return p, nil
 }
 
 func (s system) Abs(filepath string) string {

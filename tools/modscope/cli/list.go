@@ -19,13 +19,17 @@ func listCmd(fl *Flags) *cobra.Command {
 }
 
 // List lists modules in current project and prints them using Printer.
-func List(os OS, fl *Flags, print Printer) error {
-	pr := presenter{os, fl, print}
+func List(os OS, fl *Flags, prt Printer) error {
+	pr := presenter{os, fl, prt}
 	mods, err := modules.List(os, os)
 	if err != nil && errors.Is(err, modules.ErrInvalidGowork) {
 		var mod *modules.Module
 		mod, err = modules.Current(os, os)
-		return pr.presentModule(mod, err)
+		var m modules.Module
+		if mod != nil {
+			m = *mod
+		}
+		return pr.presentModule(m, err)
 	}
 	return pr.presentList(mods, err)
 }
