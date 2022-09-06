@@ -19,6 +19,7 @@ limitations under the License.
 import (
 	"context"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 
@@ -52,10 +53,14 @@ func (l Lister) isExcluded(ctx context.Context, fullpath string) bool {
 	if err != nil {
 		log.Fatal(err)
 	}
+	relative = path.Clean(relative)
 	for _, exclude := range l.Exclude {
-		if strings.HasPrefix(relative, exclude) {
-			log.Debugf("Excluding file %s", relative)
-			return true
+		parts := strings.Split(relative, "/")
+		for _, part := range parts {
+			if part == exclude {
+				log.Debugf("Excluding file %s", relative)
+				return true
+			}
 		}
 	}
 	return false
