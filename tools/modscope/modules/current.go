@@ -8,6 +8,7 @@ import (
 	"golang.org/x/mod/modfile"
 )
 
+// Current returns the current Go module.
 func Current(filesystem FileSystem, env Environment) (*Module, error) {
 	moduleFilepath, err := findModfile(filesystem, env)
 	if err != nil {

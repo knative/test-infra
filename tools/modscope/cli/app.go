@@ -10,8 +10,10 @@ import (
 // Options to override the commandline for testing purposes.
 var Options []commandline.Option //nolint:gochecknoglobals
 
+// App is a modscope commandline application.
 type App struct{}
 
+// Command returns a cobra command for the application.
 func (a App) Command() *cobra.Command {
 	fl := Flags{}
 	c := &cobra.Command{

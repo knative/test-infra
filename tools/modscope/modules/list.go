@@ -10,6 +10,7 @@ import (
 	"golang.org/x/mod/modfile"
 )
 
+// List returns the list of modules in the current Go workspace.
 func List(filesystem FileSystem, env Environment) ([]Module, error) {
 	gowork, err := findWorkfile(filesystem, env)
 	if err != nil {

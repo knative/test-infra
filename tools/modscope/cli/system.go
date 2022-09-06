@@ -13,6 +13,7 @@ const rootDir = "/"
 
 var systemFS = os.DirFS(rootDir)
 
+// OS represents a virtual operating system.
 type OS interface {
 	modules.FileSystem
 	modules.Environment
