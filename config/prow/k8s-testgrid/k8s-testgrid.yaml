@@ -10,7 +10,6 @@ dashboard_groups:
 - dashboard_names:
   - client
   - client-pkg
-  - docs
   - eventing
   - operator
   - serving
@@ -57,7 +56,6 @@ dashboards:
 - name: client
 - name: client-pkg
 - name: container-freezer
-- name: docs
 - name: eventing
 - name: eventing-autoscaler-keda
 - name: eventing-awssqs
