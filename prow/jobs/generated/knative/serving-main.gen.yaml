@@ -31,7 +31,7 @@ periodics:
         value: us-central1
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
       name: ""
       resources:
         limits:
@@ -89,7 +89,7 @@ periodics:
         value: us-central1
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
       name: ""
       resources:
         limits:
@@ -147,7 +147,7 @@ periodics:
         value: us-central1
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
       name: ""
       resources:
         limits:
@@ -205,7 +205,7 @@ periodics:
         value: us-central1
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
       name: ""
       resources:
         limits:
@@ -263,7 +263,7 @@ periodics:
         value: us-central1
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
       name: ""
       resources:
         limits:
@@ -321,7 +321,7 @@ periodics:
         value: us-central1
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
       name: ""
       resources:
         limits:
@@ -379,7 +379,7 @@ periodics:
         value: us-central1
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
       name: ""
       resources:
         limits:
@@ -435,7 +435,7 @@ periodics:
         value: us-central1
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
       name: ""
       resources:
         limits:
@@ -493,7 +493,7 @@ periodics:
         value: us-central1
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
       name: ""
       resources:
         limits:
@@ -549,7 +549,7 @@ periodics:
         value: us-central1
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
       name: ""
       resources:
         limits:
@@ -605,7 +605,7 @@ periodics:
         value: us-central1
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
       name: ""
       resources:
         limits:
@@ -701,7 +701,7 @@ periodics:
         value: /root/.kube/config
       - name: DOCKER_CONFIG
         value: /opt/cluster
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
       name: ""
       resources:
         limits:
@@ -790,7 +790,7 @@ periodics:
         value: /root/.kube/config
       - name: DOCKER_CONFIG
         value: /opt/cluster
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
       name: ""
       resources:
         limits:
@@ -861,7 +861,7 @@ periodics:
         value: "true"
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/nightly-account/service-account.json
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
       name: ""
       resources:
         limits:
@@ -932,7 +932,7 @@ periodics:
         value: "true"
       - name: E2E_CLUSTER_REGION
         value: us-central1
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
       name: ""
       resources:
         limits:
@@ -996,7 +996,7 @@ presubmits:
         env:
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources:
           limits:
@@ -1042,7 +1042,7 @@ presubmits:
         env:
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources:
           limits:
@@ -1091,7 +1091,7 @@ presubmits:
           value: us-central1
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources:
           limits:
@@ -1141,7 +1141,7 @@ presubmits:
           value: us-central1
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources:
           limits:
@@ -1191,7 +1191,7 @@ presubmits:
           value: us-central1
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources:
           limits:
@@ -1242,7 +1242,7 @@ presubmits:
           value: us-central1
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources:
           limits:
@@ -1293,7 +1293,7 @@ presubmits:
           value: us-central1
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources:
           limits:
@@ -1358,7 +1358,7 @@ presubmits:
           value: us-central1
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources:
           limits:
@@ -1409,7 +1409,7 @@ presubmits:
           value: us-central1
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources:
           limits:
@@ -1460,7 +1460,7 @@ presubmits:
           value: us-central1
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources:
           limits:
@@ -1511,7 +1511,7 @@ presubmits:
           value: us-central1
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources:
           limits:
@@ -1562,7 +1562,7 @@ presubmits:
           value: us-central1
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources:
           limits:
@@ -1613,7 +1613,7 @@ presubmits:
           value: us-central1
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources:
           limits:
@@ -1664,7 +1664,7 @@ presubmits:
           value: us-central1
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources:
           limits:
@@ -1715,7 +1715,7 @@ presubmits:
           value: us-central1
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources:
           limits:
@@ -1770,7 +1770,7 @@ presubmits:
           value: us-central1
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220824-556f3f4c
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources:
           limits:
