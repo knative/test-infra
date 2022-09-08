@@ -257,6 +257,8 @@ periodics:
       - --publish
       - --tag-release
       env:
+      - name: SIGN_IMAGES
+        value: "true"
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/nightly-account/service-account.json
       image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
