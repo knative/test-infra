@@ -1,0 +1,38 @@
+run:
+  timeout: 5m
+
+linters:
+  disable-all: false
+  presets:
+    - bugs
+    - unused
+    - complexity
+    - format
+    - performance
+    - style
+  enable:
+    - gci
+  disable:
+    - paralleltest
+    - nlreturn
+    - exhaustivestruct
+    - wsl
+    - godox
+    - scopelint
+    - maligned
+    - interfacer
+    - golint
+    - ireturn
+    - varnamelen
+    - exhaustruct
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - wrapcheck
+        - gomnd
+    - path: /test/
+      linters:
+        - gomnd
+        - wrapcheck

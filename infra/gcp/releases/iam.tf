@@ -32,3 +32,19 @@ resource "google_service_account_iam_binding" "prow_job" {
     "serviceAccount:knative-tests.svc.id.goog[test-pods/release]",
   ]
 }
+
+resource "google_service_account" "signer" {
+  account_id   = "signer"
+  display_name = "Used for signing release images with cosign"
+  project      = module.project.project_id
+}
+
+resource "google_service_account_iam_binding" "signer" {
+  service_account_id = google_service_account.signer.name
+  role               = "roles/iam.serviceAccountTokenCreator"
+
+  members = [
+    "serviceAccount:${google_service_account.prow_job.email}",
+    // DO NOT ADD ANY OTHER PRINCIPAL HERE AS THIS ROLE ALLOWS OIDC TOKENS TO BE CREATED FOR THIS USER
+  ]
+}
