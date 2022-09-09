@@ -565,6 +565,7 @@ presubmits:
           path: /sys/fs/cgroup
           type: Directory
         name: cgroup
+    trigger: ((?m)^/test( | .* )integration-tests,?($|\s.*))|((?m)^/test( | .* )integration-tests_eventing-kafka-broker_main,?($|\s.*))
   - always_run: true
     branches:
     - ^main$
@@ -572,6 +573,7 @@ presubmits:
     decorate: true
     name: integration-tests-namespaced-broker_eventing-kafka-broker_main
     path_alias: knative.dev/eventing-kafka-broker
+    rerun_command: /test integration-tests-namespaced-broker
     spec:
       containers:
       - command:
@@ -622,7 +624,8 @@ presubmits:
           path: /sys/fs/cgroup
           type: Directory
         name: cgroup
-    trigger: ((?m)^/test( | .* )integration-tests,?($|\s.*))|((?m)^/test( | .* )integration-tests_eventing-kafka-broker_main,?($|\s.*))
+    trigger: ((?m)^/test( | .* )integration-tests-namespaced-broker,?($|\s.*))|((?m)^/test(
+      | .* )integration-tests-namespaced-broker_eventing-kafka-broker_main,?($|\s.*))
   - always_run: true
     branches:
     - ^main$
@@ -742,6 +745,7 @@ presubmits:
           path: /sys/fs/cgroup
           type: Directory
         name: cgroup
+    trigger: ((?m)^/test( | .* )reconciler-tests,?($|\s.*))|((?m)^/test( | .* )reconciler-tests_eventing-kafka-broker_main,?($|\s.*))
   - always_run: true
     branches:
     - ^main$
@@ -749,6 +753,7 @@ presubmits:
     decorate: true
     name: reconciler-tests-namespaced-broker_eventing-kafka-broker_main
     path_alias: knative.dev/eventing-kafka-broker
+    rerun_command: /test reconciler-tests-namespaced-broker
     spec:
       containers:
       - command:
@@ -800,7 +805,8 @@ presubmits:
           path: /sys/fs/cgroup
           type: Directory
         name: cgroup
-    trigger: ((?m)^/test( | .* )reconciler-tests,?($|\s.*))|((?m)^/test( | .* )reconciler-tests_eventing-kafka-broker_main,?($|\s.*))
+    trigger: ((?m)^/test( | .* )reconciler-tests-namespaced-broker,?($|\s.*))|((?m)^/test(
+      | .* )reconciler-tests-namespaced-broker_eventing-kafka-broker_main,?($|\s.*))
   - always_run: true
     branches:
     - ^main$
