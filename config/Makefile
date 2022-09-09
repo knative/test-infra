@@ -25,7 +25,7 @@ TESTGRID_GCS  ?= knative-testgrid
 
 CLUSTER           ?= prow
 BUILD_CLUSTER     ?= knative-prow-build-cluster
-ZONE              ?= us-central1-f
+REGION            ?= us-central1
 JOB_NAMESPACE     ?= test-pods
 
 SKIP_CONFIG_BACKUP        ?=
@@ -41,8 +41,8 @@ PROW_CONFIG_GCS                 ?= gs://$(PROW_GCS)/configs
 
 # Useful shortcuts.
 
-SET_CONTEXT                     := gcloud container clusters get-credentials "$(CLUSTER)" --project="$(PROJECT)" --zone="$(ZONE)"
-SET_BUILD_CLUSTER_CONTEXT       := gcloud container clusters get-credentials "$(BUILD_CLUSTER)" --project="$(PROJECT)" --zone="$(ZONE)"
+SET_CONTEXT                     := gcloud container clusters get-credentials "$(CLUSTER)" --project="$(PROJECT)" --region="$(REGION)"
+SET_BUILD_CLUSTER_CONTEXT       := gcloud container clusters get-credentials "$(BUILD_CLUSTER)" --project="$(PROJECT)" --region="$(REGION)"
 UNSET_CONTEXT                   := kubectl config unset current-context
 
 .PHONY: help activate-serviceaccount get-cluster-credentials unset-cluster-credentials

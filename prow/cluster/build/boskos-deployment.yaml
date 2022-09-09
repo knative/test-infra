@@ -33,10 +33,11 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
       - name: boskos
-        image: gcr.io/k8s-staging-boskos/boskos:v20220815-0e9ae74
+        image: gcr.io/k8s-staging-boskos/boskos:v20220830-b922054
         args:
         - --config=/etc/config/config
         - --namespace=test-pods
+        - --log-level=debug
         ports:
           - containerPort: 8080
             protocol: TCP
@@ -152,6 +153,26 @@ data:
       - knative-boskos-87
       - knative-boskos-88
       - knative-boskos-89
+      - knative-boskos-90
+      - knative-boskos-91
+      - knative-boskos-92
+      - knative-boskos-93
+      - knative-boskos-94
+      - knative-boskos-95
+      - knative-boskos-96
+      - knative-boskos-97
+      - knative-boskos-98
+      - knative-boskos-99
+      # - knative-boskos-100
+      # - knative-boskos-101
+      # - knative-boskos-102
+      # - knative-boskos-103
+      # - knative-boskos-104
+      # - knative-boskos-105
+      # - knative-boskos-106
+      # - knative-boskos-107
+      # - knative-boskos-108
+      # - knative-boskos-109
       state: dirty
       type: gke-project
 kind: ConfigMap
