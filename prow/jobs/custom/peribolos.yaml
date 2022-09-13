@@ -19,7 +19,6 @@ presubmits:
   knative/community:
   # Run on the prow-trusted build cluster as it needs access to the github oauth token.
   - name: pull-knative-peribolos
-    optional: true
     agent: kubernetes
     decorate: true
     path_alias: knative.dev/community
@@ -29,7 +28,7 @@ presubmits:
     - "main"
     spec:
       containers:
-      - image: gcr.io/k8s-prow/peribolos:v20220721-cf42b99a12
+      - image: gcr.io/k8s-prow/peribolos:v20220908-f78f19e6a6
         command:
         - "peribolos"
         args:
@@ -43,9 +42,6 @@ presubmits:
         - "--min-admins=5"
         - "--fix-org=true"
         - "--fix-org-members=true"
-        - "--fix-teams=true"
-        - "--fix-team-members=true"
-        - "--fix-team-repos=true"
         - "--fix-repos=true"
         - "--github-hourly-tokens=1200"
         # Set --confirm=false to only validate the configuration file.
@@ -61,7 +57,6 @@ presubmits:
 
   # Run on the prow-trusted build cluster as it needs access to the github oauth token.
   - name: pull-knative-sandbox-peribolos
-    optional: true
     agent: kubernetes
     decorate: true
     path_alias: knative.dev/community
@@ -71,7 +66,7 @@ presubmits:
     - "main"
     spec:
       containers:
-      - image: gcr.io/k8s-prow/peribolos:v20220721-cf42b99a12
+      - image: gcr.io/k8s-prow/peribolos:v20220908-f78f19e6a6
         command:
         - "peribolos"
         args:
@@ -85,9 +80,6 @@ presubmits:
         - "--min-admins=5"
         - "--fix-org=true"
         - "--fix-org-members=true"
-        - "--fix-teams=true"
-        - "--fix-team-members=true"
-        - "--fix-team-repos=true"
         - "--fix-repos=true"
         - "--github-hourly-tokens=1200"
         # Set --confirm=false to only validate the configuration file.
@@ -124,7 +116,7 @@ postsubmits:
       testgrid-tab-name: post-knative-peribolos
     spec:
       containers:
-      - image: gcr.io/k8s-prow/peribolos:v20220721-cf42b99a12
+      - image: gcr.io/k8s-prow/peribolos:v20220908-f78f19e6a6
         command:
         - "peribolos"
         args:
@@ -177,7 +169,7 @@ postsubmits:
       testgrid-tab-name: post-knative-sandbox-peribolos
     spec:
       containers:
-      - image: gcr.io/k8s-prow/peribolos:v20220721-cf42b99a12
+      - image: gcr.io/k8s-prow/peribolos:v20220908-f78f19e6a6
         command:
         - "peribolos"
         args:
@@ -227,7 +219,7 @@ periodics:
     testgrid-tab-name: ci-knative-peribolos
   spec:
     containers:
-    - image: gcr.io/k8s-prow/peribolos:v20220721-cf42b99a12
+    - image: gcr.io/k8s-prow/peribolos:v20220908-f78f19e6a6
       command:
       - "peribolos"
       args:
@@ -275,7 +267,7 @@ periodics:
     testgrid-tab-name: ci-knative-sandbox-peribolos
   spec:
     containers:
-    - image: gcr.io/k8s-prow/peribolos:v20220721-cf42b99a12
+    - image: gcr.io/k8s-prow/peribolos:v20220908-f78f19e6a6
       command:
       - "peribolos"
       args:

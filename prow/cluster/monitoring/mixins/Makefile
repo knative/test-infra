@@ -38,11 +38,12 @@ prow_prometheusrule.yaml: install clean-prometheus-out
 	@echo "Generating prow_prometheusrule.yaml ..."
 	jsonnet -J lib/ ./prometheus/prow_prometheusrule.jsonnet | gojsontoyaml > prometheus_out/$@
 
-apply-configmaps: get-cluster-credentials grafana-dashboards
+generate-configmaps: grafana-dashboards
+	rm -rf dashboards.yaml
 	@for input in $(shell ls dashboards_out); do \
 		dashboard_name="grafana-dashboard-$${input%.*}"; \
 		echo "Generating dashboard $${dashboard_name} from $${input} ..."; \
-		kubectl create configmap -n prow-monitoring "$${dashboard_name}" --from-file="$${input}=dashboards_out/$${input}" --dry-run -o yaml | kubectl apply -f -; \
+		kubectl create configmap -n monitoring "$${dashboard_name}" --from-file="$${input}=dashboards_out/$${input}" --dry-run=client -o yaml | yq e '.metadata.labels.grafana_dashboard = "true"' >> dashboards.yaml ; echo "---" >> dashboards.yaml; \
 	done
 
 apply-prow-prometheusrule: get-cluster-credentials prow_prometheusrule.yaml

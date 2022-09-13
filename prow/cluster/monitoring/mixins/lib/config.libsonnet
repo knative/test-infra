@@ -41,7 +41,7 @@ local config = {
 
   // Boskos endpoints to be monitored
   boskosResourcetypes: [
-    {instance: "35.184.198.223:9090", type: "gke-project", friendly: "GKE projects"},
+    {type: "gke-project", friendly: "GKE projects"},
   ],
 
   // How long we go during work hours without seeing a webhook before alerting.

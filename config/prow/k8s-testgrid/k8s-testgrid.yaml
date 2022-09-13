@@ -10,7 +10,6 @@ dashboard_groups:
 - dashboard_names:
   - client
   - client-pkg
-  - docs
   - eventing
   - operator
   - serving
@@ -50,13 +49,13 @@ dashboard_groups:
   - net-kourier
   - sample-controller
   - sample-source
+  - security-guard
   name: knative-sandbox
 dashboards:
 - name: async-component
 - name: client
 - name: client-pkg
 - name: container-freezer
-- name: docs
 - name: eventing
 - name: eventing-autoscaler-keda
 - name: eventing-awssqs
@@ -81,15 +80,15 @@ dashboards:
 - name: kn-plugin-service-log
 - name: kn-plugin-source-kafka
 - name: kn-plugin-source-kamelet
-- name: knative-release-1.3
 - name: knative-release-1.4
 - name: knative-release-1.5
 - name: knative-release-1.6
+- name: knative-release-1.7
 - name: knative-sandbox-release-0.1
-- name: knative-sandbox-release-0.22
 - name: knative-sandbox-release-0.23
 - name: knative-sandbox-release-0.24
 - name: knative-sandbox-release-0.25
+- name: knative-sandbox-release-0.26
 - name: knative-sandbox-release-1.0
 - name: knative-sandbox-release-1.1
 - name: knative-sandbox-release-1.2
@@ -97,6 +96,7 @@ dashboards:
 - name: knative-sandbox-release-1.4
 - name: knative-sandbox-release-1.5
 - name: knative-sandbox-release-1.6
+- name: knative-sandbox-release-1.7
 - name: net-certmanager
 - name: net-contour
 - name: net-gateway-api
@@ -106,5 +106,6 @@ dashboards:
 - name: operator
 - name: sample-controller
 - name: sample-source
+- name: security-guard
 - name: serving
 - name: utilities

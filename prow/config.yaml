@@ -25,10 +25,10 @@ plank:
         grace_period: 15s
         utility_images:
           # Update these versions when updating plank version in cluster.yaml
-          clonerefs: "gcr.io/k8s-prow/clonerefs:v20220721-cf42b99a12"
-          initupload: "gcr.io/k8s-prow/initupload:v20220721-cf42b99a12"
-          entrypoint: "gcr.io/k8s-prow/entrypoint:v20220721-cf42b99a12"
-          sidecar: "gcr.io/k8s-prow/sidecar:v20220721-cf42b99a12"
+          clonerefs: "gcr.io/k8s-prow/clonerefs:v20220908-f78f19e6a6"
+          initupload: "gcr.io/k8s-prow/initupload:v20220908-f78f19e6a6"
+          entrypoint: "gcr.io/k8s-prow/entrypoint:v20220908-f78f19e6a6"
+          sidecar: "gcr.io/k8s-prow/sidecar:v20220908-f78f19e6a6"
         gcs_configuration:
           bucket: "knative-prow"
           path_strategy: "explicit"
@@ -44,10 +44,10 @@ plank:
         grace_period: 15s
         utility_images:
           # Update these versions when updating plank version in cluster.yaml
-          clonerefs: "gcr.io/k8s-prow/clonerefs:v20220721-cf42b99a12"
-          initupload: "gcr.io/k8s-prow/initupload:v20220721-cf42b99a12"
-          entrypoint: "gcr.io/k8s-prow/entrypoint:v20220721-cf42b99a12"
-          sidecar: "gcr.io/k8s-prow/sidecar:v20220721-cf42b99a12"
+          clonerefs: "gcr.io/k8s-prow/clonerefs:v20220908-f78f19e6a6"
+          initupload: "gcr.io/k8s-prow/initupload:v20220908-f78f19e6a6"
+          entrypoint: "gcr.io/k8s-prow/entrypoint:v20220908-f78f19e6a6"
+          sidecar: "gcr.io/k8s-prow/sidecar:v20220908-f78f19e6a6"
         gcs_configuration:
           bucket: "knative-prow"
           path_strategy: "explicit"
@@ -217,9 +217,38 @@ tide:
   squash_label: tide/merge-method-squash
   rebase_label: tide/merge-method-rebase
   merge_label: tide/merge-method-merge
+  # https://github.com/kubernetes/test-infra/blob/master/prow/cmd/tide/config.md#context-policy-options
   context_options:
     # Treat unknown contexts as optional
-    skip-unknown-contexts: true
+    skip-unknown-contexts: false
+    orgs:
+      knative:
+        repos:
+          pkg:
+            skip-unknown-contexts: true
+          eventing:
+            skip-unknown-contexts: true
+      knative-sandbox:
+        repos:
+          eventing-kafka-broker:
+            skip-unknown-contexts: true
+          reconciler-test:
+            skip-unknown-contexts: true
+#     orgs:
+#       org:
+#         required-contexts:
+#         - "check-required-for-all-repos"
+#         repos:
+#           repo:
+#             required-contexts:
+#              - "check-required-for-all-branches"
+#             branches:
+#               branch:
+#                 from-branch-protection: false
+#                 required-contexts:
+#                 - "required_test"
+#                 optional-contexts:
+#                 - "optional_test"
 
 # Configure GitHub branch protection rules according to the specified policy.
 branch-protection:

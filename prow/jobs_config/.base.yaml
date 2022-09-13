@@ -83,6 +83,27 @@ requirement_presets:
           path: /sys/fs/cgroup
           type: Directory
 
+  perf:
+    env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+    volumeMounts:
+      - name: influx-token-secret-volume
+        mountPath: /etc/influx-token-secret-volume
+        readOnly: true
+      - name: influx-url-secret-volume
+        mountPath: /etc/influx-url-secret-volume
+        readOnly: true
+    volumes:
+      - name: influx-token-secret-volume
+        secret:
+          secretName: influx-token-secret
+          defaultMode: 0600
+      - name: influx-url-secret-volume
+        secret:
+          secretName: influx-url-secret
+          defaultMode: 0600
+
   gcp:
     env:
       - name: E2E_CLUSTER_REGION
@@ -112,8 +133,6 @@ requirement_presets:
           secretKeyRef:
             name: s390x-cluster1
             key: ko-docker-repo
-      - name: DISABLE_MD_LINTING
-        value: "1"
       - name: KUBECONFIG
         value: /root/.kube/config
       - name: DOCKER_CONFIG
@@ -136,8 +155,6 @@ requirement_presets:
         value: "linux/ppc64le"
       - name: KO_DOCKER_REPO
         value: "registry.ppc64le"
-      - name: DISABLE_MD_LINTING
-        value: "1"
       - name: KUBECONFIG
         value: /root/.kube/config
     volumeMounts:

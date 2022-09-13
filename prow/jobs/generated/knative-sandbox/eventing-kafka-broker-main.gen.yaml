@@ -25,13 +25,15 @@ periodics:
       - ./test/presubmit-tests.sh
       - --all-tests
       env:
+      - name: BROKER_CLASS
+        value: Kafka
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
       name: ""
       resources: {}
       securityContext:
@@ -93,11 +95,13 @@ periodics:
       - --publish
       - --tag-release
       env:
+      - name: BROKER_CLASS
+        value: Kafka
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/nightly-account/service-account.json
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
       name: ""
       resources: {}
       securityContext:
@@ -165,7 +169,7 @@ periodics:
         value: knative-sandbox
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
       name: ""
       resources: {}
       securityContext:
@@ -238,6 +242,8 @@ periodics:
       command:
       - runner.sh
       env:
+      - name: BROKER_CLASS
+        value: Kafka
       - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
         value: SSL
       - name: EVENTING_NAMESPACE
@@ -259,13 +265,11 @@ periodics:
           secretKeyRef:
             key: ko-docker-repo
             name: s390x-cluster1
-      - name: DISABLE_MD_LINTING
-        value: "1"
       - name: KUBECONFIG
         value: /root/.kube/config
       - name: DOCKER_CONFIG
         value: /opt/cluster
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
       name: ""
       resources: {}
       securityContext:
@@ -320,6 +324,8 @@ periodics:
       command:
       - runner.sh
       env:
+      - name: BROKER_CLASS
+        value: Kafka
       - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
         value: SASL_SSL
       - name: EVENTING_NAMESPACE
@@ -341,13 +347,11 @@ periodics:
           secretKeyRef:
             key: ko-docker-repo
             name: s390x-cluster1
-      - name: DISABLE_MD_LINTING
-        value: "1"
       - name: KUBECONFIG
         value: /root/.kube/config
       - name: DOCKER_CONFIG
         value: /opt/cluster
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
       name: ""
       resources: {}
       securityContext:
@@ -402,6 +406,8 @@ periodics:
       command:
       - runner.sh
       env:
+      - name: BROKER_CLASS
+        value: Kafka
       - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
         value: SASL_PLAIN
       - name: EVENTING_NAMESPACE
@@ -423,13 +429,11 @@ periodics:
           secretKeyRef:
             key: ko-docker-repo
             name: s390x-cluster1
-      - name: DISABLE_MD_LINTING
-        value: "1"
       - name: KUBECONFIG
         value: /root/.kube/config
       - name: DOCKER_CONFIG
         value: /opt/cluster
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
       name: ""
       resources: {}
       securityContext:
@@ -470,7 +474,7 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --build-tests
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources: {}
         securityContext:
@@ -491,7 +495,7 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --unit-tests
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources: {}
         securityContext:
@@ -513,13 +517,72 @@ presubmits:
         - ./test/presubmit-tests.sh
         - --integration-tests
         env:
+        - name: BROKER_CLASS
+          value: Kafka
         - name: E2E_CLUSTER_REGION
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
+        name: ""
+        resources: {}
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /etc/test-account
+          name: test-account
+          readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        type: testing
+      volumes:
+      - name: test-account
+        secret:
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
+  - always_run: true
+    branches:
+    - ^main$
+    cluster: prow-build
+    decorate: true
+    name: integration-tests-namespaced-broker_eventing-kafka-broker_main
+    path_alias: knative.dev/eventing-kafka-broker
+    spec:
+      containers:
+      - command:
+        - runner.sh
+        - ./test/presubmit-tests.sh
+        - --integration-tests
+        env:
+        - name: BROKER_CLASS
+          value: KafkaNamespaced
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources: {}
         securityContext:
@@ -569,13 +632,15 @@ presubmits:
         - --run-test
         - ./test/upgrade-tests.sh
         env:
+        - name: BROKER_CLASS
+          value: Kafka
         - name: E2E_CLUSTER_REGION
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources: {}
         securityContext:
@@ -625,13 +690,73 @@ presubmits:
         - --run-test
         - ./test/reconciler-tests.sh
         env:
+        - name: BROKER_CLASS
+          value: Kafka
         - name: E2E_CLUSTER_REGION
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
+        name: ""
+        resources: {}
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /etc/test-account
+          name: test-account
+          readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        type: testing
+      volumes:
+      - name: test-account
+        secret:
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
+  - always_run: true
+    branches:
+    - ^main$
+    cluster: prow-build
+    decorate: true
+    name: reconciler-tests-namespaced-broker_eventing-kafka-broker_main
+    path_alias: knative.dev/eventing-kafka-broker
+    spec:
+      containers:
+      - command:
+        - runner.sh
+        - ./test/presubmit-tests.sh
+        - --run-test
+        - ./test/reconciler-tests.sh
+        env:
+        - name: BROKER_CLASS
+          value: KafkaNamespaced
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources: {}
         securityContext:
@@ -681,6 +806,8 @@ presubmits:
         - --run-test
         - ./test/e2e-tests.sh
         env:
+        - name: BROKER_CLASS
+          value: Kafka
         - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
           value: SSL
         - name: E2E_CLUSTER_REGION
@@ -689,7 +816,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources: {}
         securityContext:
@@ -739,6 +866,8 @@ presubmits:
         - --run-test
         - ./test/e2e-tests.sh
         env:
+        - name: BROKER_CLASS
+          value: Kafka
         - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
           value: SASL_SSL
         - name: E2E_CLUSTER_REGION
@@ -747,7 +876,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources: {}
         securityContext:
@@ -797,6 +926,8 @@ presubmits:
         - --run-test
         - ./test/e2e-tests.sh
         env:
+        - name: BROKER_CLASS
+          value: Kafka
         - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
           value: SASL_PLAIN
         - name: E2E_CLUSTER_REGION
@@ -805,7 +936,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources: {}
         securityContext:
@@ -855,6 +986,8 @@ presubmits:
         - --run-test
         - ./test/reconciler-tests.sh
         env:
+        - name: BROKER_CLASS
+          value: Kafka
         - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
           value: SSL
         - name: E2E_CLUSTER_REGION
@@ -863,7 +996,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources: {}
         securityContext:
@@ -913,6 +1046,8 @@ presubmits:
         - --run-test
         - ./test/reconciler-tests.sh
         env:
+        - name: BROKER_CLASS
+          value: Kafka
         - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
           value: SASL_SSL
         - name: E2E_CLUSTER_REGION
@@ -921,7 +1056,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources: {}
         securityContext:
@@ -971,6 +1106,8 @@ presubmits:
         - --run-test
         - ./test/reconciler-tests.sh
         env:
+        - name: BROKER_CLASS
+          value: Kafka
         - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
           value: SASL_PLAIN
         - name: E2E_CLUSTER_REGION
@@ -979,7 +1116,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
         name: ""
         resources: {}
         securityContext:

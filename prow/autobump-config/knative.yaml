@@ -11,6 +11,7 @@ upstreamURLBase: "https://raw.githubusercontent.com/kubernetes/test-infra/master
 targetVersion: "upstream"
 includedConfigPaths:
   - "prow/cluster/control-plane"
+  - "prow/cluster/build"
   - "prow/jobs"
 extraFiles:
   - "prow/config.yaml"
@@ -20,5 +21,11 @@ prefixes:
     prefix: "gcr.io/k8s-prow/"
     refConfigFile: "config/prow/cluster/deck_deployment.yaml"
     repo: "https://github.com/kubernetes/test-infra"
+    summarise: false
+    consistentImages: true
+  - name: "Boskos"
+    prefix: "gcr.io/k8s-staging-boskos/"
+    refConfigFile: "config/prow/cluster/build/boskos.yaml"
+    repo: "https://github.com/kubernetes-sigs/boskos"
     summarise: false
     consistentImages: true
