@@ -12,6 +12,7 @@ require (
 	github.com/google/go-cmp v0.5.7
 	github.com/google/go-containerregistry v0.8.0
 	github.com/google/go-github/v32 v32.1.1-0.20201004213705-76c3c3d7c6e7 // HEAD as of Nov 6
+	github.com/hashicorp/errwrap v1.0.0
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/pkg/errors v0.9.1
@@ -29,8 +30,6 @@ require (
 	sigs.k8s.io/boskos v0.0.0-20200729174948-794df80db9c9
 	sigs.k8s.io/yaml v1.2.0
 )
-
-require github.com/hashicorp/errwrap v1.0.0
 
 require (
 	cloud.google.com/go v0.100.2 // indirect
