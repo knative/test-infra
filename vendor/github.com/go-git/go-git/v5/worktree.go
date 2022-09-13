@@ -59,7 +59,7 @@ func (w *Worktree) Pull(o *PullOptions) error {
 // Pull only supports merges where the can be resolved as a fast-forward.
 //
 // The provided Context must be non-nil. If the context expires before the
-// operation is complete, an error is returned. The context only affects the
+// operation is complete, an error is returned. The context only affects to the
 // transport operations.
 func (w *Worktree) PullContext(ctx context.Context, o *PullOptions) error {
 	if err := o.Validate(); err != nil {
@@ -72,13 +72,11 @@ func (w *Worktree) PullContext(ctx context.Context, o *PullOptions) error {
 	}
 
 	fetchHead, err := remote.fetch(ctx, &FetchOptions{
-		RemoteName:      o.RemoteName,
-		Depth:           o.Depth,
-		Auth:            o.Auth,
-		Progress:        o.Progress,
-		Force:           o.Force,
-		InsecureSkipTLS: o.InsecureSkipTLS,
-		CABundle:        o.CABundle,
+		RemoteName: o.RemoteName,
+		Depth:      o.Depth,
+		Auth:       o.Auth,
+		Progress:   o.Progress,
+		Force:      o.Force,
 	})
 
 	updated := true
@@ -95,12 +93,7 @@ func (w *Worktree) PullContext(ctx context.Context, o *PullOptions) error {
 
 	head, err := w.r.Head()
 	if err == nil {
-		headAheadOfRef, err := isFastForward(w.r.Storer, ref.Hash(), head.Hash())
-		if err != nil {
-			return err
-		}
-
-		if !updated && headAheadOfRef {
+		if !updated && head.Hash() == ref.Hash() {
 			return NoErrAlreadyUpToDate
 		}
 
@@ -718,11 +711,7 @@ func (w *Worktree) readGitmodulesFile() (*config.Modules, error) {
 	}
 
 	m := config.NewModules()
-	if err := m.Unmarshal(input); err != nil {
-		return m, err
-	}
-
-	return m, nil
+	return m, m.Unmarshal(input)
 }
 
 // Clean the worktree by removing untracked files.
@@ -771,7 +760,7 @@ func (w *Worktree) doClean(status Status, opts *CleanOptions, dir string, files 
 		}
 	}
 
-	if opts.Dir && dir != "" {
+	if opts.Dir {
 		return doCleanDirectories(w.Filesystem, dir)
 	}
 	return nil

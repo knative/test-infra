@@ -104,18 +104,14 @@ func LoadFromReader(configData io.Reader) (*configfile.ConfigFile, error) {
 	return &configFile, err
 }
 
+// TODO remove this temporary hack, which is used to warn about the deprecated ~/.dockercfg file
+var printLegacyFileWarning bool
+
 // Load reads the configuration files in the given directory, and sets up
 // the auth config information and returns values.
 // FIXME: use the internal golang config parser
 func Load(configDir string) (*configfile.ConfigFile, error) {
-	cfg, _, err := load(configDir)
-	return cfg, err
-}
-
-// TODO remove this temporary hack, which is used to warn about the deprecated ~/.dockercfg file
-// so we can remove the bool return value and collapse this back into `Load`
-func load(configDir string) (*configfile.ConfigFile, bool, error) {
-	printLegacyFileWarning := false
+	printLegacyFileWarning = false
 
 	if configDir == "" {
 		configDir = Dir()
@@ -131,11 +127,11 @@ func load(configDir string) (*configfile.ConfigFile, bool, error) {
 		if err != nil {
 			err = errors.Wrap(err, filename)
 		}
-		return configFile, printLegacyFileWarning, err
+		return configFile, err
 	} else if !os.IsNotExist(err) {
 		// if file is there but we can't stat it for any reason other
 		// than it doesn't exist then stop
-		return configFile, printLegacyFileWarning, errors.Wrap(err, filename)
+		return configFile, errors.Wrap(err, filename)
 	}
 
 	// Can't find latest config file so check for the old one
@@ -144,16 +140,16 @@ func load(configDir string) (*configfile.ConfigFile, bool, error) {
 		printLegacyFileWarning = true
 		defer file.Close()
 		if err := configFile.LegacyLoadFromReader(file); err != nil {
-			return configFile, printLegacyFileWarning, errors.Wrap(err, filename)
+			return configFile, errors.Wrap(err, filename)
 		}
 	}
-	return configFile, printLegacyFileWarning, nil
+	return configFile, nil
 }
 
 // LoadDefaultConfigFile attempts to load the default config file and returns
 // an initialized ConfigFile struct if none is found.
 func LoadDefaultConfigFile(stderr io.Writer) *configfile.ConfigFile {
-	configFile, printLegacyFileWarning, err := load(Dir())
+	configFile, err := Load(Dir())
 	if err != nil {
 		fmt.Fprintf(stderr, "WARNING: Error loading config file: %v\n", err)
 	}

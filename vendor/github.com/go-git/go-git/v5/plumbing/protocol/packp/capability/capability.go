@@ -230,12 +230,6 @@ const (
 	PushCert Capability = "push-cert"
 	// SymRef symbolic reference support for better negotiation.
 	SymRef Capability = "symref"
-	// ObjectFormat takes a hash algorithm as an argument, indicates that the
-	// server supports the given hash algorithms.
-	ObjectFormat Capability = "object-format"
-	// Filter if present, fetch-pack may send "filter" commands to request a
-	// partial clone or partial fetch and request that the server omit various objects from the packfile
-	Filter Capability = "filter"
 )
 
 const DefaultAgent = "go-git/4.x"
@@ -247,11 +241,10 @@ var known = map[Capability]bool{
 	NoProgress: true, IncludeTag: true, ReportStatus: true, DeleteRefs: true,
 	Quiet: true, Atomic: true, PushOptions: true, AllowTipSHA1InWant: true,
 	AllowReachableSHA1InWant: true, PushCert: true, SymRef: true,
-	ObjectFormat: true, Filter: true,
 }
 
 var requiresArgument = map[Capability]bool{
-	Agent: true, PushCert: true, SymRef: true, ObjectFormat: true,
+	Agent: true, PushCert: true, SymRef: true,
 }
 
 var multipleArgument = map[Capability]bool{

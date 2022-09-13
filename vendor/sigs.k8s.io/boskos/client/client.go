@@ -93,24 +93,17 @@ func NewClient(owner string, urlString, username, passwordFile string) (*Client,
 			fmt.Printf("[WARNING] should NOT use password without enabling TLS: '%s'\n", urlString)
 		}
 
-		if err := secret.Add(passwordFile); err != nil {
+		sa := &secret.Agent{}
+		if err := sa.Start([]string{passwordFile}); err != nil {
 			logrus.WithError(err).Fatal("Failed to start secrets agent")
 		}
-		getPassword = secret.GetTokenGenerator(passwordFile)
+		getPassword = sa.GetTokenGenerator(passwordFile)
 	}
 
-	return NewClientWithPasswordGetter(owner, urlString, username, getPassword)
-}
-
-// NewClientWithPasswordGetter creates a Boskos client for the specified URL and resource owner.
-//
-// Clients created with this function default to retrying failed connection
-// attempts three times with a ten second pause between each attempt.
-func NewClientWithPasswordGetter(owner string, urlString, username string, passwordGetter func() []byte) (*Client, error) {
 	client := &Client{
 		url:         urlString,
 		username:    username,
-		getPassword: passwordGetter,
+		getPassword: getPassword,
 		owner:       owner,
 		storage:     storage.NewMemoryStorage(),
 	}

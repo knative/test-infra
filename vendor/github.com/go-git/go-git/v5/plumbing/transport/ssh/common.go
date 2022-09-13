@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"reflect"
 	"strconv"
-	"strings"
 
 	"github.com/go-git/go-git/v5/plumbing/transport"
 	"github.com/go-git/go-git/v5/plumbing/transport/internal/common"
@@ -91,14 +90,8 @@ func (c *command) Close() error {
 	//XXX: If did read the full packfile, then the session might be already
 	//     closed.
 	_ = c.Session.Close()
-	err := c.client.Close()
 
-	//XXX: in go1.16+ we can use errors.Is(err, net.ErrClosed)
-	if err != nil && strings.HasSuffix(err.Error(), "use of closed network connection") {
-		return nil
-	}
-
-	return err
+	return c.client.Close()
 }
 
 // connect connects to the SSH server, unless a AuthMethod was set with

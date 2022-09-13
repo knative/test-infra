@@ -108,10 +108,6 @@ type upSession struct {
 }
 
 func (s *upSession) AdvertisedReferences() (*packp.AdvRefs, error) {
-	return s.AdvertisedReferencesContext(context.TODO())
-}
-
-func (s *upSession) AdvertisedReferencesContext(ctx context.Context) (*packp.AdvRefs, error) {
 	ar := packp.NewAdvRefs()
 
 	if err := s.setSupportedCapabilities(ar.Capabilities); err != nil {
@@ -166,7 +162,7 @@ func (s *upSession) UploadPack(ctx context.Context, req *packp.UploadPackRequest
 		return nil, err
 	}
 
-	pr, pw := ioutil.Pipe()
+	pr, pw := io.Pipe()
 	e := packfile.NewEncoder(pw, s.storer, false)
 	go func() {
 		// TODO: plumb through a pack window.
@@ -208,10 +204,6 @@ type rpSession struct {
 }
 
 func (s *rpSession) AdvertisedReferences() (*packp.AdvRefs, error) {
-	return s.AdvertisedReferencesContext(context.TODO())
-}
-
-func (s *rpSession) AdvertisedReferencesContext(ctx context.Context) (*packp.AdvRefs, error) {
 	ar := packp.NewAdvRefs()
 
 	if err := s.setSupportedCapabilities(ar.Capabilities); err != nil {

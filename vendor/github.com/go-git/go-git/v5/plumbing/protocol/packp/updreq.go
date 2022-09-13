@@ -68,12 +68,12 @@ func NewReferenceUpdateRequestFromCapabilities(adv *capability.List) *ReferenceU
 	return r
 }
 
-func (req *ReferenceUpdateRequest) validate() error {
-	if len(req.Commands) == 0 {
+func (r *ReferenceUpdateRequest) validate() error {
+	if len(r.Commands) == 0 {
 		return ErrEmptyCommands
 	}
 
-	for _, c := range req.Commands {
+	for _, c := range r.Commands {
 		if err := c.validate(); err != nil {
 			return err
 		}
