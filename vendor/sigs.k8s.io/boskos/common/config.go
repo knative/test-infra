@@ -17,13 +17,13 @@ limitations under the License.
 package common
 
 import (
-	"errors"
 	"fmt"
 	"io/ioutil"
 
-	utilerrors "k8s.io/apimachinery/pkg/util/errors"
-	"k8s.io/apimachinery/pkg/util/validation"
+	"github.com/sirupsen/logrus"
 	"sigs.k8s.io/yaml"
+
+	"k8s.io/apimachinery/pkg/util/validation"
 )
 
 // ValidateConfig validates config with existing resources
@@ -31,31 +31,30 @@ import (
 // Out: nil on success, error on failure
 func ValidateConfig(config *BoskosConfig) error {
 	if len(config.Resources) == 0 {
-		return errors.New("empty config")
+		return fmt.Errorf("empty config")
 	}
 	resourceNames := map[string]bool{}
 	resourceTypes := map[string]bool{}
 	resourcesNeeds := map[string]int{}
 	actualResources := map[string]int{}
 
-	var errs []error
-	for idx, e := range config.Resources {
+	for _, e := range config.Resources {
 		if e.Type == "" {
-			errs = append(errs, fmt.Errorf(".%d.type: must be set", idx))
+			return fmt.Errorf("empty resource type: %s", e.Type)
 		}
 
 		if resourceTypes[e.Type] {
-			errs = append(errs, fmt.Errorf(".%d.type.%s already exists", idx, e.Type))
+			return fmt.Errorf("type %s already exists", e.Type)
 		}
 
 		names := e.Names
 		if e.IsDRLC() {
 			// Dynamic Resource
 			if e.MaxCount == 0 {
-				errs = append(errs, fmt.Errorf(".%d.max-count: must be >0", idx))
+				return fmt.Errorf("max should be > 0")
 			}
 			if e.MinCount > e.MaxCount {
-				errs = append(errs, fmt.Errorf(".%d.min-count: must be <= .%d.max-count", idx, idx))
+				return fmt.Errorf("min should be <= max %v", e)
 			}
 			for i := 0; i < e.MaxCount; i++ {
 				name := GenerateDynamicResourceName()
@@ -67,24 +66,16 @@ func ValidateConfig(config *BoskosConfig) error {
 				resourcesNeeds[k] += v * e.MaxCount
 			}
 
-		} else {
-			if e.MinCount != 0 {
-				errs = append(errs, fmt.Errorf(".%d.min-count must be unset when the names property is set", idx))
-			}
-			if e.MaxCount != 0 {
-				errs = append(errs, fmt.Errorf(".%d.max-count must be unset when the names property is set", idx))
-			}
 		}
 		actualResources[e.Type] += len(names)
-		for nameIdx, name := range names {
-			validationErrs := validation.IsDNS1123Subdomain(name)
-			if len(validationErrs) != 0 {
-				errs = append(errs, fmt.Errorf(".%d.names.%d(%s) is invalid: %v", idx, nameIdx, name, validationErrs))
+		for _, name := range names {
+			errs := validation.IsQualifiedName(name)
+			if len(errs) != 0 {
+				return fmt.Errorf("resource name %s is not a qualified k8s object name, errs: %v", name, errs)
 			}
 
 			if _, ok := resourceNames[name]; ok {
-				errs = append(errs, fmt.Errorf(".%d.names.%d(%s) is a duplicate", idx, nameIdx, name))
-				continue
+				return fmt.Errorf("duplicated resource name: %s", name)
 			}
 			resourceNames[name] = true
 		}
@@ -93,13 +84,17 @@ func ValidateConfig(config *BoskosConfig) error {
 	for rType, needs := range resourcesNeeds {
 		actual, ok := actualResources[rType]
 		if !ok {
-			errs = append(errs, fmt.Errorf("need for resource %s that does not exist", rType))
+			err := fmt.Errorf("need for resource %s that does not exist", rType)
+			logrus.WithError(err).Errorf("invalid configuration")
+			return err
 		}
 		if needs > actual {
-			errs = append(errs, fmt.Errorf("not enough resource of type %s for provisioning", rType))
+			err := fmt.Errorf("not enough resource of type %s for provisioning", rType)
+			logrus.WithError(err).Errorf("invalid configuration")
+			return err
 		}
 	}
-	return utilerrors.NewAggregate(errs)
+	return nil
 }
 
 // ParseConfig reads in configPath and returns a list of resource objects
@@ -111,7 +106,8 @@ func ParseConfig(configPath string) (*BoskosConfig, error) {
 	}
 
 	var data BoskosConfig
-	if err := yaml.Unmarshal(file, &data); err != nil {
+	err = yaml.Unmarshal(file, &data)
+	if err != nil {
 		return nil, err
 	}
 	return &data, nil

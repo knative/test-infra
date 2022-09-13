@@ -195,10 +195,10 @@ func (o *ObjectStorage) DeleteOldObjectPackAndIndex(plumbing.Hash, time.Time) er
 
 var errNotSupported = fmt.Errorf("Not supported")
 
-func (o *ObjectStorage) LooseObjectTime(hash plumbing.Hash) (time.Time, error) {
+func (s *ObjectStorage) LooseObjectTime(hash plumbing.Hash) (time.Time, error) {
 	return time.Time{}, errNotSupported
 }
-func (o *ObjectStorage) DeleteLooseObject(plumbing.Hash) error {
+func (s *ObjectStorage) DeleteLooseObject(plumbing.Hash) error {
 	return errNotSupported
 }
 

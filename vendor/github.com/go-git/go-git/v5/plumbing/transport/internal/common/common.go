@@ -162,18 +162,14 @@ func (c *client) listenFirstError(r io.Reader) chan string {
 	return errLine
 }
 
-func (s *session) AdvertisedReferences() (*packp.AdvRefs, error) {
-	return s.AdvertisedReferencesContext(context.TODO())
-}
-
 // AdvertisedReferences retrieves the advertised references from the server.
-func (s *session) AdvertisedReferencesContext(ctx context.Context) (*packp.AdvRefs, error) {
+func (s *session) AdvertisedReferences() (*packp.AdvRefs, error) {
 	if s.advRefs != nil {
 		return s.advRefs, nil
 	}
 
 	ar := packp.NewAdvRefs()
-	if err := ar.Decode(s.StdoutContext(ctx)); err != nil {
+	if err := ar.Decode(s.Stdout); err != nil {
 		if err := s.handleAdvRefDecodeError(err); err != nil {
 			return nil, err
 		}
@@ -233,7 +229,7 @@ func (s *session) handleAdvRefDecodeError(err error) error {
 // UploadPack performs a request to the server to fetch a packfile. A reader is
 // returned with the packfile content. The reader must be closed after reading.
 func (s *session) UploadPack(ctx context.Context, req *packp.UploadPackRequest) (*packp.UploadPackResponse, error) {
-	if req.IsEmpty() && len(req.Shallows) == 0 {
+	if req.IsEmpty() {
 		return nil, transport.ErrEmptyUploadPackRequest
 	}
 
@@ -241,7 +237,7 @@ func (s *session) UploadPack(ctx context.Context, req *packp.UploadPackRequest) 
 		return nil, err
 	}
 
-	if _, err := s.AdvertisedReferencesContext(ctx); err != nil {
+	if _, err := s.AdvertisedReferences(); err != nil {
 		return nil, err
 	}
 
