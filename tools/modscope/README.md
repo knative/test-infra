@@ -35,11 +35,11 @@ knative.dev/hack/schema
 ## Installation
 
 ```shell
-$ go install knative.dev/hack/tools/modscope@latest
+$ go install knative.dev/test-infra/tools/modscope@latest
 ```
 
 or use the `go run` command:
 
 ```shell
-$ go run knative.dev/hack/tools/modscope@latest --help
+$ go run knative.dev/test-infra/tools/modscope@latest --help
 ```
