@@ -1,11 +1,7 @@
 org: knative-sandbox
 repo: kn-plugin-func
 branches: [main]
-<<<<<<< HEAD
-image: gcr.io/knative-tests/test-infra/prow-tests:v20220725-a4aaff33
-=======
 image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
->>>>>>> 2de936dc86e609bd4d87414c0897133f81dc1768
 
 jobs:
   - name: nightly
