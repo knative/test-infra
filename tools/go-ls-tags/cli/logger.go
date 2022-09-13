@@ -28,7 +28,7 @@ import (
 func contextWithLogger() context.Context {
 	ctx := context.Background()
 	fallback := logging.FromContext(ctx)
-	return logging.WithLogger(context.Background(), newLogger(fallback))
+	return logging.WithLogger(ctx, newLogger(fallback))
 }
 
 func newLogger(fallback *zap.SugaredLogger) *zap.SugaredLogger {
