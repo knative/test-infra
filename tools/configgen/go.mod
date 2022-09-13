@@ -11,8 +11,8 @@ replace (
 )
 
 require (
-	istio.io/test-infra/tools/prowgen v0.0.0-20220812220240-f2420973c9f9
-	k8s.io/apimachinery v0.24.2
+	istio.io/test-infra/tools/prowgen v0.0.0-20220912223856-cd655368c7d2
+	k8s.io/apimachinery v0.24.4
 	k8s.io/test-infra v0.0.0-20220801075428-527a7b720677
 	knative.dev/test-infra v0.0.0-20220321235811-a37fa48a9b36
 	sigs.k8s.io/yaml v1.3.0
@@ -134,7 +134,7 @@ require (
 	gopkg.in/robfig/cron.v2 v2.0.0-20150107220207-be2e0b0deed5 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/api v0.24.2 // indirect
+	k8s.io/api v0.24.4 // indirect
 	k8s.io/client-go v11.0.1-0.20190805182717-6502b5e7b1b5+incompatible // indirect
 	k8s.io/component-base v0.24.2 // indirect
 	k8s.io/klog/v2 v2.70.0 // indirect

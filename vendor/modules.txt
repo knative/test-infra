@@ -347,8 +347,6 @@ github.com/modern-go/concurrent
 # github.com/modern-go/reflect2 v1.0.2
 ## explicit; go 1.12
 github.com/modern-go/reflect2
-# github.com/onsi/ginkgo v1.16.5
-## explicit; go 1.16
 # github.com/onsi/gomega v1.18.1
 ## explicit; go 1.16
 # github.com/opencontainers/go-digest v1.0.0
@@ -729,7 +727,10 @@ gopkg.in/yaml.v2
 # gopkg.in/yaml.v3 v3.0.1 => gopkg.in/yaml.v3 v3.0.0-20190709130402-674ba3eaed22
 ## explicit
 gopkg.in/yaml.v3
-# k8s.io/api v0.24.2
+# istio.io/test-infra/tools/prowgen v0.0.0-20220912223856-cd655368c7d2
+## explicit; go 1.18
+istio.io/test-infra/tools/prowgen/pkg/spec
+# k8s.io/api v0.24.4
 ## explicit; go 1.16
 k8s.io/api/admissionregistration/v1
 k8s.io/api/admissionregistration/v1beta1
@@ -776,7 +777,7 @@ k8s.io/api/scheduling/v1beta1
 k8s.io/api/storage/v1
 k8s.io/api/storage/v1alpha1
 k8s.io/api/storage/v1beta1
-# k8s.io/apimachinery v0.24.2
+# k8s.io/apimachinery v0.24.4
 ## explicit; go 1.16
 k8s.io/apimachinery/pkg/api/equality
 k8s.io/apimachinery/pkg/api/errors
@@ -823,14 +824,13 @@ k8s.io/apimachinery/pkg/version
 k8s.io/apimachinery/pkg/watch
 k8s.io/apimachinery/third_party/forked/golang/json
 k8s.io/apimachinery/third_party/forked/golang/reflect
-# k8s.io/client-go v11.0.1-0.20190805182717-6502b5e7b1b5+incompatible => k8s.io/client-go v0.23.8
+# k8s.io/client-go v11.0.1-0.20190805182717-6502b5e7b1b5+incompatible => k8s.io/client-go v0.24.4
 ## explicit; go 1.16
 k8s.io/client-go/dynamic
 k8s.io/client-go/kubernetes/scheme
 k8s.io/client-go/pkg/apis/clientauthentication
 k8s.io/client-go/pkg/apis/clientauthentication/install
 k8s.io/client-go/pkg/apis/clientauthentication/v1
-k8s.io/client-go/pkg/apis/clientauthentication/v1alpha1
 k8s.io/client-go/pkg/apis/clientauthentication/v1beta1
 k8s.io/client-go/pkg/version
 k8s.io/client-go/plugin/pkg/client/auth/exec
@@ -933,4 +933,4 @@ sigs.k8s.io/yaml
 # github.com/gregjones/httpcache => github.com/alvaroaleman/httpcache v0.0.0-20210618195546-ab9a1a3f8a38
 # golang.org/x/lint => golang.org/x/lint v0.0.0-20190409202823-959b441ac422
 # gopkg.in/yaml.v3 => gopkg.in/yaml.v3 v3.0.0-20190709130402-674ba3eaed22
-# k8s.io/client-go => k8s.io/client-go v0.23.8
+# k8s.io/client-go => k8s.io/client-go v0.24.4
