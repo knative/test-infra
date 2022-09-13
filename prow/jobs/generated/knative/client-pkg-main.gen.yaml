@@ -57,6 +57,7 @@ presubmits:
     decorate: true
     name: build-tests_client-pkg_main
     path_alias: knative.dev/client-pkg
+    rerun_command: /test build-tests
     spec:
       containers:
       - command:
@@ -71,6 +72,7 @@ presubmits:
       nodeSelector:
         kubernetes.io/arch: amd64
         type: testing
+    trigger: ((?m)^/test( | .* )build-tests,?($|\s.*))|((?m)^/test( | .* )build-tests_client-pkg_main,?($|\s.*))
   - always_run: true
     branches:
     - ^main$
@@ -78,6 +80,7 @@ presubmits:
     decorate: true
     name: unit-tests_client-pkg_main
     path_alias: knative.dev/client-pkg
+    rerun_command: /test unit-tests
     spec:
       containers:
       - command:
@@ -92,3 +95,4 @@ presubmits:
       nodeSelector:
         kubernetes.io/arch: amd64
         type: testing
+    trigger: ((?m)^/test( | .* )unit-tests,?($|\s.*))|((?m)^/test( | .* )unit-tests_client-pkg_main,?($|\s.*))

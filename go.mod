@@ -19,12 +19,15 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.5.0
+	github.com/stretchr/testify v1.8.0
+	github.com/wavesoftware/go-commandline v1.0.0
 	go.uber.org/atomic v1.9.0
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4
 	golang.org/x/net v0.0.0-20220624214902-1bab6f366d9e
 	golang.org/x/oauth2 v0.0.0-20220622183110-fd043fe589d2
 	google.golang.org/api v0.86.0
-	k8s.io/apimachinery v0.24.2
+	istio.io/test-infra/tools/prowgen v0.0.0-20220912223856-cd655368c7d2
+	k8s.io/apimachinery v0.24.4
 	k8s.io/test-infra v0.0.0-20220801075428-527a7b720677
 	knative.dev/hack v0.0.0-20220725145124-782bbaabb8a1
 	sigs.k8s.io/bom v0.3.0
@@ -49,7 +52,8 @@ replace (
 
 	golang.org/x/lint => golang.org/x/lint v0.0.0-20190409202823-959b441ac422
 	gopkg.in/yaml.v3 => gopkg.in/yaml.v3 v3.0.0-20190709130402-674ba3eaed22
-	k8s.io/client-go => k8s.io/client-go v0.23.8 // consider the version used by knative/pkg repo
+	// Various replaces to deal with mismatched deps imported from kubernetes, istio/test-infra and knative/pkg
+	k8s.io/client-go => k8s.io/client-go v0.24.4 // consider the version used by knative/pkg repo
 )
 
 require (
@@ -111,11 +115,11 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
-	github.com/onsi/ginkgo v1.16.5 // indirect
 	github.com/onsi/gomega v1.18.1 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.0.3-0.20220114050600-8b9d41f48198 // indirect
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/client_golang v1.12.2 // indirect
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.32.1 // indirect
@@ -130,6 +134,7 @@ require (
 	github.com/sirupsen/logrus v1.8.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/tektoncd/pipeline v0.36.0 // indirect
+	github.com/wavesoftware/go-retcode v1.0.0 // indirect
 	github.com/xanzy/ssh-agent v0.3.0 // indirect
 	go.opencensus.io v0.23.0 // indirect
 	go.uber.org/multierr v1.7.0 // indirect
@@ -152,7 +157,7 @@ require (
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/api v0.24.2 // indirect
+	k8s.io/api v0.24.4 // indirect
 	k8s.io/client-go v11.0.1-0.20190805182717-6502b5e7b1b5+incompatible // indirect
 	k8s.io/klog/v2 v2.70.0 // indirect
 	k8s.io/kube-openapi v0.0.0-20220328201542-3ee0da9b0b42 // indirect
@@ -161,14 +166,4 @@ require (
 	sigs.k8s.io/json v0.0.0-20211208200746-9f7c6b3444d2 // indirect
 	sigs.k8s.io/release-utils v0.7.1 // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.1 // indirect
-)
-
-require (
-	github.com/stretchr/testify v1.8.0
-	github.com/wavesoftware/go-commandline v1.0.0
-)
-
-require (
-	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/wavesoftware/go-retcode v1.0.0 // indirect
 )

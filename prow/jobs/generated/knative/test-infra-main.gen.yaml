@@ -14,6 +14,7 @@ presubmits:
     decorate: true
     name: build-tests_test-infra_main
     path_alias: knative.dev/test-infra
+    rerun_command: /test build-tests
     spec:
       containers:
       - command:
@@ -28,6 +29,7 @@ presubmits:
       nodeSelector:
         kubernetes.io/arch: amd64
         type: testing
+    trigger: ((?m)^/test( | .* )build-tests,?($|\s.*))|((?m)^/test( | .* )build-tests_test-infra_main,?($|\s.*))
   - always_run: true
     branches:
     - ^main$
@@ -35,6 +37,7 @@ presubmits:
     decorate: true
     name: unit-tests_test-infra_main
     path_alias: knative.dev/test-infra
+    rerun_command: /test unit-tests
     spec:
       containers:
       - command:
@@ -49,3 +52,4 @@ presubmits:
       nodeSelector:
         kubernetes.io/arch: amd64
         type: testing
+    trigger: ((?m)^/test( | .* )unit-tests,?($|\s.*))|((?m)^/test( | .* )unit-tests_test-infra_main,?($|\s.*))

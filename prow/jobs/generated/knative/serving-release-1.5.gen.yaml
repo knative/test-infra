@@ -290,6 +290,7 @@ presubmits:
     decorate: true
     name: build-tests_serving_release-1.5
     path_alias: knative.dev/serving
+    rerun_command: /test build-tests
     spec:
       containers:
       - command:
@@ -308,6 +309,7 @@ presubmits:
       nodeSelector:
         kubernetes.io/arch: amd64
         type: testing
+    trigger: ((?m)^/test( | .* )build-tests,?($|\s.*))|((?m)^/test( | .* )build-tests_serving_release-1.5,?($|\s.*))
   - always_run: true
     branches:
     - ^release-1.5$
@@ -315,6 +317,7 @@ presubmits:
     decorate: true
     name: unit-tests_serving_release-1.5
     path_alias: knative.dev/serving
+    rerun_command: /test unit-tests
     spec:
       containers:
       - command:
@@ -333,6 +336,7 @@ presubmits:
       nodeSelector:
         kubernetes.io/arch: amd64
         type: testing
+    trigger: ((?m)^/test( | .* )unit-tests,?($|\s.*))|((?m)^/test( | .* )unit-tests_serving_release-1.5,?($|\s.*))
   - always_run: true
     branches:
     - ^release-1.5$
@@ -340,6 +344,7 @@ presubmits:
     decorate: true
     name: upgrade-tests_serving_release-1.5
     path_alias: knative.dev/serving
+    rerun_command: /test upgrade-tests
     spec:
       containers:
       - command:
@@ -375,6 +380,7 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+    trigger: ((?m)^/test( | .* )upgrade-tests,?($|\s.*))|((?m)^/test( | .* )upgrade-tests_serving_release-1.5,?($|\s.*))
   - always_run: true
     branches:
     - ^release-1.5$
@@ -382,6 +388,7 @@ presubmits:
     decorate: true
     name: istio-latest-no-mesh_serving_release-1.5
     path_alias: knative.dev/serving
+    rerun_command: /test istio-latest-no-mesh
     spec:
       containers:
       - command:
@@ -417,6 +424,8 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+    trigger: ((?m)^/test( | .* )istio-latest-no-mesh,?($|\s.*))|((?m)^/test( | .*
+      )istio-latest-no-mesh_serving_release-1.5,?($|\s.*))
   - always_run: true
     branches:
     - ^release-1.5$
@@ -424,6 +433,7 @@ presubmits:
     decorate: true
     name: istio-latest-no-mesh-tls_serving_release-1.5
     path_alias: knative.dev/serving
+    rerun_command: /test istio-latest-no-mesh-tls
     spec:
       containers:
       - command:
@@ -459,6 +469,8 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+    trigger: ((?m)^/test( | .* )istio-latest-no-mesh-tls,?($|\s.*))|((?m)^/test( |
+      .* )istio-latest-no-mesh-tls_serving_release-1.5,?($|\s.*))
   - always_run: false
     branches:
     - ^release-1.5$
@@ -467,6 +479,7 @@ presubmits:
     name: performance-tests-kperf_serving_release-1.5
     optional: true
     path_alias: knative.dev/serving
+    rerun_command: /test performance-tests-kperf
     spec:
       containers:
       - command:
@@ -502,6 +515,8 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+    trigger: ((?m)^/test( | .* )performance-tests-kperf,?($|\s.*))|((?m)^/test( |
+      .* )performance-tests-kperf_serving_release-1.5,?($|\s.*))
   - always_run: false
     branches:
     - ^release-1.5$
@@ -510,6 +525,7 @@ presubmits:
     name: performance-tests-mako_serving_release-1.5
     optional: true
     path_alias: knative.dev/serving
+    rerun_command: /test performance-tests-mako
     spec:
       containers:
       - command:
@@ -545,6 +561,8 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+    trigger: ((?m)^/test( | .* )performance-tests-mako,?($|\s.*))|((?m)^/test( | .*
+      )performance-tests-mako_serving_release-1.5,?($|\s.*))
   - always_run: false
     branches:
     - ^release-1.5$
@@ -553,6 +571,7 @@ presubmits:
     name: istio-latest-mesh_serving_release-1.5
     optional: true
     path_alias: knative.dev/serving
+    rerun_command: /test istio-latest-mesh
     spec:
       containers:
       - command:
@@ -588,6 +607,7 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+    trigger: ((?m)^/test( | .* )istio-latest-mesh,?($|\s.*))|((?m)^/test( | .* )istio-latest-mesh_serving_release-1.5,?($|\s.*))
   - always_run: false
     branches:
     - ^release-1.5$
@@ -596,6 +616,7 @@ presubmits:
     name: istio-latest-mesh-short_serving_release-1.5
     optional: true
     path_alias: knative.dev/serving
+    rerun_command: /test istio-latest-mesh-short
     spec:
       containers:
       - command:
@@ -631,6 +652,8 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+    trigger: ((?m)^/test( | .* )istio-latest-mesh-short,?($|\s.*))|((?m)^/test( |
+      .* )istio-latest-mesh-short_serving_release-1.5,?($|\s.*))
   - always_run: false
     branches:
     - ^release-1.5$
@@ -639,6 +662,7 @@ presubmits:
     name: istio-latest-mesh-tls_serving_release-1.5
     optional: true
     path_alias: knative.dev/serving
+    rerun_command: /test istio-latest-mesh-tls
     spec:
       containers:
       - command:
@@ -674,6 +698,8 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+    trigger: ((?m)^/test( | .* )istio-latest-mesh-tls,?($|\s.*))|((?m)^/test( | .*
+      )istio-latest-mesh-tls_serving_release-1.5,?($|\s.*))
   - always_run: false
     branches:
     - ^release-1.5$
@@ -681,6 +707,7 @@ presubmits:
     decorate: true
     name: kourier-stable_serving_release-1.5
     path_alias: knative.dev/serving
+    rerun_command: /test kourier-stable
     run_if_changed: ^third_party/kourier-latest/*
     spec:
       containers:
@@ -717,6 +744,7 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+    trigger: ((?m)^/test( | .* )kourier-stable,?($|\s.*))|((?m)^/test( | .* )kourier-stable_serving_release-1.5,?($|\s.*))
   - always_run: false
     branches:
     - ^release-1.5$
@@ -724,6 +752,7 @@ presubmits:
     decorate: true
     name: kourier-stable-tls_serving_release-1.5
     path_alias: knative.dev/serving
+    rerun_command: /test kourier-stable-tls
     run_if_changed: ^third_party/kourier-latest/*
     spec:
       containers:
@@ -760,6 +789,7 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+    trigger: ((?m)^/test( | .* )kourier-stable-tls,?($|\s.*))|((?m)^/test( | .* )kourier-stable-tls_serving_release-1.5,?($|\s.*))
   - always_run: false
     branches:
     - ^release-1.5$
@@ -767,6 +797,7 @@ presubmits:
     decorate: true
     name: contour-latest_serving_release-1.5
     path_alias: knative.dev/serving
+    rerun_command: /test contour-latest
     run_if_changed: ^third_party/contour-latest/*
     spec:
       containers:
@@ -803,6 +834,7 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+    trigger: ((?m)^/test( | .* )contour-latest,?($|\s.*))|((?m)^/test( | .* )contour-latest_serving_release-1.5,?($|\s.*))
   - always_run: false
     branches:
     - ^release-1.5$
@@ -810,6 +842,7 @@ presubmits:
     decorate: true
     name: contour-tls_serving_release-1.5
     path_alias: knative.dev/serving
+    rerun_command: /test contour-tls
     run_if_changed: ^third_party/contour-latest/*
     spec:
       containers:
@@ -846,6 +879,7 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+    trigger: ((?m)^/test( | .* )contour-tls,?($|\s.*))|((?m)^/test( | .* )contour-tls_serving_release-1.5,?($|\s.*))
   - always_run: false
     branches:
     - ^release-1.5$
@@ -853,6 +887,7 @@ presubmits:
     decorate: true
     name: gateway-api-latest_serving_release-1.5
     path_alias: knative.dev/serving
+    rerun_command: /test gateway-api-latest
     run_if_changed: ^third_party/gateway-api-latest/*
     spec:
       containers:
@@ -889,6 +924,7 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+    trigger: ((?m)^/test( | .* )gateway-api-latest,?($|\s.*))|((?m)^/test( | .* )gateway-api-latest_serving_release-1.5,?($|\s.*))
   - always_run: false
     branches:
     - ^release-1.5$
@@ -897,6 +933,7 @@ presubmits:
     name: https_serving_release-1.5
     optional: true
     path_alias: knative.dev/serving
+    rerun_command: /test https
     run_if_changed: ^third_party/cert-manager-latest/*
     spec:
       containers:
@@ -936,3 +973,4 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+    trigger: ((?m)^/test( | .* )https,?($|\s.*))|((?m)^/test( | .* )https_serving_release-1.5,?($|\s.*))
