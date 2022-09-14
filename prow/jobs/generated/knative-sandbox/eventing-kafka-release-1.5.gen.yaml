@@ -154,6 +154,7 @@ presubmits:
     decorate: true
     name: build-tests_eventing-kafka_release-1.5
     path_alias: knative.dev/eventing-kafka
+    rerun_command: /test build-tests
     spec:
       containers:
       - command:
@@ -189,6 +190,7 @@ presubmits:
           path: /sys/fs/cgroup
           type: Directory
         name: cgroup
+    trigger: ((?m)^/test( | .* )build-tests,?($|\s.*))|((?m)^/test( | .* )build-tests_eventing-kafka_release-1.5,?($|\s.*))
   - always_run: true
     branches:
     - ^release-1.5$
@@ -196,6 +198,7 @@ presubmits:
     decorate: true
     name: unit-tests_eventing-kafka_release-1.5
     path_alias: knative.dev/eventing-kafka
+    rerun_command: /test unit-tests
     spec:
       containers:
       - command:
@@ -231,6 +234,7 @@ presubmits:
           path: /sys/fs/cgroup
           type: Directory
         name: cgroup
+    trigger: ((?m)^/test( | .* )unit-tests,?($|\s.*))|((?m)^/test( | .* )unit-tests_eventing-kafka_release-1.5,?($|\s.*))
   - always_run: true
     branches:
     - ^release-1.5$
@@ -238,6 +242,7 @@ presubmits:
     decorate: true
     name: integration-test-channel-consolidated_eventing-kafka_release-1.5
     path_alias: knative.dev/eventing-kafka
+    rerun_command: /test integration-test-channel-consolidated
     spec:
       containers:
       - command:
@@ -269,6 +274,8 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+    trigger: ((?m)^/test( | .* )integration-test-channel-consolidated,?($|\s.*))|((?m)^/test(
+      | .* )integration-test-channel-consolidated_eventing-kafka_release-1.5,?($|\s.*))
   - always_run: true
     branches:
     - ^release-1.5$
@@ -276,6 +283,7 @@ presubmits:
     decorate: true
     name: integration-test-channel-consolidated-tls_eventing-kafka_release-1.5
     path_alias: knative.dev/eventing-kafka
+    rerun_command: /test integration-test-channel-consolidated-tls
     spec:
       containers:
       - command:
@@ -307,6 +315,8 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+    trigger: ((?m)^/test( | .* )integration-test-channel-consolidated-tls,?($|\s.*))|((?m)^/test(
+      | .* )integration-test-channel-consolidated-tls_eventing-kafka_release-1.5,?($|\s.*))
   - always_run: true
     branches:
     - ^release-1.5$
@@ -314,6 +324,7 @@ presubmits:
     decorate: true
     name: integration-test-channel-consolidated-sasl_eventing-kafka_release-1.5
     path_alias: knative.dev/eventing-kafka
+    rerun_command: /test integration-test-channel-consolidated-sasl
     spec:
       containers:
       - command:
@@ -345,6 +356,8 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+    trigger: ((?m)^/test( | .* )integration-test-channel-consolidated-sasl,?($|\s.*))|((?m)^/test(
+      | .* )integration-test-channel-consolidated-sasl_eventing-kafka_release-1.5,?($|\s.*))
   - always_run: true
     branches:
     - ^release-1.5$
@@ -352,6 +365,7 @@ presubmits:
     decorate: true
     name: integration-test-channel-distributed_eventing-kafka_release-1.5
     path_alias: knative.dev/eventing-kafka
+    rerun_command: /test integration-test-channel-distributed
     spec:
       containers:
       - command:
@@ -383,6 +397,8 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+    trigger: ((?m)^/test( | .* )integration-test-channel-distributed,?($|\s.*))|((?m)^/test(
+      | .* )integration-test-channel-distributed_eventing-kafka_release-1.5,?($|\s.*))
   - always_run: true
     branches:
     - ^release-1.5$
@@ -391,6 +407,7 @@ presubmits:
     name: integration-test-mt-source_eventing-kafka_release-1.5
     optional: true
     path_alias: knative.dev/eventing-kafka
+    rerun_command: /test integration-test-mt-source
     spec:
       containers:
       - command:
@@ -422,6 +439,8 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+    trigger: ((?m)^/test( | .* )integration-test-mt-source,?($|\s.*))|((?m)^/test(
+      | .* )integration-test-mt-source_eventing-kafka_release-1.5,?($|\s.*))
   - always_run: true
     branches:
     - ^release-1.5$
@@ -429,6 +448,7 @@ presubmits:
     decorate: true
     name: upgrade-tests_eventing-kafka_release-1.5
     path_alias: knative.dev/eventing-kafka
+    rerun_command: /test upgrade-tests
     spec:
       containers:
       - command:
@@ -460,3 +480,4 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
+    trigger: ((?m)^/test( | .* )upgrade-tests,?($|\s.*))|((?m)^/test( | .* )upgrade-tests_eventing-kafka_release-1.5,?($|\s.*))
