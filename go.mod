@@ -20,6 +20,7 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/wavesoftware/go-commandline v1.0.0
 	go.uber.org/atomic v1.7.0
+	go.uber.org/zap v1.17.0
 	golang.org/x/mod v0.6.0-dev.0.20220818022119-ed83ed61efb9
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8
@@ -64,6 +65,7 @@ require (
 	github.com/wavesoftware/go-retcode v1.0.0 // indirect
 	github.com/xanzy/ssh-agent v0.2.1 // indirect
 	go.opencensus.io v0.23.0 // indirect
+	go.uber.org/multierr v1.6.0 // indirect
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/sys v0.0.0-20220209214540-3681064d5158 // indirect
