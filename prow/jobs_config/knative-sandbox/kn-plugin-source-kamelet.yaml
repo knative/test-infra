@@ -1,7 +1,7 @@
 org: knative-sandbox
 repo: kn-plugin-source-kamelet
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20220907-3f920d69
+image: gcr.io/knative-tests/test-infra/prow-tests:v20220914-2ad583c7
 
 jobs:
   - name: build-tests
