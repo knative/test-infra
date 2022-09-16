@@ -228,6 +228,8 @@ tide:
             skip-unknown-contexts: true
           eventing:
             skip-unknown-contexts: true
+          docs:
+            skip-unknown-contexts: true
       knative-sandbox:
         repos:
           eventing-kafka-broker:
