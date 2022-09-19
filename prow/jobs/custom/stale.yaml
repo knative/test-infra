@@ -4,7 +4,7 @@ periodics:
     cluster: prow-trusted
     decorate: true
     annotations:
-      testgrid-dashboards: sig-contribex-k8s-triage-robot
+      testgrid-dashboards: utilities
       description: Adds lifecycle/stale to stale issues after 30d of inactivity
       testgrid-tab-name: stale
     spec:
