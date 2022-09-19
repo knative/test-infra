@@ -320,6 +320,8 @@ periodics:
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: SIGN_IMAGES
+        value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20220915-bb4d8409
       name: ""
       resources:

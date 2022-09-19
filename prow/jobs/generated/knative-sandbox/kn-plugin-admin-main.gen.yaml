@@ -70,6 +70,8 @@ periodics:
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/nightly-account/service-account.json
+      - name: SIGN_IMAGES
+        value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20220915-bb4d8409
       name: ""
       resources: {}
