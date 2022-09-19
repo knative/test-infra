@@ -138,4 +138,4 @@ periodics:
       volumes:
         - name: token
           secret:
-            secretName: k8s-triage-robot-github-token
+            secretName: github-token-for-peribolos
