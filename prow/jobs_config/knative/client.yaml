@@ -83,9 +83,6 @@ jobs:
           "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
         job_states_to_report:
         - "failure"
-    env:
-    - name: SIGN_IMAGES
-      value: "true"
   - name: release
     types: [periodic]
     command: [runner.sh, ./hack/release.sh, --auto-release, --release-gcs, knative-releases/client, --release-gcr, gcr.io/knative-releases, --github-token, /etc/hub-token/token]
