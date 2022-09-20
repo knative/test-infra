@@ -229,7 +229,7 @@ jobs:
       - name: SYSTEM_NAMESPACE
         value: knative-serving
       - name: TEST_OPTIONS
-        value: "--enable-alpha --enable-beta --resolvabledomain=false"
+        value: "--enable-alpha --enable-beta --resolvabledomain=false --short"
 
   - name: s390x-contour-tests
     cron: 20 3 * * *
@@ -253,7 +253,7 @@ jobs:
       - name: SYSTEM_NAMESPACE
         value: knative-serving
       - name: TEST_OPTIONS
-        value: "--enable-alpha --enable-beta --resolvabledomain=false"
+        value: "--enable-alpha --enable-beta --resolvabledomain=false --short"
 
   - name: nightly
     types: [periodic]
