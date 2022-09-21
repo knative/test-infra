@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM debian:bullseye-20220711-slim AS base
+FROM debian:bullseye-20220912-slim AS base
 
 # Pinned versions of stuff we pull in
-ARG CLOUD_SDK_VERSION=393.0.0
-ARG KUBECTL_VERSION=v1.23.8
+ARG CLOUD_SDK_VERSION=403.0.0
+ARG KUBECTL_VERSION=v1.24.4
 ARG DOCKER_VERSION=5:20.10.17~3-0~debian-bullseye
 ARG MAVEN_VERSION=3.8.4
 ARG JAVA_VERSION=16
@@ -118,7 +118,7 @@ RUN mkdir /docker-graph
 #
 
 #
-# BEGIN: JAVA SETUP
+# BEGIN: JAVA SETUP (This is for kafka broker)
 #
 
 RUN curl -fsSL https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | gpg --dearmor -o /usr/share/keyrings/adoptopenjdk-archive-keyring.gpg && \
@@ -145,7 +145,7 @@ RUN java -version && \
 # END: JAVA SETUP
 #
 
-# Install go 1.15, 1.16, and 1.17 using https://github.com/moovweb/gvm
+# Install go 1.16, 1.17, and 1.18 using https://github.com/moovweb/gvm
 # GVM_NO_UPDATE_PROFILE=true means do not alter /root/.bashrc to automatically source gvm config, so when not using runner.sh, image works normally
 # Install the tool:
 RUN curl -fsSL https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer | GVM_NO_UPDATE_PROFILE=true bash
@@ -181,38 +181,37 @@ COPY images/prow-tests/in-gvm-env.sh /usr/local/bin
 # But it must be done in base or the last FROM, because it does not install to /go/bin
 
 ############################################################
-FROM golang:1.18 AS external-go-gets
+FROM golang:1.19 AS external-go-gets
 
-ARG KUBETEST2_VERSION=5e5d3e9eebc6a609aa428bd3e2a1c0c3566d5baf
+ARG KUBETEST2_VERSION=a46ae8d7fa3745577930887a46a9841d8b5d06e0
+ARG KUBETEST2_KOPS_VERSION=9b957a1d6189ee612506c9b6dc5b8b1a19e9c2aa # v1.25.0 release
 ARG KIND_VERSION=v0.14.0
-ARG KO_VERSION=3d362cf6702fee7ffeb96f300fc092a4b333868e # v0.11.3-0.20220715180928-3d362cf6702f
+ARG KO_VERSION=v1.12.0
 ARG PROTOC_GEN_GO_VERSION=v1.28.0
 ARG PROTOC_GEN_GOGOFASTER_VERSION=v1.3.2
 ARG GOTESTSUM_VERSION=v1.8.1
 ARG KAIL_VERSION=v0.15.0
-ARG LICHE_VERSION=v0.0.0-20200229003944-f57a5d1c5be4
 ARG GO_LICENSES_VERSION=v1.2.1
 ARG DOCKER_CREDENTIAL_GCR_VERSION=v2.0.5
 ARG JSONNET_VERSION=v0.18.0
 ARG GOJSONTOYAML_VERSION=v0.1.0
-ARG COSIGN_VERSION=v1.9.0
+ARG COSIGN_VERSION=v1.12.1
 
 # Extra tools through go install
 # These run using the golang image version of Go, not any defined by `gvm`
 RUN go install github.com/google/ko@${KO_VERSION}
 RUN go install github.com/boz/kail/cmd/kail@${KAIL_VERSION}
 RUN go install gotest.tools/gotestsum@${GOTESTSUM_VERSION}
-RUN go install github.com/raviqqe/liche@${LICHE_VERSION}  # stable liche version for checking md links
 RUN go install sigs.k8s.io/kind@${KIND_VERSION}
 RUN go install sigs.k8s.io/kubetest2@${KUBETEST2_VERSION}
 RUN go install sigs.k8s.io/kubetest2/kubetest2-gke@${KUBETEST2_VERSION}
 RUN go install sigs.k8s.io/kubetest2/kubetest2-kind@${KUBETEST2_VERSION}
+RUN go install k8s.io/kops/tests/e2e/kubetest2-kops@${KUBETEST2_KOPS_VERSION}
 RUN go install sigs.k8s.io/kubetest2/kubetest2-tester-exec@${KUBETEST2_VERSION}
 RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@${PROTOC_GEN_GO_VERSION}
 RUN go install github.com/google/go-licenses@${GO_LICENSES_VERSION}
 RUN go install sigs.k8s.io/kind@${KIND_VERSION}
 RUN go install github.com/google/go-jsonnet/cmd/jsonnet@${JSONNET_VERSION}
-RUN go install github.com/brancz/gojsontoyaml@${GOJSONTOYAML_VERSION}
 RUN go install github.com/sigstore/cosign/cmd/cosign@${COSIGN_VERSION}
 
 # According to https://github.com/knative/test-infra/pull/2762 protoc-gen-gogofaster is unsupported (and shouldn't be used?)
@@ -233,9 +232,18 @@ RUN cd /go/src/knative.dev/test-infra/tools/provenance-generator && go install .
 RUN cd /go/src/knative.dev/test-infra && go install ./pkg/clustermanager/perf-tests
 
 ############################################################
+FROM rust:1.63 AS external-rust-gets
+
+ARG CODESIGN_VERSION=cb1e430a96f7d3d38af663a553b0e3e15a813d45
+# change this when a new version with https://github.com/indygreg/apple-platform-rs/pull/20 is cut
+
+RUN cargo install --git https://github.com/indygreg/apple-platform-rs --rev ${CODESIGN_VERSION} --bin rcodesign apple-codesign
+
+############################################################
 FROM base
 
 COPY --from=external-go-gets /go/bin/* /go/bin/
+COPY --from=external-rust-gets /usr/local/cargo/bin/rcodesign /usr/local/bin/rcodesign
 
 # Only needed in this Dockerfile
 RUN rm -f /usr/local/bin/source-gvm-and-run.sh
