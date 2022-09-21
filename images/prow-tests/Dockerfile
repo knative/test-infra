@@ -22,6 +22,7 @@ ARG MAVEN_VERSION=3.8.4
 ARG JAVA_VERSION=16
 ARG PROTOC_VERSION=3.17.0
 ARG TFENV_VERSION=v2.2.3
+ARG KOPS_VERSION=v1.25.0
 ARG COMMIT_HASH
 
 RUN echo "${COMMIT_HASH}" > /commit_hash
@@ -79,6 +80,10 @@ RUN gcloud config set core/disable_usage_reporting true && \
 # kubectl
 RUN curl -fsSL "https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -o /usr/local/bin/kubectl && \
     chmod +x /usr/local/bin/kubectl
+
+# kops
+RUN curl -fsSL https://github.com/kubernetes/kops/releases/download/${KOPS_VERSION}/kops-linux-amd64 -o /usr/local/bin/kops && \
+    chmod +x /usr/local/bin/kops
 
 # tfenv
 RUN git clone -b ${TFENV_VERSION} https://github.com/tfutils/tfenv.git ~/.tfenv && \
@@ -205,7 +210,6 @@ RUN go install sigs.k8s.io/kind@${KIND_VERSION}
 RUN go install sigs.k8s.io/kubetest2@${KUBETEST2_VERSION}
 RUN go install sigs.k8s.io/kubetest2/kubetest2-gke@${KUBETEST2_VERSION}
 RUN go install sigs.k8s.io/kubetest2/kubetest2-kind@${KUBETEST2_VERSION}
-RUN go install k8s.io/kops/tests/e2e/kubetest2-kops@${KUBETEST2_KOPS_VERSION}
 RUN go install sigs.k8s.io/kubetest2/kubetest2-tester-exec@${KUBETEST2_VERSION}
 RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@${PROTOC_GEN_GO_VERSION}
 RUN go install github.com/google/go-licenses@${GO_LICENSES_VERSION}
@@ -229,6 +233,10 @@ RUN cd /go/src/knative.dev/test-infra/tools/provenance-generator && go install .
 
 # TODO(chizhg): maybe also move perf-tests tool to be part of kntest?
 RUN cd /go/src/knative.dev/test-infra && go install ./pkg/clustermanager/perf-tests
+
+# Install kubetest2-kops deployer
+RUN git clone https://github.com/kubernetes/kops /tmp/kops && cd /tmp/kops/tests/e2e/kubetest2-kops && git checkout {KUBETEST2_KOPS_VERSION} \
+    go install .
 
 ############################################################
 FROM rust:1.63 AS external-rust-gets
