@@ -235,7 +235,7 @@ RUN cd /go/src/knative.dev/test-infra/tools/provenance-generator && go install .
 RUN cd /go/src/knative.dev/test-infra && go install ./pkg/clustermanager/perf-tests
 
 # Install kubetest2-kops deployer
-RUN git clone https://github.com/kubernetes/kops /tmp/kops && cd /tmp/kops/tests/e2e/kubetest2-kops && git checkout {KUBETEST2_KOPS_VERSION} \
+RUN git clone https://github.com/kubernetes/kops /tmp/kops && cd /tmp/kops/tests/e2e/kubetest2-kops && git checkout ${KUBETEST2_KOPS_VERSION} && \
     go install .
 
 ############################################################
