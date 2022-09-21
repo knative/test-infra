@@ -683,7 +683,7 @@ periodics:
       - name: SYSTEM_NAMESPACE
         value: knative-serving
       - name: TEST_OPTIONS
-        value: --enable-alpha --enable-beta --resolvabledomain=false
+        value: --enable-alpha --enable-beta --resolvabledomain=false --short
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: DOCKER_IN_DOCKER_ENABLED
@@ -772,7 +772,7 @@ periodics:
       - name: SYSTEM_NAMESPACE
         value: knative-serving
       - name: TEST_OPTIONS
-        value: --enable-alpha --enable-beta --resolvabledomain=false
+        value: --enable-alpha --enable-beta --resolvabledomain=false --short
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: DOCKER_IN_DOCKER_ENABLED
