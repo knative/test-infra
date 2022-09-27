@@ -91,8 +91,8 @@ func TestReleaseJobs(t *testing.T) {
 					errStrs.WriteString(fmt.Sprintf("cron is supposed to be auto-generated, do not add for nightly job in %q\n", path))
 				}
 				reqs := sets.NewString(job.Requirements...)
-				if !reqs.Has("nightly") {
-					errStrs.WriteString(fmt.Sprintf("nightly requirement is required for nightly job in %q\n", path))
+				if !reqs.HasAny("nightly", "nightly-notary") {
+					errStrs.WriteString(fmt.Sprintf("nightly or nightly-notary requirement is required for nightly job in %q\n", path))
 				}
 
 				excludedReqs := sets.NewString(job.ExcludedRequirements...)
@@ -106,8 +106,8 @@ func TestReleaseJobs(t *testing.T) {
 					errStrs.WriteString(fmt.Sprintf("cron is supposed to be auto-generated, do not add it for release job in %q\n", path))
 				}
 				reqs := sets.NewString(job.Requirements...)
-				if !reqs.Has("release") {
-					errStrs.WriteString(fmt.Sprintf("release requirement is required for release job in %q\n", path))
+				if !reqs.HasAny("release", "release-notary") {
+					errStrs.WriteString(fmt.Sprintf("release or release-notary requirement is required for release job in %q\n", path))
 				}
 
 				excludedReqs := sets.NewString(job.ExcludedRequirements...)
