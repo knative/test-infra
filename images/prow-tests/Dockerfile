@@ -56,6 +56,7 @@ RUN apt-get update -qqy && apt-get install -qqy \
         uuid-runtime \
         shellcheck \
         unzip \
+        zip \
         wget \
         gnupg \
         jq \
