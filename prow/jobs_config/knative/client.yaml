@@ -74,7 +74,7 @@ jobs:
   - name: nightly
     types: [periodic]
     command: [runner.sh, ./hack/release.sh, --publish, --tag-release]
-    requirements: [nightly]
+    requirements: [nightly-notary]
     excluded_requirements: [gcp]
     reporter_config:
       slack:

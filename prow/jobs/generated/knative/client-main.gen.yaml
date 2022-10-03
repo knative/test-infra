@@ -257,8 +257,6 @@ periodics:
       - --publish
       - --tag-release
       env:
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/nightly-account/service-account.json
       - name: SIGN_IMAGES
         value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20220927-b6d8e28f
@@ -267,19 +265,24 @@ periodics:
       securityContext:
         privileged: true
       volumeMounts:
-      - mountPath: /etc/nightly-account
-        name: nightly-account
+      - mountPath: /etc/notary
+        name: apple-notary-creds
         readOnly: true
     nodeSelector:
       kubernetes.io/arch: amd64
       type: testing
+    serviceAccountName: nightly
     volumes:
-    - name: nightly-account
+    - name: apple-notary-creds
       secret:
         items:
-        - key: nightly.json
-          path: service-account.json
-        secretName: prow-google-credentials
+        - key: notary-api-key
+          path: key.json
+        - key: signing-certificate
+          path: cert.p12
+        - key: signing-certificate-password
+          path: password
+        secretName: apple-notary-creds
 - annotations:
     testgrid-dashboards: client
     testgrid-tab-name: release
