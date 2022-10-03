@@ -73,10 +73,7 @@ jobs:
 
   - name: nightly
     types: [periodic]
-    command: [runner.sh, ./hack/release.sh, --publish, --tag-release,
-      --apple-codesign-key=/etc/notary/cert.p12,
-      --apple-notary-api-key=/etc/notary/key.json,
-      --apple-codesign-password-file=/etc/notary/password]
+    command: [runner.sh, ./hack/release.sh, --publish, --tag-release]
     requirements: [nightly-notary]
     excluded_requirements: [gcp]
     reporter_config:

@@ -256,9 +256,6 @@ periodics:
       - ./hack/release.sh
       - --publish
       - --tag-release
-      - --apple-codesign-key=/etc/notary/cert.p12
-      - --apple-notary-api-key=/etc/notary/key.json
-      - --apple-codesign-password-file=/etc/notary/password
       env:
       - name: SIGN_IMAGES
         value: "true"
