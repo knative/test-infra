@@ -1,7 +1,7 @@
-org: knative-sandbox
-repo: kn-plugin-func
+org: knative
+repo: func
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20221005-aef947d7
+image: gcr.io/knative-tests/test-infra/prow-tests:v20220927-b6d8e28f
 
 jobs:
   - name: nightly
@@ -12,6 +12,6 @@ jobs:
 
   - name: release
     types: [periodic]
-    command: [runner.sh, ./hack/release.sh, --auto-release, --release-gcs, knative-releases/kn-plugin-func, --release-gcr, gcr.io/knative-releases, --github-token, /etc/hub-token/token]
+    command: [runner.sh, ./hack/release.sh, --auto-release, --release-gcs, knative-releases/func, --release-gcr, gcr.io/knative-releases, --github-token, /etc/hub-token/token]
     requirements: [release, docker]
     excluded_requirements: [gcp]
