@@ -150,6 +150,50 @@ periodics:
         - key: release.json
           path: service-account.json
         secretName: prow-google-credentials
+- annotations:
+    testgrid-dashboards: container-freezer
+    testgrid-tab-name: performance-tests
+  cluster: prow-build
+  cron: 57 4 * * *
+  decorate: true
+  extra_refs:
+  - base_ref: main
+    org: knative-sandbox
+    path_alias: knative.dev/container-freezer
+    repo: container-freezer
+  name: performance-tests_container-freezer_main_periodic
+  spec:
+    containers:
+    - args:
+      - ./test/presubmit-tests.sh
+      - --run-test
+      - ../test/performance/performance-tests.sh
+      command:
+      - runner.sh
+      env:
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20221005-aef947d7
+      name: ""
+      resources: {}
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /etc/test-account
+        name: test-account
+        readOnly: true
+    nodeSelector:
+      kubernetes.io/arch: amd64
+      type: testing
+    volumes:
+    - name: test-account
+      secret:
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
 presubmits:
   knative-sandbox/container-freezer:
   - always_run: true
