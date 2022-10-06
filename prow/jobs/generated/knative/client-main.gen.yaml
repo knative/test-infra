@@ -256,6 +256,12 @@ periodics:
       - ./hack/release.sh
       - --publish
       - --tag-release
+      - --apple-codesign-key
+      - /etc/notary/cert.p12
+      - --apple-notary-api-key
+      - /etc/notary/key.json
+      - --apple-codesign-password-file
+      - /etc/notary/password
       env:
       - name: SIGN_IMAGES
         value: "true"
@@ -307,9 +313,13 @@ periodics:
       - gcr.io/knative-releases
       - --github-token
       - /etc/hub-token/token
+      - --apple-codesign-key
+      - /etc/notary/cert.p12
+      - --apple-notary-api-key
+      - /etc/notary/key.json
+      - --apple-codesign-password-file
+      - /etc/notary/password
       env:
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: SIGN_IMAGES
@@ -323,12 +333,13 @@ periodics:
       - mountPath: /etc/hub-token
         name: hub-token
         readOnly: true
-      - mountPath: /etc/release-account
-        name: release-account
+      - mountPath: /etc/notary
+        name: apple-notary-creds
         readOnly: true
     nodeSelector:
       kubernetes.io/arch: amd64
       type: testing
+    serviceAccountName: release
     volumes:
     - name: hub-token
       secret:
@@ -336,12 +347,16 @@ periodics:
         - key: hub_token
           path: token
         secretName: github-credentials
-    - name: release-account
+    - name: apple-notary-creds
       secret:
         items:
-        - key: release.json
-          path: service-account.json
-        secretName: prow-google-credentials
+        - key: notary-api-key
+          path: key.json
+        - key: signing-certificate
+          path: cert.p12
+        - key: signing-certificate-password
+          path: password
+        secretName: apple-notary-creds
 presubmits:
   knative/client:
   - always_run: true

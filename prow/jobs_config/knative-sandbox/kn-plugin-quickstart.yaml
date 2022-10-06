@@ -33,6 +33,9 @@ jobs:
 
   - name: release
     types: [periodic]
-    command: [runner.sh, ./hack/release.sh, --auto-release, --release-gcs, knative-releases/kn-plugin-quickstart, --release-gcr, gcr.io/knative-releases, --github-token, /etc/hub-token/token]
-    requirements: [release]
+    command: [runner.sh, ./hack/release.sh, --auto-release, --release-gcs, knative-releases/kn-plugin-quickstart, --release-gcr, gcr.io/knative-releases, --github-token, /etc/hub-token/token,
+      --apple-codesign-key, /etc/notary/cert.p12,
+      --apple-notary-api-key, /etc/notary/key.json,
+      --apple-codesign-password-file, /etc/notary/password]
+    requirements: [release-notary]
     excluded_requirements: [gcp]
