@@ -30,3 +30,39 @@ requirement_presets:
           - key: release.json
             path: service-account.json
           secretName: prow-google-credentials
+
+  release-notary: # this preset is for knative projects that release binaries ONLY.
+    podSpec:
+      serviceAccountName: release
+    env:
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: SIGN_IMAGES
+        value: "true"
+     # ORG_NAME must be set to knative-sandbox, overwriting the preset in root .base.yaml
+      - name: ORG_NAME
+        value: knative-sandbox
+    volumeMounts:
+      - name: hub-token
+        mountPath: /etc/hub-token
+        readOnly: true
+      - name: apple-notary-creds
+        mountPath: /etc/notary
+        readOnly: true
+    volumes:
+      - name: hub-token
+        secret:
+          items:
+          - key: hub_token
+            path: token
+          secretName: github-credentials
+      - name: apple-notary-creds
+        secret:
+          items:
+          - key: notary-api-key
+            path: key.json
+          - key: signing-certificate
+            path: cert.p12
+          - key: signing-certificate-password
+            path: password
+          secretName: apple-notary-creds
