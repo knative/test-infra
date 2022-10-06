@@ -76,8 +76,6 @@ periodics:
       env:
       - name: SIGN_IMAGES
         value: "true"
-      - name: ORG_NAME
-        value: knative-sandbox
       image: gcr.io/knative-tests/test-infra/prow-tests:v20221005-aef947d7
       name: ""
       resources: {}
