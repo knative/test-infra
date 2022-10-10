@@ -32,7 +32,7 @@ spec:
       serviceAccountName: "sinker"
       containers:
       - name: sinker
-        image: gcr.io/k8s-prow/sinker:v20220930-4982ca61ab
+        image: gcr.io/k8s-prow/sinker:v20221007-08c3d7a2a6
         args:
         - --config-path=/etc/config/config.yaml
         - --job-config-path=/etc/job-config
