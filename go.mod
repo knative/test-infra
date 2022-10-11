@@ -26,7 +26,7 @@ require (
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8
 	google.golang.org/api v0.70.0
 	k8s.io/apimachinery v0.20.6
-	knative.dev/hack v0.0.0-20221004153928-92a65f105c37
+	knative.dev/hack v0.0.0-20221010154335-3fdc50b9c24a
 	sigs.k8s.io/boskos v0.0.0-20200729174948-794df80db9c9
 	sigs.k8s.io/yaml v1.2.0
 )
