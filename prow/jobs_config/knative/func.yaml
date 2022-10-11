@@ -1,7 +1,7 @@
 org: knative
 repo: func
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20220927-b6d8e28f
+image: gcr.io/knative-tests/test-infra/prow-tests:v20221011-8e440c0a
 
 jobs:
   - name: nightly
