@@ -2,6 +2,7 @@ package pkg
 
 import (
 	"os"
+	"time"
 
 	slsa "github.com/in-toto/in-toto-golang/in_toto/slsa_provenance/v0.2"
 	prowapi "k8s.io/test-infra/prow/apis/prowjobs/v1"
@@ -34,16 +35,18 @@ func GenerateAttestation(config Config) *provenance.Statement {
 	// This is commented as the in-toto go port does not have it
 	repo := "https://github.com/" + cloneRecord.Refs.Org + "/" + cloneRecord.Refs.Repo
 	p.Metadata.BuildInvocationID = os.Getenv("BUILD_ID")
-	p.Metadata.Completeness.Parameters = true  // The parameters are complete as we know the from prow
+	p.Metadata.Completeness.Parameters = true  // The parameters are complete as we know them from prow
 	p.Metadata.Completeness.Materials = true   // The materials are complete as we only use the github repo
 	p.Metadata.Completeness.Environment = true // We don't use environment values to build images/binaries
 	startTime := config.ProwJob.CreationTimestamp.Time.UTC()
-	endTime := config.ProwJob.Status.CompletionTime.Time.UTC()
+	endTime := time.Now().UTC() // The prowjob is still running when this timestamp is needed. Attestation happens after the images/binaries are built
 	p.Metadata.BuildStartedOn = &startTime
 	p.Metadata.BuildFinishedOn = &endTime
 	p.Invocation.ConfigSource.EntryPoint = "https://github.com/knative/test-infra/tree/main/prow/jobs/generated/" + cloneRecord.Refs.Org
 	p.BuildType = "https://prow.knative.dev/ProwJob@v1"
 	var buildConfig interface{}
+	// set config.ProwJob.Status to empty as it is not complete when the generator runs
+	config.ProwJob.Status = prowapi.ProwJobStatus{}
 	buildConfig = map[string]interface{}{
 		"command":    config.EntryPointOpts.Args,
 		"entrypoint": config.EntryPointOpts,

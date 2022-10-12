@@ -42,6 +42,7 @@ func LoadParameters(config Config) Config {
 	config.Arguments = map[string]string{}
 	keys := []string{}
 
+	config = ParseEntryPoint(config)
 	// Parse entrypoint flags
 	for _, elem := range config.EntryPointOpts.Args {
 		params := strings.Split(elem, "=") // expected values --something=foo
