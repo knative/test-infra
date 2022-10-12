@@ -1,7 +1,7 @@
 org: knative
 repo: client
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20221011-8e440c0a
+image: gcr.io/knative-tests/test-infra/prow-tests:v20221012-42a67985
 cluster: prow-build
 
 jobs:
