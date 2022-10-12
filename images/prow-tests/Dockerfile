@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM debian:bullseye-20220912-slim AS base
+FROM debian:bullseye-20221004-slim AS base
 
 # Pinned versions of stuff we pull in
-ARG CLOUD_SDK_VERSION=403.0.0
+ARG CLOUD_SDK_VERSION=405.0.0
 ARG KUBECTL_VERSION=v1.24.4
 ARG DOCKER_VERSION=5:20.10.17~3-0~debian-bullseye
 ARG MAVEN_VERSION=3.8.4
@@ -200,7 +200,7 @@ ARG KAIL_VERSION=v0.15.0
 ARG GO_LICENSES_VERSION=v1.2.1
 ARG DOCKER_CREDENTIAL_GCR_VERSION=v2.0.5
 ARG JSONNET_VERSION=v0.18.0
-ARG COSIGN_VERSION=v1.12.1
+ARG COSIGN_VERSION=v1.13.0
 
 # Extra tools through go install
 # These run using the golang image version of Go, not any defined by `gvm`
