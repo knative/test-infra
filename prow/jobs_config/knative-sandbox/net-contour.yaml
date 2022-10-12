@@ -26,6 +26,9 @@ jobs:
     types: [periodic]
     command: [runner.sh, ./hack/release.sh, --publish, --tag-release]
     requirements: [nightly]
+    env:
+      - name: ATTEST_IMAGES
+        value: "true"
     excluded_requirements: [gcp]
     reporter_config:
       slack:
