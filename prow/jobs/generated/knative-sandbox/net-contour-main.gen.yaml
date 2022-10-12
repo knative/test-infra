@@ -75,6 +75,8 @@ periodics:
       - --publish
       - --tag-release
       env:
+      - name: ATTEST_IMAGES
+        value: "true"
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/nightly-account/service-account.json
       - name: SIGN_IMAGES
