@@ -167,7 +167,7 @@ periodics:
     - args:
       - ./test/presubmit-tests.sh
       - --run-test
-      - ../test/performance/performance-tests.sh
+      - ./test/performance/performance-tests.sh
       command:
       - runner.sh
       env:
@@ -281,3 +281,44 @@ presubmits:
             path: service-account.json
           secretName: prow-google-credentials
     trigger: ((?m)^/test( | .* )integration-tests,?($|\s.*))|((?m)^/test( | .* )integration-tests_container-freezer_main,?($|\s.*))
+  - always_run: false
+    branches:
+    - ^main$
+    cluster: prow-build
+    decorate: true
+    name: performance-tests_container-freezer_main
+    optional: true
+    path_alias: knative.dev/container-freezer
+    rerun_command: /test performance-tests
+    spec:
+      containers:
+      - command:
+        - runner.sh
+        - ./test/presubmit-tests.sh
+        - --run-test
+        - ./test/performance/performance-tests.sh
+        env:
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221012-42a67985
+        name: ""
+        resources: {}
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /etc/test-account
+          name: test-account
+          readOnly: true
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        type: testing
+      volumes:
+      - name: test-account
+        secret:
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
+    trigger: ((?m)^/test( | .* )performance-tests,?($|\s.*))|((?m)^/test( | .* )performance-tests_container-freezer_main,?($|\s.*))
