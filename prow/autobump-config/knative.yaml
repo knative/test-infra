@@ -12,6 +12,7 @@ targetVersion: "upstream"
 includedConfigPaths:
   - "prow/cluster/control-plane"
   - "prow/cluster/build"
+  - "prow/cluster/trusted"
   - "prow/jobs"
 extraFiles:
   - "prow/config.yaml"
