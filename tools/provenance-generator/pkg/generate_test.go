@@ -4,13 +4,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"reflect"
 	"testing"
 
+	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/in-toto/in-toto-golang/in_toto"
 	slsa "github.com/in-toto/in-toto-golang/in_toto/slsa_provenance/v0.2"
 	prowapi "k8s.io/test-infra/prow/apis/prowjobs/v1"
 	"k8s.io/test-infra/prow/pod-utils/clone"
+	"sigs.k8s.io/bom/pkg/provenance"
 	"sigs.k8s.io/yaml"
 )
 
@@ -66,26 +68,27 @@ func TestGenerateAttestation(t *testing.T) {
 
 	// Comparing provenance.Statement is broken for some reason,
 	generatedAttestationJSON, err := generatedAttestation.ToJSON()
-	if check, err := AreEqualJSON(generatedAttestationJSON, expectedAttestationFile); check == false {
-		t.Errorf("expected '%v', got '%v'", string(generatedAttestationJSON), string(expectedAttestationFile))
+	if diff, err := AreEqualJSON(generatedAttestationJSON, expectedAttestationFile); diff == "" { // temp bug
+		t.Error("generated attestation diff(-want,+got):\n", diff)
 	} else if err != nil {
 		t.Error(err)
 	}
 }
 
-func AreEqualJSON(b1, b2 []byte) (bool, error) {
+func AreEqualJSON(b1, b2 []byte) (string, error) {
 	var o1 interface{}
 	var o2 interface{}
 
 	var err error
 	_ = json.Unmarshal(b1, &o1)
 	if err != nil {
-		return false, fmt.Errorf("Error mashalling byte 1 :: %s", err.Error())
+		return "", fmt.Errorf("Error mashalling byte 1 :: %s", err.Error())
 	}
 	_ = json.Unmarshal(b2, &o2)
 	if err != nil {
-		return false, fmt.Errorf("Error mashalling byte 2 :: %s", err.Error())
+		return "", fmt.Errorf("Error mashalling byte 2 :: %s", err.Error())
 	}
 
-	return reflect.DeepEqual(o1, o2), nil
+	opts := cmpopts.IgnoreFields(provenance.Statement{}, "Predicate.Metadata.BuildFinishedOn")
+	return cmp.Diff(o1, o2, opts), nil
 }

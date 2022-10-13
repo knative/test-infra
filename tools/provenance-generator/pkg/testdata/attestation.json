@@ -213,20 +213,6 @@
             "prowjob_defaults": {
               "tenant_id": "GlobalDefaultID"
             }
-          },
-          "status": {
-            "startTime": "2022-07-27T09:15:53Z",
-            "pendingTime": "2022-07-27T09:15:53Z",
-            "completionTime": "2022-07-27T11:15:41Z",
-            "state": "success",
-            "description": "Job succeeded.",
-            "url": "https://prow.knative.dev/view/gs/knative-prow/logs/nightly_serving_main_periodic/1552221225705541632",
-            "pod_name": "b71fa037-0d8c-11ed-ab62-2ace146f4dd8",
-            "build_id": "1552221225705541632",
-            "prev_report_states": {
-              "gcsk8sreporter": "success",
-              "gcsreporter": "success"
-            }
           }
         }
       },
