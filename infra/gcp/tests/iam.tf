@@ -21,16 +21,6 @@ module "iam" {
       "serviceAccount:prow-deployer@knative-tests.iam.gserviceaccount.com",
     ]
 
-    "roles/container.clusterAdmin" = [
-    ],
-
-    "roles/iam.serviceAccountTokenCreator" = [
-    ],
-
-    "roles/iam.serviceAccountUser" : [
-    ],
-
-
     "roles/logging.logWriter" = [
       "serviceAccount:${google_service_account.gke_nodes.email}",
     ]
@@ -44,17 +34,16 @@ module "iam" {
       "serviceAccount:${google_service_account.grafana.email}",
     ]
 
+    "roles/owner" = [
+      "group:cloud-kubernetes-engprod-oncall@twosync.google.com", # Google OSS Kubernetes oncall team
+    ]
+
     "roles/pubsub.editor" : [
       "serviceAccount:prow-control-plane@knative-tests.iam.gserviceaccount.com"
     ],
 
     "roles/secretmanager.secretAccessor" : [
       "serviceAccount:kubernetes-external-secrets-sa@knative-tests.iam.gserviceaccount.com",
-      "serviceAccount:prow-deployer@knative-tests.iam.gserviceaccount.com"
-    ],
-
-    "roles/secretmanager.viewer" : [
-      "serviceAccount:kubernetes-external-secrets-sa@knative-tests.iam.gserviceaccount.com"
     ],
 
     "roles/stackdriver.resourceMetadata.writer" = [
