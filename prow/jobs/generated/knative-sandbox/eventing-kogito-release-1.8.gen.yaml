@@ -7,17 +7,17 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.4
+    testgrid-dashboards: knative-sandbox-release-1.8
     testgrid-tab-name: eventing-kogito-continuous
   cluster: prow-build
-  cron: 41 0 * * *
+  cron: 5 12 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-1.4
+  - base_ref: release-1.8
     org: knative-sandbox
     path_alias: knative.dev/eventing-kogito
     repo: eventing-kogito
-  name: continuous_eventing-kogito_release-1.4_periodic
+  name: continuous_eventing-kogito_release-1.8_periodic
   spec:
     containers:
     - command:
@@ -49,17 +49,17 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.4
+    testgrid-dashboards: knative-sandbox-release-1.8
     testgrid-tab-name: eventing-kogito-release
   cluster: prow-build
-  cron: 59 9 * * 2
+  cron: 3 9 * * 2
   decorate: true
   extra_refs:
-  - base_ref: release-1.4
+  - base_ref: release-1.8
     org: knative-sandbox
     path_alias: knative.dev/eventing-kogito
     repo: eventing-kogito
-  name: release_eventing-kogito_release-1.4_periodic
+  name: release_eventing-kogito_release-1.8_periodic
   spec:
     containers:
     - command:
@@ -73,7 +73,7 @@ periodics:
       - --github-token
       - /etc/hub-token/token
       - --branch
-      - release-1.4
+      - release-1.8
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
@@ -113,10 +113,10 @@ presubmits:
   knative-sandbox/eventing-kogito:
   - always_run: true
     branches:
-    - ^release-1.4$
+    - ^release-1.8$
     cluster: prow-build
     decorate: true
-    name: build-tests_eventing-kogito_release-1.4
+    name: build-tests_eventing-kogito_release-1.8
     path_alias: knative.dev/eventing-kogito
     rerun_command: /test build-tests
     spec:
@@ -133,13 +133,13 @@ presubmits:
       nodeSelector:
         kubernetes.io/arch: amd64
         type: testing
-    trigger: ((?m)^/test( | .* )build-tests,?($|\s.*))|((?m)^/test( | .* )build-tests_eventing-kogito_release-1.4,?($|\s.*))
+    trigger: ((?m)^/test( | .* )build-tests,?($|\s.*))|((?m)^/test( | .* )build-tests_eventing-kogito_release-1.8,?($|\s.*))
   - always_run: true
     branches:
-    - ^release-1.4$
+    - ^release-1.8$
     cluster: prow-build
     decorate: true
-    name: unit-tests_eventing-kogito_release-1.4
+    name: unit-tests_eventing-kogito_release-1.8
     path_alias: knative.dev/eventing-kogito
     rerun_command: /test unit-tests
     spec:
@@ -156,13 +156,13 @@ presubmits:
       nodeSelector:
         kubernetes.io/arch: amd64
         type: testing
-    trigger: ((?m)^/test( | .* )unit-tests,?($|\s.*))|((?m)^/test( | .* )unit-tests_eventing-kogito_release-1.4,?($|\s.*))
+    trigger: ((?m)^/test( | .* )unit-tests,?($|\s.*))|((?m)^/test( | .* )unit-tests_eventing-kogito_release-1.8,?($|\s.*))
   - always_run: true
     branches:
-    - ^release-1.4$
+    - ^release-1.8$
     cluster: prow-build
     decorate: true
-    name: integration-tests_eventing-kogito_release-1.4
+    name: integration-tests_eventing-kogito_release-1.8
     path_alias: knative.dev/eventing-kogito
     rerun_command: /test integration-tests
     spec:
@@ -195,4 +195,4 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
-    trigger: ((?m)^/test( | .* )integration-tests,?($|\s.*))|((?m)^/test( | .* )integration-tests_eventing-kogito_release-1.4,?($|\s.*))
+    trigger: ((?m)^/test( | .* )integration-tests,?($|\s.*))|((?m)^/test( | .* )integration-tests_eventing-kogito_release-1.8,?($|\s.*))
