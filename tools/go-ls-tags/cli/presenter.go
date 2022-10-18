@@ -16,8 +16,11 @@ limitations under the License.
 
 package cli
 
+import "strings"
+
 type presenter struct {
 	printer
+	joiner string
 }
 
 func (p presenter) present(tags []string, err error) error {
@@ -25,9 +28,7 @@ func (p presenter) present(tags []string, err error) error {
 		p.PrintErr("Error: ", err)
 		return err
 	}
-	for _, tag := range tags {
-		p.Println(tag)
-	}
+	p.Println(strings.Join(tags, p.joiner))
 	return nil
 }
 

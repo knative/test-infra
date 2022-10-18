@@ -27,6 +27,8 @@ type args struct {
 	ignoreFile string
 	extension  string
 	exclude    []string
+	joiner     string
+	sort       bool
 }
 
 func withArgs(root *cobra.Command, a *args) *cobra.Command {
@@ -47,5 +49,14 @@ func withArgs(root *cobra.Command, a *args) *cobra.Command {
 		"exclude",
 		tags.DefaultExcludes,
 		"Directories to exclude")
+	pf.StringVar(&a.joiner,
+		"joiner",
+		"\n",
+		"Tags will be joined with this string on output")
+	pf.BoolVar(&a.sort,
+		"sort",
+		true,
+		"If true then tags will be sorted",
+	)
 	return root
 }

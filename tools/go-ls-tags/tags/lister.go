@@ -18,6 +18,7 @@ limitations under the License.
 
 import (
 	"context"
+	"sort"
 
 	"knative.dev/test-infra/pkg/logging"
 	"knative.dev/test-infra/tools/go-ls-tags/tags/index"
@@ -40,6 +41,7 @@ type Lister struct {
 	IgnoreFile string
 	Extension  string
 	Exclude    []string
+	Sort       bool
 }
 
 // List all used Go build tags, or errors.
@@ -56,6 +58,9 @@ func (l Lister) List(ctx context.Context) ([]string, error) {
 		return nil, errwrap(err)
 	}
 	tags, err = l.filterIgnored(ctx, tags)
+	if l.Sort {
+		sort.Strings(tags)
+	}
 	log.Infof("Found tags: %q", tags)
 	return tags, err
 }

@@ -21,7 +21,6 @@ import (
 	"errors"
 	"path"
 	"reflect"
-	"sort"
 	"strings"
 	"testing"
 
@@ -44,6 +43,10 @@ func TestApp(t *testing.T) {
 		name: "no options",
 		args: []string{},
 		tags: []string{"test_tag_v1", "test_tag_v2"},
+	}, {
+		name:      "with comma joiner",
+		args:      []string{"--joiner", ","},
+		fragments: []string{"test_tag_v1,test_tag_v2"},
 	}, {
 		name: "using absolute ignorefile",
 		args: []string{
@@ -94,8 +97,6 @@ func (tc *testCase) test(t *testing.T) {
 	if len(tc.tags) > 0 {
 		want := tc.tags
 		got := strings.Split(strings.Trim(text, "\n"), "\n")
-		sort.Strings(want)
-		sort.Strings(got)
 		if !reflect.DeepEqual(got, want) {
 			t.Errorf("mismatch\nwant %q\n got %q", want, got)
 		}
