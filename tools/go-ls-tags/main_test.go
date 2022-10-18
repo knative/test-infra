@@ -19,7 +19,6 @@ package main
 import (
 	"bytes"
 	"reflect"
-	"sort"
 	"strings"
 	"testing"
 
@@ -71,8 +70,6 @@ func (tc *testCase) test(t *testing.T) {
 	if len(tc.tags) > 0 {
 		want := tc.tags
 		got := strings.Split(strings.Trim(text, "\n"), "\n")
-		sort.Strings(want)
-		sort.Strings(got)
 		if !reflect.DeepEqual(got, want) {
 			t.Errorf("mismatch\nwant %q\n got %q", want, got)
 		}
