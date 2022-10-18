@@ -7,17 +7,17 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.4
-    testgrid-tab-name: kn-plugin-source-kafka-continuous
+    testgrid-dashboards: knative-sandbox-release-1.8
+    testgrid-tab-name: kn-plugin-source-kamelet-continuous
   cluster: prow-build
-  cron: 59 6 * * *
+  cron: 0 19 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-1.4
+  - base_ref: release-1.8
     org: knative-sandbox
-    path_alias: knative.dev/kn-plugin-source-kafka
-    repo: kn-plugin-source-kafka
-  name: continuous_kn-plugin-source-kafka_release-1.4_periodic
+    path_alias: knative.dev/kn-plugin-source-kamelet
+    repo: kn-plugin-source-kamelet
+  name: continuous_kn-plugin-source-kamelet_release-1.8_periodic
   spec:
     containers:
     - command:
@@ -49,17 +49,17 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.4
-    testgrid-tab-name: kn-plugin-source-kafka-release
+    testgrid-dashboards: knative-sandbox-release-1.8
+    testgrid-tab-name: kn-plugin-source-kamelet-release
   cluster: prow-build
-  cron: 25 9 * * 2
+  cron: 20 9 * * 2
   decorate: true
   extra_refs:
-  - base_ref: release-1.4
+  - base_ref: release-1.8
     org: knative-sandbox
-    path_alias: knative.dev/kn-plugin-source-kafka
-    repo: kn-plugin-source-kafka
-  name: release_kn-plugin-source-kafka_release-1.4_periodic
+    path_alias: knative.dev/kn-plugin-source-kamelet
+    repo: kn-plugin-source-kamelet
+  name: release_kn-plugin-source-kamelet_release-1.8_periodic
   spec:
     containers:
     - command:
@@ -67,22 +67,26 @@ periodics:
       - ./hack/release.sh
       - --dot-release
       - --release-gcs
-      - knative-releases/kn-plugin-source-kafka
+      - knative-releases/kn-plugin-source-kamelet
       - --release-gcr
       - gcr.io/knative-releases
       - --github-token
       - /etc/hub-token/token
+      - --apple-codesign-key
+      - /etc/notary/cert.p12
+      - --apple-notary-api-key
+      - /etc/notary/key.json
+      - --apple-codesign-password-file
+      - /etc/notary/password
       - --branch
-      - release-1.4
+      - release-1.8
       env:
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
+      - name: SIGN_IMAGES
+        value: "true"
       - name: ORG_NAME
         value: knative-sandbox
-      - name: DOCKER_IN_DOCKER_ENABLED
-        value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
       name: ""
       resources: {}
@@ -92,18 +96,13 @@ periodics:
       - mountPath: /etc/hub-token
         name: hub-token
         readOnly: true
-      - mountPath: /etc/release-account
-        name: release-account
+      - mountPath: /etc/notary
+        name: apple-notary-creds
         readOnly: true
-      - mountPath: /docker-graph
-        name: docker-graph
-      - mountPath: /lib/modules
-        name: modules
-      - mountPath: /sys/fs/cgroup
-        name: cgroup
     nodeSelector:
       kubernetes.io/arch: amd64
       type: testing
+    serviceAccountName: release
     volumes:
     - name: hub-token
       secret:
@@ -111,31 +110,25 @@ periodics:
         - key: hub_token
           path: token
         secretName: github-credentials
-    - name: release-account
+    - name: apple-notary-creds
       secret:
         items:
-        - key: release.json
-          path: service-account.json
-        secretName: prow-google-credentials
-    - emptyDir: {}
-      name: docker-graph
-    - hostPath:
-        path: /lib/modules
-        type: Directory
-      name: modules
-    - hostPath:
-        path: /sys/fs/cgroup
-        type: Directory
-      name: cgroup
+        - key: notary-api-key
+          path: key.json
+        - key: signing-certificate
+          path: cert.p12
+        - key: signing-certificate-password
+          path: password
+        secretName: apple-notary-creds
 presubmits:
-  knative-sandbox/kn-plugin-source-kafka:
+  knative-sandbox/kn-plugin-source-kamelet:
   - always_run: true
     branches:
-    - ^release-1.4$
+    - ^release-1.8$
     cluster: prow-build
     decorate: true
-    name: build-tests_kn-plugin-source-kafka_release-1.4
-    path_alias: knative.dev/kn-plugin-source-kafka
+    name: build-tests_kn-plugin-source-kamelet_release-1.8
+    path_alias: knative.dev/kn-plugin-source-kamelet
     rerun_command: /test build-tests
     spec:
       containers:
@@ -151,14 +144,14 @@ presubmits:
       nodeSelector:
         kubernetes.io/arch: amd64
         type: testing
-    trigger: ((?m)^/test( | .* )build-tests,?($|\s.*))|((?m)^/test( | .* )build-tests_kn-plugin-source-kafka_release-1.4,?($|\s.*))
+    trigger: ((?m)^/test( | .* )build-tests,?($|\s.*))|((?m)^/test( | .* )build-tests_kn-plugin-source-kamelet_release-1.8,?($|\s.*))
   - always_run: true
     branches:
-    - ^release-1.4$
+    - ^release-1.8$
     cluster: prow-build
     decorate: true
-    name: unit-tests_kn-plugin-source-kafka_release-1.4
-    path_alias: knative.dev/kn-plugin-source-kafka
+    name: unit-tests_kn-plugin-source-kamelet_release-1.8
+    path_alias: knative.dev/kn-plugin-source-kamelet
     rerun_command: /test unit-tests
     spec:
       containers:
@@ -174,14 +167,14 @@ presubmits:
       nodeSelector:
         kubernetes.io/arch: amd64
         type: testing
-    trigger: ((?m)^/test( | .* )unit-tests,?($|\s.*))|((?m)^/test( | .* )unit-tests_kn-plugin-source-kafka_release-1.4,?($|\s.*))
+    trigger: ((?m)^/test( | .* )unit-tests,?($|\s.*))|((?m)^/test( | .* )unit-tests_kn-plugin-source-kamelet_release-1.8,?($|\s.*))
   - always_run: true
     branches:
-    - ^release-1.4$
+    - ^release-1.8$
     cluster: prow-build
     decorate: true
-    name: integration-tests_kn-plugin-source-kafka_release-1.4
-    path_alias: knative.dev/kn-plugin-source-kafka
+    name: integration-tests_kn-plugin-source-kamelet_release-1.8
+    path_alias: knative.dev/kn-plugin-source-kamelet
     rerun_command: /test integration-tests
     spec:
       containers:
@@ -213,4 +206,4 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
-    trigger: ((?m)^/test( | .* )integration-tests,?($|\s.*))|((?m)^/test( | .* )integration-tests_kn-plugin-source-kafka_release-1.4,?($|\s.*))
+    trigger: ((?m)^/test( | .* )integration-tests,?($|\s.*))|((?m)^/test( | .* )integration-tests_kn-plugin-source-kamelet_release-1.8,?($|\s.*))
