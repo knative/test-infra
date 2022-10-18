@@ -18,13 +18,19 @@ jobs:
   - gcr.io/knative-releases
   - --github-token
   - /etc/hub-token/token
+  - --apple-codesign-key
+  - /etc/notary/cert.p12
+  - --apple-notary-api-key
+  - /etc/notary/key.json
+  - --apple-codesign-password-file
+  - /etc/notary/password
   - --branch
   - release-1.7
   excluded_requirements:
   - gcp
   name: release
   requirements:
-  - release
+  - release-notary
   - docker
   types:
   - periodic
