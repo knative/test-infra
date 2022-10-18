@@ -5,7 +5,7 @@
 # ####                                                                     ####
 # #############################################################################
 branches:
-- release-1.4
+- release-1.8
 image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
 jobs:
 - command:
@@ -22,13 +22,13 @@ jobs:
   - ./hack/release.sh
   - --dot-release
   - --release-gcs
-  - knative-releases/eventing-gitlab
+  - knative-releases/eventing-github
   - --release-gcr
   - gcr.io/knative-releases
   - --github-token
   - /etc/hub-token/token
   - --branch
-  - release-1.4
+  - release-1.8
   excluded_requirements:
   - gcp
   name: release
@@ -38,10 +38,4 @@ jobs:
   types:
   - periodic
 org: knative-sandbox
-repo: eventing-gitlab
-resources_presets:
-  default:
-    limits:
-      memory: 16Gi
-    requests:
-      memory: 12Gi
+repo: eventing-github
