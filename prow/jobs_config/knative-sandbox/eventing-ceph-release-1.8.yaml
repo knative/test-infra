@@ -5,21 +5,30 @@
 # ####                                                                     ####
 # #############################################################################
 branches:
-- release-1.7
+- release-1.8
 image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
 jobs:
+- command:
+  - runner.sh
+  - ./test/presubmit-tests.sh
+  - --all-tests
+  name: continuous
+  requirements:
+  - docker
+  types:
+  - periodic
 - command:
   - runner.sh
   - ./hack/release.sh
   - --dot-release
   - --release-gcs
-  - knative-releases/kn-plugin-func
+  - knative-releases/eventing-ceph
   - --release-gcr
   - gcr.io/knative-releases
   - --github-token
   - /etc/hub-token/token
   - --branch
-  - release-1.7
+  - release-1.8
   excluded_requirements:
   - gcp
   name: release
@@ -29,4 +38,4 @@ jobs:
   types:
   - periodic
 org: knative-sandbox
-repo: kn-plugin-func
+repo: eventing-ceph

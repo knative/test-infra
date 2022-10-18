@@ -5,7 +5,7 @@
 # ####                                                                     ####
 # #############################################################################
 branches:
-- release-1.4
+- release-1.8
 image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
 jobs:
 - command:
@@ -15,6 +15,8 @@ jobs:
   excluded_requirements:
   - gcp
   name: build-tests
+  requirements:
+  - docker
   types:
   - presubmit
 - command:
@@ -24,13 +26,6 @@ jobs:
   excluded_requirements:
   - gcp
   name: unit-tests
-  types:
-  - presubmit
-- command:
-  - runner.sh
-  - ./test/presubmit-tests.sh
-  - --integration-tests
-  name: integration-tests
   requirements:
   - docker
   types:
@@ -39,98 +34,50 @@ jobs:
   - runner.sh
   - ./test/presubmit-tests.sh
   - --run-test
-  - ./test/upgrade-tests.sh
+  - ./test/e2e-tests.sh --consolidated
+  name: integration-test-channel-consolidated
+  types:
+  - presubmit
+- command:
+  - runner.sh
+  - ./test/presubmit-tests.sh
+  - --run-test
+  - ./test/e2e-tests.sh --consolidated-tls
+  name: integration-test-channel-consolidated-tls
+  types:
+  - presubmit
+- command:
+  - runner.sh
+  - ./test/presubmit-tests.sh
+  - --run-test
+  - ./test/e2e-tests.sh --consolidated-sasl
+  name: integration-test-channel-consolidated-sasl
+  types:
+  - presubmit
+- command:
+  - runner.sh
+  - ./test/presubmit-tests.sh
+  - --run-test
+  - ./test/e2e-tests.sh --distributed
+  name: integration-test-channel-distributed
+  types:
+  - presubmit
+- command:
+  - runner.sh
+  - ./test/presubmit-tests.sh
+  - --run-test
+  - ./test/e2e-tests.sh --mt-source
+  modifiers:
+  - presubmit_optional
+  name: integration-test-mt-source
+  types:
+  - presubmit
+- command:
+  - runner.sh
+  - ./test/presubmit-tests.sh
+  - --run-test
+  - ./test/e2e-upgrade-tests.sh
   name: upgrade-tests
-  requirements:
-  - docker
-  types:
-  - presubmit
-- command:
-  - runner.sh
-  - ./test/presubmit-tests.sh
-  - --run-test
-  - ./test/reconciler-tests.sh
-  name: reconciler-tests
-  requirements:
-  - docker
-  types:
-  - presubmit
-- command:
-  - runner.sh
-  - ./test/presubmit-tests.sh
-  - --run-test
-  - ./test/e2e-tests.sh
-  env:
-  - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
-    value: SSL
-  name: channel-integration-tests-ssl
-  requirements:
-  - docker
-  types:
-  - presubmit
-- command:
-  - runner.sh
-  - ./test/presubmit-tests.sh
-  - --run-test
-  - ./test/e2e-tests.sh
-  env:
-  - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
-    value: SASL_SSL
-  name: channel-integration-tests-sasl-ssl
-  requirements:
-  - docker
-  types:
-  - presubmit
-- command:
-  - runner.sh
-  - ./test/presubmit-tests.sh
-  - --run-test
-  - ./test/e2e-tests.sh
-  env:
-  - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
-    value: SASL_PLAIN
-  name: channel-integration-tests-sasl-plain
-  requirements:
-  - docker
-  types:
-  - presubmit
-- command:
-  - runner.sh
-  - ./test/presubmit-tests.sh
-  - --run-test
-  - ./test/reconciler-tests.sh
-  env:
-  - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
-    value: SSL
-  name: channel-reconciler-tests-ssl
-  requirements:
-  - docker
-  types:
-  - presubmit
-- command:
-  - runner.sh
-  - ./test/presubmit-tests.sh
-  - --run-test
-  - ./test/reconciler-tests.sh
-  env:
-  - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
-    value: SASL_SSL
-  name: channel-reconciler-tests-sasl-ssl
-  requirements:
-  - docker
-  types:
-  - presubmit
-- command:
-  - runner.sh
-  - ./test/presubmit-tests.sh
-  - --run-test
-  - ./test/reconciler-tests.sh
-  env:
-  - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
-    value: SASL_PLAIN
-  name: channel-reconciler-tests-sasl-plain
-  requirements:
-  - docker
   types:
   - presubmit
 - command:
@@ -147,13 +94,13 @@ jobs:
   - ./hack/release.sh
   - --dot-release
   - --release-gcs
-  - knative-releases/eventing-kafka-broker
+  - knative-releases/eventing-kafka
   - --release-gcr
   - gcr.io/knative-releases
   - --github-token
   - /etc/hub-token/token
   - --branch
-  - release-1.4
+  - release-1.8
   excluded_requirements:
   - gcp
   name: release
@@ -163,4 +110,4 @@ jobs:
   types:
   - periodic
 org: knative-sandbox
-repo: eventing-kafka-broker
+repo: eventing-kafka

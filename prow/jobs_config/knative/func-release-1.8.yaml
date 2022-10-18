@@ -5,7 +5,7 @@
 # ####                                                                     ####
 # #############################################################################
 branches:
-- release-0.25
+- release-1.8
 image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
 jobs:
 - command:
@@ -13,20 +13,26 @@ jobs:
   - ./hack/release.sh
   - --dot-release
   - --release-gcs
-  - knative-releases/kn-plugin-func
+  - knative-releases/func
   - --release-gcr
   - gcr.io/knative-releases
   - --github-token
   - /etc/hub-token/token
+  - --apple-codesign-key
+  - /etc/notary/cert.p12
+  - --apple-notary-api-key
+  - /etc/notary/key.json
+  - --apple-codesign-password-file
+  - /etc/notary/password
   - --branch
-  - release-0.25
+  - release-1.8
   excluded_requirements:
   - gcp
   name: release
   requirements:
-  - release
+  - release-notary
   - docker
   types:
   - periodic
-org: knative-sandbox
-repo: kn-plugin-func
+org: knative
+repo: func
