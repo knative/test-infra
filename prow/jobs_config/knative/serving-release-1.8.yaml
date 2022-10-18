@@ -5,7 +5,7 @@
 # ####                                                                     ####
 # #############################################################################
 branches:
-- release-1.4
+- release-1.8
 image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
 jobs:
 - command:
@@ -60,6 +60,19 @@ jobs:
   - presubmit_optional
   - presubmit_skipped
   name: performance-tests-kperf
+  types:
+  - presubmit
+- command:
+  - runner.sh
+  - ./test/presubmit-tests.sh
+  - --run-test
+  - ./test/performance/performance-tests-mako.sh
+  modifiers:
+  - presubmit_optional
+  - presubmit_skipped
+  name: performance-tests-mako
+  requirements:
+  - perf
   types:
   - presubmit
 - command:
@@ -180,7 +193,7 @@ jobs:
     mkdir -p /root/.kube
     cat /opt/cluster/ci-script > connect.sh
     chmod +x connect.sh
-    server_addr=$(./connect.sh kourier-14)
+    server_addr=$(./connect.sh kourier-main)
     kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
     chmod +x adjust.sh
     ./adjust.sh
@@ -188,7 +201,7 @@ jobs:
     ./test/e2e-tests.sh --run-tests --kourier-version latest
   command:
   - runner.sh
-  cron: 20 10 * * *
+  cron: 20 2 * * *
   env:
   - name: SYSTEM_NAMESPACE
     value: knative-serving
@@ -206,7 +219,7 @@ jobs:
     mkdir -p /root/.kube
     cat /opt/cluster/ci-script > connect.sh
     chmod +x connect.sh
-    server_addr=$(./connect.sh contour-14)
+    server_addr=$(./connect.sh contour-main)
     kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
     chmod +x adjust.sh
     ./adjust.sh
@@ -214,7 +227,7 @@ jobs:
     ./test/e2e-tests.sh --run-tests --contour-version latest
   command:
   - runner.sh
-  cron: 20 11 * * *
+  cron: 20 3 * * *
   env:
   - name: SYSTEM_NAMESPACE
     value: knative-serving
@@ -236,7 +249,7 @@ jobs:
   - --github-token
   - /etc/hub-token/token
   - --branch
-  - release-1.4
+  - release-1.8
   excluded_requirements:
   - gcp
   name: release
@@ -247,6 +260,78 @@ jobs:
   - periodic
 org: knative
 repo: serving
+requirement_presets:
+  gcp:
+    env:
+    - name: E2E_CLUSTER_REGION
+      value: us-central1
+    podSpec:
+      containers: null
+      serviceAccountName: test-runner
+  nightly:
+    env:
+    - name: GOOGLE_APPLICATION_CREDENTIALS
+      value: /etc/nightly-account/service-account.json
+    podSpec:
+      containers: null
+      serviceAccountName: nightly
+    volumeMounts:
+    - mountPath: /etc/nightly-account
+      name: nightly-account
+      readOnly: true
+    volumes:
+    - name: nightly-account
+      secret:
+        items:
+        - key: nightly.json
+          path: service-account.json
+        secretName: prow-google-credentials
+  perf:
+    podSpec:
+      containers: null
+      serviceAccountName: test-runner
+    volumeMounts:
+    - mountPath: /etc/influx-token-secret-volume
+      name: influx-token-secret-volume
+      readOnly: true
+    - mountPath: /etc/influx-url-secret-volume
+      name: influx-url-secret-volume
+      readOnly: true
+    volumes:
+    - name: influx-token-secret-volume
+      secret:
+        defaultMode: 384
+        secretName: influx-token-secret
+    - name: influx-url-secret-volume
+      secret:
+        defaultMode: 384
+        secretName: influx-url-secret
+  release:
+    env:
+    - name: E2E_CLUSTER_REGION
+      value: us-central1
+    podSpec:
+      containers: null
+      serviceAccountName: release
+    volumeMounts:
+    - mountPath: /etc/hub-token
+      name: hub-token
+      readOnly: true
+    volumes:
+    - name: hub-token
+      secret:
+        items:
+        - key: hub_token
+          path: token
+        secretName: github-credentials
+    - name: release-account
+      secret:
+        items:
+        - key: release.json
+          path: service-account.json
+        secretName: prow-google-credentials
+requirements:
+- docker
 resources: high
 resources_presets:
   default:
