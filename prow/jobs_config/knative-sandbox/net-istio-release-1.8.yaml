@@ -5,7 +5,7 @@
 # ####                                                                     ####
 # #############################################################################
 branches:
-- release-1.4
+- release-1.8
 image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
 jobs:
 - command:
@@ -28,16 +28,46 @@ jobs:
   - presubmit
 - command:
   - runner.sh
+  - ./test/presubmit-tests.sh
+  - --integration-tests
+  name: integration-tests
+  types:
+  - presubmit
+- command:
+  - runner.sh
+  - ./test/presubmit-tests.sh
+  - --run-test
+  - ./test/e2e-tests.sh --istio-version latest
+  name: latest
+  types:
+  - presubmit
+- command:
+  - runner.sh
+  - ./test/presubmit-tests.sh
+  - --run-test
+  - ./test/e2e-tests.sh --istio-version latest  --mesh
+  name: latest-mesh
+  types:
+  - presubmit
+- command:
+  - runner.sh
+  - ./test/presubmit-tests.sh
+  - --all-tests
+  name: continuous
+  types:
+  - periodic
+- command:
+  - runner.sh
   - ./hack/release.sh
   - --dot-release
   - --release-gcs
-  - knative-releases/sample-source
+  - knative-releases/net-istio
   - --release-gcr
   - gcr.io/knative-releases
   - --github-token
   - /etc/hub-token/token
   - --branch
-  - release-1.4
+  - release-1.8
   excluded_requirements:
   - gcp
   name: release
@@ -46,4 +76,4 @@ jobs:
   types:
   - periodic
 org: knative-sandbox
-repo: sample-source
+repo: net-istio

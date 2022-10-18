@@ -5,16 +5,39 @@
 # ####                                                                     ####
 # #############################################################################
 branches:
-- release-1.4
+- release-1.8
 image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
 jobs:
 - command:
   - runner.sh
   - ./test/presubmit-tests.sh
+  - --build-tests
+  excluded_requirements:
+  - gcp
+  name: build-tests
+  types:
+  - presubmit
+- command:
+  - runner.sh
+  - ./test/presubmit-tests.sh
+  - --unit-tests
+  excluded_requirements:
+  - gcp
+  name: unit-tests
+  types:
+  - presubmit
+- command:
+  - runner.sh
+  - ./test/presubmit-tests.sh
+  - --integration-tests
+  name: integration-tests
+  types:
+  - presubmit
+- command:
+  - runner.sh
+  - ./test/presubmit-tests.sh
   - --all-tests
   name: continuous
-  requirements:
-  - docker
   types:
   - periodic
 - command:
@@ -22,20 +45,19 @@ jobs:
   - ./hack/release.sh
   - --dot-release
   - --release-gcs
-  - knative-releases/eventing-ceph
+  - knative-releases/net-contour
   - --release-gcr
   - gcr.io/knative-releases
   - --github-token
   - /etc/hub-token/token
   - --branch
-  - release-1.4
+  - release-1.8
   excluded_requirements:
   - gcp
   name: release
   requirements:
   - release
-  - docker
   types:
   - periodic
 org: knative-sandbox
-repo: eventing-ceph
+repo: net-contour

@@ -5,7 +5,7 @@
 # ####                                                                     ####
 # #############################################################################
 branches:
-- release-1.4
+- release-1.8
 image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
 jobs:
 - command:
@@ -15,8 +15,6 @@ jobs:
   excluded_requirements:
   - gcp
   name: build-tests
-  requirements:
-  - docker
   types:
   - presubmit
 - command:
@@ -26,58 +24,13 @@ jobs:
   excluded_requirements:
   - gcp
   name: unit-tests
-  requirements:
-  - docker
   types:
   - presubmit
 - command:
   - runner.sh
   - ./test/presubmit-tests.sh
-  - --run-test
-  - ./test/e2e-tests.sh --consolidated
-  name: integration-test-channel-consolidated
-  types:
-  - presubmit
-- command:
-  - runner.sh
-  - ./test/presubmit-tests.sh
-  - --run-test
-  - ./test/e2e-tests.sh --consolidated-tls
-  name: integration-test-channel-consolidated-tls
-  types:
-  - presubmit
-- command:
-  - runner.sh
-  - ./test/presubmit-tests.sh
-  - --run-test
-  - ./test/e2e-tests.sh --consolidated-sasl
-  name: integration-test-channel-consolidated-sasl
-  types:
-  - presubmit
-- command:
-  - runner.sh
-  - ./test/presubmit-tests.sh
-  - --run-test
-  - ./test/e2e-tests.sh --distributed
-  name: integration-test-channel-distributed
-  types:
-  - presubmit
-- command:
-  - runner.sh
-  - ./test/presubmit-tests.sh
-  - --run-test
-  - ./test/e2e-tests.sh --mt-source
-  modifiers:
-  - presubmit_optional
-  name: integration-test-mt-source
-  types:
-  - presubmit
-- command:
-  - runner.sh
-  - ./test/presubmit-tests.sh
-  - --run-test
-  - ./test/e2e-upgrade-tests.sh
-  name: upgrade-tests
+  - --integration-tests
+  name: integration-tests
   types:
   - presubmit
 - command:
@@ -85,8 +38,6 @@ jobs:
   - ./test/presubmit-tests.sh
   - --all-tests
   name: continuous
-  requirements:
-  - docker
   types:
   - periodic
 - command:
@@ -94,20 +45,19 @@ jobs:
   - ./hack/release.sh
   - --dot-release
   - --release-gcs
-  - knative-releases/eventing-kafka
+  - knative-releases/net-certmanager
   - --release-gcr
   - gcr.io/knative-releases
   - --github-token
   - /etc/hub-token/token
   - --branch
-  - release-1.4
+  - release-1.8
   excluded_requirements:
   - gcp
   name: release
   requirements:
   - release
-  - docker
   types:
   - periodic
 org: knative-sandbox
-repo: eventing-kafka
+repo: net-certmanager
