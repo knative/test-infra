@@ -7,17 +7,17 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.4
-    testgrid-tab-name: eventing-redis-continuous
+    testgrid-dashboards: knative-sandbox-release-1.8
+    testgrid-tab-name: eventing-gitlab-continuous
   cluster: prow-build
-  cron: 33 16 * * *
+  cron: 25 20 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-1.4
+  - base_ref: release-1.8
     org: knative-sandbox
-    path_alias: knative.dev/eventing-redis
-    repo: eventing-redis
-  name: continuous_eventing-redis_release-1.4_periodic
+    path_alias: knative.dev/eventing-gitlab
+    repo: eventing-gitlab
+  name: continuous_eventing-gitlab_release-1.8_periodic
   spec:
     containers:
     - command:
@@ -33,7 +33,11 @@ periodics:
         value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
       name: ""
-      resources: {}
+      resources:
+        limits:
+          memory: 16Gi
+        requests:
+          memory: 12Gi
       securityContext:
         privileged: true
       volumeMounts:
@@ -67,17 +71,17 @@ periodics:
         type: Directory
       name: cgroup
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.4
-    testgrid-tab-name: eventing-redis-release
+    testgrid-dashboards: knative-sandbox-release-1.8
+    testgrid-tab-name: eventing-gitlab-release
   cluster: prow-build
-  cron: 19 9 * * 2
+  cron: 31 9 * * 2
   decorate: true
   extra_refs:
-  - base_ref: release-1.4
+  - base_ref: release-1.8
     org: knative-sandbox
-    path_alias: knative.dev/eventing-redis
-    repo: eventing-redis
-  name: release_eventing-redis_release-1.4_periodic
+    path_alias: knative.dev/eventing-gitlab
+    repo: eventing-gitlab
+  name: release_eventing-gitlab_release-1.8_periodic
   spec:
     containers:
     - command:
@@ -85,13 +89,13 @@ periodics:
       - ./hack/release.sh
       - --dot-release
       - --release-gcs
-      - knative-releases/eventing-redis
+      - knative-releases/eventing-gitlab
       - --release-gcr
       - gcr.io/knative-releases
       - --github-token
       - /etc/hub-token/token
       - --branch
-      - release-1.4
+      - release-1.8
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
@@ -103,7 +107,11 @@ periodics:
         value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
       name: ""
-      resources: {}
+      resources:
+        limits:
+          memory: 16Gi
+        requests:
+          memory: 12Gi
       securityContext:
         privileged: true
       volumeMounts:
