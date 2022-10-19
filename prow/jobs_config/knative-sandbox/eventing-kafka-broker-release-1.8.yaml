@@ -211,5 +211,89 @@ jobs:
   - docker
   types:
   - periodic
+- name: s390x-e2e-tests-ssl
+  cron: 20 15 * * *
+  types: [periodic]
+  requirements: [s390x]
+  command: [runner.sh]
+  args:
+    - bash
+    - -c
+    - |
+      mkdir -p /root/.kube
+      cat /opt/cluster/ci-script > connect.sh
+      chmod +x connect.sh
+      ./connect.sh eventing_kafka-broker-ssl-18
+      kubectl get cm s390x-config-eventing-kafka-broker -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
+      chmod +x adjust.sh
+      ./adjust.sh
+      ./test/e2e-tests.sh --run-tests
+  env:
+    - name: SYSTEM_NAMESPACE
+      value: knative-eventing
+    - name: EVENTING_NAMESPACE
+      value: knative-eventing
+    - name: SCALE_CHAOSDUCK_TO_ZERO
+      value: "1"
+    - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+      value: SSL
+    - name: BROKER_CLASS
+      value: Kafka
+- name: s390x-e2e-tests-sasl-ssl
+  cron: 20 16 * * *
+  types: [periodic]
+  requirements: [s390x]
+  command: [runner.sh]
+  args:
+    - bash
+    - -c
+    - |
+      mkdir -p /root/.kube
+      cat /opt/cluster/ci-script > connect.sh
+      chmod +x connect.sh
+      ./connect.sh eventing_kafka-broker-sasl-ssl-18
+      kubectl get cm s390x-config-eventing-kafka-broker -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
+      chmod +x adjust.sh
+      ./adjust.sh
+      ./test/e2e-tests.sh --run-tests
+  env:
+    - name: SYSTEM_NAMESPACE
+      value: knative-eventing
+    - name: EVENTING_NAMESPACE
+      value: knative-eventing
+    - name: SCALE_CHAOSDUCK_TO_ZERO
+      value: "1"
+    - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+      value: SASL_SSL
+    - name: BROKER_CLASS
+      value: Kafka
+- name: s390x-e2e-tests-sasl-plain
+  cron: 20 17 * * *
+  types: [periodic]
+  requirements: [s390x]
+  command: [runner.sh]
+  args:
+    - bash
+    - -c
+    - |
+      mkdir -p /root/.kube
+      cat /opt/cluster/ci-script > connect.sh
+      chmod +x connect.sh
+      ./connect.sh eventing_kafka-broker-sasl-plain-18
+      kubectl get cm s390x-config-eventing-kafka-broker -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
+      chmod +x adjust.sh
+      ./adjust.sh
+      ./test/e2e-tests.sh --run-tests
+  env:
+    - name: SYSTEM_NAMESPACE
+      value: knative-eventing
+    - name: EVENTING_NAMESPACE
+      value: knative-eventing
+    - name: SCALE_CHAOSDUCK_TO_ZERO
+      value: "1"
+    - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
+      value: SASL_PLAIN
+    - name: BROKER_CLASS
+      value: Kafka
 org: knative-sandbox
 repo: eventing-kafka-broker
