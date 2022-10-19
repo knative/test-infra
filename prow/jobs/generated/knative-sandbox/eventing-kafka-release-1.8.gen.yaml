@@ -145,6 +145,84 @@ periodics:
         path: /sys/fs/cgroup
         type: Directory
       name: cgroup
+- annotations:
+    testgrid-dashboards: knative-sandbox-release-1.8
+    testgrid-tab-name: eventing-kafka-s390x-e2e-tests
+  cluster: prow-build
+  cron: 20 14 * * *
+  decorate: true
+  extra_refs:
+  - base_ref: release-1.8
+    org: knative-sandbox
+    path_alias: knative.dev/eventing-kafka
+    repo: eventing-kafka
+  name: s390x-e2e-tests_eventing-kafka_release-1.8_periodic
+  spec:
+    containers:
+    - args:
+      - bash
+      - -c
+      - |
+        mkdir -p /root/.kube
+        cat /opt/cluster/ci-script > connect.sh
+        chmod +x connect.sh
+        ./connect.sh eventing_kafka-18
+        kubectl get cm s390x-config-eventing-kafka -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
+        chmod +x adjust.sh
+        ./adjust.sh
+        ./test/e2e-tests.sh --run-tests
+      command:
+      - runner.sh
+      env:
+      - name: EVENTING_NAMESPACE
+        value: knative-eventing
+      - name: SCALE_CHAOSDUCK_TO_ZERO
+        value: "1"
+      - name: SYSTEM_NAMESPACE
+        value: knative-eventing
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      - name: KO_FLAGS
+        value: --platform=linux/s390x --insecure-registry
+      - name: PLATFORM
+        value: linux/s390x
+      - name: KO_DOCKER_REPO
+        valueFrom:
+          secretKeyRef:
+            key: ko-docker-repo
+            name: s390x-cluster1
+      - name: KUBECONFIG
+        value: /root/.kube/config
+      - name: DOCKER_CONFIG
+        value: /opt/cluster
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
+      name: ""
+      resources: {}
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /etc/test-account
+        name: test-account
+        readOnly: true
+      - mountPath: /opt/cluster
+        name: s390x-cluster1
+        readOnly: true
+    nodeSelector:
+      kubernetes.io/arch: amd64
+      type: testing
+    volumes:
+    - name: test-account
+      secret:
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
+    - name: s390x-cluster1
+      secret:
+        defaultMode: 384
+        secretName: s390x-cluster1
 presubmits:
   knative-sandbox/eventing-kafka:
   - always_run: true
