@@ -80,7 +80,6 @@ dashboards:
 - name: kn-plugin-service-log
 - name: kn-plugin-source-kafka
 - name: kn-plugin-source-kamelet
-- name: knative-release-1.4
 - name: knative-release-1.5
 - name: knative-release-1.6
 - name: knative-release-1.7
