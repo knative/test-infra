@@ -85,6 +85,7 @@ dashboards:
 - name: knative-release-1.7
 - name: knative-release-1.8
 - name: knative-sandbox-release-0.1
+- name: knative-sandbox-release-0.2
 - name: knative-sandbox-release-1.0
 - name: knative-sandbox-release-1.1
 - name: knative-sandbox-release-1.2
