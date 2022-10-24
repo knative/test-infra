@@ -95,6 +95,8 @@ periodics:
       - --branch
       - release-1.8
       env:
+      - name: BROKER_CLASS
+        value: Kafka
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
