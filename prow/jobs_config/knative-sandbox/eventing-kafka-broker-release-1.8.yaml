@@ -203,6 +203,9 @@ jobs:
   - /etc/hub-token/token
   - --branch
   - release-1.8
+  env:
+  - name: BROKER_CLASS
+    value: Kafka
   excluded_requirements:
   - gcp
   name: release
