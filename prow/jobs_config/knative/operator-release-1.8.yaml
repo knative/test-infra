@@ -97,10 +97,10 @@ jobs:
     ./test/e2e-tests.sh --run-tests
   command:
   - runner.sh
-  cron: 0 13 * * *
+  cron: 30 14 * * *
   env:
   - name: CI_JOB
-    value: operator-main
+    value: operator-release-1.8
   - name: INGRESS_CLASS
     value: contour.ingress.networking.knative.dev
   name: ppc64le-e2e-tests
