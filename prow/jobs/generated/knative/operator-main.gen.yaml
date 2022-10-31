@@ -200,6 +200,7 @@ periodics:
     org: knative
     path_alias: knative.dev/operator
     repo: operator
+  max_concurrency: 1
   name: nightly_operator_main_periodic
   reporter_config:
     slack:
@@ -250,6 +251,7 @@ periodics:
     org: knative
     path_alias: knative.dev/operator
     repo: operator
+  max_concurrency: 1
   name: release_operator_main_periodic
   spec:
     containers:

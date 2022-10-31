@@ -373,6 +373,7 @@ periodics:
     org: knative
     path_alias: knative.dev/eventing
     repo: eventing
+  max_concurrency: 1
   name: release_eventing_release-1.8_periodic
   spec:
     containers:

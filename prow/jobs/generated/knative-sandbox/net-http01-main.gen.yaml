@@ -59,6 +59,7 @@ periodics:
     org: knative-sandbox
     path_alias: knative.dev/net-http01
     repo: net-http01
+  max_concurrency: 1
   name: nightly_net-http01_main_periodic
   reporter_config:
     slack:
@@ -109,6 +110,7 @@ periodics:
     org: knative-sandbox
     path_alias: knative.dev/net-http01
     repo: net-http01
+  max_concurrency: 1
   name: release_net-http01_main_periodic
   spec:
     containers:

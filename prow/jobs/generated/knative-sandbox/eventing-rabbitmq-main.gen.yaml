@@ -59,6 +59,7 @@ periodics:
     org: knative-sandbox
     path_alias: knative.dev/eventing-rabbitmq
     repo: eventing-rabbitmq
+  max_concurrency: 1
   name: nightly_eventing-rabbitmq_main_periodic
   reporter_config:
     slack:
@@ -109,6 +110,7 @@ periodics:
     org: knative-sandbox
     path_alias: knative.dev/eventing-rabbitmq
     repo: eventing-rabbitmq
+  max_concurrency: 1
   name: release_eventing-rabbitmq_main_periodic
   spec:
     containers:

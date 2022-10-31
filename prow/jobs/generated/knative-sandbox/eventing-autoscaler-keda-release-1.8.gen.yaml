@@ -59,6 +59,7 @@ periodics:
     org: knative-sandbox
     path_alias: knative.dev/eventing-autoscaler-keda
     repo: eventing-autoscaler-keda
+  max_concurrency: 1
   name: release_eventing-autoscaler-keda_release-1.8_periodic
   spec:
     containers:

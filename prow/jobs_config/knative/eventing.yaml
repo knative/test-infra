@@ -127,11 +127,12 @@ jobs:
     command: [runner.sh, ./hack/release.sh, --publish, --tag-release]
     requirements: [nightly]
     excluded_requirements: [gcp]
+    max_concurrency: 1
     reporter_config:
       slack:
         channel: eventing
         report_template: |
-          "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
+          "The nightly release has failed, please check the logs: <{{.Status.URL}}|View logs>"
         job_states_to_report:
         - "failure"
 
@@ -141,6 +142,7 @@ jobs:
     command: [runner.sh, ./hack/release.sh, --auto-release, --release-gcs, knative-releases/eventing, --release-gcr, gcr.io/knative-releases, --github-token, /etc/hub-token/token]
     requirements: [release]
     excluded_requirements: [gcp]
+    max_concurrency: 1
 
 resources: high
 resources_presets:

@@ -59,6 +59,7 @@ periodics:
     org: knative-sandbox
     path_alias: knative.dev/kn-plugin-event
     repo: kn-plugin-event
+  max_concurrency: 1
   name: nightly_kn-plugin-event_main_periodic
   spec:
     containers:
@@ -111,6 +112,7 @@ periodics:
     org: knative-sandbox
     path_alias: knative.dev/kn-plugin-event
     repo: kn-plugin-event
+  max_concurrency: 1
   name: release_kn-plugin-event_main_periodic
   spec:
     containers:

@@ -200,6 +200,7 @@ periodics:
     org: knative
     path_alias: knative.dev/operator
     repo: operator
+  max_concurrency: 1
   name: release_operator_release-1.6_periodic
   spec:
     containers:

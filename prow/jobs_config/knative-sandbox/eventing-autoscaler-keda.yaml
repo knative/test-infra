@@ -22,10 +22,12 @@ jobs:
     types: [periodic]
     command: [runner.sh, ./hack/release.sh, --publish, --tag-release]
     requirements: [nightly]
+    max_concurrency: 1
     excluded_requirements: [gcp]
 
   - name: release
     types: [periodic]
     command: [runner.sh, ./hack/release.sh, --auto-release, --release-gcs, knative-releases/eventing-autoscaler-keda, --release-gcr, gcr.io/knative-releases, --github-token, /etc/hub-token/token]
     requirements: [release]
+    max_concurrency: 1
     excluded_requirements: [gcp]

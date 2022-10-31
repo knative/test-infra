@@ -17,7 +17,15 @@ periodics:
     org: knative
     path_alias: knative.dev/func
     repo: func
+  max_concurrency: 1
   name: nightly_func_main_periodic
+  reporter_config:
+    slack:
+      channel: functions
+      job_states_to_report:
+      - failure
+      report_template: |
+        "The nightly release has failed, please check the logs: <{{.Status.URL}}|View logs>"
   spec:
     containers:
     - command:
@@ -87,6 +95,7 @@ periodics:
     org: knative
     path_alias: knative.dev/func
     repo: func
+  max_concurrency: 1
   name: release_func_main_periodic
   spec:
     containers:

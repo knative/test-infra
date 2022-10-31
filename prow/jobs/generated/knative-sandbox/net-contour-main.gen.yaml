@@ -59,6 +59,7 @@ periodics:
     org: knative-sandbox
     path_alias: knative.dev/net-contour
     repo: net-contour
+  max_concurrency: 1
   name: nightly_net-contour_main_periodic
   reporter_config:
     slack:
@@ -111,6 +112,7 @@ periodics:
     org: knative-sandbox
     path_alias: knative.dev/net-contour
     repo: net-contour
+  max_concurrency: 1
   name: release_net-contour_main_periodic
   spec:
     containers:

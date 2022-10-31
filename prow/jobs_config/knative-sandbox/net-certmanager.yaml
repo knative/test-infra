@@ -27,6 +27,7 @@ jobs:
     command: [runner.sh, ./hack/release.sh, --publish, --tag-release]
     requirements: [nightly]
     excluded_requirements: [gcp]
+    max_concurrency: 1
     reporter_config:
       slack:
         channel: net-certmanager
@@ -37,8 +38,10 @@ jobs:
     env:
     - name: SIGN_IMAGES
       value: "true"
+
   - name: release
     types: [periodic]
     command: [runner.sh, ./hack/release.sh, --auto-release, --release-gcs, knative-releases/net-certmanager, --release-gcr, gcr.io/knative-releases, --github-token, /etc/hub-token/token]
     requirements: [release]
     excluded_requirements: [gcp]
+    max_concurrency: 1

@@ -241,6 +241,7 @@ periodics:
     org: knative
     path_alias: knative.dev/client
     repo: client
+  max_concurrency: 1
   name: nightly_client_main_periodic
   reporter_config:
     slack:
@@ -300,6 +301,7 @@ periodics:
     org: knative
     path_alias: knative.dev/client
     repo: client
+  max_concurrency: 1
   name: release_client_main_periodic
   spec:
     containers:

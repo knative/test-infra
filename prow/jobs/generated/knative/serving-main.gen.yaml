@@ -841,6 +841,7 @@ periodics:
     org: knative
     path_alias: knative.dev/serving
     repo: serving
+  max_concurrency: 1
   name: nightly_serving_main_periodic
   reporter_config:
     slack:
@@ -914,6 +915,7 @@ periodics:
     org: knative
     path_alias: knative.dev/serving
     repo: serving
+  max_concurrency: 1
   name: release_serving_main_periodic
   spec:
     containers:

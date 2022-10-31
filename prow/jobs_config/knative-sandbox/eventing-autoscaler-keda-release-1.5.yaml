@@ -49,6 +49,7 @@ jobs:
   - release-1.5
   excluded_requirements:
   - gcp
+  max_concurrency: 1
   name: release
   requirements:
   - release

@@ -17,6 +17,7 @@ periodics:
     org: knative-sandbox
     path_alias: knative.dev/sample-source
     repo: sample-source
+  max_concurrency: 1
   name: nightly_sample-source_main_periodic
   spec:
     containers:
@@ -60,6 +61,7 @@ periodics:
     org: knative-sandbox
     path_alias: knative.dev/sample-source
     repo: sample-source
+  max_concurrency: 1
   name: release_sample-source_main_periodic
   spec:
     containers:
