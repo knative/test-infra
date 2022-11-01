@@ -1,7 +1,7 @@
 org: knative
 repo: serving
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
+image: gcr.io/knative-tests/test-infra/prow-tests:v20221101-22ae6e9e
 requirements: [docker]
 
 jobs:
