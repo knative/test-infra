@@ -208,12 +208,13 @@ func (gc *GKECluster) ensureProtected() {
 // identify existing project/cluster if they are not set
 //
 // checks for existing cluster by looking at kubeconfig, if kubeconfig is set:
-// 	- If it exists in GKE:
-//		- If Request doesn't contain project/clustername:
-//			- Use it
-//		- If Request contains any of project/clustername:
-//			- If the cluster matches with them:
-//				- Use it
+//   - If it exists in GKE:
+//   - If Request doesn't contain project/clustername:
+//   - Use it
+//   - If Request contains any of project/clustername:
+//   - If the cluster matches with them:
+//   - Use it
+//
 // If cluster isn't discovered above, try to get project from gcloud
 func (gc *GKECluster) checkEnvironment() error {
 	output, err := common.StandardExec("kubectl", "config", "current-context")

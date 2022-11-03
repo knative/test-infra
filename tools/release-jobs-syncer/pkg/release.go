@@ -146,7 +146,7 @@ func latestReleaseBranch(gc ghutil.GithubOperations, org, repo string) (string, 
 }
 
 // filterLatest returns latest release branch in the form of
-// `release-[MAJOR].[MINOR]``, if there is no valid release branch exist in the form of
+// `release-[MAJOR].[MINOR]“, if there is no valid release branch exist in the form of
 // `release-[MAJOR]-[MINOR]`, then it returns ""
 func filterLatest(branches []*github.Branch) string {
 	var latest string
