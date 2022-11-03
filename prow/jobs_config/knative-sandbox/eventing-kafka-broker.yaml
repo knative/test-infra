@@ -143,6 +143,9 @@ jobs:
     command: [runner.sh, ./hack/release.sh, --auto-release, --release-gcs, knative-releases/eventing-kafka-broker, --release-gcr, gcr.io/knative-releases, --github-token, /etc/hub-token/token]
     requirements: [release, docker]
     excluded_requirements: [gcp]
+    env:
+      - name: BROKER_CLASS
+        value: Kafka
 
   - name: s390x-e2e-tests-ssl
     cron: 20 7 * * *
