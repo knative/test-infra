@@ -39,7 +39,7 @@ func TestMainFunc(t *testing.T) {
 	}, {
 		name: "no options",
 		args: []string{},
-		tags: []string{"test_tag_v1", "test_tag_v2"},
+		tags: []string{"test_tag_v1", "test_tag_v2", "test_tag_v3"},
 	}}
 	for _, tc := range tcs {
 		tc := tc

@@ -68,7 +68,7 @@ func lookupTags(ctx context.Context, path string, wg *sync.WaitGroup, ch chan<- 
 			return nil
 		}
 		ch <- result{tags: extractTags(expr)}
-		return nil
+		return files.SkipRest
 	})
 	if err != nil {
 		ch <- result{err: err}
