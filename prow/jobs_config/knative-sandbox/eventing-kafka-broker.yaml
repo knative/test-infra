@@ -1,7 +1,7 @@
 org: knative-sandbox
 repo: eventing-kafka-broker
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
+image: gcr.io/knative-tests/test-infra/prow-tests:v20221102-9cd64eff
 
 jobs:
   - name: build-tests
@@ -145,6 +145,9 @@ jobs:
     requirements: [release, docker]
     excluded_requirements: [gcp]
     max_concurrency: 1
+    env:
+      - name: BROKER_CLASS
+        value: Kafka
 
   - name: s390x-e2e-tests-ssl
     cron: 20 7 * * *

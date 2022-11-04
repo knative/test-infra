@@ -33,7 +33,7 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20221102-9cd64eff
       name: ""
       resources: {}
       securityContext:
@@ -95,6 +95,8 @@ periodics:
       - --branch
       - release-1.8
       env:
+      - name: BROKER_CLASS
+        value: Kafka
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -103,7 +105,7 @@ periodics:
         value: knative-sandbox
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20221102-9cd64eff
       name: ""
       resources: {}
       securityContext:
@@ -203,7 +205,7 @@ periodics:
         value: /root/.kube/config
       - name: DOCKER_CONFIG
         value: /opt/cluster
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20221102-9cd64eff
       name: ""
       resources: {}
       securityContext:
@@ -285,7 +287,7 @@ periodics:
         value: /root/.kube/config
       - name: DOCKER_CONFIG
         value: /opt/cluster
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20221102-9cd64eff
       name: ""
       resources: {}
       securityContext:
@@ -367,7 +369,7 @@ periodics:
         value: /root/.kube/config
       - name: DOCKER_CONFIG
         value: /opt/cluster
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20221102-9cd64eff
       name: ""
       resources: {}
       securityContext:
@@ -409,7 +411,7 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --build-tests
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221102-9cd64eff
         name: ""
         resources: {}
         securityContext:
@@ -432,7 +434,7 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --unit-tests
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221102-9cd64eff
         name: ""
         resources: {}
         securityContext:
@@ -464,7 +466,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221102-9cd64eff
         name: ""
         resources: {}
         securityContext:
@@ -523,7 +525,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221102-9cd64eff
         name: ""
         resources: {}
         securityContext:
@@ -584,7 +586,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221102-9cd64eff
         name: ""
         resources: {}
         securityContext:
@@ -644,7 +646,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221102-9cd64eff
         name: ""
         resources: {}
         securityContext:
@@ -704,7 +706,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221102-9cd64eff
         name: ""
         resources: {}
         securityContext:
@@ -767,7 +769,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221102-9cd64eff
         name: ""
         resources: {}
         securityContext:
@@ -830,7 +832,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221102-9cd64eff
         name: ""
         resources: {}
         securityContext:
@@ -893,7 +895,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221102-9cd64eff
         name: ""
         resources: {}
         securityContext:
@@ -956,7 +958,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221102-9cd64eff
         name: ""
         resources: {}
         securityContext:
@@ -1019,7 +1021,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221102-9cd64eff
         name: ""
         resources: {}
         securityContext:
@@ -1082,7 +1084,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221013-fb4b58b9
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221102-9cd64eff
         name: ""
         resources: {}
         securityContext:
