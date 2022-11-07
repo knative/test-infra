@@ -77,6 +77,7 @@ periodics:
     org: knative-sandbox
     path_alias: knative.dev/eventing-github
     repo: eventing-github
+  max_concurrency: 1
   name: nightly_eventing-github_main_periodic
   spec:
     containers:
@@ -138,6 +139,7 @@ periodics:
     org: knative-sandbox
     path_alias: knative.dev/eventing-github
     repo: eventing-github
+  max_concurrency: 1
   name: release_eventing-github_main_periodic
   spec:
     containers:

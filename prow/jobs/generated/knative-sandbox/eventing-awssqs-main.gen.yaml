@@ -59,6 +59,7 @@ periodics:
     org: knative-sandbox
     path_alias: knative.dev/eventing-awssqs
     repo: eventing-awssqs
+  max_concurrency: 1
   name: nightly_eventing-awssqs_main_periodic
   spec:
     containers:
@@ -102,6 +103,7 @@ periodics:
     org: knative-sandbox
     path_alias: knative.dev/eventing-awssqs
     repo: eventing-awssqs
+  max_concurrency: 1
   name: release_eventing-awssqs_main_periodic
   spec:
     containers:

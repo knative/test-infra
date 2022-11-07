@@ -8,6 +8,7 @@ jobs:
     types: [periodic]
     command: [runner.sh, ./test/presubmit-tests.sh, --all-tests]
     requirements: [docker]
+    max_concurrency: 1
 
   - name: nightly
     types: [periodic]
@@ -20,6 +21,7 @@ jobs:
     command: [runner.sh, ./hack/release.sh, --auto-release, --release-gcs, knative-releases/eventing-gitlab, --release-gcr, gcr.io/knative-releases, --github-token, /etc/hub-token/token]
     requirements: [release, docker]
     excluded_requirements: [gcp]
+    max_concurrency: 1
 
 resources_presets:
   default:

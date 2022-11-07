@@ -200,6 +200,7 @@ periodics:
     org: knative
     path_alias: knative.dev/client
     repo: client
+  max_concurrency: 1
   name: release_client_release-1.6_periodic
   spec:
     containers:

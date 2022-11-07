@@ -59,6 +59,7 @@ periodics:
     org: knative-sandbox
     path_alias: knative.dev/container-freezer
     repo: container-freezer
+  max_concurrency: 1
   name: nightly_container-freezer_main_periodic
   spec:
     containers:
@@ -102,6 +103,7 @@ periodics:
     org: knative-sandbox
     path_alias: knative.dev/container-freezer
     repo: container-freezer
+  max_concurrency: 1
   name: release_container-freezer_main_periodic
   spec:
     containers:

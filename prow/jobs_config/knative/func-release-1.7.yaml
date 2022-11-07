@@ -28,6 +28,7 @@ jobs:
   - release-1.7
   excluded_requirements:
   - gcp
+  max_concurrency: 1
   name: release
   requirements:
   - release-notary

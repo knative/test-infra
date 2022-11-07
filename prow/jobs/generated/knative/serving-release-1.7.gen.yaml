@@ -283,6 +283,7 @@ periodics:
     org: knative
     path_alias: knative.dev/serving
     repo: serving
+  max_concurrency: 1
   name: release_serving_release-1.7_periodic
   spec:
     containers:

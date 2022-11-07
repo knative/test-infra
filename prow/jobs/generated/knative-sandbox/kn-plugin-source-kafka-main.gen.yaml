@@ -59,6 +59,7 @@ periodics:
     org: knative-sandbox
     path_alias: knative.dev/kn-plugin-source-kafka
     repo: kn-plugin-source-kafka
+  max_concurrency: 1
   name: nightly_kn-plugin-source-kafka_main_periodic
   spec:
     containers:
@@ -129,6 +130,7 @@ periodics:
     org: knative-sandbox
     path_alias: knative.dev/kn-plugin-source-kafka
     repo: kn-plugin-source-kafka
+  max_concurrency: 1
   name: release_kn-plugin-source-kafka_main_periodic
   spec:
     containers:

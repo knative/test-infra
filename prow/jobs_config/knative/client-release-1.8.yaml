@@ -112,6 +112,7 @@ jobs:
   excluded_requirements:
   - gcp
   name: release
+  max_concurrency: 1
   requirements:
   - release-notary
   types:

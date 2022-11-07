@@ -79,6 +79,7 @@ periodics:
     org: knative-sandbox
     path_alias: knative.dev/eventing-kafka-broker
     repo: eventing-kafka-broker
+  max_concurrency: 1
   name: nightly_eventing-kafka-broker_main_periodic
   reporter_config:
     slack:
@@ -149,6 +150,7 @@ periodics:
     org: knative-sandbox
     path_alias: knative.dev/eventing-kafka-broker
     repo: eventing-kafka-broker
+  max_concurrency: 1
   name: release_eventing-kafka-broker_main_periodic
   spec:
     containers:

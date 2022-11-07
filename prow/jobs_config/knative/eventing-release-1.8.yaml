@@ -172,6 +172,7 @@ jobs:
   excluded_requirements:
   - gcp
   name: release
+  max_concurrency: 1
   requirements:
   - release
   timeout: 3h0m0s

@@ -77,6 +77,7 @@ periodics:
     org: knative-sandbox
     path_alias: knative.dev/eventing-couchdb
     repo: eventing-couchdb
+  max_concurrency: 1
   name: nightly_eventing-couchdb_main_periodic
   spec:
     containers:
@@ -138,6 +139,7 @@ periodics:
     org: knative-sandbox
     path_alias: knative.dev/eventing-couchdb
     repo: eventing-couchdb
+  max_concurrency: 1
   name: release_eventing-couchdb_main_periodic
   spec:
     containers:

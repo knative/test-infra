@@ -17,6 +17,7 @@ periodics:
     org: knative
     path_alias: knative.dev/func
     repo: func
+  max_concurrency: 1
   name: release_func_release-1.8_periodic
   spec:
     containers:

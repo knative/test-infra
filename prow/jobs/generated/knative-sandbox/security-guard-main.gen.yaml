@@ -59,6 +59,7 @@ periodics:
     org: knative-sandbox
     path_alias: knative.dev/security-guard
     repo: security-guard
+  max_concurrency: 1
   name: nightly_security-guard_main_periodic
   spec:
     containers:
@@ -102,6 +103,7 @@ periodics:
     org: knative-sandbox
     path_alias: knative.dev/security-guard
     repo: security-guard
+  max_concurrency: 1
   name: release_security-guard_main_periodic
   spec:
     containers:

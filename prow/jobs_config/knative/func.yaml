@@ -12,6 +12,14 @@ jobs:
       --apple-codesign-password-file, /etc/notary/password]
     requirements: [nightly-notary, docker]
     excluded_requirements: [gcp]
+    max_concurrency: 1
+    reporter_config:
+      slack:
+        channel: functions
+        report_template: |
+          "The nightly release has failed, please check the logs: <{{.Status.URL}}|View logs>"
+        job_states_to_report:
+        - "failure"
 
   - name: release
     types: [periodic]
@@ -20,4 +28,5 @@ jobs:
       --apple-notary-api-key, /etc/notary/key.json,
       --apple-codesign-password-file, /etc/notary/password]
     requirements: [release-notary, docker]
+    max_concurrency: 1
     excluded_requirements: [gcp]

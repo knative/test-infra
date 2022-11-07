@@ -30,6 +30,7 @@ jobs:
       --apple-codesign-password-file, /etc/notary/password]
     requirements: [nightly-notary]
     excluded_requirements: [gcp]
+    max_concurrency: 1
 
   - name: release
     types: [periodic]
@@ -39,3 +40,4 @@ jobs:
       --apple-codesign-password-file, /etc/notary/password]
     requirements: [release-notary]
     excluded_requirements: [gcp]
+    max_concurrency: 1

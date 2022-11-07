@@ -79,6 +79,7 @@ jobs:
       --apple-codesign-password-file, /etc/notary/password]
     requirements: [nightly-notary]
     excluded_requirements: [gcp]
+    max_concurrency: 1
     reporter_config:
       slack:
         channel: client
@@ -94,3 +95,4 @@ jobs:
       --apple-codesign-password-file, /etc/notary/password]
     requirements: [release-notary]
     excluded_requirements: [gcp]
+    max_concurrency: 1
