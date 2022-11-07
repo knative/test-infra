@@ -19,7 +19,13 @@ package files
 import (
 	"bufio"
 	"context"
+	"errors"
 	"os"
+)
+
+var (
+	// SkipRest can be used to skip the rest of the file.
+	SkipRest = errors.New("skip rest")
 )
 
 // ReadLines will read lines from a file and pass each line to a func handler.
@@ -42,7 +48,12 @@ func scanFile(ctx context.Context, f *os.File, fn func(line string) error) error
 		case <-ctx.Done():
 			return ctx.Err()
 		default:
-			return fn(scanner.Text())
+			if err := fn(scanner.Text()); err != nil {
+				if errors.Is(err, SkipRest) {
+					return nil
+				}
+				return err
+			}
 		}
 	}
 

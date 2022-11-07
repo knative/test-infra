@@ -42,11 +42,11 @@ func TestApp(t *testing.T) {
 	}, {
 		name: "no options",
 		args: []string{},
-		tags: []string{"test_tag_v1", "test_tag_v2"},
+		tags: []string{"test_tag_v1", "test_tag_v2", "test_tag_v3"},
 	}, {
 		name:      "with comma joiner",
 		args:      []string{"--joiner", ","},
-		fragments: []string{"test_tag_v1,test_tag_v2"},
+		fragments: []string{"test_tag_v1,test_tag_v2,test_tag_v3"},
 	}, {
 		name: "using absolute ignorefile",
 		args: []string{
