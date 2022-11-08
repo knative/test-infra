@@ -255,6 +255,50 @@ jobs:
       - name: TEST_OPTIONS
         value: "--enable-alpha --enable-beta --resolvabledomain=false"
 
+  - name: ppc64le-kourier-tests
+    cron: 30 21 * * *
+    types: [periodic]
+    requirements: [ppc64le]
+    command: [runner.sh]
+    args:
+      - bash
+      - -c
+      - |
+        cat /opt/cluster/ci-script > /tmp/connect.sh
+        chmod +x /tmp/connect.sh
+        . /tmp/connect.sh ${CI_JOB}
+        export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint 'cluster.ppc64le
+        ./test/e2e-tests.sh --run-tests --kourier-version latest
+    env:
+      - name: SYSTEM_NAMESPACE
+        value: knative-serving
+      - name: TEST_OPTIONS
+        value: "--enable-alpha --enable-beta --resolvabledomain=false"
+      - name: CI_JOB
+        value: "kourier-main"
+
+  - name: ppc64le-contour-tests
+    cron: 30 23 * * *
+    types: [periodic]
+    requirements: [ppc64le]
+    command: [runner.sh]
+    args:
+      - bash
+      - -c
+      - |
+        cat /opt/cluster/ci-script > /tmp/connect.sh
+        chmod +x /tmp/connect.sh
+        . /tmp/connect.sh ${CI_JOB}
+        export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint 'cluster.ppc64le
+        ./test/e2e-tests.sh --run-tests --contour-version latest
+    env:
+      - name: SYSTEM_NAMESPACE
+        value: knative-serving
+      - name: TEST_OPTIONS
+        value: "--enable-alpha --enable-beta --resolvabledomain=false"
+      - name: CI_JOB
+        value: "contour-main"
+
   - name: nightly
     types: [periodic]
     timeout: 3h

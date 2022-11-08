@@ -43,7 +43,7 @@ const (
 // By default only the continuous Prow jobs will be synced in order to reduce
 // the load with Prow.
 var extraPeriodicProwJobsToSync map[string]sets.String = map[string]sets.String{
-	"knative/serving":  sets.NewString("s390x-kourier-tests", "s390x-contour-tests"),
+	"knative/serving":  sets.NewString("s390x-kourier-tests", "s390x-contour-tests", "ppc64le-kourier-tests", "ppc64le-contour-tests"),
 	"knative/eventing": sets.NewString("s390x-e2e-tests", "s390x-e2e-reconciler-tests", "ppc64le-e2e-tests", "ppc64le-e2e-reconciler-tests"),
 	"knative/client":   sets.NewString("s390x-e2e-tests", "ppc64le-e2e-tests"),
 	"knative/operator": sets.NewString("s390x-e2e-tests", "ppc64le-e2e-tests"),

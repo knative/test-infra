@@ -830,6 +830,170 @@ periodics:
         secretName: s390x-cluster1
 - annotations:
     testgrid-dashboards: serving
+    testgrid-tab-name: ppc64le-kourier-tests
+  cluster: prow-build
+  cron: 30 21 * * *
+  decorate: true
+  extra_refs:
+  - base_ref: main
+    org: knative
+    path_alias: knative.dev/serving
+    repo: serving
+  name: ppc64le-kourier-tests_serving_main_periodic
+  spec:
+    containers:
+    - args:
+      - bash
+      - -c
+      - |
+        cat /opt/cluster/ci-script > /tmp/connect.sh
+        chmod +x /tmp/connect.sh
+        . /tmp/connect.sh ${CI_JOB}
+        export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint 'cluster.ppc64le
+        ./test/e2e-tests.sh --run-tests --kourier-version latest
+      command:
+      - runner.sh
+      env:
+      - name: CI_JOB
+        value: kourier-main
+      - name: SYSTEM_NAMESPACE
+        value: knative-serving
+      - name: TEST_OPTIONS
+        value: --enable-alpha --enable-beta --resolvabledomain=false
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: KO_FLAGS
+        value: --platform=linux/ppc64le
+      - name: PLATFORM
+        value: linux/ppc64le
+      - name: KO_DOCKER_REPO
+        value: registry.ppc64le
+      - name: KUBECONFIG
+        value: /root/.kube/config
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20221107-8ebeb5c4
+      name: ""
+      resources:
+        limits:
+          memory: 16Gi
+        requests:
+          memory: 12Gi
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /docker-graph
+        name: docker-graph
+      - mountPath: /lib/modules
+        name: modules
+      - mountPath: /sys/fs/cgroup
+        name: cgroup
+      - mountPath: /opt/cluster
+        name: ppc64le-cluster
+        readOnly: true
+    nodeSelector:
+      kubernetes.io/arch: amd64
+      type: testing
+    serviceAccountName: test-runner
+    volumes:
+    - emptyDir: {}
+      name: docker-graph
+    - hostPath:
+        path: /lib/modules
+        type: Directory
+      name: modules
+    - hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+      name: cgroup
+    - name: ppc64le-cluster
+      secret:
+        defaultMode: 384
+        secretName: ppc64le-cluster
+- annotations:
+    testgrid-dashboards: serving
+    testgrid-tab-name: ppc64le-contour-tests
+  cluster: prow-build
+  cron: 30 23 * * *
+  decorate: true
+  extra_refs:
+  - base_ref: main
+    org: knative
+    path_alias: knative.dev/serving
+    repo: serving
+  name: ppc64le-contour-tests_serving_main_periodic
+  spec:
+    containers:
+    - args:
+      - bash
+      - -c
+      - |
+        cat /opt/cluster/ci-script > /tmp/connect.sh
+        chmod +x /tmp/connect.sh
+        . /tmp/connect.sh ${CI_JOB}
+        export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint 'cluster.ppc64le
+        ./test/e2e-tests.sh --run-tests --contour-version latest
+      command:
+      - runner.sh
+      env:
+      - name: CI_JOB
+        value: contour-main
+      - name: SYSTEM_NAMESPACE
+        value: knative-serving
+      - name: TEST_OPTIONS
+        value: --enable-alpha --enable-beta --resolvabledomain=false
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: DOCKER_IN_DOCKER_ENABLED
+        value: "true"
+      - name: KO_FLAGS
+        value: --platform=linux/ppc64le
+      - name: PLATFORM
+        value: linux/ppc64le
+      - name: KO_DOCKER_REPO
+        value: registry.ppc64le
+      - name: KUBECONFIG
+        value: /root/.kube/config
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20221107-8ebeb5c4
+      name: ""
+      resources:
+        limits:
+          memory: 16Gi
+        requests:
+          memory: 12Gi
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /docker-graph
+        name: docker-graph
+      - mountPath: /lib/modules
+        name: modules
+      - mountPath: /sys/fs/cgroup
+        name: cgroup
+      - mountPath: /opt/cluster
+        name: ppc64le-cluster
+        readOnly: true
+    nodeSelector:
+      kubernetes.io/arch: amd64
+      type: testing
+    serviceAccountName: test-runner
+    volumes:
+    - emptyDir: {}
+      name: docker-graph
+    - hostPath:
+        path: /lib/modules
+        type: Directory
+      name: modules
+    - hostPath:
+        path: /sys/fs/cgroup
+        type: Directory
+      name: cgroup
+    - name: ppc64le-cluster
+      secret:
+        defaultMode: 384
+        secretName: ppc64le-cluster
+- annotations:
+    testgrid-dashboards: serving
     testgrid-tab-name: nightly
   cluster: prow-build
   cron: 15 9 * * *
