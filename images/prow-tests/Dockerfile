@@ -256,6 +256,7 @@ COPY --from=external-rust-gets /usr/local/cargo/bin/rcodesign /usr/local/bin/rco
 RUN rm -f /usr/local/bin/source-gvm-and-run.sh
 
 ENV PATH /go/bin:$PATH
+ENV USE_GKE_GCLOUD_AUTH_PLUGIN True
 
 # Extract versions
 RUN ko version > /ko_version
