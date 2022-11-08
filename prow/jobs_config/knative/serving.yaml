@@ -275,7 +275,7 @@ jobs:
       - name: TEST_OPTIONS
         value: "--enable-alpha --enable-beta --resolvabledomain=false"
       - name: CI_JOB
-        value: "kourier-main" 
+        value: "kourier-main"
 
   - name: ppc64le-contour-tests
     cron: 30 23 * * *
