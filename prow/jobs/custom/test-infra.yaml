@@ -71,7 +71,7 @@ presubmits:
     decorate: true
     path_alias: knative.dev/test-infra
     cluster: prow-build
-    run_if_changed: "^(images/prow-tests/.*|tools/kntest/.*|pkg/.*|go.mod)$"
+    run_if_changed: "^(images/prow-tests/.*|tools/.*|pkg/.*|go.mod)$"
     branches:
     - "main"
     spec:
@@ -310,7 +310,7 @@ postsubmits:
     path_alias: knative.dev/test-infra
     max_concurrency: 1
     cluster: prow-build
-    run_if_changed: "^(images/.*|tools/(flaky-test-reporter)/.*|pkg/.*|go.mod)$"
+    run_if_changed: "^(images/.*|tools/.*|pkg/.*|go.mod)$"
     branches:
     - "main"
     annotations:
