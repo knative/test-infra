@@ -77,7 +77,7 @@ presubmits:
     spec:
       serviceAccountName: test-runner
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:v20221107-8ebeb5c4
+      - image: gcr.io/knative-tests/test-infra/prow-tests:v20221108-3b5fcbe4
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -104,7 +104,7 @@ periodics:
     testgrid-tab-name: ci-knative-heartbeat
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:v20221107-8ebeb5c4
+    - image: gcr.io/knative-tests/test-infra/prow-tests:v20221108-3b5fcbe4
       imagePullPolicy: Always
       command:
       - "runner.sh"
@@ -139,7 +139,7 @@ periodics:
   spec:
     serviceAccountName: test-runner
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:v20221107-8ebeb5c4
+    - image: gcr.io/knative-tests/test-infra/prow-tests:v20221108-3b5fcbe4
       imagePullPolicy: Always
       command:
       - "runner.sh"
@@ -261,7 +261,7 @@ periodics:
       report_template: '"The prow-jobs-syncer periodic job has failed, please check the logs: <{{.Status.URL}}|View logs>"'
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:v20221107-8ebeb5c4
+    - image: gcr.io/knative-tests/test-infra/prow-tests:v20221108-3b5fcbe4
       imagePullPolicy: Always
       command:
       - "runner.sh"
@@ -325,7 +325,7 @@ postsubmits:
     spec:
       serviceAccountName: test-runner
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:v20221107-8ebeb5c4
+      - image: gcr.io/knative-tests/test-infra/prow-tests:v20221108-3b5fcbe4
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -365,7 +365,7 @@ postsubmits:
     spec:
       serviceAccountName: test-runner # switch a different service account
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:v20221107-8ebeb5c4
+      - image: gcr.io/knative-tests/test-infra/prow-tests:v20221108-3b5fcbe4
         imagePullPolicy: Always
         command:
         - runner.sh
