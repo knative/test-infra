@@ -8,22 +8,66 @@
 periodics:
 - annotations:
     testgrid-dashboards: net-gateway-api
-    testgrid-tab-name: continuous
+    testgrid-tab-name: continuous-istio
   cluster: prow-build
-  cron: 38 */9 * * *
+  cron: 59 6 * * *
   decorate: true
   extra_refs:
   - base_ref: main
     org: knative-sandbox
     path_alias: knative.dev/net-gateway-api
     repo: net-gateway-api
-  name: continuous_net-gateway-api_main_periodic
+  name: continuous-istio_net-gateway-api_main_periodic
   spec:
     containers:
     - command:
       - runner.sh
       - ./test/presubmit-tests.sh
-      - --all-tests
+      - --run-test
+      - ./test/e2e-tests.sh
+      env:
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/test-account/service-account.json
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20221108-3b5fcbe4
+      name: ""
+      resources: {}
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /etc/test-account
+        name: test-account
+        readOnly: true
+    nodeSelector:
+      kubernetes.io/arch: amd64
+      type: testing
+    volumes:
+    - name: test-account
+      secret:
+        items:
+        - key: service-account-key.json
+          path: service-account.json
+        secretName: prow-google-credentials
+- annotations:
+    testgrid-dashboards: net-gateway-api
+    testgrid-tab-name: continuous-contour
+  cluster: prow-build
+  cron: 13 20 * * *
+  decorate: true
+  extra_refs:
+  - base_ref: main
+    org: knative-sandbox
+    path_alias: knative.dev/net-gateway-api
+    repo: net-gateway-api
+  name: continuous-contour_net-gateway-api_main_periodic
+  spec:
+    containers:
+    - command:
+      - runner.sh
+      - ./test/presubmit-tests.sh
+      - --run-test
+      - ./test/e2e-tests.sh --contour
       env:
       - name: E2E_CLUSTER_REGION
         value: us-central1
@@ -212,15 +256,16 @@ presubmits:
     - ^main$
     cluster: prow-build
     decorate: true
-    name: integration-tests_net-gateway-api_main
+    name: integration-tests-istio_net-gateway-api_main
     path_alias: knative.dev/net-gateway-api
-    rerun_command: /test integration-tests
+    rerun_command: /test integration-tests-istio
     spec:
       containers:
       - command:
         - runner.sh
         - ./test/presubmit-tests.sh
-        - --integration-tests
+        - --run-test
+        - ./test/e2e-tests.sh
         env:
         - name: E2E_CLUSTER_REGION
           value: us-central1
@@ -245,4 +290,46 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
-    trigger: ((?m)^/test( | .* )integration-tests,?($|\s.*))|((?m)^/test( | .* )integration-tests_net-gateway-api_main,?($|\s.*))
+    trigger: ((?m)^/test( | .* )integration-tests-istio,?($|\s.*))|((?m)^/test( |
+      .* )integration-tests-istio_net-gateway-api_main,?($|\s.*))
+  - always_run: false
+    branches:
+    - ^main$
+    cluster: prow-build
+    decorate: true
+    name: integration-tests-contour_net-gateway-api_main
+    path_alias: knative.dev/net-gateway-api
+    rerun_command: /test integration-tests-contour
+    spec:
+      containers:
+      - command:
+        - runner.sh
+        - ./test/presubmit-tests.sh
+        - --run-test
+        - ./test/e2e-tests.sh --contour
+        env:
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221108-3b5fcbe4
+        name: ""
+        resources: {}
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /etc/test-account
+          name: test-account
+          readOnly: true
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        type: testing
+      volumes:
+      - name: test-account
+        secret:
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
+    trigger: ((?m)^/test( | .* )integration-tests-contour,?($|\s.*))|((?m)^/test(
+      | .* )integration-tests-contour_net-gateway-api_main,?($|\s.*))

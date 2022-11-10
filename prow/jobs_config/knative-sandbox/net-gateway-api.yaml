@@ -14,13 +14,22 @@ jobs:
     command: [runner.sh, ./test/presubmit-tests.sh, --unit-tests]
     excluded_requirements: [gcp]
 
-  - name: integration-tests
+  - name: integration-tests-istio
     types: [presubmit]
-    command: [runner.sh, ./test/presubmit-tests.sh, --integration-tests]
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/e2e-tests.sh"]
 
-  - name: continuous
+  - name: integration-tests-contour
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/e2e-tests.sh --contour"]
+    modifiers: [presubmit_skipped]
+
+  - name: continuous-istio
     types: [periodic]
-    command: [runner.sh, ./test/presubmit-tests.sh, --all-tests]
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/e2e-tests.sh"]
+
+  - name: continuous-contour
+    types: [periodic]
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/e2e-tests.sh --contour"]
 
   - name: nightly
     types: [periodic]
