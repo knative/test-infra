@@ -123,7 +123,7 @@ jobs:
 
   - name: nightly
     types: [periodic]
-    timeout: 3h
+    timeout: 4h
     command: [runner.sh, ./hack/release.sh, --publish, --tag-release]
     requirements: [nightly]
     excluded_requirements: [gcp]
@@ -138,7 +138,7 @@ jobs:
 
   - name: release
     types: [periodic]
-    timeout: 3h
+    timeout: 4h
     command: [runner.sh, ./hack/release.sh, --auto-release, --release-gcs, knative-releases/eventing, --release-gcr, gcr.io/knative-releases, --github-token, /etc/hub-token/token]
     requirements: [release]
     excluded_requirements: [gcp]
