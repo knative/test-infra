@@ -10,10 +10,6 @@ collecting metrics and displaying test results.
 This is the main repo for the [Productivity Working Group](https://github.com/knative/community/blob/main/working-groups/WORKING-GROUPS.md#productivity)
 
 The Productivity Working Group also has other repos:
-- [knative/.github](https://github.com/knative/.github)
-
-  Tools for github workflows
-
 - [knative/actions](https://github.com/knative/actions)
 
   Reusable github workflows and actions
@@ -30,14 +26,6 @@ The Productivity Working Group also has other repos:
 - [knative-sandbox/.github](https://github.com/knative-sandbox/.github)
 
   Tools for github actions
-
-- [knative-sandbox/actions-downstream-test](https://github.com/knative-sandbox/actions-downstream-test)
-
-  A github action to test multiple components together
-
-- [knative-sandbox/actions-kind](https://github.com/knative-sandbox/actions-kind)
-
-  A github action to run tests in a [kind](https://kind.sigs.k8s.io/) cluster
 
 - [knative-sandbox/kperf](https://github.com/knative-sandbox/kperf)
 
