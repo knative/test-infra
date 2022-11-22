@@ -1,7 +1,7 @@
 org: knative
 repo: networking
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20221116-ea6c00cb
+image: gcr.io/knative-tests/test-infra/prow-tests:v20221121-0481b012
 
 jobs:
   - name: build-tests
