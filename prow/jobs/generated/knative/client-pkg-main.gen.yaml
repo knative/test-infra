@@ -29,7 +29,7 @@ periodics:
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20221121-0481b012
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20221124-2aa94e72
       name: ""
       resources: {}
       securityContext:
@@ -64,7 +64,7 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --build-tests
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221121-0481b012
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221124-2aa94e72
         name: ""
         resources: {}
         securityContext:
@@ -87,7 +87,7 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --unit-tests
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221121-0481b012
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221124-2aa94e72
         name: ""
         resources: {}
         securityContext:
