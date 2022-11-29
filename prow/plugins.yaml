@@ -94,6 +94,18 @@ config_updater:
       name: plugins
 
 blunderbuss:
+  # MaxReviewerCount is the maximum number of reviewers to request
+  # reviews from. Defaults to 0 meaning no limit.
+  max_request_count: 3
+
+  # ReviewerCount is the minimum number of reviewers to request
+  # reviews from. Defaults to requesting reviews from 2 reviewers
+  request_count: 2
+
+  # UseStatusAvailability controls whether blunderbuss will consider GitHub's
+  # status availability when requesting reviews for users. This will use at one
+  # additional token per successful reviewer (and potentially more depending on
+  # how many busy reviewers it had to pass over).
   use_status_availability: true
 
 # Settings for the "trigger" plugin.
@@ -109,6 +121,7 @@ plugins:
     plugins:
     - approve
     - assign
+    - blunderbuss
     - buildifier
     - cat
     - dog
