@@ -232,6 +232,8 @@ tide:
             skip-unknown-contexts: true
       knative-sandbox:
         repos:
+          async-component:
+            skip-unknown-contexts: true
           eventing-kafka-broker:
             skip-unknown-contexts: true
           reconciler-test:
