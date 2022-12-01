@@ -19,7 +19,7 @@ jobConfigs:
     type: postsubmit
     issueRepo: serving
     slackChannels:
-      - name: serving-api
+      - name: serving
         identity: CA4DNJ9A4
   - name: istio-latest-mesh_serving_main_periodic
     org: knative
