@@ -29,7 +29,7 @@ periodics:
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20221124-2aa94e72
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
       name: ""
       resources: {}
       securityContext:
@@ -72,7 +72,7 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: SIGN_IMAGES
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20221124-2aa94e72
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
       name: ""
       resources: {}
       securityContext:
@@ -122,7 +122,7 @@ periodics:
         value: us-central1
       - name: ORG_NAME
         value: knative-sandbox
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20221124-2aa94e72
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
       name: ""
       resources: {}
       securityContext:
@@ -166,7 +166,7 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --build-tests
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221124-2aa94e72
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
         name: ""
         resources: {}
         securityContext:
@@ -189,7 +189,7 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --unit-tests
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221124-2aa94e72
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
         name: ""
         resources: {}
         securityContext:
@@ -217,7 +217,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221124-2aa94e72
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
         name: ""
         resources: {}
         securityContext:
