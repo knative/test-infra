@@ -49,6 +49,7 @@ dashboard_groups:
   - net-kourier
   - sample-controller
   - sample-source
+  - scaling-group
   - security-guard
   name: knative-sandbox
 dashboards:
@@ -104,6 +105,7 @@ dashboards:
 - name: operator
 - name: sample-controller
 - name: sample-source
+- name: scaling-group
 - name: security-guard
 - name: serving
 - name: utilities
