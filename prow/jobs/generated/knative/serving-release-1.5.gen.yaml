@@ -31,7 +31,7 @@ periodics:
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
       name: ""
       resources:
         limits:
@@ -105,7 +105,7 @@ periodics:
         value: /root/.kube/config
       - name: DOCKER_CONFIG
         value: /opt/cluster
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
       name: ""
       resources:
         limits:
@@ -186,7 +186,7 @@ periodics:
         value: /root/.kube/config
       - name: DOCKER_CONFIG
         value: /opt/cluster
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
       name: ""
       resources:
         limits:
@@ -252,7 +252,7 @@ periodics:
         value: us-central1
       - name: SIGN_IMAGES
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
       name: ""
       resources:
         limits:
@@ -300,7 +300,7 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --build-tests
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
         name: ""
         resources:
           limits:
@@ -327,7 +327,7 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --unit-tests
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
         name: ""
         resources:
           limits:
@@ -360,7 +360,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
         name: ""
         resources:
           limits:
@@ -404,7 +404,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
         name: ""
         resources:
           limits:
@@ -449,7 +449,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
         name: ""
         resources:
           limits:
@@ -495,7 +495,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
         name: ""
         resources:
           limits:
@@ -541,7 +541,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
         name: ""
         resources:
           limits:
@@ -587,7 +587,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
         name: ""
         resources:
           limits:
@@ -632,7 +632,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
         name: ""
         resources:
           limits:
@@ -678,7 +678,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
         name: ""
         resources:
           limits:
@@ -724,7 +724,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
         name: ""
         resources:
           limits:
@@ -769,7 +769,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
         name: ""
         resources:
           limits:
@@ -814,7 +814,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
         name: ""
         resources:
           limits:
@@ -859,7 +859,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
         name: ""
         resources:
           limits:
@@ -904,7 +904,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
         name: ""
         resources:
           limits:
@@ -953,7 +953,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
         name: ""
         resources:
           limits:

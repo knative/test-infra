@@ -1,7 +1,7 @@
 org: knative-sandbox
 repo: eventing-kafka-broker
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
+image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
 
 jobs:
   - name: build-tests
