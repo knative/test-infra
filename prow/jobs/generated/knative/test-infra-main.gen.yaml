@@ -21,7 +21,7 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --build-tests
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
         name: ""
         resources: {}
         securityContext:
@@ -44,7 +44,7 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --unit-tests
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221202-ccdc44b4
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
         name: ""
         resources: {}
         securityContext:
