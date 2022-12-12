@@ -113,16 +113,18 @@ func updateProwJobsForReleases(gc ghutil.GithubOperations, orgRepoReleaseMap map
 		sortReleases(releases)
 		log.Printf("Existing releases for %s/%s: %v", org, repo, releases)
 		log.Printf("Latest release for %s/%s: %s", org, repo, latest)
-		// Skip if the latest release has already been configured.
+
+		releaseToAdd := ""
 		if len(releases) != 0 && releases[len(releases)-1] == latest {
-			log.Printf("%s is already added for %s/%s:%v, skipping it", latest, org, repo, releases)
-			continue
+			log.Printf("%s is already added for %s/%s:%v", latest, org, repo, releases)
+		} else { // There is a new release
+			releaseToAdd = latest
+			releases = append(releases, latest)
 		}
 
-		releaseToAdd := latest
 		releaseToRemove := ""
 		// If the number of releases is already maximum, remove the earliest one.
-		if len(releases) == maxReleaseBranches {
+		if len(releases) > maxReleaseBranches {
 			releaseToRemove = releases[0]
 		}
 
