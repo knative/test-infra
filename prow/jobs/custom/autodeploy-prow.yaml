@@ -38,7 +38,7 @@ periodics:
       report_template: '"The config-bootstrapper periodic job fails, check the log: <{{.Status.URL}}|View logs>"'
   spec:
     containers:
-    - image: gcr.io/k8s-prow/config-bootstrapper:v20221201-5f3a3ac62d
+    - image: gcr.io/k8s-prow/config-bootstrapper:v20221208-8898931a7f
       imagePullPolicy: Always
       command:
       - config-bootstrapper
