@@ -81,7 +81,6 @@ dashboards:
 - name: kn-plugin-service-log
 - name: kn-plugin-source-kafka
 - name: kn-plugin-source-kamelet
-- name: knative-release-1.5
 - name: knative-release-1.6
 - name: knative-release-1.7
 - name: knative-release-1.8
@@ -92,7 +91,6 @@ dashboards:
 - name: knative-sandbox-release-1.2
 - name: knative-sandbox-release-1.3
 - name: knative-sandbox-release-1.4
-- name: knative-sandbox-release-1.5
 - name: knative-sandbox-release-1.6
 - name: knative-sandbox-release-1.7
 - name: knative-sandbox-release-1.8
