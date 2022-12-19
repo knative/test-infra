@@ -9,7 +9,7 @@ periodics:
       testgrid-tab-name: stale
     spec:
       containers:
-        - image: gcr.io/k8s-prow/commenter:v20221208-8898931a7f
+        - image: gcr.io/k8s-prow/commenter:v20221216-59943c5762
           command:
             - commenter
           args:
@@ -56,7 +56,7 @@ periodics:
       testgrid-tab-name: close-issues
     spec:
       containers:
-        - image: gcr.io/k8s-prow/commenter:v20221208-8898931a7f
+        - image: gcr.io/k8s-prow/commenter:v20221216-59943c5762
           command:
             - commenter
           args:
@@ -102,7 +102,7 @@ periodics:
       testgrid-tab-name: close-prs
     spec:
       containers:
-      - image: gcr.io/k8s-prow/commenter:v20221208-8898931a7f
+      - image: gcr.io/k8s-prow/commenter:v20221216-59943c5762
         command:
           - commenter
         args:
