@@ -28,7 +28,7 @@ presubmits:
     spec:
       containers:
       - name: label-sync
-        image: gcr.io/k8s-prow/label_sync:v20221220-5c7fbe528a
+        image: gcr.io/k8s-prow/label_sync:v20230106-0de7d15106
         command:
         - label_sync
         args:
@@ -68,7 +68,7 @@ periodics:
   spec:
     containers:
     - name: label-sync
-      image: gcr.io/k8s-prow/label_sync:v20221220-5c7fbe528a
+      image: gcr.io/k8s-prow/label_sync:v20230106-0de7d15106
       command:
       - label_sync
       args:
@@ -118,7 +118,7 @@ postsubmits:
     spec:
       containers:
       - name: label-sync
-        image: gcr.io/k8s-prow/label_sync:v20221220-5c7fbe528a
+        image: gcr.io/k8s-prow/label_sync:v20230106-0de7d15106
         command:
         - label_sync
         args:
