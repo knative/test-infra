@@ -30,6 +30,10 @@ module "iam" {
       "serviceAccount:terraform@knative-seed.iam.gserviceaccount.com",
     ]
 
+    "roles/resourcemanager.organizationViewer" = [
+      "group:knative-dev@googlegroups.com",
+    ]
+
     "roles/browser" = [
       "domain:knative.dev",
       "group:gke-security-groups@knative.dev",

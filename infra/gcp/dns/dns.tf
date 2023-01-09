@@ -148,7 +148,8 @@ module "knative_dev" {
       ttl  = 300
       records = [
         "34.170.87.98",
-    },
+      ]
+    }
   ]
 }
 

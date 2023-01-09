@@ -1,6 +1,6 @@
 module "vpc" {
   source  = "terraform-google-modules/network/google"
-  version = "~> 5"
+  version = "~> 6.0"
 
   project_id   = module.project.project_id
   network_name = "gke"

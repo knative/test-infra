@@ -2,7 +2,7 @@
 
 module "prow_trusted" {
   source                     = "terraform-google-modules/kubernetes-engine/google//modules/beta-public-cluster"
-  version                    = "~> 21.1"
+  version                    = "~> 24.1"
   project_id                 = module.project.project_id
   name                       = "prow-trusted"
   regional                   = false
@@ -27,13 +27,13 @@ module "prow_trusted" {
 
   node_pools = [
     {
-      name               = "prod-v1"
-      machine_type       = "e2-medium"
-      node_locations     = "us-central1-f"
-      min_count          = 1
-      max_count          = 3
+      name               = "prod-v2"
+      machine_type       = "e2-standard-2"
+      node_locations     = "us-central1-f,us-central1-a"
+      min_count          = 2
+      max_count          = 4
       disk_size_gb       = 100
-      disk_type          = "pd-standard"
+      disk_type          = "pd-ssd"
       image_type         = "COS_CONTAINERD"
       auto_repair        = true
       auto_upgrade       = true
@@ -46,7 +46,7 @@ module "prow_trusted" {
 
 module "prow" {
   source                     = "terraform-google-modules/kubernetes-engine/google//modules/beta-public-cluster"
-  version                    = "~> 21.1"
+  version                    = "~> 24.1"
   project_id                 = module.project.project_id
   name                       = "prow"
   region                     = "us-central1"
@@ -83,6 +83,7 @@ module "prow" {
       service_account    = google_service_account.gke_nodes.email
       enable_secure_boot = true
       initial_node_count = 1
+      location_policy    = "BALANCED"
     },
   ]
 
@@ -95,6 +96,7 @@ module "prow" {
 
 module "prow_build" {
   source                     = "terraform-google-modules/kubernetes-engine/google//modules/beta-public-cluster"
+  version                    = "~> 24.1"
   project_id                 = module.project.project_id
   name                       = "prow-build"
   region                     = "us-central1"
@@ -141,6 +143,7 @@ module "prow_build" {
       service_account    = google_service_account.gke_nodes.email
       enable_secure_boot = true
       initial_node_count = 1
+      location_policy    = "BALANCED"
     },
     {
       name               = "testing-pool-v1"
@@ -157,6 +160,8 @@ module "prow_build" {
       service_account    = google_service_account.gke_nodes.email
       enable_secure_boot = true
       initial_node_count = 0
+      location_policy    = "BALANCED"
+
     },
   ]
 

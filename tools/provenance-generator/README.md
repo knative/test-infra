@@ -32,7 +32,7 @@ ENTRYPOINT_OPTIONS={"timeout":7200000000000,"grace_period":15000000000,"artifact
 
 Run `export $(cat pkg/testdata/.env | xargs)` to load test env available in prow
 
-`go run main.go --clone-json pkg/testdata/clone.json --image-refs pkg/testdata/image-refs.txt --file-checksum potato`
+`go run main.go --clone-log pkg/testdata/clone.json --image-refs pkg/testdata/image-refs.txt --file-checksum potato`
 
 
 We need to read this and build an in-toto statement that looks like this:
