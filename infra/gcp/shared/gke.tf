@@ -51,6 +51,7 @@ module "shared" {
       service_account    = google_service_account.gke_nodes.email
       enable_secure_boot = true
       initial_node_count = 1
+      location_policy    = "BALANCED"
     },
   ]
 

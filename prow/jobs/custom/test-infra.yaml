@@ -102,6 +102,7 @@ periodics:
   annotations:
     testgrid-dashboards: utilities
     testgrid-tab-name: ci-knative-heartbeat
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
   spec:
     containers:
     - image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
