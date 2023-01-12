@@ -1,7 +1,7 @@
 org: knative-sandbox
 repo: sample-controller
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
+image: gcr.io/knative-tests/test-infra/prow-tests:v20230110-97b8115f
 
 jobs:
   - name: build-tests
