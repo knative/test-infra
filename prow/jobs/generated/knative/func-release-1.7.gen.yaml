@@ -40,7 +40,7 @@ periodics:
         value: "true"
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20230110-97b8115f
       name: ""
       resources: {}
       securityContext:

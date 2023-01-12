@@ -31,7 +31,7 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20230110-97b8115f
       name: ""
       resources: {}
       securityContext:
@@ -100,7 +100,7 @@ periodics:
         value: "true"
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20230110-97b8115f
       name: ""
       resources: {}
       securityContext:
@@ -169,7 +169,7 @@ periodics:
         value: knative-sandbox
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20230110-97b8115f
       name: ""
       resources: {}
       securityContext:
@@ -265,7 +265,7 @@ periodics:
         value: /root/.kube/config
       - name: DOCKER_CONFIG
         value: /opt/cluster
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20230110-97b8115f
       name: ""
       resources: {}
       securityContext:
@@ -310,7 +310,7 @@ presubmits:
         env:
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230110-97b8115f
         name: ""
         resources: {}
         securityContext:
@@ -354,7 +354,7 @@ presubmits:
         env:
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230110-97b8115f
         name: ""
         resources: {}
         securityContext:
@@ -401,7 +401,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230110-97b8115f
         name: ""
         resources: {}
         securityContext:
@@ -442,7 +442,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230110-97b8115f
         name: ""
         resources: {}
         securityContext:
@@ -483,7 +483,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230110-97b8115f
         name: ""
         resources: {}
         securityContext:
@@ -524,7 +524,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230110-97b8115f
         name: ""
         resources: {}
         securityContext:
@@ -566,7 +566,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230110-97b8115f
         name: ""
         resources: {}
         securityContext:
@@ -607,7 +607,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20221207-44150234
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230110-97b8115f
         name: ""
         resources: {}
         securityContext:
