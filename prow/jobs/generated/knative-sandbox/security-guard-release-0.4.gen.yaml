@@ -7,17 +7,17 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-0.1
+    testgrid-dashboards: knative-sandbox-release-0.4
     testgrid-tab-name: security-guard-continuous
   cluster: prow-build
-  cron: 41 0 * * *
+  cron: 14 9 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-0.1
+  - base_ref: release-0.4
     org: knative-sandbox
     path_alias: knative.dev/security-guard
     repo: security-guard
-  name: continuous_security-guard_release-0.1_periodic
+  name: continuous_security-guard_release-0.4_periodic
   spec:
     containers:
     - command:
@@ -49,18 +49,18 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-0.1
+    testgrid-dashboards: knative-sandbox-release-0.4
     testgrid-tab-name: security-guard-release
   cluster: prow-build
-  cron: 19 9 * * 2
+  cron: 42 9 * * 2
   decorate: true
   extra_refs:
-  - base_ref: release-0.1
+  - base_ref: release-0.4
     org: knative-sandbox
     path_alias: knative.dev/security-guard
     repo: security-guard
   max_concurrency: 1
-  name: release_security-guard_release-0.1_periodic
+  name: release_security-guard_release-0.4_periodic
   spec:
     containers:
     - command:
@@ -74,7 +74,7 @@ periodics:
       - --github-token
       - /etc/hub-token/token
       - --branch
-      - release-0.1
+      - release-0.4
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
@@ -114,10 +114,10 @@ presubmits:
   knative-sandbox/security-guard:
   - always_run: true
     branches:
-    - ^release-0.1$
+    - ^release-0.4$
     cluster: prow-build
     decorate: true
-    name: build-tests_security-guard_release-0.1
+    name: build-tests_security-guard_release-0.4
     path_alias: knative.dev/security-guard
     rerun_command: /test build-tests
     spec:
@@ -134,13 +134,13 @@ presubmits:
       nodeSelector:
         kubernetes.io/arch: amd64
         type: testing
-    trigger: ((?m)^/test( | .* )build-tests,?($|\s.*))|((?m)^/test( | .* )build-tests_security-guard_release-0.1,?($|\s.*))
+    trigger: ((?m)^/test( | .* )build-tests,?($|\s.*))|((?m)^/test( | .* )build-tests_security-guard_release-0.4,?($|\s.*))
   - always_run: true
     branches:
-    - ^release-0.1$
+    - ^release-0.4$
     cluster: prow-build
     decorate: true
-    name: unit-tests_security-guard_release-0.1
+    name: unit-tests_security-guard_release-0.4
     path_alias: knative.dev/security-guard
     rerun_command: /test unit-tests
     spec:
@@ -157,13 +157,13 @@ presubmits:
       nodeSelector:
         kubernetes.io/arch: amd64
         type: testing
-    trigger: ((?m)^/test( | .* )unit-tests,?($|\s.*))|((?m)^/test( | .* )unit-tests_security-guard_release-0.1,?($|\s.*))
+    trigger: ((?m)^/test( | .* )unit-tests,?($|\s.*))|((?m)^/test( | .* )unit-tests_security-guard_release-0.4,?($|\s.*))
   - always_run: true
     branches:
-    - ^release-0.1$
+    - ^release-0.4$
     cluster: prow-build
     decorate: true
-    name: integration-tests_security-guard_release-0.1
+    name: integration-tests_security-guard_release-0.4
     path_alias: knative.dev/security-guard
     rerun_command: /test integration-tests
     spec:
@@ -196,4 +196,4 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
-    trigger: ((?m)^/test( | .* )integration-tests,?($|\s.*))|((?m)^/test( | .* )integration-tests_security-guard_release-0.1,?($|\s.*))
+    trigger: ((?m)^/test( | .* )integration-tests,?($|\s.*))|((?m)^/test( | .* )integration-tests_security-guard_release-0.4,?($|\s.*))
