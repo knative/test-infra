@@ -78,6 +78,12 @@ jobs:
     command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/e2e-auto-tls-tests.sh --contour-version latest"]
     modifiers: [presubmit_skipped]
 
+  - name: contour-internal-encryption
+    types: [presubmit]
+    regex: ^third_party/contour-latest/*
+    command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/e2e-internal-encryption-tests.sh --contour-version latest"]
+    modifiers: [presubmit_skipped]
+
   - name: gateway-api-latest
     types: [presubmit]
     regex: ^third_party/gateway-api-latest/*
