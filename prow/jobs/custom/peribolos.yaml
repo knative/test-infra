@@ -40,6 +40,7 @@ presubmits:
         # with it for now.
         - "--github-token-path=/etc/github/token"
         - "--min-admins=5"
+        - "--maximum-removal-delta=0.9"
         - "--fix-org=true"
         - "--fix-org-members=true"
         - "--fix-repos=true"
@@ -80,6 +81,7 @@ presubmits:
         - "--min-admins=5"
         - "--fix-org=true"
         - "--fix-org-members=true"
+        - "--maximum-removal-delta=0.9"
         - "--fix-repos=true"
         - "--github-hourly-tokens=1200"
         # Set --confirm=false to only validate the configuration file.
@@ -125,6 +127,7 @@ postsubmits:
         - --github-app-private-key-path=/etc/github/cert
         - "--github-hourly-tokens=2000"
         - "--github-allowed-burst=1000"
+        - "--maximum-removal-delta=0.9"
         - "--min-admins=5"
         - "--fix-org=true"
         - "--fix-org-members=true"
@@ -179,6 +182,7 @@ postsubmits:
         - "--github-hourly-tokens=2000"
         - "--github-allowed-burst=1000"
         - "--min-admins=5"
+        - "--maximum-removal-delta=0.9"
         - "--fix-org=true"
         - "--fix-org-members=true"
         - "--fix-teams=true"
