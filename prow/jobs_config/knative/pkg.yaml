@@ -1,7 +1,7 @@
 org: knative
 repo: pkg
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20230110-97b8115f
+image: gcr.io/knative-tests/test-infra/prow-tests:v20230116-208c6667
 
 jobs:
   - name: build-tests
