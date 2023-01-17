@@ -35,7 +35,16 @@ roleRef:
   name: "test-pods-default"
 subjects:
 - kind: ServiceAccount
-  name: "default"
+  name: default
+  namespace: test-pods
+- kind: ServiceAccount
+  name: test-runner
+  namespace: test-pods
+- kind: ServiceAccount
+  name: nightly
+  namespace: test-pods
+- kind: ServiceAccount
+  name: release
   namespace: test-pods
 ---
 kind: Role
