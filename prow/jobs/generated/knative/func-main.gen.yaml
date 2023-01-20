@@ -42,6 +42,8 @@ periodics:
       env:
       - name: SIGN_IMAGES
         value: "true"
+      - name: ATTEST_IMAGES
+        value: "true"
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20230116-208c6667
@@ -119,6 +121,8 @@ periodics:
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: SIGN_IMAGES
+        value: "true"
+      - name: ATTEST_IMAGES
         value: "true"
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
