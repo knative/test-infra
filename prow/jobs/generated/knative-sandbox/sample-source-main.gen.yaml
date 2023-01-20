@@ -31,6 +31,8 @@ periodics:
         value: /etc/nightly-account/service-account.json
       - name: SIGN_IMAGES
         value: "true"
+      - name: ATTEST_IMAGES
+        value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20230116-208c6667
       name: ""
       resources: {}
