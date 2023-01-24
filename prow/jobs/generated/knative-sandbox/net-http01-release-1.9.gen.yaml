@@ -7,17 +7,17 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.6
-    testgrid-tab-name: net-contour-continuous
+    testgrid-dashboards: knative-sandbox-release-1.9
+    testgrid-tab-name: net-http01-continuous
   cluster: prow-build
-  cron: 27 10 * * *
+  cron: 35 6 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-1.6
+  - base_ref: release-1.9
     org: knative-sandbox
-    path_alias: knative.dev/net-contour
-    repo: net-contour
-  name: continuous_net-contour_release-1.6_periodic
+    path_alias: knative.dev/net-http01
+    repo: net-http01
+  name: continuous_net-http01_release-1.9_periodic
   spec:
     containers:
     - command:
@@ -49,17 +49,18 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.6
-    testgrid-tab-name: net-contour-release
+    testgrid-dashboards: knative-sandbox-release-1.9
+    testgrid-tab-name: net-http01-release
   cluster: prow-build
-  cron: 9 9 * * 2
+  cron: 45 9 * * 2
   decorate: true
   extra_refs:
-  - base_ref: release-1.6
+  - base_ref: release-1.9
     org: knative-sandbox
-    path_alias: knative.dev/net-contour
-    repo: net-contour
-  name: release_net-contour_release-1.6_periodic
+    path_alias: knative.dev/net-http01
+    repo: net-http01
+  max_concurrency: 1
+  name: release_net-http01_release-1.9_periodic
   spec:
     containers:
     - command:
@@ -67,13 +68,13 @@ periodics:
       - ./hack/release.sh
       - --dot-release
       - --release-gcs
-      - knative-releases/net-contour
+      - knative-releases/net-http01
       - --release-gcr
       - gcr.io/knative-releases
       - --github-token
       - /etc/hub-token/token
       - --branch
-      - release-1.6
+      - release-1.9
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
@@ -110,14 +111,14 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 presubmits:
-  knative-sandbox/net-contour:
+  knative-sandbox/net-http01:
   - always_run: true
     branches:
-    - ^release-1.6$
+    - ^release-1.9$
     cluster: prow-build
     decorate: true
-    name: build-tests_net-contour_release-1.6
-    path_alias: knative.dev/net-contour
+    name: build-tests_net-http01_release-1.9
+    path_alias: knative.dev/net-http01
     rerun_command: /test build-tests
     spec:
       containers:
@@ -133,14 +134,14 @@ presubmits:
       nodeSelector:
         kubernetes.io/arch: amd64
         type: testing
-    trigger: ((?m)^/test( | .* )build-tests,?($|\s.*))|((?m)^/test( | .* )build-tests_net-contour_release-1.6,?($|\s.*))
+    trigger: ((?m)^/test( | .* )build-tests,?($|\s.*))|((?m)^/test( | .* )build-tests_net-http01_release-1.9,?($|\s.*))
   - always_run: true
     branches:
-    - ^release-1.6$
+    - ^release-1.9$
     cluster: prow-build
     decorate: true
-    name: unit-tests_net-contour_release-1.6
-    path_alias: knative.dev/net-contour
+    name: unit-tests_net-http01_release-1.9
+    path_alias: knative.dev/net-http01
     rerun_command: /test unit-tests
     spec:
       containers:
@@ -156,14 +157,14 @@ presubmits:
       nodeSelector:
         kubernetes.io/arch: amd64
         type: testing
-    trigger: ((?m)^/test( | .* )unit-tests,?($|\s.*))|((?m)^/test( | .* )unit-tests_net-contour_release-1.6,?($|\s.*))
+    trigger: ((?m)^/test( | .* )unit-tests,?($|\s.*))|((?m)^/test( | .* )unit-tests_net-http01_release-1.9,?($|\s.*))
   - always_run: true
     branches:
-    - ^release-1.6$
+    - ^release-1.9$
     cluster: prow-build
     decorate: true
-    name: integration-tests_net-contour_release-1.6
-    path_alias: knative.dev/net-contour
+    name: integration-tests_net-http01_release-1.9
+    path_alias: knative.dev/net-http01
     rerun_command: /test integration-tests
     spec:
       containers:
@@ -195,4 +196,4 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
-    trigger: ((?m)^/test( | .* )integration-tests,?($|\s.*))|((?m)^/test( | .* )integration-tests_net-contour_release-1.6,?($|\s.*))
+    trigger: ((?m)^/test( | .* )integration-tests,?($|\s.*))|((?m)^/test( | .* )integration-tests_net-http01_release-1.9,?($|\s.*))

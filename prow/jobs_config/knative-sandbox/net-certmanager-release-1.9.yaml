@@ -5,7 +5,7 @@
 # ####                                                                     ####
 # #############################################################################
 branches:
-- release-1.6
+- release-1.9
 image: gcr.io/knative-tests/test-infra/prow-tests:v20230116-208c6667
 jobs:
 - command:
@@ -45,19 +45,20 @@ jobs:
   - ./hack/release.sh
   - --dot-release
   - --release-gcs
-  - knative-releases/net-contour
+  - knative-releases/net-certmanager
   - --release-gcr
   - gcr.io/knative-releases
   - --github-token
   - /etc/hub-token/token
   - --branch
-  - release-1.6
+  - release-1.9
   excluded_requirements:
   - gcp
+  max_concurrency: 1
   name: release
   requirements:
   - release
   types:
   - periodic
 org: knative-sandbox
-repo: net-contour
+repo: net-certmanager

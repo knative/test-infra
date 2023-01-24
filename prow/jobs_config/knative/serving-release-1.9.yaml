@@ -5,7 +5,7 @@
 # ####                                                                     ####
 # #############################################################################
 branches:
-- release-1.6
+- release-1.9
 image: gcr.io/knative-tests/test-infra/prow-tests:v20230116-208c6667
 jobs:
 - command:
@@ -71,6 +71,8 @@ jobs:
   - presubmit_optional
   - presubmit_skipped
   name: performance-tests-mako
+  requirements:
+  - perf
   types:
   - presubmit
 - command:
@@ -154,6 +156,17 @@ jobs:
   - runner.sh
   - ./test/presubmit-tests.sh
   - --run-test
+  - ./test/e2e-internal-encryption-tests.sh --contour-version latest
+  modifiers:
+  - presubmit_skipped
+  name: contour-internal-encryption
+  regex: ^third_party/contour-latest/*
+  types:
+  - presubmit
+- command:
+  - runner.sh
+  - ./test/presubmit-tests.sh
+  - --run-test
   - ./test/e2e-tests.sh --gateway-api-version latest
   modifiers:
   - presubmit_skipped
@@ -191,7 +204,7 @@ jobs:
     mkdir -p /root/.kube
     cat /opt/cluster/ci-script > connect.sh
     chmod +x connect.sh
-    server_addr=$(./connect.sh kourier-16)
+    server_addr=$(./connect.sh kourier-main)
     kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
     chmod +x adjust.sh
     ./adjust.sh
@@ -199,7 +212,7 @@ jobs:
     ./test/e2e-tests.sh --run-tests --kourier-version latest
   command:
   - runner.sh
-  cron: 20 18 * * *
+  cron: 20 2 * * *
   env:
   - name: SYSTEM_NAMESPACE
     value: knative-serving
@@ -217,7 +230,7 @@ jobs:
     mkdir -p /root/.kube
     cat /opt/cluster/ci-script > connect.sh
     chmod +x connect.sh
-    server_addr=$(./connect.sh contour-16)
+    server_addr=$(./connect.sh contour-main)
     kubectl get cm s390x-config-serving -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
     chmod +x adjust.sh
     ./adjust.sh
@@ -225,7 +238,7 @@ jobs:
     ./test/e2e-tests.sh --run-tests --contour-version latest
   command:
   - runner.sh
-  cron: 20 19 * * *
+  cron: 20 3 * * *
   env:
   - name: SYSTEM_NAMESPACE
     value: knative-serving
@@ -234,6 +247,54 @@ jobs:
   name: s390x-contour-tests
   requirements:
   - s390x
+  types:
+  - periodic
+- args:
+  - bash
+  - -c
+  - |
+    cat /opt/cluster/ci-script > /tmp/connect.sh
+    chmod +x /tmp/connect.sh
+    . /tmp/connect.sh ${CI_JOB}
+    export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint 'cluster.ppc64le
+    ./test/e2e-tests.sh --run-tests --kourier-version latest
+  command:
+  - runner.sh
+  cron: 30 21 * * *
+  env:
+  - name: SYSTEM_NAMESPACE
+    value: knative-serving
+  - name: TEST_OPTIONS
+    value: --enable-alpha --enable-beta --resolvabledomain=false
+  - name: CI_JOB
+    value: kourier-main
+  name: ppc64le-kourier-tests
+  requirements:
+  - ppc64le
+  types:
+  - periodic
+- args:
+  - bash
+  - -c
+  - |
+    cat /opt/cluster/ci-script > /tmp/connect.sh
+    chmod +x /tmp/connect.sh
+    . /tmp/connect.sh ${CI_JOB}
+    export TEST_OPTIONS=$TEST_OPTIONS' --ingressendpoint 'cluster.ppc64le
+    ./test/e2e-tests.sh --run-tests --contour-version latest
+  command:
+  - runner.sh
+  cron: 30 23 * * *
+  env:
+  - name: SYSTEM_NAMESPACE
+    value: knative-serving
+  - name: TEST_OPTIONS
+    value: --enable-alpha --enable-beta --resolvabledomain=false
+  - name: CI_JOB
+    value: contour-main
+  name: ppc64le-contour-tests
+  requirements:
+  - ppc64le
   types:
   - periodic
 - command:
@@ -247,11 +308,11 @@ jobs:
   - --github-token
   - /etc/hub-token/token
   - --branch
-  - release-1.6
+  - release-1.9
   excluded_requirements:
   - gcp
-  name: release
   max_concurrency: 1
+  name: release
   requirements:
   - release
   timeout: 3h0m0s
@@ -259,6 +320,76 @@ jobs:
   - periodic
 org: knative
 repo: serving
+requirement_presets:
+  gcp:
+    env:
+    - name: E2E_CLUSTER_REGION
+      value: us-central1
+    podSpec:
+      containers: null
+      serviceAccountName: test-runner
+  nightly:
+    env:
+    - name: GOOGLE_APPLICATION_CREDENTIALS
+      value: /etc/nightly-account/service-account.json
+    podSpec:
+      containers: null
+      serviceAccountName: nightly
+    volumeMounts:
+    - mountPath: /etc/nightly-account
+      name: nightly-account
+      readOnly: true
+    volumes:
+    - name: nightly-account
+      secret:
+        items:
+        - key: nightly.json
+          path: service-account.json
+        secretName: prow-google-credentials
+  perf:
+    podSpec:
+      containers: null
+      serviceAccountName: test-runner
+    volumeMounts:
+    - mountPath: /etc/influx-token-secret-volume
+      name: influx-token-secret-volume
+      readOnly: true
+    - mountPath: /etc/influx-url-secret-volume
+      name: influx-url-secret-volume
+      readOnly: true
+    volumes:
+    - name: influx-token-secret-volume
+      secret:
+        defaultMode: 384
+        secretName: influx-token-secret
+    - name: influx-url-secret-volume
+      secret:
+        defaultMode: 384
+        secretName: influx-url-secret
+  release:
+    env:
+    - name: E2E_CLUSTER_REGION
+      value: us-central1
+    podSpec:
+      containers: null
+      serviceAccountName: release
+    volumeMounts:
+    - mountPath: /etc/hub-token
+      name: hub-token
+      readOnly: true
+    volumes:
+    - name: hub-token
+      secret:
+        items:
+        - key: hub_token
+          path: token
+        secretName: github-credentials
+    - name: release-account
+      secret:
+        items:
+        - key: release.json
+          path: service-account.json
+        secretName: prow-google-credentials
 requirements:
 - docker
 resources: high
