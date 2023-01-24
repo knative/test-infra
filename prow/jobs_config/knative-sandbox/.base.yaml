@@ -10,6 +10,8 @@ requirement_presets:
       # ORG_NAME must be set to knative-sandbox, overwriting the preset in root .base.yaml
       - name: ORG_NAME
         value: knative-sandbox
+      - name: ATTEST_IMAGES
+        value: "true"
     volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token
@@ -42,6 +44,8 @@ requirement_presets:
      # ORG_NAME must be set to knative-sandbox, overwriting the preset in root .base.yaml
       - name: ORG_NAME
         value: knative-sandbox
+      - name: ATTEST_IMAGES
+        value: "true"
     volumeMounts:
       - name: hub-token
         mountPath: /etc/hub-token

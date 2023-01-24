@@ -139,6 +139,8 @@ periodics:
         value: "true"
       - name: ORG_NAME
         value: knative-sandbox
+      - name: ATTEST_IMAGES
+        value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20230116-208c6667
       name: ""
       resources: {}
