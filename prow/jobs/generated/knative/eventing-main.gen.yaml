@@ -593,7 +593,6 @@ presubmits:
     cluster: prow-build
     decorate: true
     name: reconciler-tests_eventing_main
-    optional: true
     path_alias: knative.dev/eventing
     rerun_command: /test reconciler-tests
     spec:
