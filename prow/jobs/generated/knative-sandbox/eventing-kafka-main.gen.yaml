@@ -597,6 +597,7 @@ presubmits:
     cluster: prow-build
     decorate: true
     name: upgrade-tests_eventing-kafka_main
+    optional: true
     path_alias: knative.dev/eventing-kafka
     rerun_command: /test upgrade-tests
     spec:
