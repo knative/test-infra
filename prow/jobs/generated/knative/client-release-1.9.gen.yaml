@@ -7,17 +7,17 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-release-1.6
+    testgrid-dashboards: knative-release-1.9
     testgrid-tab-name: client-continuous
   cluster: prow-build
-  cron: 2 9 * * *
+  cron: 23 18 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-1.6
+  - base_ref: release-1.9
     org: knative
     path_alias: knative.dev/client
     repo: client
-  name: continuous_client_release-1.6_periodic
+  name: continuous_client_release-1.9_periodic
   spec:
     containers:
     - command:
@@ -49,17 +49,17 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 - annotations:
-    testgrid-dashboards: knative-release-1.6
+    testgrid-dashboards: knative-release-1.9
     testgrid-tab-name: client-s390x-e2e-tests
   cluster: prow-build
-  cron: 20 17 * * *
+  cron: 20 1 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-1.6
+  - base_ref: release-1.9
     org: knative
     path_alias: knative.dev/client
     repo: client
-  name: s390x-e2e-tests_client_release-1.6_periodic
+  name: s390x-e2e-tests_client_release-1.9_periodic
   spec:
     containers:
     - args:
@@ -69,7 +69,7 @@ periodics:
         mkdir -p /root/.kube
         cat /opt/cluster/ci-script > connect.sh
         chmod +x connect.sh
-        ./connect.sh client-16
+        ./connect.sh client-main
         kubectl get cm s390x-config-client -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
         chmod +x adjust.sh
         ./adjust.sh
@@ -123,17 +123,17 @@ periodics:
         defaultMode: 384
         secretName: s390x-cluster1
 - annotations:
-    testgrid-dashboards: knative-release-1.6
+    testgrid-dashboards: knative-release-1.9
     testgrid-tab-name: client-ppc64le-e2e-tests
   cluster: prow-build
-  cron: 30 18 * * *
+  cron: 0 9 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-1.6
+  - base_ref: release-1.9
     org: knative
     path_alias: knative.dev/client
     repo: client
-  name: ppc64le-e2e-tests_client_release-1.6_periodic
+  name: ppc64le-e2e-tests_client_release-1.9_periodic
   spec:
     containers:
     - args:
@@ -148,7 +148,7 @@ periodics:
       - runner.sh
       env:
       - name: CI_JOB
-        value: client-release-1.6
+        value: client-main
       - name: INGRESS_CLASS
         value: contour.ingress.networking.knative.dev
       - name: E2E_CLUSTER_REGION
@@ -190,18 +190,18 @@ periodics:
         defaultMode: 384
         secretName: ppc64le-cluster
 - annotations:
-    testgrid-dashboards: knative-release-1.6
+    testgrid-dashboards: knative-release-1.9
     testgrid-tab-name: client-release
   cluster: prow-build
-  cron: 58 9 * * 2
+  cron: 9 9 * * 2
   decorate: true
   extra_refs:
-  - base_ref: release-1.6
+  - base_ref: release-1.9
     org: knative
     path_alias: knative.dev/client
     repo: client
   max_concurrency: 1
-  name: release_client_release-1.6_periodic
+  name: release_client_release-1.9_periodic
   spec:
     containers:
     - command:
@@ -214,11 +214,15 @@ periodics:
       - gcr.io/knative-releases
       - --github-token
       - /etc/hub-token/token
+      - --apple-codesign-key
+      - /etc/notary/cert.p12
+      - --apple-notary-api-key
+      - /etc/notary/key.json
+      - --apple-codesign-password-file
+      - /etc/notary/password
       - --branch
-      - release-1.6
+      - release-1.9
       env:
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: SIGN_IMAGES
@@ -234,12 +238,13 @@ periodics:
       - mountPath: /etc/hub-token
         name: hub-token
         readOnly: true
-      - mountPath: /etc/release-account
-        name: release-account
+      - mountPath: /etc/notary
+        name: apple-notary-creds
         readOnly: true
     nodeSelector:
       kubernetes.io/arch: amd64
       type: testing
+    serviceAccountName: release
     volumes:
     - name: hub-token
       secret:
@@ -247,20 +252,24 @@ periodics:
         - key: hub_token
           path: token
         secretName: github-credentials
-    - name: release-account
+    - name: apple-notary-creds
       secret:
         items:
-        - key: release.json
-          path: service-account.json
-        secretName: prow-google-credentials
+        - key: notary-api-key
+          path: key.json
+        - key: signing-certificate
+          path: cert.p12
+        - key: signing-certificate-password
+          path: password
+        secretName: apple-notary-creds
 presubmits:
   knative/client:
   - always_run: true
     branches:
-    - ^release-1.6$
+    - ^release-1.9$
     cluster: prow-build
     decorate: true
-    name: build-tests_client_release-1.6
+    name: build-tests_client_release-1.9
     path_alias: knative.dev/client
     rerun_command: /test build-tests
     spec:
@@ -277,13 +286,13 @@ presubmits:
       nodeSelector:
         kubernetes.io/arch: amd64
         type: testing
-    trigger: ((?m)^/test( | .* )build-tests,?($|\s.*))|((?m)^/test( | .* )build-tests_client_release-1.6,?($|\s.*))
+    trigger: ((?m)^/test( | .* )build-tests,?($|\s.*))|((?m)^/test( | .* )build-tests_client_release-1.9,?($|\s.*))
   - always_run: true
     branches:
-    - ^release-1.6$
+    - ^release-1.9$
     cluster: prow-build
     decorate: true
-    name: unit-tests_client_release-1.6
+    name: unit-tests_client_release-1.9
     path_alias: knative.dev/client
     rerun_command: /test unit-tests
     spec:
@@ -300,13 +309,13 @@ presubmits:
       nodeSelector:
         kubernetes.io/arch: amd64
         type: testing
-    trigger: ((?m)^/test( | .* )unit-tests,?($|\s.*))|((?m)^/test( | .* )unit-tests_client_release-1.6,?($|\s.*))
+    trigger: ((?m)^/test( | .* )unit-tests,?($|\s.*))|((?m)^/test( | .* )unit-tests_client_release-1.9,?($|\s.*))
   - always_run: true
     branches:
-    - ^release-1.6$
+    - ^release-1.9$
     cluster: prow-build
     decorate: true
-    name: integration-tests_client_release-1.6
+    name: integration-tests_client_release-1.9
     path_alias: knative.dev/client
     rerun_command: /test integration-tests
     spec:
@@ -339,13 +348,13 @@ presubmits:
           - key: service-account-key.json
             path: service-account.json
           secretName: prow-google-credentials
-    trigger: ((?m)^/test( | .* )integration-tests,?($|\s.*))|((?m)^/test( | .* )integration-tests_client_release-1.6,?($|\s.*))
+    trigger: ((?m)^/test( | .* )integration-tests,?($|\s.*))|((?m)^/test( | .* )integration-tests_client_release-1.9,?($|\s.*))
   - always_run: true
     branches:
-    - ^release-1.6$
+    - ^release-1.9$
     cluster: prow-build
     decorate: true
-    name: integration-tests-latest-release_client_release-1.6
+    name: integration-tests-latest-release_client_release-1.9
     path_alias: knative.dev/client
     rerun_command: /test integration-tests-latest-release
     spec:
@@ -378,4 +387,4 @@ presubmits:
             path: service-account.json
           secretName: prow-google-credentials
     trigger: ((?m)^/test( | .* )integration-tests-latest-release,?($|\s.*))|((?m)^/test(
-      | .* )integration-tests-latest-release_client_release-1.6,?($|\s.*))
+      | .* )integration-tests-latest-release_client_release-1.9,?($|\s.*))
