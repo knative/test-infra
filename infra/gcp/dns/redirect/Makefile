@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-PROJECT       ?= knative-dns
+PROJECT       ?= knative-tests
 OPTIONS       ?=
 
 all: default slack blog stats testgrid dispatch
@@ -25,7 +25,7 @@ default slack blog stats testgrid:
 	#### Redirection URLs for each subdomain #### \
 	["default"]="https://knative.dev" \
 	["testgrid"]="https://testgrid.k8s.io/r/knative-own-testgrid" \
-	["slack"]="https://join.slack.com/t/knative/shared_invite/zt-fzy43r2f-i4oJraPBHlBFp00v6NeI9w" \
+	["slack"]="https:/slack.cncf.io" \
 	["blog"]="https://knative.dev/blog" \
 	["stats"]="https://knative.teststats.cncf.io/" \
 	############################################## \
