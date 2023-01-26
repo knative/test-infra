@@ -5,7 +5,7 @@
 # ####                                                                     ####
 # #############################################################################
 branches:
-- release-1.6
+- release-1.9
 image: gcr.io/knative-tests/test-infra/prow-tests:v20230116-208c6667
 jobs:
 - command:
@@ -40,8 +40,6 @@ jobs:
   - ./test/presubmit-tests.sh
   - --run-test
   - ./test/e2e-rekt-tests.sh
-  modifiers:
-  - presubmit_optional
   name: reconciler-tests
   types:
   - presubmit
@@ -68,14 +66,14 @@ jobs:
     mkdir -p /root/.kube
     cat /opt/cluster/ci-script > connect.sh
     chmod +x connect.sh
-    ./connect.sh eventing-16
+    ./connect.sh eventing-main
     kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
     chmod +x adjust.sh
     ./adjust.sh
     ./test/e2e-tests.sh --run-tests
   command:
   - runner.sh
-  cron: 20 20 * * *
+  cron: 20 4 * * *
   env:
   - name: SYSTEM_NAMESPACE
     value: knative-eventing
@@ -93,14 +91,14 @@ jobs:
     mkdir -p /root/.kube
     cat /opt/cluster/ci-script > connect.sh
     chmod +x connect.sh
-    ./connect.sh eventing_rekt-16
+    ./connect.sh eventing_rekt-main
     kubectl get cm s390x-config-eventing -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
     chmod +x adjust.sh
     ./adjust.sh
     ./test/e2e-rekt-tests.sh --run-tests
   command:
   - runner.sh
-  cron: 20 21 * * *
+  cron: 20 5 * * *
   env:
   - name: SYSTEM_NAMESPACE
     value: knative-eventing
@@ -121,15 +119,38 @@ jobs:
     ./test/e2e-tests.sh --run-tests
   command:
   - runner.sh
-  cron: 0 17 * * *
+  cron: 0 7 * * *
   env:
   - name: SYSTEM_NAMESPACE
     value: knative-eventing
   - name: SCALE_CHAOSDUCK_TO_ZERO
     value: "1"
   - name: CI_JOB
-    value: eventing-release-1.6
+    value: eventing-main
   name: ppc64le-e2e-tests
+  requirements:
+  - ppc64le
+  types:
+  - periodic
+- args:
+  - bash
+  - -c
+  - |
+    cat /opt/cluster/ci-script > /tmp/connect.sh
+    chmod +x /tmp/connect.sh
+    . /tmp/connect.sh ${CI_JOB}
+    ./test/e2e-rekt-tests.sh --run-tests
+  command:
+  - runner.sh
+  cron: 30 4 * * *
+  env:
+  - name: SYSTEM_NAMESPACE
+    value: knative-eventing
+  - name: SCALE_CHAOSDUCK_TO_ZERO
+    value: "1"
+  - name: CI_JOB
+    value: eventing_rekt-main
+  name: ppc64le-e2e-reconciler-tests
   requirements:
   - ppc64le
   types:
@@ -145,14 +166,14 @@ jobs:
   - --github-token
   - /etc/hub-token/token
   - --branch
-  - release-1.6
+  - release-1.9
   excluded_requirements:
   - gcp
   max_concurrency: 1
   name: release
   requirements:
   - release
-  timeout: 3h0m0s
+  timeout: 4h0m0s
   types:
   - periodic
 org: knative
