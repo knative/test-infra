@@ -7,17 +7,17 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.6
+    testgrid-dashboards: knative-sandbox-release-1.9
     testgrid-tab-name: eventing-ceph-continuous
   cluster: prow-build
-  cron: 22 5 * * *
+  cron: 11 6 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-1.6
+  - base_ref: release-1.9
     org: knative-sandbox
     path_alias: knative.dev/eventing-ceph
     repo: eventing-ceph
-  name: continuous_eventing-ceph_release-1.6_periodic
+  name: continuous_eventing-ceph_release-1.9_periodic
   spec:
     containers:
     - command:
@@ -67,17 +67,18 @@ periodics:
         type: Directory
       name: cgroup
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.6
+    testgrid-dashboards: knative-sandbox-release-1.9
     testgrid-tab-name: eventing-ceph-release
   cluster: prow-build
-  cron: 22 9 * * 2
+  cron: 29 9 * * 2
   decorate: true
   extra_refs:
-  - base_ref: release-1.6
+  - base_ref: release-1.9
     org: knative-sandbox
     path_alias: knative.dev/eventing-ceph
     repo: eventing-ceph
-  name: release_eventing-ceph_release-1.6_periodic
+  max_concurrency: 1
+  name: release_eventing-ceph_release-1.9_periodic
   spec:
     containers:
     - command:
@@ -91,7 +92,7 @@ periodics:
       - --github-token
       - /etc/hub-token/token
       - --branch
-      - release-1.6
+      - release-1.9
       env:
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
