@@ -5,7 +5,7 @@
 # ####                                                                     ####
 # #############################################################################
 branches:
-- release-1.6
+- release-1.9
 image: gcr.io/knative-tests/test-infra/prow-tests:v20230126-0d51bee0
 jobs:
 - command:
@@ -28,9 +28,10 @@ jobs:
   - --github-token
   - /etc/hub-token/token
   - --branch
-  - release-1.6
+  - release-1.9
   excluded_requirements:
   - gcp
+  max_concurrency: 1
   name: release
   requirements:
   - release
