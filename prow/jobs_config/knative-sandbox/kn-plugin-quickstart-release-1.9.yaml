@@ -5,7 +5,7 @@
 # ####                                                                     ####
 # #############################################################################
 branches:
-- release-1.6
+- release-1.9
 image: gcr.io/knative-tests/test-infra/prow-tests:v20230126-0d51bee0
 jobs:
 - command:
@@ -45,20 +45,26 @@ jobs:
   - ./hack/release.sh
   - --dot-release
   - --release-gcs
-  - knative-releases/kn-plugin-source-kafka
+  - knative-releases/kn-plugin-quickstart
   - --release-gcr
   - gcr.io/knative-releases
   - --github-token
   - /etc/hub-token/token
+  - --apple-codesign-key
+  - /etc/notary/cert.p12
+  - --apple-notary-api-key
+  - /etc/notary/key.json
+  - --apple-codesign-password-file
+  - /etc/notary/password
   - --branch
-  - release-1.6
+  - release-1.9
   excluded_requirements:
   - gcp
+  max_concurrency: 1
   name: release
   requirements:
-  - release
-  - docker
+  - release-notary
   types:
   - periodic
 org: knative-sandbox
-repo: kn-plugin-source-kafka
+repo: kn-plugin-quickstart
