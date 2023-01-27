@@ -114,6 +114,7 @@ resource "google_service_account_iam_binding" "testgrid_updater" {
     "serviceAccount:k8s-testgrid.svc.id.goog[knative/summarizer]",
     "serviceAccount:k8s-testgrid.svc.id.goog[knative/tabulator]",
     "serviceAccount:k8s-testgrid.svc.id.goog[knative/updater]",
+    "serviceAccount:knative-tests.svc.id.goog[default/testgrid]",
   ]
 }
 

@@ -1,0 +1,55 @@
+# Testgrid will become selfhostable at some point in the future.
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: testgrid-api
+  namespace: default
+  labels:
+    app: testgrid
+    channel: stable
+    component: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: testgrid
+      channel: stable
+      component: api
+  template:
+    metadata:
+      labels:
+        app: testgrid
+        channel: stable
+        component: api
+    spec:
+      serviceAccountName: testgrid
+      containers:
+        - name: api
+          image: gcr.io/k8s-testgrid/api:v20230118-v0.0.154-12-g7617c747
+          args:
+          - --scope=gs://knative-own-testgrid
+          - --port=8080
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    iam.gke.io/gcp-service-account: testgrid-updater@knative-tests.iam.gserviceaccount.com
+  name: testgrid
+  namespace: default
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: testgrid-api
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    app: testgrid
+    component: api
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
