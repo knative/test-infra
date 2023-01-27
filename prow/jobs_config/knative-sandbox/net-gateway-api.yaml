@@ -1,7 +1,7 @@
 org: knative-sandbox
 repo: net-gateway-api
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20230116-208c6667
+image: gcr.io/knative-tests/test-infra/prow-tests:v20230126-0d51bee0
 
 jobs:
   - name: build-tests
