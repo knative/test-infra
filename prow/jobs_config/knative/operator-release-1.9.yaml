@@ -5,7 +5,7 @@
 # ####                                                                     ####
 # #############################################################################
 branches:
-- release-1.6
+- release-1.9
 image: gcr.io/knative-tests/test-infra/prow-tests:v20230126-0d51bee0
 jobs:
 - command:
@@ -71,14 +71,14 @@ jobs:
     mkdir -p /root/.kube
     cat /opt/cluster/ci-script > connect.sh
     chmod +x connect.sh
-    ./connect.sh operator-16
+    ./connect.sh operator-main
     kubectl get cm s390x-config-operator -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
     chmod +x adjust.sh
     ./adjust.sh
     ./test/e2e-tests.sh --run-tests
   command:
   - runner.sh
-  cron: 20 16 * * *
+  cron: 20 0 * * *
   env:
   - name: INGRESS_CLASS
     value: contour.ingress.networking.knative.dev
@@ -97,10 +97,10 @@ jobs:
     ./test/e2e-tests.sh --run-tests
   command:
   - runner.sh
-  cron: 0 14 * * *
+  cron: 0 13 * * *
   env:
   - name: CI_JOB
-    value: operator-release-1.6
+    value: operator-main
   - name: INGRESS_CLASS
     value: contour.ingress.networking.knative.dev
   name: ppc64le-e2e-tests
@@ -119,7 +119,7 @@ jobs:
   - --github-token
   - /etc/hub-token/token
   - --branch
-  - release-1.6
+  - release-1.9
   excluded_requirements:
   - gcp
   max_concurrency: 1
