@@ -1,4 +1,4 @@
-package modules
+package gowork
 
 // Module represents a Go module.
 type Module struct {

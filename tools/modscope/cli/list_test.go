@@ -8,8 +8,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"knative.dev/test-infra/pkg/gowork/testdata"
 	"knative.dev/test-infra/tools/modscope/cli"
-	"knative.dev/test-infra/tools/modscope/test"
 )
 
 func TestListCmd(t *testing.T) {
@@ -46,9 +46,9 @@ func TestList(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 			os := testOs{
-				FS: test.FS{
+				FS: testdata.FS{
 					Dir:   tc.dir,
-					Files: test.ExampleFS(),
+					Files: testdata.ExampleFS(),
 				},
 			}
 			printer := &testPrinter{}
@@ -73,8 +73,8 @@ type testListCase struct {
 }
 
 type testOs struct {
-	test.FS
-	test.Env
+	testdata.FS
+	testdata.Env
 }
 
 func (t testOs) Abs(filepath string) string {

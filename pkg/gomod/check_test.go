@@ -21,6 +21,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/stretchr/testify/require"
 	"knative.dev/test-infra/pkg/git"
 )
 
@@ -112,7 +113,9 @@ func TestCheck(t *testing.T) {
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			err := Check(tt.gomod, tt.release, tt.moduleRelease, tt.domain, tt.rule, os.Stdout)
+			selector, err := DefaultSelector(tt.domain)
+			require.NoError(t, err)
+			err = Check(tt.gomod, tt.release, tt.moduleRelease, selector, tt.rule, os.Stdout)
 			if (tt.wantErr && err == nil) || (!tt.wantErr && err != nil) {
 				t.Errorf("unexpected error state, want error == %t, got %v", tt.wantErr, err)
 			}

@@ -34,7 +34,11 @@ func addNeedsCmd(root *cobra.Command) {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			gomods := args
 
-			_, packages, err := gomod.Modules(gomods, domain)
+			selector, err := gomod.DefaultSelector(domain)
+			if err != nil {
+				return err
+			}
+			_, packages, err := gomod.Modules(gomods, selector)
 			if err != nil {
 				return err
 			}

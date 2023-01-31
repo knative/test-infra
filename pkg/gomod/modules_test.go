@@ -34,19 +34,31 @@ func TestModule(t *testing.T) {
 			file:     "testdata/gomod.example1",
 			domain:   "knative.dev",
 			wantName: "knative.dev/test-demo1",
-			wantDeps: []string{"knative.dev/eventing", "knative.dev/pkg", "knative.dev/serving", "knative.dev/test-infra"},
+			wantDeps: []string{
+				"knative.dev/eventing",
+				"knative.dev/pkg",
+				"knative.dev/serving",
+			},
 		},
 		"example1, knative.dev with extra spaces": {
 			file:     "testdata/gomod.example1",
 			domain:   "      knative.dev   ",
 			wantName: "knative.dev/test-demo1",
-			wantDeps: []string{"knative.dev/eventing", "knative.dev/pkg", "knative.dev/serving", "knative.dev/test-infra"},
+			wantDeps: []string{
+				"knative.dev/eventing",
+				"knative.dev/pkg",
+				"knative.dev/serving",
+			},
 		},
 		"example1, k8s.io": {
 			file:     "testdata/gomod.example1",
 			domain:   "k8s.io",
 			wantName: "knative.dev/test-demo1",
-			wantDeps: []string{"k8s.io/api", "k8s.io/apimachinery", "k8s.io/client-go"},
+			wantDeps: []string{
+				"k8s.io/api",
+				"k8s.io/apimachinery",
+				"k8s.io/client-go",
+			},
 		},
 		"example1, example.com": {
 			file:     "testdata/gomod.example1",
@@ -58,7 +70,10 @@ func TestModule(t *testing.T) {
 			file:     "testdata/gomod.example2",
 			domain:   "knative.dev",
 			wantName: "knative.dev/test-demo2",
-			wantDeps: []string{"knative.dev/discovery", "knative.dev/pkg", "knative.dev/test-infra"},
+			wantDeps: []string{
+				"knative.dev/discovery",
+				"knative.dev/pkg",
+			},
 		},
 		"bad example": {
 			file:    "testdata/bad.example",
@@ -82,13 +97,14 @@ func TestModule(t *testing.T) {
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			name, deps, err := Module(tt.file, tt.domain)
+			modname, deps, err := moduleTest(tt.file, tt.domain)
+
 			if (tt.wantErr && err == nil) || (!tt.wantErr && err != nil) {
 				t.Errorf("unexpected error state, want error == %t, got %v", tt.wantErr, err)
 				return
 			}
-			if name != tt.wantName {
-				t.Errorf("Module() name incorrect; got %q, want: %q", name, tt.wantName)
+			if modname != tt.wantName {
+				t.Errorf("Module() name incorrect; got %q, want: %q", modname, tt.wantName)
 			}
 			if diff := cmp.Diff(tt.wantDeps, deps); diff != "" {
 				t.Error("Module() deps diff(-want,+got):\n", diff)
@@ -109,10 +125,22 @@ func TestModules(t *testing.T) {
 			files:  []string{"testdata/gomod.example1", "testdata/gomod.example2"},
 			domain: "knative.dev",
 			wantPkgs: map[string][]string{
-				"knative.dev/test-demo1": {"knative.dev/eventing", "knative.dev/pkg", "knative.dev/serving", "knative.dev/test-infra"},
-				"knative.dev/test-demo2": {"knative.dev/discovery", "knative.dev/pkg", "knative.dev/test-infra"},
+				"knative.dev/test-demo1": {
+					"knative.dev/eventing",
+					"knative.dev/pkg",
+					"knative.dev/serving",
+				},
+				"knative.dev/test-demo2": {
+					"knative.dev/discovery",
+					"knative.dev/pkg",
+				},
 			},
-			wantDeps: []string{"knative.dev/discovery", "knative.dev/eventing", "knative.dev/pkg", "knative.dev/serving", "knative.dev/test-infra"},
+			wantDeps: []string{
+				"knative.dev/discovery",
+				"knative.dev/eventing",
+				"knative.dev/pkg",
+				"knative.dev/serving",
+			},
 		},
 		"example1, example2, k8s.io": {
 			files:  []string{"testdata/gomod.example1", "testdata/gomod.example2"},
@@ -127,9 +155,17 @@ func TestModules(t *testing.T) {
 			files:  []string{"testdata/gomod.example1", "testdata/gomod.example1"},
 			domain: "knative.dev",
 			wantPkgs: map[string][]string{
-				"knative.dev/test-demo1": {"knative.dev/eventing", "knative.dev/pkg", "knative.dev/serving", "knative.dev/test-infra"},
+				"knative.dev/test-demo1": {
+					"knative.dev/eventing",
+					"knative.dev/pkg",
+					"knative.dev/serving",
+				},
 			},
-			wantDeps: []string{"knative.dev/eventing", "knative.dev/pkg", "knative.dev/serving", "knative.dev/test-infra"},
+			wantDeps: []string{
+				"knative.dev/eventing",
+				"knative.dev/pkg",
+				"knative.dev/serving",
+			},
 		},
 		"bad example": {
 			files:   []string{"testdata/gomod.example1", "testdata/bad.example"},
@@ -152,7 +188,7 @@ func TestModules(t *testing.T) {
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			pkgs, deps, err := Modules(tt.files, tt.domain)
+			pkgs, deps, err := modulesTest(tt.files, tt.domain)
 			if (tt.wantErr && err == nil) || (!tt.wantErr && err != nil) {
 				t.Errorf("unexpected error state, want error == %t, got %v", tt.wantErr, err)
 				return
@@ -166,4 +202,22 @@ func TestModules(t *testing.T) {
 			}
 		})
 	}
+}
+
+func modulesTest(files []string, domain string) (map[string][]string, []string, error) {
+	selector, err := DefaultSelector(domain)
+	if err != nil {
+		return nil, nil, err
+	}
+	pkgs, deps, err := Modules(files, selector)
+	return pkgs, deps, err
+}
+
+func moduleTest(file string, domain string) (string, []string, error) {
+	selector, err := DefaultSelector(domain)
+	if err != nil {
+		return "", nil, err
+	}
+	name, deps, err := Module(file, selector)
+	return name, deps, err
 }
