@@ -11,7 +11,7 @@ func currentCmd(fl *Flags) *cobra.Command {
 		Aliases: []string{"curr"},
 		Short:   "Prints current module",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return current(system{}, fl, cmd)
+			return current(gowork.RealSystem{}, fl, cmd)
 		},
 	}
 }

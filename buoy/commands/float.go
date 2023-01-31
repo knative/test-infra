@@ -74,7 +74,11 @@ For rulesets that that restrict the selection process, no ref is selected.
 		RunE: func(cmd *cobra.Command, args []string) error {
 			gomodFile := args[0]
 
-			refs, err := gomod.Float(gomodFile, release, moduleRelease, domain, ruleset)
+			selector, err := gomod.DefaultSelector(domain)
+			if err != nil {
+				return err
+			}
+			refs, err := gomod.Float(gomodFile, release, moduleRelease, selector, ruleset)
 			if err != nil {
 				return err
 			}

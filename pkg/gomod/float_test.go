@@ -19,6 +19,7 @@ package gomod
 import (
 	"testing"
 
+	"github.com/stretchr/testify/require"
 	"knative.dev/test-infra/pkg/git"
 )
 
@@ -138,7 +139,9 @@ func TestFloat(t *testing.T) {
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			deps, err := Float(tt.gomod, tt.release, tt.moduleRelease, tt.domain, tt.rule)
+			selector, err := DefaultSelector(tt.domain)
+			require.NoError(t, err)
+			deps, err := Float(tt.gomod, tt.release, tt.moduleRelease, selector, tt.rule)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -191,7 +194,9 @@ func TestFloatUnhappy(t *testing.T) {
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			_, err := Float(tt.gomod, tt.release, tt.release, tt.domain, tt.rule)
+			selector, err := DefaultSelector(tt.domain)
+			require.NoError(t, err)
+			_, err = Float(tt.gomod, tt.release, tt.release, selector, tt.rule)
 			if err == nil {
 				t.Error("Expected an error")
 			}

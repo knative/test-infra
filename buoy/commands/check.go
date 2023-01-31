@@ -73,7 +73,11 @@ Rulesets,
 				out = cmd.OutOrStderr()
 			}
 
-			err := gomod.Check(gomodFile, release, moduleRelease, domain, ruleset, out)
+			selector, err := gomod.DefaultSelector(domain)
+			if err != nil {
+				return err
+			}
+			err = gomod.Check(gomodFile, release, moduleRelease, selector, ruleset, out)
 			if errors.Is(err, gomod.DependencyErr) {
 				_, _ = fmt.Fprintln(cmd.OutOrStdout(), err.Error())
 				os.Exit(1)

@@ -19,7 +19,6 @@ package gomod
 import (
 	"errors"
 	"io/ioutil"
-	"strings"
 
 	"golang.org/x/mod/modfile"
 	"k8s.io/apimachinery/pkg/util/sets"
@@ -27,7 +26,7 @@ import (
 
 // Modules returns a map of given given modules to their direct dependencies,
 // and a list of unique dependencies.
-func Modules(gomod []string, domain string) (map[string][]string, []string, error) {
+func Modules(gomod []string, selector Selector) (map[string][]string, []string, error) {
 	if len(gomod) == 0 {
 		return nil, nil, errors.New("no go module files provided")
 	}
@@ -35,7 +34,7 @@ func Modules(gomod []string, domain string) (map[string][]string, []string, erro
 	packages := make(map[string][]string, 1)
 	cache := make(sets.String, 1)
 	for _, gm := range gomod {
-		name, pkgs, err := Module(gm, domain)
+		name, pkgs, err := Module(gm, selector)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -53,12 +52,7 @@ func Modules(gomod []string, domain string) (map[string][]string, []string, erro
 
 // Module returns the name and a list of direct dependencies for a given module.
 // TODO: support url and gopath at some point for the gomod string.
-func Module(gomod string, domain string) (string, []string, error) {
-	domain = strings.TrimSpace(domain)
-	if len(domain) == 0 {
-		return "", nil, errors.New("no domain provided")
-	}
-
+func Module(gomod string, selector Selector) (string, []string, error) {
 	b, err := ioutil.ReadFile(gomod)
 	if err != nil {
 		return "", nil, err
@@ -76,7 +70,7 @@ func Module(gomod string, domain string) (string, []string, error) {
 			continue
 		}
 		// Look for requirements that have the prefix of domain.
-		if strings.HasPrefix(r.Mod.Path, domain) && !packages.Has(r.Mod.Path) {
+		if selector.Select(r.Mod.Path) && !packages.Has(r.Mod.Path) {
 			packages.Insert(r.Mod.Path)
 		}
 	}

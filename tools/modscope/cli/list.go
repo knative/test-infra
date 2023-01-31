@@ -13,7 +13,7 @@ func listCmd(fl *Flags) *cobra.Command {
 		Aliases: []string{"ls"},
 		Short:   "List modules in current project",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return List(system{}, fl, cmd)
+			return List(gowork.RealSystem{}, fl, cmd)
 		},
 	}
 }
