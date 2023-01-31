@@ -1,4 +1,4 @@
-package test
+package testdata
 
 // Env is a testable implementation of modules.Environment.
 type Env map[string]string

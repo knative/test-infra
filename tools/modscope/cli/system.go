@@ -7,7 +7,7 @@ import (
 	"path"
 	"path/filepath"
 
-	"knative.dev/test-infra/tools/modscope/modules"
+	"knative.dev/test-infra/pkg/gowork"
 )
 
 const rootDir = "/"
@@ -16,8 +16,8 @@ var systemFS = os.DirFS(rootDir) //nolint:gochecknoglobals
 
 // OS represents a virtual operating system.
 type OS interface {
-	modules.FileSystem
-	modules.Environment
+	gowork.FileSystem
+	gowork.Environment
 	Abs(filepath string) string
 }
 
@@ -32,7 +32,7 @@ func (s system) Get(name string) string {
 func (s system) Open(name string) (fs.File, error) {
 	f, err := systemFS.Open(name)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", modules.ErrBug, err)
+		return nil, fmt.Errorf("%w: %v", gowork.ErrBug, err)
 	}
 	return f, nil
 }
@@ -40,11 +40,11 @@ func (s system) Open(name string) (fs.File, error) {
 func (s system) Cwd() (string, error) {
 	dir, err := os.Getwd()
 	if err != nil {
-		return "", fmt.Errorf("%w: %v", modules.ErrBug, err)
+		return "", fmt.Errorf("%w: %v", gowork.ErrBug, err)
 	}
 	p, err := filepath.Rel(rootDir, dir)
 	if err != nil {
-		return "", fmt.Errorf("%w: %v", modules.ErrBug, err)
+		return "", fmt.Errorf("%w: %v", gowork.ErrBug, err)
 	}
 	return p, nil
 }

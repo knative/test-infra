@@ -2,7 +2,7 @@ package cli
 
 import (
 	"github.com/spf13/cobra"
-	"knative.dev/test-infra/tools/modscope/modules"
+	"knative.dev/test-infra/pkg/gowork"
 )
 
 func currentCmd(fl *Flags) *cobra.Command {
@@ -18,6 +18,6 @@ func currentCmd(fl *Flags) *cobra.Command {
 
 func current(os OS, fl *Flags, prt Printer) error {
 	pr := presenter{os, fl, prt}
-	curr, err := modules.Current(os, os)
+	curr, err := gowork.Current(os, os)
 	return pr.presentModule(*curr, err)
 }
