@@ -159,7 +159,6 @@ periodics:
     org: knative-sandbox
     path_alias: knative.dev/eventing-kafka
     repo: eventing-kafka
-  max_concurrency: 1
   name: s390x-e2e-tests_eventing-kafka_release-1.9_periodic
   spec:
     containers:
