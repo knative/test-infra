@@ -5,7 +5,7 @@
 # ####                                                                     ####
 # #############################################################################
 branches:
-- release-1.6
+- release-1.9
 image: gcr.io/knative-tests/test-infra/prow-tests:v20230131-ab02906b
 jobs:
 - command:
@@ -50,13 +50,20 @@ jobs:
   - gcr.io/knative-releases
   - --github-token
   - /etc/hub-token/token
+  - --apple-codesign-key
+  - /etc/notary/cert.p12
+  - --apple-notary-api-key
+  - /etc/notary/key.json
+  - --apple-codesign-password-file
+  - /etc/notary/password
   - --branch
-  - release-1.6
+  - release-1.9
   excluded_requirements:
   - gcp
+  max_concurrency: 1
   name: release
   requirements:
-  - release
+  - release-notary
   types:
   - periodic
 org: knative-sandbox
