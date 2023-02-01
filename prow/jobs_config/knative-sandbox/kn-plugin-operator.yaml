@@ -1,7 +1,7 @@
 org: knative-sandbox
 repo: kn-plugin-operator
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20230126-0d51bee0
+image: gcr.io/knative-tests/test-infra/prow-tests:v20230131-ab02906b
 
 jobs:
   - name: build-tests
