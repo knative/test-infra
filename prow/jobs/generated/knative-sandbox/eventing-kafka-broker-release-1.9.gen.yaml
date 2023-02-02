@@ -7,17 +7,17 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.6
+    testgrid-dashboards: knative-sandbox-release-1.9
     testgrid-tab-name: eventing-kafka-broker-continuous
   cluster: prow-build
-  cron: 30 13 * * *
+  cron: 35 6 * * *
   decorate: true
   extra_refs:
-  - base_ref: release-1.6
+  - base_ref: release-1.9
     org: knative-sandbox
     path_alias: knative.dev/eventing-kafka-broker
     repo: eventing-kafka-broker
-  name: continuous_eventing-kafka-broker_release-1.6_periodic
+  name: continuous_eventing-kafka-broker_release-1.9_periodic
   spec:
     containers:
     - command:
@@ -25,6 +25,8 @@ periodics:
       - ./test/presubmit-tests.sh
       - --all-tests
       env:
+      - name: BROKER_CLASS
+        value: Kafka
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -67,17 +69,18 @@ periodics:
         type: Directory
       name: cgroup
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.6
+    testgrid-dashboards: knative-sandbox-release-1.9
     testgrid-tab-name: eventing-kafka-broker-release
   cluster: prow-build
-  cron: 10 9 * * 2
+  cron: 1 9 * * 2
   decorate: true
   extra_refs:
-  - base_ref: release-1.6
+  - base_ref: release-1.9
     org: knative-sandbox
     path_alias: knative.dev/eventing-kafka-broker
     repo: eventing-kafka-broker
-  name: release_eventing-kafka-broker_release-1.6_periodic
+  max_concurrency: 1
+  name: release_eventing-kafka-broker_release-1.9_periodic
   spec:
     containers:
     - command:
@@ -91,8 +94,10 @@ periodics:
       - --github-token
       - /etc/hub-token/token
       - --branch
-      - release-1.6
+      - release-1.9
       env:
+      - name: BROKER_CLASS
+        value: Kafka
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/release-account/service-account.json
       - name: E2E_CLUSTER_REGION
@@ -151,10 +156,10 @@ presubmits:
   knative-sandbox/eventing-kafka-broker:
   - always_run: true
     branches:
-    - ^release-1.6$
+    - ^release-1.9$
     cluster: prow-build
     decorate: true
-    name: build-tests_eventing-kafka-broker_release-1.6
+    name: build-tests_eventing-kafka-broker_release-1.9
     path_alias: knative.dev/eventing-kafka-broker
     rerun_command: /test build-tests
     spec:
@@ -171,13 +176,13 @@ presubmits:
       nodeSelector:
         kubernetes.io/arch: amd64
         type: testing
-    trigger: ((?m)^/test( | .* )build-tests,?($|\s.*))|((?m)^/test( | .* )build-tests_eventing-kafka-broker_release-1.6,?($|\s.*))
+    trigger: ((?m)^/test( | .* )build-tests,?($|\s.*))|((?m)^/test( | .* )build-tests_eventing-kafka-broker_release-1.9,?($|\s.*))
   - always_run: true
     branches:
-    - ^release-1.6$
+    - ^release-1.9$
     cluster: prow-build
     decorate: true
-    name: unit-tests_eventing-kafka-broker_release-1.6
+    name: unit-tests_eventing-kafka-broker_release-1.9
     path_alias: knative.dev/eventing-kafka-broker
     rerun_command: /test unit-tests
     spec:
@@ -194,13 +199,13 @@ presubmits:
       nodeSelector:
         kubernetes.io/arch: amd64
         type: testing
-    trigger: ((?m)^/test( | .* )unit-tests,?($|\s.*))|((?m)^/test( | .* )unit-tests_eventing-kafka-broker_release-1.6,?($|\s.*))
+    trigger: ((?m)^/test( | .* )unit-tests,?($|\s.*))|((?m)^/test( | .* )unit-tests_eventing-kafka-broker_release-1.9,?($|\s.*))
   - always_run: true
     branches:
-    - ^release-1.6$
+    - ^release-1.9$
     cluster: prow-build
     decorate: true
-    name: integration-tests_eventing-kafka-broker_release-1.6
+    name: integration-tests_eventing-kafka-broker_release-1.9
     path_alias: knative.dev/eventing-kafka-broker
     rerun_command: /test integration-tests
     spec:
@@ -210,6 +215,8 @@ presubmits:
         - ./test/presubmit-tests.sh
         - --integration-tests
         env:
+        - name: BROKER_CLASS
+          value: Kafka
         - name: E2E_CLUSTER_REGION
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -251,13 +258,73 @@ presubmits:
           path: /sys/fs/cgroup
           type: Directory
         name: cgroup
-    trigger: ((?m)^/test( | .* )integration-tests,?($|\s.*))|((?m)^/test( | .* )integration-tests_eventing-kafka-broker_release-1.6,?($|\s.*))
+    trigger: ((?m)^/test( | .* )integration-tests,?($|\s.*))|((?m)^/test( | .* )integration-tests_eventing-kafka-broker_release-1.9,?($|\s.*))
   - always_run: true
     branches:
-    - ^release-1.6$
+    - ^release-1.9$
     cluster: prow-build
     decorate: true
-    name: upgrade-tests_eventing-kafka-broker_release-1.6
+    name: integration-tests-namespaced-broker_eventing-kafka-broker_release-1.9
+    path_alias: knative.dev/eventing-kafka-broker
+    rerun_command: /test integration-tests-namespaced-broker
+    spec:
+      containers:
+      - command:
+        - runner.sh
+        - ./test/presubmit-tests.sh
+        - --integration-tests
+        env:
+        - name: BROKER_CLASS
+          value: KafkaNamespaced
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230131-ab02906b
+        name: ""
+        resources: {}
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /etc/test-account
+          name: test-account
+          readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        type: testing
+      volumes:
+      - name: test-account
+        secret:
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
+    trigger: ((?m)^/test( | .* )integration-tests-namespaced-broker,?($|\s.*))|((?m)^/test(
+      | .* )integration-tests-namespaced-broker_eventing-kafka-broker_release-1.9,?($|\s.*))
+  - always_run: true
+    branches:
+    - ^release-1.9$
+    cluster: prow-build
+    decorate: true
+    name: upgrade-tests_eventing-kafka-broker_release-1.9
     path_alias: knative.dev/eventing-kafka-broker
     rerun_command: /test upgrade-tests
     spec:
@@ -268,6 +335,8 @@ presubmits:
         - --run-test
         - ./test/upgrade-tests.sh
         env:
+        - name: BROKER_CLASS
+          value: Kafka
         - name: E2E_CLUSTER_REGION
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -309,13 +378,13 @@ presubmits:
           path: /sys/fs/cgroup
           type: Directory
         name: cgroup
-    trigger: ((?m)^/test( | .* )upgrade-tests,?($|\s.*))|((?m)^/test( | .* )upgrade-tests_eventing-kafka-broker_release-1.6,?($|\s.*))
+    trigger: ((?m)^/test( | .* )upgrade-tests,?($|\s.*))|((?m)^/test( | .* )upgrade-tests_eventing-kafka-broker_release-1.9,?($|\s.*))
   - always_run: true
     branches:
-    - ^release-1.6$
+    - ^release-1.9$
     cluster: prow-build
     decorate: true
-    name: reconciler-tests_eventing-kafka-broker_release-1.6
+    name: reconciler-tests_eventing-kafka-broker_release-1.9
     path_alias: knative.dev/eventing-kafka-broker
     rerun_command: /test reconciler-tests
     spec:
@@ -326,6 +395,8 @@ presubmits:
         - --run-test
         - ./test/reconciler-tests.sh
         env:
+        - name: BROKER_CLASS
+          value: Kafka
         - name: E2E_CLUSTER_REGION
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
@@ -367,13 +438,74 @@ presubmits:
           path: /sys/fs/cgroup
           type: Directory
         name: cgroup
-    trigger: ((?m)^/test( | .* )reconciler-tests,?($|\s.*))|((?m)^/test( | .* )reconciler-tests_eventing-kafka-broker_release-1.6,?($|\s.*))
+    trigger: ((?m)^/test( | .* )reconciler-tests,?($|\s.*))|((?m)^/test( | .* )reconciler-tests_eventing-kafka-broker_release-1.9,?($|\s.*))
   - always_run: true
     branches:
-    - ^release-1.6$
+    - ^release-1.9$
     cluster: prow-build
     decorate: true
-    name: channel-integration-tests-ssl_eventing-kafka-broker_release-1.6
+    name: reconciler-tests-namespaced-broker_eventing-kafka-broker_release-1.9
+    path_alias: knative.dev/eventing-kafka-broker
+    rerun_command: /test reconciler-tests-namespaced-broker
+    spec:
+      containers:
+      - command:
+        - runner.sh
+        - ./test/presubmit-tests.sh
+        - --run-test
+        - ./test/reconciler-tests.sh
+        env:
+        - name: BROKER_CLASS
+          value: KafkaNamespaced
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/test-account/service-account.json
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230131-ab02906b
+        name: ""
+        resources: {}
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /etc/test-account
+          name: test-account
+          readOnly: true
+        - mountPath: /docker-graph
+          name: docker-graph
+        - mountPath: /lib/modules
+          name: modules
+        - mountPath: /sys/fs/cgroup
+          name: cgroup
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        type: testing
+      volumes:
+      - name: test-account
+        secret:
+          items:
+          - key: service-account-key.json
+            path: service-account.json
+          secretName: prow-google-credentials
+      - emptyDir: {}
+        name: docker-graph
+      - hostPath:
+          path: /lib/modules
+          type: Directory
+        name: modules
+      - hostPath:
+          path: /sys/fs/cgroup
+          type: Directory
+        name: cgroup
+    trigger: ((?m)^/test( | .* )reconciler-tests-namespaced-broker,?($|\s.*))|((?m)^/test(
+      | .* )reconciler-tests-namespaced-broker_eventing-kafka-broker_release-1.9,?($|\s.*))
+  - always_run: true
+    branches:
+    - ^release-1.9$
+    cluster: prow-build
+    decorate: true
+    name: channel-integration-tests-ssl_eventing-kafka-broker_release-1.9
     path_alias: knative.dev/eventing-kafka-broker
     rerun_command: /test channel-integration-tests-ssl
     spec:
@@ -384,6 +516,8 @@ presubmits:
         - --run-test
         - ./test/e2e-tests.sh
         env:
+        - name: BROKER_CLASS
+          value: Kafka
         - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
           value: SSL
         - name: E2E_CLUSTER_REGION
@@ -428,13 +562,13 @@ presubmits:
           type: Directory
         name: cgroup
     trigger: ((?m)^/test( | .* )channel-integration-tests-ssl,?($|\s.*))|((?m)^/test(
-      | .* )channel-integration-tests-ssl_eventing-kafka-broker_release-1.6,?($|\s.*))
+      | .* )channel-integration-tests-ssl_eventing-kafka-broker_release-1.9,?($|\s.*))
   - always_run: true
     branches:
-    - ^release-1.6$
+    - ^release-1.9$
     cluster: prow-build
     decorate: true
-    name: channel-integration-tests-sasl-ssl_eventing-kafka-broker_release-1.6
+    name: channel-integration-tests-sasl-ssl_eventing-kafka-broker_release-1.9
     path_alias: knative.dev/eventing-kafka-broker
     rerun_command: /test channel-integration-tests-sasl-ssl
     spec:
@@ -445,6 +579,8 @@ presubmits:
         - --run-test
         - ./test/e2e-tests.sh
         env:
+        - name: BROKER_CLASS
+          value: Kafka
         - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
           value: SASL_SSL
         - name: E2E_CLUSTER_REGION
@@ -489,13 +625,13 @@ presubmits:
           type: Directory
         name: cgroup
     trigger: ((?m)^/test( | .* )channel-integration-tests-sasl-ssl,?($|\s.*))|((?m)^/test(
-      | .* )channel-integration-tests-sasl-ssl_eventing-kafka-broker_release-1.6,?($|\s.*))
+      | .* )channel-integration-tests-sasl-ssl_eventing-kafka-broker_release-1.9,?($|\s.*))
   - always_run: true
     branches:
-    - ^release-1.6$
+    - ^release-1.9$
     cluster: prow-build
     decorate: true
-    name: channel-integration-tests-sasl-plain_eventing-kafka-broker_release-1.6
+    name: channel-integration-tests-sasl-plain_eventing-kafka-broker_release-1.9
     path_alias: knative.dev/eventing-kafka-broker
     rerun_command: /test channel-integration-tests-sasl-plain
     spec:
@@ -506,6 +642,8 @@ presubmits:
         - --run-test
         - ./test/e2e-tests.sh
         env:
+        - name: BROKER_CLASS
+          value: Kafka
         - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
           value: SASL_PLAIN
         - name: E2E_CLUSTER_REGION
@@ -550,13 +688,13 @@ presubmits:
           type: Directory
         name: cgroup
     trigger: ((?m)^/test( | .* )channel-integration-tests-sasl-plain,?($|\s.*))|((?m)^/test(
-      | .* )channel-integration-tests-sasl-plain_eventing-kafka-broker_release-1.6,?($|\s.*))
+      | .* )channel-integration-tests-sasl-plain_eventing-kafka-broker_release-1.9,?($|\s.*))
   - always_run: true
     branches:
-    - ^release-1.6$
+    - ^release-1.9$
     cluster: prow-build
     decorate: true
-    name: channel-reconciler-tests-ssl_eventing-kafka-broker_release-1.6
+    name: channel-reconciler-tests-ssl_eventing-kafka-broker_release-1.9
     path_alias: knative.dev/eventing-kafka-broker
     rerun_command: /test channel-reconciler-tests-ssl
     spec:
@@ -567,6 +705,8 @@ presubmits:
         - --run-test
         - ./test/reconciler-tests.sh
         env:
+        - name: BROKER_CLASS
+          value: Kafka
         - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
           value: SSL
         - name: E2E_CLUSTER_REGION
@@ -611,13 +751,13 @@ presubmits:
           type: Directory
         name: cgroup
     trigger: ((?m)^/test( | .* )channel-reconciler-tests-ssl,?($|\s.*))|((?m)^/test(
-      | .* )channel-reconciler-tests-ssl_eventing-kafka-broker_release-1.6,?($|\s.*))
+      | .* )channel-reconciler-tests-ssl_eventing-kafka-broker_release-1.9,?($|\s.*))
   - always_run: true
     branches:
-    - ^release-1.6$
+    - ^release-1.9$
     cluster: prow-build
     decorate: true
-    name: channel-reconciler-tests-sasl-ssl_eventing-kafka-broker_release-1.6
+    name: channel-reconciler-tests-sasl-ssl_eventing-kafka-broker_release-1.9
     path_alias: knative.dev/eventing-kafka-broker
     rerun_command: /test channel-reconciler-tests-sasl-ssl
     spec:
@@ -628,6 +768,8 @@ presubmits:
         - --run-test
         - ./test/reconciler-tests.sh
         env:
+        - name: BROKER_CLASS
+          value: Kafka
         - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
           value: SASL_SSL
         - name: E2E_CLUSTER_REGION
@@ -672,13 +814,13 @@ presubmits:
           type: Directory
         name: cgroup
     trigger: ((?m)^/test( | .* )channel-reconciler-tests-sasl-ssl,?($|\s.*))|((?m)^/test(
-      | .* )channel-reconciler-tests-sasl-ssl_eventing-kafka-broker_release-1.6,?($|\s.*))
+      | .* )channel-reconciler-tests-sasl-ssl_eventing-kafka-broker_release-1.9,?($|\s.*))
   - always_run: true
     branches:
-    - ^release-1.6$
+    - ^release-1.9$
     cluster: prow-build
     decorate: true
-    name: channel-reconciler-tests-sasl-plain_eventing-kafka-broker_release-1.6
+    name: channel-reconciler-tests-sasl-plain_eventing-kafka-broker_release-1.9
     path_alias: knative.dev/eventing-kafka-broker
     rerun_command: /test channel-reconciler-tests-sasl-plain
     spec:
@@ -689,6 +831,8 @@ presubmits:
         - --run-test
         - ./test/reconciler-tests.sh
         env:
+        - name: BROKER_CLASS
+          value: Kafka
         - name: EVENTING_KAFKA_BROKER_CHANNEL_AUTH_SCENARIO
           value: SASL_PLAIN
         - name: E2E_CLUSTER_REGION
@@ -733,4 +877,4 @@ presubmits:
           type: Directory
         name: cgroup
     trigger: ((?m)^/test( | .* )channel-reconciler-tests-sasl-plain,?($|\s.*))|((?m)^/test(
-      | .* )channel-reconciler-tests-sasl-plain_eventing-kafka-broker_release-1.6,?($|\s.*))
+      | .* )channel-reconciler-tests-sasl-plain_eventing-kafka-broker_release-1.9,?($|\s.*))
