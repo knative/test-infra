@@ -47,11 +47,7 @@ func ReleaseStatus(gomod, release, moduleRelease string, out io.Writer) (*Releas
 		return nil, err
 	}
 
-	module, _, err := Module(gomod, Selector{
-		Includes: []Matcher{MatcherFunc(func(m string) bool {
-			return true
-		})},
-	})
+	module, _, err := Module(gomod, func(string) bool { return true })
 	if err != nil {
 		return nil, err
 	}

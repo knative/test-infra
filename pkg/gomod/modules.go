@@ -26,7 +26,7 @@ import (
 
 // Modules returns a map of given given modules to their direct dependencies,
 // and a list of unique dependencies.
-func Modules(gomod []string, selector Selector) (map[string][]string, []string, error) {
+func Modules(gomod []string, selector Matcher) (map[string][]string, []string, error) {
 	if len(gomod) == 0 {
 		return nil, nil, errors.New("no go module files provided")
 	}
@@ -52,7 +52,7 @@ func Modules(gomod []string, selector Selector) (map[string][]string, []string, 
 
 // Module returns the name and a list of direct dependencies for a given module.
 // TODO: support url and gopath at some point for the gomod string.
-func Module(gomod string, selector Selector) (string, []string, error) {
+func Module(gomod string, selector Matcher) (string, []string, error) {
 	b, err := ioutil.ReadFile(gomod)
 	if err != nil {
 		return "", nil, err
@@ -70,7 +70,7 @@ func Module(gomod string, selector Selector) (string, []string, error) {
 			continue
 		}
 		// Look for requirements that have the prefix of domain.
-		if selector.Select(r.Mod.Path) && !packages.Has(r.Mod.Path) {
+		if selector(r.Mod.Path) && !packages.Has(r.Mod.Path) {
 			packages.Insert(r.Mod.Path)
 		}
 	}

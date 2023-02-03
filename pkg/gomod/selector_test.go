@@ -22,7 +22,7 @@ func TestDefaultSelector(t *testing.T) {
 	}
 	selected := make([]string, 0, len(mods))
 	for _, mod := range mods {
-		if sel.Select(mod) {
+		if sel(mod) {
 			selected = append(selected, mod)
 		}
 	}
