@@ -16,33 +16,6 @@ var (
 // Matcher matches a module name.
 type Matcher func(modname string) bool
 
-// Selector is a set of matchers that can be used to select a subset of modules.
-type Selector struct {
-	Includes []Matcher
-	Excludes []Matcher
-}
-
-// Select returns true if the module should be selected.
-func (s Selector) Match(modname string) bool {
-	for _, match := range s.Excludes {
-		if match(modname) {
-			return false
-		}
-	}
-
-	for _, match := range s.Includes {
-		if match(modname) {
-			return true
-		}
-	}
-
-	return false
-}
-
-// Assert that Selector.Match implements Matcher
-var selector_type_assert = Selector{}
-var _ Matcher = selector_type_assert.Match
-
 // CurrentModulesMatcher matches the current project modules.
 func CurrentModulesMatcher() (Matcher, error) {
 	os := gowork.RealSystem{}
@@ -81,10 +54,9 @@ func DefaultSelector(domain string) (Matcher, error) {
 		return nil, err
 	}
 
-	return Selector{
-		Includes: []Matcher{func(modname string) bool {
-			return strings.HasPrefix(modname, domain)
-		}},
-		Excludes: []Matcher{currentModules},
-	}.Match, nil
+	inDomainButNotCurrentWorkspace := func(modname string) bool {
+		return strings.HasPrefix(modname, domain) && !currentModules(modname)
+	}
+
+	return inDomainButNotCurrentWorkspace, nil
 }
