@@ -1,7 +1,7 @@
 org: knative-sandbox
 repo: eventing-gitlab
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20230131-ab02906b
+image: gcr.io/knative-tests/test-infra/prow-tests:v20230214-77f4d403
 
 jobs:
   - name: continuous
