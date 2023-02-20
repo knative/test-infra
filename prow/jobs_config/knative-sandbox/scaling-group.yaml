@@ -1,7 +1,7 @@
 org: knative-sandbox
 repo: scaling-group
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20230217-021b0c69
+image: gcr.io/knative-tests/test-infra/prow-tests:v20230220-8e42b241
 
 jobs:
   - name: build-tests
