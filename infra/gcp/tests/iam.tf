@@ -65,6 +65,7 @@ module "iam" {
 
     "roles/viewer" = [
       "serviceAccount:prow-job@knative-tests.iam.gserviceaccount.com",
+      "group:release-leads@knative.dev",
     ]
 
     "roles/iap.httpsResourceAccessor" = [
