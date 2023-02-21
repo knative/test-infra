@@ -536,7 +536,7 @@ metadata:
   namespace: default
 subjects:
 - kind: Group
-  name: release-leads@knative.dev
+  name: k8s-infra-rbac-release@knative.dev
   # THIS GROUP HAS VIEWER ROLE ON THE PROJECT.
 roleRef:
   kind: Role
