@@ -535,11 +535,10 @@ metadata:
   name: release-leads
   namespace: default
 subjects:
-# Google Group
 - kind: Group
   name: release-leads@knative.dev
   # THIS GROUP HAS VIEWER ROLE ON THE PROJECT.
 roleRef:
   kind: Role
-  name: pod-reader
+  name: release-leads
   apiGroup: rbac.authorization.k8s.io
