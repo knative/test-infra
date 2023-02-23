@@ -515,3 +515,30 @@ metadata:
     iam.gke.io/gcp-service-account: prow-pod-utils@knative-tests.iam.gserviceaccount.com
   name: default
   namespace: default
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: default
+  name: release-leads
+rules:
+  - apiGroups:
+      - "prow.k8s.io"
+    resources:
+      - prowjobs
+    verbs:
+      - create
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: release-leads
+  namespace: default
+subjects:
+- kind: Group
+  name: k8s-infra-rbac-release@knative.dev
+  # THIS GROUP HAS VIEWER ROLE ON THE PROJECT.
+roleRef:
+  kind: Role
+  name: release-leads
+  apiGroup: rbac.authorization.k8s.io

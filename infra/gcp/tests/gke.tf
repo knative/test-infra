@@ -19,6 +19,7 @@ module "prow_trusted" {
   create_service_account     = false
   remove_default_node_pool   = true
   gce_pd_csi_driver          = true
+  authenticator_security_group = "gke-security-groups@knative.dev"
   cluster_resource_labels = {
     cluster     = "prow-trusted"
     role        = "prow"
@@ -62,6 +63,7 @@ module "prow" {
   create_service_account     = false
   remove_default_node_pool   = true
   gce_pd_csi_driver          = true
+  authenticator_security_group = "gke-security-groups@knative.dev"
   cluster_resource_labels = {
     cluster     = "prow"
     role        = "prow"
@@ -112,6 +114,7 @@ module "prow_build" {
   create_service_account     = false
   remove_default_node_pool   = true
   gce_pd_csi_driver          = true
+  authenticator_security_group = "gke-security-groups@knative.dev"
   cluster_autoscaling = {
     enabled             = false
     autoscaling_profile = "OPTIMIZE_UTILIZATION"
