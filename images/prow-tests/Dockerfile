@@ -162,8 +162,9 @@ COPY images/prow-tests/source-gvm-and-run.sh /usr/local/bin
 # Install our versions of Go.
 # We only install the latest 3 versions of Go which should be enough for
 # all Knative repositories.
-RUN source-gvm-and-run.sh install go1.18.10 --prefer-binary
-RUN source-gvm-and-run.sh install go1.19.5 --prefer-binary
+
+RUN source-gvm-and-run.sh install go1.20.1 --prefer-binary
+RUN source-gvm-and-run.sh install go1.19.6 --prefer-binary
 RUN source-gvm-and-run.sh use go1.19 --default
 
 # protoc and required golang tooling
