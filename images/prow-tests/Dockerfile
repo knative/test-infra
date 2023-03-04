@@ -151,43 +151,17 @@ RUN java -version && \
 # END: JAVA SETUP
 #
 
-# Install go 1.16, 1.17, and 1.18 using https://github.com/moovweb/gvm
-# GVM_NO_UPDATE_PROFILE=true means do not alter /root/.bashrc to automatically source gvm config, so when not using runner.sh, image works normally
-# Install the tool:
-RUN curl -fsSL https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer | GVM_NO_UPDATE_PROFILE=true bash
-# gvm requires one to "source /root/.gvm/scripts/gvm" after installing
-#  but in Dockerfile, each RUN is its own shell, so source'd in-RUN env vars are not propagated
-# So have created "source-gvm-and-run.sh" to source the above then run gvm
-COPY images/prow-tests/source-gvm-and-run.sh /usr/local/bin
-# Install our versions of Go.
-# We only install the latest 3 versions of Go which should be enough for
-# all Knative repositories.
-
-RUN source-gvm-and-run.sh install go1.20.1 --prefer-binary
-RUN source-gvm-and-run.sh install go1.19.6 --prefer-binary
-RUN source-gvm-and-run.sh use go1.19 --default
-
 # protoc and required golang tooling
 RUN curl -fsSL "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip" -o protoc.zip \
     && unzip -p protoc.zip bin/protoc > /usr/local/bin/protoc \
     && chmod +x /usr/local/bin/protoc \
     && rm protoc.zip
-# protoc-gen-gogofaster is installed in below section
-
-# Note, it's pointless to run `source-gvm-and-run.sh use go1.13` in this Dockerfile because the PATH changes it makes won't stay in effect
-# We wrap the runner with our own which will run `gvm use $GO_VERSION` for us.
-COPY images/prow-tests/runner.sh /usr/local/bin
-
-# Used if you want to install different programs for different versions of Go
-COPY images/prow-tests/in-gvm-env.sh /usr/local/bin
-# If you needed to compile and install different tools for different version of Go,
-#  you could do it like:
-#  RUN GO_VERSION=go1.13 in-gvm-env.sh go install knative.dev/test-infra/tools/cleanup
-#  RUN GO_VERSION=go1.14 in-gvm-env.sh go install knative.dev/test-infra/tools/cleanup
-# But it must be done in base or the last FROM, because it does not install to /go/bin
+# protoc-gen-gogofaster is installed below
 
 ############################################################
-FROM golang:1.19 AS external-go-gets
+FROM golang:1.19.6 AS external-go-gets
+# Capture the version that depndabot bumps so that we can install it into the base image
+RUN go version | cut -d' ' -f3 > /golang_version.latest
 
 ARG KUBETEST2_VERSION=d306c412d528f0a5dda4b6bd1c7550a905f5edb9
 ARG KUBETEST2_KOPS_VERSION=9b957a1d6189ee612506c9b6dc5b8b1a19e9c2aa # v1.25.0 release
@@ -250,10 +224,38 @@ RUN cargo install --git https://github.com/indygreg/apple-platform-rs --rev ${CO
 ############################################################
 FROM base
 
-COPY --from=external-go-gets /go/bin/* /go/bin/
 COPY --from=external-rust-gets /usr/local/cargo/bin/rcodesign /usr/local/bin/rcodesign
+COPY --from=external-go-gets /go/bin/* /go/bin/
+COPY --from=external-go-gets /golang_version.latest /golang_version.latest
 
-# Only needed in this Dockerfile
+# Install go using https://github.com/moovweb/gvm
+# GVM_NO_UPDATE_PROFILE=true means do not alter /root/.bashrc to automatically source gvm config, so when not using runner.sh, image works normally
+# Install the tool:
+RUN curl -fsSL https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer | GVM_NO_UPDATE_PROFILE=true bash
+# gvm requires one to "source /root/.gvm/scripts/gvm" after installing
+#  but in Dockerfile, each RUN is its own shell, so source'd in-RUN env vars are not propagated
+# So have created "source-gvm-and-run.sh" to source the above then run gvm
+COPY images/prow-tests/source-gvm-and-run.sh /usr/local/bin
+# Install our version of Go.
+
+RUN source-gvm-and-run.sh install `cat /golang_version.latest` --prefer-binary
+# The below will need to be updated to whatever the latest is when the project is ready.
+RUN source-gvm-and-run.sh install go1.19.6 --prefer-binary
+RUN source-gvm-and-run.sh use go1.19.6 --default
+
+# Note, it's pointless to run `source-gvm-and-run.sh use goX.XX` in this Dockerfile because the PATH changes it makes won't stay in effect
+# We wrap the runner with our own which will run `gvm use $GO_VERSION` for us.
+COPY images/prow-tests/runner.sh /usr/local/bin
+
+# Used if you want to install different programs for different versions of Go
+COPY images/prow-tests/in-gvm-env.sh /usr/local/bin
+# If you needed to compile and install different tools for different version of Go,
+#  you could do it like:
+#  RUN GO_VERSION=goX.XX in-gvm-env.sh go install knative.dev/test-infra/tools/cleanup
+#  RUN GO_VERSION=goX.XX+1 in-gvm-env.sh go install knative.dev/test-infra/tools/cleanup
+# But it must be done in base or the last FROM, because it does not install to /go/bin
+
+# Not needed outside of this Dockerfile
 RUN rm -f /usr/local/bin/source-gvm-and-run.sh
 
 ENV PATH /go/bin:$PATH
