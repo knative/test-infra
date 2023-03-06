@@ -35,6 +35,7 @@ type Config struct {
 	StartTime              time.Time
 	Subject                []in_toto.Subject
 	ProwJob                *prowapi.ProwJob
+	ProwUrl                string
 }
 
 func LoadParameters(config Config) Config {
@@ -82,7 +83,7 @@ func LoadParameters(config Config) Config {
 	}
 	config = GenerateSubject(config)
 	// Get ProwJob info and add it to the statement
-	url := "https://prow.knative.dev" + "/prowjob?prowjob=" + os.Getenv("PROW_JOB_ID")
+	url := config.ProwUrl + "/prowjob?prowjob=" + os.Getenv("PROW_JOB_ID")
 	config.ProwJob, _ = FetchProwJob(url)
 	return config
 }
