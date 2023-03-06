@@ -1,0 +1,6 @@
+version: 2
+updates:
+  - package-ecosystem: "docker"
+    directory: "/images/prow-tests/"
+    schedule:
+      interval: "weekly"
