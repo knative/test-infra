@@ -33,7 +33,7 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20230301-15074695
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
       name: ""
       resources:
         limits:
@@ -125,7 +125,7 @@ periodics:
         value: /root/.kube/config
       - name: DOCKER_CONFIG
         value: /opt/cluster
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20230301-15074695
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
       name: ""
       resources:
         limits:
@@ -224,7 +224,7 @@ periodics:
         value: /root/.kube/config
       - name: DOCKER_CONFIG
         value: /opt/cluster
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20230301-15074695
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
       name: ""
       resources:
         limits:
@@ -310,7 +310,7 @@ periodics:
         value: "true"
       - name: ATTEST_IMAGES
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20230301-15074695
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
       name: ""
       resources:
         limits:
@@ -377,7 +377,7 @@ presubmits:
         env:
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230301-15074695
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
         name: ""
         resources:
           limits:
@@ -425,7 +425,7 @@ presubmits:
         env:
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230301-15074695
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
         name: ""
         resources:
           limits:
@@ -478,7 +478,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230301-15074695
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
         name: ""
         resources:
           limits:
@@ -540,7 +540,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230301-15074695
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
         name: ""
         resources:
           limits:
@@ -603,7 +603,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230301-15074695
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
         name: ""
         resources:
           limits:
@@ -667,7 +667,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230301-15074695
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
         name: ""
         resources:
           limits:
@@ -731,7 +731,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230301-15074695
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
         name: ""
         resources:
           limits:
@@ -809,7 +809,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230301-15074695
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
         name: ""
         resources:
           limits:
@@ -872,7 +872,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230301-15074695
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
         name: ""
         resources:
           limits:
@@ -936,7 +936,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230301-15074695
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
         name: ""
         resources:
           limits:
@@ -1000,7 +1000,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230301-15074695
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
         name: ""
         resources:
           limits:
@@ -1063,7 +1063,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230301-15074695
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
         name: ""
         resources:
           limits:
@@ -1126,7 +1126,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230301-15074695
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
         name: ""
         resources:
           limits:
@@ -1189,7 +1189,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230301-15074695
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
         name: ""
         resources:
           limits:
@@ -1252,7 +1252,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230301-15074695
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
         name: ""
         resources:
           limits:
@@ -1319,7 +1319,7 @@ presubmits:
           value: /etc/test-account/service-account.json
         - name: DOCKER_IN_DOCKER_ENABLED
           value: "true"
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230301-15074695
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
         name: ""
         resources:
           limits:

@@ -6,7 +6,7 @@
 # #############################################################################
 branches:
 - release-1.7
-image: gcr.io/knative-tests/test-infra/prow-tests:v20230301-15074695
+image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
 jobs:
 - command:
   - runner.sh

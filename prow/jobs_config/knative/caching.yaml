@@ -1,7 +1,7 @@
 org: knative
 repo: caching
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20230301-15074695
+image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
 cluster: prow-build
 
 jobs:
