@@ -29,7 +29,7 @@ periodics:
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20230306-f9959776
       name: ""
       resources: {}
       securityContext:
@@ -79,7 +79,7 @@ periodics:
         value: "true"
       - name: ATTEST_IMAGES
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20230306-f9959776
       name: ""
       resources: {}
       securityContext:
@@ -143,7 +143,7 @@ periodics:
         value: knative-sandbox
       - name: ATTEST_IMAGES
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20230306-f9959776
       name: ""
       resources: {}
       securityContext:
@@ -192,7 +192,7 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --build-tests
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230306-f9959776
         name: ""
         resources: {}
         securityContext:
@@ -215,7 +215,7 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --unit-tests
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230306-f9959776
         name: ""
         resources: {}
         securityContext:
@@ -243,7 +243,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230304-d0e49c5c
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230306-f9959776
         name: ""
         resources: {}
         securityContext:
