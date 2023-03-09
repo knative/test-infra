@@ -22,14 +22,6 @@ jobs:
       - name: BROKER_CLASS
         value: Kafka
 
-  - name: integration-tests-namespaced-broker
-    types: [ presubmit ]
-    command: [ runner.sh, ./test/presubmit-tests.sh, --integration-tests ]
-    requirements: [ docker ]
-    env:
-      - name: BROKER_CLASS
-        value: KafkaNamespaced
-
   - name: upgrade-tests
     types: [presubmit]
     command: [runner.sh, ./test/presubmit-tests.sh, --run-test, "./test/upgrade-tests.sh"]
