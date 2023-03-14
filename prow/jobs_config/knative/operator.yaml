@@ -1,7 +1,7 @@
 org: knative
 repo: operator
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20230306-f9959776
+image: gcr.io/knative-tests/test-infra/prow-tests:v20230314-2f7133fb
 
 jobs:
   - name: build-tests
