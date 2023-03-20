@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.17
-LABEL maintainer="Chao Dai <chaodai@google.com>"
+FROM golang:1.20.2
 
 # Required input: -e TOOL_NAME=name, i.e. TOOL_NAME=flaky-test-reporter
 ARG TOOL_NAME
