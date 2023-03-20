@@ -159,9 +159,15 @@ RUN curl -fsSL "https://github.com/protocolbuffers/protobuf/releases/download/v$
 # protoc-gen-gogofaster is installed below
 
 ############################################################
-FROM golang:1.20.2 AS external-go-gets
+FROM golang:1.19.7 AS external-go-previous
 # Capture the version that depndabot bumps so that we can install it into the base image
-RUN go version | cut -d' ' -f3 > /golang_version.latest
+RUN go version | cut -d' ' -f3 > /golang.version
+
+FROM golang:1.20.2 AS external-go-latest
+# Capture the version that depndabot bumps so that we can install it into the base image
+RUN go version | cut -d' ' -f3 > /golang.version
+
+FROM external-go-latest AS external-go-gets
 
 ARG KUBETEST2_VERSION=d306c412d528f0a5dda4b6bd1c7550a905f5edb9
 ARG KUBETEST2_KOPS_VERSION=9b957a1d6189ee612506c9b6dc5b8b1a19e9c2aa # v1.25.0 release
@@ -226,7 +232,8 @@ FROM base
 
 COPY --from=external-rust-gets /usr/local/cargo/bin/rcodesign /usr/local/bin/rcodesign
 COPY --from=external-go-gets /go/bin/* /go/bin/
-COPY --from=external-go-gets /golang_version.latest /golang_version.latest
+COPY --from=external-go-latest /golang.version /golang-latest.version
+COPY --from=external-go-previous /golang.version /golang-previous.version
 
 # Install go using https://github.com/moovweb/gvm
 # GVM_NO_UPDATE_PROFILE=true means do not alter /root/.bashrc to automatically source gvm config, so when not using runner.sh, image works normally
@@ -238,10 +245,10 @@ RUN curl -fsSL https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/g
 COPY images/prow-tests/source-gvm-and-run.sh /usr/local/bin
 # Install our version of Go.
 
-RUN source-gvm-and-run.sh install `cat /golang_version.latest` --prefer-binary
+RUN source-gvm-and-run.sh install `cat /golang-previous.version` --prefer-binary
 # The below will need to be updated to whatever the latest is when the project is ready.
-RUN source-gvm-and-run.sh install go1.19.6 --prefer-binary
-RUN source-gvm-and-run.sh use go1.19.6 --default
+RUN source-gvm-and-run.sh install `cat /golang-latest.version` --prefer-binary
+RUN source-gvm-and-run.sh use `cat /golang-latest.version` --default
 
 # Note, it's pointless to run `source-gvm-and-run.sh use goX.XX` in this Dockerfile because the PATH changes it makes won't stay in effect
 # We wrap the runner with our own which will run `gvm use $GO_VERSION` for us.
