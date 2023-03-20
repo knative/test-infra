@@ -1,7 +1,7 @@
 org: knative-sandbox
 repo: kn-plugin-quickstart
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20230314-2f7133fb
+image: gcr.io/knative-tests/test-infra/prow-tests:v20230317-5d06f773
 
 jobs:
   - name: build-tests

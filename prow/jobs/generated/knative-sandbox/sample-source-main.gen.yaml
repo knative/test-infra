@@ -33,7 +33,7 @@ periodics:
         value: "true"
       - name: ATTEST_IMAGES
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20230314-2f7133fb
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20230317-5d06f773
       name: ""
       resources: {}
       securityContext:
@@ -86,7 +86,7 @@ periodics:
         value: knative-sandbox
       - name: ATTEST_IMAGES
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20230314-2f7133fb
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20230317-5d06f773
       name: ""
       resources: {}
       securityContext:
@@ -130,7 +130,7 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --build-tests
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230314-2f7133fb
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230317-5d06f773
         name: ""
         resources: {}
         securityContext:
@@ -153,7 +153,7 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --unit-tests
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230314-2f7133fb
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230317-5d06f773
         name: ""
         resources: {}
         securityContext:
