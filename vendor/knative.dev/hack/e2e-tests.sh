@@ -21,8 +21,13 @@ source "$(dirname "${BASH_SOURCE[0]:-$0}")/infra-library.sh"
 
 readonly TEST_RESULT_FILE=/tmp/${REPO_NAME}-e2e-result
 
+# Flag whether test is using a boskos GCP project
+IS_BOSKOS=0
+
 # Tear down the test resources.
 function teardown_test_resources() {
+  # On boskos, save time and don't teardown as the cluster will be destroyed anyway.
+  (( IS_BOSKOS )) && return
   header "Tearing down test environment"
   if function_exists test_teardown; then
     test_teardown
@@ -55,7 +60,6 @@ function setup_test_cluster() {
 
   header "Setting up test cluster"
   kubectl get nodes
-
   # Set the actual project the test cluster resides in
   # It will be a project assigned by Boskos if test is running on Prow,
   # otherwise will be ${E2E_GCP_PROJECT_ID} set up by user.
@@ -72,7 +76,7 @@ function setup_test_cluster() {
   # Setup KO_DOCKER_REPO if it is a GKE cluster. Incorporate an element of
   # randomness to ensure that each run properly publishes images. Don't
   # owerwrite KO_DOCKER_REPO if already set.
-  [ -z "${KO_DOCKER_REPO:-}" ] && \
+  [ -z "${KO_DOCKER_REPO}" ] && \
     [[ "${k8s_cluster}" =~ ^gke_.* ]] && \
     export KO_DOCKER_REPO=gcr.io/${E2E_PROJECT_ID}/${REPO_NAME}-e2e-img/${RANDOM}
 
@@ -84,14 +88,20 @@ function setup_test_cluster() {
   kubectl config set-context "${k8s_cluster}" --namespace=default
 
   echo "- Cluster is ${k8s_cluster}"
-  echo "- KO_DOCKER_REPO is ${KO_DOCKER_REPO}"
+  echo "- Docker is ${KO_DOCKER_REPO}"
 
-  (( TEARDOWN )) && add_trap teardown_test_resources EXIT
+  export KO_DATA_PATH="${REPO_ROOT_DIR}/.git"
+
+  # Do not run teardowns if we explicitly want to skip them.
+  (( ! SKIP_TEARDOWNS )) && add_trap teardown_test_resources EXIT
 
   # Handle failures ourselves, so we can dump useful info.
   set +o errexit
   set +o pipefail
 
+  # Wait for Istio installation to complete, if necessary, before calling knative_setup.
+  # TODO(chizhg): is it really needed?
+  (( ! SKIP_ISTIO_ADDON )) && (wait_until_batch_job_complete istio-system || return 1)
   if function_exists knative_setup; then
     knative_setup || fail_test "Knative setup failed"
   fi
@@ -105,29 +115,23 @@ function success() {
   echo "**************************************"
   echo "***        E2E TESTS PASSED        ***"
   echo "**************************************"
-  function_exists on_success && on_success
+  dump_metrics
   exit 0
 }
 
 # Exit test, dumping current state info.
-# Parameters: $* - error message (optional).
+# Parameters: $1 - error message (optional).
 function fail_test() {
-  local message="$*"
-  if [[ "X${message:-}X" == "XX" ]]; then
-    message='test failed'
-  fi
-  function_exists on_failure && on_failure
-  (( ! SKIP_DUMP_ON_FAILURE )) && dump_cluster_state
-  abort "${message}"
+  [[ -n $1 ]] && echo "ERROR: $1"
+  dump_cluster_state
+  dump_metrics
+  exit 1
 }
 
-# Since create_test_cluster invokes the test script
-# recursively we don't want to override these on the second
-# invocation
-TEARDOWN=${TEARDOWN:-0}
-CLOUD_PROVIDER=${CLOUD_PROVIDER:-"gke"}
-SKIP_DUMP_ON_FAILURE=${SKIP_DUMP_ON_FAILURE:-0}
+SKIP_TEARDOWNS=0
+SKIP_ISTIO_ADDON=0
 E2E_SCRIPT=""
+CLOUD_PROVIDER="gke"
 
 # Parse flags and initialize the test cluster.
 function initialize() {
@@ -152,7 +156,7 @@ function initialize() {
         # Skip parsed flag (and possibly argument) and continue
         # Also save it to it's passed through to the test script
         for ((i=1;i<=skip;i++)); do
-          # Avoid double-parsing
+          # Avoid double-parsing 
           if (( parse_script_flags )); then
             e2e_script_command+=("$1")
           fi
@@ -164,10 +168,9 @@ function initialize() {
     # Try parsing flag as a standard one.
     case ${parameter} in
       --run-tests) run_tests=1 ;;
-      --teardown) TEARDOWN=1 ;;
-      --skip-teardowns) echo "--skip-teardowns is no longer supported - opt in with --teardown" ;;
-      --skip-dump-on-failure) SKIP_DUMP_ON_FAILURE=1 ;;
-      --skip-istio-addon) echo "--skip-istio-addon is no longer supported" ;;
+      --skip-teardowns) SKIP_TEARDOWNS=1 ;;
+      # TODO(chizhg): remove this flag once the addons is defined as an env var.
+      --skip-istio-addon) SKIP_ISTIO_ADDON=1 ;;
       *)
         case ${parameter} in
           --cloud-provider) shift; CLOUD_PROVIDER="$1" ;;
@@ -177,13 +180,18 @@ function initialize() {
     shift
   done
 
+  (( IS_PROW )) && [[ -z "${GCP_PROJECT_ID:-}" ]] && IS_BOSKOS=1
+
   if [[ "${CLOUD_PROVIDER}" == "gke" ]]; then
+    if (( SKIP_ISTIO_ADDON )); then
       custom_flags+=("--addons=NodeLocalDNS")
+    else
+      custom_flags+=("--addons=Istio,NodeLocalDNS")
+    fi
   fi
 
-  readonly SKIP_DUMP_ON_FAILURE
-  readonly TEARDOWN
-  readonly CLOUD_PROVIDER
+  readonly IS_BOSKOS
+  readonly SKIP_TEARDOWNS
 
   if (( ! run_tests )); then
     create_test_cluster "${CLOUD_PROVIDER}" custom_flags e2e_script_command

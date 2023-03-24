@@ -47,7 +47,7 @@ of:
   - Prow configs templates
     [prow/jobs_config](./prow/jobs_config).
 
-  - Prow configs generator [tools/configgen](./tools/configgen).
+  - Prow configs generator [config/generator](./config/generator).
 
 - **If you change a package's deps** (including adding an external dependency),
   then you must run [`./hack/update-deps.sh`](./hack/update-deps.sh).

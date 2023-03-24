@@ -19,7 +19,7 @@ set -Eeuo pipefail
 REPO_ROOT_DIR="$(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")")"
 
 # Generate Prow configs since we are using generator
-readonly CONFIG_GENERATOR_DIR="${REPO_ROOT_DIR}/tools/configgen"
+readonly CONFIG_GENERATOR_DIR="${REPO_ROOT_DIR}/config/generator"
 
 # Clean up existing generated config files.
 rm -rf "${REPO_ROOT_DIR}/prow/jobs/generated"/*

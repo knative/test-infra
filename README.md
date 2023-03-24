@@ -14,6 +14,10 @@ The Productivity Working Group also has other repos:
 
   Reusable github workflows and actions
 
+- [knative/toolbox](https://github.com/knative/toolbox)
+
+  Tools used in Knative projects, intended for development and testing
+
 - [knative/hack](https://github.com/knative/hack)
 
   Shellscripts used across the repos placed in a separate repo to avoid

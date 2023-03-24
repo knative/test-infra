@@ -19,17 +19,8 @@ ARG TOOL_NAME
 # Optional input: -e TOOLS_SUBDIR=name, i.e. TOOLS_SUBDIR=monitoring/
 ARG TOOLS_SUBDIR
 
-# Temporarily add test-infra to the image to build custom tools
-COPY . /go/src/knative.dev/test-infra
-
 # TODO: jobs should not run `/command`, just `command`
 
-RUN cd "/go/src/knative.dev/test-infra" && go install "./tools/${TOOLS_SUBDIR}${TOOL_NAME}"
-RUN cp "$(which ${TOOL_NAME})" /
+RUN GOBIN=/tools go install "knative.dev/toolbox/${TOOL_NAME}@latest"
 
-RUN if [ "${TOOL_NAME}" = flaky-test-reporter ]; then mkdir -p /config && cp /go/src/knative.dev/test-infra/tools/flaky-test-reporter/config/config.yaml /config/config.yaml; fi
-
-# Remove test-infra from the container
-RUN rm -fr /go/src/knative.dev/test-infra
-
-ENTRYPOINT ["/${TOOL_NAME}"]
+ENTRYPOINT ["/tools/${TOOL_NAME}"]

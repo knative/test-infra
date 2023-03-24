@@ -29,10 +29,6 @@ readonly REPO_UPSTREAM="https://github.com/${ORG_NAME}/${REPO_NAME}"
 readonly NIGHTLY_GCR="gcr.io/knative-nightly/github.com/${ORG_NAME}/${REPO_NAME}"
 readonly RELEASE_GCR="gcr.io/knative-releases/github.com/${ORG_NAME}/${REPO_NAME}"
 
-# Signing identities for knative releases.
-readonly NIGHTLY_SIGNING_IDENTITY="signer@knative-nightly.iam.gserviceaccount.com"
-readonly RELEASE_SIGNING_IDENTITY="signer@knative-releases.iam.gserviceaccount.com"
-
 # Georeplicate images to {us,eu,asia}.gcr.io
 readonly GEO_REPLICATION=(us eu asia)
 
@@ -103,21 +99,15 @@ VALIDATION_TESTS="./test/presubmit-tests.sh"
 ARTIFACTS_TO_PUBLISH=""
 FROM_NIGHTLY_RELEASE=""
 FROM_NIGHTLY_RELEASE_GCS=""
-SIGNING_IDENTITY=""
-APPLE_CODESIGN_KEY=""
-APPLE_NOTARY_API_KEY=""
-APPLE_CODESIGN_PASSWORD_FILE=""
 export KO_DOCKER_REPO="gcr.io/knative-nightly"
 # Build stripped binary to reduce size
 export GOFLAGS="-ldflags=-s -ldflags=-w"
 export GITHUB_TOKEN=""
-readonly IMAGES_REFS_FILE="${IMAGES_REFS_FILE:-$(mktemp -d)/images_refs.txt}"
 
 # Convenience function to run the hub tool.
 # Parameters: $1..$n - arguments to hub.
 function hub_tool() {
-  # Pinned to SHA because of https://github.com/github/hub/issues/2517
-  go_run github.com/github/hub/v2@363513a "$@"
+  gorun github.com/github/hub@v2.14.2 "$@"
 }
 
 # Shortcut to "git push" that handles authentication.
@@ -310,119 +300,6 @@ function build_from_source() {
   if [[ $? -ne 0 ]]; then
     abort "error building the release"
   fi
-  sign_release || abort "error signing the release"
-}
-
-function get_images_in_yamls() {
-  rm -rf "$IMAGES_REFS_FILE"
-  echo "Assembling a list of image refences to sign"
-  for file in "$@"; do
-    [[ "${file##*.}" != "yaml" ]] && continue
-    echo "Inspecting ${file}"
-    while read -r image; do
-      echo "$image" >> "$IMAGES_REFS_FILE"
-    done < <(grep -oh "\S*${KO_DOCKER_REPO}\S*" "${file}")
-  done
-  if [[ -f "$IMAGES_REFS_FILE" ]]; then
-    sort -uo "$IMAGES_REFS_FILE" "$IMAGES_REFS_FILE" # Remove duplicate entries
-  fi
-}
-
-# Finds a checksums file within the given list of artifacts (space delimited)
-# Parameters: $n - artifact files
-function find_checksums_file() {
-  for arg in "$@"; do
-    # kinda dirty hack needed as we pass $ARTIFACTS_TO_PUBLISH in space
-    # delimiter variable, which is vulnerable to all sorts of argument quoting
-    while read -r file; do
-      if [[ "${file}" == *"checksums.txt" ]]; then
-        echo "${file}"
-        return 0
-      fi
-    done < <(echo "$arg" | tr ' ' '\n')
-  done
-  warning "cannot find checksums file"
-}
-
-# Build a release from source.
-function sign_release() {
-  if (( ! IS_PROW )); then # This function can't be run by devs on their laptops
-    return 0
-  fi
-  get_images_in_yamls "${ARTIFACTS_TO_PUBLISH}"
-  local checksums_file
-  checksums_file="$(find_checksums_file "${ARTIFACTS_TO_PUBLISH}")"
-
-  if ! [[ -f "${checksums_file}" ]]; then
-    echo '>> No checksums file found, generating one'
-    checksums_file="$(mktemp -d)/checksums.txt"
-    for file in ${ARTIFACTS_TO_PUBLISH}; do
-      pushd "$(dirname "$file")" >/dev/null
-      sha256sum "$(basename "$file")" >> "${checksums_file}"
-      popd >/dev/null
-    done
-    ARTIFACTS_TO_PUBLISH="${ARTIFACTS_TO_PUBLISH} ${checksums_file}"
-  fi
-
-  # Notarizing mac binaries needs to be done before cosign as it changes the checksum values
-  # of the darwin binaries
- if [ -n "${APPLE_CODESIGN_KEY}" ] && [ -n "${APPLE_CODESIGN_PASSWORD_FILE}" ] && [ -n "${APPLE_NOTARY_API_KEY}" ]; then
-    banner "Notarizing macOS Binaries for the release"
-    local macos_artifacts
-    declare -a macos_artifacts=()
-    while read -r file; do
-      if echo "$file" | grep -q "darwin"; then
-        macos_artifacts+=("${file}")
-        rcodesign sign "${file}" --p12-file="${APPLE_CODESIGN_KEY}" \
-          --code-signature-flags=runtime \
-          --p12-password-file="${APPLE_CODESIGN_PASSWORD_FILE}"
-      fi
-    done < <(echo "${ARTIFACTS_TO_PUBLISH}" | tr ' ' '\n')
-    if [[ -z "${macos_artifacts[*]}" ]]; then
-      warning "No macOS binaries found, skipping notarization"
-    else
-      local zip_file
-      zip_file="$(mktemp -d)/files.zip"
-      zip "$zip_file" -@ < <(printf "%s\n"  "${macos_artifacts[@]}")
-      rcodesign notary-submit "$zip_file" --api-key-path="${APPLE_NOTARY_API_KEY}" --wait
-      true > "${checksums_file}" # Clear the checksums file
-      for file in ${ARTIFACTS_TO_PUBLISH}; do
-        if echo "$file" | grep -q "checksums.txt"; then
-          continue # Don't checksum the checksums file
-        fi
-        pushd "$(dirname "$file")" >/dev/null
-        sha256sum "$(basename "$file")" >> "${checksums_file}"
-        popd >/dev/null
-      done
-      echo "🧮     Post Notarization Checksum:"
-      cat "$checksums_file"
-    fi
-  fi
-
-  ID_TOKEN=$(gcloud auth print-identity-token --audiences=sigstore \
-    --include-email \
-    --impersonate-service-account="${SIGNING_IDENTITY}")
-  echo "Signing Images with the identity ${SIGNING_IDENTITY}"
-  ## Sign the images with cosign
-  if [[ -f "$IMAGES_REFS_FILE" ]]; then
-    COSIGN_EXPERIMENTAL=1 cosign sign $(cat "$IMAGES_REFS_FILE") \
-      --recursive --identity-token="${ID_TOKEN}"
-    if  [ -n "${ATTEST_IMAGES:-}" ]; then # Temporary Feature Gate
-      provenance-generator --clone-log=/logs/clone.json \
-        --image-refs="$IMAGES_REFS_FILE" --output=attestation.json
-      mkdir -p "${ARTIFACTS}"/attestation && cp attestation.json "${ARTIFACTS}"/attestation
-      COSIGN_EXPERIMENTAL=1 cosign attest $(cat "$IMAGES_REFS_FILE") \
-        --recursive --identity-token="${ID_TOKEN}" \
-        --predicate=attestation.json --type=slsaprovenance
-    fi
-  fi
-
-  echo "Signing checksums with the identity ${SIGNING_IDENTITY}"
-  COSIGN_EXPERIMENTAL=1 cosign sign-blob "$checksums_file" \
-    --output-signature="${checksums_file}.sig" \
-    --output-certificate="${checksums_file}.pem" \
-    --identity-token="${ID_TOKEN}"
-  ARTIFACTS_TO_PUBLISH="${ARTIFACTS_TO_PUBLISH} ${checksums_file}.sig ${checksums_file}.pem"
 }
 
 # Copy tagged images from the nightly GCR to the release GCR, tagging them 'latest'.
@@ -497,12 +374,10 @@ function parse_flags() {
             ;;
           --release-gcr)
             KO_DOCKER_REPO=$1
-            SIGNING_IDENTITY=$RELEASE_SIGNING_IDENTITY
             has_gcr_flag=1
             ;;
           --release-gcs)
             RELEASE_GCS_BUCKET=$1
-            SIGNING_IDENTITY=$RELEASE_SIGNING_IDENTITY
             RELEASE_DIR=""
             has_gcs_flag=1
             ;;
@@ -526,15 +401,6 @@ function parse_flags() {
           --from-nightly)
             [[ $1 =~ ^v[0-9]+-[0-9a-f]+$ ]] || abort "nightly tag must be 'vYYYYMMDD-commithash'"
             FROM_NIGHTLY_RELEASE=$1
-            ;;
-          --apple-codesign-key)
-            APPLE_CODESIGN_KEY=$1
-            ;;
-          --apple-codesign-password-file)
-            APPLE_CODESIGN_PASSWORD_FILE=$1
-            ;;
-          --apple-notary-api-key)
-            APPLE_NOTARY_API_KEY=$1
             ;;
           *) abort "unknown option ${parameter}" ;;
         esac
@@ -582,11 +448,6 @@ function parse_flags() {
     [[ -z "${RELEASE_DIR}" ]] && RELEASE_DIR="${REPO_ROOT_DIR}"
   fi
 
-  # Set signing identity for cosign, it would already be set to the RELEASE one if the release-gcr/release-gcs flags are set
-  if [[ -z "${SIGNING_IDENTITY}" ]]; then
-    SIGNING_IDENTITY="${NIGHTLY_SIGNING_IDENTITY}"
-  fi
-
   [[ -z "${RELEASE_GCS_BUCKET}" && -z "${RELEASE_DIR}" ]] && abort "--release-gcs or --release-dir must be used"
   if [[ -n "${RELEASE_DIR}" ]]; then
     mkdir -p "${RELEASE_DIR}" || abort "cannot create release dir '${RELEASE_DIR}'"
@@ -619,7 +480,6 @@ function parse_flags() {
   readonly RELEASE_DIR
   readonly VALIDATION_TESTS
   readonly FROM_NIGHTLY_RELEASE
-  readonly SIGNING_IDENTITY
 }
 
 # Run tests (unless --skip-tests was passed). Conveniently displays a banner indicating so.
@@ -730,7 +590,7 @@ function main() {
 # Parameters: $1..$n - files to add to the release.
 function publish_to_github() {
   (( PUBLISH_TO_GITHUB )) || return 0
-  local title="${TAG}"
+  local title="${REPO_NAME_FORMATTED} release ${TAG}"
   local attachments=()
   local description="$(mktemp)"
   local attachments_dir="$(mktemp -d)"

@@ -209,11 +209,11 @@ RUN go install github.com/GoogleCloudPlatform/docker-credential-gcr@${DOCKER_CRE
 COPY . /go/src/knative.dev/test-infra
 
 # Build custom tools in the container
-RUN cd /go/src/knative.dev/test-infra && go install ./tools/kntest/cmd/kntest
-RUN cd /go/src/knative.dev/test-infra/tools/provenance-generator && go install .
+RUN go install knative.dev/toolbox/kntest/cmd/kntest@latest
+RUN go install knative.dev/toolbox/provenance-generator@latest
 
 # TODO(chizhg): maybe also move perf-tests tool to be part of kntest?
-RUN cd /go/src/knative.dev/test-infra && go install ./pkg/clustermanager/perf-tests
+RUN go install knative.dev/toolbox/pkg/clustermanager/perf-tests@latest
 
 # Install kubetest2-kops deployer
 RUN git clone https://github.com/kubernetes/kops /tmp/kops && cd /tmp/kops/tests/e2e/kubetest2-kops && git checkout ${KUBETEST2_KOPS_VERSION} && \
@@ -258,8 +258,8 @@ COPY images/prow-tests/runner.sh /usr/local/bin
 COPY images/prow-tests/in-gvm-env.sh /usr/local/bin
 # If you needed to compile and install different tools for different version of Go,
 #  you could do it like:
-#  RUN GO_VERSION=goX.XX in-gvm-env.sh go install knative.dev/test-infra/tools/cleanup
-#  RUN GO_VERSION=goX.XX+1 in-gvm-env.sh go install knative.dev/test-infra/tools/cleanup
+#  RUN GO_VERSION=goX.XX in-gvm-env.sh go install knative.dev/toolbox/cleanup@latest
+#  RUN GO_VERSION=goX.XX+1 in-gvm-env.sh go install knative.dev/toolbox/cleanup@latest
 # But it must be done in base or the last FROM, because it does not install to /go/bin
 
 # Not needed outside of this Dockerfile
