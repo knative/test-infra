@@ -1,0 +1,15 @@
+org: knative
+repo: toolbox
+branches: [main]
+image: gcr.io/knative-tests/test-infra/prow-tests:v20230320-1305d234
+
+jobs:
+  - name: build-tests
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --build-tests]
+    excluded_requirements: [gcp]
+
+  - name: unit-tests
+    types: [presubmit]
+    command: [runner.sh, ./test/presubmit-tests.sh, --unit-tests]
+    excluded_requirements: [gcp]
