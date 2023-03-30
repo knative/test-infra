@@ -245,7 +245,7 @@ periodics:
   name: nightly_client_main_periodic
   reporter_config:
     slack:
-      channel: client
+      channel: knative-client
       job_states_to_report:
       - failure
       report_template: |

@@ -31,7 +31,7 @@ periodics:
     path_alias: knative.dev/test-infra
   reporter_config:
     slack:
-      channel: productivity
+      channel: knative-productivity
       job_states_to_report:
         - failure
       report_template: '"The branchprotector job fails, check the log: <{{.Status.URL}}|View logs>"'

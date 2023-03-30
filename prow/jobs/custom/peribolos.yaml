@@ -107,7 +107,7 @@ postsubmits:
     - "main"
     reporter_config:
       slack:
-        channel: productivity
+        channel: knative-productivity
         job_states_to_report:
           - failure
         report_template: '"The knative peribolos postsubmit job fails, check the log: <{{.Status.URL}}|View logs>"'
@@ -160,7 +160,7 @@ postsubmits:
     - "main"
     reporter_config:
       slack:
-        channel: productivity
+        channel: knative-productivity
         job_states_to_report:
           - failure
         report_template: '"The knative-sandbox peribolos postsubmit job fails, check the log: <{{.Status.URL}}|View logs>"'

@@ -133,7 +133,7 @@ periodics:
     testgrid-tab-name: ci-knative-cleanup
   reporter_config:
     slack:
-      channel: productivity
+      channel: knative-productivity
       job_states_to_report:
         - failure
       report_template: '"The cleanup periodic job has failed, please check the logs: <{{.Status.URL}}|View logs>"'
@@ -162,7 +162,7 @@ periodics:
     testgrid-tab-name: ci-knative-flakes-reporter
   reporter_config:
     slack:
-      channel: productivity
+      channel: knative-productivity
       job_states_to_report:
         - failure
       report_template: '"The flakes-reporter periodic job has failed, please check the logs: <{{.Status.URL}}|View logs>"'
@@ -206,7 +206,7 @@ periodics:
     testgrid-tab-name: ci-knative-flakes-resultsrecorder
   reporter_config:
     slack:
-      channel: productivity
+      channel: knative-productivity
       job_states_to_report:
         - failure
       report_template: '"The flakes-resultsrecorder periodic job has failed, please check the logs: <{{.Status.URL}}|View logs>"'
@@ -256,7 +256,7 @@ periodics:
     testgrid-tab-name: ci-knative-prow-jobs-syncer
   reporter_config:
     slack:
-      channel: productivity
+      channel: knative-productivity
       job_states_to_report:
         - failure
       report_template: '"The prow-jobs-syncer periodic job has failed, please check the logs: <{{.Status.URL}}|View logs>"'
@@ -319,7 +319,7 @@ postsubmits:
       testgrid-tab-name: post-knative-test-infra-image-push
     reporter_config:
       slack:
-        channel: productivity
+        channel: knative-productivity
         job_states_to_report:
           - failure
         report_template: '"The test-infra-tools-image-push postsubmit job has failed, please check the logs: <{{.Status.URL}}|View logs>"'
@@ -359,7 +359,7 @@ postsubmits:
       testgrid-tab-name: post-knative-test-infra-prow-tests-image-push
     reporter_config:
       slack:
-        channel: productivity
+        channel: knative-productivity
         job_states_to_report:
           - failure
         report_template: '"The prow-tests-image-push postsubmit job has failed, please check the logs: <{{.Status.URL}}|View logs>"'
@@ -390,7 +390,7 @@ postsubmits:
       testgrid-tab-name: post-test-infra-update-testgrid-proto
     reporter_config:
       slack:
-        channel: productivity
+        channel: knative-productivity
         job_states_to_report:
           - failure
         report_template: '"The update-testgrid-proto postsubmit job has failed, please check the logs: <{{.Status.URL}}|View logs>"'

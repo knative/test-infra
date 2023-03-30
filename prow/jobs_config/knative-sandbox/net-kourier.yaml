@@ -30,9 +30,9 @@ jobs:
     max_concurrency: 1
     reporter_config:
       slack:
-        channel: net-kourier
+        channel: knative-serving-bots
         report_template: |
-          "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
+          "[kourier] nightly release job failed, check the log: <{{.Status.URL}}|View logs>"
         job_states_to_report:
         - "failure"
 
