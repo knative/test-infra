@@ -65,7 +65,7 @@ slack_reporter_configs:
     # Do not report any job states by default.
     job_states_to_report:
     # By default reporting to the test channel, it is required so it has to be set here.
-    channel: test
+    channel: knative-ci
     report_template: "Job `{{.Spec.Job}}` ended with state *{{.Status.State}}*: <{{.Status.URL}}|View logs>"
 
 deck:

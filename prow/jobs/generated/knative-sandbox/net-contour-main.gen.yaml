@@ -63,11 +63,11 @@ periodics:
   name: nightly_net-contour_main_periodic
   reporter_config:
     slack:
-      channel: net-contour
+      channel: knative-serving-bots
       job_states_to_report:
       - failure
       report_template: |
-        "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
+        "[net-contour] nightly release job failed, check the log: <{{.Status.URL}}|View logs>"
   spec:
     containers:
     - command:

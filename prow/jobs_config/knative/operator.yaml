@@ -82,7 +82,7 @@ jobs:
     max_concurrency: 1
     reporter_config:
       slack:
-        channel: operator
+        channel: knative-operations
         report_template: |
           "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
         job_states_to_report:

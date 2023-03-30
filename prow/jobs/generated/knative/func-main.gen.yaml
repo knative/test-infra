@@ -21,7 +21,7 @@ periodics:
   name: nightly_func_main_periodic
   reporter_config:
     slack:
-      channel: functions
+      channel: knative-functions
       job_states_to_report:
       - failure
       report_template: |

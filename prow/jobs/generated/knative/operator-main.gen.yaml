@@ -204,7 +204,7 @@ periodics:
   name: nightly_operator_main_periodic
   reporter_config:
     slack:
-      channel: operator
+      channel: knative-operations
       job_states_to_report:
       - failure
       report_template: |
