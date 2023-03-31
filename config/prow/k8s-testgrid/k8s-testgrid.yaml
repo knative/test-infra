@@ -18,7 +18,6 @@ dashboard_groups:
   name: knative
 - dashboard_names:
   - async-component
-  - container-freezer
   - eventing-autoscaler-keda
   - eventing-awssqs
   - eventing-ceph
@@ -57,7 +56,6 @@ dashboards:
 - name: async-component
 - name: client
 - name: client-pkg
-- name: container-freezer
 - name: eventing
 - name: eventing-autoscaler-keda
 - name: eventing-awssqs
@@ -86,7 +84,6 @@ dashboards:
 - name: knative-release-1.7
 - name: knative-release-1.8
 - name: knative-release-1.9
-- name: knative-sandbox-release-0.1
 - name: knative-sandbox-release-0.3
 - name: knative-sandbox-release-0.4
 - name: knative-sandbox-release-0.5
