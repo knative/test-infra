@@ -1,7 +1,7 @@
 org: knative-sandbox
 repo: eventing-couchdb
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20230327-f3a12f59
+image: gcr.io/knative-tests/test-infra/prow-tests:v20230331-37ec75c1
 
 jobs:
   - name: continuous
