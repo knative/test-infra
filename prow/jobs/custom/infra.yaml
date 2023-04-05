@@ -1,0 +1,409 @@
+# Copyright 2023 The Knative Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Add a fake hook image here so that autobump.sh can bump only job configs
+# image: gcr.io/k8s-prow/hook:v20230329-c93d79fb7d
+# See
+# https://github.com/kubernetes/test-infra/blob/5815354584709c3f436e3d682110c673d224d7b1/prow/cmd/autobump/autobump.sh#L164
+
+presubmits:
+  knative/infra:
+  - name: pull-infra-validate-prow-yaml
+    run_if_changed: '^prow/((config|plugins)\.yaml$|jobs/)'
+    decorate: true
+    cluster: prow-build
+    spec:
+      containers:
+      - image: gcr.io/k8s-prow/checkconfig:v20230329-c93d79fb7d
+        command:
+        - checkconfig
+        args:
+        - --config-path=./prow/config.yaml
+        - --job-config-path=./prow/jobs
+        - --plugin-config=./prow/plugins.yaml
+        - --strict
+        # This warning can forbid valid (and convenient) config. Exclude it.
+        # Details: https://github.com/GoogleCloudPlatform/oss-test-infra/pull/131#discussion_r334208082
+        - --exclude-warning=mismatched-tide
+        - --exclude-warning=non-decorated-jobs
+        - --exclude-warning=long-job-names
+
+  - name: pull-infra-validate-own-testgrid-yaml
+    decorate: true
+    optional: false
+    run_if_changed: "(^config/prow/k8s-testgrid/.*.yaml$|^prow/jobs/.*.yaml$)"
+    branches:
+    - "main"
+    cluster: "prow-build"
+    decoration_config: # will remove this temp override
+      gcs_credentials_secret: "gcs-upload"
+    extra_refs:
+    - org: GoogleCloudPlatform
+      repo: oss-test-infra
+      base_ref: master
+    spec:
+      containers:
+      - image: gcr.io/k8s-prow/configurator:v20230329-c93d79fb7d
+        command:
+        - configurator
+        args:
+        - --prow-config=prow/config.yaml
+        - --prow-job-config=prow/jobs
+        - --default=config/prow/k8s-testgrid/testgrid-common-settings.yaml
+        - --yaml=config/prow/k8s-testgrid/k8s-testgrid.yaml
+        - --oneshot
+        - --validate-config-file
+
+  - name: pull-knative-infra-prow-tests-image-build
+    agent: kubernetes
+    optional: false
+    decorate: true
+    path_alias: knative.dev/infra
+    cluster: prow-build
+    run_if_changed: "^(images/prow-tests/.*|tools/.*|pkg/.*|go.mod)$"
+    branches:
+    - "main"
+    spec:
+      serviceAccountName: test-runner
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:v20230331-37ec75c1
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "make"
+        - "-C"
+        - "images/prow-tests"
+        - "build-ci-test"
+periodics:
+# ci-knative-heartbeat is used for prometheus, alert(s) will be sent
+# if this job hadn't been succeeded for some time
+- cron: "*/3 * * * *" # Every 3 minutes
+  name: ci-knative-heartbeat
+  agent: kubernetes
+  decorate: true
+  cluster: "default"
+  extra_refs:
+  - org: knative
+    repo: infra
+    base_ref: main
+    path_alias: knative.dev/infra
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-heartbeat
+    cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:v20230331-37ec75c1
+      imagePullPolicy: Always
+      command:
+      - "runner.sh"
+      args:
+      - "echo"
+      - "Everything is fine!"
+      resources:
+        requests:
+          cpu: 100m
+          memory: 1Gi
+- cron: "0 19 * * *"
+  name: ci-knative-cleanup
+  agent: kubernetes
+  decorate: true
+  cluster: prow-build
+  decoration_config:
+    timeout: 6h
+  extra_refs:
+  - org: knative
+    repo: infra
+    base_ref: main
+    path_alias: knative.dev/infra
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-cleanup
+  reporter_config:
+    slack:
+      channel: knative-productivity
+      job_states_to_report:
+        - failure
+      report_template: '"The cleanup periodic job has failed, please check the logs: <{{.Status.URL}}|View logs>"'
+  spec:
+    serviceAccountName: test-runner
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:v20230331-37ec75c1
+      imagePullPolicy: Always
+      command:
+      - "runner.sh"
+      args:
+      - "go"
+      - "run"
+      - "./tools/cleanup/cleanup.go"
+      - "--project-resource-yaml=prow/cluster/build/boskos-deployment.yaml"
+      - "--days-to-keep-images=30"
+      - "--hours-to-keep-clusters=24"
+      - "--concurrent-operations=50"
+- cron: "0 12 * * *"
+  name: ci-knative-flakes-reporter
+  agent: kubernetes
+  decorate: true
+  cluster: prow-build
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-flakes-reporter
+  reporter_config:
+    slack:
+      channel: knative-productivity
+      job_states_to_report:
+        - failure
+      report_template: '"The flakes-reporter periodic job has failed, please check the logs: <{{.Status.URL}}|View logs>"'
+  spec:
+    serviceAccountName: flaky-test-reporter
+    containers:
+    - image: gcr.io/knative-tests/test-infra/flaky-test-reporter:latest
+      imagePullPolicy: Always
+      command:
+      - "/flaky-test-reporter"
+      args:
+      - "--github-account=/etc/flaky-test-reporter-github-token/token"
+      - "--slack-account=/etc/flaky-test-reporter-slack-token/token"
+      volumeMounts:
+      - name: github-credentials
+        mountPath: /etc/flaky-test-reporter-github-token
+        readOnly: true
+      - name: slack-credentials
+        mountPath: /etc/flaky-test-reporter-slack-token
+        readOnly: true
+    volumes:
+    - name: github-credentials
+      secret:
+        secretName: github-credentials
+        items:
+        - key: auto_bumper_token
+          path: token
+    - name: slack-credentials
+      secret:
+        secretName: slack-credentials
+        items:
+        - key: token
+          path: token
+- cron: "0 * * * *"
+  name: ci-knative-flakes-resultsrecorder
+  agent: kubernetes
+  decorate: true
+  cluster: prow-build
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-flakes-resultsrecorder
+  reporter_config:
+    slack:
+      channel: knative-productivity
+      job_states_to_report:
+        - failure
+      report_template: '"The flakes-resultsrecorder periodic job has failed, please check the logs: <{{.Status.URL}}|View logs>"'
+  spec:
+    serviceAccountName: flaky-test-reporter
+    containers:
+    - image: gcr.io/knative-tests/test-infra/flaky-test-reporter:latest
+      imagePullPolicy: Always
+      command:
+      - "/flaky-test-reporter"
+      args:
+      - "--skip-report"
+      - "--build-count=10"
+      volumeMounts:
+      - name: github-credentials
+        mountPath: /etc/flaky-test-reporter-github-token
+        readOnly: true
+      - name: slack-credentials
+        mountPath: /etc/flaky-test-reporter-slack-token
+        readOnly: true
+    volumes:
+    - name: github-credentials
+      secret:
+        secretName: github-credentials
+        items:
+        - key: auto_bumper_token
+          path: token
+    - name: slack-credentials
+      secret:
+        secretName: slack-credentials
+        items:
+        - key: token
+          path: token
+
+- cron: "0 */2 * * *" # Every other hour
+  name: ci-knative-prow-jobs-syncer
+  agent: kubernetes
+  decorate: true
+  cluster: prow-build
+  extra_refs:
+  - org: knative
+    repo: infra
+    base_ref: main
+    path_alias: knative.dev/infra
+  annotations:
+    testgrid-dashboards: utilities
+    testgrid-tab-name: ci-knative-prow-jobs-syncer
+  reporter_config:
+    slack:
+      channel: knative-productivity
+      job_states_to_report:
+        - failure
+      report_template: '"The prow-jobs-syncer periodic job has failed, please check the logs: <{{.Status.URL}}|View logs>"'
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests:v20230331-37ec75c1
+      imagePullPolicy: Always
+      command:
+      - "runner.sh"
+      args:
+      - bash
+      - -c
+      - |
+        cd tools/release-jobs-syncer
+        go run . --github-account=/etc/prow-auto-bumper-github-token/token \
+          --git-userid=knative-prow-updater-robot \
+          --git-username='Knative Prow Updater Robot' \
+          --git-email=knative-prow-updater-robot@google.com \
+          --prow-job-config-root-path=prow/jobs_config \
+          --regen-config-script=hack/generate-configs.sh \
+          --label=skip-review
+      volumeMounts:
+      - name: github-credentials
+        mountPath: /etc/prow-auto-bumper-github-token
+        readOnly: true
+      - name: ssh
+        mountPath: /root/.ssh
+    volumes:
+    - name: github-credentials
+      secret:
+        secretName: github-credentials
+        items:
+        - key: auto_bumper_token
+          path: token
+    - name: ssh
+      secret:
+        secretName: github-credentials
+        defaultMode: 0700
+        items:
+        - key: id_rsa
+          path: id_rsa
+        - key: id_rsa_pub
+          path: id_rsa.pub
+        - key: known_hosts
+          path: known_hosts
+
+postsubmits:
+  knative/infra:
+  - name: post-knative-infra-image-push
+    agent: kubernetes
+    decorate: true
+    path_alias: knative.dev/infra
+    max_concurrency: 1
+    cluster: prow-build
+    run_if_changed: "^(images/.*|tools/.*|pkg/.*|go.mod)$"
+    branches:
+    - "main"
+    annotations:
+      testgrid-dashboards: utilities
+      testgrid-tab-name: post-knative-infra-image-push
+    reporter_config:
+      slack:
+        channel: knative-productivity
+        job_states_to_report:
+          - failure
+        report_template: '"The infra-tools-image-push postsubmit job has failed, please check the logs: <{{.Status.URL}}|View logs>"'
+    spec:
+      serviceAccountName: test-runner
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:v20230331-37ec75c1
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./images/push-all.sh"
+        securityContext:
+          privileged: true
+        env:
+        - name: DOCKER_IN_DOCKER_ENABLED
+          value: "true"
+        resources:
+          requests:
+            memory: 28Gi
+          limits:
+            memory: 32Gi
+      volumes:
+      - name: docker-graph
+        emptyDir: {}
+  - name: post-knative-infra-prow-tests-image-push
+    agent: kubernetes
+    decorate: true
+    path_alias: knative.dev/infra
+    max_concurrency: 1
+    cluster: prow-build
+    run_if_changed: "^(images/prow-tests/.*|tools/kntest/.*|pkg/.*|go.mod)$"
+    branches:
+    - "main"
+    annotations:
+      testgrid-dashboards: utilities
+      testgrid-tab-name: post-knative-infra-prow-tests-image-push
+    reporter_config:
+      slack:
+        channel: knative-productivity
+        job_states_to_report:
+          - failure
+        report_template: '"The prow-tests-image-push postsubmit job has failed, please check the logs: <{{.Status.URL}}|View logs>"'
+    spec:
+      serviceAccountName: test-runner # switch a different service account
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests:v20230331-37ec75c1
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "make"
+        - "-C"
+        - "images/prow-tests"
+        - "push"
+  - name: post-infra-update-testgrid-proto
+    decorate: true
+    run_if_changed: "^(config/prow/k8s-testgrid/|prow/jobs/).*.yaml"
+    branches:
+    - "main"
+    cluster: prow-build
+    extra_refs:
+    - org: GoogleCloudPlatform
+      repo: oss-test-infra
+      base_ref: master
+    annotations:
+      testgrid-dashboards: utilities
+      testgrid-tab-name: post-infra-update-testgrid-proto
+    reporter_config:
+      slack:
+        channel: knative-productivity
+        job_states_to_report:
+          - failure
+        report_template: '"The update-testgrid-proto postsubmit job has failed, please check the logs: <{{.Status.URL}}|View logs>"'
+    spec:
+      serviceAccountName: testgrid-updater
+      containers:
+      - image: gcr.io/k8s-prow/configurator:v20230329-c93d79fb7d
+        command:
+        - configurator
+        args:
+        - --prow-config=prow/config.yaml
+        - --prow-job-config=prow/jobs
+        - --default=config/prow/k8s-testgrid/testgrid-common-settings.yaml
+        - --yaml=config/prow/k8s-testgrid/k8s-testgrid.yaml
+        - --oneshot
+        - --output=gs://knative-own-testgrid/config
