@@ -21,7 +21,25 @@ jobs:
   - name: continuous
     types: [periodic]
     command: [runner.sh, ./test/presubmit-tests.sh, --all-tests]
-
+  - name: s390x-e2e-tests
+    cron: 20 10 * * *
+    types: [periodic]
+    requirements: [s390x]
+    command: [runner.sh]
+    args:
+      - bash
+      - -c
+      - |
+        mkdir -p /root/.kube
+        cat /opt/cluster/ci-script > connect.sh
+        chmod +x connect.sh
+        ./connect.sh plugin_event-main
+        kubectl get cm s390x-config-plugin_event -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
+        chmod +x adjust.sh
+        ./adjust.sh
+        ./test/e2e-tests.sh --run-tests
+    excluded_requirements:
+    - gcp
   - name: nightly
     types: [periodic]
     command: [runner.sh, ./hack/release.sh, --publish, --tag-release,
