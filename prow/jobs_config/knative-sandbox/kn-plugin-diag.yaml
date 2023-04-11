@@ -1,7 +1,7 @@
 org: knative-sandbox
 repo: kn-plugin-diag
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20230331-37ec75c1
+image: gcr.io/knative-tests/test-infra/prow-tests:v20230410-37f7de8a
 
 jobs:
   - name: build-tests
