@@ -21,7 +21,7 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --build-tests
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230331-37ec75c1
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230410-37f7de8a
         name: ""
         resources: {}
         securityContext:
@@ -44,7 +44,7 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --unit-tests
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230331-37ec75c1
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230410-37f7de8a
         name: ""
         resources: {}
         securityContext:
@@ -72,7 +72,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230331-37ec75c1
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230410-37f7de8a
         name: ""
         resources: {}
         securityContext:
