@@ -31,7 +31,7 @@ periodics:
         value: /etc/test-account/service-account.json
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20230410-37f7de8a
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20230413-35d401a2
       name: ""
       resources: {}
       securityContext:
@@ -103,7 +103,7 @@ periodics:
         value: "true"
       - name: DOCKER_IN_DOCKER_ENABLED
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20230410-37f7de8a
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20230413-35d401a2
       name: ""
       resources: {}
       securityContext:
