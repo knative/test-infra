@@ -20,7 +20,7 @@ module "project" {
   project_id      = each.key
   folder_id       = google_folder.boskos.id
   org_id          = "22054930418"
-  billing_account = "01DDAC-7D2015-6E152D"
+  billing_account = "018CEF-0F96A6-4D1A14"
 
   # Sane project defaults
   default_service_account     = "keep"

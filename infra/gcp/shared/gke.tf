@@ -28,6 +28,8 @@ module "shared" {
     max_memory_gb       = null
     min_cpu_cores       = null
     min_memory_gb       = null
+    auto_repair         = null
+    auto_upgrade        = null
   }
 
   cluster_resource_labels = {
