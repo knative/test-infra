@@ -1,7 +1,7 @@
 org: knative-sandbox
 repo: kn-plugin-source-kafka
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20230425-631eb438
+image: gcr.io/knative-tests/test-infra/prow-tests:v20230426-d7b623bd
 
 jobs:
   - name: build-tests
