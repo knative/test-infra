@@ -1,24 +1,24 @@
 // WARNING, MAKE SURE YOU DON"T DESTROY THESE CLUSTERS ACCIDENTALLY
 
 module "prow_trusted" {
-  source                     = "terraform-google-modules/kubernetes-engine/google//modules/beta-public-cluster"
-  version                    = "~> 24.1"
-  project_id                 = module.project.project_id
-  name                       = "prow-trusted"
-  regional                   = false
-  zones                      = ["us-central1-a"]
-  release_channel            = "STABLE"
-  network                    = "default"
-  subnetwork                 = "default"
-  ip_range_pods              = "gke-prow-trusted-pods-f579223d"
-  ip_range_services          = "gke-prow-trusted-services-f579223d"
-  http_load_balancing        = true
-  network_policy             = false
-  horizontal_pod_autoscaling = true
-  filestore_csi_driver       = false
-  create_service_account     = false
-  remove_default_node_pool   = true
-  gce_pd_csi_driver          = true
+  source                       = "terraform-google-modules/kubernetes-engine/google//modules/beta-public-cluster"
+  version                      = "~> 24.1"
+  project_id                   = module.project.project_id
+  name                         = "prow-trusted"
+  regional                     = false
+  zones                        = ["us-central1-a"]
+  release_channel              = "STABLE"
+  network                      = "default"
+  subnetwork                   = "default"
+  ip_range_pods                = "gke-prow-trusted-pods-f579223d"
+  ip_range_services            = "gke-prow-trusted-services-f579223d"
+  http_load_balancing          = true
+  network_policy               = false
+  horizontal_pod_autoscaling   = true
+  filestore_csi_driver         = false
+  create_service_account       = false
+  remove_default_node_pool     = true
+  gce_pd_csi_driver            = true
   authenticator_security_group = "gke-security-groups@knative.dev"
   cluster_resource_labels = {
     cluster     = "prow-trusted"
@@ -46,23 +46,23 @@ module "prow_trusted" {
 }
 
 module "prow" {
-  source                     = "terraform-google-modules/kubernetes-engine/google//modules/beta-public-cluster"
-  version                    = "~> 24.1"
-  project_id                 = module.project.project_id
-  name                       = "prow"
-  region                     = "us-central1"
-  release_channel            = "RAPID"
-  network                    = module.vpc.network_name
-  subnetwork                 = module.vpc.subnets["us-central1/prow-subnet-01"].name
-  ip_range_pods              = "prow-pods"
-  ip_range_services          = "prow-services"
-  http_load_balancing        = true
-  network_policy             = false
-  horizontal_pod_autoscaling = true
-  filestore_csi_driver       = false
-  create_service_account     = false
-  remove_default_node_pool   = true
-  gce_pd_csi_driver          = true
+  source                       = "terraform-google-modules/kubernetes-engine/google//modules/beta-public-cluster"
+  version                      = "~> 24.1"
+  project_id                   = module.project.project_id
+  name                         = "prow"
+  region                       = "us-central1"
+  release_channel              = "RAPID"
+  network                      = module.vpc.network_name
+  subnetwork                   = module.vpc.subnets["us-central1/prow-subnet-01"].name
+  ip_range_pods                = "prow-pods"
+  ip_range_services            = "prow-services"
+  http_load_balancing          = true
+  network_policy               = false
+  horizontal_pod_autoscaling   = true
+  filestore_csi_driver         = false
+  create_service_account       = false
+  remove_default_node_pool     = true
+  gce_pd_csi_driver            = true
   authenticator_security_group = "gke-security-groups@knative.dev"
   cluster_resource_labels = {
     cluster     = "prow"
@@ -97,23 +97,23 @@ module "prow" {
 }
 
 module "prow_build" {
-  source                     = "terraform-google-modules/kubernetes-engine/google//modules/beta-public-cluster"
-  version                    = "~> 24.1"
-  project_id                 = module.project.project_id
-  name                       = "prow-build"
-  region                     = "us-central1"
-  release_channel            = "RAPID"
-  network                    = module.vpc.network_name
-  subnetwork                 = module.vpc.subnets["us-central1/prow-subnet-01"].name
-  ip_range_pods              = "prow-build-pods"
-  ip_range_services          = "prow-build-services"
-  http_load_balancing        = true
-  network_policy             = false
-  horizontal_pod_autoscaling = true
-  filestore_csi_driver       = false
-  create_service_account     = false
-  remove_default_node_pool   = true
-  gce_pd_csi_driver          = true
+  source                       = "terraform-google-modules/kubernetes-engine/google//modules/beta-public-cluster"
+  version                      = "~> 24.1"
+  project_id                   = module.project.project_id
+  name                         = "prow-build"
+  region                       = "us-central1"
+  release_channel              = "RAPID"
+  network                      = module.vpc.network_name
+  subnetwork                   = module.vpc.subnets["us-central1/prow-subnet-01"].name
+  ip_range_pods                = "prow-build-pods"
+  ip_range_services            = "prow-build-services"
+  http_load_balancing          = true
+  network_policy               = false
+  horizontal_pod_autoscaling   = true
+  filestore_csi_driver         = false
+  create_service_account       = false
+  remove_default_node_pool     = true
+  gce_pd_csi_driver            = true
   authenticator_security_group = "gke-security-groups@knative.dev"
   cluster_autoscaling = {
     enabled             = false

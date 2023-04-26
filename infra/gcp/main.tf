@@ -7,29 +7,41 @@ data "google_organization" "org" {
 }
 
 module "dns" {
-  source = "./dns"
+  source          = "./dns"
+  billing_account = var.billing_account
 }
 
 module "gsuite" {
-  source = "./gsuite"
+  source          = "./gsuite"
+  billing_account = var.billing_account
+
 }
 
 module "tests" {
-  source = "./tests"
+  source          = "./tests"
+  billing_account = var.billing_account
 }
 
 module "analytics" {
-  source = "./analytics"
+  source          = "./analytics"
+  billing_account = var.billing_account
+
 }
 
 module "releases" {
-  source = "./releases"
+  source          = "./releases"
+  billing_account = var.billing_account
+
 }
 
 module "nightly" {
-  source = "./nightly"
+  source          = "./nightly"
+  billing_account = var.billing_account
+
 }
 
 module "shared" {
-  source = "./shared"
+  source          = "./shared"
+  billing_account = var.billing_account
+
 }
