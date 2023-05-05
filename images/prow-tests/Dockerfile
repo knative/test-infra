@@ -159,11 +159,11 @@ RUN curl -fsSL "https://github.com/protocolbuffers/protobuf/releases/download/v$
 # protoc-gen-gogofaster is installed below
 
 ############################################################
-FROM golang:1.19.7 AS external-go-previous
+FROM golang:1.19.9 AS external-go-previous
 # Capture the version that depndabot bumps so that we can install it into the base image
 RUN go version | cut -d' ' -f3 > /golang.version
 
-FROM golang:1.20.2 AS external-go-latest
+FROM golang:1.20.4 AS external-go-latest
 # Capture the version that depndabot bumps so that we can install it into the base image
 RUN go version | cut -d' ' -f3 > /golang.version
 
@@ -171,7 +171,7 @@ FROM external-go-latest AS external-go-gets
 
 ARG KUBETEST2_VERSION=d306c412d528f0a5dda4b6bd1c7550a905f5edb9
 ARG KUBETEST2_KOPS_VERSION=9b957a1d6189ee612506c9b6dc5b8b1a19e9c2aa # v1.25.0 release
-ARG KIND_VERSION=v0.17.0
+ARG KIND_VERSION=v0.18.0
 ARG KO_VERSION=v0.13.0
 ARG PROTOC_GEN_GO_VERSION=v1.28.0
 ARG PROTOC_GEN_GOGOFASTER_VERSION=v1.3.2
