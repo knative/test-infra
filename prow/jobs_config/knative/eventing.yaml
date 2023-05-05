@@ -1,7 +1,7 @@
 org: knative
 repo: eventing
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20230426-d7b623bd
+image: gcr.io/knative-tests/test-infra/prow-tests:v20230505-dcd8fbb3
 
 jobs:
   - name: build-tests
