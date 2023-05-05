@@ -56,7 +56,7 @@ const (
 	<summary>%s</summary><p>
 
 %s
-</p></details>`  // The blank line is crucial for collapsible format
+</p></details>` // The blank line is crucial for collapsible format
 
 	// issueBodyTemplate is a template for issue body
 	issueBodyTemplate = `

@@ -36,8 +36,8 @@ import (
 )
 
 const (
-	// The max number of release branches we keep for CI/CD is 3, current and previous 2.
-	maxReleaseBranches = 3
+	// The max number of release branches we keep for CI/CD is 2, current and previous 1.
+	maxReleaseBranches = 2
 
 	// Prefix for release branch names.
 	releaseBranchNamePrefix = "release-"
