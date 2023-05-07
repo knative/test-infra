@@ -63,7 +63,7 @@ periodics:
   name: nightly_eventing-kogito_main_periodic
   reporter_config:
     slack:
-      channel: eventing-sources
+      channel: knative-eventing
       job_states_to_report:
       - failure
       report_template: |

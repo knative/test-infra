@@ -63,7 +63,7 @@ periodics:
   name: nightly_eventing-rabbitmq_main_periodic
   reporter_config:
     slack:
-      channel: eventing-rabbitmq
+      channel: knative-eventing
       job_states_to_report:
       - failure
       report_template: |
