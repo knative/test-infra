@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.20.2
+FROM golang:1.20.4
 
 # Required input: -e TOOL_NAME=name, i.e. TOOL_NAME=flaky-test-reporter
 ARG TOOL_NAME
