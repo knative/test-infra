@@ -39,9 +39,9 @@ jobs:
     max_concurrency: 1
     reporter_config:
       slack:
-        channel: eventing-kafka
+        channel: knative-eventing
         report_template: |
-          "The nightly release job fails, check the log: <{{.Status.URL}}|View logs>"
+          "The nightly release job has failed, check the log: <{{.Status.URL}}|View logs>"
         job_states_to_report:
         - "failure"
 

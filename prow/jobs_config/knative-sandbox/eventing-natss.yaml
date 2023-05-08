@@ -16,11 +16,11 @@ jobs:
     max_concurrency: 1
     reporter_config:
       slack:
-        channel: eventing
+        channel: knative-eventing
         job_states_to_report:
         - failure
         report_template: |
-          "The nightly release job for eventing-natss failed, check the log: <{{.Status.URL}}|View logs>"
+          "The nightly release job for eventing-natss has failed, please check the log: <{{.Status.URL}}|View logs>"
 
   - name: release
     types: [periodic]

@@ -16,7 +16,7 @@ jobs:
     max_concurrency: 1
     reporter_config:
       slack:
-        channel: eventing-rabbitmq
+        channel: knative-eventing
         job_states_to_report:
         - failure
         report_template: |
