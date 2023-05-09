@@ -13,6 +13,9 @@ jobs:
     types: [presubmit]
     command: [runner.sh, ./test/presubmit-tests.sh, --unit-tests]
     excluded_requirements: [gcp]
+    env:
+      - name: E2E_CLUSTER_REGION
+        value: us-central1
 
   - name: integration-tests
     types: [presubmit]

@@ -44,6 +44,9 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --unit-tests
+        env:
+        - name: E2E_CLUSTER_REGION
+          value: us-central1
         image: gcr.io/knative-tests/test-infra/prow-tests:v20230508-f21f8415
         name: ""
         resources: {}
