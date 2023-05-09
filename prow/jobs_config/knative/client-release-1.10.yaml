@@ -80,12 +80,12 @@ jobs:
     ./test/e2e-tests.sh --run-tests
   command:
   - runner.sh
-  cron: 0 9 * * *
+  cron: 30 20 * * *
   env:
   - name: INGRESS_CLASS
     value: contour.ingress.networking.knative.dev
   - name: CI_JOB
-    value: client-main
+    value: client-release-1.10
   name: ppc64le-e2e-tests
   requirements:
   - ppc64le
