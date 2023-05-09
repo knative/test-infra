@@ -123,6 +123,65 @@ periodics:
         - key: signing-certificate-password
           path: password
         secretName: apple-notary-creds
+- annotations:
+    testgrid-dashboards: knative-sandbox-release-1.10
+    testgrid-tab-name: kn-plugin-event-s390x-e2e-tests
+  cluster: prow-build
+  cron: 20 14 * * *
+  decorate: true
+  extra_refs:
+  - base_ref: release-1.10
+    org: knative-sandbox
+    path_alias: knative.dev/kn-plugin-event
+    repo: kn-plugin-event
+  name: s390x-e2e-tests_kn-plugin-event_release-1.10_periodic
+  spec:
+    containers:
+    - args:
+      - bash
+      - -c
+      - |
+        mkdir -p /root/.kube
+        cat /opt/cluster/ci-script > connect.sh
+        chmod +x connect.sh
+        ./connect.sh plugin_event-110
+        kubectl get cm s390x-config-plugin-event -n default -o jsonpath='{.data.adjustment-script}' > adjust.sh
+        chmod +x adjust.sh
+        ./adjust.sh
+        ./test/e2e-tests.sh --run-tests
+      command:
+      - runner.sh
+      env:
+      - name: KO_FLAGS
+        value: --platform=linux/s390x --insecure-registry
+      - name: PLATFORM
+        value: linux/s390x
+      - name: KO_DOCKER_REPO
+        valueFrom:
+          secretKeyRef:
+            key: ko-docker-repo
+            name: s390x-cluster1
+      - name: KUBECONFIG
+        value: /root/.kube/config
+      - name: DOCKER_CONFIG
+        value: /opt/cluster
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20230505-dcd8fbb3
+      name: ""
+      resources: {}
+      securityContext:
+        privileged: true
+      volumeMounts:
+      - mountPath: /opt/cluster
+        name: s390x-cluster1
+        readOnly: true
+    nodeSelector:
+      kubernetes.io/arch: amd64
+      type: testing
+    volumes:
+    - name: s390x-cluster1
+      secret:
+        defaultMode: 384
+        secretName: s390x-cluster1
 presubmits:
   knative-sandbox/kn-plugin-event:
   - always_run: true
