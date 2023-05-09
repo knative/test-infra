@@ -249,14 +249,14 @@ jobs:
     ./test/e2e-tests.sh --run-tests --kourier-version latest
   command:
   - runner.sh
-  cron: 30 21 * * *
+  cron: 30 5 * * *
   env:
   - name: SYSTEM_NAMESPACE
     value: knative-serving
   - name: TEST_OPTIONS
     value: --enable-alpha --enable-beta --resolvabledomain=false
   - name: CI_JOB
-    value: kourier-main
+    value: kourier-release-1.10
   name: ppc64le-kourier-tests
   requirements:
   - ppc64le
@@ -273,14 +273,14 @@ jobs:
     ./test/e2e-tests.sh --run-tests --contour-version latest
   command:
   - runner.sh
-  cron: 30 23 * * *
+  cron: 30 2 * * *
   env:
   - name: SYSTEM_NAMESPACE
     value: knative-serving
   - name: TEST_OPTIONS
     value: --enable-alpha --enable-beta --resolvabledomain=false
   - name: CI_JOB
-    value: contour-main
+    value: contour-release-1.10
   name: ppc64le-contour-tests
   requirements:
   - ppc64le
