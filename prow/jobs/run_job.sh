@@ -35,28 +35,28 @@ CONFIG_YAML=${REPO_ROOT_DIR}/prow/config.yaml
 JOB_CONFIG_YAML=${REPO_ROOT_DIR}/prow/jobs
 
 if [[ -n "${GITHUB_TOKEN_PATH}" ]]; then
-    docker run -i --rm \
-        -v "${PWD}:${PWD}" -v "${CONFIG_YAML}:${CONFIG_YAML}" -v "${JOB_CONFIG_YAML}:${JOB_CONFIG_YAML}" \
-        -v "${GITHUB_TOKEN_PATH}:${GITHUB_TOKEN_PATH}" \
-        -w "${PWD}" \
-        gcr.io/k8s-prow/mkpj:v20230505-3fedf7ef10 \
-        "--job=${JOB_NAME}" "--config-path=${CONFIG_YAML}" "--job-config-path=${JOB_CONFIG_YAML}" \
-        "--github-token-path=${GITHUB_TOKEN_PATH}" \
-        > "${JOB_YAML}"
+  docker run -i --rm \
+    -v "${PWD}:${PWD}" -v "${CONFIG_YAML}:${CONFIG_YAML}" -v "${JOB_CONFIG_YAML}:${JOB_CONFIG_YAML}" \
+    -v "${GITHUB_TOKEN_PATH}:${GITHUB_TOKEN_PATH}" \
+    -w "${PWD}" \
+    gcr.io/k8s-prow/mkpj:v20230505-3fedf7ef10 \
+    "--job=${JOB_NAME}" "--config-path=${CONFIG_YAML}" "--job-config-path=${JOB_CONFIG_YAML}" \
+    "--github-token-path=${GITHUB_TOKEN_PATH}" \
+    >"${JOB_YAML}"
 else
-    failed=0
-    docker run -i --rm \
-        -v "${PWD}:${PWD}" -v "${CONFIG_YAML}:${CONFIG_YAML}" -v "${JOB_CONFIG_YAML}:${JOB_CONFIG_YAML}" \
-        -w "${PWD}" \
-        gcr.io/k8s-prow/mkpj:v20230505-3fedf7ef10 \
-        "--job=${JOB_NAME}" "--config-path=${CONFIG_YAML}" "--job-config-path=${JOB_CONFIG_YAML}" \
-        > "${JOB_YAML}" || failed=1
+  failed=0
+  docker run -i --rm \
+    -v "${PWD}:${PWD}" -v "${CONFIG_YAML}:${CONFIG_YAML}" -v "${JOB_CONFIG_YAML}:${JOB_CONFIG_YAML}" \
+    -w "${PWD}" \
+    gcr.io/k8s-prow/mkpj:v20230505-3fedf7ef10 \
+    "--job=${JOB_NAME}" "--config-path=${CONFIG_YAML}" "--job-config-path=${JOB_CONFIG_YAML}" \
+    >"${JOB_YAML}" || failed=1
 
-    if (( failed )); then
-        echo "ERROR: failed generating job config using mkpj"
-        echo "It's possible that GitHub token is missing, please try passing github token path as second parameter"
-        exit 1
-    fi
+  if ((failed)); then
+    echo "ERROR: failed generating job config using mkpj"
+    echo "It's possible that GitHub token is missing, please try passing github token path as second parameter"
+    exit 1
+  fi
 fi
 
 echo "Job YAML file saved to ${JOB_YAML}"
