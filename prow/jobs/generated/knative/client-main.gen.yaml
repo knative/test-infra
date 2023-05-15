@@ -167,7 +167,7 @@ periodics:
     testgrid-dashboards: client
     testgrid-tab-name: ppc64le-e2e-tests
   cluster: prow-build
-  cron: 0 9 * * *
+  cron: 45 9 * * *
   decorate: true
   extra_refs:
   - base_ref: main
