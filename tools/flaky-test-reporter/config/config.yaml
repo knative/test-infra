@@ -19,65 +19,65 @@ jobConfigs:
     type: postsubmit
     issueRepo: serving
     slackChannels:
-      - name: serving
-        identity: CA4DNJ9A4
+      - name: knative-serving
+        identity: C04LMU0AX60
   - name: istio-latest-mesh_serving_main_periodic
     org: knative
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: net-istio
-        identity: C012AK2FPK7
+      - name: knative-serving
+        identity: C04LMU0AX60
   - name: istio-latest-no-mesh_serving_main_periodic
     org: knative
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: net-istio
-        identity: C012AK2FPK7
+      - name: knative-serving
+        identity: C04LMU0AX60
   - name: contour-latest_serving_main_periodic
     org: knative
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: net-contour
-        identity: C012J5TCS6Q
+      - name: knative-serving
+        identity: C04LMU0AX60
   - name: s390x-contour-tests_serving_main_periodic
     org: knative
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: s390x
-        identity: C027YB4QUUU
+      - name: knative-serving
+        identity: C04LMU0AX60
   - name: kourier-stable_serving_main_periodic
     org: knative
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: net-kourier
-        identity: C012C0VQJAW
+      - name: knative-serving
+        identity: C04LMU0AX60
   - name: s390x-kourier-tests_serving_main_periodic
     org: knative
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: s390x
-        identity: C027YB4QUUU
+      - name: knative-serving
+        identity: C04LMU0AX60
   - name: continuous_eventing_main_periodic
     org: knative
     repo: eventing
     type: postsubmit
     issueRepo: eventing
     slackChannels:
-      - name: eventing
-        identity: C9JP909F0
+      - name: knative-eventing
+        identity: C04LMU33V1S
   - name: s390x-e2e-tests_eventing_main_periodic
     org: knative
     repo: eventing
     type: postsubmit
     slackChannels:
-      - name: s390x
-        identity: C027YB4QUUU
+      - name: knative-eventing
+        identity: C04LMU33V1S
   - name: continuous_eventing-kafka-broker_main_periodic
     org: knative-sandbox
     repo: eventing-kafka-broker
@@ -88,12 +88,12 @@ jobConfigs:
     repo: operator
     type: postsubmit
     slackChannels:
-      - name: s390x
-        identity: C027YB4QUUU
+      - name: knative-operations
+        identity: C050X5BGNNS
   - name: s390x-e2e-tests_client_main_periodic
     org: knative
     repo: client
     type: postsubmit
     slackChannels:
-      - name: s390x
-        identity: C027YB4QUUU
+      - name: knative-client
+        identity: C04LY4SKBQR
