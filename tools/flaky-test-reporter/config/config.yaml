@@ -19,50 +19,50 @@ jobConfigs:
     type: postsubmit
     issueRepo: serving
     slackChannels:
-      - name: knative-serving
-        identity: C04LMU0AX60
+      - name: knative-serving-bots
+        identity: C04MYJBP3H7
   - name: istio-latest-mesh_serving_main_periodic
     org: knative
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: knative-serving
-        identity: C04LMU0AX60
+      - name: knative-serving-bots
+        identity: C04MYJBP3H7
   - name: istio-latest-no-mesh_serving_main_periodic
     org: knative
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: knative-serving
-        identity: C04LMU0AX60
+      - name: knative-serving-bots
+        identity: C04MYJBP3H7
   - name: contour-latest_serving_main_periodic
     org: knative
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: knative-serving
-        identity: C04LMU0AX60
+      - name: knative-serving-bots
+        identity: C04MYJBP3H7
   - name: s390x-contour-tests_serving_main_periodic
     org: knative
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: knative-serving
-        identity: C04LMU0AX60
+      - name: knative-serving-bots
+        identity: C04MYJBP3H7
   - name: kourier-stable_serving_main_periodic
     org: knative
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: knative-serving
-        identity: C04LMU0AX60
+      - name: knative-serving-bots
+        identity: C04MYJBP3H7
   - name: s390x-kourier-tests_serving_main_periodic
     org: knative
     repo: serving
     type: postsubmit
     slackChannels:
-      - name: knative-serving
-        identity: C04LMU0AX60
+      - name: knative-serving-bots
+        identity: C04MYJBP3H7
   - name: continuous_eventing_main_periodic
     org: knative
     repo: eventing
