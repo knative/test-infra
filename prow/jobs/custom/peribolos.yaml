@@ -32,6 +32,7 @@ presubmits:
         command:
         - "peribolos"
         args:
+        - "--allow-repo-archival"
         - "--config-path=peribolos/knative.yaml"
         # We have to still use the GitHub oauth token for authentication, since
         # peribolos does not allow using GitHub app token when having
@@ -70,6 +71,7 @@ presubmits:
         command:
         - "peribolos"
         args:
+        - "--allow-repo-archival"
         - "--config-path=peribolos/knative-sandbox.yaml"
         # We have to still use the GitHub oauth token for authentication, since
         # peribolos does not allow using GitHub app token when having
@@ -120,6 +122,7 @@ postsubmits:
         command:
         - "peribolos"
         args:
+        - "--allow-repo-archival"
         - "--config-path=peribolos/knative.yaml"
         - --github-app-id=$(GITHUB_APP_ID)
         - --github-app-private-key-path=/etc/github/cert
@@ -173,6 +176,7 @@ postsubmits:
         command:
         - "peribolos"
         args:
+        - "--allow-repo-archival"
         - "--config-path=peribolos/knative-sandbox.yaml"
         - --github-app-id=$(GITHUB_APP_ID)
         - --github-app-private-key-path=/etc/github/cert
