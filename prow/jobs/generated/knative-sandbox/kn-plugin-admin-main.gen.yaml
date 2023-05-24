@@ -14,7 +14,7 @@ periodics:
   decorate: true
   extra_refs:
   - base_ref: main
-    org: knative-sandbox
+    org: knative-extension
     path_alias: knative.dev/kn-plugin-admin
     repo: kn-plugin-admin
   name: continuous_kn-plugin-admin_main_periodic
@@ -56,7 +56,7 @@ periodics:
   decorate: true
   extra_refs:
   - base_ref: main
-    org: knative-sandbox
+    org: knative-extension
     path_alias: knative.dev/kn-plugin-admin
     repo: kn-plugin-admin
   max_concurrency: 1
@@ -111,7 +111,7 @@ periodics:
   decorate: true
   extra_refs:
   - base_ref: main
-    org: knative-sandbox
+    org: knative-extension
     path_alias: knative.dev/kn-plugin-admin
     repo: kn-plugin-admin
   max_concurrency: 1
@@ -140,7 +140,7 @@ periodics:
       - name: SIGN_IMAGES
         value: "true"
       - name: ORG_NAME
-        value: knative-sandbox
+        value: knative-extension
       - name: ATTEST_IMAGES
         value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20230516-b5591eac
@@ -177,7 +177,7 @@ periodics:
           path: password
         secretName: apple-notary-creds
 presubmits:
-  knative-sandbox/kn-plugin-admin:
+  knative-extension/kn-plugin-admin:
   - always_run: true
     branches:
     - ^main$

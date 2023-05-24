@@ -57,11 +57,11 @@ presubmits:
           secretName: github-token-for-peribolos
 
   # Run on the prow-trusted build cluster as it needs access to the github oauth token.
-  - name: pull-knative-sandbox-peribolos
+  - name: pull-knative-extension-peribolos
     agent: kubernetes
     decorate: true
     path_alias: knative.dev/community
-    run_if_changed: "^peribolos/knative-sandbox.yaml$"
+    run_if_changed: "^peribolos/knative-extension.yaml$"
     cluster: "prow-trusted"
     branches:
     - "main"
@@ -72,7 +72,7 @@ presubmits:
         - "peribolos"
         args:
         - "--allow-repo-archival"
-        - "--config-path=peribolos/knative-sandbox.yaml"
+        - "--config-path=peribolos/knative-extension.yaml"
         # We have to still use the GitHub oauth token for authentication, since
         # peribolos does not allow using GitHub app token when having
         # --confirm=false.
@@ -152,12 +152,12 @@ postsubmits:
         secret:
           secretName: github-token
   # Run on the prow-trusted build cluster as it needs access to the github oauth token.
-  - name: post-knative-sandbox-peribolos
+  - name: post-knative-extension-peribolos
     agent: kubernetes
     decorate: true
     path_alias: knative.dev/community
     max_concurrency: 1
-    run_if_changed: "^peribolos/knative-sandbox.yaml$"
+    run_if_changed: "^peribolos/knative-extension.yaml$"
     cluster: "prow-trusted"
     branches:
     - "main"
@@ -166,10 +166,10 @@ postsubmits:
         channel: knative-productivity
         job_states_to_report:
           - failure
-        report_template: '"The knative-sandbox peribolos postsubmit job fails, check the log: <{{.Status.URL}}|View logs>"'
+        report_template: '"The knative-extension peribolos postsubmit job fails, check the log: <{{.Status.URL}}|View logs>"'
     annotations:
       testgrid-dashboards: utilities
-      testgrid-tab-name: post-knative-sandbox-peribolos
+      testgrid-tab-name: post-knative-extension-peribolos
     spec:
       containers:
       - image: gcr.io/k8s-prow/peribolos:v20230519-bb3c69e522
@@ -177,7 +177,7 @@ postsubmits:
         - "peribolos"
         args:
         - "--allow-repo-archival"
-        - "--config-path=peribolos/knative-sandbox.yaml"
+        - "--config-path=peribolos/knative-extension.yaml"
         - --github-app-id=$(GITHUB_APP_ID)
         - --github-app-private-key-path=/etc/github/cert
         - "--github-hourly-tokens=2000"
@@ -257,7 +257,7 @@ periodics:
         secretName: github-token
 # Run at 10AM PST.
 - cron: "0 17 * * *"
-  name: ci-knative-sandbox-peribolos
+  name: ci-knative-extension-peribolos
   agent: kubernetes
   decorate: true
   cluster: "prow-trusted"
@@ -268,14 +268,14 @@ periodics:
     path_alias: knative.dev/community
   annotations:
     testgrid-dashboards: utilities
-    testgrid-tab-name: ci-knative-sandbox-peribolos
+    testgrid-tab-name: ci-knative-extension-peribolos
   spec:
     containers:
     - image: gcr.io/k8s-prow/peribolos:v20230519-bb3c69e522
       command:
       - "peribolos"
       args:
-      - "--config-path=peribolos/knative-sandbox.yaml"
+      - "--config-path=peribolos/knative-extension.yaml"
       - --github-app-id=$(GITHUB_APP_ID)
       - --github-app-private-key-path=/etc/github/cert
       - "--github-hourly-tokens=2000"

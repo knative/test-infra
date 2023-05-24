@@ -7,14 +7,14 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.10
+    testgrid-dashboards: knative-extension-release-1.10
     testgrid-tab-name: eventing-redis-continuous
   cluster: prow-build
   cron: 8 3 * * *
   decorate: true
   extra_refs:
   - base_ref: release-1.10
-    org: knative-sandbox
+    org: knative-extension
     path_alias: knative.dev/eventing-redis
     repo: eventing-redis
   name: continuous_eventing-redis_release-1.10_periodic
@@ -67,14 +67,14 @@ periodics:
         type: Directory
       name: cgroup
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.10
+    testgrid-dashboards: knative-extension-release-1.10
     testgrid-tab-name: eventing-redis-release
   cluster: prow-build
   cron: 28 9 * * 2
   decorate: true
   extra_refs:
   - base_ref: release-1.10
-    org: knative-sandbox
+    org: knative-extension
     path_alias: knative.dev/eventing-redis
     repo: eventing-redis
   max_concurrency: 1
@@ -99,7 +99,7 @@ periodics:
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: ORG_NAME
-        value: knative-sandbox
+        value: knative-extension
       - name: ATTEST_IMAGES
         value: "true"
       - name: DOCKER_IN_DOCKER_ENABLED

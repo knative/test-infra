@@ -23,15 +23,15 @@ The Productivity Working Group also has other repos:
 
   Release documentation and tools
 
-- [knative-sandbox/.github](https://github.com/knative-sandbox/.github)
+- [knative-extension/.github](https://github.com/knative-extension/.github)
 
   Tools for github actions
 
-- [knative-sandbox/kperf](https://github.com/knative-sandbox/kperf)
+- [knative-extension/kperf](https://github.com/knative-extension/kperf)
 
   A performance test framework
 
-- [knative-sandbox/knobots](https://github.com/knative-sandbox/knobots)
+- [knative-extension/knobots](https://github.com/knative-extension/knobots)
 
   Automated pull requests to fix up the code (based on github actions)
 

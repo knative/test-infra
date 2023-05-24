@@ -6,7 +6,7 @@
 # #######################################################################
 
 presubmits:
-  knative-sandbox/reconciler-test:
+  knative-extension/reconciler-test:
   - always_run: true
     branches:
     - ^main$

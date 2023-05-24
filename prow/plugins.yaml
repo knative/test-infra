@@ -16,14 +16,14 @@
 approve:
 - repos:
   - "knative"
-  - "knative-sandbox"
+  - "knative-extension"
   - "knative-prow-robot/test-infra"
   ignore_review_state: false
 
 # Settings for the "lgtm" plugin.
 lgtm:
 - repos:
-  - "knative-sandbox"
+  - "knative-extension"
   - "knative"
   review_acts_as_lgtm: true
 
@@ -112,7 +112,7 @@ blunderbuss:
 triggers:
 - repos:
   - knative
-  - knative-sandbox
+  - knative-extension
   trigger_github_workflows: true
 
 # Plugins enabled for each repo.
@@ -145,7 +145,7 @@ plugins:
     - welcome
     - wip
     - yuks
-  knative-sandbox:
+  knative-extension:
     plugins:
     - approve
     - assign
@@ -211,7 +211,7 @@ external_plugins:
     events:
       - issue_comment
       - pull_request
-  knative-sandbox:
+  knative-extension:
   - name: needs-rebase
     events:
       - issue_comment

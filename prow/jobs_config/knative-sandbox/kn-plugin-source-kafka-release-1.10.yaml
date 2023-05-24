@@ -67,5 +67,5 @@ jobs:
   - docker
   types:
   - periodic
-org: knative-sandbox
+org: knative-extension
 repo: kn-plugin-source-kafka

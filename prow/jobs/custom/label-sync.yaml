@@ -35,7 +35,7 @@ presubmits:
         - --config=label_sync/labels.yaml
         # Set --confirm=false to only validate the configuration file.
         - --confirm=false
-        - --orgs=knative-sandbox,knative
+        - --orgs=knative-extension,knative
         # We have to still use the GitHub oauth token for authentication, since
         # https://github.com/knative/test-infra/pull/3198 change and having
         # --confirm=false. This happens with peribolos as well.
@@ -74,7 +74,7 @@ periodics:
       args:
       - --config=label_sync/labels.yaml
       - --confirm=true
-      - --orgs=knative-sandbox,knative
+      - --orgs=knative-extension,knative
       - --github-app-id=$(GITHUB_APP_ID)
       - --github-app-private-key-path=/etc/github/cert
       - "--github-hourly-tokens=2000"
@@ -124,7 +124,7 @@ postsubmits:
         args:
         - --config=label_sync/labels.yaml
         - --confirm=true
-        - --orgs=knative-sandbox,knative
+        - --orgs=knative-extension,knative
         - --github-app-id=$(GITHUB_APP_ID)
         - --github-app-private-key-path=/etc/github/cert
         - "--github-hourly-tokens=2000"

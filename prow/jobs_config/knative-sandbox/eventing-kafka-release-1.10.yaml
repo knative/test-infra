@@ -104,5 +104,5 @@ jobs:
       value: knative-eventing
     - name: SCALE_CHAOSDUCK_TO_ZERO
       value: "1"
-org: knative-sandbox
+org: knative-extension
 repo: eventing-kafka

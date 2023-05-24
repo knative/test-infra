@@ -14,7 +14,7 @@ periodics:
   decorate: true
   extra_refs:
   - base_ref: main
-    org: knative-sandbox
+    org: knative-extension
     path_alias: knative.dev/kn-plugin-sample
     repo: kn-plugin-sample
   name: continuous_kn-plugin-sample_main_periodic
@@ -49,7 +49,7 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 presubmits:
-  knative-sandbox/kn-plugin-sample:
+  knative-extension/kn-plugin-sample:
   - always_run: true
     branches:
     - ^main$

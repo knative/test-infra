@@ -66,5 +66,5 @@ jobs:
   - release-notary
   types:
   - periodic
-org: knative-sandbox
+org: knative-extension
 repo: kn-plugin-admin

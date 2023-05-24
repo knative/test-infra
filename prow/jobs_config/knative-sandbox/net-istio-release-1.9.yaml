@@ -76,5 +76,5 @@ jobs:
   - release
   types:
   - periodic
-org: knative-sandbox
+org: knative-extension
 repo: net-istio

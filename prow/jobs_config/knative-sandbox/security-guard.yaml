@@ -1,4 +1,4 @@
-org: knative-sandbox
+org: knative-extension
 repo: security-guard
 branches: [main]
 image: gcr.io/knative-tests/test-infra/prow-tests:v20230516-b5591eac

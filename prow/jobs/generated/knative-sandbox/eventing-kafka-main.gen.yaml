@@ -14,7 +14,7 @@ periodics:
   decorate: true
   extra_refs:
   - base_ref: main
-    org: knative-sandbox
+    org: knative-extension
     path_alias: knative.dev/eventing-kafka
     repo: eventing-kafka
   name: continuous_eventing-kafka_main_periodic
@@ -74,7 +74,7 @@ periodics:
   decorate: true
   extra_refs:
   - base_ref: main
-    org: knative-sandbox
+    org: knative-extension
     path_alias: knative.dev/eventing-kafka
     repo: eventing-kafka
   max_concurrency: 1
@@ -145,7 +145,7 @@ periodics:
   decorate: true
   extra_refs:
   - base_ref: main
-    org: knative-sandbox
+    org: knative-extension
     path_alias: knative.dev/eventing-kafka
     repo: eventing-kafka
   max_concurrency: 1
@@ -168,7 +168,7 @@ periodics:
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: ORG_NAME
-        value: knative-sandbox
+        value: knative-extension
       - name: ATTEST_IMAGES
         value: "true"
       - name: DOCKER_IN_DOCKER_ENABLED
@@ -225,7 +225,7 @@ periodics:
   decorate: true
   extra_refs:
   - base_ref: main
-    org: knative-sandbox
+    org: knative-extension
     path_alias: knative.dev/eventing-kafka
     repo: eventing-kafka
   name: s390x-e2e-tests_eventing-kafka_main_periodic
@@ -296,7 +296,7 @@ periodics:
         defaultMode: 384
         secretName: s390x-cluster1
 presubmits:
-  knative-sandbox/eventing-kafka:
+  knative-extension/eventing-kafka:
   - always_run: true
     branches:
     - ^main$

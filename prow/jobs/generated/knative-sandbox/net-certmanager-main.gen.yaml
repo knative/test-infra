@@ -14,7 +14,7 @@ periodics:
   decorate: true
   extra_refs:
   - base_ref: main
-    org: knative-sandbox
+    org: knative-extension
     path_alias: knative.dev/net-certmanager
     repo: net-certmanager
   name: continuous_net-certmanager_main_periodic
@@ -56,7 +56,7 @@ periodics:
   decorate: true
   extra_refs:
   - base_ref: main
-    org: knative-sandbox
+    org: knative-extension
     path_alias: knative.dev/net-certmanager
     repo: net-certmanager
   max_concurrency: 1
@@ -109,7 +109,7 @@ periodics:
   decorate: true
   extra_refs:
   - base_ref: main
-    org: knative-sandbox
+    org: knative-extension
     path_alias: knative.dev/net-certmanager
     repo: net-certmanager
   max_concurrency: 1
@@ -132,7 +132,7 @@ periodics:
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: ORG_NAME
-        value: knative-sandbox
+        value: knative-extension
       - name: ATTEST_IMAGES
         value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20230516-b5591eac
@@ -164,7 +164,7 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 presubmits:
-  knative-sandbox/net-certmanager:
+  knative-extension/net-certmanager:
   - always_run: true
     branches:
     - ^main$

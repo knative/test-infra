@@ -6,7 +6,7 @@
 # #######################################################################
 
 presubmits:
-  knative-sandbox/discovery:
+  knative-extension/discovery:
   - always_run: true
     branches:
     - ^main$
