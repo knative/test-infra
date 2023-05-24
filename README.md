@@ -1,4 +1,8 @@
-# Knative Test Infrastructure
+# ⚠ ⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠ ⚠
+# ⚠ This repo is no longer in use please go to [infra repo](https://github.com/knative/infra) ⚠
+# ⚠ ⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠ ⚠
+
+## Knative Test Infrastructure
 
 [![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white)](https://pkg.go.dev/github.com/knative/test-infra)
 [![Go Report Card](https://goreportcard.com/badge/knative/test-infra)](https://goreportcard.com/report/knative/test-infra)
