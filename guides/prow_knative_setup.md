@@ -28,7 +28,7 @@ All Prow config files for running Prow jobs for Knative projects are under
    config files for other repos for blueprints for what to add. Then run
    `./hack/generate-configs.sh` to regenerate
    [prow/jobs/generated](../prow/jobs/generated), otherwise the presubmit test
-   in test-infra will fail. Create a PR with the changes. Once it's merged
+   in infra will fail. Create a PR with the changes. Once it's merged
    the configs will be automatically updated by a postsubmit job.
 
 1. Wait a few minutes, check that Prow is working by entering `/woof` as a

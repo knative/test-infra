@@ -27,9 +27,9 @@ To check out this repository:
 ```shell
 mkdir -p ${GOPATH}/src/knative.dev
 cd ${GOPATH}/src/knative.dev
-git clone git@github.com:${YOUR_GITHUB_USERNAME}/test-infra.git
-cd test-infra
-git remote add upstream https://github.com/knative/test-infra.git
+git clone git@github.com:${YOUR_GITHUB_USERNAME}/infra.git
+cd infra
+git remote add upstream https://github.com/knative/infra.git
 git remote set-url --push upstream no_push
 ```
 

@@ -149,7 +149,7 @@ Example:
 
 ### Option #1: Via Prow UI
 
-**Note:** Has to be a member of one of the groups under `deck: -> rerun_auth_configs:` block in [config.yaml](https://github.com/knative/test-infra/blob/main/prow/config.yaml)
+**Note:** Has to be a member of one of the groups under `deck: -> rerun_auth_configs:` block in [config.yaml](https://github.com/knative/infra/blob/main/prow/config.yaml)
 
 1. Open a browser, navigate to
    `https://prow.knative.dev/?job=release_MODULE_release-[RELEASE_BRANCH_VERSION]_periodic`,
