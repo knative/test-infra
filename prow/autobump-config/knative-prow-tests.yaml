@@ -4,8 +4,8 @@ gitHubToken: "/etc/prow-auto-bumper-github-token/token"
 skipPullRequest: false
 selfAssign: true # Commenting `/cc`, so that autobump PR is not assigned to anyone
 gitHubOrg: "knative"
-gitHubRepo: "test-infra"
-remoteName: "test-infra"
+gitHubRepo: "infra"
+remoteName: "infra"
 headBranchName: "autobump-prow-tests-knative"
 targetVersion: "latest"
 includedConfigPaths:
@@ -14,6 +14,6 @@ includedConfigPaths:
 prefixes:
   - name: "Knative prow-tests image"
     prefix: "gcr.io/knative-tests/test-infra/prow-tests"
-    repo: "https://github.com/knative/test-infra"
+    repo: "https://github.com/knative/infra"
     summarise: false
     consistentImages: true

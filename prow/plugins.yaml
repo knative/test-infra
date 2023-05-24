@@ -198,7 +198,7 @@ plugins:
     - welcome
     - wip
     - yuks
-  knative/test-infra:
+  knative/infra:
     plugins:
     - config-updater
 external_plugins:

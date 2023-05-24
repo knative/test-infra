@@ -4,8 +4,8 @@ gitHubToken: "/etc/prow-auto-bumper-github-token/token"
 skipPullRequest: false
 selfAssign: true # Commenting `/cc`, so that autobump PR is not assigned to anyone
 gitHubOrg: "knative"
-gitHubRepo: "test-infra"
-remoteName: "test-infra"
+gitHubRepo: "infra"
+remoteName: "infra"
 headBranchName: "autobump-knative"
 upstreamURLBase: "https://raw.githubusercontent.com/kubernetes/test-infra/master"
 targetVersion: "upstream"
