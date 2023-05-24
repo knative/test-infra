@@ -29,7 +29,7 @@ periodics:
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20230516-b5591eac
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20230524-d6a12e8c
       name: ""
       resources: {}
       securityContext:
@@ -70,7 +70,7 @@ periodics:
         value: us-central1
       - name: GOOGLE_APPLICATION_CREDENTIALS
         value: /etc/test-account/service-account.json
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20230516-b5591eac
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20230524-d6a12e8c
       name: ""
       resources: {}
       securityContext:
@@ -137,7 +137,7 @@ periodics:
         value: /root/.kube/config
       - name: DOCKER_CONFIG
         value: /opt/cluster
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20230516-b5591eac
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20230524-d6a12e8c
       name: ""
       resources: {}
       securityContext:
@@ -204,7 +204,7 @@ periodics:
         value: registry.ppc64le
       - name: KUBECONFIG
         value: /root/.kube/config
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20230516-b5591eac
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20230524-d6a12e8c
       name: ""
       resources: {}
       securityContext:
@@ -268,7 +268,7 @@ periodics:
         value: "true"
       - name: ATTEST_IMAGES
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20230516-b5591eac
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20230524-d6a12e8c
       name: ""
       resources: {}
       securityContext:
@@ -330,7 +330,7 @@ periodics:
         value: "true"
       - name: ATTEST_IMAGES
         value: "true"
-      image: gcr.io/knative-tests/test-infra/prow-tests:v20230516-b5591eac
+      image: gcr.io/knative-tests/test-infra/prow-tests:v20230524-d6a12e8c
       name: ""
       resources: {}
       securityContext:
@@ -379,7 +379,7 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --build-tests
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230516-b5591eac
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230524-d6a12e8c
         name: ""
         resources: {}
         securityContext:
@@ -402,7 +402,7 @@ presubmits:
         - runner.sh
         - ./test/presubmit-tests.sh
         - --unit-tests
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230516-b5591eac
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230524-d6a12e8c
         name: ""
         resources: {}
         securityContext:
@@ -430,7 +430,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230516-b5591eac
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230524-d6a12e8c
         name: ""
         resources: {}
         securityContext:
@@ -468,7 +468,7 @@ presubmits:
           value: us-central1
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /etc/test-account/service-account.json
-        image: gcr.io/knative-tests/test-infra/prow-tests:v20230516-b5591eac
+        image: gcr.io/knative-tests/test-infra/prow-tests:v20230524-d6a12e8c
         name: ""
         resources: {}
         securityContext:
