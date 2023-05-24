@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     path: prow/cluster/gitops/apps
-    repoURL: https://github.com/knative/test-infra
+    repoURL: https://github.com/knative/infra
     targetRevision: main
   syncPolicy:
     automated:

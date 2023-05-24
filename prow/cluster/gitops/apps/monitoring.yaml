@@ -14,7 +14,7 @@ spec:
       valueFiles:
       - values.yaml
     path: prow/cluster/monitoring/chart
-    repoURL: https://github.com/knative/test-infra
+    repoURL: https://github.com/knative/infra
     targetRevision: main
   syncPolicy:
     syncOptions:
