@@ -17,7 +17,7 @@
 
 presubmits:
   knative/community:
-  - name: pull-knative-test-infra-label-sync
+  - name: pull-knative-infra-label-sync
     agent: kubernetes
     decorate: true
     path_alias: knative.dev/community
@@ -53,7 +53,7 @@ presubmits:
 periodics:
 # Run at 8AM PST.
 - cron: "0 15 * * *"
-  name: ci-knative-test-infra-label-sync
+  name: ci-knative-infra-label-sync
   agent: kubernetes
   decorate: true
   cluster: "prow-trusted"
@@ -64,7 +64,7 @@ periodics:
     path_alias: knative.dev/community
   annotations:
     testgrid-dashboards: utilities
-    testgrid-tab-name: ci-knative-test-infra-label-sync
+    testgrid-tab-name: ci-knative-infra-label-sync
   spec:
     containers:
     - name: label-sync
@@ -97,7 +97,7 @@ periodics:
 
 postsubmits:
   knative/community:
-  - name: post-knative-test-infra-label-sync
+  - name: post-knative-infra-label-sync
     agent: kubernetes
     decorate: true
     path_alias: knative.dev/community
@@ -114,7 +114,7 @@ postsubmits:
         report_template: '"The label-sync postsubmit job fails, check the log: <{{.Status.URL}}|View logs>"'
     annotations:
       testgrid-dashboards: utilities
-      testgrid-tab-name: post-knative-test-infra-label-sync
+      testgrid-tab-name: post-knative-infra-label-sync
     spec:
       containers:
       - name: label-sync

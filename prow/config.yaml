@@ -202,6 +202,7 @@ tide:
   - repos:
     # Allow PRs for test-infra to be automatically merged without manual approval
     - "knative/test-infra"
+    - "knative/infra"
     labels:
     - "skip-review"
     missingLabels: *knative_tide_missing_labels

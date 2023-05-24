@@ -18,24 +18,24 @@ periodics:
 # For more contexts, check https://github.com/knative/test-infra/issues/3220.
 # Scheduled to run at 12AM PST.
 - cron: "0 7 * * *"
-  name: ci-knative-test-infra-config-bootstrapper
+  name: ci-knative-infra-config-bootstrapper
   agent: kubernetes
   decorate: true
   cluster: "prow-trusted"
   extra_refs:
   - org: knative
-    repo: test-infra
+    repo: infra
     base_ref: main
-    path_alias: knative.dev/test-infra
+    path_alias: knative.dev/infra
   annotations:
     testgrid-dashboards: utilities
-    testgrid-tab-name: ci-knative-test-infra-config-bootstrapper
+    testgrid-tab-name: ci-knative-infra-config-bootstrapper
   reporter_config:
     slack:
       channel: knative-productivity
       job_states_to_report:
         - failure
-      report_template: '"The config-bootstrapper periodic job fails, check the log: <{{.Status.URL}}|View logs>"'
+      report_template: '"The config-bootstrapper periodic has failed, check the log: <{{.Status.URL}}|View logs>"'
   spec:
     containers:
     - image: gcr.io/k8s-prow/config-bootstrapper:v20230519-bb3c69e522
