@@ -20,3 +20,11 @@ spec:
   domains:
   - prow.knative.dev
   - gcsweb.knative.dev
+---
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: api-testgrid-knative-dev
+spec:
+  domains:
+  - api.testgrid.knative.dev

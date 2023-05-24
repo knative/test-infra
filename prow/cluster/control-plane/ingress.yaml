@@ -21,7 +21,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "gce"
     kubernetes.io/ingress.global-static-ip-name: prow-ingress
-    networking.gke.io/managed-certificates: prow-knative-dev
+    networking.gke.io/managed-certificates: "prow-knative-dev,api-testgrid-knative-dev"
 spec:
   rules:
     - host: prow.knative.dev
@@ -49,5 +49,15 @@ spec:
             backend:
               service:
                 name: gcsweb
+                port:
+                  number: 80
+    - host: api.testgrid.knative.dev
+      http:
+        paths:
+          - path: /*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: testgrid-api
                 port:
                   number: 80

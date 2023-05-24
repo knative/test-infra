@@ -79,6 +79,14 @@ module "knative_dev" {
       ]
     },
     {
+      name = "api.testgrid"
+      type = "A"
+      ttl  = 300
+      records = [
+        "35.201.93.215",
+      ]
+    },
+    {
       name = "grafana"
       type = "A"
       ttl  = 300
