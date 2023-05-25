@@ -19,6 +19,10 @@ The Productivity Working Group also has other repos:
   Shellscripts used across the repos placed in a separate repo to avoid
   dependency cycles
 
+- [knative/toolbox](https://github.com/knative/toolbox)
+
+  Tools used in Knative projects, intended for development and testing
+
 - [knative/release](https://github.com/knative/release)
 
   Release documentation and tools

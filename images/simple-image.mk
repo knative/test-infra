@@ -33,7 +33,7 @@ DOCKERFILE ?= Dockerfile
 SELF_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 include $(SELF_DIR)../common.mk
 
-IMG = $(REGISTRY)/$(PROJECT)/test-infra/$(IMAGE_NAME)
+IMG = $(REGISTRY)/$(PROJECT)/infra/$(IMAGE_NAME)
 TAG := $(shell date +v%Y%m%d)-$(shell git describe --always --dirty --match '^$$')
 export COMMIT_HASH := $(shell git rev-parse --verify HEAD)
 

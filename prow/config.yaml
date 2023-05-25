@@ -200,8 +200,7 @@ tide:
     author: knative-automation
     reviewApprovedRequired: false
   - repos:
-    # Allow PRs for test-infra to be automatically merged without manual approval
-    - "knative/test-infra"
+    # Allow PRs for infra to be automatically merged without manual approval
     - "knative/infra"
     labels:
     - "skip-review"

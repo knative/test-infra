@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.20.4
-
-# Required input: -e TOOL_NAME=name, i.e. TOOL_NAME=flaky-test-reporter
-ARG TOOL_NAME
-
-RUN GOBIN=/tools go install "knative.dev/toolbox/${TOOL_NAME}@latest"
-
-ENTRYPOINT ["/tools/${TOOL_NAME}"]
+# Do not allow server update from wrong branch or dirty working space
+# In emergency, could easily edit this file, deleting all these lines
+confirm-main:
+	@if git diff-index --quiet HEAD; then true; else echo "Git working space is dirty -- will not update server"; false; fi;
+ifneq ("$(shell git branch --show-current)","main")
+	@echo "Branch is not main -- will not update server"
+	@false
+endif

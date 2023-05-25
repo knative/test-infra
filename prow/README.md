@@ -19,10 +19,10 @@ This directory contains prow configs hosted for Knative. This prow is bumped by 
 
 - [Prow control plane cluster(default prow cluster)](https://console.cloud.google.com/kubernetes/clusters/details/us-central1/prow?project=knative-tests)
   - Prow deployments, core configs, and plugins are hosted in this repo
-  - Prow job configs are hosted in knative/test-infra repo
+  - Prow job configs are hosted in knative/infra repo
 - [Build cluster](https://console.cloud.google.com/kubernetes/clusters/details/us-central1/prow-build?project=knative-tests)
   - Build cluster deployments are hosted in this repo
-  - Boskos resources are hosted in knative/test-infra repo
+  - Boskos resources are hosted in knative/infra repo
 - [Trusted cluster](https://console.cloud.google.com/kubernetes/clusters/details/us-central1-a/prow-trusted?project=knative-tests)
   - This is a small cluster with important secrets and runs sensitive prow jobs.
 

@@ -1,5 +1,5 @@
 
-We use argocd to sync cluster state with the configuration specified in knative/test-infra.
+We use argocd to sync cluster state with the configuration specified in knative/infra.
 
 ArgoCD runs in the prow cluster and manages the following clusters:
 - prow
