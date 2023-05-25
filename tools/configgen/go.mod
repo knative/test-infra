@@ -1,4 +1,4 @@
-module knative.dev/test-infra/tools/configgen
+module knative.dev/infra/tools/configgen
 
 go 1.18
 
@@ -7,14 +7,14 @@ replace (
 	k8s.io/api => k8s.io/api v0.24.2
 	k8s.io/apimachinery => k8s.io/apimachinery v0.24.2
 	k8s.io/client-go => k8s.io/client-go v0.24.2
-	knative.dev/test-infra => ../..
+	knative.dev/infra => ../..
 )
 
 require (
 	istio.io/test-infra/tools/prowgen v0.0.0-20220912223856-cd655368c7d2
 	k8s.io/apimachinery v0.24.4
 	k8s.io/test-infra v0.0.0-20220801075428-527a7b720677
-	knative.dev/test-infra v0.0.0-20220321235811-a37fa48a9b36
+	knative.dev/infra v0.0.0-20230524184324-1ad56d594b74 // indirect
 	sigs.k8s.io/yaml v1.3.0
 )
 

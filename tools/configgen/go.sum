@@ -1190,6 +1190,8 @@ k8s.io/utils v0.0.0-20210802155522-efc7438f0176/go.mod h1:jPW/WVKK9YHAvNhRxK0md/
 k8s.io/utils v0.0.0-20220210201930-3a6ce19ff2f9/go.mod h1:jPW/WVKK9YHAvNhRxK0md/EJ228hCsBRufyofKtW8HA=
 k8s.io/utils v0.0.0-20220725171434-9bab9ef40391 h1:1MPbIQv9SykLDytzVuV+Pl6V40NCQrB2AkCk65P4IU0=
 k8s.io/utils v0.0.0-20220725171434-9bab9ef40391/go.mod h1:jPW/WVKK9YHAvNhRxK0md/EJ228hCsBRufyofKtW8HA=
+knative.dev/infra v0.0.0-20230524184324-1ad56d594b74 h1:HfXRDADeVUgmeqv9yBMzZXL2Uam82nsLtpIDykXSIHg=
+knative.dev/infra v0.0.0-20230524184324-1ad56d594b74/go.mod h1:ECTvajhX+JeWi5+RCZUWL3+Br+6T+rbHfMpDmbFR/KE=
 knative.dev/pkg v0.0.0-20220728013737-449f7e6dab63 h1:xi3R/hhkqp7iLvlj1bNsOj+3dDRLvpDJ4Iszq+9iPX8=
 knative.dev/pkg v0.0.0-20220728013737-449f7e6dab63/go.mod h1:KBzRmnxrSjsJ17ktIYzfdbCs0HrqmY0MYpAOM2b8XNE=
 pack.ag/amqp v0.11.2/go.mod h1:4/cbmt4EJXSKlG6LCfWHoqmN0uFdy5i/+YFz+fTfhV4=

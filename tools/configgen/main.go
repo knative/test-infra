@@ -20,7 +20,7 @@ import (
 	"flag"
 	"log"
 
-	"knative.dev/test-infra/tools/configgen/pkg"
+	"knative.dev/infra/tools/configgen/pkg"
 )
 
 var (

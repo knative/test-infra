@@ -15,9 +15,9 @@
 FROM debian:bullseye-20230522-slim AS base
 
 # Pinned versions of stuff we pull in
-ARG CLOUD_SDK_VERSION=405.0.0
-ARG KUBECTL_VERSION=v1.24.4
-ARG DOCKER_VERSION=5:20.10.17~3-0~debian-bullseye
+ARG CLOUD_SDK_VERSION=432.0.0
+ARG KUBECTL_VERSION=v1.25.10
+ARG DOCKER_VERSION=5:24.0.1-1~debian.11~bullseye
 ARG MAVEN_VERSION=3.8.4
 ARG JAVA_VERSION=16
 ARG PROTOC_VERSION=3.17.0
@@ -79,7 +79,7 @@ RUN gcloud config set core/disable_usage_reporting true && \
 #
 
 # kubectl
-RUN curl -fsSL "https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -o /usr/local/bin/kubectl && \
+RUN curl -fsSL "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -o /usr/local/bin/kubectl && \
     chmod +x /usr/local/bin/kubectl
 
 # kops
@@ -160,11 +160,11 @@ RUN curl -fsSL "https://github.com/protocolbuffers/protobuf/releases/download/v$
 
 ############################################################
 FROM golang:1.19.9 AS external-go-previous
-# Capture the version that depndabot bumps so that we can install it into the base image
+# Capture the version that dependabot bumps so that we can install it into the base image
 RUN go version | cut -d' ' -f3 > /golang.version
 
 FROM golang:1.20.4 AS external-go-latest
-# Capture the version that depndabot bumps so that we can install it into the base image
+# Capture the version that dependabot bumps so that we can install it into the base image
 RUN go version | cut -d' ' -f3 > /golang.version
 
 FROM external-go-latest AS external-go-gets
@@ -181,6 +181,7 @@ ARG GO_LICENSES_VERSION=v1.2.1
 ARG DOCKER_CREDENTIAL_GCR_VERSION=v2.0.5
 ARG JSONNET_VERSION=v0.18.0
 ARG COSIGN_VERSION=v1.13.0
+ARG TOOLBOX_VERSION=2aaf6de75f2e02cc078de98d4646d0803c8c5132
 
 # Extra tools through go install
 # These run using the golang image version of Go, not any defined by `gvm`
@@ -197,6 +198,9 @@ RUN go install github.com/google/go-licenses@${GO_LICENSES_VERSION}
 RUN go install sigs.k8s.io/kind@${KIND_VERSION}
 RUN go install github.com/google/go-jsonnet/cmd/jsonnet@${JSONNET_VERSION}
 RUN go install github.com/sigstore/cosign/cmd/cosign@${COSIGN_VERSION}
+RUN go install knative.dev/toolbox/provenance-generator@${TOOLBOX_VERSION}
+RUN go install knative.dev/toolbox/pkg/clustermanager/perf-tests@${TOOLBOX_VERSION}
+RUN go install knative.dev/toolbox/kntest/cmd/kntest@${TOOLBOX_VERSION}
 
 # According to https://github.com/knative/test-infra/pull/2762 protoc-gen-gogofaster is unsupported (and shouldn't be used?)
 # Not sure when it can be removed, maybe knative-0.26?
@@ -205,11 +209,11 @@ RUN go install github.com/gogo/protobuf/protoc-gen-gogofaster@${PROTOC_GEN_GOGOF
 # Docker
 RUN go install github.com/GoogleCloudPlatform/docker-credential-gcr@${DOCKER_CREDENTIAL_GCR_VERSION}
 
-# Install toolbox things
-RUN go install knative.dev/toolbox/kntest/cmd/kntest@latest
-RUN go install knative.dev/toolbox/provenance-generator@latest
-# TODO(chizhg): maybe also move perf-tests tool to be part of kntest?
-RUN go install knative.dev/toolbox/pkg/clustermanager/perf-tests@latest
+# We do this instead of `go get` so the tools are locked to the Dockerfile's commit
+COPY . /go/src/knative.dev/infra
+
+# Build custom tools in the container
+RUN cd /go/src/knative.dev/infra/tools/configgen && go install .
 
 # Install kubetest2-kops deployer
 RUN git clone https://github.com/kubernetes/kops /tmp/kops && cd /tmp/kops/tests/e2e/kubetest2-kops && git checkout ${KUBETEST2_KOPS_VERSION} && \
@@ -218,10 +222,10 @@ RUN git clone https://github.com/kubernetes/kops /tmp/kops && cd /tmp/kops/tests
 ############################################################
 FROM rust:1.69 AS external-rust-gets
 
-ARG CODESIGN_VERSION=cb1e430a96f7d3d38af663a553b0e3e15a813d45
+ARG CODESIGN_VERSION=0.22.0
 # change this when a new version with https://github.com/indygreg/apple-platform-rs/pull/20 is cut
 
-RUN cargo install --git https://github.com/indygreg/apple-platform-rs --rev ${CODESIGN_VERSION} --bin rcodesign apple-codesign
+RUN cargo install --git https://github.com/indygreg/apple-platform-rs --tag=apple-codesign/${CODESIGN_VERSION} --bin=rcodesign apple-codesign
 
 ############################################################
 FROM base
