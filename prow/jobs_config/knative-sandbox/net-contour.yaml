@@ -1,7 +1,7 @@
 org: knative-sandbox
 repo: net-contour
 branches: [main]
-image: gcr.io/knative-tests/test-infra/prow-tests:v20230524-d6a12e8c
+image: gcr.io/knative-tests/test-infra/prow-tests:v20230524-3500eda5
 
 jobs:
   - name: build-tests
