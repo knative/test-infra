@@ -69,6 +69,7 @@ RUN curl -fsSLO https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/googl
 RUN tar xzf google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz -C /
 RUN rm google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz
 RUN gcloud config set core/disable_usage_reporting true && \
+    gcloud config set core/disable_color true && \
     gcloud config set component_manager/disable_update_check true && \
     gcloud config set metrics/environment github_docker_image && \
     gcloud components install alpha beta gke-gcloud-auth-plugin && \
@@ -208,6 +209,12 @@ RUN go install github.com/gogo/protobuf/protoc-gen-gogofaster@${PROTOC_GEN_GOGOF
 
 # Docker
 RUN go install github.com/GoogleCloudPlatform/docker-credential-gcr@${DOCKER_CREDENTIAL_GCR_VERSION}
+
+# Install tricky tools from knative/toolbox repo by cloning the repo.
+RUN git clone https://github.com/knative/toolbox.git /go/src/knative.dev/toolbox && \
+    cd /go/src/knative.dev/toolbox && \
+    git checkout ${TOOLBOX_VERSION} && \
+    go install ./release-jobs-syncer
 
 # We do this instead of `go get` so the tools are locked to the Dockerfile's commit
 COPY . /go/src/knative.dev/infra

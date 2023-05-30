@@ -25,6 +25,9 @@ steps:
   - '-f'
   - 'images/prow-tests/Dockerfile'
   - '.'
+  env:
+  - 'NO_COLOR=1'
+  - 'BUILDKIT_PROGRESS=plain'
 - name: gcr.io/cloud-builders/docker
   args:
   - 'tag'
