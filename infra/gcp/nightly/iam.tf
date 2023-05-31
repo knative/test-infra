@@ -11,6 +11,9 @@ module "iam" {
     "roles/storage.admin" = [
       "serviceAccount:${google_service_account.prow_job.email}",
     ]
+    "roles/artifactregistry.repoAdmin" = [
+      "serviceAccount:${google_service_account.prow_job.email}",
+    ]
     "projects/knative-nightly/roles/ServiceAccountIAMEditor" = [
       "serviceAccount:${google_service_account.prow_job.email}",
     ]

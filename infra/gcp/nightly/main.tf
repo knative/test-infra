@@ -17,6 +17,7 @@ module "project" {
 
   activate_apis = [
     "containerregistry.googleapis.com",
-    "cloudkms.googleapis.com"
+    "cloudkms.googleapis.com",
+    "artifactregistry.googleapis.com",
   ]
 }

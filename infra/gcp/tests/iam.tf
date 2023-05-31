@@ -12,7 +12,9 @@ module "iam" {
     "roles/artifactregistry.reader" = [
       "serviceAccount:${google_service_account.gke_nodes.email}",
     ]
-
+    "roles/artifactregistry.repoAdmin" = [
+      "serviceAccount:${google_service_account.prow_job.email}",
+    ]
     "roles/cloudbuild.builds.editor" = [
       "serviceAccount:prow-job@knative-tests.iam.gserviceaccount.com",
     ]

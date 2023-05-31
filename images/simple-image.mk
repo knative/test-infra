@@ -26,14 +26,14 @@
 #  DOCKERBUILDARGS: arguments for `docker build`
 #  DOCKERFILE: use a different Dockerfile, relative to starting subdirectory
 
-REGISTRY   ?= gcr.io
+REGISTRY   ?= us-docker.pkg.dev
 PROJECT    ?= knative-tests
 DOCKERFILE ?= Dockerfile
 
 SELF_DIR := $(dir $(lastword $(MAKEFILE_LIST)))
 include $(SELF_DIR)../common.mk
 
-IMG = $(REGISTRY)/$(PROJECT)/infra/$(IMAGE_NAME)
+IMG = $(REGISTRY)/$(PROJECT)/images/$(IMAGE_NAME)
 TAG := $(shell date +v%Y%m%d)-$(shell git describe --always --dirty --match '^$$')
 export COMMIT_HASH := $(shell git rev-parse --verify HEAD)
 

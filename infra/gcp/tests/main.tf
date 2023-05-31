@@ -20,7 +20,8 @@ module "project" {
     "secretmanager.googleapis.com",
     "compute.googleapis.com",
     "cloudkms.googleapis.com",
-    "certificatemanager.googleapis.com"
+    "certificatemanager.googleapis.com",
+    "artifactregistry.googleapis.com"
   ]
 }
 
