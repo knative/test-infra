@@ -28,7 +28,7 @@ presubmits:
     - "main"
     spec:
       containers:
-      - image: gcr.io/k8s-prow/peribolos:v20230526-bc91fd978b
+      - image: gcr.io/k8s-prow/peribolos:v20230601-43eb1068e4
         command:
         - "peribolos"
         args:
@@ -67,7 +67,7 @@ presubmits:
     - "main"
     spec:
       containers:
-      - image: gcr.io/k8s-prow/peribolos:v20230526-bc91fd978b
+      - image: gcr.io/k8s-prow/peribolos:v20230601-43eb1068e4
         command:
         - "peribolos"
         args:
@@ -118,7 +118,7 @@ postsubmits:
       testgrid-tab-name: post-knative-peribolos
     spec:
       containers:
-      - image: gcr.io/k8s-prow/peribolos:v20230526-bc91fd978b
+      - image: gcr.io/k8s-prow/peribolos:v20230601-43eb1068e4
         command:
         - "peribolos"
         args:
@@ -172,7 +172,7 @@ postsubmits:
       testgrid-tab-name: post-knative-sandbox-peribolos
     spec:
       containers:
-      - image: gcr.io/k8s-prow/peribolos:v20230526-bc91fd978b
+      - image: gcr.io/k8s-prow/peribolos:v20230601-43eb1068e4
         command:
         - "peribolos"
         args:
@@ -223,7 +223,7 @@ periodics:
     testgrid-tab-name: ci-knative-peribolos
   spec:
     containers:
-    - image: gcr.io/k8s-prow/peribolos:v20230526-bc91fd978b
+    - image: gcr.io/k8s-prow/peribolos:v20230601-43eb1068e4
       command:
       - "peribolos"
       args:
@@ -271,7 +271,7 @@ periodics:
     testgrid-tab-name: ci-knative-sandbox-peribolos
   spec:
     containers:
-    - image: gcr.io/k8s-prow/peribolos:v20230526-bc91fd978b
+    - image: gcr.io/k8s-prow/peribolos:v20230601-43eb1068e4
       command:
       - "peribolos"
       args:
