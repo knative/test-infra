@@ -46,12 +46,6 @@ presubmits:
     branches:
     - "main"
     cluster: "prow-build"
-    decoration_config: # will remove this temp override
-      gcs_credentials_secret: "gcs-upload"
-    extra_refs:
-    - org: GoogleCloudPlatform
-      repo: oss-test-infra
-      base_ref: master
     spec:
       containers:
       - image: gcr.io/k8s-prow/configurator:v20230526-bc91fd978b
@@ -77,7 +71,7 @@ presubmits:
     spec:
       serviceAccountName: test-runner
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:v20230524-3500eda5
+      - image: us-docker.pkg.dev/knative-tests/images/prow-tests:v20230605-5de90de6
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -106,7 +100,7 @@ periodics:
     cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:v20230524-3500eda5
+    - image: us-docker.pkg.dev/knative-tests/images/prow-tests:v20230605-5de90de6
       imagePullPolicy: Always
       command:
       - "runner.sh"
@@ -145,7 +139,7 @@ periodics:
   spec:
     serviceAccountName: test-runner
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:v20230524-3500eda5
+    - image: us-docker.pkg.dev/knative-tests/images/prow-tests:v20230605-5de90de6
       imagePullPolicy: Always
       command:
       - "runner.sh"
@@ -253,9 +247,9 @@ periodics:
   cluster: prow-build
   extra_refs:
   - org: knative
-    repo: test-infra
+    repo: infra
     base_ref: main
-    path_alias: knative.dev/test-infra
+    path_alias: knative.dev/infra
   annotations:
     testgrid-dashboards: utilities
     testgrid-tab-name: ci-knative-prow-jobs-syncer
@@ -267,7 +261,7 @@ periodics:
       report_template: '"The prow-jobs-syncer periodic job has failed, please check the logs: <{{.Status.URL}}|View logs>"'
   spec:
     containers:
-    - image: gcr.io/knative-tests/test-infra/prow-tests:v20230524-3500eda5
+    - image: us-docker.pkg.dev/knative-tests/images/prow-tests:v20230605-5de90de6
       imagePullPolicy: Always
       command:
       - "runner.sh"
@@ -275,11 +269,10 @@ periodics:
       - bash
       - -c
       - |
-        cd tools/release-jobs-syncer
-        go run . --github-account=/etc/prow-auto-bumper-github-token/token \
+        release-jobs-syncer --github-account=/etc/prow-auto-bumper-github-token/token \
           --git-userid=knative-prow-updater-robot \
           --git-username='Knative Prow Updater Robot' \
-          --git-email=knative-prow-updater-robot@google.com \
+          --git-email=automation+prow-updater-robot@knative.team \
           --prow-job-config-root-path=prow/jobs_config \
           --regen-config-script=hack/generate-configs.sh \
           --label=skip-review
@@ -331,7 +324,7 @@ postsubmits:
     spec:
       serviceAccountName: test-runner
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:v20230524-3500eda5
+      - image: us-docker.pkg.dev/knative-tests/images/prow-tests:v20230605-5de90de6
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -371,7 +364,7 @@ postsubmits:
     spec:
       serviceAccountName: test-runner # switch a different service account
       containers:
-      - image: gcr.io/knative-tests/test-infra/prow-tests:v20230524-3500eda5
+      - image: us-docker.pkg.dev/knative-tests/images/prow-tests:v20230605-5de90de6
         imagePullPolicy: Always
         command:
         - runner.sh
@@ -386,10 +379,6 @@ postsubmits:
     branches:
     - "main"
     cluster: prow-build
-    extra_refs:
-    - org: GoogleCloudPlatform
-      repo: oss-test-infra
-      base_ref: master
     annotations:
       testgrid-dashboards: utilities
       testgrid-tab-name: post-infra-update-testgrid-proto
