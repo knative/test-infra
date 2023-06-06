@@ -13,7 +13,7 @@ includedConfigPaths:
   - "prow/jobs_config"
 prefixes:
   - name: "Knative flaky-test-reporter image"
-    prefix: "gcr.io/knative-tests/test-infra/flaky-test-reporter"
+    prefix: "us-docker.pkg.dev/knative-tests/images/flaky-test-reporter"
     repo: "https://github.com/knative/infra"
     summarise: false
     consistentImages: true

@@ -13,7 +13,7 @@ includedConfigPaths:
   - "prow/jobs_config"
 prefixes:
   - name: "Knative prow-tests image"
-    prefix: "gcr.io/knative-tests/test-infra/prow-tests"
+    prefix: "us-docker.pkg.dev/knative-tests/images/prow-tests"
     repo: "https://github.com/knative/infra"
     summarise: false
     consistentImages: true

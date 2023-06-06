@@ -168,7 +168,7 @@ periodics:
   spec:
     serviceAccountName: flaky-test-reporter
     containers:
-    - image: gcr.io/knative-tests/test-infra/flaky-test-reporter:latest
+    - image: us-docker.pkg.dev/knative-tests/images/flaky-test-reporter:v20230605-4663f9da
       imagePullPolicy: Always
       command:
       - "/flaky-test-reporter"
@@ -212,7 +212,7 @@ periodics:
   spec:
     serviceAccountName: flaky-test-reporter
     containers:
-    - image: gcr.io/knative-tests/test-infra/flaky-test-reporter:latest
+    - image: us-docker.pkg.dev/knative-tests/images/flaky-test-reporter:v20230605-4663f9da
       imagePullPolicy: Always
       command:
       - "/flaky-test-reporter"
