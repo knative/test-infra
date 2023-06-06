@@ -171,7 +171,7 @@ periodics:
     - image: us-docker.pkg.dev/knative-tests/images/flaky-test-reporter:v20230605-4663f9da
       imagePullPolicy: Always
       command:
-      - "/flaky-test-reporter"
+      - "/tools/flaky-test-reporter"
       args:
       - "--github-account=/etc/flaky-test-reporter-github-token/token"
       - "--slack-account=/etc/flaky-test-reporter-slack-token/token"
@@ -215,7 +215,7 @@ periodics:
     - image: us-docker.pkg.dev/knative-tests/images/flaky-test-reporter:v20230605-4663f9da
       imagePullPolicy: Always
       command:
-      - "/flaky-test-reporter"
+      - "/tools/flaky-test-reporter"
       args:
       - "--skip-report"
       - "--build-count=10"
