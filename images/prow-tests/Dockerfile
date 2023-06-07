@@ -200,6 +200,7 @@ RUN go install sigs.k8s.io/kind@${KIND_VERSION}
 RUN go install github.com/google/go-jsonnet/cmd/jsonnet@${JSONNET_VERSION}
 RUN go install github.com/sigstore/cosign/cmd/cosign@${COSIGN_VERSION}
 RUN go install knative.dev/toolbox/provenance-generator@${TOOLBOX_VERSION}
+RUN go install knative.dev/toolbox/flaky-test-reporter@${TOOLBOX_VERSION}
 RUN go install knative.dev/toolbox/pkg/clustermanager/perf-tests@${TOOLBOX_VERSION}
 RUN go install knative.dev/toolbox/kntest/cmd/kntest@${TOOLBOX_VERSION}
 

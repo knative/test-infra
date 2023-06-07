@@ -303,46 +303,6 @@ periodics:
 
 postsubmits:
   knative/infra:
-  - name: post-knative-infra-image-push
-    agent: kubernetes
-    decorate: true
-    path_alias: knative.dev/infra
-    max_concurrency: 1
-    cluster: prow-build
-    run_if_changed: "^(images/.*|tools/.*|pkg/.*|go.mod)$"
-    branches:
-    - "main"
-    annotations:
-      testgrid-dashboards: utilities
-      testgrid-tab-name: post-knative-infra-image-push
-    reporter_config:
-      slack:
-        channel: knative-productivity
-        job_states_to_report:
-          - failure
-        report_template: '"The infra-tools-image-push postsubmit job has failed, please check the logs: <{{.Status.URL}}|View logs>"'
-    spec:
-      serviceAccountName: test-runner
-      containers:
-      - image: us-docker.pkg.dev/knative-tests/images/prow-tests:v20230605-5de90de6
-        imagePullPolicy: Always
-        command:
-        - runner.sh
-        args:
-        - "./images/push-all.sh"
-        securityContext:
-          privileged: true
-        env:
-        - name: DOCKER_IN_DOCKER_ENABLED
-          value: "true"
-        resources:
-          requests:
-            memory: 28Gi
-          limits:
-            memory: 32Gi
-      volumes:
-      - name: docker-graph
-        emptyDir: {}
   - name: post-knative-infra-prow-tests-image-push
     agent: kubernetes
     decorate: true
