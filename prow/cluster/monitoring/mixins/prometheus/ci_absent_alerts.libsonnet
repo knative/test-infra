@@ -16,7 +16,7 @@
               slo: name,
             },
             annotations: {
-              message: '@test-infra-oncall The service %s has been down for 10 minutes.' % name,
+              message: '@infra-oncall The service %s has been down for 10 minutes.' % name,
             },
           }
           for name in [
