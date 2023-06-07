@@ -149,6 +149,7 @@ plugins:
     plugins:
     - approve
     - assign
+    - blunderbuss
     - buildifier
     - cat
     - dog
@@ -171,7 +172,7 @@ plugins:
     - welcome
     - wip
     - yuks
-  knative-prow-robot/test-infra:
+  knative-prow-robot/infra:
     plugins:
     - approve
     - assign
@@ -220,7 +221,7 @@ external_plugins:
     events:
       - issue_comment
       - pull_request
-  knative-prow-robot/test-infra:
+  knative-prow-robot/infra:
   - name: needs-rebase
     events:
       - issue_comment
