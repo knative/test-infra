@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM debian:bullseye-20230522-slim AS base
+FROM debian:bullseye-20230703-slim AS base
 
 # Pinned versions of stuff we pull in
 ARG CLOUD_SDK_VERSION=405.0.0
