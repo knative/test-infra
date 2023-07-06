@@ -99,6 +99,13 @@ func GetMetaImport(url string) (*MetaImport, error) {
 
 // ModuleToRepo resolves a go module name to a remote git repo.
 func ModuleToRepo(module string) (*git.Repo, error) {
+	// If module has more than 1 domain + 2 paths (e.g. github.com/blang/semver/v4),
+	// make it 1 domain + 2 paths. Otherwise, it fails to fetch go import on GetMetaImport().
+	m := strings.Split(module, "/")
+	if len(m) > 2 {
+		module = strings.Join(m[0:3], "/")
+	}
+
 	url := fmt.Sprintf("https://%s?go-get=1", module)
 	meta, err := GetMetaImport(url)
 	if err != nil {
