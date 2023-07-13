@@ -299,5 +299,5 @@ jobs:
       value: SASL_PLAIN
     - name: BROKER_CLASS
       value: Kafka
-org: knative-sandbox
+org: knative-extensions
 repo: eventing-kafka-broker

@@ -14,7 +14,7 @@ periodics:
   decorate: true
   extra_refs:
   - base_ref: main
-    org: knative-sandbox
+    org: knative-extensions
     path_alias: knative.dev/eventing-redis
     repo: eventing-redis
   name: continuous_eventing-redis_main_periodic
@@ -74,7 +74,7 @@ periodics:
   decorate: true
   extra_refs:
   - base_ref: main
-    org: knative-sandbox
+    org: knative-extensions
     path_alias: knative.dev/eventing-redis
     repo: eventing-redis
   max_concurrency: 1
@@ -138,7 +138,7 @@ periodics:
   decorate: true
   extra_refs:
   - base_ref: main
-    org: knative-sandbox
+    org: knative-extensions
     path_alias: knative.dev/eventing-redis
     repo: eventing-redis
   max_concurrency: 1
@@ -161,7 +161,7 @@ periodics:
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: ORG_NAME
-        value: knative-sandbox
+        value: knative-extensions
       - name: ATTEST_IMAGES
         value: "true"
       - name: DOCKER_IN_DOCKER_ENABLED

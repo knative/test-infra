@@ -14,7 +14,7 @@ periodics:
   decorate: true
   extra_refs:
   - base_ref: main
-    org: knative-sandbox
+    org: knative-extensions
     path_alias: knative.dev/kn-plugin-source-kafka
     repo: kn-plugin-source-kafka
   name: continuous_kn-plugin-source-kafka_main_periodic
@@ -56,7 +56,7 @@ periodics:
   decorate: true
   extra_refs:
   - base_ref: main
-    org: knative-sandbox
+    org: knative-extensions
     path_alias: knative.dev/kn-plugin-source-kafka
     repo: kn-plugin-source-kafka
   max_concurrency: 1
@@ -129,7 +129,7 @@ periodics:
   decorate: true
   extra_refs:
   - base_ref: main
-    org: knative-sandbox
+    org: knative-extensions
     path_alias: knative.dev/kn-plugin-source-kafka
     repo: kn-plugin-source-kafka
   max_concurrency: 1
@@ -158,7 +158,7 @@ periodics:
       - name: SIGN_IMAGES
         value: "true"
       - name: ORG_NAME
-        value: knative-sandbox
+        value: knative-extensions
       - name: ATTEST_IMAGES
         value: "true"
       - name: DOCKER_IN_DOCKER_ENABLED
@@ -213,7 +213,7 @@ periodics:
         type: Directory
       name: cgroup
 presubmits:
-  knative-sandbox/kn-plugin-source-kafka:
+  knative-extensions/kn-plugin-source-kafka:
   - always_run: true
     branches:
     - ^main$

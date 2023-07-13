@@ -7,14 +7,14 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.10
+    testgrid-dashboards: knative-extensions-release-1.10
     testgrid-tab-name: kn-plugin-admin-continuous
   cluster: prow-build
   cron: 45 16 * * *
   decorate: true
   extra_refs:
   - base_ref: release-1.10
-    org: knative-sandbox
+    org: knative-extensions
     path_alias: knative.dev/kn-plugin-admin
     repo: kn-plugin-admin
   name: continuous_kn-plugin-admin_release-1.10_periodic
@@ -49,14 +49,14 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.10
+    testgrid-dashboards: knative-extensions-release-1.10
     testgrid-tab-name: kn-plugin-admin-release
   cluster: prow-build
   cron: 23 9 * * 2
   decorate: true
   extra_refs:
   - base_ref: release-1.10
-    org: knative-sandbox
+    org: knative-extensions
     path_alias: knative.dev/kn-plugin-admin
     repo: kn-plugin-admin
   max_concurrency: 1
@@ -87,7 +87,7 @@ periodics:
       - name: SIGN_IMAGES
         value: "true"
       - name: ORG_NAME
-        value: knative-sandbox
+        value: knative-extensions
       - name: ATTEST_IMAGES
         value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20230524-d6a12e8c
@@ -124,7 +124,7 @@ periodics:
           path: password
         secretName: apple-notary-creds
 presubmits:
-  knative-sandbox/kn-plugin-admin:
+  knative-extensions/kn-plugin-admin:
   - always_run: true
     branches:
     - ^release-1.10$

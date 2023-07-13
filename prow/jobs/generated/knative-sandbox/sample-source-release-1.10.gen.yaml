@@ -7,14 +7,14 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.10
+    testgrid-dashboards: knative-extensions-release-1.10
     testgrid-tab-name: sample-source-release
   cluster: prow-build
   cron: 12 9 * * 2
   decorate: true
   extra_refs:
   - base_ref: release-1.10
-    org: knative-sandbox
+    org: knative-extensions
     path_alias: knative.dev/sample-source
     repo: sample-source
   max_concurrency: 1
@@ -39,7 +39,7 @@ periodics:
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: ORG_NAME
-        value: knative-sandbox
+        value: knative-extensions
       - name: ATTEST_IMAGES
         value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20230524-d6a12e8c
@@ -71,7 +71,7 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 presubmits:
-  knative-sandbox/sample-source:
+  knative-extensions/sample-source:
   - always_run: true
     branches:
     - ^release-1.10$

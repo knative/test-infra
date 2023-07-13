@@ -39,7 +39,7 @@ jobs:
   - docker
   types:
   - periodic
-org: knative-sandbox
+org: knative-extensions
 repo: eventing-gitlab
 resources_presets:
   default:

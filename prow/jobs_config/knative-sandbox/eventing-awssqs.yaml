@@ -1,4 +1,4 @@
-org: knative-sandbox
+org: knative-extensions
 repo: eventing-awssqs
 branches: [main]
 image: gcr.io/knative-tests/test-infra/prow-tests:v20230524-d6a12e8c

@@ -7,14 +7,14 @@
 
 periodics:
 - annotations:
-    testgrid-dashboards: knative-sandbox-release-1.9
+    testgrid-dashboards: knative-extensions-release-1.9
     testgrid-tab-name: sample-controller-release
   cluster: prow-build
   cron: 23 9 * * 2
   decorate: true
   extra_refs:
   - base_ref: release-1.9
-    org: knative-sandbox
+    org: knative-extensions
     path_alias: knative.dev/sample-controller
     repo: sample-controller
   name: release_sample-controller_release-1.9_periodic
@@ -38,7 +38,7 @@ periodics:
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: ORG_NAME
-        value: knative-sandbox
+        value: knative-extensions
       - name: ATTEST_IMAGES
         value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20230524-d6a12e8c
@@ -70,7 +70,7 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 presubmits:
-  knative-sandbox/sample-controller:
+  knative-extensions/sample-controller:
   - always_run: true
     branches:
     - ^release-1.9$

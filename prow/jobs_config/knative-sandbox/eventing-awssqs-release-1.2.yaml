@@ -34,5 +34,5 @@ jobs:
   - gcp
   types:
   - periodic
-org: knative-sandbox
+org: knative-extensions
 repo: eventing-awssqs

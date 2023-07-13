@@ -15,7 +15,7 @@ The build parameters are available as env variables:
 ```
 GOOGLE_APPLICATION_CREDENTIALS=/etc/release-account/service-account.json
 E2E_CLUSTER_REGION=us-central1
-ORG_NAME=knative-sandbox
+ORG_NAME=knative-extensions
 DOCKER_IN_DOCKER_ENABLED=true
 ARTIFACTS=/logs/artifacts
 BUILD_ID=1552222232225255424
@@ -23,7 +23,7 @@ BUILD_NUMBER=1552222232225255424
 CI=true
 GOPATH=/home/prow/go
 JOB_NAME=release_kn-plugin-func_main_periodic
-JOB_SPEC={"type":"periodic","job":"release_kn-plugin-func_main_periodic","buildid":"1552222232225255424","prowjobid":"46282424-0d8d-11ed-ab62-2ace146f4dd8","extra_refs":[{"org":"knative-sandbox","repo":"kn-plugin-func","base_ref":"main","path_alias":"knative.dev/kn-plugin-func"}],"decoration_config":{"timeout":"2h0m0s","grace_period":"15s","utility_images":{"clonerefs":"gcr.io/k8s-prow/clonerefs:v20220721-cf42b99a12","initupload":"gcr.io/k8s-prow/initupload:v20220721-cf42b99a12","entrypoint":"gcr.io/k8s-prow/entrypoint:v20220721-cf42b99a12","sidecar":"gcr.io/k8s-prow/sidecar:v20220721-cf42b99a12"},"resources":{"sidecar":{"requests":{"cpu":"100m","memory":"20Mi"}}},"gcs_configuration":{"bucket":"knative-prow","path_strategy":"explicit"},"gcs_credentials_secret":"gcs-upload"}}
+JOB_SPEC={"type":"periodic","job":"release_kn-plugin-func_main_periodic","buildid":"1552222232225255424","prowjobid":"46282424-0d8d-11ed-ab62-2ace146f4dd8","extra_refs":[{"org":"knative-extensions","repo":"kn-plugin-func","base_ref":"main","path_alias":"knative.dev/kn-plugin-func"}],"decoration_config":{"timeout":"2h0m0s","grace_period":"15s","utility_images":{"clonerefs":"gcr.io/k8s-prow/clonerefs:v20220721-cf42b99a12","initupload":"gcr.io/k8s-prow/initupload:v20220721-cf42b99a12","entrypoint":"gcr.io/k8s-prow/entrypoint:v20220721-cf42b99a12","sidecar":"gcr.io/k8s-prow/sidecar:v20220721-cf42b99a12"},"resources":{"sidecar":{"requests":{"cpu":"100m","memory":"20Mi"}}},"gcs_configuration":{"bucket":"knative-prow","path_strategy":"explicit"},"gcs_credentials_secret":"gcs-upload"}}
 JOB_TYPE=periodic
 PROW_JOB_ID=46282424-0d8d-11ed-ab62-2ace146f4dd8
 ENTRYPOINT_OPTIONS={"timeout":7200000000000,"grace_period":15000000000,"artifact_dir":"/logs/artifacts","args":["runner.sh","./hack/release.sh","--auto-release","--release-gcs","knative-releases/kn-plugin-func","--release-gcr","gcr.io/knative-releases","--github-token","/etc/hub-token/token"],"container_name":"test","process_log":"/logs/process-log.txt","marker_file":"/logs/marker-file.txt","metadata_file":"/logs/artifacts/metadata.json"}

@@ -6,7 +6,7 @@
 # #######################################################################
 
 presubmits:
-  knative-sandbox/kperf:
+  knative-extensions/kperf:
   - always_run: true
     branches:
     - ^main$

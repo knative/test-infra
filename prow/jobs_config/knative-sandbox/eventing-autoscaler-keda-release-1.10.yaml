@@ -55,5 +55,5 @@ jobs:
   - release
   types:
   - periodic
-org: knative-sandbox
+org: knative-extensions
 repo: eventing-autoscaler-keda

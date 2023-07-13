@@ -14,7 +14,7 @@ periodics:
   decorate: true
   extra_refs:
   - base_ref: main
-    org: knative-sandbox
+    org: knative-extensions
     path_alias: knative.dev/async-component
     repo: async-component
   name: continuous_async-component_main_periodic
@@ -56,7 +56,7 @@ periodics:
   decorate: true
   extra_refs:
   - base_ref: main
-    org: knative-sandbox
+    org: knative-extensions
     path_alias: knative.dev/async-component
     repo: async-component
   name: nightly_async-component_main_periodic
@@ -101,7 +101,7 @@ periodics:
   decorate: true
   extra_refs:
   - base_ref: main
-    org: knative-sandbox
+    org: knative-extensions
     path_alias: knative.dev/async-component
     repo: async-component
   name: release_async-component_main_periodic
@@ -123,7 +123,7 @@ periodics:
       - name: E2E_CLUSTER_REGION
         value: us-central1
       - name: ORG_NAME
-        value: knative-sandbox
+        value: knative-extensions
       - name: ATTEST_IMAGES
         value: "true"
       image: gcr.io/knative-tests/test-infra/prow-tests:v20230524-d6a12e8c
@@ -155,7 +155,7 @@ periodics:
           path: service-account.json
         secretName: prow-google-credentials
 presubmits:
-  knative-sandbox/async-component:
+  knative-extensions/async-component:
   - always_run: true
     branches:
     - ^main$

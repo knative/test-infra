@@ -79,7 +79,7 @@ jobConfigs:
       - name: knative-eventing
         identity: C04LMU33V1S
   - name: continuous_eventing-kafka-broker_main_periodic
-    org: knative-sandbox
+    org: knative-extensions
     repo: eventing-kafka-broker
     type: postsubmit
     issueRepo: eventing-kafka-broker
