@@ -124,28 +124,6 @@ jobs:
     - --run-test
     - ./test/e2e-auto-tls-tests.sh --istio-version latest --mesh
 
-  - name: istio-head-mesh
-    types: [periodic]
-    command:
-    - runner.sh
-    args:
-    - ./test/presubmit-tests.sh
-    - --run-test
-    - ./test/e2e-tests.sh --istio-version head --mesh
-    - --run-test
-    - ./test/e2e-auto-tls-tests.sh --istio-version head --mesh
-
-  - name: istio-head-no-mesh
-    types: [periodic]
-    command:
-    - runner.sh
-    args:
-    - ./test/presubmit-tests.sh
-    - --run-test
-    - ./test/e2e-tests.sh --istio-version head --no-mesh
-    - --run-test
-    - ./test/e2e-auto-tls-tests.sh --istio-version head --no-mesh
-
   - name: kourier-stable
     types: [periodic]
     command:
