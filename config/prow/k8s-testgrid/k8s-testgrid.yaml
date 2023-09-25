@@ -51,6 +51,7 @@ dashboard_groups:
   - sample-source
   - scaling-group
   - security-guard
+  - serving-progressive-rollout
   name: knative-sandbox
 dashboards:
 - name: async-component
@@ -104,4 +105,5 @@ dashboards:
 - name: scaling-group
 - name: security-guard
 - name: serving
+- name: serving-progressive-rollout
 - name: utilities
